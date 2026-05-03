@@ -35090,6 +35090,25 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     }
 
+    const kdySeS = r.match(
+      /^\s*kdy\s+se\s+(?:uvid[ií]m|uvid[ií]me|potk[aá]m|potk[aá]me|m[aá]m\s+sej[ií]t|m[aá]me\s+sej[ií]t|sejdu|sejdeme)\s+s\s+(.+?)(?=\s*[.!?]|$)/i
+    );
+    if (kdySeS && kdySeS[1]) {
+      const rest = String(kdySeS[1]).replace(/\s*[?.!]+\s*$/g, "").trim();
+      if (rest) {
+        const qFold = foldCs(rest);
+        return {
+          intent: "find_by_title",
+          query: rest,
+          normalizedQuery: rest,
+          diacriticInsensitive: true,
+          queryFolded: qFold,
+          preferFuture: true,
+          meetingPersonHint: true
+        };
+      }
+    }
+
     return null;
   }
 
@@ -35141,9 +35160,17 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     if (spec.intent === "find_by_title") {
       const qf = spec.queryFolded || foldCs(spec.query || "");
-      return sorted.filter(function (e) {
+      let hits = sorted.filter(function (e) {
         return iuSilverTitleMatchesReadQuery(e.title, qf);
       });
+      if (spec.preferFuture && hits.length > 1) {
+        const t0 = now.getTime();
+        const fut = hits.filter(function (e) {
+          return parseDateTimeIso(e.date, e.time).getTime() >= t0;
+        });
+        if (fut.length) hits = fut;
+      }
+      return hits;
     }
 
     if (spec.intent === "count_events") {
@@ -35228,13 +35255,23 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     if (type === "find_by_title") {
       if (count === 0) {
-        message = "Nic takového v kalendáři nemám.";
+        message = "Nic jsem k tomu nenašel.";
         return { success: true, type: type, count: 0, events: [], message: message, ambiguity: false };
       }
       if (count > 1) ambiguity = true;
       if (count === 1) {
         const ev = evs[0];
-        message = "Našel jsem: " + String(ev.title || "") + " v " + String(ev.time || "") + " (" + iuSilverFormatDateCs(String(ev.date || "")) + ").";
+        const tit = String(ev.title || "");
+        const ft = foldCs(tit);
+        const rel = iuSilverRelativeDayWordForEvent(ev.date, now);
+        const tim = String(ev.time || "");
+        if (spec.meetingPersonHint && (/\bs\s+petrem\b/.test(ft) || /\bpetrem\b/.test(ft))) {
+          message = "S Petrem se uvidíš " + rel + " v " + tim + ".";
+        } else if (/\bzubar/.test(ft)) {
+          message = "Zubaře máš " + rel + " v " + tim + ".";
+        } else {
+          message = "Máš " + tit + " " + rel + " v " + tim + ".";
+        }
       } else {
         const show = evs.slice(0, 3);
         const lines = show.map(function (e) {
@@ -35312,6 +35349,535 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const matched = iuSilverRetrieveReadQuery(spec, snap, now);
     const answer = iuSilverBuildReadAnswer(spec, matched, now);
     return { detectedIntent: "calendar.read", query: spec, events: matched, answer: answer };
+  }
+
+  /** Silver Brain v1.5 — local READ/SEARCH/ANSWER (browser-only; no network). */
+  const IU_SILVER_SEARCH_SYNONYMS = {
+    meeting: ["schuzka", "setkani", "porada", "meeting", "uvidim", "potkam", "sejdu", "videt", "vidim"],
+    calendar: ["kalendar", "udalost", "program", "schuzka", "meeting", "porada", "zubar", "doktor", "navsteva"],
+    tasks: ["ukol", "ukoly", "udelat", "vyridit", "zaridit", "koupit", "zavolat", "zaplatit", "poslat", "objednat"],
+    notes: ["poznamka", "poznamky", "poznamenane", "zapsane", "ulozene", "informace"],
+    order: ["objednavka", "objednavky", "cislo objednavky", "objednaci cislo"],
+    pin: ["pin", "kod", "heslo", "bezpecnostni kod"],
+    color: ["barva", "barvu", "barevny"],
+    warranty: ["zaruka", "garance", "reklamace"],
+    contact: ["kontakt", "telefon", "cislo", "email", "servis"]
+  };
+
+  function iuSilverNormalizeForSearch(text) {
+    let s = String(text || "")
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+    s = s.replace(/[\u200b-\u200d\ufeff\u00ad]/g, "");
+    s = s.replace(/[''""`´]/g, " ");
+    s = s.replace(/[^a-z0-9\s]+/g, " ");
+    const reps = [
+      [/\bpetrem\b|\bpetrovi\b|\bpetra\b|\bpetre\b/g, "petr"],
+      [/\bpavlem\b|\bpavla\b|\bpavlovi\b/g, "pavel"],
+      [/\bjanou\b|\bjane\b/g, "jana"],
+      [/\bhonzou\b|\bhonzovi\b|\bhonzu\b/g, "honza"],
+      [/\bmartinou\b|\bmartina\b|\bmartinovi\b|\bmartinem\b/g, "martin"],
+      [/\blenkou\b|\blence\b/g, "lenka"],
+      [/\bmamkou\b|\bmamce\b|\bmama\b|\bmamka\b|\bmame\b/g, "mama"],
+      [/\btatkou\b|\btatovi\b|\btatka\b|\btata\b|\btate\b/g, "tata"],
+      [/\bdoktorem\b|\bdoktorovi\b|\bdoktora\b|\bdoktor\b/g, "doktor"],
+      [/\bzubare\b|\bzubari\b|\bzubarem\b|\bzubar\b/g, "zubar"],
+      [/\bservisem\b|\bservisu\b|\bservis\b/g, "servis"],
+      [/\bschuzku\b|\bschuzky\b|\bschuzce\b|\bschuzka\b/g, "schuzka"],
+      [/\bsetkani\b|\bsetkan\b/g, "setkani"],
+      [/\bmeetingu\b|\bmeetingem\b|\bmeeting\b/g, "meeting"],
+      [/\bporadu\b|\bporade\b|\bporady\b|\bporada\b/g, "porada"],
+      [/\bnavstevu\b|\bnavsteve\b|\bnavsteva\b/g, "navsteva"],
+      [/\budalosti\b|\budalost\b|\budalosti\b|\budalost\b/g, "udalost"],
+      [/\bprogramu\b|\bprogram\b/g, "program"],
+      [/\bukolu\b|\bukoly\b|\bukol\b/g, "ukol"],
+      [/\budelat\b|\budelej\b|\budelat\b/g, "udelat"],
+      [/\bvyrizit\b|\bvyriz\b|\bvyridit\b|\bvyrizen\b/g, "vyridit"],
+      [/\bzaplatit\b|\bzaplat\b|\bzaplaceni\b/g, "zaplatit"],
+      [/\bkoupim\b|\bnakoupit\b|\bnakup\b|\bkoupit\b/g, "koupit"],
+      [/\bzavolej\b|\bvolat\b|\bzavolat\b/g, "zavolat"],
+      [/\bposli\b|\bodeslat\b|\bposlat\b/g, "poslat"],
+      [/\bobjednej\b|\bobjednavka\b|\bobjednavky\b|\bobjednat\b/g, "objednat"],
+      [/\breklamaci\b|\breklamací\b|\breklamace\b/g, "reklamace"],
+      [/\bnajem\b|\bnájmu\b|\bnajmu\b|\bnajem\b/g, "najem"],
+      [/\belektrinu\b|\belektrina\b|\belektriny\b/g, "elektrina"],
+      [/\bpoznamky\b|\bpoznamku\b|\bpoznamka\b/g, "poznamka"],
+      [/\bpoznamenane\b|\bzapsane\b|\bulozene\b/g, "poznamka"],
+      [/\bobjednavky\b|\bobjednavku\b|\bobjednavka\b/g, "objednavka"],
+      [/\bcislo\s+objednavky\b/g, "cislo objednavky"],
+      [/\bpin\b/g, "pin"],
+      [/\bkod\b/g, "kod"],
+      [/\bhesla\b|\bheslo\b/g, "heslo"],
+      [/\bbarvu\b|\bbarve\b|\bbarvy\b|\bbarva\b/g, "barva"],
+      [/\bauta\b|\baute\b|\bautu\b|\bauto\b/g, "auto"],
+      [/\bzaruky\b|\bzaruku\b|\bzaruka\b/g, "zaruka"],
+      [/\bkontaktu\b|\bkontakt\b/g, "kontakt"],
+      [/\balzy\b|\balze\b|\balza\b/g, "alza"],
+      [/\btelevizi\b|\btelevize\b/g, "televize"],
+      [/\bkarte\b|\bkarty\b|\bkarta\b/g, "karta"]
+    ];
+    for (let ri = 0; ri < reps.length; ri++) {
+      s = s.replace(reps[ri][0], " " + String(reps[ri][1]) + " ");
+    }
+    s = s.replace(/\s+/g, " ").trim();
+    return s;
+  }
+
+  function iuSilverSearchTokenize(norm) {
+    return String(norm || "")
+      .split(/\s+/)
+      .map(function (x) {
+        return x.trim();
+      })
+      .filter(function (x) {
+        return x.length >= 2;
+      });
+  }
+
+  function iuSilverSearchExpandSynonymTokens(tokens) {
+    const bag = {};
+    const add = function (w) {
+      const x = String(w || "").trim();
+      if (x.length >= 2) bag[x] = 1;
+    };
+    for (let i = 0; i < tokens.length; i++) add(tokens[i]);
+    const keys = Object.keys(IU_SILVER_SEARCH_SYNONYMS);
+    for (let ki = 0; ki < keys.length; ki++) {
+      const k = keys[ki];
+      const arr = IU_SILVER_SEARCH_SYNONYMS[k] || [];
+      const all = [k].concat(arr);
+      let hit = false;
+      for (let ai = 0; ai < all.length; ai++) {
+        if (bag[all[ai]]) {
+          hit = true;
+          break;
+        }
+      }
+      if (hit) {
+        for (let ai = 0; ai < all.length; ai++) add(all[ai]);
+      }
+    }
+    return Object.keys(bag);
+  }
+
+  function iuSilverRelativeDayWordForEvent(isoDate, now) {
+    const todayStr = toDateOnly(now);
+    const tom = addDays(todayStr, 1);
+    const d0 = String(isoDate || "").slice(0, 10);
+    if (d0 === todayStr) return "dnes";
+    if (d0 === tom) return "zítra";
+    return iuSilverFormatDateCs(d0);
+  }
+
+  function iuSilverSearchLocalData(query, options) {
+    options = options || {};
+    const target = options.target === "calendar" || options.target === "tasks" || options.target === "notes" ? options.target : "all";
+    const now = options.now instanceof Date ? options.now : new Date();
+    const listMode = options.listMode || "";
+    const preferFuture = !!options.preferFuture;
+    const dateHint = options.dateHint || "";
+    const getEv = options.getEventsSnapshot;
+    const getTk = options.getTasksSnapshot;
+    const getNt = options.getNotesSnapshot;
+    const events = typeof getEv === "function" ? getEv() : [];
+    const tasks = typeof getTk === "function" ? getTk() : [];
+    const notes = typeof getNt === "function" ? getNt() : [];
+    const rawQ = String(query || "").trim();
+    const normalizedQuery = iuSilverNormalizeForSearch(rawQ);
+    const baseToks = iuSilverSearchTokenize(normalizedQuery);
+    const expToks = iuSilverSearchExpandSynonymTokens(baseToks);
+    const results = [];
+    let bestResult = null;
+    let bestScore = -1;
+    const todayStr = toDateOnly(now);
+    const tomorrowStr = addDays(todayStr, 1);
+    const wantDone = /\b(hotove|hotovy|splnene|vyrizene)\b/.test(iuSilverNormalizeForSearch(String(options.rawFoldedHint || "")));
+
+    function pushRes(kind, score, payload) {
+      const row = { kind: kind, score: score, payload: payload };
+      results.push(row);
+      if (score > bestScore) {
+        bestScore = score;
+        bestResult = row;
+      }
+    }
+
+    function scoreHaystack(hay, toks, fullNorm) {
+      const h = iuSilverNormalizeForSearch(hay);
+      if (!h) return 0;
+      let sc = 0;
+      if (fullNorm.length >= 3 && h.indexOf(fullNorm) >= 0) sc += 120;
+      for (let ti = 0; ti < toks.length; ti++) {
+        const t = toks[ti];
+        if (!t || t.length < 2) continue;
+        if (h.indexOf(t) >= 0) {
+          sc += t.length >= 4 ? 35 : 22;
+        }
+      }
+      return sc;
+    }
+
+    if (listMode === "tasks_active" && (target === "tasks" || target === "all")) {
+      const arr = Array.isArray(tasks) ? tasks : [];
+      const act = [];
+      for (let i = 0; i < arr.length; i++) {
+        const tk = arr[i];
+        if (!tk || tk.status === "done") continue;
+        act.push(tk);
+      }
+      act.sort(function (a, b) {
+        return (Number(b.updatedAt || 0) || 0) - (Number(a.updatedAt || 0) || 0);
+      });
+      for (let j = 0; j < act.length; j++) {
+        pushRes("task", 50 - j * 0.1, { task: act[j] });
+      }
+      return {
+        query: rawQ,
+        normalizedQuery: normalizedQuery,
+        target: target,
+        results: results,
+        bestResult: results.length ? results[0] : null,
+        confidence: results.length ? 0.9 : 0,
+        answerType: results.length ? "list" : "none",
+        source: "local_browser_only"
+      };
+    }
+
+    function considerCalendar() {
+      const evs = iuSilverSortEventsChrono(Array.isArray(events) ? events : []);
+      for (let ei = 0; ei < evs.length; ei++) {
+        const ev = evs[ei];
+        const title = String(ev.title || "");
+        const sc0 = scoreHaystack(title, expToks, normalizedQuery);
+        let sc = sc0;
+        const dt = parseDateTimeIso(ev.date, ev.time).getTime();
+        if (preferFuture && dt >= now.getTime()) sc += 28;
+        if (dateHint === "tomorrow" && String(ev.date || "").slice(0, 10) === tomorrowStr) sc += 40;
+        if (dateHint === "today" && String(ev.date || "").slice(0, 10) === todayStr) sc += 40;
+        if (sc > 0) pushRes("calendar_event", sc, { event: ev });
+      }
+    }
+
+    function considerTasks() {
+      const arr = Array.isArray(tasks) ? tasks : [];
+      for (let i = 0; i < arr.length; i++) {
+        const tk = arr[i];
+        if (!tk) continue;
+        if (tk.status === "done" && !wantDone) continue;
+        const blob = String(tk.title || "") + " " + String(tk.note || "");
+        let sc = scoreHaystack(blob, expToks, normalizedQuery);
+        if (tk.status === "done") sc *= 0.35;
+        if (sc > 0) pushRes("task", sc, { task: tk });
+      }
+    }
+
+    function considerNotes() {
+      const arr = Array.isArray(notes) ? notes : [];
+      for (let i = 0; i < arr.length; i++) {
+        const n = arr[i];
+        if (!n || n.deleted) continue;
+        const blob = String(n.title || "") + " " + String(n.content || "");
+        const sc = scoreHaystack(blob, expToks, normalizedQuery);
+        if (sc > 0) pushRes("note", sc, { note: n });
+      }
+    }
+
+    if (target === "calendar" || target === "all") considerCalendar();
+    if (target === "tasks" || target === "all") considerTasks();
+    if (target === "notes" || target === "all") considerNotes();
+
+    results.sort(function (a, b) {
+      return b.score - a.score;
+    });
+
+    let answerType = "none";
+    if (bestResult) {
+      if (bestResult.kind === "calendar_event") answerType = "calendar_event";
+      else if (bestResult.kind === "task") answerType = "task";
+      else if (bestResult.kind === "note") answerType = "note";
+    }
+    const topN = results.slice(0, 12);
+    return {
+      query: rawQ,
+      normalizedQuery: normalizedQuery,
+      target: target,
+      results: topN,
+      bestResult: bestResult,
+      confidence: bestScore > 0 ? Math.min(1, bestScore / 200) : 0,
+      answerType: answerType,
+      source: "local_browser_only",
+      evalNow: now
+    };
+  }
+
+  function iuSilverBuildAnswerFromSearch(searchResult) {
+    const sr = searchResult || {};
+    const evalNow = sr.evalNow instanceof Date ? sr.evalNow : new Date();
+    const res = Array.isArray(sr.results) ? sr.results : [];
+    if (sr.target === "all" && res.length >= 2) {
+      const lines = [];
+      const seen = {};
+      for (let i = 0; i < res.length && lines.length < 6; i++) {
+        const row = res[i];
+        const k = row.kind;
+        if (k === "calendar_event" && row.payload && row.payload.event) {
+          const ev = row.payload.event;
+          const key = "c" + String(ev.id || "") + String(ev.date || "");
+          if (seen[key]) continue;
+          seen[key] = 1;
+          lines.push(
+            "Kalendář: " +
+              String(ev.title || "").trim() +
+              " — " +
+              String(ev.time || "").trim() +
+              " (" +
+              iuSilverFormatDateCs(String(ev.date || "")) +
+              ")"
+          );
+        } else if (k === "task" && row.payload && row.payload.task) {
+          const tk = row.payload.task;
+          const key = "t" + String(tk.id || "");
+          if (seen[key]) continue;
+          seen[key] = 1;
+          lines.push("Úkol: " + String(tk.title || "").trim());
+        } else if (k === "note" && row.payload && row.payload.note) {
+          const n = row.payload.note;
+          const key = "n" + String(n.id || "");
+          if (seen[key]) continue;
+          seen[key] = 1;
+          const blob = (String(n.title || "").trim() + " — " + String(n.content || "").trim()).replace(/\s+/g, " ").trim();
+          lines.push("Poznámka: " + blob.slice(0, 240));
+        }
+      }
+      if (lines.length) return { message: lines.join("\n"), answerType: "list" };
+    }
+    const br = sr.bestResult;
+    if (!br || res.length === 0) {
+      return { message: "Nic jsem k tomu nenašel.", answerType: "none" };
+    }
+    const at = sr.answerType;
+    if (at === "list" && res.length) {
+      const lines = [];
+      const cap = Math.min(res.length, 12);
+      for (let i = 0; i < cap; i++) {
+        const p = res[i].payload && res[i].payload.task ? res[i].payload.task : null;
+        if (!p) continue;
+        lines.push(String(i + 1) + ". " + String(p.title || "").trim());
+      }
+      if (!lines.length) return { message: "Nic jsem k tomu nenašel.", answerType: "none" };
+      if (lines.length === 1) return { message: "Našel jsem úkol: " + lines[0].replace(/^\d+\.\s*/, "") + ".", answerType: "list" };
+      return { message: "Máš " + lines.length + " aktivní úkoly:\n" + lines.join("\n"), answerType: "list" };
+    }
+    if (at === "calendar_event") {
+      const ev = br.payload && br.payload.event ? br.payload.event : null;
+      if (!ev) return { message: "Nic jsem k tomu nenašel.", answerType: "none" };
+      const tit = String(ev.title || "").trim();
+      const tim = String(ev.time || "").trim();
+      const rel = iuSilverRelativeDayWordForEvent(ev.date, evalNow);
+      const ft = foldCs(tit);
+      if (/\bs\s+petrem\b/.test(ft) || /\bpetrem\b/.test(ft)) {
+        return { message: "S Petrem se uvidíš " + rel + " v " + tim + ".", answerType: "calendar_event" };
+      }
+      if (/\bzubar/.test(ft)) {
+        return { message: "Zubaře máš " + rel + " v " + tim + ".", answerType: "calendar_event" };
+      }
+      return { message: "Máš " + tit + " " + rel + " v " + tim + ".", answerType: "calendar_event" };
+    }
+    if (at === "task") {
+      const tk = br.payload && br.payload.task ? br.payload.task : null;
+      if (!tk) return { message: "Nic jsem k tomu nenašel.", answerType: "none" };
+      return { message: "Našel jsem úkol: " + String(tk.title || "").trim() + ".", answerType: "task" };
+    }
+    if (at === "note") {
+      const n = br.payload && br.payload.note ? br.payload.note : null;
+      if (!n) return { message: "Nic jsem k tomu nenašel.", answerType: "none" };
+      const tit0 = String(n.title || "").trim();
+      const ct0 = String(n.content || "").trim();
+      let blobTrim = ct0 || tit0;
+      if (tit0 && ct0 && foldCs(ct0).indexOf(foldCs(tit0)) === 0) blobTrim = ct0.replace(/\s+/g, " ").trim();
+      else if (tit0 && ct0) blobTrim = (tit0 + " " + ct0).replace(/\s+/g, " ").trim();
+      else blobTrim = (ct0 || tit0).replace(/\s+/g, " ").trim();
+      if (res.length > 1) {
+        const lines = [];
+        const show = Math.min(res.length, 5);
+        for (let i = 0; i < show; i++) {
+          const nn = res[i].payload && res[i].payload.note ? res[i].payload.note : null;
+          if (!nn) continue;
+          const t = (String(nn.title || "").trim() + " — " + String(nn.content || "").trim()).replace(/\s+/g, " ").trim();
+          lines.push(String(lines.length + 1) + ". " + t.slice(0, 220));
+        }
+        return { message: "Našel jsem více záznamů:\n" + lines.join("\n"), answerType: "note" };
+      }
+      return { message: "V poznámkách mám: " + blobTrim.slice(0, 500) + ".", answerType: "note" };
+    }
+    return { message: "Nic jsem k tomu nenašel.", answerType: "none" };
+  }
+
+  function iuSilverReadSearchSignalFolded(f) {
+    const x = String(f || "");
+    return (
+      /\b(najdi|vyhledej|vyhledejte|hledej|ukaz|ukaž|ukož|zobraz|zobrazit)\b/.test(x) ||
+      /\b(jake|jaky|jakou)\s+mam\s+ukol/.test(x) ||
+      /\bco\s+mam\s+(udelat|koupit|zaplatit|vyridit|poslat|objednat|zavolat)\b/.test(x) ||
+      /\b(jake|jaky)\s+mam\s+poznam/.test(x) ||
+      /\bco\s+jsem\s+si\s+poznamenal/.test(x) ||
+      /\bco\s+mam\s+(poznamenane|ulozene|ulozene)\b/.test(x) ||
+      /\bco\s+mam\s+k\s+\S+/.test(x) ||
+      /\b(co\s+mam|co\s+mas|co\s+me\s+ceka)\b/.test(x) ||
+      /\bkdy\s+se\b/.test(x) ||
+      /\b(kde|s\s+kym)\s+mam\s+(zitra|dnes)/.test(x) ||
+      /\b(jaky|jake)\s+mam\s+program/.test(x) ||
+      /\b(co\s+vis|co\s+vies)\b/.test(x) ||
+      /\b(co\s+je\s+ulozeno)\b/.test(x) ||
+      /\bnajdi\s+v\s+(kalend|kalendari)/.test(x) ||
+      /\b(jakou|jaka|jake)\s+barvu\b/.test(x) ||
+      /\bbarva\s+auta\b/.test(x) ||
+      /\bjaka\s+byla\s+barva\b/.test(x)
+    );
+  }
+
+  function iuSilverReadSearchGateCalendarCreate(raw, folded, now) {
+    const prev0 = createEmptyDraft();
+    if (iuSilverBrainCalendarWantedInternal(raw, now, prev0, folded) && iuSilverLooksLikeSchedulingFragment(folded, raw)) return true;
+    return false;
+  }
+
+  function iuSilverReadSearchShouldRun(raw, folded, now) {
+    if (!String(raw || "").trim()) return false;
+    if (iuSilverIsNegatedWriteIntentNarrow(folded) || iuSilverIsNegatedBroadVerb(folded)) return false;
+    if (iuSilverCalendarReadSuppressedForWriteIntent(folded)) return false;
+    if (iuSilverTryParseExplicitNoteCreate(raw)) return false;
+    if (iuSilverReadSearchGateCalendarCreate(raw, folded, now)) return false;
+    if (iuSilverHasTaskActionVerb(folded) && !iuSilverCalendarEventOverridesTask(raw, folded) && !iuSilverReadSearchSignalFolded(folded)) return false;
+    return iuSilverReadSearchSignalFolded(folded);
+  }
+
+  function iuSilverReadSearchPickTarget(folded) {
+    const f = String(folded || "");
+    if (/\b(najdi|vyhledej|ukaz|ukaž)\s+v\s+(kalend|kalendari)\b/.test(f)) return "calendar";
+    if (/\b(ukol|ukoly|udelat|vyridit|zaplatit|koupit|zavolat|objednat|poslat)\b/.test(f) && !/\b(kalendar|schuz|zubar|kdy\s+mam)\b/.test(f)) {
+      if (/\b(poznam|pin|kod|heslo|objednav|barva|auto|zaruka|alz|televiz)\b/.test(f)) return "notes";
+      if (/\b(jake|jaky)\s+mam\s+ukol|aktivni\s+ukol|hotove\s+ukol|co\s+mam\s+udelat\b/.test(f)) return "tasks";
+      if (/\bnajdi\s+ukol|vyhledej\s+ukol\b/.test(f)) return "tasks";
+    }
+    if (/\bnajdi\s+ukol|vyhledej\s+ukol\b/.test(f)) return "tasks";
+    if (/\b(poznam|pin|kod|heslo|objednav|barva|auto|zaruka|reklam|kontakt|servis|alz|televiz|kart)\b/.test(f)) return "notes";
+    if (/\b(kdy|v\s+kolik|program|kalendar|schuz|meeting|porad|zubar|doktor|navstev|uvidim|potkam|sejdu|zitra|dnes|udalost)\b/.test(f)) return "calendar";
+    if (/\b(najdi|vyhledej|ukaz|ukaž|hledej)\b/.test(f)) return "all";
+    if (/\bco\s+mam\s+k\s+\S+/.test(f)) return "all";
+    return "all";
+  }
+
+  function iuSilverReadSearchExtractQuery(raw, folded, target) {
+    let t = String(raw || "").trim();
+    t = t.replace(/[\u200b-\u200d\ufeff\u00ad]/g, "");
+    t = t.replace(/^prosim,?\s+/i, "");
+    const strips = [
+      /^\s*najdi\s+v\s+kalend[aá]ři\s+/i,
+      /^\s*vyhledej\s+v\s+kalend[aá]ři\s+/i,
+      /^\s*najdi\s+ukol\s+/i,
+      /^\s*vyhledej\s+ukol\s+/i,
+      /^\s*najdi\s+pozn[aá]mk\w*\s+/i,
+      /^\s*vyhledej\s+pozn[aá]mk\w*\s+/i,
+      /^\s*(najdi|vyhledej|hledej|ukaž|ukaz|zobraz)\s+(mi\s+)?/i,
+      /^\s*co\s+mám\s+k\s+/i,
+      /^\s*co\s+mam\s+k\s+/i,
+      /^\s*kdy\s+se\s+(uvid[ií]m|uvid[ií]me|potk[aá]m|potk[aá]me|m[aá]m\s+sej[ií]t|sejdu|sejdeme)\s+s\s+/i,
+      /^\s*jako[uů]\s+barvu\s+m[eě]lo\s+/i,
+      /^\s*jaky\s+m[aá]m\s+program\s+/i,
+      /^\s*jake\s+mam\s+ukol\w*\s*/i,
+      /^\s*jaky\s+mam\s+ukol\w*\s*/i
+    ];
+    for (let si = 0; si < 20; si++) {
+      const prev = t;
+      for (let j = 0; j < strips.length; j++) {
+        t = t.replace(strips[j], "");
+      }
+      t = t.replace(/\s+/g, " ").trim();
+      if (t === prev) break;
+    }
+    t = t.replace(/^[\s?.!,:;]+/, "").replace(/[\s?.!,:;]+$/, "").trim();
+    if (!t && /\b(jake|jaky)\s+mam\s+ukol/.test(folded)) return "";
+    if (!t && target === "notes" && /\b(pin|kod|heslo)\b/.test(folded)) return "pin karty";
+    return t;
+  }
+
+  function iuSilverTryReadSearchTurn(raw, now, folded, ctx, empty) {
+    if (!iuSilverReadSearchShouldRun(raw, folded, now)) return null;
+    const target = iuSilverReadSearchPickTarget(folded);
+    const f = folded;
+    const listTasks =
+      /\b(jake|jaky)\s+mam\s+ukol/.test(f) ||
+      /\bco\s+mam\s+udelat\b/.test(f) ||
+      /\bukaz\s+aktivni\s+ukol/.test(f) ||
+      /^\s*ukaz\s+ukoly\s*$/i.test(String(raw || "").trim()) ||
+      /^\s*ukaž\s+úkoly\s*$/i.test(String(raw || "").trim());
+    if (listTasks) {
+      const sr = iuSilverSearchLocalData("", {
+        target: "tasks",
+        now: now,
+        listMode: "tasks_active",
+        getEventsSnapshot: ctx && ctx.getEventsSnapshot,
+        getTasksSnapshot: ctx && ctx.getTasksSnapshot,
+        getNotesSnapshot: ctx && ctx.getNotesSnapshot,
+        rawFoldedHint: f
+      });
+      const ans = iuSilverBuildAnswerFromSearch(sr);
+      return {
+        normalizedIntent: "tasks.read",
+        targetContainer: "none",
+        processingState: "READ_OK",
+        clarificationReason: null,
+        futureIntentCandidate: null,
+        readQuery: { silverReadSearch: true, target: "tasks", listMode: "tasks_active" },
+        readAnswer: { message: ans.message, silverSearch: sr },
+        extractedFields: {},
+        missingFields: [],
+        ambiguousFields: [],
+        userFacingSummary: ans.message,
+        assistantLead: ans.message,
+        clarificationText: "",
+        draft: empty,
+        silverSearchResult: sr
+      };
+    }
+    const q = iuSilverReadSearchExtractQuery(raw, folded, target);
+    const preferFuture = /\bkdy\b/.test(f) || /\bkdy\s+se\b/.test(f);
+    const dateHint = /\bzitra\b|\bzittra\b/.test(f) ? "tomorrow" : /\bdnes\b|\bdneska\b/.test(f) ? "today" : "";
+    const sr = iuSilverSearchLocalData(q, {
+      target: target,
+      now: now,
+      preferFuture: preferFuture,
+      dateHint: dateHint,
+      getEventsSnapshot: ctx && ctx.getEventsSnapshot,
+      getTasksSnapshot: ctx && ctx.getTasksSnapshot,
+      getNotesSnapshot: ctx && ctx.getNotesSnapshot,
+      rawFoldedHint: f
+    });
+    const ans = iuSilverBuildAnswerFromSearch(sr);
+    let ni = "global.search";
+    if (target === "calendar") ni = "calendar.read";
+    else if (target === "tasks") ni = "tasks.read";
+    else if (target === "notes") ni = "notes.read";
+    return {
+      normalizedIntent: ni,
+      targetContainer: "none",
+      processingState: "READ_OK",
+      clarificationReason: null,
+      futureIntentCandidate: null,
+      readQuery: { silverReadSearch: true, target: target, query: q },
+      readAnswer: { message: ans.message, silverSearch: sr },
+      extractedFields: {},
+      missingFields: [],
+      ambiguousFields: [],
+      userFacingSummary: ans.message,
+      assistantLead: ans.message,
+      clarificationText: "",
+      draft: empty,
+      silverSearchResult: sr
+    };
   }
 
   function cloneDraft(d) {
@@ -37189,6 +37755,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       };
     }
 
+    const readSearchTurn = iuSilverTryReadSearchTurn(raw, now, folded, ctx || {}, empty);
+    if (readSearchTurn) return readSearchTurn;
+
     if (iuSilverIsNegatedWriteIntentNarrow(folded)) {
       return baseClarification("negated_write_request", "clarification");
     }
@@ -37315,6 +37884,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     extractFromUtterance,
     proofWeekdayRuleSnippet,
     calendarReadProbe,
+    iuSilverNormalizeForSearch: iuSilverNormalizeForSearch,
+    iuSilverSearchLocalData: iuSilverSearchLocalData,
+    iuSilverBuildAnswerFromSearch: iuSilverBuildAnswerFromSearch,
     hasSilverStorageDisambiguationPayload,
     iuSilverBrainRoute: iuSilverBrainRoute,
     iuSilverExtractEntities: iuSilverExtractEntities,
@@ -37498,7 +38070,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (
       turn.readAnswer &&
       turn.readAnswer.message &&
-      (turn.processingState === "READ_OK" || turn.normalizedIntent === "calendar.read")
+      (turn.processingState === "READ_OK" ||
+        turn.normalizedIntent === "calendar.read" ||
+        turn.normalizedIntent === "tasks.read" ||
+        turn.normalizedIntent === "notes.read" ||
+        turn.normalizedIntent === "global.search")
     ) {
       return `<div class="iuSilverMsg iuSilverMsg--assistant" data-iu-silver-msg="assistant">
   <p class="iuSilverMsgLead iuSilverMsgLead--read">${esc(iuSilverDecorateAssistantLead(turn.readAnswer.message)).replace(/\n/g, "<br>")}</p>
@@ -37968,6 +38544,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     } else if (
       turn.processingState === "READ_OK" ||
       turn.normalizedIntent === "calendar.read" ||
+      turn.normalizedIntent === "tasks.read" ||
+      turn.normalizedIntent === "notes.read" ||
+      turn.normalizedIntent === "global.search" ||
       (turn.readAnswer && turn.readAnswer.message)
     ) {
       chatState.lastDraftTurn = null;
@@ -38031,11 +38610,21 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function getSilverCalendarCtx() {
     const svc = window.iuCalendarService;
+    const tks = window.iuTasksService;
+    const nts = window.iuNotesService;
     return {
       now: new Date(),
       getEventsSnapshot: function () {
         if (!svc || typeof svc.calendarGetEventsSnapshot !== "function") return [];
         return svc.calendarGetEventsSnapshot();
+      },
+      getTasksSnapshot: function () {
+        if (!tks || typeof tks.tasksGetSnapshot !== "function") return [];
+        return tks.tasksGetSnapshot();
+      },
+      getNotesSnapshot: function () {
+        if (!nts || typeof nts.notesGetSnapshot !== "function") return [];
+        return nts.notesGetSnapshot();
       }
     };
   }

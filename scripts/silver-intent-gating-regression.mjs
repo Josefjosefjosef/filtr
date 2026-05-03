@@ -18,7 +18,10 @@ function expandExpectedShorthand(expected) {
     "calendar.create": { normalizedIntent: "calendar.create", processingState: "READY_TO_SAVE", clarificationReason: null },
     "task.create": { normalizedIntent: "tasks.create", processingState: "READY_TO_SAVE", clarificationReason: null },
     "note.create": { normalizedIntent: "notes.create", processingState: "READY_TO_SAVE", clarificationReason: null },
-    unknown: { normalizedIntent: "clarification", processingState: "CLARIFICATION", clarificationReason: "ambiguous_request" }
+    unknown: { normalizedIntent: "clarification", processingState: "CLARIFICATION", clarificationReason: "ambiguous_request" },
+    "tasks.read": { normalizedIntent: "tasks.read", processingState: "READ_OK", clarificationReason: null },
+    "notes.read": { normalizedIntent: "notes.read", processingState: "READ_OK", clarificationReason: null },
+    "global.search": { normalizedIntent: "global.search", processingState: "READ_OK", clarificationReason: null }
   };
   if (!table[e]) throw new Error("Unknown expected shorthand: " + e);
   return table[e];
@@ -57,7 +60,12 @@ function run() {
   let fail = 0;
 
   for (const c of CORPUS.cases) {
-    const r = eng.processUserTurn(c.input, eng.createEmptyDraft(), { now, getEventsSnapshot: () => [] });
+    const r = eng.processUserTurn(c.input, eng.createEmptyDraft(), {
+      now,
+      getEventsSnapshot: () => [],
+      getTasksSnapshot: () => [],
+      getNotesSnapshot: () => []
+    });
     const exp = c.expect || expandExpectedShorthand(c.expected);
     const ok =
       r.normalizedIntent === exp.normalizedIntent &&
