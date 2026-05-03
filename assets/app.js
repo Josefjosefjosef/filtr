@@ -34378,6 +34378,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function iuSilverLooksLikeSchedulingFragment(f, raw) {
     if (/\bz[ií]tra\b|\bzittra\b|\bdnes(?:ka|ek)?\b|\bpoz[ií]t[rř][ií]\b/.test(f)) return true;
+    if (/\bpristi\b/.test(f)) return true;
+    if (/\bza\s+hodinu\b/.test(f) || /\bza\s+\d+\s*hodin/.test(f) || /\bza\s+\d+\s*minut/.test(f)) return true;
+    if (/\br[aá]no\b|\bdopoledne\b|\bodpoledne\b|\bve[cč]er\b|\bnoc\b/.test(f)) return true;
     if (iuSilverReWeekdayOnce().test(raw)) return true;
     if (/\b\d{1,2}\s*\.\s*\d{1,2}\s*\./.test(f)) return true;
     if (/\b\d{1,2}\s*[.\/\-]\s*\d{1,2}\b/.test(f)) return true;
@@ -34424,13 +34427,31 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       String(scratchParsed.values.title || "").trim() &&
       scratchParsed.confidence.time !== "certain" &&
       iuSilverHasCalendarEventKeywordFolded(titleHintFold);
+    /** v1.3: „Zítra v 18“ — datum + čas jisté, název chybí → kalendář + chytré doptání na název. */
+    const parsedCalendarZitraTimeOnlyHint =
+      !!scratchParsed &&
+      (/\bzitra\b|\bzittra\b/.test(folded) || /\bpristi\b/.test(folded)) &&
+      scratchParsed.confidence.date === "certain" &&
+      scratchParsed.confidence.time === "certain" &&
+      (scratchParsed.confidence.title !== "certain" || !String(scratchParsed.values.title || "").trim());
+    /** „Praha jedna večer“ — číslovaná část bez jasného dne/úkolu → neimplicitní kalendář (storage výběr). */
+    const prahaDistrictNoDayFrag =
+      /\bpraha\b/.test(folded) &&
+      /\b(jedna|dva|tri|ctyri|pet|sest|sedm|osm|devet|deset)\b/.test(folded) &&
+      !/\bzitra\b|\bzittra\b|\bpristi\b|\bdnes\b|\bpozitri\b/.test(folded) &&
+      !iuSilverHasCalendarEventKeywordFolded(folded) &&
+      !iuSilverHasWriteVerb(folded);
     const implicitCalCreate =
       !iuSilverIsTargetAmbiguousStorageVerb(folded) &&
       !iuSilverHasExplicitNotesTarget(folded) &&
       !iuSilverHasExplicitTasksTarget(folded) &&
       !iuSilverHasExplicitCalendarTarget(folded) &&
       schedulingFrag &&
-      (iuSilverHasWriteVerb(folded) || parsedCalendarComplete || parsedCalendarEventHint);
+      !prahaDistrictNoDayFrag &&
+      (iuSilverHasWriteVerb(folded) ||
+        parsedCalendarComplete ||
+        parsedCalendarEventHint ||
+        parsedCalendarZitraTimeOnlyHint);
     return hasCalExplicit || inCalSession || implicitCalCreate;
   }
 
@@ -34604,7 +34625,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   function iuSilverCalendarEventOverridesTask(raw, folded) {
-    const timeHit = findTime(String(raw || ""));
+    const timeHit = findTime(String(raw || ""), null);
     if (!timeHit.time) return false;
     return iuSilverHasCalendarEventKeywordFolded(String(folded || ""));
   }
@@ -34687,10 +34708,18 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!iuSilverHasTaskActionVerb(foldedWork) && !opts.fromExplicitTarget) return null;
 
     let w = work;
-    const tHit = findTime(w);
+    const tHit = findTime(w, now);
     if (tHit.time) w = tHit.work;
 
     let dueYmd = "";
+    const foldedRawIn = foldCs(String(rawIn || ""));
+    if (
+      /\bza\s+hodinu\b/.test(foldedRawIn) ||
+      /\bza\s+\d+\s*hodin/.test(foldedRawIn) ||
+      /\bza\s+\d+\s*minut/.test(foldedRawIn)
+    ) {
+      dueYmd = toDateOnly(now);
+    }
     const rel = findRelativeDay(w, now, false, null);
     if (rel) {
       dueYmd = rel.date;
@@ -35424,9 +35453,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return { work: w.replace(/\s+/g, " ").trim(), location: loc };
   }
 
-  function findTime(work) {
+  /**
+   * Wall-clock time from work string. Optional `now` enables v1.3: „za hodinu“, „za 30 minut“, …
+   * Returns { time, work, timeLabel?, dateISOHint? } — dateISOHint when „za …“ crosses midnight (calendar date).
+   */
+  function findTime(work, nowOpt) {
     let w = work;
     let time = null;
+    let timeLabel = null;
+    let dateISOHint = null;
     const r1 = /\b(?:v|ve)\s+(\d{1,2})\s*:\s*(\d{2})\b/i;
     const hit1 = w.match(r1);
     if (hit1) {
@@ -35500,10 +35535,78 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         w = w.replace(rLead, " ");
       }
     }
+    if (!time && nowOpt) {
+      const n0 = nowOpt instanceof Date ? nowOpt : new Date(nowOpt);
+      const startMin = n0.getHours() * 60 + n0.getMinutes() + n0.getSeconds() / 60;
+      let addMin = null;
+      let stripRe = null;
+      const mZa1 = w.match(/\bza\s+hodinu\b/i);
+      if (mZa1) {
+        addMin = 60;
+        stripRe = /\bza\s+hodinu\b/i;
+      }
+      if (addMin == null) {
+        const mZaH = w.match(/\bza\s+(\d+)\s*hodin(?:y|u|a)?\b/i);
+        if (mZaH) {
+          addMin = Math.min(24 * 60, Math.max(1, Number(mZaH[1]) || 0) * 60);
+          stripRe = /\bza\s+\d+\s*hodin(?:y|u|a)?\b/i;
+        }
+      }
+      if (addMin == null) {
+        const mZaM = w.match(/\bza\s+(\d+)\s*minut(?:y|u|a)?\b/i);
+        if (mZaM) {
+          addMin = Math.min(24 * 60, Math.max(1, Number(mZaM[1]) || 0));
+          stripRe = /\bza\s+\d+\s*minut(?:y|u|a)?\b/i;
+        }
+      }
+      if (addMin != null && stripRe) {
+        const endMin = startMin + addMin;
+        if (endMin >= 24 * 60) {
+          dateISOHint = addDays(toDateOnly(n0), 1);
+        }
+        const hm = Math.floor(((endMin % (24 * 60)) + 24 * 60) % (24 * 60));
+        const hh = Math.floor(hm / 60);
+        const mm = hm % 60;
+        time = pad(hh) + ":" + pad(mm);
+        if (mZa1) timeLabel = "za hodinu";
+        else if (addMin % 60 === 0) timeLabel = "za " + String(addMin / 60) + " hodin";
+        else timeLabel = "za " + String(Math.round(addMin)) + " minut";
+        w = w.replace(stripRe, " ");
+      }
+    }
+    if (!time) {
+      const fo = foldCs(String(w || ""));
+      const dayParts = [
+        { reF: /\brano\b/, reW: /\br[aá]no\b/gi, hhmm: "09:00", lab: "ráno" },
+        { reF: /\bdopoledne\b/, reW: /\bdopoledne\b/gi, hhmm: "10:00", lab: "dopoledne" },
+        { reF: /\bodpoledne\b/, reW: /\bodpoledne\b/gi, hhmm: "15:00", lab: "odpoledne" },
+        { reF: /\bvecer\b/, reW: /\bve[cč]er\b/gi, hhmm: "18:00", lab: "večer" },
+        { reF: /\bnoc\b/, reW: /\bnoc\b/gi, hhmm: "21:00", lab: "noc" }
+      ];
+      for (let di = 0; di < dayParts.length; di++) {
+        const row = dayParts[di];
+        if (row.reF.test(fo)) {
+          time = row.hhmm;
+          timeLabel = row.lab;
+          w = w.replace(row.reW, " ");
+          break;
+        }
+      }
+      w = w.replace(/\s+/g, " ").trim();
+    }
     if (time) {
       w = w.replace(/\s+\.\s+/g, " ");
     }
-    return time ? { time, work: w.replace(/\s+/g, " ").trim() } : { time: null, work };
+    const workOut = w.replace(/\s+/g, " ").trim();
+    if (time) {
+      return {
+        time,
+        work: workOut,
+        timeLabel: timeLabel || time,
+        dateISOHint: dateISOHint || null
+      };
+    }
+    return { time: null, work: workOut, timeLabel: null, dateISOHint: null };
   }
 
   function parseMonthWord(tok) {
@@ -35596,6 +35699,24 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       w = w.replace(/\bdnes\b/i, " ");
       return { date: toDateOnly(now), work: w.replace(/\s+/g, " ").trim() };
     }
+    if (/\bpristi\b/.test(folded)) {
+      let w2 = w
+        .replace(/\bpříští\s+/gi, " ")
+        .replace(/\bpristi\s+/gi, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+      const reWdNext = iuSilverReWeekdayOnce();
+      const mN = w2.match(reWdNext);
+      if (mN) {
+        const dowN = weekdayToDow(mN[1]);
+        if (dowN >= 0) {
+          const baseN = nextWeekdayDate(dowN, now, hasCertainTime, timeHHMM);
+          const dN = addDays(baseN, 7);
+          w2 = w2.replace(reWdNext, " ");
+          return { date: dN, work: w2.replace(/\s+/g, " ").trim() };
+        }
+      }
+    }
     const reWd = iuSilverReWeekdayOnce();
     const m = w.match(reWd);
     if (m) {
@@ -35657,10 +35778,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     let location = null;
     let locationNormalized = null;
 
-    const tHit = findTime(raw);
+    const tHit = findTime(raw, n);
     if (tHit.time) {
       timeHHMM = tHit.time;
-      timeLabel = tHit.time;
+      timeLabel = tHit.timeLabel || tHit.time;
     }
 
     const abs0 = findAbsoluteDate(raw, n);
@@ -36210,10 +36331,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     work = locHit.work;
 
     function consumeTimeFromWork() {
-      const th = findTime(work);
+      const th = findTime(work, now);
       if (th.time) {
         values.time = th.time;
         confidence.time = "certain";
+        if (th.dateISOHint && confidence.date === "missing") {
+          values.date = th.dateISOHint;
+          confidence.date = "certain";
+        }
         work = th.work;
         return true;
       }
@@ -36309,7 +36434,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function applyFragmentFallback(raw, draft, now) {
     let d = cloneDraft(draft);
-    const t = findTime(String(raw));
+    const t = findTime(String(raw), now);
     if (t.time && d.meta.time !== "certain") {
       d.time = t.time;
       d.meta.time = "certain";
@@ -36329,7 +36454,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     }
     if (d.meta.time !== "certain") {
-      const t2 = findTime(String(raw));
+      const t2 = findTime(String(raw), now);
       if (t2.time) {
         d.time = t2.time;
         d.meta.time = "certain";
@@ -36337,7 +36462,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     const line = String(raw || "").trim();
     if (d.meta.title !== "certain" && line.length >= 2 && line.length <= 100 && !/[?]/.test(line)) {
-      const onlyTime = findTime(line);
+      const onlyTime = findTime(line, now);
       const hasWd = iuSilverReWeekdayOnce().test(line);
       const hasAbs = !!findAbsoluteDate(line, now);
       const hasRel = /\bz[ií]tra|dnes|poz[ií]t[rř][ií]\b/i.test(foldCs(line));
@@ -36385,6 +36510,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const missCal = computeMissing(draft);
     if (missCal.length === 1 && missCal[0] === "time") {
       return { assistantLead: "V kolik hodin to mám uložit?", clarification: "" };
+    }
+    if (missCal.length === 1 && missCal[0] === "title") {
+      return { assistantLead: "Co přesně mám uložit?", clarification: "" };
+    }
+    if (missCal.length === 1 && missCal[0] === "date") {
+      return { assistantLead: "Který den to mám uložit?", clarification: "" };
     }
     const parts = [];
     if (draft.meta.time !== "certain") parts.push("Chybí mi přesný čas.");
@@ -36679,6 +36810,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     } else if (ni === "calendar.create" && t.processingState === "NEEDS_CLARIFICATION" && d) {
       const miss = computeMissing(d);
       if (miss.length === 1 && miss[0] === "time") IU_SILVER_CONVERSATION_V12.awaitingField = "time";
+      else if (miss.length === 1 && miss[0] === "title") IU_SILVER_CONVERSATION_V12.awaitingField = "title";
     } else if (ni === "tasks.create" && d && d.targetContainer === "tasks" && t.processingState === "READY_TO_SAVE" && !String(d.taskDueAt || "").trim()) {
       IU_SILVER_CONVERSATION_V12.awaitingField = "task_due";
     } else if (ni === "create.storage_disambiguation" || t.storageDisambiguation) {
@@ -36700,11 +36832,38 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
 
     if (c.awaitingField === "time" && p.targetContainer === "calendar" && p.activeCalendarSession) {
-      const th = findTime(raw);
+      const th = findTime(raw, now);
       if (!th.time) return null;
       const d = cloneDraft(p);
       d.time = th.time;
       d.meta.time = "certain";
+      iuSilverSanitizeDraftTitle(d);
+      const ps = processingStateFromDraft(d);
+      const ap = buildAssistantParts(d, ps);
+      return {
+        normalizedIntent: "calendar.create",
+        targetContainer: "calendar",
+        processingState: ps,
+        clarificationReason: null,
+        futureIntentCandidate: null,
+        readQuery: null,
+        readAnswer: null,
+        extractedFields: {},
+        missingFields: computeMissing(d),
+        ambiguousFields: [],
+        userFacingSummary: "",
+        assistantLead: ap.assistantLead,
+        clarificationText: ap.clarification,
+        draft: d
+      };
+    }
+
+    if (c.awaitingField === "title" && p.targetContainer === "calendar" && p.activeCalendarSession) {
+      const titleIn = iuSilverNormalizeWs(String(raw || "").trim()).slice(0, 200);
+      if (!titleIn) return null;
+      const d = cloneDraft(p);
+      d.title = titleIn;
+      d.meta.title = "certain";
       iuSilverSanitizeDraftTitle(d);
       const ps = processingStateFromDraft(d);
       const ap = buildAssistantParts(d, ps);
