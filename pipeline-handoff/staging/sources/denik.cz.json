@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-03T08:25:05.382231Z",
+  "ingestedAt": "2026-05-03T08:59:50.486466Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V boji proti ruským zpravodajským službám jsme úspěšní, říká šéf BIS Koudelka",
+      "url": "https://www.denik.cz/z_domova/v-boji-proti-ruskym-zpravodajskym-sluzbam-jsme-uspesni-rika-sef-bis-20270429.html",
+      "dt": "2026-05-03T08:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bis",
+        "boji",
+        "jsme",
+        "koudelka",
+        "proti",
+        "ruským",
+        "službám",
+        "zpravodajským",
+        "úspěšní",
+        "říká",
+        "šéf"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -630,31 +658,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "U letiště ve Strakonicích havaroval větroň. Narazil do stromu, piloti se zranili",
-      "url": "https://www.denik.cz/nehody/nehoda-vetron-letiste-strakonice-zahrada-lehke-zraneni.html",
-      "dt": "2026-05-02T11:13:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "havaroval",
-        "letiště",
-        "narazil",
-        "piloti",
-        "strakonicích",
-        "stromu",
-        "větroň",
-        "zranili"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -665,7 +668,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28446,
+      "bytes": 28599,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -702,7 +705,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-03T06:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T08:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -719,6 +722,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V boji proti ruským zpravodajským službám jsme úspěšní, říká šéf BIS Koudelka",
+            "publishedAt": "2026-05-03T08:30:00Z"
+          },
           {
             "title": "Vydavatelé tisku vyzvali vládu. Chtějí nižší DPH, je nejvyšší v Evropské unii",
             "publishedAt": "2026-05-03T06:20:00Z"
@@ -746,10 +753,6 @@
           {
             "title": "Shrnutí prvního dne: Požár v Národním parku České Švýcarsko se rychle rozšířil",
             "publishedAt": "2026-05-03T03:44:00Z"
-          },
-          {
-            "title": "Záhada strašidelných domů vyřešena. Experti zjistili, co může za hororové zvuky",
-            "publishedAt": "2026-05-03T03:30:00Z"
           }
         ]
       }

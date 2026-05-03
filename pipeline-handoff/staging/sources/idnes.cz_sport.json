@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-03T08:25:05.382231Z",
+  "ingestedAt": "2026-05-03T08:59:50.486466Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Z posledního místa k závratnému triumfu. Kentucky Derby ovládl hřebec Golden Tempo",
+      "url": "https://www.idnes.cz/sport/ostatni/kentucky-derby-golden-tempo.A260503_100207_sporty_ald",
+      "dt": "2026-05-03T08:21:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "derby",
+        "golden",
+        "hřebec",
+        "kentucky",
+        "místa",
+        "ovládl",
+        "posledního",
+        "tempo",
+        "triumfu",
+        "závratnému"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -772,30 +799,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Karviná - Pardubice 1:2, Patrák a Samuel zařídili vítězství hostů",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-play-off-o-umisteni-karvina-pardubice-online-vysledek.A260501_115942_fotbal_duff",
-      "dt": "2026-05-02T16:26:35Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "hostů",
-        "karviná",
-        "pardubice",
-        "patrák",
-        "samuel",
-        "vítězství",
-        "zařídili"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -806,7 +809,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45131,
+      "bytes": 45035,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -843,7 +846,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T08:21:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -858,6 +861,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Z posledního místa k závratnému triumfu. Kentucky Derby ovládl hřebec Golden Tempo",
+            "publishedAt": "2026-05-03T08:21:00Z"
+          },
           {
             "title": "Jedlička: V Baníku je mi dobře, chci tady zůstat. Chápu, že na nás fanoušci bučeli",
             "publishedAt": "2026-05-03T07:00:00Z"
@@ -885,10 +892,6 @@
           {
             "title": "Po lokti zlomená čelist. Jasná červená, řekl Kováč i experti. Sudí úder neviděl",
             "publishedAt": "2026-05-03T05:26:26Z"
-          },
-          {
-            "title": "Trpišovský si výhru v Liberci pochvaloval. Titul proti Spartě? Bonus, vážíme si toho",
-            "publishedAt": "2026-05-03T05:00:00Z"
           }
         ]
       }

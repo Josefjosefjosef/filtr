@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-05-03T08:25:05.382231Z",
+  "ingestedAt": "2026-05-03T08:59:50.486466Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Ulice: Lumír ve vazbě, návrat z Telecího rovnou na policejní stanici a agresivní otec",
+      "url": "https://www.vtelce.cz/ulice-lumir-ve-vazbe-navrat-z-teleciho-rovnou-na-policejni-stanici-a-agresivni-otec/",
+      "dt": "2026-05-03T08:23:11Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "agresivní",
+        "lumír",
+        "návrat",
+        "otec",
+        "policejní",
+        "rovnou",
+        "stanici",
+        "telecího",
+        "ulice",
+        "vazbě"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -261,33 +288,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Dřevěný rošťák s fistulkou slaví 100 let. Připomeňte si legendárního Hurvínka dnes na Déčku",
-      "url": "https://www.vtelce.cz/dreveny-rostak-s-fistulkou-slavi-100-let-pripomente-si-legendarniho-hurvinka-dnes-na-decku/",
-      "dt": "2026-05-02T07:06:59Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "100",
-        "déčku",
-        "dřevěný",
-        "fistulkou",
-        "hurvínka",
-        "legendárního",
-        "let",
-        "připomeňte",
-        "rošťák",
-        "slaví"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -298,8 +298,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 75069,
-      "reason": "fetch_timeout",
+      "bytes": 79635,
+      "reason": "",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -335,7 +335,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-03T06:28:57Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T08:23:11Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "other": 10
@@ -350,6 +350,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ulice: Lumír ve vazbě, návrat z Telecího rovnou na policejní stanici a agresivní otec",
+            "publishedAt": "2026-05-03T08:23:11Z"
+          },
           {
             "title": "Úspěšný dramatický seriál Jitřní záře poprvé míří na televizní obrazovky",
             "publishedAt": "2026-05-03T06:28:57Z"
@@ -377,10 +381,6 @@
           {
             "title": "Růžový panter: Stadion plný Čechů, váhající Steve Martin a miliony za přetáčky postelových scén",
             "publishedAt": "2026-05-02T13:55:28Z"
-          },
-          {
-            "title": "Pro svou roli Fany se nechala Jiřina Bohdalová zavřít do ústavu pro choromyslné",
-            "publishedAt": "2026-05-02T13:44:54Z"
           }
         ]
       }
