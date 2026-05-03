@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-03T08:59:50.486466Z",
+  "ingestedAt": "2026-05-03T09:35:11.892389Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Alkohol na lodi? Kde ještě projde a kde platí nula",
+      "url": "https://ekonomickydenik.cz/plavidla-alkohol-kontroly-pokuty/",
+      "dt": "2026-05-03T09:00:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "alkohol",
+        "ještě",
+        "lodi",
+        "nula",
+        "platí",
+        "projde"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -769,33 +792,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Konec digitální džungle? Nový zákon si došlápne na online giganty a ochrání děti",
-      "url": "https://ekonomickydenik.cz/konec-digitalni-dzungle-novy-zakon-ochrana-deti/",
-      "dt": "2026-04-30T10:49:22Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "digitální",
-        "došlápne",
-        "děti",
-        "džungle",
-        "giganty",
-        "konec",
-        "nový",
-        "ochrání",
-        "online",
-        "zákon"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -806,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70265,
+      "bytes": 69996,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -843,7 +839,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T09:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 28,
@@ -860,6 +856,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Alkohol na lodi? Kde ještě projde a kde platí nula",
+            "publishedAt": "2026-05-03T09:00:00Z"
+          },
           {
             "title": "Daň z cigaret má zachránit evropský rozpočet. Unie přitom vyhlásila válku kuřákům",
             "publishedAt": "2026-05-03T07:00:00Z"
@@ -887,10 +887,6 @@
           {
             "title": "Babiš si vybral. Landovský se stane vládním zmocněncem pro závazky vůči NATO",
             "publishedAt": "2026-05-02T11:30:00Z"
-          },
-          {
-            "title": "Podívejte se, jak přežily pád těžkého průmyslu. Vítkovice Hammering vsadily na titan a nikl",
-            "publishedAt": "2026-05-02T11:00:00Z"
           }
         ]
       }

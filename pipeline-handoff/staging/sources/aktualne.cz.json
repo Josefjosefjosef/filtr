@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-03T08:59:50.486466Z",
+  "ingestedAt": "2026-05-03T09:35:11.892389Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Oscarový režisér Talankin dorazí na festival v Českém Těšíně s nalezenou soškou",
+      "url": "https://zpravy.aktualne.cz/domaci/oscarovy-reziser-talankin-dorazi-na-festival-v-ceskem-tesine-s-nalezenou-soskou/r~aaa29c46bacdc20acef1a8e4b6a30d7a/",
+      "dt": "2026-05-03T08:52:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dorazí",
+        "festival",
+        "nalezenou",
+        "oscarový",
+        "režisér",
+        "soškou",
+        "talankin",
+        "těšíně",
+        "českém"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -506,31 +532,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Bylo lépe za Babiše, či za Fialy? Index demokracie má pro Česko překvapivý výsledek",
-      "url": "https://zpravy.aktualne.cz/domaci/bylo-lepe-za-babise-ci-za-fialy-index-demokracie-ma-pro-cesko-prekvapivy-vysledek/r~aaa29d5c2c2444ef0e51c4ff94521dc0/",
-      "dt": "2026-05-03T03:30:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "babiše",
-        "demokracie",
-        "fialy",
-        "index",
-        "lépe",
-        "překvapivý",
-        "výsledek",
-        "česko"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -541,7 +542,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21440,
+      "bytes": 21425,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -578,7 +579,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-03T08:43:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T08:52:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 14,
@@ -596,6 +597,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Oscarový režisér Talankin dorazí na festival v Českém Těšíně s nalezenou soškou",
+            "publishedAt": "2026-05-03T08:52:00Z"
+          },
           {
             "title": "Letiště Karlovy Vary podle Babiše přejde pod armádu, hejtmanství o tom jedná",
             "publishedAt": "2026-05-03T08:43:00Z"
@@ -623,10 +628,6 @@
           {
             "title": "Volební chaos v Peru. Výsledky nejsou ani po měsíci jasné, hlasy přezkoumá audit",
             "publishedAt": "2026-05-03T07:58:00Z"
-          },
-          {
-            "title": "KVÍZ: Poznáte retro večerníčky podle obrázku nebo jedné věty?",
-            "publishedAt": "2026-05-03T07:45:00Z"
           }
         ]
       }
