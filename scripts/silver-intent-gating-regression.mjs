@@ -10,6 +10,19 @@ import vm from "vm";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const CORPUS = JSON.parse(fs.readFileSync(path.join(__dirname, "silver-intent-gating-corpus.json"), "utf8"));
+
+/** Shorthand expected → full processUserTurn contract (silver-intent-gating-corpus.json). */
+function expandExpectedShorthand(expected) {
+  const e = String(expected || "").trim();
+  const table = {
+    "calendar.create": { normalizedIntent: "calendar.create", processingState: "READY_TO_SAVE", clarificationReason: null },
+    "task.create": { normalizedIntent: "tasks.create", processingState: "READY_TO_SAVE", clarificationReason: null },
+    "note.create": { normalizedIntent: "notes.create", processingState: "READY_TO_SAVE", clarificationReason: null },
+    unknown: { normalizedIntent: "clarification", processingState: "CLARIFICATION", clarificationReason: "ambiguous_request" }
+  };
+  if (!table[e]) throw new Error("Unknown expected shorthand: " + e);
+  return table[e];
+}
 function readSilverEngineFromApp() {
   const app = fs.readFileSync(path.join(ROOT, "assets", "app.js"), "utf8");
   const m = app.match(/\/\* IU_SILVER_P0_ENGINE_START \*\/([\s\S]*?)\/\* IU_SILVER_P0_ENGINE_END \*\//);
@@ -45,7 +58,7 @@ function run() {
 
   for (const c of CORPUS.cases) {
     const r = eng.processUserTurn(c.input, eng.createEmptyDraft(), { now, getEventsSnapshot: () => [] });
-    const exp = c.expect;
+    const exp = c.expect || expandExpectedShorthand(c.expected);
     const ok =
       r.normalizedIntent === exp.normalizedIntent &&
       r.processingState === exp.processingState &&

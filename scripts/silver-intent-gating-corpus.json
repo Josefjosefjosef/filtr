@@ -1,5 +1,5 @@
 {
-  "contractVersion": "2",
+  "contractVersion": "3",
   "fixedNow": "2026-03-27T12:00:00",
   "cases": [
     { "id": "read-01", "input": "co mám dnes", "expect": { "normalizedIntent": "calendar.read", "processingState": "READ_OK", "clarificationReason": null } },
@@ -19,6 +19,10 @@
     { "id": "tasks-03", "input": "Zaplatit nájem", "expect": { "normalizedIntent": "tasks.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
     { "id": "tasks-cal-01", "input": "Zítra zubař v 18 hod.", "expect": { "normalizedIntent": "calendar.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
     { "id": "neg-01", "input": "neukládej do kalendáře zítra zubaře v 8", "expect": { "normalizedIntent": "clarification", "processingState": "CLARIFICATION", "clarificationReason": "negated_write_request" } },
-    { "id": "ambig-01", "input": "náhodný text bez kontextu xyz123", "expect": { "normalizedIntent": "clarification", "processingState": "CLARIFICATION", "clarificationReason": "ambiguous_request" } }
+    { "id": "ambig-01", "input": "náhodný text bez kontextu xyz123", "expect": { "normalizedIntent": "clarification", "processingState": "CLARIFICATION", "clarificationReason": "ambiguous_request" } },
+    { "id": "sb-v1-cal-18", "input": "Zítra zubař v 18", "expected": "calendar.create" },
+    { "id": "sb-v1-task-milk", "input": "Zítra mlíko koupit", "expected": "task.create" },
+    { "id": "sb-v1-note-order", "input": "Ulož poznámku číslo objednávky", "expected": "note.create" },
+    { "id": "sb-v1-unknown-praha", "input": "Praha jedna", "expected": "unknown" }
   ]
 }

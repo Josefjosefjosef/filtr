@@ -34397,6 +34397,200 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     );
   }
 
+  /**
+   * Silver Brain v1: single calendar gate (explicit target, active session, or implicit scheduling).
+   * Must stay aligned with iuSilverBrainRoute + iuSilverBuildCalendarCreateTurn.
+   */
+  function iuSilverBrainCalendarWantedInternal(raw, now, prev, folded) {
+    const hasCalExplicit = iuSilverHasExplicitCalendarTarget(folded);
+    const inCalSession = !!(prev && prev.activeCalendarSession) && prev.targetContainer === "calendar";
+    const schedulingFrag = iuSilverLooksLikeSchedulingFragment(folded, raw);
+    const scratchParsed =
+      schedulingFrag && !hasCalExplicit && !inCalSession ? extractFromUtterance(raw, now) : null;
+    const parsedCalendarComplete =
+      !!scratchParsed &&
+      scratchParsed.confidence.date === "certain" &&
+      scratchParsed.confidence.time === "certain" &&
+      scratchParsed.confidence.title === "certain" &&
+      String(scratchParsed.values.title || "").trim();
+    const implicitCalCreate =
+      !iuSilverIsTargetAmbiguousStorageVerb(folded) &&
+      !iuSilverHasExplicitNotesTarget(folded) &&
+      !iuSilverHasExplicitTasksTarget(folded) &&
+      !iuSilverHasExplicitCalendarTarget(folded) &&
+      schedulingFrag &&
+      (iuSilverHasWriteVerb(folded) || parsedCalendarComplete);
+    return hasCalExplicit || inCalSession || implicitCalCreate;
+  }
+
+  function iuSilverBuildCalendarCreateTurn(raw, now, prevDraft) {
+    const folded = foldCs(raw);
+    const prev = prevDraft || createEmptyDraft();
+    const empty = createEmptyDraft();
+    const hasCalExplicit = iuSilverHasExplicitCalendarTarget(folded);
+    const inCalSession = !!prev.activeCalendarSession && prev.targetContainer === "calendar";
+    const workRaw = hasCalExplicit ? iuSilverStripCalendarTargetPhrases(raw) : raw;
+    const eff = String(workRaw || "").trim();
+    if (!eff && !inCalSession) {
+      return {
+        normalizedIntent: "clarification",
+        targetContainer: "none",
+        processingState: "CLARIFICATION",
+        clarificationReason: "ambiguous_request",
+        futureIntentCandidate: null,
+        readQuery: null,
+        readAnswer: null,
+        extractedFields: {},
+        missingFields: [],
+        ambiguousFields: [],
+        userFacingSummary: "",
+        assistantLead: iuSilverClarificationCopy("ambiguous_request"),
+        clarificationText: "",
+        draft: empty
+      };
+    }
+    let draft = cloneDraft(prev);
+    draft.targetContainer = "calendar";
+    draft.activeCalendarSession = true;
+    const parseRaw = eff || raw;
+    const extracted = extractFromUtterance(parseRaw, now);
+    draft = mergeIntoDraft(draft, extracted);
+    draft = applyFragmentFallback(parseRaw, draft, now);
+    iuSilverSanitizeDraftTitle(draft);
+
+    let processingState = "NEEDS_CLARIFICATION";
+    if (draft.meta.date === "certain" && draft.meta.time === "certain" && draft.meta.title === "certain" && String(draft.title || "").trim()) {
+      processingState = "READY_TO_SAVE";
+    }
+    const ap = buildAssistantParts(draft, processingState);
+    return {
+      normalizedIntent: "calendar.create",
+      targetContainer: "calendar",
+      processingState: processingState,
+      clarificationReason: null,
+      futureIntentCandidate: null,
+      readQuery: null,
+      readAnswer: null,
+      extractedFields: extracted.values,
+      missingFields: computeMissing(draft),
+      ambiguousFields: [],
+      userFacingSummary: "",
+      assistantLead: ap.assistantLead,
+      clarificationText: ap.clarification,
+      draft: draft
+    };
+  }
+
+  /**
+   * Silver Brain v1 — central intent routing (calendar / tasks / notes / fallback).
+   * Pořadí: explicitní poznámka → legacy explicitní cíl poznámky → úkoly → kalendář → disambiguace → nejasné.
+   */
+  function iuSilverBrainRoute(rawText, now, prevDraft) {
+    const raw = String(rawText || "").trim();
+    const folded = foldCs(raw);
+    const prev = prevDraft || createEmptyDraft();
+    const calWanted = iuSilverBrainCalendarWantedInternal(raw, now, prev, folded);
+
+    const noteHit = iuSilverTryParseExplicitNoteCreate(raw);
+    if (noteHit) {
+      if (noteHit.kind === "empty") {
+        return {
+          intent: "unknown",
+          confidence: 1,
+          route: "fallback",
+          reason: "notes_empty_body",
+          kind: "NOTE_EMPTY",
+          calendarFallbackWanted: false
+        };
+      }
+      return {
+        intent: "note.create",
+        confidence: 1,
+        route: "notes",
+        reason: "explicit_note_phrase",
+        kind: "NOTE_BODY",
+        noteBody: noteHit.body,
+        calendarFallbackWanted: false
+      };
+    }
+
+    if (iuSilverNotesFutureCandidate(folded)) {
+      return {
+        intent: "unknown",
+        confidence: 0.85,
+        route: "fallback",
+        reason: "explicit_notes_target_unparsed",
+        kind: "FUTURE_NOTES_CLARIFY",
+        calendarFallbackWanted: false
+      };
+    }
+
+    const calendarOverridesTask = iuSilverCalendarEventOverridesTask(raw, folded);
+
+    if (iuSilverHasExplicitTasksTarget(folded) && iuSilverHasWriteVerb(folded)) {
+      const strippedT = iuSilverStripTaskTargetPhrases(raw);
+      const foldedStrip = foldCs(strippedT);
+      const calOverStrip = iuSilverCalendarEventOverridesTask(strippedT, foldedStrip);
+      return {
+        intent: "task.create",
+        confidence: 1,
+        route: "tasks",
+        reason: "explicit_tasks_target",
+        kind: "TASK_TRY",
+        taskRaw: strippedT,
+        taskOpts: { skipTargetStrip: true, calendarOverridesTask: calOverStrip, fromExplicitTarget: true },
+        calendarFallbackWanted: calWanted
+      };
+    }
+
+    if (iuSilverHasTaskActionVerb(folded) && !calendarOverridesTask && !iuSilverHasExplicitCalendarTarget(folded)) {
+      return {
+        intent: "task.create",
+        confidence: 0.88,
+        route: "tasks",
+        reason: "task_action_verb",
+        kind: "TASK_TRY",
+        taskRaw: raw,
+        taskOpts: { skipTargetStrip: false, calendarOverridesTask: false, fromExplicitTarget: false },
+        calendarFallbackWanted: calWanted
+      };
+    }
+
+    if (calWanted) {
+      let r = "implicit_scheduling";
+      if (iuSilverHasExplicitCalendarTarget(folded)) r = "explicit_calendar";
+      else if (prev.activeCalendarSession && prev.targetContainer === "calendar") r = "calendar_session";
+      return {
+        intent: "calendar.create",
+        confidence: 0.92,
+        route: "calendar",
+        reason: r,
+        kind: "CALENDAR",
+        calendarFallbackWanted: false
+      };
+    }
+
+    if (iuSilverHasWriteVerb(folded) || iuSilverLooksLikeSchedulingFragment(folded, raw)) {
+      return {
+        intent: "unknown",
+        confidence: 0.55,
+        route: "fallback",
+        reason: "write_or_scheduling_fragment",
+        kind: "WRITE_SCHED_PROBE",
+        calendarFallbackWanted: false
+      };
+    }
+
+    return {
+      intent: "unknown",
+      confidence: 0.35,
+      route: "fallback",
+      reason: "ambiguous_request",
+      kind: "AMBIGUOUS",
+      calendarFallbackWanted: false
+    };
+  }
+
   function iuSilverCalendarEventOverridesTask(raw, folded) {
     const timeHit = findTime(String(raw || ""));
     if (!timeHit.time) return false;
@@ -34613,14 +34807,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const raw = String(text || "").trim();
     const folded = foldCs(raw);
     const calOver = iuSilverCalendarEventOverridesTask(raw, folded);
-    if (iuSilverHasExplicitTasksTarget(folded) && iuSilverHasWriteVerb(folded)) {
-      return { kind: "tasks", via: "explicit_target", calendarOverridesTask: false };
-    }
-    if (iuSilverHasTaskActionVerb(folded) && !calOver && !iuSilverHasExplicitCalendarTarget(folded)) {
-      return { kind: "tasks", via: "action_verb", calendarOverridesTask: false };
-    }
     if (iuSilverHasTaskActionVerb(folded) && calOver) {
       return { kind: "calendar", via: "time_event_keyword", calendarOverridesTask: true };
+    }
+    const route = iuSilverBrainRoute(raw, now, createEmptyDraft());
+    if (route.kind === "TASK_TRY") {
+      const via = route.reason === "explicit_tasks_target" ? "explicit_target" : "action_verb";
+      return { kind: "tasks", via: via, calendarOverridesTask: false };
     }
     return { kind: "none", via: "", calendarOverridesTask: false };
   }
@@ -36273,15 +36466,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     function baseClarification(reason, normIntent) {
       const lead = iuSilverClarificationCopy(reason);
-      let tc = "none";
-      if (normIntent === "notes.future_candidate") tc = "notes";
-      else if (normIntent === "tasks.future_candidate") tc = "tasks";
       return {
         normalizedIntent: normIntent || "clarification",
-        targetContainer: tc,
+        targetContainer: "none",
         processingState: "CLARIFICATION",
         clarificationReason: reason,
-        futureIntentCandidate: normIntent === "notes.future_candidate" || normIntent === "tasks.future_candidate" ? normIntent : null,
+        futureIntentCandidate: null,
         readQuery: null,
         readAnswer: null,
         extractedFields: {},
@@ -36340,115 +36530,44 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return baseClarification("negated_write_request", "clarification");
     }
 
-    const noteHit = iuSilverTryParseExplicitNoteCreate(raw);
-    if (noteHit) {
-      if (noteHit.kind === "empty") {
-        return {
-          normalizedIntent: "notes.empty_prompt",
-          targetContainer: "none",
-          processingState: "CLARIFICATION",
-          clarificationReason: "notes_empty_body",
-          futureIntentCandidate: null,
-          readQuery: null,
-          readAnswer: null,
-          extractedFields: {},
-          missingFields: [],
-          ambiguousFields: [],
-          userFacingSummary: "",
-          assistantLead: "Co si mám poznamenat?",
-          clarificationText: "",
-          draft: createEmptyDraft()
-        };
-      }
-      return iuSilverBuildNoteCreateTurn(noteHit.body, now);
-    }
-
-    if (iuSilverNotesFutureCandidate(folded)) {
-      return baseClarification("future_target_not_supported_yet", "notes.future_candidate");
-    }
-
-    const calendarOverridesTask = iuSilverCalendarEventOverridesTask(raw, folded);
-
-    if (iuSilverHasExplicitTasksTarget(folded) && iuSilverHasWriteVerb(folded)) {
-      const strippedT = iuSilverStripTaskTargetPhrases(raw);
-      const foldedStrip = foldCs(strippedT);
-      const calOverStrip = iuSilverCalendarEventOverridesTask(strippedT, foldedStrip);
-      const taskTurnEx = iuSilverBuildTaskCreateTurn(strippedT, now, {
-        skipTargetStrip: true,
-        calendarOverridesTask: calOverStrip,
-        fromExplicitTarget: true
-      });
-      if (taskTurnEx) return taskTurnEx;
-    }
-
-    if (iuSilverHasTaskActionVerb(folded) && !calendarOverridesTask && !iuSilverHasExplicitCalendarTarget(folded)) {
-      const taskTurnIm = iuSilverBuildTaskCreateTurn(raw, now, {
-        skipTargetStrip: false,
-        calendarOverridesTask: false,
-        fromExplicitTarget: false
-      });
-      if (taskTurnIm) return taskTurnIm;
-    }
-
-    const hasCalExplicit = iuSilverHasExplicitCalendarTarget(folded);
     const prev = prevDraft || createEmptyDraft();
-    const inCalSession = !!prev.activeCalendarSession && prev.targetContainer === "calendar";
-    const schedulingFrag = iuSilverLooksLikeSchedulingFragment(folded, raw);
-    const scratchParsed =
-      schedulingFrag && !hasCalExplicit && !inCalSession ? extractFromUtterance(raw, now) : null;
-    const parsedCalendarComplete =
-      !!scratchParsed &&
-      scratchParsed.confidence.date === "certain" &&
-      scratchParsed.confidence.time === "certain" &&
-      scratchParsed.confidence.title === "certain" &&
-      String(scratchParsed.values.title || "").trim();
-    const implicitCalCreate =
-      !iuSilverIsTargetAmbiguousStorageVerb(folded) &&
-      !iuSilverHasExplicitNotesTarget(folded) &&
-      !iuSilverHasExplicitTasksTarget(folded) &&
-      !iuSilverHasExplicitCalendarTarget(folded) &&
-      schedulingFrag &&
-      (iuSilverHasWriteVerb(folded) || parsedCalendarComplete);
+    const route = iuSilverBrainRoute(raw, now, prev);
 
-    if (hasCalExplicit || inCalSession || implicitCalCreate) {
-      const workRaw = hasCalExplicit ? iuSilverStripCalendarTargetPhrases(raw) : raw;
-      const eff = String(workRaw || "").trim();
-      if (!eff && !inCalSession) {
-        return baseClarification("ambiguous_request", "clarification");
-      }
-      let draft = cloneDraft(prev);
-      draft.targetContainer = "calendar";
-      draft.activeCalendarSession = true;
-      const parseRaw = eff || raw;
-      const extracted = extractFromUtterance(parseRaw, now);
-      draft = mergeIntoDraft(draft, extracted);
-      draft = applyFragmentFallback(parseRaw, draft, now);
-      iuSilverSanitizeDraftTitle(draft);
-
-      let processingState = "NEEDS_CLARIFICATION";
-      if (draft.meta.date === "certain" && draft.meta.time === "certain" && draft.meta.title === "certain" && String(draft.title || "").trim()) {
-        processingState = "READY_TO_SAVE";
-      }
-      const ap = buildAssistantParts(draft, processingState);
+    if (route.kind === "NOTE_EMPTY") {
       return {
-        normalizedIntent: "calendar.create",
-        targetContainer: "calendar",
-        processingState: processingState,
-        clarificationReason: null,
+        normalizedIntent: "notes.empty_prompt",
+        targetContainer: "none",
+        processingState: "CLARIFICATION",
+        clarificationReason: "notes_empty_body",
         futureIntentCandidate: null,
         readQuery: null,
         readAnswer: null,
-        extractedFields: extracted.values,
-        missingFields: computeMissing(draft),
+        extractedFields: {},
+        missingFields: [],
         ambiguousFields: [],
         userFacingSummary: "",
-        assistantLead: ap.assistantLead,
-        clarificationText: ap.clarification,
-        draft: draft
+        assistantLead: "Co si mám poznamenat?",
+        clarificationText: "",
+        draft: createEmptyDraft()
       };
     }
-
-    if (iuSilverHasWriteVerb(folded) || iuSilverLooksLikeSchedulingFragment(folded, raw)) {
+    if (route.kind === "NOTE_BODY") {
+      return iuSilverBuildNoteCreateTurn(route.noteBody, now);
+    }
+    if (route.kind === "FUTURE_NOTES_CLARIFY") {
+      return baseClarification("future_target_not_supported_yet", "clarification");
+    }
+    if (route.kind === "TASK_TRY") {
+      const taskTurn = iuSilverBuildTaskCreateTurn(route.taskRaw, now, route.taskOpts);
+      if (taskTurn) return taskTurn;
+      if (route.calendarFallbackWanted) {
+        return iuSilverBuildCalendarCreateTurn(raw, now, prev);
+      }
+    }
+    if (route.kind === "CALENDAR") {
+      return iuSilverBuildCalendarCreateTurn(raw, now, prev);
+    }
+    if (route.kind === "WRITE_SCHED_PROBE") {
       let draft = createEmptyDraft();
       const extracted = extractFromUtterance(raw, now);
       draft = mergeIntoDraft(draft, extracted);
@@ -36476,7 +36595,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
       return baseClarification("missing_explicit_target", "clarification");
     }
-
     return baseClarification("ambiguous_request", "clarification");
   }
 
@@ -36497,26 +36615,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     proofWeekdayRuleSnippet,
     calendarReadProbe,
     hasSilverStorageDisambiguationPayload,
+    iuSilverBrainRoute: iuSilverBrainRoute,
     iuSilverDetectTaskIntent: iuSilverDetectTaskIntent,
     iuSilverBuildTaskDraft: function (text, nowOpt) {
       const n = nowOpt || new Date();
       const raw = String(text || "").trim();
       const folded = foldCs(raw);
       const calOver = iuSilverCalendarEventOverridesTask(raw, folded);
-      let r = null;
-      if (iuSilverHasExplicitTasksTarget(folded) && iuSilverHasWriteVerb(folded)) {
-        const strippedT = iuSilverStripTaskTargetPhrases(raw);
-        const foldedStrip = foldCs(strippedT);
-        const calOverStrip = iuSilverCalendarEventOverridesTask(strippedT, foldedStrip);
-        r = iuSilverBuildTaskCreateTurn(strippedT, n, {
-          skipTargetStrip: true,
-          calendarOverridesTask: calOverStrip,
-          fromExplicitTarget: true
-        });
+      if (iuSilverHasTaskActionVerb(folded) && calOver) {
+        return null;
       }
-      if (!r && iuSilverHasTaskActionVerb(folded) && !calOver && !iuSilverHasExplicitCalendarTarget(folded)) {
-        r = iuSilverBuildTaskCreateTurn(raw, n, { skipTargetStrip: false, calendarOverridesTask: false, fromExplicitTarget: false });
-      }
+      const route = iuSilverBrainRoute(raw, n, createEmptyDraft());
+      if (route.kind !== "TASK_TRY") return null;
+      const r = iuSilverBuildTaskCreateTurn(route.taskRaw, n, route.taskOpts);
       return r ? cloneDraft(r.draft) : null;
     },
     iuSilverTaskDraftToExistingTaskModel: function (draft) {
@@ -36780,9 +36891,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (
       turn.processingState === "CLARIFICATION" ||
       turn.normalizedIntent === "clarification" ||
-      turn.normalizedIntent === "notes.empty_prompt" ||
-      turn.normalizedIntent === "notes.future_candidate" ||
-      turn.normalizedIntent === "tasks.future_candidate"
+      turn.normalizedIntent === "notes.empty_prompt"
     ) {
       return `<div class="iuSilverMsg iuSilverMsg--assistant" data-iu-silver-msg="assistant">
   <p class="iuSilverMsgLead iuSilverMsgLead--read">${esc(iuSilverDecorateAssistantLead(turn.assistantLead))}</p>
@@ -37173,9 +37282,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     } else if (
       turn.processingState === "CLARIFICATION" ||
       turn.normalizedIntent === "clarification" ||
-      turn.normalizedIntent === "notes.empty_prompt" ||
-      turn.normalizedIntent === "notes.future_candidate" ||
-      turn.normalizedIntent === "tasks.future_candidate"
+      turn.normalizedIntent === "notes.empty_prompt"
     ) {
       chatState.lastDraftTurn = null;
       chatState.cardEditMode = false;
