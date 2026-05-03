@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-03T11:19:51.145502Z",
+  "ingestedAt": "2026-05-03T11:54:57.714473Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Házenkáři Plzně odvrátili i druhý mečbol Karviné a vynutili si páté finále",
+      "url": "https://www.idnes.cz/sport/ostatni/hazenkari-plzne-odvratili-i-druhy-mecbol-karvine-a-vynutili-si-pate-finale.A260503_131949_sporty_ald",
+      "dt": "2026-05-03T11:21:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "druhý",
+        "finále",
+        "házenkáři",
+        "karviné",
+        "mečbol",
+        "odvrátili",
+        "plzně",
+        "páté",
+        "vynutili"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -775,33 +801,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ovace při příchodu? Chválu si vyslechneme  až po záchraně, říká nový kouč Baníku",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/josef-dvornik-banik-ostrava.A260502_194503_fotbal_jsl",
-      "dt": "2026-05-02T19:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "baníku",
-        "chválu",
-        "kouč",
-        "nový",
-        "ovace",
-        "při",
-        "příchodu",
-        "vyslechneme",
-        "záchraně",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -812,7 +811,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45535,
+      "bytes": 45534,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -849,7 +848,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T11:14:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T11:21:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -864,6 +863,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Házenkáři Plzně odvrátili i druhý mečbol Karviné a vynutili si páté finále",
+            "publishedAt": "2026-05-03T11:21:00Z"
+          },
           {
             "title": "ONLINE: Teplice - Slovácko 1:0, domácí tým posílá do vedení Mareček",
             "publishedAt": "2026-05-03T11:14:00Z"
@@ -891,10 +894,6 @@
           {
             "title": "Poznar trefil záchranu a svůj 50. ligový gól. Splněný sen, říká zlínský kapitán",
             "publishedAt": "2026-05-03T09:05:00Z"
-          },
-          {
-            "title": "Hořké jubileum. Messi ve stém utkání za Miami skóroval, jeho tým ztratil náskok 3:0",
-            "publishedAt": "2026-05-03T08:51:00Z"
           }
         ]
       }

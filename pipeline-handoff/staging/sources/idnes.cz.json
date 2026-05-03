@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-03T11:19:51.145502Z",
+  "ingestedAt": "2026-05-03T11:54:57.714473Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Česká vláda brzdí Evropu, míní Grolich. Jsme pragmatičtí, oponuje Juchelka",
+      "url": "https://www.idnes.cz/zpravy/domaci/juchelka-grolich-stredula-zajicek-nedelni-debata.A260503_123229_domaci_meli",
+      "dt": "2026-05-03T11:46:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "brzdí",
+        "evropu",
+        "grolich",
+        "jsme",
+        "juchelka",
+        "míní",
+        "oponuje",
+        "pragmatičtí",
+        "vláda",
+        "česká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -755,33 +782,6 @@
         "pásmu",
         "zbohatla",
         "šoku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Oportunista, který měl rád luxus. Zdeněk Fierlinger je symbolem hrobaře vlastní strany",
-      "url": "https://www.idnes.cz/olomouc/zpravy/zdenek-fierlinger-ksc-cssd-vyroci-umrti.A260501_172145_olomouc-zpravy_zunt",
-      "dt": "2026-05-02T18:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "fierlinger",
-        "hrobaře",
-        "luxus",
-        "měl",
-        "oportunista",
-        "rád",
-        "strany",
-        "symbolem",
-        "vlastní",
-        "zdeněk"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1586,7 +1586,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49056,
+      "bytes": 49227,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1623,7 +1623,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T11:12:25Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T11:46:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -1640,6 +1640,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česká vláda brzdí Evropu, míní Grolich. Jsme pragmatičtí, oponuje Juchelka",
+            "publishedAt": "2026-05-03T11:46:00Z"
+          },
           {
             "title": "Summit není cvičení lampasáků, řekl Macinka. Je to prezident! reagoval Vondra",
             "publishedAt": "2026-05-03T11:12:25Z"
@@ -1667,10 +1671,6 @@
           {
             "title": "„Snad se to nevymkne kontrole.“ Požár v Českém Švýcarsku hasí sedm vrtulníků",
             "publishedAt": "2026-05-03T09:47:00Z"
-          },
-          {
-            "title": "GLOSA: Ti pajduláci mě hrozně bavili. Hlas Bohdalové je soundtrack mého dětství",
-            "publishedAt": "2026-05-03T09:25:00Z"
           }
         ]
       }

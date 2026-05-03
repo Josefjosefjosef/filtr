@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-03T11:19:51.145502Z",
+  "ingestedAt": "2026-05-03T11:54:57.714473Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Co tě baví, tím buď! Nutit potomka do aktivit, které odmítá, jen kvůli volbě povolání, se na něm může krutě podepsat",
+      "url": "https://byznys.hn.cz/c1-67872220-co-te-bavi-tim-bud-nutit-potomka-do-aktivit-ktere-odmita-jen-kvuli-volbe-povolani-se-na-nem-muze-krute-podepsat",
+      "dt": "2026-05-03T11:22:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "aktivit",
+        "baví",
+        "buď",
+        "jen",
+        "krutě",
+        "kvůli",
+        "nutit",
+        "něm",
+        "odmítá",
+        "podepsat",
+        "potomka",
+        "povolání",
+        "tím",
+        "volbě"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -1172,26 +1203,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Finanční trhy (30. 4. 2026)",
-      "url": "https://archiv.hn.cz/c1-67870690-financni-trhy-30-4-2026",
-      "dt": "2026-04-29T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "2026",
-        "finanční",
-        "trhy"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1202,7 +1213,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184404,
+      "bytes": 184549,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1239,12 +1250,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-03T08:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T11:22:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
+          "finance": 33,
           "zpravy": 3,
           "sport": 3,
-          "finance": 33,
           "zdravi": 1
         },
         "drop_counts": {
@@ -1257,6 +1268,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Co tě baví, tím buď! Nutit potomka do aktivit, které odmítá, jen kvůli volbě povolání, se na něm může krutě podepsat",
+            "publishedAt": "2026-05-03T11:22:00Z"
+          },
           {
             "title": "Korejští vývojáři udělali z &bdquo;nesmyslu&ldquo; splněný sen. Hit Crimson Desert za měsíc prodal pět milionů kopií",
             "publishedAt": "2026-05-03T08:33:00Z"
@@ -1284,10 +1299,6 @@
           {
             "title": "Tykačův Sev.en jde po hutích v Anglii. Pokud uspěje, bude z něj největší výrobce oceli v celé Británii",
             "publishedAt": "2026-05-01T15:41:00Z"
-          },
-          {
-            "title": "Malé hospody nezmizí, rozhodně ne kvůli EET, pomáhá jim. České gastro přesto čeká nástup franšíz",
-            "publishedAt": "2026-05-01T07:15:00Z"
           }
         ]
       }

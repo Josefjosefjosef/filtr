@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-03T11:19:51.145502Z",
+  "ingestedAt": "2026-05-03T11:54:57.714473Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "VÝSTRAHA: Je sucho, platí varování před požáry. Meteorologové řekli, kdy zaprší",
+      "url": "https://www.denik.cz/pocasi/predpoved-pocasi-cesko-sucho-pozary-dest-kveten.html",
+      "dt": "2026-05-03T11:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "meteorologové",
+        "platí",
+        "požáry",
+        "sucho",
+        "varování",
+        "výstraha",
+        "zaprší",
+        "řekli"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -631,31 +656,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zapnutím mikrofonu práce zdaleka nezačíná, říká moderátor Přívětivý",
-      "url": "https://www.denik.cz/ctenar-reporter/vojtech-privetivy-moderator-rozhovor-cesky-rozhlas-ceska-televize.html",
-      "dt": "2026-05-02T13:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "mikrofonu",
-        "moderátor",
-        "nezačíná",
-        "práce",
-        "přívětivý",
-        "zapnutím",
-        "zdaleka",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -666,7 +666,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28606,
+      "bytes": 28674,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -703,7 +703,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-03T10:36:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T11:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -720,6 +720,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "VÝSTRAHA: Je sucho, platí varování před požáry. Meteorologové řekli, kdy zaprší",
+            "publishedAt": "2026-05-03T11:30:00Z"
+          },
           {
             "title": "Nadšení vystřídaly spory. Na záchranu velryby Timmyho navazuje hněv a nejistota",
             "publishedAt": "2026-05-03T10:36:00Z"
@@ -747,10 +751,6 @@
           {
             "title": "KVÍZ: Jiřina Bohdalová slaví 95. Dokážete doplnit její hlášky do rolí a filmů?",
             "publishedAt": "2026-05-03T05:30:00Z"
-          },
-          {
-            "title": "Rakouské letiště Schwechat je pořád daleko před Prahou",
-            "publishedAt": "2026-05-03T05:10:00Z"
           }
         ]
       }
