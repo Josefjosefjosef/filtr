@@ -10182,62 +10182,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   #newsList #iuJrEmptyView .iuJRGrid.iuRadioGrid a.iuRadioChip:active{transform:none}
 }
 
-#iuNotesOverlay.iuNotesRoot{
-  --iu-notes-cal-accent: #15803d;
-  --iu-notes-cal-accent-soft: rgba(21, 128, 61, 0.12);
-}
-
-
-#iuNotesOverlay.iuNotesRoot .iu-notesOverlay__itemBtn.iuNotesState--recent:not(.is-active){
-  background: rgba(236, 253, 245, 0.55);
-  border-color: rgba(21, 128, 61, 0.28);
-  box-shadow: 0 0 0 1px rgba(21, 128, 61, 0.2) inset;
-}
-
-
-#iuNotesOverlay.iuNotesRoot .iu-notesOverlay__itemBtn.iuNotesState--active:not(.is-active){
-  background: linear-gradient(180deg, rgba(238, 244, 255, 0.95), rgba(247, 249, 252, 0.98));
-  border-color: rgba(31, 58, 95, 0.22);
-}
-
-#iuNotesOverlay.iuNotesRoot .iu-notesOverlay__itemBtn.iuNotesState--active.iuNotesState--recent:not(.is-active){
-  background: linear-gradient(145deg, rgba(236, 253, 245, 0.6), rgba(238, 244, 255, 0.95));
-  border-color: rgba(31, 58, 95, 0.22);
-  box-shadow: 0 0 0 1px rgba(21, 128, 61, 0.2) inset;
-}
-
-
-#iuNotesOverlay.iuNotesRoot .iu-notesOverlay__itemBtn.iuNotesState--older:not(.is-active){
-  opacity: 0.9;
-}
-#iuNotesOverlay.iuNotesRoot .iu-notesOverlay__itemBtn.iuNotesState--older:not(.is-active) .iu-notesOverlay__itemTitle,
-#iuNotesOverlay.iuNotesRoot .iu-notesOverlay__itemBtn.iuNotesState--older:not(.is-active) .iu-notesOverlay__itemMeta{
-  color: rgba(11, 31, 51, 0.72);
-}
-
-
-#iuNotesOverlay.iuNotesRoot .iu-notesOverlay__itemBtn.is-active.iuNotesState--selected{
-  outline: 2px solid rgba(31, 58, 95, 0.35);
-  outline-offset: 1px;
-}
-
-
-#iuNotesOverlay.iuNotesRoot .iu-notesOverlay__empty.iuNotesState--empty{
-  opacity: 0.95;
-}
-
-
-#iuNotesOverlay.iuNotesRoot .iu-notesOverlay__itemBtn{
-  box-sizing: border-box;
-  border-width: 1px;
-  transition: box-shadow 0.12s ease, filter 0.12s ease, background-color 0.12s ease, opacity 0.12s ease;
-}
-#iuNotesOverlay.iuNotesRoot .iu-notesOverlay__itemBtn:hover{
-  filter: brightness(0.995);
-}
-#iuNotesOverlay.iuNotesRoot .iu-notesOverlay__pin:hover{
-  filter: brightness(0.97);
-}
+/* Poznámky overlay (#iuNotesOverlay): vizuál v assets/iu-notes-premium.css */
 
 .iu-rightContent{
   height: auto !important;
