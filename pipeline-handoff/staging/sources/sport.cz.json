@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-03T05:35:10.663867Z",
+  "ingestedAt": "2026-05-03T06:05:18.341308Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Philadelphia v sedmém zápase play off NBA vyřadila Boston",
+      "url": "https://www.sport.cz/clanek/basketbal-philadelphia-v-sedmem-zapase-play-off-nba-vyradila-boston-5447797",
+      "dt": "2026-05-03T05:52:27Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "boston",
+        "nba",
+        "off",
+        "philadelphia",
+        "play",
+        "sedmém",
+        "vyřadila",
+        "zápase"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -747,35 +772,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "SESTŘIH: Češi druhou výhru v domácím turnaji nepřidali, proti Švédsku nezvládli závěrečnou třetinu",
-      "url": "https://www.sport.cz/clanek/hokej-euro-hockey-tour-2026-ceske-hokejove-hry-cesko-svedsko-online-5446811",
-      "dt": "2026-05-02T08:04:49Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "domácím",
-        "druhou",
-        "nepřidali",
-        "nezvládli",
-        "proti",
-        "sestřih",
-        "turnaji",
-        "třetinu",
-        "výhru",
-        "závěrečnou",
-        "češi",
-        "švédsku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -786,7 +782,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44038,
+      "bytes": 43523,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -823,7 +819,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T05:06:25Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T05:52:27Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -838,6 +834,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Philadelphia v sedmém zápase play off NBA vyřadila Boston",
+            "publishedAt": "2026-05-03T05:52:27Z"
+          },
           {
             "title": "Vladař s Flyers v Carolině narazili",
             "publishedAt": "2026-05-03T04:03:39Z"
@@ -865,10 +865,6 @@
           {
             "title": "Výsledky MS v hokeji do 18 let 2026: Čeští mladíci U18 na šampionátu v Bratislavě a Trenčíně",
             "publishedAt": "2026-04-27T21:03:00Z"
-          },
-          {
-            "title": "Fotbalisté Porta po čtyřech letech slaví zisk portugalského titulu",
-            "publishedAt": "2026-05-02T22:22:12Z"
           }
         ]
       }

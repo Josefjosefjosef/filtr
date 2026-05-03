@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-03T05:35:10.663867Z",
+  "ingestedAt": "2026-05-03T06:05:18.341308Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "KVÍZ: Jiřina Bohdalová slaví 95. Dokážete doplnit její hlášky do rolí a filmů?",
+      "url": "https://www.denik.cz/film-a-televize/kviz-jirina-bohdalova-slavi-95-poznate-jeji-mene-zname-hlasky.html",
+      "dt": "2026-05-03T05:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bohdalová",
+        "dokážete",
+        "doplnit",
+        "filmů",
+        "hlášky",
+        "její",
+        "jiřina",
+        "kvíz",
+        "rolí",
+        "slaví"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -623,33 +650,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V Osoblaze hořela střecha domu. Jeden hasič se zranil, škoda je tři miliony",
-      "url": "https://www.denik.cz/pozary/osoblaha-pozar-strecha-rodinny-dum-zraneny-hasic-skoda-3-miliony.html",
-      "dt": "2026-05-02T08:23:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "domu",
-        "hasič",
-        "hořela",
-        "jeden",
-        "miliony",
-        "osoblaze",
-        "střecha",
-        "tři",
-        "zranil",
-        "škoda"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -660,7 +660,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 27510,
+      "bytes": 27565,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -697,7 +697,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-03T05:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T05:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -714,6 +714,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "KVÍZ: Jiřina Bohdalová slaví 95. Dokážete doplnit její hlášky do rolí a filmů?",
+            "publishedAt": "2026-05-03T05:30:00Z"
+          },
           {
             "title": "Rakouské letiště Schwechat je pořád daleko před Prahou",
             "publishedAt": "2026-05-03T05:10:00Z"
@@ -741,10 +745,6 @@
           {
             "title": "Obchodníci nabízejí jarní slevy na uhlí. Může se hodit i jako další zdroj tepla",
             "publishedAt": "2026-05-03T02:00:00Z"
-          },
-          {
-            "title": "Alkohol, křik a výhrůžky: Letadlo Easyjet muselo kvůli opilcům předčasně přistát",
-            "publishedAt": "2026-05-02T18:05:00Z"
           }
         ]
       }

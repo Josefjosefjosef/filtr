@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-03T05:35:10.663867Z",
+  "ingestedAt": "2026-05-03T06:05:18.341308Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Co přinese odchod Emirátů z OPEC?",
+      "url": "https://profitonline.cz/co-prinese-odchod-emiratu-z-opec/",
+      "dt": "2026-05-03T06:00:52Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "emirátů",
+        "odchod",
+        "opec",
+        "přinese"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -263,32 +284,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Nový most v Praze je dvakrát dražší než podobná stavba v Helsinkách",
-      "url": "https://profitonline.cz/novy-most-v-praze-je-dvakrat-drazsi-nez-podobna-stavba-v-helsinkach/",
-      "dt": "2026-04-30T06:40:53Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "dražší",
-        "dvakrát",
-        "helsinkách",
-        "most",
-        "než",
-        "nový",
-        "podobná",
-        "praze",
-        "stavba"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -299,7 +294,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18417,
+      "bytes": 18153,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -336,12 +331,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-03T04:00:21Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T06:00:52Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
+          "finance": 10,
           "zdravi": 1,
-          "finance": 9,
-          "zpravy": 2
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -353,6 +348,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Co přinese odchod Emirátů z OPEC?",
+            "publishedAt": "2026-05-03T06:00:52Z"
+          },
           {
             "title": "Vozy na benzin a naftu prohrávají s elektroauty o 120 korun na 100 km",
             "publishedAt": "2026-05-03T04:00:21Z"
@@ -380,10 +379,6 @@
           {
             "title": "Blízkovýchodní konflikt zvyšuje inflaci. Nejen v Evropě",
             "publishedAt": "2026-05-01T07:00:03Z"
-          },
-          {
-            "title": "Kde v Evropě pojedete letos po dálnici zdarma a kde vaše peněženka zapláče? Přinášíme přehled poplatků",
-            "publishedAt": "2026-05-01T04:00:36Z"
           }
         ]
       }
