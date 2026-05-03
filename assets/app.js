@@ -34359,13 +34359,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return false;
   }
 
-  function iuSilverTasksFutureCandidate(f) {
-    if (!iuSilverHasExplicitTasksTarget(f)) return false;
-    if (iuSilverHasWriteVerb(f)) return true;
-    if (/\badd\s+task\b/.test(f)) return true;
-    return false;
-  }
-
   function iuSilverLooksLikeSchedulingFragment(f, raw) {
     if (/\bz[ií]tra\b|\bzittra\b|\bdnes(?:ka|ek)?\b|\bpoz[ií]t[rř][ií]\b/.test(f)) return true;
     if (iuSilverReWeekdayOnce().test(raw)) return true;
@@ -34374,6 +34367,170 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bv\s*\d{1,2}\s*[:.]\s*\d{1,2}\b/.test(f) || /\bve\s+\d{1,2}\s*[:.]\s*\d{1,2}\b/.test(f)) return true;
     if (/\bschuz|schůz|porad|zubar|zub|kontrola|servis|ud[aá]lost/i.test(f)) return true;
     return false;
+  }
+
+  function iuSilverHasCalendarEventKeywordFolded(f) {
+    const x = String(f || "");
+    return (
+      /\bschuzk/.test(x) ||
+      /\bmeeting\b/.test(x) ||
+      /\bzubar/.test(x) ||
+      /\bnavstev/.test(x) ||
+      /\bporad/.test(x)
+    );
+  }
+
+  function iuSilverCalendarEventOverridesTask(raw, folded) {
+    const timeHit = findTime(String(raw || ""));
+    if (!timeHit.time) return false;
+    return iuSilverHasCalendarEventKeywordFolded(String(folded || ""));
+  }
+
+  function iuSilverStripTaskTargetPhrases(raw) {
+    let t = String(raw || "").trim();
+    const pats = [
+      /\b(?:p[rř]idej|pridej|ulo[zž]|uloz|zapi[sš]|zapis|vlo[zž]|vloz)\s+(?:mi\s+)?(?:to\s+)?(?:do\s+)?(?:[uú]kol[uůyí]|[uú]koly|to-?do|tasks?)\b/gi,
+      /\b(?:p[rř]idej|pridej|ulo[zž]|uloz|zapi[sš]|zapis|vlo[zž]|vloz)\s+(?:mi\s+)?(?:do\s+)?(?:[uú]kol[uůyí]|[uú]koly|to-?do|tasks?)\b/gi,
+      /\bdo\s+(?:[uú]kol[uůyí]|[uú]koly|to-?do|tasks?)\b/gi,
+      /\bv\s+(?:[uú]kolech|[uú]kol[uů])\b/gi,
+      /\badd\s+task\b/gi
+    ];
+    for (let i = 0; i < 12; i++) {
+      const prev = t;
+      for (let j = 0; j < pats.length; j++) {
+        t = t.replace(pats[j], " ");
+      }
+      t = t.replace(/\s+/g, " ").trim();
+      if (t === prev) break;
+    }
+    return t;
+  }
+
+  function iuSilverHasTaskActionVerb(folded) {
+    const f = String(folded || "");
+    return /\b(koupit|ud[eě]lat|udelat|zavolat|vy[rř][ií]dit|vyridit|zaplatit|poslat|objednat|p[rř]ipomenout|pripomenout|zkontrolovat|za[rř][ií]dit|zaridit)\b/.test(
+      f
+    );
+  }
+
+  const IU_SILVER_TASK_VERB_CANON = {
+    koupit: "koupit",
+    udelat: "udělat",
+    zavolat: "zavolat",
+    vyridit: "vyřídit",
+    vyrit: "vyřídit",
+    zaplatit: "zaplatit",
+    poslat: "poslat",
+    objednat: "objednat",
+    pripomenout: "připomenout",
+    zkontrolovat: "zkontrolovat",
+    zaridit: "zařídit"
+  };
+
+  function iuSilverNormalizeTaskLexeme(s) {
+    let t = iuSilverNormalizeWs(String(s || ""));
+    t = t.replace(/\bml[ií]ko\b/gi, "mléko");
+    return t;
+  }
+
+  function iuSilverFinalizeTaskTitle(cleanWork) {
+    let t = iuSilverNormalizeTaskLexeme(cleanWork);
+    const m = t.match(
+      /^(.+?)\s+(koupit|udělat|udelat|zavolat|vyřídit|vyridit|zaplatit|poslat|objednat|připomenout|pripomenout|zkontrolovat|zařídit|zariadit)\s*$/iu
+    );
+    if (m) {
+      const body = iuSilverNormalizeWs(m[1]);
+      const vf = foldCs(String(m[2] || ""));
+      const verbCanon = IU_SILVER_TASK_VERB_CANON[vf] || String(m[2] || "").toLowerCase();
+      t = verbCanon + " " + body;
+    }
+    t = iuSilverNormalizeWs(t);
+    if (!t || t.length < 2) return "";
+    return t.charAt(0).toLocaleUpperCase("cs-CZ") + t.slice(1);
+  }
+
+  function iuSilverBuildTaskCreateTurn(rawIn, now, opts) {
+    opts = opts || {};
+    if (opts.calendarOverridesTask) return null;
+    let work = String(rawIn || "").trim();
+    if (!work) return null;
+    if (!opts.skipTargetStrip) {
+      work = iuSilverStripTaskTargetPhrases(work);
+    }
+    work = iuSilverNormalizeWs(work);
+    if (!work) return null;
+
+    const foldedWork = foldCs(work);
+    if (!iuSilverHasTaskActionVerb(foldedWork) && !opts.fromExplicitTarget) return null;
+
+    let w = work;
+    const tHit = findTime(w);
+    if (tHit.time) w = tHit.work;
+
+    let dueYmd = "";
+    const rel = findRelativeDay(w, now, false, null);
+    if (rel) {
+      dueYmd = rel.date;
+      w = rel.work;
+    }
+    const abs = findAbsoluteDate(w, now);
+    if (abs) {
+      dueYmd = abs.date;
+      w = abs.work;
+    }
+
+    w = iuSilverNormalizeWs(w);
+    const title = iuSilverFinalizeTaskTitle(w);
+    if (!title || title.length < 2) return null;
+
+    const draft = createEmptyDraft();
+    draft.targetContainer = "tasks";
+    draft.taskDueAt = dueYmd || "";
+    draft.taskNote = "";
+    draft.title = title;
+    draft.meta.title = "certain";
+    draft.date = "";
+    draft.meta.date = "missing";
+    draft.time = "";
+    draft.meta.time = "missing";
+    draft.note = "";
+    draft.meta.note = "optional";
+
+    const processingState = "READY_TO_SAVE";
+    const ap = buildAssistantParts(draft, processingState);
+    return {
+      normalizedIntent: "tasks.create",
+      targetContainer: "tasks",
+      processingState: processingState,
+      clarificationReason: null,
+      futureIntentCandidate: null,
+      readQuery: null,
+      readAnswer: null,
+      extractedFields: {},
+      missingFields: [],
+      ambiguousFields: [],
+      userFacingSummary: "",
+      assistantLead: ap.assistantLead,
+      clarificationText: ap.clarification,
+      draft: draft
+    };
+  }
+
+  function iuSilverDetectTaskIntent(text, nowOpt) {
+    const now = nowOpt || new Date();
+    const raw = String(text || "").trim();
+    const folded = foldCs(raw);
+    const calOver = iuSilverCalendarEventOverridesTask(raw, folded);
+    if (iuSilverHasExplicitTasksTarget(folded) && iuSilverHasWriteVerb(folded)) {
+      return { kind: "tasks", via: "explicit_target", calendarOverridesTask: false };
+    }
+    if (iuSilverHasTaskActionVerb(folded) && !calOver && !iuSilverHasExplicitCalendarTarget(folded)) {
+      return { kind: "tasks", via: "action_verb", calendarOverridesTask: false };
+    }
+    if (iuSilverHasTaskActionVerb(folded) && calOver) {
+      return { kind: "calendar", via: "time_event_keyword", calendarOverridesTask: true };
+    }
+    return { kind: "none", via: "", calendarOverridesTask: false };
   }
 
   function iuSilverStripCalendarTargetPhrases(raw) {
@@ -34845,7 +35002,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         duration: d.meta.duration
       },
       activeCalendarSession: !!d.activeCalendarSession,
-      targetContainer: d.targetContainer == null ? null : d.targetContainer
+      targetContainer: d.targetContainer == null ? null : d.targetContainer,
+      taskDueAt: d.taskDueAt != null ? String(d.taskDueAt).slice(0, 10) : "",
+      taskNote: d.taskNote != null ? String(d.taskNote) : ""
     };
   }
 
@@ -34868,7 +35027,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         duration: "optional"
       },
       activeCalendarSession: false,
-      targetContainer: null
+      targetContainer: null,
+      taskDueAt: "",
+      taskNote: ""
     };
   }
 
@@ -35769,6 +35930,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   function buildAssistantParts(draft, processingState) {
+    if (draft && draft.targetContainer === "tasks") {
+      if (processingState === "READY_TO_SAVE") {
+        return { assistantLead: "Připravil jsem návrh úkolu.", clarification: "" };
+      }
+      return {
+        assistantLead: "Potřebuji ještě upřesnit název úkolu.",
+        clarification: "Bez názvu úkol teď bezpečně neuložím."
+      };
+    }
     if (processingState === "READY_TO_SAVE") {
       return { assistantLead: "Připravil jsem návrh události do kalendáře.", clarification: "" };
     }
@@ -36069,8 +36239,27 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return baseClarification("future_target_not_supported_yet", "notes.future_candidate");
     }
 
-    if (iuSilverTasksFutureCandidate(folded)) {
-      return baseClarification("future_target_not_supported_yet", "tasks.future_candidate");
+    const calendarOverridesTask = iuSilverCalendarEventOverridesTask(raw, folded);
+
+    if (iuSilverHasExplicitTasksTarget(folded) && iuSilverHasWriteVerb(folded)) {
+      const strippedT = iuSilverStripTaskTargetPhrases(raw);
+      const foldedStrip = foldCs(strippedT);
+      const calOverStrip = iuSilverCalendarEventOverridesTask(strippedT, foldedStrip);
+      const taskTurnEx = iuSilverBuildTaskCreateTurn(strippedT, now, {
+        skipTargetStrip: true,
+        calendarOverridesTask: calOverStrip,
+        fromExplicitTarget: true
+      });
+      if (taskTurnEx) return taskTurnEx;
+    }
+
+    if (iuSilverHasTaskActionVerb(folded) && !calendarOverridesTask && !iuSilverHasExplicitCalendarTarget(folded)) {
+      const taskTurnIm = iuSilverBuildTaskCreateTurn(raw, now, {
+        skipTargetStrip: false,
+        calendarOverridesTask: false,
+        fromExplicitTarget: false
+      });
+      if (taskTurnIm) return taskTurnIm;
     }
 
     const hasCalExplicit = iuSilverHasExplicitCalendarTarget(folded);
@@ -36179,7 +36368,38 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     extractFromUtterance,
     proofWeekdayRuleSnippet,
     calendarReadProbe,
-    hasSilverStorageDisambiguationPayload
+    hasSilverStorageDisambiguationPayload,
+    iuSilverDetectTaskIntent: iuSilverDetectTaskIntent,
+    iuSilverBuildTaskDraft: function (text, nowOpt) {
+      const n = nowOpt || new Date();
+      const raw = String(text || "").trim();
+      const folded = foldCs(raw);
+      const calOver = iuSilverCalendarEventOverridesTask(raw, folded);
+      let r = null;
+      if (iuSilverHasExplicitTasksTarget(folded) && iuSilverHasWriteVerb(folded)) {
+        const strippedT = iuSilverStripTaskTargetPhrases(raw);
+        const foldedStrip = foldCs(strippedT);
+        const calOverStrip = iuSilverCalendarEventOverridesTask(strippedT, foldedStrip);
+        r = iuSilverBuildTaskCreateTurn(strippedT, n, {
+          skipTargetStrip: true,
+          calendarOverridesTask: calOverStrip,
+          fromExplicitTarget: true
+        });
+      }
+      if (!r && iuSilverHasTaskActionVerb(folded) && !calOver && !iuSilverHasExplicitCalendarTarget(folded)) {
+        r = iuSilverBuildTaskCreateTurn(raw, n, { skipTargetStrip: false, calendarOverridesTask: false, fromExplicitTarget: false });
+      }
+      return r ? cloneDraft(r.draft) : null;
+    },
+    iuSilverTaskDraftToExistingTaskModel: function (draft) {
+      const d = draft && typeof draft === "object" ? draft : {};
+      const due = d.taskDueAt && /^\d{4}-\d{2}-\d{2}$/.test(String(d.taskDueAt)) ? String(d.taskDueAt).slice(0, 10) : "";
+      return {
+        title: String(d.title || "").trim().slice(0, 200),
+        dueAt: due || null,
+        note: String(d.taskNote || "").trim().slice(0, 5000)
+      };
+    }
   };
 
   /* --- Fullscreen chat UI (depends on DOM; calendar save via window.iuCalendarService) --- */
@@ -36202,8 +36422,24 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     );
   }
 
+  function isTaskDraftSaveable(d) {
+    return d && d.targetContainer === "tasks" && d.meta.title === "certain" && String(d.title || "").trim().length > 0;
+  }
+
+  function isSilverDraftSaveable(d) {
+    if (d && d.targetContainer === "tasks") return isTaskDraftSaveable(d);
+    return isDraftSaveable(d);
+  }
+
   function processingStateFromDraft(d) {
     return isDraftSaveable(d) ? "READY_TO_SAVE" : "NEEDS_CLARIFICATION";
+  }
+
+  function silverProcessingStateFromDraft(d) {
+    if (d && d.targetContainer === "tasks") {
+      return isTaskDraftSaveable(d) ? "READY_TO_SAVE" : "NEEDS_CLARIFICATION";
+    }
+    return processingStateFromDraft(d);
   }
 
   function formatDraftRow(label, val, muted, rowOpts) {
@@ -36285,6 +36521,49 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   </div>
 </div>`;
     }
+    if (turn.normalizedIntent === "tasks.create" || (turn.draft && turn.draft.targetContainer === "tasks")) {
+      const d = turn.draft;
+      const editMode = !!opts.editMode;
+      const st = silverProcessingStateFromDraft(d);
+      const showSave = isTaskDraftSaveable(d);
+      const dateHuman =
+        d.taskDueAt && typeof d.taskDueAt === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d.taskDueAt)
+          ? iuSilverFormatDateCs(d.taskDueAt)
+          : "";
+      const titleDisp = String(d.title || "").trim();
+      const noteDisp = String(d.taskNote || "").trim();
+      const statusDisp = "čeká na splnění";
+      let actions = "";
+      actions += `<button type="button" class="iuSilverDraftBtn iuSilverDraftBtn--primary" data-iu-silver-action="save" ${showSave ? "" : "disabled"}>Uložit</button>`;
+      actions += `<button type="button" class="iuSilverDraftBtn" data-iu-silver-action="edit" aria-pressed="${editMode ? "true" : "false"}">Upravit</button>`;
+      const grid = editMode
+        ? `<div class="iuSilverDraftGrid iuSilverDraftGrid--edit iuSilverDraftGrid--task">
+    <div class="iuSilverDraftK">Datum</div><input type="date" class="iuSilverDraftInput" data-iu-silver-task-field="due" value="${esc(String(d.taskDueAt || "").slice(0, 10))}" />
+    <div class="iuSilverDraftK">Název</div><input type="text" maxlength="200" class="iuSilverDraftInput" data-iu-silver-task-field="title" value="${esc(titleDisp)}" autocomplete="off" />
+    <div class="iuSilverDraftK">Poznámka</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" rows="2" maxlength="5000" data-iu-silver-task-field="note">${esc(noteDisp)}</textarea>
+  </div>`
+        : `<div class="iuSilverDraftGrid iuSilverDraftGrid--task">
+    ${formatDraftRow("Datum", dateHuman, !dateHuman, {})}
+    ${formatDraftRow("Název", titleDisp, false, {})}
+    ${formatDraftRow("Stav", statusDisp, false, {})}
+    ${formatDraftRow("Poznámka", noteDisp, false, {})}
+  </div>`;
+      let clar = "";
+      if (st === "NEEDS_CLARIFICATION" && turn.clarificationText) {
+        clar = `<p class="iuSilverMsgClarification iuSilverMsgClarification--warning" data-iu-silver-clarification="1">${esc(turn.clarificationText)}</p>`;
+      }
+      const leadClass = st === "NEEDS_CLARIFICATION" ? "iuSilverMsgLead iuSilverMsgLead--warning" : "iuSilverMsgLead";
+      const card = `<div class="iuSilverDraftCard iuSilverDraftCard--task" data-iu-silver-draft-card="1" data-iu-silver-draft-kind="task" data-iu-silver-edit-mode="${editMode ? "1" : "0"}">
+  <div class="iuSilverDraftCardTitle">Návrh úkolu</div>
+  ${grid}
+  <div class="iuSilverDraftActions" data-iu-silver-actions="1">${actions}</div>
+</div>`;
+      return `<div class="iuSilverMsg iuSilverMsg--assistant" data-iu-silver-msg="assistant">
+  <p class="${leadClass}">${esc(iuSilverDecorateAssistantLead(turn.assistantLead))}</p>
+  ${clar}
+  ${card}
+</div>`;
+    }
     if (
       turn.processingState === "CLARIFICATION" ||
       turn.normalizedIntent === "clarification" ||
@@ -36355,7 +36634,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const msg = cardEl.closest(".iuSilverMsg--assistant");
     if (!msg) return;
     const d = cloneDraft(chatState.draft);
-    const ps = processingStateFromDraft(d);
+    const ps = silverProcessingStateFromDraft(d);
     const ap = buildAssistantParts(d, ps);
     const lead = msg.querySelector(".iuSilverMsgLead");
     if (lead) {
@@ -36384,6 +36663,42 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function syncDraftFromCardInputs(cardEl) {
     if (!cardEl) return;
     const d = cloneDraft(chatState.draft);
+    if (d.targetContainer === "tasks") {
+      const titleIn = cardEl.querySelector('[data-iu-silver-task-field="title"]');
+      if (titleIn) {
+        d.title = String(titleIn.value || "")
+          .trim()
+          .slice(0, 200);
+        d.meta.title = d.title ? "certain" : "missing";
+      }
+      const dueIn = cardEl.querySelector('[data-iu-silver-task-field="due"]');
+      if (dueIn) {
+        const dv = String(dueIn.value || "").trim().slice(0, 10);
+        if (/^\d{4}-\d{2}-\d{2}$/.test(dv)) {
+          d.taskDueAt = dv;
+        } else {
+          d.taskDueAt = "";
+        }
+      }
+      const noteIn = cardEl.querySelector('[data-iu-silver-task-field="note"]');
+      if (noteIn) {
+        d.taskNote = String(noteIn.value || "").trim().slice(0, 5000);
+      }
+      chatState.draft = d;
+      const ps = silverProcessingStateFromDraft(d);
+      const ap = buildAssistantParts(d, ps);
+      if (chatState.lastDraftTurn) {
+        chatState.lastDraftTurn = {
+          ...chatState.lastDraftTurn,
+          draft: cloneDraft(d),
+          assistantLead: ap.assistantLead,
+          clarificationText: ap.clarification,
+          processingState: ps
+        };
+      }
+      patchDraftCardMessageCopy(cardEl);
+      return;
+    }
     const dateIn = cardEl.querySelector('[data-iu-silver-field="date"]');
     if (dateIn) {
       if (dateIn.value) {
@@ -36447,7 +36762,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function refreshLastDraftCard() {
     const cardEl = getLastDraftCardEl();
     if (!cardEl) return;
-    if (cardEl.querySelector("[data-iu-silver-field]")) {
+    if (cardEl.querySelector("[data-iu-silver-field]") || cardEl.querySelector("[data-iu-silver-task-field]")) {
       syncDraftFromCardInputs(cardEl);
     }
     const msg = cardEl.closest(".iuSilverMsg--assistant");
@@ -36455,7 +36770,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const turn = chatState.lastDraftTurn;
     if (!turn) return;
     const d = cloneDraft(chatState.draft);
-    const ps = processingStateFromDraft(d);
+    const ps = silverProcessingStateFromDraft(d);
     const ap = buildAssistantParts(d, ps);
     const turnOut = {
       ...turn,
@@ -36474,12 +36789,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function onOverlayDraftInput(e) {
     const t = e.target;
-    if (!t || !t.getAttribute || !t.getAttribute("data-iu-silver-field")) return;
+    if (!t || !t.getAttribute) return;
+    const f = t.getAttribute("data-iu-silver-field") || t.getAttribute("data-iu-silver-task-field");
+    if (!f) return;
     const card = t.closest("[data-iu-silver-draft-card]");
     if (!card) return;
     syncDraftFromCardInputs(card);
     const saveBtn = card.querySelector('[data-iu-silver-action="save"]');
-    if (saveBtn) saveBtn.disabled = !isDraftSaveable(chatState.draft);
+    if (saveBtn) saveBtn.disabled = !isSilverDraftSaveable(chatState.draft);
   }
 
   function openChatOverlay(fromEl) {
@@ -36620,6 +36937,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       chatState.cardEditMode = false;
       chatState.draft = createEmptyDraft();
       clearPendingStorageDisambiguation();
+    } else if (turn.normalizedIntent === "tasks.create" || (turn.draft && turn.draft.targetContainer === "tasks")) {
+      chatState.cardEditMode = false;
+      clearPendingStorageDisambiguation();
+      chatState.lastDraftTurn = { ...turn, draft: cloneDraft(turn.draft) };
     } else if (turn.normalizedIntent === "calendar.create" || turn.processingState === "NEEDS_CLARIFICATION" || turn.processingState === "READY_TO_SAVE") {
       chatState.cardEditMode = false;
       clearPendingStorageDisambiguation();
@@ -36801,9 +37122,90 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
   }
 
+  async function handleTaskSaveClick() {
+    if (chatState.saveBusy) return;
+    const cardEl = getLastDraftCardEl();
+    if (cardEl && cardEl.querySelector("[data-iu-silver-task-field]")) {
+      syncDraftFromCardInputs(cardEl);
+    }
+    const d = chatState.draft;
+    if (!isTaskDraftSaveable(d)) return;
+    const svc = window.iuTasksService;
+    if (!svc || typeof svc.tasksCreateFromSilver !== "function") {
+      appendAssistantTurn({
+        processingState: "CLARIFICATION",
+        normalizedIntent: "clarification",
+        assistantLead: "Úkoly teď nejdou uložit. Zkuste obnovit stránku.",
+        clarificationText: "",
+        draft: createEmptyDraft(),
+        clarificationReason: "unsupported_request"
+      });
+      return;
+    }
+    chatState.saveBusy = true;
+    try {
+      const res = svc.tasksCreateFromSilver({
+        title: String(d.title || "").trim(),
+        date: d.taskDueAt && /^\d{4}-\d{2}-\d{2}$/.test(d.taskDueAt) ? d.taskDueAt : "",
+        time: "",
+        note: String(d.taskNote || "").trim(),
+        location: ""
+      });
+      if (res && res.ok && res.task) {
+        try {
+          if (typeof window.iuSilverTasksSummaryRefresh === "function") window.iuSilverTasksSummaryRefresh();
+        } catch {}
+        const tit = String(res.task.title || "").trim().toLowerCase();
+        const whenPhrase = iuSilverFormatTaskSavedWhenPhrase(d.taskDueAt, new Date());
+        const lead =
+          "Přidal jsem úkol" +
+          (whenPhrase ? " " + whenPhrase : "") +
+          ": " +
+          tit +
+          ". Úkol je uložený v tomto prohlížeči.";
+        appendAssistantTurn({
+          confirmOnly: true,
+          processingState: "READ_OK",
+          assistantLead: lead,
+          clarificationText: "",
+          draft: createEmptyDraft()
+        });
+        chatState.draft = createEmptyDraft();
+        requestAnimationFrame(function () {
+          closeChatOverlay();
+        });
+      } else {
+        appendAssistantTurn({
+          processingState: "CLARIFICATION",
+          normalizedIntent: "clarification",
+          assistantLead: "Nepodařilo se uložit úkol. Zkuste to znovu.",
+          clarificationText: "",
+          draft: chatState.draft
+        });
+      }
+    } finally {
+      chatState.saveBusy = false;
+    }
+  }
+
+  function iuSilverFormatTaskSavedWhenPhrase(taskDueYmd, now) {
+    if (!taskDueYmd || typeof taskDueYmd !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(taskDueYmd)) return "";
+    const today = toDateOnly(now);
+    const tom = addDays(today, 1);
+    const poz = addDays(today, 2);
+    if (taskDueYmd === today) return "na dnes";
+    if (taskDueYmd === tom) return "na zítra";
+    if (taskDueYmd === poz) return "na pozítří";
+    return "na " + iuSilverFormatDateCs(taskDueYmd);
+  }
+
   async function handleSaveClick() {
     if (chatState.saveBusy) return;
     const cardEl = getLastDraftCardEl();
+    if (chatState.draft && chatState.draft.targetContainer === "tasks") {
+      await handleTaskSaveClick();
+      return;
+    }
     if (cardEl && cardEl.querySelector("[data-iu-silver-field]")) {
       syncDraftFromCardInputs(cardEl);
     }

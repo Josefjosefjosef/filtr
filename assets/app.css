@@ -17358,6 +17358,15 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   word-break: break-word;
   overflow-wrap: anywhere;
 }
+.iuSilverDraftCard--task .iuSilverDraftV,
+.iuSilverDraftGrid--task .iuSilverDraftV{
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+.iuSilverDraftCard--task .iuSilverDraftK,
+.iuSilverDraftGrid--task .iuSilverDraftK{
+  min-width: 0;
+}
 .iuSilverDraftV--muted{
   color: #7a8fb0;
   font-style: italic;

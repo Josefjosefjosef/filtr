@@ -7,7 +7,10 @@
     { "id": "create-01", "input": "ulož do kalendáře zítra zubaře v 8", "expect": { "normalizedIntent": "calendar.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
     { "id": "miss-01", "input": "zítra zubař v 8", "expect": { "normalizedIntent": "calendar.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
     { "id": "notes-01", "input": "zapiš do poznámek auto je v servisu", "expect": { "normalizedIntent": "notes.future_candidate", "processingState": "CLARIFICATION", "clarificationReason": "future_target_not_supported_yet" } },
-    { "id": "tasks-01", "input": "přidej do úkolů zavolat účetní", "expect": { "normalizedIntent": "tasks.future_candidate", "processingState": "CLARIFICATION", "clarificationReason": "future_target_not_supported_yet" } },
+    { "id": "tasks-01", "input": "přidej do úkolů zavolat účetní", "expect": { "normalizedIntent": "tasks.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
+    { "id": "tasks-02", "input": "Zítra mlíko koupit", "expect": { "normalizedIntent": "tasks.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
+    { "id": "tasks-03", "input": "Zaplatit nájem", "expect": { "normalizedIntent": "tasks.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
+    { "id": "tasks-cal-01", "input": "Zítra zubař v 18 hod.", "expect": { "normalizedIntent": "calendar.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
     { "id": "neg-01", "input": "neukládej do kalendáře zítra zubaře v 8", "expect": { "normalizedIntent": "clarification", "processingState": "CLARIFICATION", "clarificationReason": "negated_write_request" } },
     { "id": "ambig-01", "input": "náhodný text bez kontextu xyz123", "expect": { "normalizedIntent": "clarification", "processingState": "CLARIFICATION", "clarificationReason": "ambiguous_request" } }
   ]
