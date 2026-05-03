@@ -3119,6 +3119,30 @@ button.iu-close-btn-38:focus-visible{
   line-height:1;
 }
 
+/*
+  P0 infoUzel: mobile/tablet (<=1024px) month view only — zero grid gap between day cells.
+  Single 1px dividers via grid top/left + cell right/bottom (no doubled borders). Desktop unchanged.
+*/
+@media (max-width: 1024px) {
+  #iuCalendarOverlay .iu-calendarOverlay__viewRoot[data-view="month"] .iu-calGrid {
+    gap: 0;
+    column-gap: 0;
+    row-gap: 0;
+    border-left: 1px solid #d6dfec;
+    border-top: 1px solid #d6dfec;
+    box-sizing: border-box;
+  }
+
+  #iuCalendarOverlay .iu-calendarOverlay__viewRoot[data-view="month"] .iu-calDayCell {
+    margin: 0;
+    border-radius: 0;
+    border-style: solid;
+    border-color: #d6dfec;
+    border-width: 0 1px 1px 0;
+    box-sizing: border-box;
+  }
+}
+
 
 @media (min-width: 1025px){
   body.iu-modal-open #iuDsOverlay.iu-datovka-overlay-root:not([hidden]){
