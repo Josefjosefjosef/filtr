@@ -36537,7 +36537,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const x = String(f || "");
     return (
       iuSilverNoteFactReadQuerySignalFolded(x) ||
-      /\b(najdi|vyhledej|vyhledejte|hledej|ukaz|ukaž|ukož|zobraz|zobrazit)\b/.test(x) ||
+      /\b(najdi|vyhledej|vyhledejte|hledej|ukaz|ukaž|ukož|zobraz|zobrazit|vypis)\b/.test(x) ||
+      /\bco\s+je\s+v\s+poznamk\w*/.test(x) ||
       /\b(jake|jaky|jakou)\s+mam\s+ukol/.test(x) ||
       /\bco\s+mam\s+(udelat|koupit|zaplatit|vyridit|poslat|objednat|zavolat)\b/.test(x) ||
       /\b(jake|jaky)\s+mam\s+poznam/.test(x) ||
@@ -36583,12 +36584,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const f = String(folded || "");
     if (/\b(najdi|vyhledej|ukaz|ukaž)\s+v\s+(kalend|kalendari)\b/.test(f)) return "calendar";
     if (/\b(ukol|ukoly|udelat|vyridit|zaplatit|koupit|zavolat|objednat|poslat)\b/.test(f) && !/\b(kalendar|schuz|zubar|kdy\s+mam)\b/.test(f)) {
-      if (/\b(poznam|pin|kod|heslo|obcank\w*|smlouv\w*|objednav\w*|barva|auto|zaruka|alz|televiz)\b/.test(f)) return "notes";
+      if (/\b(poznam\w*|pin|kod|heslo|obcank\w*|smlouv\w*|objednav\w*|barva|auto|zaruka|alz|televiz)\b/.test(f)) return "notes";
       if (/\b(jake|jaky)\s+mam\s+ukol|aktivni\s+ukol|hotove\s+ukol|co\s+mam\s+udelat\b/.test(f)) return "tasks";
-      if (/\bnajdi\s+ukol|vyhledej\s+ukol\b/.test(f)) return "tasks";
+      if (/\bnajdi\s+(muj|moje|mi\s+)?ukol|vyhledej\s+(muj|moje|mi\s+)?ukol\b/.test(f)) return "tasks";
     }
-    if (/\bnajdi\s+ukol|vyhledej\s+ukol\b/.test(f)) return "tasks";
-    if (/\b(poznam|pin|kod|heslo|obcank\w*|smlouv\w*|klic\w*|objednav\w*|barva|auto|zaruka|reklam|kontakt|servis|alz|televiz|kart)\b/.test(f)) return "notes";
+    if (/\bnajdi\s+(muj|moje|mi\s+)?ukol|vyhledej\s+(muj|moje|mi\s+)?ukol\b/.test(f)) return "tasks";
+    if (/\b(poznam\w*|pin|kod|heslo|obcank\w*|smlouv\w*|klic\w*|objednav\w*|barva|auto|zaruka|reklam|kontakt|servis|alz|televiz|kart)\b/.test(f)) return "notes";
     if (/\b(kdy|v\s+kolik|program|kalendar|schuz|meeting|porad|zubar|doktor|navstev|uvidim|potkam|sejdu|zitra|dnes|udalost)\b/.test(f)) return "calendar";
     if (/\b(najdi|vyhledej|ukaz|ukaž|hledej)\b/.test(f)) return "all";
     if (/\bco\s+mam\s+k\s+\S+/.test(f)) return "all";
@@ -36614,9 +36615,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /^\s*(jakou|jaka)\s+barvu\s+/i,
       /^\s*co\s+jsem\s+si\s+poznamenal\s+o\s+/i,
       /^\s*co\s+m[aá]m\s+v\s+pozn[aá]mk\w*\s+o\s+/i,
+      /^\s*co\s+je\s+v\s+pozn[aá]mk\w*\s*(o\s+)?/i,
       /^\s*co\s+m[aá]m\s+poznamenan[eé]\s+o\s+/i,
       /^\s*co\s+jsem\s+si\s+ulo[zž]il\s+(ke|k)\s+/i,
-      /^\s*(najdi|vyhledej|hledej|ukaž|ukaz|zobraz)\s+(mi\s+)?/i,
+      /^\s*(najdi|vyhledej|hledej|ukaž|ukaz|zobraz|vypiš|vypis)\s+(mi\s+)?/i,
+      /^\s*najdi\s+(muj|moje|mi\s+)?ukol/i,
       /^\s*co\s+mám\s+k\s+/i,
       /^\s*co\s+mam\s+k\s+/i,
       /^\s*kdy\s+se\s+(uvid[ií]m|uvid[ií]me|potk[aá]m|potk[aá]me|m[aá]m\s+sej[ií]t|sejdu|sejdeme)\s+s\s+/i,
@@ -36705,9 +36708,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bukaz\s+mi\s+ukol/.test(f) ||
       /\bukaz\s+mi\s+ukoly\b/.test(f) ||
       /\bukaz\s+aktivni\s+ukol/.test(f) ||
-      /^\s*ukaz\s+ukoly\s*$/i.test(r0) ||
-      /^\s*ukaž\s+úkoly\s*$/i.test(r0) ||
+      /^\s*(uka[zž]|ukaz)\s+ukol\w*(\s+\d+)?\s*$/i.test(f) ||
       /\bzobraz\s+moje\s+ukol/.test(f) ||
+      /\bzobraz\s+ukol/i.test(f) ||
+      /\bvypi[sš]\s+ukol/i.test(f) ||
+      /\bnajdi\s+muj\s+ukol/i.test(f) ||
       /\bnajdi\s+moje\s+ukol/.test(f) ||
       /\bco\s+me\s+ceka\s+v\s+ukol/.test(f) ||
       /\bco\s+mam\s+v\s+ukol/.test(f) ||
@@ -36721,7 +36726,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bco\s+jsem\s+si\s+ulozil\s+jako\s+ukol/.test(f) ||
       /^\s*zobraz\s+(mi\s+)?(moje\s+)?ukol/i.test(r0) ||
       /^\s*najdi\s+(mi\s+)?(moje\s+)?ukol/i.test(r0) ||
-      /\bvyhledej\s+(mi\s+)?(moje\s+)?ukol/.test(f);
+      /^\s*najdi\s+muj\s+ukol/i.test(r0) ||
+      /\bvyhledej\s+(mi\s+)?(moje\s+)?ukol/.test(f) ||
+      /\bvyhledej\s+muj\s+ukol/i.test(f);
 
     if (!wantsTaskList) return null;
     return iuSilverBuildTasksReadListTurn(ctx, empty, f, now);
@@ -36735,8 +36742,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\b(jake|jaky)\s+mam\s+ukol/.test(f) ||
       /\bco\s+mam\s+udelat\b/.test(f) ||
       /\bukaz\s+aktivni\s+ukol/.test(f) ||
-      /^\s*ukaz\s+ukoly\s*$/i.test(String(raw || "").trim()) ||
-      /^\s*ukaž\s+úkoly\s*$/i.test(String(raw || "").trim());
+      /^\s*(uka[zž]|ukaz)\s+ukol\w*(\s+\d+)?\s*$/i.test(f) ||
+      /^\s*vypi[sš]\s+ukol/i.test(f) ||
+      /^\s*zobraz\s+ukol/i.test(f);
     if (listTasks) {
       return iuSilverBuildTasksReadListTurn(ctx, empty, f, now);
     }
