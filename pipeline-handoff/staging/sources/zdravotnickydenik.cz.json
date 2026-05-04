@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-04T09:48:50.461485Z",
+  "ingestedAt": "2026-05-04T10:24:28.990497Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Brusel přeskupuje miliardy: Co se stane s financemi na rakovinu a vzácná onemocnění?",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/brusel-preskupuje-zdravotnicke-miliardy-nove-fondy-eu/",
+      "dt": "2026-05-04T10:10:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "brusel",
+        "financemi",
+        "miliardy",
+        "onemocnění",
+        "přeskupuje",
+        "rakovinu",
+        "stane",
+        "vzácná"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,35 +267,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Evropa čeká na nové léky až 600 dní. Dusí ji „regulační inflace“, říká zástupce Bayeru",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/leky-regulace-bayer/",
-      "dt": "2026-05-03T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "600",
-        "bayeru",
-        "dní",
-        "dusí",
-        "evropa",
-        "inflace",
-        "léky",
-        "nové",
-        "regulační",
-        "zástupce",
-        "čeká",
-        "říká"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +277,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 96882,
+      "bytes": 94494,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,7 +314,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-04T08:48:53Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T10:10:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -333,6 +329,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Brusel přeskupuje miliardy: Co se stane s financemi na rakovinu a vzácná onemocnění?",
+            "publishedAt": "2026-05-04T10:10:00Z"
+          },
           {
             "title": "Nemoc, která zabíjela na výletní lodi v Atlantiku: Co je to hantavirus a jak se přenáší na člověka?",
             "publishedAt": "2026-05-04T08:48:53Z"
@@ -360,10 +360,6 @@
           {
             "title": "Černochová hrozí Babišovi žalobou: Lži o zmanipulované soutěži nehodlám tolerovat",
             "publishedAt": "2026-05-03T14:19:46Z"
-          },
-          {
-            "title": "Babiš plánuje akci v přestrojení: V hledáčku má nelegální drogové obchody v centru Prahy",
-            "publishedAt": "2026-05-03T13:31:00Z"
           }
         ]
       }

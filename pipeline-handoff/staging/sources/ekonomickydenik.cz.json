@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-04T09:48:50.461485Z",
+  "ingestedAt": "2026-05-04T10:24:28.990497Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Konec iluzí o Rusku. Pobaltí a Sever varují před útokem Kremlu, i když Putin slábne",
+      "url": "https://ekonomickydenik.cz/pobalti-a-sever-varuji-pred-utokem-kremlu-i-kdyz-putin-slabne/",
+      "dt": "2026-05-04T10:06:47Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "iluzí",
+        "když",
+        "konec",
+        "kremlu",
+        "pobaltí",
+        "putin",
+        "rusku",
+        "sever",
+        "slábne",
+        "varují",
+        "útokem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -760,33 +788,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Jaderná matematika Pchjongjangu: Scénář, ve kterém Kimovy rakety přečíslí americký štít",
-      "url": "https://ekonomickydenik.cz/jaderna-matematika-pchjongjangu-rakety-stit-usa/",
-      "dt": "2026-05-01T08:46:58Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "americký",
-        "jaderná",
-        "kimovy",
-        "kterém",
-        "matematika",
-        "pchjongjangu",
-        "přečíslí",
-        "rakety",
-        "scénář",
-        "štít"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -797,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70318,
+      "bytes": 70411,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -834,11 +835,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T08:16:48Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T10:06:47Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 26,
-          "zpravy": 2,
+          "zpravy": 3,
+          "finance": 25,
           "zdravi": 2
         },
         "drop_counts": {
@@ -851,6 +852,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec iluzí o Rusku. Pobaltí a Sever varují před útokem Kremlu, i když Putin slábne",
+            "publishedAt": "2026-05-04T10:06:47Z"
+          },
           {
             "title": "Výpověď smlouvy v mailu neuznáváme, vzkázalo innogy. Teď za to dostalo pokutu od ERÚ",
             "publishedAt": "2026-05-04T08:16:48Z"
@@ -878,10 +883,6 @@
           {
             "title": "Šéf lotyšské armády varuje: Rusko může v blízké době zaútočit na Pobaltí",
             "publishedAt": "2026-05-03T14:30:00Z"
-          },
-          {
-            "title": "Černochová hrozí Babišovi žalobou: Lži o zmanipulované soutěži nehodlám tolerovat",
-            "publishedAt": "2026-05-03T13:23:31Z"
           }
         ]
       }

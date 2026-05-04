@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-04T09:48:50.461485Z",
+  "ingestedAt": "2026-05-04T10:24:28.990497Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Indexové investování slaví 50 let. Začalo jako propadák, skončilo jako standard",
+      "url": "https://investice.hn.cz/c1-67873180-indexove-investovani-slavi-50-let-zacalo-jako-propadak-skoncilo-jako-standard",
+      "dt": "2026-05-04T09:55:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "indexové",
+        "investování",
+        "jako",
+        "let",
+        "propadák",
+        "skončilo",
+        "slaví",
+        "standard",
+        "začalo"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1156,38 +1182,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nájmy ve většině krajských měst letos opět podražily. Nejvíce si lidé připlatí v Liberci, v Praze i Brně tempo zvolnilo",
-      "url": "https://byznys.hn.cz/c1-67872710-najmy-ve-vetsine-krajskych-mest-letos-opet-podrazily-nejvice-si-lide-priplati-v-liberci-v-praze-i-brne-tempo-zvolnilo",
-      "dt": "2026-04-30T13:48:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "brně",
-        "krajských",
-        "letos",
-        "liberci",
-        "lidé",
-        "měst",
-        "nejvíce",
-        "nájmy",
-        "opět",
-        "podražily",
-        "praze",
-        "připlatí",
-        "tempo",
-        "většině",
-        "zvolnilo"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1198,7 +1192,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184419,
+      "bytes": 184276,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1235,7 +1229,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-04T09:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T09:55:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 33,
@@ -1253,6 +1247,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Indexové investování slaví 50 let. Začalo jako propadák, skončilo jako standard",
+            "publishedAt": "2026-05-04T09:55:00Z"
+          },
           {
             "title": "Trendy práce a umělá inteligence: Jak změní český pracovní trh, jaká bude mzda budoucnosti a co udělá s českou ekonomikou?",
             "publishedAt": "2026-05-04T09:35:00Z"
@@ -1280,10 +1278,6 @@
           {
             "title": "Írán varoval americké lodě, aby se nepřibližovaly k Hormuzskému průlivu. Stanou se terčem útoku, hrozí Teherán",
             "publishedAt": "2026-05-04T04:57:00Z"
-          },
-          {
-            "title": "Nová pravidla pro regulaci cen benzinu a nafty: Co se mění a jak funguje byznys provozovatelů pump",
-            "publishedAt": "2026-05-04T04:30:00Z"
           }
         ]
       }

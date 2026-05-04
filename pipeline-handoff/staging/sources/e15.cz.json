@@ -1,8 +1,63 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-04T09:48:50.461485Z",
+  "ingestedAt": "2026-05-04T10:24:28.990497Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Dva důležité léky budou v Česku měsíce těžko k sehnání. Ústav zároveň varuje před padělky",
+      "url": "https://www.e15.cz/domaci/dva-dulezite-leky-budou-v-cesku-mesice-tezko-k-sehnani-ustav-zaroven-varuje-pred-padelky-1432557",
+      "dt": "2026-05-04T10:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "dva",
+        "důležité",
+        "léky",
+        "měsíce",
+        "padělky",
+        "sehnání",
+        "těžko",
+        "varuje",
+        "zároveň",
+        "ústav",
+        "česku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Co radí Buffett a jeho následník? Nebláznit s AI a trpělivě čekat na pořádnou investiční příležitost",
+      "url": "https://www.e15.cz/nazory-a-analyzy/co-radi-buffett-a-jeho-naslednik-neblaznit-s-ai-a-trpelive-cekat-na-poradnou-investicni-prilezitost-1432555",
+      "dt": "2026-05-04T10:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "buffett",
+        "investiční",
+        "jeho",
+        "nebláznit",
+        "následník",
+        "pořádnou",
+        "příležitost",
+        "radí",
+        "trpělivě",
+        "čekat"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -1044,59 +1099,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Rusko vyslalo proti Ukrajině nejvíce dronů od začátku invaze",
-      "url": "https://www.e15.cz/valka-na-ukrajine/rusko-vyslalo-proti-ukrajine-nejvice-dronu-od-zacatku-invaze-1432530",
-      "dt": "2026-05-01T08:39:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "dronů",
-        "invaze",
-        "nejvíce",
-        "proti",
-        "rusko",
-        "ukrajině",
-        "vyslalo",
-        "začátku"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Jak na levné letenky do exotiky? Aerolinky bojují o zákazníky na trasách, kde jejich důvěru narušila válka",
-      "url": "https://www.e15.cz/byznys/doprava-a-logistika/jak-na-levne-letenky-do-exotiky-aerolinky-bojuji-o-zakazniky-na-trasach-kde-jejich-duveru-narusila-valka-1432528",
-      "dt": "2026-05-01T05:40:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "aerolinky",
-        "bojují",
-        "důvěru",
-        "exotiky",
-        "jejich",
-        "letenky",
-        "levné",
-        "narušila",
-        "trasách",
-        "válka",
-        "zákazníky"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1107,7 +1109,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 56865,
+      "bytes": 56605,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1144,12 +1146,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-04T08:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zdravi": 3,
+          "zdravi": 4,
           "finance": 31,
-          "zpravy": 6
+          "zpravy": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1161,6 +1163,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dva důležité léky budou v Česku měsíce těžko k sehnání. Ústav zároveň varuje před padělky",
+            "publishedAt": "2026-05-04T10:00:00Z"
+          },
+          {
+            "title": "Co radí Buffett a jeho následník? Nebláznit s AI a trpělivě čekat na pořádnou investiční příležitost",
+            "publishedAt": "2026-05-04T10:00:00Z"
+          },
           {
             "title": "Elektronické daňové přiznání je nutné odeslat do dnešní půlnoci",
             "publishedAt": "2026-05-04T08:40:00Z"
@@ -1184,14 +1194,6 @@
           {
             "title": "INVESTIČNÍ ONLINE: Bitcoin poprvé za více než tři měsíce překonal hranici 80 tisíc dolarů",
             "publishedAt": "2026-05-04T06:15:00Z"
-          },
-          {
-            "title": "USA začnou vyvádět lodě z Perského zálivu, řekl Trump. Írán hrozí odvetným útokem",
-            "publishedAt": "2026-05-04T05:20:00Z"
-          },
-          {
-            "title": "Připravuji dispečery na svět, kde se bude ještě častěji válčit, říká šéf Řízení letového provozu",
-            "publishedAt": "2026-05-04T04:00:00Z"
           }
         ]
       }

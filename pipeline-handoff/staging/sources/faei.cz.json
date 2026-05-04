@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-04T09:48:50.461485Z",
+  "ingestedAt": "2026-05-04T10:24:28.990497Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Dědictví zrušení superhrubé mzdy: Letos už chybí 122 miliard",
+      "url": "https://profitonline.cz/dedictvi-zruseni-superhrube-mzdy-letos-uz-chybi-122-miliard/",
+      "dt": "2026-05-04T10:00:10Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "122",
+        "chybí",
+        "dědictví",
+        "letos",
+        "miliard",
+        "mzdy",
+        "superhrubé",
+        "zrušení"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -258,31 +283,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Okamžiky historie: Den, kdy se uzavřelo dílo renesančního Leonarda da Vinciho",
-      "url": "https://profitonline.cz/okamziky-historie-den-kdy-se-uzavrelo-dilo-renesancniho-leonarda-da-vinciho/",
-      "dt": "2026-05-02T04:00:53Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "den",
-        "dílo",
-        "historie",
-        "leonarda",
-        "okamžiky",
-        "renesančního",
-        "uzavřelo",
-        "vinciho"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -293,7 +293,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18322,
+      "bytes": 18314,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -330,7 +330,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-04T09:10:02Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T10:00:10Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -346,6 +346,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dědictví zrušení superhrubé mzdy: Letos už chybí 122 miliard",
+            "publishedAt": "2026-05-04T10:00:10Z"
+          },
           {
             "title": "Česká ekonomika klopýtla, Írán za to ale zatím nemůže",
             "publishedAt": "2026-05-04T09:10:02Z"
@@ -373,10 +377,6 @@
           {
             "title": "Co přinese odchod Emirátů z OPEC?",
             "publishedAt": "2026-05-03T06:00:52Z"
-          },
-          {
-            "title": "Vozy na benzin a naftu prohrávají s elektroauty o 120 korun na 100 km",
-            "publishedAt": "2026-05-03T04:00:21Z"
           }
         ]
       }
