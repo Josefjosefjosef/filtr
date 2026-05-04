@@ -34272,10 +34272,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   const IU_SILVER_WEEKDAY_INNER =
     "pondělí|pondeli|úterý|utery|středu|středa|streda|stredu|čtvrtek|ctvrtek|pátek|patek|sobotu|sobota|neděli|neděle|nedeli|nedele";
   function iuSilverReWeekdayOnce() {
-    return new RegExp("\\b(?:v|ve|na)?\\s*(" + IU_SILVER_WEEKDAY_INNER + ")(?=\\s|$|[0-9])", "i");
+    return new RegExp("\\b(?:v|ve|na)?\\s*(" + IU_SILVER_WEEKDAY_INNER + ")(?=\\s|$|[0-9]|[.:,;?!])", "i");
   }
   function iuSilverReWeekdayAll() {
-    return new RegExp("\\b(?:v|ve|na)?\\s*(" + IU_SILVER_WEEKDAY_INNER + ")(?=\\s|$|[0-9])", "gi");
+    return new RegExp("\\b(?:v|ve|na)?\\s*(" + IU_SILVER_WEEKDAY_INNER + ")(?=\\s|$|[0-9]|[.:,;?!])", "gi");
   }
 
   const CZ_MONTH = {
@@ -35203,6 +35203,83 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P0: correction / rephrase toward a new calendar slot („vlastně to dej na…“, „oprav to na…“).
+   * foldCs-safe; must not match bare „oprav to.“ without „na …“.
+   */
+  function iuSilverCalendarCorrectionWriteLeadFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    return (
+      /\bvlastne(\s+to)?\s+dej\s+na\b/.test(x) ||
+      /\bpredtim\s+jsem\s+psal\s+spatne\b/.test(x) ||
+      /\boprav\s+to\s+na\b/.test(x) ||
+      /\bzmen\s+to\s+na\b/.test(x) ||
+      /\bdej\s+to\s+radsi\s+na\b/.test(x) ||
+      /\bdej\s+to\s+radsi\s+do\s+kalendar/.test(x)
+    );
+  }
+
+  /**
+   * P0: correction lead + clear schedule anchors (date/day + time and/or person/event) — allows
+   * calendar.create routing without classic ulož/zapiš sloveso; blocks unsafe create without date/time cues.
+   */
+  /** Strip correction / apology tails so calendar title/date extract sees the scheduling core. */
+  function iuSilverStripCalendarCorrectionWriteBoilerplate(s) {
+    let w = String(s || "").trim();
+    if (!w) return w;
+    const lead = [
+      /^\s*vlastn[eě]\s+to\s+dej\s+na\s+/iu,
+      /^\s*vlastne(\s+to)?\s+dej\s+na\s+/iu,
+      /^\s*oprav(?:te)?\s+to\s+na\s+/iu,
+      /^\s*zmen(?:te)?\s+to\s+na\s+/iu,
+      /^\s*zm[eě]n(?:te)?\s+to\s+na\s+/iu,
+      /^\s*dej\s+to\s+rad[sš]i\s+na\s+/iu,
+      /^\s*dej\s+to\s+radsi\s+na\s+/iu,
+      /^\s*dej\s+to\s+rad[sš]i\s+do\s+kalend[aá]ř[ei]?\s+na\s*/iu,
+      /^\s*dej\s+to\s+radsi\s+do\s+kalendar\w*\s+na\s*/iu
+    ];
+    const trail = [
+      /\s*,?\s*p[rř]edt[ií]m\s+jsem\s+psal\s+[sš]patn[eě]\.?\s*$/iu,
+      /\s*,?\s*predtim\s+jsem\s+psal\s+spatne\.?\s*$/iu
+    ];
+    for (let ci = 0; ci < 16; ci++) {
+      const prevW = w;
+      for (let li = 0; li < lead.length; li++) {
+        w = w.replace(lead[li], "");
+      }
+      for (let ti = 0; ti < trail.length; ti++) {
+        w = w.replace(trail[ti], "");
+      }
+      w = w.replace(/\s+/g, " ").trim();
+      if (w === prevW) break;
+    }
+    return w.trim();
+  }
+
+  function iuSilverCalendarCorrectionWriteSafeFolded(f, rawIn) {
+    if (!iuSilverCalendarCorrectionWriteLeadFolded(f)) return false;
+    const r = String(rawIn != null ? rawIn : "").trim();
+    const rawForSched = r || String(f || "");
+    if (!iuSilverLooksLikeSchedulingFragment(f, rawForSched)) return false;
+    const timeHit = findTime(rawForSched, null, rawForSched);
+    const hasTimeLike =
+      !!(timeHit && timeHit.time) ||
+      /\b\d{1,2}\s*[:.]\s*\d{1,2}\b/.test(f) ||
+      /\bv\s*\d{1,2}\s*hodin/.test(f) ||
+      /\bve\s+\d/.test(f) ||
+      /\bv\s+deset\b|\bv\s+pul\b|\br[aá]no\b|\bdopoledne\b|\bodpoledne\b|\bve[cč]er|\bpo\s+obede|\bkolem\s+seste|\bkolem\s+šest/i.test(f);
+    const hasDateLike =
+      iuSilverReWeekdayOnce().test(rawForSched) ||
+      /\bz[ií]tra\b|\bzittra\b|\bdnes|\bpoz[ií]t[rř][ií]\b|\bpristi\b|\btento\s+tyden|\bna\s+vikend|\bdo\s+patku\b|\bza\s+tyden/i.test(f) ||
+      /\b\d{1,2}\s*\.\s*\d{1,2}\s*\./.test(f);
+    const hasEntityLike =
+      iuSilverHasCalendarEventKeywordFolded(f) ||
+      /\b(mam|mas)\s+[a-z]{3,}\b/i.test(f) ||
+      /\blekar|\blekare\b|\badvok|\bpravn|\bzubar|\bdoktor|\bucet|\bkuryr/i.test(f);
+    return (hasDateLike && hasTimeLike) || (hasDateLike && hasEntityLike);
+  }
+
+  /**
    * Silver Brain v1: single calendar gate (explicit target, active session, or implicit scheduling).
    * Must stay aligned with iuSilverBrainRoute + iuSilverBuildCalendarCreateTurn.
    */
@@ -35210,7 +35287,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const fGate = String(folded || "");
     if (iuSilverExplicitNotesReadScopeFolded(fGate)) return false;
     if (iuSilverHasExplicitNotesTarget(fGate) && iuSilverCalendarQuerySignalFolded(fGate)) return false;
-    if (iuSilverNegativeCreateGuardFolded(fGate)) return false;
+    if (iuSilverNegativeCreateGuardFolded(fGate) && !iuSilverCalendarCorrectionWriteSafeFolded(fGate, raw)) return false;
     if (iuSilverCalendarQuerySignalFolded(fGate) && iuSilverHasExplicitCalendarTarget(fGate)) return false;
     if (iuSilverCalendarQuerySignalFolded(fGate) && iuSilverExplicitCalendarReadScopeFolded(fGate)) return false;
     if (
@@ -35274,6 +35351,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       schedulingFrag &&
       !prahaDistrictNoDayFrag &&
       (iuSilverHasWriteVerb(folded) ||
+        iuSilverCalendarCorrectionWriteSafeFolded(folded, raw) ||
         parsedCalendarComplete ||
         parsedCalendarEventHint ||
         parsedCalendarZitraTimeOnlyHint);
@@ -35455,7 +35533,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     if (
       iuSilverHasWriteVerb(folded) ||
-      (iuSilverLooksLikeSchedulingFragment(folded, raw) && !iuSilverNegativeQueryReadGuardP0Folded(folded))
+      (iuSilverLooksLikeSchedulingFragment(folded, raw) && !iuSilverNegativeQueryReadGuardP0Folded(folded, raw))
     ) {
       return {
         intent: "unknown",
@@ -37404,9 +37482,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
    * P0: query + „nic neukládej / jen čti / nevytvářej …“ → vnutit read, blokovat create.
    * Neplatí u čistého zápisu s úzkou negací cíle („ulož …, ale ne do kalendáře“).
    */
-  function iuSilverNegativeQueryReadGuardP0Folded(f) {
+  function iuSilverNegativeQueryReadGuardP0Folded(f, rawOpt) {
     const x = String(f || "");
     if (!x) return false;
+    const r0 = String(rawOpt != null ? rawOpt : "");
+    if (iuSilverCalendarCorrectionWriteSafeFolded(x, r0 || x)) return false;
     if (iuSilverHasWriteVerb(x) && iuSilverIsNegatedWriteIntentNarrow(x)) return false;
     if (!iuSilverQuerySignalNegativeGuardP0Folded(x)) return false;
     if (!(iuSilverNegativeReadOnlyTaskPhrasesFolded(x) || iuSilverIsNegatedBroadVerbExcludingTaskOnlyFolded(x))) return false;
@@ -37432,7 +37512,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (
       !trCtx0 &&
       (iuSilverIsNegatedWriteIntentNarrow(folded) || iuSilverIsNegatedBroadVerbExcludingTaskOnlyFolded(folded)) &&
-      !iuSilverNegativeQueryReadGuardP0Folded(folded)
+      !iuSilverNegativeQueryReadGuardP0Folded(folded, raw)
     )
       return false;
     if (iuSilverCalendarReadSuppressedForWriteIntent(folded)) return false;
@@ -38882,6 +38962,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     const rawCtx = String(raw || "").trim();
     let work = iuSilverNormalizeCzechNumberWords(rawCtx);
+    work = iuSilverStripCalendarCorrectionWriteBoilerplate(work);
     const notePieces = [];
 
     const noteHit = stripNote(work);
@@ -40171,14 +40252,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (
       iuSilverIsNegatedWriteIntentNarrow(folded) &&
       !iuSilverTaskReadContextFolded(folded) &&
-      !iuSilverNegativeQueryReadGuardP0Folded(folded)
+      !iuSilverNegativeQueryReadGuardP0Folded(folded, raw)
     ) {
       return baseClarification("negated_write_request", "clarification");
     }
     if (
       iuSilverIsNegatedBroadVerbExcludingTaskOnlyFolded(folded) &&
       !iuSilverTaskReadContextFolded(folded) &&
-      !iuSilverNegativeQueryReadGuardP0Folded(folded) &&
+      !iuSilverNegativeQueryReadGuardP0Folded(folded, raw) &&
       (iuSilverHasExplicitCalendarTarget(folded) ||
         iuSilverHasExplicitNotesTarget(folded) ||
         iuSilverHasExplicitTasksTarget(folded) ||
