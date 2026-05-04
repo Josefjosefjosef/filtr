@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-04T20:14:43.631123Z",
+  "ingestedAt": "2026-05-04T20:55:32.187589Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Cenu Práva získal Frodl, hokejový galavečer si podmanil Červenka",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-cenu-prava-ziskal-frodl-hokejovy-galavecer-si-podmanil-cervenka-5448507",
+      "dt": "2026-05-04T20:38:14Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "cenu",
+        "frodl",
+        "galavečer",
+        "hokejový",
+        "podmanil",
+        "práva",
+        "získal",
+        "červenka"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -734,36 +759,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "ZAOSTŘENO NA REPRE: Byl jak smyslů zbavený, odsoudil Antoš beka Sparty, jenž zranil oporu českého nároďáku",
-      "url": "https://www.sport.cz/clanek/podcasty-zaostreno-zaostreno-na-repre-byl-jak-smyslu-zbaveny-odsoudil-antos-beka-sparty-jenz-zranil-oporu-ceskeho-narodaku-5448494",
-      "dt": "2026-05-04T11:38:09Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "antoš",
-        "beka",
-        "jenž",
-        "nároďáku",
-        "odsoudil",
-        "oporu",
-        "repre",
-        "smyslů",
-        "sparty",
-        "zaostřeno",
-        "zbavený",
-        "zranil",
-        "českého"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -774,7 +769,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 39794,
+      "bytes": 39458,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -811,11 +806,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T19:02:20Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T20:38:14Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 29,
-          "zpravy": 1
+          "sport": 30
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -827,6 +821,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cenu Práva získal Frodl, hokejový galavečer si podmanil Červenka",
+            "publishedAt": "2026-05-04T20:38:14Z"
+          },
           {
             "title": "Basketbalisté Nymburka a Pardubic jsou krok od postupu do semifinále",
             "publishedAt": "2026-05-04T18:42:08Z"
@@ -854,10 +852,6 @@
           {
             "title": "Reprezentační trenér Bartoň skončil po jedné sezoně v USK",
             "publishedAt": "2026-05-04T17:31:23Z"
-          },
-          {
-            "title": "Tragédie v USA. Při leteckém neštěstí zahynul celý tým raketového sportu",
-            "publishedAt": "2026-05-04T17:25:57Z"
           }
         ]
       }

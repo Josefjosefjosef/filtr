@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-04T20:14:43.631123Z",
+  "ingestedAt": "2026-05-04T20:55:32.187589Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Majitel Liberce nekompromisně: Tihle dva pitomci ať už v životě nepískají náš zápas",
+      "url": "https://sport.aktualne.cz/fotbal/majitel-liberce-bez-servitek-tihle-dva-pitomci-at-uz-v-zivote-nepiskaji-nas-zapas/r~aaa29fed419921ff7cb631c2c4e78ec7/",
+      "dt": "2026-05-04T20:19:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dva",
+        "liberce",
+        "majitel",
+        "nekompromisně",
+        "nepískají",
+        "náš",
+        "pitomci",
+        "tihle",
+        "zápas",
+        "životě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -511,34 +538,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Unesl letadlo, vyskočil s padákem a zmizel s výkupným. FBI nyní odtajnila další spisy",
-      "url": "https://magazin.aktualne.cz/unesl-letadlo-vyskocil-s-padakem-a-zmizel-s-vykupnym-fbi-nyni-odtajnila-dalsi-spisy/r~aaa29c68653a2172250bc514a7a5e8c7/",
-      "dt": "2026-05-04T12:56:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "další",
-        "fbi",
-        "letadlo",
-        "nyní",
-        "odtajnila",
-        "padákem",
-        "spisy",
-        "unesl",
-        "vyskočil",
-        "výkupným",
-        "zmizel"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -549,7 +548,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 23217,
+      "bytes": 23167,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -586,11 +585,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-04T19:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T20:19:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 18,
-          "sport": 2
+          "sport": 3,
+          "zpravy": 17
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -602,6 +601,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Majitel Liberce nekompromisně: Tihle dva pitomci ať už v životě nepískají náš zápas",
+            "publishedAt": "2026-05-04T20:19:00Z"
+          },
           {
             "title": "Rusko v dubnu na Ukrajině ztratilo víc území, než dobylo. Poprvé od roku 2023",
             "publishedAt": "2026-01-21T06:45:00Z"
@@ -629,10 +632,6 @@
           {
             "title": "Brutální útok v Praze. Neonacisté zkopali do krve anarchistu, jejich tvář promluvila",
             "publishedAt": "2026-05-04T16:57:00Z"
-          },
-          {
-            "title": "Aktuálně z Knihovny Václava Havla: Zasáhne východní křídlo NATO válka?",
-            "publishedAt": "2026-05-04T16:55:00Z"
           }
         ]
       }
