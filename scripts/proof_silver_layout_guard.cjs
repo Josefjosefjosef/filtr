@@ -228,6 +228,7 @@ async function runViewport(page, w, h) {
     appErrorsCount: appErrors,
     cls,
     cls_pass: clsPass,
+    consoleErrorsText: consoleErrors.slice(),
     _pass: pass,
   };
 }
@@ -252,6 +253,12 @@ function formatBlock(label, o) {
     "  cls: " + o.cls,
     "  cls_pass: " + o.cls_pass,
   ];
+  if (Array.isArray(o.consoleErrorsText) && o.consoleErrorsText.length) {
+    lines.push("  console_errors_text:");
+    for (let ci = 0; ci < o.consoleErrorsText.length; ci++) {
+      lines.push("    - " + String(o.consoleErrorsText[ci]).slice(0, 800));
+    }
+  }
   return lines.join("\n");
 }
 

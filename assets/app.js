@@ -30,6 +30,22 @@ function iuIsProdHost() {
 }
 try { if (typeof window !== "undefined") window.iuIsProdHost = iuIsProdHost; } catch (e) {}
 
+/**
+ * Chrome/Chromium: ResizeObserver can emit a benign window "error" (loop / undelivered notifications).
+ * Playwright layout guard counts console.error — must not fail CI on this known browser quirk.
+ */
+function iuIsBenignResizeObserverLoopError(ev) {
+  try {
+    const msg = String((ev && ev.message) || "");
+    return /ResizeObserver loop/i.test(msg);
+  } catch (_) {
+    return false;
+  }
+}
+try {
+  if (typeof window !== "undefined") window.iuIsBenignResizeObserverLoopError = iuIsBenignResizeObserverLoopError;
+} catch (_) {}
+
 /** Debounce duplicate skipWaiting reloads in one burst — must NOT block a later new waiting worker in the same tab session (10 min sessionStorage was too aggressive). */
 var __iuSilentSwReloadLastMs = 0;
 
@@ -117,6 +133,7 @@ try {
 
 window.addEventListener("error", (e) => {
   try {
+    if (iuIsBenignResizeObserverLoopError(e)) return;
     console.error("[WINERROR]", e?.message, e?.filename, e?.lineno, e?.colno, e?.error);
     if (typeof window.persistLastError === "function") {
       window.persistLastError(`${e?.message || "error"} (${e?.filename || ""}:${e?.lineno || ""})`);
@@ -7165,8 +7182,8 @@ function buildVideoAsArticleCard(it) {
     try{
       var vv2 = window.visualViewport;
       if (vv2){
-        vv2.addEventListener("resize", iuSilverMobileStackFitSchedule);
-        vv2.addEventListener("scroll", iuSilverMobileStackFitSchedule);
+        vv2.addEventListener("resize", iuSilverMobileStackFitSchedule, { passive: true });
+        vv2.addEventListener("scroll", iuSilverMobileStackFitSchedule, { passive: true });
       }
     }catch(_){}
     try{
@@ -15986,6 +16003,7 @@ function buildVideoAsArticleCard(it) {
 
   window.addEventListener("error", (event) => {
     try {
+      if (typeof window !== "undefined" && typeof window.iuIsBenignResizeObserverLoopError === "function" && window.iuIsBenignResizeObserverLoopError(event)) return;
       const info = `${event.message} (${event.filename}:${event.lineno})`;
       console.error("[ERR]", info);
       persistLastError(info);
