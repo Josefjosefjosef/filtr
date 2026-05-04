@@ -35359,7 +35359,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       };
     }
 
-    if (iuSilverHasWriteVerb(folded) || iuSilverLooksLikeSchedulingFragment(folded, raw)) {
+    if (
+      iuSilverHasWriteVerb(folded) ||
+      (iuSilverLooksLikeSchedulingFragment(folded, raw) && !iuSilverNegativeQueryReadGuardP0Folded(folded))
+    ) {
       return {
         intent: "unknown",
         confidence: 0.55,
@@ -35994,7 +35997,17 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (kolik && (/\bud[aá]lost/i.test(r) || /\bsch[uů]z/i.test(f))) {
       let dayKey = "today";
       if (/\bz[ií]tra\b/i.test(f) || /\bzitrek\b/.test(f)) dayKey = "tomorrow";
+      if (/\bvcere\b|\bvcera\b|\bvcerajs/i.test(f)) dayKey = "yesterday";
       return { intent: "count_events", dateRange: dayKey, filter: null };
+    }
+
+    if (
+      /\bkolik\b/.test(f) &&
+      /\b(mel|mela)\s+jsem\b/.test(f) &&
+      /\b(vcere|vcera|vceraj)/i.test(f) &&
+      (/\bsch[uů]z/i.test(f) || /\bud[aá]lost/i.test(r))
+    ) {
+      return { intent: "count_events", dateRange: "yesterday", filter: null };
     }
 
     if (coMam && /\b(?:tento|tenhle|tomuto)\s+t[yý]den\b/i.test(f)) {
@@ -36306,7 +36319,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
 
     if (spec.intent === "count_events") {
-      const dr = spec.dateRange === "tomorrow" ? addDays(todayStr, 1) : todayStr;
+      let dr = todayStr;
+      if (spec.dateRange === "tomorrow") dr = addDays(todayStr, 1);
+      else if (spec.dateRange === "yesterday") dr = addDays(todayStr, -1);
       return sorted.filter(function (e) {
         return String(e.date).slice(0, 10) === dr;
       });
@@ -36338,11 +36353,18 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const tomorrowStr = addDays(todayStr, 1);
 
     if (type === "count_events") {
-      const label = spec.dateRange === "tomorrow" ? "zítra" : "dnes";
-      if (count === 0) message = "Na " + label + " nemáš žádné události.";
-      else if (count === 1) message = "Na " + label + " máš 1 událost.";
-      else if (count < 5) message = "Na " + label + " máš " + count + " události.";
-      else message = "Na " + label + " máš " + count + " událostí.";
+      if (spec.dateRange === "yesterday") {
+        if (count === 0) message = "Včera nemáš žádné události.";
+        else if (count === 1) message = "Včera máš 1 událost.";
+        else if (count < 5) message = "Včera máš " + count + " události.";
+        else message = "Včera máš " + count + " událostí.";
+      } else {
+        const label = spec.dateRange === "tomorrow" ? "zítra" : "dnes";
+        if (count === 0) message = "Na " + label + " nemáš žádné události.";
+        else if (count === 1) message = "Na " + label + " máš 1 událost.";
+        else if (count < 5) message = "Na " + label + " máš " + count + " události.";
+        else message = "Na " + label + " máš " + count + " událostí.";
+      }
       return { success: true, type: type, count: count, events: evs, message: message, ambiguity: false };
     }
 
@@ -37177,6 +37199,36 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     );
   }
 
+  /**
+   * P0: dotazový signál pro audit „query + negace zápisu → read“ (foldCs).
+   * Slouží jen v kombinaci s iuSilverNegativeQueryReadGuardP0Folded.
+   */
+  function iuSilverQuerySignalNegativeGuardP0Folded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (iuSilverCalendarQuerySignalFolded(x)) return true;
+    if (iuSilverReadSearchSignalFolded(x)) return true;
+    if (/\bkolik\b/.test(x)) return true;
+    if (/\b(mel|mela)\s+jsem\b/.test(x)) return true;
+    if (/\bjestli\b/.test(x)) return true;
+    if (/\bkde\s+(mam|mas|je|jsou|mel|mela)\b/.test(x)) return true;
+    if (/\bco\s+(mam|mas|je|bylo|byla)\b/.test(x)) return true;
+    return false;
+  }
+
+  /**
+   * P0: query + „nic neukládej / jen čti / nevytvářej …“ → vnutit read, blokovat create.
+   * Neplatí u čistého zápisu s úzkou negací cíle („ulož …, ale ne do kalendáře“).
+   */
+  function iuSilverNegativeQueryReadGuardP0Folded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (iuSilverHasWriteVerb(x) && iuSilverIsNegatedWriteIntentNarrow(x)) return false;
+    if (!iuSilverQuerySignalNegativeGuardP0Folded(x)) return false;
+    if (!(iuSilverNegativeReadOnlyTaskPhrasesFolded(x) || iuSilverIsNegatedBroadVerb(x))) return false;
+    return true;
+  }
+
   function iuSilverReadSearchGateCalendarCreate(raw, folded, now) {
     const f = String(folded || "");
     if (iuSilverExplicitNotesReadScopeFolded(f)) return false;
@@ -37193,7 +37245,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverReadSearchShouldRun(raw, folded, now) {
     if (!String(raw || "").trim()) return false;
     const trCtx0 = iuSilverTaskReadContextFolded(folded);
-    if (!trCtx0 && (iuSilverIsNegatedWriteIntentNarrow(folded) || iuSilverIsNegatedBroadVerb(folded))) return false;
+    if (
+      !trCtx0 &&
+      (iuSilverIsNegatedWriteIntentNarrow(folded) || iuSilverIsNegatedBroadVerb(folded)) &&
+      !iuSilverNegativeQueryReadGuardP0Folded(folded)
+    )
+      return false;
     if (iuSilverCalendarReadSuppressedForWriteIntent(folded)) return false;
     if (iuSilverTryParseExplicitNoteCreate(raw)) return false;
     if (iuSilverReadSearchGateCalendarCreate(raw, folded, now)) return false;
@@ -39542,12 +39599,17 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const readSearchTurn = iuSilverTryReadSearchTurn(raw, now, folded, ctx || {}, empty);
     if (readSearchTurn) return readSearchTurn;
 
-    if (iuSilverIsNegatedWriteIntentNarrow(folded) && !iuSilverTaskReadContextFolded(folded)) {
+    if (
+      iuSilverIsNegatedWriteIntentNarrow(folded) &&
+      !iuSilverTaskReadContextFolded(folded) &&
+      !iuSilverNegativeQueryReadGuardP0Folded(folded)
+    ) {
       return baseClarification("negated_write_request", "clarification");
     }
     if (
       iuSilverIsNegatedBroadVerb(folded) &&
       !iuSilverTaskReadContextFolded(folded) &&
+      !iuSilverNegativeQueryReadGuardP0Folded(folded) &&
       (iuSilverHasExplicitCalendarTarget(folded) ||
         iuSilverHasExplicitNotesTarget(folded) ||
         iuSilverHasExplicitTasksTarget(folded) ||
