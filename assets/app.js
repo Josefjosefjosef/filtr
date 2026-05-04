@@ -35838,6 +35838,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (reason === "unsupported_request") {
       return "Tento požadavek teď neumím bezpečně zpracovat. Upřesni ho prosím.";
     }
+    if (reason === "multi_intent_query_write_unclear") {
+      return "Chceš to jen zjistit, nebo zároveň i uložit? Upřesni prosím.";
+    }
     return "Upřesni prosím požadavek.";
   }
 
@@ -39293,7 +39296,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           clr === "missing_explicit_target" ||
           clr === "negated_write_request" ||
           clr === "future_target_not_supported_yet" ||
-          clr === "unsupported_request"));
+          clr === "unsupported_request" ||
+          clr === "multi_intent_query_write_unclear"));
 
     if (clearMem) {
       IU_SILVER_CONVERSATION_V12.lastDraft = null;
@@ -39525,6 +39529,346 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return "Mám to uložit do kalendáře, úkolů, nebo poznámek?";
   }
 
+  /** P0: split query+write na spojkách (a zároveň, …) — read část + samostatný draft zápisu, nebo bezpečná clarifikace. */
+  function iuSilverMultiIntentSplitOnConnectorP0(raw) {
+    const r = String(raw || "").trim();
+    if (!r) return null;
+    const re =
+      /\s+(a\s+zároveň|a\s+zaroven|ale\s+zároveň|ale\s+zaroven|a\s+kromě\s+toho|a\s+krome\s+toho|a\s+taky|a\s+také|a\s+ještě|a\s+jeste|a\s+n(?:e|\u011b)co\s+s\s+t(?:i|\u00ed)m)\s+/i;
+    const m = r.match(re);
+    if (!m || m.index == null || m.index < 1) return null;
+    const sepLen = m[0].length;
+    const idx = m.index;
+    const left = r.slice(0, idx).trim();
+    const right = r.slice(idx + sepLen).trim();
+    if (!left || !right) return null;
+    return { left: left, right: right };
+  }
+
+  function iuSilverMultiIntentSanitizeWriteSideRaw(raw) {
+    let t = String(raw || "").trim();
+    t = t.replace(/[.,]\s*neplet\b[^.?!]*$/i, "");
+    t = t.replace(/[.,]\s*ale\s+nic\s+nepridavej\b[^.?!]*$/i, "");
+    t = t.replace(/[.,]\s*ale\s+nevracej\b[^.?!]*$/i, "");
+    t = t.replace(/\s+/g, " ").trim();
+    return t;
+  }
+
+  function iuSilverMultiIntentPartBlocksWriteFolded(partF) {
+    const f = String(partF || "");
+    if (!f) return true;
+    if (iuSilverNegativeReadOnlyTaskPhrasesFolded(f)) return true;
+    if (iuSilverIsNegatedBroadVerb(f)) return true;
+    if (/\bnevytvarej\b/.test(f)) return true;
+    if (iuSilverIsNegatedWriteIntentNarrow(f)) return true;
+    return false;
+  }
+
+  function iuSilverMultiIntentHasVagueActionFolded(f) {
+    const x = String(f || "");
+    if (/\bneco\s+s\s+tim\s+udel/.test(x)) return true;
+    if (/\bneco\s+s\s+tim\b/.test(x) && !iuSilverHasTaskActionVerb(x) && !iuSilverHasWriteVerb(x)) return true;
+    return false;
+  }
+
+  function iuSilverMultiIntentWriteRouteKind(route) {
+    if (!route || !route.kind) return "";
+    if (route.kind === "TASK_TRY") return "task";
+    if (route.kind === "NOTE_BODY") return "note";
+    if (route.kind === "CALENDAR") return "calendar";
+    return "";
+  }
+
+  function iuSilverMultiIntentLooksLikeWriteSide(raw, route) {
+    const f = foldCs(String(raw || ""));
+    if (iuSilverMultiIntentWriteRouteKind(route)) return true;
+    if (iuSilverHasTaskActionVerb(f) && !iuSilverTaskReadContextFolded(f)) return true;
+    if (iuSilverHasWriteVerb(f) && !iuSilverNegativeReadOnlyTaskPhrasesFolded(f) && !iuSilverIsNegatedBroadVerb(f)) return true;
+    return false;
+  }
+
+  function iuSilverMultiIntentOrientReadWriteP0(left, right, now) {
+    const lf = foldCs(left);
+    const rf = foldCs(right);
+    const leftRead = iuSilverReadSearchShouldRun(left, lf, now);
+    const rightRead = iuSilverReadSearchShouldRun(right, rf, now);
+    const routeL = iuSilverBrainRoute(left, now, createEmptyDraft());
+    const routeR = iuSilverBrainRoute(right, now, createEmptyDraft());
+    const writeL = iuSilverMultiIntentLooksLikeWriteSide(left, routeL);
+    const writeR = iuSilverMultiIntentLooksLikeWriteSide(right, routeR);
+    if (leftRead && writeR && !rightRead) return { readRaw: left, writeRaw: right, readF: lf, writeF: rf };
+    if (rightRead && writeL && !leftRead) return { readRaw: right, writeRaw: left, readF: rf, writeF: lf };
+    if (leftRead && writeR) return { readRaw: left, writeRaw: right, readF: lf, writeF: rf };
+    if (rightRead && writeL) return { readRaw: right, writeRaw: left, readF: rf, writeF: lf };
+    return null;
+  }
+
+  function iuSilverTryMultiIntentP0Turn(raw, now, folded, ctx, empty, prevDraft) {
+    const sp = iuSilverMultiIntentSplitOnConnectorP0(raw);
+    if (!sp) return null;
+    const right0 = iuSilverMultiIntentSanitizeWriteSideRaw(sp.right);
+    const prev = prevDraft || createEmptyDraft();
+
+    function multiIntentClarTurnP0() {
+      return {
+        normalizedIntent: "clarification",
+        targetContainer: "none",
+        processingState: "CLARIFICATION",
+        clarificationReason: "multi_intent_query_write_unclear",
+        futureIntentCandidate: null,
+        readQuery: null,
+        readAnswer: null,
+        extractedFields: {},
+        missingFields: [],
+        ambiguousFields: [],
+        userFacingSummary: "",
+        assistantLead: iuSilverClarificationCopy("multi_intent_query_write_unclear"),
+        clarificationText: "",
+        draft: empty
+      };
+    }
+
+    const routeSplitL = iuSilverBrainRoute(sp.left, now, createEmptyDraft());
+    const routeSplitR = iuSilverBrainRoute(right0, now, createEmptyDraft());
+    const writeSplitL = iuSilverMultiIntentLooksLikeWriteSide(sp.left, routeSplitL);
+    const writeSplitR = iuSilverMultiIntentLooksLikeWriteSide(right0, routeSplitR);
+    if (writeSplitL && writeSplitR) {
+      return multiIntentClarTurnP0();
+    }
+
+    const fSplitL = foldCs(sp.left);
+    const fSplitR = foldCs(right0);
+    const leftTaskWriteHeu =
+      routeSplitL.kind === "TASK_TRY" || (iuSilverHasExplicitTasksTarget(fSplitL) && iuSilverHasWriteVerb(fSplitL) && /\bukol/.test(fSplitL));
+    const rightTaskWriteHeu =
+      routeSplitR.kind === "TASK_TRY" || (iuSilverHasExplicitTasksTarget(fSplitR) && iuSilverHasWriteVerb(fSplitR) && /\bukol/.test(fSplitR));
+    if (leftTaskWriteHeu && /\bpoznamk|poznamce\b/i.test(fSplitR) && !/^\s*(zjist|najd|hledej|ukaz|ukaž|co\s+mam|co\s+jsem)/i.test(String(right0 || "").trim())) {
+      return multiIntentClarTurnP0();
+    }
+    if (rightTaskWriteHeu && /\bpoznamk|poznamce\b/i.test(fSplitL) && !/^\s*(zjist|najd|hledej|ukaz|ukaž|co\s+mam|co\s+jsem)/i.test(String(sp.left || "").trim())) {
+      return multiIntentClarTurnP0();
+    }
+
+    const orient = iuSilverMultiIntentOrientReadWriteP0(sp.left, right0, now);
+
+    if (!orient) {
+      const lf = foldCs(sp.left);
+      const rf = foldCs(right0);
+      if (iuSilverReadSearchShouldRun(sp.left, lf, now) && iuSilverMultiIntentPartBlocksWriteFolded(rf)) {
+        const readTurn = iuSilverTryReadSearchTurn(sp.left, now, lf, ctx, empty);
+        if (readTurn && readTurn.processingState === "READ_OK") {
+          return {
+            normalizedIntent: "global.search",
+            targetContainer: "none",
+            processingState: "READ_OK",
+            clarificationReason: null,
+            futureIntentCandidate: null,
+            readQuery: readTurn.readQuery,
+            readAnswer: readTurn.readAnswer,
+            extractedFields: {},
+            missingFields: [],
+            ambiguousFields: [],
+            userFacingSummary: readTurn.userFacingSummary,
+            assistantLead: readTurn.assistantLead || (readTurn.readAnswer && readTurn.readAnswer.message) || "",
+            clarificationText: "",
+            draft: empty,
+            silverSearchResult: readTurn.silverSearchResult
+          };
+        }
+      }
+      if (iuSilverReadSearchShouldRun(right0, rf, now) && iuSilverMultiIntentPartBlocksWriteFolded(lf)) {
+        const readTurn2 = iuSilverTryReadSearchTurn(right0, now, rf, ctx, empty);
+        if (readTurn2 && readTurn2.processingState === "READ_OK") {
+          return {
+            normalizedIntent: "global.search",
+            targetContainer: "none",
+            processingState: "READ_OK",
+            clarificationReason: null,
+            futureIntentCandidate: null,
+            readQuery: readTurn2.readQuery,
+            readAnswer: readTurn2.readAnswer,
+            extractedFields: {},
+            missingFields: [],
+            ambiguousFields: [],
+            userFacingSummary: readTurn2.userFacingSummary,
+            assistantLead: readTurn2.assistantLead || (readTurn2.readAnswer && readTurn2.readAnswer.message) || "",
+            clarificationText: "",
+            draft: empty,
+            silverSearchResult: readTurn2.silverSearchResult
+          };
+        }
+      }
+      if (iuSilverReadSearchShouldRun(sp.left, lf, now)) {
+        const routeR0 = iuSilverBrainRoute(right0, now, createEmptyDraft());
+        if (!iuSilverMultiIntentLooksLikeWriteSide(right0, routeR0) && String(foldCs(right0) || "").length < 56) {
+          return {
+            normalizedIntent: "clarification",
+            targetContainer: "none",
+            processingState: "CLARIFICATION",
+            clarificationReason: "multi_intent_query_write_unclear",
+            futureIntentCandidate: null,
+            readQuery: null,
+            readAnswer: null,
+            extractedFields: {},
+            missingFields: [],
+            ambiguousFields: [],
+            userFacingSummary: "",
+            assistantLead: iuSilverClarificationCopy("multi_intent_query_write_unclear"),
+            clarificationText: "",
+            draft: empty
+          };
+        }
+      }
+      if (/\ba\s+n(?:e|\u011b)co\s+s\s+t(?:i|\u00ed)m\b/i.test(foldCs(raw))) {
+        return multiIntentClarTurnP0();
+      }
+      return null;
+    }
+
+    let readRaw = orient.readRaw;
+    let writeRaw = iuSilverMultiIntentSanitizeWriteSideRaw(orient.writeRaw);
+    let readF = foldCs(readRaw);
+    let writeF = foldCs(writeRaw);
+
+    if (!writeRaw || writeRaw.length < 2) {
+      const readOnly = iuSilverTryReadSearchTurn(readRaw, now, readF, ctx, empty);
+      if (readOnly && readOnly.processingState === "READ_OK") {
+        return {
+          normalizedIntent: "global.search",
+          targetContainer: "none",
+          processingState: "READ_OK",
+          clarificationReason: null,
+          futureIntentCandidate: null,
+          readQuery: readOnly.readQuery,
+          readAnswer: readOnly.readAnswer,
+          extractedFields: {},
+          missingFields: [],
+          ambiguousFields: [],
+          userFacingSummary: readOnly.userFacingSummary,
+          assistantLead: readOnly.assistantLead || (readOnly.readAnswer && readOnly.readAnswer.message) || "",
+          clarificationText: "",
+          draft: empty,
+          silverSearchResult: readOnly.silverSearchResult
+        };
+      }
+      return null;
+    }
+
+    const readTurn = iuSilverTryReadSearchTurn(readRaw, now, readF, ctx, empty);
+    if (!readTurn || readTurn.processingState !== "READ_OK") return null;
+
+    if (iuSilverMultiIntentPartBlocksWriteFolded(writeF)) {
+      return {
+        normalizedIntent: "global.search",
+        targetContainer: "none",
+        processingState: "READ_OK",
+        clarificationReason: null,
+        futureIntentCandidate: null,
+        readQuery: readTurn.readQuery,
+        readAnswer: readTurn.readAnswer,
+        extractedFields: {},
+        missingFields: [],
+        ambiguousFields: [],
+        userFacingSummary: readTurn.userFacingSummary,
+        assistantLead: readTurn.assistantLead || (readTurn.readAnswer && readTurn.readAnswer.message) || "",
+        clarificationText: "",
+        draft: empty,
+        silverSearchResult: readTurn.silverSearchResult
+      };
+    }
+
+    const wRoute = iuSilverBrainRoute(writeRaw, now, createEmptyDraft());
+    if (iuSilverMultiIntentHasVagueActionFolded(writeF) && !iuSilverMultiIntentWriteRouteKind(wRoute)) {
+      return {
+        normalizedIntent: "clarification",
+        targetContainer: "none",
+        processingState: "CLARIFICATION",
+        clarificationReason: "multi_intent_query_write_unclear",
+        futureIntentCandidate: null,
+        readQuery: null,
+        readAnswer: null,
+        extractedFields: {},
+        missingFields: [],
+        ambiguousFields: [],
+        userFacingSummary: "",
+        assistantLead: iuSilverClarificationCopy("multi_intent_query_write_unclear"),
+        clarificationText: "",
+        draft: empty
+      };
+    }
+
+    const wk = iuSilverMultiIntentWriteRouteKind(wRoute);
+
+    if (wk === "task") {
+      const taskTurn = iuSilverBuildTaskCreateTurn(wRoute.taskRaw, now, wRoute.taskOpts);
+      if (!taskTurn) return multiIntentClarTurnP0();
+      return {
+        normalizedIntent: "tasks.create",
+        targetContainer: "tasks",
+        processingState: taskTurn.processingState,
+        clarificationReason: taskTurn.clarificationReason,
+        futureIntentCandidate: null,
+        readQuery: readTurn.readQuery,
+        readAnswer: readTurn.readAnswer,
+        extractedFields: taskTurn.extractedFields,
+        missingFields: taskTurn.missingFields,
+        ambiguousFields: taskTurn.ambiguousFields,
+        userFacingSummary: String((readTurn.readAnswer && readTurn.readAnswer.message) || "").trim(),
+        assistantLead: taskTurn.assistantLead,
+        clarificationText: taskTurn.clarificationText || "",
+        draft: taskTurn.draft,
+        silverSearchResult: readTurn.silverSearchResult,
+        silverMultiIntentComposite: true
+      };
+    }
+
+    if (wk === "note") {
+      const noteTurn = iuSilverBuildNoteCreateTurn(wRoute.noteBody, now);
+      return {
+        normalizedIntent: "notes.create",
+        targetContainer: "notes",
+        processingState: noteTurn.processingState,
+        clarificationReason: null,
+        futureIntentCandidate: null,
+        readQuery: readTurn.readQuery,
+        readAnswer: readTurn.readAnswer,
+        extractedFields: {},
+        missingFields: [],
+        ambiguousFields: [],
+        userFacingSummary: String((readTurn.readAnswer && readTurn.readAnswer.message) || "").trim(),
+        assistantLead: noteTurn.assistantLead,
+        clarificationText: noteTurn.clarificationText || "",
+        draft: noteTurn.draft,
+        silverSearchResult: readTurn.silverSearchResult,
+        silverMultiIntentComposite: true
+      };
+    }
+
+    if (wk === "calendar") {
+      const calTurn = iuSilverBuildCalendarCreateTurn(writeRaw, now, prev);
+      return {
+        normalizedIntent: "calendar.create",
+        targetContainer: "calendar",
+        processingState: calTurn.processingState,
+        clarificationReason: calTurn.clarificationReason,
+        futureIntentCandidate: null,
+        readQuery: readTurn.readQuery,
+        readAnswer: readTurn.readAnswer,
+        extractedFields: calTurn.extractedFields,
+        missingFields: calTurn.missingFields,
+        ambiguousFields: calTurn.ambiguousFields,
+        userFacingSummary: String((readTurn.readAnswer && readTurn.readAnswer.message) || "").trim(),
+        assistantLead: calTurn.assistantLead,
+        clarificationText: calTurn.clarificationText || "",
+        draft: calTurn.draft,
+        silverSearchResult: readTurn.silverSearchResult,
+        silverMultiIntentComposite: true
+      };
+    }
+
+    return multiIntentClarTurnP0();
+  }
+
   function processUserTurn(text, prevDraft, ctx) {
     const now = ctx && ctx.now ? ctx.now : new Date();
     const raw0 = String(text || "").trim();
@@ -39561,6 +39905,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const salEarly = iuSilverBuildSalutationPreferenceTurn(raw0);
     if (salEarly) {
       return salEarly;
+    }
+
+    const multiIntentP0 = iuSilverTryMultiIntentP0Turn(raw, now, folded, ctx || {}, empty, prevDraft);
+    if (multiIntentP0) {
+      return multiIntentP0;
     }
 
     const taskReadListEarly = iuSilverTryTaskReadListQueryEarly(raw, now, folded, ctx || {}, empty);
@@ -39947,6 +40296,115 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (turn.confirmOnly) {
       return `<div class="iuSilverMsg iuSilverMsg--assistant" data-iu-silver-msg="assistant">
   <p class="iuSilverMsgLead">${esc(iuSilverDecorateAssistantLead(turn.assistantLead))}</p>
+</div>`;
+    }
+    if (turn.silverMultiIntentComposite && turn.readAnswer && turn.readAnswer.message && turn.draft && turn.draft.targetContainer === "tasks") {
+      const d = turn.draft;
+      const editMode = !!opts.editMode;
+      const st = silverProcessingStateFromDraft(d);
+      const showSave = isTaskDraftSaveable(d);
+      const dateHuman =
+        d.taskDueAt && typeof d.taskDueAt === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d.taskDueAt)
+          ? iuSilverFormatDateCs(d.taskDueAt)
+          : "";
+      const titleDisp = String(d.title || "").trim();
+      const noteDisp = String(d.taskNote || "").trim();
+      const statusDisp = "čeká na splnění";
+      let actions = "";
+      actions += `<button type="button" class="iuSilverDraftBtn iuSilverDraftBtn--primary" data-iu-silver-action="save" ${showSave ? "" : "disabled"}>Uložit</button>`;
+      actions += `<button type="button" class="iuSilverDraftBtn" data-iu-silver-action="edit" aria-pressed="${editMode ? "true" : "false"}">Upravit</button>`;
+      const grid = editMode
+        ? `<div class="iuSilverDraftGrid iuSilverDraftGrid--edit iuSilverDraftGrid--task">
+    <div class="iuSilverDraftK">Datum</div><input type="date" class="iuSilverDraftInput" data-iu-silver-task-field="due" value="${esc(String(d.taskDueAt || "").slice(0, 10))}" />
+    <div class="iuSilverDraftK">Název</div><input type="text" maxlength="200" class="iuSilverDraftInput" data-iu-silver-task-field="title" value="${esc(titleDisp)}" autocomplete="off" />
+    <div class="iuSilverDraftK">Poznámka</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" rows="2" maxlength="5000" data-iu-silver-task-field="note">${esc(noteDisp)}</textarea>
+  </div>`
+        : `<div class="iuSilverDraftGrid iuSilverDraftGrid--task">
+    ${formatDraftRow("Datum", dateHuman, !dateHuman, {})}
+    ${formatDraftRow("Název", titleDisp, false, {})}
+    ${formatDraftRow("Stav", statusDisp, false, {})}
+    ${formatDraftRow("Poznámka", noteDisp, false, {})}
+  </div>`;
+      let clar = "";
+      if (st === "NEEDS_CLARIFICATION" && turn.clarificationText) {
+        clar = `<p class="iuSilverMsgClarification iuSilverMsgClarification--warning" data-iu-silver-clarification="1">${esc(turn.clarificationText)}</p>`;
+      }
+      const leadClass = st === "NEEDS_CLARIFICATION" ? "iuSilverMsgLead iuSilverMsgLead--warning" : "iuSilverMsgLead";
+      const readBlock = `<p class="iuSilverMsgLead iuSilverMsgLead--read">${esc(iuSilverDecorateAssistantLead(turn.readAnswer.message)).replace(/\n/g, "<br>")}</p>`;
+      const card = `<div class="iuSilverDraftCard iuSilverDraftCard--task" data-iu-silver-draft-card="1" data-iu-silver-draft-kind="task" data-iu-silver-edit-mode="${editMode ? "1" : "0"}">
+  <div class="iuSilverDraftCardTitle">Návrh úkolu</div>
+  ${grid}
+  <div class="iuSilverDraftActions" data-iu-silver-actions="1">${actions}</div>
+</div>`;
+      return `<div class="iuSilverMsg iuSilverMsg--assistant" data-iu-silver-msg="assistant">
+  ${readBlock}
+  <p class="${leadClass}">${esc(iuSilverDecorateAssistantLead(turn.assistantLead))}</p>
+  ${clar}
+  ${card}
+</div>`;
+    }
+    if (turn.silverMultiIntentComposite && turn.readAnswer && turn.readAnswer.message && turn.draft && turn.draft.targetContainer === "notes") {
+      const d = turn.draft || createEmptyDraft();
+      const editMode = !!opts.editMode;
+      const st = silverProcessingStateFromDraft(d);
+      const showSave = isNoteDraftSaveable(d);
+      const textDisp = String(d.silverNoteText || "").trim();
+      const createdDisp = d.silverNoteCreatedTs ? iuSilverFormatNoteCreatedCs(d.silverNoteCreatedTs) : "";
+      let actions = "";
+      actions += `<button type="button" class="iuSilverDraftBtn iuSilverDraftBtn--primary" data-iu-silver-action="save" ${showSave ? "" : "disabled"}>Uložit</button>`;
+      actions += `<button type="button" class="iuSilverDraftBtn" data-iu-silver-action="edit" aria-pressed="${editMode ? "true" : "false"}">Upravit</button>`;
+      const grid = editMode
+        ? `<div class="iuSilverDraftGrid iuSilverDraftGrid--edit iuSilverDraftGrid--note">
+    <div class="iuSilverDraftK">Text</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" rows="4" maxlength="5000" data-iu-silver-note-field="text">${esc(textDisp)}</textarea>
+    <div class="iuSilverDraftK">Vytvořeno</div><div class="iuSilverDraftV">${esc(createdDisp || "—")}</div>
+  </div>`
+        : `<div class="iuSilverDraftGrid iuSilverDraftGrid--note">
+    ${formatDraftRow("Text", textDisp, !textDisp, {})}
+    ${formatDraftRow("Vytvořeno", createdDisp, false, {})}
+  </div>`;
+      let clar = "";
+      if (st === "NEEDS_CLARIFICATION" && turn.clarificationText) {
+        clar = `<p class="iuSilverMsgClarification iuSilverMsgClarification--warning" data-iu-silver-clarification="1">${esc(turn.clarificationText)}</p>`;
+      }
+      const leadClass = st === "NEEDS_CLARIFICATION" ? "iuSilverMsgLead iuSilverMsgLead--warning" : "iuSilverMsgLead";
+      const readBlockN = `<p class="iuSilverMsgLead iuSilverMsgLead--read">${esc(iuSilverDecorateAssistantLead(turn.readAnswer.message)).replace(/\n/g, "<br>")}</p>`;
+      const cardN = `<div class="iuSilverDraftCard iuSilverDraftCard--note" data-iu-silver-draft-card="1" data-iu-silver-draft-kind="note" data-iu-silver-edit-mode="${editMode ? "1" : "0"}">
+  <div class="iuSilverDraftCardTitle">Návrh poznámky</div>
+  ${grid}
+  <div class="iuSilverDraftActions" data-iu-silver-actions="1">${actions}</div>
+</div>`;
+      return `<div class="iuSilverMsg iuSilverMsg--assistant" data-iu-silver-msg="assistant">
+  ${readBlockN}
+  <p class="${leadClass}">${esc(iuSilverDecorateAssistantLead(turn.assistantLead))}</p>
+  ${clar}
+  ${cardN}
+</div>`;
+    }
+    if (turn.silverMultiIntentComposite && turn.readAnswer && turn.readAnswer.message && turn.draft && turn.draft.targetContainer === "calendar") {
+      const d = turn.draft;
+      const editMode = !!opts.editMode;
+      const st = processingStateFromDraft(d);
+      const showSave = isDraftSaveable(d);
+      let actions = "";
+      actions += `<button type="button" class="iuSilverDraftBtn iuSilverDraftBtn--primary" data-iu-silver-action="save" ${showSave ? "" : "disabled"}>Uložit</button>`;
+      actions += `<button type="button" class="iuSilverDraftBtn" data-iu-silver-action="edit" aria-pressed="${editMode ? "true" : "false"}">Upravit</button>`;
+      const grid = editMode ? renderDraftCardEditGrid(d) : renderDraftCardViewGrid(d);
+      let clar = "";
+      if (st === "NEEDS_CLARIFICATION" && turn.clarificationText) {
+        clar = `<p class="iuSilverMsgClarification iuSilverMsgClarification--warning" data-iu-silver-clarification="1">${esc(turn.clarificationText)}</p>`;
+      }
+      const leadClass = st === "NEEDS_CLARIFICATION" ? "iuSilverMsgLead iuSilverMsgLead--warning" : "iuSilverMsgLead";
+      const readBlockC = `<p class="iuSilverMsgLead iuSilverMsgLead--read">${esc(iuSilverDecorateAssistantLead(turn.readAnswer.message)).replace(/\n/g, "<br>")}</p>`;
+      const cardC = `<div class="iuSilverDraftCard" data-iu-silver-draft-card="1" data-iu-silver-edit-mode="${editMode ? "1" : "0"}">
+  <div class="iuSilverDraftCardTitle">Návrh události</div>
+  ${grid}
+  <div class="iuSilverDraftActions" data-iu-silver-actions="1">${actions}</div>
+</div>`;
+      return `<div class="iuSilverMsg iuSilverMsg--assistant" data-iu-silver-msg="assistant">
+  ${readBlockC}
+  <p class="${leadClass}">${esc(iuSilverDecorateAssistantLead(turn.assistantLead))}</p>
+  ${clar}
+  ${cardC}
 </div>`;
     }
     if (
@@ -40423,6 +40881,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       chatState.lastDraftTurn = null;
       chatState.cardEditMode = false;
       clearPendingStorageDisambiguation();
+    } else if (
+      turn.silverMultiIntentComposite &&
+      turn.draft &&
+      (turn.draft.targetContainer === "tasks" || turn.draft.targetContainer === "notes" || turn.draft.targetContainer === "calendar")
+    ) {
+      chatState.cardEditMode = false;
+      clearPendingStorageDisambiguation();
+      chatState.lastDraftTurn = { ...turn, draft: cloneDraft(turn.draft) };
     } else if (
       turn.processingState === "READ_OK" ||
       turn.normalizedIntent === "calendar.read" ||
