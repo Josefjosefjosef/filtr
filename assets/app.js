@@ -35730,7 +35730,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     if (
       /^pozn[aá]mk[ay]\s+(?!m[aá]m\s+)/i.test(s) &&
-      !/^pozn[aá]mk[ay]\s+o\s+/i.test(s) &&
       !/^pozn[aá]mk[ay]\s*:/i.test(s) &&
       !iuSilverHasExplicitCalendarTarget(fEarly) &&
       !iuSilverHasTaskActionVerb(fEarly)
@@ -35980,6 +35979,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!x) return false;
     if (iuSilverExplicitNotesReadScopeFolded(x)) return false;
     if (iuSilverExplicitTaskReadScopeFolded(x)) return false;
+    /* Past/history calendar READ must not hijack explicit writes (NOTE_BODY / TASK_TRY) via intent-first blockCreates. */
+    if (iuSilverHasWriteVerb(x)) return false;
     if (iuSilverTaskQueryHardSignalFolded(x) && !/\bkalend/.test(x)) return false;
     const yesterday = /\bvcera\b|\bvcer[ae]\b/.test(x);
     const jsemMel =
