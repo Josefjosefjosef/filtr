@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-04T16:35:28.774172Z",
+  "ingestedAt": "2026-05-04T17:14:34.101341Z",
   "items": [
     {
       "section": "finance",
@@ -85,6 +85,31 @@
         "továrnu",
         "usa",
         "york"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Demokracie umírá, hledá se recept na její záchranu. Co navrhuje věda?",
+      "url": "https://nazory.hn.cz/c1-67873140-demokracie-umira-hleda-se-recept-na-jeji-zachranu-co-navrhuje-veda",
+      "dt": "2026-05-04T15:40:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "demokracie",
+        "hledá",
+        "její",
+        "navrhuje",
+        "recept",
+        "umírá",
+        "věda",
+        "záchranu"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1107,36 +1132,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Trump řeší jinou krizi, mír na Ukrajině potřebuje nového prostředníka, řekl Babiš po setkání se Zelenským",
-      "url": "https://domaci.hn.cz/c1-67873050-trump-resi-jinou-krizi-mir-na-ukrajine-potrebuje-noveho-prostrednika-rekl-babis-po-setkani-se-zelenskym",
-      "dt": "2026-05-03T19:54:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "babiš",
-        "jinou",
-        "krizi",
-        "mír",
-        "nového",
-        "potřebuje",
-        "prostředníka",
-        "setkání",
-        "trump",
-        "ukrajině",
-        "zelenským",
-        "řekl",
-        "řeší"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1147,7 +1142,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183945,
+      "bytes": 183915,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1214,6 +1209,10 @@
             "publishedAt": "2026-05-04T15:59:00Z"
           },
           {
+            "title": "Demokracie umírá, hledá se recept na její záchranu. Co navrhuje věda?",
+            "publishedAt": "2026-05-04T15:40:00Z"
+          },
+          {
             "title": "První &bdquo;Východoevropan&ldquo; ve vedení Evropské centrální banky. Německo tak vysoko svého člověka dosud nikdy nemělo",
             "publishedAt": "2026-05-04T14:51:00Z"
           },
@@ -1228,10 +1227,6 @@
           {
             "title": "Zkrachoval další velký e-shop. Měl pověst drtiče cen a tržby přes miliardu, teď míří do insolvence",
             "publishedAt": "2026-05-04T14:26:00Z"
-          },
-          {
-            "title": "Uzavřený Hormuz? Pro polovodičové společnosti to nepředstavuje problém, jejich akcie stoupají",
-            "publishedAt": "2026-05-04T13:24:00Z"
           }
         ]
       }

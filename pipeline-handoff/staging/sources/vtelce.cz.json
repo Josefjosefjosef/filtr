@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-05-04T16:35:28.774172Z",
+  "ingestedAt": "2026-05-04T17:14:34.101341Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Sestra v akci: Miliardová žaloba jeptišky, opilé sestry v kasinu a Whoopi Goldberg v ostrém sporu s Disney",
+      "url": "https://www.vtelce.cz/sestra-v-akci-miliardova-zaloba-jeptisky-opile-sestry-v-kasinu-a-whoopi-goldberg-v-ostrem-sporu-s-disney/",
+      "dt": "2026-05-04T16:55:16Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "akci",
+        "disney",
+        "goldberg",
+        "jeptišky",
+        "kasinu",
+        "miliardová",
+        "opilé",
+        "ostrém",
+        "sestra",
+        "sestry",
+        "sporu",
+        "whoopi",
+        "žaloba"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -253,32 +283,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Úspěšný dramatický seriál Jitřní záře poprvé míří na televizní obrazovky",
-      "url": "https://www.vtelce.cz/uspesny-dramaticky-serial-jitrni-zare-poprve-miri-na-televizni-obrazovky/",
-      "dt": "2026-05-03T06:28:57Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "dramatický",
-        "jitřní",
-        "míří",
-        "obrazovky",
-        "poprvé",
-        "seriál",
-        "televizní",
-        "záře",
-        "úspěšný"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -289,8 +293,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 83145,
-      "reason": "",
+      "bytes": 92222,
+      "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -326,7 +330,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-04T16:28:24Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T16:55:16Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "other": 10
@@ -341,6 +345,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sestra v akci: Miliardová žaloba jeptišky, opilé sestry v kasinu a Whoopi Goldberg v ostrém sporu s Disney",
+            "publishedAt": "2026-05-04T16:55:16Z"
+          },
           {
             "title": "Blázni ze stadiónu: Podvod se symboly, tajnosti přímo na place a útěk herce těsně před první klapkou",
             "publishedAt": "2026-05-04T16:28:24Z"
@@ -368,10 +376,6 @@
           {
             "title": "Jen ho nechte, ať se bojí: Nebezpečný kousek na kolejích, utajený vztah na place a tříminutový souboj s hřebíkem",
             "publishedAt": "2026-05-03T12:12:48Z"
-          },
-          {
-            "title": "Dokument Jiřina Bohdalová: Jede se furt dál… přináší upřímnou zpověď o láskách i výzvách",
-            "publishedAt": "2026-05-03T09:44:22Z"
           }
         ]
       }

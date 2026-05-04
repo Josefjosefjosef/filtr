@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "pelipecky.cz",
-  "ingestedAt": "2026-05-04T16:35:28.774172Z",
+  "ingestedAt": "2026-05-04T17:14:34.101341Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Blízký východ: letecká doprava v Emirátech se už vrátila do normálu.",
+      "url": "https://pelipecky.cz/aktualni-situace-blizky-vychod-vzdusny-prostor/",
+      "dt": "2026-05-04T17:08:21Z",
+      "media_raw": "Pelipecky",
+      "media_norm": "Pelipecky",
+      "tokens": [
+        "blízký",
+        "doprava",
+        "emirátech",
+        "letecká",
+        "normálu",
+        "vrátila",
+        "východ"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_pelipecky",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "pelipecky.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -224,31 +248,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "pelipecky.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Thajsko od 10 990 Kč: Bangkok, Chiang Mai a Phuket včetně zavazadla",
-      "url": "https://pelipecky.cz/thajsko-akcni-letenky/",
-      "dt": "2026-04-22T11:41:49Z",
-      "media_raw": "Pelipecky",
-      "media_norm": "Pelipecky",
-      "tokens": [
-        "990",
-        "bangkok",
-        "chiang",
-        "mai",
-        "phuket",
-        "thajsko",
-        "včetně",
-        "zavazadla"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_pelipecky",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "pelipecky.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -259,7 +258,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://pelipecky.cz/feed/",
-      "bytes": 117341,
+      "bytes": 111751,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -296,7 +295,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-04T10:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T17:08:21Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "cestovani": 10
@@ -311,6 +310,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Blízký východ: letecká doprava v Emirátech se už vrátila do normálu.",
+            "publishedAt": "2026-05-04T17:08:21Z"
+          },
           {
             "title": "Lufthansa zrušila příruční zavazadlo u nejlevnějších letenek",
             "publishedAt": "2026-05-04T10:30:00Z"
@@ -338,10 +341,6 @@
           {
             "title": "Nejvertikálnější město na světě: Hongkong za 12 490 Kč",
             "publishedAt": "2026-04-27T08:00:00Z"
-          },
-          {
-            "title": "7 nejkrásnějších míst v okolí Říma",
-            "publishedAt": "2026-04-25T17:19:05Z"
           }
         ]
       }

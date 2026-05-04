@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-05-04T16:35:28.774172Z",
+  "ingestedAt": "2026-05-04T17:14:34.101341Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Dřevo a krb bez televize. Lucie Vondráčková se pochlubila zrekonstruovanou vilou, sklep připomíná ateliér",
+      "url": "https://www.betterlife.cz/drevo-a-krb-bez-televize-lucie-vondrackova-se-pochlubila-zrekonstruovanou-vilou-sklep-pripomina-atelier/",
+      "dt": "2026-05-04T16:27:13Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "ateliér",
+        "dřevo",
+        "krb",
+        "lucie",
+        "pochlubila",
+        "připomíná",
+        "sklep",
+        "televize",
+        "vilou",
+        "vondráčková",
+        "zrekonstruovanou"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -244,34 +272,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Tajemství dokonalého trávníku spočívá ve správné technologii. Levné stroje stébla fatálně poškozují",
-      "url": "https://www.betterlife.cz/tajemstvi-dokonaleho-travniku-spociva-ve-spravne-technologii-levne-stroje-stebla-fatalne-poskozuji/",
-      "dt": "2026-04-30T05:58:32Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "dokonalého",
-        "fatálně",
-        "levné",
-        "poškozují",
-        "spočívá",
-        "správné",
-        "stroje",
-        "stébla",
-        "tajemství",
-        "technologii",
-        "trávníku"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 68254,
+      "bytes": 74927,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -342,10 +342,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-04T09:02:57Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T16:27:13Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 10
+          "finance": 1,
+          "zdravi": 9
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -357,6 +358,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dřevo a krb bez televize. Lucie Vondráčková se pochlubila zrekonstruovanou vilou, sklep připomíná ateliér",
+            "publishedAt": "2026-05-04T16:27:13Z"
+          },
           {
             "title": "Záludné otázky a etické testy. Pracovní pohovory vyžadují přípravu, otázky na rodinu, zdraví i orientaci jsou tabu",
             "publishedAt": "2026-05-04T09:02:57Z"
@@ -384,10 +389,6 @@
           {
             "title": "Ulice: Odnese to Kristýna? Polykule se rozpadá",
             "publishedAt": "2026-05-01T15:57:29Z"
-          },
-          {
-            "title": "Jitka z Metráčku o své nejslavnější roli nechce ani slyšet. Dneš žije v podhůří Orlických hor a o pozornost médií nestojí",
-            "publishedAt": "2026-05-01T10:44:56Z"
           }
         ]
       }

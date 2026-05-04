@@ -1,28 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-04T16:35:28.774172Z",
+  "ingestedAt": "2026-05-04T17:14:34.101341Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "V centru Lipska vjelo auto do lidí, podle místních médií dva lidé zemřeli",
+      "title": "Požár v Českém Švýcarsku se podařilo lokalizovat. Na místě je přes 500 hasičů",
+      "url": "https://www.denik.cz/pozary/pozar-ceske-svycarsko-narodni-park-lokalizace-20260504.html",
+      "dt": "2026-05-04T16:32:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "500",
+        "hasičů",
+        "lokalizovat",
+        "místě",
+        "podařilo",
+        "požár",
+        "českém",
+        "švýcarsku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Řidič v Lipsku najel do davu lidí. Na místě jsou dva mrtví, další jsou zranění",
       "url": "https://www.denik.cz/staty-eu/nemecko-lipsko-auto-vjelo-do-lidi-mrtvi.html",
       "dt": "2026-05-04T15:59:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
-        "auto",
-        "centru",
+        "další",
+        "davu",
         "dva",
-        "lidé",
         "lidí",
-        "lipska",
-        "médií",
-        "místních",
-        "podle",
-        "vjelo",
-        "zemřeli"
+        "lipsku",
+        "mrtví",
+        "místě",
+        "najel",
+        "zranění",
+        "řidič"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -633,32 +657,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Samosběr u Olomouce začne v červnu. Česnek vypadá luxusně, těší farmáře",
-      "url": "https://www.denik.cz/regiony/samosber-zeleniny-olomouc-vojnice-cesnek-2026.html",
-      "dt": "2026-05-04T08:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "farmáře",
-        "luxusně",
-        "olomouce",
-        "samosběr",
-        "těší",
-        "vypadá",
-        "začne",
-        "červnu",
-        "česnek"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -669,7 +667,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29467,
+      "bytes": 29614,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -706,7 +704,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-04T15:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T16:32:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -724,7 +722,11 @@
         },
         "sample_titles": [
           {
-            "title": "V centru Lipska vjelo auto do lidí, podle místních médií dva lidé zemřeli",
+            "title": "Požár v Českém Švýcarsku se podařilo lokalizovat. Na místě je přes 500 hasičů",
+            "publishedAt": "2026-05-04T16:32:00Z"
+          },
+          {
+            "title": "Řidič v Lipsku najel do davu lidí. Na místě jsou dva mrtví, další jsou zranění",
             "publishedAt": "2026-05-04T15:59:00Z"
           },
           {
@@ -750,10 +752,6 @@
           {
             "title": "Ostuda Leo Express pokračuje, dvě soupravy Talgo odstavil. Lidé nešetří kritikou",
             "publishedAt": "2026-05-04T13:52:00Z"
-          },
-          {
-            "title": "Prevence rakoviny kůže: Začal Stan proti melanomu, kde lidem vyšetří znaménka",
-            "publishedAt": "2026-05-04T13:25:00Z"
           }
         ]
       }

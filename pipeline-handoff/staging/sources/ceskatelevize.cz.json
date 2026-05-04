@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-04T16:35:28.774172Z",
+  "ingestedAt": "2026-05-04T17:14:34.101341Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "SOUHRN: Zásadní události pondělí 4. května",
+      "url": "https://ct24.ceskatelevize.cz/clanek/media/souhrn-zasadni-udalosti-pondeli-4-kvetna-373087",
+      "dt": "2026-05-04T16:30:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "května",
+        "pondělí",
+        "souhrn",
+        "události",
+        "zásadní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -693,16 +715,15 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Hasiči nasadili v Českém Švýcarsku osm vrtulníků",
+      "title": "Hasiči lokalizovali požár v Českém Švýcarsku",
       "url": "https://ct24.ceskatelevize.cz/clanek/regiony/ustecky-kraj/pokracuje-haseni-pozaru-v-ceskem-svycarsku-na-pomoc-dorazi-slovenske-vrtulniky-373061",
       "dt": "2026-05-04T04:27:43Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
         "hasiči",
-        "nasadili",
-        "osm",
-        "vrtulníků",
+        "lokalizovali",
+        "požár",
         "českém",
         "švýcarsku"
       ],
@@ -730,30 +751,6 @@
         "sám",
         "úředník",
         "černé"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vláda schválila opětovné zavedení elektronické evidence tržeb",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/vlada-projedna-opetovne-zavedeni-elektronicke-evidence-trzeb-a-danove-zmeny-373058",
-      "dt": "2026-05-04T03:08:06Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "elektronické",
-        "evidence",
-        "opětovné",
-        "schválila",
-        "tržeb",
-        "vláda",
-        "zavedení"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1543,7 +1540,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44598,
+      "bytes": 44247,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1603,7 +1600,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T16:04:09Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T16:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -1620,6 +1617,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "SOUHRN: Zásadní události pondělí 4. května",
+            "publishedAt": "2026-05-04T16:30:00Z"
+          },
           {
             "title": "V centru Lipska vjel řidič auta do lidí",
             "publishedAt": "2026-05-04T16:04:09Z"
@@ -1647,10 +1648,6 @@
           {
             "title": "Vláda schválila návrh na zpřísnění trestů za týrání lidí i zvířat",
             "publishedAt": "2026-05-04T12:21:54Z"
-          },
-          {
-            "title": "Válka dopadá i na ukrajinské zemědělství. V Charkovské oblasti uhynuly desetitisíce zvířat",
-            "publishedAt": "2026-05-04T12:19:41Z"
           }
         ]
       }
@@ -1756,7 +1753,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77782,
+      "bytes": 77734,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

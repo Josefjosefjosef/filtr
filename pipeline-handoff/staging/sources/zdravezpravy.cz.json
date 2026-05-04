@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-04T16:35:28.774172Z",
+  "ingestedAt": "2026-05-04T17:14:34.101341Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zdravotní benefity na kardio a onko prevenci nebudou daňově omezené",
+      "url": "https://www.zdravezpravy.cz/2026/05/04/zdravotni-benefity-na-kardio-a-onko-prevenci-nebudou-danove-omezene/",
+      "dt": "2026-05-04T16:13:17Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "benefity",
+        "daňově",
+        "kardio",
+        "nebudou",
+        "omezené",
+        "onko",
+        "prevenci",
+        "zdravotní"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -472,30 +497,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "V ČR je jen 500 alergologů. Na vyšetření se čeká i půl roku",
-      "url": "https://www.zdravezpravy.cz/2026/04/26/v-cr-je-jen-500-alergologu-na-vysetreni-se-ceka-i-pul-roku/",
-      "dt": "2026-04-26T08:30:10Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "500",
-        "alergologů",
-        "jen",
-        "půl",
-        "roku",
-        "vyšetření",
-        "čeká"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -506,7 +507,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 189460,
+      "bytes": 187269,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -543,7 +544,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-04T13:30:54Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T16:13:17Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -558,6 +559,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zdravotní benefity na kardio a onko prevenci nebudou daňově omezené",
+            "publishedAt": "2026-05-04T16:13:17Z"
+          },
           {
             "title": "Kožní lékaři vyvracejí 5 nejčastějších mýtů o „zdravém“ slunění",
             "publishedAt": "2026-05-04T13:30:54Z"
@@ -585,10 +590,6 @@
           {
             "title": "Vojtěch: Očkovací strategie očkování nerozšiřuje, na to nemá právní sílu",
             "publishedAt": "2026-04-30T12:28:22Z"
-          },
-          {
-            "title": "Převod dávek, příspěvků a průkazů OZP na ČSSZ se o dva roky odkládá",
-            "publishedAt": "2026-04-30T06:45:20Z"
           }
         ]
       }
