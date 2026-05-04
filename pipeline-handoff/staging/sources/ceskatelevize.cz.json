@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-04T21:29:01.857396Z",
+  "ingestedAt": "2026-05-04T22:04:11.625202Z",
   "items": [
     {
       "section": "aktualne",
@@ -131,16 +131,18 @@
     {
       "section": "kultura",
       "contentType": "article",
-      "title": "Eric Clapton hraje v Praze",
+      "title": "Praha se dočkala dalšího koncertu Erica Claptona",
       "url": "https://ct24.ceskatelevize.cz/clanek/kultura/eric-clapton-hraje-v-praze-373097",
       "dt": "2026-05-04T18:31:11Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "clapton",
-        "eric",
-        "hraje",
-        "praze"
+        "claptona",
+        "dalšího",
+        "dočkala",
+        "erica",
+        "koncertu",
+        "praha"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -764,6 +766,31 @@
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "AS Řím útočí na účast v Lize mistrů Fiorentina má jistou záchranu",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/as-rim-utoci-na-ucast-v-lize-mistru-fiorentina-ma-jistou-zachranu-156604",
+      "dt": "2026-05-04T21:43:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "fiorentina",
+        "jistou",
+        "lize",
+        "mistrů",
+        "záchranu",
+        "útočí",
+        "účast",
+        "řím"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1515,31 +1542,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Philadelphia s Vladařem podlehla Carolině, která je v play-off zatím neporažená",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/nhl/philadelphia-s-vladarem-podlehla-caroline-ktera-je-v-play-off-zatim-neporazena-156574",
-      "dt": "2026-05-03T06:56:07Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "carolině",
-        "neporažená",
-        "off",
-        "philadelphia",
-        "play",
-        "podlehla",
-        "vladařem",
-        "zatím"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1550,7 +1552,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44916,
+      "bytes": 44963,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1648,7 +1650,7 @@
             "publishedAt": "2026-05-04T20:38:28Z"
           },
           {
-            "title": "Eric Clapton hraje v Praze",
+            "title": "Praha se dočkala dalšího koncertu Erica Claptona",
             "publishedAt": "2026-05-04T18:31:11Z"
           },
           {
@@ -1669,7 +1671,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40002,
+      "bytes": 39905,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1706,7 +1708,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T19:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T21:43:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1721,6 +1723,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "AS Řím útočí na účast v Lize mistrů Fiorentina má jistou záchranu",
+            "publishedAt": "2026-05-04T21:43:00Z"
+          },
           {
             "title": "Červenkova one-man show: Ovládl anketu Hokejista sezony a potvrdil start na MS",
             "publishedAt": "2026-05-04T19:15:00Z"
@@ -1748,10 +1754,6 @@
           {
             "title": "Chmelař je zraněný a přijde o Švédské hry. Nahradí ho Reichel",
             "publishedAt": "2026-05-04T12:13:52Z"
-          },
-          {
-            "title": "Mannsverk ani Moses neměli o víkendu dohrát, Slavia měla v Liberci kopat penaltu",
-            "publishedAt": "2026-05-04T12:01:30Z"
           }
         ]
       }
@@ -1763,7 +1765,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77813,
+      "bytes": 77725,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

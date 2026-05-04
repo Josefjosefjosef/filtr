@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-04T21:29:01.857396Z",
+  "ingestedAt": "2026-05-04T22:04:11.625202Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pulitzerovu cenu získal The Washington Post za popis chaotické Trumpovy reformy",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/pulitzerova-cena-the-washington-post-trump-reuters-ap-nyt.A260504_222239_zahranicni_berr",
+      "dt": "2026-05-04T21:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "cenu",
+        "chaotické",
+        "popis",
+        "post",
+        "pulitzerovu",
+        "reformy",
+        "the",
+        "trumpovy",
+        "washington",
+        "získal"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -774,26 +801,25 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Klesly nám příjmy, stěžují si prostitutky v Mexiku. Viní fotbalový šampionát",
-      "url": "https://www.idnes.cz/ekonomika/zahranicni/prostitutky-v-mexicke-metropoli-tvrdi-ze-jim-kvuli-ms-ve-fotbale-klesly-prijmy.A260504_155344_eko-zahranicni_jadv",
-      "dt": "2026-05-04T14:07:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
+      "title": "OTÁZKY A ODPOVĚDI: Nová evidence tržeb. Co komu přinese EET 2.0",
+      "url": "https://www.idnes.cz/ekonomika/domaci/otazky-a-odpovedi-nova-evidence-trzeb-co-komu-prinese-eet-2-0.A260504_161200_ekonomika_ven",
+      "dt": "2026-05-04T22:00:00Z",
+      "media_raw": "iDNES / Ekonomika",
+      "media_norm": "iDNES / Ekonomika",
       "tokens": [
-        "fotbalový",
-        "klesly",
-        "mexiku",
-        "nám",
-        "prostitutky",
-        "příjmy",
-        "stěžují",
-        "viní",
-        "šampionát"
+        "eet",
+        "evidence",
+        "komu",
+        "nová",
+        "odpovědi",
+        "otázky",
+        "přinese",
+        "tržeb"
       ],
-      "feedCategory": "zpravy",
+      "feedCategory": "finance",
       "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
+      "feedId": "fin_idnes_ekonomika",
+      "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
     },
@@ -1557,30 +1583,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Z kuchyně až do továrny. Recept ladila roky, teď má „továrnu“ na modelínu",
-      "url": "https://www.idnes.cz/ekonomika/domaci/katerina-exnerova-plastelina-deti-hracka-formela-ekonomika.A260426_193826_ekonomika_jans",
-      "dt": "2026-04-26T22:00:00Z",
-      "media_raw": "iDNES / Ekonomika",
-      "media_norm": "iDNES / Ekonomika",
-      "tokens": [
-        "kuchyně",
-        "ladila",
-        "modelínu",
-        "recept",
-        "roky",
-        "továrnu",
-        "továrny"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rubric",
-      "feedId": "fin_idnes_ekonomika",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1591,7 +1593,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50386,
+      "bytes": 50228,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1628,11 +1630,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T20:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T21:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
-          "finance": 4,
+          "zpravy": 26,
+          "finance": 3,
           "other": 1
         },
         "drop_counts": {
@@ -1645,6 +1647,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pulitzerovu cenu získal The Washington Post za popis chaotické Trumpovy reformy",
+            "publishedAt": "2026-05-04T21:00:00Z"
+          },
           {
             "title": "Alžběta II. se ještě jako princezna na konci války tajně připojila k jásajícímu davu",
             "publishedAt": "2026-05-04T20:20:00Z"
@@ -1672,10 +1678,6 @@
           {
             "title": "Vymaní se Arménie z ruského vlivu? EU hledá partnery v regionu",
             "publishedAt": "2026-05-04T19:05:00Z"
-          },
-          {
-            "title": "Budeme to hrát po celé Trumpovo funkční období, ale nedáme se, reaguje EU na cla",
-            "publishedAt": "2026-05-04T18:38:00Z"
           }
         ]
       }
@@ -1687,7 +1689,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=ekonomika",
-      "bytes": 45662,
+      "bytes": 45242,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1724,7 +1726,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T16:45:32Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 30
@@ -1739,6 +1741,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "OTÁZKY A ODPOVĚDI: Nová evidence tržeb. Co komu přinese EET 2.0",
+            "publishedAt": "2026-05-04T22:00:00Z"
+          },
           {
             "title": "Průšvih CSG: akcie ztratily už polovinu hodnoty. Nevěří se jeho byznys modelu",
             "publishedAt": "2026-05-04T16:45:32Z"
@@ -1765,10 +1771,6 @@
           },
           {
             "title": "Nejasný vývoj války brzdí prodeje letních zájezdů, cestovky se je snaží podpořit",
-            "publishedAt": "2026-05-03T22:00:00Z"
-          },
-          {
-            "title": "Kozy na dohled paneláků. Jirákovi farmaří kousek od centra Prahy",
             "publishedAt": "2026-05-03T22:00:00Z"
           }
         ]

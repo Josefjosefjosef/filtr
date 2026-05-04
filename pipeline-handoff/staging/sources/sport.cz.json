@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-04T21:29:01.857396Z",
+  "ingestedAt": "2026-05-04T22:04:11.625202Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Už třinácté MS v kariéře! Červenka chce být u Rulíkova loučení a překoná český rekord",
+      "url": "https://www.sport.cz/clanek/hokej-ms-cervenka-potvrdil-ze-planuje-startovat-na-ms-5448545",
+      "dt": "2026-05-04T21:39:20Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "být",
+        "chce",
+        "kariéře",
+        "loučení",
+        "překoná",
+        "rekord",
+        "rulíkova",
+        "třinácté",
+        "červenka",
+        "český"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -740,35 +767,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rozhodčí zpackali zápas Slavie v Liberci. Zásadní pochybení komise odhalila také v utkání Sparty",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-dve-neudelene-cervene-a-neodpiskana-penalta-rozhodci-zasadne-chybovali-v-duelech-slavie-a-sparty-tvrdi-komise-5448477",
-      "dt": "2026-05-04T11:50:33Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "komise",
-        "liberci",
-        "odhalila",
-        "pochybení",
-        "rozhodčí",
-        "slavie",
-        "sparty",
-        "také",
-        "utkání",
-        "zpackali",
-        "zápas",
-        "zásadní"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -779,7 +777,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40662,
+      "bytes": 40034,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -816,7 +814,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T21:17:06Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T21:39:20Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -831,6 +829,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Už třinácté MS v kariéře! Červenka chce být u Rulíkova loučení a překoná český rekord",
+            "publishedAt": "2026-05-04T21:39:20Z"
+          },
           {
             "title": "Bolestná ztráta v honbě za titulem. Manchester City urval alespoň bod trefou v sedmé minutě nastavení",
             "publishedAt": "2026-05-04T16:39:17Z"
@@ -858,10 +860,6 @@
           {
             "title": "Odešel legendární král smolařů Velké pardubické",
             "publishedAt": "2026-05-04T18:45:10Z"
-          },
-          {
-            "title": "Stříbrná biatlonistka z posledního MS udělala životní krok",
-            "publishedAt": "2026-05-04T18:22:52Z"
           }
         ]
       }
