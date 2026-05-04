@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-04T08:05:24.376280Z",
+  "ingestedAt": "2026-05-04T08:38:59.069136Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Cígler a Sandberg opět nakupovali. Seyfor vstoupil do tuzemského Raynetu s plány na další expanzi",
+      "url": "https://www.e15.cz/byznys/technologie-a-media/cigler-a-sandberg-opet-nakupovali-seyfor-vstoupil-do-tuzemskeho-raynetu-s-plany-na-dalsi-expanzi-1432554",
+      "dt": "2026-05-04T08:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "cígler",
+        "další",
+        "expanzi",
+        "nakupovali",
+        "opět",
+        "plány",
+        "raynetu",
+        "sandberg",
+        "seyfor",
+        "tuzemského",
+        "vstoupil"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -1074,32 +1102,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Vdovský důchod 2026: Kdo má letos nárok, jaká je výše a kdy ho získáte natrvalo?",
-      "url": "https://www.e15.cz/vdovsky-duchod-narok-vypocet",
-      "dt": "2026-05-01T04:30:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "2026",
-        "důchod",
-        "jaká",
-        "letos",
-        "natrvalo",
-        "nárok",
-        "vdovský",
-        "výše",
-        "získáte"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1110,7 +1112,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 56755,
+      "bytes": 56744,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1147,11 +1149,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-04T07:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T08:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 7,
           "finance": 31,
+          "zpravy": 7,
           "zdravi": 2
         },
         "drop_counts": {
@@ -1164,6 +1166,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cígler a Sandberg opět nakupovali. Seyfor vstoupil do tuzemského Raynetu s plány na další expanzi",
+            "publishedAt": "2026-05-04T08:00:00Z"
+          },
           {
             "title": "Chcete po roce 2028 stavět v Praze? Bez Metropolitního plánu to půjde těžko",
             "publishedAt": "2026-05-04T07:45:00Z"
@@ -1191,10 +1197,6 @@
           {
             "title": "Pokud dokážu vydělat na měsíční splátku, jdu do vlastního. Je Čechům jedno, kolik stojí byt?",
             "publishedAt": "2026-05-04T03:30:00Z"
-          },
-          {
-            "title": "Dálnice i přehrady budou mimo rozpočtový schodek. Měkčí pravidla má i Německo, hájí změny Schillerová",
-            "publishedAt": "2026-05-04T03:00:00Z"
           }
         ]
       }

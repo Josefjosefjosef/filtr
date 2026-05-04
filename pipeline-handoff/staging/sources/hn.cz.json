@@ -1,8 +1,40 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-04T08:05:24.376280Z",
+  "ingestedAt": "2026-05-04T08:38:59.069136Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Konec povinnosti platit dluhy? Reálně hrozí, že definitivně přijdeme o pověst fiskálně konzervativní země, kterou si držíme od roku 1918",
+      "url": "https://archiv.hn.cz/c1-67871200-konec-povinnosti-platit-dluhy-realne-hrozi-ze-definitivne-prijdeme-o-povest-fiskalne-konzervativni-zeme-kterou-si-drzime-od-roku-1918",
+      "dt": "2026-05-04T08:08:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "1918",
+        "definitivně",
+        "dluhy",
+        "držíme",
+        "fiskálně",
+        "hrozí",
+        "konec",
+        "konzervativní",
+        "platit",
+        "povinnosti",
+        "pověst",
+        "přijdeme",
+        "reálně",
+        "roku",
+        "země"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -67,27 +99,26 @@
       "_dt_serialized": true
     },
     {
-      "section": "finance",
+      "section": "krimi",
       "contentType": "article",
-      "title": "Američané chtějí doprovázet lodě skrz Hormuzský průliv. Budeme to považovat za porušení příměří, hrozí Teherán",
+      "title": "Írán varoval americké lodě, aby se nepřibližovaly k Hormuzskému průlivu. Stanou se terčem útoku, hrozí Teherán",
       "url": "https://zahranicni.hn.cz/c1-67873060-americane-chteji-doprovazet-lode-skrz-hormuzsky-pruliv-budeme-to-povazovat-za-poruseni-primeri-hrozi-teheran",
       "dt": "2026-05-04T04:57:00Z",
       "media_raw": "HN / Ekonomika",
       "media_norm": "HN / Ekonomika",
       "tokens": [
-        "američané",
-        "budeme",
-        "chtějí",
-        "doprovázet",
-        "hormuzský",
+        "americké",
+        "hormuzskému",
         "hrozí",
         "lodě",
-        "porušení",
-        "považovat",
-        "průliv",
-        "příměří",
-        "skrz",
-        "teherán"
+        "nepřibližovaly",
+        "průlivu",
+        "stanou",
+        "teherán",
+        "terčem",
+        "varoval",
+        "írán",
+        "útoku"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1166,35 +1197,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "České dráhy loni hospodařily se ziskem téměř dvě miliardy korun. Nedařilo se nákladní dopravě",
-      "url": "https://byznys.hn.cz/c1-67872660-ceske-drahy-loni-hospodarily-se-ziskem-temer-dve-miliardy-korun-nedarilo-se-nakladni-doprave",
-      "dt": "2026-04-30T12:32:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "dopravě",
-        "dráhy",
-        "dvě",
-        "hospodařily",
-        "korun",
-        "loni",
-        "miliardy",
-        "nedařilo",
-        "nákladní",
-        "téměř",
-        "ziskem",
-        "české"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1205,7 +1207,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184191,
+      "bytes": 184391,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1242,11 +1244,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-04T06:54:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T08:08:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 34,
-          "zpravy": 4,
+          "finance": 33,
+          "zpravy": 5,
           "sport": 2
         },
         "drop_counts": {
@@ -1260,6 +1262,10 @@
         },
         "sample_titles": [
           {
+            "title": "Konec povinnosti platit dluhy? Reálně hrozí, že definitivně přijdeme o pověst fiskálně konzervativní země, kterou si držíme od roku 1918",
+            "publishedAt": "2026-05-04T08:08:00Z"
+          },
+          {
             "title": "GameStop chce koupit eBay a konkurovat s ním Amazonu. Prodejce videoher je přitom čtyřikrát menší než známý e-shop",
             "publishedAt": "2026-05-04T06:54:00Z"
           },
@@ -1268,7 +1274,7 @@
             "publishedAt": "2026-05-04T06:06:00Z"
           },
           {
-            "title": "Američané chtějí doprovázet lodě skrz Hormuzský průliv. Budeme to považovat za porušení příměří, hrozí Teherán",
+            "title": "Írán varoval americké lodě, aby se nepřibližovaly k Hormuzskému průlivu. Stanou se terčem útoku, hrozí Teherán",
             "publishedAt": "2026-05-04T04:57:00Z"
           },
           {
@@ -1285,10 +1291,6 @@
           },
           {
             "title": "Lufthansa oslavila sté výročí. Finančně oslabená, stávkující a v obavách o dostatek leteckého paliva",
-            "publishedAt": "2026-05-03T22:00:00Z"
-          },
-          {
-            "title": "Trh se začíná nasycovat. Hledat dobré retail parky je těžší, klíčem je lokalita, říká Oplíštil z Realia Group",
             "publishedAt": "2026-05-03T22:00:00Z"
           }
         ]

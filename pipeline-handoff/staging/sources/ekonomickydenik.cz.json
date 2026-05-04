@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-04T08:05:24.376280Z",
+  "ingestedAt": "2026-05-04T08:38:59.069136Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Výpověď smlouvy v mailu neuznáváme, vzkázalo innogy. Teď za to dostalo pokutu od ERÚ",
+      "url": "https://ekonomickydenik.cz/innogy-dostalo-pokutu-od-eru-480-tisic/",
+      "dt": "2026-05-04T08:16:48Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dostalo",
+        "erú",
+        "innogy",
+        "mailu",
+        "neuznáváme",
+        "pokutu",
+        "smlouvy",
+        "vzkázalo",
+        "výpověď"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Dronový útok v Moskvě: Zásah mrakodrapu jen pár kilometrů od Kremlu",
+      "url": "https://ekonomickydenik.cz/dron-utok-moskva-zasah-par-kilometru-od-kremlu/",
+      "dt": "2026-05-04T08:13:41Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dronový",
+        "jen",
+        "kilometrů",
+        "kremlu",
+        "moskvě",
+        "mrakodrapu",
+        "pár",
+        "zásah",
+        "útok"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -735,61 +787,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Peníze za americkou válku s Íránem? Stačily by na pomoc pro téměř 90 milionů lidí, tvrdí OSN",
-      "url": "https://ekonomickydenik.cz/penize-za-americkou-valku-s-iranem-osn/",
-      "dt": "2026-05-01T07:38:35Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "americkou",
-        "lidí",
-        "milionů",
-        "osn",
-        "peníze",
-        "pomoc",
-        "stačily",
-        "tvrdí",
-        "téměř",
-        "válku",
-        "íránem"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Naděje pro trh s ropou? Emiráty opouštějí OPEC a plánují rozjet těžbu naplno",
-      "url": "https://ekonomickydenik.cz/emiraty-opousteji-opec-planuji-rozjet-tezbu/",
-      "dt": "2026-05-01T04:15:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "emiráty",
-        "naděje",
-        "naplno",
-        "opec",
-        "opouštějí",
-        "plánují",
-        "ropou",
-        "rozjet",
-        "trh",
-        "těžbu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70418,
+      "bytes": 70315,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,11 +834,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T07:41:05Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T08:16:48Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 27,
-          "zpravy": 1,
+          "finance": 26,
+          "zpravy": 2,
           "zdravi": 2
         },
         "drop_counts": {
@@ -854,6 +851,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Výpověď smlouvy v mailu neuznáváme, vzkázalo innogy. Teď za to dostalo pokutu od ERÚ",
+            "publishedAt": "2026-05-04T08:16:48Z"
+          },
+          {
+            "title": "Dronový útok v Moskvě: Zásah mrakodrapu jen pár kilometrů od Kremlu",
+            "publishedAt": "2026-05-04T08:13:41Z"
+          },
           {
             "title": "Česko modernizuje správu státních hranic. Už se dohodlo se Slovenskem a Německem",
             "publishedAt": "2026-05-04T07:41:05Z"
@@ -877,14 +882,6 @@
           {
             "title": "Černochová hrozí Babišovi žalobou: Lži o zmanipulované soutěži nehodlám tolerovat",
             "publishedAt": "2026-05-03T13:23:31Z"
-          },
-          {
-            "title": "Tichý zabiják v řadách hrdinů: Proč stát zásadně mění péči o veterány?",
-            "publishedAt": "2026-05-03T12:30:00Z"
-          },
-          {
-            "title": "Babiš: Letiště Karlovy Vary přejde pod armádu. Hejtman kraje není proti",
-            "publishedAt": "2026-05-03T11:15:00Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "pelipecky.cz",
-  "ingestedAt": "2026-05-04T08:05:24.376280Z",
+  "ingestedAt": "2026-05-04T08:38:59.069136Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "POBYT DNE: Dovolená na Ischii ve výborně hodnoceném hotelu s odletem z Prahy od 15 790 Kč",
+      "url": "https://pelipecky.cz/pobyt-letenky-ischia-boutique-ideal/",
+      "dt": "2026-05-04T08:25:18Z",
+      "media_raw": "Pelipecky",
+      "media_norm": "Pelipecky",
+      "tokens": [
+        "790",
+        "dne",
+        "dovolená",
+        "hodnoceném",
+        "hotelu",
+        "ischii",
+        "odletem",
+        "pobyt",
+        "prahy",
+        "výborně"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_pelipecky",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "pelipecky.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -223,26 +250,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "pelipecky.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Letenky do Bangkoku za 14 390 Kč",
-      "url": "https://pelipecky.cz/bangkok-aktivity/",
-      "dt": "2026-04-22T08:00:00Z",
-      "media_raw": "Pelipecky",
-      "media_norm": "Pelipecky",
-      "tokens": [
-        "390",
-        "bangkoku",
-        "letenky"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_pelipecky",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "pelipecky.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -253,7 +260,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://pelipecky.cz/feed/",
-      "bytes": 135079,
+      "bytes": 124244,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -290,7 +297,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-03T12:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T08:25:18Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "cestovani": 10
@@ -305,6 +312,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "POBYT DNE: Dovolená na Ischii ve výborně hodnoceném hotelu s odletem z Prahy od 15 790 Kč",
+            "publishedAt": "2026-05-04T08:25:18Z"
+          },
           {
             "title": "Hledáš LAST MINUTE letenky + pobyty? Tady jsou nejlepší nabídky na nadcházející dny a týdny",
             "publishedAt": "2026-05-03T12:30:00Z"
@@ -332,10 +343,6 @@
           {
             "title": "POBYT DNE: 4* pobyt v Nízkých Tatrách se snídaní a wellness od 3 290 Kč",
             "publishedAt": "2026-04-24T06:55:35Z"
-          },
-          {
-            "title": "Thajsko od 10 990 Kč: Bangkok, Chiang Mai a Phuket včetně zavazadla",
-            "publishedAt": "2026-04-22T11:41:49Z"
           }
         ]
       }

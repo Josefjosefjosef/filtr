@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-04T08:05:24.376280Z",
+  "ingestedAt": "2026-05-04T08:38:59.069136Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "NEJ Z LIGY: Zmatky s čísly i chorvatský mág. A Spartě se zaplňuje marodka",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-nadstavba-1-kolo-souhrn-nej-z-ligy-momenty-kola.A260503_071923_fotbal_duff",
+      "dt": "2026-05-04T08:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "chorvatský",
+        "ligy",
+        "marodka",
+        "mág",
+        "nej",
+        "spartě",
+        "zaplňuje",
+        "zmatky",
+        "čísly"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -759,31 +785,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Čtvrtkařkám se finále na World Relays nevyvedlo, ztratily už na první předávce",
-      "url": "https://www.idnes.cz/sport/atletika/ceska-stafeta-ctvrtkarek-world-relays-norky-jaegerova-jamajka-botsvana.A260503_173151_atletika_kazdt",
-      "dt": "2026-05-03T15:43:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "finále",
-        "nevyvedlo",
-        "první",
-        "předávce",
-        "relays",
-        "world",
-        "ztratily",
-        "čtvrtkařkám"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47058,
+      "bytes": 47286,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T07:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T08:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -846,6 +847,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "NEJ Z LIGY: Zmatky s čísly i chorvatský mág. A Spartě se zaplňuje marodka",
+            "publishedAt": "2026-05-04T08:00:00Z"
+          },
           {
             "title": "Pojedou na MS mladíci? Záleží také na NHL. Rulík čeká, jaké bude mít možnosti",
             "publishedAt": "2026-05-04T07:35:00Z"
@@ -873,10 +878,6 @@
           {
             "title": "Hokej jsem hrát nechtěl, střílel jsem na obě branky, říká nejmladší Zohorna",
             "publishedAt": "2026-05-04T06:00:00Z"
-          },
-          {
-            "title": "Dobeš vychytal Montrealu postup, Nečas třikrát asistoval u kanonády",
-            "publishedAt": "2026-05-04T05:43:33Z"
           }
         ]
       }
