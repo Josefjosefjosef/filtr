@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-04T15:59:39.217263Z",
+  "ingestedAt": "2026-05-04T16:35:28.774172Z",
   "items": [
     {
       "section": "veda",
@@ -22,6 +22,35 @@
         "prodávat",
         "přestal",
         "stolní"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "T-Mobile ukázal výhody 5G SA sítě. V mobilu ji nepoznáte, ale v nemocnicích nebo fabrikách mění pravidla",
+      "url": "https://mobilmania.zive.cz/clanky/t-mobile-ukazal-vyhody-5g-sa-site-v-mobilu-ji-nepoznate-ale-v-nemocnicich-nebo-fabrikach-meni-pravidla/sc-3-a-1364668/default.aspx",
+      "dt": "2026-05-04T15:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "ale",
+        "fabrikách",
+        "mobile",
+        "mobilu",
+        "mění",
+        "nebo",
+        "nemocnicích",
+        "nepoznáte",
+        "pravidla",
+        "sítě",
+        "ukázal",
+        "výhody"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -942,34 +971,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Tento český doplněk do prohlížeče upozorní na pochybné e-shopy dříve, než přijdete o peníze",
-      "url": "https://www.zive.cz/clanky/tento-cesky-doplnek-do-prohlizece-upozorni-na-pochybne-e-shopy-drive-nez-prijdete-o-penize/sc-3-a-240930/default.aspx",
-      "dt": "2026-04-29T12:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "doplněk",
-        "dříve",
-        "než",
-        "peníze",
-        "pochybné",
-        "prohlížeče",
-        "přijdete",
-        "shopy",
-        "tento",
-        "upozorní",
-        "český"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -980,7 +981,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22970,
+      "bytes": 22788,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1017,7 +1018,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-04T13:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T15:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1035,6 +1036,10 @@
           {
             "title": "Apple přestal prodávat nejlevnější stolní Mac. Důvodů může být hned několik",
             "publishedAt": "2026-05-04T12:45:00Z"
+          },
+          {
+            "title": "T-Mobile ukázal výhody 5G SA sítě. V mobilu ji nepoznáte, ale v nemocnicích nebo fabrikách mění pravidla",
+            "publishedAt": "2026-05-04T15:45:00Z"
           },
           {
             "title": "Už chybí jen alobalová čepice. KitKat ukázal obal, který odřízne mobil od signálu. Naštěstí je to jen reklama",
@@ -1059,10 +1064,6 @@
           {
             "title": "Konec fyzických SIM karet je v nedohlednu. Zákazníci o přechod na eSIM zase tolik nestojí",
             "publishedAt": "2026-05-04T07:15:00Z"
-          },
-          {
-            "title": "Konec fólií, které se poškrábou za pár dní. Novinka z Koreje spojuje odolnost skla i pružnost plastu",
-            "publishedAt": "2026-05-04T08:45:00Z"
           }
         ]
       }

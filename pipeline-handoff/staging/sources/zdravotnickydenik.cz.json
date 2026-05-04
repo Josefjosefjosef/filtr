@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-04T15:59:39.217263Z",
+  "ingestedAt": "2026-05-04T16:35:28.774172Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Boj s mýty o vakcínách: Evropská agentura spouští poradní tým, je v něm i známý český expert",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/ema-poradni-skupina-ockovani-prymula/",
+      "dt": "2026-05-04T16:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "agentura",
+        "boj",
+        "evropská",
+        "expert",
+        "mýty",
+        "něm",
+        "poradní",
+        "spouští",
+        "tým",
+        "vakcínách",
+        "známý",
+        "český"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -240,35 +269,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Jednání o úhradách v pasti: Peníze na příští rok se dělí „naslepo“, pojišťovny mají prázdné kapsy",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/dohodovaci-rizeni-naslepo-miliardy-od-statu/",
-      "dt": "2026-05-04T06:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "dělí",
-        "jednání",
-        "kapsy",
-        "mají",
-        "naslepo",
-        "pasti",
-        "peníze",
-        "pojišťovny",
-        "prázdné",
-        "příští",
-        "rok",
-        "úhradách"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 87713,
+      "bytes": 84985,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-04T14:58:18Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T16:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -331,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Boj s mýty o vakcínách: Evropská agentura spouští poradní tým, je v něm i známý český expert",
+            "publishedAt": "2026-05-04T16:00:00Z"
+          },
           {
             "title": "Změna ve vedení péče o vězně: Do čela zařízení ministerstva spravedlnosti nastoupil nový ředitel",
             "publishedAt": "2026-05-04T14:58:18Z"
@@ -358,10 +362,6 @@
           {
             "title": "Nemoc, která zabíjela na výletní lodi v Atlantiku: Co je to hantavirus a jak se přenáší na člověka?",
             "publishedAt": "2026-05-04T08:48:53Z"
-          },
-          {
-            "title": "Joudy v telemedicíně nechceme. Čestné slovo místo certifikace zavání průšvihem, varuje Pecina",
-            "publishedAt": "2026-05-04T08:00:00Z"
           }
         ]
       }

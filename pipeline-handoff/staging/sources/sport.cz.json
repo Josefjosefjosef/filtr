@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-04T15:59:39.217263Z",
+  "ingestedAt": "2026-05-04T16:35:28.774172Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Real přišel kvůli obnovenému zranění o Mendyho do konce sezony",
+      "url": "https://www.sport.cz/clanek/fotbal-la-liga-real-prisel-kvuli-obnovenemu-zraneni-o-mendyho-do-konce-sezony-5448526",
+      "dt": "2026-05-04T16:01:57Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "konce",
+        "kvůli",
+        "mendyho",
+        "obnovenému",
+        "přišel",
+        "real",
+        "sezony",
+        "zranění"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -32,20 +57,24 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Brutální skvrna na oslavách Slovanu. Třináctileté děvče muselo na operaci",
+      "title": "Brutální skvrna na oslavách Slovanu. Třináctileté děvče hrozivě zaplatilo za touhu být blízko mistrům",
       "url": "https://www.sport.cz/clanek/fotbal-evropske-ligy-hroziva-skvrna-na-oslavach-slovanu-brutalni-skluz-prisel-v-necekane-chvili-trinactileta-fanynka-musela-na-operaci-5448524",
       "dt": "2026-05-04T15:34:44Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
+        "blízko",
         "brutální",
+        "být",
         "děvče",
-        "muselo",
-        "operaci",
+        "hrozivě",
+        "mistrům",
         "oslavách",
         "skvrna",
         "slovanu",
-        "třináctileté"
+        "touhu",
+        "třináctileté",
+        "zaplatilo"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -745,35 +774,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nepřijatelné. Pokud chceme vyhrát mistrovství světa, musíme zasáhnout, říká šéf Mercedesu Wolff",
-      "url": "https://www.sport.cz/clanek/moto-formule-1-neprijatelne-pokud-chceme-vyhrat-mistrovstvi-sveta-musime-zasahnout-rika-sef-mercedesu-wolff-5448485",
-      "dt": "2026-05-04T09:55:45Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "chceme",
-        "mercedesu",
-        "mistrovství",
-        "musíme",
-        "nepřijatelné",
-        "pokud",
-        "světa",
-        "vyhrát",
-        "wolff",
-        "zasáhnout",
-        "říká",
-        "šéf"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -784,7 +784,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41128,
+      "bytes": 41204,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -821,7 +821,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T15:45:19Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T16:01:57Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -838,11 +838,15 @@
         },
         "sample_titles": [
           {
+            "title": "Real přišel kvůli obnovenému zranění o Mendyho do konce sezony",
+            "publishedAt": "2026-05-04T16:01:57Z"
+          },
+          {
             "title": "Cyklistická hvězda Vosová si hned v úvodu Vuelty zlomila klíční kost",
             "publishedAt": "2026-05-04T15:45:19Z"
           },
           {
-            "title": "Brutální skvrna na oslavách Slovanu. Třináctileté děvče muselo na operaci",
+            "title": "Brutální skvrna na oslavách Slovanu. Třináctileté děvče hrozivě zaplatilo za touhu být blízko mistrům",
             "publishedAt": "2026-05-04T15:34:44Z"
           },
           {
@@ -864,10 +868,6 @@
           {
             "title": "Aktuální kádr české hokejové reprezentace před MS 2026. Česko v přípravě na světový šampionát",
             "publishedAt": "2026-05-01T06:03:00Z"
-          },
-          {
-            "title": "Švédské hokejové hry 2026: Program českých hokejistů na Beijer Hockey Games",
-            "publishedAt": "2026-05-04T14:27:00Z"
           }
         ]
       }
