@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-04T11:35:12.804738Z",
+  "ingestedAt": "2026-05-04T12:10:08.775491Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Maximální ceny benzinu a nafty na úterý 5. května",
+      "url": "https://www.penize.cz/doprava/489243-maximalni-ceny-benzinu-a-nafty-na-utery-5-kvetna",
+      "dt": "2026-05-04T13:58:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "benzinu",
+        "ceny",
+        "května",
+        "maximální",
+        "nafty",
+        "úterý"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -472,29 +495,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Maximální ceny benzinu a nafty na čtvrtek 30. dubna",
-      "url": "https://www.penize.cz/doprava/489083-maximalni-ceny-benzinu-a-nafty-na-ctvrtek-30-dubna",
-      "dt": "2026-04-29T13:58:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "benzinu",
-        "ceny",
-        "dubna",
-        "maximální",
-        "nafty",
-        "čtvrtek"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -505,7 +505,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18334,
+      "bytes": 18330,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -542,12 +542,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-04T12:47:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T13:58:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 3,
           "finance": 16,
-          "sport": 1,
-          "zpravy": 3
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -559,6 +559,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Maximální ceny benzinu a nafty na úterý 5. května",
+            "publishedAt": "2026-05-04T13:58:00Z"
+          },
           {
             "title": "Evidenci tržeb od ledna 2027 schválila vláda. Do košíku vám neuvidí",
             "publishedAt": "2026-05-04T12:47:00Z"
@@ -586,10 +590,6 @@
           {
             "title": "Jarní úklid v předplatném. Jak si udělat pořádek a ušetřit až tisíce měsíčně",
             "publishedAt": "2026-05-03T08:00:00Z"
-          },
-          {
-            "title": "Banka Creditas má soutěž o iPhone a vstupenky na MotoGP",
-            "publishedAt": "2026-05-03T06:30:00Z"
           }
         ]
       }

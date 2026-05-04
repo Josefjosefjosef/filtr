@@ -1,25 +1,78 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-04T11:35:12.804738Z",
+  "ingestedAt": "2026-05-04T12:10:08.775491Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Čísla mu poradila žena. Muž ze středních Čech je proměnil v pohádkovou výhru",
+      "title": "Hasiči se snaží požár v národním parku dostat pod kontrolu, pomáhá osm vrtulníků",
+      "url": "https://www.denik.cz/pozary/pozar-ceske-svycarsko-20260504.html",
+      "dt": "2026-05-04T11:54:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dostat",
+        "hasiči",
+        "kontrolu",
+        "národním",
+        "osm",
+        "parku",
+        "pomáhá",
+        "požár",
+        "snaží",
+        "vrtulníků"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "V kauze bitcoinového daru ministerstvu obvinila policie další tři lidi",
+      "url": "https://www.denik.cz/krimi/bitcoinova-kauza-nove-obvineni.html",
+      "dt": "2026-05-04T11:52:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bitcoinového",
+        "další",
+        "daru",
+        "kauze",
+        "lidi",
+        "ministerstvu",
+        "obvinila",
+        "policie",
+        "tři"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Muž prozradil, jak vyhrál Superjackpot 187 milionů. S čísly mu poradila žena",
       "url": "https://www.denik.cz/regiony/cisla-stredni-cechy-sportka-vyhra-miliony-allwyn.html",
       "dt": "2026-05-04T11:21:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
+        "187",
+        "milionů",
         "muž",
-        "pohádkovou",
         "poradila",
-        "proměnil",
-        "středních",
-        "výhru",
-        "čech",
-        "čísla",
+        "prozradil",
+        "superjackpot",
+        "vyhrál",
+        "čísly",
         "žena"
       ],
       "feedCategory": "zpravy",
@@ -601,58 +654,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Na nevyhovující byt si nepůjde vzít dávku. Stát bojuje s obchodníky s chudobou",
-      "url": "https://www.denik.cz/z_domova/superdavka-bydleni-davka-statni-socialni-pomoci-byt-jiny-prostor-k-bydleni.html",
-      "dt": "2026-05-04T02:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bojuje",
-        "byt",
-        "chudobou",
-        "dávku",
-        "nepůjde",
-        "nevyhovující",
-        "obchodníky",
-        "stát",
-        "vzít"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Na výletní lodi v Atlantiku zemřeli tři lidé, u jednoho našli hantavirus",
-      "url": "https://www.denik.cz/ze_sveta/vyletni-lod-hantavirus.html",
-      "dt": "2026-05-03T21:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "atlantiku",
-        "hantavirus",
-        "jednoho",
-        "lidé",
-        "lodi",
-        "našli",
-        "tři",
-        "výletní",
-        "zemřeli"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -663,7 +664,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28885,
+      "bytes": 28901,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -700,7 +701,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-04T11:21:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T11:54:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -717,7 +718,15 @@
         },
         "sample_titles": [
           {
-            "title": "Čísla mu poradila žena. Muž ze středních Čech je proměnil v pohádkovou výhru",
+            "title": "Hasiči se snaží požár v národním parku dostat pod kontrolu, pomáhá osm vrtulníků",
+            "publishedAt": "2026-05-04T11:54:00Z"
+          },
+          {
+            "title": "V kauze bitcoinového daru ministerstvu obvinila policie další tři lidi",
+            "publishedAt": "2026-05-04T11:52:00Z"
+          },
+          {
+            "title": "Muž prozradil, jak vyhrál Superjackpot 187 milionů. S čísly mu poradila žena",
             "publishedAt": "2026-05-04T11:21:00Z"
           },
           {
@@ -739,14 +748,6 @@
           {
             "title": "Utíkejte! Hroch v zoo pozdravil návštěvníky po svém, pokropil je sprchou výkalů",
             "publishedAt": "2026-05-04T09:37:00Z"
-          },
-          {
-            "title": "RADAR: Na Česko se ženou bouřky a ochlazení. Mapa ukazuje, kde bude pršet",
-            "publishedAt": "2026-05-04T09:12:00Z"
-          },
-          {
-            "title": "Poslední slova zavražděné Kateřiny z Vysoké: Zavolám ti v neděli, mami",
-            "publishedAt": "2026-05-04T09:00:00Z"
           }
         ]
       }

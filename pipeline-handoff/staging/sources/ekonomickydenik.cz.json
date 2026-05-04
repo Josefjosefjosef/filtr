@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-04T11:35:12.804738Z",
+  "ingestedAt": "2026-05-04T12:10:08.775491Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Schillerová oživí EET. Očekávané výnosy jsou podle opozice nerealistické",
+      "url": "https://ekonomickydenik.cz/schillerova-ozivi-eet-vynosy-nerealisticke/",
+      "dt": "2026-05-04T12:02:44Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "eet",
+        "nerealistické",
+        "opozice",
+        "očekávané",
+        "oživí",
+        "podle",
+        "schillerová",
+        "výnosy"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -761,33 +786,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Šéfové berou stále víc. Příjmy zaměstnanců jsou ale nižší než před 7 lety",
-      "url": "https://ekonomickydenik.cz/sefove-berou-stale-vic-prijmy-zamestnancu-jsou-nizsi/",
-      "dt": "2026-05-01T10:48:24Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "ale",
-        "berou",
-        "lety",
-        "než",
-        "nižší",
-        "příjmy",
-        "stále",
-        "víc",
-        "zaměstnanců",
-        "šéfové"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70863,
+      "bytes": 71500,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T11:17:56Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T12:02:44Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 25,
@@ -852,6 +850,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Schillerová oživí EET. Očekávané výnosy jsou podle opozice nerealistické",
+            "publishedAt": "2026-05-04T12:02:44Z"
+          },
           {
             "title": "Česko volá o pomoc kvůli požáru. Na cestě jsou vrtulníky od sousedů",
             "publishedAt": "2026-05-04T11:17:56Z"
@@ -879,10 +881,6 @@
           {
             "title": "Rozšíří Kanada Unii? Z hlediska kvality institucí a hodnot překonává Ukrajinu",
             "publishedAt": "2026-05-04T04:30:00Z"
-          },
-          {
-            "title": "Babiš se setkal se Zelenským. Doporučil mu země, které mohou zprostředkovat mír",
-            "publishedAt": "2026-05-03T17:09:56Z"
           }
         ]
       }

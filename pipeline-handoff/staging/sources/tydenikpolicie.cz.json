@@ -1,8 +1,40 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-04T11:35:12.804738Z",
+  "ingestedAt": "2026-05-04T12:10:08.775491Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Seniorovi v Jirkově vadil hluk v domě. Nenapadlo ho nic lepšího, než zavolat na tísňovou linku s tím, že to tam vystřílí",
+      "url": "https://tydenikpolicie.cz/seniorovi-v-jirkove-vadil-hluk-v-dome-nenapadlo-ho-nic-lepsiho-nez-zavolat-na-tisnovou-linku-s-tim-ze-to-tam-vystrili/",
+      "dt": "2026-05-04T12:03:27Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "domě",
+        "hluk",
+        "jirkově",
+        "lepšího",
+        "linku",
+        "nenapadlo",
+        "než",
+        "nic",
+        "seniorovi",
+        "tam",
+        "tím",
+        "tísňovou",
+        "vadil",
+        "vystřílí",
+        "zavolat"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -228,34 +260,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kvůli požáru v Národním parku České Švýcarsko byl vyhlášen zvláštní stupeň požárního poplachu",
-      "url": "https://tydenikpolicie.cz/kvuli-pozaru-v-narodnim-parku-ceske-svycarsko-byl-vyhlasen-zvlastni-stupen-pozarniho-poplachu/",
-      "dt": "2026-05-02T15:28:03Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "kvůli",
-        "národním",
-        "parku",
-        "poplachu",
-        "požárního",
-        "požáru",
-        "stupeň",
-        "vyhlášen",
-        "zvláštní",
-        "české",
-        "švýcarsko"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -266,7 +270,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15754,
+      "bytes": 15705,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -303,7 +307,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-04T10:01:22Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T12:03:27Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -318,6 +322,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Seniorovi v Jirkově vadil hluk v domě. Nenapadlo ho nic lepšího, než zavolat na tísňovou linku s tím, že to tam vystřílí",
+            "publishedAt": "2026-05-04T12:03:27Z"
+          },
           {
             "title": "Podříznutá májka spadla na Prachaticku na dráty elektrického vedení",
             "publishedAt": "2026-05-04T10:01:22Z"
@@ -345,10 +353,6 @@
           {
             "title": "Při nehodě u Hroznětína na Karlovarsku zemřel motorkář",
             "publishedAt": "2026-05-02T18:54:25Z"
-          },
-          {
-            "title": "Devět lehce zraněných po nehodě malé horské dráhy v Hradci Králové",
-            "publishedAt": "2026-05-02T17:24:45Z"
           }
         ]
       }

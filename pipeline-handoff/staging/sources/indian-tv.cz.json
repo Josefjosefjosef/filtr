@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-05-04T11:35:12.804738Z",
+  "ingestedAt": "2026-05-04T12:10:08.775491Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Špičková volba pro hráče i náročné uživatele. Samsung 9100 PRO ukazuje sílu PCIe 5.0 - INDIAN",
+      "url": "https://indian-tv.cz/clanek/spickova-volba-pro-hrace-i-narocne-uzivatele-samsung-9100-pro-sxxoui",
+      "dt": "2026-05-04T12:00:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "9100",
+        "hráče",
+        "indian",
+        "náročné",
+        "pcie",
+        "samsung",
+        "sílu",
+        "ukazuje",
+        "uživatele",
+        "volba",
+        "špičková"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1058,34 +1086,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Game Pass zlevnil, Steam Controller je venku a Kingdom Come 2 sbírá ceny - INDIAN",
-      "url": "https://indian-tv.cz/porad/showtime/game-pass-zlevnil-steam-controller-je-venku-a-kingdom-come-29ekxl",
-      "dt": "2026-04-29T16:00:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "ceny",
-        "come",
-        "controller",
-        "game",
-        "indian",
-        "kingdom",
-        "pass",
-        "sbírá",
-        "steam",
-        "venku",
-        "zlevnil"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1096,7 +1096,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 206631,
+      "bytes": 208287,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1133,7 +1133,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-04T10:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1148,6 +1148,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Špičková volba pro hráče i náročné uživatele. Samsung 9100 PRO ukazuje sílu PCIe 5.0 - INDIAN",
+            "publishedAt": "2026-05-04T12:00:00Z"
+          },
           {
             "title": "V přípravě mají být další remaky ze série Halo - INDIAN",
             "publishedAt": "2026-05-04T10:40:00Z"
@@ -1175,10 +1179,6 @@
           {
             "title": "Indiana Jones pro Switch 2 bude omezen na 30 fps. Odhalena velikost hry - INDIAN",
             "publishedAt": "2026-05-04T06:39:25Z"
-          },
-          {
-            "title": "Brno Transit aneb patálie v brněnském metru - INDIAN",
-            "publishedAt": "2026-05-03T15:49:43Z"
           }
         ]
       }
