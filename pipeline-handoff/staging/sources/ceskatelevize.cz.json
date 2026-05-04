@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-04T10:24:28.990497Z",
+  "ingestedAt": "2026-05-04T10:58:54.136817Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Vědci ze Stanfordu popsali nový kryptický způsob, jak bakterie tvoří DNA",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/vedci-ze-stanfordu-popsali-novy-krypticky-zpusob-jak-bakterie-tvori-dna-373072",
+      "dt": "2026-05-04T10:40:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "bakterie",
+        "dna",
+        "kryptický",
+        "nový",
+        "popsali",
+        "stanfordu",
+        "tvoří",
+        "vědci",
+        "způsob"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -409,21 +435,19 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Vláda projedná opětovné zavedení elektronické evidence tržeb a daňové změny",
+      "title": "Vláda schválila opětovné zavedení elektronické evidence tržeb",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/vlada-projedna-opetovne-zavedeni-elektronicke-evidence-trzeb-a-danove-zmeny-373058",
       "dt": "2026-05-04T03:08:06Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "daňové",
         "elektronické",
         "evidence",
         "opětovné",
-        "projedná",
+        "schválila",
         "tržeb",
         "vláda",
-        "zavedení",
-        "změny"
+        "zavedení"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -728,33 +752,6 @@
         "izrael",
         "prodloužil",
         "vazbu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "Zvýšené riziko požárů se nově týká většiny území Česka a platí déle",
-      "url": "https://ct24.ceskatelevize.cz/clanek/pocasi/zvysene-riziko-pozaru-nove-plati-na-vetsine-uzemi-ceska-373043",
-      "dt": "2026-05-03T09:30:41Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "déle",
-        "nově",
-        "platí",
-        "požárů",
-        "riziko",
-        "týká",
-        "většiny",
-        "zvýšené",
-        "území",
-        "česka"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1540,7 +1537,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 45081,
+      "bytes": 44574,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1600,11 +1597,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T10:19:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T10:40:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
-          "other": 2,
+          "other": 3,
+          "zpravy": 25,
           "finance": 2
         },
         "drop_counts": {
@@ -1617,6 +1614,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vědci ze Stanfordu popsali nový kryptický způsob, jak bakterie tvoří DNA",
+            "publishedAt": "2026-05-04T10:40:00Z"
+          },
           {
             "title": "Soud nepravomocně uznal vinu Nagyové v kauze Čapí hnízdo",
             "publishedAt": "2026-05-04T10:19:00Z"
@@ -1644,10 +1645,6 @@
           {
             "title": "Na výletní lodi v Atlantiku byl zjištěn smrtící hantavirus. Tři lidé zemřeli",
             "publishedAt": "2026-05-04T08:20:30Z"
-          },
-          {
-            "title": "Rusko nechce obsadit Evropu, věří Ševčík. Havel varuje před podceněním",
-            "publishedAt": "2026-05-04T07:28:14Z"
           }
         ]
       }
@@ -1753,7 +1750,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77529,
+      "bytes": 77421,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,56 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-04T10:24:28.990497Z",
+  "ingestedAt": "2026-05-04T10:58:54.136817Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Evidenci tržeb od ledna 2027 schválila vláda. Do košíku vám neuvidí",
+      "url": "https://www.penize.cz/podnikani/489235-evidenci-trzeb-od-ledna-2027-schvalila-vlada-do-kosiku-vam-neuvidi",
+      "dt": "2026-05-04T12:47:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "2027",
+        "evidenci",
+        "košíku",
+        "ledna",
+        "neuvidí",
+        "schválila",
+        "tržeb",
+        "vláda",
+        "vám"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Školkovné a sleva na studenta se vrací. Kdy a jak je využijete",
+      "url": "https://www.penize.cz/dan-z-prijmu-fyzickych-osob/488210-skolkovne-a-sleva-na-studenta-se-vraci-kdy-a-jak-je-vyuzijete",
+      "dt": "2026-05-04T12:40:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "sleva",
+        "studenta",
+        "vrací",
+        "využijete",
+        "školkovné"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -447,60 +495,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Vyplatí se koučink, nebo je to drahá iluze? Týden s experty nabídne odpovědi",
-      "url": "https://www.penize.cz/spotrebitel/488920-vyplati-se-koucink-nebo-je-to-draha-iluze-tyden-s-experty-nabidne-odpovedi",
-      "dt": "2026-04-29T08:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "drahá",
-        "experty",
-        "iluze",
-        "koučink",
-        "nabídne",
-        "nebo",
-        "odpovědi",
-        "týden",
-        "vyplatí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Místo letenky jen ztracené peníze. Aerolinky v Česku čelí prvním hromadným žalobám",
-      "url": "https://www.penize.cz/doprava/488991-misto-letenky-jen-ztracene-penize-aerolinky-v-cesku-celi-prvnim-hromadnym-zalobam",
-      "dt": "2026-04-29T05:05:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "aerolinky",
-        "hromadným",
-        "jen",
-        "letenky",
-        "místo",
-        "peníze",
-        "prvním",
-        "ztracené",
-        "čelí",
-        "česku",
-        "žalobám"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -511,7 +505,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18653,
+      "bytes": 18334,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -548,12 +542,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-04T11:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T12:47:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 15,
+          "finance": 16,
           "sport": 1,
-          "zpravy": 4
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -565,6 +559,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Evidenci tržeb od ledna 2027 schválila vláda. Do košíku vám neuvidí",
+            "publishedAt": "2026-05-04T12:47:00Z"
+          },
+          {
+            "title": "Školkovné a sleva na studenta se vrací. Kdy a jak je využijete",
+            "publishedAt": "2026-05-04T12:40:00Z"
+          },
           {
             "title": "Poslední den na daňové přiznání. Návody, změny a časté chyby",
             "publishedAt": "2026-05-04T11:30:00Z"
@@ -588,14 +590,6 @@
           {
             "title": "Banka Creditas má soutěž o iPhone a vstupenky na MotoGP",
             "publishedAt": "2026-05-03T06:30:00Z"
-          },
-          {
-            "title": "K hokejovému mistrovství světa můžete mít stylovou platební kartu",
-            "publishedAt": "2026-05-02T09:00:00Z"
-          },
-          {
-            "title": "Walkmany, digitálky, tamagoči. Retrokvíz Made in Japan",
-            "publishedAt": "2026-05-02T08:00:00Z"
           }
         ]
       }

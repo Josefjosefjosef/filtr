@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-05-04T10:24:28.990497Z",
+  "ingestedAt": "2026-05-04T10:58:54.136817Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "V přípravě mají být další remaky ze série Halo - INDIAN",
+      "url": "https://indian-tv.cz/clanek/v-priprave-maji-byt-dalsi-remaky-ze-serie-halo-uxirez",
+      "dt": "2026-05-04T10:40:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "být",
+        "další",
+        "halo",
+        "indian",
+        "mají",
+        "přípravě",
+        "remaky",
+        "série"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1061,33 +1086,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Denuvo prolomeno u většiny singleplayerových her. DRM přichází s novou ochranou - INDIAN",
-      "url": "https://indian-tv.cz/clanek/denovu-prolomeno-u-vetsiny-singleplayerovych-her7nfz",
-      "dt": "2026-04-29T14:33:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "denuvo",
-        "drm",
-        "her",
-        "indian",
-        "novou",
-        "ochranou",
-        "prolomeno",
-        "přichází",
-        "singleplayerových",
-        "většiny"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1098,7 +1096,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 206675,
+      "bytes": 206629,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1135,7 +1133,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-04T10:13:46Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T10:40:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1150,6 +1148,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V přípravě mají být další remaky ze série Halo - INDIAN",
+            "publishedAt": "2026-05-04T10:40:00Z"
+          },
           {
             "title": "HW nároky PC verze LEGO Batman: Legacy of the Dark Knight budí rozpaky - INDIAN",
             "publishedAt": "2026-05-04T10:13:46Z"
@@ -1177,10 +1179,6 @@
           {
             "title": "Brno Transit aneb patálie v brněnském metru - INDIAN",
             "publishedAt": "2026-05-03T15:49:43Z"
-          },
-          {
-            "title": "Co bude po Kingdom Come? Tvůrci ze studia Warhorse potvrzují vývoj nového velkého RPG - INDIAN",
-            "publishedAt": "2026-05-03T13:53:23Z"
           }
         ]
       }

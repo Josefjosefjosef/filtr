@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-04T10:24:28.990497Z",
+  "ingestedAt": "2026-05-04T10:58:54.136817Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Loni při maratonu v Praze málem zemřel. Letos běžel znovu a navštívil své zachránce",
+      "url": "https://www.idnes.cz/sport/trendy/loni-pri-maratonu-v-praze-malem-zemrel-letos-bezel-znovu-a-navstivil-sve-zachrance.A260504_104458_trendy_blah",
+      "dt": "2026-05-04T10:33:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "běžel",
+        "letos",
+        "loni",
+        "maratonu",
+        "málem",
+        "navštívil",
+        "praze",
+        "při",
+        "své",
+        "zachránce",
+        "zemřel",
+        "znovu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -756,33 +785,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rozhodne až pátý finálový zápas. Lvi Praha na domácí půdě porazili Karlovarsko 3:1",
-      "url": "https://www.idnes.cz/sport/ostatni/lvi-praha-si-vyhrou-3-1-vynutili-paty-duel-ve-finale-volejbalistu-s-karlovarskem.A260503_210951_sporty_pls",
-      "dt": "2026-05-03T19:50:18Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "domácí",
-        "finálový",
-        "karlovarsko",
-        "lvi",
-        "porazili",
-        "praha",
-        "pátý",
-        "půdě",
-        "rozhodne",
-        "zápas"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47617,
+      "bytes": 47819,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T10:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T10:33:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -845,6 +847,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Loni při maratonu v Praze málem zemřel. Letos běžel znovu a navštívil své zachránce",
+            "publishedAt": "2026-05-04T10:33:00Z"
+          },
           {
             "title": "Vonnová se chystá na Met Gala. Poprvé od zranění chce vyrazit bez berlí",
             "publishedAt": "2026-05-04T10:10:00Z"
@@ -872,10 +878,6 @@
           {
             "title": "Zemřel Chárův tatínek Zdeněk, bývalý československý zápasník",
             "publishedAt": "2026-05-04T08:57:00Z"
-          },
-          {
-            "title": "Švédské hokejové hry 2026: Program, soupisky, výsledky, Češi",
-            "publishedAt": "2026-05-04T08:55:00Z"
           }
         ]
       }

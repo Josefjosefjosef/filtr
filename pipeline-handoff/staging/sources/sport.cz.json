@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-04T10:24:28.990497Z",
+  "ingestedAt": "2026-05-04T10:58:54.136817Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Aktuální tabulka nejlepších střelců Chance Ligy v sezoně 2025/2026",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-tabulka-strelci-nejlepsi-hraci-3541365",
+      "dt": "2026-04-07T04:03:00Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "2025",
+        "2026",
+        "aktuální",
+        "chance",
+        "ligy",
+        "nejlepších",
+        "sezoně",
+        "střelců",
+        "tabulka"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -770,28 +796,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Inter slaví zisk titulu v Serii A",
-      "url": "https://www.sport.cz/clanek/fotbal-serie-a-fotbaliste-ac-milan-prohrali-na-hristi-sassuola-a-mohou-prijit-o-treti-misto-5448076",
-      "dt": "2026-05-03T15:08:02Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "inter",
-        "serii",
-        "slaví",
-        "titulu",
-        "zisk"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +806,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42694,
+      "bytes": 43048,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -856,6 +860,10 @@
         },
         "sample_titles": [
           {
+            "title": "Aktuální tabulka nejlepších střelců Chance Ligy v sezoně 2025/2026",
+            "publishedAt": "2026-04-07T04:03:00Z"
+          },
+          {
             "title": "Třinec získal dalšího reprezentanta",
             "publishedAt": "2026-05-04T10:20:32Z"
           },
@@ -882,10 +890,6 @@
           {
             "title": "Nepřijatelné. Pokud chceme vyhrát mistrovství světa, musíme zasáhnout, říká šéf Mercedesu Wolff",
             "publishedAt": "2026-05-04T09:55:45Z"
-          },
-          {
-            "title": "Sabalenková, Sinner a Djokovič požadují vyšší odměny na French Open. Vítěz vydělá 68 milionů",
-            "publishedAt": "2026-05-04T09:47:07Z"
           }
         ]
       }
