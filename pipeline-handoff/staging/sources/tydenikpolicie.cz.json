@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-04T09:14:29.946865Z",
+  "ingestedAt": "2026-05-04T09:48:50.461485Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Řidič při couvání v Dětmarovicích přehlédl chodkyni a srazil ji",
+      "url": "https://tydenikpolicie.cz/ridic-pri-couvani-v-detmarovicich-prehledl-chodkyni-a-srazil-ji/",
+      "dt": "2026-05-04T09:22:46Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "chodkyni",
+        "couvání",
+        "dětmarovicích",
+        "přehlédl",
+        "při",
+        "srazil",
+        "řidič"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -234,30 +258,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Záchranáři v Jeseníkách zasahovali v terénu u muže s poruchami vědomí",
-      "url": "https://tydenikpolicie.cz/zachranari-v-jesenikach-zasahovali-v-terenu-u-muze-s-poruchami-vedomi/",
-      "dt": "2026-05-02T10:56:42Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "jeseníkách",
-        "muže",
-        "poruchami",
-        "terénu",
-        "vědomí",
-        "zasahovali",
-        "záchranáři"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -268,7 +268,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15983,
+      "bytes": 16026,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -305,7 +305,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-04T09:03:44Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T09:22:46Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -320,6 +320,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Řidič při couvání v Dětmarovicích přehlédl chodkyni a srazil ji",
+            "publishedAt": "2026-05-04T09:22:46Z"
+          },
           {
             "title": "Městská policie Kladno se loučí se svým kolegou Radkem Hadrabou",
             "publishedAt": "2026-05-04T09:03:44Z"
@@ -347,10 +351,6 @@
           {
             "title": "Dopravu na dálnici D1 komplikovala na čarodějnice nehoda dvou osobních vozů a kamionu",
             "publishedAt": "2026-05-02T11:28:45Z"
-          },
-          {
-            "title": "Požár lesa v Beskydech likvidovalo patnáct jednotek hasičů, nasazen byl policejní vrtulník",
-            "publishedAt": "2026-05-02T11:08:23Z"
           }
         ]
       }

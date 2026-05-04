@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-04T09:14:29.946865Z",
+  "ingestedAt": "2026-05-04T09:48:50.461485Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "RADAR: Na Česko se ženou bouřky a ochlazení. Mapa ukazuje, kde bude pršet",
+      "url": "https://www.denik.cz/pocasi/predpoved-pocasi-cesko-kraje-mapa-vystraha-bourky-dest-ochlazeni.html",
+      "dt": "2026-05-04T09:12:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bouřky",
+        "mapa",
+        "ochlazení",
+        "pršet",
+        "radar",
+        "ukazuje",
+        "česko",
+        "ženou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Poslední slova zavražděné Kateřiny z Vysoké: Zavolám ti v neděli, mami",
+      "url": "https://havlickobrodsky.denik.cz/krimi/zavolam-ti-v-nedeli-mami-posledni-slova-zavrazdene-katky-z-vysoke-stale-boli-202.html",
+      "dt": "2026-05-04T09:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "kateřiny",
+        "mami",
+        "neděli",
+        "poslední",
+        "slova",
+        "vysoké",
+        "zavolám",
+        "zavražděné"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -595,58 +645,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Babiš se setkal se Zelenským, poprvé od opětovného nástupu do čela vlády",
-      "url": "https://www.denik.cz/z_domova/jerevan-setkani-andrej-babis-volodymyr-zelenskyj.html",
-      "dt": "2026-05-03T15:40:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "babiš",
-        "nástupu",
-        "opětovného",
-        "poprvé",
-        "setkal",
-        "vlády",
-        "zelenským",
-        "čela"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Premiéra Leo Expressu s vozy Talgo skončila sérií závad a obřím zpožděním",
-      "url": "https://www.denik.cz/doprava/doprava-vlaky-leo-express-souprava-talgo.html",
-      "dt": "2026-05-03T15:05:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "expressu",
-        "leo",
-        "obřím",
-        "premiéra",
-        "skončila",
-        "sérií",
-        "talgo",
-        "vozy",
-        "zpožděním",
-        "závad"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -657,7 +655,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29379,
+      "bytes": 29543,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -694,11 +692,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-04T08:06:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T09:12:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 1,
-          "zpravy": 24
+          "zpravy": 24,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -710,6 +708,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "RADAR: Na Česko se ženou bouřky a ochlazení. Mapa ukazuje, kde bude pršet",
+            "publishedAt": "2026-05-04T09:12:00Z"
+          },
+          {
+            "title": "Poslední slova zavražděné Kateřiny z Vysoké: Zavolám ti v neděli, mami",
+            "publishedAt": "2026-05-04T09:00:00Z"
+          },
           {
             "title": "Nová zelená úsporám: Kdo chce peníze na zateplení, musí mít renovační pas",
             "publishedAt": "2026-05-04T08:06:00Z"
@@ -733,14 +739,6 @@
           {
             "title": "Luxusní výškový dům v Moskvě zasáhl dron. Krátce před oslavami Dne vítězství",
             "publishedAt": "2026-05-04T07:08:00Z"
-          },
-          {
-            "title": "Při střelbě na večírku u Oklahoma City bylo zraněno nejméně deset lidí",
-            "publishedAt": "2026-05-04T06:23:00Z"
-          },
-          {
-            "title": "Požár v Českém Švýcarsku se dál nešíří. Plně pod kontrolou však zatím není",
-            "publishedAt": "2026-05-04T06:10:00Z"
           }
         ]
       }

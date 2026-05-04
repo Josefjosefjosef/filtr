@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-05-04T09:14:29.946865Z",
+  "ingestedAt": "2026-05-04T09:48:50.461485Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Klára Issová k nepoznání! V Americe nosí krátké mikádo i brýle a září štěstím",
+      "url": "https://www.prozeny.cz/clanek/zdravi-a-zivotni-styl-zaujalo-nas-klara-issova-k-nepoznani-v-americe-nosi-kratke-mikado-i-bryle-a-zari-stestim-103338",
+      "dt": "2026-05-04T09:17:39Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "americe",
+        "brýle",
+        "issová",
+        "klára",
+        "krátké",
+        "mikádo",
+        "nepoznání",
+        "nosí",
+        "září",
+        "štěstím"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -791,33 +818,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Čepička, která brzdí rakovinu mozku. Má ji i Laďka Něrgešová. Co všechno tato léčba obnáší?",
-      "url": "https://www.prozeny.cz/clanek/zdravi-cepicka-ktera-brzdi-rakovinu-mozku-ma-ji-i-ladka-nergesova-co-vsechno-tato-lecba-obnasi-103245",
-      "dt": "2026-05-02T03:00:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "brzdí",
-        "laďka",
-        "léčba",
-        "mozku",
-        "něrgešová",
-        "obnáší",
-        "rakovinu",
-        "tato",
-        "všechno",
-        "čepička"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -828,7 +828,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 38829,
+      "bytes": 38714,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -865,7 +865,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T09:09:26Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T09:17:39Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 30
@@ -880,6 +880,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Klára Issová k nepoznání! V Americe nosí krátké mikádo i brýle a září štěstím",
+            "publishedAt": "2026-05-04T09:17:39Z"
+          },
           {
             "title": "Hantavirus: zabíjel na lodi, nakazit se můžete i doma v kůlně. Jaké jsou příznaky a jak se chránit?",
             "publishedAt": "2026-05-04T09:09:26Z"
@@ -906,10 +910,6 @@
           },
           {
             "title": "Hit letošního roku? Ovocné dekory vnesou léto do bytu i na terasu",
-            "publishedAt": "2026-05-04T03:00:00Z"
-          },
-          {
-            "title": "Orlické hory vás chytí za srdce! Je to tichý ráj bez davů. Nejhezčí trasy, výhledy a přírodní poklady",
             "publishedAt": "2026-05-04T03:00:00Z"
           }
         ]
