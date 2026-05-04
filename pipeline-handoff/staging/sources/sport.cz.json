@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-04T03:59:47.060786Z",
+  "ingestedAt": "2026-05-04T04:34:57.350772Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Skvělý Dobeš dotáhl Montreal k postupu přes Tampu. Nečas zapsal tři body u výhry Colorada",
+      "title": "Skvělý Dobeš dotáhl Montreal k postupu přes Tampu. Nečas zapsal tři body u divoké výhry Colorada",
       "url": "https://www.sport.cz/clanek/hokej-nhl-skvely-dobes-dotahl-montreal-k-postupu-pres-tampu-5448465",
       "dt": "2026-05-04T03:42:05Z",
       "media_raw": "Sport.cz",
@@ -14,6 +14,7 @@
       "tokens": [
         "body",
         "colorada",
+        "divoké",
         "dobeš",
         "dotáhl",
         "montreal",
@@ -24,6 +25,31 @@
         "tři",
         "výhry",
         "zapsal"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Priske směrem ke Slavii: Je smutné, jak končí top české zápasy",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-priske-smerem-ke-slavii-je-smutne-jak-konci-top-ceske-zapasy-5448458",
+      "dt": "2026-05-04T04:04:17Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "končí",
+        "priske",
+        "slavii",
+        "smutné",
+        "směrem",
+        "top",
+        "zápasy",
+        "české"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -745,31 +771,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Judista Kopecký zopakoval na Grand Slamu v Dušanbe loňský bronz",
-      "url": "https://www.sport.cz/clanek/ostatni-judista-kopecky-zopakoval-na-grand-slamu-v-dusanbe-lonsky-bronz-5448019",
-      "dt": "2026-05-03T14:40:03Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bronz",
-        "dušanbe",
-        "grand",
-        "judista",
-        "kopecký",
-        "loňský",
-        "slamu",
-        "zopakoval"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -780,7 +781,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45285,
+      "bytes": 45954,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -817,7 +818,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T03:42:05Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T04:04:17Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -834,8 +835,12 @@
         },
         "sample_titles": [
           {
-            "title": "Skvělý Dobeš dotáhl Montreal k postupu přes Tampu. Nečas zapsal tři body u výhry Colorada",
+            "title": "Skvělý Dobeš dotáhl Montreal k postupu přes Tampu. Nečas zapsal tři body u divoké výhry Colorada",
             "publishedAt": "2026-05-04T03:42:05Z"
+          },
+          {
+            "title": "Priske směrem ke Slavii: Je smutné, jak končí top české zápasy",
+            "publishedAt": "2026-05-04T04:04:17Z"
           },
           {
             "title": "Hrozivá nehoda v Miami. Jezdce F1 zachránila svatozář",
@@ -860,10 +865,6 @@
           {
             "title": "Na Kořenáře Švýcaři znovu ve hře nevyzráli, zase je o kousek blíž k MS",
             "publishedAt": "2026-05-03T20:10:54Z"
-          },
-          {
-            "title": "Kinský pomohl Tottenhamu opustit sestupové pásmo",
-            "publishedAt": "2026-05-03T16:45:02Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-04T03:59:47.060786Z",
+  "ingestedAt": "2026-05-04T04:34:57.350772Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "The Economist: Spojené arabské emiráty vsadily na Izrael a Ameriku",
+      "url": "https://profitonline.cz/the-economist-spojene-arabske-emiraty-vsadily-na-izrael-a-ameriku/",
+      "dt": "2026-05-04T04:00:46Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "ameriku",
+        "arabské",
+        "economist",
+        "emiráty",
+        "izrael",
+        "spojené",
+        "the",
+        "vsadily"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -260,30 +285,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Centrální banky sazby drží beze změny, zatím",
-      "url": "https://profitonline.cz/centralni-banky-sazby-drzi-beze-zmeny-zatim/",
-      "dt": "2026-04-30T20:40:24Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "banky",
-        "beze",
-        "centrální",
-        "drží",
-        "sazby",
-        "zatím",
-        "změny"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -294,7 +295,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18405,
+      "bytes": 18400,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -331,7 +332,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-03T20:30:06Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T04:00:46Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -348,6 +349,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "The Economist: Spojené arabské emiráty vsadily na Izrael a Ameriku",
+            "publishedAt": "2026-05-04T04:00:46Z"
+          },
           {
             "title": "Saúdská Arábie na vývozu ropy vydělává více než před válkou v Perském zálivu",
             "publishedAt": "2026-05-03T20:30:06Z"
@@ -375,10 +380,6 @@
           {
             "title": "Trump chce zavést 25% clo na auta z EU",
             "publishedAt": "2026-05-02T09:00:30Z"
-          },
-          {
-            "title": "Okamžiky historie: Den, kdy se uzavřelo dílo renesančního Leonarda da Vinciho",
-            "publishedAt": "2026-05-02T04:00:53Z"
           }
         ]
       }
