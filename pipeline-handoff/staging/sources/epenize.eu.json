@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-03T23:15:20.542438Z",
+  "ingestedAt": "2026-05-04T00:30:08.235002Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Rubio s požehnáním a Vance na střídačce: Vatikánská facka pro viceprezidenta",
+      "url": "https://www.epenize.eu/rubio-s-pozehnanim-a-vance-na-stridacce-vatikanska-facka-pro-viceprezidenta/",
+      "dt": "2026-05-03T23:00:47Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "facka",
+        "požehnáním",
+        "rubio",
+        "střídačce",
+        "vance",
+        "vatikánská",
+        "viceprezidenta"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -468,30 +492,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Střílejte a zabíjejte: Trumpova námořní kovbojka v Hormuzském průlivu",
-      "url": "https://www.epenize.eu/strilejte-a-zabijejte-trumpova-namorni-kovbojka-v-hormuzskem-prulivu/",
-      "dt": "2026-04-23T23:00:44Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "hormuzském",
-        "kovbojka",
-        "námořní",
-        "průlivu",
-        "střílejte",
-        "trumpova",
-        "zabíjejte"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -502,7 +502,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 102935,
+      "bytes": 103715,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -539,7 +539,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-03T12:46:11Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T23:00:47Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 18,
@@ -555,6 +555,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rubio s požehnáním a Vance na střídačce: Vatikánská facka pro viceprezidenta",
+            "publishedAt": "2026-05-03T23:00:47Z"
+          },
           {
             "title": "Czexit. Mudrování Vondráčka o vystoupení z EU je trapné",
             "publishedAt": "2026-05-03T12:46:11Z"
@@ -582,10 +586,6 @@
           {
             "title": "Neuvěřitelný Turek: Smlouvu jen našel, asi někomu na ministerstvu vypadla",
             "publishedAt": "2026-04-30T07:00:59Z"
-          },
-          {
-            "title": "Bývalý ředitel FBI dal na Instagram mušle: MAGA v tom vidí rozkaz k vraždě",
-            "publishedAt": "2026-04-29T23:00:38Z"
           }
         ]
       }
