@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-04T14:39:05.524073Z",
+  "ingestedAt": "2026-05-04T15:19:24.139971Z",
   "items": [
     {
       "section": "aktualne",
@@ -20,6 +20,30 @@
         "ukrajiny",
         "vstupu",
         "zelenskyj"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ruský generál spáchal sebevraždu v Moskvě, informují média",
+      "url": "https://www.denik.cz/staty-mimo-eu/rusky-general-spachal-sebevrazdu-v-moskve-informuji-media.html",
+      "dt": "2026-05-04T14:08:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "generál",
+        "informují",
+        "moskvě",
+        "média",
+        "ruský",
+        "sebevraždu",
+        "spáchal"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -635,33 +659,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Luxusní výškový dům v Moskvě zasáhl dron. Krátce před oslavami Dne vítězství",
-      "url": "https://www.denik.cz/ze_sveta/zasah-dron-moskva-oslavy-den-vitezstvi.html",
-      "dt": "2026-05-04T07:08:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dne",
-        "dron",
-        "dům",
-        "krátce",
-        "luxusní",
-        "moskvě",
-        "oslavami",
-        "vítězství",
-        "výškový",
-        "zasáhl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -672,7 +669,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29585,
+      "bytes": 29500,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -731,6 +728,10 @@
             "publishedAt": "2026-05-04T14:08:00Z"
           },
           {
+            "title": "Ruský generál spáchal sebevraždu v Moskvě, informují média",
+            "publishedAt": "2026-05-04T14:08:00Z"
+          },
+          {
             "title": "Co byste v květnu neměli minout v kině: Mandalorian, Billie Eilish i Mengele",
             "publishedAt": "2026-05-04T14:00:00Z"
           },
@@ -753,10 +754,6 @@
           {
             "title": "Znojmo patřilo veteránům. Majitelé vozů vyrazili na závod k 800 letům města",
             "publishedAt": "2026-05-04T13:00:00Z"
-          },
-          {
-            "title": "Inspekce varuje, v obchodech odhalila nebezpečné potraviny: Šlo o maso i sýr",
-            "publishedAt": "2026-05-04T12:42:00Z"
           }
         ]
       }
