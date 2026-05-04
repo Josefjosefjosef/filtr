@@ -34541,6 +34541,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bdo\s+notes?\b/.test(f) || /\bdo\s+note\b/.test(f)) return true;
     if (/\bdo\s+mema\b/.test(f) || /\bdo\s+memo\b/.test(f)) return true;
     if (/\b(?:zapis|uloz)\s+do\s+pozn/.test(f)) return true;
+    if (/\buloz\s+si\b/.test(f)) return true;
+    if (/\buloz\s+poznamku\b/.test(f)) return true;
+    if (/\bzapis\s+si\b/.test(f)) return true;
+    if (/\bzapis\s+poznamku\b/.test(f)) return true;
+    if (/\bpoznamenej\s+si\b/.test(f)) return true;
+    if (/\bpoznamka\s*:/.test(f) || /\bpoznamky\s*:/.test(f)) return true;
+    if (/\bvytvor\w*\s+poznamku\b/.test(f)) return true;
     if (/\badd\s+note\b/.test(f)) return true;
     return false;
   }
@@ -35054,13 +35061,20 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const b0 = iuSilverNoteCreateFinalizeBody(s.replace(/^add\s+note\s+/i, "").trim());
       if (b0) return { kind: "body", body: b0 };
     }
-    if (/^zapi[sš]\s+(?!do\s+)/i.test(s) && !iuSilverHasExplicitCalendarTarget(fEarly) && !iuSilverHasTaskActionVerb(fEarly)) {
-      const b0 = iuSilverNoteCreateFinalizeBody(s.replace(/^zapi[sš]\s+/i, "").trim());
+    if (
+      /^zapi[sš]\s+(?!do\s+)/i.test(s) &&
+      !iuSilverHasExplicitCalendarTarget(fEarly) &&
+      !iuSilverHasExplicitTasksTarget(fEarly) &&
+      !iuSilverHasTaskActionVerb(fEarly)
+    ) {
+      let tail = s.replace(/^zapi[sš]\s+/i, "").trim();
+      tail = tail.replace(/^(si|mi)\s+/i, "").trim();
+      const b0 = iuSilverNoteCreateFinalizeBody(tail);
       if (b0) return { kind: "body", body: b0 };
     }
     if (
       /^pozn[aá]mk[ay]\s+(?!m[aá]m\s+)/i.test(s) &&
-      !/^pozn[aá]mka\s*:/i.test(s) &&
+      !/^pozn[aá]mk[ay]\s*:/i.test(s) &&
       !iuSilverHasExplicitCalendarTarget(fEarly) &&
       !iuSilverHasTaskActionVerb(fEarly)
     ) {
@@ -35072,10 +35086,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (b0) return { kind: "body", body: b0 };
     }
     const patterns = [
+      /^pozn[aá]mk[ay]\s*:/i,
+      /^ul[oó][zž](?:te)?\s+si\b/i,
       /^ul[oó][zž](?:te)?\s+pozn[aá]mku\b/i,
       /^ul[oó][zž]it\s+pozn[aá]mku\b/i,
       /^ul[oó][zž](?:te)?\s+mi\s+do\s+pozn[aá]m(?:ek|ky|ce)\b/i,
-      /^pozn[aá]mka\s*:/i,
       /^poznamenej\s+si\b/i,
       /^[zn]api[sš]\s+do\s+pozn[aá]mek\b/i,
       /^ul[oó][zž](?:te)?\s+do\s+pozn[aá]mek\b/i,
@@ -35099,6 +35114,21 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     const loose = iuSilverTryParseLooseNoteToBody(s);
     if (loose) return loose;
+    const ulozMiHead = s.match(/^ul[oó][zž](?:te)?\s+mi\b/i);
+    if (
+      ulozMiHead &&
+      !iuSilverHasExplicitCalendarTarget(fEarly) &&
+      !iuSilverHasExplicitTasksTarget(fEarly)
+    ) {
+      let restMi = s.slice(ulozMiHead[0].length).trim();
+      if (restMi && !/^do\s+poznam/i.test(restMi)) {
+        const restFold = foldCs(restMi);
+        if (!iuSilverHasExplicitCalendarTarget(restFold) && !iuSilverHasExplicitTasksTarget(restFold)) {
+          const bMi = iuSilverNoteCreateFinalizeBody(restMi);
+          if (bMi) return { kind: "body", body: bMi };
+        }
+      }
+    }
     return null;
   }
 
