@@ -35730,6 +35730,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     if (
       /^pozn[aá]mk[ay]\s+(?!m[aá]m\s+)/i.test(s) &&
+      !/^pozn[aá]mk[ay]\s+o\s+/i.test(s) &&
       !/^pozn[aá]mk[ay]\s*:/i.test(s) &&
       !iuSilverHasExplicitCalendarTarget(fEarly) &&
       !iuSilverHasTaskActionVerb(fEarly)
@@ -37415,7 +37416,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bjaky\s+je\s+pin\b/.test(x) ||
       /\bpodivej\s+se\s+do\s+poznam/.test(x) ||
       (/\bzjist(i|it)\b/.test(x) && /\bpoznam/.test(x)) ||
-      (iuSilverCalendarQuerySignalFolded(x) && iuSilverHasExplicitNotesTarget(x))
+      (iuSilverCalendarQuerySignalFolded(x) && iuSilverHasExplicitNotesTarget(x)) ||
+      (/^\s*poznamk\w*\s+o\s+\S/i.test(x) && !iuSilverHasWriteVerb(x))
     );
   }
 
