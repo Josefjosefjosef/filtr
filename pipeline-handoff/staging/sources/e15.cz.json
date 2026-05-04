@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-04T06:55:46.128061Z",
+  "ingestedAt": "2026-05-04T07:30:08.166623Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Primoco po slabším roce hlásí rekordní kvartál. Výrobce dronů těží ze zakázek a chystá expanzi",
+      "url": "https://www.e15.cz/byznys/primoco-po-slabsim-roce-hlasi-rekordni-kvartal-vyrobce-dronu-tezi-ze-zakazek-a-chysta-expanzi-1432549",
+      "dt": "2026-05-04T07:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "chystá",
+        "dronů",
+        "expanzi",
+        "hlásí",
+        "kvartál",
+        "primoco",
+        "rekordní",
+        "roce",
+        "slabším",
+        "těží",
+        "výrobce",
+        "zakázek"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1071,33 +1100,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Operace čistý řez aneb jak ovládnout ČEZ bez právních válek a s miliardami v kapse",
-      "url": "https://www.e15.cz/byznys/operace-cisty-rez-aneb-jak-ovladnout-cez-bez-pravnich-valek-a-s-miliardami-v-kapse-1432512",
-      "dt": "2026-05-01T03:30:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "aneb",
-        "kapse",
-        "miliardami",
-        "operace",
-        "ovládnout",
-        "právních",
-        "válek",
-        "čez",
-        "čistý",
-        "řez"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1108,7 +1110,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 56516,
+      "bytes": 56721,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1145,7 +1147,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-04T06:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T07:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 33,
@@ -1162,6 +1164,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Primoco po slabším roce hlásí rekordní kvartál. Výrobce dronů těží ze zakázek a chystá expanzi",
+            "publishedAt": "2026-05-04T07:00:00Z"
+          },
           {
             "title": "Požár v Českém Švýcarsku se dál nešíří. Hasičům pomůžou slovenské vrtulníky",
             "publishedAt": "2026-05-04T06:20:00Z"
@@ -1189,10 +1195,6 @@
           {
             "title": "Telefon pro ty, kteří nechtějí být pořád u zásuvky",
             "publishedAt": "2026-05-03T22:00:00Z"
-          },
-          {
-            "title": "Mír na Ukrajině? Babiš po schůzce v Jerevanu mluví o roli Turecka a Střední Asie",
-            "publishedAt": "2026-05-03T19:11:00Z"
           }
         ]
       }

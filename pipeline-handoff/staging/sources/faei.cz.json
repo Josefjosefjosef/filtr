@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-04T06:55:46.128061Z",
+  "ingestedAt": "2026-05-04T07:30:08.166623Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Lenka Vaněk posilou top managementu E.ON Energy Solutions",
+      "url": "https://profitonline.cz/lenka-vanek-posilou-top-managementu-e-on-energy-solutions/",
+      "dt": "2026-05-04T07:00:19Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "energy",
+        "lenka",
+        "managementu",
+        "posilou",
+        "solutions",
+        "top",
+        "vaněk"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -257,34 +281,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Kde v Evropě pojedete letos po dálnici zdarma a kde vaše peněženka zapláče? Přinášíme přehled poplatků",
-      "url": "https://profitonline.cz/kde-v-evrope-pojedete-letos-po-dalnici-zdarma-a-kde-vase-penezenka-zaplace-prinasime-prehled-poplatku/",
-      "dt": "2026-05-01T04:00:36Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "dálnici",
-        "evropě",
-        "letos",
-        "peněženka",
-        "pojedete",
-        "poplatků",
-        "přehled",
-        "přinášíme",
-        "vaše",
-        "zapláče",
-        "zdarma"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -295,7 +291,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18400,
+      "bytes": 18041,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -332,12 +328,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-04T04:00:46Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T07:00:19Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 10,
-          "zdravi": 1,
-          "zpravy": 1
+          "finance": 11,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -349,6 +344,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lenka Vaněk posilou top managementu E.ON Energy Solutions",
+            "publishedAt": "2026-05-04T07:00:19Z"
+          },
           {
             "title": "The Economist: Spojené arabské emiráty vsadily na Izrael a Ameriku",
             "publishedAt": "2026-05-04T04:00:46Z"
@@ -376,10 +375,6 @@
           {
             "title": "Češi přestali spořit",
             "publishedAt": "2026-05-02T10:00:45Z"
-          },
-          {
-            "title": "Trump chce zavést 25% clo na auta z EU",
-            "publishedAt": "2026-05-02T09:00:30Z"
           }
         ]
       }

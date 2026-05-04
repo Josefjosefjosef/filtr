@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-04T06:55:46.128061Z",
+  "ingestedAt": "2026-05-04T07:30:08.166623Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "6 % dětí se narodilo díky IVF. V jedné věci nás už ale předběhlo i Rumunsko",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/proc-si-cesi-u-lecby-neplodnosti-doplaceji-a-co-s-tim/",
+      "dt": "2026-05-04T07:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "ale",
+        "díky",
+        "dětí",
+        "ivf",
+        "jedné",
+        "narodilo",
+        "nás",
+        "předběhlo",
+        "rumunsko",
+        "věci"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -245,33 +272,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nadbytečné kapacity a rostoucí náklady. Souběhy úvazků lékařů budí obavy pojišťoven",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/soubehy-praci-lekaru-ovlivnuji-dostupne-pece-rikaji-zdravotni-pojistovny/",
-      "dt": "2026-05-02T07:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "budí",
-        "kapacity",
-        "lékařů",
-        "nadbytečné",
-        "náklady",
-        "obavy",
-        "pojišťoven",
-        "rostoucí",
-        "souběhy",
-        "úvazků"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 83441,
+      "bytes": 83240,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +319,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-04T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T07:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 8,
@@ -335,6 +335,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "6 % dětí se narodilo díky IVF. V jedné věci nás už ale předběhlo i Rumunsko",
+            "publishedAt": "2026-05-04T07:00:00Z"
+          },
           {
             "title": "Jednání o úhradách v pasti: Peníze na příští rok se dělí „naslepo“, pojišťovny mají prázdné kapsy",
             "publishedAt": "2026-05-04T06:00:00Z"
@@ -362,10 +366,6 @@
           {
             "title": "Evropa čeká na nové léky až 600 dní. Dusí ji „regulační inflace“, říká zástupce Bayeru",
             "publishedAt": "2026-05-03T05:00:00Z"
-          },
-          {
-            "title": "Jed na krysy v dětské výživě: Policie zadržela podezřelého. Vyděrač řádil i v Česku",
-            "publishedAt": "2026-05-02T17:03:25Z"
           }
         ]
       }

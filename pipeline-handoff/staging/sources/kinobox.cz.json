@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-04T06:55:46.128061Z",
+  "ingestedAt": "2026-05-04T07:30:08.166623Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Sex je snadný, láska je fuška. Lidé to mají v traileru romantické Očisty nezávazně povolené na jednu noc",
+      "url": "https://www.kinobox.cz/clanky/filmy/53202-sex-je-snadny-laska-je-fuska-lide-to-maji-v-traileru-romanticke-ocisty-nezavazne-povolene-na-jednu-noc",
+      "dt": "2026-05-04T07:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "fuška",
+        "jednu",
+        "lidé",
+        "láska",
+        "mají",
+        "nezávazně",
+        "noc",
+        "očisty",
+        "povolené",
+        "romantické",
+        "sex",
+        "snadný",
+        "traileru"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -533,32 +563,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Netflix v květnu: Návrat mrazivého Kaštánku, druhý Berlín a mluvící chobotnice",
-      "url": "https://www.kinobox.cz/clanky/vod/52895-netflix-v-kvetnu",
-      "dt": "2026-04-30T17:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "berlín",
-        "chobotnice",
-        "druhý",
-        "kaštánku",
-        "květnu",
-        "mluvící",
-        "mrazivého",
-        "netflix",
-        "návrat"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -569,7 +573,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28381,
+      "bytes": 28951,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -606,7 +610,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-03T17:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T07:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -621,6 +625,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sex je snadný, láska je fuška. Lidé to mají v traileru romantické Očisty nezávazně povolené na jednu noc",
+            "publishedAt": "2026-05-04T07:00:00Z"
+          },
           {
             "title": "7 filmů, které musíte vidět v květnu v kině: Nové Star Wars, Mortal Kombat 2 i hororové žně",
             "publishedAt": "2026-05-03T17:00:00Z"
@@ -648,10 +656,6 @@
           {
             "title": "Jitřní záře si pokládá složité otázky, ale ty ji zmáhají. Má člověk právo žít mimo společnost?",
             "publishedAt": "2026-05-02T17:00:00Z"
-          },
-          {
-            "title": "Pošťák vždy zvoní dvakrát slaví 80 let. Slavný noir pronásledovala smůla, hlavní hvězdu pomočil tygr",
-            "publishedAt": "2026-05-02T14:00:00Z"
           }
         ]
       }

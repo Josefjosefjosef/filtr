@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-04T06:55:46.128061Z",
+  "ingestedAt": "2026-05-04T07:30:08.166623Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Komentář: Tak jsem asi méněcenný. Macinka mi jde na nervy",
+      "url": "https://www.epenize.eu/komentar-tak-jsem-asi-menecenny-macinka-mi-jde-na-nervy/",
+      "dt": "2026-05-04T07:00:46Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "asi",
+        "jde",
+        "jsem",
+        "komentář",
+        "macinka",
+        "méněcenný",
+        "nervy",
+        "tak"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -469,29 +494,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Deratizace parazitů aneb úřaduje hranatý nevzdělanec",
-      "url": "https://www.epenize.eu/deratizace-parazitu-aneb-uraduje-hranaty-nevzdelanec/",
-      "dt": "2026-04-24T06:15:55Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "aneb",
-        "deratizace",
-        "hranatý",
-        "nevzdělanec",
-        "parazitů",
-        "úřaduje"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -502,7 +504,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 103715,
+      "bytes": 103378,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -539,7 +541,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-03T23:00:47Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T07:00:46Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 18,
@@ -555,6 +557,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Komentář: Tak jsem asi méněcenný. Macinka mi jde na nervy",
+            "publishedAt": "2026-05-04T07:00:46Z"
+          },
           {
             "title": "Rubio s požehnáním a Vance na střídačce: Vatikánská facka pro viceprezidenta",
             "publishedAt": "2026-05-03T23:00:47Z"
@@ -582,10 +588,6 @@
           {
             "title": "Tucker Carlson se omluvil, že Trumpa vůbec někdy podporoval",
             "publishedAt": "2026-04-30T23:00:10Z"
-          },
-          {
-            "title": "Neuvěřitelný Turek: Smlouvu jen našel, asi někomu na ministerstvu vypadla",
-            "publishedAt": "2026-04-30T07:00:59Z"
           }
         ]
       }

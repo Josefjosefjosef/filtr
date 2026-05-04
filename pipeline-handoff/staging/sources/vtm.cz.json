@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-04T06:55:46.128061Z",
+  "ingestedAt": "2026-05-04T07:30:08.166623Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Problém pro AMD? Intel sází na více jader za méně peněz a mění tak pravidla hry",
+      "url": "https://www.zive.cz/clanky/problem-pro-amd-intel-sazi-na-vice-jader-za-mene-penez-a-meni-tak-pravidla-hry/sc-3-a-240683/default.aspx",
+      "dt": "2026-05-04T06:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "amd",
+        "hry",
+        "intel",
+        "jader",
+        "mění",
+        "peněz",
+        "pravidla",
+        "problém",
+        "sází",
+        "tak"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -931,34 +958,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "OneDrive pro Windows zvládne synchronizovat až milion souborů, ale jen na dostatečně výkonných počítačích",
-      "url": "https://www.zive.cz/clanky/onedrive-pro-windows-zvladne-synchronizovat-az-milion-souboru-ale-jen-na-dostatecne-vykonnych-pocitacich/sc-3-a-240878/default.aspx",
-      "dt": "2026-04-28T14:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "ale",
-        "dostatečně",
-        "jen",
-        "milion",
-        "onedrive",
-        "počítačích",
-        "souborů",
-        "synchronizovat",
-        "výkonných",
-        "windows",
-        "zvládne"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -969,7 +968,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22802,
+      "bytes": 22665,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1006,7 +1005,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-03T15:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T06:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1021,6 +1020,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Problém pro AMD? Intel sází na více jader za méně peněz a mění tak pravidla hry",
+            "publishedAt": "2026-05-04T06:45:00Z"
+          },
           {
             "title": "Jak dobře vybrat powerbanku. Kapacita není vše, zajímat vás musí také rychlost nabíjení a porty",
             "publishedAt": "2026-05-03T15:45:00Z"
@@ -1048,10 +1051,6 @@
           {
             "title": "Týden Živě: Claude se proměnil v CAD inženýra a jak snadno proměnit běžnou silničku v elektrokolo",
             "publishedAt": "2026-05-02T16:45:00Z"
-          },
-          {
-            "title": "Na Slovensku zítra startuje éra bez hotovosti. Obchody a služby budou muset brát karty nebo QR kódy",
-            "publishedAt": "2026-04-30T16:45:00Z"
           }
         ]
       }
