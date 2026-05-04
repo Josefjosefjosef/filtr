@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-04T10:58:54.136817Z",
+  "ingestedAt": "2026-05-04T11:35:12.804738Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Česko volá o pomoc kvůli požáru. Na cestě jsou vrtulníky od sousedů",
+      "url": "https://ekonomickydenik.cz/cesko-vola-pomoc-vrtulniky-sousedu/",
+      "dt": "2026-05-04T11:17:56Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "cestě",
+        "kvůli",
+        "pomoc",
+        "požáru",
+        "sousedů",
+        "volá",
+        "vrtulníky",
+        "česko"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -763,31 +788,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Velký personální lov: Hledá se nový Řehka. Kdo bude „tichou silou“?",
-      "url": "https://ekonomickydenik.cz/velky-lov-hleda-se-novy-rehka-armada/",
-      "dt": "2026-05-01T09:14:27Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "hledá",
-        "lov",
-        "nový",
-        "personální",
-        "silou",
-        "tichou",
-        "velký",
-        "řehka"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70411,
+      "bytes": 70863,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,11 +835,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T10:06:47Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T11:17:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 3,
           "finance": 25,
+          "zpravy": 3,
           "zdravi": 2
         },
         "drop_counts": {
@@ -852,6 +852,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česko volá o pomoc kvůli požáru. Na cestě jsou vrtulníky od sousedů",
+            "publishedAt": "2026-05-04T11:17:56Z"
+          },
           {
             "title": "Konec iluzí o Rusku. Pobaltí a Sever varují před útokem Kremlu, i když Putin slábne",
             "publishedAt": "2026-05-04T10:06:47Z"
@@ -879,10 +883,6 @@
           {
             "title": "Babiš se setkal se Zelenským. Doporučil mu země, které mohou zprostředkovat mír",
             "publishedAt": "2026-05-03T17:09:56Z"
-          },
-          {
-            "title": "Šéf lotyšské armády varuje: Rusko může v blízké době zaútočit na Pobaltí",
-            "publishedAt": "2026-05-03T14:30:00Z"
           }
         ]
       }

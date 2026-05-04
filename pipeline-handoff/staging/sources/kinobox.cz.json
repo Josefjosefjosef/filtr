@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-04T10:58:54.136817Z",
+  "ingestedAt": "2026-05-04T11:35:12.804738Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Zatčení legendární postavy v Ulici. Skončí Lumír kvůli temné minulosti ve vězení?",
+      "url": "https://www.kinobox.cz/clanky/serialy/53391-zatceni-legendarni-postavy-v-ulici-skonci-lumir-kvuli-temne-minulosti-ve-vezeni",
+      "dt": "2026-05-04T11:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "kvůli",
+        "legendární",
+        "lumír",
+        "minulosti",
+        "postavy",
+        "skončí",
+        "temné",
+        "ulici",
+        "vězení",
+        "zatčení"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -535,33 +562,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Kinobox Daily: Láska, která voní zradou. Oženil se Brad Pitt s nacistickou špionku?",
-      "url": "https://www.kinobox.cz/clanky/daily/53233-kinobox-daily-laska-ktera-voni-zradou-ozenil-se-brad-pitt-s-nacistickou-spionkou",
-      "dt": "2026-05-01T10:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "brad",
-        "daily",
-        "kinobox",
-        "láska",
-        "nacistickou",
-        "oženil",
-        "pitt",
-        "voní",
-        "zradou",
-        "špionku"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -572,7 +572,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28826,
+      "bytes": 28888,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -609,7 +609,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-04T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T11:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -624,6 +624,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zatčení legendární postavy v Ulici. Skončí Lumír kvůli temné minulosti ve vězení?",
+            "publishedAt": "2026-05-04T11:00:00Z"
+          },
           {
             "title": "Kinobox Daily: Masa v Řeznících se bát nemusíte. Jensen je veskrze humanistickým filmařem",
             "publishedAt": "2026-05-04T10:00:00Z"
@@ -651,10 +655,6 @@
           {
             "title": "Kinobox Daily: Připomeňte si Jiřinu Bohdalovou v dokonale delirickém thrilleru Ucho",
             "publishedAt": "2026-05-03T11:00:00Z"
-          },
-          {
-            "title": "Ucho, Chalupáři i Nesmrtelná teta. Památné role oslavenkyně Jiřiny Bohdalové",
-            "publishedAt": "2026-05-03T09:00:00Z"
           }
         ]
       }
