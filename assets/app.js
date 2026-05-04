@@ -35930,7 +35930,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       (/\bnevytvarej\b/.test(x) &&
         !/\bnevytvarej\s+ukol\b/.test(x) &&
         !/\bnevytvarej\s+poznam/.test(x) &&
-        /\b(do\s+kalend|kalend|schuz|udalost|meeting|zubar|porad)\b/.test(x)) ||
+        (/\bdo\s+kalend/i.test(x) ||
+          /\bkalend/i.test(x) ||
+          /schuz|udalost|porad|meeting|zubar/.test(x))) ||
       iuSilverIsNegatedBroadVerb(x);
     if (!neg) return false;
     return iuSilverHasExplicitCalendarTarget(x) || iuSilverCalendarEntityContextFolded(x);
@@ -35954,6 +35956,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\buloz\s+do\s+kalend/.test(f)) return true;
     if (/\b(?:zapis|zapiš|pridej|přidej|vytvor|vytvoř|naplanuj|naplánuj)\s+mi\s+do\s+kalend/.test(f)) return true;
     if (/\b(?:zapis|zapiš|pridej|přidej|vytvor|vytvoř|naplanuj|naplánuj)\s+do\s+kalend/.test(f)) return true;
+    if (/\bdej\s+do\s+kalend/i.test(f)) return true;
     return false;
   }
 
@@ -36230,11 +36233,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     const qp = iuSilverTryParseCalendarReadQueryPriority(rawIn, now, r, f);
     if (qp) return qp;
-    /* P0: negace zápisu + kalendář — bez klasického dotazu stále calendar.read (agenda / den), ne create. */
-    if (
-      iuSilverCalendarNegationBeatsCalendarWriteSuppressionFolded(f) &&
-      iuSilverCalendarReadSuppressedForWriteIntentCore(f)
-    ) {
+    /* P0: negace zápisu + kalendář — bez klasického dotazu stále calendar.read (agenda / den), ne create.
+     * Platí i bez write-tokenů („nevytvoř událost, včera v kalendáři jen ověř“ → read, ne create).
+     * Výjimka: holý broad-verb „neukládej do kalendáře…“ bez write-tvaru → clarification (regrese neg-01). */
+    if (iuSilverCalendarNegationBeatsCalendarWriteSuppressionFolded(f)) {
+      if (iuSilverIsNegatedBroadVerb(f) && !iuSilverCalendarReadSuppressedForWriteIntentCore(f)) {
+        return null;
+      }
       if (/\bposledn/i.test(f) && /\bsch[uů]z/i.test(f) && /\bdnes\b/i.test(f)) {
         return { intent: "last_event_today", filter: null };
       }
