@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-04T19:04:23.833879Z",
+  "ingestedAt": "2026-05-04T19:39:10.858621Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Evropskou ekonomiku brzdí nejednotný kapitálový trh. Řešení je, ale vyžaduje ústupky od členských zemí",
+      "url": "https://byznys.hn.cz/c1-67872930-evropskou-ekonomiku-brzdi-nejednotny-kapitalovy-trh-reseni-je-ale-vyzaduje-ustupky-od-clenskych-zemi",
+      "dt": "2026-05-04T19:04:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "ale",
+        "brzdí",
+        "ekonomiku",
+        "evropskou",
+        "kapitálový",
+        "nejednotný",
+        "trh",
+        "vyžaduje",
+        "zemí",
+        "ústupky",
+        "členských",
+        "řešení"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1096,33 +1125,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Když je víc kapitálu než kvalitních nemovitostí. Proč je dobré podívat se i za hranice",
-      "url": "https://archiv.hn.cz/c1-67872350-kdyz-je-vic-kapitalu-nez-kvalitnich-nemovitosti-proc-je-dobre-podivat-se-i-za-hranice",
-      "dt": "2026-05-03T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "dobré",
-        "hranice",
-        "kapitálu",
-        "když",
-        "kvalitních",
-        "nemovitostí",
-        "než",
-        "podívat",
-        "proč",
-        "víc"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1133,7 +1135,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183836,
+      "bytes": 183861,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1170,7 +1172,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-04T18:23:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T19:04:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 36,
@@ -1187,6 +1189,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Evropskou ekonomiku brzdí nejednotný kapitálový trh. Řešení je, ale vyžaduje ústupky od členských zemí",
+            "publishedAt": "2026-05-04T19:04:00Z"
+          },
           {
             "title": "Rusko oznámilo na 8. a 9. května příměří ve válce proti Ukrajině",
             "publishedAt": "2026-05-04T18:23:00Z"
@@ -1214,10 +1220,6 @@
           {
             "title": "První &bdquo;Východoevropan&ldquo; ve vedení Evropské centrální banky. Německo tak vysoko svého člověka dosud nikdy nemělo",
             "publishedAt": "2026-05-04T14:51:00Z"
-          },
-          {
-            "title": "Nejasnosti kolem nové povinnosti: insolvenční správci čekají na manuál k nahrávání jednání s dlužníky",
-            "publishedAt": "2026-05-04T14:33:00Z"
           }
         ]
       }
