@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-05-04T14:04:01.279645Z",
+  "ingestedAt": "2026-05-04T14:39:05.524073Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Pracovní inzerát naznačuje, že Rockstar chystá další remastery - INDIAN",
+      "url": "https://indian-tv.cz/clanek/pracovni-inzerat-naznacuje-ze-rockstar-chysta-dalsi-remastery-868og7",
+      "dt": "2026-05-04T14:30:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "chystá",
+        "další",
+        "indian",
+        "inzerát",
+        "naznačuje",
+        "pracovní",
+        "remastery",
+        "rockstar"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1059,34 +1084,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Asha Sharma reaguje na přání a připravuje dynamické pozadí s novým logem Xbox - INDIAN",
-      "url": "https://indian-tv.cz/clanek/asha-sharma-reaguje-na-prani-a-pripravuje-dynamicke-pozadi",
-      "dt": "2026-04-30T05:00:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "asha",
-        "dynamické",
-        "indian",
-        "logem",
-        "novým",
-        "pozadí",
-        "připravuje",
-        "přání",
-        "reaguje",
-        "sharma",
-        "xbox"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1097,7 +1094,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 209192,
+      "bytes": 209279,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1134,7 +1131,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-04T13:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T14:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1149,6 +1146,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pracovní inzerát naznačuje, že Rockstar chystá další remastery - INDIAN",
+            "publishedAt": "2026-05-04T14:30:00Z"
+          },
           {
             "title": "Xbox se znovu zajímá o zpětnou kompatibilitu. Hráči mají hlasovat, které hry se vrátí - INDIAN",
             "publishedAt": "2026-05-04T13:00:00Z"
@@ -1176,10 +1177,6 @@
           {
             "title": "Vývojáři střílečky Space Marine 2 prodlužují podporu do třetího roku - INDIAN",
             "publishedAt": "2026-05-04T07:00:00Z"
-          },
-          {
-            "title": "Pragmata má skvělý start. Může jít o začátek série - INDIAN",
-            "publishedAt": "2026-05-04T06:43:30Z"
           }
         ]
       }

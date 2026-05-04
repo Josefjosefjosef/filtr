@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-04T14:04:01.279645Z",
+  "ingestedAt": "2026-05-04T14:39:05.524073Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Smáli se nám, teď je z toho hit, říká Havlíček k programu pro koloniály",
+      "url": "https://ekonomickydenik.cz/obchudek-program-havlicek-kolonialy/",
+      "dt": "2026-05-04T14:26:10Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "havlíček",
+        "hit",
+        "koloniály",
+        "nám",
+        "programu",
+        "smáli",
+        "toho",
+        "říká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -757,32 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Digitální peněženka narazila. Česko nestíhá termín, chybí dodavatel i zákon",
-      "url": "https://ekonomickydenik.cz/digitalni-penezenku-se-nestihne-vcas/",
-      "dt": "2026-05-02T04:30:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "chybí",
-        "digitální",
-        "dodavatel",
-        "narazila",
-        "nestíhá",
-        "peněženka",
-        "termín",
-        "zákon",
-        "česko"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71663,
+      "bytes": 71832,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +829,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T13:46:31Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T14:26:10Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -847,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Smáli se nám, teď je z toho hit, říká Havlíček k programu pro koloniály",
+            "publishedAt": "2026-05-04T14:26:10Z"
+          },
           {
             "title": "Ruské vlajky zpět na stadiony? Debata ukázala proruskou část poslanců, třeba Konečnou",
             "publishedAt": "2026-05-04T13:46:31Z"
@@ -874,10 +877,6 @@
           {
             "title": "Výpověď smlouvy v mailu neuznáváme, vzkázalo innogy. Teď za to dostalo pokutu od ERÚ",
             "publishedAt": "2026-05-04T08:16:48Z"
-          },
-          {
-            "title": "Dronový útok v Moskvě: Zásah mrakodrapu jen pár kilometrů od Kremlu",
-            "publishedAt": "2026-05-04T08:13:41Z"
           }
         ]
       }

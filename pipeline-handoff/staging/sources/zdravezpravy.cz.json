@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-04T14:04:01.279645Z",
+  "ingestedAt": "2026-05-04T14:39:05.524073Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Kožní lékaři vyvracejí 5 nejčastějších mýtů o „zdravém“ slunění",
+      "url": "https://www.zdravezpravy.cz/2026/05/04/kozni-lekari-vyvraceji-5-castych-mytu-o-zdravem-sluneni/",
+      "dt": "2026-05-04T13:30:54Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "kožní",
+        "lékaři",
+        "mýtů",
+        "nejčastějších",
+        "slunění",
+        "vyvracejí",
+        "zdravém"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -472,33 +496,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Miroslav Lédl má 400 odběrů krve. Ale chce jich mít 500",
-      "url": "https://www.zdravezpravy.cz/2026/04/25/miroslav-ledl-ma-400-odberu-chce-jich-ale-mit-500/",
-      "dt": "2026-04-25T09:00:22Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "400",
-        "500",
-        "ale",
-        "chce",
-        "jich",
-        "krve",
-        "lédl",
-        "miroslav",
-        "mít",
-        "odběrů"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -509,7 +506,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 185362,
+      "bytes": 189460,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -546,7 +543,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-04T06:27:24Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T13:30:54Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -561,6 +558,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kožní lékaři vyvracejí 5 nejčastějších mýtů o „zdravém“ slunění",
+            "publishedAt": "2026-05-04T13:30:54Z"
+          },
           {
             "title": "Od 80 let dostanou lidé k důchodu po pěti letech vždy 500 korun",
             "publishedAt": "2026-05-04T06:27:24Z"
@@ -588,10 +589,6 @@
           {
             "title": "Převod dávek, příspěvků a průkazů OZP na ČSSZ se o dva roky odkládá",
             "publishedAt": "2026-04-30T06:45:20Z"
-          },
-          {
-            "title": "České Lékaře bez hranic nově vede Tomáš Bendl",
-            "publishedAt": "2026-04-29T11:32:20Z"
           }
         ]
       }

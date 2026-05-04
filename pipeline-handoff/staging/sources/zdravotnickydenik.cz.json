@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-04T14:04:01.279645Z",
+  "ingestedAt": "2026-05-04T14:39:05.524073Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Otrávit dětské výživy jedem na krysy měl Slovák. Zřejmě se mstil za vyhazov",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/otravene-detske-vyzivy-slovak-vyhazov/",
+      "dt": "2026-05-04T14:08:03Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dětské",
+        "jedem",
+        "krysy",
+        "mstil",
+        "měl",
+        "otrávit",
+        "slovák",
+        "vyhazov",
+        "výživy",
+        "zřejmě"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -241,32 +268,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Smrt na výletní lodi: V Atlantiku zabíjel virus s až 50% úmrtností, na který neexistuje lék",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/lod-atlantik-hantavirus-who/",
-      "dt": "2026-05-03T20:50:40Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "atlantiku",
-        "lodi",
-        "lék",
-        "neexistuje",
-        "smrt",
-        "virus",
-        "výletní",
-        "zabíjel",
-        "úmrtností"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -277,7 +278,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 89984,
+      "bytes": 90887,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -314,7 +315,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-04T13:24:40Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T14:08:03Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -329,6 +330,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Otrávit dětské výživy jedem na krysy měl Slovák. Zřejmě se mstil za vyhazov",
+            "publishedAt": "2026-05-04T14:08:03Z"
+          },
           {
             "title": "Algoritmus rozhoduje, kdo dostane zdravotní péči. AI počítá chudým likvidační poplatky",
             "publishedAt": "2026-05-04T13:24:40Z"
@@ -356,10 +361,6 @@
           {
             "title": "6 % dětí se narodilo díky IVF. V jedné věci nás už ale předběhlo i Rumunsko",
             "publishedAt": "2026-05-04T07:00:00Z"
-          },
-          {
-            "title": "Jednání o úhradách v pasti: Peníze na příští rok se dělí „naslepo“, pojišťovny mají prázdné kapsy",
-            "publishedAt": "2026-05-04T06:00:00Z"
           }
         ]
       }
