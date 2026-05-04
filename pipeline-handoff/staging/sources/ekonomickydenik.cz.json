@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-04T05:09:55.699063Z",
+  "ingestedAt": "2026-05-04T05:46:27.683023Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nižší DPH u piva nepomůže, tvrdí exministr. Proč Češi v hospodách méně pijí?",
+      "url": "https://ekonomickydenik.cz/pivo-dph-valek-spotrebitele/",
+      "dt": "2026-05-04T05:33:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dph",
+        "exministr",
+        "hospodách",
+        "nepomůže",
+        "nižší",
+        "pijí",
+        "piva",
+        "proč",
+        "tvrdí",
+        "češi"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -765,32 +792,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Z Prahy do Kodaně za 12 hodin, do Hamburku za šest. České dráhy rozšířily síť",
-      "url": "https://ekonomickydenik.cz/ceske-drahy-hamburk-kodan/",
-      "dt": "2026-04-30T17:05:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "dráhy",
-        "hamburku",
-        "hodin",
-        "kodaně",
-        "prahy",
-        "rozšířily",
-        "síť",
-        "české",
-        "šest"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 69983,
+      "bytes": 70232,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,7 +839,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T04:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T05:33:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -855,6 +856,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nižší DPH u piva nepomůže, tvrdí exministr. Proč Češi v hospodách méně pijí?",
+            "publishedAt": "2026-05-04T05:33:00Z"
+          },
           {
             "title": "Rozšíří Kanada Unii? Z hlediska kvality institucí a hodnot překonává Ukrajinu",
             "publishedAt": "2026-05-04T04:30:00Z"
@@ -882,10 +887,6 @@
           {
             "title": "Dopady slunečného víkendu: Elektřinu vyrábíme levně a bez emisí. Je to výhra nebo bolehlav?",
             "publishedAt": "2026-05-03T09:58:00Z"
-          },
-          {
-            "title": "Alkohol na lodi? Kde ještě projde a kde platí nula",
-            "publishedAt": "2026-05-03T09:00:00Z"
           }
         ]
       }

@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-04T05:09:55.699063Z",
+  "ingestedAt": "2026-05-04T05:46:27.683023Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Američané chtějí doprovázet lodě skrz Hormuzský průliv. Budeme to považovat za porušení příměří, hrozí Teherán",
+      "url": "https://zahranicni.hn.cz/c1-67873060-americane-chteji-doprovazet-lode-skrz-hormuzsky-pruliv-budeme-to-povazovat-za-poruseni-primeri-hrozi-teheran",
+      "dt": "2026-05-04T04:57:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "američané",
+        "budeme",
+        "chtějí",
+        "doprovázet",
+        "hormuzský",
+        "hrozí",
+        "lodě",
+        "porušení",
+        "považovat",
+        "průliv",
+        "příměří",
+        "skrz",
+        "teherán"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -610,28 +640,27 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "České Švýcarsko dál hoří, část ale hasiči dokázali dostat pod kontrolu. Slovensko vyšle na pomoc dva vrtulníky Black Hawk",
+      "title": "S požárem v Českém Švýcarsku dál bojují stovky hasičů, pod kontrolou ho zatím nemají. Slovensko posílá dva vrtulníky Black Hawk",
       "url": "https://domaci.hn.cz/c1-67872980-varovani-nepomohla-v-narodnim-parku-ceske-svycarsko-hori-les-ohen-zasahl-odhadem-deset-hektaru",
       "dt": "2026-05-02T14:58:00Z",
       "media_raw": "HN / Ekonomika",
       "media_norm": "HN / Ekonomika",
       "tokens": [
-        "ale",
         "black",
-        "dokázali",
-        "dostat",
+        "bojují",
         "dva",
-        "hasiči",
+        "hasičů",
         "hawk",
-        "hoří",
-        "kontrolu",
-        "pomoc",
+        "kontrolou",
+        "nemají",
+        "posílá",
+        "požárem",
         "slovensko",
+        "stovky",
         "vrtulníky",
-        "vyšle",
-        "české",
-        "část",
-        "švýcarsko"
+        "zatím",
+        "českém",
+        "švýcarsku"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1156,31 +1185,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Odstřihnout Čínu od ropy skrze Írán? Tak jednoduché to nebude",
-      "url": "https://archiv.hn.cz/c1-67872590-odstrihnout-cinu-od-ropy-skrze-iran-tak-jednoduche-to-nebude",
-      "dt": "2026-04-30T11:18:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "jednoduché",
-        "nebude",
-        "odstřihnout",
-        "ropy",
-        "skrze",
-        "tak",
-        "írán",
-        "čínu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1191,7 +1195,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184517,
+      "bytes": 184388,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1228,7 +1232,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-04T04:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T04:57:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 34,
@@ -1245,6 +1249,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Američané chtějí doprovázet lodě skrz Hormuzský průliv. Budeme to považovat za porušení příměří, hrozí Teherán",
+            "publishedAt": "2026-05-04T04:57:00Z"
+          },
           {
             "title": "Nová pravidla pro regulaci cen benzinu a nafty: Co se mění a jak funguje byznys provozovatelů pump",
             "publishedAt": "2026-05-04T04:30:00Z"
@@ -1271,10 +1279,6 @@
           },
           {
             "title": "Policie v bytě a toulavé kočky se zastřiženým uchem. Babiš přichází s novelou za práva zvířat",
-            "publishedAt": "2026-05-03T22:00:00Z"
-          },
-          {
-            "title": "Malý byt neznamená automaticky dobrou investici. Musí mít funkční uspořádání",
             "publishedAt": "2026-05-03T22:00:00Z"
           }
         ]

@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-04T05:09:55.699063Z",
+  "ingestedAt": "2026-05-04T05:46:27.683023Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Bláznivý skluz bez vyloučení. Nechápu, Sparta vytváří tlak na sudí, pěnil kouč soupeře",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-blaznivy-skluz-bez-vylouceni-nechapu-sparta-vytvari-tlak-na-sudi-penil-kouc-soupere-5448454",
+      "dt": "2026-05-04T05:30:14Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bláznivý",
+        "kouč",
+        "nechápu",
+        "pěnil",
+        "skluz",
+        "soupeře",
+        "sparta",
+        "sudí",
+        "tlak",
+        "vyloučení",
+        "vytváří"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -746,32 +774,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bývalý sparťan šokoval Švýcarsko, dovedl nováčka k titulu ve fotbalové lize",
-      "url": "https://www.sport.cz/clanek/fotbal-evropske-ligy-byvaly-spartan-sokoval-svycarsko-dovedl-novacka-k-titulu-ve-fotbalove-lize-5448107",
-      "dt": "2026-05-03T15:24:38Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bývalý",
-        "dovedl",
-        "fotbalové",
-        "lize",
-        "nováčka",
-        "sparťan",
-        "titulu",
-        "šokoval",
-        "švýcarsko"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -782,7 +784,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 46764,
+      "bytes": 47464,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -819,7 +821,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T04:54:08Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T05:30:14Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -835,6 +837,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bláznivý skluz bez vyloučení. Nechápu, Sparta vytváří tlak na sudí, pěnil kouč soupeře",
+            "publishedAt": "2026-05-04T05:30:14Z"
+          },
           {
             "title": "Skvělý Dobeš dotáhl Montreal k postupu přes Tampu. Nečas zapsal tři body u divoké výhry Colorada",
             "publishedAt": "2026-05-04T03:42:05Z"
@@ -862,10 +868,6 @@
           {
             "title": "Real Madrid porazil Espaňol a oddálil mistrovské oslavy rivalů z Barcelony",
             "publishedAt": "2026-05-03T21:39:25Z"
-          },
-          {
-            "title": "Inter slaví zisk titulu v Serii A",
-            "publishedAt": "2026-05-03T15:08:02Z"
           }
         ]
       }
