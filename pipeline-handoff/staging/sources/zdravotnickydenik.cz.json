@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-04T05:46:27.683023Z",
+  "ingestedAt": "2026-05-04T06:20:20.705213Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Jednání o úhradách v pasti: Peníze na příští rok se dělí „naslepo“, pojišťovny mají prázdné kapsy",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/dohodovaci-rizeni-naslepo-miliardy-od-statu/",
+      "dt": "2026-05-04T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dělí",
+        "jednání",
+        "kapsy",
+        "mají",
+        "naslepo",
+        "pasti",
+        "peníze",
+        "pojišťovny",
+        "prázdné",
+        "příští",
+        "rok",
+        "úhradách"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -243,34 +272,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Babiš chce sestry z Uzbekistánu. Připravují se na práci v Německu, tak proč ne i u nás, ptá se",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/babis-chce-zdravotni-sestry-z-uzbekistanu/",
-      "dt": "2026-05-01T16:32:02Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "babiš",
-        "chce",
-        "nás",
-        "německu",
-        "proč",
-        "práci",
-        "ptá",
-        "připravují",
-        "sestry",
-        "tak",
-        "uzbekistánu"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 80744,
+      "bytes": 83441,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,7 +319,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-04T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 8,
@@ -334,6 +335,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jednání o úhradách v pasti: Peníze na příští rok se dělí „naslepo“, pojišťovny mají prázdné kapsy",
+            "publishedAt": "2026-05-04T06:00:00Z"
+          },
           {
             "title": "Trumpův triumf, nebo lekce pro Evropu? Zdravotnictví se stalo motorem ekonomiky USA",
             "publishedAt": "2026-05-04T05:00:00Z"
@@ -361,10 +366,6 @@
           {
             "title": "Jed na krysy v dětské výživě: Policie zadržela podezřelého. Vyděrač řádil i v Česku",
             "publishedAt": "2026-05-02T17:03:25Z"
-          },
-          {
-            "title": "Další bitva o potraty v USA: Soud zakázal zasílání oblíbené pilulky poštou",
-            "publishedAt": "2026-05-02T08:46:25Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-04T05:46:27.683023Z",
+  "ingestedAt": "2026-05-04T06:20:20.705213Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Sundin se vrací do Toronta jako poradce, novým generálním manažerem bude Chayka",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-sundin-se-vraci-do-toronta-jako-poradce-novym-generalnim-manazerem-bude-chayka-5448470",
+      "dt": "2026-05-04T05:45:42Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "chayka",
+        "generálním",
+        "jako",
+        "manažerem",
+        "novým",
+        "poradce",
+        "sundin",
+        "toronta",
+        "vrací"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -752,28 +778,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Švédové obhájili prvenství na českém turnaji",
-      "url": "https://www.sport.cz/clanek/hokej-ms-svedove-obhajili-prvenstvi-na-ceskem-turnaji-5447882",
-      "dt": "2026-05-03T12:27:53Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "obhájili",
-        "prvenství",
-        "turnaji",
-        "českém",
-        "švédové"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -784,7 +788,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 47464,
+      "bytes": 47456,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -821,7 +825,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T05:30:14Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T05:45:42Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -837,6 +841,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sundin se vrací do Toronta jako poradce, novým generálním manažerem bude Chayka",
+            "publishedAt": "2026-05-04T05:45:42Z"
+          },
           {
             "title": "Bláznivý skluz bez vyloučení. Nechápu, Sparta vytváří tlak na sudí, pěnil kouč soupeře",
             "publishedAt": "2026-05-04T05:30:14Z"
@@ -864,10 +872,6 @@
           {
             "title": "Vítězný hattrick. Antonelli prolomil prokletí a v Miami zvítězil. Penalizace srazila Leclerca o dvě místa",
             "publishedAt": "2026-05-03T07:34:01Z"
-          },
-          {
-            "title": "Real Madrid porazil Espaňol a oddálil mistrovské oslavy rivalů z Barcelony",
-            "publishedAt": "2026-05-03T21:39:25Z"
           }
         ]
       }

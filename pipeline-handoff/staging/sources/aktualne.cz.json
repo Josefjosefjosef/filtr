@@ -1,25 +1,50 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-04T05:46:27.683023Z",
+  "ingestedAt": "2026-05-04T06:20:20.705213Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Požár v Českém Švýcarsku: hasiči oheň pod kontrolou nemají, opět vzlétnou vrtulníky",
+      "title": "Dron narazil do budovy v Moskvě, šest km od Kremlu a pár dní před oslavami 9. května",
+      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
+      "dt": "2026-01-21T06:45:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "budovy",
+        "dní",
+        "dron",
+        "kremlu",
+        "května",
+        "moskvě",
+        "narazil",
+        "oslavami",
+        "pár",
+        "šest"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Požár v Českém Švýcarsku: hasiči bojují s ohněm, stále není pod kontrolou",
       "url": "https://zpravy.aktualne.cz/domaci/pozar-v-ceskem-svycarsku-se-nerozsiruje-do-zasahu-se-znovu-zapoji-vrtulniky/r~aaa293864d15cb0b820e36acc4a22ff3/",
       "dt": "2026-05-04T05:13:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
+        "bojují",
         "hasiči",
         "kontrolou",
-        "nemají",
-        "oheň",
-        "opět",
+        "ohněm",
         "požár",
-        "vrtulníky",
-        "vzlétnou",
+        "stále",
         "českém",
         "švýcarsku"
       ],
@@ -128,30 +153,6 @@
         "varuje",
         "začnou",
         "írán"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rusko zaútočilo na výzkumnou laboratoř jaderné elektrárny v Záporoží",
-      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
-      "dt": "2026-01-21T06:45:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "elektrárny",
-        "jaderné",
-        "laboratoř",
-        "rusko",
-        "výzkumnou",
-        "zaútočilo",
-        "záporoží"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -543,7 +544,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22579,
+      "bytes": 22631,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -599,7 +600,11 @@
         },
         "sample_titles": [
           {
-            "title": "Požár v Českém Švýcarsku: hasiči oheň pod kontrolou nemají, opět vzlétnou vrtulníky",
+            "title": "Dron narazil do budovy v Moskvě, šest km od Kremlu a pár dní před oslavami 9. května",
+            "publishedAt": "2026-01-21T06:45:00Z"
+          },
+          {
+            "title": "Požár v Českém Švýcarsku: hasiči bojují s ohněm, stále není pod kontrolou",
             "publishedAt": "2026-05-04T05:13:00Z"
           },
           {
@@ -617,10 +622,6 @@
           {
             "title": "Americké síly začnou doprovázet lodě plující Hormuzem, oznámil Trump. Írán před tím varuje",
             "publishedAt": "2026-02-28T14:04:00Z"
-          },
-          {
-            "title": "Rusko zaútočilo na výzkumnou laboratoř jaderné elektrárny v Záporoží",
-            "publishedAt": "2026-01-21T06:45:00Z"
           },
           {
             "title": "Bývalý newyorský starosta Giuliani je v kritickém stavu. Zmínil to i Trump",
