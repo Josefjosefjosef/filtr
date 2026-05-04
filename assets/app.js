@@ -34673,7 +34673,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   function iuSilverIsNegatedBroadVerb(f) {
-    return /neukladej|nezapis|nepridej|nepridavej|nevkladej|nedavej/.test(f);
+    return /neukladej|neukladat|nezapis|nepridej|nepridavej|nevkladej|nedavej/.test(f);
   }
 
   /** P0: „jen v úkolech“ / „jen úkoly“ — read scope; foldCs-safe. */
@@ -34722,9 +34722,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const x = String(f || "");
     return (
       /\bneukladej\b/.test(x) ||
+      /\bneukladat\b/.test(x) ||
       /\bnic\s+neukladej\b/.test(x) ||
       /\bnic\s+noveho\s+neukladej\b/.test(x) ||
       /\bjen\s+cti\b/.test(x) ||
+      /\bpouze\s+cti\b/.test(x) ||
       /\bjen\s+se\s+podivej\b/.test(x) ||
       /\bjen\s+zjist/.test(x) ||
       /\bjen\s+over/.test(x) ||
@@ -34975,7 +34977,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\b(podivej\s+se|podivejte\s+se)\b/.test(x) ||
       /\bjen\s+se\s+podivej\b/.test(x) ||
       /\bse\s+podivej\b/.test(x) ||
-      /\bzjist(i|it|te)\b/.test(x) ||
+      /\bjen\s+cti\b/.test(x) ||
+      /\bpouze\s+cti\b/.test(x) ||
+      (function () {
+        if (!/\bzjist(i|it|te)\b/.test(x)) return false;
+        if (
+          /\bjen\s+zjist/i.test(x) &&
+          /\b(zapis|uloz|pridej|vytvor)\w*\b/i.test(x) &&
+          !/\bdo\s+kalend/i.test(x)
+        ) {
+          return false;
+        }
+        return true;
+      })() ||
       /\bprect(i|it|ete)\b/.test(x) ||
       /\b(najdi|vyhledej|hledej|ukaz|zobraz|zobrazit|vypi[sš]|vypis)\b/.test(x) ||
       /\b(rekni|reknete)\b/.test(x) ||
@@ -35897,13 +35911,42 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
-   * calendar.create with explicit write-to-calendar must never be classified as calendar.read.
+   * P0: globální negace / readonly („nic neukládej“, „jen se podívej“, …) + kalendářní kontext
+   * musí přebít write-tokeny — jinak tryParseCalendarRead selže a tok spadne do WRITE_SCHED_PROBE.
+   */
+  function iuSilverCalendarNegationBeatsCalendarWriteSuppressionFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    /* Bez holého „jen zjisti“ na konci vět — 20k šablony calendar_write ho používají i u create. */
+    const neg =
+      /\bnic\s+neukladej\b/.test(x) ||
+      /\bnic\s+noveho\s+neukladej\b/.test(x) ||
+      /\bnic\s+nevytvarej\b/.test(x) ||
+      /\bjen\s+se\s+podivej\b/.test(x) ||
+      /\bjen\s+cti\b/.test(x) ||
+      /\bpouze\s+cti\b/.test(x) ||
+      /\bnevytvarej\s+udalost\b/.test(x) ||
+      /\bnevytvor\w*\s+udalost\b/.test(x) ||
+      (/\bnevytvarej\b/.test(x) &&
+        !/\bnevytvarej\s+ukol\b/.test(x) &&
+        !/\bnevytvarej\s+poznam/.test(x) &&
+        (/\bdo\s+kalend/i.test(x) ||
+          /\bkalend/i.test(x) ||
+          /schuz|udalost|porad|meeting|zubar/.test(x))) ||
+      iuSilverIsNegatedBroadVerb(x);
+    if (!neg) return false;
+    return iuSilverHasExplicitCalendarTarget(x) || iuSilverCalendarEntityContextFolded(x);
+  }
+
+  /**
+   * calendar.create with explicit write-to-calendar must never be classified as calendar.read
+   * when suppression applies (bez negace — negace přebíjí přes iuSilverCalendarReadSuppressedForWriteIntent).
    * (Fixes false read e.g. „… schůzku s Petrem ulož mi to do kalendáře“ → find_by_title.)
    */
-  function iuSilverCalendarReadSuppressedForWriteIntent(f) {
+  function iuSilverCalendarReadSuppressedForWriteIntentCore(f) {
     if (!f) return false;
     if (
-      /\buloz(?:it|te|i)?\b|\bulož(?:te)?\b|\bzapis(?:it|te|i)?\b|\bzapiš(?:te)?\b|\bpridej\b|\bpřidej\b|\bvytvor\w*\b|\bvytvoř\w*\b|\bnaplanuj\b|\bnaplánuj\b|\bzanes\b|dej\s+to\s+do\s+kalend|dej\s+mi\s+to\s+do\s+kalend/.test(
+      /\buloz(?:it|te|i)?\b|\bulož(?:te)?\b|\bzapis(?:it|te|i)?\b|\bzapiš(?:te)?\b|\bpridej\b|\bpřidej\b|\bvytvor\w*\b|\bvytvoř\w*\b|\bnaplanuj\b|\bnaplánuj\b|\bzanes\b|dej\s+to\s+do\s+kalend|dej\s+mi\s+to\s+do\s+kalend|dej\s+mi\s+do\s+kalend/.test(
         f
       )
     ) {
@@ -35913,7 +35956,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\buloz\s+do\s+kalend/.test(f)) return true;
     if (/\b(?:zapis|zapiš|pridej|přidej|vytvor|vytvoř|naplanuj|naplánuj)\s+mi\s+do\s+kalend/.test(f)) return true;
     if (/\b(?:zapis|zapiš|pridej|přidej|vytvor|vytvoř|naplanuj|naplánuj)\s+do\s+kalend/.test(f)) return true;
+    if (/\bdej\s+do\s+kalend/i.test(f)) return true;
     return false;
+  }
+
+  function iuSilverCalendarReadSuppressedForWriteIntent(f) {
+    if (!f) return false;
+    if (iuSilverCalendarNegationBeatsCalendarWriteSuppressionFolded(f)) return false;
+    return iuSilverCalendarReadSuppressedForWriteIntentCore(f);
   }
 
   /**
@@ -36183,6 +36233,27 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     const qp = iuSilverTryParseCalendarReadQueryPriority(rawIn, now, r, f);
     if (qp) return qp;
+    /* P0: negace zápisu + kalendář — bez klasického dotazu stále calendar.read (agenda / den), ne create.
+     * Platí i bez write-tokenů („nevytvoř událost, včera v kalendáři jen ověř“ → read, ne create).
+     * Výjimka: holý broad-verb „neukládej do kalendáře…“ bez write-tvaru → clarification (regrese neg-01). */
+    if (iuSilverCalendarNegationBeatsCalendarWriteSuppressionFolded(f)) {
+      if (iuSilverIsNegatedBroadVerb(f) && !iuSilverCalendarReadSuppressedForWriteIntentCore(f)) {
+        return null;
+      }
+      if (/\bposledn/i.test(f) && /\bsch[uů]z/i.test(f) && /\bdnes\b/i.test(f)) {
+        return { intent: "last_event_today", filter: null };
+      }
+      if (/\bz[ií]tra\b/i.test(f)) {
+        return { intent: "agenda_for_day", dateRange: "tomorrow", filter: null };
+      }
+      if (/\bvcere\b|\bvcera\b|\bvcerajs/i.test(f)) {
+        return { intent: "agenda_for_day", dateRange: "yesterday", filter: null };
+      }
+      if (/\bdnes(?:ka|ek)?\b/i.test(f)) {
+        return { intent: "agenda_for_day", dateRange: "today", filter: null };
+      }
+      return { intent: "agenda_for_day", dateRange: "today", filter: null };
+    }
     return null;
   }
 
@@ -39905,6 +39976,39 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const salEarly = iuSilverBuildSalutationPreferenceTurn(raw0);
     if (salEarly) {
       return salEarly;
+    }
+
+    {
+      const spNegEarly = iuSilverMultiIntentSplitOnConnectorP0(raw);
+      const leftNegLen = spNegEarly ? String(spNegEarly.left || "").trim().length : 0;
+      if (
+        iuSilverCalendarNegationBeatsCalendarWriteSuppressionFolded(folded) &&
+        iuSilverCalendarReadSuppressedForWriteIntentCore(folded) &&
+        (!spNegEarly || leftNegLen < 44)
+      ) {
+        const readSpecNegEarly = tryParseCalendarRead(raw, now);
+        if (readSpecNegEarly) {
+          const snapN = ctx && typeof ctx.getEventsSnapshot === "function" ? ctx.getEventsSnapshot() : [];
+          const matchedN = iuSilverRetrieveReadQuery(readSpecNegEarly, snapN, now);
+          const answerN = iuSilverBuildReadAnswer(readSpecNegEarly, matchedN, now);
+          return {
+            normalizedIntent: "calendar.read",
+            targetContainer: "none",
+            processingState: "READ_OK",
+            clarificationReason: null,
+            futureIntentCandidate: null,
+            readQuery: readSpecNegEarly,
+            readAnswer: answerN,
+            extractedFields: {},
+            missingFields: [],
+            ambiguousFields: [],
+            userFacingSummary: answerN.message,
+            assistantLead: answerN.message,
+            clarificationText: "",
+            draft: empty
+          };
+        }
+      }
     }
 
     const multiIntentP0 = iuSilverTryMultiIntentP0Turn(raw, now, folded, ctx || {}, empty, prevDraft);
