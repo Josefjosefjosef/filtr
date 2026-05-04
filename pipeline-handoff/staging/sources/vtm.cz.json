@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-04T17:54:00.960670Z",
+  "ingestedAt": "2026-05-04T18:28:59.977431Z",
   "items": [
     {
       "section": "veda",
@@ -22,6 +22,31 @@
         "prodávat",
         "přestal",
         "stolní"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Takhle budou do tří let vypadat všechny státní weby a aplikace",
+      "url": "https://www.zive.cz/clanky/takhle-budou-do-tri-let-vypadat-vsechny-statni-weby-a-aplikace/sc-3-a-241008/default.aspx",
+      "dt": "2026-05-04T17:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "aplikace",
+        "let",
+        "státní",
+        "takhle",
+        "tří",
+        "vypadat",
+        "všechny",
+        "weby"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -944,33 +969,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Znáte nejčastější chyby při focení mobilem? Děláme je snad úplně všichni",
-      "url": "https://mobilmania.zive.cz/clanky/nejcastejsi-chyby-pri-foceni-mobilem-202604/sc-3-a-1364634/default.aspx",
-      "dt": "2026-04-28T17:15:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "chyby",
-        "děláme",
-        "focení",
-        "mobilem",
-        "nejčastější",
-        "při",
-        "snad",
-        "všichni",
-        "znáte",
-        "úplně"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -981,7 +979,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22788,
+      "bytes": 22834,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1018,7 +1016,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-04T15:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T17:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1036,6 +1034,10 @@
           {
             "title": "Apple přestal prodávat nejlevnější stolní Mac. Důvodů může být hned několik",
             "publishedAt": "2026-05-04T12:45:00Z"
+          },
+          {
+            "title": "Takhle budou do tří let vypadat všechny státní weby a aplikace",
+            "publishedAt": "2026-05-04T17:45:00Z"
           },
           {
             "title": "T-Mobile ukázal výhody 5G SA sítě. V mobilu ji nepoznáte, ale v nemocnicích nebo fabrikách mění pravidla",
@@ -1060,10 +1062,6 @@
           {
             "title": "Problém pro AMD? Intel sází na více jader za méně peněz a mění tak pravidla hry",
             "publishedAt": "2026-05-04T06:45:00Z"
-          },
-          {
-            "title": "Konec fyzických SIM karet je v nedohlednu. Zákazníci o přechod na eSIM zase tolik nestojí",
-            "publishedAt": "2026-05-04T07:15:00Z"
           }
         ]
       }

@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-04T17:54:00.960670Z",
+  "ingestedAt": "2026-05-04T18:28:59.977431Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Jedna sezona a konec. Reprezentační kouč Bartoň už basketbalisty USK nepovede",
+      "url": "https://www.idnes.cz/sport/basket/jedna-sezona-a-konec-reprezentacni-kouc-barton-uz-basketbalisty-usk-nepovede.A260504_194010_sport-basket_tit",
+      "dt": "2026-05-04T17:45:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bartoň",
+        "basketbalisty",
+        "jedna",
+        "konec",
+        "kouč",
+        "nepovede",
+        "reprezentační",
+        "sezona",
+        "usk"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Zavolejte mi, prosím! Fotbalista ukazoval do kamery vizitku, pracuje jako makléř",
+      "url": "https://www.idnes.cz/sport/trendy/zavolejte-mi-prosim-fotbalista-ukazoval-do-kamery-vizitku-pracuje-jako-makler.A260504_144930_trendy_subt",
+      "dt": "2026-05-04T17:41:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "fotbalista",
+        "jako",
+        "kamery",
+        "makléř",
+        "pracuje",
+        "prosím",
+        "ukazoval",
+        "vizitku",
+        "zavolejte"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -739,60 +791,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nejmladší účastník za 89 let. Francouzský teenager Seixas míří na Tour už letos",
-      "url": "https://www.idnes.cz/sport/cyklistika/francouzsky-talent-seixas-se-letos-poprve-predstavi-na-tour-de-france.A260504_111911_cyklistika_ten",
-      "dt": "2026-05-04T09:23:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "francouzský",
-        "let",
-        "letos",
-        "míří",
-        "nejmladší",
-        "seixas",
-        "teenager",
-        "tour",
-        "účastník"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Výjimečná přestřelka, patnáct gólů! S tím jsme do zápasu ale nešli, zní z Colorada",
-      "url": "https://www.idnes.cz/hokej/nhl/prestrelka-colorado-minnesota-15-golu.A260504_094400_nhl_hrj",
-      "dt": "2026-05-04T09:17:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "ale",
-        "colorada",
-        "gólů",
-        "jsme",
-        "nešli",
-        "patnáct",
-        "přestřelka",
-        "tím",
-        "výjimečná",
-        "zní",
-        "zápasu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -803,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47712,
+      "bytes": 47677,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -840,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T16:41:24Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T17:45:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -855,6 +853,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jedna sezona a konec. Reprezentační kouč Bartoň už basketbalisty USK nepovede",
+            "publishedAt": "2026-05-04T17:45:00Z"
+          },
+          {
+            "title": "Zavolejte mi, prosím! Fotbalista ukazoval do kamery vizitku, pracuje jako makléř",
+            "publishedAt": "2026-05-04T17:41:00Z"
+          },
           {
             "title": "Chelsea prohrála šestý ligový zápas v řadě, padla s Nottinghamem. City vyzve Everton",
             "publishedAt": "2026-05-04T16:41:24Z"
@@ -878,14 +884,6 @@
           {
             "title": "Ztratil zdánlivě neztratitelné a dostal padáka. Orlando je v NBA bez trenéra",
             "publishedAt": "2026-05-04T14:41:00Z"
-          },
-          {
-            "title": "Přerovská líheň nezastavuje. Do extraligy vyšle třetího gólmana za tři roky. Jak to?",
-            "publishedAt": "2026-05-04T14:27:00Z"
-          },
-          {
-            "title": "Kameraman i mechanik zapomněli na práci. Virální záběry z Miami baví fanoušky",
-            "publishedAt": "2026-05-04T14:05:00Z"
           }
         ]
       }

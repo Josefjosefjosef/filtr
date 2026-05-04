@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-04T17:54:00.960670Z",
+  "ingestedAt": "2026-05-04T18:28:59.977431Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Akce 007 First Light odhaluje herní dobu",
+      "url": "https://zing.cz/article/akce-007-first-light-odhaluje-herni-dobu",
+      "dt": "2026-05-04T18:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "007",
+        "akce",
+        "dobu",
+        "first",
+        "herní",
+        "light",
+        "odhaluje"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -963,32 +987,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Závodní série MotoGP je po roce zpátky, nový díl vyšel na PC i konzolích",
-      "url": "https://zing.cz/article/zavodni-serie-motogp-je-po-roce-zpatky-novy-dil-vysel-na-pc-i-konzolich",
-      "dt": "2026-04-30T08:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "díl",
-        "konzolích",
-        "motogp",
-        "nový",
-        "roce",
-        "série",
-        "vyšel",
-        "zpátky",
-        "závodní"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -999,7 +997,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125804,
+      "bytes": 125739,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1036,7 +1034,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-04T16:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T18:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1052,6 +1050,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Akce 007 First Light odhaluje herní dobu",
+            "publishedAt": "2026-05-04T18:00:00Z"
+          },
           {
             "title": "Forza Horizon 6 je po obsahové stránce hotová, známe potřebné místo na disku",
             "publishedAt": "2026-05-04T16:00:00Z"
@@ -1079,10 +1081,6 @@
           {
             "title": "Halo Studios údajně připravuje remake původní trilogie",
             "publishedAt": "2026-05-04T11:00:00Z"
-          },
-          {
-            "title": "Kingdom Come dostalo po holicím strojku vlastní parfém s vůní středověku",
-            "publishedAt": "2026-05-04T08:00:00Z"
           }
         ]
       }
