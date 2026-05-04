@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-04T17:14:34.101341Z",
+  "ingestedAt": "2026-05-04T17:54:00.960670Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Vlček: Požár se nešíří a šířit nebude. Hasiči bojují s plameny v Českém Švýcarsku",
+      "url": "https://ekonomickydenik.cz/vlcek-pozar-sirit-nebude-hasici/",
+      "dt": "2026-05-04T17:29:03Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bojují",
+        "hasiči",
+        "nebude",
+        "nešíří",
+        "plameny",
+        "požár",
+        "vlček",
+        "českém",
+        "švýcarsku",
+        "šířit"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -755,32 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Babiš si vybral. Landovský se stane vládním zmocněncem pro závazky vůči NATO",
-      "url": "https://ekonomickydenik.cz/landovsky-se-stane-vladnim-zmocnencem-nato/",
-      "dt": "2026-05-02T11:30:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "babiš",
-        "landovský",
-        "nato",
-        "stane",
-        "vládním",
-        "vybral",
-        "vůči",
-        "zmocněncem",
-        "závazky"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72385,
+      "bytes": 72781,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,7 +829,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T17:08:52Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T17:29:03Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 25,
@@ -845,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vlček: Požár se nešíří a šířit nebude. Hasiči bojují s plameny v Českém Švýcarsku",
+            "publishedAt": "2026-05-04T17:29:03Z"
+          },
           {
             "title": "Hrozí Evropě blackouty? Komise vyhlásila válku Huawei kvůli solárním panelům",
             "publishedAt": "2026-05-04T17:08:52Z"
@@ -872,10 +877,6 @@
           {
             "title": "Benzin výrazně zdraží. Nové opatření zavedlo i  Německo",
             "publishedAt": "2026-05-04T13:27:26Z"
-          },
-          {
-            "title": "Elektřina a plyn zdražují. Od května si připlatí i zákazníci PRE",
-            "publishedAt": "2026-05-04T12:33:00Z"
           }
         ]
       }

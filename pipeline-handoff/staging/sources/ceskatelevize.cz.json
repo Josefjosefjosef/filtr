@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-04T17:14:34.101341Z",
+  "ingestedAt": "2026-05-04T17:54:00.960670Z",
   "items": [
     {
       "section": "aktualne",
@@ -762,6 +762,28 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Reprezentační trenér Bartoň v USK skončil",
+      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/reprezentacni-trener-barton-v-usk-skoncil-156602",
+      "dt": "2026-05-04T17:35:17Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "bartoň",
+        "reprezentační",
+        "skončil",
+        "trenér",
+        "usk"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Nottingham prohloubil krizi Chelsea, Blues padli v lize pošesté v řadě",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/nottingham-prohloubil-krizi-chelsea-blues-padli-v-lize-poseste-v-rade-156601",
       "dt": "2026-05-04T16:27:44Z",
@@ -1505,31 +1527,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Brněnští obhájci stříbra čelí vyřazení, Opava šla do vedení",
-      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/brnensti-obhajci-stribra-celi-vyrazeni-opava-sla-do-vedeni-156571",
-      "dt": "2026-05-02T19:55:39Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "brněnští",
-        "obhájci",
-        "opava",
-        "stříbra",
-        "vedení",
-        "vyřazení",
-        "čelí",
-        "šla"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1659,7 +1656,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40184,
+      "bytes": 39913,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1696,7 +1693,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T16:27:44Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T17:35:17Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1711,6 +1708,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Reprezentační trenér Bartoň v USK skončil",
+            "publishedAt": "2026-05-04T17:35:17Z"
+          },
           {
             "title": "Nottingham prohloubil krizi Chelsea, Blues padli v lize pošesté v řadě",
             "publishedAt": "2026-05-04T16:27:44Z"
@@ -1738,10 +1739,6 @@
           {
             "title": "Pastrňák na MS nejspíš nepojede. Potřebuji pauzu, říká",
             "publishedAt": "2026-05-04T09:13:38Z"
-          },
-          {
-            "title": "Detroit slaví v play-off postup. Takhle daleko nebyl sedmnáct let",
-            "publishedAt": "2026-05-04T06:14:57Z"
           }
         ]
       }
