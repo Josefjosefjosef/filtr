@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-04T08:38:59.069136Z",
+  "ingestedAt": "2026-05-04T09:14:29.946865Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Česká ekonomika klopýtla, Írán za to ale zatím nemůže",
+      "url": "https://profitonline.cz/ceska-ekonomika-klopytla-iran-za-to-ale-zatim-nemuze/",
+      "dt": "2026-05-04T09:10:02Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "ale",
+        "ekonomika",
+        "klopýtla",
+        "nemůže",
+        "zatím",
+        "írán",
+        "česká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -259,30 +283,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Paradox: Za umrzání českých ovocných stromů může globální oteplování",
-      "url": "https://profitonline.cz/paradox-za-umrzani-ceskych-ovocnych-stromu-muze-globalni-oteplovani/",
-      "dt": "2026-05-01T10:00:51Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "globální",
-        "oteplování",
-        "ovocných",
-        "paradox",
-        "stromů",
-        "umrzání",
-        "českých"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -293,7 +293,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18325,
+      "bytes": 18322,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -330,7 +330,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-04T08:00:39Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T09:10:02Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -346,6 +346,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česká ekonomika klopýtla, Írán za to ale zatím nemůže",
+            "publishedAt": "2026-05-04T09:10:02Z"
+          },
           {
             "title": "Čeští investoři sázejí na technologie a krypto, ale s otazníkem nad budoucností",
             "publishedAt": "2026-05-04T08:00:39Z"
@@ -373,10 +377,6 @@
           {
             "title": "Vozy na benzin a naftu prohrávají s elektroauty o 120 korun na 100 km",
             "publishedAt": "2026-05-03T04:00:21Z"
-          },
-          {
-            "title": "Mstí se Trump německému kancléři?",
-            "publishedAt": "2026-05-02T15:05:20Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-04T08:38:59.069136Z",
+  "ingestedAt": "2026-05-04T09:14:29.946865Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Městská policie Kladno se loučí se svým kolegou Radkem Hadrabou",
+      "url": "https://tydenikpolicie.cz/mestska-policie-kladno-se-louci-se-svym-kolegou-radkem-hadrabou/",
+      "dt": "2026-05-04T09:03:44Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "hadrabou",
+        "kladno",
+        "kolegou",
+        "loučí",
+        "městská",
+        "policie",
+        "radkem",
+        "svým"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -233,31 +258,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Při nehodě motocyklu na Novojičínsku byli zraněni dva lidé",
-      "url": "https://tydenikpolicie.cz/pri-nehode-motocyklu-na-novojicinsku-byli-zraneni-dva-lide/",
-      "dt": "2026-05-02T10:07:21Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "byli",
-        "dva",
-        "lidé",
-        "motocyklu",
-        "nehodě",
-        "novojičínsku",
-        "při",
-        "zraněni"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -268,7 +268,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15999,
+      "bytes": 15983,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -305,7 +305,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-04T07:03:17Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T09:03:44Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -320,6 +320,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Městská policie Kladno se loučí se svým kolegou Radkem Hadrabou",
+            "publishedAt": "2026-05-04T09:03:44Z"
+          },
           {
             "title": "Vězně, který utekl z areálu věznice v Jiřicích, dopadli policisté v Olomouci",
             "publishedAt": "2026-05-04T07:03:17Z"
@@ -347,10 +351,6 @@
           {
             "title": "Požár lesa v Beskydech likvidovalo patnáct jednotek hasičů, nasazen byl policejní vrtulník",
             "publishedAt": "2026-05-02T11:08:23Z"
-          },
-          {
-            "title": "Lidem ve Strakonicích přistál na zahradě větroň. Posádka vyvázla s lehkým zraněním",
-            "publishedAt": "2026-05-02T11:03:59Z"
           }
         ]
       }

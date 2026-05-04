@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-04T08:38:59.069136Z",
+  "ingestedAt": "2026-05-04T09:14:29.946865Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Elektronické daňové přiznání je nutné odeslat do dnešní půlnoci",
+      "url": "https://www.e15.cz/finexpert/danove-priznani/elektronicke-danove-priznani-je-nutne-odeslat-do-dnesni-pulnoci-1432545",
+      "dt": "2026-05-04T08:40:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "daňové",
+        "dnešní",
+        "elektronické",
+        "nutné",
+        "odeslat",
+        "přiznání",
+        "půlnoci"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1073,35 +1097,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "České dráhy spustily novou linku z Prahy do Kodaně. Cesta zatím potrvá o něco déle",
-      "url": "https://www.e15.cz/byznys/doprava-a-logistika/ceske-drahy-spustily-novou-linku-z-prahy-do-kodane-cesta-zatim-potrva-o-neco-dele-1432527",
-      "dt": "2026-05-01T05:10:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "cesta",
-        "dráhy",
-        "déle",
-        "kodaně",
-        "linku",
-        "novou",
-        "něco",
-        "potrvá",
-        "prahy",
-        "spustily",
-        "zatím",
-        "české"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1112,7 +1107,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 56744,
+      "bytes": 56863,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1149,12 +1144,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-04T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T08:40:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
+          "zdravi": 3,
           "finance": 31,
-          "zpravy": 7,
-          "zdravi": 2
+          "zpravy": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1166,6 +1161,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Elektronické daňové přiznání je nutné odeslat do dnešní půlnoci",
+            "publishedAt": "2026-05-04T08:40:00Z"
+          },
           {
             "title": "Cígler a Sandberg opět nakupovali. Seyfor vstoupil do tuzemského Raynetu s plány na další expanzi",
             "publishedAt": "2026-05-04T08:00:00Z"
@@ -1193,10 +1192,6 @@
           {
             "title": "Připravuji dispečery na svět, kde se bude ještě častěji válčit, říká šéf Řízení letového provozu",
             "publishedAt": "2026-05-04T04:00:00Z"
-          },
-          {
-            "title": "Pokud dokážu vydělat na měsíční splátku, jdu do vlastního. Je Čechům jedno, kolik stojí byt?",
-            "publishedAt": "2026-05-04T03:30:00Z"
           }
         ]
       }

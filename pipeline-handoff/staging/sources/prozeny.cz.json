@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-05-04T08:38:59.069136Z",
+  "ingestedAt": "2026-05-04T09:14:29.946865Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Hantavirus: zabíjel na lodi, nakazit se můžete i doma v kůlně. Jaké jsou příznaky a jak se chránit?",
+      "url": "https://www.prozeny.cz/clanek/zdravi-wiki-nemoci-hantavirus-co-to-je-priznaky-lecba-inkubacni-doba-smrt-103335",
+      "dt": "2026-05-04T09:09:26Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "chránit",
+        "doma",
+        "hantavirus",
+        "jaké",
+        "kůlně",
+        "lodi",
+        "můžete",
+        "nakazit",
+        "příznaky",
+        "zabíjel"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -791,32 +818,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Slepice jsou nový hit zahrad. Proč si je lidé pořizují a kolik to stojí?",
-      "url": "https://www.prozeny.cz/clanek/bydleni-kvetiny-a-zahrada-domaci-slepice-chov-cena-kolik-stoji-narocnost-103204",
-      "dt": "2026-05-02T03:00:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "hit",
-        "kolik",
-        "lidé",
-        "nový",
-        "pořizují",
-        "proč",
-        "slepice",
-        "stojí",
-        "zahrad"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -827,7 +828,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 38736,
+      "bytes": 38829,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -864,7 +865,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T07:24:41Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T09:09:26Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 30
@@ -879,6 +880,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hantavirus: zabíjel na lodi, nakazit se můžete i doma v kůlně. Jaké jsou příznaky a jak se chránit?",
+            "publishedAt": "2026-05-04T09:09:26Z"
+          },
           {
             "title": "Nenalíčená Marie Rottrová: Zastavila čas! Věřili byste, že letos oslaví 85. narozeniny?",
             "publishedAt": "2026-05-04T07:24:41Z"
@@ -905,10 +910,6 @@
           },
           {
             "title": "Orlické hory vás chytí za srdce! Je to tichý ráj bez davů. Nejhezčí trasy, výhledy a přírodní poklady",
-            "publishedAt": "2026-05-04T03:00:00Z"
-          },
-          {
-            "title": "Zarudlé a svědící oči? Jak poznat jarní alergii a zbavit se potíží",
             "publishedAt": "2026-05-04T03:00:00Z"
           }
         ]
