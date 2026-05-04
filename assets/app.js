@@ -35214,7 +35214,18 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       !/\bzitra\b|\bzittra\b|\bpristi\b|\bdnes\b|\bpozitri\b/.test(folded) &&
       !iuSilverHasCalendarEventKeywordFolded(folded) &&
       !iuSilverHasWriteVerb(folded);
+    /* Krátké „ulož/vlož …“ bez cíle a bez read-signálu → WRITE_SCHED_PROBE (CI smoke); delší věty zůstávají u P0 implicitního kalendáře. */
+    const shortBareUlozNoExplicitCalendar =
+      /\b(?:uloz|vloz)(?:it|te|i)?\b/.test(folded) &&
+      !hasCalExplicit &&
+      !inCalSession &&
+      !iuSilverCalendarQuerySignalFolded(fGate) &&
+      String(raw || "")
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean).length <= 10;
     const implicitCalCreate =
+      !shortBareUlozNoExplicitCalendar &&
       (!iuSilverIsTargetAmbiguousStorageVerb(folded) || iuSilverP0CalendarWriteVsAmbiguousNoteFolded(folded, raw)) &&
       !iuSilverHasExplicitNotesTarget(folded) &&
       !iuSilverHasExplicitTasksTarget(folded) &&
@@ -35996,6 +36007,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\b(?:zapis|zapiš|pridej|přidej|vytvor|vytvoř|naplanuj|naplánuj)\s+mi\s+do\s+kalend/.test(f)) return true;
     if (/\b(?:zapis|zapiš|pridej|přidej|vytvor|vytvoř|naplanuj|naplánuj)\s+do\s+kalend/.test(f)) return true;
     if (/\bdej\s+do\s+kalend/i.test(f)) return true;
+    /* P0 smoke / WRITE_SCHED_PROBE: „Ulož zítra v 11 schůzka zubař“ nesmí spadnout na calendar.read před storage disambiguation. */
+    if (
+      iuSilverIsTargetAmbiguousStorageVerb(f) &&
+      !iuSilverHasExplicitCalendarTarget(f) &&
+      !iuSilverHasExplicitNotesTarget(f) &&
+      !iuSilverHasExplicitTasksTarget(f) &&
+      !iuSilverCalendarQuerySignalFolded(f)
+    ) {
+      return true;
+    }
     return false;
   }
 
