@@ -34803,6 +34803,25 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return false;
   }
 
+  /**
+   * P0: „jen zjisti“ + dotazový signál nesmí zablokovat kalendář, když je v téže větě
+   * explicitní zápis do kalendáře (do kalendáře / ulož / nahod …) a chybí tvrdá negace zápisu do kalendáře.
+   * Používá se v iuSilverBrainCalendarWantedInternal (řádek query+explicit_calendar → dříve false vždy).
+   */
+  function iuSilverExplicitCalendarWriteBeatsReadQueryFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (/\bnic\s+neuklad\w*\b/.test(x)) return false;
+    if (/\bnic\s+noveho\s+neuklad\w*\b/.test(x)) return false;
+    if (/\bneuklad\w*\s+do\s+kalend/i.test(x)) return false;
+    if (/\bne\s+do\s+kalend/i.test(x)) return false;
+    if (/\bnic\s+nevytvarej\b/.test(x)) return false;
+    if (iuSilverCalendarReadSuppressedForWriteIntentCore(x)) return true;
+    if (iuSilverHasWriteVerb(x) && /\bdo\s+kalend/i.test(x)) return true;
+    if (/\bnahod\w*\b/.test(x) && /\bdo\s+kalend/i.test(x)) return true;
+    return false;
+  }
+
   function iuSilverTaskReadContextFolded(f) {
     if (iuSilverExplicitNotesPositiveReadScopeFolded(f) && !iuSilverExplicitTaskReadScopeFolded(f)) return false;
     if (iuSilverExplicitTaskReadScopeFolded(f)) return true;
@@ -35008,7 +35027,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   function iuSilverHasWriteVerb(f) {
-    return /\buloz(?:it|te|i)?\b|\bzapis(?:it|te|i)?\b|\bvloz(?:it|te|i)?\b|\bpridej\b|\bnaplanuj\b|\bvytvor\w*\b|\bzaloz\b|\bnapis\b|\bzaznamenej\b|\beviduj\b|\bdopln\b|\bzanes\b|\bpripis\b|\bhod\b|\bdej\s+mi\b|\bdej\s+do\b|\bnapis\s+mi\b|\bpridej\s+mi\b|\bpoznamenej\b|\bzapamatuj\b/.test(f);
+    return /\buloz(?:it|te|i)?\b|\bzapis(?:it|te|i)?\b|\bvloz(?:it|te|i)?\b|\bpridej\b|\bnaplanuj\b|\bvytvor\w*\b|\bzaloz\b|\bnapis\b|\bzaznamenej\b|\beviduj\b|\bdopln\b|\bzanes\b|\bpripis\b|\bhod\b|\bnahod\w*\b|\bdej\s+mi\b|\bdej\s+do\b|\bnapis\s+mi\b|\bpridej\s+mi\b|\bpoznamenej\b|\bzapamatuj\b/.test(f);
   }
 
   /** P0 v1.7: dotazové sloveso + kalendářní kontext → calendar.read / blokace false create (kdy… řeší větve tryParseCalendarRead). */
@@ -35022,12 +35041,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bpouze\s+cti\b/.test(x) ||
       (function () {
         if (!/\bzjist(i|it|te)\b/.test(x)) return false;
-        if (
-          /\bjen\s+zjist/i.test(x) &&
-          /\b(zapis|uloz|pridej|vytvor)\w*\b/i.test(x) &&
-          !/\bdo\s+kalend/i.test(x)
-        ) {
-          return false;
+        if (/\bjen\s+zjist/i.test(x)) {
+          const hasCalWriteVerb =
+            /\b(zapis|uloz|pridej|vytvor|nahod)\w*\b/i.test(x) ||
+            /\bdej\s+do\s+kalend/i.test(x) ||
+            /\buloz\s+do\s+kalend/i.test(x) ||
+            /\bpridej\s+do\s+kalend/i.test(x) ||
+            /\bzapis\s+do\s+kalend/i.test(x);
+          if (hasCalWriteVerb && /\bdo\s+kalend/i.test(x)) return false;
+          if (/\b(zapis|uloz|pridej|vytvor)\w*\b/i.test(x) && !/\bdo\s+kalend/i.test(x)) return false;
         }
         return true;
       })() ||
@@ -35288,7 +35310,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (iuSilverExplicitNotesReadScopeFolded(fGate)) return false;
     if (iuSilverHasExplicitNotesTarget(fGate) && iuSilverCalendarQuerySignalFolded(fGate)) return false;
     if (iuSilverNegativeCreateGuardFolded(fGate) && !iuSilverCalendarCorrectionWriteSafeFolded(fGate, raw)) return false;
-    if (iuSilverCalendarQuerySignalFolded(fGate) && iuSilverHasExplicitCalendarTarget(fGate)) return false;
+    if (
+      iuSilverCalendarQuerySignalFolded(fGate) &&
+      iuSilverHasExplicitCalendarTarget(fGate) &&
+      !iuSilverExplicitCalendarWriteBeatsReadQueryFolded(fGate)
+    )
+      return false;
     if (iuSilverCalendarQuerySignalFolded(fGate) && iuSilverExplicitCalendarReadScopeFolded(fGate)) return false;
     if (
       iuSilverCalendarQuerySignalFolded(fGate) &&
@@ -36124,12 +36151,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverCalendarReadSuppressedForWriteIntentCore(f) {
     if (!f) return false;
     if (
-      /\buloz(?:it|te|i)?\b|\bulož(?:te)?\b|\bzapis(?:it|te|i)?\b|\bzapiš(?:te)?\b|\bpridej\b|\bpřidej\b|\bvytvor\w*\b|\bvytvoř\w*\b|\bnaplanuj\b|\bnaplánuj\b|\bzanes\b|dej\s+to\s+do\s+kalend|dej\s+mi\s+to\s+do\s+kalend|dej\s+mi\s+do\s+kalend/.test(
+      /\buloz(?:it|te|i)?\b|\bulož(?:te)?\b|\bzapis(?:it|te|i)?\b|\bzapiš(?:te)?\b|\bpridej\b|\bpřidej\b|\bvytvor\w*\b|\bvytvoř\w*\b|\bnaplanuj\b|\bnaplánuj\b|\bzanes\b|\bnahod\w*\b|dej\s+to\s+do\s+kalend|dej\s+mi\s+to\s+do\s+kalend|dej\s+mi\s+do\s+kalend/.test(
         f
       )
     ) {
       if (/\bdo\s+kalend[aá]r[eě]\b|\bv\s+kalend[aá]r[eě]\b/i.test(f)) return true;
     }
+    if (/\bnahod\w*\s+do\s+kalend/i.test(f)) return true;
     if (/\buloz\s+mi\s+to\s+do\s+kalend/.test(f)) return true;
     if (/\buloz\s+do\s+kalend/.test(f)) return true;
     if (/\b(?:zapis|zapiš|pridej|přidej|vytvor|vytvoř|naplanuj|naplánuj)\s+mi\s+do\s+kalend/.test(f)) return true;
