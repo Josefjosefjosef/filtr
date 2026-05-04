@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-04T07:30:08.166623Z",
+  "ingestedAt": "2026-05-04T08:05:24.376280Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Joudy v telemedicíně nechceme. Čestné slovo místo certifikace zavání průšvihem, varuje Pecina",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/telemedicina-certifikace-pecina/",
+      "dt": "2026-05-04T08:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "certifikace",
+        "joudy",
+        "místo",
+        "nechceme",
+        "pecina",
+        "průšvihem",
+        "slovo",
+        "telemedicíně",
+        "varuje",
+        "zavání",
+        "čestné"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -245,33 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Další bitva o potraty v USA: Soud zakázal zasílání oblíbené pilulky poštou",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/usa-soud-zakazal-zasilani-potratove-pilulky-mifepriston-postou/",
-      "dt": "2026-05-02T08:46:25Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "bitva",
-        "další",
-        "oblíbené",
-        "pilulky",
-        "potraty",
-        "poštou",
-        "soud",
-        "usa",
-        "zakázal",
-        "zasílání"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 83240,
+      "bytes": 94017,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,11 +320,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-04T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T08:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 8,
-          "zpravy": 2
+          "zdravi": 9,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -335,6 +336,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Joudy v telemedicíně nechceme. Čestné slovo místo certifikace zavání průšvihem, varuje Pecina",
+            "publishedAt": "2026-05-04T08:00:00Z"
+          },
           {
             "title": "6 % dětí se narodilo díky IVF. V jedné věci nás už ale předběhlo i Rumunsko",
             "publishedAt": "2026-05-04T07:00:00Z"
@@ -362,10 +367,6 @@
           {
             "title": "Pevnost v Letňanech? Babiše fascinuje nemocnice, která se do 72 hodin schová pod zem",
             "publishedAt": "2026-05-03T10:49:12Z"
-          },
-          {
-            "title": "Evropa čeká na nové léky až 600 dní. Dusí ji „regulační inflace“, říká zástupce Bayeru",
-            "publishedAt": "2026-05-03T05:00:00Z"
           }
         ]
       }

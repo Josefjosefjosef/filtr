@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-04T07:30:08.166623Z",
+  "ingestedAt": "2026-05-04T08:05:24.376280Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Česko modernizuje správu státních hranic. Už se dohodlo se Slovenskem a Německem",
+      "url": "https://ekonomickydenik.cz/cesko-modernizuje-spravu-statnich-hranic/",
+      "dt": "2026-05-04T07:41:05Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dohodlo",
+        "hranic",
+        "modernizuje",
+        "německem",
+        "slovenskem",
+        "správu",
+        "státních",
+        "česko"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -765,33 +790,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Konec nadvlády USA a Číny? Nová pravidla fúzí mají nakopnout konkurenceschopnost EU",
-      "url": "https://ekonomickydenik.cz/konec-nadvlady-usa-a-ciny-nova-pravidla-fuzi/",
-      "dt": "2026-04-30T18:35:55Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "fúzí",
-        "konec",
-        "konkurenceschopnost",
-        "mají",
-        "nadvlády",
-        "nakopnout",
-        "nová",
-        "pravidla",
-        "usa",
-        "číny"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70232,
+      "bytes": 70418,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,7 +837,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T05:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T07:41:05Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -856,6 +854,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česko modernizuje správu státních hranic. Už se dohodlo se Slovenskem a Německem",
+            "publishedAt": "2026-05-04T07:41:05Z"
+          },
           {
             "title": "Nižší DPH u piva nepomůže, tvrdí exministr. Proč Češi v hospodách méně pijí?",
             "publishedAt": "2026-05-04T05:33:00Z"
@@ -883,10 +885,6 @@
           {
             "title": "Babiš: Letiště Karlovy Vary přejde pod armádu. Hejtman kraje není proti",
             "publishedAt": "2026-05-03T11:15:00Z"
-          },
-          {
-            "title": "Dopady slunečného víkendu: Elektřinu vyrábíme levně a bez emisí. Je to výhra nebo bolehlav?",
-            "publishedAt": "2026-05-03T09:58:00Z"
           }
         ]
       }

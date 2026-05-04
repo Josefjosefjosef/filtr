@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-04T07:30:08.166623Z",
+  "ingestedAt": "2026-05-04T08:05:24.376280Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Rusko nechce obsadit Evropu, věří Ševčík. Havel varuje před podceněním",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/rusko-nechce-obsadit-evropu-veri-sevcik-havel-varuje-pred-podcenenim-373060",
+      "dt": "2026-05-04T07:28:14Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "evropu",
+        "havel",
+        "nechce",
+        "obsadit",
+        "podceněním",
+        "rusko",
+        "varuje",
+        "věří",
+        "ševčík"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -227,21 +253,22 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "USA začnou doprovázet lodě uvázlé v Perském zálivu, oznámil Trump",
+      "title": "Zaútočíme na lodě USA, pokud se přiblíží k Hormuzskému průlivu, varuje íránská armáda",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/usa-zacnou-v-pondeli-doprovazet-lode-uvizle-v-perskem-zalivu-oznamil-trump-373057",
       "dt": "2026-05-03T21:31:35Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "doprovázet",
+        "armáda",
+        "hormuzskému",
         "lodě",
-        "oznámil",
-        "perském",
-        "trump",
+        "pokud",
+        "průlivu",
+        "přiblíží",
         "usa",
-        "uvázlé",
-        "začnou",
-        "zálivu"
+        "varuje",
+        "zaútočíme",
+        "íránská"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -713,31 +740,6 @@
         "ubývá",
         "usilují",
         "českem"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Jiřině Bohdalové je 95 let, hraje téměř stejně tak dlouho",
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/jirine-bohdalove-je-95-let-hraje-temer-stejne-tak-dlouho-372892",
-      "dt": "2026-05-03T05:01:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "bohdalové",
-        "dlouho",
-        "hraje",
-        "jiřině",
-        "let",
-        "stejně",
-        "tak",
-        "téměř"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1522,7 +1524,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43208,
+      "bytes": 44258,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1582,11 +1584,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T07:18:08Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T07:28:14Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 3,
-          "zpravy": 25,
+          "zpravy": 26,
+          "other": 2,
           "finance": 2
         },
         "drop_counts": {
@@ -1599,6 +1601,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rusko nechce obsadit Evropu, věří Ševčík. Havel varuje před podceněním",
+            "publishedAt": "2026-05-04T07:28:14Z"
+          },
           {
             "title": "Prastaré íránské písmo rozluštil jediný vědec",
             "publishedAt": "2026-05-04T07:18:08Z"
@@ -1626,10 +1632,6 @@
           {
             "title": "Požár v Českém Švýcarsku se nerozšiřuje, pod kontrolou ale stále není",
             "publishedAt": "2026-05-04T04:27:43Z"
-          },
-          {
-            "title": "Úředník sám sobě povolil černé stavby. Teď je chce legalizovat",
-            "publishedAt": "2026-05-04T04:00:00Z"
           }
         ]
       }
@@ -1735,7 +1737,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77413,
+      "bytes": 77550,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

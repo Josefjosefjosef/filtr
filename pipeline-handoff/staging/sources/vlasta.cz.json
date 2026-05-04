@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vlasta.cz",
-  "ingestedAt": "2026-05-04T07:30:08.166623Z",
+  "ingestedAt": "2026-05-04T08:05:24.376280Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Dnes v Ulici: Vanda si myslí, že je Luďkova milenka zlatokopka. A Lumíra zadrží policie",
+      "url": "https://www.vlasta.cz/inspirace/dnes-v-ulici-novy-dil-pondeli-dej-herci-lumir-vanda-ludek-kristyna-blanka/",
+      "dt": "2026-05-04T07:55:19Z",
+      "media_raw": "Vlasta",
+      "media_norm": "Vlasta",
+      "tokens": [
+        "lumíra",
+        "luďkova",
+        "milenka",
+        "myslí",
+        "policie",
+        "ulici",
+        "vanda",
+        "zadrží",
+        "zlatokopka"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vlasta",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "vlasta.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -1125,34 +1151,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "vlasta.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Svíčková Taťány Kuchařové: Lahodnou recepturu podle první české Miss World si zamilujete",
-      "url": "https://www.vlasta.cz/inspirace/svickova-recept-tatana-kucharova/",
-      "dt": "2026-04-29T05:02:00Z",
-      "media_raw": "Vlasta",
-      "media_norm": "Vlasta",
-      "tokens": [
-        "kuchařové",
-        "lahodnou",
-        "miss",
-        "podle",
-        "první",
-        "recepturu",
-        "svíčková",
-        "taťány",
-        "world",
-        "zamilujete",
-        "české"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vlasta",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "vlasta.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1163,7 +1161,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.vlasta.cz/rss/vse.xml",
-      "bytes": 62356,
+      "bytes": 62345,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1200,10 +1198,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-04T06:04:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T07:55:19Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "other": 40
+          "zpravy": 1,
+          "other": 39
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1215,6 +1214,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dnes v Ulici: Vanda si myslí, že je Luďkova milenka zlatokopka. A Lumíra zadrží policie",
+            "publishedAt": "2026-05-04T07:55:19Z"
+          },
           {
             "title": "Proti pavoukům používám tento běžný prostředek, vyhýbají se nám obloukem. Máte ho doma také",
             "publishedAt": "2026-05-04T06:04:00Z"
@@ -1242,10 +1245,6 @@
           {
             "title": "Tomáš Maštalír: Na češtině jsem musel máknout, naposlouchal jsem ji z pohádek. Sociálním sítím se bráním",
             "publishedAt": "2026-05-03T06:32:00Z"
-          },
-          {
-            "title": "Tohle před praním nedělá 90 % Čechů. Jeden pohyb navíc přitom zbaví skvrn od potu a zachová barvy",
-            "publishedAt": "2026-05-03T06:04:00Z"
           }
         ]
       }
