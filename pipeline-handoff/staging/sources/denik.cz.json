@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-04T03:25:03.753097Z",
+  "ingestedAt": "2026-05-04T03:59:47.060786Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nechci se zaplést se žádnou politikou, říká herečka Tereza Kostková",
+      "url": "https://www.denik.cz/z_domova/nechci-se-zaplest-se-zadnou-politikou-rika-tereza-kostkova.html",
+      "dt": "2026-05-04T03:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "herečka",
+        "kostková",
+        "nechci",
+        "politikou",
+        "tereza",
+        "zaplést",
+        "říká",
+        "žádnou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -613,32 +638,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Středočeští hasiči vyjeli na pomoc s bojem proti požáru v Českém Švýcarsku",
-      "url": "https://www.denik.cz/pozary/stredocesti-hasici-vyjeli-na-pomoc-s-bojem-proti-pozaru-v-ceskem-svycarsku.html",
-      "dt": "2026-05-03T05:40:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bojem",
-        "hasiči",
-        "pomoc",
-        "požáru",
-        "proti",
-        "středočeští",
-        "vyjeli",
-        "českém",
-        "švýcarsku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -649,7 +648,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30105,
+      "bytes": 30159,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -686,7 +685,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-04T02:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T03:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -701,6 +700,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nechci se zaplést se žádnou politikou, říká herečka Tereza Kostková",
+            "publishedAt": "2026-05-04T03:30:00Z"
+          },
           {
             "title": "Májová slavnost ve Šternberku objektivem Antonína Gerži",
             "publishedAt": "2026-05-04T02:20:00Z"
@@ -728,10 +731,6 @@
           {
             "title": "Na smrt čekal 36 let. V USA od nástupu Trumpa přibylo poprav",
             "publishedAt": "2026-05-03T16:00:00Z"
-          },
-          {
-            "title": "Padající stromy i kameny. Velitel hasičů popsal zásah v Českém Švýcarsku",
-            "publishedAt": "2026-05-03T15:57:00Z"
           }
         ]
       }

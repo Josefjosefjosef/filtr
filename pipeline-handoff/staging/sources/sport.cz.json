@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-04T03:25:03.753097Z",
+  "ingestedAt": "2026-05-04T03:59:47.060786Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Skvělý Dobeš dotáhl Montreal k postupu přes Tampu. Nečas zapsal tři body u výhry Colorada",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-skvely-dobes-dotahl-montreal-k-postupu-pres-tampu-5448465",
+      "dt": "2026-05-04T03:42:05Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "body",
+        "colorada",
+        "dobeš",
+        "dotáhl",
+        "montreal",
+        "nečas",
+        "postupu",
+        "skvělý",
+        "tampu",
+        "tři",
+        "výhry",
+        "zapsal"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -741,29 +770,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "SESTŘIH: Teplice ani Slovácko se znovu výhry nedočkaly",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-teplice-ani-slovacko-se-znovu-vyhry-nedockaly-5447914",
-      "dt": "2026-05-03T13:02:25Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "nedočkaly",
-        "sestřih",
-        "slovácko",
-        "teplice",
-        "výhry",
-        "znovu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -774,7 +780,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45757,
+      "bytes": 45285,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -811,11 +817,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T21:39:25Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T03:42:05Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "sport": 29
+          "sport": 29,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -827,6 +833,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Skvělý Dobeš dotáhl Montreal k postupu přes Tampu. Nečas zapsal tři body u výhry Colorada",
+            "publishedAt": "2026-05-04T03:42:05Z"
+          },
           {
             "title": "Hrozivá nehoda v Miami. Jezdce F1 zachránila svatozář",
             "publishedAt": "2026-05-03T20:27:53Z"
@@ -854,10 +864,6 @@
           {
             "title": "Kinský pomohl Tottenhamu opustit sestupové pásmo",
             "publishedAt": "2026-05-03T16:45:02Z"
-          },
-          {
-            "title": "Kuchta pálí a hlásí se o mistrovství světa: Budu šťastný za jakoukoliv roli",
-            "publishedAt": "2026-05-03T20:24:08Z"
           }
         ]
       }

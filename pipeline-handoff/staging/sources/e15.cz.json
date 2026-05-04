@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-04T03:25:03.753097Z",
+  "ingestedAt": "2026-05-04T03:59:47.060786Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Pokud dokážu vydělat na měsíční splátku, jdu do vlastního. Je Čechům jedno, kolik stojí byt?",
+      "url": "https://www.e15.cz/byznys/reality-a-stavebnictvi/pokud-dokazu-vydelat-na-mesicni-splatku-jdu-do-vlastniho-je-cechum-jedno-kolik-stoji-byt-1432524",
+      "dt": "2026-05-04T03:30:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "byt",
+        "dokážu",
+        "jdu",
+        "jedno",
+        "kolik",
+        "měsíční",
+        "pokud",
+        "splátku",
+        "stojí",
+        "vlastního",
+        "vydělat",
+        "čechům"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -1069,33 +1098,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Tchajwanský prezident chtěl letět do Afriky přes Evropu, Česko a Německo mu zablokovaly cestu",
-      "url": "https://www.e15.cz/zahranicni/tchajwansky-prezident-chtel-letet-do-afriky-pres-evropu-cesko-a-nemecko-mu-zablokovaly-cestu-1432522",
-      "dt": "2026-04-30T13:37:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "afriky",
-        "cestu",
-        "chtěl",
-        "evropu",
-        "letět",
-        "německo",
-        "prezident",
-        "tchajwanský",
-        "zablokovaly",
-        "česko"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1106,7 +1108,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 56350,
+      "bytes": 56600,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1143,11 +1145,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-04T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T03:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 6,
           "finance": 32,
+          "zpravy": 6,
           "zdravi": 2
         },
         "drop_counts": {
@@ -1160,6 +1162,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pokud dokážu vydělat na měsíční splátku, jdu do vlastního. Je Čechům jedno, kolik stojí byt?",
+            "publishedAt": "2026-05-04T03:30:00Z"
+          },
           {
             "title": "Dálnice i přehrady budou mimo rozpočtový schodek. Měkčí pravidla má i Německo, hájí změny Schillerová",
             "publishedAt": "2026-05-04T03:00:00Z"
@@ -1187,10 +1193,6 @@
           {
             "title": "Učili vás nemíchat? V Minus One na to zapomeňte. Host přichází na celé menu šesti drinků párovaných s finedinigem",
             "publishedAt": "2026-05-03T04:30:00Z"
-          },
-          {
-            "title": "Dirigent Chuhei Iwasaki v Plzni bojuje za to, aby se z klasické hudby nestalo muzeum. Pomáhá mu v tom i excelová tabulka",
-            "publishedAt": "2026-05-03T04:00:00Z"
           }
         ]
       }
