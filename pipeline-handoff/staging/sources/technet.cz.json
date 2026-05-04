@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-05-04T12:44:45.725696Z",
+  "ingestedAt": "2026-05-04T14:04:01.279645Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Budoucí český astronaut Svoboda má za sebou základní výcvik. Čeká na misi",
+      "url": "https://www.idnes.cz/technet/vesmir/vesmir-cesky-astronaut-svoboda-vycvik-konec-esa-iss.A260504_135825_tec_vesmir_vse",
+      "dt": "2026-05-04T12:49:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "astronaut",
+        "budoucí",
+        "misi",
+        "sebou",
+        "svoboda",
+        "výcvik",
+        "základní",
+        "čeká",
+        "český"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -408,7 +434,7 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Web od AI, hotový za 5 minut? Vyzkoušeli jsme Webglobe AI WebEditor",
       "url": "https://www.idnes.cz/technet/software/web-od-ai-hotovy-za-5-minut-vyzkouseli-jsme-webglobe-ai-webeditor.A260421_173427_koktejl_zust",
@@ -738,33 +764,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Sonda Voyager 1 se pomalu blíží svému konci. NASA vypnula další instrument",
-      "url": "https://www.idnes.cz/technet/vesmir/vesmir-sonda-vzdalena-voyager-setreni-energii-vypnuti.A260423_105546_tec_vesmir_vse",
-      "dt": "2026-04-23T16:55:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "blíží",
-        "další",
-        "instrument",
-        "konci",
-        "nasa",
-        "pomalu",
-        "sonda",
-        "svému",
-        "voyager",
-        "vypnula"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -775,7 +774,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 47288,
+      "bytes": 47513,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -812,7 +811,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T12:49:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 16,
@@ -828,6 +827,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Budoucí český astronaut Svoboda má za sebou základní výcvik. Čeká na misi",
+            "publishedAt": "2026-05-04T12:49:00Z"
+          },
           {
             "title": "Z kdysi monumentálního Anhaltského nádraží v Berlíně zbylo jen torzo",
             "publishedAt": "2026-05-03T22:00:00Z"
@@ -855,10 +858,6 @@
           {
             "title": "Češi staví evropskou AI. Brusel ji pak možná paradoxně zakáže vlastní regulací",
             "publishedAt": "2026-04-30T08:00:00Z"
-          },
-          {
-            "title": "Neumíme to udělat lépe, možná později. Apple nechá jedno zařízení, jak je",
-            "publishedAt": "2026-04-29T22:00:00Z"
           }
         ]
       }

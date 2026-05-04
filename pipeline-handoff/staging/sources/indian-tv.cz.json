@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-05-04T12:44:45.725696Z",
+  "ingestedAt": "2026-05-04T14:04:01.279645Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Xbox se znovu zajímá o zpětnou kompatibilitu. Hráči mají hlasovat, které hry se vrátí - INDIAN",
+      "url": "https://indian-tv.cz/clanek/xbox-se-znovu-zajima-o-zpetnou-kompatibilitu-xvw7wp",
+      "dt": "2026-05-04T13:00:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "hlasovat",
+        "hry",
+        "hráči",
+        "indian",
+        "kompatibilitu",
+        "mají",
+        "vrátí",
+        "xbox",
+        "zajímá",
+        "znovu",
+        "zpětnou"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1059,33 +1087,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "PlayStation Plus v květnu nabídne fotbal, temný soulslike i stylovou 2D akci - INDIAN",
-      "url": "https://indian-tv.cz/clanek/playstation-plus-v-kvetnu-nabidne-fotbal-h1yubh",
-      "dt": "2026-04-29T16:44:08Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "akci",
-        "fotbal",
-        "indian",
-        "květnu",
-        "nabídne",
-        "playstation",
-        "plus",
-        "soulslike",
-        "stylovou",
-        "temný"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1096,7 +1097,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 208287,
+      "bytes": 209192,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1133,7 +1134,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-04T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T13:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1148,6 +1149,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Xbox se znovu zajímá o zpětnou kompatibilitu. Hráči mají hlasovat, které hry se vrátí - INDIAN",
+            "publishedAt": "2026-05-04T13:00:00Z"
+          },
           {
             "title": "Špičková volba pro hráče i náročné uživatele. Samsung 9100 PRO ukazuje sílu PCIe 5.0 - INDIAN",
             "publishedAt": "2026-05-04T12:00:00Z"
@@ -1175,10 +1180,6 @@
           {
             "title": "Pragmata má skvělý start. Může jít o začátek série - INDIAN",
             "publishedAt": "2026-05-04T06:43:30Z"
-          },
-          {
-            "title": "Indiana Jones pro Switch 2 bude omezen na 30 fps. Odhalena velikost hry - INDIAN",
-            "publishedAt": "2026-05-04T06:39:25Z"
           }
         ]
       }

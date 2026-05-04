@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-04T12:44:45.725696Z",
+  "ingestedAt": "2026-05-04T14:04:01.279645Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Algoritmus rozhoduje, kdo dostane zdravotní péči. AI počítá chudým likvidační poplatky",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/algoritmus-pece-umela-inteligence-chudi/",
+      "dt": "2026-05-04T13:24:40Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "algoritmus",
+        "chudým",
+        "dostane",
+        "likvidační",
+        "poplatky",
+        "počítá",
+        "péči",
+        "rozhoduje",
+        "zdravotní"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -241,32 +267,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Černochová hrozí Babišovi žalobou: Lži o zmanipulované soutěži nehodlám tolerovat",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/cernochova-hrozi-babisovi-zalobou-kvuli-uvn/",
-      "dt": "2026-05-03T14:19:46Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "babišovi",
-        "hrozí",
-        "lži",
-        "nehodlám",
-        "soutěži",
-        "tolerovat",
-        "zmanipulované",
-        "černochová",
-        "žalobou"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -277,7 +277,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 90165,
+      "bytes": 89984,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -314,7 +314,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-04T12:05:45Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T13:24:40Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -329,6 +329,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Algoritmus rozhoduje, kdo dostane zdravotní péči. AI počítá chudým likvidační poplatky",
+            "publishedAt": "2026-05-04T13:24:40Z"
+          },
           {
             "title": "Žloutenka na jihu Moravy neustupuje: Hygienici varují před rizikem na výletech a táborech",
             "publishedAt": "2026-05-04T12:05:45Z"
@@ -356,10 +360,6 @@
           {
             "title": "Jednání o úhradách v pasti: Peníze na příští rok se dělí „naslepo“, pojišťovny mají prázdné kapsy",
             "publishedAt": "2026-05-04T06:00:00Z"
-          },
-          {
-            "title": "Trumpův triumf, nebo lekce pro Evropu? Zdravotnictví se stalo motorem ekonomiky USA",
-            "publishedAt": "2026-05-04T05:00:00Z"
           }
         ]
       }
