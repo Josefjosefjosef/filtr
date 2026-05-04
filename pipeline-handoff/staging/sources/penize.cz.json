@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-04T02:50:17.389836Z",
+  "ingestedAt": "2026-05-04T03:25:03.753097Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Spořicí účty mají nového krále. Porovnání na začátku května",
+      "url": "https://www.penize.cz/sporici-ucty/485804-sporici-ucty-maji-noveho-krale-porovnani-na-zacatku-kvetna",
+      "dt": "2026-05-04T05:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "krále",
+        "května",
+        "mají",
+        "nového",
+        "porovnání",
+        "spořicí",
+        "začátku",
+        "účty"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -473,31 +498,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Další zdražení. Maximální ceny benzinu a nafty na středu 29. dubna",
-      "url": "https://www.penize.cz/doprava/489018-dalsi-zdrazeni-maximalni-ceny-benzinu-a-nafty-na-stredu-29-dubna",
-      "dt": "2026-04-28T13:59:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "benzinu",
-        "ceny",
-        "další",
-        "dubna",
-        "maximální",
-        "nafty",
-        "středu",
-        "zdražení"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -508,7 +508,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 19141,
+      "bytes": 18883,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -545,12 +545,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-03T16:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T05:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 13,
+          "finance": 14,
           "sport": 2,
-          "zpravy": 5
+          "zpravy": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -562,6 +562,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Spořicí účty mají nového krále. Porovnání na začátku května",
+            "publishedAt": "2026-05-04T05:00:00Z"
+          },
           {
             "title": "Jak si zkomplikovat cestu k hypotéce? Pozor na vtípky i hazard",
             "publishedAt": "2026-05-03T16:00:00Z"
@@ -589,10 +593,6 @@
           {
             "title": "Michl prodával v Las Vegas bitcoiny. Zakladatel burzy zmizel s klíči k bitcoinům za miliardu",
             "publishedAt": "2026-05-01T07:00:00Z"
-          },
-          {
-            "title": "Kdo všechno si strhává peníze z vaší karty? Další banka ukáže přehled",
-            "publishedAt": "2026-04-30T14:30:00Z"
           }
         ]
       }

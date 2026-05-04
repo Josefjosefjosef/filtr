@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-04T02:50:17.389836Z",
+  "ingestedAt": "2026-05-04T03:25:03.753097Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Dálnice i přehrady budou mimo rozpočtový schodek. Měkčí pravidla má i Německo, hájí změny Schillerová",
+      "url": "https://www.e15.cz/domaci/politika/dalnice-i-prehrady-budou-mimo-rozpoctovy-schodek-mekci-pravidla-ma-i-nemecko-haji-zmeny-schillerova-1432513",
+      "dt": "2026-05-04T03:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "dálnice",
+        "hájí",
+        "mimo",
+        "měkčí",
+        "německo",
+        "pravidla",
+        "přehrady",
+        "rozpočtový",
+        "schillerová",
+        "schodek",
+        "změny"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1068,34 +1096,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Největší česká baterie odstartovala nabíjením při záporné ceně elektřiny, řídit ji pomáhá AI",
-      "url": "https://www.e15.cz/byznys/prumysl-a-energetika/nejvetsi-ceska-baterie-odstartovala-nabijenim-pri-zaporne-cene-elektriny-ridit-ji-pomaha-ai-1432518",
-      "dt": "2026-04-30T13:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "baterie",
-        "ceně",
-        "elektřiny",
-        "nabíjením",
-        "největší",
-        "odstartovala",
-        "pomáhá",
-        "při",
-        "záporné",
-        "česká",
-        "řídit"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1106,7 +1106,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 56182,
+      "bytes": 56350,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1143,11 +1143,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-03T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T03:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 33,
-          "zpravy": 5,
+          "zpravy": 6,
+          "finance": 32,
           "zdravi": 2
         },
         "drop_counts": {
@@ -1160,6 +1160,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dálnice i přehrady budou mimo rozpočtový schodek. Měkčí pravidla má i Německo, hájí změny Schillerová",
+            "publishedAt": "2026-05-04T03:00:00Z"
+          },
           {
             "title": "Telefon pro ty, kteří nechtějí být pořád u zásuvky",
             "publishedAt": "2026-05-03T22:00:00Z"
@@ -1187,10 +1191,6 @@
           {
             "title": "Dirigent Chuhei Iwasaki v Plzni bojuje za to, aby se z klasické hudby nestalo muzeum. Pomáhá mu v tom i excelová tabulka",
             "publishedAt": "2026-05-03T04:00:00Z"
-          },
-          {
-            "title": "Data Check: Litr za 23 Kč. Kde se ve vyspělém světě tankuje nejlevněji?",
-            "publishedAt": "2026-05-03T03:30:00Z"
           }
         ]
       }
