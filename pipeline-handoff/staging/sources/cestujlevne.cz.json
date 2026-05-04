@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-05-04T15:19:24.139971Z",
+  "ingestedAt": "2026-05-04T15:59:39.217263Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Bangkok z Vídně s Air India vč. odbaveného zavazadla. Letenky od 10 605 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/bangkok-z-vidne-s-air-india-vc-odbaveneho-zavazadla",
+      "dt": "2026-05-04T15:49:50Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "605",
+        "air",
+        "bangkok",
+        "india",
+        "letenky",
+        "odbaveného",
+        "vídně",
+        "zavazadla"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -481,34 +506,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Kapverdy z Prahy na týden: ostrov Sal a 4* hotel s all-inclusive v květnu. Zájezd od 16 990 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/kapverdy-z-prahy-na-tyden-ostrov-sal-a-4-hotel-s-all-inclusive-v-kvetnu",
-      "dt": "2026-04-27T11:02:43Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "990",
-        "all",
-        "hotel",
-        "inclusive",
-        "kapverdy",
-        "květnu",
-        "ostrov",
-        "prahy",
-        "sal",
-        "týden",
-        "zájezd"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -519,7 +516,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 42588,
+      "bytes": 41823,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -556,7 +553,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-04T07:04:53Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T15:49:50Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -571,6 +568,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bangkok z Vídně s Air India vč. odbaveného zavazadla. Letenky od 10 605 Kč",
+            "publishedAt": "2026-05-04T15:49:50Z"
+          },
           {
             "title": "Bitva o Palermo? Z Prahy bude létat kromě Wizz Airu také Ryanair. Letenky od 1 388 Kč",
             "publishedAt": "2026-05-04T07:04:53Z"
@@ -598,10 +599,6 @@
           {
             "title": "Švédský Göteborg z Prahy v květnu. Letenky od 978 Kč",
             "publishedAt": "2026-04-30T09:44:16Z"
-          },
-          {
-            "title": "Gran Canaria na týden z Prahy s all-inclusive. Zájezd od 13 490 Kč",
-            "publishedAt": "2026-04-30T08:35:33Z"
           }
         ]
       }

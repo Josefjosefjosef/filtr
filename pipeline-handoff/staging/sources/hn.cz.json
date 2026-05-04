@@ -1,8 +1,41 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-04T15:19:24.139971Z",
+  "ingestedAt": "2026-05-04T15:59:39.217263Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "První &bdquo;východoevropan&ldquo; ve vedení Evropské centrální banky. Německo tak vysoko svého člověka dosud nikdy nemělo",
+      "url": "https://archiv.hn.cz/c1-67873420-prvni-bdquo-vychodoevropan-ldquo-ve-vedeni-evropske-centralni-banky-nemecko-tak-vysoko-sveho-cloveka-dosud-nikdy-nemelo",
+      "dt": "2026-05-04T14:51:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "banky",
+        "bdquo",
+        "centrální",
+        "dosud",
+        "evropské",
+        "ldquo",
+        "nemělo",
+        "nikdy",
+        "německo",
+        "první",
+        "svého",
+        "tak",
+        "vedení",
+        "vysoko",
+        "východoevropan",
+        "člověka"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1109,39 +1142,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Korejští vývojáři udělali z &bdquo;nesmyslu&ldquo; splněný sen. Hit Crimson Desert za měsíc prodal pět milionů kopií",
-      "url": "https://tech.hn.cz/c1-67872990-korejsti-vyvojari-udelali-z-bdquo-nesmyslu-ldquo-splneny-sen-hit-crimson-desert-funguje-jako-mmorpg-ale-nepotrebuje-jine-hrace",
-      "dt": "2026-05-03T08:33:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bdquo",
-        "crimson",
-        "desert",
-        "hit",
-        "kopií",
-        "korejští",
-        "ldquo",
-        "milionů",
-        "měsíc",
-        "nesmyslu",
-        "prodal",
-        "pět",
-        "sen",
-        "splněný",
-        "udělali",
-        "vývojáři"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1152,7 +1152,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183729,
+      "bytes": 183568,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1189,11 +1189,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-04T14:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T14:51:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 35,
-          "zpravy": 4,
+          "finance": 36,
+          "zpravy": 3,
           "zdravi": 1
         },
         "drop_counts": {
@@ -1206,6 +1206,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "První &bdquo;východoevropan&ldquo; ve vedení Evropské centrální banky. Německo tak vysoko svého člověka dosud nikdy nemělo",
+            "publishedAt": "2026-05-04T14:51:00Z"
+          },
           {
             "title": "Nejasnosti kolem nové povinnosti: insolvenční správci čekají na manuál k nahrávání jednání s dlužníky",
             "publishedAt": "2026-05-04T14:33:00Z"
@@ -1233,10 +1237,6 @@
           {
             "title": "Český investiční trh roste, roste ale i ochrana klientů? ČNB mění přístup k odměňování zprostředkovatelů",
             "publishedAt": "2026-05-04T12:25:00Z"
-          },
-          {
-            "title": "Zpomalení ekonomiky a rostoucí dluh je platbou za zvolení starých vůdců",
-            "publishedAt": "2026-05-04T12:10:00Z"
           }
         ]
       }

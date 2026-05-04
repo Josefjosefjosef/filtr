@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-04T15:19:24.139971Z",
+  "ingestedAt": "2026-05-04T15:59:39.217263Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Akcie firmy CSG prudce oslabily po zprávě zpochybňující její obchodní model",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/akcie-firmy-csg-prudce-oslabily-po-zprave-zpochybnujici-jeji-obchodni-model-373090",
+      "dt": "2026-05-04T15:49:34Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "akcie",
+        "csg",
+        "firmy",
+        "její",
+        "model",
+        "obchodní",
+        "oslabily",
+        "prudce",
+        "zpochybňující",
+        "zprávě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -730,32 +757,6 @@
         "varuje",
         "zaútočíme",
         "írán"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Spor s Trumpem za stažením vojáků USA z Německa nestojí, věří Merz",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/spor-s-trumpem-za-stazenim-vojaku-usa-z-nemecka-nestoji-veri-merz-373056",
-      "dt": "2026-05-03T19:43:45Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "merz",
-        "nestojí",
-        "německa",
-        "spor",
-        "stažením",
-        "trumpem",
-        "usa",
-        "vojáků",
-        "věří"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1542,7 +1543,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44786,
+      "bytes": 44836,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1602,11 +1603,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T15:08:33Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T15:49:34Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 2,
+          "finance": 3,
+          "zpravy": 22,
           "other": 5
         },
         "drop_counts": {
@@ -1619,6 +1620,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Akcie firmy CSG prudce oslabily po zprávě zpochybňující její obchodní model",
+            "publishedAt": "2026-05-04T15:49:34Z"
+          },
           {
             "title": "Reklamační oprava u Pasohlávek přinese dopravní omezení",
             "publishedAt": "2026-05-04T15:08:33Z"
@@ -1646,10 +1651,6 @@
           {
             "title": "Policie obvinila v kauze chomutovského exprimátora Hrabáče dalších šest lidí",
             "publishedAt": "2026-05-04T11:59:07Z"
-          },
-          {
-            "title": "Kriminalisté v souvislosti s bitcoinovou kauzou stíhají další tři lidi",
-            "publishedAt": "2026-05-04T11:37:40Z"
           }
         ]
       }
@@ -1661,7 +1662,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40363,
+      "bytes": 40299,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1755,7 +1756,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77812,
+      "bytes": 77816,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

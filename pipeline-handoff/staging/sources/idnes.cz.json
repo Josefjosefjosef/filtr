@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-04T15:19:24.139971Z",
+  "ingestedAt": "2026-05-04T15:59:39.217263Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Průšvih CSG: akcie ztratily už polovinu hodnoty. Nevěří se jeho byznys modelu",
+      "url": "https://www.idnes.cz/ekonomika/domaci/akcie-firmy-csg-prudce-oslabuji-po-zprave-zpochybnujici-jeji-obchodni-model.A260504_173954_ekonomika_remy",
+      "dt": "2026-05-04T15:49:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "akcie",
+        "byznys",
+        "csg",
+        "hodnoty",
+        "jeho",
+        "modelu",
+        "nevěří",
+        "polovinu",
+        "průšvih",
+        "ztratily"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Na Pražském okruhu havarovaly dva kamiony, směr k letišti stál několik hodin",
+      "url": "https://www.idnes.cz/praha/zpravy/nehoda-d0-prazsky-okruh-nakladni-auta.A260504_143922_praha-zpravy_epkbn",
+      "dt": "2026-05-04T15:39:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dva",
+        "havarovaly",
+        "hodin",
+        "kamiony",
+        "letišti",
+        "několik",
+        "okruhu",
+        "pražském",
+        "směr",
+        "stál"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -726,58 +780,6 @@
         "utéct",
         "vězeň",
         "věznice"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ruské letectvo povede nový velitel. EU na něj uvalila sankce kvůli masakru v Buči",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/ruske-letectvo-ma-noveho-velitele-eu-na-nej-uvalila-sankce-kvuli-buci-pise-bbc.A260504_144650_zahranicni_iluj",
-      "dt": "2026-05-04T13:05:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "buči",
-        "kvůli",
-        "letectvo",
-        "masakru",
-        "nový",
-        "něj",
-        "povede",
-        "ruské",
-        "sankce",
-        "uvalila",
-        "velitel"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Jitřní záře na TV Nova: O čem je seriál, kdy se vysílá a kde se natáčel",
-      "url": "https://www.idnes.cz/kultura/film-televize/jitrni-zare-na-tv-nova-o-cem-je-serial-kdy-se-vysila-a-kde-se-natacel.A260504_131928_filmvideo_hrat",
-      "dt": "2026-05-04T13:02:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "jitřní",
-        "natáčel",
-        "nova",
-        "seriál",
-        "vysílá",
-        "záře",
-        "čem"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1579,7 +1581,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48531,
+      "bytes": 48458,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1616,12 +1618,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T15:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T15:49:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "finance": 4,
           "zpravy": 25,
-          "finance": 3,
-          "other": 2
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1633,6 +1635,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Průšvih CSG: akcie ztratily už polovinu hodnoty. Nevěří se jeho byznys modelu",
+            "publishedAt": "2026-05-04T15:49:00Z"
+          },
+          {
+            "title": "Na Pražském okruhu havarovaly dva kamiony, směr k letišti stál několik hodin",
+            "publishedAt": "2026-05-04T15:39:00Z"
+          },
           {
             "title": "Maturuje rekordní počet studentů. Letošní matematika byla méně záludná, říká učitel",
             "publishedAt": "2026-05-04T15:02:00Z"
@@ -1656,14 +1666,6 @@
           {
             "title": "EET je podle analytiků krok správným směrem, podle opozice naopak nazpět",
             "publishedAt": "2026-05-04T14:53:00Z"
-          },
-          {
-            "title": "Vláda schválila EET. Chce spropitné osvobodit od daní a vrátit i školkovné",
-            "publishedAt": "2026-05-04T14:50:00Z"
-          },
-          {
-            "title": "Otrava dětské výživy HiPP. Exzaměstnanec zadržený v Rakousku obvinění popírá",
-            "publishedAt": "2026-05-04T14:49:59Z"
           }
         ]
       }
