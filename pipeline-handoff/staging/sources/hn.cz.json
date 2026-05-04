@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-04T18:28:59.977431Z",
+  "ingestedAt": "2026-05-04T19:04:23.833879Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Rusko oznámilo na 8. a 9. května příměří ve válce proti Ukrajině",
+      "url": "https://zahranicni.hn.cz/c1-67873500-rusko-oznamilo-na-8-a-9-kvetna-primeri-ve-valce-proti-ukrajine",
+      "dt": "2026-05-04T18:23:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "května",
+        "oznámilo",
+        "proti",
+        "příměří",
+        "rusko",
+        "ukrajině",
+        "válce"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -380,7 +404,7 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Český investiční trh roste, roste ale i ochrana klientů?",
+      "title": "Radní ČNB pro HN: Český investiční trh roste, roste ale i ochrana klientů?",
       "url": "https://nazory.hn.cz/c1-67873310-cesky-investicni-trh-roste-roste-ale-i-ochrana-klientu-cnb-meni-pristup-k-odmenovani-zprostredkovatelu",
       "dt": "2026-05-04T12:25:00Z",
       "media_raw": "HN / Ekonomika",
@@ -390,9 +414,11 @@
         "investiční",
         "klientů",
         "ochrana",
+        "radní",
         "roste",
         "trh",
-        "český"
+        "český",
+        "čnb"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1097,32 +1123,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kdy nemovitost držet a kdy prodat? Investor musí mít dobře rozmyšlenou strategii",
-      "url": "https://archiv.hn.cz/c1-67872330-kdy-nemovitost-drzet-a-kdy-prodat-investor-musi-mit-dobre-rozmyslenou-strategii",
-      "dt": "2026-05-03T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "dobře",
-        "držet",
-        "investor",
-        "musí",
-        "mít",
-        "nemovitost",
-        "prodat",
-        "rozmyšlenou",
-        "strategii"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1133,7 +1133,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183793,
+      "bytes": 183836,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1170,7 +1170,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-04T18:07:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T18:23:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 36,
@@ -1187,6 +1187,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rusko oznámilo na 8. a 9. května příměří ve válce proti Ukrajině",
+            "publishedAt": "2026-05-04T18:23:00Z"
+          },
           {
             "title": "První dny nováčka ve firmě často určují, jestli se investice do něj vyplatí",
             "publishedAt": "2026-05-04T18:07:00Z"
@@ -1214,10 +1218,6 @@
           {
             "title": "Nejasnosti kolem nové povinnosti: insolvenční správci čekají na manuál k nahrávání jednání s dlužníky",
             "publishedAt": "2026-05-04T14:33:00Z"
-          },
-          {
-            "title": "Masivní škrty ve Volkswagenu, jaké tu nebyly dvě dekády. A stejně je to málo. Ve hře je i větší spolupráce s Číňany",
-            "publishedAt": "2026-05-04T14:29:00Z"
           }
         ]
       }

@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-04T18:28:59.977431Z",
+  "ingestedAt": "2026-05-04T19:04:23.833879Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Eric Clapton hraje v Praze",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/eric-clapton-hraje-v-praze-373097",
+      "dt": "2026-05-04T18:31:11Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "clapton",
+        "eric",
+        "hraje",
+        "praze"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -78,7 +99,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "V centru Lipska vjel řidič auta do lidí, dva lidi zabil a další zranil",
+      "title": "V centru Lipska vjel řidič auta do lidí, dva zabil a další zranil",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/v-centru-lipska-vjelo-auto-do-lidi-podle-mistnich-medii-dva-lide-zemreli-373093",
       "dt": "2026-05-04T16:04:09Z",
       "media_raw": "ČT24 / Domácí",
@@ -88,7 +109,6 @@
         "centru",
         "další",
         "dva",
-        "lidi",
         "lidí",
         "lipska",
         "vjel",
@@ -675,20 +695,21 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Babiš před summitem v Jerevanu jednal s Ruttem o navyšování výdajů v NATO",
+      "title": "Arménie chce do Evropy, EU potřebuje partnery v regionu, řekli Macron a Costa",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/babis-pred-summitem-v-jerevanu-jednal-s-ruttem-o-navysovani-vydaju-v-nato-373067",
       "dt": "2026-05-04T06:40:40Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "babiš",
-        "jednal",
-        "jerevanu",
-        "nato",
-        "navyšování",
-        "ruttem",
-        "summitem",
-        "výdajů"
+        "arménie",
+        "chce",
+        "costa",
+        "evropy",
+        "macron",
+        "partnery",
+        "potřebuje",
+        "regionu",
+        "řekli"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -743,33 +764,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V Německu roste zájem o elektroauta. Stojí za ním drahá paliva i státní dotace",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/v-nemecku-roste-zajem-o-elektroauta-stoji-za-nim-draha-paliva-i-statni-dotace-373055",
-      "dt": "2026-05-04T05:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "dotace",
-        "drahá",
-        "elektroauta",
-        "ním",
-        "německu",
-        "paliva",
-        "roste",
-        "stojí",
-        "státní",
-        "zájem"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "sport",
       "contentType": "article",
       "title": "Hirt se představí na Giru d’Italia už podeváté, Kopeckého čeká premiéra",
@@ -797,16 +791,18 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Reprezentační trenér Bartoň v USK skončil",
+      "title": "Nymburk a Pardubice jsou krok od semifinále, Bartoň u USK skončil",
       "url": "https://sport.ceskatelevize.cz/clanek/basketbal/reprezentacni-trener-barton-v-usk-skoncil-156602",
       "dt": "2026-05-04T17:35:17Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
         "bartoň",
-        "reprezentační",
+        "krok",
+        "nymburk",
+        "pardubice",
+        "semifinále",
         "skončil",
-        "trenér",
         "usk"
       ],
       "feedCategory": "sport",
@@ -1548,7 +1544,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44672,
+      "bytes": 44656,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1608,12 +1604,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T18:00:43Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T18:31:11Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "finance": 3,
-          "other": 5
+          "other": 6,
+          "zpravy": 21,
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1625,6 +1621,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Eric Clapton hraje v Praze",
+            "publishedAt": "2026-05-04T18:31:11Z"
+          },
           {
             "title": "Dosavadní kontroly požární bezpečnosti podniků jsou alarmující, řekl šéf hasičů",
             "publishedAt": "2026-05-04T18:00:43Z"
@@ -1638,7 +1638,7 @@
             "publishedAt": "2026-05-04T16:30:00Z"
           },
           {
-            "title": "V centru Lipska vjel řidič auta do lidí, dva lidi zabil a další zranil",
+            "title": "V centru Lipska vjel řidič auta do lidí, dva zabil a další zranil",
             "publishedAt": "2026-05-04T16:04:09Z"
           },
           {
@@ -1652,10 +1652,6 @@
           {
             "title": "Falešné nabídky práce na TikToku slibují stovky eur denně. Z obětí lákají peníze i osobní údaje",
             "publishedAt": "2026-05-04T15:04:55Z"
-          },
-          {
-            "title": "Schodek státního rozpočtu po konci provizoria vzrostl na 106 miliard",
-            "publishedAt": "2026-05-04T13:47:08Z"
           }
         ]
       }
@@ -1667,7 +1663,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39914,
+      "bytes": 40104,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1724,7 +1720,7 @@
             "publishedAt": "2026-05-04T18:21:09Z"
           },
           {
-            "title": "Reprezentační trenér Bartoň v USK skončil",
+            "title": "Nymburk a Pardubice jsou krok od semifinále, Bartoň u USK skončil",
             "publishedAt": "2026-05-04T17:35:17Z"
           },
           {
@@ -1761,7 +1757,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77814,
+      "bytes": 77773,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
