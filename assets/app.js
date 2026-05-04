@@ -34293,6 +34293,21 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return cand;
   }
 
+  /** Upcoming Sat–Sun window from wall-clock `now` (Mon→Fri: next Sat–Sun; Sat: today+Sun; Sun: Sat–today). */
+  function iuSilverWeekendSatSunIso(now) {
+    const todayStr = toDateOnly(now);
+    const dow = now.getDay();
+    if (dow === 6) {
+      return { start: todayStr, end: addDays(todayStr, 1) };
+    }
+    if (dow === 0) {
+      return { start: addDays(todayStr, -1), end: todayStr };
+    }
+    const daysUntilSat = 6 - dow;
+    const sat = addDays(todayStr, daysUntilSat);
+    return { start: sat, end: addDays(sat, 1) };
+  }
+
   /**
    * P0: calendar read query priority — weekday / „co mám v pátek“ / „kdy je porada v pondělí“ / …
    * must classify as calendar.read before WRITE_SCHED_PROBE → storage disambiguation.
@@ -34314,10 +34329,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
 
     function dayPartFromFx() {
-      if (/\bvecer\b|\bvecern\b/.test(f)) return "evening";
+      if (/\bvecer\b|\bvecern\b|\bveceru\b/.test(f)) return "evening";
       if (/\bdopoledne\b|\brano\b|\bsnid/i.test(f)) return "morning";
       if (/\bodpoledne\b/.test(f)) return "afternoon";
       return null;
+    }
+
+    function looksLikeWeekendPhrase(fx) {
+      return /\b(?:o\s+)?vikendu\b|\bna\s+vikendu\b|\bna\s+vikend\b|\bvikendu\b|\bvikend\b/.test(fx);
     }
 
     const wkTok = wkName();
@@ -34325,6 +34344,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bm[aá]m\s+n[eě]co\b/i.test(f)) {
       if (/\bnaplanovan/i.test(f) && /\bz[ií]tra\b/i.test(f)) {
         return { intent: "agenda_for_day", dateRange: "tomorrow", filter: null };
+      }
+      if (looksLikeWeekendPhrase(f)) {
+        return { intent: "agenda_for_weekend", dayPart: dayPartFromFx(), filter: null };
       }
       if (wkTok) {
         const dateIso = isoForWk(wkTok);
@@ -34393,6 +34415,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
 
     if (/\bjake\s+m[aá]m\s+udalost/i.test(f) || /\bjake\s+mam\s+udalost/i.test(f)) {
+      if (looksLikeWeekendPhrase(f)) {
+        return { intent: "agenda_for_weekend", dayPart: dayPartFromFx(), filter: null };
+      }
       const wk = wkTok || wkName();
       if (wk) {
         const dateIso = isoForWk(wk);
@@ -34403,6 +34428,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
 
     if (/\bukaz\s+kalendar/i.test(f) || /\buka[zž]\s+kalend/i.test(String(rawIn || ""))) {
+      if (looksLikeWeekendPhrase(f)) {
+        return { intent: "agenda_for_weekend", dayPart: dayPartFromFx(), filter: null };
+      }
       if (/\bna\s+z[ií]tra\b/i.test(f) || /\bz[ií]tra\b/i.test(f)) {
         return { intent: "agenda_for_day", dateRange: "tomorrow", filter: null };
       }
@@ -34434,6 +34462,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     }
 
+    if (
+      (/\bukaz\s+udalost/i.test(f) || /\buka[zž]\s+ud[aá]lost/i.test(String(rawIn || ""))) &&
+      looksLikeWeekendPhrase(f)
+    ) {
+      return { intent: "agenda_for_weekend", dayPart: dayPartFromFx(), filter: null };
+    }
+
     if (/\bm[aá]m\s+v\s+kalend/i.test(f) && /\bn[eě]co\b/i.test(f) && /\bz[ií]tra\b/i.test(f)) {
       const th = findTime(rawIn, now, rawIn);
       if (th && th.time) {
@@ -34443,6 +34478,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
 
     if (/\bco\s+m[aá]m\b/.test(f)) {
+      if (looksLikeWeekendPhrase(f)) {
+        return { intent: "agenda_for_weekend", dayPart: dayPartFromFx(), filter: null };
+      }
       const wkC = wkTok || wkName();
       if (wkC) {
         const dateIsoC = isoForWk(wkC);
@@ -34477,6 +34515,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const querySig = sigStrong || sigWeak;
 
     if (querySig && schedCtx) {
+      if (looksLikeWeekendPhrase(f)) {
+        return { intent: "agenda_for_weekend", dayPart: dayPartFromFx(), filter: null };
+      }
       if (/\bz[ií]tra\b/i.test(f)) {
         return { intent: "agenda_for_day", dateRange: "tomorrow", filter: null };
       }
@@ -35410,14 +35451,51 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return { intent: "agenda_for_range", range: "week", filter: null };
     }
 
+    var dpTodayTomorrow = (function (fx) {
+      if (/\bvecern\b|\bvecer\b|\bveceru\b/.test(fx)) return "evening";
+      if (/\bdopoledne\b|\brano\b|\bsnid/i.test(fx)) return "morning";
+      if (/\bodpoledne\b/.test(fx)) return "afternoon";
+      return null;
+    })(f);
+    if (coMam && /\bdnes(?:ka|ek)?\b/i.test(f) && dpTodayTomorrow) {
+      return {
+        intent: "agenda_for_iso",
+        dateIso: toDateOnly(now),
+        dayPart: dpTodayTomorrow,
+        timeHHMM: null,
+        filter: null
+      };
+    }
+    if (coMam && /\bz[ií]tra\b/i.test(f) && dpTodayTomorrow) {
+      return {
+        intent: "agenda_for_iso",
+        dateIso: addDays(toDateOnly(now), 1),
+        dayPart: dpTodayTomorrow,
+        timeHHMM: null,
+        filter: null
+      };
+    }
+
     if (coMam && /\bdnes(?:ka|ek)?\b/i.test(f)) {
       return { intent: "agenda_for_day", dateRange: "today", filter: null };
     }
-    if (coMam && /\bz[ií]tra\b/i.test(f) && (/\bvecern\b/.test(f) || /\bvecer\b/.test(f))) {
-      return { intent: "agenda_evening", dateRange: "tomorrow", filter: "evening" };
-    }
     if (coMam && /\bz[ií]tra\b/i.test(f)) {
       return { intent: "agenda_for_day", dateRange: "tomorrow", filter: null };
+    }
+
+    if (
+      kdyMam &&
+      /\bn[eě]co\b/i.test(f) &&
+      (/\bdopoledne\b/.test(f) || /\bodpoledne\b/.test(f))
+    ) {
+      const dpKdyNeco = /\bdopoledne\b/.test(f) ? "morning" : "afternoon";
+      return {
+        intent: "agenda_for_iso",
+        dateIso: toDateOnly(now),
+        dayPart: dpKdyNeco,
+        timeHHMM: null,
+        filter: null
+      };
     }
 
     if (kdyMam) {
@@ -35541,6 +35619,34 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         const ds = String(e.date).slice(0, 10);
         return ds >= start && ds <= end;
       });
+    }
+
+    if (spec.intent === "agenda_for_weekend") {
+      const wr = iuSilverWeekendSatSunIso(now);
+      const ws = String(wr.start || "").slice(0, 10);
+      const we = String(wr.end || "").slice(0, 10);
+      if (!ws || !we) return [];
+      let selW = sorted.filter(function (e) {
+        const ds = String(e.date).slice(0, 10);
+        return ds >= ws && ds <= we;
+      });
+      if (spec.dayPart === "evening") {
+        selW = selW.filter(function (e) {
+          const hh = Number(String(e.time || "00:00").slice(0, 2));
+          return hh >= 17;
+        });
+      } else if (spec.dayPart === "morning") {
+        selW = selW.filter(function (e) {
+          const hh = Number(String(e.time || "00:00").slice(0, 2));
+          return hh < 12;
+        });
+      } else if (spec.dayPart === "afternoon") {
+        selW = selW.filter(function (e) {
+          const hh = Number(String(e.time || "00:00").slice(0, 2));
+          return hh >= 12 && hh < 17;
+        });
+      }
+      return selW;
     }
 
     if (spec.intent === "next_event") {
@@ -35804,6 +35910,37 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         count +
         " událostí. Ukázka:\n" +
         lines.join("\n") +
+        (count > 3 ? "\n… a další (" + (count - 3) + ")." : "");
+      return { success: true, type: type, count: count, events: evs, message: message, ambiguity: ambiguity };
+    }
+
+    if (type === "agenda_for_weekend") {
+      let slotHintW = "";
+      if (spec.dayPart === "evening") slotHintW = " večer";
+      else if (spec.dayPart === "morning") slotHintW = " dopoledne";
+      else if (spec.dayPart === "afternoon") slotHintW = " odpoledne";
+      if (count === 0) {
+        message = "O víkendu" + slotHintW + " nemáš žádné události.";
+        return { success: true, type: type, count: 0, events: [], message: message, ambiguity: false };
+      }
+      if (count === 1) {
+        const ev = evs[0];
+        const tit = String(ev.title || "");
+        message = "O víkendu" + slotHintW + " máš " + tit + " v " + String(ev.time || "") + ".";
+        return { success: true, type: type, count: 1, events: evs, message: message, ambiguity: false };
+      }
+      ambiguity = count > 1;
+      const previewW = evs.slice(0, 3);
+      const linesW = previewW.map(function (e) {
+        return iuSilverFormatEventLine(e);
+      });
+      message =
+        "O víkendu" +
+        slotHintW +
+        " máš " +
+        count +
+        " událostí. Ukázka:\n" +
+        linesW.join("\n") +
         (count > 3 ? "\n… a další (" + (count - 3) + ")." : "");
       return { success: true, type: type, count: count, events: evs, message: message, ambiguity: ambiguity };
     }
