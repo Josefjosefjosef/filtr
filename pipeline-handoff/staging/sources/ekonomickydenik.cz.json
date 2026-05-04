@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-04T12:10:08.775491Z",
+  "ingestedAt": "2026-05-04T12:44:45.725696Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Elektřina a plyn zdražují. Od května si připlatí i zákazníci PRE",
+      "url": "https://ekonomickydenik.cz/elektrina-plyn-zdrazuji-pre/",
+      "dt": "2026-05-04T12:33:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "elektřina",
+        "května",
+        "plyn",
+        "pre",
+        "připlatí",
+        "zdražují",
+        "zákazníci"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -762,30 +786,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Varování pro Moskvu. Nová německá doktrína počítá se vším",
-      "url": "https://ekonomickydenik.cz/varovani-pro-moskvu-nova-nemecka-doktrina-pocita-se-vsim/",
-      "dt": "2026-05-01T11:12:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "doktrína",
-        "moskvu",
-        "nová",
-        "německá",
-        "počítá",
-        "varování",
-        "vším"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71500,
+      "bytes": 71516,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,12 +833,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T12:02:44Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T12:33:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 25,
-          "zpravy": 3,
-          "zdravi": 2
+          "zdravi": 3,
+          "finance": 24,
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -850,6 +850,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Elektřina a plyn zdražují. Od května si připlatí i zákazníci PRE",
+            "publishedAt": "2026-05-04T12:33:00Z"
+          },
           {
             "title": "Schillerová oživí EET. Očekávané výnosy jsou podle opozice nerealistické",
             "publishedAt": "2026-05-04T12:02:44Z"
@@ -877,10 +881,6 @@
           {
             "title": "Nižší DPH u piva nepomůže, tvrdí exministr. Proč Češi v hospodách méně pijí?",
             "publishedAt": "2026-05-04T05:33:00Z"
-          },
-          {
-            "title": "Rozšíří Kanada Unii? Z hlediska kvality institucí a hodnot překonává Ukrajinu",
-            "publishedAt": "2026-05-04T04:30:00Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-04T12:10:08.775491Z",
+  "ingestedAt": "2026-05-04T12:44:45.725696Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Policisté po technopárty ve Starých Bukách zastavili pět řidičů pod vlivem",
+      "url": "https://tydenikpolicie.cz/policiste-po-technoparty-ve-starych-bukach-zastavili-pet-ridicu-pod-vlivem/",
+      "dt": "2026-05-04T12:11:52Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "bukách",
+        "policisté",
+        "pět",
+        "starých",
+        "technopárty",
+        "vlivem",
+        "zastavili",
+        "řidičů"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -234,32 +259,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Falešný policista i bankéř znovu v akci. Policisté pátrají po možném kurýrovi",
-      "url": "https://tydenikpolicie.cz/falesny-policista-i-banker-znovu-v-akci-policiste-patraji-po-moznem-kuryrovi/",
-      "dt": "2026-05-02T17:16:25Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "akci",
-        "bankéř",
-        "falešný",
-        "kurýrovi",
-        "možném",
-        "policista",
-        "policisté",
-        "pátrají",
-        "znovu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -270,7 +269,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15705,
+      "bytes": 15656,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -307,7 +306,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-04T12:03:27Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T12:11:52Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -322,6 +321,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policisté po technopárty ve Starých Bukách zastavili pět řidičů pod vlivem",
+            "publishedAt": "2026-05-04T12:11:52Z"
+          },
           {
             "title": "Seniorovi v Jirkově vadil hluk v domě. Nenapadlo ho nic lepšího, než zavolat na tísňovou linku s tím, že to tam vystřílí",
             "publishedAt": "2026-05-04T12:03:27Z"
@@ -349,10 +352,6 @@
           {
             "title": "Vězně, který utekl z areálu věznice v Jiřicích, dopadli policisté v Olomouci",
             "publishedAt": "2026-05-04T07:03:17Z"
-          },
-          {
-            "title": "Při nehodě u Hroznětína na Karlovarsku zemřel motorkář",
-            "publishedAt": "2026-05-02T18:54:25Z"
           }
         ]
       }

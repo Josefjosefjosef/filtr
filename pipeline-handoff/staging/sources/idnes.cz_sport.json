@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-04T12:10:08.775491Z",
+  "ingestedAt": "2026-05-04T12:44:45.725696Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Mannsverk a Moses měli dostat červenou, řekla komise. Slavii sudí odepřeli penaltu",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga.A260504_134859_fotbal_tals",
+      "dt": "2026-05-04T12:15:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dostat",
+        "komise",
+        "mannsverk",
+        "moses",
+        "měli",
+        "odepřeli",
+        "penaltu",
+        "slavii",
+        "sudí",
+        "červenou",
+        "řekla"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "F1 přilákala Messiho i Nadala. Které další sportovní hvězdy nechyběly v Miami?",
+      "url": "https://www.idnes.cz/sport/trendy/f1-prilakala-messiho-i-nadala-ktere-dalsi-sportovni-hvezdy-nechybely-v-miami.A260504_094923_trendy_subt/foto",
+      "dt": "2026-05-04T12:14:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "další",
+        "hvězdy",
+        "messiho",
+        "miami",
+        "nadala",
+        "nechyběly",
+        "přilákala",
+        "sportovní"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -733,58 +786,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hokej jsem hrát nechtěl, střílel jsem na obě branky, říká nejmladší Zohorna",
-      "url": "https://www.idnes.cz/hokej/evropske-ligy/radim-zohorna-hokej-jsem-hrat-nechtel-strilel-jsem-na-obe-branky.A260503_160521_evropa_mrg",
-      "dt": "2026-05-04T06:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "branky",
-        "hokej",
-        "hrát",
-        "jsem",
-        "nechtěl",
-        "nejmladší",
-        "obě",
-        "střílel",
-        "zohorna",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dobeš vychytal Montrealu postup, Nečas třikrát asistoval u kanonády",
-      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-dobes-necas.A260504_070235_nhl_mkr",
-      "dt": "2026-05-04T05:43:33Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "asistoval",
-        "dobeš",
-        "kanonády",
-        "montrealu",
-        "nečas",
-        "postup",
-        "třikrát",
-        "vychytal"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47467,
+      "bytes": 47545,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T12:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T12:15:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -847,6 +848,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mannsverk a Moses měli dostat červenou, řekla komise. Slavii sudí odepřeli penaltu",
+            "publishedAt": "2026-05-04T12:15:00Z"
+          },
+          {
+            "title": "F1 přilákala Messiho i Nadala. Které další sportovní hvězdy nechyběly v Miami?",
+            "publishedAt": "2026-05-04T12:14:00Z"
+          },
           {
             "title": "Zraněný Chmelař vypadává z reprezentace, Rulíka ale přesvědčil. Šanci dostal Reichel",
             "publishedAt": "2026-05-04T12:01:00Z"
@@ -870,14 +879,6 @@
           {
             "title": "Dobeš zařídil Montrealu postup, přechytal i Vasilevského. Hokejový bůh, zní z kabiny",
             "publishedAt": "2026-05-04T11:05:00Z"
-          },
-          {
-            "title": "Bránil Messiho, vyhrál tituly. Videoanalytik Zbrojovky má za sebou i exotické angažmá",
-            "publishedAt": "2026-05-04T11:01:00Z"
-          },
-          {
-            "title": "Velká posila pro Třinec. Do obrany získal reprezentačního obránce Pyrochtu",
-            "publishedAt": "2026-05-04T10:59:00Z"
           }
         ]
       }
