@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-05-04T22:04:11.625202Z",
+  "ingestedAt": "2026-05-04T22:40:13.387878Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Měly nahradit walkmany, ale nakonec je musela zachránit paměť RAM",
+      "url": "https://www.idnes.cz/technet/technika/discman-sony-ram-electronic-shock-protection-esp-g-protection.A260327_143155_tec_technika_dvr",
+      "dt": "2026-05-04T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "ale",
+        "musela",
+        "měly",
+        "nahradit",
+        "nakonec",
+        "paměť",
+        "ram",
+        "walkmany",
+        "zachránit"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -737,33 +763,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Sluneční bouře mohou napáchat škody za miliardy. Ale už víme, kdy přijdou, líčí expert",
-      "url": "https://www.idnes.cz/technet/veda/martin-svik-surya-model-llm-slunce-erupce-magnetismus-boure-elektromagneticke-zareni-satelit-blackou.A260423_130428_veda_ilrj",
-      "dt": "2026-04-23T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "ale",
-        "bouře",
-        "expert",
-        "líčí",
-        "miliardy",
-        "napáchat",
-        "přijdou",
-        "sluneční",
-        "víme",
-        "škody"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -774,7 +773,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 47513,
+      "bytes": 47285,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -811,11 +810,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T12:49:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 14,
-          "zpravy": 16
+          "other": 15,
+          "zpravy": 15
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -827,6 +826,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Měly nahradit walkmany, ale nakonec je musela zachránit paměť RAM",
+            "publishedAt": "2026-05-04T22:00:00Z"
+          },
           {
             "title": "Budoucí český astronaut Svoboda má za sebou základní výcvik. Čeká na misi",
             "publishedAt": "2026-05-04T12:49:00Z"
@@ -854,10 +857,6 @@
           {
             "title": "Netflix mění aplikaci pro smartphone, scrollovat budete jako u TikToku",
             "publishedAt": "2026-04-30T13:00:00Z"
-          },
-          {
-            "title": "Češi staví evropskou AI. Brusel ji pak možná paradoxně zakáže vlastní regulací",
-            "publishedAt": "2026-04-30T08:00:00Z"
           }
         ]
       }

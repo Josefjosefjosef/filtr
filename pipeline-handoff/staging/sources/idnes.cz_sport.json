@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-04T22:04:11.625202Z",
+  "ingestedAt": "2026-05-04T22:40:13.387878Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Opět za exotikou, na nový asfalt. Giro míří do Bulharska, kde jsou cyklisté na obtíž",
+      "url": "https://www.idnes.cz/sport/cyklistika/opet-za-exotikou-na-novy-asfalt-giro-miri-do-bulharska-kde-jsou-cykliste-na-obtiz.A260504_194730_cyklistika_tit",
+      "dt": "2026-05-04T22:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "asfalt",
+        "bulharska",
+        "cyklisté",
+        "exotikou",
+        "giro",
+        "míří",
+        "nový",
+        "obtíž",
+        "opět"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -760,32 +786,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vonnová se chystá na Met Gala. Poprvé od zranění chce vyrazit bez berlí",
-      "url": "https://www.idnes.cz/sport/trendy/vonnova-se-chysta-na-met-gala-poprve-od-zraneni-chce-vyrazit-bez-berli.A260504_102347_trendy_blah",
-      "dt": "2026-05-04T10:10:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "berlí",
-        "chce",
-        "chystá",
-        "gala",
-        "met",
-        "poprvé",
-        "vonnová",
-        "vyrazit",
-        "zranění"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47512,
+      "bytes": 47323,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T21:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -848,6 +848,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Opět za exotikou, na nový asfalt. Giro míří do Bulharska, kde jsou cyklisté na obtíž",
+            "publishedAt": "2026-05-04T22:00:00Z"
+          },
           {
             "title": "Červenka je po deseti letech Hokejistou sezony. A teď se chystám na MS, prozradil",
             "publishedAt": "2026-05-04T21:40:00Z"
@@ -874,10 +878,6 @@
           },
           {
             "title": "Indie a Čína bez MS? FIFA nejlidnatějším zemím stále neprodala vysílací práva",
-            "publishedAt": "2026-05-04T16:40:00Z"
-          },
-          {
-            "title": "Příště zůstanu doma. Bilesovou šokoval půlmilionový účet za červený koberec",
             "publishedAt": "2026-05-04T16:40:00Z"
           }
         ]
