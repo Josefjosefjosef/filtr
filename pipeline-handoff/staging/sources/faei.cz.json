@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-04T19:39:10.858621Z",
+  "ingestedAt": "2026-05-04T20:14:43.631123Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Firmám v Česku rostou náklady nejvýrazněji za čtyři roky",
+      "url": "https://profitonline.cz/firmam-v-cesku-rostou-naklady-nejvyrazneji-za-ctyri-roky/",
+      "dt": "2026-05-04T20:10:02Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "firmám",
+        "nejvýrazněji",
+        "náklady",
+        "roky",
+        "rostou",
+        "česku",
+        "čtyři"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -261,28 +285,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Trump chce zavést 25% clo na auta z EU",
-      "url": "https://profitonline.cz/trump-chce-zavest-25-clo-na-auta-z-eu/",
-      "dt": "2026-05-02T09:00:30Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "auta",
-        "chce",
-        "clo",
-        "trump",
-        "zavést"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -293,7 +295,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18315,
+      "bytes": 18495,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -330,7 +332,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-04T10:00:10Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T20:10:02Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -346,6 +348,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Firmám v Česku rostou náklady nejvýrazněji za čtyři roky",
+            "publishedAt": "2026-05-04T20:10:02Z"
+          },
           {
             "title": "Dědictví zrušení superhrubé mzdy: Letos už chybí 122 miliard",
             "publishedAt": "2026-05-04T10:00:10Z"
@@ -373,10 +379,6 @@
           {
             "title": "Trhy zůstávají nervózní, zákazníky ochrání fixace",
             "publishedAt": "2026-05-03T08:00:39Z"
-          },
-          {
-            "title": "Co přinese odchod Emirátů z OPEC?",
-            "publishedAt": "2026-05-03T06:00:52Z"
           }
         ]
       }
