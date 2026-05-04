@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-04T20:55:32.187589Z",
+  "ingestedAt": "2026-05-04T21:29:01.857396Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Policie v blízkosti Bílého domu postřelila člověka",
+      "url": "https://www.denik.cz/ze_sveta/usa-bily-dum-washingtonuv-pamatnik-policie-strelba.html",
+      "dt": "2026-05-04T20:53:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "blízkosti",
+        "bílého",
+        "domu",
+        "policie",
+        "postřelila",
+        "člověka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -626,33 +649,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Padl verdikt v kauze Čapí hnízdo: Nagyová je vinná, dostala podmínku a pokutu",
-      "url": "https://www.denik.cz/krimi/capi-hnizdo-nagyova-babis-20260504.html",
-      "dt": "2026-05-04T09:45:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dostala",
-        "hnízdo",
-        "kauze",
-        "nagyová",
-        "padl",
-        "podmínku",
-        "pokutu",
-        "verdikt",
-        "vinná",
-        "čapí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -663,7 +659,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29524,
+      "bytes": 29447,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -700,7 +696,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-04T18:47:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-04T20:53:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -717,6 +713,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policie v blízkosti Bílého domu postřelila člověka",
+            "publishedAt": "2026-05-04T20:53:00Z"
+          },
           {
             "title": "Dosavadní kontroly požární bezpečnosti klubů jsou alarmující, řekl šéf hasičů",
             "publishedAt": "2026-05-04T18:47:00Z"
@@ -744,10 +744,6 @@
           {
             "title": "Řidič v Lipsku najel do davu lidí. Na místě jsou dva mrtví, další jsou zranění",
             "publishedAt": "2026-05-04T15:59:00Z"
-          },
-          {
-            "title": "Náměstí v Opočně patřilo nablýskaným veteránům. Obdivovaly je davy lidí",
-            "publishedAt": "2026-05-04T15:40:00Z"
           }
         ]
       }
