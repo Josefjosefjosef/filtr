@@ -35981,6 +35981,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (iuSilverExplicitTaskReadScopeFolded(x)) return false;
     /* Past/history calendar READ must not hijack explicit writes (NOTE_BODY / TASK_TRY) via intent-first blockCreates. */
     if (iuSilverHasWriteVerb(x)) return false;
+    if (/\bukol\s*:/.test(x) || /\bpoznam\w*\s*:/.test(x)) return false;
     if (iuSilverTaskQueryHardSignalFolded(x) && !/\bkalend/.test(x)) return false;
     const yesterday = /\bvcera\b|\bvcer[ae]\b/.test(x);
     const jsemMel =
@@ -36050,7 +36051,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     if (iuSilverPastCalendarQueryFolded(f)) {
       readForced = true;
-      writeForbidden = true;
       intent = "read";
       moduleHint = "calendar";
       reasons.push("past_or_history_calendar_query");
@@ -39865,8 +39865,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
 
     const route = iuSilverBrainRoute(raw, now, prev);
-    const blockCreates =
-      intentFirst.writeForbidden || (intentFirst.readForced && intentFirst.intent !== "write");
+    /* Only true negation / read-only guards may veto creates; readForced alone is handled by read parsers + brain. */
+    const blockCreates = intentFirst.writeForbidden;
 
     if (
       blockCreates &&
