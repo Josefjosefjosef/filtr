@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-05T05:05:35.686243Z",
+  "ingestedAt": "2026-05-05T05:40:50.815690Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Příměří na Ukrajině: Ruský návrh chce Zelenskyj rozšířit",
+      "url": "https://ekonomickydenik.cz/primeri-ukrajina-rusko-navrh-zelenskyj-rozsirit/",
+      "dt": "2026-05-05T05:28:18Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "chce",
+        "návrh",
+        "příměří",
+        "rozšířit",
+        "ruský",
+        "ukrajině",
+        "zelenskyj"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -756,32 +780,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Taková transakční rodinka. Synové Trumpa zbohatli na investici do těžby v Kazachstánu",
-      "url": "https://ekonomickydenik.cz/synove-trumpa-zbohatli-na-investici-do-tezby-v-kazachstanu/",
-      "dt": "2026-05-02T13:30:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "investici",
-        "kazachstánu",
-        "rodinka",
-        "synové",
-        "taková",
-        "transakční",
-        "trumpa",
-        "těžby",
-        "zbohatli"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72814,
+      "bytes": 72721,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,11 +827,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T04:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T05:28:18Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 3,
           "finance": 24,
+          "zdravi": 3,
           "zpravy": 3
         },
         "drop_counts": {
@@ -846,6 +844,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Příměří na Ukrajině: Ruský návrh chce Zelenskyj rozšířit",
+            "publishedAt": "2026-05-05T05:28:18Z"
+          },
           {
             "title": "Trutnovská elektrárna přejde od uhlí k biomase a plynu. Podobný záměr má ČEZ v Hodoníně",
             "publishedAt": "2026-05-05T04:05:00Z"
@@ -873,10 +875,6 @@
           {
             "title": "Smáli se nám, teď je z toho hit, říká Havlíček k programu pro koloniály",
             "publishedAt": "2026-05-04T14:26:10Z"
-          },
-          {
-            "title": "Ruské vlajky zpět na stadiony? Debata ukázala proruskou část poslanců, třeba Konečnou",
-            "publishedAt": "2026-05-04T13:46:31Z"
           }
         ]
       }

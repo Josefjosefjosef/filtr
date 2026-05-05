@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-05T05:05:35.686243Z",
+  "ingestedAt": "2026-05-05T05:40:50.815690Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Minnesota zaskočila San Antonio. Na favorita vytasila nečekaného žolíka",
+      "url": "https://www.sport.cz/clanek/basketbal-minnesota-zaskocila-san-antonio-na-favorita-vytasila-necekaneho-zolika-5448551",
+      "dt": "2026-05-05T05:34:16Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "antonio",
+        "favorita",
+        "minnesota",
+        "nečekaného",
+        "san",
+        "vytasila",
+        "zaskočila",
+        "žolíka"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -743,31 +768,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Plzeň už je v historické tabulce třetí. Z bronzové pozice sesadila Liberec",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-plzen-uz-je-v-historicke-tabulce-treti-z-bronzove-pozice-sesadila-liberec-5448504",
-      "dt": "2026-05-04T13:50:43Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bronzové",
-        "historické",
-        "liberec",
-        "plzeň",
-        "pozice",
-        "sesadila",
-        "tabulce",
-        "třetí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -778,7 +778,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40880,
+      "bytes": 40767,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -815,7 +815,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T04:27:43Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T05:34:16Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -830,6 +830,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Minnesota zaskočila San Antonio. Na favorita vytasila nečekaného žolíka",
+            "publishedAt": "2026-05-05T05:34:16Z"
+          },
           {
             "title": "Vladař výhru nevychytal, Philadelphie padla v prodloužení. Nedařilo se ani Dostálovu Anaheimu",
             "publishedAt": "2026-05-05T03:53:03Z"
@@ -857,10 +861,6 @@
           {
             "title": "Cenu Práva získal Frodl, hokejový galavečer si podmanil Červenka",
             "publishedAt": "2026-05-04T20:38:14Z"
-          },
-          {
-            "title": "Basketbalisté Nymburka a Pardubic jsou krok od postupu do semifinále",
-            "publishedAt": "2026-05-04T18:42:08Z"
           }
         ]
       }

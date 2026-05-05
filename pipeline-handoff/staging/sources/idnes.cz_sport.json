@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-05T05:05:35.686243Z",
+  "ingestedAt": "2026-05-05T05:40:50.815690Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Carolina je v play off dále bez porážky, Vegas uspělo nad Anaheimem",
+      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-vladar-dostal.A260505_071014_nhl_mkr",
+      "dt": "2026-05-05T05:29:53Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "anaheimem",
+        "carolina",
+        "dále",
+        "off",
+        "play",
+        "porážky",
+        "uspělo",
+        "vegas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Trápení Krejčíkové končí, už je zase fit. Mrzutost s Muchovou ji spíš rozesmála",
+      "url": "https://www.idnes.cz/sport/tenis/trapeni-krejcikove-konci-uz-je-zase-fit-mrzutost-s-muchovou-ji-spis-rozesmala.A260504_232912_tenis_ikuc",
+      "dt": "2026-05-05T05:11:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "fit",
+        "končí",
+        "krejčíkové",
+        "mrzutost",
+        "muchovou",
+        "rozesmála",
+        "spíš",
+        "trápení",
+        "zase"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -732,60 +783,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Velká posila pro Třinec. Do obrany získal reprezentačního obránce Pyrochtu",
-      "url": "https://www.idnes.cz/hokej/extraliga/hokejovy-obrance-pyrochta-bude-nove-pusobit-v-trinci.A260504_124649_hokej_luji",
-      "dt": "2026-05-04T10:59:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "obrany",
-        "obránce",
-        "posila",
-        "pyrochtu",
-        "reprezentačního",
-        "třinec",
-        "velká",
-        "získal"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Loni při maratonu v Praze málem zemřel. Letos běžel znovu a navštívil své zachránce",
-      "url": "https://www.idnes.cz/sport/trendy/loni-pri-maratonu-v-praze-malem-zemrel-letos-bezel-znovu-a-navstivil-sve-zachrance.A260504_104458_trendy_blah",
-      "dt": "2026-05-04T10:33:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "běžel",
-        "letos",
-        "loni",
-        "maratonu",
-        "málem",
-        "navštívil",
-        "praze",
-        "při",
-        "své",
-        "zachránce",
-        "zemřel",
-        "znovu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47323,
+      "bytes": 46708,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T05:29:53Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -848,6 +845,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Carolina je v play off dále bez porážky, Vegas uspělo nad Anaheimem",
+            "publishedAt": "2026-05-05T05:29:53Z"
+          },
+          {
+            "title": "Trápení Krejčíkové končí, už je zase fit. Mrzutost s Muchovou ji spíš rozesmála",
+            "publishedAt": "2026-05-05T05:11:00Z"
+          },
           {
             "title": "Opět za exotikou, na nový asfalt. Giro míří do Bulharska, kde jsou cyklisté na obtíž",
             "publishedAt": "2026-05-04T22:00:00Z"
@@ -871,14 +876,6 @@
           {
             "title": "Jedna sezona a konec. Reprezentační kouč Bartoň už basketbalisty USK nepovede",
             "publishedAt": "2026-05-04T17:45:00Z"
-          },
-          {
-            "title": "Zavolejte mi, prosím! Fotbalista ukazoval do kamery vizitku, pracuje jako makléř",
-            "publishedAt": "2026-05-04T17:41:00Z"
-          },
-          {
-            "title": "Indie a Čína bez MS? FIFA nejlidnatějším zemím stále neprodala vysílací práva",
-            "publishedAt": "2026-05-04T16:40:00Z"
           }
         ]
       }
