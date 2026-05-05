@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-05T10:49:55.042745Z",
+  "ingestedAt": "2026-05-05T11:25:18.480609Z",
   "items": [
     {
       "section": "veda",
@@ -20,6 +20,31 @@
         "vypadat",
         "všechny",
         "weby"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Dost bylo nekonečného vysvětlování. Gemini si zapamatuje, kdo jste a co máte rádi",
+      "url": "https://www.zive.cz/clanky/dost-bylo-nekonecneho-vysvetlovani-gemini-si-zapamatuje-kdo-jste-a-co-mate-radi/sc-3-a-241009/default.aspx",
+      "dt": "2026-05-05T10:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "dost",
+        "gemini",
+        "jste",
+        "máte",
+        "nekonečného",
+        "rádi",
+        "vysvětlování",
+        "zapamatuje"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -944,35 +969,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "T-Mobile ruší staré mobilní tarify. Zákazníky převede na aktuální portfolio Next, většina si připlatí",
-      "url": "https://mobilmania.zive.cz/clanky/t-mobile-rusi-stare-mobilni-tarify-zakazniky-prevede-na-aktualni-portfolio-next-vetsina-si-priplati/sc-3-a-1364657/default.aspx",
-      "dt": "2026-05-01T08:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "aktuální",
-        "mobile",
-        "mobilní",
-        "next",
-        "portfolio",
-        "převede",
-        "připlatí",
-        "ruší",
-        "staré",
-        "tarify",
-        "většina",
-        "zákazníky"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -983,7 +979,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22948,
+      "bytes": 23098,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1020,7 +1016,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-05T09:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T10:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1038,6 +1034,10 @@
           {
             "title": "Takhle budou do tří let vypadat všechny státní weby a aplikace",
             "publishedAt": "2026-05-04T17:45:00Z"
+          },
+          {
+            "title": "Dost bylo nekonečného vysvětlování. Gemini si zapamatuje, kdo jste a co máte rádi",
+            "publishedAt": "2026-05-05T10:45:00Z"
           },
           {
             "title": "Netflix a 30 nejoblíbenějších filmů a seriálů v květnu 2026. Mimoni, Harry Hole, Radiační poplach, Válečné monstrum…",
@@ -1062,10 +1062,6 @@
           {
             "title": "T-Mobile ukázal výhody 5G SA sítě. V mobilu ji nepoznáte, ale v nemocnicích nebo fabrikách mění pravidla",
             "publishedAt": "2026-05-04T15:45:00Z"
-          },
-          {
-            "title": "Google propojil Fotky a Nano Banana. AI vygeneruje obrázky, na kterých poznáte sebe i své blízké",
-            "publishedAt": "2026-05-04T07:45:00Z"
           }
         ]
       }

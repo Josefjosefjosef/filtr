@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-05T10:49:55.042745Z",
+  "ingestedAt": "2026-05-05T11:25:18.480609Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Proti Američanům v O&#8322; areně. Davis Cup se do největší české haly vrátí po 13 letech",
+      "url": "https://www.idnes.cz/sport/tenis/davis-cup-praha-o2-arena-cesko-usa.A260505_123752_tenis_ikuc",
+      "dt": "2026-05-05T10:50:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "8322",
+        "američanům",
+        "areně",
+        "cup",
+        "davis",
+        "haly",
+        "letech",
+        "největší",
+        "proti",
+        "vrátí",
+        "české"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -758,31 +786,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Wolffová zažila v závodním světě samotu. Teď buduje komunitu jezdkyň",
-      "url": "https://www.idnes.cz/sport/trendy/wolffova-zazila-v-zavodnim-svete-samotu-ted-buduje-komunitu-jezdkyn.A260504_134427_trendy_blah",
-      "dt": "2026-05-04T16:03:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "buduje",
-        "jezdkyň",
-        "komunitu",
-        "samotu",
-        "světě",
-        "wolffová",
-        "zažila",
-        "závodním"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46685,
+      "bytes": 47168,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T10:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T10:50:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -845,6 +848,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Proti Američanům v O&#8322; areně. Davis Cup se do největší české haly vrátí po 13 letech",
+            "publishedAt": "2026-05-05T10:50:00Z"
+          },
           {
             "title": "Sluší jí to? Krasobruslařka Alysa Liuová je novou tváří Louis Vuitton, oblékla denim",
             "publishedAt": "2026-05-05T10:30:00Z"
@@ -872,10 +879,6 @@
           {
             "title": "Sportovní hvězdy zazářily na Met Gala. Kdo dorazil oblečený jen v bublinkách?",
             "publishedAt": "2026-05-05T08:50:00Z"
-          },
-          {
-            "title": "Herajt deptal Karvinou. Když je brankář nahoře, brzdička se u střelců objeví",
-            "publishedAt": "2026-05-05T08:10:00Z"
           }
         ]
       }

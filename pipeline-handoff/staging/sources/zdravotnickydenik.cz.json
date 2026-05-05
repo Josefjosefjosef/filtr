@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-05T10:49:55.042745Z",
+  "ingestedAt": "2026-05-05T11:25:18.480609Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Kontrola a odstranění znamének: Kdy to máte zdarma a kdy si musíte připravit peněženku?",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/kontrola-a-odstraneni-znamenek-kdy-je-zdarma/",
+      "dt": "2026-05-05T11:02:29Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "kontrola",
+        "musíte",
+        "máte",
+        "odstranění",
+        "peněženku",
+        "připravit",
+        "zdarma",
+        "znamének"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -244,32 +269,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Žloutenka na jihu Moravy neustupuje: Hygienici varují před rizikem na výletech a táborech",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/hepatitida-jizni-morava-vylety/",
-      "dt": "2026-05-04T12:05:45Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "hygienici",
-        "jihu",
-        "moravy",
-        "neustupuje",
-        "rizikem",
-        "táborech",
-        "varují",
-        "výletech",
-        "žloutenka"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 83771,
+      "bytes": 83657,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-05T08:50:44Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T11:02:29Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -332,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kontrola a odstranění znamének: Kdy to máte zdarma a kdy si musíte připravit peněženku?",
+            "publishedAt": "2026-05-05T11:02:29Z"
+          },
           {
             "title": "Konec ředitele Holobrady: Příbramská nemocnice reaguje na policejní zásah",
             "publishedAt": "2026-05-05T08:50:44Z"
@@ -359,10 +362,6 @@
           {
             "title": "Změna ve vedení péče o vězně: Do čela zařízení ministerstva spravedlnosti nastoupil nový ředitel",
             "publishedAt": "2026-05-04T14:58:18Z"
-          },
-          {
-            "title": "Otrávit dětské výživy jedem na krysy měl Slovák. Zřejmě se mstil za vyhazov",
-            "publishedAt": "2026-05-04T14:08:03Z"
           }
         ]
       }
