@@ -629,6 +629,84 @@ const ADDRS = [
   "Hradec Králové",
   "Pardubice centrum"
 ];
+
+/** Silver Quality Audit v1 — informational only; must not affect routing PASS/FAIL or expectedIntent. */
+const TITLE_QUALITY_FILLER_RE = /pros[ií]m|ho[dď]|napi[šs]|ulo[zž]|\bsi\b|\bmi\b/i;
+const DATE_QUALITY_RELATIVE_RAW_RE =
+  /\b(zitra|zítra|dnes|pozitri|pozítří|pondeli|pondělí|utery|úterý|streda|středa|stredu|středu|ctvrtek|čtvrtek|patek|pátek|vikend|víkend|tyden|týden|mesic|měsíc|pristi|příští|koncem|tento|tenhle)\b/i;
+
+function measureSilverQualityV1(turn, rawOut) {
+  const d = turn.draft || {};
+  const raw = String(rawOut || "");
+
+  const titleStr = String(d.title || "").trim();
+  let titleClean = true;
+  if (titleStr) {
+    const ft = foldCs(titleStr);
+    if (TITLE_QUALITY_FILLER_RE.test(ft)) titleClean = false;
+    if (ft.length > 100) titleClean = false;
+  }
+
+  const iso = String(d.dateISO || "").trim();
+  const dateS = String(d.date || "").trim();
+  const dateCombined = iso || dateS;
+  let dateParsed = true;
+  if (dateCombined) {
+    const hasIso =
+      /^\d{4}-\d{2}-\d{2}/.test(iso) ||
+      /^\d{4}-\d{2}-\d{2}/.test(dateS) ||
+      /\d{4}-\d{2}-\d{2}/.test(dateCombined);
+    const hasDotted = /\d{1,2}\.\s*\d{1,2}\.\s*\d{2,4}/.test(dateCombined);
+    if (hasIso || hasDotted) dateParsed = true;
+    else if (DATE_QUALITY_RELATIVE_RAW_RE.test(dateCombined) && !/\d{4}-\d{2}-\d{2}/.test(dateCombined)) dateParsed = false;
+  }
+
+  const th = String(d.timeHHMM || "").trim();
+  const tm = String(d.time || "").trim();
+  const timeCombined = th || tm;
+  let timeParsed = true;
+  if (timeCombined) {
+    if (/\d{1,2}:\d{2}/.test(timeCombined)) timeParsed = true;
+    else {
+      const ftime = foldCs(timeCombined);
+      if (/\b(vecer|večer|rano|ráno|odpoledne|dopoledne|po\s+obede|po\s+obědě|kolem)\b/.test(ftime) && !/\d/.test(timeCombined)) timeParsed = false;
+    }
+  }
+
+  const parts = [raw, d.title, d.note, d.silverNoteText, d.address, d.location].filter(Boolean);
+  const hay = foldCs(parts.join(" "));
+  let entityOk = false;
+  if (hay) {
+    for (let pi = 0; pi < PERSONS.length; pi++) {
+      const fp = foldCs(PERSONS[pi]);
+      if (fp.length >= 2 && hay.indexOf(fp) >= 0) {
+        entityOk = true;
+        break;
+      }
+    }
+    if (!entityOk) {
+      for (let ai = 0; ai < ADDRS.length; ai++) {
+        const fa = foldCs(ADDRS[ai]);
+        if (fa.length >= 3 && hay.indexOf(fa) >= 0) {
+          entityOk = true;
+          break;
+        }
+      }
+    }
+    if (!entityOk) {
+      if (
+        /\b(lednic|marek|pepa|pravnic|zubar|doktor|ucetn|kuryr|schuzk|ukol|poznam|korunn|prahou|dlouh|ostrava|brno|vinohrad|spalen|pardubic)\w*/.test(
+          hay
+        )
+      ) {
+        entityOk = true;
+      }
+    }
+  }
+
+  return { titleClean, dateParsed, timeParsed, entityOk };
+}
+
 const TIMES = [
   "15:00",
   "10:15",
@@ -1623,6 +1701,11 @@ function main() {
   const fails = [];
   const lines = [];
   let firstFail = "";
+  let qTitlePass = 0;
+  let qDatePass = 0;
+  let qTimePass = 0;
+  let qEntityPass = 0;
+  const qualityDenom = 20000;
 
   for (const c of cases) {
     if (!byG[c.group]) byG[c.group] = { pass: 0, fail: 0 };
@@ -1633,6 +1716,11 @@ function main() {
     const turn = eng.processUserTurn(c.input, empty, ctxForCase(c.group));
     turn._auditInput = c.input;
     const ev = evaluateOne(c, turn);
+    const qv = measureSilverQualityV1(turn, ev.raw);
+    if (qv.titleClean) qTitlePass++;
+    if (qv.dateParsed) qDatePass++;
+    if (qv.timeParsed) qTimePass++;
+    if (qv.entityOk) qEntityPass++;
     if (ev.pass) {
       byG[c.group].pass++;
       lines.push("PASS " + c.id);
@@ -1840,6 +1928,48 @@ function main() {
     "==== END_SILVER_20000_STABLE_AUDIT_HARNESS_RESULT ==="
   ].join("\n");
   console.log("\n" + harnessOut);
+
+  const quality_audit = {
+    title_clean: qTitlePass + " / " + qualityDenom,
+    date_parsed: qDatePass + " / " + qualityDenom,
+    time_parsed: qTimePass + " / " + qualityDenom,
+    entity_detected: qEntityPass + " / " + qualityDenom
+  };
+  console.log("QUALITY_AUDIT", quality_audit);
+
+  const accNum = parseFloat(acc);
+  const zeroRegression =
+    accNum >= 80.33 &&
+    (byG.calendar_write ? byG.calendar_write.pass : 0) === 3000 &&
+    (byG.calendar_query ? byG.calendar_query.pass : 0) === 3000 &&
+    (byG.multi_intent ? byG.multi_intent.pass : 0) === 2000 &&
+    (catCount.query_created_write || 0) === 0;
+  const silverQualityBlock = [
+    "=== SILVER_QUALITY_AUDIT_V1_RESULT ===",
+    "pr_url=" + escapeField(prUrl),
+    "merged=PASS/FAIL",
+    "main_commit=" + escapeField(gitHead),
+    "pages_deploy_status=PASS/FAIL",
+    "silver_prod_proof=PASS/FAIL",
+    "overall_accuracy=" + acc + "%",
+    "calendar_write=" + (byG.calendar_write ? byG.calendar_write.pass : 0) + "/3000",
+    "calendar_query=" + (byG.calendar_query ? byG.calendar_query.pass : 0) + "/3000",
+    "task_write=" + (byG.task_write ? byG.task_write.pass : 0) + "/3000",
+    "note_write=" + (byG.note_write ? byG.note_write.pass : 0) + "/3000",
+    "multi_intent=" + (byG.multi_intent ? byG.multi_intent.pass : 0) + "/2000",
+    "query_created_write_count=" + (catCount.query_created_write || 0),
+    "quality_title_clean=" + quality_audit.title_clean,
+    "quality_date_parsed=" + quality_audit.date_parsed,
+    "quality_time_parsed=" + quality_audit.time_parsed,
+    "quality_entity_detected=" + quality_audit.entity_detected,
+    "console_app_errors=n/a",
+    "cls=n/a",
+    "zero_regression=" + (zeroRegression ? "PASS" : "FAIL"),
+    "first_fail=" + escapeField(firstFail || "(none)"),
+    "next_recommended_scope=Silver normalizer v1 (title cleaning)",
+    "=== END_SILVER_QUALITY_AUDIT_V1_RESULT ==="
+  ].join("\n");
+  console.log("\n" + silverQualityBlock);
 }
 
 main();
