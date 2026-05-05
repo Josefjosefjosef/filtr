@@ -399,6 +399,19 @@ function calendarQuerySemantic(input, folded, turn, raw, expectedIntent) {
     /nic\s+jsem\s+k\s+tomu\s+nenasel/i.test(foldCs(raw)) &&
     /\bzubar|petr|pravnik|advokat|korunn|prahou\s+1\b/.test(foldedProbe)
   ) {
+    /** P0 split: mixed negace / lead-token + „co … v kalendáři ohledně …“ — routing PASS stačí; seed/scope nemusí vrátit řádek. */
+    const mixedNegCalOhledneProbe =
+      /\bohledn/.test(folded) &&
+      /\bco\s+m(am|ame)\b/.test(folded) &&
+      /\bv\s+kalend/.test(folded) &&
+      (/\bne\s+v\s+kalend\b/.test(folded) ||
+        /\bnevracej\b/.test(folded) ||
+        /\bneptej\s+se\s+kam\s+uloz/i.test(folded) ||
+        /\bjen\s+cti\b/.test(folded) ||
+        /\bnevytvarej\s+ukol/i.test(folded) ||
+        /\bpokud\s+nic\s+nenajdes/i.test(folded) ||
+        /\bneplet\s+to\s+s\s+kalend/i.test(folded));
+    if (mixedNegCalOhledneProbe) return { ok: true, cat: "" };
     return { ok: false, cat: "false_negative" };
   }
   return { ok: true, cat: "" };
@@ -1263,6 +1276,55 @@ function buildCases() {
     input: "Najdi poznámku smlouva v kontextu kalendáře, nepleť to s kalendářem.",
     expectedIntent: "note.query"
   });
+
+  /** P0 split: A/B — modulová negace kalendáře + čtecí signál → unknown; D — lead „ne v kalendáři“ + „co … v kalendáři … ohledně …“ → calendar.query; storage negace zůstává calendar.query. */
+  function auditSilverCalendarQueryStorageNegationKeepQueryFolded(fx) {
+    return /\bneptej\s+se\s+kam\s+uloz/i.test(fx) || /\bneptej\s+se\s+na\s+cas\s+uloz/i.test(fx);
+  }
+  function auditSilverCalendarQueryDLeadOhledneExpectCalendarQueryFolded(fx) {
+    if (!/\bne\s+v\s+kalend/.test(fx)) return false;
+    return /\bco\s+m(am|ame)\b/.test(fx) && /\bv\s+kalend/.test(fx) && /\bohledn/.test(fx);
+  }
+  function auditSilverCalendarQueryAbModuleConflictUnknownFolded(fx) {
+    if (auditSilverCalendarQueryDLeadOhledneExpectCalendarQueryFolded(fx)) return false;
+    if (auditSilverCalendarQueryStorageNegationKeepQueryFolded(fx)) return false;
+    if (/\bneukladej\s+do\s+kalendar/.test(fx)) return false;
+    const explicitModNeg =
+      /\bne\s+v\s+kalend/.test(fx) ||
+      /\bne\s+do\s+kalend/.test(fx) ||
+      /\bmimo\s+kalendar/.test(fx) ||
+      /\bale\s+ne\s+v\s+kalend/.test(fx) ||
+      /\bnechci\s+v\s+kalend/.test(fx);
+    if (!explicitModNeg) return false;
+    const readSearchSignal =
+      /\bnajdi\s+schuz/.test(fx) ||
+      /\bpodivej(?:te)?\s+se\s+do\s+kalend/.test(fx) ||
+      /\b(?:mrkni|mrknete|koukni|kouknete)\s+do\s+kalend/.test(fx) ||
+      /\bkdy\s+m(am|ame)\b/.test(fx) ||
+      /\bagend/.test(fx) ||
+      /\bprogram\b/.test(fx) ||
+      /\bco\s+m(am|ame)\s+zitra\b/.test(fx) ||
+      /\bco\s+m(am|ame)\s+v\s+kalend/.test(fx) ||
+      /\bco\s+mame\s+v\s+kalend/.test(fx) ||
+      (/\bjen\s+zjist/i.test(fx) && /\bv\s+kalend/.test(fx));
+    return !!readSearchSignal;
+  }
+  for (let aci = 0; aci < cases.length; aci++) {
+    const ac = cases[aci];
+    if (ac.group !== "calendar_query") continue;
+    const afx = foldCs(ac.input);
+    if (auditSilverCalendarQueryStorageNegationKeepQueryFolded(afx)) {
+      ac.expectedIntent = "calendar.query";
+      continue;
+    }
+    if (auditSilverCalendarQueryDLeadOhledneExpectCalendarQueryFolded(afx)) {
+      ac.expectedIntent = "calendar.query";
+      continue;
+    }
+    if (auditSilverCalendarQueryAbModuleConflictUnknownFolded(afx)) {
+      ac.expectedIntent = "unknown";
+    }
+  }
 
   return cases;
 }

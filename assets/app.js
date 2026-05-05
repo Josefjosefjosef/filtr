@@ -34352,6 +34352,18 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P0 (D): úvodní lead-token „ne v kalendáři Pepo,“ nesmí zablokovat tryParseCalendarRead, když později následuje
+   * jasný kalendářní dotaz „co mám … v kalendáři … ohledně …“ (foldCs vstup).
+   */
+  function iuSilverSoftCalendarModuleNegationOverriddenByExplicitCalendarReadTailFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (!iuSilverSoftCalendarModuleNegationClauseFolded(x)) return false;
+    if (!/\bco\s+m(am|ame)\b/.test(x) || !/\bv\s+kalend/.test(x) || !/\bohledn/.test(x)) return false;
+    return true;
+  }
+
+  /**
    * P0: pozdější explicitní zápis do kalendáře (vč. „ulož mi … do kalendáře“) přebije měkkou negaci modulu dříve ve větě.
    */
   function iuSilverExplicitCalendarWriteOverridesSoftModuleNegationFolded(f) {
@@ -34366,6 +34378,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
    * P0 v1.7: scope poznámek + tvrdá negace kalendářního vyhledávání (bez holého „ne v kalendáři“ — viz měkká negace výše).
    */
   function iuSilverExplicitNotesReadScopeFolded(f) {
+    if (iuSilverSoftCalendarModuleNegationOverriddenByExplicitCalendarReadTailFolded(f)) {
+      return iuSilverHardNotesOrAntiCalendarLookupScopeFolded(f);
+    }
     return iuSilverHardNotesOrAntiCalendarLookupScopeFolded(f) || iuSilverSoftCalendarModuleNegationClauseFolded(f);
   }
 
