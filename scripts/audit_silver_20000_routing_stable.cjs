@@ -405,7 +405,7 @@ function calendarQuerySemantic(input, folded, turn, raw, expectedIntent) {
       /\bohledn/.test(folded) &&
       /\bco\s+m(am|ame)\b/.test(folded) &&
       /\bv\s+kalend/.test(folded) &&
-      (/\bne\s+v\s+kalend\b/.test(folded) ||
+      (/\bne\s+v\s+kalend\w*/.test(folded) ||
         /\bnevracej\b/.test(folded) ||
         /\bneptej\s+se\s+kam\s+uloz/i.test(folded) ||
         /\bjen\s+cti\b/.test(folded) ||
@@ -1565,6 +1565,22 @@ function main() {
       lines.push(block);
       fails.push({ sev: severity(ev), block, cat, input: c.input });
       if (!firstFail) firstFail = c.id + "|" + cat + "|" + escapeField(c.input.slice(0, 160));
+    }
+  }
+
+  /** P0: explicitní kotvy — mixed neg „ne v kalendáři“ + ohledně (calendar_query_03681); storage neg (03104); exclude (03126). */
+  const SILVER_AUDIT_ROUTING_ANCHOR_IDS = [
+    "calendar_query_03104",
+    "calendar_query_03126",
+    "calendar_query_03681"
+  ];
+  for (let ani = 0; ani < SILVER_AUDIT_ROUTING_ANCHOR_IDS.length; ani++) {
+    const anid = SILVER_AUDIT_ROUTING_ANCHOR_IDS[ani];
+    if (lines.indexOf("PASS " + anid) < 0) {
+      console.log("=== SILVER_AUDIT_ROUTING_ANCHOR_FAIL ===");
+      console.log("anchor_id=" + escapeField(anid));
+      console.log("==== END_SILVER_AUDIT_ROUTING_ANCHOR_FAIL ====");
+      process.exit(1);
     }
   }
 
