@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-05T07:39:52.111442Z",
+  "ingestedAt": "2026-05-05T08:10:39.864381Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Game Pass přijde již brzy o několik her",
+      "url": "https://zing.cz/article/game-pass-prijde-jiz-brzy-o-nekolik-her-2",
+      "dt": "2026-05-05T08:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "brzy",
+        "game",
+        "her",
+        "již",
+        "několik",
+        "pass",
+        "přijde"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -954,32 +978,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Film podle herní série Resident Evil obdržel premiérový trailer",
-      "url": "https://zing.cz/article/film-podle-herni-serie-resident-evil-obdrzel",
-      "dt": "2026-04-30T14:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "evil",
-        "film",
-        "herní",
-        "obdržel",
-        "podle",
-        "premiérový",
-        "resident",
-        "série",
-        "trailer"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -990,7 +988,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125809,
+      "bytes": 125727,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1027,11 +1025,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-05T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T08:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "other": 39,
-          "zpravy": 1
+          "other": 40
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1043,6 +1040,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Game Pass přijde již brzy o několik her",
+            "publishedAt": "2026-05-05T08:00:00Z"
+          },
           {
             "title": "Aktivujte si zdarma na Steamu hororovou hru",
             "publishedAt": "2026-05-05T06:00:00Z"
@@ -1070,10 +1071,6 @@
           {
             "title": "Základní verze The Outer Worlds bude stažena z prodeje",
             "publishedAt": "2026-05-04T14:00:00Z"
-          },
-          {
-            "title": "EA nově zavádí možnost předobjednat si battlepass v Battlefield 6",
-            "publishedAt": "2026-05-04T13:00:00Z"
           }
         ]
       }

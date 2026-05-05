@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-05T07:39:52.111442Z",
+  "ingestedAt": "2026-05-05T08:10:39.864381Z",
   "items": [
     {
       "section": "veda",
@@ -20,6 +20,33 @@
         "vypadat",
         "všechny",
         "weby"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Chyba v Bluetooth prozrazuje policisty v utajení. Telefony se stejnou technologií jsou chráněny lépe",
+      "url": "https://mobilmania.zive.cz/clanky/chyba-v-bluetooth-prozrazuje-policisty-vutajeni-telefony-se-stejnou-technologii-jsou-chraneny-lepe/sc-3-a-1364667/default.aspx",
+      "dt": "2026-05-05T07:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "bluetooth",
+        "chráněny",
+        "chyba",
+        "lépe",
+        "policisty",
+        "prozrazuje",
+        "stejnou",
+        "technologií",
+        "telefony",
+        "utajení"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -942,33 +969,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Alza má dvě nové ergonomické myši. Jsou tiché a mají pod palcem pět tlačítek",
-      "url": "https://www.zive.cz/clanky/alza-ma-dve-nove-ergonomicke-mysi-jsou-tiche-a-maji-pod-palcem-pet-tlacitek/sc-3-a-240952/default.aspx",
-      "dt": "2026-04-30T10:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "alza",
-        "dvě",
-        "ergonomické",
-        "mají",
-        "myši",
-        "nové",
-        "palcem",
-        "pět",
-        "tiché",
-        "tlačítek"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -979,7 +979,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23047,
+      "bytes": 22912,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1016,7 +1016,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-05T06:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T07:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1034,6 +1034,10 @@
           {
             "title": "Takhle budou do tří let vypadat všechny státní weby a aplikace",
             "publishedAt": "2026-05-04T17:45:00Z"
+          },
+          {
+            "title": "Chyba v Bluetooth prozrazuje policisty v utajení. Telefony se stejnou technologií jsou chráněny lépe",
+            "publishedAt": "2026-05-05T07:45:00Z"
           },
           {
             "title": "Hyrox tlačí tělo do extrémů. V nejtvrdším fitness závodu už nestačí jen pocity, potřebujete senzory a přesná data",
@@ -1058,10 +1062,6 @@
           {
             "title": "Už chybí jen alobalová čepice. KitKat ukázal obal, který odřízne mobil od signálu. Naštěstí je to jen reklama",
             "publishedAt": "2026-05-04T13:45:00Z"
-          },
-          {
-            "title": "Sennheiser HDB 630: Když je prioritou kvalitní přednes, Hi-Res přenos a maximálně flexibilní konektivita",
-            "publishedAt": "2026-05-04T11:45:00Z"
           }
         ]
       }

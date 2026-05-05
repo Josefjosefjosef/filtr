@@ -1,8 +1,44 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-05T07:39:52.111442Z",
+  "ingestedAt": "2026-05-05T08:10:39.864381Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Příští konflikt bude zcela jiný, než jaký známe z učebnic. Armádní špičky však Evropu připravují na tradiční válku, říká brigádní generál v záloze",
+      "url": "https://byznys.hn.cz/c1-67872580-pristi-konflikt-bude-zcela-jiny-nez-jaky-zname-z-ucebnic-armadni-spicky-vsak-evropu-pripravuji-na-tradicni-valku-rika-brigadni-general-v-zaloze",
+      "dt": "2026-05-05T07:40:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "armádní",
+        "brigádní",
+        "evropu",
+        "generál",
+        "jaký",
+        "jiný",
+        "konflikt",
+        "než",
+        "připravují",
+        "příští",
+        "tradiční",
+        "učebnic",
+        "válku",
+        "však",
+        "zcela",
+        "známe",
+        "záloze",
+        "říká",
+        "špičky"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1102,31 +1138,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Elektronická evidence tržeb? Západní standard, který nikdo neměl rušit",
-      "url": "https://archiv.hn.cz/c1-67873090-elektronicka-evidence-trzeb-zapadni-standard-ktery-nikdo-nemel-rusit",
-      "dt": "2026-05-04T06:23:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "elektronická",
-        "evidence",
-        "neměl",
-        "nikdo",
-        "rušit",
-        "standard",
-        "tržeb",
-        "západní"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1137,7 +1148,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 182999,
+      "bytes": 183159,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1174,12 +1185,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-05T07:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T07:40:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 36,
-          "zpravy": 3,
-          "zdravi": 1
+          "finance": 37,
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1191,6 +1201,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Příští konflikt bude zcela jiný, než jaký známe z učebnic. Armádní špičky však Evropu připravují na tradiční válku, říká brigádní generál v záloze",
+            "publishedAt": "2026-05-05T07:40:00Z"
+          },
           {
             "title": "Kdo přijde o dotace? Brusel chce omezit podporu velkým farmám. Česko patří mezi největší odpůrce",
             "publishedAt": "2026-05-05T07:30:00Z"
@@ -1217,10 +1231,6 @@
           },
           {
             "title": "Míří na dvoumiliardovou EBITDA. Růst CE Industries urychlí vlastní investiční fond",
-            "publishedAt": "2026-05-04T22:00:00Z"
-          },
-          {
-            "title": "Slabá místa firemních dluhopisů. Jak rozpoznat varovné signály a&nbsp;nenaletět",
             "publishedAt": "2026-05-04T22:00:00Z"
           }
         ]
