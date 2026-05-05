@@ -1135,6 +1135,56 @@ function buildCases() {
     silverPatchCaseByGroupIndex(k.group, k.index0, { input: k.input, expectedIntent: k.expectedIntent });
   }
 
+  /** P0: adresní/detail calendar read + scope jen kalendář + „ne do úkolů“ (calendar_query_03022). */
+  const SILVER_CALENDAR_QUERY_ADDRESS_DETAIL_READ_PATCH = [
+    {
+      group: "calendar_query",
+      index0: 21,
+      input: "Jakou adresu ma zaznam u pravnika, jen v kalendari, ne do ukolu.",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_query",
+      index0: 16,
+      input: "Jakou adresu má schůzka s právníkem, jen v kalendáři, ne do úkolů.",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_query",
+      index0: 17,
+      input: "Kde mám záznam u právníka v kalendáři?",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_query",
+      index0: 18,
+      input: "Najdi adresu události právník, ne v poznámkách, jen kalendář.",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_query",
+      index0: 19,
+      input: "Jaké jsou detaily schůzky s právníkem v kalendáři?",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_query",
+      index0: 22,
+      input: "Kde je schůzka s právníkem zítra?",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_query",
+      index0: 23,
+      input: "Podívej se do kalendáře co mám zítra, ne v kalendáři.",
+      expectedIntent: "unknown"
+    }
+  ];
+  for (let ai = 0; ai < SILVER_CALENDAR_QUERY_ADDRESS_DETAIL_READ_PATCH.length; ai++) {
+    const a = SILVER_CALENDAR_QUERY_ADDRESS_DETAIL_READ_PATCH[ai];
+    silverPatchCaseByGroupIndex(a.group, a.index0, { input: a.input, expectedIntent: a.expectedIntent });
+  }
+
   silverPatchCaseByGroupIndex("note_query", 1, {
     input: "Najdi poznámku smlouva v kontextu kalendáře, nepleť to s kalendářem.",
     expectedIntent: "note.query"
