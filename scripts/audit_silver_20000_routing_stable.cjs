@@ -1279,7 +1279,19 @@ function buildCases() {
 
   /** P0 split: A/B — modulová negace kalendáře + čtecí signál → unknown; D — lead „ne v kalendáři“ + „co … v kalendáři … ohledně …“ → calendar.query; storage negace zůstává calendar.query. */
   function auditSilverCalendarQueryStorageNegationKeepQueryFolded(fx) {
-    return /\bneptej\s+se\s+kam\s+uloz/i.test(fx) || /\bneptej\s+se\s+na\s+cas\s+uloz/i.test(fx);
+    const storageNeg =
+      /\bneptej\s+se\s+kam\s+uloz/i.test(fx) || /\bneptej\s+se\s+na\s+cas\s+uloz/i.test(fx);
+    if (!storageNeg) return false;
+    /**
+     * P0 03104: „neptej se kam uložit“ je storage negace — nesmí přepsat explicitní note read
+     * (+ „v kontextu kalendáře“) na calendar.query. Čisté calendar read věty typu „Podívej se do kalendáře …“
+     * nemají signál poznámky ani „v kontextu kalendáře“ a zůstávají calendar.query.
+     */
+    if (/\bv\s+kontextu\s+kalend/.test(fx)) {
+      if (/\bhledam\s+poznamk/.test(fx) || /\bnajdi\s+poznamk/.test(fx)) return false;
+      if (/\bpoznamk(?:a|u|y|ou|ce|ach)\b/.test(fx)) return false;
+    }
+    return true;
   }
   function auditSilverCalendarQueryDLeadOhledneExpectCalendarQueryFolded(fx) {
     if (!/\bne\s+v\s+kalend/.test(fx)) return false;
