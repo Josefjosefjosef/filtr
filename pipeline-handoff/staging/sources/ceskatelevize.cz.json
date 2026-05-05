@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-05T19:59:07.047667Z",
+  "ingestedAt": "2026-05-05T20:39:27.282057Z",
   "items": [
     {
       "section": "aktualne",
@@ -81,14 +81,17 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Ruské útoky na Záporoží a Kramatorsk zabily podle úřadů 17 lidí",
+      "title": "Ruské útoky na Záporoží a Kramatorsk zabily podle úřadů nejméně dvě desítky lidí",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/ruske-utoky-na-zaporozi-a-kramatorsk-zabily-podle-uradu-14-lidi-373138",
       "dt": "2026-05-05T16:40:26Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
+        "desítky",
+        "dvě",
         "kramatorsk",
         "lidí",
+        "nejméně",
         "podle",
         "ruské",
         "zabily",
@@ -527,22 +530,18 @@
     {
       "section": "pocasi",
       "contentType": "article",
-      "title": "Bouřky zasáhnou západ Čech, na Moravě kvůli suchu dál platí riziko požárů",
+      "title": "Bouřky dorazily do Česka, nejsilnější jsou v Karlovarském kraji",
       "url": "https://ct24.ceskatelevize.cz/clanek/pocasi/bourky-zasahnou-zapad-cech-na-morave-kvuli-suchu-dal-plati-riziko-pozaru-373116",
       "dt": "2026-05-05T10:04:16Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
         "bouřky",
-        "kvůli",
-        "moravě",
-        "platí",
-        "požárů",
-        "riziko",
-        "suchu",
-        "zasáhnou",
-        "západ",
-        "čech"
+        "dorazily",
+        "karlovarském",
+        "kraji",
+        "nejsilnější",
+        "česka"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -745,6 +744,30 @@
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Reprezentace zamířila na Švédské hry s osmi novými hráči",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/reprezentace-zamirila-na-svedske-hry-s-osmi-novymi-hraci-156618",
+      "dt": "2026-05-05T19:56:55Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "hry",
+        "hráči",
+        "novými",
+        "osmi",
+        "reprezentace",
+        "zamířila",
+        "švédské"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1480,32 +1503,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Obhájkyně titulu z Mostu jsou jednou nohou ve finále, vyhrály i házenkářky Kynžvartu",
-      "url": "https://sport.ceskatelevize.cz/clanek/hazena/obhajkyne-titulu-z-mostu-jsou-jednou-nohou-ve-finale-vyhraly-i-hazenkarky-kynzvartu-156588",
-      "dt": "2026-05-03T19:07:38Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "finále",
-        "házenkářky",
-        "jednou",
-        "kynžvartu",
-        "mostu",
-        "nohou",
-        "obhájkyně",
-        "titulu",
-        "vyhrály"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1516,7 +1513,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42972,
+      "bytes": 43091,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1605,7 +1602,7 @@
             "publishedAt": "2026-05-05T18:11:35Z"
           },
           {
-            "title": "Ruské útoky na Záporoží a Kramatorsk zabily podle úřadů 17 lidí",
+            "title": "Ruské útoky na Záporoží a Kramatorsk zabily podle úřadů nejméně dvě desítky lidí",
             "publishedAt": "2026-05-05T16:40:26Z"
           },
           {
@@ -1634,7 +1631,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37918,
+      "bytes": 37898,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1671,7 +1668,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T17:58:58Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T19:56:55Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1686,6 +1683,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Reprezentace zamířila na Švédské hry s osmi novými hráči",
+            "publishedAt": "2026-05-05T19:56:55Z"
+          },
           {
             "title": "Karlovarsko nedalo v rozhodujícím finále Lvům šanci a má čtvrtý titul",
             "publishedAt": "2026-05-05T17:58:58Z"
@@ -1713,10 +1714,6 @@
           {
             "title": "Rozhodčí Petřík se podle serveru odkryto.cz přiznal ke korupci a usiluje o dohodu",
             "publishedAt": "2026-05-05T12:20:59Z"
-          },
-          {
-            "title": "Krejčíková slaví vítězný comeback, v Římě na úvod porazila Jacquemotovou",
-            "publishedAt": "2026-05-05T12:05:27Z"
           }
         ]
       }
@@ -1728,7 +1725,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77825,
+      "bytes": 77787,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
