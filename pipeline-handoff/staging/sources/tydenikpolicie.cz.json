@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-05T20:39:27.282057Z",
+  "ingestedAt": "2026-05-05T21:19:29.184747Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Při střetu s projíždějícím vlakem v Sezimově Ústí utrpěl senior vážná zranění",
+      "url": "https://tydenikpolicie.cz/pri-stretu-s-projizdejicim-vlakem-v-sezimove-usti-utrpel-senior-vazna-zraneni/",
+      "dt": "2026-05-05T21:11:07Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "projíždějícím",
+        "při",
+        "senior",
+        "sezimově",
+        "střetu",
+        "utrpěl",
+        "vlakem",
+        "vážná",
+        "zranění",
+        "ústí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -257,32 +284,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pražská policie hledá ženu podezřelou ze dvou krádeží v kancelářských budovách",
-      "url": "https://tydenikpolicie.cz/prazska-policie-hleda-zenu-podezrelou-ze-dvou-kradezi-v-kancelarskych-budovach/",
-      "dt": "2026-05-05T07:53:24Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "budovách",
-        "dvou",
-        "hledá",
-        "kancelářských",
-        "krádeží",
-        "podezřelou",
-        "policie",
-        "pražská",
-        "ženu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -293,7 +294,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16482,
+      "bytes": 16612,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -330,7 +331,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-05T13:44:59Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T21:11:07Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -345,6 +346,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Při střetu s projíždějícím vlakem v Sezimově Ústí utrpěl senior vážná zranění",
+            "publishedAt": "2026-05-05T21:11:07Z"
+          },
           {
             "title": "Strážníci v Praze zachránili sebevraha, který chtěl skočit z mostu",
             "publishedAt": "2026-05-05T13:44:59Z"
@@ -372,10 +377,6 @@
           {
             "title": "Řidiči nerespektují zákazy řízení. Jeden z nich přišel o svou Škodovku",
             "publishedAt": "2026-05-05T09:58:12Z"
-          },
-          {
-            "title": "Policistům v Brně ujížděl po nehodě podnapilý cizinec. Hledají případné svědky jeho riskantní jízdy",
-            "publishedAt": "2026-05-05T09:29:40Z"
           }
         ]
       }

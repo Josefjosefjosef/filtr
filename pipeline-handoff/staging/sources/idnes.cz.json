@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-05T20:39:27.282057Z",
+  "ingestedAt": "2026-05-05T21:19:29.184747Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
       "title": "Poslanci se přou o usnesení ke sjezdu sudetských Němců, které tlačí Okamura",
       "url": "https://www.idnes.cz/zpravy/domaci/koalice-chce-prosadit-usneseni-k-chystanemu-jednani-sudetskych-nemcu-v-brne.A260505_112854_domaci_kop",
-      "dt": "2026-05-05T20:34:23Z",
+      "dt": "2026-05-05T21:00:03Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
@@ -20,6 +20,31 @@
         "sudetských",
         "tlačí",
         "usnesení"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Nepálu zemřel český horolezec, patrně v důsledku otoku plic",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/nepal-horolezec-otok-plic-zachranari-umrti.A260505_225439_zahranicni_berr",
+      "dt": "2026-05-05T20:54:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "důsledku",
+        "horolezec",
+        "nepálu",
+        "otoku",
+        "patrně",
+        "plic",
+        "zemřel",
+        "český"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -759,31 +784,6 @@
         "soud",
         "zprávy",
         "řešil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "RECENZE: I když není dokonalá, má komedie Ovce žerou první alespoň nápad",
-      "url": "https://www.idnes.cz/kultura/film-televize/recenze-ovce-zerou-prvni-jan-musil-balcar-dolansky.A260502_203159_filmvideo_spm",
-      "dt": "2026-05-05T14:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "alespoň",
-        "dokonalá",
-        "když",
-        "komedie",
-        "nápad",
-        "ovce",
-        "první",
-        "žerou"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1592,7 +1592,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48681,
+      "bytes": 48258,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1629,12 +1629,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T20:34:23Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T21:00:03Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
+          "zpravy": 26,
           "finance": 3,
-          "other": 2
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1648,7 +1648,11 @@
         "sample_titles": [
           {
             "title": "Poslanci se přou o usnesení ke sjezdu sudetských Němců, které tlačí Okamura",
-            "publishedAt": "2026-05-05T20:34:23Z"
+            "publishedAt": "2026-05-05T21:00:03Z"
+          },
+          {
+            "title": "V Nepálu zemřel český horolezec, patrně v důsledku otoku plic",
+            "publishedAt": "2026-05-05T20:54:00Z"
           },
           {
             "title": "Írán změnil a rozšířil kontrolu Hormuzu, Izrael hrozí nasazením všech letadel",
@@ -1673,10 +1677,6 @@
           {
             "title": "Oběťmi zběsilého řidiče z lipské pěší zóny jsou dva Němci. Řidič je ve vazbě",
             "publishedAt": "2026-05-05T18:51:37Z"
-          },
-          {
-            "title": "Hasiči za dva dny zlikvidovali požár lesa u Rusavy. Hořelo v náročném terénu",
-            "publishedAt": "2026-05-05T18:44:00Z"
           }
         ]
       }
