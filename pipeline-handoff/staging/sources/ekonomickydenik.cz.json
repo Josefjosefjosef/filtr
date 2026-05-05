@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-05T12:03:57.762456Z",
+  "ingestedAt": "2026-05-05T12:39:06.907550Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Letadla s prázdnými nádržemi? Nejistota ohledně paliv dostává Evropu pod tlak",
+      "url": "https://ekonomickydenik.cz/letadla-s-prazdnymi-nadrzemi-nejistota-ohledne-paliv-dostava-evropu-pod-tlak/",
+      "dt": "2026-05-05T12:12:28Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dostává",
+        "evropu",
+        "letadla",
+        "nejistota",
+        "nádržemi",
+        "ohledně",
+        "paliv",
+        "prázdnými",
+        "tlak"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Přišlo to WhatsAppem. Vlastníci bytů přišli po útoku hackerů o 4 miliony",
+      "url": "https://ekonomickydenik.cz/svj-utoku-hackeru-4-miliony/",
+      "dt": "2026-05-05T12:03:56Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bytů",
+        "hackerů",
+        "miliony",
+        "přišli",
+        "přišlo",
+        "vlastníci",
+        "whatsappem",
+        "útoku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -731,56 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Rozšíří Kanada Unii? Z hlediska kvality institucí a hodnot překonává Ukrajinu",
-      "url": "https://ekonomickydenik.cz/rozsiri-kanada-unii-z-hlediska-kvality-instituci-prekonava-ukrajinu/",
-      "dt": "2026-05-04T04:30:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "hlediska",
-        "hodnot",
-        "institucí",
-        "kanada",
-        "kvality",
-        "překonává",
-        "rozšíří",
-        "ukrajinu",
-        "unii"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Babiš se setkal se Zelenským. Doporučil mu země, které mohou zprostředkovat mír",
-      "url": "https://ekonomickydenik.cz/babis-se-setkal-se-zelenskym-v-jerevanu/",
-      "dt": "2026-05-03T17:09:56Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "babiš",
-        "doporučil",
-        "mír",
-        "setkal",
-        "zelenským",
-        "země",
-        "zprostředkovat"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74533,
+      "bytes": 74234,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,13 +829,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T11:26:48Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T12:12:28Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 25,
+          "finance": 24,
+          "zpravy": 3,
           "sport": 1,
-          "zdravi": 2,
-          "zpravy": 2
+          "zdravi": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -846,6 +847,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Letadla s prázdnými nádržemi? Nejistota ohledně paliv dostává Evropu pod tlak",
+            "publishedAt": "2026-05-05T12:12:28Z"
+          },
+          {
+            "title": "Přišlo to WhatsAppem. Vlastníci bytů přišli po útoku hackerů o 4 miliony",
+            "publishedAt": "2026-05-05T12:03:56Z"
+          },
           {
             "title": "Evropa „vyfoukla“ Arménii Putinovi pod nosem. Přidala se i Británie a Kanada",
             "publishedAt": "2026-05-05T11:26:48Z"
@@ -869,14 +878,6 @@
           {
             "title": "Putinovy obavy, kulomety v Kremlu: Moskva se mění v pevnost kvůli strachu z úderu",
             "publishedAt": "2026-05-05T08:33:15Z"
-          },
-          {
-            "title": "Objev neznámého živočicha při ražbě metra v Praze. Fosilii našel sběratel na haldě",
-            "publishedAt": "2026-05-05T08:18:54Z"
-          },
-          {
-            "title": "Zamíří ukrajinské drony do Evropy? Zelenskyj prolamuje embargo. Dorazí i do Česka?",
-            "publishedAt": "2026-05-05T07:30:47Z"
           }
         ]
       }

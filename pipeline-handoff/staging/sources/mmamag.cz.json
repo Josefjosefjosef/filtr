@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-05T12:03:57.762456Z",
+  "ingestedAt": "2026-05-05T12:39:06.907550Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Historická akce UFC v Bílém domě má háček. Běžní fanoušci se na turnaj vůbec nedostanou",
+      "url": "https://www.mmamag.cz/ufc-v-bilem-dome-bezni-fanousci-se-na-turnaj-nedostanou/",
+      "dt": "2026-05-05T12:25:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "akce",
+        "bílém",
+        "běžní",
+        "domě",
+        "fanoušci",
+        "historická",
+        "háček",
+        "nedostanou",
+        "turnaj",
+        "ufc",
+        "vůbec"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1097,35 +1125,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "video",
-      "title": "Ledový car proti levé noze smrti. Fedor musel zkrotit nejnebezpečnějšího střelce PRIDE",
-      "url": "https://www.mmamag.cz/fedor-vs-cro-cop-ticha-valka-dvou-legend-pride/",
-      "dt": "2026-05-03T18:07:33Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "car",
-        "fedor",
-        "ledový",
-        "levé",
-        "musel",
-        "nejnebezpečnějšího",
-        "noze",
-        "pride",
-        "proti",
-        "smrti",
-        "střelce",
-        "zkrotit"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1136,7 +1135,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 82137,
+      "bytes": 81579,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1173,7 +1172,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-05T11:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T12:25:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1188,6 +1187,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Historická akce UFC v Bílém domě má háček. Běžní fanoušci se na turnaj vůbec nedostanou",
+            "publishedAt": "2026-05-05T12:25:00Z"
+          },
           {
             "title": "České MMA stojí na místě. A problém není jen v Oktagonu",
             "publishedAt": "2026-05-05T11:55:00Z"
@@ -1215,10 +1218,6 @@
           {
             "title": "Šéf Oktagonu brzdí rozjetého Roušala. Na nejlepší soupeře prý ještě nemá",
             "publishedAt": "2026-05-05T08:00:00Z"
-          },
-          {
-            "title": "Hvězdy UFC mají jasno: Obyčejný člověk by proti nim v kleci vydržel sotva pár vteřin",
-            "publishedAt": "2026-05-05T07:20:32Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-05-05T12:03:57.762456Z",
+  "ingestedAt": "2026-05-05T12:39:06.907550Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Už i WhatsApp můžete mít za peníze, ale zatím jen někde",
+      "url": "https://www.idnes.cz/technet/software/iternet-komunikace-whatsapp-plus-placena-sluzba.A260504_165730_software_vse",
+      "dt": "2026-05-05T11:48:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "ale",
+        "jen",
+        "mít",
+        "můžete",
+        "někde",
+        "peníze",
+        "whatsapp",
+        "zatím"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -739,30 +764,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nouzová přistání a dramatické momenty. Kdyby Aero Ab-11 mohlo vyprávět",
-      "url": "https://www.idnes.cz/technet/technika/aero-ab-11-rekordni-let-kbely.A260421_163453_tec_technika_alv",
-      "dt": "2026-04-23T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "aero",
-        "dramatické",
-        "kdyby",
-        "momenty",
-        "nouzová",
-        "přistání",
-        "vyprávět"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -773,7 +774,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 47285,
+      "bytes": 46919,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -810,11 +811,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T11:48:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 12,
-          "zpravy": 18
+          "other": 13,
+          "zpravy": 17
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -826,6 +827,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Už i WhatsApp můžete mít za peníze, ale zatím jen někde",
+            "publishedAt": "2026-05-05T11:48:00Z"
+          },
           {
             "title": "Měly nahradit walkmany, ale nakonec je musela zachránit paměť RAM",
             "publishedAt": "2026-05-04T22:00:00Z"
@@ -853,10 +858,6 @@
           {
             "title": "Celebrity a láska k létání: 21 příběhů, které vás možná překvapí",
             "publishedAt": "2026-04-30T22:00:00Z"
-          },
-          {
-            "title": "Netflix mění aplikaci pro smartphone, scrollovat budete jako u TikToku",
-            "publishedAt": "2026-04-30T13:00:00Z"
           }
         ]
       }

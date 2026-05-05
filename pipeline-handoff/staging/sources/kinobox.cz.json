@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-05T12:03:57.762456Z",
+  "ingestedAt": "2026-05-05T12:39:06.907550Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kevin Costner má v rukou nejvelkolepější filmové selhání. Jeho vysněný western neuvidíme ani letos",
+      "url": "https://www.kinobox.cz/clanky/filmy/53389-kevin-costner-ma-v-rukach-nejvelkolepejsi-filmove-selhani-westernovy-horizont-neuvidime-ani-letos",
+      "dt": "2026-05-05T12:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "costner",
+        "filmové",
+        "jeho",
+        "kevin",
+        "letos",
+        "nejvelkolepější",
+        "neuvidíme",
+        "rukou",
+        "selhání",
+        "vysněný",
+        "western"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -536,34 +564,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Kvíz: Jiřina Bohdalová slaví 95. narozeniny. Poznáte její slavné role podle fotky?",
-      "url": "https://www.kinobox.cz/clanky/tema/53206-kviz-jirina-bohdalova-slavi-95-narozeniny-poznate-jeji-slavne-role-podle-fotky",
-      "dt": "2026-05-02T12:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "bohdalová",
-        "fotky",
-        "její",
-        "jiřina",
-        "kvíz",
-        "narozeniny",
-        "podle",
-        "poznáte",
-        "role",
-        "slavné",
-        "slaví"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -574,7 +574,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28672,
+      "bytes": 29087,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -611,7 +611,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-05T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T12:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -626,6 +626,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kevin Costner má v rukou nejvelkolepější filmové selhání. Jeho vysněný western neuvidíme ani letos",
+            "publishedAt": "2026-05-05T12:00:00Z"
+          },
           {
             "title": "Kinobox Daily: Pan Nikdo proti Putinovi ukazuje praktiky ruského režimu i proměnu své hlavní tváře",
             "publishedAt": "2026-05-05T10:00:00Z"
@@ -653,10 +657,6 @@
           {
             "title": "TV sledovanost: Propadák Novy se rozloučil důstojně. Jitřní záře neoslnila",
             "publishedAt": "2026-05-04T12:00:00Z"
-          },
-          {
-            "title": "Kinobox Daily: Masa v Řeznících se bát nemusíte. Jensen je veskrze humanistickým filmařem",
-            "publishedAt": "2026-05-04T10:00:00Z"
           }
         ]
       }
