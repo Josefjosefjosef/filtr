@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-05T17:19:24.967766Z",
+  "ingestedAt": "2026-05-05T17:59:20.201657Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Antimonopolní úřad začal řešit prodej ČSA a Smartwings tureckým Pegasus Airlines",
+      "url": "https://www.denik.cz/doprava/csa-smartwings-prodej-pegasus-airlines-antiminopolni-urad.html",
+      "dt": "2026-05-05T17:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "airlines",
+        "antimonopolní",
+        "pegasus",
+        "prodej",
+        "smartwings",
+        "tureckým",
+        "začal",
+        "úřad",
+        "čsa",
+        "řešit"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -632,34 +659,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Unikátní nález při ražbě metra v Praze: Sběratel objevil nový druh členovce",
-      "url": "https://www.denik.cz/regiony/pri-razbe-prazskeho-metra-nasel-sberatel-fosilii-neznameho-clenovce-z-prvohor-20.html",
-      "dt": "2026-05-05T07:50:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "druh",
-        "metra",
-        "nový",
-        "nález",
-        "objevil",
-        "praze",
-        "při",
-        "ražbě",
-        "sběratel",
-        "unikátní",
-        "členovce"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -670,7 +669,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29692,
+      "bytes": 29704,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -707,7 +706,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-05T16:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T17:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -724,6 +723,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Antimonopolní úřad začal řešit prodej ČSA a Smartwings tureckým Pegasus Airlines",
+            "publishedAt": "2026-05-05T17:00:00Z"
+          },
           {
             "title": "Podpořit ČT a Český rozhlas přišly na Staroměstské náměstí tisíce lidí",
             "publishedAt": "2026-05-05T16:30:00Z"
@@ -751,10 +754,6 @@
           {
             "title": "Učitelé: Letošní maturity z matematiky byly ty lehčí testy, jazyky trápí víc",
             "publishedAt": "2026-05-05T13:26:00Z"
-          },
-          {
-            "title": "Met Gala 2026: Na celebrity čekaly protesty, šaty víc odhalovaly než skrývaly",
-            "publishedAt": "2026-05-05T13:05:00Z"
           }
         ]
       }

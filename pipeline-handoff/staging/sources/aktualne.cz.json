@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-05T17:19:24.967766Z",
+  "ingestedAt": "2026-05-05T17:59:20.201657Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Tisíce lidí zaplnily centrum Prahy, demonstrují za nezávislost veřejnoprávních médií",
+      "url": "https://zpravy.aktualne.cz/domaci/tisice-lidi-zaplnily-centrum-prahy-demonstruji-za-nezavislost-verejnopravnich-medii/r~aaa29d7585be72ac66e6ee9dca4483e9/",
+      "dt": "2026-05-05T17:12:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "centrum",
+        "demonstrují",
+        "lidí",
+        "médií",
+        "nezávislost",
+        "prahy",
+        "tisíce",
+        "veřejnoprávních",
+        "zaplnily"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -518,31 +544,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Frontální útok. Prezident Pavel sundal ve vztahu k Trumpovi rukavice",
-      "url": "https://zpravy.aktualne.cz/domaci/frontalni-utok-prezident-pavel-sundal-ve-vztahu-k-trumpovi-rukavice/r~aaa29a6e4d2faa2630f864b8f2acfb39/",
-      "dt": "2026-05-05T11:48:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "frontální",
-        "pavel",
-        "prezident",
-        "rukavice",
-        "sundal",
-        "trumpovi",
-        "vztahu",
-        "útok"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -553,7 +554,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22369,
+      "bytes": 22399,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -590,7 +591,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-05T16:47:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T17:12:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 11,
@@ -608,6 +609,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tisíce lidí zaplnily centrum Prahy, demonstrují za nezávislost veřejnoprávních médií",
+            "publishedAt": "2026-05-05T17:12:00Z"
+          },
           {
             "title": "Rusko oznámilo krátké příměří od 8. května, Ukrajina hlásí klid zbraní ještě dříve",
             "publishedAt": "2026-01-21T06:45:00Z"
@@ -635,10 +640,6 @@
           {
             "title": "Nebeská podívaná už dnes v noci. Jak sledovat padající hvězdy z roje éta Akvaridy z Česka?",
             "publishedAt": "2026-05-05T15:44:00Z"
-          },
-          {
-            "title": "Babiš všechny zaskočil oznámením o své „totální změně“. Řekl i datum, kdy k ní došlo",
-            "publishedAt": "2026-05-05T15:34:00Z"
           }
         ]
       }

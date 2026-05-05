@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "pelipecky.cz",
-  "ingestedAt": "2026-05-05T17:19:24.967766Z",
+  "ingestedAt": "2026-05-05T17:59:20.201657Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Letenky do Bangkoku za 12 390 Kč z Vídně",
+      "url": "https://pelipecky.cz/bangkok-aktivity/",
+      "dt": "2026-05-05T17:33:39Z",
+      "media_raw": "Pelipecky",
+      "media_norm": "Pelipecky",
+      "tokens": [
+        "390",
+        "bangkoku",
+        "letenky",
+        "vídně"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_pelipecky",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "pelipecky.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -224,30 +245,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "pelipecky.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "POBYT DNE: 4* pobyt v Nízkých Tatrách se snídaní a wellness od 3 290 Kč",
-      "url": "https://pelipecky.cz/pobyt-nizke-tatry-tri-studnicky/",
-      "dt": "2026-04-24T06:55:35Z",
-      "media_raw": "Pelipecky",
-      "media_norm": "Pelipecky",
-      "tokens": [
-        "290",
-        "dne",
-        "nízkých",
-        "pobyt",
-        "snídaní",
-        "tatrách",
-        "wellness"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_pelipecky",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "pelipecky.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -258,7 +255,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://pelipecky.cz/feed/",
-      "bytes": 111751,
+      "bytes": 121777,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -295,7 +292,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-04T17:08:21Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T17:33:39Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "cestovani": 10
@@ -310,6 +307,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Letenky do Bangkoku za 12 390 Kč z Vídně",
+            "publishedAt": "2026-05-05T17:33:39Z"
+          },
           {
             "title": "Blízký východ: letecká doprava v Emirátech se už vrátila do normálu.",
             "publishedAt": "2026-05-04T17:08:21Z"
@@ -337,10 +338,6 @@
           {
             "title": "Economy, ale s postelí: Air New Zealand zavádí „Skynest“ spací kapsle",
             "publishedAt": "2026-04-27T09:27:46Z"
-          },
-          {
-            "title": "Nejvertikálnější město na světě: Hongkong za 12 490 Kč",
-            "publishedAt": "2026-04-27T08:00:00Z"
           }
         ]
       }

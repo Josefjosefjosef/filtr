@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-05T17:19:24.967766Z",
+  "ingestedAt": "2026-05-05T17:59:20.201657Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Basketbalisté Nymburka rozstříleli Ostravu a postoupili do semifinále",
+      "url": "https://www.sport.cz/clanek/basketbal-basketbaliste-nymburka-rozstrileli-ostravu-a-postoupili-do-semifinale-5448618",
+      "dt": "2026-05-05T17:28:11Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "basketbalisté",
+        "nymburka",
+        "ostravu",
+        "postoupili",
+        "rozstříleli",
+        "semifinále"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Prezident FIA slíbil návrat osmiválce do F1. Je to jen otázka času, tvrdí",
+      "url": "https://www.sport.cz/clanek/moto-formule-1-prezident-fia-slibil-navrat-osmivalce-do-f1-je-to-jen-otazka-casu-tvrdi-5448598",
+      "dt": "2026-05-05T17:16:59Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "fia",
+        "jen",
+        "návrat",
+        "osmiválce",
+        "otázka",
+        "prezident",
+        "slíbil",
+        "tvrdí",
+        "času"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -690,55 +739,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Švýcaři mají v nominaci na Švédské hry další posily ze zámoří",
-      "url": "https://www.sport.cz/clanek/hokej-ms-svycari-maji-v-nominaci-na-svedske-hry-dalsi-posily-ze-zamori-5448576",
-      "dt": "2026-05-05T10:12:43Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "další",
-        "hry",
-        "mají",
-        "nominaci",
-        "posily",
-        "zámoří",
-        "švédské",
-        "švýcaři"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Polonara po opakovaném boji s rakovinou ukončil basketbalovou kariéru",
-      "url": "https://www.sport.cz/clanek/basketbal-polonara-po-opakovanem-boji-s-rakovinou-ukoncil-basketbalovou-karieru-5448574",
-      "dt": "2026-05-05T10:07:24Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "basketbalovou",
-        "boji",
-        "kariéru",
-        "opakovaném",
-        "polonara",
-        "rakovinou",
-        "ukončil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -749,7 +749,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43253,
+      "bytes": 43009,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -786,11 +786,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T16:54:12Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T17:28:11Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 29,
-          "zdravi": 1
+          "sport": 30
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -802,6 +801,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Basketbalisté Nymburka rozstříleli Ostravu a postoupili do semifinále",
+            "publishedAt": "2026-05-05T17:28:11Z"
+          },
+          {
+            "title": "Prezident FIA slíbil návrat osmiválce do F1. Je to jen otázka času, tvrdí",
+            "publishedAt": "2026-05-05T17:16:59Z"
+          },
           {
             "title": "Santos vyšetřuje Neymarův úlet",
             "publishedAt": "2026-05-05T12:08:26Z"
@@ -825,14 +832,6 @@
           {
             "title": "Debut v NHL i reprezentaci, český mladík prožil snový měsíc. Rulíka si oblíbil",
             "publishedAt": "2026-05-05T15:55:04Z"
-          },
-          {
-            "title": "Životní zápas českého tvrďáka. Už se dokonce vidí s titulem",
-            "publishedAt": "2026-05-05T15:52:13Z"
-          },
-          {
-            "title": "Krejčíková se vrátila na kurty vítězstvím na turnaji v Římě, teď ji ale čeká světová jednička",
-            "publishedAt": "2026-05-05T11:06:27Z"
           }
         ]
       }

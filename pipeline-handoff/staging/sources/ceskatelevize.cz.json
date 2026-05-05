@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-05T17:19:24.967766Z",
+  "ingestedAt": "2026-05-05T17:59:20.201657Z",
   "items": [
     {
       "section": "aktualne",
@@ -726,24 +726,53 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Hasiči dál likvidují požár v Českém Švýcarsku, v pátek by mohlo být hotovo",
+      "title": "Hasiči zmenšili požár v Českém Švýcarsku na pět hektarů, letecké hašení skončilo",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/hasici-dal-hasi-pozar-v-ceskem-svycarsku-stale-zasahuji-vrtulniky-373106",
       "dt": "2026-05-05T06:11:03Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "být",
         "hasiči",
-        "hotovo",
-        "likvidují",
+        "hašení",
+        "hektarů",
+        "letecké",
         "požár",
-        "pátek",
+        "pět",
+        "skončilo",
+        "zmenšili",
         "českém",
         "švýcarsku"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nymburk proti Ostravě vyhrál i počtvrté. Postupu jsou blízko také Pardubice a Děčín",
+      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/nymburk-proti-ostrave-vyhral-i-poctvrte-postupu-jsou-blizko-take-pardubice-a-decin-156616",
+      "dt": "2026-05-05T17:27:31Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "blízko",
+        "děčín",
+        "nymburk",
+        "ostravě",
+        "pardubice",
+        "postupu",
+        "počtvrté",
+        "proti",
+        "také",
+        "vyhrál"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1476,33 +1505,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Další obměna kádru pro Švédské hry. K týmu se připojí nová sedmička hráčů",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/dalsi-obmena-kadru-pro-svedske-hry-k-tymu-se-pripoji-nova-sedmicka-hracu-156586",
-      "dt": "2026-05-03T18:10:02Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "další",
-        "hry",
-        "hráčů",
-        "kádru",
-        "nová",
-        "obměna",
-        "připojí",
-        "sedmička",
-        "týmu",
-        "švédské"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1513,7 +1515,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41455,
+      "bytes": 41327,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1631,7 +1633,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38018,
+      "bytes": 37772,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1668,7 +1670,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T15:56:11Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T17:27:31Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1683,6 +1685,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nymburk proti Ostravě vyhrál i počtvrté. Postupu jsou blízko také Pardubice a Děčín",
+            "publishedAt": "2026-05-05T17:27:31Z"
+          },
           {
             "title": "Florbalistky budou na juniorském MS útočit na pátou medaili v řadě",
             "publishedAt": "2026-05-05T15:56:11Z"
@@ -1710,10 +1716,6 @@
           {
             "title": "Tenisté zamíří na kvalifikaci s USA zpátky do O2 areny",
             "publishedAt": "2026-05-05T10:51:08Z"
-          },
-          {
-            "title": "Kempný se vrací do Česka, posílí Kladno",
-            "publishedAt": "2026-05-05T09:41:57Z"
           }
         ]
       }
@@ -1725,7 +1727,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77806,
+      "bytes": 77808,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

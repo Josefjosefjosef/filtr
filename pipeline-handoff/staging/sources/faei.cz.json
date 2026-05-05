@@ -1,12 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-05T17:19:24.967766Z",
+  "ingestedAt": "2026-05-05T17:59:20.201657Z",
   "items": [
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Fakt, že příměří pokračuje, trhy uklidnilo",
+      "title": "Konec zlaté rally? Zlato ztratilo už osmnáct procent",
+      "url": "https://profitonline.cz/konec-zlate-rally-zlato-ztratilo-uz-osmnact-procent/",
+      "dt": "2026-05-05T17:30:08Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "konec",
+        "osmnáct",
+        "procent",
+        "rally",
+        "zlato",
+        "zlaté",
+        "ztratilo"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Fakt, že příměří pokračuje, trhy uklidnil",
       "url": "https://profitonline.cz/fakt-ze-primeri-pokracuje-trhy-uklidnilo/",
       "dt": "2026-05-05T17:00:26Z",
       "media_raw": "FAEI",
@@ -16,7 +40,7 @@
         "pokračuje",
         "příměří",
         "trhy",
-        "uklidnilo"
+        "uklidnil"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -265,30 +289,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Lenka Vaněk posilou top managementu E.ON Energy Solutions",
-      "url": "https://profitonline.cz/lenka-vanek-posilou-top-managementu-e-on-energy-solutions/",
-      "dt": "2026-05-04T07:00:19Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "energy",
-        "lenka",
-        "managementu",
-        "posilou",
-        "solutions",
-        "top",
-        "vaněk"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -299,7 +299,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19046,
+      "bytes": 19081,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -336,7 +336,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-05T17:00:26Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T17:30:08Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -353,7 +353,11 @@
         },
         "sample_titles": [
           {
-            "title": "Fakt, že příměří pokračuje, trhy uklidnilo",
+            "title": "Konec zlaté rally? Zlato ztratilo už osmnáct procent",
+            "publishedAt": "2026-05-05T17:30:08Z"
+          },
+          {
+            "title": "Fakt, že příměří pokračuje, trhy uklidnil",
             "publishedAt": "2026-05-05T17:00:26Z"
           },
           {
@@ -379,10 +383,6 @@
           {
             "title": "Podnikatelé prosazují byrokratický detox. EU chrlí sedm nových předpisů za den",
             "publishedAt": "2026-05-05T04:00:56Z"
-          },
-          {
-            "title": "Firmám v Česku rostou náklady nejvýrazněji za čtyři roky",
-            "publishedAt": "2026-05-04T20:10:02Z"
           }
         ]
       }
