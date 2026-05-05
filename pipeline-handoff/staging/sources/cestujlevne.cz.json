@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-05-05T17:59:20.201657Z",
+  "ingestedAt": "2026-05-05T18:39:18.731654Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Týden na Kypru s polopenzí jen kousek od pláže Nissi Beach. Zájezd od 12 990 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/tyden-na-kypru-s-polopenzi-jen-kousek-od-plaze-nissi-beach",
+      "dt": "2026-05-05T18:10:06Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "990",
+        "beach",
+        "jen",
+        "kousek",
+        "kypru",
+        "nissi",
+        "pláže",
+        "polopenzí",
+        "týden",
+        "zájezd"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -478,33 +505,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Týden na Sardinii s all-inclusive a přímým letem z Prahy v červnu. Zájezd od 16 780 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/tyden-na-sardinii-s-all-inclusive-a-primym-letem-z-prahy-v-cervnu",
-      "dt": "2026-04-28T07:20:04Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "780",
-        "all",
-        "inclusive",
-        "letem",
-        "prahy",
-        "přímým",
-        "sardinii",
-        "týden",
-        "zájezd",
-        "červnu"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -515,7 +515,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 44780,
+      "bytes": 44139,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -552,7 +552,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-05T06:45:01Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T18:10:06Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -567,6 +567,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Týden na Kypru s polopenzí jen kousek od pláže Nissi Beach. Zájezd od 12 990 Kč",
+            "publishedAt": "2026-05-05T18:10:06Z"
+          },
           {
             "title": "Řecká Parga na týden s odletem z Prahy. Zájezd od 8 990 Kč",
             "publishedAt": "2026-05-05T06:45:01Z"
@@ -594,10 +598,6 @@
           {
             "title": "Týden v Marsa Matrouh ve 4* hotelu přímo u pláže z Ostravy. Zájezd od 10 990 Kč",
             "publishedAt": "2026-04-30T14:37:23Z"
-          },
-          {
-            "title": "Týden na ostrově Sal ve 4* hotelu s all-inclusive. Zájezd od 15 990 Kč",
-            "publishedAt": "2026-04-30T12:00:43Z"
           }
         ]
       }

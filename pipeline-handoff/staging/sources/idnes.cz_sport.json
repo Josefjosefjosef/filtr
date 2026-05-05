@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-05T17:59:20.201657Z",
+  "ingestedAt": "2026-05-05T18:39:18.731654Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
       "title": "Snadnou, krátkou cestou. Nymburští rozebrali Ostravu a jsou v semifinále",
       "url": "https://www.idnes.cz/sport/basket/ctvrtfinale-play-off-maxa-nbl-ostrava-nymburk-pisek-pardubice-brno-decin.A260505_192823_sport-basket_ten",
-      "dt": "2026-05-05T17:34:00Z",
+      "dt": "2026-05-05T18:30:19Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
@@ -19,6 +19,32 @@
         "rozebrali",
         "semifinále",
         "snadnou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Karlovarsko urvalo volejbalový titul, v pátém finále porazilo obhajující Lvy",
+      "url": "https://www.idnes.cz/sport/ostatni/volejbal-extraliga-muzu-karlovarsko-ctvrty-titul-pate-finale-lvi-praha.A260505_201248_sporty_ten",
+      "dt": "2026-05-05T18:14:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "finále",
+        "karlovarsko",
+        "lvy",
+        "obhajující",
+        "porazilo",
+        "pátém",
+        "titul",
+        "urvalo",
+        "volejbalový"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -760,32 +786,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Udělám všechno, aby si ti dva pitomci už u nás nezapískali. Kania se obul do sudích",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/liberec-ondrej-kania-videorozhodci-reakce.A260505_082729_fotbal_duff",
-      "dt": "2026-05-05T07:25:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dva",
-        "kania",
-        "nezapískali",
-        "nás",
-        "obul",
-        "pitomci",
-        "sudích",
-        "udělám",
-        "všechno"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47148,
+      "bytes": 47203,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T17:34:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T18:30:19Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -850,7 +850,11 @@
         "sample_titles": [
           {
             "title": "Snadnou, krátkou cestou. Nymburští rozebrali Ostravu a jsou v semifinále",
-            "publishedAt": "2026-05-05T17:34:00Z"
+            "publishedAt": "2026-05-05T18:30:19Z"
+          },
+          {
+            "title": "Karlovarsko urvalo volejbalový titul, v pátém finále porazilo obhajující Lvy",
+            "publishedAt": "2026-05-05T18:14:00Z"
           },
           {
             "title": "Vypukne v tenise válka? Hvězdám nestačí 68 milionů, hrozí bojkotem grandslamů",
@@ -875,10 +879,6 @@
           {
             "title": "Novým trenérem biatlonistů je Šlesingr. Davidová pokračuje, Vinklárková také",
             "publishedAt": "2026-05-05T14:00:00Z"
-          },
-          {
-            "title": "Pingpongový úkaz. Bývalý kouč šampiona si zahrál na mistrovství světa. V 73 letech",
-            "publishedAt": "2026-05-05T13:30:00Z"
           }
         ]
       }

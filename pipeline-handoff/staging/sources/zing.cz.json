@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-05T17:59:20.201657Z",
+  "ingestedAt": "2026-05-05T18:39:18.731654Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Game Pass odhalil nabídku her pro první půlku května",
+      "url": "https://zing.cz/article/game-pass-odhalil-nabidku-her-pro-prvni-pulku-kvetna-3",
+      "dt": "2026-05-05T18:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "game",
+        "her",
+        "května",
+        "nabídku",
+        "odhalil",
+        "pass",
+        "první",
+        "půlku"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -957,35 +982,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Nová hra s Batmanem se blíží. LEGO Batman: Legacy of the Dark Knight hlásí hotovo",
-      "url": "https://zing.cz/article/nova-hra-s-batmanem-se-blizi-lego-batman-legacy-of-the-dark-knight-hlasi-hotovo",
-      "dt": "2026-05-01T06:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "batman",
-        "batmanem",
-        "blíží",
-        "dark",
-        "hlásí",
-        "hotovo",
-        "hra",
-        "knight",
-        "legacy",
-        "lego",
-        "nová",
-        "the"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -996,7 +992,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125835,
+      "bytes": 125781,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1033,7 +1029,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-05T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T18:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1048,6 +1044,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Game Pass odhalil nabídku her pro první půlku května",
+            "publishedAt": "2026-05-05T18:00:00Z"
+          },
           {
             "title": "Květnová nabídka her v PlayStation Plus je nyní k dispozici",
             "publishedAt": "2026-05-05T15:00:00Z"
@@ -1075,10 +1075,6 @@
           {
             "title": "Aktivujte si zdarma na Steamu hororovou hru",
             "publishedAt": "2026-05-05T06:00:00Z"
-          },
-          {
-            "title": "Steam ovladač se vyprodal za 30 minut, servery při spuštění nevydržely",
-            "publishedAt": "2026-05-05T05:00:00Z"
           }
         ]
       }

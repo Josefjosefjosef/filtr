@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-05T17:59:20.201657Z",
+  "ingestedAt": "2026-05-05T18:39:18.731654Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "Česko zasáhly první bouřky. Mapa ukazuje, kde je doprovází kroupy i silný vítr",
+      "url": "https://www.denik.cz/pocasi/do-ceska-dorazily-prvni-bourky-mohou-je-doprovazet-kroupy-i-silny-vitr.html",
+      "dt": "2026-05-05T17:40:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bouřky",
+        "doprovází",
+        "kroupy",
+        "mapa",
+        "první",
+        "silný",
+        "ukazuje",
+        "vítr",
+        "zasáhly",
+        "česko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -58,7 +85,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Oběťmi zběsilé jízdy centrem Lipska jsou dva Němci, řidič je ve vazbě",
+      "title": "Oběťmi zběsilé jízdy centrem Lipska jsou dva Němci, řidič je na psychiatrii",
       "url": "https://www.denik.cz/staty-eu/obetmi-zbesile-jizdy-centrem-lipska-jsou-dva-nemci-ridic-je-ve-vazbe.html",
       "dt": "2026-05-05T16:14:00Z",
       "media_raw": "Deník",
@@ -70,7 +97,7 @@
         "lipska",
         "němci",
         "oběťmi",
-        "vazbě",
+        "psychiatrii",
         "zběsilé",
         "řidič"
       ],
@@ -632,33 +659,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Z videa mrazí: Letadlo zasáhlo při přistávání kamion, řidič přežil zázrakem",
-      "url": "https://www.denik.cz/ze_sveta/video-usa-letadlo-united-airlines-zasahlo-pri-pristani-kamion-s-pecivem.html",
-      "dt": "2026-05-05T08:05:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "kamion",
-        "letadlo",
-        "mrazí",
-        "přežil",
-        "při",
-        "přistávání",
-        "videa",
-        "zasáhlo",
-        "zázrakem",
-        "řidič"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -669,7 +669,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29704,
+      "bytes": 29895,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -706,7 +706,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-05T17:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T17:40:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -724,6 +724,10 @@
         },
         "sample_titles": [
           {
+            "title": "Česko zasáhly první bouřky. Mapa ukazuje, kde je doprovází kroupy i silný vítr",
+            "publishedAt": "2026-05-05T17:40:00Z"
+          },
+          {
             "title": "Antimonopolní úřad začal řešit prodej ČSA a Smartwings tureckým Pegasus Airlines",
             "publishedAt": "2026-05-05T17:00:00Z"
           },
@@ -732,7 +736,7 @@
             "publishedAt": "2026-05-05T16:30:00Z"
           },
           {
-            "title": "Oběťmi zběsilé jízdy centrem Lipska jsou dva Němci, řidič je ve vazbě",
+            "title": "Oběťmi zběsilé jízdy centrem Lipska jsou dva Němci, řidič je na psychiatrii",
             "publishedAt": "2026-05-05T16:14:00Z"
           },
           {
@@ -750,10 +754,6 @@
           {
             "title": "Žirovnice se pyšní unikátním modelem zámku. Patří mu český rekord",
             "publishedAt": "2026-05-05T14:30:00Z"
-          },
-          {
-            "title": "Učitelé: Letošní maturity z matematiky byly ty lehčí testy, jazyky trápí víc",
-            "publishedAt": "2026-05-05T13:26:00Z"
           }
         ]
       }
