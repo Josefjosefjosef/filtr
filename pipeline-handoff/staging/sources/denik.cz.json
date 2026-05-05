@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-05T02:09:43.940054Z",
+  "ingestedAt": "2026-05-05T02:40:38.649067Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "OBRAZEM: První květnový úplněk máme za sebou, čeká nás ještě jeden",
+      "url": "https://www.denik.cz/ctenar-reporter/prvni-kvetnovy-uplnek.html",
+      "dt": "2026-05-05T02:19:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "jeden",
+        "ještě",
+        "květnový",
+        "máme",
+        "nás",
+        "obrazem",
+        "první",
+        "sebou",
+        "úplněk",
+        "čeká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -620,34 +647,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kauza otrávené dětské výživy: Zadrželi Slováka, roli prý hrála pomsta i rozvod",
-      "url": "https://www.denik.cz/staty-eu/kauza-otravena-detska-vyziva-hipp-zadrzeny-slovak-pomsta.html",
-      "dt": "2026-05-04T11:17:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dětské",
-        "hrála",
-        "kauza",
-        "otrávené",
-        "pomsta",
-        "prý",
-        "roli",
-        "rozvod",
-        "slováka",
-        "výživy",
-        "zadrželi"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -658,7 +657,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29307,
+      "bytes": 28975,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -695,11 +694,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-05T02:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T02:19:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 2,
           "zpravy": 22,
+          "finance": 2,
           "zdravi": 1
         },
         "drop_counts": {
@@ -712,6 +711,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "OBRAZEM: První květnový úplněk máme za sebou, čeká nás ještě jeden",
+            "publishedAt": "2026-05-05T02:19:00Z"
+          },
           {
             "title": "Spropitné bude legálním příjmem číšníků či kuchařů, nebudou ho muset danit",
             "publishedAt": "2026-05-05T02:00:00Z"
@@ -739,10 +742,6 @@
           {
             "title": "Filipíny zahalily mraky popela. Vulkán Mayon ohrožuje statisíce lidí",
             "publishedAt": "2026-05-04T16:36:00Z"
-          },
-          {
-            "title": "Požár v Českém Švýcarsku se podařilo lokalizovat. Na místě je přes 500 hasičů",
-            "publishedAt": "2026-05-04T16:32:00Z"
           }
         ]
       }
