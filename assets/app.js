@@ -35476,9 +35476,42 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
-   * P0: konfliktní cluster „podívej se do kalendáře / co mám zítra…“ + explicitní „ne v / ne do kalendáře“
+   * P0: explicitní negace kalendářního modulu (kde hledat), ne negace zápisu typu „neukládej do kalendáře“
+   * („neukladej“ bez mezery za „ne“ → neplatí \bne\s+do\s+kalend). foldCs vstup.
+   */
+  function iuSilverExplicitCalendarModuleNegationForSafeClarificationFolded(x) {
+    const f = String(x || "");
+    if (!f) return false;
+    if (/\bne\s+v\s+kalend/.test(f)) return true;
+    if (/\bne\s+do\s+kalend/.test(f)) return true;
+    if (/\bmimo\s+kalendar/.test(f)) return true;
+    if (/\bnechci\s+v\s+kalend/.test(f)) return true;
+    if (/\bale\s+ne\s+v\s+kalend/.test(f)) return true;
+    return false;
+  }
+
+  /**
+   * P0: read/search signál pro konflikt s negací kalendářního modulu — užší než holé „co mám“
+   * (to by jinak přepadlo tisíce řádků audit šablon s jinou negací ve větě).
+   * foldCs vstup.
+   */
+  function iuSilverCalendarReadSearchSignalVersusCalendarModuleNegationFolded(x) {
+    const f = String(x || "");
+    if (!f) return false;
+    if (/\bnajdi\s+schuz/.test(f)) return true;
+    if (/\bpodivej(?:te)?\s+se\s+do\s+kalend/.test(f)) return true;
+    if (/\b(?:mrkni|mrknete|koukni|kouknete)\s+do\s+kalend/.test(f)) return true;
+    if (/\bkdy\s+m(am|ame)\b/.test(f)) return true;
+    if (/\bagend/.test(f)) return true;
+    if (/\bprogram\b/.test(f)) return true;
+    return false;
+  }
+
+  /**
+   * P0: konfliktní cluster „podívej se do kalendáře / co mám zítra… / najdi schůzku…“ + explicitní negace kalendářního modulu
    * bez zápisového slovesa → bezpečné unknown (ne calendar.query, ne note.query, ne create).
    * Záměrně neřeší „nepleť to s kalendářem“ u hledání poznámky (bez fráze co mám zítra / do kalendáře).
+   * „Neukládej do kalendáře“ + read zůstává calendar.read (negace zápisu, ne modulu).
    */
   function iuSilverCalendarQueryHardNoCalendarConflictFolded(f) {
     const x = String(f || "");
@@ -35490,9 +35523,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bco\s+m(am|ame)\s+zitra\b/.test(x) ||
       /\bco\s+m(am|ame)\s+v\s+kalend/.test(x) ||
       /\bco\s+mame\s+v\s+kalend/.test(x);
-    if (!readCalCluster) return false;
-    if (!(/\bne\s+v\s+kalend/.test(x) || /\bne\s+do\s+kalend/.test(x))) return false;
-    return true;
+    if (readCalCluster && (/\bne\s+v\s+kalend/.test(x) || /\bne\s+do\s+kalend/.test(x))) return true;
+    if (
+      iuSilverExplicitCalendarModuleNegationForSafeClarificationFolded(x) &&
+      iuSilverCalendarReadSearchSignalVersusCalendarModuleNegationFolded(x)
+    )
+      return true;
+    return false;
   }
 
   function iuSilverCalendarEntityContextFolded(f) {

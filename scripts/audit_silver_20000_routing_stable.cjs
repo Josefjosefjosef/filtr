@@ -1253,6 +1253,12 @@ function buildCases() {
     silverPatchCaseByGroupIndex(sk.group, sk.index0, { input: sk.input, expectedIntent: sk.expectedIntent });
   }
 
+  /** P0: calendar_query_03036 — najdi schůzku + negace kalendářního modulu → safe clarification (unknown), ne note.query. */
+  silverPatchCaseByGroupIndex("calendar_query", 35, {
+    input: "Najdi schůzku s doktorem na zítřek, ne v kalendáři.",
+    expectedIntent: "unknown"
+  });
+
   silverPatchCaseByGroupIndex("note_query", 1, {
     input: "Najdi poznámku smlouva v kontextu kalendáře, nepleť to s kalendářem.",
     expectedIntent: "note.query"
