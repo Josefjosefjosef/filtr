@@ -1,6 +1,6 @@
 {
   "date": "2026-05-04",
-  "generatedAt": "2026-05-05T05:07:44.806470Z",
+  "generatedAt": "2026-05-05T10:12:37.452655Z",
   "items": [
     {
       "topic": "aktualne",
@@ -54,7 +54,7 @@
       "feedId": "fin_epenize",
       "url": "https://www.epenize.eu/trumpuv-seznam-italie-s-nicim-nepomohla-spanelsko-je-hrozne-britanie-zbabela-a-francie-blokuje-prelety/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.3861161418289244,
+      "displayScore": 0.2740051811007961,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -85,7 +85,7 @@
       "feedId": "zpr_kverulant",
       "url": "https://www.kverulant.org/article/ustavni-soud-odmitl-kostelecke-uzeniny-duvodem-byl-babisuv-stret-zajmu/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.3376802808960999,
+      "displayScore": 0.2443973383396203,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -116,7 +116,7 @@
       "feedId": "zpr_idnes_zpravy",
       "url": "https://www.idnes.cz/ekonomika/doprava/zeleznice-sprava-zeleznic-odmeny.A260504_105927_eko-doprava_cfr",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.4909661628750812,
+      "displayScore": 0.3561925126467249,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -258,24 +258,20 @@
       "publishedAt": "2026-05-04T22:00:00Z",
       "sources": [
         {
-          "name": "iDNES / Zprávy",
-          "url": "https://www.idnes.cz/ekonomika/domaci/otazky-a-odpovedi-nova-evidence-trzeb-co-komu-prinese-eet-2-0.A260504_161200_ekonomika_ven"
-        },
-        {
           "name": "iDNES / Ekonomika",
           "url": "https://www.idnes.cz/ekonomika/domaci/otazky-a-odpovedi-nova-evidence-trzeb-co-komu-prinese-eet-2-0.A260504_161200_ekonomika_ven"
         }
       ],
-      "primaryCategory": "zpravy",
+      "primaryCategory": "finance",
       "topicHash": "6a72be3ba535aaeb",
       "feedType": "rubric",
-      "sourceDisplayWeight": 1.1,
-      "sectionPrimary": "zpravy",
-      "sourceLabel": "iDNES / Zprávy",
-      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.05,
+      "sectionPrimary": "finance",
+      "sourceLabel": "iDNES / Ekonomika",
+      "feedId": "fin_idnes_ekonomika",
       "url": "https://www.idnes.cz/ekonomika/domaci/otazky-a-odpovedi-nova-evidence-trzeb-co-komu-prinese-eet-2-0.A260504_161200_ekonomika_ven",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.4909661632200148,
+      "displayScore": 0.3400019439767056,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -483,20 +479,16 @@
       "topic": "krimi",
       "section": "krimi",
       "contentType": "article",
-      "title": "Policie u Bílého domu postřelila člověka",
+      "title": "Policie v blízkosti Bílého domu postřelila člověka",
       "publishedAt": "2026-05-04T21:28:40Z",
       "sources": [
         {
           "name": "Seznam Zprávy / Byznys",
           "url": "https://www.seznamzpravy.cz/clanek/zahranicni-policie-v-blizkosti-bileho-domu-postrelila-cloveka-incident-neni-jasny-305486"
-        },
-        {
-          "name": "Novinky / Ekonomika",
-          "url": "https://www.novinky.cz/clanek/zahranicni-policie-u-bileho-domu-postrelila-cloveka-40576606"
         }
       ],
       "primaryCategory": "finance",
-      "topicHash": "13262c0b681f1e56",
+      "topicHash": "a72b00b045308ebd",
       "feedType": "rubric",
       "sourceDisplayWeight": 1.15,
       "sectionPrimary": "finance",
@@ -504,7 +496,7 @@
       "feedId": "fin_sz_byznys",
       "url": "https://www.seznamzpravy.cz/clanek/zahranicni-policie-v-blizkosti-bileho-domu-postrelila-cloveka-incident-neni-jasny-305486",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.49408870018503587,
+      "displayScore": 0.3621756733153572,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -807,7 +799,7 @@
       "feedId": "zpr_ct24_domaci",
       "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/bilance-bez-cizincu-se-uz-ceska-ekonomika-neobejde-373091",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.49418141594073317,
+      "displayScore": 0.36630087872693645,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -1202,6 +1194,41 @@
       }
     },
     {
+      "topic": "krimi",
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Motorkářům na Vysočině vběhli do cesty koně, harleyář po smyku skončil na poli",
+      "publishedAt": "2026-05-04T19:19:39Z",
+      "sources": [
+        {
+          "name": "Novinky / Domácí",
+          "url": "https://www.novinky.cz/clanek/krimi-motorkarum-na-vysocine-vbehli-do-cesty-kone-harleyar-po-smyku-skoncil-na-poli-40576584"
+        },
+        {
+          "name": "Novinky / Zahraniční",
+          "url": "https://www.novinky.cz/clanek/krimi-motorkarum-na-vysocine-vbehli-do-cesty-kone-harleyar-po-smyku-skoncil-na-poli-40576584"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "5273bcb5b6120484",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.15,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "Novinky / Domácí",
+      "feedId": "zpr_novinky_domaci",
+      "url": "https://www.novinky.cz/clanek/krimi-motorkarum-na-vysocine-vbehli-do-cesty-kone-harleyar-po-smyku-skoncil-na-poli-40576584",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.3254439763330639,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "krimi",
+        "guardFlags": []
+      }
+    },
+    {
       "topic": "aktualne",
       "section": "aktualne",
       "contentType": "article",
@@ -1478,7 +1505,7 @@
       "feedId": "zpr_tydenikpolicie",
       "url": "https://tydenikpolicie.cz/podvodnik-nakukal-muzi-ze-ma-300-tisic-korun-na-svem-investicnim-fondu-dotycny-prisel-o-30-tisic/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.26897174840510274,
+      "displayScore": 0.23413181850909287,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -1571,7 +1598,7 @@
       "feedId": "zpr_idnes_zpravy",
       "url": "https://www.idnes.cz/ekonomika/zahranicni/ministri-eu-usa-trump-cla-reseni-obchodni-dohody-eskalace.A260504_201853_eko-zahranicni_sahu",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.3926339887648275,
+      "displayScore": 0.3014252960967572,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -1633,7 +1660,7 @@
       "feedId": "zpr_idnes_zpravy",
       "url": "https://www.idnes.cz/zpravy/zahranicni/nehoda-cyklista-ochrnuti-zastava-srdce-laska-brit.A260504_200437_zahranicni_berr",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.38839792683285657,
+      "displayScore": 0.2989224409126667,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -2659,24 +2686,20 @@
       "publishedAt": "2026-05-04T16:45:32Z",
       "sources": [
         {
-          "name": "iDNES / Zprávy",
-          "url": "https://www.idnes.cz/ekonomika/domaci/akcie-firmy-csg-prudce-oslabuji-po-zprave-zpochybnujici-jeji-obchodni-model.A260504_173954_ekonomika_remy"
-        },
-        {
           "name": "iDNES / Ekonomika",
           "url": "https://www.idnes.cz/ekonomika/domaci/akcie-firmy-csg-prudce-oslabuji-po-zprave-zpochybnujici-jeji-obchodni-model.A260504_173954_ekonomika_remy"
         }
       ],
-      "primaryCategory": "zpravy",
+      "primaryCategory": "finance",
       "topicHash": "b361775cd86ee4d6",
       "feedType": "rubric",
-      "sourceDisplayWeight": 1.1,
-      "sectionPrimary": "zpravy",
-      "sourceLabel": "iDNES / Zprávy",
-      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.05,
+      "sectionPrimary": "finance",
+      "sourceLabel": "iDNES / Ekonomika",
+      "feedId": "fin_idnes_ekonomika",
       "url": "https://www.idnes.cz/ekonomika/domaci/akcie-firmy-csg-prudce-oslabuji-po-zprave-zpochybnujici-jeji-obchodni-model.A260504_173954_ekonomika_remy",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.5662695591410275,
+      "displayScore": 0.28074702401009305,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -2944,7 +2967,7 @@
       "feedId": "zdr_betterlife",
       "url": "https://www.betterlife.cz/drevo-a-krb-bez-televize-lucie-vondrackova-se-pochlubila-zrekonstruovanou-vilou-sklep-pripomina-atelier/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.20537913688354753,
+      "displayScore": 0.16198909464867245,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -3099,7 +3122,7 @@
       "feedId": "zdr_zdravezpravy",
       "url": "https://www.zdravezpravy.cz/2026/05/04/zdravotni-benefity-na-kardio-a-onko-prevenci-nebudou-danove-omezene/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.32775810217942963,
+      "displayScore": 0.25917481943944665,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -3347,7 +3370,7 @@
       "feedId": "fin_sz_byznys",
       "url": "https://www.seznamzpravy.cz/clanek/zahranicni-rusky-general-spachal-sebevrazdu-moskve-305470",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.3554391791540277,
+      "displayScore": 0.2816438254917861,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -3572,7 +3595,7 @@
       "feedId": "zpr_ct24_domaci",
       "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/akcie-firmy-csg-prudce-oslabily-po-zprave-zpochybnujici-jeji-obchodni-model-373090",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.36703288994936906,
+      "displayScore": 0.2914602771277128,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -3820,7 +3843,7 @@
       "feedId": "fin_sz_byznys",
       "url": "https://www.seznamzpravy.cz/clanek/zahranicni-o-krok-bliz-evrope-s-moskvou-za-zady-armenie-hosti-velky-summit-305445",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.3450940662006904,
+      "displayScore": 0.27510894878516906,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -3944,8 +3967,8 @@
       "feedId": "hry_novinky",
       "url": "https://www.novinky.cz/clanek/ekonomika-akcie-csg-prudce-padaji-40576576",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.30989798523603934,
-      "iuReleaseAt": "2026-05-05T05:07:46.806470Z",
+      "displayScore": 0.24787833066266293,
+      "iuReleaseAt": "2026-05-05T10:12:39.452655Z",
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -4182,24 +4205,20 @@
       "publishedAt": "2026-05-04T14:53:00Z",
       "sources": [
         {
-          "name": "iDNES / Zprávy",
-          "url": "https://www.idnes.cz/ekonomika/domaci/analytici-eet-je-krok-spravnym-smerem-odhadovany-prinos-prehnane-optimisticky.A260504_164009_ekonomika_remy"
-        },
-        {
           "name": "iDNES / Ekonomika",
           "url": "https://www.idnes.cz/ekonomika/domaci/analytici-eet-je-krok-spravnym-smerem-odhadovany-prinos-prehnane-optimisticky.A260504_164009_ekonomika_remy"
         }
       ],
-      "primaryCategory": "zpravy",
+      "primaryCategory": "finance",
       "topicHash": "e066cf9c7b6bd778",
       "feedType": "rubric",
-      "sourceDisplayWeight": 1.1,
-      "sectionPrimary": "zpravy",
-      "sourceLabel": "iDNES / Zprávy",
-      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.05,
+      "sectionPrimary": "finance",
+      "sourceLabel": "iDNES / Ekonomika",
+      "feedId": "fin_idnes_ekonomika",
       "url": "https://www.idnes.cz/ekonomika/domaci/analytici-eet-je-krok-spravnym-smerem-odhadovany-prinos-prehnane-optimisticky.A260504_164009_ekonomika_remy",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.6646791780686957,
+      "displayScore": 0.259092005225966,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -4331,7 +4350,7 @@
       "feedId": "fin_novinky_ekonomika",
       "url": "https://www.novinky.cz/clanek/kultura-filmy-serialy-recenze-kdybych-mela-nohy-tak-ti-nakopu-je-tragikomicka-vize-mentalniho-rozpadu-v-materstvi-40576467",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.31895025972368196,
+      "displayScore": 0.2560193055700211,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -4897,7 +4916,7 @@
       "feedId": "zpr_hlidacipes",
       "url": "https://hlidacipes.org/osobni-zkusenost-jak-se-vybiraji-radni-ct-odbornost-je-vedlejsi-rozhoduje-politika/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.2240101137251827,
+      "displayScore": 0.1856297696951162,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -5021,7 +5040,7 @@
       "feedId": "fin_penize",
       "url": "https://www.penize.cz/doprava/489243-maximalni-ceny-benzinu-a-nafty-na-utery-5-kvetna",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.23747201180737249,
+      "displayScore": 0.1919989933289487,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -5114,7 +5133,7 @@
       "feedId": "zpr_denik",
       "url": "https://www.denik.cz/doprava/ostuda-leo-express-spoupravy-talgo-odstaveni-a-oprava-kritika-cestujicich.html",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.26417979147529197,
+      "displayScore": 0.21378228696203314,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -5207,7 +5226,7 @@
       "feedId": "zpr_novinky_zahranicni",
       "url": "https://www.novinky.cz/clanek/internet-a-pc-ai-devet-sekund-a-bylo-po-vsem-ai-agent-vymazal-behem-chvilky-databazi-firmy-40576513",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.3194675569978079,
+      "displayScore": 0.2585735736642322,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -5401,7 +5420,7 @@
       "feedId": "zdr_zdravezpravy",
       "url": "https://www.zdravezpravy.cz/2026/05/04/kozni-lekari-vyvraceji-5-castych-mytu-o-zdravem-sluneni/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.28730545301123667,
+      "displayScore": 0.2332097671765833,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -5439,6 +5458,38 @@
         "reason": "general_news_bucket",
         "confidence": 0.85,
         "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "veda",
+      "section": "veda",
+      "contentType": "article",
+      "title": "Pro vznik požárů byly v Českém Švýcarsku ideální podmínky, vysvětluje bioklimatolog",
+      "publishedAt": "2026-05-04T13:28:05Z",
+      "sources": [
+        {
+          "name": "ČT24 / Domácí",
+          "url": "https://ct24.ceskatelevize.cz/clanek/veda/pro-vznik-pozaru-byly-v-ceskem-svycarsku-idealni-podminky-vysvetluje-bioklimatolog-373084"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "8b2c5009ba45e91d",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.2,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "ČT24 / Domácí",
+      "feedId": "zpr_ct24_domaci",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/pro-vznik-pozaru-byly-v-ceskem-svycarsku-idealni-podminky-vysvetluje-bioklimatolog-373084",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.26606309374910797,
+      "iuReleaseAt": "2026-05-05T10:12:51.452655Z",
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "veda",
+        "reason": "url_strong_vertical",
+        "confidence": 0.94,
+        "railSectionKey": "veda",
         "guardFlags": []
       }
     },
@@ -5494,7 +5545,7 @@
       "feedId": "zpr_denik",
       "url": "https://www.denik.cz/zdravotnictvi/zdravi-cesko-prevence-rakoviny-kuze-stan-proti-melanomu-kde-praha-brno-ostrava.html",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.25878254513018434,
+      "displayScore": 0.21023405138346285,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -5773,7 +5824,7 @@
       "feedId": "zpr_ceskajustice",
       "url": "https://www.ceska-justice.cz/2026/05/vlada-hodila-toulave-kocky-na-krk-obcim-co-vsechno-budou-platit/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.20009788900636788,
+      "displayScore": 0.16318882825576467,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -5897,7 +5948,7 @@
       "feedId": "zpr_aktualne",
       "url": "https://zpravy.aktualne.cz/ekonomika/auto/elektromobilita/vydelavat-na-elektromobilu-jako-na-spalovaku-to-nejde-rika-vw-od-eu-ceka-vysoke-pokuty/r~aaa297ba26f11cc1c0a9c0c4c500831e/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.25099574376148437,
+      "displayScore": 0.21537321421808378,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -6029,7 +6080,7 @@
       "feedId": "fin_e15",
       "url": "https://www.e15.cz/domaci/statni-zalobce-obvinil-dalsi-tri-lidi-v-kauze-darovanych-bitcoinu-je-mezi-nimi-i-exministr-1432569",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.2622811497517861,
+      "displayScore": 0.2145720200459484,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -6091,7 +6142,7 @@
       "feedId": "fin_ekonomickydenik",
       "url": "https://ekonomickydenik.cz/elektrina-plyn-zdrazuji-pre/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.22277667138241475,
+      "displayScore": 0.18227757351374077,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -6432,7 +6483,7 @@
       "feedId": "fin_e15",
       "url": "https://www.e15.cz/domaci/soud-nepravomocne-potrestal-klicovou-spolupracovnici-babise-premier-se-soudu-vyhnul-1432566",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.2563056699749388,
+      "displayScore": 0.2105560696318496,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -6844,7 +6895,7 @@
       "feedId": "spt_sportcz",
       "url": "https://www.sport.cz/clanek/podcasty-zaostreno-zaostreno-na-repre-byl-jak-smyslu-zbaveny-odsoudil-antos-beka-sparty-jenz-zranil-oporu-ceskeho-narodaku-5448494",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.28983013198195984,
+      "displayScore": 0.23880826239404165,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -6875,7 +6926,7 @@
       "feedId": "zpr_ct24_domaci",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/kriminaliste-v-souvislosti-s-bitcoinovou-kauzou-stihaji-dalsi-tri-lidi-373080",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.30232914338824096,
+      "displayScore": 0.24912177468877147,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -8046,7 +8097,7 @@
       "feedId": "fin_hn",
       "url": "https://domaci.hn.cz/c1-67873250-soud-dal-nagyove-v-kauze-capi-hnizdo-podminku-a-trest-pul-milionu-korun",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.23990836936808138,
+      "displayScore": 0.19936222239103865,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -8263,7 +8314,7 @@
       "feedId": "fin_ekonomickydenik",
       "url": "https://ekonomickydenik.cz/pobalti-a-sever-varuji-pred-utokem-kremlu-i-kdyz-putin-slabne/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.2013436626867381,
+      "displayScore": 0.16767352717578798,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -8511,7 +8562,7 @@
       "feedId": "fin_e15",
       "url": "https://www.e15.cz/domaci/dva-dulezite-leky-budou-v-cesku-mesice-tezko-k-sehnani-ustav-zaroven-varuje-pred-padelky-1432557",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.23582234261151755,
+      "displayScore": 0.19653247255824574,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -8697,7 +8748,7 @@
       "feedId": "zpr_denik",
       "url": "https://www.denik.cz/krimi/capi-hnizdo-nagyova-babis-20260504.html",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.22185132956935086,
+      "displayScore": 0.1851893604441698,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -8976,7 +9027,7 @@
       "feedId": "fin_novinky_ekonomika",
       "url": "https://www.novinky.cz/clanek/kultura-hudba-jason-newsted-byvaly-clen-metalliky-porazil-rakovinu-40576450",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.2549756340625634,
+      "displayScore": 0.21310085630630196,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -9457,7 +9508,7 @@
       "feedId": "zpr_denik",
       "url": "https://www.denik.cz/pocasi/predpoved-pocasi-cesko-kraje-mapa-vystraha-bourky-dest-ochlazeni.html",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.21720175503485314,
+      "displayScore": 0.18193827816972127,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -9643,7 +9694,7 @@
       "feedId": "zdr_betterlife",
       "url": "https://www.betterlife.cz/zaludne-otazky-a-eticke-testy-pracovni-pohovory-vyzaduji-pripravu-otazky-na-rodinu-zdravi-i-orientaci-jsou-tabu/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.14776244908637515,
+      "displayScore": 0.12388763440147738,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -9705,7 +9756,7 @@
       "feedId": "zpr_denik",
       "url": "https://havlickobrodsky.denik.cz/krimi/zavolam-ti-v-nedeli-mami-posledni-slova-zavrazdene-katky-z-vysoke-stale-boli-202.html",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.21555895555813748,
+      "displayScore": 0.18078418816769987,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -10120,7 +10171,7 @@
       "feedId": "fin_e15",
       "url": "https://www.e15.cz/finexpert/danove-priznani/elektronicke-danove-priznani-je-nutne-odeslat-do-dnesni-pulnoci-1432545",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.2240794656919785,
+      "displayScore": 0.18830831696336536,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -10244,7 +10295,7 @@
       "feedId": "zpr_novinky_domaci",
       "url": "https://www.novinky.cz/clanek/domaci-pavel-privital-na-hrade-finskeho-prezidenta-stubba-40576424",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.25574664247692896,
+      "displayScore": 0.21967425698825968,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -10372,7 +10423,7 @@
       "feedId": "fin_ekonomickydenik",
       "url": "https://ekonomickydenik.cz/dron-utok-moskva-zasah-par-kilometru-od-kremlu/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.1873978520546446,
+      "displayScore": 0.15788862405530255,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -10814,7 +10865,7 @@
       "feedId": "kul_vlasta",
       "url": "https://www.vlasta.cz/inspirace/dnes-v-ulici-novy-dil-pondeli-dej-herci-lumir-vanda-ludek-kristyna-blanka/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.15261108042211288,
+      "displayScore": 0.12880526937920403,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -10938,7 +10989,7 @@
       "feedId": "fin_e15",
       "url": "https://www.e15.cz/nazory-a-analyzy/chcete-po-roce-2028-stavet-v-praze-bez-metropolitniho-planu-to-pujde-tezko-1432548",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.21666217405545107,
+      "displayScore": 0.18304231284143224,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -11527,7 +11578,7 @@
       "feedId": "fin_epenize",
       "url": "https://www.epenize.eu/komentar-tak-jsem-asi-menecenny-macinka-mi-jde-na-nervy/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.1688351184343538,
+      "displayScore": 0.15818005029496873,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -11589,7 +11640,7 @@
       "feedId": "zdr_plnezdravi",
       "url": "https://www.plnezdravi.cz/past-pri-lecbe-beder-proc-vas-zada-boli-a-jak-to-zmenit/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.17932423784903959,
+      "displayScore": 0.1680109368089758,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -12089,7 +12140,7 @@
       "feedId": "fin_hn",
       "url": "https://archiv.hn.cz/c1-67873090-elektronicka-evidence-trzeb-zapadni-standard-ktery-nikdo-nemel-rusit",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.20647258089488507,
+      "displayScore": 0.1757161829209365,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -12279,7 +12330,7 @@
       "feedId": "zpr_seznam_domaci",
       "url": "https://www.seznamzpravy.cz/clanek/ekonomika-firmy-drony-pro-spanelskou-policii-a-dalsi-zakazky-primoco-hlasi-silny-zacatek-roku-305337",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.2343520587966028,
+      "displayScore": 0.19983025360381343,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -12372,7 +12423,7 @@
       "feedId": "zpr_seznam_domaci",
       "url": "https://www.seznamzpravy.cz/clanek/zdravi-plus-alergii-reste-spravnymi-leky-bezne-kapky-na-rymu-vam-znici-sliznice-304686",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.23435205878112594,
+      "displayScore": 0.19983025360863615,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -12434,7 +12485,7 @@
       "feedId": "fin_sz_byznys",
       "url": "https://www.seznamzpravy.cz/clanek/zahranicni-pripravte-se-na-valku-prijel-britum-poradit-finsky-prezident-co-poradi-nam-304895",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.23172857715202858,
+      "displayScore": 0.19791960983768456,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -12589,7 +12640,7 @@
       "feedId": "fin_sz_byznys",
       "url": "https://www.seznamzpravy.cz/clanek/zahranicni-zkouska-rakvi-detektory-smrti-osamelost-meni-byznys-s-umiranim-304746",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.22916318299977206,
+      "displayScore": 0.19604515663479866,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -12744,7 +12795,7 @@
       "feedId": "fin_sz_byznys",
       "url": "https://www.seznamzpravy.cz/clanek/kultura-rusko-nakonec-svuj-pavilon-na-bienale-pro-verejnost-neotevre-pisi-media-305353",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.22725323426144295,
+      "displayScore": 0.1946456735137629,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -12775,7 +12826,7 @@
       "feedId": "zpr_aktualne",
       "url": "https://zpravy.aktualne.cz/pocasi/po-horkem-a-suchem-pocasi-prijde-razantni-zmena-predpoved-hlasi-kdy-naprsi-nejvic/r~aaa29798ba5c721efd36118925ffe029/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.18744112484373762,
+      "displayScore": 0.1605815970073636,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -12930,7 +12981,7 @@
       "feedId": "zpr_idnes_zpravy",
       "url": "https://www.idnes.cz/zpravy/domaci/pocasi-cesko-predpoved-oblacnost-bourky.A260504_062948_domaci_pluh",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.2166808208760407,
+      "displayScore": 0.1856750421770795,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -13566,8 +13617,8 @@
       "feedId": "zpr_aktualne",
       "url": "https://magazin.aktualne.cz/kultura/divadlo/soumrak-stoleti-i-invence-kdyz-jit-na-inscenaci-petrolejove-lampy-tak-kvuli-hercum/r~aaa299f550d027363363bfe1811cf597/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.18128109263271955,
-      "iuReleaseAt": "2026-05-05T05:07:57.806470Z",
+      "displayScore": 0.15603909847508993,
+      "iuReleaseAt": "2026-05-05T10:12:50.452655Z",
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "kultura",
@@ -13815,7 +13866,7 @@
       "feedId": "fin_e15",
       "url": "https://www.e15.cz/domaci/politika/dalnice-i-prehrady-budou-mimo-rozpoctovy-schodek-mekci-pravidla-ma-i-nemecko-haji-zmeny-schillerova-1432513",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.1849404131790151,
+      "displayScore": 0.1657503426832164,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
