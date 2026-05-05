@@ -296,8 +296,9 @@ function negForbiddenPerson(f) {
   return m[1];
 }
 
-function detectCollectionConfusion(category, engIntent) {
+function detectCollectionConfusion(category, engIntent, expectedIntent) {
   const e = String(engIntent || "");
+  const exp = String(expectedIntent || "");
   if (category === "calendar_write") {
     if (e === "tasks.create") return "calendar_vs_task_confusion";
     if (e === "notes.create") return "wrong_collection";
@@ -312,7 +313,7 @@ function detectCollectionConfusion(category, engIntent) {
   }
   if (category === "calendar_query") {
     if (e === "tasks.read" || e === "tasks.create") return "calendar_vs_task_confusion";
-    if (e === "notes.read" || e === "notes.create") return "wrong_collection";
+    if ((e === "notes.read" || e === "notes.create") && exp !== "note.query") return "wrong_collection";
   }
   if (category === "task_query") {
     if (e === "calendar.read" || e === "calendar.create") return "calendar_vs_task_confusion";
@@ -364,7 +365,8 @@ function noteWriteSemantic(turn, raw, foldedIn) {
   return { ok: true, cat: "" };
 }
 
-function calendarQuerySemantic(input, folded, turn, raw) {
+function calendarQuerySemantic(input, folded, turn, raw, expectedIntent) {
+  const expI = String(expectedIntent || "");
   if (turn.processingState === "READY_TO_SAVE" || turn.normalizedIntent === "calendar.create") {
     return { ok: false, cat: "query_created_write" };
   }
@@ -380,7 +382,11 @@ function calendarQuerySemantic(input, folded, turn, raw) {
       (forb.indexOf("petr") >= 0 && /\btomas/.test(folded) && /\bpetr\b/.test(foldCs(raw)));
     if (bad) return { ok: false, cat: "wrong_person_match" };
   }
-  if (/nic\s+jsem\s+k\s+tomu\s+nenasel/i.test(foldCs(raw)) && /\bzubar|petr|pravnik|advokat|korunn|prahou\s+1\b/.test(folded)) {
+  if (
+    expI !== "note.query" &&
+    /nic\s+jsem\s+k\s+tomu\s+nenasel/i.test(foldCs(raw)) &&
+    /\bzubar|petr|pravnik|advokat|korunn|prahou\s+1\b/.test(folded)
+  ) {
     return { ok: false, cat: "false_negative" };
   }
   return { ok: true, cat: "" };
@@ -478,7 +484,7 @@ function evaluateOne(c, turn) {
     if (ov) expectedIntent = ov;
   }
   const auditIntent = engineToAuditIntent(eng, c.group);
-  const conf = detectCollectionConfusion(c.group, eng);
+  const conf = detectCollectionConfusion(c.group, eng, c.expectedIntent);
   if (conf) {
     return { pass: false, cat: conf, auditIntent, raw };
   }
@@ -506,7 +512,7 @@ function evaluateOne(c, turn) {
     const sem = noteWriteSemantic(turn, raw, folded);
     if (!sem.ok) return { pass: false, cat: sem.cat, auditIntent, raw };
   } else if (c.group === "calendar_query") {
-    const sem = calendarQuerySemantic(c.input, folded, turn, raw);
+    const sem = calendarQuerySemantic(c.input, folded, turn, raw, c.expectedIntent);
     if (!sem.ok) return { pass: false, cat: sem.cat, auditIntent, raw };
   } else if (c.group === "task_query") {
     const sem = taskQuerySemantic(c.input, folded, turn, raw);
@@ -756,7 +762,9 @@ function buildCases() {
       `Co máme v kalendáři ve čtvrtek, ${neg}?`,
       `Hledám poznámku smlouva v kontextu kalendáře pro ${p}, ${neg}.`
     ];
-    push("calendar_query", diacVariant(i, lines[i % lines.length]), "calendar.query", {}, {});
+    const lineIx = i % lines.length;
+    const expQ = lineIx === 7 ? "note.query" : "calendar.query";
+    push("calendar_query", diacVariant(i, lines[lineIx]), expQ, {}, {});
   }
 
   for (let i = 0; i < 3000; i++) {
