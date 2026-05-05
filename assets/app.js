@@ -34857,6 +34857,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     if (/\bne\s+do\s+ukol/.test(foldUse)) {
       if (/\bdo\s+kalendar/.test(foldUse) && /\b(dej|uloz|zapis|nahod|vloz|pridej|naplanuj|vytvor)\b/.test(foldUse)) return false;
+      if (iuSilverExplicitCalendarReadScopeFolded(foldUse)) return false;
+      if (iuSilverCalendarScopedDetailReadMatchFolded(foldUse)) return false;
       return true;
     }
     if (/nechci\s+to\s+do\s+pozn/.test(foldUse)) return true;
@@ -35264,6 +35266,77 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bjen\s+cti\b/i.test(x);
     if (!noteNeg) return false;
     return true;
+  }
+
+  /**
+   * P0: kalendářní scope pro adresní/detail read (foldCs) — bez konfliktního „ne v kalendáři“ / „ne do kalendáře“.
+   */
+  function iuSilverCalendarReadScopeForDetailReadFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (iuSilverExplicitCalendarReadScopeFolded(x)) return true;
+    if (/\bu\s+zaznamu\s+v\s+kalend/.test(x)) return true;
+    if (/\bu\s+udalost/i.test(x) && /\b(jakou|kde|adres|detaily|udaje|kalend|zaznam)\b/.test(x)) return true;
+    if (/\bu\s+schuz/i.test(x) && /\b(jakou|kde|adres|detaily|udaje|kalend|zaznam)\b/.test(x)) return true;
+    if (/\bz\s+kalend/.test(x)) return true;
+    if (/\bv\s+kalend/.test(x) && !/\bne\s+v\s+kalend/.test(x) && !/\bne\s+do\s+kalend/.test(x)) return true;
+    return false;
+  }
+
+  /** P0: dotaz na adresu / kde / detaily události ve větě s kalendářním kontextem (foldCs). */
+  function iuSilverCalendarDetailReadQuestionFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (/\bjakou\s+adresu\b/.test(x)) return true;
+    if (/\bjaka\s+je\s+adres/.test(x)) return true;
+    if (/\bjake\s+jsou\s+detaily\b/.test(x) || /\bdetaily\s+(schuz|udalost)/.test(x)) return true;
+    if (/\bdetail(y|u)\s+zaznamu\b/.test(x)) return true;
+    if (/\budaje\b/.test(x) && /(schuz|udalost|zaznam|kalend|pravn|zubar|advokat|doktor)/.test(x)) return true;
+    if (/\bmisto\b/.test(x) && /(schuz|udalost|zaznam|pravn|zubar|advokat|kalend)/.test(x)) return true;
+    if (/\bnajdi\s+adresu\b/.test(x)) return true;
+    if (/\bkde\b/.test(x) && (/\bmam\s+zaznam|\bzaznam\s+u|\bschuz\w*\s+s|\budalost/.test(x) || /\bkalend/.test(x))) return true;
+    return false;
+  }
+
+  /** P0: adresní/detail calendar read — jen při kalendářním scope nebo kalendářní entitě (ne holá adresa). */
+  function iuSilverCalendarScopedDetailReadMatchFolded(f) {
+    if (!iuSilverCalendarDetailReadQuestionFolded(f)) return false;
+    if (iuSilverExplicitNotesPositiveReadScopeFolded(f) && !iuSilverCalendarReadScopeForDetailReadFolded(f)) return false;
+    if (iuSilverCalendarReadScopeForDetailReadFolded(f)) return true;
+    if (iuSilverCalendarEntityContextFolded(f)) return true;
+    return false;
+  }
+
+  /** P0: z věty „jakou adresu má záznam u právníka …“ vytáhni krátký dotaz pro find_by_title (+ volitelné datum zítra/dnes). */
+  function iuSilverExtractCalendarDetailTitleQueryForRead(rRaw, fFold, nowOpt) {
+    const fAd = foldCs(String(rRaw || ""));
+    let qRaw = "";
+    const mZu = fAd.match(/\bzaznam\s+u\s+([a-z]+)/i);
+    if (mZu && mZu[1]) qRaw = String(mZu[1] || "").trim();
+    if (!qRaw) {
+      const mSch = fAd.match(/\bschuz\w*\s+s\s+([a-z]+)/i);
+      if (mSch && mSch[1]) qRaw = String(mSch[1] || "").trim();
+    }
+    if (!qRaw) {
+      const mP = fAd.match(/\b(zubar|pravnik|advokat|doktor|petra|petr)\b/i);
+      if (mP && mP[1]) qRaw = String(mP[1] || "").trim();
+    }
+    if (!qRaw || qRaw.length < 2) return null;
+    let qUse = qRaw;
+    const qFoldZ = foldCs(qRaw);
+    if (/\bzubar/.test(qFoldZ)) qUse = "Zubař";
+    else if (/\bpravnik|pravnika|pravnici/.test(qFoldZ)) qUse = "Právník";
+    else if (/\badvokat/.test(qFoldZ)) qUse = "Advokát";
+    else if (/\bdoktor/.test(qFoldZ)) qUse = "Doktor";
+    else if (/\bpetra?\b/.test(qFoldZ)) qUse = "Petra";
+    else if (/\bpetr\b/.test(qFoldZ)) qUse = "Petr";
+    let dateIso = null;
+    const n0 = nowOpt || new Date();
+    const todayS = toDateOnly(n0);
+    const fX = String(fFold || "");
+    if (/\bzittra\b|\bzitrek\b/.test(fX)) dateIso = addDays(todayS, 1);
+    else if (/\bdnes(?:ka|ek)?\b/.test(fX)) dateIso = todayS;
+    return { query: qUse, dateIso: dateIso };
   }
 
   /**
@@ -36444,9 +36517,31 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       iuSilverLooksLikeSchedulingFragment(f, r)
     )
       return null;
-    if (iuSilverExplicitNotesReadScopeFolded(f) || (iuSilverHasExplicitNotesTarget(f) && iuSilverCalendarQuerySignalFolded(f))) return null;
+    if (
+      iuSilverExplicitNotesReadScopeFolded(f) ||
+      (iuSilverHasExplicitNotesTarget(f) && iuSilverCalendarQuerySignalFolded(f) && !iuSilverCalendarScopedDetailReadMatchFolded(f))
+    )
+      return null;
     if (iuSilverExplicitTaskReadScopeFolded(f)) return null;
     if (!iuSilverCalendarReadWinsOverTaskReadFolded(f) && iuSilverTaskQueryHardSignalFolded(f)) return null;
+
+    if (
+      iuSilverCalendarScopedDetailReadMatchFolded(f) &&
+      !(iuSilverCalendarQueryWithNoteNegationSignalFolded(f) && /\bjakou\s+adresu\b/.test(f))
+    ) {
+      const pick = iuSilverExtractCalendarDetailTitleQueryForRead(r, f, now);
+      if (pick && String(pick.query || "").trim().length >= 2) {
+        const out = {
+          intent: "find_by_title",
+          query: pick.query,
+          normalizedQuery: pick.query,
+          diacriticInsensitive: true,
+          queryFolded: foldCs(pick.query)
+        };
+        if (pick.dateIso) out.dateIso = pick.dateIso;
+        return out;
+      }
+    }
 
     if (
       iuSilverCalendarQueryWithNoteNegationSignalFolded(f) &&
@@ -37779,6 +37874,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverNoteQueryWithCalendarContextSignalFolded(f) {
     const x = String(f || "");
     if (!x) return false;
+    if (iuSilverCalendarScopedDetailReadMatchFolded(x)) return false;
     const noteSig =
       /\bhledam\s+poznam/i.test(x) ||
       /\bnajdi\s+poznam/i.test(x) ||
