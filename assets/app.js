@@ -35295,7 +35295,47 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bmisto\b/.test(x) && /(schuz|udalost|zaznam|pravn|zubar|advokat|kalend)/.test(x)) return true;
     if (/\bnajdi\s+adresu\b/.test(x)) return true;
     if (/\bkde\b/.test(x) && (/\bmam\s+zaznam|\bzaznam\s+u|\bschuz\w*\s+s|\budalost/.test(x) || /\bkalend/.test(x))) return true;
+    if (
+      /\badresu\b/.test(x) &&
+      /\bkalend/.test(x) &&
+      /\b(jen\s+zjist|zjist(i|it|te)?|najdi|vyhledej|hledej|uka[zž]|ukaz|zobraz|zobrazit|vypis|vypi[sš]|rekni)\b/.test(x)
+    )
+      return true;
     return false;
+  }
+
+  /**
+   * P0: před hledáním entity v adresním read odstranit negativní klauzule (nevracej právníka, bez zubaře, ne zubaře, …),
+   * aby fallback regex nenašel „pravnik“ z negace místo „zubar“ z „pro zubaře“.
+   */
+  function iuSilverScrubCalendarNegativeEntityClausesForEntityScanFolded(x) {
+    let s = String(x || "");
+    if (!s) return "";
+    s = s.replace(/\b(?:nevracej|neukazuj|neukaz|nezobrazuj)\s+[a-z]{3,}\b/gi, " ");
+    s = s.replace(/\bnesmis\s+(?:vrait\w*|vratit)\s+[a-z]{3,}\b/gi, " ");
+    s = s.replace(/\bbez\s+[a-z]{3,}\b/gi, " ");
+    s = s.replace(/\bne\s+pro\s+[a-z]{3,}\b/gi, " ");
+    s = s.replace(/\bne\s+(zubar\w*|pravnik\w*|advokat\w*|doktor\w*|lekaf\w*|lekari\w*|servis\w*|skol\w*|urad\w*)\b/gi, " ");
+    return s.replace(/\s+/g, " ").trim();
+  }
+
+  /** P0: „pro zubaře / pro právníka / …“ → krátký title dotaz (foldCs vstup). */
+  function iuSilverExtractCalendarProEntityTitleFromProClauseFolded(fX) {
+    const x = String(fX || "");
+    if (!x) return null;
+    const m = /\bpro\s+([a-z]{3,})\b/i.exec(x);
+    if (!m || !m[1]) return null;
+    const tok = foldCs(String(m[1] || ""));
+    if (/^zubar/.test(tok)) return { query: "Zubař" };
+    if (/^pravnik/.test(tok)) return { query: "Právník" };
+    if (/^advokat/.test(tok)) return { query: "Advokát" };
+    if (/^doktor/.test(tok)) return { query: "Doktor" };
+    if (/^lekaf/.test(tok) || /^lekari/.test(tok)) return { query: "Doktor" };
+    if (/^servis/.test(tok)) return { query: "Servis" };
+    if (/^skol/.test(tok)) return { query: "Škola" };
+    if (/^urad/.test(tok)) return { query: "Úřad" };
+    if (/^osob/.test(tok)) return { query: "Osoba" };
+    return null;
   }
 
   /** P0: adresní/detail calendar read — jen při kalendářním scope nebo kalendářní entitě (ne holá adresa). */
@@ -35307,9 +35347,22 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return false;
   }
 
-  /** P0: z věty „jakou adresu má záznam u právníka …“ vytáhni krátký dotaz pro find_by_title (+ volitelné datum zítra/dnes). */
+  /** P0: z věty „jakou adresu má záznam u právníka …“ / „… adresu … pro zubaře a nevracej právníka“ vytáhni krátký dotaz pro find_by_title (+ volitelné datum zítra/dnes). */
   function iuSilverExtractCalendarDetailTitleQueryForRead(rRaw, fFold, nowOpt) {
+    const fX = String(fFold || "");
     const fAd = foldCs(String(rRaw || ""));
+    const n0 = nowOpt || new Date();
+    const todayS = toDateOnly(n0);
+    let dateIso = null;
+    if (/\bzittra\b|\bzitrek\b/.test(fX)) dateIso = addDays(todayS, 1);
+    else if (/\bdnes(?:ka|ek)?\b/.test(fX)) dateIso = todayS;
+
+    const proPick = iuSilverExtractCalendarProEntityTitleFromProClauseFolded(fX);
+    if (proPick && String(proPick.query || "").trim().length >= 2) {
+      return { query: proPick.query, dateIso: dateIso };
+    }
+
+    const scrubbed = iuSilverScrubCalendarNegativeEntityClausesForEntityScanFolded(fX);
     let qRaw = "";
     const mZu = fAd.match(/\bzaznam\s+u\s+([a-z]+)/i);
     if (mZu && mZu[1]) qRaw = String(mZu[1] || "").trim();
@@ -35318,7 +35371,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (mSch && mSch[1]) qRaw = String(mSch[1] || "").trim();
     }
     if (!qRaw) {
-      const mP = fAd.match(/\b(zubar|pravnik|advokat|doktor|petra|petr)\b/i);
+      const mP = scrubbed.match(/\b(zubar\w*|pravnik\w*|advokat\w*|doktor\w*|lekaf\w*|lekari\w*|servis\w*|skol\w*|urad\w*|petra\w*|petr)\b/i);
       if (mP && mP[1]) qRaw = String(mP[1] || "").trim();
     }
     if (!qRaw || qRaw.length < 2) return null;
@@ -35328,14 +35381,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     else if (/\bpravnik|pravnika|pravnici/.test(qFoldZ)) qUse = "Právník";
     else if (/\badvokat/.test(qFoldZ)) qUse = "Advokát";
     else if (/\bdoktor/.test(qFoldZ)) qUse = "Doktor";
+    else if (/^lekaf|^lekari/.test(qFoldZ)) qUse = "Doktor";
     else if (/\bpetra?\b/.test(qFoldZ)) qUse = "Petra";
     else if (/\bpetr\b/.test(qFoldZ)) qUse = "Petr";
-    let dateIso = null;
-    const n0 = nowOpt || new Date();
-    const todayS = toDateOnly(n0);
-    const fX = String(fFold || "");
-    if (/\bzittra\b|\bzitrek\b/.test(fX)) dateIso = addDays(todayS, 1);
-    else if (/\bdnes(?:ka|ek)?\b/.test(fX)) dateIso = todayS;
+    else if (/^servis/.test(qFoldZ)) qUse = "Servis";
+    else if (/^skol/.test(qFoldZ)) qUse = "Škola";
+    else if (/^urad/.test(qFoldZ)) qUse = "Úřad";
     return { query: qUse, dateIso: dateIso };
   }
 
@@ -36548,23 +36599,17 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bjakou\s+adresu\b/.test(f) &&
       /(?:zubar|pravn|advokat|doktor|petra|petr)/.test(f)
     ) {
-      const fAd = foldCs(String(r || ""));
-      let qAd = "";
-      const mZu = fAd.match(/\bzaznam\s+u\s+([a-z]+)/i);
-      if (mZu && mZu[1]) qAd = String(mZu[1] || "").trim();
-      if (!qAd) {
-        const mP = fAd.match(/\b(zubar|pravnik|advokat|doktor|petra|petr)\b/i);
-        if (mP && mP[1]) qAd = String(mP[1] || "").trim();
-      }
-      if (qAd.length >= 2) {
-        const qFoldAd = foldCs(qAd);
-        return {
+      const pickAd = iuSilverExtractCalendarDetailTitleQueryForRead(r, f, now);
+      if (pickAd && String(pickAd.query || "").trim().length >= 2) {
+        const outAd = {
           intent: "find_by_title",
-          query: qAd,
-          normalizedQuery: qAd,
+          query: pickAd.query,
+          normalizedQuery: pickAd.query,
           diacriticInsensitive: true,
-          queryFolded: qFoldAd
+          queryFolded: foldCs(pickAd.query)
         };
+        if (pickAd.dateIso) outAd.dateIso = pickAd.dateIso;
+        return outAd;
       }
     }
 
@@ -36573,6 +36618,18 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\badresu\b/.test(f) &&
       /\bzjist/i.test(f)
     ) {
+      const pickZj = iuSilverExtractCalendarDetailTitleQueryForRead(r, f, now);
+      if (pickZj && String(pickZj.query || "").trim().length >= 2) {
+        const outZj = {
+          intent: "find_by_title",
+          query: pickZj.query,
+          normalizedQuery: pickZj.query,
+          diacriticInsensitive: true,
+          queryFolded: foldCs(pickZj.query)
+        };
+        if (pickZj.dateIso) outZj.dateIso = pickZj.dateIso;
+        return outZj;
+      }
       const mLine = String(r || "").match(/\badresu\s+(.+?)(?:\s+a\s+jen\s+|\s*,\s*jen\s+|$)/i);
       let qZ = mLine && mLine[1] ? String(mLine[1] || "").trim() : "";
       qZ = qZ.replace(/\s*[?.!…]+$/u, "").trim();
