@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-05T15:15:02.783300Z",
+  "ingestedAt": "2026-05-05T15:54:33.699365Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Trump ničí dohodu z golfového resortu. Vyšší cla na auta poškodí i české firmy",
+      "url": "https://ekonomickydenik.cz/trump-nici-dohodu-vyssi-cla-na-auta-poskodi-i-ceske-firmy/",
+      "dt": "2026-05-05T15:26:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "auta",
+        "cla",
+        "dohodu",
+        "firmy",
+        "golfového",
+        "ničí",
+        "poškodí",
+        "resortu",
+        "trump",
+        "vyšší",
+        "české"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -754,34 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Konec iluzí o Rusku. Pobaltí a Sever varují před útokem Kremlu, i když Putin slábne",
-      "url": "https://ekonomickydenik.cz/pobalti-a-sever-varuji-pred-utokem-kremlu-i-kdyz-putin-slabne/",
-      "dt": "2026-05-04T10:06:47Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "iluzí",
-        "když",
-        "konec",
-        "kremlu",
-        "pobaltí",
-        "putin",
-        "rusku",
-        "sever",
-        "slábne",
-        "varují",
-        "útokem"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74908,
+      "bytes": 74689,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,11 +829,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T14:51:07Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T15:26:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 25,
-          "zpravy": 2,
+          "finance": 26,
+          "zpravy": 1,
           "sport": 1,
           "zdravi": 2
         },
@@ -847,6 +847,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump ničí dohodu z golfového resortu. Vyšší cla na auta poškodí i české firmy",
+            "publishedAt": "2026-05-05T15:26:00Z"
+          },
           {
             "title": "Černochová vrací úder: Babišovy nedělní „podcasty“ už bude řešit advokát",
             "publishedAt": "2026-05-05T14:51:07Z"
@@ -874,10 +878,6 @@
           {
             "title": "Evropa „vyfoukla“ Arménii Putinovi pod nosem. Přidala se i Británie a Kanada",
             "publishedAt": "2026-05-05T11:26:48Z"
-          },
-          {
-            "title": "Nacistická rétorika. TOP 09 vyzvala Macinku k rezignaci za méněcenné",
-            "publishedAt": "2026-05-05T10:40:56Z"
           }
         ]
       }

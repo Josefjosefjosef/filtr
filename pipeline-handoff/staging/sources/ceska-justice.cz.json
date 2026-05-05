@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-05-05T15:15:02.783300Z",
+  "ingestedAt": "2026-05-05T15:54:33.699365Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zoufalí sousedé: SVJ přišlo o 4 miliony. Hackeři útočili přes WhatsApp",
+      "url": "https://www.ceska-justice.cz/2026/05/zoufali-sousede-svj-prislo-o-4-miliony-hackeri-utocili-pres-whatsapp/",
+      "dt": "2026-05-05T15:27:44Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "hackeři",
+        "miliony",
+        "přišlo",
+        "sousedé",
+        "svj",
+        "whatsapp",
+        "zoufalí",
+        "útočili"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -234,34 +259,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kolovrat jako náhrada hákového kříže? Policie podle soudu mohla vzít muži DNA",
-      "url": "https://www.ceska-justice.cz/2026/05/muzi-s-kolovratem-vzala-policie-dna-v-hruznem-kontextu-treti-rise-je-to-spravne-rika-soud/",
-      "dt": "2026-05-02T04:30:00Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "dna",
-        "hákového",
-        "jako",
-        "kolovrat",
-        "kříže",
-        "muži",
-        "náhrada",
-        "podle",
-        "policie",
-        "soudu",
-        "vzít"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -272,7 +269,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 85656,
+      "bytes": 82842,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -309,7 +306,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-05T14:48:32Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T15:27:44Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -324,6 +321,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zoufalí sousedé: SVJ přišlo o 4 miliony. Hackeři útočili přes WhatsApp",
+            "publishedAt": "2026-05-05T15:27:44Z"
+          },
           {
             "title": "Klášter, miliony a ruské vazby. Matce představené hrozí za zpronevěru 10 let",
             "publishedAt": "2026-05-05T14:48:32Z"
@@ -351,10 +352,6 @@
           {
             "title": "Tři roky podmínky a půlmilionový trest. Nagyová stojí v kauze Čapí hnízdo potřetí před soudem",
             "publishedAt": "2026-05-04T09:39:37Z"
-          },
-          {
-            "title": "Advokát podal žalobu pozdě. Klient přišel o 150 tisíc",
-            "publishedAt": "2026-05-03T04:30:00Z"
           }
         ]
       }
