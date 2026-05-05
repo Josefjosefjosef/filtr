@@ -34482,7 +34482,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (iuSilverNotesScopeBlocksCalendarWriteRouteFolded(x)) return false;
     if (iuSilverNegativeCreateGuardFolded(x) && !iuSilverNegationTargetsTasksOnlyFolded(x) && !iuSilverCalendarCorrectionWriteSafeFolded(x, String(rawOpt || "")))
       return false;
-    if (/\bco\s+mam\b/.test(x) && !iuSilverCalendarReadSuppressedForWriteIntentCore(x)) return false;
+    if (/\bco\s+m(am|ame)\b/.test(x) && !iuSilverCalendarReadSuppressedForWriteIntentCore(x)) return false;
     return true;
   }
 
@@ -34691,7 +34691,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return { intent: "agenda_for_day", dateRange: "tomorrow", filter: null };
     }
 
-    if (/\bco\s+m[aá]m\b/.test(f)) {
+    if (/\bco\s+m(am|ame)\b/.test(f)) {
       if (looksLikeWeekendPhrase(f)) {
         return { intent: "agenda_for_weekend", dayPart: dayPartFromFx(), filter: null };
       }
@@ -34709,7 +34709,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         (iuSilverLooksLikeSchedulingFragment(f, rawIn) || /\bkalend|\budalost/i.test(f) || !!wkTok));
 
     const sigStrong =
-      /\bco\s+m[aá]m\b/.test(f) ||
+      /\bco\s+m(am|ame)\b/.test(f) ||
       /\bjake\s+m[aá]m\s+udalost/i.test(f) ||
       /\bjake\s+mam\s+udalost/i.test(f) ||
       /\bukaz\s+kalendar/i.test(f) ||
@@ -34825,6 +34825,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const rawStr = rawOpt != null ? String(rawOpt) : foldUse;
     if (iuSilverExplicitCalendarWriteOverridesSoftModuleNegationFolded(foldUse) && /\bne\s+do\s+pozn/.test(foldUse)) return false;
     if (iuSilverImplicitCalendarOnlyWriteSignalFolded(foldUse, rawStr)) return false;
+    if (/\b(co|jake|kolik)\s+m(am|ame)\b[^?.!]{0,200}\bv\s+kalendari\b[^?.!]{0,120}\bne\s+do\s+ukol/.test(foldUse)) return false;
     if (/nechci\s+to\s+do\s+kalend/.test(foldUse)) return true;
     if (/\bne\s+do\s+kalend/.test(foldUse)) return true;
     if (/\bdo\s+kalendare\s+ne\b/.test(foldUse)) return true;
@@ -35199,7 +35200,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bkde\s+je\b/.test(x) ||
       /\bjakou\s+(barvu|adresu)\b/.test(x) ||
       /\bjakou\s+mam\b/.test(x) ||
-      /\bco\s+mam\b/.test(x) ||
+      /\bco\s+m(am|ame)\b/.test(x) ||
       /\bmam\s+neco\b/.test(x)
     );
   }
@@ -35241,7 +35242,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bzjist(i|it)\s+(mi\s+)?((pouze|jen)\s+)?(z\s+)?kalend/.test(x)) return true;
     if (/\bnajdi\s+(mi\s+)?((jen|pouze)\s+)?v\s+kalend/.test(x)) return true;
     if (/\bhledej\s+(mi\s+)?v\s+kalend/.test(x)) return true;
-    if (/\bco\s+mam\s+v\s+kalend/.test(x)) return true;
+    if (/\bco\s+m(am|ame)\s+v\s+kalend/.test(x)) return true;
     if (/\bmam\s+dnes\s+v\s+kalend/.test(x)) return true;
     if (/\bmam\s+zitra\s+v\s+kalend/.test(x)) return true;
     if (/\bkdy\s+mam\s+v\s+kalend/.test(x)) return true;
@@ -36380,7 +36381,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     }
 
-    const coMam = /\bco\s+m[aá]m\b/.test(f);
+    const coMam = /\bco\s+m(am|ame)\b/.test(f);
     const kdyMam =
       /^\s*kdy\s+(?:přesně|presne)\s+m[aá]m\s+/i.test(r) ||
       /^\s*kdy\s+(?:presne)\s+mam\s+/i.test(f) ||
@@ -36428,7 +36429,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     }
 
-    if (/\bco\s+m[aá]m\s+jako\s+dal[sš][ií]\b/i.test(f)) {
+    if (/\bco\s+m(am|ame)\s+jako\s+dal[sš][ií]\b/i.test(f)) {
       return { intent: "next_event", filter: null };
     }
     if (/\bkdy\s+m[aá]m\s+dal[sš][ií]/i.test(f)) {
@@ -36582,8 +36583,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         /^\s*(?:najdi|vyhledej|hledej)\s+(?:mi\s+)?/i,
         /^\s*(?:uka[zž]|ukaz|zobraz|zobrazit|vypiš|vypis)\s+(?:mi\s+)?(?:v\s+)?(?:kalend[aá]ři|kalendari|kalend[aá]ř)\s*/i,
         /^\s*(?:uka[zž]|ukaz|zobraz|zobrazit|vypiš|vypis)\s+(?:mi\s+)?/i,
-        /^\s*co\s+m[aá]m\s+(?:v\s+)?(?:kalend[aá]ři|kalendari|kalend[aá]ř)\s*/i,
-        /^\s*co\s+m[aá]m\s+/i,
+        /^\s*co\s+m(am|ame)\s+(?:v\s+)?(?:kalend[aá]ři|kalendari|kalend[aá]ř)\s*/i,
+        /^\s*co\s+m(am|ame)\s+/i,
         /^\s*m[aá]m\s+n[eě]co\s+/i
       ];
       for (let sqi = 0; sqi < 16; sqi++) {
