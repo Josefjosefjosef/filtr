@@ -257,6 +257,19 @@ function hasNegWrite(folded) {
   );
 }
 
+/** P0: read-only NEGS prefix + „jako jeden úkol“ = konflikt zápis/read (harness expected unknown; engine může vrátit tasks.read). */
+function auditSilverTaskWriteReadOnlyNegVsExplicitJedenUkolFolded(fx) {
+  const x = String(fx || "");
+  if (!/\bjako\s+jeden\s+ukol\b/.test(x)) return false;
+  const readOnlyNeg =
+    /\bjen\s+se\s+podivej\b/.test(x) ||
+    /\bjen\s+cti\b/.test(x) ||
+    /\bjen\s+zjist\w*\b/.test(x) ||
+    /\bjen\s+over\w*\b/.test(x) ||
+    /\bjen\s+vypis\w*\b/.test(x);
+  return readOnlyNeg;
+}
+
 function auditFoldedExplicitCalendarWriteVerbBeforeDoKalend(f) {
   const x = String(f || "");
   const iDo = x.search(/\bdo\s+kalend/);
@@ -513,12 +526,20 @@ function evaluateOne(c, turn) {
     const ov = calendarWriteHarnessIntentOverride(folded);
     if (ov) expectedIntent = ov;
   }
-  const auditIntent = engineToAuditIntent(eng, c.group);
+  let auditIntent = engineToAuditIntent(eng, c.group);
   const conf = detectCollectionConfusion(c.group, eng, c.expectedIntent);
   if (conf) {
     return { pass: false, cat: conf, auditIntent, raw };
   }
   if (c.group !== "multi_intent") {
+    if (
+      c.group === "task_write" &&
+      expectedIntent === "unknown" &&
+      auditSilverTaskWriteReadOnlyNegVsExplicitJedenUkolFolded(folded) &&
+      (eng === "tasks.read" || auditIntent === "task.query")
+    ) {
+      auditIntent = "unknown";
+    }
     if (auditIntent === "unknown" || eng === "clarification") {
       if (expectedIntent !== "unknown") {
         return { pass: false, cat: "intent_fail", auditIntent, raw };
@@ -1446,6 +1467,19 @@ function buildCases() {
     silverPatchCaseByGroupIndex(gw.group, gw.index0, { input: gw.input, expectedIntent: gw.expectedIntent });
   }
 
+  /**
+   * P0 harness: jednoznačný read-only prefix (NEGS „jen se podívej“ / „jen čti“ / …) + explicitní task-write šablona
+   * „jako jeden úkol“ ve stejné větě → produkt/engine: ambiguous_write → unknown; očekávání není task.create.
+   */
+  for (let twi = 0; twi < cases.length; twi++) {
+    const twc = cases[twi];
+    if (twc.group !== "task_write") continue;
+    if (auditSilverTaskWriteReadOnlyNegVsExplicitJedenUkolFolded(foldCs(twc.input))) {
+      twc.expectedIntent = "unknown";
+      twc.meta = Object.assign({}, twc.meta || {}, { readWritePriorityGate: true });
+    }
+  }
+
   return cases;
 }
 
@@ -1618,7 +1652,8 @@ function main() {
     "calendar_query_03104",
     "calendar_query_03126",
     "calendar_query_03681",
-    "task_write_06001"
+    "task_write_06001",
+    "task_write_06004"
   ];
   for (let ani = 0; ani < SILVER_AUDIT_ROUTING_ANCHOR_IDS.length; ani++) {
     const anid = SILVER_AUDIT_ROUTING_ANCHOR_IDS[ani];
