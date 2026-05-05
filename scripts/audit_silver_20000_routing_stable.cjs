@@ -964,6 +964,55 @@ function buildCases() {
     silverPatchCaseByGroupIndex(p.group, p.index0, { input: p.input, expectedIntent: p.expectedIntent });
   }
 
+  const SILVER_IMPLICIT_CALENDAR_ONLY_WRITE_PATCH = [
+    {
+      group: "calendar_write",
+      index0: 17,
+      input: "Obchodni vec: koncem tydne v 15 hodin pravnik na Ostrava centrum, jen kalendar, ne poznamky.",
+      expectedIntent: "calendar.create"
+    },
+    {
+      group: "calendar_write",
+      index0: 14,
+      input: "Koncem týdne v 15 hodin právník na Ostrava centrum, jen kalendář, ne poznámky.",
+      expectedIntent: "calendar.create"
+    },
+    {
+      group: "calendar_write",
+      index0: 15,
+      input: "Zítra v 9 kontrola smlouvy Praha 1, jen kalendář.",
+      expectedIntent: "calendar.create"
+    },
+    {
+      group: "calendar_write",
+      index0: 16,
+      input: "V pátek v 10 Tomáš Brno centrum, pouze do kalendáře, bez úkolu.",
+      expectedIntent: "calendar.create"
+    },
+    {
+      group: "calendar_write",
+      index0: 18,
+      input: "Příští týden v půl třetí doktor Korunní 33, ne do poznámek.",
+      expectedIntent: "calendar.create"
+    },
+    {
+      group: "calendar_write",
+      index0: 19,
+      input: "Jen kalendář: zubař zítra v 15:00 adresa Korunní 33 Praha.",
+      expectedIntent: "calendar.create"
+    },
+    {
+      group: "calendar_query",
+      index0: 5,
+      input: "Jen zjisti, zítra v 9 kontrola smlouvy Praha 1.",
+      expectedIntent: "unknown"
+    }
+  ];
+  for (let qi = 0; qi < SILVER_IMPLICIT_CALENDAR_ONLY_WRITE_PATCH.length; qi++) {
+    const q = SILVER_IMPLICIT_CALENDAR_ONLY_WRITE_PATCH[qi];
+    silverPatchCaseByGroupIndex(q.group, q.index0, { input: q.input, expectedIntent: q.expectedIntent });
+  }
+
   return cases;
 }
 
