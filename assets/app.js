@@ -36354,6 +36354,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const r = iuSilverNormalizeUtteranceForReadParse(rawIn);
     const f = foldCs(r);
     if (!r) return null;
+    if (iuSilverNoteQueryWithCalendarContextSignalFolded(f)) return null;
     if (iuSilverCalendarReadSuppressedForWriteIntent(f)) return null;
     if (
       /^\s*jen\s+zjist/i.test(r) &&
@@ -37631,6 +37632,42 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return !!(factQ && noteThing);
   }
 
+  /**
+   * P0: dotaz na poznámku s kalendářním kontextem + negace „nepleť s kalendářem“
+   * nesmí spadnout do intent_fail / calendar.create — výsledek notes.read.
+   */
+  function iuSilverNoteQueryWithCalendarContextSignalFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    const noteSig =
+      /\bhledam\s+poznam/i.test(x) ||
+      /\bnajdi\s+poznam/i.test(x) ||
+      /\bvyhledej\s+poznam/i.test(x) ||
+      /\bpoznamku\s+smlouv/i.test(x) ||
+      /\bv\s+poznamk/i.test(x) ||
+      /\bz\s+poznam/i.test(x);
+    if (!noteSig) return false;
+    const calCtx =
+      /\bv\s+kontextu\s+kalend/i.test(x) ||
+      /\bk\s+udalost/i.test(x) ||
+      /\bke\s+schuz/i.test(x) ||
+      /\bu\s+kalend/i.test(x) ||
+      /\bsouvisi\s+s\s+kalend/i.test(x);
+    if (!calCtx) return false;
+    if (
+      /\buloz\w*\s+do\s+kalend/i.test(x) ||
+      /\bdej\s+do\s+kalend/i.test(x) ||
+      /\bnahod\w*\s+do\s+kalend/i.test(x) ||
+      /\bpridej\s+do\s+kalend/i.test(x) ||
+      /\bzapis\w*\s+do\s+kalend/i.test(x) ||
+      /\bvloz\w*\s+do\s+kalend/i.test(x)
+    ) {
+      return false;
+    }
+    if (/\b(smaz|vymaz|vyprazdni|vycisti)\w*\b/.test(x) && /\b(poznam|kalend|udalost)/.test(x)) return false;
+    return true;
+  }
+
   function iuSilverReadSearchSignalFolded(f) {
     const x = String(f || "");
     return (
@@ -37758,6 +37795,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /^\s*vyhledej\s+ukol\s+/i,
       /^\s*najdi\s+pozn[aá]mk\w*\s+/i,
       /^\s*vyhledej\s+pozn[aá]mk\w*\s+/i,
+      /^\s*hled[aá]m\s+pozn[aá]mk\w*\s+/i,
       /^\s*(jaky|jake)\s+(je|m[aá]m)\s+/i,
       /^\s*kde\s+(je|jsou|m[aá]m|m[eě]la|m[eě]l)\s+/i,
       /^\s*kde\s+m[aá]m\s+(ulozen\w*|poznamenan\w*)\s+/i,
@@ -37853,6 +37891,43 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     if (!wantsTaskList) return null;
     return iuSilverBuildTasksReadListTurn(ctx, empty, f, now);
+  }
+
+  function iuSilverTryNoteQueryWithCalendarContextReadTurn(raw, now, folded, ctx, empty) {
+    const f = String(folded || "");
+    const r0 = String(raw || "").trim();
+    if (!f || !r0) return null;
+    if (!iuSilverNoteQueryWithCalendarContextSignalFolded(f)) return null;
+    const target = "notes";
+    let q = iuSilverReadSearchExtractQuery(r0, f, target);
+    const qFold0 = foldCs(String(q || "").trim());
+    if ((!qFold0 || qFold0.length < 2) && /\bsmlouv/.test(f)) q = "smlouva";
+    const sr = iuSilverSearchLocalData(q, {
+      target: target,
+      now: now,
+      getEventsSnapshot: ctx && ctx.getEventsSnapshot,
+      getTasksSnapshot: ctx && ctx.getTasksSnapshot,
+      getNotesSnapshot: ctx && ctx.getNotesSnapshot,
+      rawFoldedHint: f
+    });
+    const ans = iuSilverBuildAnswerFromSearch(sr);
+    return {
+      normalizedIntent: "notes.read",
+      targetContainer: "none",
+      processingState: "READ_OK",
+      clarificationReason: null,
+      futureIntentCandidate: null,
+      readQuery: { silverReadSearch: true, target: target, query: q },
+      readAnswer: { message: ans.message, silverSearch: sr },
+      extractedFields: {},
+      missingFields: [],
+      ambiguousFields: [],
+      userFacingSummary: ans.message,
+      assistantLead: ans.message,
+      clarificationText: "",
+      draft: empty,
+      silverSearchResult: sr
+    };
   }
 
   function iuSilverTryReadSearchTurn(raw, now, folded, ctx, empty) {
@@ -40422,6 +40497,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const taskQueryReadPriority = iuSilverTryTaskQueryReadPriorityTurn(raw, now, folded, ctx || {}, empty);
     if (taskQueryReadPriority) {
       return taskQueryReadPriority;
+    }
+
+    const noteCalCtxRead = iuSilverTryNoteQueryWithCalendarContextReadTurn(raw, now, folded, ctx || {}, empty);
+    if (noteCalCtxRead) {
+      return noteCalCtxRead;
     }
 
     const readSpec = tryParseCalendarRead(raw, now);
