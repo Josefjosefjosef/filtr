@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-05T05:40:50.815690Z",
+  "ingestedAt": "2026-05-05T07:00:05.630220Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Ještě pár volebních období. Soudní zpravodaj HN odhaduje pravděpodobnost odsouzení Andreje Babiše v kauze Čapí hnízdo",
+      "url": "https://podcasty.hn.cz/c1-67873510-jeste-par-volebnich-obdobi-soudni-zpravodaj-hn-odhaduje-pravdepodobnost-odsouzeni-andreje-babise-v-kauze-capi-hnizdo",
+      "dt": "2026-05-05T05:31:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "andreje",
+        "babiše",
+        "hnízdo",
+        "ještě",
+        "kauze",
+        "období",
+        "odhaduje",
+        "odsouzení",
+        "pravděpodobnost",
+        "pár",
+        "soudní",
+        "volebních",
+        "zpravodaj",
+        "čapí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1098,33 +1129,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zabránili jsme Američanům vplout do Hormuzského průlivu, tvrdí Teherán. Washington to popírá",
-      "url": "https://zahranicni.hn.cz/c1-67873060-americane-chteji-doprovazet-lode-skrz-hormuzsky-pruliv-budeme-to-povazovat-za-poruseni-primeri-hrozi-teheran",
-      "dt": "2026-05-04T04:57:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "američanům",
-        "hormuzského",
-        "jsme",
-        "popírá",
-        "průlivu",
-        "teherán",
-        "tvrdí",
-        "vplout",
-        "washington",
-        "zabránili"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1135,7 +1139,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183048,
+      "bytes": 183044,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1172,11 +1176,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-05T05:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T05:31:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 37,
-          "zpravy": 2,
+          "zpravy": 3,
+          "finance": 36,
           "zdravi": 1
         },
         "drop_counts": {
@@ -1189,6 +1193,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ještě pár volebních období. Soudní zpravodaj HN odhaduje pravděpodobnost odsouzení Andreje Babiše v kauze Čapí hnízdo",
+            "publishedAt": "2026-05-05T05:31:00Z"
+          },
           {
             "title": "Unikátní data o českém biotech sektoru: roste a velikostí se blíží top evropskému science klastru",
             "publishedAt": "2026-05-05T05:05:00Z"
@@ -1215,10 +1223,6 @@
           },
           {
             "title": "AI je v&nbsp;oblasti investic dvousečný meč. Letošní rok pro ni bude zlomový, říká Tomáš Pfeiler z&nbsp;Cyrrusu",
-            "publishedAt": "2026-05-04T22:00:00Z"
-          },
-          {
-            "title": "Burza vyspělé české firmy neláká. Expanzi financují hlavně z&nbsp;vlastního kapitálu",
             "publishedAt": "2026-05-04T22:00:00Z"
           }
         ]

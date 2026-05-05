@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-05T05:40:50.815690Z",
+  "ingestedAt": "2026-05-05T07:00:05.630220Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Martin Vránek novým generálním ředitelem Rema Systém",
+      "url": "https://profitonline.cz/martin-vranek-novym-generalnim-reditelem-rema-system/",
+      "dt": "2026-05-05T06:00:21Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "generálním",
+        "martin",
+        "novým",
+        "rema",
+        "systém",
+        "vránek",
+        "ředitelem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -266,31 +290,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Vozy na benzin a naftu prohrávají s elektroauty o 120 korun na 100 km",
-      "url": "https://profitonline.cz/vozy-na-benzin-a-naftu-prohravaji-s-elektroauty-o-120-korun-na-100-km/",
-      "dt": "2026-05-03T04:00:21Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "100",
-        "120",
-        "benzin",
-        "elektroauty",
-        "korun",
-        "naftu",
-        "prohrávají",
-        "vozy"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -301,7 +300,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18930,
+      "bytes": 18903,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -338,11 +337,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-05T05:00:26Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T06:00:21Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 11,
-          "zdravi": 1
+          "finance": 12
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -354,6 +352,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Martin Vránek novým generálním ředitelem Rema Systém",
+            "publishedAt": "2026-05-05T06:00:21Z"
+          },
           {
             "title": "Dolar na úvod týdne silnější",
             "publishedAt": "2026-05-05T05:00:26Z"
@@ -381,10 +383,6 @@
           {
             "title": "Lenka Vaněk posilou top managementu E.ON Energy Solutions",
             "publishedAt": "2026-05-04T07:00:19Z"
-          },
-          {
-            "title": "The Economist: Spojené arabské emiráty vsadily na Izrael a Ameriku",
-            "publishedAt": "2026-05-04T04:00:46Z"
           }
         ]
       }
