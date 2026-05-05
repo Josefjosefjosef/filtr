@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-05T03:20:28.335858Z",
+  "ingestedAt": "2026-05-05T03:55:19.787812Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Otevírací doba obchodů 8. května: Kde je na Den vítězství otevřeno, kde zavřeno",
+      "url": "https://www.denik.cz/ekonomika/oteviraci-doba-obchodu-8-kvetna-den-vitezstvi-kdy-si-nakoupit-kde-bude-zavreno.html",
+      "dt": "2026-05-05T03:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "den",
+        "doba",
+        "května",
+        "obchodů",
+        "otevírací",
+        "otevřeno",
+        "vítězství",
+        "zavřeno"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -621,33 +646,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Bitcoinová kauza: Policie obvinila další tři lidi včetně exministra Blažka",
-      "url": "https://www.denik.cz/krimi/bitcoinova-kauza-nove-obvineni.html",
-      "dt": "2026-05-04T11:52:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bitcoinová",
-        "blažka",
-        "další",
-        "exministra",
-        "kauza",
-        "lidi",
-        "obvinila",
-        "policie",
-        "tři",
-        "včetně"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -658,7 +656,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29050,
+      "bytes": 29199,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -695,11 +693,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-05T02:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T03:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "finance": 2,
+          "finance": 3,
+          "zpravy": 21,
           "zdravi": 1
         },
         "drop_counts": {
@@ -712,6 +710,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Otevírací doba obchodů 8. května: Kde je na Den vítězství otevřeno, kde zavřeno",
+            "publishedAt": "2026-05-05T03:30:00Z"
+          },
           {
             "title": "Zima se odmítá vzdát. Evropa se chystá na návrat sněhu, teploty prudce klesnou",
             "publishedAt": "2026-05-05T02:30:00Z"
@@ -739,10 +741,6 @@
           {
             "title": "Letadlo v Brazílii narazilo do budovy, pilot a kopilot zahynuli",
             "publishedAt": "2026-05-04T17:46:00Z"
-          },
-          {
-            "title": "Rusko oznámilo dvoudenní příměří, Zelenskyj vyhlásil klid zbraní",
-            "publishedAt": "2026-05-04T17:45:00Z"
           }
         ]
       }
