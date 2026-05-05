@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-05T08:50:10.122686Z",
+  "ingestedAt": "2026-05-05T09:30:59.993732Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Podezřelý „les antén“ nad Vídní: Rakousko vyhostilo 3 ruské špióny",
+      "url": "https://ekonomickydenik.cz/les-anten-viden-3-ruske-spiony/",
+      "dt": "2026-05-05T09:23:34Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "antén",
+        "les",
+        "podezřelý",
+        "rakousko",
+        "ruské",
+        "vyhostilo",
+        "vídní",
+        "špióny"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Dva prezidenti si zaběhali v centru Prahy. S olympioničkou a hvězdným fotbalistou",
+      "url": "https://ekonomickydenik.cz/dva-prezidenti-zabehali-centrum-prahy/",
+      "dt": "2026-05-05T08:58:23Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "centru",
+        "dva",
+        "fotbalistou",
+        "hvězdným",
+        "olympioničkou",
+        "prahy",
+        "prezidenti",
+        "zaběhali"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -733,59 +783,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Babiš: Letiště Karlovy Vary přejde pod armádu. Hejtman kraje není proti",
-      "url": "https://ekonomickydenik.cz/babis-letiste-karlovy-vary-prejde-pod-armadu/",
-      "dt": "2026-05-03T11:15:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "armádu",
-        "babiš",
-        "hejtman",
-        "karlovy",
-        "kraje",
-        "letiště",
-        "proti",
-        "přejde",
-        "vary"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Dopady slunečného víkendu: Elektřinu vyrábíme levně a bez emisí. Je to výhra nebo bolehlav?",
-      "url": "https://ekonomickydenik.cz/elektrinu-vyrabime-levne-a-s-malymi-emisemi/",
-      "dt": "2026-05-03T09:58:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "bolehlav",
-        "dopady",
-        "elektřinu",
-        "emisí",
-        "levně",
-        "nebo",
-        "slunečného",
-        "vyrábíme",
-        "víkendu",
-        "výhra"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73478,
+      "bytes": 73677,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,12 +830,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T08:33:15Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T09:23:34Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 24,
-          "zdravi": 3,
-          "zpravy": 3
+          "finance": 25,
+          "sport": 1,
+          "zdravi": 2,
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -850,6 +848,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Podezřelý „les antén“ nad Vídní: Rakousko vyhostilo 3 ruské špióny",
+            "publishedAt": "2026-05-05T09:23:34Z"
+          },
+          {
+            "title": "Dva prezidenti si zaběhali v centru Prahy. S olympioničkou a hvězdným fotbalistou",
+            "publishedAt": "2026-05-05T08:58:23Z"
+          },
           {
             "title": "Putinovy obavy, kulomety v Kremlu: Moskva se mění v pevnost kvůli strachu z úderu",
             "publishedAt": "2026-05-05T08:33:15Z"
@@ -873,14 +879,6 @@
           {
             "title": "Příměří na Ukrajině: Ruský návrh chce Zelenskyj rozšířit",
             "publishedAt": "2026-05-05T05:28:18Z"
-          },
-          {
-            "title": "Trutnovská elektrárna přejde od uhlí k biomase a plynu. Podobný záměr má ČEZ v Hodoníně",
-            "publishedAt": "2026-05-05T04:05:00Z"
-          },
-          {
-            "title": "Vlček: Požár se nešíří a šířit nebude. Hasiči bojují s plameny v Českém Švýcarsku",
-            "publishedAt": "2026-05-04T17:29:03Z"
           }
         ]
       }

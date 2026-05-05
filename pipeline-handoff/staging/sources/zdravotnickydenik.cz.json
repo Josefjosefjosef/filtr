@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-05T08:50:10.122686Z",
+  "ingestedAt": "2026-05-05T09:30:59.993732Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Konec ředitele Holobrady: Příbramská nemocnice reaguje na policejní zásah",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/pribram-nemocnice-predstavenstvo-holobrada/",
+      "dt": "2026-05-05T08:50:44Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "holobrady",
+        "konec",
+        "nemocnice",
+        "policejní",
+        "příbramská",
+        "reaguje",
+        "zásah",
+        "ředitele"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -245,32 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Prevence bez limitu: Ministr Vojtěch oznámil, které zdravotní výhody už nebudou daněny",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/prevence-ministr-vojtech-dane/",
-      "dt": "2026-05-04T11:34:23Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "daněny",
-        "limitu",
-        "ministr",
-        "nebudou",
-        "oznámil",
-        "prevence",
-        "vojtěch",
-        "výhody",
-        "zdravotní"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 83772,
+      "bytes": 82328,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-05T08:31:08Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T08:50:44Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -333,6 +332,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec ředitele Holobrady: Příbramská nemocnice reaguje na policejní zásah",
+            "publishedAt": "2026-05-05T08:50:44Z"
+          },
           {
             "title": "Každé páté klíště je nakažené. Experti varují, že hrozí i méně známé infekce",
             "publishedAt": "2026-05-05T08:31:08Z"
@@ -360,10 +363,6 @@
           {
             "title": "Otrávit dětské výživy jedem na krysy měl Slovák. Zřejmě se mstil za vyhazov",
             "publishedAt": "2026-05-04T14:08:03Z"
-          },
-          {
-            "title": "Algoritmus rozhoduje, kdo dostane zdravotní péči. AI počítá chudým likvidační poplatky",
-            "publishedAt": "2026-05-04T13:24:40Z"
           }
         ]
       }
