@@ -35255,7 +35255,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         /\b(co\s+m(am|ame)|co\s+me|jake\s+m(am|ame)|najdi|hledej|ukaz|zjist(i|it|te)?|podivej)\b/.test(x));
     if (!calQ) return false;
     const schedHint =
-      /\bzittra\b|\bdnes|\bpristi\s+pondel|\bpristi\s+tyden|\bv\s+pondel|\bkoncem\s+tydne|\bohledne\b|(?<!\bne\s)\bv\s+kalend/.test(x) ||
+      /\bzittra\b|\bdnes|\bpristi\s+pondel|\bpristi\s+tyden|\bza\s+tyden\b|\bv\s+pondel|\bkoncem\s+tydne|\bohledne\b|(?<!\bne\s)\bv\s+kalend/.test(x) ||
       (/\bjakou\s+(barvu|adresu)\b/.test(x) &&
         /(?:kalend|zubar|pravn|advokat|doktor|petra|petr)/.test(x));
     if (!schedHint) return false;
@@ -35402,6 +35402,87 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/pavel/.test(p) && /pavel/.test(e)) return true;
     if (/mariana/.test(p) && /mariana/.test(e)) return true;
     return false;
+  }
+
+  /**
+   * P0 (20k): úzký cluster „prefix + co mám … v kalendáři ohledně X“ + časová kotva (stejné rodiny jako 20k DATES),
+   * kdy „co má(m/e)“ není na začátku věty — nesmí spadnout na find_by_title přes celou větu (prázdný hit).
+   * foldCs vstup.
+   */
+  function iuSilverIsPrefixedCoMamKalendarOhledneWeekClusterFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (!/\bco\s+m(am|ame)\b/.test(x)) return false;
+    if (!/\bv\s+kalend/.test(x)) return false;
+    if (!/\bohledne\b/.test(x)) return false;
+    const hasTimeScope =
+      /\bza\s+tyden\b/.test(x) ||
+      /\bpristi\s+pondel/.test(x) ||
+      /\bpristi\s+tyden\b/.test(x) ||
+      /\bpristi\s+mesic\b/.test(x) ||
+      /\b(?:tento|tenhle|tomuto)\s+t[yý]den\b/.test(x) ||
+      /\bve\s+(ctvrtek|ctvrtku|ctvrtek)\b/.test(x) ||
+      /\bdo\s+patku\b/.test(x) ||
+      /\bdo\s+10\s+dn|\bdo\s+deseti\s+dn/.test(x) ||
+      /\bkoncem\s+tyden\b/.test(x);
+    if (!hasTimeScope) return false;
+    const anchor = x.search(/\bco\s+m(am|ame)\b/);
+    if (anchor <= 0) return false;
+    return true;
+  }
+
+  /**
+   * P0: parse find_by_title + datum/týden z kotvy za „ohledně“ (ne z celé věty) + volitelný exclude z „nevracej …“.
+   */
+  function iuSilverTryParsePrefixedCoMamKalendOhledneWeekFindSpec(rawIn, rNorm, fFold, now) {
+    const f = String(fFold || "");
+    if (!iuSilverIsPrefixedCoMamKalendarOhledneWeekClusterFolded(f)) return null;
+    let lastTok = "";
+    const reOh = /\bohledne\s+([a-z][a-z0-9]*)\b/gi;
+    let mm;
+    while ((mm = reOh.exec(f)) !== null) {
+      lastTok = String(mm[1] || "").trim();
+    }
+    if (!lastTok || lastTok.length < 2) return null;
+    const can = iuSilverCanonicalCalendarEntityTitleFromPersonFragment(lastTok);
+    if (!can || !can.query || String(can.query).length < 2) return null;
+    const out = {
+      intent: "find_by_title",
+      query: can.query,
+      normalizedQuery: can.query,
+      diacriticInsensitive: true,
+      queryFolded: can.queryFolded || foldCs(can.query)
+    };
+    const exTf = iuSilverExtractCalendarExcludeTitleFoldedFromReadTail(String(rawIn || ""));
+    if (exTf && exTf.length >= 2 && !iuSilverCalendarExcludeSameRoleAsPrimaryFolded(out.queryFolded, exTf)) {
+      out.excludeTitleFolded = exTf;
+    }
+    const todayS = toDateOnly(now);
+    if (/\bpristi\s+pondel/.test(f)) {
+      out.dateIso = nextWeekdayDate(1, now, false, null);
+    } else if (/\bve\s+(ctvrtek|ctvrtku|ctvrtek)\b/.test(f)) {
+      out.dateIso = nextWeekdayDate(4, now, false, null);
+    } else if (/\bdo\s+patku\b/.test(f)) {
+      const fri = nextWeekdayDate(5, now, false, null);
+      out.restrictDateStart = todayS;
+      out.restrictDateEnd = fri;
+    } else if (/\bdo\s+10\s+dn|\bdo\s+deseti\s+dn/.test(f)) {
+      out.restrictDateStart = todayS;
+      out.restrictDateEnd = addDays(todayS, 10);
+    } else if (/\bpristi\s+mesic\b/.test(f)) {
+      out.restrictDateStart = todayS;
+      out.restrictDateEnd = addDays(todayS, 31);
+    } else if (
+      /\bza\s+tyden\b/.test(f) ||
+      /\bpristi\s+tyden\b/.test(f) ||
+      /\b(?:tento|tenhle|tomuto)\s+t[yý]den\b/.test(f) ||
+      /\bkoncem\s+tyden\b/.test(f)
+    ) {
+      const wkStart = startOfWeekMondayFromDateStr(todayS);
+      out.restrictDateStart = wkStart;
+      out.restrictDateEnd = addDays(wkStart, 6);
+    }
+    return out;
   }
 
   /** P0: „pro zubaře / pro právníka / …“ → krátký title dotaz (foldCs vstup). */
@@ -36824,6 +36905,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /^\s*kdy\s+m[aá]m\s+/i.test(r) ||
       /^\s*kdy\s+mam\s+/i.test(f);
     const kolik = /\bkolik\s+m[aá]m\b/.test(f);
+
+    const specPrefOhEarly = iuSilverTryParsePrefixedCoMamKalendOhledneWeekFindSpec(rawIn, r, f, now);
+    if (specPrefOhEarly) return specPrefOhEarly;
 
     const mKdyKolikWeek = String(r || "").match(/^\s*kdy\s+m[aá]m\s+(.+?)\s+a\s+kolik\s+toho\s+m[aá]m\b/i);
     if (mKdyKolikWeek && iuSilverThisCalendarWeekScopeFolded(f)) {

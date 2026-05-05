@@ -1259,6 +1259,50 @@ function buildCases() {
     expectedIntent: "unknown"
   });
 
+  /** P0: prefixed „co mám … v kalendáři ohledně …“ + za týden / příští pondělí — calendar.query + správný title read. */
+  const SILVER_CALENDAR_QUERY_PREFIX_OHLEDNE_WEEK_KOTVA = [
+    {
+      group: "calendar_query",
+      index0: 36,
+      input: "nevracej pravnika Pepo, co mam za tyden v kalendari ohledne zubar?",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_query",
+      index0: 37,
+      input: "nevytvarej ukol Pepo, co mam za tyden v kalendari ohledne Petra?",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_query",
+      index0: 38,
+      input: "neptej se kam ulozit Pepo, co mám za týden v kalendáři ohledně pravnik?",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_query",
+      index0: 39,
+      input: "pokud nic nenajdes, nic nevytvarej Pepo, co mam pristi pondeli v kalendari ohledne pravnik?",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_query",
+      index0: 40,
+      input: "jen cti Pepo, co mam za tyden v kalendari ohledne pravnik?",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_query",
+      index0: 41,
+      input: "nevracej zubare Pepo, co mam pristi pondeli v kalendari ohledne pravnik?",
+      expectedIntent: "calendar.query"
+    }
+  ];
+  for (let pi = 0; pi < SILVER_CALENDAR_QUERY_PREFIX_OHLEDNE_WEEK_KOTVA.length; pi++) {
+    const pk = SILVER_CALENDAR_QUERY_PREFIX_OHLEDNE_WEEK_KOTVA[pi];
+    silverPatchCaseByGroupIndex(pk.group, pk.index0, { input: pk.input, expectedIntent: pk.expectedIntent });
+  }
+
   silverPatchCaseByGroupIndex("note_query", 1, {
     input: "Najdi poznámku smlouva v kontextu kalendáře, nepleť to s kalendářem.",
     expectedIntent: "note.query"
