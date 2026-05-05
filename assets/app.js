@@ -34958,11 +34958,32 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     );
   }
 
+  /**
+   * P0 calendar_query_03080: explicitní čtení poznámky + zákaz vytvoření úkolu („nevytvářej úkol“)
+   * nesmí aktivovat task-read kontext přes heuristiku smlouva+úkol ani přes „najdi … … úkol“.
+   */
+  function iuSilverNoteReadPrimaryBeatsTaskWriteNegationForReadContextFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    const noteReadPrimary =
+      /\bhledam\s+poznam/i.test(x) ||
+      /\bnajdi\s+poznam/i.test(x) ||
+      /\bvyhledej\s+poznam/i.test(x) ||
+      /\bpoznam\w*\s+smlouv/i.test(x);
+    if (!noteReadPrimary) return false;
+    const taskWriteNegUk =
+      /\bnevytvarej\s+ukol\b/.test(x) ||
+      /\bnevytvor\w*\s+ukol\b/.test(x) ||
+      /\bnedelej\s+ukol\b/.test(x);
+    return !!taskWriteNegUk;
+  }
+
   function iuSilverTaskReadNegativeWriteWithScopeFolded(f) {
     if (!iuSilverNegativeReadOnlyTaskPhrasesFolded(f)) return false;
     if (iuSilverCalendarReadWinsOverTaskReadFolded(f) && !iuSilverHasExplicitTasksTarget(f)) return false;
     if (iuSilverExplicitTaskReadScopeFolded(f) || iuSilverTaskQueryHardSignalFolded(f)) return true;
     const x = String(f || "");
+    if (iuSilverNoteReadPrimaryBeatsTaskWriteNegationForReadContextFolded(x)) return false;
     if (/\b(jak\w*|kolik)\s+mam\b.*\bukol/.test(x)) return true;
     if (/\b(zjist|najd|hledej|podivej)\b.*\b(ukol|ukolech)/.test(x)) return true;
     if (/\bmam\s+v\s+ukolech\s+neco\b/.test(x)) return true;
