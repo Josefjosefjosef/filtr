@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-05T13:19:13.685162Z",
+  "ingestedAt": "2026-05-05T14:39:24.851307Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Listerióza v českých prodejnách: Podívejte se, které balení hub musíte okamžitě vrátit",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/listerioza-houby-obchody-inspekce/",
+      "dt": "2026-05-05T14:13:19Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "balení",
+        "hub",
+        "listerióza",
+        "musíte",
+        "okamžitě",
+        "podívejte",
+        "prodejnách",
+        "vrátit",
+        "českých"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,33 +268,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Otrávit dětské výživy jedem na krysy měl Slovák. Zřejmě se mstil za vyhazov",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/otravene-detske-vyzivy-slovak-vyhazov/",
-      "dt": "2026-05-04T14:08:03Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "dětské",
-        "jedem",
-        "krysy",
-        "mstil",
-        "měl",
-        "otrávit",
-        "slovák",
-        "vyhazov",
-        "výživy",
-        "zřejmě"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +278,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 84121,
+      "bytes": 82683,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +315,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-05T12:45:04Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T14:13:19Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -331,6 +330,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Listerióza v českých prodejnách: Podívejte se, které balení hub musíte okamžitě vrátit",
+            "publishedAt": "2026-05-05T14:13:19Z"
+          },
           {
             "title": "Europoslanec Knotek: Přísná ekologická pravidla mohou poškodit výrobu léků i ekonomiku",
             "publishedAt": "2026-05-05T12:45:04Z"
@@ -358,10 +361,6 @@
           {
             "title": "Průlomová terapie vzácného onemocnění i léčba rakoviny. Kterých 5 léků dostalo v EU zelenou?",
             "publishedAt": "2026-05-05T05:00:00Z"
-          },
-          {
-            "title": "Boj s mýty o vakcínách: Evropská agentura spouští poradní tým, je v něm i známý český expert",
-            "publishedAt": "2026-05-04T16:00:00Z"
           }
         ]
       }

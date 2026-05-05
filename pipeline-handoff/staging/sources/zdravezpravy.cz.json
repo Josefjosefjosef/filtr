@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-05T13:19:13.685162Z",
+  "ingestedAt": "2026-05-05T14:39:24.851307Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Na práva dětí a dospělých na MPSV dohlédne zpěvačka Nosková",
+      "url": "https://www.zdravezpravy.cz/2026/05/05/na-prava-deti-a-dospelych-na-mpsv-dohledne-muzikalova-zpevacka-noskova/",
+      "dt": "2026-05-05T12:27:51Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "dohlédne",
+        "dospělých",
+        "dětí",
+        "mpsv",
+        "nosková",
+        "práva",
+        "zpěvačka"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -471,30 +495,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Z farmaceutického průmyslu těží veřejné rozpočty 25 miliard korun",
-      "url": "https://www.zdravezpravy.cz/2026/04/27/z-farma-prumyslu-tezi-ceske-rozpocty-25-mld-kc-mohlo-by-to-byt-nasobne-vic/",
-      "dt": "2026-04-27T11:57:31Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "farmaceutického",
-        "korun",
-        "miliard",
-        "průmyslu",
-        "rozpočty",
-        "těží",
-        "veřejné"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -505,7 +505,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 191553,
+      "bytes": 190164,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -542,7 +542,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-05T09:50:07Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T12:27:51Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -558,6 +558,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na práva dětí a dospělých na MPSV dohlédne zpěvačka Nosková",
+            "publishedAt": "2026-05-05T12:27:51Z"
+          },
           {
             "title": "Nákazy hantaviry jsou spíše vzácné, ale mají vysokou smrtnost",
             "publishedAt": "2026-05-05T09:50:07Z"
@@ -585,10 +589,6 @@
           {
             "title": "Český národní zdravotnický tým CZERT získal certifikaci EMT 1",
             "publishedAt": "2026-05-02T07:30:54Z"
-          },
-          {
-            "title": "V ÚHKT podali pacientovi s revmatoidním onemocněním genovou terapii",
-            "publishedAt": "2026-05-01T09:05:47Z"
           }
         ]
       }
