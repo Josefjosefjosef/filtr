@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-05T18:39:18.731654Z",
+  "ingestedAt": "2026-05-05T19:59:07.047667Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Odpadků podél dálnic přibylo za pět let o čtvrtinu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/odpadku-podel-dalnic-pribylo-za-pet-let-o-ctvrtinu-373145",
+      "dt": "2026-05-05T18:45:14Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dálnic",
+        "let",
+        "odpadků",
+        "podél",
+        "pět",
+        "přibylo",
+        "čtvrtinu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -57,7 +81,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Ruské útoky na Záporoží a Kramatorsk podle úřadů zabily 17 lidí",
+      "title": "Ruské útoky na Záporoží a Kramatorsk zabily podle úřadů 17 lidí",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/ruske-utoky-na-zaporozi-a-kramatorsk-zabily-podle-uradu-14-lidi-373138",
       "dt": "2026-05-05T16:40:26Z",
       "media_raw": "ČT24 / Domácí",
@@ -726,32 +750,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Oběťmi zběsilé jízdy centrem Lipska jsou dva Němci, útočník je ve vazbě",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/obetmi-zbesile-jizdy-centrem-lipska-jsou-dva-nemci-utocnik-je-ve-vazbe-373110",
-      "dt": "2026-05-05T07:23:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "centrem",
-        "dva",
-        "jízdy",
-        "lipska",
-        "němci",
-        "oběťmi",
-        "vazbě",
-        "zběsilé",
-        "útočník"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "sport",
       "contentType": "article",
       "title": "Karlovarsko nedalo v rozhodujícím finále Lvům šanci a má čtvrtý titul",
@@ -779,20 +777,22 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Nymburk proti Ostravě vyhrál i počtvrté. Postupu jsou blízko také Pardubice a Děčín",
+      "title": "Nymburk proti Ostravě vyhrál i počtvrté. Postupují také Pardubice, Brno odvrátilo první mečbol",
       "url": "https://sport.ceskatelevize.cz/clanek/basketbal/nymburk-proti-ostrave-vyhral-i-poctvrte-postupu-jsou-blizko-take-pardubice-a-decin-156616",
       "dt": "2026-05-05T17:27:31Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
-        "blízko",
-        "děčín",
+        "brno",
+        "mečbol",
         "nymburk",
+        "odvrátilo",
         "ostravě",
         "pardubice",
-        "postupu",
+        "postupují",
         "počtvrté",
         "proti",
+        "první",
         "také",
         "vyhrál"
       ],
@@ -1516,7 +1516,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42372,
+      "bytes": 42972,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1576,7 +1576,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T18:13:26Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T18:45:14Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1593,6 +1593,10 @@
         },
         "sample_titles": [
           {
+            "title": "Odpadků podél dálnic přibylo za pět let o čtvrtinu",
+            "publishedAt": "2026-05-05T18:45:14Z"
+          },
+          {
             "title": "Hasiči odhalili přes 1200 nedostatků při kontrole požární bezpečnosti v nočních podnicích",
             "publishedAt": "2026-05-05T18:13:26Z"
           },
@@ -1601,7 +1605,7 @@
             "publishedAt": "2026-05-05T18:11:35Z"
           },
           {
-            "title": "Ruské útoky na Záporoží a Kramatorsk podle úřadů zabily 17 lidí",
+            "title": "Ruské útoky na Záporoží a Kramatorsk zabily podle úřadů 17 lidí",
             "publishedAt": "2026-05-05T16:40:26Z"
           },
           {
@@ -1619,10 +1623,6 @@
           {
             "title": "Opravy komplikují dopravu v Ostravě, řidiče trápí kolony",
             "publishedAt": "2026-05-05T15:45:34Z"
-          },
-          {
-            "title": "Milion chvilek zorganizoval pochod na podporu ČT a ČRo",
-            "publishedAt": "2026-05-05T15:35:39Z"
           }
         ]
       }
@@ -1634,7 +1634,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37799,
+      "bytes": 37918,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1691,7 +1691,7 @@
             "publishedAt": "2026-05-05T17:58:58Z"
           },
           {
-            "title": "Nymburk proti Ostravě vyhrál i počtvrté. Postupu jsou blízko také Pardubice a Děčín",
+            "title": "Nymburk proti Ostravě vyhrál i počtvrté. Postupují také Pardubice, Brno odvrátilo první mečbol",
             "publishedAt": "2026-05-05T17:27:31Z"
           },
           {
@@ -1728,7 +1728,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77799,
+      "bytes": 77825,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
