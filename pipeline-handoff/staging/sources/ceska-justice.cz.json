@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-05-05T10:10:16.059872Z",
+  "ingestedAt": "2026-05-05T10:49:55.042745Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Lobbista Janoušek žádal 10 milionů. Jako odškodnění za zabavené peníze",
+      "url": "https://www.ceska-justice.cz/2026/05/lobbista-janousek-zadal-10-milionu-odskodneni/",
+      "dt": "2026-05-05T10:11:07Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "jako",
+        "janoušek",
+        "lobbista",
+        "milionů",
+        "odškodnění",
+        "peníze",
+        "zabavené",
+        "žádal"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -239,35 +264,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Váš syn je zadržený po nehodě, pošlete peníze. Policie obvinila Čechy z podvodu za stovky tisíc",
-      "url": "https://www.ceska-justice.cz/2026/05/vas-syn-je-zadrzeny-po-nehode-policie-podvod/",
-      "dt": "2026-05-01T11:58:39Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "nehodě",
-        "obvinila",
-        "peníze",
-        "podvodu",
-        "policie",
-        "pošlete",
-        "stovky",
-        "syn",
-        "tisíc",
-        "váš",
-        "zadržený",
-        "čechy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +274,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 82781,
+      "bytes": 83812,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +311,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-05T04:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T10:11:07Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -330,6 +326,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lobbista Janoušek žádal 10 milionů. Jako odškodnění za zabavené peníze",
+            "publishedAt": "2026-05-05T10:11:07Z"
+          },
           {
             "title": "Pokuta pro Cermat za maturity: Proč měl úřad platit za situaci, kterou nezpůsobil?",
             "publishedAt": "2026-05-05T04:15:00Z"
@@ -357,10 +357,6 @@
           {
             "title": "Důchodci budou moci ukončit spoření bez sankcí.  Poslanci doporučili změnu schválit",
             "publishedAt": "2026-05-02T10:45:00Z"
-          },
-          {
-            "title": "Kolovrat jako náhrada hákového kříže? Policie podle soudu mohla vzít muži DNA",
-            "publishedAt": "2026-05-02T04:30:00Z"
           }
         ]
       }

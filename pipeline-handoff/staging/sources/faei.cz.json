@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-05T10:10:16.059872Z",
+  "ingestedAt": "2026-05-05T10:49:55.042745Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nemohla popadnout dech. Zrádná nemoc vede ke kolapsu srdce",
+      "url": "https://profitonline.cz/nemohla-popadnout-dech-zradna-nemoc-vede-ke-kolapsu-srdce/",
+      "dt": "2026-05-05T10:20:05Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dech",
+        "kolapsu",
+        "nemoc",
+        "nemohla",
+        "popadnout",
+        "srdce",
+        "vede",
+        "zrádná"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -267,32 +292,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Saúdská Arábie na vývozu ropy vydělává více než před válkou v Perském zálivu",
-      "url": "https://profitonline.cz/saudska-arabie-na-vyvozu-ropy-vydelava-vice-nez-pred-valkou-v-perskem-zalivu/",
-      "dt": "2026-05-03T20:30:06Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "arábie",
-        "než",
-        "perském",
-        "ropy",
-        "saúdská",
-        "vydělává",
-        "válkou",
-        "vývozu",
-        "zálivu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -303,7 +302,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19245,
+      "bytes": 19120,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -340,10 +339,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-05T08:20:21Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T10:20:05Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 12
+          "zdravi": 1,
+          "finance": 11
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -355,6 +355,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nemohla popadnout dech. Zrádná nemoc vede ke kolapsu srdce",
+            "publishedAt": "2026-05-05T10:20:05Z"
+          },
           {
             "title": "Kdo a proč shodil akcie Czechoslovak Group burze v Amsterodamu",
             "publishedAt": "2026-05-05T08:20:21Z"
@@ -382,10 +386,6 @@
           {
             "title": "Dědictví zrušení superhrubé mzdy: Letos už chybí 122 miliard",
             "publishedAt": "2026-05-04T10:00:10Z"
-          },
-          {
-            "title": "Česká ekonomika klopýtla, Írán za to ale zatím nemůže",
-            "publishedAt": "2026-05-04T09:10:02Z"
           }
         ]
       }

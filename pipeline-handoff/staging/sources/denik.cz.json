@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-05T10:10:16.059872Z",
+  "ingestedAt": "2026-05-05T10:49:55.042745Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Vystresovaný slon v Indii zabil člověka. Vzduchem letělo i auto a stromy",
+      "url": "https://www.denik.cz/ze_sveta/vystresovany-slon-v-indii-zabil-cloveka-vzduchem-letelo-i-auto-a-stromy.html",
+      "dt": "2026-05-05T10:07:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "auto",
+        "indii",
+        "letělo",
+        "slon",
+        "stromy",
+        "vystresovaný",
+        "vzduchem",
+        "zabil",
+        "člověka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Řidič srazil chodce a ujížděl Brnem. Při policejní honičce pomohl i taxikář",
+      "url": "https://www.denik.cz/krimi/brno-honicka-pronasledovani-policie-srazeny-chodec-taxikar.html",
+      "dt": "2026-05-05T10:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "brnem",
+        "chodce",
+        "honičce",
+        "policejní",
+        "pomohl",
+        "při",
+        "srazil",
+        "taxikář",
+        "ujížděl",
+        "řidič"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -598,57 +651,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rusko oznámilo dvoudenní příměří, Zelenskyj vyhlásil klid zbraní",
-      "url": "https://www.denik.cz/staty-mimo-eu/valka-na-ukrajine-rusko-oznamilo-primeri.html",
-      "dt": "2026-05-04T17:45:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dvoudenní",
-        "klid",
-        "oznámilo",
-        "příměří",
-        "rusko",
-        "vyhlásil",
-        "zbraní",
-        "zelenskyj"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Filipíny zahalily mraky popela. Vulkán Mayon ohrožuje statisíce lidí",
-      "url": "https://www.denik.cz/ze_sveta/popel-z-filipinskeho-vulkanu-mayon-zasahl-bezmala-200-000-lidi.html",
-      "dt": "2026-05-04T16:36:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "filipíny",
-        "lidí",
-        "mayon",
-        "mraky",
-        "ohrožuje",
-        "popela",
-        "statisíce",
-        "vulkán",
-        "zahalily"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +661,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28602,
+      "bytes": 28340,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,7 +698,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-05T09:22:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T10:07:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -713,6 +715,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vystresovaný slon v Indii zabil člověka. Vzduchem letělo i auto a stromy",
+            "publishedAt": "2026-05-05T10:07:00Z"
+          },
+          {
+            "title": "Řidič srazil chodce a ujížděl Brnem. Při policejní honičce pomohl i taxikář",
+            "publishedAt": "2026-05-05T10:00:00Z"
+          },
           {
             "title": "Chorvatsko zasáhlo zemětřesení: Otřesy v noci zvedly lidi z postelí",
             "publishedAt": "2026-05-05T09:22:00Z"
@@ -736,14 +746,6 @@
           {
             "title": "Dívenka s těžkou epilepsií nemá díky operaci v Česku záchvaty. Je rok po zákroku",
             "publishedAt": "2026-05-05T08:09:00Z"
-          },
-          {
-            "title": "Z videa mrazí: Letadlo zasáhlo při přistávání kamion, řidič přežil zázrakem",
-            "publishedAt": "2026-05-05T08:05:00Z"
-          },
-          {
-            "title": "Unikátní nález při ražbě metra v Praze: Sběratel objevil nový druh členovce",
-            "publishedAt": "2026-05-05T07:50:00Z"
           }
         ]
       }

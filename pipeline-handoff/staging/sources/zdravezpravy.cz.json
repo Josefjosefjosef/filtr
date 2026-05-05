@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-05T10:10:16.059872Z",
+  "ingestedAt": "2026-05-05T10:49:55.042745Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nákazy hantaviry jsou spíše vzácné, ale mají vysokou smrtnost",
+      "url": "https://www.zdravezpravy.cz/2026/05/05/nakazy-hantaviry-jsou-spise-vzacne-ale-maji-vysokou-smrtnost/",
+      "dt": "2026-05-05T09:50:07Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "ale",
+        "hantaviry",
+        "mají",
+        "nákazy",
+        "smrtnost",
+        "spíše",
+        "vysokou",
+        "vzácné"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -470,30 +495,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Česko vystaví čtvrtou vojenskou nemocnici. Doba si to žádá…",
-      "url": "https://www.zdravezpravy.cz/2026/04/27/cesko-vystavi-ctvrtou-vojenskou-nemocnici-doba-si-to-zada-tvrdi-premier/",
-      "dt": "2026-04-27T08:50:22Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "doba",
-        "nemocnici",
-        "vojenskou",
-        "vystaví",
-        "česko",
-        "čtvrtou",
-        "žádá"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -504,7 +505,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 191559,
+      "bytes": 191553,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -541,11 +542,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-05T07:00:24Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T09:50:07Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 1,
-          "zdravi": 19
+          "zdravi": 19,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -557,6 +558,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nákazy hantaviry jsou spíše vzácné, ale mají vysokou smrtnost",
+            "publishedAt": "2026-05-05T09:50:07Z"
+          },
           {
             "title": "Analýza: V investicích do zdravotnictví dál zaostáváme za západem",
             "publishedAt": "2026-05-05T07:00:24Z"
@@ -584,10 +589,6 @@
           {
             "title": "V ÚHKT podali pacientovi s revmatoidním onemocněním genovou terapii",
             "publishedAt": "2026-05-01T09:05:47Z"
-          },
-          {
-            "title": "ZUŠ Open zahájí 13. května benefiční koncert na Pražském hradě",
-            "publishedAt": "2026-04-30T13:00:35Z"
           }
         ]
       }
