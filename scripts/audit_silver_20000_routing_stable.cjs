@@ -365,6 +365,17 @@ function noteWriteSemantic(turn, raw, foldedIn) {
   return { ok: true, cat: "" };
 }
 
+function auditFoldedStripTailEntityExcludeClauses(folded) {
+  let x = String(folded || "");
+  x = x.replace(/\bnevracej\s+\w+/g, " ");
+  x = x.replace(/\bneukazuj\s+\w+/g, " ");
+  x = x.replace(/\bnezobrazuj\s+\w+/g, " ");
+  x = x.replace(/\bbez\s+zubar\w*/g, " ");
+  x = x.replace(/\bne\s+zubar\w*/g, " ");
+  x = x.replace(/\bnesmis\s+vrait\w*\s+\w+/g, " ");
+  return x.replace(/\s+/g, " ").trim();
+}
+
 function calendarQuerySemantic(input, folded, turn, raw, expectedIntent) {
   const expI = String(expectedIntent || "");
   if (turn.processingState === "READY_TO_SAVE" || turn.normalizedIntent === "calendar.create") {
@@ -382,10 +393,11 @@ function calendarQuerySemantic(input, folded, turn, raw, expectedIntent) {
       (forb.indexOf("petr") >= 0 && /\btomas/.test(folded) && /\bpetr\b/.test(foldCs(raw)));
     if (bad) return { ok: false, cat: "wrong_person_match" };
   }
+  const foldedProbe = auditFoldedStripTailEntityExcludeClauses(folded);
   if (
     expI !== "note.query" &&
     /nic\s+jsem\s+k\s+tomu\s+nenasel/i.test(foldCs(raw)) &&
-    /\bzubar|petr|pravnik|advokat|korunn|prahou\s+1\b/.test(folded)
+    /\bzubar|petr|pravnik|advokat|korunn|prahou\s+1\b/.test(foldedProbe)
   ) {
     return { ok: false, cat: "false_negative" };
   }
@@ -1188,6 +1200,12 @@ function buildCases() {
   /** P0: calendar_query_03026 — adresní read + „pro zubaře“ + negace „nevracej právníka“ nesmí přepsat title query na právníka. */
   silverPatchCaseByGroupIndex("calendar_query", 25, {
     input: "Jen zjisti v kalendáři adresu Brno střed pro zubaře a nevracej právníka.",
+    expectedIntent: "calendar.query"
+  });
+
+  /** P0: calendar_query_03027 — kdy mám + osoba + kolik toho + tento týden + nevracej (exclude, ne blokace). */
+  silverPatchCaseByGroupIndex("calendar_query", 26, {
+    input: "Kdy mám táta a kolik toho mám tento týden, nevracej zubaře?",
     expectedIntent: "calendar.query"
   });
 

@@ -35319,6 +35319,84 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return s.replace(/\s+/g, " ").trim();
   }
 
+  /** P0: „tento / tenhle / aktuální týden“ jako časový scope (foldCs). */
+  function iuSilverThisCalendarWeekScopeFolded(fx) {
+    const x = String(fx || "");
+    return (
+      /\b(?:tento|tenhle|tomuto)\s+t[yý]den\b/.test(x) ||
+      /\baktualni\s+tyden\b/.test(x) ||
+      /\baktuální\s+týden\b/.test(x)
+    );
+  }
+
+  /** P0: negativní klauzule na konci věty → exclude token pro title match (ne dotaz). */
+  function iuSilverExtractCalendarExcludeTitleFoldedFromReadTail(rRaw) {
+    const tail = String(rRaw || "");
+    let m = tail.match(/\bnevracej\s+([a-záéěíóúůýž]+)/i);
+    if (m && m[1] && String(m[1]).length > 2) return foldCs(String(m[1]).trim());
+    m = tail.match(/\bneukazuj\s+([a-záéěíóúůýž]+)/i);
+    if (m && m[1] && String(m[1]).length > 2) return foldCs(String(m[1]).trim());
+    m = tail.match(/\bnezobrazuj\s+([a-záéěíóúůýž]+)/i);
+    if (m && m[1] && String(m[1]).length > 2) return foldCs(String(m[1]).trim());
+    m = tail.match(/\bbez\s+(zubar\w*|pravnik\w*|advokat\w*|doktor\w*)/i);
+    if (m && m[1]) return foldCs(String(m[1]).trim());
+    m = tail.match(/\bne\s+(zubar\w*|pravnik\w*|advokat\w*|doktor\w*)\b/i);
+    if (m && m[1]) return foldCs(String(m[1]).trim());
+    m = tail.match(/\bnesmis\s+(?:vrait\w*|vratit)\s+([a-záéěíóúůýž]+)/i);
+    if (m && m[1] && String(m[1]).length > 2) return foldCs(String(m[1]).trim());
+    m = tail.match(/\bnesmi[sš]\s+[^,.!?]{0,22}?\s+vrait\w*\s+([a-záéěíóúůýž]+)/i);
+    if (m && m[1] && String(m[1]).length > 2) return foldCs(String(m[1]).trim());
+    return "";
+  }
+
+  /** P0: krátký fragment osoby za „kdy mám …“ / „s …“ → title dotaz (find_by_title). */
+  function iuSilverCanonicalCalendarEntityTitleFromPersonFragment(qRawIn) {
+    const q0 = String(qRawIn || "")
+      .trim()
+      .replace(/\s*[?.!…]+$/u, "")
+      .trim();
+    if (!q0 || q0.length < 2) return null;
+    const qFold = foldCs(q0);
+    if (/^zubar|^zubare/.test(qFold)) return { query: "Zubař", queryFolded: foldCs("Zubař") };
+    if (/^pravnik|^pravnika|^pravnici/.test(qFold)) return { query: "Právník", queryFolded: foldCs("Právník") };
+    if (/^advokat/.test(qFold)) return { query: "Advokát", queryFolded: foldCs("Advokát") };
+    if (/^doktor|^lekaf|^lekari/.test(qFold)) return { query: "Doktor", queryFolded: foldCs("Doktor") };
+    if (/^servis/.test(qFold)) return { query: "Servis", queryFolded: foldCs("Servis") };
+    if (/^skol/.test(qFold)) return { query: "Škola", queryFolded: foldCs("Škola") };
+    if (/^urad/.test(qFold)) return { query: "Úřad", queryFolded: foldCs("Úřad") };
+    if (/\bpetra?\b/.test(qFold)) return { query: "Petra", queryFolded: foldCs("Petra") };
+    if (/\bpetr\b/.test(qFold)) return { query: "Petr", queryFolded: foldCs("Petr") };
+    if (/\btomas/.test(qFold)) return { query: "Tomáš", queryFolded: foldCs("Tomáš") };
+    if (/\bpavel/.test(qFold)) return { query: "Pavel", queryFolded: foldCs("Pavel") };
+    if (/\bmariana\b/.test(qFold)) return { query: "Mariana", queryFolded: foldCs("Mariana") };
+    if (/\bmarie\b/.test(qFold)) return { query: "Marie", queryFolded: foldCs("Marie") };
+    if (/\bjana\b/.test(qFold)) return { query: "Jana", queryFolded: foldCs("Jana") };
+    if (/\bhonza\b/.test(qFold)) return { query: "Honza", queryFolded: foldCs("Honza") };
+    if (/\b(tata|tatovi|tatou|tatos)\b/.test(qFold)) return { query: "Táta", queryFolded: foldCs("Táta") };
+    if (/\b(mama|mamu|mami|matce)\b/.test(qFold)) return { query: "Máma", queryFolded: foldCs("Máma") };
+    return { query: q0, queryFolded: qFold };
+  }
+
+  /** P0: negace nesmí vyfiltrovat stejnou roli/osobu jako primární dotaz (pravník vs nevracej právníka). */
+  function iuSilverCalendarExcludeSameRoleAsPrimaryFolded(primaryFq, excludeFq) {
+    const p = String(primaryFq || "");
+    const e = String(excludeFq || "");
+    if (!p || !e || p.length < 2 || e.length < 2) return true;
+    if (p === e) return true;
+    const pr = /petr|petra/;
+    const zr = /zubar|zubare/;
+    const lr = /pravnik|pravnika|advokat/;
+    if (pr.test(p) && pr.test(e)) return true;
+    if (zr.test(p) && zr.test(e)) return true;
+    if (lr.test(p) && lr.test(e)) return true;
+    if (/tata|tatu|tatovi/.test(p) && /tata|tatu|tatovi/.test(e)) return true;
+    if (/mama|mamu|matce/.test(p) && /mama|mamu|matce/.test(e)) return true;
+    if (/tomas/.test(p) && /tomas/.test(e)) return true;
+    if (/pavel/.test(p) && /pavel/.test(e)) return true;
+    if (/mariana/.test(p) && /mariana/.test(e)) return true;
+    return false;
+  }
+
   /** P0: „pro zubaře / pro právníka / …“ → krátký title dotaz (foldCs vstup). */
   function iuSilverExtractCalendarProEntityTitleFromProClauseFolded(fX) {
     const x = String(fX || "");
@@ -35417,6 +35495,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bplanovac\b/.test(x) ||
       /\brozvrh\b/.test(x) ||
       /schuz|udalost|porad|meeting|zubar|advokat|pravnik|doktor/.test(x) ||
+      /\b(tata|tatu|mama|mamu)\b/.test(x) ||
       /\bv\s+kalend/i.test(x)
     );
   }
@@ -36678,6 +36757,89 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /^\s*kdy\s+mam\s+/i.test(f);
     const kolik = /\bkolik\s+m[aá]m\b/.test(f);
 
+    const mKdyKolikWeek = String(r || "").match(/^\s*kdy\s+m[aá]m\s+(.+?)\s+a\s+kolik\s+toho\s+m[aá]m\b/i);
+    if (mKdyKolikWeek && iuSilverThisCalendarWeekScopeFolded(f)) {
+      const fragK = String(mKdyKolikWeek[1] || "").trim();
+      const canK = iuSilverCanonicalCalendarEntityTitleFromPersonFragment(fragK);
+      if (canK && canK.query && String(canK.query).length >= 2) {
+        const todayS0 = toDateOnly(now);
+        const wkStart = startOfWeekMondayFromDateStr(todayS0);
+        const wkEnd = addDays(wkStart, 6);
+        const exTf = iuSilverExtractCalendarExcludeTitleFoldedFromReadTail(String(rawIn || ""));
+        const outSpecK = {
+          intent: "find_by_title",
+          query: canK.query,
+          normalizedQuery: canK.query,
+          diacriticInsensitive: true,
+          queryFolded: canK.queryFolded,
+          restrictDateStart: wkStart,
+          restrictDateEnd: wkEnd
+        };
+        if (exTf && exTf.length >= 2 && !iuSilverCalendarExcludeSameRoleAsPrimaryFolded(canK.queryFolded, exTf)) {
+          outSpecK.excludeTitleFolded = exTf;
+        }
+        return outSpecK;
+      }
+    }
+
+    const mKdyWeekSimple = String(r || "").match(
+      /^\s*kdy\s+m[aá]m\s+(.+?)\s+(?:tento|tenhle|tomuto|aktu[aá]ln[ií])\s+t[yý]den\b/i
+    );
+    if (mKdyWeekSimple && !mKdyKolikWeek) {
+      const fragW = String(mKdyWeekSimple[1] || "")
+        .trim()
+        .replace(/\s*[?.!…]+$/u, "")
+        .trim();
+      const canW = iuSilverCanonicalCalendarEntityTitleFromPersonFragment(fragW);
+      if (canW && canW.query && String(canW.query).length >= 2) {
+        const todaySw = toDateOnly(now);
+        const wkStartW = startOfWeekMondayFromDateStr(todaySw);
+        const wkEndW = addDays(wkStartW, 6);
+        const exW = iuSilverExtractCalendarExcludeTitleFoldedFromReadTail(String(rawIn || ""));
+        const outSpecW = {
+          intent: "find_by_title",
+          query: canW.query,
+          normalizedQuery: canW.query,
+          diacriticInsensitive: true,
+          queryFolded: canW.queryFolded,
+          restrictDateStart: wkStartW,
+          restrictDateEnd: wkEndW
+        };
+        if (exW && exW.length >= 2 && !iuSilverCalendarExcludeSameRoleAsPrimaryFolded(canW.queryFolded, exW)) {
+          outSpecW.excludeTitleFolded = exW;
+        }
+        return outSpecW;
+      }
+    }
+
+    const mKolikWeekS = String(r || "").match(
+      /\bkolik\s+toho\s+m[aá]m\s+(?:tento|tenhle|tomuto|aktu[aá]ln[ií])\s+t[yý]den\b/i
+    );
+    if (mKolikWeekS && (iuSilverCalendarEntityContextFolded(f) || /\bkalend/i.test(f))) {
+      const mSP = String(r || "").match(/\b(?:s|se)\s+([a-záéěíóúůýž]+)\b/i);
+      const fragS = mSP && mSP[1] ? String(mSP[1]).trim() : "";
+      const canS = fragS ? iuSilverCanonicalCalendarEntityTitleFromPersonFragment(fragS) : null;
+      if (canS && canS.query && String(canS.query).length >= 2) {
+        const todaySs = toDateOnly(now);
+        const wkStartS = startOfWeekMondayFromDateStr(todaySs);
+        const wkEndS = addDays(wkStartS, 6);
+        const exS = iuSilverExtractCalendarExcludeTitleFoldedFromReadTail(String(rawIn || ""));
+        const outSpecS = {
+          intent: "find_by_title",
+          query: canS.query,
+          normalizedQuery: canS.query,
+          diacriticInsensitive: true,
+          queryFolded: canS.queryFolded,
+          restrictDateStart: wkStartS,
+          restrictDateEnd: wkEndS
+        };
+        if (exS && exS.length >= 2 && !iuSilverCalendarExcludeSameRoleAsPrimaryFolded(canS.queryFolded, exS)) {
+          outSpecS.excludeTitleFolded = exS;
+        }
+        return outSpecS;
+      }
+    }
+
     if (/\bjak[aá]\s+je\s+moje\s+dal[sš][ií]\s+ud[aá]lost/i.test(f)) {
       return { intent: "next_event", filter: null };
     }
@@ -36741,7 +36903,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return { intent: "count_events", dateRange: "yesterday", filter: null };
     }
 
-    if (coMam && /\b(?:tento|tenhle|tomuto)\s+t[yý]den\b/i.test(f)) {
+    if (coMam && /\b(?:tento|tenhle|tomuto|aktu[aá]ln[ií])\s+t[yý]den\b/i.test(f)) {
       return { intent: "agenda_for_range", range: "week", filter: null };
     }
 
@@ -37052,6 +37214,26 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       let hits = sorted.filter(function (e) {
         return iuSilverTitleMatchesReadQuery(e.title, qf);
       });
+      if (spec.restrictDateStart && spec.restrictDateEnd) {
+        const rs = String(spec.restrictDateStart).slice(0, 10);
+        const re = String(spec.restrictDateEnd).slice(0, 10);
+        hits = hits.filter(function (e) {
+          const ds = String(e.date).slice(0, 10);
+          return ds >= rs && ds <= re;
+        });
+      }
+      if (spec.excludeTitleFolded) {
+        const exf = String(spec.excludeTitleFolded || "")
+          .trim()
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "");
+        if (exf.length >= 2) {
+          hits = hits.filter(function (e) {
+            return !iuSilverTitleMatchesReadQuery(e.title, exf);
+          });
+        }
+      }
       if (spec.dateIso) {
         const di = String(spec.dateIso).slice(0, 10);
         hits = hits.filter(function (e) {
