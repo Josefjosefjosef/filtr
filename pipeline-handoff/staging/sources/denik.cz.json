@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-05T07:00:05.630220Z",
+  "ingestedAt": "2026-05-05T07:39:52.111442Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Když hoří České Švýcarsko, vaří. Žena s kamarády nakrmila stovky hasičů",
+      "url": "https://www.denik.cz/regiony/kdyz-hori-ceske-svycarsko-ona-vari-pani-marie-s-kamarady-nakrmila-600-hasicu.html",
+      "dt": "2026-05-05T07:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "hasičů",
+        "hoří",
+        "kamarády",
+        "když",
+        "nakrmila",
+        "stovky",
+        "vaří",
+        "české",
+        "švýcarsko",
+        "žena"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -618,33 +645,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Obávaný plevel, nebo neocenitelný poklad? Českem se i letos šíří žlutá invaze",
-      "url": "https://www.denik.cz/regiony/jablonec-nad-nisou-pampelisky-kocianova-duben-2026.html",
-      "dt": "2026-05-04T13:20:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "invaze",
-        "letos",
-        "nebo",
-        "neocenitelný",
-        "obávaný",
-        "plevel",
-        "poklad",
-        "českem",
-        "šíří",
-        "žlutá"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -655,7 +655,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29153,
+      "bytes": 29074,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -692,7 +692,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-05T06:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T07:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -709,6 +709,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Když hoří České Švýcarsko, vaří. Žena s kamarády nakrmila stovky hasičů",
+            "publishedAt": "2026-05-05T07:00:00Z"
+          },
           {
             "title": "Kvalita života v Praze klesá, ukázal průzkum. Politici se přou o viníka",
             "publishedAt": "2026-05-05T06:20:00Z"
@@ -736,10 +740,6 @@
           {
             "title": "Zima se odmítá vzdát. Evropa se chystá na návrat sněhu, teploty prudce klesnou",
             "publishedAt": "2026-05-05T02:30:00Z"
-          },
-          {
-            "title": "OBRAZEM: První květnový úplněk máme za sebou, čeká nás ještě jeden",
-            "publishedAt": "2026-05-05T02:19:00Z"
           }
         ]
       }

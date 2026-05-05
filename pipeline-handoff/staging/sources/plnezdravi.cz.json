@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "plnezdravi.cz",
-  "ingestedAt": "2026-05-05T07:00:05.630220Z",
+  "ingestedAt": "2026-05-05T07:39:52.111442Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Jak zachránit život a neudělat chybu při mrtvici",
+      "url": "https://www.plnezdravi.cz/jak-zachranit-zivot-a-neudelat-chybu-pri-mrtvici/",
+      "dt": "2026-05-05T07:00:24Z",
+      "media_raw": "Plné zdraví",
+      "media_norm": "Plné zdraví",
+      "tokens": [
+        "chybu",
+        "mrtvici",
+        "neudělat",
+        "při",
+        "zachránit",
+        "život"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_plnezdravi",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "plnezdravi.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -494,31 +517,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "plnezdravi.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Když „až někdy“ ohrožuje vaše zdraví: prokrastinace u vysokého tlaku",
-      "url": "https://www.plnezdravi.cz/kdyz-az-nekdy-ohrozuje-vase-zdravi-prokrastinace-u-vysokeho-tlaku/",
-      "dt": "2026-04-20T07:00:23Z",
-      "media_raw": "Plné zdraví",
-      "media_norm": "Plné zdraví",
-      "tokens": [
-        "když",
-        "někdy",
-        "ohrožuje",
-        "prokrastinace",
-        "tlaku",
-        "vaše",
-        "vysokého",
-        "zdraví"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_plnezdravi",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "plnezdravi.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -529,7 +527,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.plnezdravi.cz/feed/",
-      "bytes": 149633,
+      "bytes": 148950,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -566,7 +564,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-05T04:25:13Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T07:00:24Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -581,6 +579,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jak zachránit život a neudělat chybu při mrtvici",
+            "publishedAt": "2026-05-05T07:00:24Z"
+          },
           {
             "title": "Proč nás dnes světlo obtěžuje víc než dřív? Světloplachost je na vzestupu",
             "publishedAt": "2026-05-05T04:25:13Z"
@@ -608,10 +610,6 @@
           {
             "title": "Jaro je pro alergiky těžkým obdobím, kuřáci jsou na tom hůř",
             "publishedAt": "2026-04-30T07:00:27Z"
-          },
-          {
-            "title": "Alkohol u mladých ustupuje, nahrazují ho však jiné látky",
-            "publishedAt": "2026-04-29T07:00:07Z"
           }
         ]
       }

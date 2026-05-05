@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-05T07:00:05.630220Z",
+  "ingestedAt": "2026-05-05T07:39:52.111442Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Colt CZ: Amsterdamská burza není jen symbolický doplněk",
+      "url": "https://profitonline.cz/colt-cz-amsterdamska-burza-neni-jen-symbolicky-doplnek/",
+      "dt": "2026-05-05T07:00:10Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "amsterdamská",
+        "burza",
+        "colt",
+        "doplněk",
+        "jen",
+        "symbolický"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -269,27 +292,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Co přinese odchod Emirátů z OPEC?",
-      "url": "https://profitonline.cz/co-prinese-odchod-emiratu-z-opec/",
-      "dt": "2026-05-03T06:00:52Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "emirátů",
-        "odchod",
-        "opec",
-        "přinese"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -300,7 +302,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18903,
+      "bytes": 19061,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -337,7 +339,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-05T06:00:21Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T07:00:10Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -352,6 +354,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Colt CZ: Amsterdamská burza není jen symbolický doplněk",
+            "publishedAt": "2026-05-05T07:00:10Z"
+          },
           {
             "title": "Martin Vránek novým generálním ředitelem Rema Systém",
             "publishedAt": "2026-05-05T06:00:21Z"
@@ -379,10 +385,6 @@
           {
             "title": "Čeští investoři sázejí na technologie a krypto, ale s otazníkem nad budoucností",
             "publishedAt": "2026-05-04T08:00:39Z"
-          },
-          {
-            "title": "Lenka Vaněk posilou top managementu E.ON Energy Solutions",
-            "publishedAt": "2026-05-04T07:00:19Z"
           }
         ]
       }

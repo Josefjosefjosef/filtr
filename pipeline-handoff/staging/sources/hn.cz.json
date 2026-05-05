@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-05T07:00:05.630220Z",
+  "ingestedAt": "2026-05-05T07:39:52.111442Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Kdo přijde o dotace? Brusel chce omezit podporu velkým farmám. Česko patří mezi největší odpůrce",
+      "url": "https://byznys.hn.cz/c1-67873410-kdo-prijde-o-dotace-brusel-chce-omezit-podporu-velkym-farmam-cesko-patri-mezi-nejvetsi-odpurce",
+      "dt": "2026-05-05T07:30:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "brusel",
+        "chce",
+        "dotace",
+        "farmám",
+        "největší",
+        "odpůrce",
+        "omezit",
+        "patří",
+        "podporu",
+        "přijde",
+        "velkým",
+        "česko"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -1098,37 +1127,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Když mě někdo k něčemu vyzývá, tak jdu po tom. Babiš znovu jednal s Ruttem o zvyšování výdajů na obranu",
-      "url": "https://domaci.hn.cz/c1-67873080-kdyz-me-nekdo-k-necemu-vyzyva-tak-jdu-po-tom-babis-znovu-jednal-s-ruttem-o-zvysovani-vydaju-na-obranu",
-      "dt": "2026-05-04T06:06:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "babiš",
-        "jdu",
-        "jednal",
-        "když",
-        "někdo",
-        "něčemu",
-        "obranu",
-        "ruttem",
-        "tak",
-        "tom",
-        "vyzývá",
-        "výdajů",
-        "znovu",
-        "zvyšování"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1139,7 +1137,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183044,
+      "bytes": 182999,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1176,11 +1174,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-05T05:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T07:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 3,
           "finance": 36,
+          "zpravy": 3,
           "zdravi": 1
         },
         "drop_counts": {
@@ -1193,6 +1191,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kdo přijde o dotace? Brusel chce omezit podporu velkým farmám. Česko patří mezi největší odpůrce",
+            "publishedAt": "2026-05-05T07:30:00Z"
+          },
           {
             "title": "Ještě pár volebních období. Soudní zpravodaj HN odhaduje pravděpodobnost odsouzení Andreje Babiše v kauze Čapí hnízdo",
             "publishedAt": "2026-05-05T05:31:00Z"
@@ -1219,10 +1221,6 @@
           },
           {
             "title": "Slabá místa firemních dluhopisů. Jak rozpoznat varovné signály a&nbsp;nenaletět",
-            "publishedAt": "2026-05-04T22:00:00Z"
-          },
-          {
-            "title": "AI je v&nbsp;oblasti investic dvousečný meč. Letošní rok pro ni bude zlomový, říká Tomáš Pfeiler z&nbsp;Cyrrusu",
             "publishedAt": "2026-05-04T22:00:00Z"
           }
         ]

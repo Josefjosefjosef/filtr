@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-05T07:00:05.630220Z",
+  "ingestedAt": "2026-05-05T07:39:52.111442Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "AlzaBoxy nově slouží i pro odeslání knih do Knihobotu",
+      "url": "https://www.penize.cz/nakupy/489274-alzaboxy-nove-slouzi-i-pro-odeslani-knih-do-knihobotu",
+      "dt": "2026-05-05T09:26:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "alzaboxy",
+        "knih",
+        "knihobotu",
+        "nově",
+        "odeslání",
+        "slouží"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -471,29 +494,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Čekat na plastovou kartu už nemusíte ani ve Fio bance",
-      "url": "https://www.penize.cz/osobni-ucty/489129-cekat-na-plastovou-kartu-uz-nemusite-ani-ve-fio-bance",
-      "dt": "2026-04-30T10:55:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "bance",
-        "fio",
-        "kartu",
-        "nemusíte",
-        "plastovou",
-        "čekat"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -504,7 +504,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18185,
+      "bytes": 18119,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -541,12 +541,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-05T05:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T09:26:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 17,
-          "zpravy": 2,
-          "sport": 1
+          "sport": 2,
+          "finance": 16,
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -558,6 +558,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "AlzaBoxy nově slouží i pro odeslání knih do Knihobotu",
+            "publishedAt": "2026-05-05T09:26:00Z"
+          },
           {
             "title": "Jak vylepšit penzijko, aby vydělalo víc? Změny ve spoření na důchod očima expertů",
             "publishedAt": "2026-05-05T05:05:00Z"
@@ -585,10 +589,6 @@
           {
             "title": "Poslední den na daňové přiznání. Návody, změny a časté chyby",
             "publishedAt": "2026-05-04T11:30:00Z"
-          },
-          {
-            "title": "Allianz pojišťovna má nového provozního ředitele a člena představenstva",
-            "publishedAt": "2026-05-04T11:20:00Z"
           }
         ]
       }

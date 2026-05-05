@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-05T07:00:05.630220Z",
+  "ingestedAt": "2026-05-05T07:39:52.111442Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Oběťmi zběsilé jízdy centrem Lipska jsou dva Němci, útočník je ve vazbě",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/obetmi-zbesile-jizdy-centrem-lipska-jsou-dva-nemci-utocnik-je-ve-vazbe-373110",
+      "dt": "2026-05-05T07:23:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "centrem",
+        "dva",
+        "jízdy",
+        "lipska",
+        "němci",
+        "oběťmi",
+        "vazbě",
+        "zběsilé",
+        "útočník"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -739,33 +765,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Kriminalisté v souvislosti s bitcoinovou kauzou stíhají další tři lidi včetně Blažka",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/kriminaliste-v-souvislosti-s-bitcoinovou-kauzou-stihaji-dalsi-tri-lidi-373080",
-      "dt": "2026-05-04T11:37:40Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "bitcoinovou",
-        "blažka",
-        "další",
-        "kauzou",
-        "kriminalisté",
-        "lidi",
-        "souvislosti",
-        "stíhají",
-        "tři",
-        "včetně"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "sport",
       "contentType": "article",
       "title": "Minnesota zaskočila i San Antonio, vyčerpaná Philadelphia padla s New Yorkem",
@@ -817,7 +816,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "AS Řím útočí na účast v Lize mistrů Fiorentina má jistou záchranu",
+      "title": "AS Řím útočí na účast v Lize mistrů, Fiorentina má jistou záchranu",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/as-rim-utoci-na-ucast-v-lize-mistru-fiorentina-ma-jistou-zachranu-156604",
       "dt": "2026-05-04T21:43:00Z",
       "media_raw": "ČT sport",
@@ -1546,7 +1545,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 45315,
+      "bytes": 45200,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1606,7 +1605,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T06:30:18Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T07:23:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1623,6 +1622,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Oběťmi zběsilé jízdy centrem Lipska jsou dva Němci, útočník je ve vazbě",
+            "publishedAt": "2026-05-05T07:23:00Z"
+          },
           {
             "title": "Východní část Chorvatska v noci zasáhlo zemětřesení",
             "publishedAt": "2026-05-05T06:30:18Z"
@@ -1650,10 +1653,6 @@
           {
             "title": "Někteří řidiči zejména na sídlištích parkují v rozporu se zákonem",
             "publishedAt": "2026-05-05T04:31:00Z"
-          },
-          {
-            "title": "Vietnamský lídr „Hořící pece“ koncentruje moc po vzoru Číny",
-            "publishedAt": "2026-05-05T04:00:00Z"
           }
         ]
       }
@@ -1665,7 +1664,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39429,
+      "bytes": 39430,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1726,7 +1725,7 @@
             "publishedAt": "2026-05-05T06:29:37Z"
           },
           {
-            "title": "AS Řím útočí na účast v Lize mistrů Fiorentina má jistou záchranu",
+            "title": "AS Řím útočí na účast v Lize mistrů, Fiorentina má jistou záchranu",
             "publishedAt": "2026-05-04T21:43:00Z"
           },
           {
@@ -1759,7 +1758,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77401,
+      "bytes": 77312,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

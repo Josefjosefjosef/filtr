@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-05T07:00:05.630220Z",
+  "ingestedAt": "2026-05-05T07:39:52.111442Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Gentleman Babiš? Schovat se za ženu je zbabělé",
+      "url": "https://www.epenize.eu/gentleman-babis-schovat-se-za-zenu-je-zbabele/",
+      "dt": "2026-05-05T07:00:41Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "babiš",
+        "gentleman",
+        "schovat",
+        "zbabělé",
+        "ženu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -474,30 +496,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Učitel dnes nemusí umět učit. Stačí mu se dobře prodat",
-      "url": "https://www.epenize.eu/ucitel-dnes-nemusi-umet-ucit-staci-mu-se-dobre-prodat/",
-      "dt": "2026-04-25T07:00:48Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "dobře",
-        "nemusí",
-        "prodat",
-        "stačí",
-        "umět",
-        "učit",
-        "učitel"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -508,7 +506,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 104964,
+      "bytes": 104076,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -545,7 +543,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-04T23:00:41Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T07:00:41Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 18,
@@ -561,6 +559,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Gentleman Babiš? Schovat se za ženu je zbabělé",
+            "publishedAt": "2026-05-05T07:00:41Z"
+          },
           {
             "title": "Trumpův seznam: Itálie s ničím nepomohla, Španělsko je hrozné, Británie zbabělá a Francie blokuje přelety",
             "publishedAt": "2026-05-04T23:00:41Z"
@@ -588,10 +590,6 @@
           {
             "title": "Greeneová věští konec GOP po fiasku se špehováním",
             "publishedAt": "2026-05-01T23:00:35Z"
-          },
-          {
-            "title": "Miroslav Kalousek: Uzákonili jsme si rozežranost na úkor budoucnosti",
-            "publishedAt": "2026-05-01T07:51:51Z"
           }
         ]
       }
