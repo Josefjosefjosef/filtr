@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-05T16:39:31.181451Z",
+  "ingestedAt": "2026-05-05T17:19:24.967766Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Fakt, že příměří pokračuje, trhy uklidnilo",
+      "url": "https://profitonline.cz/fakt-ze-primeri-pokracuje-trhy-uklidnilo/",
+      "dt": "2026-05-05T17:00:26Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "fakt",
+        "pokračuje",
+        "příměří",
+        "trhy",
+        "uklidnilo"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -267,31 +289,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "The Economist: Spojené arabské emiráty vsadily na Izrael a Ameriku",
-      "url": "https://profitonline.cz/the-economist-spojene-arabske-emiraty-vsadily-na-izrael-a-ameriku/",
-      "dt": "2026-05-04T04:00:46Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "ameriku",
-        "arabské",
-        "economist",
-        "emiráty",
-        "izrael",
-        "spojené",
-        "the",
-        "vsadily"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -302,7 +299,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19120,
+      "bytes": 19046,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -339,11 +336,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-05T10:20:05Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T17:00:26Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "zdravi": 1,
-          "finance": 11
+          "finance": 11,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -355,6 +352,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fakt, že příměří pokračuje, trhy uklidnilo",
+            "publishedAt": "2026-05-05T17:00:26Z"
+          },
           {
             "title": "Nemohla popadnout dech. Zrádná nemoc vede ke kolapsu srdce",
             "publishedAt": "2026-05-05T10:20:05Z"
@@ -382,10 +383,6 @@
           {
             "title": "Firmám v Česku rostou náklady nejvýrazněji za čtyři roky",
             "publishedAt": "2026-05-04T20:10:02Z"
-          },
-          {
-            "title": "Dědictví zrušení superhrubé mzdy: Letos už chybí 122 miliard",
-            "publishedAt": "2026-05-04T10:00:10Z"
           }
         ]
       }

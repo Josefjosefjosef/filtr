@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-05T16:39:31.181451Z",
+  "ingestedAt": "2026-05-05T17:19:24.967766Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Mrazivá česká detektivka boduje na streamu. Děsivá vražda zde není pro slabé povahy",
+      "url": "https://www.kinobox.cz/clanky/vod/53489-mraziva-ceska-detektivka-boduje-na-streamu-desiva-vrazda-zde-neni-pro-slabe-povahy",
+      "dt": "2026-05-05T17:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "boduje",
+        "detektivka",
+        "děsivá",
+        "mrazivá",
+        "povahy",
+        "slabé",
+        "streamu",
+        "vražda",
+        "zde",
+        "česká"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -530,34 +557,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "„Krotitele duchů z toho dělat nechceme,\" říká Štefan Titka, scenárista Záhadných případů",
-      "url": "https://www.kinobox.cz/clanky/serialy/53198-krotitele-duchu-z-toho-delat-nechceme-rika-stefan-titka-scenarista-zahadnych-pripadu",
-      "dt": "2026-05-03T07:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "duchů",
-        "dělat",
-        "krotitele",
-        "nechceme",
-        "případů",
-        "scenárista",
-        "titka",
-        "toho",
-        "záhadných",
-        "říká",
-        "štefan"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -568,7 +567,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 29208,
+      "bytes": 29106,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -605,10 +604,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-05T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T17:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "other": 20
+          "zpravy": 1,
+          "other": 19
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -620,6 +620,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mrazivá česká detektivka boduje na streamu. Děsivá vražda zde není pro slabé povahy",
+            "publishedAt": "2026-05-05T17:00:00Z"
+          },
           {
             "title": "Ještě lepší než Michael? 10 životopisných filmů, které by měl vidět každý hudební fanoušek",
             "publishedAt": "2026-05-05T15:00:00Z"
@@ -647,10 +651,6 @@
           {
             "title": "TV tipy: Oscarový Pan Nikdo proti Putinovi, Tarantinův Kill Bill i Nicholas Winton",
             "publishedAt": "2026-05-04T17:00:00Z"
-          },
-          {
-            "title": "Top kina ČR: Ďábel nosí Pradu 2 si připsal nejlepší start roku. Michael dále úspěšně tančí",
-            "publishedAt": "2026-05-04T15:00:00Z"
           }
         ]
       }

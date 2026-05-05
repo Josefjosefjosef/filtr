@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-05T16:39:31.181451Z",
+  "ingestedAt": "2026-05-05T17:19:24.967766Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Jsem jako trenér sedmnáctého týmu ligy, říká nový šéf českých rozhodčích",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/carlos-clos-gomez-predseda-komise-rozhofcich-facr-rozhovor.A260505_174354_fotbal_min",
+      "dt": "2026-05-05T16:44:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "jako",
+        "jsem",
+        "ligy",
+        "nový",
+        "rozhodčích",
+        "sedmnáctého",
+        "trenér",
+        "týmu",
+        "českých",
+        "říká",
+        "šéf"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Wawrinka ukončí kariéru během domácího turnaje. Na programu je emotivní rozlučka",
+      "url": "https://www.idnes.cz/sport/trendy/wawrinka-ukonci-karieru-behem-domaciho-turnaje-na-programu-je-emotivni-rozlucka.A260505_124914_trendy_blah",
+      "dt": "2026-05-05T16:21:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "během",
+        "domácího",
+        "emotivní",
+        "kariéru",
+        "programu",
+        "rozlučka",
+        "turnaje",
+        "ukončí",
+        "wawrinka"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -734,60 +788,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Giro d’Italia 2026: program, přehled a výsledky etap, favorité, Češi na startu",
-      "url": "https://www.idnes.cz/sport/cyklistika/giro-d-italia-prehled-souhrn-trasy-vysledky.A260423_130030_cyklistika_ipet",
-      "dt": "2026-05-05T06:59:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "2026",
-        "etap",
-        "favorité",
-        "giro",
-        "italia",
-        "program",
-        "přehled",
-        "startu",
-        "výsledky",
-        "češi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Carrick nastartoval United. Zůstane však? Šéf klubu preferuje megalomanská řešení",
-      "url": "https://www.idnes.cz/fotbal/zahranici/carrick-nastartoval-united-zustane-vsak-sef-klubu-preferuje-megalomanska-reseni.A260504_182150_fot_zahranici_tit",
-      "dt": "2026-05-05T06:30:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "carrick",
-        "klubu",
-        "megalomanská",
-        "nastartoval",
-        "preferuje",
-        "united",
-        "však",
-        "zůstane",
-        "řešení",
-        "šéf"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47445,
+      "bytes": 47216,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,7 +835,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T15:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T16:44:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -850,6 +850,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jsem jako trenér sedmnáctého týmu ligy, říká nový šéf českých rozhodčích",
+            "publishedAt": "2026-05-05T16:44:00Z"
+          },
+          {
+            "title": "Wawrinka ukončí kariéru během domácího turnaje. Na programu je emotivní rozlučka",
+            "publishedAt": "2026-05-05T16:21:00Z"
+          },
           {
             "title": "Třikrát mistryně světa, třikrát zlatá na olympiádě. Charlesová v 37 končí kariéru",
             "publishedAt": "2026-05-05T15:32:00Z"
@@ -873,14 +881,6 @@
           {
             "title": "Najali jste lháře. Toronto ohromilo volbou manažera, v minulosti porušoval pravidla",
             "publishedAt": "2026-05-05T13:00:00Z"
-          },
-          {
-            "title": "Zlomeniny se hromadí a ženská Vuelta přichází o největší hvězdy",
-            "publishedAt": "2026-05-05T12:54:00Z"
-          },
-          {
-            "title": "Napojení na Černaje, nabádání k nekalým praktikám. Olomoucký Elbel nesmí hrát",
-            "publishedAt": "2026-05-05T12:49:11Z"
           }
         ]
       }
