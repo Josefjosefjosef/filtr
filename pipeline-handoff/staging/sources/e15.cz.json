@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-05T04:30:28.576769Z",
+  "ingestedAt": "2026-05-05T05:05:35.686243Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jeden za všechny, nebo každý sám za sebe? Proč společná evropská obrana vázne",
+      "url": "https://www.e15.cz/nazory-a-analyzy/jeden-za-vsechny-nebo-kazdy-sam-za-sebe-proc-spolecna-evropska-obrana-vazne-1432559",
+      "dt": "2026-05-05T04:30:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "evropská",
+        "jeden",
+        "každý",
+        "nebo",
+        "obrana",
+        "proč",
+        "sebe",
+        "společná",
+        "sám",
+        "vázne",
+        "všechny"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1078,35 +1106,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Volkswagen v ohni, tohle bude drahé. Strádající matka Škody Auto doplácí na Trumpovu zášť k Německu",
-      "url": "https://www.e15.cz/byznys/cesky-a-evropsky-autoprumysl/volkswagen-v-ohni-tohle-bude-drahe-stradajici-matka-skody-auto-doplaci-na-trumpovu-zast-k-nemecku-1432537",
-      "dt": "2026-05-02T15:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "auto",
-        "doplácí",
-        "drahé",
-        "matka",
-        "německu",
-        "ohni",
-        "strádající",
-        "tohle",
-        "trumpovu",
-        "volkswagen",
-        "zášť",
-        "škody"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1117,7 +1116,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 57516,
+      "bytes": 57712,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1154,7 +1153,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-05T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T04:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 32,
@@ -1171,6 +1170,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jeden za všechny, nebo každý sám za sebe? Proč společná evropská obrana vázne",
+            "publishedAt": "2026-05-05T04:30:00Z"
+          },
           {
             "title": "Růst se téměř zastavil a ceny rostou. Evropa se dostává na hranu velmi nebezpečného stavu: stagflace",
             "publishedAt": "2026-05-05T04:00:00Z"
@@ -1198,10 +1201,6 @@
           {
             "title": "Čínské technologie v EU se dostávají pod tlak. Brusel varuje před dvěma výrobci, Peking hrozí odvetou",
             "publishedAt": "2026-05-04T13:53:00Z"
-          },
-          {
-            "title": "Další dodavatel zvyšuje ceny energií. Od května zdražuje fixované ceníky",
-            "publishedAt": "2026-05-04T13:07:00Z"
           }
         ]
       }

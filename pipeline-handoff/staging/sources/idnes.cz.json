@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-05T04:30:28.576769Z",
+  "ingestedAt": "2026-05-05T05:05:35.686243Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Krize v Hormuzu nemá vojenské řešení, míní šéf íránské diplomacie",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/krize-hormuzsky-pruliv-iran-usa-vojenske-reseni.A260505_062706_zahranicni_herp",
+      "dt": "2026-05-05T04:44:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "diplomacie",
+        "hormuzu",
+        "krize",
+        "míní",
+        "nemá",
+        "vojenské",
+        "íránské",
+        "řešení",
+        "šéf"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -766,32 +792,6 @@
         "podle",
         "směrem",
         "správným"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vláda schválila EET. Chce spropitné osvobodit od daní a vrátit i školkovné",
-      "url": "https://www.idnes.cz/zpravy/domaci/eet-je-zpet-vyjimku-maji-dostat-zivnostnici-s-obratem-do-milionu-korun.A260504_054715_domaci_kop",
-      "dt": "2026-05-04T14:50:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "chce",
-        "daní",
-        "eet",
-        "osvobodit",
-        "schválila",
-        "spropitné",
-        "vláda",
-        "vrátit",
-        "školkovné"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1595,7 +1595,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49836,
+      "bytes": 49687,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1632,7 +1632,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T03:52:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T04:44:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1648,6 +1648,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Krize v Hormuzu nemá vojenské řešení, míní šéf íránské diplomacie",
+            "publishedAt": "2026-05-05T04:44:00Z"
+          },
           {
             "title": "Poslanci mají jednat o změně stavebního zákona, Mrázová ji chce schválit zrychleně",
             "publishedAt": "2026-05-05T03:52:00Z"
@@ -1675,10 +1679,6 @@
           {
             "title": "Pulitzerovu cenu získal The Washington Post za popis chaotické Trumpovy reformy",
             "publishedAt": "2026-05-04T21:00:00Z"
-          },
-          {
-            "title": "Alžběta II. se ještě jako princezna na konci války tajně připojila k jásajícímu davu",
-            "publishedAt": "2026-05-04T20:20:00Z"
           }
         ]
       }

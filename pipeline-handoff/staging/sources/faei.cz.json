@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-05T04:30:28.576769Z",
+  "ingestedAt": "2026-05-05T05:05:35.686243Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Dolar na úvod týdne silnější",
+      "url": "https://profitonline.cz/dolar-na-uvod-tydne-silnejsi/",
+      "dt": "2026-05-05T05:00:26Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dolar",
+        "silnější",
+        "týdne",
+        "úvod"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -270,27 +291,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Mstí se Trump německému kancléři?",
-      "url": "https://profitonline.cz/msti-se-trump-nemeckemu-kancleri/",
-      "dt": "2026-05-02T15:05:20Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "kancléři",
-        "mstí",
-        "německému",
-        "trump"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -301,7 +301,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18829,
+      "bytes": 18930,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -338,7 +338,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-05T04:00:56Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T05:00:26Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -354,6 +354,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dolar na úvod týdne silnější",
+            "publishedAt": "2026-05-05T05:00:26Z"
+          },
           {
             "title": "Podnikatelé prosazují byrokratický detox. EU chrlí sedm nových předpisů za den",
             "publishedAt": "2026-05-05T04:00:56Z"
@@ -381,10 +385,6 @@
           {
             "title": "The Economist: Spojené arabské emiráty vsadily na Izrael a Ameriku",
             "publishedAt": "2026-05-04T04:00:46Z"
-          },
-          {
-            "title": "Saúdská Arábie na vývozu ropy vydělává více než před válkou v Perském zálivu",
-            "publishedAt": "2026-05-03T20:30:06Z"
           }
         ]
       }

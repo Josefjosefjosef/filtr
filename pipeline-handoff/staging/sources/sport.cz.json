@@ -1,23 +1,50 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-05T04:30:28.576769Z",
+  "ingestedAt": "2026-05-05T05:05:35.686243Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Vladař výhru nevychytal, Philadelphie padla v prodloužení",
+      "title": "Vladař výhru nevychytal, Philadelphie padla v prodloužení. Nedařilo se ani Dostálovu Anaheimu",
       "url": "https://www.sport.cz/clanek/hokej-nhl-vladar-vyhru-nevychytal-philadelphie-padla-v-prodlouzeni-5448548",
       "dt": "2026-05-05T03:53:03Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
+        "anaheimu",
+        "dostálovu",
+        "nedařilo",
         "nevychytal",
         "padla",
         "philadelphie",
         "prodloužení",
         "vladař",
         "výhru"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Už si u nás nezapískají! Majitel Liberce se tvrdě pustil do rozhodčích",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-uz-si-u-nas-nezapiskaji-majitel-liberce-se-tvrde-pustil-do-rozhodcich-5448534",
+      "dt": "2026-05-05T04:27:43Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "liberce",
+        "majitel",
+        "nezapískají",
+        "nás",
+        "pustil",
+        "rozhodčích",
+        "tvrdě"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -741,31 +768,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fantastický úspěch. Češi vezou z Řecka rekordní počet medailí",
-      "url": "https://www.sport.cz/clanek/bojove-sporty-mma-fantasticky-uspech-cesi-vezou-z-recka-rekordni-pocet-medaili-5448484",
-      "dt": "2026-05-04T13:48:59Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "fantastický",
-        "medailí",
-        "počet",
-        "rekordní",
-        "vezou",
-        "úspěch",
-        "češi",
-        "řecka"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -776,7 +778,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40005,
+      "bytes": 40880,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -813,7 +815,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T03:53:03Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T04:27:43Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -829,8 +831,12 @@
         },
         "sample_titles": [
           {
-            "title": "Vladař výhru nevychytal, Philadelphie padla v prodloužení",
+            "title": "Vladař výhru nevychytal, Philadelphie padla v prodloužení. Nedařilo se ani Dostálovu Anaheimu",
             "publishedAt": "2026-05-05T03:53:03Z"
+          },
+          {
+            "title": "Už si u nás nezapískají! Majitel Liberce se tvrdě pustil do rozhodčích",
+            "publishedAt": "2026-05-05T04:27:43Z"
           },
           {
             "title": "Už třinácté MS v kariéře! Červenka chce být u Rulíkova loučení a překoná český rekord",
@@ -855,10 +861,6 @@
           {
             "title": "Basketbalisté Nymburka a Pardubic jsou krok od postupu do semifinále",
             "publishedAt": "2026-05-04T18:42:08Z"
-          },
-          {
-            "title": "Hearts se výhrou nad Rangers přiblížili senzačnímu titulu ve skotské lize",
-            "publishedAt": "2026-05-04T19:02:20Z"
           }
         ]
       }

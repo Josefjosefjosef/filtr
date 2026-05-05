@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-05T04:30:28.576769Z",
+  "ingestedAt": "2026-05-05T05:05:35.686243Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Průlomová terapie vzácného onemocnění i léčba rakoviny. Kterých 5 léků dostalo v EU zelenou?",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/nove-leky-ema-sma/",
+      "dt": "2026-05-05T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dostalo",
+        "kterých",
+        "léků",
+        "léčba",
+        "onemocnění",
+        "průlomová",
+        "rakoviny",
+        "terapie",
+        "vzácného",
+        "zelenou"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,33 +269,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "6 % dětí se narodilo díky IVF. V jedné věci nás už ale předběhlo i Rumunsko",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/proc-si-cesi-u-lecby-neplodnosti-doplaceji-a-co-s-tim/",
-      "dt": "2026-05-04T07:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "ale",
-        "díky",
-        "dětí",
-        "ivf",
-        "jedné",
-        "narodilo",
-        "nás",
-        "předběhlo",
-        "rumunsko",
-        "věci"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 85611,
+      "bytes": 84525,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-04T16:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -331,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Průlomová terapie vzácného onemocnění i léčba rakoviny. Kterých 5 léků dostalo v EU zelenou?",
+            "publishedAt": "2026-05-05T05:00:00Z"
+          },
           {
             "title": "Boj s mýty o vakcínách: Evropská agentura spouští poradní tým, je v něm i známý český expert",
             "publishedAt": "2026-05-04T16:00:00Z"
@@ -358,10 +362,6 @@
           {
             "title": "Brusel přeskupuje miliardy: Co se stane s financemi na rakovinu a vzácná onemocnění?",
             "publishedAt": "2026-05-04T10:10:00Z"
-          },
-          {
-            "title": "Nemoc, která zabíjela na výletní lodi v Atlantiku: Co je to hantavirus a jak se přenáší na člověka?",
-            "publishedAt": "2026-05-04T08:48:53Z"
           }
         ]
       }
