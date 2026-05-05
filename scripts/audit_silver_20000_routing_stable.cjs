@@ -965,7 +965,13 @@ function buildCases() {
       input: "ne jako úkol, nahoď do kalendáře kontrolu smlouvy zítra v 9.",
       expectedIntent: "calendar.create"
     },
-    { group: "calendar_query", index0: 4, input: "ne v kalendáři a nic nevytvářej.", expectedIntent: "unknown" }
+    { group: "calendar_query", index0: 4, input: "ne v kalendáři a nic nevytvářej.", expectedIntent: "unknown" },
+    {
+      group: "calendar_write",
+      index0: 21,
+      input: "Ne v kalendáři. ulož do kalendáře schůzku s Janem zítra v 10.",
+      expectedIntent: "calendar.create"
+    }
   ];
   for (let pi = 0; pi < SILVER_READ_WRITE_PRIORITY_PATCH.length; pi++) {
     const p = SILVER_READ_WRITE_PRIORITY_PATCH[pi];
@@ -1070,6 +1076,69 @@ function buildCases() {
     const p = SILVER_CALENDAR_QUERY_NOTE_NEGATION_PATCH[ni];
     silverPatchCaseByGroupIndex(p.group, p.index0, { input: p.input, expectedIntent: p.expectedIntent });
   }
+
+  /** P0: calendar_query řádek 4 + NEGS „ne v kalendáři“ (25× i≡20 mod 120) → unknown, sladění s produktem. */
+  for (let i = 0; i < 3000; i++) {
+    if (i % 8 !== 4 || (i * 2) % 30 !== 10) continue;
+    const neg = NEGS[(i * 2) % NEGS.length];
+    const p = PERSONS[(i * 4) % PERSONS.length];
+    const a = ADDRS[(i * 5) % ADDRS.length];
+    const lines = [
+      `${neg} Pepo, co mám ${DATES[i % DATES.length]} v kalendáři ohledně ${p}?`,
+      `Jen zjisti v kalendáři adresu ${a} pro zubaře a ${neg}.`,
+      `Kdy mám ${p} a kolik toho mám tento týden, ${neg}?`,
+      `Najdi schůzku s ${p} na zítřek, ${neg.replace(/e/g, "e")}.`,
+      `Bez diakritiky: podivej se do kalendare co mam zitra, ${stripDiak(neg)}.`,
+      `Jakou adresu má záznam u ${foldCs(p).indexOf("zubar") >= 0 ? "zubaře" : "právníka"}, jen v kalendáři, ${neg}.`,
+      `Co máme v kalendáři ve čtvrtek, ${neg}?`,
+      `Hledám poznámku smlouva v kontextu kalendáře pro ${p}, ${neg}.`
+    ];
+    const lineIx = i % lines.length;
+    const inp = diacVariant(i, lines[lineIx]);
+    silverPatchCaseByGroupIndex("calendar_query", i, { input: inp, expectedIntent: "unknown" });
+  }
+
+  const SILVER_CALENDAR_QUERY_NO_CALENDAR_CONFLICT_KOTVA = [
+    {
+      group: "calendar_query",
+      index0: 11,
+      input: "Bez diakritiky: podivej se do kalendare co mam zitra, ne v kalendari.",
+      expectedIntent: "unknown"
+    },
+    {
+      group: "calendar_query",
+      index0: 12,
+      input: "Podívej se do kalendáře co mám zítra, ne v kalendáři.",
+      expectedIntent: "unknown"
+    },
+    {
+      group: "calendar_query",
+      index0: 13,
+      input: "Co mám zítra v kalendáři, ale ne v kalendáři?",
+      expectedIntent: "unknown"
+    },
+    {
+      group: "calendar_query",
+      index0: 14,
+      input: "Ne v kalendáři a nic nevytvářej.",
+      expectedIntent: "unknown"
+    },
+    {
+      group: "calendar_query",
+      index0: 15,
+      input: "Nepleť to s poznámkou, co mám zítra v kalendáři?",
+      expectedIntent: "calendar.query"
+    }
+  ];
+  for (let ki = 0; ki < SILVER_CALENDAR_QUERY_NO_CALENDAR_CONFLICT_KOTVA.length; ki++) {
+    const k = SILVER_CALENDAR_QUERY_NO_CALENDAR_CONFLICT_KOTVA[ki];
+    silverPatchCaseByGroupIndex(k.group, k.index0, { input: k.input, expectedIntent: k.expectedIntent });
+  }
+
+  silverPatchCaseByGroupIndex("note_query", 1, {
+    input: "Najdi poznámku smlouva v kontextu kalendáře, nepleť to s kalendářem.",
+    expectedIntent: "note.query"
+  });
 
   return cases;
 }

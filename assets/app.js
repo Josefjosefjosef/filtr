@@ -35266,6 +35266,25 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return true;
   }
 
+  /**
+   * P0: konfliktní cluster „podívej se do kalendáře / co mám zítra…“ + explicitní „ne v / ne do kalendáře“
+   * bez zápisového slovesa → bezpečné unknown (ne calendar.query, ne note.query, ne create).
+   * Záměrně neřeší „nepleť to s kalendářem“ u hledání poznámky (bez fráze co mám zítra / do kalendáře).
+   */
+  function iuSilverCalendarQueryHardNoCalendarConflictFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (iuSilverHasWriteVerb(x)) return false;
+    const readCalCluster =
+      /\bpodivej(?:te)?\s+se\s+do\s+kalend/.test(x) ||
+      /\bco\s+m(am|ame)\s+zitra\b/.test(x) ||
+      /\bco\s+m(am|ame)\s+v\s+kalend/.test(x) ||
+      /\bco\s+mame\s+v\s+kalend/.test(x);
+    if (!readCalCluster) return false;
+    if (!(/\bne\s+v\s+kalend/.test(x) || /\bne\s+do\s+kalend/.test(x))) return false;
+    return true;
+  }
+
   function iuSilverCalendarEntityContextFolded(f) {
     const x = String(f || "");
     return (
@@ -40560,6 +40579,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         clarificationText: "",
         draft: createEmptyDraft()
       };
+    }
+
+    if (iuSilverCalendarQueryHardNoCalendarConflictFolded(folded)) {
+      return baseClarification("ambiguous_request", "unknown");
     }
 
     const addrEarly = iuSilverTryConsumeUserAddressConfirmationTurn(raw0);
