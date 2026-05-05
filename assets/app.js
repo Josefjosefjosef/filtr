@@ -34326,18 +34326,57 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return { start: sat, end: addDays(sat, 1) };
   }
 
-  /** P0 v1.7: explicit „jen poznámky“ / negace kalendáře — má přednost před adresou/zubařem/časem v textu. */
-  function iuSilverExplicitNotesReadScopeFolded(f) {
+  /**
+   * P0: tvrdý scope „jen poznámky“ / „nehledej v kalendáři“ / „ne v úkolech“ — má přednost před adresou/zubařem/časem v textu.
+   * Odděleno od měkké větné negace modulu („ne v kalendáři.“), která nesmí přebít pozdější explicitní zápis do kalendáře.
+   */
+  function iuSilverHardNotesOrAntiCalendarLookupScopeFolded(f) {
     const x = String(f || "");
     return (
       /\bjen\s+v\s+poznamkach\b/.test(x) ||
       /\bpouze\s+v\s+poznamkach\b/.test(x) ||
       /\bz\s+poznam\b/.test(x) ||
       /\bv\s+poznamkach\b/.test(x) ||
-      /\bne\s+v\s+kalend/.test(x) ||
       /\bnehledej\s+to\s+v\s+kalend/.test(x) ||
       /\bne\s+v\s+ukol/.test(x)
     );
+  }
+
+  /** Měkká negace kalendáře v samostatné úvodní větě („ne v kalendáři.“ / „ne kalendář.“) — ne globální zákaz zápisu. */
+  function iuSilverSoftCalendarModuleNegationClauseFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (/\bne\s+v\s+kalend/.test(x)) return true;
+    if (/\bne\s+kalend(?:ar|are|ari)?\b/.test(x)) return true;
+    return false;
+  }
+
+  /**
+   * P0: pozdější explicitní zápis do kalendáře (vč. „ulož mi … do kalendáře“) přebije měkkou negaci modulu dříve ve větě.
+   */
+  function iuSilverExplicitCalendarWriteOverridesSoftModuleNegationFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (iuSilverHasExplicitCalendarTarget(x)) return true;
+    if (iuSilverExplicitCalendarWriteBeatsReadQueryFolded(x)) return true;
+    return false;
+  }
+
+  /**
+   * P0 v1.7: scope poznámek + tvrdá negace kalendářního vyhledávání (bez holého „ne v kalendáři“ — viz měkká negace výše).
+   */
+  function iuSilverExplicitNotesReadScopeFolded(f) {
+    return iuSilverHardNotesOrAntiCalendarLookupScopeFolded(f) || iuSilverSoftCalendarModuleNegationClauseFolded(f);
+  }
+
+  /**
+   * P0: kdy zablokovat kalendářní zápis / read-search gate kvůli „jen poznámky“ / měkké „ne v kalendáři“ bez pozdějšího explicitního uložení do kalendáře.
+   */
+  function iuSilverNotesScopeBlocksCalendarWriteRouteFolded(f) {
+    const x = String(f || "");
+    if (iuSilverHardNotesOrAntiCalendarLookupScopeFolded(x)) return true;
+    if (iuSilverSoftCalendarModuleNegationClauseFolded(x) && !iuSilverExplicitCalendarWriteOverridesSoftModuleNegationFolded(x)) return true;
+    return false;
   }
 
   /** Pozitivní scope poznámek (bez „ne v kalendáři“ — ten je negace jiného modulu, ne primární výběr poznámek). */
@@ -34372,6 +34411,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverNegationTargetsTasksOnlyFolded(f) {
     const x = String(f || "");
     if (!x) return false;
+    if (/\bbez\s+ukol/.test(x)) return true;
     if (/\bneni\s+to\s+ukol\b/.test(x)) return true;
     if (/\bne\s+jako\s+ukol\b/.test(x)) return true;
     if (/\bneukladej\b/.test(x) && (/\bjako\s+ukol/.test(x) || /\bdo\s+ukol/.test(x))) return true;
@@ -34699,6 +34739,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   /** --- Explicit intent gating (P0): NEGATION / READ / targets / clarification --- */
   function iuSilverIsNegatedWriteIntentNarrow(f) {
+    if (iuSilverExplicitCalendarWriteOverridesSoftModuleNegationFolded(f) && /\bne\s+do\s+pozn/.test(f)) return false;
     if (/nechci\s+to\s+do\s+kalend/.test(f)) return true;
     if (/\bne\s+do\s+kalend/.test(f)) return true;
     if (/\bdo\s+kalendare\s+ne\b/.test(f)) return true;
@@ -35143,7 +35184,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const f = String(folded || "");
     const r = String(raw || "").trim();
     if (!r) return false;
-    if (iuSilverExplicitNotesReadScopeFolded(f) || iuSilverNegativeCreateGuardFolded(f)) return false;
+    if (iuSilverNotesScopeBlocksCalendarWriteRouteFolded(f) || iuSilverNegativeCreateGuardFolded(f)) return false;
     if (iuSilverHasExplicitNotesTarget(f) && iuSilverCalendarQuerySignalFolded(f)) return false;
     const calPart = iuSilverHasExplicitCalendarTarget(f) || /\bkalend/.test(f);
     const sched = iuSilverLooksLikeSchedulingFragment(f, r);
@@ -35307,7 +35348,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
    */
   function iuSilverBrainCalendarWantedInternal(raw, now, prev, folded) {
     const fGate = String(folded || "");
-    if (iuSilverExplicitNotesReadScopeFolded(fGate)) return false;
+    if (iuSilverNotesScopeBlocksCalendarWriteRouteFolded(fGate)) return false;
     if (iuSilverHasExplicitNotesTarget(fGate) && iuSilverCalendarQuerySignalFolded(fGate)) return false;
     if (iuSilverNegativeCreateGuardFolded(fGate) && !iuSilverCalendarCorrectionWriteSafeFolded(fGate, raw)) return false;
     if (
@@ -37523,7 +37564,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function iuSilverReadSearchGateCalendarCreate(raw, folded, now) {
     const f = String(folded || "");
-    if (iuSilverExplicitNotesReadScopeFolded(f)) return false;
+    if (iuSilverNotesScopeBlocksCalendarWriteRouteFolded(f)) return false;
     if (iuSilverHasExplicitNotesTarget(f) && iuSilverCalendarQuerySignalFolded(f)) return false;
     if (iuSilverNegativeCreateGuardFolded(f)) return false;
     if (iuSilverCalendarQuerySignalFolded(f) && iuSilverCalendarEntityContextFolded(f)) return false;
@@ -37553,7 +37594,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverReadSearchPickTarget(folded) {
     const f = String(folded || "");
     if (
-      iuSilverExplicitNotesReadScopeFolded(f) ||
+      iuSilverNotesScopeBlocksCalendarWriteRouteFolded(f) ||
       (iuSilverHasExplicitNotesTarget(f) &&
         (iuSilverCalendarQuerySignalFolded(f) || /\bjakou\s+(barvu|adresu)\b/.test(f)))
     )

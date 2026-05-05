@@ -257,8 +257,31 @@ function hasNegWrite(folded) {
   );
 }
 
+function auditFoldedExplicitCalendarWriteVerbBeforeDoKalend(f) {
+  const x = String(f || "");
+  const iDo = x.search(/\bdo\s+kalend/);
+  if (iDo < 0) return false;
+  const verbs = ["uloz", "zapis", "pridej", "nahod", "nedej", "vloz", "naplanuj", "vytvor", "zaloz"];
+  for (let vi = 0; vi < verbs.length; vi++) {
+    const re = new RegExp("\\b" + verbs[vi] + "\\w*\\b");
+    const m = re.exec(x);
+    if (m && m.index >= 0 && m.index < iDo) return true;
+  }
+  if (/\bdej\b/.test(x)) {
+    const m2 = /\bdej\b/.exec(x);
+    if (m2 && m2.index >= 0 && m2.index < iDo) return true;
+  }
+  return false;
+}
+
 function hasExplicitNoCalendar(f) {
-  return /\bne\s+v\s+kalend|\bne\s+do\s+kalend|\bneuklad\w*\s+do\s+kalend|\bnic\s+z\s+toho\s+nedavej\s+do\s+kalend/.test(f);
+  const x = String(f || "");
+  const writeCal = auditFoldedExplicitCalendarWriteVerbBeforeDoKalend(x);
+  if (writeCal && /\bne\s+v\s+kalend/.test(x)) return false;
+  if (writeCal && /\bne\s+do\s+poznam/.test(x)) return false;
+  if (writeCal && /\bbez\s+ukol/.test(x)) return false;
+  if (writeCal && /\bne\s+jako\s+ukol/.test(x)) return false;
+  return /\bne\s+v\s+kalend|\bne\s+do\s+kalend|\bneuklad\w*\s+do\s+kalend|\bnic\s+z\s+toho\s+nedavej\s+do\s+kalend/.test(x);
 }
 function hasExplicitNoTasks(f) {
   return /\bne\s+do\s+ukol|\bne\s+v\s+ukol|\bneuklad\w*\s+do\s+ukol|\bnic\s+z\s+toho\s+nedavej\s+do\s+ukol/.test(f);
@@ -908,7 +931,33 @@ function buildCases() {
       input: "Neukládej do kalendáře, jen zjisti co mám zítra.",
       expectedIntent: "calendar.query"
     },
-    { group: "calendar_query", index0: 3, input: "Jen zjisti a nic nevytvářej.", expectedIntent: "unknown" }
+    { group: "calendar_query", index0: 3, input: "Jen zjisti a nic nevytvářej.", expectedIntent: "unknown" },
+    {
+      group: "calendar_write",
+      index0: 10,
+      input:
+        "ne v kalendáři. Pepo, ulož mi prosím do kalendáře na koncem týdne v v půl třetí schůzku s pravnik, název nech krátký, poznámka vzít smlouvu, ne do poznámek.",
+      expectedIntent: "calendar.create"
+    },
+    {
+      group: "calendar_write",
+      index0: 11,
+      input: "ne do poznámek. ulož mi do kalendáře schůzku s Petrem zítra v 15:00.",
+      expectedIntent: "calendar.create"
+    },
+    {
+      group: "calendar_write",
+      index0: 12,
+      input: "bez úkolu. dej do kalendáře schůzku s Tomášem v pátek v 10.",
+      expectedIntent: "calendar.create"
+    },
+    {
+      group: "calendar_write",
+      index0: 13,
+      input: "ne jako úkol, nahoď do kalendáře kontrolu smlouvy zítra v 9.",
+      expectedIntent: "calendar.create"
+    },
+    { group: "calendar_query", index0: 4, input: "ne v kalendáři a nic nevytvářej.", expectedIntent: "unknown" }
   ];
   for (let pi = 0; pi < SILVER_READ_WRITE_PRIORITY_PATCH.length; pi++) {
     const p = SILVER_READ_WRITE_PRIORITY_PATCH[pi];
