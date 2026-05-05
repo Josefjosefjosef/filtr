@@ -1185,6 +1185,12 @@ function buildCases() {
     silverPatchCaseByGroupIndex(a.group, a.index0, { input: a.input, expectedIntent: a.expectedIntent });
   }
 
+  /** P0: calendar_query_03026 — adresní read + „pro zubaře“ + negace „nevracej právníka“ nesmí přepsat title query na právníka. */
+  silverPatchCaseByGroupIndex("calendar_query", 25, {
+    input: "Jen zjisti v kalendáři adresu Brno střed pro zubaře a nevracej právníka.",
+    expectedIntent: "calendar.query"
+  });
+
   silverPatchCaseByGroupIndex("note_query", 1, {
     input: "Najdi poznámku smlouva v kontextu kalendáře, nepleť to s kalendářem.",
     expectedIntent: "note.query"
