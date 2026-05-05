@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-05-05T09:30:59.993732Z",
+  "ingestedAt": "2026-05-05T10:10:16.059872Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Slovenští senioři letos dostanou přes 16 tisíc korun k důchodu navíc. Štědré bonusy jsou i jinde v Evropě",
+      "url": "https://www.betterlife.cz/slovensti-seniori-letos-dostanou-pres-16-tisic-korun-k-duchodu-navic-stedre-bonusy-jsou-i-jinde-v-evrope/",
+      "dt": "2026-05-05T09:34:38Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "bonusy",
+        "dostanou",
+        "důchodu",
+        "evropě",
+        "jinde",
+        "korun",
+        "letos",
+        "navíc",
+        "senioři",
+        "slovenští",
+        "tisíc",
+        "štědré"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -246,32 +275,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Ulice: Noční návštěva u Adriany doma přinese rozuzlení celého případu",
-      "url": "https://www.betterlife.cz/ulice-nocni-navsteva-u-adriany-doma-prinese-rozuzleni-celeho-pripadu/",
-      "dt": "2026-04-30T15:58:34Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "adriany",
-        "celého",
-        "doma",
-        "noční",
-        "návštěva",
-        "přinese",
-        "případu",
-        "rozuzlení",
-        "ulice"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,8 +285,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 74927,
-      "reason": "fetch_timeout",
+      "bytes": 75678,
+      "reason": "",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -342,11 +345,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-04T16:27:13Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T09:34:38Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "finance": 1,
-          "zdravi": 9
+          "zdravi": 9,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -358,6 +361,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Slovenští senioři letos dostanou přes 16 tisíc korun k důchodu navíc. Štědré bonusy jsou i jinde v Evropě",
+            "publishedAt": "2026-05-05T09:34:38Z"
+          },
           {
             "title": "Dřevo a krb bez televize. Lucie Vondráčková se pochlubila zrekonstruovanou vilou, sklep připomíná ateliér",
             "publishedAt": "2026-05-04T16:27:13Z"
@@ -385,10 +392,6 @@
           {
             "title": "Věžky lákají zahrádkáře i celé rodiny na pestrou nabídku i program",
             "publishedAt": "2026-05-02T06:14:06Z"
-          },
-          {
-            "title": "Ulice: Odnese to Kristýna? Polykule se rozpadá",
-            "publishedAt": "2026-05-01T15:57:29Z"
           }
         ]
       }

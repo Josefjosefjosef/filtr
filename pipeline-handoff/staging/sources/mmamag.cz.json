@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-05T09:30:59.993732Z",
+  "ingestedAt": "2026-05-05T10:10:16.059872Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Brad Pitt se zavřel na půl roku do posilovny. Vylezl z ní jako bájný hrdina Achilles",
+      "url": "https://www.mmamag.cz/z-brada-pitta-se-po-pul-roce-v-posilovne-stal-bajny-achlles/",
+      "dt": "2026-05-05T10:00:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "achilles",
+        "brad",
+        "bájný",
+        "hrdina",
+        "jako",
+        "pitt",
+        "posilovny",
+        "půl",
+        "roku",
+        "vylezl",
+        "zavřel"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1100,33 +1128,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bizár v polské kleci MMA: Šedesátiletý otec se synem dali protivníkovi nakládačku",
-      "url": "https://www.mmamag.cz/mma-bizar-z-polska-60lety-otec-syn/",
-      "dt": "2026-05-03T13:18:02Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "bizár",
-        "dali",
-        "kleci",
-        "mma",
-        "nakládačku",
-        "otec",
-        "polské",
-        "protivníkovi",
-        "synem",
-        "šedesátiletý"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1137,7 +1138,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 82053,
+      "bytes": 82090,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1174,7 +1175,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-05T09:04:06Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1189,6 +1190,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Brad Pitt se zavřel na půl roku do posilovny. Vylezl z ní jako bájný hrdina Achilles",
+            "publishedAt": "2026-05-05T10:00:00Z"
+          },
           {
             "title": "Zkuste si vybavit nejkontroverznější momenty v historii UFC. Spousta z nich hýbala světem a otázka je, kolik si jich pamatujete",
             "publishedAt": "2026-05-05T09:04:06Z"
@@ -1216,10 +1221,6 @@
           {
             "title": "Česko je čtvrtou nejlepší zemí světa v MMA. 37 medailí z evropského šampionátu je historický rekord, který nikdo nečekal",
             "publishedAt": "2026-05-05T06:23:23Z"
-          },
-          {
-            "title": "Boxerku na vážení zradila podprsenka. Ukázala víc, než sama chtěla",
-            "publishedAt": "2026-05-05T06:02:32Z"
           }
         ]
       }
