@@ -1401,6 +1401,51 @@ function buildCases() {
     }
   }
 
+  /** P0: globální zákaz zápisu vs explicitní zápis (task_write_06001 + kotvy; modulová negace zůstává). */
+  const SILVER_GLOBAL_WRITE_NEGATION_CONFLICT_PATCH = [
+    {
+      group: "task_write",
+      index0: 0,
+      input: "nic neukládej Hoď mi do úkolů, že uhlí do pátku, ale ne do kalendáře.",
+      expectedIntent: "unknown"
+    },
+    {
+      group: "task_write",
+      index0: 2995,
+      input: "nic neukladej hoď mi do úkolů koupit uhlí",
+      expectedIntent: "unknown"
+    },
+    {
+      group: "task_write",
+      index0: 2996,
+      input: "neukládej to, ale napiš úkol koupit uhlí",
+      expectedIntent: "unknown"
+    },
+    {
+      group: "task_write",
+      index0: 2997,
+      input: "nevytvářej nic, přidej úkol koupit uhlí",
+      expectedIntent: "unknown"
+    },
+    {
+      group: "task_write",
+      index0: 120,
+      input: "ne do kalendáře hoď mi do úkolů koupit uhlí do pátku",
+      expectedIntent: "task.create"
+    },
+    {
+      group: "note_write",
+      index0: 200,
+      input:
+        "neukládej do kalendáře Dej mi do poznámky, že PIN ke kartě je v šuplíku, ne úkol.",
+      expectedIntent: "note.create"
+    }
+  ];
+  for (let gwi = 0; gwi < SILVER_GLOBAL_WRITE_NEGATION_CONFLICT_PATCH.length; gwi++) {
+    const gw = SILVER_GLOBAL_WRITE_NEGATION_CONFLICT_PATCH[gwi];
+    silverPatchCaseByGroupIndex(gw.group, gw.index0, { input: gw.input, expectedIntent: gw.expectedIntent });
+  }
+
   return cases;
 }
 
@@ -1572,7 +1617,8 @@ function main() {
   const SILVER_AUDIT_ROUTING_ANCHOR_IDS = [
     "calendar_query_03104",
     "calendar_query_03126",
-    "calendar_query_03681"
+    "calendar_query_03681",
+    "task_write_06001"
   ];
   for (let ani = 0; ani < SILVER_AUDIT_ROUTING_ANCHOR_IDS.length; ani++) {
     const anid = SILVER_AUDIT_ROUTING_ANCHOR_IDS[ani];

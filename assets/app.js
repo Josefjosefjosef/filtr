@@ -34895,6 +34895,30 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (iuSilverExplicitCalendarWriteOverridesSoftModuleNegationFolded(foldUse) && /\bne\s+do\s+pozn/.test(foldUse)) return false;
     if (iuSilverImplicitCalendarOnlyWriteSignalFolded(foldUse, rawStr)) return false;
     if (/\b(co|jake|kolik)\s+m(am|ame)\b[^?.!]{0,200}\bv\s+kalendari\b[^?.!]{0,120}\bne\s+do\s+ukol/.test(foldUse)) return false;
+    /**
+     * P0: modulová negace kalendáře + explicitní zápis do úkolů („…do úkolů… ale ne do kalendáře“) —
+     * negace se vztahuje jen na kalendář, ne na celý imperativ.
+     */
+    if (/\bne\s+do\s+kalend/.test(foldUse) && iuSilverHasExplicitTasksTarget(foldUse) && iuSilverHasWriteVerb(foldUse)) return false;
+    /**
+     * P0: „neukládej do kalendáře“ + explicitní poznámka — cíl je poznámka, ne globální zákaz zápisu.
+     * (tryParse může vrátit null, pokud fráze není na začátku věty — stačí spolehlivý signál „napiš poznámku“.)
+     */
+    if (
+      /\bneukladej\s+do\s+kalendar/.test(foldUse) &&
+      (iuSilverTryParseExplicitNoteCreate(rawStr) || (/\bnapis\w*\s+poznam/i.test(foldUse) && iuSilverHasWriteVerb(foldUse)))
+    )
+      return false;
+    /**
+     * P0: NEGS prefix „ne do úkolů“ + následný explicitní zápis do úkolů (20k šablona) —
+     * modulová negace nesmí zablokovat samotný task.create (task_write_06433).
+     */
+    if (
+      /^\s*ne\s+do\s+ukol/i.test(String(rawStr || "").trim()) &&
+      iuSilverHasExplicitTasksTarget(foldUse) &&
+      iuSilverHasWriteVerb(foldUse)
+    )
+      return false;
     if (/nechci\s+to\s+do\s+kalend/.test(foldUse)) return true;
     if (/\bne\s+do\s+kalend/.test(foldUse)) return true;
     if (/\bdo\s+kalendare\s+ne\b/.test(foldUse)) return true;
@@ -36003,6 +36027,138 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P0: globální zákaz zápisu („nic neukládej“, holé „neukládej“, …) vs modulově vázaná negace
+   * („neukládej do kalendáře“, „ne do kalendáře“) — druhá nesmí zhasnout první.
+   */
+  function iuSilverHasGlobalWriteNegationVersusExplicitWriteSignalFolded(s) {
+    const x = String(s || "");
+    if (!x) return false;
+    if (/\bnic\s+neukladej\b/.test(x)) return true;
+    if (/\bnic\s+noveho\s+neukladej\b/.test(x)) return true;
+    if (/\bnic\s+nevytvarej\b/.test(x)) return true;
+    if (/\bjen\s+cti\b/.test(x) || /\bpouze\s+cti\b/.test(x)) return true;
+    if (/\bneukladej\s+do\s+kalendar/.test(x)) return false;
+    if (/\bneukladej\s+do\s+poznam/.test(x)) return false;
+    if (/\bneukladej\s+do\s+ukol/.test(x)) return false;
+    if (/\bneukladej\b/.test(x) && !iuSilverNegationTargetsTasksOnlyFolded(x)) return true;
+    if (
+      /\bnevytvarej\b/.test(x) &&
+      !/\bnevytvarej\s+udalost\b/.test(x) &&
+      !/\bnevytvarej\s+ukol\b/.test(x) &&
+      !/\bnevytvarej\s+poznam/.test(x)
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  function iuSilverEarliestGlobalWriteNegationIndexFolded(s) {
+    const x = String(s || "");
+    if (!x) return -1;
+    const res = [
+      /\bnic\s+noveho\s+neukladej\b/i,
+      /\bnic\s+neukladej\b/i,
+      /\bnic\s+nevytvarej\b/i,
+      /\bpouze\s+cti\b/i,
+      /\bjen\s+cti\b/i,
+      /\bneukladej\b/i,
+      /\bnevytvarej\b/i
+    ];
+    let best = -1;
+    for (let ri = 0; ri < res.length; ri++) {
+      const re = res[ri];
+      const m = re.exec(x);
+      re.lastIndex = 0;
+      if (m && typeof m.index === "number" && m.index >= 0) {
+        if (best < 0 || m.index < best) best = m.index;
+      }
+    }
+    return best;
+  }
+
+  function iuSilverEarliestExplicitTaskWriteCueIndexFolded(s) {
+    const x = String(s || "");
+    if (!x) return -1;
+    const patterns = [
+      /\bpridej\s+ukol\w*\b/i,
+      /\buloz\w*\s+do\s+ukol\w*\b/i,
+      /\bvytvor\w*\s+ukol\w*\b/i,
+      /\bnapis\w*\s+ukol\w*\b/i,
+      /\bdej\s+mi\s+do\s+ukol\w*\b/i,
+      /\bhod\s+mi\s+do\s+ukol\w*\b/i,
+      /\bmam\s+udelat\s+ukol\w*\b/i,
+      /\bdo\s+ukolu\b/i,
+      /\bdo\s+ukol\w*\b/i,
+      /\bhod\b/i
+    ];
+    let best = -1;
+    for (let pi = 0; pi < patterns.length; pi++) {
+      const re = patterns[pi];
+      const rx = new RegExp(re.source, re.flags.indexOf("g") >= 0 ? re.flags : re.flags + "g");
+      let m;
+      while ((m = rx.exec(x)) !== null) {
+        const idx = m.index;
+        const before = x.slice(Math.max(0, idx - 4), idx);
+        if (/\bne\s+$/i.test(before)) continue;
+        if (best < 0 || idx < best) best = idx;
+      }
+      rx.lastIndex = 0;
+    }
+    return best;
+  }
+
+  function iuSilverEarliestExplicitNoteWriteCueIndexFolded(s) {
+    const x = String(s || "");
+    if (!x) return -1;
+    const patterns = [
+      /\bdej\s+mi\s+do\s+poznam\w*\b/i,
+      /\buloz\w*\s+do\s+poznam\w*\b/i,
+      /\bpoznamenej\b/i,
+      /\bzapis\w*\s+do\s+poznam\w*\b/i,
+      /\bnapis\w*\s+poznam\w*\b/i
+    ];
+    let best = -1;
+    for (let qi = 0; qi < patterns.length; qi++) {
+      const re = patterns[qi];
+      const m = re.exec(x);
+      re.lastIndex = 0;
+      if (m && typeof m.index === "number" && m.index >= 0) {
+        if (best < 0 || m.index < best) best = m.index;
+      }
+    }
+    return best;
+  }
+
+  /**
+   * P0 task_write_06001: globální negace zápisu před explicitním zápisem do úkolů/poznámky
+   * → ne task.create (konflikt). Modulová negace („ne do kalendáře“ + úkoly) zůstává mimo.
+   */
+  function iuSilverGlobalWriteNegationConflictsExplicitModuleWriteFolded(raw, folded) {
+    const f = String(folded || "");
+    const r = String(raw || "").trim();
+    if (!f || !iuSilverHasGlobalWriteNegationVersusExplicitWriteSignalFolded(f)) return false;
+    const negIdx = iuSilverEarliestGlobalWriteNegationIndexFolded(f);
+    if (negIdx < 0) return false;
+
+    const colonTaskLine = /^\s*ukol\w*\s*:/.test(f) || /^\s*ukoly\w*\s*:/.test(f);
+    const explicitTask =
+      (iuSilverHasExplicitTasksTarget(f) &&
+        (iuSilverHasWriteVerb(f) || (colonTaskLine && iuSilverHasTaskActionVerb(f)))) ||
+      (/\b(pridej|napis|uloz|vytvor)\w*\s+ukol\w*\b/.test(f) && iuSilverHasWriteVerb(f));
+    if (explicitTask) {
+      const taskIdx = iuSilverEarliestExplicitTaskWriteCueIndexFolded(f);
+      if (taskIdx >= 0 && negIdx < taskIdx) return true;
+    }
+
+    if (iuSilverTryParseExplicitNoteCreate(r)) {
+      const noteIdx = iuSilverEarliestExplicitNoteWriteCueIndexFolded(f);
+      if (noteIdx >= 0 && negIdx < noteIdx) return true;
+    }
+
+    return false;
+  }
+
+  /**
    * Silver Brain v1 — central intent routing (calendar / tasks / notes / fallback).
    * Pořadí: explicitní zápis úkolu (P0.5) → explicitní poznámka → legacy explicitní cíl poznámky → úkoly (sloveso) → kalendář → disambiguace → nejasné.
    */
@@ -36010,6 +36166,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const raw = String(rawText || "").trim();
     const folded = foldCs(raw);
     const prev = prevDraft || createEmptyDraft();
+    if (iuSilverGlobalWriteNegationConflictsExplicitModuleWriteFolded(raw, folded)) {
+      return {
+        intent: "unknown",
+        confidence: 0.92,
+        route: "fallback",
+        reason: "ambiguous_write",
+        kind: "AMBIGUOUS_WRITE",
+        calendarFallbackWanted: false
+      };
+    }
     const calWanted = iuSilverBrainCalendarWantedInternal(raw, now, prev, folded);
     const calendarOverridesTask = iuSilverCalendarEventOverridesTask(raw, folded);
     const colonTaskLine = /^\s*ukol\w*\s*:/.test(folded) || /^\s*ukoly\w*\s*:/.test(folded);
@@ -36417,7 +36583,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverTryParseExplicitNoteCreate(rawIn) {
     const s0 = String(rawIn || "").trim();
     if (!s0) return null;
-    const s = s0.replace(/^\s*pros[ií]m,?\s+/i, "").trim();
+    let s = s0.replace(/^\s*pros[ií]m,?\s+/i, "").trim();
+    /* P0: modulová negace kalendáře na začátku věty nesmí zablokovat „napiš/ulož do poznámek …“. */
+    if (/^\s*neukladej\s+do\s+kalendar/i.test(foldCs(s))) {
+      /* „kalendáře“ obsahuje „ř“ — ASCII [a-z]* by useklo prefix uprostřed slova. */
+      const st = s.replace(/^\s*neukl[aá]dej\s+do\s+[^\s,]+(?:\s*,)?\s*/i, "").trim();
+      if (st.length >= 6 && st.length < s.length) s = st;
+    }
     const fEarly = foldCs(s);
     if (iuSilverShouldForceCalendarOverCompositeNote(s, fEarly)) return null;
     if (iuSilverHasExplicitTasksTarget(fEarly)) return null;
@@ -36608,6 +36780,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     if (reason === "ambiguous_request") {
       return "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.";
+    }
+    if (reason === "ambiguous_write") {
+      return "V jedné větě je rozpor mezi zákazem zápisu a požadavkem uložit do úkolů nebo poznámek — upřesni prosím, co přesně mám udělat.";
     }
     if (reason === "negated_write_request") {
       return "Rozumím, zápis neprovedu.";
@@ -41051,6 +41226,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       };
     }
 
+    if (iuSilverGlobalWriteNegationConflictsExplicitModuleWriteFolded(raw, folded)) {
+      return baseClarification("ambiguous_write", "unknown");
+    }
+
     if (iuSilverCalendarQueryHardNoCalendarConflictFolded(folded)) {
       return baseClarification("ambiguous_request", "unknown");
     }
@@ -41159,6 +41338,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       iuSilverIsNegatedBroadVerbExcludingTaskOnlyFolded(folded) &&
       !iuSilverTaskReadContextFolded(folded) &&
       !iuSilverNegativeQueryReadGuardP0Folded(folded, raw) &&
+      !(
+        /\bneukladej\s+do\s+kalendar/.test(folded) &&
+        (iuSilverTryParseExplicitNoteCreate(String(raw || "").trim()) ||
+          (/\bnapis\w*\s+poznam/i.test(folded) && iuSilverHasWriteVerb(folded)))
+      ) &&
       (iuSilverHasExplicitCalendarTarget(folded) ||
         iuSilverHasExplicitNotesTarget(folded) ||
         iuSilverHasExplicitTasksTarget(folded) ||
@@ -41197,6 +41381,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
 
     const route = iuSilverBrainRoute(raw, now, prev);
+
+    if (route.kind === "AMBIGUOUS_WRITE") {
+      return baseClarification("ambiguous_write", "unknown");
+    }
 
     if (route.kind === "NOTE_EMPTY") {
       return {
