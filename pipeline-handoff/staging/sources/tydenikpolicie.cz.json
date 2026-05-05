@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-05T21:19:29.184747Z",
+  "ingestedAt": "2026-05-05T22:00:15.409325Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Policisté v hradeckých lesích řešili nálezy munice ze druhé světové války",
+      "url": "https://tydenikpolicie.cz/policiste-v-hradeckych-lesich-resili-nalezy-munice-ze-druhe-svetove-valky/",
+      "dt": "2026-05-05T21:20:43Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "druhé",
+        "hradeckých",
+        "lesích",
+        "munice",
+        "nálezy",
+        "policisté",
+        "světové",
+        "války",
+        "řešili"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -257,33 +283,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Záchranáři a policisté zachraňovali na jihu Čech dva silně opilé mladistvé chlapce",
-      "url": "https://tydenikpolicie.cz/zachranari-a-policiste-zachranovali-na-jihu-cech-dva-silne-opile-mladistve-chlapce/",
-      "dt": "2026-05-05T08:13:52Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "chlapce",
-        "dva",
-        "jihu",
-        "mladistvé",
-        "opilé",
-        "policisté",
-        "silně",
-        "zachraňovali",
-        "záchranáři",
-        "čech"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -294,7 +293,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16612,
+      "bytes": 16584,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -331,7 +330,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-05T21:11:07Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T21:20:43Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -346,6 +345,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policisté v hradeckých lesích řešili nálezy munice ze druhé světové války",
+            "publishedAt": "2026-05-05T21:20:43Z"
+          },
           {
             "title": "Při střetu s projíždějícím vlakem v Sezimově Ústí utrpěl senior vážná zranění",
             "publishedAt": "2026-05-05T21:11:07Z"
@@ -373,10 +376,6 @@
           {
             "title": "Opilý strojvedoucí zapomněl na Přerovsku otevírat dveře cestujícím, navíc na sebe upozornil nestandardní jízdou",
             "publishedAt": "2026-05-05T10:06:08Z"
-          },
-          {
-            "title": "Řidiči nerespektují zákazy řízení. Jeden z nich přišel o svou Škodovku",
-            "publishedAt": "2026-05-05T09:58:12Z"
           }
         ]
       }
