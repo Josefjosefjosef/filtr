@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-05T02:40:38.649067Z",
+  "ingestedAt": "2026-05-05T03:20:28.335858Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "Zima se odmítá vzdát. Evropa se chystá na návrat sněhu, teploty prudce klesnou",
+      "url": "https://www.denik.cz/pocasi/predpoved-pocasi-evropa-navrat-zimy-snih-ochlazeni.html",
+      "dt": "2026-05-05T02:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "chystá",
+        "evropa",
+        "klesnou",
+        "návrat",
+        "odmítá",
+        "prudce",
+        "sněhu",
+        "teploty",
+        "vzdát",
+        "zima"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -621,32 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Muž prozradil, jak vyhrál Superjackpot 187 milionů. S čísly mu poradila žena",
-      "url": "https://www.denik.cz/regiony/cisla-stredni-cechy-sportka-vyhra-miliony-allwyn.html",
-      "dt": "2026-05-04T11:21:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "187",
-        "milionů",
-        "muž",
-        "poradila",
-        "prozradil",
-        "superjackpot",
-        "vyhrál",
-        "čísly",
-        "žena"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -657,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28975,
+      "bytes": 29050,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -694,7 +695,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-05T02:19:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T02:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -711,6 +712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zima se odmítá vzdát. Evropa se chystá na návrat sněhu, teploty prudce klesnou",
+            "publishedAt": "2026-05-05T02:30:00Z"
+          },
           {
             "title": "OBRAZEM: První květnový úplněk máme za sebou, čeká nás ještě jeden",
             "publishedAt": "2026-05-05T02:19:00Z"
@@ -738,10 +743,6 @@
           {
             "title": "Rusko oznámilo dvoudenní příměří, Zelenskyj vyhlásil klid zbraní",
             "publishedAt": "2026-05-04T17:45:00Z"
-          },
-          {
-            "title": "Filipíny zahalily mraky popela. Vulkán Mayon ohrožuje statisíce lidí",
-            "publishedAt": "2026-05-04T16:36:00Z"
           }
         ]
       }
