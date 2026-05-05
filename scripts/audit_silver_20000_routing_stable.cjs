@@ -378,6 +378,7 @@ function auditFoldedStripTailEntityExcludeClauses(folded) {
 
 function calendarQuerySemantic(input, folded, turn, raw, expectedIntent) {
   const expI = String(expectedIntent || "");
+  if (expI === "unknown") return { ok: true, cat: "" };
   if (turn.processingState === "READY_TO_SAVE" || turn.normalizedIntent === "calendar.create") {
     return { ok: false, cat: "query_created_write" };
   }
@@ -417,7 +418,9 @@ function calendarQuerySemantic(input, folded, turn, raw, expectedIntent) {
   return { ok: true, cat: "" };
 }
 
-function taskQuerySemantic(input, folded, turn, raw) {
+function taskQuerySemantic(input, folded, turn, raw, expectedIntent) {
+  const expI = String(expectedIntent || "");
+  if (expI === "unknown") return { ok: true, cat: "" };
   if (turn.processingState === "READY_TO_SAVE" || turn.normalizedIntent === "tasks.create") {
     return { ok: false, cat: "query_created_write" };
   }
@@ -435,7 +438,9 @@ function taskQuerySemantic(input, folded, turn, raw) {
   return { ok: true, cat: "" };
 }
 
-function noteQuerySemantic(input, folded, turn, raw) {
+function noteQuerySemantic(input, folded, turn, raw, expectedIntent) {
+  const expI = String(expectedIntent || "");
+  if (expI === "unknown") return { ok: true, cat: "" };
   if (turn.processingState === "READY_TO_SAVE" || turn.normalizedIntent === "notes.create") {
     return { ok: false, cat: "query_created_write" };
   }
@@ -540,10 +545,10 @@ function evaluateOne(c, turn) {
     const sem = calendarQuerySemantic(c.input, folded, turn, raw, c.expectedIntent);
     if (!sem.ok) return { pass: false, cat: sem.cat, auditIntent, raw };
   } else if (c.group === "task_query") {
-    const sem = taskQuerySemantic(c.input, folded, turn, raw);
+    const sem = taskQuerySemantic(c.input, folded, turn, raw, c.expectedIntent);
     if (!sem.ok) return { pass: false, cat: sem.cat, auditIntent, raw };
   } else if (c.group === "note_query") {
-    const sem = noteQuerySemantic(c.input, folded, turn, raw);
+    const sem = noteQuerySemantic(c.input, folded, turn, raw, c.expectedIntent);
     if (!sem.ok) return { pass: false, cat: sem.cat, auditIntent, raw };
   } else if (c.group === "multi_intent") {
     const sem = multiSemantic(c.meta || {}, turn, raw, folded);
@@ -1335,6 +1340,64 @@ function buildCases() {
     }
     if (auditSilverCalendarQueryAbModuleConflictUnknownFolded(afx)) {
       ac.expectedIntent = "unknown";
+    }
+  }
+
+  /**
+   * P0: musí odpovídat iuSilverConflictingReadSameModuleConstraintFolded + !iuSilverHasWriteVerb v assets/app.js
+   * (stejný modul — pozitivní read-scope + negace modulu → unknown u query harnessů).
+   */
+  function auditSilverConflictingReadSameModuleConstraintUnknownFolded(fx) {
+    const x = String(fx || "");
+    if (!x) return false;
+    const calPos =
+      /\bjen\s+kalendar\b/.test(x) ||
+      /\bpouze\s+kalendar\b/.test(x) ||
+      /\bjen\s+v\s+kalend/.test(x) ||
+      /\bpouze\s+v\s+kalend/.test(x) ||
+      /\bjen\s+z\s+kalend/.test(x) ||
+      /\bpouze\s+z\s+kalend/.test(x) ||
+      /\bz\s+kalend/.test(x);
+    const calNeg =
+      /\bne\s+v\s+kalend/.test(x) ||
+      /\bne\s+do\s+kalend/.test(x) ||
+      /\bmimo\s+kalendar/.test(x) ||
+      /\bale\s+ne\s+v\s+kalend/.test(x) ||
+      /\bnechci\s+v\s+kalend/.test(x);
+    if (calPos && calNeg) return true;
+    const taskPos =
+      /\bjen\s+v\s+ukol/.test(x) ||
+      /\bjen\s+do\s+ukol/.test(x) ||
+      /\bpouze\s+v\s+ukol/.test(x) ||
+      /\bpouze\s+do\s+ukol/.test(x) ||
+      /\bjen\s+ukol(y|u|um|e|emi)?\b/.test(x) ||
+      /\bpouze\s+ukol(y|u)?\b/.test(x) ||
+      /\bjen\s+cti\s+ukol/.test(x);
+    const taskNeg = /\bne\s+v\s+ukol/.test(x) || /\bne\s+do\s+ukol/.test(x) || /\bmimo\s+ukol/.test(x);
+    if (taskPos && taskNeg) return true;
+    const notePos =
+      /\bjen\s+v\s+poznamkach\b/.test(x) ||
+      /\bpouze\s+v\s+poznamkach\b/.test(x) ||
+      /\bz\s+poznam\b/.test(x);
+    const noteNeg =
+      /\bne\s+v\s+poznamk/.test(x) || /\bne\s+do\s+poznam/.test(x) || /\bmimo\s+poznam/.test(x);
+    if (notePos && noteNeg) return true;
+    return false;
+  }
+  function auditSilverConflictingReadSameModuleHasWriteVerbFolded(fx) {
+    return /\buloz(?:it|te|i)?\b|\bzapis(?:it|te|i)?\b|\bvloz(?:it|te|i)?\b|\bpridej\b|\bnaplanuj\b|\bvytvor\w*\b|\bzaloz\b|\bnapis\b|\bzaznamenej\b|\beviduj\b|\bdopln\b|\bzanes\b|\bpripis\b|\bhod\b|\bnahod\w*\b|\bdej\s+mi\b|\bdej\s+do\b|\bnapis\s+mi\b|\bpridej\s+mi\b|\bpoznamenej\b|\bzapamatuj\b/.test(
+      String(fx || "")
+    );
+  }
+  for (let cci = 0; cci < cases.length; cci++) {
+    const cc = cases[cci];
+    if (cc.group !== "calendar_query" && cc.group !== "task_query" && cc.group !== "note_query") continue;
+    const cfx = foldCs(cc.input);
+    if (
+      auditSilverConflictingReadSameModuleConstraintUnknownFolded(cfx) &&
+      !auditSilverConflictingReadSameModuleHasWriteVerbFolded(cfx)
+    ) {
+      cc.expectedIntent = "unknown";
     }
   }
 

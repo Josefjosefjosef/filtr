@@ -34419,6 +34419,35 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     );
   }
 
+  /**
+   * P0: stejný modul — současně pozitivní read-scope („jen v kalendáři“ / „jen v úkolech“ / „jen v poznámkách“)
+   * a negace tohoto modulu („ne v kalendáři“ / …). Vnitřně rozporný READ → bezpečné unknown (ne calendar/note routing).
+   * Nesmí chytit „ne v úkolech, jen v kalendáři“ (různé moduly). Poznámky: jen explicitní jen/pouze/z (ne holé „v poznámkách“ u „ne v …“).
+   */
+  function iuSilverConflictingReadSameModuleConstraintFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    const calPos = iuSilverExplicitCalendarReadScopeFolded(x);
+    const calNeg =
+      /\bne\s+v\s+kalend/.test(x) ||
+      /\bne\s+do\s+kalend/.test(x) ||
+      /\bmimo\s+kalendar/.test(x) ||
+      /\bale\s+ne\s+v\s+kalend/.test(x) ||
+      /\bnechci\s+v\s+kalend/.test(x);
+    if (calPos && calNeg) return true;
+    const taskPos = iuSilverExplicitTaskReadScopeFolded(x);
+    const taskNeg = /\bne\s+v\s+ukol/.test(x) || /\bne\s+do\s+ukol/.test(x) || /\bmimo\s+ukol/.test(x);
+    if (taskPos && taskNeg) return true;
+    const notePos =
+      /\bjen\s+v\s+poznamkach\b/.test(x) ||
+      /\bpouze\s+v\s+poznamkach\b/.test(x) ||
+      /\bz\s+poznam\b/.test(x);
+    const noteNeg =
+      /\bne\s+v\s+poznamk/.test(x) || /\bne\s+do\s+poznam/.test(x) || /\bmimo\s+poznam/.test(x);
+    if (notePos && noteNeg) return true;
+    return false;
+  }
+
   /** P0: „jen / pouze kalendář“, „jen do kalendáře“, nebo negace poznámek jako scope (ne jako zákaz kalendáře). */
   function iuSilverImplicitCalendarOnlyWriteCalendarScopeFolded(x) {
     const s = String(x || "");
@@ -41023,6 +41052,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
 
     if (iuSilverCalendarQueryHardNoCalendarConflictFolded(folded)) {
+      return baseClarification("ambiguous_request", "unknown");
+    }
+
+    if (iuSilverConflictingReadSameModuleConstraintFolded(folded) && !iuSilverHasWriteVerb(folded)) {
       return baseClarification("ambiguous_request", "unknown");
     }
 
