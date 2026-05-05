@@ -707,6 +707,59 @@ function measureSilverQualityV1(turn, rawOut) {
   return { titleClean, dateParsed, timeParsed, entityOk };
 }
 
+/** P0 diagnostic only: title-cleaning cluster tags (must not affect PASS/FAIL or measureSilverQualityV1). */
+const TITLE_FAIL_FILLER_CANON = [
+  { key: "prosim", re: /\bprosim\b/ },
+  { key: "hod", re: /\bhod\b/ },
+  { key: "napis", re: /\bnapis\b/ },
+  { key: "uloz", re: /\buloz\b/ },
+  { key: "si", re: /\bsi\b/ },
+  { key: "mi", re: /\bmi\b/ }
+];
+
+function extractTitleFailFillerTokens(foldedTitle) {
+  const ft = String(foldedTitle || "");
+  const out = [];
+  for (let i = 0; i < TITLE_FAIL_FILLER_CANON.length; i++) {
+    const x = TITLE_FAIL_FILLER_CANON[i];
+    if (x.re.test(ft)) out.push(x.key);
+  }
+  return out;
+}
+
+function classifyTitleFailBordelBuckets(foldedTitle, foldedInput, titleRaw) {
+  const ft = String(foldedTitle || "");
+  const fi = String(foldedInput || "");
+  const tr = String(titleRaw || "");
+  const buckets = [];
+  if (/\bprosim\b/.test(ft)) buckets.push("prosim_prosim");
+  if (/\bhod\b/.test(ft)) buckets.push("hod_hod");
+  if (/\bnapis\b/.test(ft)) buckets.push("napis_napis");
+  if (/\buloz\b/.test(ft)) buckets.push("uloz_uloz");
+  if (/\bsi\b/.test(ft)) buckets.push("si_si");
+  if (/\bmi\b/.test(ft)) buckets.push("mi_mi");
+  if (/\bjen\s+zjist\w*\b/.test(ft) || /\bjen\s+se\s+podiv\w*\b/.test(ft) || /\bjen\s+cti\b/.test(ft)) {
+    buckets.push("readonly_prefix_in_title");
+  }
+  if (
+    /\bjen\s+zjist\w*\b/.test(fi) ||
+    /\bjen\s+se\s+podiv\w*\b/.test(fi) ||
+    /\bjen\s+cti\b/.test(fi) ||
+    /\bpouze\s+cti\b/.test(fi)
+  ) {
+    buckets.push("readonly_prefix_in_user_input_context");
+  }
+  if (/\bpriorit\w*\b/.test(ft) || /\bdulezit\w*\b/.test(ft)) {
+    buckets.push("priorita_dulezite_in_title_metadata_leak");
+  }
+  const ftp = foldCs(String(tr || "").trim());
+  if (/^(uloz|ulozte|zapis|zapiste|pridej|pridejte|hod|napis|napiste|dej|dejte)\w*(\s+mi|\s+si)?\s+/.test(ftp)) {
+    buckets.push("raw_command_prefix_before_real_title");
+  }
+  if (tr.length > 100) buckets.push("title_len_gt_100");
+  return buckets;
+}
+
 const TIMES = [
   "15:00",
   "10:15",
@@ -1707,6 +1760,11 @@ function main() {
   let qEntityPass = 0;
   const qualityDenom = 20000;
 
+  const titleCleanFailRecords = [];
+  const titleFailFillerCount = new Map();
+  const titleFailBucketCount = new Map();
+  const titleFailByGroup = {};
+
   for (const c of cases) {
     if (!byG[c.group]) byG[c.group] = { pass: 0, fail: 0 };
     try {
@@ -1721,6 +1779,31 @@ function main() {
     if (qv.dateParsed) qDatePass++;
     if (qv.timeParsed) qTimePass++;
     if (qv.entityOk) qEntityPass++;
+    if (!qv.titleClean) {
+      const d = turn.draft || {};
+      const titleStr = String(d.title || "").trim();
+      const ft = foldCs(titleStr);
+      const fi = foldCs(c.input);
+      const fillers = extractTitleFailFillerTokens(ft);
+      const buckets = classifyTitleFailBordelBuckets(ft, fi, titleStr);
+      for (let fi2 = 0; fi2 < fillers.length; fi2++) {
+        const k = fillers[fi2];
+        titleFailFillerCount.set(k, (titleFailFillerCount.get(k) || 0) + 1);
+      }
+      for (let bi = 0; bi < buckets.length; bi++) {
+        const bk = buckets[bi];
+        titleFailBucketCount.set(bk, (titleFailBucketCount.get(bk) || 0) + 1);
+      }
+      titleFailByGroup[c.group] = (titleFailByGroup[c.group] || 0) + 1;
+      titleCleanFailRecords.push({
+        id: c.id,
+        group: c.group,
+        title: titleStr,
+        input: c.input,
+        buckets: buckets,
+        fillers: fillers
+      });
+    }
     if (ev.pass) {
       byG[c.group].pass++;
       lines.push("PASS " + c.id);
@@ -1870,7 +1953,6 @@ function main() {
     "=== END_AUDIT ==="
   ].join("\n\n");
 
-  fs.writeFileSync(REPORT_TXT, lines.join("\n\n"), "utf8");
   console.log(out);
 
   let auditHash = "";
@@ -1944,6 +2026,96 @@ function main() {
     (byG.calendar_query ? byG.calendar_query.pass : 0) === 3000 &&
     (byG.multi_intent ? byG.multi_intent.pass : 0) === 2000 &&
     (catCount.query_created_write || 0) === 0;
+
+  const taskWP = byG.task_write ? byG.task_write.pass : 0;
+  const taskQP = byG.task_query ? byG.task_query.pass : 0;
+  const noteWP = byG.note_write ? byG.note_write.pass : 0;
+  const noteQP = byG.note_query ? byG.note_query.pass : 0;
+  const clusterZeroRegression =
+    zeroRegression &&
+    taskWP >= 2035 &&
+    taskQP >= 2531 &&
+    noteWP >= 800 &&
+    noteQP >= 2700 &&
+    qTitlePass >= 19241 &&
+    qEntityPass >= 9388;
+
+  const titleCleanFailCount = titleCleanFailRecords.length;
+  const sortEntriesDesc = (m) =>
+    Array.from(m.entries()).sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0])));
+  const topFillerLines = sortEntriesDesc(titleFailFillerCount)
+    .slice(0, 30)
+    .map((kv, ix) => "filler_rank_" + (ix + 1) + "=" + escapeField(kv[0]) + "=" + kv[1]);
+  const topBucketLines = sortEntriesDesc(titleFailBucketCount)
+    .slice(0, 30)
+    .map((kv, ix) => "cluster_rank_" + (ix + 1) + "=" + escapeField(kv[0]) + "=" + kv[1]);
+  const exSorted = titleCleanFailRecords.slice().sort((a, b) => a.id.localeCompare(b.id));
+  const top30Examples = exSorted.slice(0, 30).map((r, ix) => {
+    return (
+      "example_" +
+      (ix + 1) +
+      "=" +
+      escapeField(r.id) +
+      "|" +
+      escapeField(r.group) +
+      "|title=" +
+      escapeField(r.title.slice(0, 200)) +
+      "|input=" +
+      escapeField(r.input.slice(0, 200)) +
+      "|buckets=" +
+      escapeField(r.buckets.join(",")) +
+      "|fillers=" +
+      escapeField(r.fillers.join(","))
+    );
+  });
+  let titleFailGroupSum = 0;
+  for (const gk in titleFailByGroup) {
+    if (Object.prototype.hasOwnProperty.call(titleFailByGroup, gk)) titleFailGroupSum += titleFailByGroup[gk];
+  }
+  const titleFailSplitLines = [
+    "title_fail_count_calendar_write=" + (titleFailByGroup.calendar_write || 0),
+    "title_fail_count_task_write=" + (titleFailByGroup.task_write || 0),
+    "title_fail_count_note_write=" + (titleFailByGroup.note_write || 0),
+    "title_fail_count_multi_intent=" + (titleFailByGroup.multi_intent || 0),
+    "title_fail_count_calendar_query=" + (titleFailByGroup.calendar_query || 0),
+    "title_fail_count_task_query=" + (titleFailByGroup.task_query || 0),
+    "title_fail_count_note_query=" + (titleFailByGroup.note_query || 0),
+    "title_fail_sum_all_groups=" + titleFailGroupSum,
+    "title_fail_sum_matches_title_clean_fail_count=" + (titleFailGroupSum === titleCleanFailCount ? "yes" : "no")
+  ];
+  const nextScopeClusterText =
+    "Silver Normalizer v1: strip high-frequency Czech command/filler tokens from draft titles (prosim, hod/hod mi, napis/napis, uloz/uloz mi, si/mi) after verifying no routing regression; treat readonly-prefix leakage and priorita/dulezite tails as title-vs-metadata split; address raw-imperative-prefix + real name only in title pass (not in global intent).";
+  const titleCleaningClusterAudit = [
+    "=== TITLE_CLEANING_CLUSTER_AUDIT ===",
+    "title_clean_fail_count=" + titleCleanFailCount,
+    "title_clean_pass_count=" + qTitlePass,
+    "---top_filler_tokens---"
+  ]
+    .concat(topFillerLines.length ? topFillerLines : ["top_filler_tokens=(none)"])
+    .concat(["---top_title_fail_clusters---"])
+    .concat(topBucketLines.length ? topBucketLines : ["top_title_fail_clusters=(none)"])
+    .concat(["---split_by_module---"])
+    .concat(titleFailSplitLines)
+    .concat(["---bordel_bucket_definitions---"])
+    .concat([
+      "bucket_prosim_prosim=prosím|prosim in folded title",
+      "bucket_hod_hod=hoď|hod token in folded title",
+      "bucket_napis_napis=napiš|napis token in folded title",
+      "bucket_uloz_uloz=ulož|uloz token in folded title",
+      "bucket_si_si=word si in folded title",
+      "bucket_mi_mi=word mi in folded title",
+      "bucket_readonly_prefix_in_title=jen zjisti|jen se podivej|jen cti in folded title",
+      "bucket_readonly_prefix_in_user_input_context=readonly cues in folded user input (informational)",
+      "bucket_priorita_dulezite_in_title_metadata_leak=priorita|dulezite in folded title",
+      "bucket_raw_command_prefix_before_real_title=leading uloz/zapis/pridej/hod/napis/dej (+optional mi|si) in folded title",
+      "bucket_title_len_gt_100=title length over quality cap"
+    ])
+    .concat(["---top_30_title_fail_examples---"])
+    .concat(top30Examples.length ? top30Examples : ["top_30_title_fail_examples=(none)"])
+    .concat(["---next_recommended_scope_text_only---", "next_recommended_scope=" + escapeField(nextScopeClusterText)])
+    .concat(["=== END_TITLE_CLEANING_CLUSTER_AUDIT ==="])
+    .join("\n");
+
   const silverQualityBlock = [
     "=== SILVER_QUALITY_AUDIT_V1_RESULT ===",
     "pr_url=" + escapeField(prUrl),
@@ -1970,6 +2142,55 @@ function main() {
     "=== END_SILVER_QUALITY_AUDIT_V1_RESULT ==="
   ].join("\n");
   console.log("\n" + silverQualityBlock);
+
+  const topFillerOneLine = sortEntriesDesc(titleFailFillerCount)
+    .slice(0, 30)
+    .map((kv) => kv[0] + "=" + kv[1])
+    .join(";");
+  const topClustersOneLine = sortEntriesDesc(titleFailBucketCount)
+    .slice(0, 30)
+    .map((kv) => kv[0] + "=" + kv[1])
+    .join(";");
+  const top30OneLine = exSorted
+    .slice(0, 30)
+    .map((r) => escapeField(r.id + "|" + r.group + "|" + r.title.slice(0, 160)))
+    .join(" || ");
+
+  const silverTitleCleaningClusterAuditResult = [
+    "=== SILVER_TITLE_CLEANING_CLUSTER_AUDIT_RESULT ===",
+    "pr_url=" + escapeField(prUrl),
+    "merged=NO",
+    "main_commit=" + escapeField(gitHead),
+    "smoke=PASS/FAIL",
+    "silver_prod_proof=PASS/FAIL",
+    "overall_accuracy=" + acc + "%",
+    "calendar_write=" + (byG.calendar_write ? byG.calendar_write.pass : 0) + "/3000",
+    "calendar_query=" + (byG.calendar_query ? byG.calendar_query.pass : 0) + "/3000",
+    "task_write=" + taskWP + "/3000",
+    "task_query=" + taskQP + "/3000",
+    "note_write=" + noteWP + "/3000",
+    "note_query=" + noteQP + "/3000",
+    "multi_intent=" + (byG.multi_intent ? byG.multi_intent.pass : 0) + "/2000",
+    "query_created_write_count=" + (catCount.query_created_write || 0),
+    "quality_title_clean=" + quality_audit.title_clean,
+    "quality_date_parsed=" + quality_audit.date_parsed,
+    "quality_time_parsed=" + quality_audit.time_parsed,
+    "quality_entity_detected=" + quality_audit.entity_detected,
+    "title_clean_fail_count=" + titleCleanFailCount,
+    "top_filler_tokens=" + (topFillerOneLine || "(none)"),
+    "top_title_fail_clusters=" + (topClustersOneLine || "(none)"),
+    "top_30_title_fail_examples=" + escapeField(top30OneLine || "(none)"),
+    "first_fail=" + escapeField(firstFail || "(none)"),
+    "zero_regression=" + (clusterZeroRegression ? "PASS" : "FAIL"),
+    "next_recommended_scope=" +
+      escapeField("Silver Normalizer v1 — implement title cleaning only after this cluster audit is reviewed"),
+    "=== END_SILVER_TITLE_CLEANING_CLUSTER_AUDIT_RESULT ==="
+  ].join("\n");
+
+  console.log("\n" + titleCleaningClusterAudit);
+  console.log("\n" + silverTitleCleaningClusterAuditResult);
+
+  fs.writeFileSync(REPORT_TXT, lines.join("\n\n") + "\n\n" + titleCleaningClusterAudit + "\n", "utf8");
 }
 
 main();
