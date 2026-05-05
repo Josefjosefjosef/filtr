@@ -1209,6 +1209,50 @@ function buildCases() {
     expectedIntent: "calendar.query"
   });
 
+  /** P0: calendar_query_03029 — explicitní read + agenda + negace „kam uložit“ nesmí blokovat calendar.query. */
+  const SILVER_CALENDAR_QUERY_STORAGE_NEGATION_KOTVA = [
+    {
+      group: "calendar_query",
+      index0: 27,
+      input: "Podívej se do kalendáře co mám zítra, neptej se kam uložit.",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_query",
+      index0: 28,
+      input: "podivej se do kalendare co mam zitra, neptej se kam ulozit.",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_query",
+      index0: 29,
+      input: "mrkni do kalendare co mam zitra, neptej se kam ulozit.",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_query",
+      index0: 30,
+      input: "Koukni do kalendáře co mám dnes, bez dotazu kam uložit.",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_query",
+      index0: 31,
+      input: "Podívej se do kalendáře co mám tento týden, neptat se kam uložit.",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_query",
+      index0: 32,
+      input: "Podívej se do kalendáře, ale ne v kalendáři",
+      expectedIntent: "unknown"
+    }
+  ];
+  for (let si = 0; si < SILVER_CALENDAR_QUERY_STORAGE_NEGATION_KOTVA.length; si++) {
+    const sk = SILVER_CALENDAR_QUERY_STORAGE_NEGATION_KOTVA[si];
+    silverPatchCaseByGroupIndex(sk.group, sk.index0, { input: sk.input, expectedIntent: sk.expectedIntent });
+  }
+
   silverPatchCaseByGroupIndex("note_query", 1, {
     input: "Najdi poznámku smlouva v kontextu kalendáře, nepleť to s kalendářem.",
     expectedIntent: "note.query"
