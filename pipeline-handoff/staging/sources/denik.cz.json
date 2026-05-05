@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-05T01:34:55.776082Z",
+  "ingestedAt": "2026-05-05T02:09:43.940054Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Spropitné bude legálním příjmem číšníků či kuchařů, nebudou ho muset danit",
+      "url": "https://www.denik.cz/ekonomika/vlada-eet-restaurace-dane-spropitne-nemusi-se-danit.html",
+      "dt": "2026-05-05T02:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "danit",
+        "kuchařů",
+        "legálním",
+        "muset",
+        "nebudou",
+        "příjmem",
+        "spropitné",
+        "číšníků"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -623,32 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vyšetřování smrtelného hantaviru na výletní lodi: Přenesly ho tam myši, lék není",
-      "url": "https://www.denik.cz/ze_sveta/hantavirus-nemoc-vyletni-lod-mv-hondius-vycetroivani-pricina-priznaky-lecba.html",
-      "dt": "2026-05-04T11:07:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "hantaviru",
-        "lodi",
-        "lék",
-        "myši",
-        "přenesly",
-        "smrtelného",
-        "tam",
-        "vyšetřování",
-        "výletní"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29447,
+      "bytes": 29307,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,12 +695,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-04T20:53:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T02:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "zdravi": 1,
-          "finance": 1
+          "finance": 2,
+          "zpravy": 22,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -713,6 +712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Spropitné bude legálním příjmem číšníků či kuchařů, nebudou ho muset danit",
+            "publishedAt": "2026-05-05T02:00:00Z"
+          },
           {
             "title": "Policie v blízkosti Bílého domu postřelila člověka",
             "publishedAt": "2026-05-04T20:53:00Z"
@@ -740,10 +743,6 @@
           {
             "title": "Požár v Českém Švýcarsku se podařilo lokalizovat. Na místě je přes 500 hasičů",
             "publishedAt": "2026-05-04T16:32:00Z"
-          },
-          {
-            "title": "Řidič v Lipsku najel do davu lidí. Na místě jsou dva mrtví, další jsou zranění",
-            "publishedAt": "2026-05-04T15:59:00Z"
           }
         ]
       }

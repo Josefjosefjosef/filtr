@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-05T01:34:55.776082Z",
+  "ingestedAt": "2026-05-05T02:09:43.940054Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Výbuch v čínské továrně na pyrotechniku zabil 21 lidí. Podobná fabrika zabíjela už loni",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/vybuch-v-tovarne-na-zabavni-pyrotechniku-v-chu-nanu-zabil-21-lidi.A260505_033334_zahranicni_air",
+      "dt": "2026-05-05T01:56:37Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "fabrika",
+        "lidí",
+        "loni",
+        "podobná",
+        "pyrotechniku",
+        "továrně",
+        "výbuch",
+        "zabil",
+        "zabíjela",
+        "čínské"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -764,31 +791,6 @@
         "rakousku",
         "výživy",
         "zadržený"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Nepodléhejme trendům.“ Rajchl ve Sněmovně loboval za uhlí, Turek souhlasí",
-      "url": "https://www.idnes.cz/zpravy/domaci/uhli-turek-rajchl-poslanecka-snemovna-seminar-obnovitelne-zdroje.A260504_125731_domaci_tty",
-      "dt": "2026-05-04T14:49:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "loboval",
-        "nepodléhejme",
-        "rajchl",
-        "sněmovně",
-        "souhlasí",
-        "trendům",
-        "turek",
-        "uhlí"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1592,7 +1594,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49988,
+      "bytes": 49663,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1629,7 +1631,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T01:56:37Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1645,6 +1647,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Výbuch v čínské továrně na pyrotechniku zabil 21 lidí. Podobná fabrika zabíjela už loni",
+            "publishedAt": "2026-05-05T01:56:37Z"
+          },
           {
             "title": "Vím, že nás Česko neopustí. Ukrajinský velvyslanec o zbrojní pomoci i uprchlících",
             "publishedAt": "2026-05-04T22:00:00Z"
@@ -1672,10 +1678,6 @@
           {
             "title": "Rusko a Ukrajina oznámily kolem Dne vítězství příměří. Zelenskyj navrhl dřívější",
             "publishedAt": "2026-05-04T20:15:00Z"
-          },
-          {
-            "title": "Dostala epileptický záchvat. Pes, kterého si přivedla z útulku, jí ukousl kus obličeje",
-            "publishedAt": "2026-05-04T19:20:00Z"
           }
         ]
       }

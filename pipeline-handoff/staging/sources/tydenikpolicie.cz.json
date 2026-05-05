@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-05T01:34:55.776082Z",
+  "ingestedAt": "2026-05-05T02:09:43.940054Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Dvě mladé ženy sprejovaly všude, kudy chodily",
+      "url": "https://tydenikpolicie.cz/dve-mlade-zeny-sprejovaly-vsude-kudy-chodily/",
+      "dt": "2026-05-05T02:02:06Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "chodily",
+        "dvě",
+        "kudy",
+        "mladé",
+        "sprejovaly",
+        "všude",
+        "ženy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -240,38 +264,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Seniorovi v Jirkově vadil hluk v domě. Nenapadlo ho nic lepšího, než zavolat na tísňovou linku s tím, že to tam vystřílí",
-      "url": "https://tydenikpolicie.cz/seniorovi-v-jirkove-vadil-hluk-v-dome-nenapadlo-ho-nic-lepsiho-nez-zavolat-na-tisnovou-linku-s-tim-ze-to-tam-vystrili/",
-      "dt": "2026-05-04T12:03:27Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "domě",
-        "hluk",
-        "jirkově",
-        "lepšího",
-        "linku",
-        "nenapadlo",
-        "než",
-        "nic",
-        "seniorovi",
-        "tam",
-        "tím",
-        "tísňovou",
-        "vadil",
-        "vystřílí",
-        "zavolat"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +274,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15990,
+      "bytes": 15808,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +311,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-04T18:42:45Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T02:02:06Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -334,6 +326,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dvě mladé ženy sprejovaly všude, kudy chodily",
+            "publishedAt": "2026-05-05T02:02:06Z"
+          },
           {
             "title": "Podvodník nakukal muži, že má 300 tisíc korun ve svém investičním fondu. Dotyčný přišel o 30 tisíc",
             "publishedAt": "2026-05-04T18:42:45Z"
@@ -361,10 +357,6 @@
           {
             "title": "Další nehody motocyklů v Karlovarském kraji. Jedna z nich skončila tragicky",
             "publishedAt": "2026-05-04T16:09:54Z"
-          },
-          {
-            "title": "Při nehodě u Branné zemřel motorkář",
-            "publishedAt": "2026-05-04T15:58:37Z"
           }
         ]
       }
