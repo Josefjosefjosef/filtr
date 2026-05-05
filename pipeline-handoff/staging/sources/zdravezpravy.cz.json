@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-05T08:10:39.864381Z",
+  "ingestedAt": "2026-05-05T08:50:10.122686Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Analýza: V investicích do zdravotnictví dál zaostáváme za západem",
+      "url": "https://www.zdravezpravy.cz/2026/05/05/analyza-v-investicich-do-zdravotnictvi-dal-zaostavame-za-zapadem/",
+      "dt": "2026-05-05T07:00:24Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "investicích",
+        "zaostáváme",
+        "zdravotnictví",
+        "západem"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -473,30 +494,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "3. ročník Kongresu následné intenzivní péče upoutal i letos",
-      "url": "https://www.zdravezpravy.cz/2026/04/27/3-rocnik-kongresu-nasledne-intenzivni-pece-upoutal-i-letos/",
-      "dt": "2026-04-27T07:19:04Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "intenzivní",
-        "kongresu",
-        "letos",
-        "následné",
-        "péče",
-        "ročník",
-        "upoutal"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -507,7 +504,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 187269,
+      "bytes": 191559,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -544,10 +541,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-04T16:13:17Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T07:00:24Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zdravi": 20
+          "finance": 1,
+          "zdravi": 19
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -559,6 +557,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Analýza: V investicích do zdravotnictví dál zaostáváme za západem",
+            "publishedAt": "2026-05-05T07:00:24Z"
+          },
           {
             "title": "Zdravotní benefity na kardio a onko prevenci nebudou daňově omezené",
             "publishedAt": "2026-05-04T16:13:17Z"
@@ -586,10 +588,6 @@
           {
             "title": "ZUŠ Open zahájí 13. května benefiční koncert na Pražském hradě",
             "publishedAt": "2026-04-30T13:00:35Z"
-          },
-          {
-            "title": "Vojtěch: Očkovací strategie očkování nerozšiřuje, na to nemá právní sílu",
-            "publishedAt": "2026-04-30T12:28:22Z"
           }
         ]
       }

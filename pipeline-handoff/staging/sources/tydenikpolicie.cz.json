@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-05T08:10:39.864381Z",
+  "ingestedAt": "2026-05-05T08:50:10.122686Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Záchranáři a policisté zachraňovali na jihu Čech dva silně opilé mladistvé chlapce",
+      "url": "https://tydenikpolicie.cz/zachranari-a-policiste-zachranovali-na-jihu-cech-dva-silne-opile-mladistve-chlapce/",
+      "dt": "2026-05-05T08:13:52Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "chlapce",
+        "dva",
+        "jihu",
+        "mladistvé",
+        "opilé",
+        "policisté",
+        "silně",
+        "zachraňovali",
+        "záchranáři",
+        "čech"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -235,31 +262,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Řidič se zákazem řízení ujížděl před policisty v Liberci po silnicích i po loukách",
-      "url": "https://tydenikpolicie.cz/ridic-se-zakazem-rizeni-ujizdel-pred-policisty-v-liberci-po-silnicich-i-po-loukach/",
-      "dt": "2026-05-04T17:25:04Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "liberci",
-        "loukách",
-        "policisty",
-        "silnicích",
-        "ujížděl",
-        "zákazem",
-        "řidič",
-        "řízení"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -270,7 +272,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15508,
+      "bytes": 15392,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -307,7 +309,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-05T07:53:24Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T08:13:52Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -322,6 +324,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Záchranáři a policisté zachraňovali na jihu Čech dva silně opilé mladistvé chlapce",
+            "publishedAt": "2026-05-05T08:13:52Z"
+          },
           {
             "title": "Pražská policie hledá ženu podezřelou ze dvou krádeží v kancelářských budovách",
             "publishedAt": "2026-05-05T07:53:24Z"
@@ -349,10 +355,6 @@
           {
             "title": "Muže podezřelého z rušení nočního klidu v Pardubicích rozplakal pepřový sprej. Poté hrozil sebevraždou skokem z okna v přízemí",
             "publishedAt": "2026-05-04T18:32:05Z"
-          },
-          {
-            "title": "Dluh se známému pokusil uhradit bankovkami z filmových rekvizit",
-            "publishedAt": "2026-05-04T18:21:36Z"
           }
         ]
       }

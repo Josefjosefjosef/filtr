@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-05T08:10:39.864381Z",
+  "ingestedAt": "2026-05-05T08:50:10.122686Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Každé páté klíště je nakažené. Experti varují, že hrozí i méně známé infekce",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/kliste-nakaza-dalsi-infekce/",
+      "dt": "2026-05-05T08:31:08Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "experti",
+        "hrozí",
+        "infekce",
+        "každé",
+        "klíště",
+        "nakažené",
+        "páté",
+        "varují",
+        "známé"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -245,31 +271,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Brusel přeskupuje miliardy: Co se stane s financemi na rakovinu a vzácná onemocnění?",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/brusel-preskupuje-zdravotnicke-miliardy-nove-fondy-eu/",
-      "dt": "2026-05-04T10:10:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "brusel",
-        "financemi",
-        "miliardy",
-        "onemocnění",
-        "přeskupuje",
-        "rakovinu",
-        "stane",
-        "vzácná"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +281,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 89301,
+      "bytes": 83772,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +318,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-05T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T08:31:08Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -332,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Každé páté klíště je nakažené. Experti varují, že hrozí i méně známé infekce",
+            "publishedAt": "2026-05-05T08:31:08Z"
+          },
           {
             "title": "Inovace v Česku vznikají v chaosu. Experti mluví o skandálních podmínkách a kultuře strachu",
             "publishedAt": "2026-05-05T07:00:00Z"
@@ -359,10 +364,6 @@
           {
             "title": "Algoritmus rozhoduje, kdo dostane zdravotní péči. AI počítá chudým likvidační poplatky",
             "publishedAt": "2026-05-04T13:24:40Z"
-          },
-          {
-            "title": "Žloutenka na jihu Moravy neustupuje: Hygienici varují před rizikem na výletech a táborech",
-            "publishedAt": "2026-05-04T12:05:45Z"
           }
         ]
       }

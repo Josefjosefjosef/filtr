@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-05T08:10:39.864381Z",
+  "ingestedAt": "2026-05-05T08:50:10.122686Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Kdo a proč shodil akcie Czechoslovak Group burze v Amsterodamu",
+      "url": "https://profitonline.cz/kdo-a-proc-shodil-akcie-czechoslovak-group-burze-v-amsterodamu/",
+      "dt": "2026-05-05T08:20:21Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "akcie",
+        "amsterodamu",
+        "burze",
+        "czechoslovak",
+        "group",
+        "proč",
+        "shodil"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -269,29 +293,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Trhy zůstávají nervózní, zákazníky ochrání fixace",
-      "url": "https://profitonline.cz/trhy-zustavaji-nervozni-zakazniky-ochrani-fixace/",
-      "dt": "2026-05-03T08:00:39Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "fixace",
-        "nervózní",
-        "ochrání",
-        "trhy",
-        "zákazníky",
-        "zůstávají"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -302,7 +303,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19061,
+      "bytes": 19245,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -339,7 +340,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-05T07:00:10Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T08:20:21Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -354,6 +355,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kdo a proč shodil akcie Czechoslovak Group burze v Amsterodamu",
+            "publishedAt": "2026-05-05T08:20:21Z"
+          },
           {
             "title": "Colt CZ: Amsterdamská burza není jen symbolický doplněk",
             "publishedAt": "2026-05-05T07:00:10Z"
@@ -381,10 +386,6 @@
           {
             "title": "Česká ekonomika klopýtla, Írán za to ale zatím nemůže",
             "publishedAt": "2026-05-04T09:10:02Z"
-          },
-          {
-            "title": "Čeští investoři sázejí na technologie a krypto, ale s otazníkem nad budoucností",
-            "publishedAt": "2026-05-04T08:00:39Z"
           }
         ]
       }
