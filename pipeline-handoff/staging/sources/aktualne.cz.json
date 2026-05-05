@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-05T12:39:06.907550Z",
+  "ingestedAt": "2026-05-05T13:19:13.685162Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Je to něco mimořádného.“ Bohdalová dostala k narozeninám vlastní edici poštovních známek",
+      "url": "https://magazin.aktualne.cz/je-to-neco-mimoradneho-bohdalova-dostala-k-narozeninam-vlastni-edici-postovnich-znamek/r~aaa29715770f1a7e2384047d8eeb089a/",
+      "dt": "2026-05-05T12:46:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bohdalová",
+        "dostala",
+        "edici",
+        "mimořádného",
+        "narozeninám",
+        "něco",
+        "poštovních",
+        "vlastní",
+        "známek"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -507,36 +533,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ropa v moři, padá černý déšť. Ruské město čelí katastrofě, Putin říká, že nic nehrozí",
-      "url": "https://zpravy.aktualne.cz/zahranici/na-ruske-mesto-pada-jedovaty-cerny-dest-putin-se-tvari-ze-se-nic-nedeje/r~aaa299e05445d1e5f60e25c59fca7b0a/",
-      "dt": "2026-05-05T07:40:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "déšť",
-        "katastrofě",
-        "moři",
-        "město",
-        "nehrozí",
-        "nic",
-        "padá",
-        "putin",
-        "ropa",
-        "ruské",
-        "čelí",
-        "černý",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -547,7 +543,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22614,
+      "bytes": 22532,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -584,11 +580,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-05T12:08:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T12:46:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 4,
           "zpravy": 12,
+          "sport": 4,
           "other": 2,
           "finance": 2
         },
@@ -602,6 +598,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Je to něco mimořádného.“ Bohdalová dostala k narozeninám vlastní edici poštovních známek",
+            "publishedAt": "2026-05-05T12:46:00Z"
+          },
           {
             "title": "V korupční kauze jsou namočení další dva ligoví fotbalisté. Rozhodčí už se přiznal",
             "publishedAt": "2026-05-05T09:24:00Z"
@@ -629,10 +629,6 @@
           {
             "title": "S výletní lodí u Kapverd zdravotníci nově spojují sedm případů hantaviru",
             "publishedAt": "2026-05-05T04:49:00Z"
-          },
-          {
-            "title": "Rusko oznámilo krátké příměří od 8. května, Ukrajina hlásí klid zbraní ještě dříve",
-            "publishedAt": "2026-01-21T06:45:00Z"
           }
         ]
       }

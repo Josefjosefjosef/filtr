@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-05T12:39:06.907550Z",
+  "ingestedAt": "2026-05-05T13:19:13.685162Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Europoslanec Knotek: Přísná ekologická pravidla mohou poškodit výrobu léků i ekonomiku",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/europoslanec-knotek-vyroba-leku-ekonomika/",
+      "dt": "2026-05-05T12:45:04Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "ekologická",
+        "ekonomiku",
+        "europoslanec",
+        "knotek",
+        "léků",
+        "poškodit",
+        "pravidla",
+        "přísná",
+        "výrobu"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -243,32 +269,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Algoritmus rozhoduje, kdo dostane zdravotní péči. AI počítá chudým likvidační poplatky",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/algoritmus-pece-umela-inteligence-chudi/",
-      "dt": "2026-05-04T13:24:40Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "algoritmus",
-        "chudým",
-        "dostane",
-        "likvidační",
-        "poplatky",
-        "počítá",
-        "péči",
-        "rozhoduje",
-        "zdravotní"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 83657,
+      "bytes": 84121,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-05T11:02:29Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T12:45:04Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -331,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Europoslanec Knotek: Přísná ekologická pravidla mohou poškodit výrobu léků i ekonomiku",
+            "publishedAt": "2026-05-05T12:45:04Z"
+          },
           {
             "title": "Kontrola a odstranění znamének: Kdy to máte zdarma a kdy si musíte připravit peněženku?",
             "publishedAt": "2026-05-05T11:02:29Z"
@@ -358,10 +362,6 @@
           {
             "title": "Boj s mýty o vakcínách: Evropská agentura spouští poradní tým, je v něm i známý český expert",
             "publishedAt": "2026-05-04T16:00:00Z"
-          },
-          {
-            "title": "Změna ve vedení péče o vězně: Do čela zařízení ministerstva spravedlnosti nastoupil nový ředitel",
-            "publishedAt": "2026-05-04T14:58:18Z"
           }
         ]
       }
