@@ -1,27 +1,53 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-05T22:39:42.537316Z",
+  "ingestedAt": "2026-05-05T23:20:26.014851Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Noční bitva o usnesení ke sjezdu sudetských Němců. Tlačí ho šéf SPD Okamura",
+      "title": "V noční bitvě Okamura zatím neprosadil odmítnutí sjezdu sudetských Němců v Brně",
       "url": "https://www.idnes.cz/zpravy/domaci/koalice-chce-prosadit-usneseni-k-chystanemu-jednani-sudetskych-nemcu-v-brne.A260505_112854_domaci_kop",
-      "dt": "2026-05-05T22:30:00Z",
+      "dt": "2026-05-05T22:55:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
-        "bitva",
+        "bitvě",
+        "brně",
+        "neprosadil",
         "noční",
         "němců",
+        "odmítnutí",
         "okamura",
         "sjezdu",
-        "spd",
         "sudetských",
-        "tlačí",
-        "usnesení",
-        "šéf"
+        "zatím"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jak se v Česku sdílí elektřina. Od srpna přijdou změny, slibuje datové centrum",
+      "url": "https://www.idnes.cz/ekonomika/domaci/elekroenergeticke-datove-centrum-cez-centropol.A260505_143708_ekonomika_hyk",
+      "dt": "2026-05-05T22:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "centrum",
+        "datové",
+        "elektřina",
+        "přijdou",
+        "sdílí",
+        "slibuje",
+        "srpna",
+        "změny",
+        "česku"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -50,32 +76,6 @@
         "vynést",
         "írán",
         "škrtičů"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Jak se v Česku sdílí elektřina. Od srpna přijdou změny, slibuje datové centrum",
-      "url": "https://www.idnes.cz/ekonomika/domaci/elekroenergeticke-datove-centrum-cez-centropol.A260505_143708_ekonomika_hyk",
-      "dt": "2026-05-05T22:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "centrum",
-        "datové",
-        "elektřina",
-        "přijdou",
-        "sdílí",
-        "slibuje",
-        "srpna",
-        "změny",
-        "česku"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1591,7 +1591,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47439,
+      "bytes": 47509,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1628,7 +1628,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T22:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T22:55:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1646,15 +1646,15 @@
         },
         "sample_titles": [
           {
-            "title": "Noční bitva o usnesení ke sjezdu sudetských Němců. Tlačí ho šéf SPD Okamura",
-            "publishedAt": "2026-05-05T22:30:00Z"
-          },
-          {
-            "title": "Liga hormuzských škrtičů před finále. Írán teď musí vynést kartu, Trump být rychlejší",
-            "publishedAt": "2026-05-05T22:00:00Z"
+            "title": "V noční bitvě Okamura zatím neprosadil odmítnutí sjezdu sudetských Němců v Brně",
+            "publishedAt": "2026-05-05T22:55:00Z"
           },
           {
             "title": "Jak se v Česku sdílí elektřina. Od srpna přijdou změny, slibuje datové centrum",
+            "publishedAt": "2026-05-05T22:00:00Z"
+          },
+          {
+            "title": "Liga hormuzských škrtičů před finále. Írán teď musí vynést kartu, Trump být rychlejší",
             "publishedAt": "2026-05-05T22:00:00Z"
           },
           {
