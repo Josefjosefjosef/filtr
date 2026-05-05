@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-05T14:39:24.851307Z",
+  "ingestedAt": "2026-05-05T15:15:02.783300Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Za slevy v aplikaci poukaz na dovolenou. Raiffeisenbank spouští letní kampaň",
+      "url": "https://www.e15.cz/finexpert/banky-a-ucty/za-slevy-v-aplikaci-poukaz-na-dovolenou-raiffeisenbank-spousti-letni-kampan-1432606",
+      "dt": "2026-05-05T14:05:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "aplikaci",
+        "dovolenou",
+        "kampaň",
+        "letní",
+        "poukaz",
+        "raiffeisenbank",
+        "slevy",
+        "spouští"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1063,32 +1088,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Maturita 2026: Výsledky, aktuální informace, průběh státní a školní části",
-      "url": "https://www.e15.cz/maturita-2026",
-      "dt": "2026-05-04T09:55:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "2026",
-        "aktuální",
-        "informace",
-        "maturita",
-        "průběh",
-        "státní",
-        "výsledky",
-        "části",
-        "školní"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1099,11 +1098,11 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 56383,
+      "bytes": 55234,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 50,
+      "itemsParsed": 49,
       "itemsKept": 40,
       "accepted": 40,
       "status": "OK",
@@ -1136,7 +1135,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-05T13:07:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T14:05:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 35,
@@ -1153,6 +1152,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Za slevy v aplikaci poukaz na dovolenou. Raiffeisenbank spouští letní kampaň",
+            "publishedAt": "2026-05-05T14:05:00Z"
+          },
           {
             "title": "GameStop chce na pozadí velkého zúčtování v Big Tech a rozpadu OPEC ovládnout eBay",
             "publishedAt": "2026-05-05T13:07:00Z"
@@ -1180,10 +1183,6 @@
           {
             "title": "Státní svátky v ČR v roce 2026: Otevírací doba obchodů a kdy je volno",
             "publishedAt": "2026-05-05T11:15:00Z"
-          },
-          {
-            "title": "Zvládne Trump otevřít Hormuz silou, nebo rozpoutá další kolo marných bojů?",
-            "publishedAt": "2026-05-05T11:14:00Z"
           }
         ]
       }

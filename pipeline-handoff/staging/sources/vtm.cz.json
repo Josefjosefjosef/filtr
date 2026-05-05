@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-05T14:39:24.851307Z",
+  "ingestedAt": "2026-05-05T15:15:02.783300Z",
   "items": [
     {
       "section": "veda",
@@ -20,6 +20,33 @@
         "vypadat",
         "všechny",
         "weby"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Konečně změna. Nové Call of Duty po 13 letech nevyjde na PlayStation 4 a Xbox One",
+      "url": "https://doupe.zive.cz/konecne-zmena-nove-call-of-duty-po-13-letech-nevyjde-na-playstation-4-a-xbox-one",
+      "dt": "2026-05-05T14:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "call",
+        "duty",
+        "konečně",
+        "letech",
+        "nevyjde",
+        "nové",
+        "one",
+        "playstation",
+        "xbox",
+        "změna"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -945,34 +972,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "AirPods už s Androidy fungují skoro jako s iPhony. Google konečně opravil dlouholetou chybu",
-      "url": "https://mobilmania.zive.cz/clanky/airpods-na-androidu-konecne-funguji-skoro-jako-s-iphonem-komunita-obesla-omezeni-applu/sc-3-a-1363775/default.aspx",
-      "dt": "2026-04-30T08:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "airpods",
-        "androidy",
-        "chybu",
-        "dlouholetou",
-        "fungují",
-        "google",
-        "iphony",
-        "jako",
-        "konečně",
-        "opravil",
-        "skoro"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -983,7 +982,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23080,
+      "bytes": 23023,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1020,7 +1019,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-05T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T14:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1038,6 +1037,10 @@
           {
             "title": "Takhle budou do tří let vypadat všechny státní weby a aplikace",
             "publishedAt": "2026-05-04T17:45:00Z"
+          },
+          {
+            "title": "Konečně změna. Nové Call of Duty po 13 letech nevyjde na PlayStation 4 a Xbox One",
+            "publishedAt": "2026-05-05T14:45:00Z"
           },
           {
             "title": "Micro RGB místo QLED: Samsung ukazuje novou generaci prémiových LCD televizorů, známe ceny",
@@ -1062,10 +1065,6 @@
           {
             "title": "Chyba v Bluetooth prozrazuje policisty v utajení. Telefony se stejnou technologií jsou chráněny lépe",
             "publishedAt": "2026-05-05T07:45:00Z"
-          },
-          {
-            "title": "Apple přestal prodávat nejlevnější stolní Mac. Důvodů může být hned několik",
-            "publishedAt": "2026-05-04T12:45:00Z"
           }
         ]
       }

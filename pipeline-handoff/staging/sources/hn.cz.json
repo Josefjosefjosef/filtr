@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-05T14:39:24.851307Z",
+  "ingestedAt": "2026-05-05T15:15:02.783300Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Elektroauto už není strašák. Zájem českých firem roste, tahounem je levnější operativní leasing",
+      "url": "https://archiv.hn.cz/c1-67873830-elektroauto-uz-neni-strasak-zajem-ceskych-firem-roste-tahounem-je-levnejsi-operativni-leasing",
+      "dt": "2026-05-05T14:59:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "elektroauto",
+        "firem",
+        "leasing",
+        "levnější",
+        "operativní",
+        "roste",
+        "strašák",
+        "tahounem",
+        "zájem",
+        "českých"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1122,33 +1149,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Policie obvinila další tři lidi v bitcoinové kauze. Je mezi nimi i exministr Blažek",
-      "url": "https://archiv.hn.cz/c1-67873320-policie-obvinila-v-bitcoinove-kauze-i-exministra-blazka-pisi-media",
-      "dt": "2026-05-04T12:31:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bitcoinové",
-        "blažek",
-        "další",
-        "exministr",
-        "kauze",
-        "lidi",
-        "nimi",
-        "obvinila",
-        "policie",
-        "tři"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1159,7 +1159,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183429,
+      "bytes": 183394,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1196,11 +1196,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-05T14:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T14:59:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
+          "zdravi": 1,
           "finance": 37,
-          "zpravy": 3
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1212,6 +1213,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Elektroauto už není strašák. Zájem českých firem roste, tahounem je levnější operativní leasing",
+            "publishedAt": "2026-05-05T14:59:00Z"
+          },
           {
             "title": "Plánovaný nárůst počtu reaktorů je v poměru k velikosti Česka bezprecedentní, říká nástupce Dany Drábové",
             "publishedAt": "2026-05-05T14:30:00Z"
@@ -1239,10 +1244,6 @@
           {
             "title": "Svěží tváře české módy. Udělejte si přehled, které návrháře z jarní edice pražského fashion weeku sledovat",
             "publishedAt": "2026-05-05T09:23:00Z"
-          },
-          {
-            "title": "Proč je někomu zle po Ozempicu a proč nezabírá každému? Vědci zjistili, co za to může",
-            "publishedAt": "2026-05-05T09:00:00Z"
           }
         ]
       }

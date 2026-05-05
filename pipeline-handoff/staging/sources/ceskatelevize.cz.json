@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-05T14:39:24.851307Z",
+  "ingestedAt": "2026-05-05T15:15:02.783300Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Les budoucnosti bude vypadat jinak, než jsme zvyklí, říká výzkumník Krejza",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/les-budoucnosti-bude-vypadat-jinak-nez-jsme-zvykli-rika-vyzkumnik-krejza-373068",
+      "dt": "2026-05-05T14:42:11Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "budoucnosti",
+        "jinak",
+        "jsme",
+        "krejza",
+        "les",
+        "než",
+        "vypadat",
+        "výzkumník",
+        "zvyklí",
+        "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -735,26 +762,26 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Výbuch v čínské továrně na zábavní pyrotechniku zabil nejméně 26 lidí",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/vybuch-v-cinske-tovarne-na-zabavni-pyrotechniku-zabil-nejmene-21-lidi-373105",
-      "dt": "2026-05-05T02:05:12Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Kovařík končí, komisi rozhodčích nově povede Španěl Clos",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/kovarik-konci-komisi-rozhodcich-nove-povede-spanel-clos-156614",
+      "dt": "2026-05-05T14:40:14Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "lidí",
-        "nejméně",
-        "pyrotechniku",
-        "továrně",
-        "výbuch",
-        "zabil",
-        "zábavní",
-        "čínské"
+        "clos",
+        "komisi",
+        "končí",
+        "kovařík",
+        "nově",
+        "povede",
+        "rozhodčích",
+        "španěl"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1496,30 +1523,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Mohuč uloupila důležité body v St. Pauli, zachránil se i Mönchengladbach",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/mohuc-uloupila-dulezite-body-v-st-pauli-156584",
-      "dt": "2026-05-03T16:04:16Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "body",
-        "důležité",
-        "mohuč",
-        "mönchengladbach",
-        "pauli",
-        "uloupila",
-        "zachránil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1530,7 +1533,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43435,
+      "bytes": 43674,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1590,11 +1593,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T14:05:09Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T14:42:11Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 6,
-          "zpravy": 24
+          "zpravy": 24,
+          "other": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1606,6 +1609,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Les budoucnosti bude vypadat jinak, než jsme zvyklí, říká výzkumník Krejza",
+            "publishedAt": "2026-05-05T14:42:11Z"
+          },
           {
             "title": "Anifilm vezme diváky na Farmu zvířat i za Čarodějovým učněm",
             "publishedAt": "2026-05-05T14:05:09Z"
@@ -1633,10 +1640,6 @@
           {
             "title": "Rumunský parlament vyjádřil nedůvěru vládě",
             "publishedAt": "2026-05-05T11:48:09Z"
-          },
-          {
-            "title": "Středověcí Češi zavrhli proso, nastoupili na cestu „dietní transformace“, popsala studie",
-            "publishedAt": "2026-05-05T11:45:30Z"
           }
         ]
       }
@@ -1648,7 +1651,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38330,
+      "bytes": 38289,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1685,7 +1688,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T14:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T14:40:14Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1700,6 +1703,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kovařík končí, komisi rozhodčích nově povede Španěl Clos",
+            "publishedAt": "2026-05-05T14:40:14Z"
+          },
           {
             "title": "Všichni mají dobré nastavení, vyhlíží další úspěchy bronzový kouč Tomajko",
             "publishedAt": "2026-05-05T14:30:00Z"
@@ -1727,10 +1734,6 @@
           {
             "title": "Etická komise FAČR zahájila řízení v korupční kauze i s Elbelem, Látalem a Chrudimí",
             "publishedAt": "2026-05-05T09:17:52Z"
-          },
-          {
-            "title": "Minnesota zaskočila i San Antonio, vyčerpaná Philadelphia padla s New Yorkem",
-            "publishedAt": "2026-05-05T06:41:43Z"
           }
         ]
       }
@@ -1742,7 +1745,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77937,
+      "bytes": 77945,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

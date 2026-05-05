@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-05T14:39:24.851307Z",
+  "ingestedAt": "2026-05-05T15:15:02.783300Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Hantaviry, které zabíjely na lodi v Atlantiku, se vyskytují i v Česku. Nejvíce v těchto 2 krajích",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/hantaviry-cesko-2-kraje/",
+      "dt": "2026-05-05T14:45:53Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "atlantiku",
+        "hantaviry",
+        "krajích",
+        "lodi",
+        "nejvíce",
+        "těchto",
+        "vyskytují",
+        "zabíjely",
+        "česku"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -240,34 +266,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Změna ve vedení péče o vězně: Do čela zařízení ministerstva spravedlnosti nastoupil nový ředitel",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/zmena-ve-vedeni-pece-o-vezne-novy-reditel/",
-      "dt": "2026-05-04T14:58:18Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "ministerstva",
-        "nastoupil",
-        "nový",
-        "péče",
-        "spravedlnosti",
-        "vedení",
-        "vězně",
-        "zařízení",
-        "změna",
-        "čela",
-        "ředitel"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +276,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 82683,
+      "bytes": 85324,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +313,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-05T14:13:19Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T14:45:53Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -330,6 +328,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hantaviry, které zabíjely na lodi v Atlantiku, se vyskytují i v Česku. Nejvíce v těchto 2 krajích",
+            "publishedAt": "2026-05-05T14:45:53Z"
+          },
           {
             "title": "Listerióza v českých prodejnách: Podívejte se, které balení hub musíte okamžitě vrátit",
             "publishedAt": "2026-05-05T14:13:19Z"
@@ -357,10 +359,6 @@
           {
             "title": "V nemocnici se nakazí až každý desátý pacient. Zařízení popisují pravidla pro nemocný personál",
             "publishedAt": "2026-05-05T06:00:00Z"
-          },
-          {
-            "title": "Průlomová terapie vzácného onemocnění i léčba rakoviny. Kterých 5 léků dostalo v EU zelenou?",
-            "publishedAt": "2026-05-05T05:00:00Z"
           }
         ]
       }
