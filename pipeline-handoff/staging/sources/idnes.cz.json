@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-05T03:55:19.787812Z",
+  "ingestedAt": "2026-05-05T04:30:28.576769Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Poslanci mají jednat o změně stavebního zákona, Mrázová ji chce schválit zrychleně",
+      "url": "https://www.idnes.cz/zpravy/domaci/poslance-zamestna-zmena-stavebniho-zakona-mrazova-ji-chce-schvalit-zrychlene.A260505_051216_domaci_kop",
+      "dt": "2026-05-05T03:52:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "chce",
+        "jednat",
+        "mají",
+        "mrázová",
+        "poslanci",
+        "schválit",
+        "stavebního",
+        "změně",
+        "zrychleně",
+        "zákona"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -765,32 +792,6 @@
         "vláda",
         "vrátit",
         "školkovné"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Otrava dětské výživy HiPP. Exzaměstnanec zadržený v Rakousku obvinění popírá",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/muz-podezrely-z-otraveni-detskych-vyziv-zadrzeny-v-rakousku-obvineni-popira.A260504_135319_zahranicni_tmps",
-      "dt": "2026-05-04T14:49:59Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "dětské",
-        "exzaměstnanec",
-        "hipp",
-        "obvinění",
-        "otrava",
-        "popírá",
-        "rakousku",
-        "výživy",
-        "zadržený"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1594,7 +1595,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49663,
+      "bytes": 49836,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1631,7 +1632,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T01:56:37Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T03:52:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1647,6 +1648,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Poslanci mají jednat o změně stavebního zákona, Mrázová ji chce schválit zrychleně",
+            "publishedAt": "2026-05-05T03:52:00Z"
+          },
           {
             "title": "Výbuch v čínské továrně na pyrotechniku zabil 21 lidí. Podobná fabrika zabíjela už loni",
             "publishedAt": "2026-05-05T01:56:37Z"
@@ -1674,10 +1679,6 @@
           {
             "title": "Alžběta II. se ještě jako princezna na konci války tajně připojila k jásajícímu davu",
             "publishedAt": "2026-05-04T20:20:00Z"
-          },
-          {
-            "title": "Rusko a Ukrajina oznámily kolem Dne vítězství příměří. Zelenskyj navrhl dřívější",
-            "publishedAt": "2026-05-04T20:15:00Z"
           }
         ]
       }

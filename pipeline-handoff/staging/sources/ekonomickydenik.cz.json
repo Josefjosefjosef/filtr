@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-05T03:55:19.787812Z",
+  "ingestedAt": "2026-05-05T04:30:28.576769Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Trutnovská elektrárna přejde od uhlí k biomase a plynu. Podobný záměr má ČEZ v Hodoníně",
+      "url": "https://ekonomickydenik.cz/trutnovska-elektrarna-uhli-biomasa-plyn/",
+      "dt": "2026-05-05T04:05:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "biomase",
+        "elektrárna",
+        "hodoníně",
+        "plynu",
+        "podobný",
+        "přejde",
+        "trutnovská",
+        "uhlí",
+        "záměr",
+        "čez"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -755,33 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Semafory na přechodu nutí chodce porušovat předpisy, tvrdí náměstek. Ozvala se kritika",
-      "url": "https://ekonomickydenik.cz/semafory-hrozba-chodce-namestek-beranek/",
-      "dt": "2026-05-02T12:30:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "chodce",
-        "kritika",
-        "nutí",
-        "náměstek",
-        "ozvala",
-        "porušovat",
-        "přechodu",
-        "předpisy",
-        "semafory",
-        "tvrdí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72781,
+      "bytes": 72814,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,11 +829,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T17:29:03Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T04:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 25,
-          "zdravi": 2,
+          "zdravi": 3,
+          "finance": 24,
           "zpravy": 3
         },
         "drop_counts": {
@@ -846,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trutnovská elektrárna přejde od uhlí k biomase a plynu. Podobný záměr má ČEZ v Hodoníně",
+            "publishedAt": "2026-05-05T04:05:00Z"
+          },
           {
             "title": "Vlček: Požár se nešíří a šířit nebude. Hasiči bojují s plameny v Českém Švýcarsku",
             "publishedAt": "2026-05-04T17:29:03Z"
@@ -873,10 +877,6 @@
           {
             "title": "Ruské vlajky zpět na stadiony? Debata ukázala proruskou část poslanců, třeba Konečnou",
             "publishedAt": "2026-05-04T13:46:31Z"
-          },
-          {
-            "title": "Benzin výrazně zdraží. Nové opatření zavedlo i  Německo",
-            "publishedAt": "2026-05-04T13:27:26Z"
           }
         ]
       }

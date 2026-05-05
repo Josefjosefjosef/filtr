@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-05T03:55:19.787812Z",
+  "ingestedAt": "2026-05-05T04:30:28.576769Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vladař výhru nevychytal, Philadelphie padla v prodloužení",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-vladar-vyhru-nevychytal-philadelphie-padla-v-prodlouzeni-5448548",
+      "dt": "2026-05-05T03:53:03Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "nevychytal",
+        "padla",
+        "philadelphie",
+        "prodloužení",
+        "vladař",
+        "výhru"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -743,30 +766,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Trenér Marcelino po sezoně i přes postup do LM odejde od fotbalistů Villarrealu",
-      "url": "https://www.sport.cz/clanek/fotbal-la-liga-trener-marcelino-po-sezone-i-pres-postup-do-lm-odejde-od-fotbalistu-villarrealu-5448510",
-      "dt": "2026-05-04T13:43:22Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "fotbalistů",
-        "marcelino",
-        "odejde",
-        "postup",
-        "sezoně",
-        "trenér",
-        "villarrealu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -777,7 +776,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40034,
+      "bytes": 40005,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -814,7 +813,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-04T21:39:20Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T03:53:03Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -829,6 +828,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vladař výhru nevychytal, Philadelphie padla v prodloužení",
+            "publishedAt": "2026-05-05T03:53:03Z"
+          },
           {
             "title": "Už třinácté MS v kariéře! Červenka chce být u Rulíkova loučení a překoná český rekord",
             "publishedAt": "2026-05-04T21:39:20Z"
@@ -856,10 +859,6 @@
           {
             "title": "Hearts se výhrou nad Rangers přiblížili senzačnímu titulu ve skotské lize",
             "publishedAt": "2026-05-04T19:02:20Z"
-          },
-          {
-            "title": "Odešel legendární král smolařů Velké pardubické",
-            "publishedAt": "2026-05-04T18:45:10Z"
           }
         ]
       }

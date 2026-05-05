@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-05T03:55:19.787812Z",
+  "ingestedAt": "2026-05-05T04:30:28.576769Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Růst se téměř zastavil a ceny rostou. Evropa se dostává na hranu velmi nebezpečného stavu: stagflace",
+      "url": "https://www.e15.cz/nazory-a-analyzy/rust-se-temer-zastavil-a-ceny-rostou-evropa-se-dostava-na-hranu-velmi-nebezpecneho-stavu-stagflace-1432578",
+      "dt": "2026-05-05T04:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "ceny",
+        "dostává",
+        "evropa",
+        "hranu",
+        "nebezpečného",
+        "rostou",
+        "růst",
+        "stagflace",
+        "stavu",
+        "téměř",
+        "velmi",
+        "zastavil"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1078,29 +1107,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Nízkonákladová aerolinka skončila. Nepřežila drahé palivo",
-      "url": "https://www.e15.cz/byznys/doprava-a-logistika/nizkonakladova-aerolinka-skoncila-neprezila-drahe-palivo-1432538",
-      "dt": "2026-05-02T13:58:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "aerolinka",
-        "drahé",
-        "nepřežila",
-        "nízkonákladová",
-        "palivo",
-        "skončila"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1111,7 +1117,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 57429,
+      "bytes": 57516,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1148,11 +1154,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-05T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T04:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 31,
-          "zpravy": 7,
+          "finance": 32,
+          "zpravy": 6,
           "zdravi": 2
         },
         "drop_counts": {
@@ -1165,6 +1171,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Růst se téměř zastavil a ceny rostou. Evropa se dostává na hranu velmi nebezpečného stavu: stagflace",
+            "publishedAt": "2026-05-05T04:00:00Z"
+          },
           {
             "title": "Nový stadion na Strahově za 4,5 miliardy korun nabídne pětinásobek VIP míst, říká šéf Sparty Křivda",
             "publishedAt": "2026-05-05T03:30:00Z"
@@ -1192,10 +1202,6 @@
           {
             "title": "Další dodavatel zvyšuje ceny energií. Od května zdražuje fixované ceníky",
             "publishedAt": "2026-05-04T13:07:00Z"
-          },
-          {
-            "title": "Penta posiluje holding a mění vedení. Vsadila na dlouholetého manažera",
-            "publishedAt": "2026-05-04T12:58:00Z"
           }
         ]
       }
