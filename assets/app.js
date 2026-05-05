@@ -36491,12 +36491,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     w = iuSilverNormalizeWs(w);
     const title = iuSilverFinalizeTaskTitle(w);
     if (!title || title.length < 2) return null;
+    const titleNorm = normalizeSilverTitleV1(title, { kind: "task" }).slice(0, 200);
 
     const draft = createEmptyDraft();
     draft.targetContainer = "tasks";
     draft.taskDueAt = dueYmd || "";
     draft.taskNote = "";
-    draft.title = title;
+    draft.title = titleNorm;
     draft.meta.title = "certain";
     draft.date = "";
     draft.meta.date = "missing";
@@ -36708,9 +36709,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverBuildNoteCreateTurn(body, now) {
     const draft = createEmptyDraft();
     draft.targetContainer = "notes";
-    draft.silverNoteText = String(body || "")
+    const body0 = String(body || "")
       .trim()
       .slice(0, IU_SILVER_NOTE_BODY_MAX);
+    draft.silverNoteText = normalizeSilverTitleV1(body0, { kind: "note" }).slice(0, IU_SILVER_NOTE_BODY_MAX);
     draft.silverNoteCreatedTs = now.getTime();
     const processingState = "READY_TO_SAVE";
     const ap = buildAssistantParts(draft, processingState);
@@ -39993,6 +39995,50 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return iuSilverTitlePipelineFull(work);
   }
 
+  /**
+   * Silver Normalizer v1 — title cleaning only (after routing). Strips leading command/filler
+   * prefixes from cluster audit (hoď/hod, mi, prosím, napiš, ulož, si, …) without touching
+   * words inside the real title; if the result would be empty or too short, returns original.
+   */
+  function normalizeSilverTitleV1(title, context) {
+    /* context: optional { kind: "calendar"|"task"|"note"|"multi" } for callers (v1 uses same prefix rules). */
+    void context;
+    const original = String(title || "").trim();
+    if (!original) return original;
+    let work = iuSilverNormalizeWs(original);
+    const phraseRes = [
+      /^(pros[ií]m|prosim)\s+(ho[dď]|hod)\s+mi\s+/iu,
+      /^(pros[ií]m|prosim)\s+(ho[dď]|hod)\s+/iu,
+      /^(ho[dď]|hod)\s+mi\s+/iu,
+      /^(napi[sš]|napis)\s+si\s+/iu,
+      /^(ulo[zž]|uloz)\s+si\s+/iu
+    ];
+    const singleRes = [
+      /^(pros[ií]m|prosim)\s+/iu,
+      /^(ho[dď]|hod)\s+/iu,
+      /^(napi[sš]|napis)\s+/iu,
+      /^(ulo[zž]|uloz)\s+/iu,
+      /^\s*mi\s+/iu,
+      /^\s*si\s+/iu
+    ];
+    for (let round = 0; round < 24; round++) {
+      const prev = work;
+      let pi = 0;
+      for (; pi < phraseRes.length; pi++) {
+        work = work.replace(phraseRes[pi], "").trim();
+      }
+      let si = 0;
+      for (; si < singleRes.length; si++) {
+        work = work.replace(singleRes[si], "").trim();
+      }
+      work = iuSilverNormalizeWs(work);
+      if (work === prev) break;
+    }
+    const folded = foldCs(work);
+    if (!folded || folded.length < 2) return original;
+    return work;
+  }
+
   function iuSilverSanitizeDraftTitle(draft) {
     const rawT = String(draft.title || "").trim();
     if (!rawT) {
@@ -40002,7 +40048,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     const fin = iuSilverTitlePipelineFull(rawT);
     if (fin.ok) {
-      draft.title = fin.text;
+      const kind =
+        draft.targetContainer === "tasks" ? "task" : draft.targetContainer === "notes" ? "note" : "calendar";
+      const cap = kind === "task" ? 200 : 120;
+      draft.title = normalizeSilverTitleV1(fin.text, { kind: kind }).slice(0, cap);
       draft.meta.title = "certain";
     } else {
       draft.title = "";
@@ -40537,8 +40586,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     }
     if ((d.meta.title !== "certain" || !String(d.title || "").trim()) && sess.lastTitle) {
-      d.title = String(sess.lastTitle).trim().slice(0, 200);
-      d.meta.title = "certain";
+      const lt = String(sess.lastTitle).trim().slice(0, 200);
+      d.title = normalizeSilverTitleV1(lt, { kind: "calendar" }).slice(0, 200);
+      d.meta.title = d.title ? "certain" : "missing";
     }
     return d;
   }
@@ -41999,9 +42049,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (d.targetContainer === "notes") {
       const ta = cardEl.querySelector('[data-iu-silver-note-field="text"]');
       if (ta) {
-        d.silverNoteText = String(ta.value || "")
+        const nt0 = String(ta.value || "")
           .trim()
           .slice(0, IU_SILVER_NOTE_BODY_MAX);
+        d.silverNoteText = normalizeSilverTitleV1(nt0, { kind: "note" }).slice(0, IU_SILVER_NOTE_BODY_MAX);
       }
       chatState.draft = d;
       const ps = silverProcessingStateFromDraft(d);
@@ -42021,9 +42072,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (d.targetContainer === "tasks") {
       const titleIn = cardEl.querySelector('[data-iu-silver-task-field="title"]');
       if (titleIn) {
-        d.title = String(titleIn.value || "")
+        const tt0 = String(titleIn.value || "")
           .trim()
           .slice(0, 200);
+        d.title = normalizeSilverTitleV1(tt0, { kind: "task" }).slice(0, 200);
         d.meta.title = d.title ? "certain" : "missing";
       }
       const dueIn = cardEl.querySelector('[data-iu-silver-task-field="due"]');
