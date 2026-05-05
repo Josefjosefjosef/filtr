@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-05T11:25:18.480609Z",
+  "ingestedAt": "2026-05-05T12:03:57.762456Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "České MMA stojí na místě. A problém není jen v Oktagonu",
+      "url": "https://www.mmamag.cz/ceske-mma-stagnuje-problem-je-hlubsi/",
+      "dt": "2026-05-05T11:55:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "jen",
+        "mma",
+        "místě",
+        "oktagonu",
+        "problém",
+        "stojí",
+        "české"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1102,31 +1126,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Šestnáctiletý kulturista riskuje. Kvůli steroidům se smířil s hrozbou infarktu",
-      "url": "https://www.mmamag.cz/sestnactilety-kulturista-riskuje-zivot-bere-steroidy/",
-      "dt": "2026-05-03T17:44:44Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "hrozbou",
-        "infarktu",
-        "kulturista",
-        "kvůli",
-        "riskuje",
-        "smířil",
-        "steroidům",
-        "šestnáctiletý"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1137,7 +1136,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 82111,
+      "bytes": 82137,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1174,7 +1173,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-05T11:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T11:55:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1189,6 +1188,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "České MMA stojí na místě. A problém není jen v Oktagonu",
+            "publishedAt": "2026-05-05T11:55:00Z"
+          },
           {
             "title": "Arogance v kleci narazila na tvrdou realitu. Provokatér z Brazílie dostal nakládačku, na kterou nezapomene",
             "publishedAt": "2026-05-05T11:15:00Z"
@@ -1216,10 +1219,6 @@
           {
             "title": "Hvězdy UFC mají jasno: Obyčejný člověk by proti nim v kleci vydržel sotva pár vteřin",
             "publishedAt": "2026-05-05T07:20:32Z"
-          },
-          {
-            "title": "Děsivé KO v prvním kole. Soupeř po 60 sekundách vůbec nevěděl, co se děje",
-            "publishedAt": "2026-05-05T06:42:47Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonom.cz",
-  "ingestedAt": "2026-05-05T11:25:18.480609Z",
+  "ingestedAt": "2026-05-05T12:03:57.762456Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "První dny nováčka ve firmě často určují, jestli se investice do něj vyplatí",
+      "url": "https://podcasty.ekonom.cz/c1-67873810-prvni-dny-novacka-ve-firme-casto-urcuji-jestli-se-investice-do-nej-vyplati",
+      "dt": "2026-05-05T11:06:00Z",
+      "media_raw": "Ekonom (HN)",
+      "media_norm": "Ekonom (HN)",
+      "tokens": [
+        "dny",
+        "firmě",
+        "investice",
+        "jestli",
+        "nováčka",
+        "něj",
+        "první",
+        "určují",
+        "vyplatí",
+        "často"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonom",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "ekonom.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -523,13 +550,13 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://ekonom.cz/?p=400000_rss",
-      "bytes": 23352,
+      "bytes": 24503,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 19,
-      "itemsKept": 19,
-      "accepted": 19,
+      "itemsParsed": 20,
+      "itemsKept": 20,
+      "accepted": 20,
       "status": "OK",
       "bozo_but_used": false,
       "registryId": "fin_ekonom",
@@ -559,11 +586,11 @@
         }
       ],
       "iuTelemetry": {
-        "raw_feed_new_item_count": 19,
-        "raw_feed_latest_publishedAt": "2026-04-29T22:00:00Z",
-        "valid_publishedAt_count": 19,
+        "raw_feed_new_item_count": 20,
+        "raw_feed_latest_publishedAt": "2026-05-05T11:06:00Z",
+        "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 14,
+          "finance": 15,
           "sport": 1,
           "zdravi": 2,
           "zpravy": 2
@@ -578,6 +605,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "První dny nováčka ve firmě často určují, jestli se investice do něj vyplatí",
+            "publishedAt": "2026-05-05T11:06:00Z"
+          },
           {
             "title": "Na vlně podnikání s Janem Šimkem, šéfem agrárního holdingu JTZE",
             "publishedAt": "2026-04-29T16:00:00Z"
@@ -605,10 +636,6 @@
           {
             "title": "Letem světem",
             "publishedAt": "2026-04-29T22:00:00Z"
-          },
-          {
-            "title": "Platy České republiky, s. p. Mnozí ředitelé berou dvakrát víc než ministři",
-            "publishedAt": "2026-04-29T16:00:00Z"
           }
         ]
       }

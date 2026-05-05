@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-05T11:25:18.480609Z",
+  "ingestedAt": "2026-05-05T12:03:57.762456Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Studio Remedy poodhalilo svou nejbližší budoucnost",
+      "url": "https://zing.cz/article/studio-remedy-poodhalilo-svou-nejblizsi-budoucnost",
+      "dt": "2026-05-05T12:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "budoucnost",
+        "nejbližší",
+        "poodhalilo",
+        "remedy",
+        "studio",
+        "svou"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -955,34 +978,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Fanoušci série Heroes of Might and Magic se po dekádě čekání dočkali nového dílu",
-      "url": "https://zing.cz/article/fanousci-serie-heroes-of-might-and-magic-se-po-dekade-cekaji-dockali-noveho-dilu",
-      "dt": "2026-04-30T18:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "and",
-        "dekádě",
-        "dočkali",
-        "dílu",
-        "fanoušci",
-        "heroes",
-        "magic",
-        "might",
-        "nového",
-        "série",
-        "čekání"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -993,7 +988,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125806,
+      "bytes": 125755,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1030,7 +1025,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-05T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1045,6 +1040,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Studio Remedy poodhalilo svou nejbližší budoucnost",
+            "publishedAt": "2026-05-05T12:00:00Z"
+          },
           {
             "title": "Rockstar by se mohl pustit do dalších remasterů svých klasických her",
             "publishedAt": "2026-05-05T10:00:00Z"
@@ -1072,10 +1071,6 @@
           {
             "title": "Akce 007 First Light odhaluje herní dobu",
             "publishedAt": "2026-05-04T18:00:00Z"
-          },
-          {
-            "title": "Forza Horizon 6 je po obsahové stránce hotová, známe potřebné místo na disku",
-            "publishedAt": "2026-05-04T16:00:00Z"
           }
         ]
       }
