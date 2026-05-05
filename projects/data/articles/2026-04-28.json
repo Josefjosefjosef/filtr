@@ -1,6 +1,6 @@
 {
   "date": "2026-04-28",
-  "generatedAt": "2026-05-05T15:56:56.637911Z",
+  "generatedAt": "2026-05-05T16:41:50.404999Z",
   "items": [
     {
       "topic": "aktualne",
@@ -364,7 +364,7 @@
       "feedId": "ved_technet",
       "url": "https://www.idnes.cz/technet/vojenstvi/cviceni-vysadkaru-sovetska-armada-mongolsko-1979.A260426_185331_vojenstvi_erp",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.035654231744913535,
+      "displayScore": 0.03549677442525079,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -3611,7 +3611,7 @@
       "feedId": "fin_e15",
       "url": "https://www.e15.cz/investicni-newsletter/investicni-newsletter-warshuv-jestrabi-ton-srazil-sazky-na-pokles-sazeb-intel-zaziva-necekane-zmrtvychvstani-1432436",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.034492742403461174,
+      "displayScore": 0.03434535559210981,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -3808,8 +3808,8 @@
       }
     },
     {
-      "topic": "kultura",
-      "section": "kultura",
+      "topic": "aktualne",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Brácha za všechny peníze: Vyškrtnutá role kvůli ženským tvarům, rozčílená hvězda na place a cizí tvář v záběru",
       "publishedAt": "2026-04-28T16:01:35Z",
@@ -3828,14 +3828,14 @@
       "feedId": "kul_vtelce",
       "url": "https://www.vtelce.cz/bracha-za-vsechny-penize-vyskrtnuta-role-kvuli-zenskym-tvarum-rozcilena-hvezda-na-place-a-cizi-tvar-v-zaberu/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.027536999962381604,
+      "displayScore": 0.025713836984238916,
       "iuReleaseAt": "2026-05-05T05:07:45.806470Z",
       "iuFeedClassification": {
         "v": 1,
-        "mediaTopicKey": "kultura",
-        "reason": "topic_field",
-        "confidence": 0.95,
-        "railSectionKey": "kultura",
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
         "guardFlags": []
       }
     },
@@ -3902,6 +3902,38 @@
       }
     },
     {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Hráči na PlayStationu řeší novou DRM ochranu u digitálně zakoupených her",
+      "publishedAt": "2026-04-28T16:00:00Z",
+      "sources": [
+        {
+          "name": "Zing",
+          "url": "https://zing.cz/article/hraci-na-playstationu-resi-novou-drm-ochranu-u-digitalne-zakoupenych-her"
+        }
+      ],
+      "primaryCategory": "hry",
+      "topicHash": "14cde6a6a9a89471",
+      "feedType": "rss",
+      "sourceDisplayWeight": 0.85,
+      "sectionPrimary": "hry",
+      "sourceLabel": "Zing",
+      "feedId": "hry_zing",
+      "url": "https://zing.cz/article/hraci-na-playstationu-resi-novou-drm-ochranu-u-digitalne-zakoupenych-her",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.029137954839901545,
+      "iuReleaseAt": "2026-05-04T06:58:41.738102Z",
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
+    {
       "topic": "sport",
       "section": "sport",
       "contentType": "article",
@@ -3929,38 +3961,6 @@
         "reason": "url_strong_vertical",
         "confidence": 0.94,
         "railSectionKey": "sport",
-        "guardFlags": []
-      }
-    },
-    {
-      "topic": "hry",
-      "section": "hry",
-      "contentType": "article",
-      "title": "Hráči na PlayStationu řeší novou DRM ochranu u digitálně zakoupených her",
-      "publishedAt": "2026-04-28T16:00:00Z",
-      "sources": [
-        {
-          "name": "Zing",
-          "url": "https://zing.cz/article/hraci-na-playstationu-resi-novou-drm-ochranu-u-digitalne-zakoupenych-her"
-        }
-      ],
-      "primaryCategory": "hry",
-      "topicHash": "14cde6a6a9a89471",
-      "feedType": "rss",
-      "sourceDisplayWeight": 0.85,
-      "sectionPrimary": "hry",
-      "sourceLabel": "Zing",
-      "feedId": "hry_zing",
-      "url": "https://zing.cz/article/hraci-na-playstationu-resi-novou-drm-ochranu-u-digitalne-zakoupenych-her",
-      "duplicatePenalty": 1.0,
-      "displayScore": 0.03611257618898425,
-      "iuReleaseAt": "2026-05-04T06:58:41.738102Z",
-      "iuFeedClassification": {
-        "v": 1,
-        "mediaTopicKey": "hry",
-        "reason": "topic_field",
-        "confidence": 0.95,
-        "railSectionKey": "hry",
         "guardFlags": []
       }
     },
@@ -5230,8 +5230,8 @@
       "feedId": "zdr_zdravotnickydenik",
       "url": "https://www.zdravotnickydenik.cz/2026/04/cestovani-horecka-evropa/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.035846503496828074,
-      "iuReleaseAt": "2026-05-05T15:57:07.637911Z",
+      "displayScore": 0.03569489397524049,
+      "iuReleaseAt": "2026-05-05T16:42:01.404999Z",
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "cestovani",
@@ -5262,7 +5262,7 @@
       "feedId": "zpr_idnes_zpravy",
       "url": "https://www.idnes.cz/zpravy/domaci/pocasi-cesko-teplota-stupen-teplo.A260428_153152_domaci_mikp",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.037549859575856034,
+      "displayScore": 0.03739106111028948,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -7737,7 +7737,7 @@
       "feedId": "ved_vtm",
       "url": "https://mobilmania.zive.cz/clanky/smazana-meditacni-aplikace-se-vraci-jako-bumerang-iphony-trapi-podivna-chyba/sc-3-a-1364635/default.aspx",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03192687605843331,
+      "displayScore": 0.03179394083726723,
       "iuReleaseAt": "2026-05-04T14:41:38.825202Z",
       "iuFeedClassification": {
         "v": 1,
@@ -10354,7 +10354,7 @@
       "feedId": "fin_ekonomickydenik",
       "url": "https://ekonomickydenik.cz/rychlejsi-stavebni-povoleni-novy-superurad-zrychli-administrativu/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.0281847245208272,
+      "displayScore": 0.028068931169259098,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -10478,7 +10478,7 @@
       "feedId": "vzd_novinky_skola",
       "url": "https://www.novinky.cz/clanek/zahranicni-evropa-novinari-vypatrali-v-budapesti-polskeho-politika-podezreleho-ze-zpronevery-628-milionu-40575620",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03314104919233211,
+      "displayScore": 0.03300496477210088,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -11251,7 +11251,7 @@
       "feedId": "zpr_novinky_domaci",
       "url": "https://www.novinky.cz/clanek/ekonomika-spotreba-piva-v-cesku-loni-klesla-na-historicke-minimum-40575611",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03793561287732419,
+      "displayScore": 0.037780559748977184,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -12793,7 +12793,7 @@
       "feedId": "zpr_tydenikpolicie",
       "url": "https://tydenikpolicie.cz/kriminaliste-patraji-po-totoznosti-mrtve-zeny-jejiz-telo-vytahli-ve-vrchlabi-z-reky-labe/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.024606759238924025,
+      "displayScore": 0.02450672668780344,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -13460,7 +13460,7 @@
       "feedId": "kul_vlasta",
       "url": "https://www.vlasta.cz/celebrity/charlotte-gott-rozhovor-dnes-plany-deska-sbirka-aut/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.02285718806088629,
+      "displayScore": 0.022764707656153294,
       "iuReleaseAt": "2026-05-05T03:57:39.149669Z",
       "iuFeedClassification": {
         "v": 1,
@@ -14333,7 +14333,7 @@
       "feedId": "ved_technet",
       "url": "https://www.idnes.cz/technet/vesmir/vesmir-iss-turista-taxi-dennis-tito-soukroma-cesta-sojuz.A260427_151417_tec_vesmir_vse",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03238290060594461,
+      "displayScore": 0.0322529590106212,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -14399,7 +14399,7 @@
       "feedId": "fin_penize",
       "url": "https://www.penize.cz/zamestnani/488888-psychotest-ceka-kazdeho-pilota-u-lekaru-povinny-neni-expert-o-naboru-lidi-i-toxicke-praci",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.02752546551488785,
+      "displayScore": 0.027415015158823348,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -14686,8 +14686,8 @@
       "feedId": "kul_vlasta",
       "url": "https://www.vlasta.cz/cestovani/nejstrasidelnejsi-cesky-hrad-zvikov-paranormalni-jevy/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.02260905194074951,
-      "iuReleaseAt": "2026-05-05T15:57:06.637911Z",
+      "displayScore": 0.0225185645848189,
+      "iuReleaseAt": "2026-05-05T16:42:00.404999Z",
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "cestovani",
@@ -15122,7 +15122,7 @@
       "feedId": "hry_novinky",
       "url": "https://www.novinky.cz/clanek/valka-na-ukrajine-putin-shani-penize-oligarchy-zada-o-velkoryse-dary-40575468",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.0338195166259308,
+      "displayScore": 0.03368453596532176,
       "iuReleaseAt": "2026-05-05T03:57:31.149669Z",
       "iuFeedClassification": {
         "v": 1,
