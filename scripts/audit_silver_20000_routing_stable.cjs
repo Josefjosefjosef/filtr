@@ -837,6 +837,84 @@ function buildCases() {
     c.flags.with_negative = negHit;
   }
 
+  /** P0 Silver: read-prefix + explicit calendar write — must stay 20000 total cases (ids use global gid). */
+  function silverPatchCaseByGroupIndex(group, index0, patch) {
+    let seen = -1;
+    for (let ci = 0; ci < cases.length; ci++) {
+      if (cases[ci].group !== group) continue;
+      seen++;
+      if (seen === index0) {
+        cases[ci].input = patch.input;
+        cases[ci].expectedIntent = patch.expectedIntent;
+        cases[ci].meta = Object.assign({}, cases[ci].meta || {}, { readWritePriorityGate: true });
+        return;
+      }
+    }
+    throw new Error("silverPatchCaseByGroupIndex missing " + group + "[" + index0 + "]");
+  }
+  const SILVER_READ_WRITE_PRIORITY_PATCH = [
+    {
+      group: "calendar_write",
+      index0: 6,
+      input:
+        "jen zjisti. Rychle mi nahod do kalendare na víkend v půl třetí schuzku, adresu Pardubice centrum, bez ukolu.",
+      expectedIntent: "calendar.create"
+    },
+    {
+      group: "calendar_write",
+      index0: 0,
+      input: "Jen zjisti. Nahod do kalendáře schůzku s Petrem zítra v 15:00.",
+      expectedIntent: "calendar.create"
+    },
+    {
+      group: "calendar_write",
+      index0: 1,
+      input: "Jen zjisti, ale potom to ulož do kalendáře na zítra v 15:00.",
+      expectedIntent: "calendar.create"
+    },
+    {
+      group: "calendar_write",
+      index0: 2,
+      input: "Jen se podívej. Dej do kalendáře schůzku s Tomášem v pátek v 10.",
+      expectedIntent: "calendar.create"
+    },
+    {
+      group: "calendar_write",
+      index0: 3,
+      input: "Neukládej to jako úkol, dej to do kalendáře zítra v 15:00.",
+      expectedIntent: "calendar.create"
+    },
+    {
+      group: "calendar_write",
+      index0: 4,
+      input: "Není to poznámka, nahoď mi do kalendáře schůzku s Petrem v pondělí.",
+      expectedIntent: "calendar.create"
+    },
+    {
+      group: "calendar_query",
+      index0: 0,
+      input: "Nic neukládej, jen zjisti co mám zítra.",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_query",
+      index0: 1,
+      input: "Nevytvářej nic, jen čti kalendář.",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_query",
+      index0: 2,
+      input: "Neukládej do kalendáře, jen zjisti co mám zítra.",
+      expectedIntent: "calendar.query"
+    },
+    { group: "calendar_query", index0: 3, input: "Jen zjisti a nic nevytvářej.", expectedIntent: "unknown" }
+  ];
+  for (let pi = 0; pi < SILVER_READ_WRITE_PRIORITY_PATCH.length; pi++) {
+    const p = SILVER_READ_WRITE_PRIORITY_PATCH[pi];
+    silverPatchCaseByGroupIndex(p.group, p.index0, { input: p.input, expectedIntent: p.expectedIntent });
+  }
+
   return cases;
 }
 
