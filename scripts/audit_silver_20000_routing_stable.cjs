@@ -1021,6 +1021,56 @@ function buildCases() {
     silverPatchCaseByGroupIndex(q.group, q.index0, { input: q.input, expectedIntent: q.expectedIntent });
   }
 
+  /** P0: kalendářní read + negace poznámek — regresní kotvy (calendar_query_03009 třída). */
+  const SILVER_CALENDAR_QUERY_NOTE_NEGATION_PATCH = [
+    {
+      group: "calendar_query",
+      index0: 6,
+      input: "Bez poznámek, co mám zítra v kalendáři?",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_query",
+      index0: 7,
+      input: "Ne do poznámek, jaké mám v pondělí události v kalendáři?",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_query",
+      index0: 8,
+      input: "Nepleť to s poznámkou, co máme příští týden v kalendáři?",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_query",
+      index0: 9,
+      input: "nepleť to s poznámkou Pepo, co mám příští pondělí v kalendáři ohledně právník?",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_query",
+      index0: 10,
+      input: "Nic neukládej, nepleť to s poznámkou, co mám zítra v kalendáři?",
+      expectedIntent: "calendar.query"
+    },
+    {
+      group: "calendar_write",
+      index0: 20,
+      input: "Nepleť to s poznámkou, ulož do kalendáře schůzku s Janem zítra v 10.",
+      expectedIntent: "calendar.create"
+    },
+    {
+      group: "note_query",
+      index0: 0,
+      input: "Najdi poznámku smlouva v kontextu kalendáře, nepleť to s kalendářem.",
+      expectedIntent: "note.query"
+    }
+  ];
+  for (let ni = 0; ni < SILVER_CALENDAR_QUERY_NOTE_NEGATION_PATCH.length; ni++) {
+    const p = SILVER_CALENDAR_QUERY_NOTE_NEGATION_PATCH[ni];
+    silverPatchCaseByGroupIndex(p.group, p.index0, { input: p.input, expectedIntent: p.expectedIntent });
+  }
+
   return cases;
 }
 

@@ -34336,7 +34336,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bjen\s+v\s+poznamkach\b/.test(x) ||
       /\bpouze\s+v\s+poznamkach\b/.test(x) ||
       /\bz\s+poznam\b/.test(x) ||
-      /\bv\s+poznamkach\b/.test(x) ||
+      (/\bv\s+poznamkach\b/.test(x) && !/\bne\s+v\s+poznamkach\b/.test(x)) ||
       /\bnehledej\s+to\s+v\s+kalend/.test(x) ||
       /\bne\s+v\s+ukol/.test(x)
     );
@@ -34802,6 +34802,28 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     }
 
+    if (iuSilverCalendarQueryWithNoteNegationSignalFolded(f)) {
+      if (looksLikeWeekendPhrase(f)) {
+        return { intent: "agenda_for_weekend", dayPart: dayPartFromFx(), filter: null };
+      }
+      if (/\bz[ií]tra\b/i.test(f)) {
+        return { intent: "agenda_for_day", dateRange: "tomorrow", filter: null };
+      }
+      if (/\bdnes\b/i.test(f)) {
+        return { intent: "agenda_for_day", dateRange: "today", filter: null };
+      }
+      if (/\bpristi\s+tyden\b/.test(f)) {
+        return { intent: "agenda_for_range", range: "week", filter: null };
+      }
+      const wkNn = wkTok || wkName();
+      if (wkNn) {
+        const diNn = isoForWk(wkNn);
+        if (diNn) {
+          return { intent: "agenda_for_iso", dateIso: diNn, dayPart: dayPartFromFx(), timeHHMM: null, filter: null };
+        }
+      }
+    }
+
     return null;
   }
 
@@ -35203,6 +35225,45 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bco\s+m(am|ame)\b/.test(x) ||
       /\bmam\s+neco\b/.test(x)
     );
+  }
+
+  /**
+   * P0: kalendářní read + negativní scope vůči poznámkám („nepleť to s poznámkou“, „bez poznámek“, …).
+   * Když platí, nesmí první „silný“ read blok spadnout na find_by_title přes celou větu (prázdný hit → „Nic jsem…“).
+   */
+  function iuSilverCalendarQueryWithNoteNegationSignalFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (iuSilverCalendarReadSuppressedForWriteIntentCore(x)) return false;
+    const calQ =
+      /\bco\s+m(am|ame)\b/.test(x) ||
+      /\bco\s+me\b/.test(x) ||
+      /\bjak[eé]\s+m(am|ame)\b/.test(x) ||
+      /\bco\s+je\s+v\s+kalend/.test(x) ||
+      /\bjakou\s+(barvu|adresu)\b/.test(x) ||
+      /\bv\s+kalend/.test(x) ||
+      (/\bkalend/.test(x) &&
+        /\b(co\s+m(am|ame)|co\s+me|jake\s+m(am|ame)|najdi|hledej|ukaz|zjist(i|it|te)?|podivej)\b/.test(x));
+    if (!calQ) return false;
+    const schedHint =
+      /\bzittra\b|\bdnes|\bpristi\s+pondel|\bpristi\s+tyden|\bv\s+pondel|\bkoncem\s+tydne|\bohledne\b|(?<!\bne\s)\bv\s+kalend/.test(x) ||
+      (/\bjakou\s+(barvu|adresu)\b/.test(x) &&
+        /(?:kalend|zubar|pravn|advokat|doktor|petra|petr)/.test(x));
+    if (!schedHint) return false;
+    const noteNeg =
+      /\bneplet\s+to\s+s\s+poznam/.test(x) ||
+      /\bneplet\s+to\s+s\s+kalend/.test(x) ||
+      /\bne\s+poznam/.test(x) ||
+      /\bne\s+do\s+poznam/.test(x) ||
+      /\bbez\s+poznam/.test(x) ||
+      /\bne\s+v\s+poznamk/.test(x) ||
+      /\bneptej\s+se\s+kam\s+uloz/i.test(x) ||
+      /\bneptej\s+se\s+na\s+cas/i.test(x) ||
+      /\bjen\s+over\b/i.test(x) ||
+      /\bjen\s+ov[eě]r\b/i.test(x) ||
+      /\bjen\s+cti\b/i.test(x);
+    if (!noteNeg) return false;
+    return true;
   }
 
   function iuSilverCalendarEntityContextFolded(f) {
@@ -36368,6 +36429,62 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (iuSilverExplicitTaskReadScopeFolded(f)) return null;
     if (!iuSilverCalendarReadWinsOverTaskReadFolded(f) && iuSilverTaskQueryHardSignalFolded(f)) return null;
 
+    if (
+      iuSilverCalendarQueryWithNoteNegationSignalFolded(f) &&
+      /\bjakou\s+adresu\b/.test(f) &&
+      /(?:zubar|pravn|advokat|doktor|petra|petr)/.test(f)
+    ) {
+      const fAd = foldCs(String(r || ""));
+      let qAd = "";
+      const mZu = fAd.match(/\bzaznam\s+u\s+([a-z]+)/i);
+      if (mZu && mZu[1]) qAd = String(mZu[1] || "").trim();
+      if (!qAd) {
+        const mP = fAd.match(/\b(zubar|pravnik|advokat|doktor|petra|petr)\b/i);
+        if (mP && mP[1]) qAd = String(mP[1] || "").trim();
+      }
+      if (qAd.length >= 2) {
+        const qFoldAd = foldCs(qAd);
+        return {
+          intent: "find_by_title",
+          query: qAd,
+          normalizedQuery: qAd,
+          diacriticInsensitive: true,
+          queryFolded: qFoldAd
+        };
+      }
+    }
+
+    if (
+      iuSilverCalendarQueryWithNoteNegationSignalFolded(f) &&
+      /\badresu\b/.test(f) &&
+      /\bzjist/i.test(f)
+    ) {
+      const mLine = String(r || "").match(/\badresu\s+(.+?)(?:\s+a\s+jen\s+|\s*,\s*jen\s+|$)/i);
+      let qZ = mLine && mLine[1] ? String(mLine[1] || "").trim() : "";
+      qZ = qZ.replace(/\s*[?.!…]+$/u, "").trim();
+      if (qZ.length >= 3) {
+        let qUse = qZ;
+        let qFoldZ = foldCs(qUse);
+        if (/\bzubare\b|\bzubar\b/.test(qFoldZ)) {
+          qUse = "Zubař";
+          qFoldZ = foldCs(qUse);
+        } else if (/\bpravnika\b|\bpravnik\b/.test(qFoldZ)) {
+          qUse = "Právník";
+          qFoldZ = foldCs(qUse);
+        } else if (/\badvokat/.test(qFoldZ)) {
+          qUse = "Advokát";
+          qFoldZ = foldCs(qUse);
+        }
+        return {
+          intent: "find_by_title",
+          query: qUse,
+          normalizedQuery: qUse,
+          diacriticInsensitive: true,
+          queryFolded: qFoldZ
+        };
+      }
+    }
+
     if (/^vyhledat\s+v\s+kalend[aá]ři\s+/i.test(r) || /^vyhledat\s+v\s+kalendari\s+/i.test(r)) {
       const rest = r.replace(/^\s*vyhledat\s+v\s+kalend[aá]ři\s+/i, "").replace(/^\s*vyhledat\s+v\s+kalendari\s+/i, "").replace(/\s*[?.!]+\s*$/g, "").trim();
       if (rest && rest.length > 0) {
@@ -36566,6 +36683,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       !iuSilverExplicitTaskReadScopeFolded(f) &&
       (!iuSilverTaskQueryHardSignalFolded(f) || iuSilverCalendarReadWinsOverTaskReadFolded(f))
     ) {
+      if (iuSilverCalendarQueryWithNoteNegationSignalFolded(f)) {
+        const qpNoteNeg = iuSilverTryParseCalendarReadQueryPriority(rawIn, now, r, f);
+        if (qpNoteNeg) return qpNoteNeg;
+      }
       let restQ = String(r || "")
         .trim()
         .replace(/^\s*pros[ií]m,?\s+/i, "")
