@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-05T15:54:33.699365Z",
+  "ingestedAt": "2026-05-05T16:39:31.181451Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nemůžete si dělat z úst kanál a sršet  nechutnosti, vmetla Černochová Babišovi kvůli ÚVN",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/nemuzete-si-udelat-z-ust-kanal-vmetla-cernochova-babisovi/",
+      "dt": "2026-05-05T16:02:38Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "babišovi",
+        "dělat",
+        "kanál",
+        "kvůli",
+        "nechutnosti",
+        "nemůžete",
+        "sršet",
+        "vmetla",
+        "úst",
+        "úvn",
+        "černochová"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -237,35 +265,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Boj s mýty o vakcínách: Evropská agentura spouští poradní tým, je v něm i známý český expert",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/ema-poradni-skupina-ockovani-prymula/",
-      "dt": "2026-05-04T16:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "agentura",
-        "boj",
-        "evropská",
-        "expert",
-        "mýty",
-        "něm",
-        "poradní",
-        "spouští",
-        "tým",
-        "vakcínách",
-        "známý",
-        "český"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -276,7 +275,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 85324,
+      "bytes": 87176,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,7 +312,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-05T14:45:53Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T16:02:38Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -328,6 +327,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nemůžete si dělat z úst kanál a sršet  nechutnosti, vmetla Černochová Babišovi kvůli ÚVN",
+            "publishedAt": "2026-05-05T16:02:38Z"
+          },
           {
             "title": "Hantaviry, které zabíjely na lodi v Atlantiku, se vyskytují i v Česku. Nejvíce v těchto 2 krajích",
             "publishedAt": "2026-05-05T14:45:53Z"
@@ -355,10 +358,6 @@
           {
             "title": "Inovace v Česku vznikají v chaosu. Experti mluví o skandálních podmínkách a kultuře strachu",
             "publishedAt": "2026-05-05T07:00:00Z"
-          },
-          {
-            "title": "V nemocnici se nakazí až každý desátý pacient. Zařízení popisují pravidla pro nemocný personál",
-            "publishedAt": "2026-05-05T06:00:00Z"
           }
         ]
       }

@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-05-05T15:54:33.699365Z",
+  "ingestedAt": "2026-05-05T16:39:31.181451Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Možné je všechno III: Zábavná show představí nové výzvy a známé televizní tváře",
+      "url": "https://www.vtelce.cz/mozne-je-vsechno-iii-zabavna-show-predstavi-nove-vyzvy-a-zname-televizni-tvare/",
+      "dt": "2026-05-05T16:28:43Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "iii",
+        "možné",
+        "nové",
+        "představí",
+        "show",
+        "televizní",
+        "tváře",
+        "výzvy",
+        "všechno",
+        "známé",
+        "zábavná"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -255,34 +283,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Nepřítel před branami: Vymyšlený duel střelců, hněv ruských veteránů a zklamání z historické nepřesnosti",
-      "url": "https://www.vtelce.cz/nepritel-pred-branami-vymysleny-duel-strelcu-hnev-ruskych-veteranu-a-zklamani-z-historicke-nepresnosti/",
-      "dt": "2026-05-03T16:55:08Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "branami",
-        "duel",
-        "historické",
-        "hněv",
-        "nepřesnosti",
-        "nepřítel",
-        "ruských",
-        "střelců",
-        "veteránů",
-        "vymyšlený",
-        "zklamání"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -293,7 +293,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 80997,
+      "bytes": 75986,
       "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
@@ -330,7 +330,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-05T10:28:10Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T16:28:43Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "other": 10
@@ -345,6 +345,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Možné je všechno III: Zábavná show představí nové výzvy a známé televizní tváře",
+            "publishedAt": "2026-05-05T16:28:43Z"
+          },
           {
             "title": "King Kong žije: Směšné chyby v džungli, legendární scéna s nahotou a uložení filmu do trezoru",
             "publishedAt": "2026-05-05T10:28:10Z"
@@ -372,10 +376,6 @@
           {
             "title": "Blázni ze stadiónu: Podvod se symboly, tajnosti přímo na place a útěk herce těsně před první klapkou",
             "publishedAt": "2026-05-04T16:28:24Z"
-          },
-          {
-            "title": "Ulice: Kristýna zůstane zaskočená. Daniela s ní končí, s Denisem ale bude chodit dál",
-            "publishedAt": "2026-05-04T15:59:37Z"
           }
         ]
       }

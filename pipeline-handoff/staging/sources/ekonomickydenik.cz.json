@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-05T15:54:33.699365Z",
+  "ingestedAt": "2026-05-05T16:39:31.181451Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Britský lev se vrací. Strach z ruských ponorek nutí Londýn spolupracovat s EU",
+      "url": "https://ekonomickydenik.cz/britsky-lev-se-vraci-do-evropy-strach-ruske-ponorky/",
+      "dt": "2026-05-05T16:30:47Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "britský",
+        "lev",
+        "londýn",
+        "nutí",
+        "ponorek",
+        "ruských",
+        "spolupracovat",
+        "strach",
+        "vrací"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -757,31 +783,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Česko volá o pomoc kvůli požáru. Na cestě jsou vrtulníky od sousedů",
-      "url": "https://ekonomickydenik.cz/cesko-vola-pomoc-vrtulniky-sousedu/",
-      "dt": "2026-05-04T11:17:56Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "cestě",
-        "kvůli",
-        "pomoc",
-        "požáru",
-        "sousedů",
-        "volá",
-        "vrtulníky",
-        "česko"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74689,
+      "bytes": 74407,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T15:26:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-05T16:30:47Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 26,
@@ -847,6 +848,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Britský lev se vrací. Strach z ruských ponorek nutí Londýn spolupracovat s EU",
+            "publishedAt": "2026-05-05T16:30:47Z"
+          },
           {
             "title": "Trump ničí dohodu z golfového resortu. Vyšší cla na auta poškodí i české firmy",
             "publishedAt": "2026-05-05T15:26:00Z"
@@ -874,10 +879,6 @@
           {
             "title": "Přišlo to WhatsAppem. Jak podvodníci ukradli sdružení vlastníků bytů 4 miliony",
             "publishedAt": "2026-05-05T12:03:56Z"
-          },
-          {
-            "title": "Evropa „vyfoukla“ Arménii Putinovi pod nosem. Přidala se i Británie a Kanada",
-            "publishedAt": "2026-05-05T11:26:48Z"
           }
         ]
       }
