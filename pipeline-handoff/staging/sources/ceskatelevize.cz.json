@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-06T11:36:20.208632Z",
+  "ingestedAt": "2026-05-06T12:15:22.616915Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Vědci vyvrátili jeden z nejznámějších mýtů o kukačkách. Vejce v zobáku nenosí",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/vedci-vyvratili-jeden-z-nejznamejsich-mytu-o-kukackach-vejce-v-zobaku-nenosi-373156",
+      "dt": "2026-05-06T12:07:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "jeden",
+        "kukačkách",
+        "mýtů",
+        "nejznámějších",
+        "nenosí",
+        "vejce",
+        "vyvrátili",
+        "vědci",
+        "zobáku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -726,26 +752,25 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Suché počasí prodlužuje pylovou sezonu a zhoršuje příznaky u alergiků",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/suche-pocasi-prodluzuje-pylovou-sezonu-a-zhorsuje-priznaky-u-alergiku-373136",
-      "dt": "2026-05-05T15:56:42Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Hokejisté museli zrušit trénink kvůli díře v ledu",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/hokejiste-museli-zrusit-trenink-kvuli-dire-v-ledu-156624",
+      "dt": "2026-05-06T11:50:12Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "alergiků",
-        "počasí",
-        "prodlužuje",
-        "pylovou",
-        "příznaky",
-        "sezonu",
-        "suché",
-        "zhoršuje"
+        "díře",
+        "hokejisté",
+        "kvůli",
+        "ledu",
+        "museli",
+        "trénink",
+        "zrušit"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1484,29 +1509,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pastrňák na MS nejspíš nepojede. Potřebuji pauzu, říká",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/pastrnak-na-ms-nejspis-nepojede-potrebuji-pauzu-rika-156594",
-      "dt": "2026-05-04T09:13:38Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "nejspíš",
-        "nepojede",
-        "pastrňák",
-        "pauzu",
-        "potřebuji",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1517,7 +1519,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44642,
+      "bytes": 44639,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1577,11 +1579,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T11:04:17Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T12:07:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 24,
-          "other": 5,
+          "other": 6,
+          "zpravy": 23,
           "finance": 1
         },
         "drop_counts": {
@@ -1594,6 +1596,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vědci vyvrátili jeden z nejznámějších mýtů o kukačkách. Vejce v zobáku nenosí",
+            "publishedAt": "2026-05-06T12:07:00Z"
+          },
           {
             "title": "Demonstrant na mostě ve Washingtonu brzdí dopravu",
             "publishedAt": "2026-05-06T11:04:17Z"
@@ -1621,10 +1627,6 @@
           {
             "title": "Rusko porušilo Ukrajinou vyhlášený klid zbraní v téměř dvou tisících případech, uvedl Zelenskyj",
             "publishedAt": "2026-05-06T09:17:43Z"
-          },
-          {
-            "title": "Švýcarsko má pacienta s hantavirem, další jsou z lodi evakuováni do Nizozemska",
-            "publishedAt": "2026-05-06T09:08:08Z"
           }
         ]
       }
@@ -1636,7 +1638,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37846,
+      "bytes": 38059,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1673,7 +1675,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T09:58:50Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T11:50:12Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1688,6 +1690,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hokejisté museli zrušit trénink kvůli díře v ledu",
+            "publishedAt": "2026-05-06T11:50:12Z"
+          },
           {
             "title": "Sparta oznámila první posilu, ze Švýcarska se vrací Sekáč",
             "publishedAt": "2026-05-06T09:58:50Z"
@@ -1715,10 +1721,6 @@
           {
             "title": "Karlovarsko nedalo v rozhodujícím finále Lvům šanci a má čtvrtý titul",
             "publishedAt": "2026-05-05T17:58:58Z"
-          },
-          {
-            "title": "Nymburk proti Ostravě vyhrál i počtvrté. Postupují také Pardubice, Brno odvrátilo první mečbol",
-            "publishedAt": "2026-05-05T17:27:31Z"
           }
         ]
       }
@@ -1730,7 +1732,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78696,
+      "bytes": 78627,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

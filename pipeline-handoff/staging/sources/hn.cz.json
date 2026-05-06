@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-06T11:36:20.208632Z",
+  "ingestedAt": "2026-05-06T12:15:22.616915Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Senát odmítl snížení odvodů pro živnostníky. Opozice se bojí výpadku v důchodovém systému",
+      "url": "https://byznys.hn.cz/c1-67874410-senat-odmitl-snizeni-odvodu-pro-zivnostniky-opozice-se-boji-vypadku-v-duchodovem-systemu",
+      "dt": "2026-05-06T11:53:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bojí",
+        "důchodovém",
+        "odmítl",
+        "odvodů",
+        "opozice",
+        "senát",
+        "snížení",
+        "systému",
+        "výpadku",
+        "živnostníky"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -40,25 +67,22 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Utajený protest proti ruské agresi. V Kaliningradu se na výročí invaze na Ukrajinu upálil muž, úřady jeho čin ututlaly",
+      "title": "Utajený protest proti ruské agresi. V Kaliningradu se upálil muž, úřady jeho čin ututlaly",
       "url": "https://zahranicni.hn.cz/c1-67874370-utajeny-protest-proti-ruske-agresi-v-kaliningradu-se-na-vyroci-invaze-na-ukrajinu-upalil-muz-urady-jeho-cin-ututlaly",
       "dt": "2026-05-06T10:34:00Z",
       "media_raw": "HN / Ekonomika",
       "media_norm": "HN / Ekonomika",
       "tokens": [
         "agresi",
-        "invaze",
         "jeho",
         "kaliningradu",
         "muž",
         "protest",
         "proti",
         "ruské",
-        "ukrajinu",
         "upálil",
         "utajený",
         "ututlaly",
-        "výročí",
         "úřady",
         "čin"
       ],
@@ -1127,36 +1151,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Svěží tváře české módy. Udělejte si přehled, které návrháře z jarní edice pražského fashion weeku sledovat",
-      "url": "https://procne.hn.cz/c1-67873720-nove-tvare-ceske-mody-udelejte-si-prehled-ktere-navrhare-z-jarni-edice-mbpfw-sledovat",
-      "dt": "2026-05-05T09:23:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "edice",
-        "fashion",
-        "jarní",
-        "módy",
-        "návrháře",
-        "pražského",
-        "přehled",
-        "sledovat",
-        "svěží",
-        "tváře",
-        "udělejte",
-        "weeku",
-        "české"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1167,7 +1161,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183271,
+      "bytes": 183207,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1204,11 +1198,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-06T11:26:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T11:53:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 4,
           "finance": 32,
+          "zpravy": 4,
           "zdravi": 4
         },
         "drop_counts": {
@@ -1222,11 +1216,15 @@
         },
         "sample_titles": [
           {
+            "title": "Senát odmítl snížení odvodů pro živnostníky. Opozice se bojí výpadku v důchodovém systému",
+            "publishedAt": "2026-05-06T11:53:00Z"
+          },
+          {
             "title": "Efekt Čapí hnízdo? Tejc chce omezit pravomoci odvolacích soudů, experti se ale obávají nekonečného &bdquo;ping-pongu&ldquo;",
             "publishedAt": "2026-05-06T11:26:00Z"
           },
           {
-            "title": "Utajený protest proti ruské agresi. V Kaliningradu se na výročí invaze na Ukrajinu upálil muž, úřady jeho čin ututlaly",
+            "title": "Utajený protest proti ruské agresi. V Kaliningradu se upálil muž, úřady jeho čin ututlaly",
             "publishedAt": "2026-05-06T10:34:00Z"
           },
           {
@@ -1248,10 +1246,6 @@
           {
             "title": "Zrušit penzijko? Udělejte úplně jinou věc, jinak přijdete o peníze, radí rentiér",
             "publishedAt": "2026-05-06T06:47:00Z"
-          },
-          {
-            "title": "Až utichnou zbraně. Kyjev, EU a koalici ochotných čekají po válce velké starosti s obnovou Ukrajiny",
-            "publishedAt": "2026-05-06T06:29:00Z"
           }
         ]
       }

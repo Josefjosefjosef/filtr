@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-06T11:36:20.208632Z",
+  "ingestedAt": "2026-05-06T12:15:22.616915Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Maximální ceny benzinu a nafty na čtvrtek 7. května",
+      "url": "https://www.penize.cz/doprava/489341-maximalni-ceny-benzinu-a-nafty-na-ctvrtek-7-kvetna",
+      "dt": "2026-05-06T14:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "benzinu",
+        "ceny",
+        "května",
+        "maximální",
+        "nafty",
+        "čtvrtek"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -458,34 +481,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Michl prodával v Las Vegas bitcoiny. Zakladatel burzy zmizel s klíči k bitcoinům za miliardu",
-      "url": "https://www.penize.cz/kryptomeny/489196-michl-prodaval-v-las-vegas-bitcoiny-zakladatel-burzy-zmizel-s-klici-k-bitcoinum-za-miliardu",
-      "dt": "2026-05-01T07:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "bitcoiny",
-        "bitcoinům",
-        "burzy",
-        "klíči",
-        "las",
-        "michl",
-        "miliardu",
-        "prodával",
-        "vegas",
-        "zakladatel",
-        "zmizel"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -496,7 +491,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18051,
+      "bytes": 17997,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -533,11 +528,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-06T05:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T14:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 16,
-          "zpravy": 2,
+          "zpravy": 3,
+          "finance": 15,
           "sport": 2
         },
         "drop_counts": {
@@ -550,6 +545,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Maximální ceny benzinu a nafty na čtvrtek 7. května",
+            "publishedAt": "2026-05-06T14:00:00Z"
+          },
           {
             "title": "Už žádné „v pohodě“. Proč se radikální upřímnost vyplatí v práci i doma",
             "publishedAt": "2026-05-06T05:05:00Z"
@@ -577,10 +576,6 @@
           {
             "title": "Raiffeisenbank láká na slevy, rozdá poukazy na dovolenou zdarma",
             "publishedAt": "2026-05-05T04:30:00Z"
-          },
-          {
-            "title": "Maximální ceny benzinu a nafty na úterý 5. května",
-            "publishedAt": "2026-05-04T13:58:00Z"
           }
         ]
       }

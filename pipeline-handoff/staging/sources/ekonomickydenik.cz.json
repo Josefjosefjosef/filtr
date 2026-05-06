@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-06T11:36:20.208632Z",
+  "ingestedAt": "2026-05-06T12:15:22.616915Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Odmítáme, aby dotování vodíku zdražilo cenu plynu, vzkazují vládě zástupci byznysu",
+      "url": "https://ekonomickydenik.cz/odmitame-aby-dotovani-vodiku-prodrazilo-plyn/",
+      "dt": "2026-05-06T11:39:32Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "byznysu",
+        "cenu",
+        "dotování",
+        "odmítáme",
+        "plynu",
+        "vládě",
+        "vodíku",
+        "vzkazují",
+        "zdražilo",
+        "zástupci"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -756,30 +783,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Příměří na Ukrajině: Ruský návrh chce Zelenskyj rozšířit",
-      "url": "https://ekonomickydenik.cz/primeri-ukrajina-rusko-navrh-zelenskyj-rozsirit/",
-      "dt": "2026-05-05T05:28:18Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "chce",
-        "návrh",
-        "příměří",
-        "rozšířit",
-        "ruský",
-        "ukrajině",
-        "zelenskyj"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 75214,
+      "bytes": 75227,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T10:29:47Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T11:39:32Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 26,
@@ -845,6 +848,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Odmítáme, aby dotování vodíku zdražilo cenu plynu, vzkazují vládě zástupci byznysu",
+            "publishedAt": "2026-05-06T11:39:32Z"
+          },
           {
             "title": "Nenechávají nic náhodě: V armádě chtějí nahradit Pandury, ladí proto smlouvy s českými partnery",
             "publishedAt": "2026-05-06T10:29:47Z"
@@ -872,10 +879,6 @@
           {
             "title": "Lodě v Hormuzském průlivu bez ochrany. Trump to vysvětluje jednáním",
             "publishedAt": "2026-05-06T05:53:21Z"
-          },
-          {
-            "title": "Neobvyklé partnerství: ČEZ postaví s firmou exministra větrníky na Olomoucku",
-            "publishedAt": "2026-05-06T05:20:54Z"
           }
         ]
       }

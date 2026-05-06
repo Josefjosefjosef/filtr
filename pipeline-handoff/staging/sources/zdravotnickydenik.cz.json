@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-06T11:36:20.208632Z",
+  "ingestedAt": "2026-05-06T12:15:22.616915Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Muž zemřel pár dní po operaci mandlí. Rodina vinila pardubickou nemocnici, policie případ odložila",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/umrti-operace-mandli-pardubicka-nemocnice-policie/",
+      "dt": "2026-05-06T11:39:36Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dní",
+        "mandlí",
+        "muž",
+        "nemocnici",
+        "odložila",
+        "operaci",
+        "pardubickou",
+        "policie",
+        "pár",
+        "případ",
+        "rodina",
+        "vinila",
+        "zemřel"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -243,32 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Listerióza v českých prodejnách: Podívejte se, které balení hub musíte okamžitě vrátit",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/listerioza-houby-obchody-inspekce/",
-      "dt": "2026-05-05T14:13:19Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "balení",
-        "hub",
-        "listerióza",
-        "musíte",
-        "okamžitě",
-        "podívejte",
-        "prodejnách",
-        "vrátit",
-        "českých"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 83984,
+      "bytes": 84901,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +320,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-06T11:12:34Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T11:39:36Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -331,6 +335,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Muž zemřel pár dní po operaci mandlí. Rodina vinila pardubickou nemocnici, policie případ odložila",
+            "publishedAt": "2026-05-06T11:39:36Z"
+          },
           {
             "title": "Zásadní změna: Stát bude moci omezit dodávky nedostatkových pomůcek jen pro nemocnice",
             "publishedAt": "2026-05-06T11:12:34Z"
@@ -358,10 +366,6 @@
           {
             "title": "Varování pro Česko? Německé nemocnice začnou propouštět, specialisté přijdou o miliony",
             "publishedAt": "2026-05-06T05:00:00Z"
-          },
-          {
-            "title": "Nemůžete si dělat z úst kanál a sršet  nechutnosti, vmetla Černochová Babišovi kvůli ÚVN",
-            "publishedAt": "2026-05-05T16:02:38Z"
           }
         ]
       }
