@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-06T22:04:21.608011Z",
+  "ingestedAt": "2026-05-06T22:44:12.558313Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Banky trestají nejistotu. Hypotéky opět mírně zdražily, připlácí se za nejoblíbenější fixace",
+      "url": "https://www.e15.cz/byznys/finance-a-bankovnictvi/banky-trestaji-nejistotu-hypoteky-opet-mirne-zdrazily-priplaci-se-za-nejoblibenejsi-fixace-1432655",
+      "dt": "2026-05-06T22:01:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "banky",
+        "fixace",
+        "hypotéky",
+        "mírně",
+        "nejistotu",
+        "nejoblíbenější",
+        "opět",
+        "připlácí",
+        "trestají",
+        "zdražily"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1055,32 +1082,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Návrat školkovného a slevy na studenta schválen. Na daních ušetříte až v roce 2028",
-      "url": "https://www.e15.cz/finexpert/danove-priznani/navrat-skolkovneho-a-slevy-na-studenta-schvalen-na-danich-usetrite-az-v-roce-2028-1432587",
-      "dt": "2026-05-05T08:27:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "2028",
-        "daních",
-        "návrat",
-        "roce",
-        "schválen",
-        "slevy",
-        "studenta",
-        "ušetříte",
-        "školkovného"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1091,7 +1092,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 52593,
+      "bytes": 52706,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1128,7 +1129,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-06T15:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T22:01:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 35,
@@ -1145,6 +1146,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Banky trestají nejistotu. Hypotéky opět mírně zdražily, připlácí se za nejoblíbenější fixace",
+            "publishedAt": "2026-05-06T22:01:00Z"
+          },
           {
             "title": "Trump našel slabé místo k propašování amerického LNG do Evropy. Potichu odtud posiluje vliv nad kontinentem",
             "publishedAt": "2026-05-06T15:20:00Z"
@@ -1172,10 +1177,6 @@
           {
             "title": "Konec dvojích cen nafty na Slovensku. Vláda ruší omezení, které kritizovala Evropská komise",
             "publishedAt": "2026-05-06T10:50:00Z"
-          },
-          {
-            "title": "ČNB zatím sazby měnit nebude, šance na jejich zvýšení ale roste",
-            "publishedAt": "2026-05-06T10:00:00Z"
           }
         ]
       }

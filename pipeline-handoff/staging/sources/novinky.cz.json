@@ -1,9 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "novinky.cz",
-  "ingestedAt": "2026-05-06T22:04:21.608011Z",
+  "ingestedAt": "2026-05-06T22:44:12.558313Z",
   "items": [
     {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Banky ustálily hypoteční sazby nad pěti procenty",
+      "url": "https://www.novinky.cz/clanek/ekonomika-banky-ustalily-hypotecni-sazby-nad-peti-procenty-40576887",
+      "dt": "2026-05-06T22:01:00Z",
+      "media_raw": "Novinky / Domácí",
+      "media_norm": "Novinky / Domácí",
+      "tokens": [
+        "banky",
+        "hypoteční",
+        "procenty",
+        "pěti",
+        "sazby",
+        "ustálily"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_novinky_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "novinky.cz",
+      "_dt_serialized": true
+    },
+    {
       "section": "aktualne",
       "contentType": "article",
       "title": "Protesty proti Rusku a Izraeli, zavřené pavilony a zrušená účast Íránu. V Benátkách začíná bienále",
@@ -751,27 +774,24 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "finance",
       "contentType": "article",
-      "title": "Maďarsko Kyjevu vrátilo zabavené peníze ukrajinské banky, oznámil Zelenskyj",
-      "url": "https://www.novinky.cz/clanek/zahranicni-evropa-madarsko-kyjevu-vratilo-zabavene-penize-ukrajinske-banky-oznamil-zelenskyj-40576975",
-      "dt": "2026-05-06T14:23:43Z",
-      "media_raw": "Novinky / Domácí",
-      "media_norm": "Novinky / Domácí",
+      "title": "Banky ustálily hypoteční sazby nad pěti procenty",
+      "url": "https://www.novinky.cz/clanek/ekonomika-banky-ustalily-hypotecni-sazby-nad-peti-procenty-40576887",
+      "dt": "2026-05-06T22:01:00Z",
+      "media_raw": "Novinky / Zahraniční",
+      "media_norm": "Novinky / Zahraniční",
       "tokens": [
         "banky",
-        "kyjevu",
-        "maďarsko",
-        "oznámil",
-        "peníze",
-        "ukrajinské",
-        "vrátilo",
-        "zabavené",
-        "zelenskyj"
+        "hypoteční",
+        "procenty",
+        "pěti",
+        "sazby",
+        "ustálily"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
-      "feedId": "zpr_novinky_domaci",
+      "feedId": "zpr_novinky_zahranicni",
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "novinky.cz",
       "_dt_serialized": true
@@ -1515,32 +1535,6 @@
         "samsungu",
         "táhne",
         "čipů"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_novinky_zahranicni",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "novinky.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Maďarsko Kyjevu vrátilo zabavené peníze ukrajinské banky, oznámil Zelenskyj",
-      "url": "https://www.novinky.cz/clanek/zahranicni-evropa-madarsko-kyjevu-vratilo-zabavene-penize-ukrajinske-banky-oznamil-zelenskyj-40576975",
-      "dt": "2026-05-06T14:23:43Z",
-      "media_raw": "Novinky / Zahraniční",
-      "media_norm": "Novinky / Zahraniční",
-      "tokens": [
-        "banky",
-        "kyjevu",
-        "maďarsko",
-        "oznámil",
-        "peníze",
-        "ukrajinské",
-        "vrátilo",
-        "zabavené",
-        "zelenskyj"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -5408,7 +5402,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/domaci",
-      "bytes": 40713,
+      "bytes": 40656,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -5445,11 +5439,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T20:12:15Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T22:01:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 28,
-          "finance": 2
+          "finance": 3,
+          "zpravy": 27
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -5461,6 +5455,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Banky ustálily hypoteční sazby nad pěti procenty",
+            "publishedAt": "2026-05-06T22:01:00Z"
+          },
           {
             "title": "Protesty proti Rusku a Izraeli, zavřené pavilony a zrušená účast Íránu. V Benátkách začíná bienále",
             "publishedAt": "2026-05-06T20:12:15Z"
@@ -5488,10 +5486,6 @@
           {
             "title": "Po stopách pacientů nula. Epidemiologové hledají, kde se manželé nakazili smrtelným hantavirem",
             "publishedAt": "2026-05-06T18:15:54Z"
-          },
-          {
-            "title": "Izrael bez varování udeřil na Bejrút, cílem byl údajně vysoký velitel Hizballáhu",
-            "publishedAt": "2026-05-06T17:59:55Z"
           }
         ]
       }
@@ -5503,7 +5497,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/zahranicni",
-      "bytes": 40713,
+      "bytes": 40656,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -5540,11 +5534,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T20:12:15Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T22:01:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 28,
-          "finance": 2
+          "finance": 3,
+          "zpravy": 27
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -5556,6 +5550,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Banky ustálily hypoteční sazby nad pěti procenty",
+            "publishedAt": "2026-05-06T22:01:00Z"
+          },
           {
             "title": "Protesty proti Rusku a Izraeli, zavřené pavilony a zrušená účast Íránu. V Benátkách začíná bienále",
             "publishedAt": "2026-05-06T20:12:15Z"
@@ -5583,10 +5581,6 @@
           {
             "title": "Po stopách pacientů nula. Epidemiologové hledají, kde se manželé nakazili smrtelným hantavirem",
             "publishedAt": "2026-05-06T18:15:54Z"
-          },
-          {
-            "title": "Izrael bez varování udeřil na Bejrút, cílem byl údajně vysoký velitel Hizballáhu",
-            "publishedAt": "2026-05-06T17:59:55Z"
           }
         ]
       }
