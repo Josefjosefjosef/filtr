@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-06T12:50:34.491415Z",
+  "ingestedAt": "2026-05-06T13:30:20.765935Z",
   "items": [
     {
       "section": "aktualne",
@@ -35,22 +35,49 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Američané přestanou chránit lodě v Hormuzu, oznámil Trump. Naznačil pokrok v jednání",
+      "title": "Trump Íránu opět hrozí bombardováním, chce otevření Hormuzského průlivu",
       "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
       "dt": "2026-02-28T14:04:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "američané",
-        "chránit",
-        "hormuzu",
-        "jednání",
-        "lodě",
-        "naznačil",
-        "oznámil",
-        "pokrok",
-        "přestanou",
-        "trump"
+        "bombardováním",
+        "chce",
+        "hormuzského",
+        "hrozí",
+        "opět",
+        "otevření",
+        "průlivu",
+        "trump",
+        "íránu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nevidíme důvod dodržovat příměří. Ukrajina nehodlá kvůli ruským oslavám složit zbraně",
+      "url": "https://zpravy.aktualne.cz/zahranici/nevidime-duvod-dodrzovat-primeri-ukrajina-nehodla-kvuli-ruskym-oslavam-slozit-zbrane/r~aaa297b91f15af71a88394c575cf0511/",
+      "dt": "2026-05-06T13:15:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dodržovat",
+        "důvod",
+        "kvůli",
+        "nehodlá",
+        "nevidíme",
+        "oslavám",
+        "příměří",
+        "ruským",
+        "složit",
+        "ukrajina",
+        "zbraně"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -88,23 +115,21 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "„Přestaňte vymýšlet lži.“ Babiš pod tlakem Okamury dává ruce pryč od sudetských Němců",
+      "title": "„Přestaňte vymýšlet lži.“ Babiše vytočil dotaz na sněm sudetských Němců",
       "url": "https://zpravy.aktualne.cz/domaci/prestante-vymyslet-lzi-babis-pod-tlakem-okamury-dava-ruce-pryc-od-sudetskych-nemcu/r~aaa29f382d37ef7d9b846637fa2e773b/",
       "dt": "2026-05-06T12:21:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "babiš",
-        "dává",
+        "babiše",
+        "dotaz",
         "lži",
         "němců",
-        "okamury",
-        "pryč",
         "přestaňte",
-        "ruce",
+        "sněm",
         "sudetských",
-        "tlakem",
-        "vymýšlet"
+        "vymýšlet",
+        "vytočil"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -502,29 +527,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vonnová odhodila berle a zářila na prestižním plese",
-      "url": "https://sport.aktualne.cz/ostatni-sporty/zimni-sporty/vonnova-odhodila-berle-a-zarila-na-prestiznim-plese/r~aaa29d2a0edc17b9b895eb8646927217/",
-      "dt": "2026-05-06T09:04:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "berle",
-        "odhodila",
-        "plese",
-        "prestižním",
-        "vonnová",
-        "zářila"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -535,7 +537,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21841,
+      "bytes": 21789,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -572,12 +574,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-06T12:21:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T13:15:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 13,
+          "zpravy": 14,
           "other": 1,
-          "sport": 4,
+          "sport": 3,
           "finance": 2
         },
         "drop_counts": {
@@ -595,15 +597,19 @@
             "publishedAt": "2026-01-21T06:45:00Z"
           },
           {
-            "title": "Američané přestanou chránit lodě v Hormuzu, oznámil Trump. Naznačil pokrok v jednání",
+            "title": "Trump Íránu opět hrozí bombardováním, chce otevření Hormuzského průlivu",
             "publishedAt": "2026-02-28T14:04:00Z"
+          },
+          {
+            "title": "Nevidíme důvod dodržovat příměří. Ukrajina nehodlá kvůli ruským oslavám složit zbraně",
+            "publishedAt": "2026-05-06T13:15:00Z"
           },
           {
             "title": "Španělsko přijme výletní loď s hantavirem, uvedlo ministerstvo. Kanáry nesouhlasí",
             "publishedAt": "2026-05-06T08:06:00Z"
           },
           {
-            "title": "„Přestaňte vymýšlet lži.“ Babiš pod tlakem Okamury dává ruce pryč od sudetských Němců",
+            "title": "„Přestaňte vymýšlet lži.“ Babiše vytočil dotaz na sněm sudetských Němců",
             "publishedAt": "2026-05-06T12:21:00Z"
           },
           {
@@ -617,10 +623,6 @@
           {
             "title": "Bouřlivá noc ve sněmovně. Šéf poslanců SPD řval na Bendu a vulgárně nadával opozici",
             "publishedAt": "2026-05-06T09:31:00Z"
-          },
-          {
-            "title": "Co čeká kurýra z planety Země? Český sci-fi komiks řeší i AI nebo vzdor proti systému",
-            "publishedAt": "2026-05-06T11:53:00Z"
           }
         ]
       }

@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-06T12:50:34.491415Z",
+  "ingestedAt": "2026-05-06T13:30:20.765935Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Na Giru se představí tři Češi. Hirt pojede už podeváté, bratry Kopecké čeká debut",
+      "url": "https://www.idnes.cz/sport/cyklistika/na-giru-se-predstavi-dva-cesi-hirt-pojede-uz-podevate-kopeckeho-ceka-debut.A260504_201950_cyklistika_tit",
+      "dt": "2026-05-06T12:56:33Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bratry",
+        "debut",
+        "giru",
+        "hirt",
+        "kopecké",
+        "podeváté",
+        "pojede",
+        "představí",
+        "tři",
+        "čeká",
+        "češi"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kopřiva se v Římě uvedl dominantně, druhé kolo si vybojovala i Siniaková",
+      "url": "https://www.idnes.cz/sport/tenis/kopriva-rim-marozsan-humbert-tenista-antuka.A260506_125408_tenis_kazdt",
+      "dt": "2026-05-06T12:46:30Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dominantně",
+        "druhé",
+        "kolo",
+        "kopřiva",
+        "siniaková",
+        "uvedl",
+        "vybojovala",
+        "římě"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -78,31 +131,6 @@
         "zvolí",
         "získat",
         "šanci"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kopřiva se skvěle uvedl i v Římě, na antuce za 79 minut porazil Marozsána",
-      "url": "https://www.idnes.cz/sport/tenis/kopriva-rim-marozsan-humbert-tenista-antuka.A260506_125408_tenis_kazdt",
-      "dt": "2026-05-06T11:04:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "antuce",
-        "kopřiva",
-        "marozsána",
-        "minut",
-        "porazil",
-        "skvěle",
-        "uvedl",
-        "římě"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -771,32 +799,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vypukne v tenise válka? Hvězdám nestačí 68 milionů, hrozí bojkotem grandslamů",
-      "url": "https://www.idnes.cz/sport/tenis/vypukne-v-tenise-valka-hvezdam-nestaci-68-milionu-hrozi-bojkotem-grandslamu.A260505_180139_tenis_ikuc",
-      "dt": "2026-05-05T17:26:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bojkotem",
-        "grandslamů",
-        "hrozí",
-        "hvězdám",
-        "milionů",
-        "nestačí",
-        "tenise",
-        "vypukne",
-        "válka"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -807,7 +809,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47928,
+      "bytes": 47884,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -844,7 +846,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T12:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T12:56:33Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -860,6 +862,14 @@
         },
         "sample_titles": [
           {
+            "title": "Na Giru se představí tři Češi. Hirt pojede už podeváté, bratry Kopecké čeká debut",
+            "publishedAt": "2026-05-06T12:56:33Z"
+          },
+          {
+            "title": "Kopřiva se v Římě uvedl dominantně, druhé kolo si vybojovala i Siniaková",
+            "publishedAt": "2026-05-06T12:46:30Z"
+          },
+          {
             "title": "Že Nečas v play off vadne? Kritika už není na místě, řekl kouč. A Čech oslnil parádou",
             "publishedAt": "2026-05-06T12:10:00Z"
           },
@@ -872,10 +882,6 @@
             "publishedAt": "2026-05-06T11:35:00Z"
           },
           {
-            "title": "Kopřiva se skvěle uvedl i v Římě, na antuce za 79 minut porazil Marozsána",
-            "publishedAt": "2026-05-06T11:04:00Z"
-          },
-          {
             "title": "Simeone: Nikdo nečekal, že to dotáhneme tak daleko. Arsenal si postup zasloužil",
             "publishedAt": "2026-05-06T11:03:00Z"
           },
@@ -886,10 +892,6 @@
           {
             "title": "Mbappé vytočil fanoušky. Chtějí ho pryč z Realu. Petice má miliony podpisů",
             "publishedAt": "2026-05-06T11:00:00Z"
-          },
-          {
-            "title": "Ullman: Liga v Lotyšsku? Na školní umělce. Riga má peníze jak Sparta a Slavia",
-            "publishedAt": "2026-05-06T10:51:00Z"
           }
         ]
       }

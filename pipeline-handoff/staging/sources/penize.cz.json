@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-06T12:50:34.491415Z",
+  "ingestedAt": "2026-05-06T13:30:20.765935Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "HP Tronic diktoval ceny a trestal „neposlušné“ prodejce. Dostal tučnou pokutu",
+      "url": "https://www.penize.cz/nakupy/489343-hp-tronic-diktoval-ceny-a-trestal-neposlusne-prodejce-dostal-pokutu-39-milionu-korun",
+      "dt": "2026-05-06T14:55:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "ceny",
+        "diktoval",
+        "dostal",
+        "neposlušné",
+        "pokutu",
+        "prodejce",
+        "trestal",
+        "tronic",
+        "tučnou"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -457,30 +483,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nejlepší bankovky roku. Podívejte se, kdo uspěl ve světové soutěži",
-      "url": "https://www.penize.cz/nakupy/489198-nejlepsi-bankovky-roku-podivejte-se-kdo-uspel-ve-svetove-soutezi",
-      "dt": "2026-05-01T16:30:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "bankovky",
-        "nejlepší",
-        "podívejte",
-        "roku",
-        "soutěži",
-        "světové",
-        "uspěl"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -491,7 +493,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 17997,
+      "bytes": 17980,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -528,11 +530,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-06T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T14:55:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 3,
-          "finance": 15,
+          "zpravy": 4,
+          "finance": 14,
           "sport": 2
         },
         "drop_counts": {
@@ -545,6 +547,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "HP Tronic diktoval ceny a trestal „neposlušné“ prodejce. Dostal tučnou pokutu",
+            "publishedAt": "2026-05-06T14:55:00Z"
+          },
           {
             "title": "Maximální ceny benzinu a nafty na čtvrtek 7. května",
             "publishedAt": "2026-05-06T14:00:00Z"
@@ -572,10 +578,6 @@
           {
             "title": "Uniforma bez pravomocí? Co si k vám ostraha nesmí dovolit a s čím naopak pomůže",
             "publishedAt": "2026-05-05T05:00:00Z"
-          },
-          {
-            "title": "Raiffeisenbank láká na slevy, rozdá poukazy na dovolenou zdarma",
-            "publishedAt": "2026-05-05T04:30:00Z"
           }
         ]
       }
