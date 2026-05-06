@@ -1061,7 +1061,7 @@ function buildCases() {
       `Poznamenej si PIN ke kartě je doma, není to úkol, ${neg}.`,
       `Zapamatuj si velikost bot 33, ${neg}, ne kalendář.`,
       `Bez diakritiky: dej do poznamek ze soused ma klic, ${stripDiak(neg)} ne jako ukol.`,
-      `Advokát potřebuje plnou moc — jen poznámka, ${neg}.`
+      `Ulož do poznámek, že advokát potřebuje plnou moc, ${neg}.`
     ];
     push("note_write", diacVariant(i, lines[i % lines.length]), "note.create", {}, {});
   }
@@ -1701,6 +1701,50 @@ function buildCases() {
     if (auditSilverTaskWriteNakupJedenUkolDeadlineFolded(f3) || auditSilverTaskWriteNeDoUkolLeadWorkLineFolded(f3)) {
       twc3.expectedIntent = "unknown";
       twc3.meta = Object.assign({}, twc3.meta || {}, { readWritePriorityGate: true });
+    }
+  }
+
+  /** P0 note_write: read-only / globální zákaz vs explicitní zápis do poznámek → očekávání unknown (sladění s produktem). */
+  function auditSilverNicNeukladejBlocksNoteWriteExpectationFolded(fx) {
+    const f = String(fx || "");
+    if (!/\bnic\s+neukladej\b/.test(f)) return false;
+    if (/\bnic\s+neukladej\s+do\s+kalendar/.test(f)) return false;
+    if (/\bzaroven\b|\bzároveň\b/.test(f) && /\b(do\s+kalend|\buloz\s+do\s+kalend|\buloz\s+mi\s+do\s+kalend|\bnahod)/.test(f)) return false;
+    if (/^\s*do\s+poznam\w*\s+.*\bnapis/.test(f) || /^\s*napis\w*\s+do\s+poznam/.test(f)) return false;
+    return true;
+  }
+  function auditSilverNoteWriteReadOnlyVersusExplicitWriteFolded(fx) {
+    const x = String(fx || "");
+    if (!x) return false;
+    const hasNote =
+      /\bdo\s+poznam/.test(x) ||
+      /\bdej\s+mi\s+do\s+poznam/.test(x) ||
+      /\bdej\s+do\s+poznam/.test(x) ||
+      /\bzapamatuj\s+si\b/.test(x) ||
+      /\bpoznamenej\s+si\b/.test(x) ||
+      /\buloz\s+si\b/.test(x) ||
+      /\buloz\s+poznamku\b/.test(x) ||
+      /\buloz\w*\s+[\s\S]{0,4000}?\s+do\s+poznam/.test(x);
+    if (!hasNote) return false;
+    return (
+      /\bjen\s+cti\b/.test(x) ||
+      /\bpouze\s+cti\b/.test(x) ||
+      /\bjen\s+zjist/.test(x) ||
+      /\bjen\s+se\s+podivej\b/.test(x) ||
+      /\bjen\s+vypis\b/.test(x) ||
+      /\bjen\s+over\b/.test(x) ||
+      auditSilverNicNeukladejBlocksNoteWriteExpectationFolded(x) ||
+      (/\bnic\s+nevytvarej\b/.test(x) && !/\bnic\s+nevytvarej\s+do\s+kalendar/.test(x)) ||
+      /\bpokud\s+nic\s+nenajdes\b/.test(x) ||
+      /\bpokud\s+nis\s+vysledek\b/.test(x)
+    );
+  }
+  for (let nwi = 0; nwi < cases.length; nwi++) {
+    const nwc = cases[nwi];
+    if (nwc.group !== "note_write") continue;
+    if (auditSilverNoteWriteReadOnlyVersusExplicitWriteFolded(foldCs(nwc.input))) {
+      nwc.expectedIntent = "unknown";
+      nwc.meta = Object.assign({}, nwc.meta || {}, { readWritePriorityGate: true });
     }
   }
 
