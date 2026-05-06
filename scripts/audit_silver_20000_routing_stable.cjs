@@ -270,6 +270,55 @@ function auditSilverTaskWriteReadOnlyNegVsExplicitJedenUkolFolded(fx) {
   return readOnlyNeg;
 }
 
+/**
+ * P0 (task_write_06007): read-only lead („jen zjisti“, „jen čti“, …) před prvním explicitním „do úkolů“
+ * → konflikt zápis/read; harness + engine: unknown / ambiguous_write (ne task.create).
+ */
+function auditSilverTaskWriteReadOnlyLeadBeforeExplicitDoUkolFolded(fx) {
+  const x = String(fx || "");
+  if (!x) return false;
+  if (/\bne\s+do\s+ukol/.test(x)) return false;
+  const doM = /\bdo\s+ukol\w*\b/i.exec(x);
+  if (!doM || typeof doM.index !== "number") return false;
+  const doIdx = doM.index;
+  const readRes = [
+    /\bjen\s+se\s+podivej\b/i.exec(x),
+    /\bjen\s+cti\b/i.exec(x),
+    /\bjen\s+zjist\w*\b/i.exec(x),
+    /\bjen\s+over\w*\b/i.exec(x),
+    /\bjen\s+vypis\w*\b/i.exec(x),
+    /\bpouze\s+cti\b/i.exec(x)
+  ];
+  let readIdx = -1;
+  for (let ri = 0; ri < readRes.length; ri++) {
+    const m = readRes[ri];
+    if (m && typeof m.index === "number" && m.index >= 0 && (readIdx < 0 || m.index < readIdx)) readIdx = m.index;
+  }
+  if (readIdx < 0) return false;
+  return readIdx < doIdx;
+}
+
+/** task_write_06012: nákupní řádek + „jako jeden úkol do pátku“ bez slovesa zápisu — engine zůstává unknown. */
+function auditSilverTaskWriteNakupJedenUkolDeadlineFolded(fx) {
+  const x = String(fx || "");
+  if (!/\bnakup\s*:/.test(x)) return false;
+  if (!/\bjako\s+jeden\s+ukol\w*\b/.test(x)) return false;
+  return (
+    /\bdo\s+patk\w*\b/.test(x) ||
+    /\bdo\s+zitr\w*\b/.test(x) ||
+    /\bdo\s+deset\w*\b/.test(x) ||
+    /\bdo\s+\d+\s+dn\w*\b/.test(x)
+  );
+}
+
+/** task_write_06013: NEGS fragment „ne do úkolů“ + pracovní úkol řádek — konflikt signálů, zápis neprovedu. */
+function auditSilverTaskWriteNeDoUkolLeadWorkLineFolded(fx) {
+  const x = String(fx || "").trim();
+  if (!/^\s*ne\s+do\s+ukol\w*\b/i.test(x)) return false;
+  if (!/\bpracovn\w*\s*:/.test(x)) return false;
+  return /\bne\s+kalendar\w*\b/.test(x) || /\bne\s+kalend\w*\b/.test(x);
+}
+
 function auditFoldedExplicitCalendarWriteVerbBeforeDoKalend(f) {
   const x = String(f || "");
   const iDo = x.search(/\bdo\s+kalend/);
@@ -363,7 +412,8 @@ function taskWriteSemantic(turn, raw, foldedIn) {
   if (hasExplicitNoCalendar(foldedIn) && turn.normalizedIntent === "calendar.create") return { ok: false, cat: "negative_instruction_fail" };
   if (hasExplicitNoNotes(foldedIn) && turn.normalizedIntent === "notes.create") return { ok: false, cat: "negative_instruction_fail" };
   const ok =
-    /úkol|ukol|task|ulož|uloz|přid|prid|hotov|seznam/i.test(raw) || turn.processingState === "READY_TO_SAVE";
+    /úkol|ukol|task|ulož|uloz|přid|prid|hotov|seznam|zápis|zapis|neprovedu|neproved|upřesn|upresn/i.test(raw) ||
+    turn.processingState === "READY_TO_SAVE";
   if (!ok) return { ok: false, cat: "raw_response_wrong" };
   return { ok: true, cat: "" };
 }
@@ -536,6 +586,30 @@ function evaluateOne(c, turn) {
       c.group === "task_write" &&
       expectedIntent === "unknown" &&
       auditSilverTaskWriteReadOnlyNegVsExplicitJedenUkolFolded(folded) &&
+      (eng === "tasks.read" || auditIntent === "task.query")
+    ) {
+      auditIntent = "unknown";
+    }
+    if (
+      c.group === "task_write" &&
+      expectedIntent === "unknown" &&
+      auditSilverTaskWriteReadOnlyLeadBeforeExplicitDoUkolFolded(folded) &&
+      (eng === "tasks.read" || auditIntent === "task.query")
+    ) {
+      auditIntent = "unknown";
+    }
+    if (
+      c.group === "task_write" &&
+      expectedIntent === "unknown" &&
+      auditSilverTaskWriteNakupJedenUkolDeadlineFolded(folded) &&
+      (eng === "tasks.read" || auditIntent === "task.query")
+    ) {
+      auditIntent = "unknown";
+    }
+    if (
+      c.group === "task_write" &&
+      expectedIntent === "unknown" &&
+      auditSilverTaskWriteNeDoUkolLeadWorkLineFolded(folded) &&
       (eng === "tasks.read" || auditIntent === "task.query")
     ) {
       auditIntent = "unknown";
@@ -1611,6 +1685,25 @@ function buildCases() {
     }
   }
 
+  for (let twd = 0; twd < cases.length; twd++) {
+    const twc2 = cases[twd];
+    if (twc2.group !== "task_write") continue;
+    if (auditSilverTaskWriteReadOnlyLeadBeforeExplicitDoUkolFolded(foldCs(twc2.input))) {
+      twc2.expectedIntent = "unknown";
+      twc2.meta = Object.assign({}, twc2.meta || {}, { readWritePriorityGate: true });
+    }
+  }
+
+  for (let twx = 0; twx < cases.length; twx++) {
+    const twc3 = cases[twx];
+    if (twc3.group !== "task_write") continue;
+    const f3 = foldCs(twc3.input);
+    if (auditSilverTaskWriteNakupJedenUkolDeadlineFolded(f3) || auditSilverTaskWriteNeDoUkolLeadWorkLineFolded(f3)) {
+      twc3.expectedIntent = "unknown";
+      twc3.meta = Object.assign({}, twc3.meta || {}, { readWritePriorityGate: true });
+    }
+  }
+
   return cases;
 }
 
@@ -1824,7 +1917,10 @@ function main() {
     "calendar_query_03126",
     "calendar_query_03681",
     "task_write_06001",
-    "task_write_06004"
+    "task_write_06004",
+    "task_write_06007",
+    "task_write_06012",
+    "task_write_06013"
   ];
   for (let ani = 0; ani < SILVER_AUDIT_ROUTING_ANCHOR_IDS.length; ani++) {
     const anid = SILVER_AUDIT_ROUTING_ANCHOR_IDS[ani];

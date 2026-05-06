@@ -36159,6 +36159,34 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P0 task_write_06007: read-only lead („jen zjisti“, „jen čti“, …) před prvním „do úkolů“
+   * + explicitní cíl úkolů → konflikt; žádný task.create (ambiguous_write / unknown).
+   */
+  function iuSilverTaskWriteReadOnlyLeadBeforeExplicitDoUkolConflictFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (/\bne\s+do\s+ukol/.test(x)) return false;
+    const doM = /\bdo\s+ukol\w*\b/i.exec(x);
+    if (!doM || typeof doM.index !== "number") return false;
+    const doIdx = doM.index;
+    const readRes = [
+      /\bjen\s+se\s+podivej\b/i.exec(x),
+      /\bjen\s+cti\b/i.exec(x),
+      /\bjen\s+zjist\w*\b/i.exec(x),
+      /\bjen\s+over\w*\b/i.exec(x),
+      /\bjen\s+vypis\w*\b/i.exec(x),
+      /\bpouze\s+cti\b/i.exec(x)
+    ];
+    let readIdx = -1;
+    for (let ri = 0; ri < readRes.length; ri++) {
+      const m = readRes[ri];
+      if (m && typeof m.index === "number" && m.index >= 0 && (readIdx < 0 || m.index < readIdx)) readIdx = m.index;
+    }
+    if (readIdx < 0) return false;
+    return readIdx < doIdx;
+  }
+
+  /**
    * Silver Brain v1 — central intent routing (calendar / tasks / notes / fallback).
    * Pořadí: explicitní zápis úkolu (P0.5) → explicitní poznámka → legacy explicitní cíl poznámky → úkoly (sloveso) → kalendář → disambiguace → nejasné.
    */
@@ -36170,6 +36198,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return {
         intent: "unknown",
         confidence: 0.92,
+        route: "fallback",
+        reason: "ambiguous_write",
+        kind: "AMBIGUOUS_WRITE",
+        calendarFallbackWanted: false
+      };
+    }
+    if (iuSilverTaskWriteReadOnlyLeadBeforeExplicitDoUkolConflictFolded(folded)) {
+      return {
+        intent: "unknown",
+        confidence: 0.9,
         route: "fallback",
         reason: "ambiguous_write",
         kind: "AMBIGUOUS_WRITE",
@@ -36383,7 +36421,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverHasTaskActionVerb(folded) {
     const f = String(folded || "");
     if (
-      /\b(koupit|ud[eě]lat|udelat|zavolat|vy[rř][ií]dit|vyridit|zaplatit|poslat|objednat|p[rř]ipomenout|pripomenout|zkontrolovat|za[rř][ií]dit|zaridit|uklidit|vyzvednout)\b/.test(
+      /\b(koupit|ud[eě]lat|udelat|zavolat|vy[rř][ií]dit|vyridit|zaplatit|poslat|objednat|p[rř]ipomenout|pripomenout|zkontrolovat|za[rř][ií]dit|zaridit|uklidit|vyzvednout|opravit)\b/.test(
         f
       )
     ) {
