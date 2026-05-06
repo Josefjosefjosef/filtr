@@ -2,7 +2,7 @@
   "harness_id": "audit_silver_realistic_mobile_corpus_v1",
   "fixed_now": "2026-05-04T12:00:00",
   "total_cases": 10000,
-  "overall_accuracy_realistic": "81.10",
+  "overall_accuracy_realistic": "85.10",
   "accuracy_by_cluster": {
     "calendar_write_basic:schuzka": "93.13",
     "calendar_write_basic:zubar": "93.13",
@@ -27,7 +27,7 @@
     "negation_safety:calendar_read": "80.00",
     "negation_safety:task_read": "60.00",
     "negation_safety:note_read": "100.00",
-    "messy_czech_mobile": "50.00"
+    "messy_czech_mobile": "100.00"
   },
   "fail_count_by_cluster": {
     "calendar_write_basic:schuzka": 11,
@@ -53,10 +53,9 @@
     "negation_safety:calendar_read": 30,
     "negation_safety:task_read": 60,
     "negation_safety:note_read": 0,
-    "messy_czech_mobile": 400
+    "messy_czech_mobile": 0
   },
   "top_20_fail_clusters": [
-    "messy_czech_mobile||intent_fail=400",
     "calendar_write_address||intent_fail=360",
     "calendar_write_note_tail||intent_fail=270",
     "note_query||intent_fail=160",
@@ -384,7 +383,7 @@
   "query_created_write_count_realistic": 0,
   "unknown_when_uncertain_count": 0,
   "write_when_negated_count": 0,
-  "calendar_write_accuracy": "65.36",
+  "calendar_write_accuracy": "77.48",
   "calendar_query_accuracy": "91.93",
   "task_write_accuracy": "100.00",
   "task_query_accuracy": "60.00",
@@ -392,9 +391,9 @@
   "note_query_accuracy": "83.16",
   "multi_intent_accuracy": "100.00",
   "negation_safety_accuracy": "80.00",
-  "messy_czech_mobile_accuracy": "50.00",
-  "recommended_next_fix_cluster": "messy_czech_mobile",
-  "recommended_next_fix_reason": "Highest fail mass in «messy_czech_mobile» dominated by «intent_fail»; safest follow-up is a narrow Silver routing/read-guard change scoped to this Czech mobile phrasing family (no UI).",
+  "messy_czech_mobile_accuracy": "100.00",
+  "recommended_next_fix_cluster": "calendar_write_address",
+  "recommended_next_fix_reason": "Highest fail mass in «calendar_write_address» dominated by «intent_fail»; safest follow-up is a narrow Silver routing/read-guard change scoped to this Czech mobile phrasing family (no UI).",
   "baseline_20k": {
     "overall_accuracy": "91.29",
     "calendar_write": "3000/3000",
@@ -411,6 +410,6 @@
     "title_clean": "9645 / 10000",
     "date_parsed": "10000 / 10000",
     "time_parsed": "10000 / 10000",
-    "entity_detected": "6297 / 10000"
+    "entity_detected": "6697 / 10000"
   }
 }

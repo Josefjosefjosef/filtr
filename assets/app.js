@@ -35260,7 +35260,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bdo\s+diare\b/.test(f)) return true;
     if (/\bdo\s+planovace\b/.test(f)) return true;
     if (/\bdo\s+rozvrhu\b/.test(f)) return true;
-    if (/\b(?:uloz|zapis|pridej|vloz|naplanuj|vytvor|zaloz|napis|zaznamenej|eviduj|dopln|zanes)\s+do\s+kalend/.test(f)) return true;
+    if (
+      /\b(?:uloz|zapis|pridej|vloz|naplanuj|vytvor|zaloz|napis|zaznamenej|eviduj|dopln|zanes)(?:\s+(?:mi|nam|si))?\s+do\s+kalend/.test(
+        f
+      )
+    )
+      return true;
     return false;
   }
 
@@ -35337,7 +35342,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           const hasCalWriteVerb =
             /\b(zapis|uloz|pridej|vytvor|nahod)\w*\b/i.test(x) ||
             /\bdej\s+do\s+kalend/i.test(x) ||
-            /\buloz\s+do\s+kalend/i.test(x) ||
+            /\buloz\s+(?:mi\s+)?do\s+kalend/i.test(x) ||
             /\bpridej\s+do\s+kalend/i.test(x) ||
             /\bzapis\s+do\s+kalend/i.test(x);
           if (hasCalWriteVerb && /\bdo\s+kalend/i.test(x)) return false;
@@ -37172,7 +37177,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     if (/\bnahod\w*\s+do\s+kalend/i.test(fProbe)) return true;
     if (/\buloz\s+mi\s+to\s+do\s+kalend/.test(fProbe)) return true;
-    if (/\buloz\s+do\s+kalend/.test(fProbe)) return true;
+    if (/\buloz\s+(?:mi\s+)?do\s+kalend/.test(fProbe)) return true;
     if (/\b(?:zapis|zapiš|pridej|přidej|vytvor|vytvoř|naplanuj|naplánuj)\s+mi\s+do\s+kalend/.test(fProbe)) return true;
     if (/\b(?:zapis|zapiš|pridej|přidej|vytvor|vytvoř|naplanuj|naplánuj)\s+do\s+kalend/.test(fProbe)) return true;
     if (/\bdej\s+do\s+kalend/i.test(fProbe)) return true;
@@ -38705,7 +38710,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bsouvisi\s+s\s+kalend/i.test(x);
     if (!calCtx) return false;
     if (
-      /\buloz\w*\s+do\s+kalend/i.test(x) ||
+      /\buloz\w*\s+(?:mi\s+)?do\s+kalend/i.test(x) ||
       /\bdej\s+do\s+kalend/i.test(x) ||
       /\bnahod\w*\s+do\s+kalend/i.test(x) ||
       /\bpridej\s+do\s+kalend/i.test(x) ||
@@ -41282,6 +41287,22 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return null;
   }
 
+  /**
+   * P0 messy_czech_mobile: „ulož mi do kalendáře … ne do úkolů“ + „a ještě mi přidej, že mám …“ — jeden calendar.create;
+   * dual-write clarifikace (oba segmenty write) nesmí předběhnout primární kalendář.
+   */
+  function iuSilverMessyCzechMobileCalendarHeadPlusMiPridejZeTailBypassP0(leftRaw, rightRaw, nowRef) {
+    const left = String(leftRaw || "").trim();
+    const right = String(rightRaw || "").trim();
+    if (left.length < 24 || right.length < 10) return false;
+    const lf = foldCs(left);
+    const rf = foldCs(right);
+    if (!iuSilverHasExplicitCalendarTarget(lf)) return false;
+    if (!/\bmi\s+pridej\s+ze\s+mam\b/.test(rf)) return false;
+    const routeL = iuSilverBrainRoute(left, nowRef, createEmptyDraft());
+    return routeL.kind === "CALENDAR";
+  }
+
   function iuSilverTryMultiIntentP0Turn(raw, now, folded, ctx, empty, prevDraft) {
     const sp = iuSilverMultiIntentSplitOnConnectorP0(raw);
     if (!sp) return null;
@@ -41312,6 +41333,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const writeSplitL = iuSilverMultiIntentLooksLikeWriteSide(sp.left, routeSplitL);
     const writeSplitR = iuSilverMultiIntentLooksLikeWriteSide(right0, routeSplitR);
     if (writeSplitL && writeSplitR) {
+      if (iuSilverMessyCzechMobileCalendarHeadPlusMiPridejZeTailBypassP0(sp.left, right0, now)) {
+        return null;
+      }
       return multiIntentClarTurnP0();
     }
 
