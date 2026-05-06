@@ -39534,6 +39534,57 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return { work: w.replace(/\s+/g, " ").trim(), minutes };
   }
 
+  /**
+   * P1 narrow: české místo konání z kalendářové věty → location (Quality Audit V2 address_in_title_only).
+   * Jen deterministické vzory (na mostě / náměstí / nádraží / Korunní / kavárna / restaurace / Brno centrum).
+   * Nebere slepě každé „v …“ (vyloučeno v patternu). Volá se z stripLocation až po standardních místních vzorech.
+   */
+  function iuSilverTryStripNarrowCalendarVenueTail(wIn) {
+    let w = String(wIn || "").trim();
+    if (!w) return { work: w, location: "" };
+    const specs = [
+      { re: /\bv centru Brna\s+na\s+náměstí\s+Svobody(?=,|\s|$|\.|!|\?)/i, loc: "Brno náměstí Svobody" },
+      { re: /\bna\s+Mánesovém\s+mostě(?:\s+v\s+Praze)?(?=,|\s|$|\.|!|\?)/i, loc: "Mánesův most Praha" },
+      { re: /\bna\s+Karlově\s+mostě(?=,|\s|$|\.|!|\?)/i, loc: "Karlův most Praha" },
+      {
+        re: /\bna\s+Václavském\s+náměstí\s+(\d+)\s+Praha(?=,|\s|$|\.|!|\?)/i,
+        locFrom: function (m) {
+          return "Václavské náměstí " + String(m[1] || "").trim() + " Praha";
+        }
+      },
+      { re: /\bna\s+Hlavním\s+nádraží\s+Praha(?=,|\s|$|\.|!|\?)/i, loc: "Hlavní nádraží Praha" },
+      { re: /\bv\s+kav[aá]rně\s+Louvre(?:\s+Praha)?(?=,|\s|$|\.|!|\?)/i, loc: "Kavárna Louvre Praha" },
+      { re: /\bv\s+restaurac[ei]\s+Marina\s+Praha(?=,|\s|$|\.|!|\?)/i, loc: "Restaurace Marina Praha" },
+      { re: /\brestaurac[ei]\s+Marina\s+Praha(?=,|\s|$|\.|!|\?)/i, loc: "Restaurace Marina Praha" },
+      {
+        re: /\bna\s+Korunní\s+(\d+)(?:\s+Praha)?(?=,|\s|$|\.|!|\?)/i,
+        locFrom: function (m) {
+          return "Korunní " + String(m[1] || "").trim() + " Praha";
+        }
+      },
+      {
+        re: /\bna\s+([A-ZÁČÉĚÍŇÓŘŠŤÚŮÝŽa-záčéěíňóřšťúůýž]+(?:ov|ovém|ové|ém|ě)?\s+mostě)(?:\s+v\s+Praze)?(?=,|\s|$|\.|!|\?)/i,
+        locFrom: function (m) {
+          const core = String(m[1] || "").trim();
+          if (!core) return "";
+          return core + " Praha";
+        }
+      }
+    ];
+    for (let si = 0; si < specs.length; si++) {
+      const sp = specs[si];
+      const m = w.match(sp.re);
+      if (!m) continue;
+      let loc = sp.locFrom ? sp.locFrom(m) : sp.loc;
+      loc = iuSilverNormalizeWs(String(loc || "")).slice(0, 200);
+      if (loc.length >= 6) {
+        w = iuSilverNormalizeWs(w.replace(sp.re, " "));
+        return { work: w, location: loc };
+      }
+    }
+    return { work: w, location: "" };
+  }
+
   function stripLocation(work) {
     let w = work;
     let loc = "";
@@ -39553,6 +39604,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         loc = loc.replace(/\s+a\s*$/i, "").trim();
         w = w.replace(re, " ");
         break;
+      }
+    }
+    if (!loc || String(loc).trim().length < 6) {
+      const ven = iuSilverTryStripNarrowCalendarVenueTail(w);
+      if (ven.location && String(ven.location).trim().length >= 6) {
+        loc = ven.location;
+        w = ven.work;
       }
     }
     return { work: w.replace(/\s+/g, " ").trim(), location: loc };

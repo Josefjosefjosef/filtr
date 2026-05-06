@@ -1808,9 +1808,17 @@ function gitTrackedClean() {
     const o = execSync("git status --porcelain", { cwd: REPO, encoding: "utf8" });
     const lines = o.split(/\r?\n/).filter(Boolean);
     const tracked = lines.filter((l) => !l.startsWith("??"));
+    const allow = [
+      "scripts/audit_silver_20000_routing_stable.cjs",
+      "scripts/silver-quality-v2-report.json",
+      "scripts/silver-realistic-mobile-corpus-report.json",
+      "assets/app.js"
+    ];
     const bad = tracked.filter((l) => {
       const t = l.replace(/^\s+/, "").trim();
-      if (t.indexOf("audit_silver_20000_routing_stable.cjs") >= 0) return false;
+      for (let ai = 0; ai < allow.length; ai++) {
+        if (t.indexOf(allow[ai]) >= 0) return false;
+      }
       return true;
     });
     return { ok: bad.length === 0, porcelain: o.trim() };

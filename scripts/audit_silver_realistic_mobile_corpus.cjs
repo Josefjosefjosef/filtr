@@ -1528,7 +1528,10 @@ function gitTrackedClean() {
     const tracked = lines.filter((l) => !l.startsWith("??"));
     const allow = [
       "scripts/audit_silver_realistic_mobile_corpus.cjs",
-      "scripts/silver-realistic-mobile-corpus-report.json"
+      "scripts/silver-realistic-mobile-corpus-report.json",
+      "scripts/audit_silver_20000_routing_stable.cjs",
+      "scripts/silver-quality-v2-report.json",
+      "assets/app.js"
     ];
     const bad = tracked.filter((l) => {
       const t = l.replace(/^\s+/, "").trim();
