@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-06T08:25:39.879543Z",
+  "ingestedAt": "2026-05-06T09:05:09.434980Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ve Švýcarsku se léčí muž s hantavirem, plavil se na výletní lodi",
+      "url": "https://www.denik.cz/staty-mimo-eu/hantavirus-vyletni-lod-svycarsko.html",
+      "dt": "2026-05-06T08:37:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "hantavirem",
+        "lodi",
+        "léčí",
+        "muž",
+        "plavil",
+        "výletní",
+        "švýcarsku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -626,33 +650,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kde je velryba Timmy? Zřejmě mrtvá, píší odborníci. GPS vysílač přestal fungovat",
-      "url": "https://www.denik.cz/staty-eu/keporkak-velryba-timmy-je-mozna-mrtvy-gps-signal-nefunguje.html",
-      "dt": "2026-05-05T15:09:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "fungovat",
-        "gps",
-        "mrtvá",
-        "odborníci",
-        "píší",
-        "přestal",
-        "timmy",
-        "velryba",
-        "vysílač",
-        "zřejmě"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -663,7 +660,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29904,
+      "bytes": 29600,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -700,7 +697,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-06T08:12:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T08:37:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -715,6 +712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ve Švýcarsku se léčí muž s hantavirem, plavil se na výletní lodi",
+            "publishedAt": "2026-05-06T08:37:00Z"
+          },
           {
             "title": "Mravnost nade vše? V Česku hlásí lidé 10 sexuálních zločinů denně",
             "publishedAt": "2026-05-06T08:12:00Z"
@@ -742,10 +743,6 @@
           {
             "title": "Kluci u ní hledají ženské srdce. Zpěvačka Billie Eilish míří do kin",
             "publishedAt": "2026-05-06T06:30:00Z"
-          },
-          {
-            "title": "Tři malá koťata čekala v krabici na smrt. Záchrana přišla na poslední chvíli",
-            "publishedAt": "2026-05-06T06:10:00Z"
           }
         ]
       }

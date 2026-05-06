@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-05-06T08:25:39.879543Z",
+  "ingestedAt": "2026-05-06T09:05:09.434980Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Sigourney Weaver i v 76 dokazuje, že styl je věčný. Vsadila na nesmrtelnou klasiku",
+      "url": "https://www.prozeny.cz/clanek/zdravi-a-zivotni-styl-zaujalo-nas-sigourney-weaver-i-v-76-dokazuje-ze-styl-je-vecny-vsadila-na-nesmrtelnou-klasiku-103382",
+      "dt": "2026-05-06T08:56:56Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "dokazuje",
+        "klasiku",
+        "nesmrtelnou",
+        "sigourney",
+        "styl",
+        "vsadila",
+        "věčný",
+        "weaver"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -812,33 +837,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Hantavirus: zabíjel na lodi, nakazit se můžete i doma v kůlně. Jaké jsou příznaky a jak se chránit?",
-      "url": "https://www.prozeny.cz/clanek/zdravi-wiki-nemoci-hantavirus-co-to-je-priznaky-lecba-inkubacni-doba-smrt-103335",
-      "dt": "2026-05-04T09:09:26Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "chránit",
-        "doma",
-        "hantavirus",
-        "jaké",
-        "kůlně",
-        "lodi",
-        "můžete",
-        "nakazit",
-        "příznaky",
-        "zabíjel"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -849,7 +847,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 39358,
+      "bytes": 39254,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -886,7 +884,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T08:01:45Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T08:56:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 29,
@@ -902,6 +900,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sigourney Weaver i v 76 dokazuje, že styl je věčný. Vsadila na nesmrtelnou klasiku",
+            "publishedAt": "2026-05-06T08:56:56Z"
+          },
           {
             "title": "Tyhle nápoje sabotují vaši štíhlou postavu! Které škodí a které naopak pomáhají?",
             "publishedAt": "2026-05-06T08:01:45Z"
@@ -928,10 +930,6 @@
           },
           {
             "title": "Kam na výlet s kočárkem? Krásné trasy a nenáročné procházky po Česku. Užijete si údolí, lesy i hory",
-            "publishedAt": "2026-05-06T03:00:00Z"
-          },
-          {
-            "title": "George Clooney slaví 65: Ze starého mládence je oddaný manžel. Co o něm nevíte?",
             "publishedAt": "2026-05-06T03:00:00Z"
           }
         ]

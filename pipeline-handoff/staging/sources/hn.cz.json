@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-06T08:25:39.879543Z",
+  "ingestedAt": "2026-05-06T09:05:09.434980Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Inflace v dubnu meziročně zrychlila, zdražily hlavně energie a neřesti",
+      "url": "https://byznys.hn.cz/c1-67874250-inflace-v-dubnu-mezirocne-zrychlila-zdrazily-hlavne-energie-a-neresti",
+      "dt": "2026-05-06T08:01:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "dubnu",
+        "energie",
+        "hlavně",
+        "inflace",
+        "meziročně",
+        "neřesti",
+        "zdražily",
+        "zrychlila"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -1135,37 +1160,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Ještě pár volebních období. Soudní zpravodaj HN odhaduje pravděpodobnost odsouzení Andreje Babiše v kauze Čapí hnízdo",
-      "url": "https://podcasty.hn.cz/c1-67873510-jeste-par-volebnich-obdobi-soudni-zpravodaj-hn-odhaduje-pravdepodobnost-odsouzeni-andreje-babise-v-kauze-capi-hnizdo",
-      "dt": "2026-05-05T05:31:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "andreje",
-        "babiše",
-        "hnízdo",
-        "ještě",
-        "kauze",
-        "období",
-        "odhaduje",
-        "odsouzení",
-        "pravděpodobnost",
-        "pár",
-        "soudní",
-        "volebních",
-        "zpravodaj",
-        "čapí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1176,7 +1170,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183393,
+      "bytes": 183275,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1213,12 +1207,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-06T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T08:01:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
+          "finance": 33,
           "zdravi": 4,
-          "finance": 32,
-          "zpravy": 4
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1230,6 +1224,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Inflace v dubnu meziročně zrychlila, zdražily hlavně energie a neřesti",
+            "publishedAt": "2026-05-06T08:01:00Z"
+          },
           {
             "title": "Hlína z lesa na rohožce? Nechte ji tam, může ozdravit život v domech ve městě, věří vědci",
             "publishedAt": "2026-05-06T08:00:00Z"
@@ -1257,10 +1255,6 @@
           {
             "title": "USA přerušují ochranu lodí v Hormuzu, podle Trumpa kvůli snaze o dohodu s Íránem. Ten zatím zavedl nová pravidla pro plavbu průlivem",
             "publishedAt": "2026-05-06T04:13:00Z"
-          },
-          {
-            "title": "Co doopravdy změnil Babiš ve srovnání s Fialou a poděkuje jednou Evropa Trumpovi? Vše vysvětluje nová kniha",
-            "publishedAt": "2026-05-06T04:00:00Z"
           }
         ]
       }

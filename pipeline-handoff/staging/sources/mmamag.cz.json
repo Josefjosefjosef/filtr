@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-06T08:25:39.879543Z",
+  "ingestedAt": "2026-05-06T09:05:09.434980Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "MMA babička jde znovu do akce. 49letá bojovnice hlásí návrat do klece Oktagonu",
+      "url": "https://www.mmamag.cz/mma-babicka-jde-znovu-do-akce-opet-zavita-do-klece-oktagonu/",
+      "dt": "2026-05-06T09:00:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "49letá",
+        "akce",
+        "babička",
+        "bojovnice",
+        "hlásí",
+        "jde",
+        "klece",
+        "mma",
+        "návrat",
+        "oktagonu",
+        "znovu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "video",
@@ -1086,37 +1114,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hrozba slepoty a konce kariéry je zažehnána. Nezlomný šampion UFC Aspinall potvrdil návrat a ukázal na další oběť",
-      "url": "https://www.mmamag.cz/nezlomny-sampion-ufc-aspinall-potvrdil-navrat/",
-      "dt": "2026-05-04T10:18:18Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "aspinall",
-        "další",
-        "hrozba",
-        "kariéry",
-        "konce",
-        "nezlomný",
-        "návrat",
-        "oběť",
-        "potvrdil",
-        "slepoty",
-        "ufc",
-        "ukázal",
-        "zažehnána",
-        "šampion"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1127,7 +1124,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 81598,
+      "bytes": 81510,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1164,7 +1161,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-06T08:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T09:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1179,6 +1176,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "MMA babička jde znovu do akce. 49letá bojovnice hlásí návrat do klece Oktagonu",
+            "publishedAt": "2026-05-06T09:00:00Z"
+          },
           {
             "title": "Gustav Frištenský nebojoval jen na žíněnce. Nacisté ho věznili, komunisté obrali",
             "publishedAt": "2026-05-06T08:15:00Z"
@@ -1206,10 +1207,6 @@
           {
             "title": "Češi prorazili bránu UFC. Bojovníci, kteří prošlapali cestu ostatním",
             "publishedAt": "2026-05-05T20:15:00Z"
-          },
-          {
-            "title": "P4P žebříček štve fanoušky. Srovnává bojovníky, kteří se nikdy nepotkají",
-            "publishedAt": "2026-05-05T19:30:00Z"
           }
         ]
       }

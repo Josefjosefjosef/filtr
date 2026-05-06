@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-06T08:25:39.879543Z",
+  "ingestedAt": "2026-05-06T09:05:09.434980Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Třesk v hokejovém Litvínově, končí generální ředitel Hynek i manažer Vrábel",
+      "url": "https://www.idnes.cz/hokej/extraliga/hokej-litvinov-odchod-hynek-a-vrabel.A260506_103542_hokej_pbi",
+      "dt": "2026-05-06T08:54:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "generální",
+        "hokejovém",
+        "hynek",
+        "končí",
+        "litvínově",
+        "manažer",
+        "třesk",
+        "vrábel",
+        "ředitel"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Odstavte ho! Montoya se pustil do Maxe Verstappena. Chce pro něj přísnější trest",
+      "url": "https://www.idnes.cz/sport/trendy/max-verstappen-montoya.A260506_095523_trendy_blah",
+      "dt": "2026-05-06T08:48:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "chce",
+        "maxe",
+        "montoya",
+        "něj",
+        "odstavte",
+        "pustil",
+        "přísnější",
+        "trest",
+        "verstappena"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -738,57 +790,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Obviněný rozhodčí Petřík se přiznal ke korupci, usiluje o dohodu o vině a trestu",
-      "url": "https://www.idnes.cz/fotbal/domaci-souteze/sazkarska-kauza-rozhodci-jan-petrik-priznani-korupce.A260505_140349_fot_dsouteze_ipet",
-      "dt": "2026-05-05T12:12:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dohodu",
-        "korupci",
-        "obviněný",
-        "petřík",
-        "přiznal",
-        "rozhodčí",
-        "trestu",
-        "usiluje",
-        "vině"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Trest na 15 let mu zmírnili, teď Hladíka fotbal prošetřuje za manipulace znovu",
-      "url": "https://www.idnes.cz/fotbal/domaci-souteze/trest-na-15-let-mu-zmirnili-ted-hladika-fotbal-prosetruje-za-manipulace-znovu.A260505_120918_fot_dsouteze_duff",
-      "dt": "2026-05-05T12:08:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "fotbal",
-        "hladíka",
-        "let",
-        "manipulace",
-        "prošetřuje",
-        "trest",
-        "zmírnili",
-        "znovu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46964,
+      "bytes": 46983,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,7 +837,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T08:54:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -851,6 +852,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Třesk v hokejovém Litvínově, končí generální ředitel Hynek i manažer Vrábel",
+            "publishedAt": "2026-05-06T08:54:00Z"
+          },
+          {
+            "title": "Odstavte ho! Montoya se pustil do Maxe Verstappena. Chce pro něj přísnější trest",
+            "publishedAt": "2026-05-06T08:48:00Z"
+          },
           {
             "title": "Nedělá si hlavu, proto je dobrej. Šimek o parťákovi Galvasovi i další absenci na MS",
             "publishedAt": "2026-05-06T08:00:00Z"
@@ -874,14 +883,6 @@
           {
             "title": "I s mladíky se dají zvládnout bitvy! Trenér Jihostroje o extralize i parádě s Italy",
             "publishedAt": "2026-05-06T06:36:00Z"
-          },
-          {
-            "title": "Ústecký šéf: Vyoral nemá formu, ale zapne. Ještě proti Opavě zamícháme karty",
-            "publishedAt": "2026-05-06T05:46:00Z"
-          },
-          {
-            "title": "Nečas dvěma body nasměroval Colorado za druhou výhrou proti Minnesotě",
-            "publishedAt": "2026-05-06T05:41:14Z"
           }
         ]
       }
