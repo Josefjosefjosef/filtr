@@ -1,14 +1,43 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-06T05:45:33.922835Z",
+  "ingestedAt": "2026-05-06T06:25:43.246792Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Ústecký šéf: Vyoral nemá formu, ale zapne. Ještě proti Opavě zamícháme karty",
+      "url": "https://www.idnes.cz/sport/basket/ctvrtfinale-nbl-usti-opava-a-decin-brno.A260506_073204_sport-basket_pbi",
+      "dt": "2026-05-06T05:46:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "ale",
+        "formu",
+        "ještě",
+        "karty",
+        "nemá",
+        "opavě",
+        "proti",
+        "vyoral",
+        "zamícháme",
+        "zapne",
+        "ústecký",
+        "šéf"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
       "title": "Nečas dvěma body nasměroval Colorado za druhou výhrou proti Minnesotě",
       "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-play-off-necas.A260506_071152_nhl_mkr",
-      "dt": "2026-05-06T05:38:11Z",
+      "dt": "2026-05-06T05:41:14Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
@@ -762,33 +791,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Titul už nemáme ve vlastních rukách. City možná o trofej připraví i nevídaná chyba",
-      "url": "https://www.idnes.cz/fotbal/zahranici/premier-league-everton-manchester-city-pep-guardiola-guehi.A260505_105103_fot_zahranici_tals",
-      "dt": "2026-05-05T09:45:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "chyba",
-        "city",
-        "možná",
-        "nemáme",
-        "nevídaná",
-        "připraví",
-        "rukách",
-        "titul",
-        "trofej",
-        "vlastních"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46704,
+      "bytes": 46960,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T05:38:11Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T05:46:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -852,8 +854,12 @@
         },
         "sample_titles": [
           {
+            "title": "Ústecký šéf: Vyoral nemá formu, ale zapne. Ještě proti Opavě zamícháme karty",
+            "publishedAt": "2026-05-06T05:46:00Z"
+          },
+          {
             "title": "Nečas dvěma body nasměroval Colorado za druhou výhrou proti Minnesotě",
-            "publishedAt": "2026-05-06T05:38:11Z"
+            "publishedAt": "2026-05-06T05:41:14Z"
           },
           {
             "title": "Konec kariéry visel na vlásku, připouští Plíšková. Motivaci měla i díky sestře",
@@ -878,10 +884,6 @@
           {
             "title": "Nymburští rozebrali Ostravu třetí stovkou, v semifinále jsou i Pardubice. Brno se drží",
             "publishedAt": "2026-05-05T20:25:31Z"
-          },
-          {
-            "title": "Hokejová reprezentace zamířila na Švédské hry s osmi novými hráči",
-            "publishedAt": "2026-05-05T18:35:00Z"
           }
         ]
       }

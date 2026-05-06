@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-05-06T05:45:33.922835Z",
+  "ingestedAt": "2026-05-06T06:25:43.246792Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Co udělat na zahrádce v květnu: sázejte, stříhejte a těšte se z první úrody",
+      "url": "https://www.prozeny.cz/clanek/bydleni-kvetiny-a-zahrada-zahrada-v-kvetnu-94718",
+      "dt": "2026-05-06T06:00:00Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "květnu",
+        "první",
+        "stříhejte",
+        "sázejte",
+        "těšte",
+        "udělat",
+        "zahrádce",
+        "úrody"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -816,34 +841,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Čas na restart! Dopřejte si tělový peeling: pokožka vám poděkuje, zůstane hebká a zářivá",
-      "url": "https://www.prozeny.cz/clanek/krasa-a-moda-krasna-tvar-cas-na-restart-doprejte-si-telovy-peeling-pokozka-vam-podekuje-zustane-hebka-a-zariva-103305",
-      "dt": "2026-05-04T03:00:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "dopřejte",
-        "hebká",
-        "peeling",
-        "poděkuje",
-        "pokožka",
-        "restart",
-        "tělový",
-        "vám",
-        "zářivá",
-        "zůstane",
-        "čas"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -854,7 +851,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 39469,
+      "bytes": 39318,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -891,7 +888,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T06:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 29,
@@ -907,6 +904,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Co udělat na zahrádce v květnu: sázejte, stříhejte a těšte se z první úrody",
+            "publishedAt": "2026-05-06T06:00:00Z"
+          },
           {
             "title": "Nové parfémy na jaro a léto! Úžasné novinky ve světě vůní: od kokosu po temnou mořskou sůl",
             "publishedAt": "2026-05-06T03:00:00Z"
@@ -933,10 +934,6 @@
           },
           {
             "title": "Sílu extraktů z čerstvých květů znala už královna Kleopatra. Květinové vody umí s pletí zázraky",
-            "publishedAt": "2026-05-06T03:00:00Z"
-          },
-          {
-            "title": "Zdravotní sestra Alice: Po rozchodu se musím postavit na vlastní nohy, ale nevím, kde začít",
             "publishedAt": "2026-05-06T03:00:00Z"
           }
         ]

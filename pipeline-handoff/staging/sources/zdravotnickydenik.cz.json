@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-06T05:45:33.922835Z",
+  "ingestedAt": "2026-05-06T06:25:43.246792Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Pacient v českém systému často bloudí. Šéfka Penta Hospitals popsala, co je potřeba změnit",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/proc-pacient-bloudi-systemem-soukromi-poskytovatele/",
+      "dt": "2026-05-06T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "bloudí",
+        "hospitals",
+        "pacient",
+        "penta",
+        "popsala",
+        "potřeba",
+        "systému",
+        "změnit",
+        "často",
+        "českém",
+        "šéfka"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -237,33 +265,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "V nemocnici se nakazí až každý desátý pacient. Zařízení popisují pravidla pro nemocný personál",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/nakazy-v-nemocnici-opatreni-pro-zdravotniky-i-navstevy/",
-      "dt": "2026-05-05T06:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "desátý",
-        "každý",
-        "nakazí",
-        "nemocnici",
-        "nemocný",
-        "pacient",
-        "personál",
-        "popisují",
-        "pravidla",
-        "zařízení"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,7 +275,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 87941,
+      "bytes": 84010,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -311,7 +312,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-06T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -326,6 +327,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pacient v českém systému často bloudí. Šéfka Penta Hospitals popsala, co je potřeba změnit",
+            "publishedAt": "2026-05-06T06:00:00Z"
+          },
           {
             "title": "Varování pro Česko? Německé nemocnice začnou propouštět, specialisté přijdou o miliony",
             "publishedAt": "2026-05-06T05:00:00Z"
@@ -353,10 +358,6 @@
           {
             "title": "Konec ředitele Holobrady: Příbramská nemocnice reaguje na policejní zásah",
             "publishedAt": "2026-05-05T08:50:44Z"
-          },
-          {
-            "title": "Každé páté klíště je nakažené. Experti varují, že hrozí i méně známé infekce",
-            "publishedAt": "2026-05-05T08:31:08Z"
           }
         ]
       }

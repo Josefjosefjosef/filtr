@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-06T05:45:33.922835Z",
+  "ingestedAt": "2026-05-06T06:25:43.246792Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Koťata čekala v krabici na smrt. Záchrana přišla na poslední chvíli",
+      "url": "https://www.denik.cz/regiony/chebsko-marianske-lazne-hamrniky-kotata-vyhozena-v-krabici-u-popelnic.html",
+      "dt": "2026-05-06T06:10:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "chvíli",
+        "koťata",
+        "krabici",
+        "poslední",
+        "přišla",
+        "smrt",
+        "záchrana",
+        "čekala"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -627,32 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Nízkonákladovým leteckým společnostem hrozí krach. Konec věští i šéf Ryanairu",
-      "url": "https://www.denik.cz/doprava/doprava-evropa-nizkonakladove-letecke-spolecnosti-hrozi-krach-ryanair-wizzair.html",
-      "dt": "2026-05-05T12:09:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "hrozí",
-        "konec",
-        "krach",
-        "leteckým",
-        "nízkonákladovým",
-        "ryanairu",
-        "společnostem",
-        "věští",
-        "šéf"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -663,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30682,
+      "bytes": 30362,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -700,7 +699,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-06T05:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T06:10:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -716,6 +715,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Koťata čekala v krabici na smrt. Záchrana přišla na poslední chvíli",
+            "publishedAt": "2026-05-06T06:10:00Z"
+          },
           {
             "title": "Extrémní proměny: Karolina se přejídala už na škole, dospělo to do váhy 125 kg",
             "publishedAt": "2026-05-06T05:30:00Z"
@@ -743,10 +746,6 @@
           {
             "title": "Prelátská zahrada v Olomouci: Barokní oáza klidu u Klášterního Hradiska",
             "publishedAt": "2026-05-06T02:15:00Z"
-          },
-          {
-            "title": "Maturity se příští rok změní. Část budou moct dělat studenti ve skupinách",
-            "publishedAt": "2026-05-06T02:00:00Z"
           }
         ]
       }

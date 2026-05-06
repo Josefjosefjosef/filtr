@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-06T05:45:33.922835Z",
+  "ingestedAt": "2026-05-06T06:25:43.246792Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Karolina Kyselová vede marketing OMV v Česku",
+      "url": "https://profitonline.cz/karolina-kyselova-vede-marketing-omv-v-cesku/",
+      "dt": "2026-05-06T06:00:59Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "karolina",
+        "kyselová",
+        "marketing",
+        "omv",
+        "vede",
+        "česku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -263,30 +286,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Česká ekonomika klopýtla, Írán za to ale zatím nemůže",
-      "url": "https://profitonline.cz/ceska-ekonomika-klopytla-iran-za-to-ale-zatim-nemuze/",
-      "dt": "2026-05-04T09:10:02Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "ale",
-        "ekonomika",
-        "klopýtla",
-        "nemůže",
-        "zatím",
-        "írán",
-        "česká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -297,7 +296,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18889,
+      "bytes": 18819,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -334,7 +333,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-06T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T06:00:59Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -350,6 +349,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Karolina Kyselová vede marketing OMV v Česku",
+            "publishedAt": "2026-05-06T06:00:59Z"
+          },
           {
             "title": "Dočkáme se po vládním zmocněnci pro NATO i zmocněnce pro kulturu?",
             "publishedAt": "2026-05-06T04:00:00Z"
@@ -377,10 +380,6 @@
           {
             "title": "Martin Vránek novým generálním ředitelem Rema Systém",
             "publishedAt": "2026-05-05T06:00:21Z"
-          },
-          {
-            "title": "Dolar na úvod týdne silnější",
-            "publishedAt": "2026-05-05T05:00:26Z"
           }
         ]
       }

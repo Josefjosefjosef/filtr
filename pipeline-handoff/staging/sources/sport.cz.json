@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-06T05:45:33.922835Z",
+  "ingestedAt": "2026-05-06T06:25:43.246792Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Čeští sudí mají vysokou kvalitu, tvrdí jejich nový šéf. Vysvětlil vazbu na kontroverzní osobu",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-cesti-sudi-maji-vysokou-kvalitu-tvrdi-jejich-novy-sef-vysvetlil-vazbu-na-kontroverzni-osobu-5448688",
+      "dt": "2026-05-06T06:19:20Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "jejich",
+        "kontroverzní",
+        "kvalitu",
+        "mají",
+        "nový",
+        "osobu",
+        "sudí",
+        "tvrdí",
+        "vazbu",
+        "vysokou",
+        "vysvětlil",
+        "čeští",
+        "šéf"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -736,34 +766,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Mandát krotil oslavy, pozvánka ho nadchla: Po tom, co jsem provedl, už bych šanci nečekal",
-      "url": "https://www.sport.cz/clanek/hokej-reprezentace-mandat-krotil-oslavy-pozvanka-ho-nadchla-po-tom-co-jsem-provedl-uz-jsem-sanci-necekal-5448585",
-      "dt": "2026-05-05T13:13:37Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bych",
-        "jsem",
-        "krotil",
-        "mandát",
-        "nadchla",
-        "nečekal",
-        "oslavy",
-        "pozvánka",
-        "provedl",
-        "tom",
-        "šanci"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -774,7 +776,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42131,
+      "bytes": 41688,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -811,7 +813,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T05:01:57Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T06:19:20Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -826,6 +828,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Čeští sudí mají vysokou kvalitu, tvrdí jejich nový šéf. Vysvětlil vazbu na kontroverzní osobu",
+            "publishedAt": "2026-05-06T06:19:20Z"
+          },
           {
             "title": "Český biatlonista mění sport! Parta mi bude chybět, ale už jsem neměl tolik radosti, říká",
             "publishedAt": "2026-05-06T05:01:57Z"
@@ -853,10 +859,6 @@
           {
             "title": "Arsenal je prvním finalistou Ligy mistrů",
             "publishedAt": "2026-05-05T09:54:51Z"
-          },
-          {
-            "title": "Útočník Kryštof Hrabík podepsal novou smlouvu ve Spartě",
-            "publishedAt": "2026-05-05T19:17:23Z"
           }
         ]
       }
