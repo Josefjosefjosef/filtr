@@ -1950,9 +1950,15 @@ function main() {
       catCount[cat]++;
       const block = failDetail(c, turn, ev);
       lines.push(block);
-      fails.push({ sev: severity(ev), block, cat, input: c.input });
+      fails.push({ sev: severity(ev), block, cat, input: c.input, group: c.group });
       if (!firstFail) firstFail = c.id + "|" + cat + "|" + escapeField(c.input.slice(0, 160));
     }
+  }
+
+  let noteWriteUnnecessaryDisambiguationFails = 0;
+  for (let iU = 0; iU < fails.length; iU++) {
+    const fu = fails[iU];
+    if (fu.group === "note_write" && fu.cat === "unnecessary_disambiguation") noteWriteUnnecessaryDisambiguationFails++;
   }
 
   /** P0: explicitní kotvy — mixed neg „ne v kalendáři“ + ohledně (calendar_query_03681); storage neg (03104); exclude (03126). */
@@ -2255,6 +2261,7 @@ function main() {
     "note_write=" + (byG.note_write ? byG.note_write.pass : 0) + "/3000",
     "note_query=" + (byG.note_query ? byG.note_query.pass : 0) + "/3000",
     "multi_intent=" + (byG.multi_intent ? byG.multi_intent.pass : 0) + "/2000",
+    "note_write_unnecessary_disambiguation_fail_count=" + noteWriteUnnecessaryDisambiguationFails,
     "repo_status=see_git_porcelain",
     "old_temp_79_63_comparable=NO",
     "new_stable_baseline_created=PASS",
