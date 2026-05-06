@@ -2,7 +2,7 @@
   "harness_id": "audit_silver_realistic_mobile_corpus_v1",
   "fixed_now": "2026-05-04T12:00:00",
   "total_cases": 10000,
-  "overall_accuracy_realistic": "98.74",
+  "overall_accuracy_realistic": "99.04",
   "accuracy_by_cluster": {
     "calendar_write_basic:schuzka": "96.25",
     "calendar_write_basic:zubar": "96.25",
@@ -24,7 +24,7 @@
     "task_query": "100.00",
     "calendar_query": "100.00",
     "multi_intent_calendar_note": "100.00",
-    "negation_safety:calendar_read": "80.00",
+    "negation_safety:calendar_read": "100.00",
     "negation_safety:task_read": "80.00",
     "negation_safety:note_read": "100.00",
     "messy_czech_mobile": "100.00"
@@ -50,13 +50,12 @@
     "task_query": 0,
     "calendar_query": 0,
     "multi_intent_calendar_note": 0,
-    "negation_safety:calendar_read": 30,
+    "negation_safety:calendar_read": 0,
     "negation_safety:task_read": 30,
     "negation_safety:note_read": 0,
     "messy_czech_mobile": 0
   },
   "top_20_fail_clusters": [
-    "negation_safety:calendar_read||false_negative=30",
     "negation_safety:task_read||calendar_vs_task_confusion=30",
     "calendar_write_basic:lekar||intent_fail=8",
     "calendar_write_basic:navsteva||intent_fail=8",
@@ -70,12 +69,6 @@
     "calendar_write_basic:zubar||intent_fail=6"
   ],
   "top_50_failed_examples": [
-    {
-      "id": "rmb_08757",
-      "cluster": "negation_safety:calendar_read",
-      "category": "false_negative",
-      "input": "Nic neukládej, jen zjisti kdy mám zubaře."
-    },
     {
       "id": "rmb_00022",
       "cluster": "calendar_write_basic:schuzka",
@@ -369,6 +362,12 @@
       "cluster": "calendar_write_basic:restaurace",
       "category": "intent_fail",
       "input": "Chci mit zapsané v kalendari dneska v 14:30 obed v restauraci s zubar, ne do úkolů."
+    },
+    {
+      "id": "rmb_01212",
+      "cluster": "calendar_write_basic:restaurace",
+      "category": "intent_fail",
+      "input": "Chci mít zapsané v kalendáři ve ctvrtek v odpoledne rezervaci v restauraci s Petr, ne do poznámek."
     }
   ],
   "false_write_count": 0,
@@ -377,13 +376,13 @@
   "unknown_when_uncertain_count": 0,
   "write_when_negated_count": 0,
   "calendar_write_accuracy": "98.00",
-  "calendar_query_accuracy": "97.93",
+  "calendar_query_accuracy": "100.00",
   "task_write_accuracy": "100.00",
   "task_query_accuracy": "96.84",
   "note_write_accuracy": "100.00",
   "note_query_accuracy": "100.00",
   "multi_intent_accuracy": "100.00",
-  "negation_safety_accuracy": "86.67",
+  "negation_safety_accuracy": "93.33",
   "messy_czech_mobile_accuracy": "100.00",
   "note_write_basic_unnecessary_disambiguation_fail_count": 0,
   "note_write_basic_unnecessary_disambiguation_reduced": "YES",
@@ -391,8 +390,8 @@
   "calendar_query_intent_fail_count": 0,
   "calendar_query_intent_fail_reduced": "YES",
   "explicit_separate_note_exception_passed": "YES",
-  "recommended_next_fix_cluster": "negation_safety:calendar_read",
-  "recommended_next_fix_reason": "Highest fail mass in «negation_safety:calendar_read» dominated by «false_negative»; safest follow-up is a narrow Silver routing/read-guard change scoped to this Czech mobile phrasing family (no UI).",
+  "recommended_next_fix_cluster": "negation_safety:task_read",
+  "recommended_next_fix_reason": "Highest fail mass in «negation_safety:task_read» dominated by «calendar_vs_task_confusion»; safest follow-up is a narrow Silver routing/read-guard change scoped to this Czech mobile phrasing family (no UI).",
   "baseline_20k": {
     "overall_accuracy": "94.07",
     "calendar_write": "3000/3000",
@@ -409,6 +408,6 @@
     "title_clean": "9496 / 10000",
     "date_parsed": "10000 / 10000",
     "time_parsed": "10000 / 10000",
-    "entity_detected": "7759 / 10000"
+    "entity_detected": "7789 / 10000"
   }
 }

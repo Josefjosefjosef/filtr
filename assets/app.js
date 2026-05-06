@@ -37600,14 +37600,23 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     const coMam = /\bco\s+m(am|ame)\b/.test(f) || /\bco\s+tam\s+m(am|ame)\b/.test(f);
     const fUse = foldCs(rUse);
+    /**
+     * P0: „Nic neukládej, jen zjisti kdy mám zubaře.“ → po lead-strip zůstane „jen zjisti kdy mám …“;
+     * kdy-mám regexy jsou kotvené na začátek řetězce — bez probe spadne read na holý agenda_for_day (false negative).
+     */
+    const rKdyProbe = String(rUse || "")
+      .replace(/^\s*(?:jen|pouze)\s+zjist(?:i|it|í)\b\s*/i, "")
+      .replace(/^\s*zkus\s+zjist(?:i|it|í)\b\s*/i, "")
+      .trim();
+    const fKdyProbe = foldCs(rKdyProbe);
     const kdyMam =
-      /^\s*kdy\s+(?:přesně|presne)\s+m[aá]m\s+/i.test(rUse) ||
-      /^\s*kdy\s+(?:presne)\s+mam\s+/i.test(fUse) ||
-      /^\s*kdy\s+m[aá]m\s+/i.test(rUse) ||
-      /^\s*kdy\s+mam\s+/i.test(fUse);
+      /^\s*kdy\s+(?:přesně|presne)\s+m[aá]m\s+/i.test(rKdyProbe) ||
+      /^\s*kdy\s+(?:presne)\s+mam\s+/i.test(fKdyProbe) ||
+      /^\s*kdy\s+m[aá]m\s+/i.test(rKdyProbe) ||
+      /^\s*kdy\s+mam\s+/i.test(fKdyProbe);
     const kolik = /\bkolik\s+m[aá]m\b/.test(f);
 
-    const mKdyKolikWeek = String(rUse || "").match(/^\s*kdy\s+m[aá]m\s+(.+?)\s+a\s+kolik\s+toho\s+m[aá]m\b/i);
+    const mKdyKolikWeek = String(rKdyProbe || "").match(/^\s*kdy\s+m[aá]m\s+(.+?)\s+a\s+kolik\s+toho\s+m[aá]m\b/i);
     if (mKdyKolikWeek && iuSilverThisCalendarWeekScopeFolded(f)) {
       const fragK = String(mKdyKolikWeek[1] || "").trim();
       const canK = iuSilverCanonicalCalendarEntityTitleFromPersonFragment(fragK);
@@ -37632,7 +37641,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     }
 
-    const mKdyWeekSimple = String(rUse || "").match(
+    const mKdyWeekSimple = String(rKdyProbe || "").match(
       /^\s*kdy\s+m[aá]m\s+(.+?)\s+(?:tento|tenhle|tomuto|aktu[aá]ln[ií])\s+t[yý]den\b/i
     );
     if (mKdyWeekSimple && !mKdyKolikWeek) {
@@ -37837,7 +37846,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
 
     if (kdyMam) {
-      const rest = rUse
+      const rest = rKdyProbe
         .replace(/^\s*kdy\s+(?:přesně|presne)\s+m[aá]m\s+/i, "")
         .replace(/^\s*kdy\s+m[aá]m\s+/i, "")
         .replace(/\s*[?.!]+\s*$/g, "")
