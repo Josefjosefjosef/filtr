@@ -35345,8 +35345,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\b(?:zapis|uloz)\s+do\s+pozn/.test(f)) return true;
     if (/\buloz\s+si\b/.test(f)) return true;
     if (/\buloz\s+poznamku\b/.test(f)) return true;
-    if (/\bzapis\s+si\b/.test(f)) return true;
-    if (/\bzapis\s+poznamku\b/.test(f)) return true;
+    if (/\b(?:zapis|napis)\s+si\b/.test(f)) return true;
+    if (/\b(?:zapis|napis)\s+poznamku\b/.test(f)) return true;
+    if (/\bnapis\s+si\s+do\s+poznam/.test(f)) return true;
     if (/\bpoznamenej\s+si\b/.test(f)) return true;
     if (/\bpoznamka\s*:/.test(f) || /\bpoznamky\s*:/.test(f)) return true;
     if (/\bvytvor\w*\s+poznamku\b/.test(f)) return true;
@@ -36457,6 +36458,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\buloz\w*\s+do\s+poznam\w*\b/i,
       /\bpoznamenej\b/i,
       /\bzapis\w*\s+do\s+poznam\w*\b/i,
+      /\bnapis\w*\s+si\s+do\s+poznam\w*\b/i,
       /\bnapis\w*\s+poznam\w*\b/i
     ];
     let best = -1;
@@ -37044,7 +37046,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const b0 = iuSilverNoteCreateFinalizeBody(s.replace(/^add\s+note\s+/i, "").trim());
       if (b0) return { kind: "body", body: b0 };
     }
-    const zapisMiPozn = s.match(/^zapi[sš]\s+(?:mi\s+|si\s+)?pozn[aá]mku\b\s*[.:]?\s*/i);
+    /** P1 note_write_basic: „napiš si poznámku do poznámek že …“ — redundantní cíl nesmí nechat „do poznámek“ v těle (WRITE_SCHED_PROBE → storage disambiguation). */
+    const zapisMiPozn = s.match(
+      /^[zn]api[sš]\s+(?:mi\s+|si\s+)?pozn[aá]mku(?:\s+do\s+pozn[aá]m(?:ek|ky|ce))?\b\s*[.:]?\s*/i
+    );
     if (zapisMiPozn) {
       let restZp = s.slice(zapisMiPozn[0].length).trim();
       restZp = restZp.replace(/^(že|ze)\b/i, "").trim();
@@ -37079,6 +37084,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (b0) return { kind: "body", body: b0 };
     }
     const patterns = [
+      /^[zn]api[sš]\s+si\s+do\s+pozn[aá]m(?:ek|ky|ce)\b/i,
+      /^[zn]api[sš]\s+si\s+že\b/i,
       /^pozn[aá]mk[ay]\s*:/i,
       /^ul[oó][zž](?:te)?\s+si\b/i,
       /^ul[oó][zž](?:te)?\s+pozn[aá]mku\b/i,
@@ -37093,14 +37100,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /^hod\s+do\s+pozn[aá]m(?:ek|ky|ce)\b/i,
       /^p[rř]idej\s+mi\s+do\s+pozn[aá]m(?:ek|ky|ce)\b/i,
       /^p[rř]idej\s+do\s+pozn[aá]m(?:ek|ky|ce)\b/i,
-      /^zapi[sš]\s+do\s+pozn[aá]m(?:ek|ky|ce)\b/i,
       /^poznamenej\s+si\b/i,
       /^poznamenej\s+do\s+pozn[aá]m(?:ek|ky|ce)\b/i,
-      /^[zn]api[sš]\s+do\s+pozn[aá]mek\b/i,
+      /^[zn]api[sš]\s+do\s+pozn[aá]m(?:ek|ky|ce)\b/i,
       /^ul[oó][zž](?:te)?\s+do\s+pozn[aá]mek\b/i,
       /^dej\s+do\s+pozn[aá]mek\b/i,
       /^vlož(?:te)?\s+mi\s+to\s+do\s+pozn[aá]m(?:ek|ky|ce)\b/i,
-      /^zapi[sš]\s+pozn[aá]mku\b/i,
+      /^[zn]api[sš]\s+pozn[aá]mku\b/i,
       /^vytvořit\s+pozn[aá]mku\b/i,
       /^vytvoř\s+pozn[aá]mku\b/i,
       /^vytvor\s+pozn[aá]mku\b/i

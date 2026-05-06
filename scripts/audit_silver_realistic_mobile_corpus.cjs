@@ -1673,6 +1673,36 @@ function main() {
     }
   }
 
+  let noteWriteBasicUnnecessaryDisambiguationFails = 0;
+  for (let iNwb = 0; iNwb < fails.length; iNwb++) {
+    const fnb = fails[iNwb];
+    if (fnb.cluster === "note_write_basic" && fnb.cat === "unnecessary_disambiguation") {
+      noteWriteBasicUnnecessaryDisambiguationFails++;
+    }
+  }
+
+  let embeddedEventNoteTailStandaloneNoteCreateCount = 0;
+  const embeddedTailStandaloneProbes = [
+    "Ulož mi schůzku s Jakubem zítra v 15:00 a do poznámky mi dej abych si vzal deštník",
+    "Dej do kalendáře schůzku s Jirkou v pátek ve 3 a do poznámky napiš vzít dokumenty",
+    "Zítra zubař v 10 na Korunní 44 Praha a do poznámky přidej kartičku pojišťovny"
+  ];
+  for (let iEmb = 0; iEmb < embeddedTailStandaloneProbes.length; iEmb++) {
+    try {
+      if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
+    } catch (eEmbC) {
+      void eEmbC;
+    }
+    const trEmb = eng.processUserTurn(embeddedTailStandaloneProbes[iEmb], eng.createEmptyDraft(), ctxEmpty());
+    if (
+      trEmb.normalizedIntent === "notes.create" &&
+      String(trEmb.processingState || "") === "READY_TO_SAVE" &&
+      !trEmb.silverCompanionNoteTurn
+    ) {
+      embeddedEventNoteTailStandaloneNoteCreateCount++;
+    }
+  }
+
   /** P0 real mobile command audit v1 — produkční věty (Silver routing / kalendář / úkol / dual-write). */
   function auditRmPass(name, ok) {
     console.log("real_mobile_case=" + escapeField(name) + "=" + (ok ? "PASS" : "FAIL"));
@@ -1865,6 +1895,44 @@ function main() {
 
   try {
     if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
+  } catch (eRmSn) {
+    void eRmSn;
+  }
+  const rmSilNotes = eng.processUserTurn(
+    "Silvere jen se podívej do poznámek, nic neukládej",
+    eng.createEmptyDraft(),
+    ctxEmpty()
+  );
+  rmAll =
+    auditRmPass(
+      "p1_neg_silvere_notes_readonly_no_write",
+      !(rmSilNotes.normalizedIntent === "notes.create" && rmSilNotes.processingState === "READY_TO_SAVE") &&
+        !(rmSilNotes.normalizedIntent === "tasks.create" && rmSilNotes.processingState === "READY_TO_SAVE") &&
+        !(rmSilNotes.normalizedIntent === "calendar.create" && rmSilNotes.processingState === "READY_TO_SAVE")
+    ) && rmAll;
+
+  const p1NoteWriteBasicSpot = [
+    ["p1_note_basic_zapis_pin", "Zapiš poznámku PIN ke kartě je 1234"],
+    ["p1_note_basic_uloz_auto", "Ulož poznámku že auto má modrou barvu"],
+    ["p1_note_basic_napis_si_do", "Napiš si do poznámek heslo k Wi-Fi je ABCD"],
+    ["p1_note_basic_poznamenej", "Poznamenej si faktura za elektřinu zaplacena"],
+    ["p1_note_basic_uloz_do", "Ulož do poznámek že záruka na televizi končí v lednu"]
+  ];
+  for (let iPs = 0; iPs < p1NoteWriteBasicSpot.length; iPs++) {
+    try {
+      if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
+    } catch (ePs) {
+      void ePs;
+    }
+    const tPs = eng.processUserTurn(p1NoteWriteBasicSpot[iPs][1], eng.createEmptyDraft(), ctxEmpty());
+    const okPs =
+      engineToAuditIntent(tPs.normalizedIntent, "note_write") === "note.create" &&
+      tPs.processingState === "READY_TO_SAVE";
+    rmAll = auditRmPass(p1NoteWriteBasicSpot[iPs][0], okPs) && rmAll;
+  }
+
+  try {
+    if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
   } catch (eRm5) {
     void eRm5;
   }
@@ -2021,7 +2089,7 @@ function main() {
 
   const dangerousWriteCount = dangerousCaseIds.size;
   const queryCreatedWriteRealistic = catCount.query_created_write || 0;
-  const mainCommitBefore = "4923b08bb5f63be5af60ecdb245d4b85c1d807eb";
+  const mainCommitBefore = "d3ae1f8dc99bdc0745ea80737d58db07d47fa47c";
   const mergedNo = "NO";
   const smokeFlag = process.env.SILVER_REALISTIC_AUDIT_SMOKE || "SKIPPED";
   const prodProofFlag = process.env.SILVER_REALISTIC_AUDIT_PROD || "SKIPPED";
@@ -2031,6 +2099,11 @@ function main() {
   const zeroRegFlag = process.env.SILVER_REALISTIC_AUDIT_ZERO_REG || "SKIPPED";
   const gitClean = git.ok ? "YES" : "NO";
   const readyMerge = gitClean === "YES" && rmAll ? "YES" : "NO";
+
+  const explicitSeparateNoteExceptionPassed =
+    rmSep.normalizedIntent === "calendar.create" &&
+    !!rmSep.silverCompanionNoteTurn &&
+    sepNote.indexOf("kytk") >= 0;
 
   const reportObj = {
     harness_id: STABLE_HARNESS_ID,
@@ -2055,6 +2128,11 @@ function main() {
     multi_intent_accuracy: accForGroup("multi_intent"),
     negation_safety_accuracy: accClusterPrefix("negation_safety"),
     messy_czech_mobile_accuracy: accuracyByCluster.messy_czech_mobile || "0.00",
+    note_write_basic_unnecessary_disambiguation_fail_count: noteWriteBasicUnnecessaryDisambiguationFails,
+    note_write_basic_unnecessary_disambiguation_reduced:
+      noteWriteBasicUnnecessaryDisambiguationFails === 0 ? "YES" : "NO",
+    embedded_event_note_tail_standalone_note_create_count: embeddedEventNoteTailStandaloneNoteCreateCount,
+    explicit_separate_note_exception_passed: explicitSeparateNoteExceptionPassed ? "YES" : "NO",
     recommended_next_fix_cluster: recommendedNextFixCluster,
     recommended_next_fix_reason: recommendedNextFixReason,
     baseline_20k: baseline20k,
@@ -2075,7 +2153,7 @@ function main() {
     "merged=" + mergedNo,
     "main_commit_before=" + escapeField(mainCommitBefore),
     "audit_only=YES",
-    "engine_changed=NO",
+    "engine_changed=YES",
     "total_cases=" + totalCases,
     "overall_accuracy_realistic=" + accReal + "%",
     "calendar_write_accuracy=" + accForGroup("calendar_write") + "%",
@@ -2113,6 +2191,10 @@ function main() {
     "zero_regression=" + zeroRegFlag,
     "git_status_clean=" + gitClean,
     "ready_for_merge=" + readyMerge,
+    "note_write_basic_unnecessary_disambiguation_fail_count=" + noteWriteBasicUnnecessaryDisambiguationFails,
+    "note_write_basic_unnecessary_disambiguation_reduced=" + (noteWriteBasicUnnecessaryDisambiguationFails === 0 ? "YES" : "NO"),
+    "embedded_event_note_tail_standalone_note_create_count=" + embeddedEventNoteTailStandaloneNoteCreateCount,
+    "explicit_separate_note_exception_passed=" + (explicitSeparateNoteExceptionPassed ? "YES" : "NO"),
     "next_recommended_scope=P0 FIX TOP REALISTIC MOBILE CORPUS CLUSTER — based only on recommended_next_fix_cluster after this audit PR is merged",
     "=== END_SILVER_REALISTIC_MOBILE_CORPUS_AUDIT_V1_RESULT ==="
   ].join("\n");
