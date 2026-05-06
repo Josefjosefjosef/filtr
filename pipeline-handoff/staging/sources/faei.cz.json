@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-06T03:49:43.370991Z",
+  "ingestedAt": "2026-05-06T04:29:49.459838Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Dočkáme se po vládním zmocněnci pro NATO i zmocněnce pro kulturu?",
+      "url": "https://profitonline.cz/dockame-se-po-vladnim-zmocnenci-pro-nato-i-zmocnence-pro-kulturu/",
+      "dt": "2026-05-06T04:00:00Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dočkáme",
+        "kulturu",
+        "nato",
+        "vládním",
+        "zmocněnce",
+        "zmocněnci"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -264,31 +287,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Čeští investoři sázejí na technologie a krypto, ale s otazníkem nad budoucností",
-      "url": "https://profitonline.cz/cesti-investori-sazeji-na-technologie-a-krypto-ale-s-otaznikem-nad-budoucnosti/",
-      "dt": "2026-05-04T08:00:39Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "ale",
-        "budoucností",
-        "investoři",
-        "krypto",
-        "otazníkem",
-        "sázejí",
-        "technologie",
-        "čeští"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -299,7 +297,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19082,
+      "bytes": 18889,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -336,7 +334,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-05T17:30:08Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T04:00:00Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -352,6 +350,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dočkáme se po vládním zmocněnci pro NATO i zmocněnce pro kulturu?",
+            "publishedAt": "2026-05-06T04:00:00Z"
+          },
           {
             "title": "Konec zlaté rally? Zlato ztratilo už osmnáct procent",
             "publishedAt": "2026-05-05T17:30:08Z"
@@ -379,10 +381,6 @@
           {
             "title": "Dolar na úvod týdne silnější",
             "publishedAt": "2026-05-05T05:00:26Z"
-          },
-          {
-            "title": "Podnikatelé prosazují byrokratický detox. EU chrlí sedm nových předpisů za den",
-            "publishedAt": "2026-05-05T04:00:56Z"
           }
         ]
       }

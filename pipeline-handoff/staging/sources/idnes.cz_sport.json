@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-06T03:49:43.370991Z",
+  "ingestedAt": "2026-05-06T04:29:49.459838Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Dvakrát přemohl rakovinu a zase trénoval. Italský hrdina ale ucítil: Je čas říct dost",
+      "url": "https://www.idnes.cz/sport/basket/achille-polonara-konec-kariery-rakovina-leukemie-italie.A260505_135146_sport-basket_czo",
+      "dt": "2026-05-06T04:01:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "ale",
+        "dost",
+        "dvakrát",
+        "hrdina",
+        "italský",
+        "přemohl",
+        "rakovinu",
+        "trénoval",
+        "ucítil",
+        "zase",
+        "čas",
+        "říct"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -758,32 +787,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sportovní hvězdy zazářily na Met Gala. Kdo dorazil oblečený jen v bublinkách?",
-      "url": "https://www.idnes.cz/sport/trendy/met-gala-sportovci-modely-alysa-liuova-lindsey-vonnova.A260505_094845_trendy_blah/foto",
-      "dt": "2026-05-05T08:50:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bublinkách",
-        "dorazil",
-        "gala",
-        "hvězdy",
-        "jen",
-        "met",
-        "oblečený",
-        "sportovní",
-        "zazářily"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47423,
+      "bytes": 47342,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +834,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T04:01:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -846,6 +849,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dvakrát přemohl rakovinu a zase trénoval. Italský hrdina ale ucítil: Je čas říct dost",
+            "publishedAt": "2026-05-06T04:01:00Z"
+          },
           {
             "title": "Mužský biatlon má potenciál. Šlesingr se těší zpátky na vzduch. Co vyhlíží za výzvy?",
             "publishedAt": "2026-05-05T22:00:00Z"
@@ -873,10 +880,6 @@
           {
             "title": "Vypukne v tenise válka? Hvězdám nestačí 68 milionů, hrozí bojkotem grandslamů",
             "publishedAt": "2026-05-05T17:26:00Z"
-          },
-          {
-            "title": "Jsem jako trenér sedmnáctého týmu ligy, říká nový šéf českých rozhodčích",
-            "publishedAt": "2026-05-05T16:44:00Z"
           }
         ]
       }

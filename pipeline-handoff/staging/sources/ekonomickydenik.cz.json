@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-06T03:49:43.370991Z",
+  "ingestedAt": "2026-05-06T04:29:49.459838Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Do důchodu s generálskou frčkou? BIS navrhla povýšení pro estébáka",
+      "url": "https://ekonomickydenik.cz/estebak-komunista-generalem-navrhla-bis/",
+      "dt": "2026-05-06T04:05:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bis",
+        "důchodu",
+        "estébáka",
+        "frčkou",
+        "generálskou",
+        "navrhla",
+        "povýšení"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -765,30 +789,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Benzin výrazně zdraží. Nové opatření zavedlo i  Německo",
-      "url": "https://ekonomickydenik.cz/benzin-vyrazne-zdrazi-opatreni-nemecko/",
-      "dt": "2026-05-04T13:27:26Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "benzin",
-        "nové",
-        "německo",
-        "opatření",
-        "výrazně",
-        "zavedlo",
-        "zdraží"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +799,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74292,
+      "bytes": 75174,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,11 +836,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T18:01:09Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T04:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 2,
           "finance": 26,
+          "zpravy": 2,
           "sport": 1,
           "zdravi": 1
         },
@@ -854,6 +854,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Do důchodu s generálskou frčkou? BIS navrhla povýšení pro estébáka",
+            "publishedAt": "2026-05-06T04:05:00Z"
+          },
           {
             "title": "Patří politici do obecních bytů? Piráti chtějí kvůli kauze Mrázová nová pravidla",
             "publishedAt": "2026-05-05T18:01:09Z"
@@ -881,10 +885,6 @@
           {
             "title": "Turek dostal poslední varování. Hnutí Duha žádá omluvu",
             "publishedAt": "2026-05-05T12:56:45Z"
-          },
-          {
-            "title": "Vnitro přiznalo, proč musí stopnout klíčové informační systémy. Aby ochránilo data občanů",
-            "publishedAt": "2026-05-05T12:50:38Z"
           }
         ]
       }
