@@ -37238,6 +37238,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     )
       return null;
     if (iuSilverNoteQueryWithCalendarContextSignalFolded(f)) return null;
+    /** P0 realistic mobile note_query: „co jsem si psal o …“ nesmí spadnout na calendar.read (co mám / kdy mám větve). */
+    if (iuSilverNoteArchiveQueryCueFolded(f)) return null;
     if (iuSilverCalendarReadSuppressedForWriteIntent(f)) return null;
     if (
       /^\s*jen\s+zjist/i.test(r) &&
@@ -38679,6 +38681,22 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P0 realistic mobile corpus: úzký signál dotazu na uložený text v poznámkách (psaní / faktura / pojistka …),
+   * bez rozšíření obecného semantic search — jen routing před calendar.read.
+   */
+  function iuSilverNoteArchiveQueryCueFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (/\bco\s+jsem\s+si\s+psal\w*\b/.test(x)) return true;
+    if (/\bco\s+jsem\s+si\s+zapsal\w*\b/.test(x)) return true;
+    if (/\bco\s+mam\s+(zapsane|psane)\s+o\s+\w/.test(x)) return true;
+    if (/\bnajdi\s+mi\s+poznam\w*\s+(k|ke)\s+/.test(x)) return true;
+    if (/\bco\s+mam\s+ulozene\s+o\s+\w/.test(x)) return true;
+    if (/\bco\s+jsem\s+si\s+poznamenal\s+o\s+\w/.test(x)) return true;
+    return false;
+  }
+
+  /**
    * P0: fact/read questions about stored notes (PIN, keys, …) → notes.read / global.search,
    * not storage disambiguation / unknown / note.create.
    */
@@ -38691,7 +38709,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bco\s+mam\s+poznamenane\s+o\s+\w/.test(x)) return true;
     if (/\bco\s+jsem\s+si\s+ulozil\b/.test(x) && /\b(ke|k)\s+\w/.test(x)) return true;
     const noteThing =
-      /\b(pin|heslo|hesla|klic\w*|obcank\w*|smlouv\w*|aut\w*|barv\w*|objednav\w*|poznam\w*|wifi|doklad|kart\w*)\b/.test(x) ||
+      /\b(pin|heslo|hesla|klic\w*|obcank\w*|smlouv\w*|aut\w*|barv\w*|objednav\w*|poznam\w*|wifi|doklad|kart\w*|faktur\w*|lednic\w*|prack\w*|pojist\w*|zaruk\w*)\b/.test(x) ||
       /\bulozen\w*\s+(pin|heslo|klic|obcank|smlouv|udaj)\b/.test(x) ||
       /\bpoznamenan\w*\s+(pin|heslo|klic|obcank)\b/.test(x);
     const factQ =
@@ -38753,6 +38771,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\b(kdy|do\s+kdy|jak\s+dlouho|konci|vyprsi|do\s+konce)\b/.test(x) &&
       !/\b(v\s+kalend|do\s+kalend|udalost\w*\s+v\s+kalend)\b/.test(x);
     return (
+      iuSilverNoteArchiveQueryCueFolded(x) ||
       iuSilverNoteFactReadQuerySignalFolded(x) ||
       noteWarrantyAsk ||
       /\b(najdi|vyhledej|vyhledejte|hledej|ukaz|ukaž|ukož|zobraz|zobrazit|vypis)\b/.test(x) ||
@@ -38808,6 +38827,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!x) return false;
     const r0 = String(rawOpt != null ? rawOpt : "");
     if (iuSilverCalendarCorrectionWriteSafeFolded(x, r0 || x)) return false;
+    /**
+     * P0 20k note_query: čistý read v poznámkách + modulová negace „ne do úkolů / kalendáře / poznámek“ (NEGS tail)
+     * musí projít ReadSearchShouldRun a negated_write_request gate — jen bez zápisového slovesa.
+     */
+    if (!iuSilverHasWriteVerb(x) && /\bne\s+do\s+(ukol\w*|kalend\w*|poznam\w*)\b/.test(x)) {
+      if (/\bnajdi\s+v\s+poznamkach\b/.test(x)) return true;
+      if (/\bkde\s+mam\s+\S+\s+podle\s+poznamkach\b/.test(x)) return true;
+      if (/\bjakou\s+adresu\b/.test(x) && /\bpoznamkach\b/.test(x)) return true;
+      if (/\bco\s+mam\s+v\s+poznamkach\b/.test(x)) return true;
+    }
     if (iuSilverHasWriteVerb(x) && iuSilverIsNegatedWriteIntentNarrow(x, r0 || x)) return false;
     if (!iuSilverQuerySignalNegativeGuardP0Folded(x)) return false;
     if (!(iuSilverNegativeReadOnlyTaskPhrasesFolded(x) || iuSilverIsNegatedBroadVerbExcludingTaskOnlyFolded(x))) return false;
@@ -38860,7 +38889,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (/\bnajdi\s+(muj|moje|mi\s+)?ukol|vyhledej\s+(muj|moje|mi\s+)?ukol\b/.test(f)) return "tasks";
     }
     if (/\bnajdi\s+(muj|moje|mi\s+)?ukol|vyhledej\s+(muj|moje|mi\s+)?ukol\b/.test(f)) return "tasks";
-    if (/\b(poznam\w*|pin|kod|heslo|obcank\w*|smlouv\w*|klic\w*|objednav\w*|barva|auto|zaruka|reklam|kontakt|servis|alz|televiz|kart)\b/.test(f)) return "notes";
+    if (
+      /\b(poznam\w*|pin|kod|heslo|obcank\w*|smlouv\w*|klic\w*|objednav\w*|barva|auto|zaruka|reklam|kontakt|servis|alz|televiz|kart|faktur|lednic|prack|pojist)\b/.test(
+        f
+      )
+    )
+      return "notes";
     if (
       /\bkdy\b/.test(f) &&
       /\b(zaruk\w*|garanc\w*|reklamac\w*|lhu[tť]a\w*|platnost\w*|televiz\w*|\btw\b)\b/.test(f) &&
@@ -38892,6 +38926,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /^\s*(jakou|jaka)\s+barvu\s+m[aá]\s+/i,
       /^\s*(jakou|jaka)\s+barvu\s+/i,
       /^\s*co\s+jsem\s+si\s+poznamenal\s+o\s+/i,
+      /^\s*co\s+jsem\s+si\s+psal\w*\s+o\s+/i,
+      /^\s*co\s+jsem\s+si\s+zapsal\w*\s+o\s+/i,
       /^\s*co\s+m[aá]m\s+v\s+pozn[aá]mk\w*\s+o\s+/i,
       /^\s*co\s+je\s+v\s+pozn[aá]mk\w*\s*(o\s+)?/i,
       /^\s*co\s+m[aá]m\s+poznamenan[eé]\s+o\s+/i,
