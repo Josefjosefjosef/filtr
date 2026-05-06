@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-06T12:15:22.616915Z",
+  "ingestedAt": "2026-05-06T12:50:34.491415Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Evropa je plná neoblíbených politiků, jako první může padnout britský premiér Starmer. Co je v království špatně?",
+      "url": "https://zahranicni.hn.cz/c1-67874260-evropa-je-plna-neoblibenych-politiku-jako-prvni-muze-padnout-britsky-premier-starmer-co-je-v-kralovstvi-spatne",
+      "dt": "2026-05-06T12:16:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "britský",
+        "evropa",
+        "jako",
+        "království",
+        "neoblíbených",
+        "padnout",
+        "plná",
+        "politiků",
+        "premiér",
+        "první",
+        "starmer",
+        "špatně"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1119,38 +1148,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Jejich raketami se chlubil Putin, teď skončili za mřížemi. Ruský soud poslal do vězení experty na hypersonické zbraně, viní je z vlastizrady",
-      "url": "https://zahranicni.hn.cz/c1-67873750-jejich-raketami-se-chlubil-putin-ted-skoncili-za-mrizemi-rusky-soud-poslal-do-vezeni-experty-na-hypersonicke-zbrane-vini-je-z-vlastizrady",
-      "dt": "2026-05-05T10:15:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "chlubil",
-        "experty",
-        "hypersonické",
-        "jejich",
-        "mřížemi",
-        "poslal",
-        "putin",
-        "raketami",
-        "ruský",
-        "skončili",
-        "soud",
-        "viní",
-        "vlastizrady",
-        "vězení",
-        "zbraně"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1161,7 +1158,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183207,
+      "bytes": 183203,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1198,11 +1195,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-06T11:53:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T12:16:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 32,
-          "zpravy": 4,
+          "finance": 33,
+          "zpravy": 3,
           "zdravi": 4
         },
         "drop_counts": {
@@ -1215,6 +1212,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Evropa je plná neoblíbených politiků, jako první může padnout britský premiér Starmer. Co je v království špatně?",
+            "publishedAt": "2026-05-06T12:16:00Z"
+          },
           {
             "title": "Senát odmítl snížení odvodů pro živnostníky. Opozice se bojí výpadku v důchodovém systému",
             "publishedAt": "2026-05-06T11:53:00Z"
@@ -1242,10 +1243,6 @@
           {
             "title": "Autodrom Most koupil valašský miliardář. Změna vlastníků je součástí většího plánu na budoucnost okruhu",
             "publishedAt": "2026-05-06T07:27:00Z"
-          },
-          {
-            "title": "Zrušit penzijko? Udělejte úplně jinou věc, jinak přijdete o peníze, radí rentiér",
-            "publishedAt": "2026-05-06T06:47:00Z"
           }
         ]
       }
