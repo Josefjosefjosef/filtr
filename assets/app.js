@@ -36314,6 +36314,31 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return hasCalExplicit || inCalSession || implicitCalCreate;
   }
 
+  /**
+   * P1: explicitní „posuň / přesuň / změň čas …“ — bez jednoznačně vybrané existující události
+   * nesmí skončit jako nový calendar.create READY_TO_SAVE (riziko falešného create).
+   * foldCs vstup; žádný širší NLP.
+   */
+  function iuSilverExplicitCalendarUpdateMoveIntentFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (/\bposunout\s+schuz/.test(x)) return true;
+    if (/\bpresunout\s+schuz/.test(x)) return true;
+    if (/\bzmen(?:it)?\s+cas\b/.test(x)) return true;
+    if (/\buprav\s+cas\b/.test(x)) return true;
+    if (/\bprehod\s+cas\b/.test(x)) return true;
+    if (/\bdej\s+to\s+na\s+jiny\s+cas\b/.test(x)) return true;
+    if (/\bpresun\b/.test(x)) return true;
+    if (/\bposun\b/.test(x)) return true;
+    return false;
+  }
+
+  /** P1: povolit calendar.create navzdory move-slovesům jen při aktivní kalendářové relaci (úprava rozpracovaného draftu). */
+  function iuSilverCalendarUpdateRiskAllowCreateDespiteExplicitMoveP1(prevDraft) {
+    const p = prevDraft || createEmptyDraft();
+    return !!(p.activeCalendarSession && p.targetContainer === "calendar");
+  }
+
   function iuSilverBuildCalendarCreateTurn(raw, now, prevDraft) {
     const folded = foldCs(raw);
     const prev = prevDraft || createEmptyDraft();
@@ -36354,6 +36379,25 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     let processingState = "NEEDS_CLARIFICATION";
     if (draft.meta.date === "certain" && draft.meta.time === "certain" && draft.meta.title === "certain" && String(draft.title || "").trim()) {
       processingState = "READY_TO_SAVE";
+    }
+    if (iuSilverExplicitCalendarUpdateMoveIntentFolded(folded) && !iuSilverCalendarUpdateRiskAllowCreateDespiteExplicitMoveP1(prev)) {
+      const lead = iuSilverClarificationCopy("needs_existing_event_selection");
+      return {
+        normalizedIntent: "unknown",
+        targetContainer: "none",
+        processingState: "CLARIFICATION",
+        clarificationReason: "needs_existing_event_selection",
+        futureIntentCandidate: null,
+        readQuery: null,
+        readAnswer: null,
+        extractedFields: {},
+        missingFields: [],
+        ambiguousFields: [],
+        userFacingSummary: "",
+        assistantLead: lead,
+        clarificationText: "",
+        draft: createEmptyDraft()
+      };
     }
     const ap = buildAssistantParts(draft, processingState);
     return {
@@ -37268,6 +37312,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     if (reason === "multi_intent_query_write_unclear") {
       return "Chceš to jen zjistit, nebo zároveň i uložit? Upřesni prosím.";
+    }
+    if (reason === "needs_existing_event_selection") {
+      return "Chceš upravit existující událost v kalendáři — vyber prosím konkrétní událost, nebo ji upřesni (den a název).";
     }
     return "Upřesni prosím požadavek.";
   }
@@ -41410,7 +41457,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           clr === "negated_write_request" ||
           clr === "future_target_not_supported_yet" ||
           clr === "unsupported_request" ||
-          clr === "multi_intent_query_write_unclear"));
+          clr === "multi_intent_query_write_unclear" ||
+          clr === "needs_existing_event_selection"));
 
     if (clearMem) {
       IU_SILVER_CONVERSATION_V12.lastDraft = null;
