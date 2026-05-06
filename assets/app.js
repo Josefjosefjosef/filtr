@@ -35010,6 +35010,36 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P0 negation_safety:task_read / calendar_vs_task_confusion — read-only + úkoly + negace kalendáře
+   * (např. „jen se podívej do úkolů, ne do kalendáře, nic neukládej“) → task routing, ne calendar.read.
+   * Úzké párování: ne bere „ne do úkolů“ jako pozitivní „do úkolů“ (substring false positive).
+   */
+  function iuSilverTaskReadNegatedCalendarModuleFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (!/\bne\s+do\s+kalend/.test(x) && !/\bne\s+v\s+kalend/.test(x)) return false;
+    const readOnly =
+      /\bjen\s+se\s+podivej\b/.test(x) ||
+      /\bnic\s+neukladej\b/.test(x) ||
+      /\bjen\s+cti\b/.test(x) ||
+      /\bpouze\s+cti\b/.test(x) ||
+      /\bnic\s+noveho\s+neukladej\b/.test(x);
+    if (!readOnly) return false;
+    const posTasks =
+      /\bjen\s+se\s+podivej\s+do\s+ukol/.test(x) ||
+      /\bpodivej\s+se\s+do\s+ukol/.test(x) ||
+      /\bjen\s+cti\s+ukol/.test(x) ||
+      /\bjen\s+cti\s+ukoly\b/.test(x) ||
+      /\bdo\s+ukol\w*\s*,\s*ne\s+do\s+kalend/.test(x) ||
+      /\bdo\s+ukol\w*\s+ne\s+do\s+kalend/.test(x) ||
+      (/\bukoly\b/.test(x) &&
+        (/\bjen\s+se\s+podivej\b/.test(x) || /\bnic\s+neukladej\b/.test(x) || /\bjen\s+cti\b/.test(x) || /\bpouze\s+cti\b/.test(x)));
+    if (!posTasks) return false;
+    if (/\bjen\s+se\s+podivej\s+do\s+kalend/.test(x) || /\bpodivej\s+se\s+do\s+kalend/.test(x)) return false;
+    return true;
+  }
+
+  /**
    * P0 realistic mobile task_query (calendar_vs_task_confusion): list-style task reads where
    * tryParseCalendarRead would otherwise claim coMam+dnes/zitra agenda. foldCs-safe; narrow —
    * explicit calendar tail (v kalendáři, událost, schůzka…) excluded via CalendarReadWinsOverTaskRead.
@@ -35057,6 +35087,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverTaskQueryHardSignalFolded(f) {
     const x = String(f || "");
     if (!x) return false;
+    if (iuSilverTaskReadNegatedCalendarModuleFolded(x)) return true;
     if (iuSilverRealisticMobileTaskQueryListCueFolded(x)) return true;
     if (/\b(do\s+ukol|v\s+ukolech)\s+se\s+podivej/.test(x)) return true;
     if (/\bpodivej\s+se\s+do\s+ukol/.test(x)) return true;
@@ -35754,6 +35785,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverCalendarReadWinsOverTaskReadFolded(f) {
     const x = String(f || "");
     if (!x) return false;
+    if (iuSilverTaskReadNegatedCalendarModuleFolded(x)) return false;
     /**
      * P0 20k task_query: „Najdi úkol rohlíky, nevracej schůzku“ — negace obsahuje „schůzku“,
      * nesmí spustit CalendarEntityContext přes substring schuz a ukrást task.search před calendar.read.
@@ -37498,6 +37530,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     )
       return null;
     if (iuSilverExplicitTaskReadScopeFolded(f)) return null;
+    if (iuSilverTaskReadNegatedCalendarModuleFolded(f)) return null;
     if (!iuSilverCalendarReadWinsOverTaskReadFolded(f) && iuSilverTaskQueryHardSignalFolded(f)) return null;
 
     if (
@@ -39306,7 +39339,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const wantsTaskList = iuSilverWantsTaskListOnlyFolded(f) ||
       /^\s*zobraz\s+(mi\s+)?(moje\s+)?ukol/i.test(r0) ||
       /^\s*najdi\s+(mi\s+)?(moje\s+)?ukol/i.test(r0) ||
-      /^\s*najdi\s+muj\s+ukol/i.test(r0);
+      /^\s*najdi\s+muj\s+ukol/i.test(r0) ||
+      iuSilverTaskReadNegatedCalendarModuleFolded(f);
 
     if (!wantsTaskList) return null;
     return iuSilverBuildTasksReadListTurn(ctx, empty, f, now);
