@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-06T10:56:45.978915Z",
+  "ingestedAt": "2026-05-06T11:36:20.208632Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Konec dvojích cen nafty na Slovensku. Vláda ruší omezení, které kritizovala Evropská komise",
+      "url": "https://www.e15.cz/zahranicni/konec-dvojich-cen-nafty-na-slovensku-vlada-rusi-omezeni-ktere-kritizovala-evropska-komise-1432632",
+      "dt": "2026-05-06T10:50:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "cen",
+        "dvojích",
+        "evropská",
+        "komise",
+        "konec",
+        "kritizovala",
+        "nafty",
+        "omezení",
+        "ruší",
+        "slovensku",
+        "vláda"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1053,32 +1081,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Platformová ekonomika je budoucnost trhu práce. Nesmíme ji udusit přísnou regulací",
-      "url": "https://www.e15.cz/nazory-a-analyzy/platformova-ekonomika-je-budoucnost-trhu-prace-nesmime-ji-udusit-prisnou-regulaci-1432556",
-      "dt": "2026-05-04T17:12:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "budoucnost",
-        "ekonomika",
-        "nesmíme",
-        "platformová",
-        "práce",
-        "přísnou",
-        "regulací",
-        "trhu",
-        "udusit"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1089,7 +1091,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 52128,
+      "bytes": 52160,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1126,7 +1128,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-06T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T10:50:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 35,
@@ -1143,6 +1145,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec dvojích cen nafty na Slovensku. Vláda ruší omezení, které kritizovala Evropská komise",
+            "publishedAt": "2026-05-06T10:50:00Z"
+          },
           {
             "title": "ČNB zatím sazby měnit nebude, šance na jejich zvýšení ale roste",
             "publishedAt": "2026-05-06T10:00:00Z"
@@ -1170,10 +1176,6 @@
           {
             "title": "BMW doplácí na cla i slabší Čínu. Zisk luxusní automobilky klesl o 23 procent",
             "publishedAt": "2026-05-06T08:10:00Z"
-          },
-          {
-            "title": "Píše se rok 2040 a Čína prohrála ve válce peněz s USA. Evropa boj o stupně vítězů ztratila",
-            "publishedAt": "2026-05-06T07:52:00Z"
           }
         ]
       }

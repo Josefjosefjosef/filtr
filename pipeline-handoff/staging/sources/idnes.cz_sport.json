@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-06T10:56:45.978915Z",
+  "ingestedAt": "2026-05-06T11:36:20.208632Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Mbappé vytočil fanoušky. Chtějí ho pryč z Realu. Petice má miliony podpisů",
+      "url": "https://www.idnes.cz/sport/trendy/kylian-mbappe-petice.A260506_104857_trendy_blah",
+      "dt": "2026-05-06T11:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "chtějí",
+        "fanoušky",
+        "mbappé",
+        "miliony",
+        "petice",
+        "podpisů",
+        "pryč",
+        "realu",
+        "vytočil"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Ullman: Liga v Lotyšsku? Na školní umělce. Riga má peníze jak Sparta a Slavia",
+      "url": "https://www.idnes.cz/fotbal/zahranici/ullman-liga-v-lotyssku-hraje-se-i-na-skolni-umelce.A260506_074145_fot_zahranici_pbi",
+      "dt": "2026-05-06T10:51:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "liga",
+        "lotyšsku",
+        "peníze",
+        "riga",
+        "slavia",
+        "sparta",
+        "ullman",
+        "umělce",
+        "školní"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -741,59 +793,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Manželka musí stát v pozadí. Olympijský vítěz čelí obviněním ze sexismu",
-      "url": "https://www.idnes.cz/sport/trendy/olympijsky-vitez-pod-palbou-po-vyrocich-o-manzelce-celi-obvinenim-ze-sexismu.A260505_121429_trendy_subt",
-      "dt": "2026-05-05T13:24:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "manželka",
-        "musí",
-        "obviněním",
-        "olympijský",
-        "pozadí",
-        "sexismu",
-        "stát",
-        "vítěz",
-        "čelí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Najali jste lháře. Toronto ohromilo volbou manažera, v minulosti porušoval pravidla",
-      "url": "https://www.idnes.cz/hokej/nhl/toronto-generalni-manazer-john-chayka-kontroverze.A260505_095445_nhl_ivt",
-      "dt": "2026-05-05T13:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "jste",
-        "lháře",
-        "manažera",
-        "minulosti",
-        "najali",
-        "ohromilo",
-        "porušoval",
-        "pravidla",
-        "toronto",
-        "volbou"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +803,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48174,
+      "bytes": 47147,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,7 +840,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T11:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -856,6 +855,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mbappé vytočil fanoušky. Chtějí ho pryč z Realu. Petice má miliony podpisů",
+            "publishedAt": "2026-05-06T11:00:00Z"
+          },
+          {
+            "title": "Ullman: Liga v Lotyšsku? Na školní umělce. Riga má peníze jak Sparta a Slavia",
+            "publishedAt": "2026-05-06T10:51:00Z"
+          },
           {
             "title": "Radiace? No a co. Pojedete, nebo skončíte kariéru. Komunisté, Černobyl a Závod míru",
             "publishedAt": "2026-05-06T10:00:00Z"
@@ -879,14 +886,6 @@
           {
             "title": "Nedělá si hlavu, proto je dobrej. Šimek o parťákovi Galvasovi i další absenci na MS",
             "publishedAt": "2026-05-06T08:00:00Z"
-          },
-          {
-            "title": "Baníkovská naděje Drozd: První start v lize mám, teď se soustředím hlavně na sebe",
-            "publishedAt": "2026-05-06T07:45:00Z"
-          },
-          {
-            "title": "Posily z NHL na MS: přehlídka hvězd v útoku Kanady, dorazit má také Celebrini",
-            "publishedAt": "2026-05-06T07:24:00Z"
           }
         ]
       }

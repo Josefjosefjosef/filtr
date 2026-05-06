@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-06T10:56:45.978915Z",
+  "ingestedAt": "2026-05-06T11:36:20.208632Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Jaký vliv mají Královny Brna na diváky? Nabízejí motivaci i načančané zkreslení reality",
+      "url": "https://www.kinobox.cz/clanky/vod/53522-motivace-nebo-zkresleni-reality-jaky-vliv-maji-kralovny-brna-na-divaky",
+      "dt": "2026-05-06T11:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "brna",
+        "diváky",
+        "jaký",
+        "královny",
+        "mají",
+        "motivaci",
+        "nabízejí",
+        "načančané",
+        "reality",
+        "vliv",
+        "zkreslení"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -531,34 +559,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Rachel Zegler si v 25 zaslouží druhou šanci. Nejnenáviděnější mladá herečka totiž patří mezi nejlepší",
-      "url": "https://www.kinobox.cz/clanky/tema/53194-rachel-zegler-si-v-25-zaslouzi-druhou-sanci-nejnenavidenejsi-mlada-herecka-totiz-patri-mezi-nejlepsi",
-      "dt": "2026-05-03T14:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "druhou",
-        "herečka",
-        "mladá",
-        "nejlepší",
-        "nejnenáviděnější",
-        "patří",
-        "rachel",
-        "totiž",
-        "zaslouží",
-        "zegler",
-        "šanci"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -569,7 +569,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 29442,
+      "bytes": 29059,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -606,7 +606,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-06T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T11:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 19,
@@ -622,6 +622,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jaký vliv mají Královny Brna na diváky? Nabízejí motivaci i načančané zkreslení reality",
+            "publishedAt": "2026-05-06T11:00:00Z"
+          },
           {
             "title": "Kinobox Daily: Jak parta chudých veslařů pokořila Hitlera v jeho vlastním revíru?",
             "publishedAt": "2026-05-06T10:00:00Z"
@@ -649,10 +653,6 @@
           {
             "title": "Kevin Costner má v rukou nejvelkolepější filmové selhání. Jeho vysněný western neuvidíme ani letos",
             "publishedAt": "2026-05-05T12:00:00Z"
-          },
-          {
-            "title": "Kinobox Daily: Pan Nikdo proti Putinovi ukazuje praktiky ruského režimu i proměnu své hlavní tváře",
-            "publishedAt": "2026-05-05T10:00:00Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-06T10:56:45.978915Z",
+  "ingestedAt": "2026-05-06T11:36:20.208632Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zásadní změna: Stát bude moci omezit dodávky nedostatkových pomůcek jen pro nemocnice",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/stat-dodavky-pomucek-nemocnice/",
+      "dt": "2026-05-06T11:12:34Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dodávky",
+        "jen",
+        "moci",
+        "nedostatkových",
+        "nemocnice",
+        "omezit",
+        "pomůcek",
+        "stát",
+        "změna",
+        "zásadní"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,32 +269,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Europoslanec Knotek: Přísná ekologická pravidla mohou poškodit výrobu léků i ekonomiku",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/europoslanec-knotek-vyroba-leku-ekonomika/",
-      "dt": "2026-05-05T12:45:04Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "ekologická",
-        "ekonomiku",
-        "europoslanec",
-        "knotek",
-        "léků",
-        "poškodit",
-        "pravidla",
-        "přísná",
-        "výrobu"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 85412,
+      "bytes": 83984,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-06T10:07:44Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T11:12:34Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -330,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zásadní změna: Stát bude moci omezit dodávky nedostatkových pomůcek jen pro nemocnice",
+            "publishedAt": "2026-05-06T11:12:34Z"
+          },
           {
             "title": "Zaměstnanecké pojišťovny dostanou téměř 8 miliard. Senátoři schválili přerozdělení od VZP",
             "publishedAt": "2026-05-06T10:07:44Z"
@@ -357,10 +362,6 @@
           {
             "title": "Nemůžete si dělat z úst kanál a sršet  nechutnosti, vmetla Černochová Babišovi kvůli ÚVN",
             "publishedAt": "2026-05-05T16:02:38Z"
-          },
-          {
-            "title": "Hantaviry, které zabíjely na lodi v Atlantiku, se vyskytují i v Česku. Nejvíce v těchto 2 krajích",
-            "publishedAt": "2026-05-05T14:45:53Z"
           }
         ]
       }

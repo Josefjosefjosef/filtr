@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-06T10:56:45.978915Z",
+  "ingestedAt": "2026-05-06T11:36:20.208632Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Demonstrant na mostě ve Washingtonu brzdí dopravu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/demonstrant-na-moste-ve-washingtonu-brzdi-dopravu-373162",
+      "dt": "2026-05-06T11:04:17Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "brzdí",
+        "demonstrant",
+        "dopravu",
+        "mostě",
+        "washingtonu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -720,31 +742,6 @@
         "sezonu",
         "suché",
         "zhoršuje"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Emirátská protivzdušná obrana opět zasahovala proti íránskému útoku",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/emiratska-protivzdusna-obrana-opet-zasahovala-proti-iranskemu-utoku-373137",
-      "dt": "2026-05-05T15:49:07Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "emirátská",
-        "obrana",
-        "opět",
-        "proti",
-        "protivzdušná",
-        "zasahovala",
-        "íránskému",
-        "útoku"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1520,7 +1517,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44716,
+      "bytes": 44642,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1580,11 +1577,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T10:27:37Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T11:04:17Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 5,
           "zpravy": 24,
+          "other": 5,
           "finance": 1
         },
         "drop_counts": {
@@ -1597,6 +1594,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Demonstrant na mostě ve Washingtonu brzdí dopravu",
+            "publishedAt": "2026-05-06T11:04:17Z"
+          },
           {
             "title": "AI se nevyrovná lékaři, stále si vymýšlí. Experti připravili návod, jak ji využívat",
             "publishedAt": "2026-05-06T10:27:37Z"
@@ -1624,10 +1625,6 @@
           {
             "title": "Švýcarsko má pacienta s hantavirem, další jsou z lodi evakuováni do Nizozemska",
             "publishedAt": "2026-05-06T09:08:08Z"
-          },
-          {
-            "title": "Budovy v Česku svítily modře. Upozorňovaly na plicní hypertenzi",
-            "publishedAt": "2026-05-06T08:56:15Z"
           }
         ]
       }
@@ -1733,7 +1730,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78600,
+      "bytes": 78696,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
