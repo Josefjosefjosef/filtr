@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-06T02:30:06.857650Z",
+  "ingestedAt": "2026-05-06T03:49:43.370991Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Koalice chce na mimořádné schůzi Sněmovny rozvolnit rozpočtová pravidla",
+      "url": "https://www.idnes.cz/zpravy/domaci/koalice-chce-na-mimoradne-schuzi-snemovny-rozvolnit-rozpoctova-pravidla.A260506_003701_domaci_kop",
+      "dt": "2026-05-06T03:35:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "chce",
+        "koalice",
+        "mimořádné",
+        "pravidla",
+        "rozpočtová",
+        "rozvolnit",
+        "schůzi",
+        "sněmovny"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -762,32 +787,6 @@
         "slavný",
         "udělala",
         "žaluje"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Klempíř jednal s odbory televize a rozhlasu. Našli jsme shodu, tvrdí",
-      "url": "https://www.idnes.cz/zpravy/mediahub/klempir-ministr-kultura-ct-cro-stavka-pohotovost-odbory.A260505_161802_domaci_sahu",
-      "dt": "2026-05-05T14:50:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "jednal",
-        "jsme",
-        "klempíř",
-        "našli",
-        "odbory",
-        "rozhlasu",
-        "shodu",
-        "televize",
-        "tvrdí"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1589,7 +1588,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47387,
+      "bytes": 47081,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1626,7 +1625,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-05T23:40:57Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T03:35:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1643,6 +1642,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Koalice chce na mimořádné schůzi Sněmovny rozvolnit rozpočtová pravidla",
+            "publishedAt": "2026-05-06T03:35:00Z"
+          },
           {
             "title": "USA přeruší ochranu lodí v Hormuzském průlivu, snaží se o příměří s Íránem",
             "publishedAt": "2026-05-05T23:40:57Z"
@@ -1670,10 +1673,6 @@
           {
             "title": "V Nepálu zemřel český horolezec, patrně v důsledku otoku plic",
             "publishedAt": "2026-05-05T20:54:00Z"
-          },
-          {
-            "title": "Írán změnil a rozšířil kontrolu Hormuzu, Izrael hrozí nasazením všech letadel",
-            "publishedAt": "2026-05-05T20:26:00Z"
           }
         ]
       }

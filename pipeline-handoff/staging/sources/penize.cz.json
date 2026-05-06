@@ -1,8 +1,56 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-06T02:30:06.857650Z",
+  "ingestedAt": "2026-05-06T03:49:43.370991Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Už žádné „v pohodě“. Proč se radikální upřímnost vyplatí v práci i doma",
+      "url": "https://www.penize.cz/spotrebitel/488550-uz-zadne-v-pohode-proc-se-radikalni-uprimnost-vyplati-v-praci-i-doma",
+      "dt": "2026-05-06T05:05:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "doma",
+        "pohodě",
+        "proč",
+        "práci",
+        "radikální",
+        "upřímnost",
+        "vyplatí",
+        "žádné"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Prodejní doba obchodů 8. května. Jak je otevřeno na svátek",
+      "url": "https://www.penize.cz/nakupy/489315-prodejni-doba-obchodu-8-kvetna-jak-je-otevreno-na-svatek",
+      "dt": "2026-05-06T05:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "doba",
+        "května",
+        "obchodů",
+        "otevřeno",
+        "prodejní",
+        "svátek"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -438,58 +486,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kdo všechno si strhává peníze z vaší karty? Další banka ukáže přehled",
-      "url": "https://www.penize.cz/osobni-ucty/489151-kdo-vsechno-si-strhava-penize-z-vasi-karty-dalsi-banka-ukaze-prehled",
-      "dt": "2026-04-30T14:30:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "banka",
-        "další",
-        "karty",
-        "peníze",
-        "přehled",
-        "strhává",
-        "ukáže",
-        "vaší",
-        "všechno"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Vyjíždíte na prodloužený víkend? Maximální ceny benzinu a nafty pro začátek května",
-      "url": "https://www.penize.cz/doprava/489168-vyjizdite-na-prodlouzeny-vikend-maximalni-ceny-benzinu-a-nafty-pro-zacatek-kvetna",
-      "dt": "2026-04-30T14:04:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "benzinu",
-        "ceny",
-        "května",
-        "maximální",
-        "nafty",
-        "prodloužený",
-        "vyjíždíte",
-        "víkend",
-        "začátek"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -500,7 +496,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18120,
+      "bytes": 18051,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -537,12 +533,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-05T13:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T05:05:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 3,
-          "sport": 2,
-          "finance": 15
+          "finance": 16,
+          "zpravy": 2,
+          "sport": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -554,6 +550,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Už žádné „v pohodě“. Proč se radikální upřímnost vyplatí v práci i doma",
+            "publishedAt": "2026-05-06T05:05:00Z"
+          },
+          {
+            "title": "Prodejní doba obchodů 8. května. Jak je otevřeno na svátek",
+            "publishedAt": "2026-05-06T05:00:00Z"
+          },
           {
             "title": "Maximální ceny benzinu a nafty na středu 6. května",
             "publishedAt": "2026-05-05T13:59:00Z"
@@ -577,14 +581,6 @@
           {
             "title": "Maximální ceny benzinu a nafty na úterý 5. května",
             "publishedAt": "2026-05-04T13:58:00Z"
-          },
-          {
-            "title": "EET bude od ledna, schválila vláda. Do košíku vám neuvidí",
-            "publishedAt": "2026-05-04T12:47:00Z"
-          },
-          {
-            "title": "Školkovné a sleva na studenta se vrací. Kdy a jak je využijete",
-            "publishedAt": "2026-05-04T12:40:00Z"
           }
         ]
       }
