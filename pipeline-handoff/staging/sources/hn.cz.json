@@ -1,8 +1,69 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-06T04:29:49.459838Z",
+  "ingestedAt": "2026-05-06T05:09:55.697400Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Dražší než Německo, Francie nebo Španělsko. České domácnosti platí za elektřinu jedny z nejvyšších cen v celé EU",
+      "url": "https://byznys.hn.cz/c1-67874170-drazsi-nez-nemecko-francie-nebo-spanelsko-ceske-domacnosti-plati-za-elektrinu-jedny-z-nejvyssich-cen-v-cele-eu",
+      "dt": "2026-05-06T04:42:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "celé",
+        "cen",
+        "domácnosti",
+        "dražší",
+        "elektřinu",
+        "francie",
+        "jedny",
+        "nebo",
+        "nejvyšších",
+        "než",
+        "německo",
+        "platí",
+        "české",
+        "španělsko"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Cukr jako jeden z nejsilnějších jedů. Ovlivňuje rakovinu, mikrobiom i záněty v těle. Existují zdravější varianty?",
+      "url": "https://domaci.hn.cz/c1-67873690-cukr-jako-jeden-z-nejsilnejsich-jedu-ovlivnuje-rakovinu-mikrobiom-i-zanety-v-tele-existuji-zdravejsi-varianty",
+      "dt": "2026-05-06T04:20:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "cukr",
+        "existují",
+        "jako",
+        "jeden",
+        "jedů",
+        "mikrobiom",
+        "nejsilnějších",
+        "ovlivňuje",
+        "rakovinu",
+        "těle",
+        "varianty",
+        "zdravější",
+        "záněty"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1103,58 +1164,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Míří na dvoumiliardovou EBITDA. Růst CE Industries urychlí vlastní investiční fond",
-      "url": "https://archiv.hn.cz/c1-67873460-miri-na-dvoumiliardovou-ebitda-rust-ce-industries-urychli-vlastni-investicni-fond",
-      "dt": "2026-05-04T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "dvoumiliardovou",
-        "ebitda",
-        "fond",
-        "industries",
-        "investiční",
-        "míří",
-        "růst",
-        "urychlí",
-        "vlastní"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Slabá místa firemních dluhopisů. Jak rozpoznat varovné signály a&nbsp;nenaletět",
-      "url": "https://archiv.hn.cz/c1-67873450-slaba-mista-firemnich-dluhopisu-jak-rozpoznat-varovne-signaly-a-nenaletet",
-      "dt": "2026-05-04T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "dluhopisů",
-        "firemních",
-        "místa",
-        "nbsp",
-        "nenaletět",
-        "rozpoznat",
-        "signály",
-        "slabá",
-        "varovné"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1165,7 +1174,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183563,
+      "bytes": 183292,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1202,12 +1211,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-06T04:13:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T04:42:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 34,
-          "zpravy": 4,
-          "zdravi": 2
+          "finance": 33,
+          "zdravi": 3,
+          "zpravy": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1219,6 +1228,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dražší než Německo, Francie nebo Španělsko. České domácnosti platí za elektřinu jedny z nejvyšších cen v celé EU",
+            "publishedAt": "2026-05-06T04:42:00Z"
+          },
+          {
+            "title": "Cukr jako jeden z nejsilnějších jedů. Ovlivňuje rakovinu, mikrobiom i záněty v těle. Existují zdravější varianty?",
+            "publishedAt": "2026-05-06T04:20:00Z"
+          },
           {
             "title": "USA přerušují ochranu lodí v Hormuzu, podle Trumpa kvůli snaze o dohodu s Íránem. Ten zatím zavedl nová pravidla pro plavbu průlivem",
             "publishedAt": "2026-05-06T04:13:00Z"
@@ -1241,14 +1258,6 @@
           },
           {
             "title": "Nové řešení sociálních dávek nutí k práci načerno, další část nažene do ubytoven",
-            "publishedAt": "2026-05-05T22:00:00Z"
-          },
-          {
-            "title": "Češi se bojí, že energie kvůli válkám zdraží. Chtějí chytré měřáky a&nbsp;dynamický tarif",
-            "publishedAt": "2026-05-05T22:00:00Z"
-          },
-          {
-            "title": "Přichází generace, která ví, proč investovat do&nbsp;strategie a&nbsp;managementu",
             "publishedAt": "2026-05-05T22:00:00Z"
           }
         ]

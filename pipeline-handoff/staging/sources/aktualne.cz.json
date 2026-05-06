@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-06T04:29:49.459838Z",
+  "ingestedAt": "2026-05-06T05:09:55.697400Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kypr bije na poplach. Zájem o letní dovolenou se propadl o třetinu",
+      "url": "https://zpravy.aktualne.cz/zahranici/kypr-bije-na-poplach-zajem-o-letni-dovolenou-se-propadl-o-tretinu/r~aaa297ea1681527a27621382fba4bf9c/",
+      "dt": "2026-05-06T04:45:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bije",
+        "dovolenou",
+        "kypr",
+        "letní",
+        "poplach",
+        "propadl",
+        "třetinu",
+        "zájem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -513,34 +538,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Američtí vojáci potápí nepřátelské lodě, vyslali drsný signál. Írán odpovídá hrozbou",
-      "url": "https://zpravy.aktualne.cz/zahranici/americti-vojaci-potapi-nepratelske-lode-vyslali-drsny-signal-iran-odpovida-hrozbou/r~aaa293161c33f1719d74c23698c33f31/",
-      "dt": "2026-05-05T16:47:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "američtí",
-        "drsný",
-        "hrozbou",
-        "lodě",
-        "nepřátelské",
-        "odpovídá",
-        "potápí",
-        "signál",
-        "vojáci",
-        "vyslali",
-        "írán"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -551,7 +548,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22403,
+      "bytes": 22487,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -588,7 +585,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-06T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T04:45:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 13,
@@ -606,6 +603,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kypr bije na poplach. Zájem o letní dovolenou se propadl o třetinu",
+            "publishedAt": "2026-05-06T04:45:00Z"
+          },
           {
             "title": "Zabíjení navzdory příměří. Ruské útoky připravily o život nejméně 20 lidí, oběti hlásí i Krym",
             "publishedAt": "2026-01-21T06:45:00Z"
@@ -632,10 +633,6 @@
           },
           {
             "title": "Fico se najednou kamarádí se Zelenským? Expert vysvětluje, co se děje",
-            "publishedAt": "2026-05-06T03:30:00Z"
-          },
-          {
-            "title": "Konec „mlýnku na maso“. Rusko zkouší Ukrajince přelstít novou mazanou strategií",
             "publishedAt": "2026-05-06T03:30:00Z"
           }
         ]
