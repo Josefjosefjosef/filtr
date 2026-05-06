@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-06T16:44:30.108638Z",
+  "ingestedAt": "2026-05-06T18:09:06.554349Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Béčko Sparty rozstřílelo Prostějov, debakl schytala i rezerva Slavie. Brno remizovalo",
+      "url": "https://www.idnes.cz/fotbal/domaci-souteze/sparta-b-zbrojovka-brno-druha-liga-fotbal.A260506_193807_fot_dsouteze_hava",
+      "dt": "2026-05-06T17:49:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "brno",
+        "béčko",
+        "debakl",
+        "prostějov",
+        "remizovalo",
+        "rezerva",
+        "rozstřílelo",
+        "schytala",
+        "slavie",
+        "sparty"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Opravdu šla bez opory? Vonnová ukázala zákulisí triumfálního vstupu na Met Gala",
+      "url": "https://www.idnes.cz/sport/trendy/opravdu-sla-bez-opory-vonnova-ukazala-zakulisi-triumfalniho-vstupu-na-met-gala.A260506_120525_trendy_blah",
+      "dt": "2026-05-06T16:38:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "gala",
+        "met",
+        "opory",
+        "opravdu",
+        "triumfálního",
+        "ukázala",
+        "vonnová",
+        "vstupu",
+        "zákulisí",
+        "šla"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -750,59 +804,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nečas dvěma body nasměroval Colorado za druhou výhrou proti Minnesotě",
-      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-play-off-necas.A260506_071152_nhl_mkr",
-      "dt": "2026-05-06T05:41:14Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "body",
-        "colorado",
-        "druhou",
-        "dvěma",
-        "minnesotě",
-        "nasměroval",
-        "nečas",
-        "proti",
-        "výhrou"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Konec kariéry visel na vlásku, připouští Plíšková. Motivaci měla i díky sestře",
-      "url": "https://www.idnes.cz/sport/tenis/karolina-pliskova-rozhovor-konec.A260505_193207_tenis_ikuc",
-      "dt": "2026-05-06T05:29:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "díky",
-        "kariéry",
-        "konec",
-        "motivaci",
-        "měla",
-        "plíšková",
-        "připouští",
-        "sestře",
-        "visel",
-        "vlásku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -813,7 +814,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48677,
+      "bytes": 49031,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -850,7 +851,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T16:27:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T17:49:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -866,6 +867,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Béčko Sparty rozstřílelo Prostějov, debakl schytala i rezerva Slavie. Brno remizovalo",
+            "publishedAt": "2026-05-06T17:49:00Z"
+          },
+          {
+            "title": "Opravdu šla bez opory? Vonnová ukázala zákulisí triumfálního vstupu na Met Gala",
+            "publishedAt": "2026-05-06T16:38:00Z"
+          },
           {
             "title": "Posily z NHL na MS: přehlídka hvězd v útoku Kanady, dorazit má také Celebrini",
             "publishedAt": "2026-05-06T16:27:00Z"
@@ -889,14 +898,6 @@
           {
             "title": "Nikdy jsem tu nic podobného nezažil, díky. Arteta o postupu do finále Ligy mistrů",
             "publishedAt": "2026-05-06T14:14:00Z"
-          },
-          {
-            "title": "Nejhlasitější blahopřání? Italská tenistka rozezpívala pro Sabalenkovou celý kurt",
-            "publishedAt": "2026-05-06T14:02:00Z"
-          },
-          {
-            "title": "Autodrom Most mění vlastníka. Okruh koupil otec českého závodníka ve formulích",
-            "publishedAt": "2026-05-06T13:34:00Z"
           }
         ]
       }

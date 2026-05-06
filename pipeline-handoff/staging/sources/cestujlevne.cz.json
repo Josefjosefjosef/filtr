@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-05-06T16:44:30.108638Z",
+  "ingestedAt": "2026-05-06T18:09:06.554349Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Madeira na týden se snídaní z Prahy. Zájezd od 7 990 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/madeira-na-tyden-se-snidani-z-prahy",
+      "dt": "2026-05-06T17:38:18Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "990",
+        "madeira",
+        "prahy",
+        "snídaní",
+        "týden",
+        "zájezd"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -482,31 +505,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Bosna a Hercegovina od května do října na mnoho termínů. Letenky od 489 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/bosna-a-hercegovina-od-kvetna-do-rijna-se-spoustou-terminu",
-      "dt": "2026-04-28T14:14:31Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "489",
-        "bosna",
-        "hercegovina",
-        "května",
-        "letenky",
-        "mnoho",
-        "termínů",
-        "října"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -517,7 +515,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 44805,
+      "bytes": 46412,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -554,7 +552,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-06T13:49:30Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T17:38:18Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -569,6 +567,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Madeira na týden se snídaní z Prahy. Zájezd od 7 990 Kč",
+            "publishedAt": "2026-05-06T17:38:18Z"
+          },
           {
             "title": "Jarní Mallorca s all-inclusive z Prahy v květnu. Zájezd od 8 990 Kč",
             "publishedAt": "2026-05-06T13:49:30Z"
@@ -596,10 +598,6 @@
           {
             "title": "Buy & Fly: Madeira z Brna na týden do 5* hotelu s polopenzí. Zájezd od 13 690 Kč",
             "publishedAt": "2026-05-04T06:11:12Z"
-          },
-          {
-            "title": "Z Prahy na řecký ostrov Kefalonie do 4* hotelu s all-inclusive. Zájezd od 10 490 Kč",
-            "publishedAt": "2026-05-01T11:28:49Z"
           }
         ]
       }

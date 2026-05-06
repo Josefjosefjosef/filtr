@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-06T16:44:30.108638Z",
+  "ingestedAt": "2026-05-06T18:09:06.554349Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Izrael bez varování udeřil na Bejrút",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/izrael-bez-varovani-uderil-na-bejrut-373181",
+      "dt": "2026-05-06T18:03:04Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "bejrút",
+        "izrael",
+        "udeřil",
+        "varování"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -28,7 +49,7 @@
     {
       "section": "pocasi",
       "contentType": "article",
-      "title": "V Čechách hrozí bouřky se silným větrem a kroupy",
+      "title": "V Čechách hrozí bouřky se silným větrem",
       "url": "https://ct24.ceskatelevize.cz/clanek/pocasi/v-cechach-hrozi-bourky-se-silnym-vetrem-a-kroupy-373177",
       "dt": "2026-05-06T15:46:18Z",
       "media_raw": "ČT24 / Domácí",
@@ -36,7 +57,6 @@
       "tokens": [
         "bouřky",
         "hrozí",
-        "kroupy",
         "silným",
         "větrem",
         "čechách"
@@ -723,50 +743,23 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Proti covidu není očkovaná většina lékařů a téměř všechny sestry, vyplývá z dat",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/proti-covidu-neni-ockovana-vetsina-lekaru-a-temer-vsechny-sestry-vyplyva-z-dat-373119",
-      "dt": "2026-05-06T05:40:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "covidu",
-        "dat",
-        "lékařů",
-        "očkovaná",
-        "proti",
-        "sestry",
-        "téměř",
-        "vyplývá",
-        "většina",
-        "všechny"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "sport",
       "contentType": "article",
-      "title": "Baník Ostrava B hostí jistého vítěze druhé ligy Zbrojovku Brno",
+      "title": "Rezerva Baníku uhrála remízu se Zbrojovkou, Sparta oživila naději na záchranu",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/banik-ostrava-b-hosti-jisteho-viteze-druhe-ligy-zbrojovku-brno-156629",
       "dt": "2026-05-06T14:50:00Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
-        "baník",
-        "brno",
-        "druhé",
-        "hostí",
-        "jistého",
-        "ligy",
-        "ostrava",
-        "vítěze",
-        "zbrojovku"
+        "baníku",
+        "naději",
+        "oživila",
+        "remízu",
+        "rezerva",
+        "sparta",
+        "uhrála",
+        "zbrojovkou",
+        "záchranu"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1515,7 +1508,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41650,
+      "bytes": 41929,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1575,11 +1568,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T16:29:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T18:03:04Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 20,
-          "other": 8,
+          "zpravy": 21,
+          "other": 7,
           "finance": 2
         },
         "drop_counts": {
@@ -1593,11 +1586,15 @@
         },
         "sample_titles": [
           {
+            "title": "Izrael bez varování udeřil na Bejrút",
+            "publishedAt": "2026-05-06T18:03:04Z"
+          },
+          {
             "title": "SOUHRN: Zásadní události středy 6. května",
             "publishedAt": "2026-05-06T16:29:00Z"
           },
           {
-            "title": "V Čechách hrozí bouřky se silným větrem a kroupy",
+            "title": "V Čechách hrozí bouřky se silným větrem",
             "publishedAt": "2026-05-06T15:46:18Z"
           },
           {
@@ -1619,10 +1616,6 @@
           {
             "title": "Maďarsko vrátilo Kyjevu peníze, které zabavilo ukrajinské bance",
             "publishedAt": "2026-05-06T14:43:53Z"
-          },
-          {
-            "title": "Zemřel zakladatel televize CNN Ted Turner",
-            "publishedAt": "2026-05-06T14:39:43Z"
           }
         ]
       }
@@ -1634,7 +1627,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37752,
+      "bytes": 38022,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1687,7 +1680,7 @@
         },
         "sample_titles": [
           {
-            "title": "Baník Ostrava B hostí jistého vítěze druhé ligy Zbrojovku Brno",
+            "title": "Rezerva Baníku uhrála remízu se Zbrojovkou, Sparta oživila naději na záchranu",
             "publishedAt": "2026-05-06T14:50:00Z"
           },
           {
@@ -1728,7 +1721,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78589,
+      "bytes": 78487,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

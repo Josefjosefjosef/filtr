@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-05-06T16:44:30.108638Z",
+  "ingestedAt": "2026-05-06T18:09:06.554349Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Sony se má u PlayStationu 6 poučit z chyb Xboxu - INDIAN",
+      "url": "https://indian-tv.cz/clanek/sony-se-ma-u-playstationu-6-poucit-z-chyb-xboxu-egohmj",
+      "dt": "2026-05-06T16:53:33Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "chyb",
+        "indian",
+        "playstationu",
+        "poučit",
+        "sony",
+        "xboxu"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1064,32 +1087,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "NVIDIA láká na silný květen. Do GeForce NOW přidá 16 her - INDIAN",
-      "url": "https://indian-tv.cz/clanek/nvidia-laka-na-silny-kveten-do-geforce-now-prida-16-her-zql2vv",
-      "dt": "2026-05-02T07:47:03Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "geforce",
-        "her",
-        "indian",
-        "květen",
-        "láká",
-        "now",
-        "nvidia",
-        "přidá",
-        "silný"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1100,7 +1097,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 221761,
+      "bytes": 221596,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1137,7 +1134,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-06T15:56:03Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T16:53:33Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1152,6 +1149,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sony se má u PlayStationu 6 poučit z chyb Xboxu - INDIAN",
+            "publishedAt": "2026-05-06T16:53:33Z"
+          },
           {
             "title": "Zapomenutá real-time strategie R.U.S.E. se vrací - INDIAN",
             "publishedAt": "2026-05-06T15:56:03Z"
@@ -1179,10 +1180,6 @@
           {
             "title": "Tohle jsou změny, kterými zaujme Assassin’s Creed: Black Flag Resynced - INDIAN",
             "publishedAt": "2026-05-06T08:17:17Z"
-          },
-          {
-            "title": "Druhý playtest Horizon Hunters Gathering přidá nové hrdiny i náročnější výzvy - INDIAN",
-            "publishedAt": "2026-05-06T08:04:37Z"
           }
         ]
       }
