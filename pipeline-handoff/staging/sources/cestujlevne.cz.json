@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-05-06T13:30:20.765935Z",
+  "ingestedAt": "2026-05-06T14:06:22.538719Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Jarní Mallorca s all-inclusive z Prahy v květnu. Zájezd od 8 990 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/jarni-mallorca-s-all-inclusive-z-prahy-v-kvetnu",
+      "dt": "2026-05-06T13:49:30Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "990",
+        "all",
+        "inclusive",
+        "jarní",
+        "květnu",
+        "mallorca",
+        "prahy",
+        "zájezd"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -482,28 +507,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Řím z Prahy v červenci. Letenky od 1 199 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/rim-z-prahy-v-cervenci",
-      "dt": "2026-04-28T11:09:19Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "199",
-        "letenky",
-        "prahy",
-        "červenci",
-        "řím"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -514,7 +517,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 43924,
+      "bytes": 44805,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -551,7 +554,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-06T10:52:28Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T13:49:30Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -566,6 +569,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jarní Mallorca s all-inclusive z Prahy v květnu. Zájezd od 8 990 Kč",
+            "publishedAt": "2026-05-06T13:49:30Z"
+          },
           {
             "title": "Bergamo z Brna, Vídně i Prahy. Letenky od 732 Kč",
             "publishedAt": "2026-05-06T10:52:28Z"
@@ -593,10 +600,6 @@
           {
             "title": "Z Prahy na řecký ostrov Kefalonie do 4* hotelu s all-inclusive. Zájezd od 10 490 Kč",
             "publishedAt": "2026-05-01T11:28:49Z"
-          },
-          {
-            "title": "Málaga z Pardubic v červnu. Letenky od 1 308 Kč",
-            "publishedAt": "2026-05-01T06:00:37Z"
           }
         ]
       }

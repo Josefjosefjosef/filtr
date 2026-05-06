@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-06T13:30:20.765935Z",
+  "ingestedAt": "2026-05-06T14:06:22.538719Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Jak Šimek o další mistrovství světa přišel. Zraněné ruce jsme se doma už smáli, prozradil",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-jak-simek-o-dalsi-mistrovstvi-sveta-prisel-zranene-ruce-jsme-se-doma-uz-smali-prozradil-5448753",
+      "dt": "2026-05-06T13:56:58Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "další",
+        "doma",
+        "jsme",
+        "mistrovství",
+        "prozradil",
+        "přišel",
+        "ruce",
+        "smáli",
+        "světa",
+        "zraněné",
+        "šimek"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -744,31 +772,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Monstrum, které šikanuje soupeře. Experti mění na posilu za miliardy názor",
-      "url": "https://www.sport.cz/clanek/fotbal-liga-mistru-monstrum-ktere-sikanuje-soupere-experti-meni-na-posilu-za-miliardy-nazor-5448731",
-      "dt": "2026-05-06T06:42:34Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "experti",
-        "miliardy",
-        "monstrum",
-        "mění",
-        "názor",
-        "posilu",
-        "soupeře",
-        "šikanuje"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -779,7 +782,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43137,
+      "bytes": 43699,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -816,7 +819,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T13:19:37Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T13:56:58Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -831,6 +834,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jak Šimek o další mistrovství světa přišel. Zraněné ruce jsme se doma už smáli, prozradil",
+            "publishedAt": "2026-05-06T13:56:58Z"
+          },
           {
             "title": "Kočovného života už bylo dost. Při play off jsem čuměl s otevřenou tlamou, přiznává posila Sparty Sekáč",
             "publishedAt": "2026-05-06T13:19:37Z"
@@ -858,10 +865,6 @@
           {
             "title": "Vylepšení Ferrari na pódium nestačila. Ostatní dělají něco jinak, ví Hamilton",
             "publishedAt": "2026-05-06T12:13:19Z"
-          },
-          {
-            "title": "Evenepoel až do Tour de France závodit nebude",
-            "publishedAt": "2026-05-06T12:12:59Z"
           }
         ]
       }

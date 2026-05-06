@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-06T13:30:20.765935Z",
+  "ingestedAt": "2026-05-06T14:06:22.538719Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Inflace v dubnu překonala odhady. Hlavním viníkem jsou energie",
+      "url": "https://profitonline.cz/inflace-v-dubnu-prekonala-odhady-hlavnim-vinikem-jsou-energie/",
+      "dt": "2026-05-06T14:00:44Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dubnu",
+        "energie",
+        "hlavním",
+        "inflace",
+        "odhady",
+        "překonala",
+        "viníkem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -259,32 +283,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Podnikatelé prosazují byrokratický detox. EU chrlí sedm nových předpisů za den",
-      "url": "https://profitonline.cz/podnikatele-prosazuji-byrokraticky-detox-eu-chrli-sedm-novych-predpisu-za-den/",
-      "dt": "2026-05-05T04:00:56Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "byrokratický",
-        "chrlí",
-        "den",
-        "detox",
-        "nových",
-        "podnikatelé",
-        "prosazují",
-        "předpisů",
-        "sedm"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -295,7 +293,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18801,
+      "bytes": 18653,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -332,7 +330,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-06T10:00:27Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T14:00:44Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -348,6 +346,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Inflace v dubnu překonala odhady. Hlavním viníkem jsou energie",
+            "publishedAt": "2026-05-06T14:00:44Z"
+          },
           {
             "title": "Kdo nespoří, není Čech. Rodiny se opět obávají zdražování energií",
             "publishedAt": "2026-05-06T10:00:27Z"
@@ -375,10 +377,6 @@
           {
             "title": "Nemohla popadnout dech. Zrádná nemoc vede ke kolapsu srdce",
             "publishedAt": "2026-05-05T10:20:05Z"
-          },
-          {
-            "title": "Kdo a proč shodil akcie Czechoslovak Group na burze v Amsterodamu",
-            "publishedAt": "2026-05-05T08:20:21Z"
           }
         ]
       }
