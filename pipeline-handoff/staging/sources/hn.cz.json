@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-06T14:06:22.538719Z",
+  "ingestedAt": "2026-05-06T14:50:18.130226Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jistě, pane řediteli! Schopný a neústupný úředník, který přerostl svého ministra. Kdo ve skutečnosti vládne v resortu práce?",
+      "url": "https://domaci.hn.cz/c1-67873950-jiste-pane-rediteli-schopny-a-neustupny-urednik-ktery-prerostl-sveho-ministra-kdo-ve-skutecnosti-vladne-v-resortu-prace",
+      "dt": "2026-05-06T14:34:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "jistě",
+        "ministra",
+        "neústupný",
+        "pane",
+        "práce",
+        "přerostl",
+        "resortu",
+        "schopný",
+        "skutečnosti",
+        "svého",
+        "vládne",
+        "úředník",
+        "řediteli"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1127,35 +1157,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Plánovaný nárůst počtu reaktorů je v poměru k velikosti Česka bezprecedentní, říká nástupce Dany Drábové",
-      "url": "https://archiv.hn.cz/c1-67873640-planovany-narust-poctu-reaktoru-je-v-pomeru-k-velikosti-ceska-bezprecedentni-rika-nastupce-dany-drabove",
-      "dt": "2026-05-05T14:30:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bezprecedentní",
-        "dany",
-        "drábové",
-        "nárůst",
-        "nástupce",
-        "plánovaný",
-        "poměru",
-        "počtu",
-        "reaktorů",
-        "velikosti",
-        "česka",
-        "říká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1166,7 +1167,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183990,
+      "bytes": 184139,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1203,7 +1204,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-06T13:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T14:34:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 32,
@@ -1220,6 +1221,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jistě, pane řediteli! Schopný a neústupný úředník, který přerostl svého ministra. Kdo ve skutečnosti vládne v resortu práce?",
+            "publishedAt": "2026-05-06T14:34:00Z"
+          },
           {
             "title": "Maďarsko vrátilo peníze zabavené ukrajinské bance. Konstruktivní a civilizovaný krok, reagoval Zelenskyj",
             "publishedAt": "2026-05-06T13:32:00Z"
@@ -1247,10 +1252,6 @@
           {
             "title": "Utajený protest proti ruské agresi. V Kaliningradu se upálil muž, úřady jeho čin ututlaly",
             "publishedAt": "2026-05-06T10:34:00Z"
-          },
-          {
-            "title": "Krachuje tradiční středočeský výrobce obalů. Firma z Čáslavi dluží desítky milionů, svůj pád odůvodňuje i válkou v Íránu",
-            "publishedAt": "2026-05-06T09:30:00Z"
           }
         ]
       }

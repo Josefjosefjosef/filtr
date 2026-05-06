@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hlidacipes.org",
-  "ingestedAt": "2026-05-06T14:06:22.538719Z",
+  "ingestedAt": "2026-05-06T14:50:18.130226Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Mládežníci AfD tvrdě proti české vládě: „Neútočte na sudetské Němce v Brně.“",
+      "url": "https://hlidacipes.org/mladeznici-afd-tvrde-proti-ceske-vlade-neutocte-na-sudetske-nemce-v-brne/",
+      "dt": "2026-05-06T14:43:07Z",
+      "media_raw": "HlídacíPes",
+      "media_norm": "HlídacíPes",
+      "tokens": [
+        "afd",
+        "brně",
+        "mládežníci",
+        "neútočte",
+        "němce",
+        "proti",
+        "sudetské",
+        "tvrdě",
+        "vládě",
+        "české"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_hlidacipes",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "hlidacipes.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -237,31 +264,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "hlidacipes.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kremelská mapaganda: Rusko překresluje mapy a má hranice, které „nikde nekončí“",
-      "url": "https://hlidacipes.org/kremelska-mapaganda-rusko-prekresluje-mapy-a-ma-hranice-ktere-nikde-nekonci/",
-      "dt": "2026-05-03T06:00:17Z",
-      "media_raw": "HlídacíPes",
-      "media_norm": "HlídacíPes",
-      "tokens": [
-        "hranice",
-        "kremelská",
-        "mapaganda",
-        "mapy",
-        "nekončí",
-        "nikde",
-        "překresluje",
-        "rusko"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_hlidacipes",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "hlidacipes.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -272,7 +274,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://hlidacipes.org/feed/",
-      "bytes": 17455,
+      "bytes": 17409,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -309,7 +311,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-06T14:00:34Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T14:43:07Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -324,6 +326,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mládežníci AfD tvrdě proti české vládě: „Neútočte na sudetské Němce v Brně.“",
+            "publishedAt": "2026-05-06T14:43:07Z"
+          },
           {
             "title": "Aleš Rozehnal: V čem policejní konstrukce v kauze Pavla Blažka budí rozpaky",
             "publishedAt": "2026-05-06T14:00:34Z"
@@ -351,10 +357,6 @@
           {
             "title": "Osobní zkušenost: Jak se vybírají radní ČT? Odbornost je vedlejší, rozhoduje politika",
             "publishedAt": "2026-05-04T14:00:55Z"
-          },
-          {
-            "title": "Aleš Rozehnal: Skandál? Ale jinde. Stát tvrdě sáhl do soukromí tam, kde neměl",
-            "publishedAt": "2026-05-04T09:30:18Z"
           }
         ]
       }

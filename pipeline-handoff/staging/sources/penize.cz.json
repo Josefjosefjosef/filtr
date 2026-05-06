@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-06T14:06:22.538719Z",
+  "ingestedAt": "2026-05-06T14:50:18.130226Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "AI v Česku poprvé nakoupila za člověka. Mastercard a ČSOB otestovaly novou službu",
+      "url": "https://www.penize.cz/spotrebitel/489354-ai-v-cesku-poprve-nakoupila-za-cloveka-mastercard-a-csob-otestovaly-novou-sluzbu",
+      "dt": "2026-05-06T16:10:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "mastercard",
+        "nakoupila",
+        "novou",
+        "otestovaly",
+        "poprvé",
+        "službu",
+        "česku",
+        "člověka",
+        "čsob"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -460,29 +486,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Walkmany, digitálky, tamagoči. Retrokvíz Made in Japan",
-      "url": "https://www.penize.cz/nakupy/488926-walkmany-digitalky-tamagoci-osvezte-si-v-kvizu-touhy-po-made-in-japan",
-      "dt": "2026-05-02T08:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "digitálky",
-        "japan",
-        "made",
-        "retrokvíz",
-        "tamagoči",
-        "walkmany"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -493,7 +496,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 17980,
+      "bytes": 17925,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -530,11 +533,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-06T14:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T16:10:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 4,
           "finance": 14,
+          "zpravy": 4,
           "sport": 2
         },
         "drop_counts": {
@@ -547,6 +550,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "AI v Česku poprvé nakoupila za člověka. Mastercard a ČSOB otestovaly novou službu",
+            "publishedAt": "2026-05-06T16:10:00Z"
+          },
           {
             "title": "HP Tronic diktoval ceny a trestal „neposlušné“ prodejce. Dostal tučnou pokutu",
             "publishedAt": "2026-05-06T14:55:00Z"
@@ -574,10 +581,6 @@
           {
             "title": "Jak vylepšit penzijko, aby vydělalo víc? Změny ve spoření na důchod očima expertů",
             "publishedAt": "2026-05-05T05:05:00Z"
-          },
-          {
-            "title": "Uniforma bez pravomocí? Co si k vám ostraha nesmí dovolit a s čím naopak pomůže",
-            "publishedAt": "2026-05-05T05:00:00Z"
           }
         ]
       }

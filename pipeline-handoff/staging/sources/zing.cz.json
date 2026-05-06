@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-06T14:06:22.538719Z",
+  "ingestedAt": "2026-05-06T14:50:18.130226Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Na Steam se po deseti letech překvapivě vrátila oceňovaná hra od Ubisoftu",
+      "url": "https://zing.cz/article/na-steam-se-po-deseti-letech-prekvapive-vratila-ocenovana-hra-od-ubisoftu",
+      "dt": "2026-05-06T14:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "deseti",
+        "hra",
+        "letech",
+        "oceňovaná",
+        "překvapivě",
+        "steam",
+        "ubisoftu",
+        "vrátila"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -959,30 +984,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Recenze Aphelion – mrazivé sci-fi naráží na průměrnou hratelnost",
-      "url": "https://zing.cz/article/recenze-aphelion-mrazive-sci-fi-narazi-na-prumernou-hratelnost",
-      "dt": "2026-05-01T17:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "aphelion",
-        "hratelnost",
-        "mrazivé",
-        "naráží",
-        "průměrnou",
-        "recenze",
-        "sci"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -993,7 +994,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125725,
+      "bytes": 125761,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1030,7 +1031,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-06T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T14:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1045,6 +1046,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na Steam se po deseti letech překvapivě vrátila oceňovaná hra od Ubisoftu",
+            "publishedAt": "2026-05-06T14:00:00Z"
+          },
           {
             "title": "Lego Batman: Legacy of the Dark Knight ukázalo 45 minut dlouhé záběry z hraní",
             "publishedAt": "2026-05-06T12:00:00Z"
@@ -1072,10 +1077,6 @@
           {
             "title": "Květnová nabídka her v PlayStation Plus je nyní k dispozici",
             "publishedAt": "2026-05-05T15:00:00Z"
-          },
-          {
-            "title": "Headset SteelSeries Arctis Nova Pro Omni definuje budoucnost herního audia",
-            "publishedAt": "2026-05-05T14:00:00Z"
           }
         ]
       }

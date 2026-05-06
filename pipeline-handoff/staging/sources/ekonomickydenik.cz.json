@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-06T14:06:22.538719Z",
+  "ingestedAt": "2026-05-06T14:50:18.130226Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Nejkrvavější rok historie a soudní teror. Kdy začne Evropa chránit své novináře?",
+      "url": "https://ekonomickydenik.cz/evropa-slibila-ochranu-novinaru-pred-likvidacnimi-zalobami-jednotlive-zeme-selhavaji/",
+      "dt": "2026-05-06T14:30:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "chránit",
+        "evropa",
+        "historie",
+        "nejkrvavější",
+        "novináře",
+        "rok",
+        "soudní",
+        "své",
+        "teror",
+        "začne"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -753,34 +780,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Objev neznámého živočicha při ražbě metra v Praze. Fosilii našel sběratel na haldě",
-      "url": "https://ekonomickydenik.cz/objev-neznameho-zivocicha-metro/",
-      "dt": "2026-05-05T08:18:54Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "fosilii",
-        "haldě",
-        "metra",
-        "našel",
-        "neznámého",
-        "objev",
-        "praze",
-        "při",
-        "ražbě",
-        "sběratel",
-        "živočicha"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74354,
+      "bytes": 74217,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,12 +827,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T13:54:47Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T14:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 26,
+          "zpravy": 3,
+          "finance": 25,
           "zdravi": 1,
-          "zpravy": 2,
           "sport": 1
         },
         "drop_counts": {
@@ -846,6 +845,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejkrvavější rok historie a soudní teror. Kdy začne Evropa chránit své novináře?",
+            "publishedAt": "2026-05-06T14:30:00Z"
+          },
           {
             "title": "Úlevy pro živnostníky stopnul Senát, rozhodne Sněmovna",
             "publishedAt": "2026-05-06T13:54:47Z"
@@ -873,10 +876,6 @@
           {
             "title": "Kvůli drahým palivům roste inflace. V příštích měsících má dál zrychlit",
             "publishedAt": "2026-05-06T09:30:56Z"
-          },
-          {
-            "title": "Hrozí výpadky leteckého paliva v Evropě. Jak je připravené Česko?",
-            "publishedAt": "2026-05-06T08:42:08Z"
           }
         ]
       }

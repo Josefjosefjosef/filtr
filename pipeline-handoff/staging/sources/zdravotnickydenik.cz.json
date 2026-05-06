@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-06T14:06:22.538719Z",
+  "ingestedAt": "2026-05-06T14:50:18.130226Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Další pandemie je jen otázkou času, bije na poplach šéf WHO. Připomněl hantavirus na lodi",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/nova-pandemie-who/",
+      "dt": "2026-05-06T14:41:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "bije",
+        "další",
+        "hantavirus",
+        "jen",
+        "lodi",
+        "otázkou",
+        "pandemie",
+        "poplach",
+        "připomněl",
+        "who",
+        "času",
+        "šéf"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -244,34 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nemůžete si dělat z úst kanál a sršet  nechutnosti, vmetla Černochová Babišovi kvůli ÚVN",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/nemuzete-si-udelat-z-ust-kanal-vmetla-cernochova-babisovi/",
-      "dt": "2026-05-05T16:02:38Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "babišovi",
-        "dělat",
-        "kanál",
-        "kvůli",
-        "nechutnosti",
-        "nemůžete",
-        "sršet",
-        "vmetla",
-        "úst",
-        "úvn",
-        "černochová"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 84955,
+      "bytes": 82780,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,10 +320,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-06T13:27:26Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T14:41:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 10
+          "finance": 1,
+          "zdravi": 9
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -334,6 +336,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Další pandemie je jen otázkou času, bije na poplach šéf WHO. Připomněl hantavirus na lodi",
+            "publishedAt": "2026-05-06T14:41:00Z"
+          },
           {
             "title": "Šebelová varuje před „zpackáním“ supernemocnice: Babišův zásah ohrožuje péči",
             "publishedAt": "2026-05-06T13:27:26Z"
@@ -361,10 +367,6 @@
           {
             "title": "Nová generace EZKarty se blíží: Přinese osobní QR kód i přehled o branné povinnosti",
             "publishedAt": "2026-05-06T07:00:00Z"
-          },
-          {
-            "title": "Pacient v českém systému často bloudí. Šéfka Penta Hospitals popsala, co je potřeba změnit",
-            "publishedAt": "2026-05-06T06:00:00Z"
           }
         ]
       }

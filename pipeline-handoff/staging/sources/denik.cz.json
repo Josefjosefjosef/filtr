@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-06T14:06:22.538719Z",
+  "ingestedAt": "2026-05-06T14:50:18.130226Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Pojišťovny chtějí zkrátit návštěvy asistentek po porodu. Nesmysl, zní od expertů",
+      "url": "https://www.denik.cz/zdravotnictvi/zdravotnictvi-zkrati-se-hrazene-navstevy-porodnich-asistentek-kritika.html",
+      "dt": "2026-05-06T14:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "asistentek",
+        "chtějí",
+        "expertů",
+        "nesmysl",
+        "návštěvy",
+        "pojišťovny",
+        "porodu",
+        "zkrátit",
+        "zní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -622,32 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Třináctiletý mladík zastřelil v brazilské škole dva lidi, dva další zranil",
-      "url": "https://www.denik.cz/ze_sveta/trinactilety-mladik-zastrelil-v-brazilske-skole-dva-lidi-dva-dalsi-zranil.html",
-      "dt": "2026-05-06T04:53:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "brazilské",
-        "další",
-        "dva",
-        "lidi",
-        "mladík",
-        "třináctiletý",
-        "zastřelil",
-        "zranil",
-        "škole"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -658,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 27944,
+      "bytes": 28447,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -695,10 +695,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-06T13:06:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T14:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 25
+          "zdravi": 1,
+          "zpravy": 24
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -710,6 +711,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pojišťovny chtějí zkrátit návštěvy asistentek po porodu. Nesmysl, zní od expertů",
+            "publishedAt": "2026-05-06T14:00:00Z"
+          },
           {
             "title": "Školka se po řádění vandalů změnila ve spoušť. S obnovou pomáhají dobrovolníci",
             "publishedAt": "2026-05-06T13:06:00Z"
@@ -737,10 +742,6 @@
           {
             "title": "Řekové rozšířili mapu: Lehátka či slunečníky zakázali už na stovkách pláží",
             "publishedAt": "2026-05-06T10:38:00Z"
-          },
-          {
-            "title": "Syn si na skluzavce zlomil obratle, tvrdí matka. Praha 5 spouští kontrolu hřišť",
-            "publishedAt": "2026-05-06T10:32:00Z"
           }
         ]
       }
