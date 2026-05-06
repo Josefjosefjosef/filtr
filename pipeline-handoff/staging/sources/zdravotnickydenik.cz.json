@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-06T15:25:28.354719Z",
+  "ingestedAt": "2026-05-06T16:00:19.624370Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Záchranáři, policie i armáda pod jednou střechou. Babiš chce v republice síť supercenter IZS",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/babis-izs-zachranari-policie-hasici-na-jednom-miste/",
+      "dt": "2026-05-06T15:52:46Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "armáda",
+        "babiš",
+        "chce",
+        "izs",
+        "jednou",
+        "policie",
+        "republice",
+        "střechou",
+        "supercenter",
+        "síť",
+        "záchranáři"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -247,32 +275,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Varování pro Česko? Německé nemocnice začnou propouštět, specialisté přijdou o miliony",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/nemecke-nemocnice-propousteni-specialiste/",
-      "dt": "2026-05-06T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "miliony",
-        "nemocnice",
-        "německé",
-        "propouštět",
-        "přijdou",
-        "specialisté",
-        "varování",
-        "začnou",
-        "česko"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -283,7 +285,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 82780,
+      "bytes": 78588,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -320,11 +322,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-06T14:41:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T15:52:46Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
+          "zpravy": 1,
           "finance": 1,
-          "zdravi": 9
+          "zdravi": 8
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -336,6 +339,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Záchranáři, policie i armáda pod jednou střechou. Babiš chce v republice síť supercenter IZS",
+            "publishedAt": "2026-05-06T15:52:46Z"
+          },
           {
             "title": "Další pandemie je jen otázkou času, bije na poplach šéf WHO. Připomněl hantavirus na lodi",
             "publishedAt": "2026-05-06T14:41:00Z"
@@ -363,10 +370,6 @@
           {
             "title": "Nejzáhadnější orgán se vrací do centra pozornosti. Může souviset s dlouhověkostí i rizikem rakoviny",
             "publishedAt": "2026-05-06T08:00:00Z"
-          },
-          {
-            "title": "Nová generace EZKarty se blíží: Přinese osobní QR kód i přehled o branné povinnosti",
-            "publishedAt": "2026-05-06T07:00:00Z"
           }
         ]
       }

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-06T15:25:28.354719Z",
+  "ingestedAt": "2026-05-06T16:00:19.624370Z",
   "items": [
     {
       "section": "pocasi",
@@ -21,6 +21,32 @@
         "radar",
         "sledujte",
         "výstraha"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "VIDEO: U Štramberka vykolejil vagon s vápnem. Osobní vlaky kvůli nehodě nejezdí",
+      "url": "https://www.denik.cz/nehody/koprivnice-verovice-stramberk-vykolejeni-nakladni-vlak-omezeni-provoz.html",
+      "dt": "2026-05-06T14:58:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "kvůli",
+        "nehodě",
+        "nejezdí",
+        "osobní",
+        "vagon",
+        "vlaky",
+        "vykolejil",
+        "vápnem",
+        "štramberka"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -304,32 +330,6 @@
         "syn",
         "tvrdí",
         "zlomil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "S podobou nového sedmiletého rozpočtu EU nejsme vůbec spokojeni, říká Jermanová",
-      "url": "https://www.denik.cz/evropa-pro-cechy/jaroslava-pokorna-jermanova-patrioti-evropsky-parlament-podcast.html",
-      "dt": "2026-05-06T10:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "jermanová",
-        "nejsme",
-        "nového",
-        "podobou",
-        "rozpočtu",
-        "sedmiletého",
-        "spokojeni",
-        "vůbec",
-        "říká"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -658,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28742,
+      "bytes": 28737,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -716,6 +716,10 @@
             "publishedAt": "2026-05-06T15:01:00Z"
           },
           {
+            "title": "VIDEO: U Štramberka vykolejil vagon s vápnem. Osobní vlaky kvůli nehodě nejezdí",
+            "publishedAt": "2026-05-06T14:58:00Z"
+          },
+          {
             "title": "Klíšťata útočí. Každé páté na Moravě přenáší nebezpečné patogeny, tvrdí studie",
             "publishedAt": "2026-05-06T14:56:00Z"
           },
@@ -738,10 +742,6 @@
           {
             "title": "České přehrady se výrazně oteplují. Vědci narazili na jarní paradox",
             "publishedAt": "2026-05-06T12:00:00Z"
-          },
-          {
-            "title": "Nervozita a obviňování. Pasažéři popisují zoufalství na lodi zasažené hantavirem",
-            "publishedAt": "2026-05-06T11:19:00Z"
           }
         ]
       }
