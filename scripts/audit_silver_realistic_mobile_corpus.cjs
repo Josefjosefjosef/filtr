@@ -1749,18 +1749,120 @@ function main() {
     eng.createEmptyDraft(),
     ctxEmpty()
   );
-  const zNote = foldCs(
-    String((rmZel.silverCompanionNoteTurn && rmZel.silverCompanionNoteTurn.draft && rmZel.silverCompanionNoteTurn.draft.silverNoteText) || "")
-  );
+  const zNote = foldCs(String((rmZel.draft && rmZel.draft.note) || ""));
   const zAddr = foldCs(String((rmZel.draft && (rmZel.draft.address || rmZel.draft.location)) || ""));
   rmAll =
     auditRmPass(
       "real_multi_intent_calendar_note_zelenka",
       rmZel.normalizedIntent === "calendar.create" &&
-        !!rmZel.silverCompanionNoteTurn &&
+        !rmZel.silverCompanionNoteTurn &&
         zNote.indexOf("smlouv") >= 0 &&
         zAddr.indexOf("vinohrad") >= 0
     ) && rmAll;
+
+  function rmEmbeddedCalNoteNoCompanion(label, rawIn, needleFold) {
+    try {
+      if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
+    } catch (eEmb) {
+      void eEmb;
+    }
+    const tr = eng.processUserTurn(String(rawIn || "").trim(), eng.createEmptyDraft(), ctxEmpty());
+    const nFold = foldCs(String((tr.draft && tr.draft.note) || ""));
+    return auditRmPass(
+      label,
+      tr.normalizedIntent === "calendar.create" &&
+        !tr.silverCompanionNoteTurn &&
+        nFold.indexOf(needleFold) >= 0
+    );
+  }
+  rmAll =
+    rmEmbeddedCalNoteNoCompanion(
+      "embedded_event_note_jakub_destnik",
+      "Ulož mi schůzku s Jakubem zítra v 15:00 a do poznámky mi dej abych si vzal deštník",
+      "destnik"
+    ) && rmAll;
+  rmAll =
+    rmEmbeddedCalNoteNoCompanion(
+      "embedded_event_note_jirka_dokumenty",
+      "Dej do kalendáře schůzku s Jirkou v pátek ve 3 a do poznámky napiš vzít dokumenty",
+      "dokument"
+    ) && rmAll;
+  rmAll =
+    rmEmbeddedCalNoteNoCompanion(
+      "embedded_event_note_zubar_karticka",
+      "Zítra zubař v 10 na Korunní 44 Praha a do poznámky přidej kartičku pojišťovny",
+      "kartick"
+    ) && rmAll;
+  rmAll =
+    rmEmbeddedCalNoteNoCompanion(
+      "embedded_event_note_pravnik_smlouva",
+      "Ulož mi právníka ve čtvrtek 14:00 Spálená 3 Praha a k tomu do poznámky smlouvu",
+      "smlouv"
+    ) && rmAll;
+  rmAll =
+    rmEmbeddedCalNoteNoCompanion(
+      "embedded_event_note_bohdalova_zavolat",
+      "Schůzka s paní Bohdalovou v pondělí 9:00 Praha jedna a do poznámky mi dej zavolat předem",
+      "zavolat"
+    ) && rmAll;
+  rmAll =
+    rmEmbeddedCalNoteNoCompanion(
+      "embedded_event_note_tomas_obcanka",
+      "Ulož mi schůzku s Tomášem pozítří 16:00 ať si vezmu občanku",
+      "obcank"
+    ) && rmAll;
+  rmAll =
+    rmEmbeddedCalNoteNoCompanion(
+      "embedded_event_note_investor_podklady",
+      "Zítra 15:00 investor v kavárně a nezapomenout vzít podklady",
+      "podklad"
+    ) && rmAll;
+  rmAll =
+    rmEmbeddedCalNoteNoCompanion(
+      "embedded_event_note_kontrola_vysledky",
+      "Dej do kalendáře kontrolu v úterý dopoledne a poznámka: vzít výsledky",
+      "vysled"
+    ) && rmAll;
+
+  try {
+    if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
+  } catch (eRmSep) {
+    void eRmSep;
+  }
+  const rmSep = eng.processUserTurn(
+    "Ulož schůzku zítra v 15 a zvlášť si napiš poznámku že mám koupit kytku",
+    eng.createEmptyDraft(),
+    ctxEmpty()
+  );
+  const sepNote = foldCs(
+    String((rmSep.silverCompanionNoteTurn && rmSep.silverCompanionNoteTurn.draft && rmSep.silverCompanionNoteTurn.draft.silverNoteText) || "")
+  );
+  rmAll =
+    auditRmPass(
+      "explicit_separate_note_zvlast_kytky",
+      rmSep.normalizedIntent === "calendar.create" &&
+        !!rmSep.silverCompanionNoteTurn &&
+        sepNote.indexOf("kytk") >= 0
+    ) && rmAll;
+
+  try {
+    if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
+  } catch (eRmNeg) {
+    void eRmNeg;
+  }
+  const rmNeg = eng.processUserTurn(
+    "Silvere jen se podívej na schůzku zítra a nic neukládej",
+    eng.createEmptyDraft(),
+    ctxEmpty()
+  );
+  rmAll =
+    auditRmPass(
+      "read_only_negated_no_write",
+      rmNeg.normalizedIntent !== "notes.create" &&
+        rmNeg.normalizedIntent !== "tasks.create" &&
+        !(rmNeg.normalizedIntent === "calendar.create" && rmNeg.processingState === "READY_TO_SAVE")
+    ) && rmAll;
+
   try {
     if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
   } catch (eRm5) {

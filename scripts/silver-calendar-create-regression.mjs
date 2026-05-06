@@ -118,20 +118,17 @@ function run() {
   };
   console.log(JSON.stringify({ summary }));
 
-  /** P0 PR #4008: real multi-intent — calendar.create (head) + notes.create (tail), not event note only. */
+  /** P0 embedded event note: calendar.create + event draft.note; žádný samostatný notes.create companion. */
   const DUAL_NOW = new Date("2026-05-06T12:00:00");
   const dualIn =
     "Ulož mi schůzku ve středu s Tomášem na adrese Korunní 44 Praha do poznámky mi dej abych si sebou vzal deštník";
   const dualR = eng.processUserTurn(dualIn, eng.createEmptyDraft(), { now: DUAL_NOW });
   const comp = !!dualR.silverCompanionNoteTurn;
-  const noteTxt = String((dualR.silverCompanionNoteTurn && dualR.silverCompanionNoteTurn.draft && dualR.silverCompanionNoteTurn.draft.silverNoteText) || "").toLowerCase();
   const calNote = String((dualR.draft && dualR.draft.note) || "").toLowerCase();
   const dualOk =
     dualR.normalizedIntent === "calendar.create" &&
-    comp &&
-    (noteTxt.indexOf("deštník") >= 0 || noteTxt.indexOf("destnik") >= 0) &&
-    calNote.indexOf("deštník") < 0 &&
-    calNote.indexOf("destnik") < 0;
+    !comp &&
+    (calNote.indexOf("deštník") >= 0 || calNote.indexOf("destnik") >= 0);
   console.log(JSON.stringify({ case: "REAL_MULTI_INTENT_CAL_NOTE_SPLIT", pass: dualOk }));
   const exitDual = dualOk ? 0 : 1;
 
@@ -142,8 +139,8 @@ function run() {
   const rmZR = eng.processUserTurn(rmZel, eng.createEmptyDraft(), { now: RM_NOW });
   const zOk =
     rmZR.normalizedIntent === "calendar.create" &&
-    !!rmZR.silverCompanionNoteTurn &&
-    String((rmZR.silverCompanionNoteTurn.draft && rmZR.silverCompanionNoteTurn.draft.silverNoteText) || "")
+    !rmZR.silverCompanionNoteTurn &&
+    String((rmZR.draft && rmZR.draft.note) || "")
       .toLowerCase()
       .indexOf("smlouv") >= 0 &&
     String((rmZR.draft && rmZR.draft.address) || "").toLowerCase().indexOf("vinohrad") >= 0;
