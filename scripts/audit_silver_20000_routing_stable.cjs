@@ -1976,6 +1976,121 @@ function main() {
     }
   }
 
+  /** P0 real mobile command audit v1 — produkční věty (Silver routing / kalendář / úkol / dual-write). */
+  function auditRmPass(name, ok) {
+    console.log("real_mobile_case=" + escapeField(name) + "=" + (ok ? "PASS" : "FAIL"));
+    return ok;
+  }
+  let rmAll = true;
+  try {
+    if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
+  } catch (eRm0) {
+    void eRm0;
+  }
+  const rmWarrantyTurn = eng.processUserTurn("Kdy mi končí záruka TV", eng.createEmptyDraft(), ctxForCase("note_query"));
+  rmAll =
+    auditRmPass(
+      "warranty_note_query",
+      engineToAuditIntent(rmWarrantyTurn.normalizedIntent, "note_query") === "note.query" &&
+        rmWarrantyTurn.processingState === "READ_OK"
+    ) && rmAll;
+  try {
+    if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
+  } catch (eRm1) {
+    void eRm1;
+  }
+  const rmTaskNapsat = eng.processUserTurn(
+    "Nesmím zapomenout napsat do knihy úvodní kapitolu",
+    eng.createEmptyDraft(),
+    ctxEmpty()
+  );
+  rmAll =
+    auditRmPass(
+      "nesmim_zapomenout_napsat_task",
+      engineToAuditIntent(rmTaskNapsat.normalizedIntent, "task_write") === "task.create" &&
+        rmTaskNapsat.processingState === "READY_TO_SAVE"
+    ) && rmAll;
+  try {
+    if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
+  } catch (eRm2) {
+    void eRm2;
+  }
+  const rmTaskZaplatit = eng.processUserTurn("Nesmím zapomenout zaplatit nájem do pátku", eng.createEmptyDraft(), ctxEmpty());
+  rmAll =
+    auditRmPass(
+      "nesmim_zapomenout_zaplatit_task",
+      engineToAuditIntent(rmTaskZaplatit.normalizedIntent, "task_write") === "task.create" &&
+        rmTaskZaplatit.processingState === "READY_TO_SAVE"
+    ) && rmAll;
+  try {
+    if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
+  } catch (eRm3) {
+    void eRm3;
+  }
+  const rmNov = eng.processUserTurn(
+    "Ulož mi schůzku s panem Novotným 22.5. v 15 hod. místo je restaurace palma na náměstí bratří synků Praha",
+    eng.createEmptyDraft(),
+    ctxEmpty()
+  );
+  const novAddr = foldCs(String((rmNov.draft && (rmNov.draft.address || rmNov.draft.location)) || ""));
+  rmAll =
+    auditRmPass(
+      "calendar_address_misto_je_novotny",
+      engineToAuditIntent(rmNov.normalizedIntent, "calendar_write") === "calendar.create" &&
+        rmNov.processingState === "READY_TO_SAVE" &&
+        novAddr.indexOf("palma") >= 0 &&
+        novAddr.indexOf("namesti") >= 0 &&
+        foldCs(String(rmNov.draft.title || "")).indexOf("palma") < 0
+    ) && rmAll;
+  try {
+    if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
+  } catch (eRm4) {
+    void eRm4;
+  }
+  const rmZel = eng.processUserTurn(
+    "Ulož mi ve čtvrtek schůzku s panem Zelenkou na adrese Praha jedna vinohradská a do poznámky mi dej ať si připravím smlouvu",
+    eng.createEmptyDraft(),
+    ctxEmpty()
+  );
+  const zNote = foldCs(
+    String((rmZel.silverCompanionNoteTurn && rmZel.silverCompanionNoteTurn.draft && rmZel.silverCompanionNoteTurn.draft.silverNoteText) || "")
+  );
+  const zAddr = foldCs(String((rmZel.draft && (rmZel.draft.address || rmZel.draft.location)) || ""));
+  rmAll =
+    auditRmPass(
+      "real_multi_intent_calendar_note_zelenka",
+      rmZel.normalizedIntent === "calendar.create" &&
+        !!rmZel.silverCompanionNoteTurn &&
+        zNote.indexOf("smlouv") >= 0 &&
+        zAddr.indexOf("vinohrad") >= 0
+    ) && rmAll;
+  try {
+    if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
+  } catch (eRm5) {
+    void eRm5;
+  }
+  const rmJak = eng.processUserTurn(
+    "Ulož mi pozítří schůzku s Jakubem potkáme se na Štvanici a připomeň mi ať si sebou vezmu mobilní telefon",
+    eng.createEmptyDraft(),
+    ctxEmpty()
+  );
+  const jakNote = foldCs(String((rmJak.draft && rmJak.draft.note) || ""));
+  const jakTitle = foldCs(String((rmJak.draft && rmJak.draft.title) || ""));
+  rmAll =
+    auditRmPass(
+      "calendar_reminder_tail_jakub",
+      engineToAuditIntent(rmJak.normalizedIntent, "calendar_write") === "calendar.create" &&
+        rmJak.processingState === "NEEDS_CLARIFICATION" &&
+        jakNote.indexOf("pripom") >= 0 &&
+        jakNote.indexOf("mobil") >= 0 &&
+        jakTitle.indexOf("pripom") < 0
+    ) && rmAll;
+  console.log("real_mobile_cases=" + (rmAll ? "PASS" : "FAIL"));
+  if (!rmAll) {
+    console.log("=== SILVER_REAL_MOBILE_AUDIT_FAIL ===");
+    process.exit(1);
+  }
+
   fails.sort((a, b) => b.sev - a.sev);
   const seenIn = new Set();
   const top100 = [];

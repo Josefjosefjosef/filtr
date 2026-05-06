@@ -35757,7 +35757,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const comp = iuSilverTryCalendarNoteCompositeHeadNoteTailP0(raw, folded);
     if (!comp || !comp.headRaw || !String(comp.noteBody || "").trim()) return null;
     const tailFoldGate = foldCs(String(comp.noteRaw || ""));
-    if (!/\bdo\s+poznam\w*\s+mi\s+dej\b/.test(tailFoldGate)) return null;
+    /** P0: „do poznámky mi dej|napiš|ulož …“ — stejný dual-write jako PR #4008. */
+    const tailHasCompanionNoteCue =
+      /\bdo\s+poznam\w*\s+mi\s+(dej|dejte|napi[sš]|ulo[zž])\b/.test(tailFoldGate) ||
+      /\bdo\s+poznam\w*\s+napi[sš]\b/.test(tailFoldGate);
+    if (!tailHasCompanionNoteCue) return null;
     const prev = prevDraft || createEmptyDraft();
     const calTurn = iuSilverBuildCalendarCreateTurn(comp.headRaw, now, prev);
     if (!calTurn || calTurn.normalizedIntent !== "calendar.create") return null;
@@ -36507,7 +36511,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /^\s*že\s+/iu,
       /^\s*abych\s+/iu,
       /^\s*musím\s+/iu,
-      /^\s*musim\s+/iu
+      /^\s*musim\s+/iu,
+      /^\s*nesm[ií]m\s+zapomenout\s+/iu,
+      /^\s*nezapomen(?:out)?\s+/iu
     ];
     for (let bi = 0; bi < 24; bi++) {
       const prevW = w;
@@ -36523,7 +36529,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverHasTaskActionVerb(folded) {
     const f = String(folded || "");
     if (
-      /\b(koupit|ud[eě]lat|udelat|zavolat|vy[rř][ií]dit|vyridit|zaplatit|poslat|objednat|p[rř]ipomenout|pripomenout|zkontrolovat|za[rř][ií]dit|zaridit|uklidit|vyzvednout|opravit)\b/.test(
+      /\b(koupit|ud[eě]lat|udelat|zavolat|vy[rř][ií]dit|vyridit|zaplatit|poslat|objednat|p[rř]ipomenout|pripomenout|zkontrolovat|za[rř][ií]dit|zaridit|uklidit|vyzvednout|opravit|napsat|precist|pripravit|odeslat|dokoncit|nastudovat|domluvit)\b/.test(
         f
       )
     ) {
@@ -36532,7 +36538,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bje\s+potreba\s+(koupit|zaplatit|zavolat|poslat|objednat|vyridit|vyrizit|udelat)\b/.test(f)) return true;
     if (/\b(mam|musim)\s+(zaplatit|koupit|zavolat|poslat|objednat|vyridit|vyrizit|udelat)\b/.test(f)) return true;
     if (/\b(musim|mam|mel\s+bych|potrebuji|potrebuju)\s+(\w+\s+){0,4}(koupit|zaplatit|zavolat|poslat|objednat|vyridit|vyrizit|udelat)\b/.test(f)) return true;
-    if (/\bnesmim\s+zapomenout\b.*\b(koupit|zaplatit|zavolat|poslat|objednat|vyridit|udelat)\b/.test(f)) return true;
+    if (
+      /\bnesmim\s+zapomenout\b.*\b(koupit|zaplatit|zavolat|poslat|objednat|vyridit|udelat|napsat|precist|pripravit|odeslat|dokoncit|nastudovat|domluvit)\b/.test(
+        f
+      )
+    )
+      return true;
     if (/\b(a|at)\s+nezapomenu\b.*\b(koupit|zaplatit|zavolat|poslat|objednat)\b/.test(f)) return true;
     if (/\bpripomen(?:te)?\s+mi\b.*\b(koupit|zaplatit|zavolat|poslat|objednat)\b/.test(f)) return true;
     if (/\b(zitra|dnes)\s+musim\b.*\b(koupit|zavolat|zaplatit)\b/.test(f)) return true;
@@ -36550,7 +36561,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     objednat: "objednat",
     pripomenout: "připomenout",
     zkontrolovat: "zkontrolovat",
-    zaridit: "zařídit"
+    zaridit: "zařídit",
+    napsat: "napsat",
+    precist: "přečíst",
+    pripravit: "připravit",
+    odeslat: "odeslat",
+    dokoncit: "dokončit",
+    nastudovat: "nastudovat",
+    domluvit: "domluvit"
   };
 
   function iuSilverNormalizeTaskLexeme(s) {
@@ -36562,7 +36580,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverFinalizeTaskTitle(cleanWork) {
     let t = iuSilverNormalizeTaskLexeme(cleanWork);
     const m = t.match(
-      /^(.+?)\s+(koupit|udělat|udelat|zavolat|vyřídit|vyridit|zaplatit|poslat|objednat|připomenout|pripomenout|zkontrolovat|zařídit|zariadit)\s*$/iu
+      /^(.+?)\s+(koupit|udělat|udelat|zavolat|vyřídit|vyridit|zaplatit|poslat|objednat|připomenout|pripomenout|zkontrolovat|zařídit|zariadit|napsat|přečíst|precist|připravit|pripravit|odeslat|dokončit|dokoncit|nastudovat|domluvit)\s*$/iu
     );
     if (m) {
       const body = iuSilverNormalizeWs(m[1]);
@@ -37152,6 +37170,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const r = iuSilverNormalizeUtteranceForReadParse(rawIn);
     const f = foldCs(r);
     if (!r) return null;
+    /** P0: dotaz na konec záruky / TV v poznámkách — nesmí spadnout na calendar.read před notes.read. */
+    if (
+      /\b(kdy|do\s+kdy|jak\s+dlouho|konci|vyprsi)\b/.test(f) &&
+      /\b(zaruk\w*|garanc\w*|reklamac\w*|lhu[tť]a\w*|platnost\w*|televiz\w*|\btw\b)\b/.test(f) &&
+      !/\b(v\s+kalend|do\s+kalend|jen\s+v\s+kalend|jen\s+kalendar)\b/.test(f)
+    )
+      return null;
     if (iuSilverNoteQueryWithCalendarContextSignalFolded(f)) return null;
     if (iuSilverCalendarReadSuppressedForWriteIntent(f)) return null;
     if (
@@ -38662,8 +38687,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function iuSilverReadSearchSignalFolded(f) {
     const x = String(f || "");
+    /** P0 real mobile: záruka / lhůta / TV v poznámkách — „kdy mi končí …“ je note read, ne kalendářní doptávka. */
+    const noteWarrantyAsk =
+      /\b(zaruk\w*|garanc\w*|reklamac\w*|lhu[tť]a\w*|platnost\w*|televiz\w*|\btw\b)\b/.test(x) &&
+      /\b(kdy|do\s+kdy|jak\s+dlouho|konci|vyprsi|do\s+konce)\b/.test(x) &&
+      !/\b(v\s+kalend|do\s+kalend|udalost\w*\s+v\s+kalend)\b/.test(x);
     return (
       iuSilverNoteFactReadQuerySignalFolded(x) ||
+      noteWarrantyAsk ||
       /\b(najdi|vyhledej|vyhledejte|hledej|ukaz|ukaž|ukož|zobraz|zobrazit|vypis)\b/.test(x) ||
       /\bco\s+je\s+v\s+poznamk\w*/.test(x) ||
       /\b(jake|jaky|jakou)\s+mam\s+ukol/.test(x) ||
@@ -38770,6 +38801,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     if (/\bnajdi\s+(muj|moje|mi\s+)?ukol|vyhledej\s+(muj|moje|mi\s+)?ukol\b/.test(f)) return "tasks";
     if (/\b(poznam\w*|pin|kod|heslo|obcank\w*|smlouv\w*|klic\w*|objednav\w*|barva|auto|zaruka|reklam|kontakt|servis|alz|televiz|kart)\b/.test(f)) return "notes";
+    if (
+      /\bkdy\b/.test(f) &&
+      /\b(zaruk\w*|garanc\w*|reklamac\w*|lhu[tť]a\w*|platnost\w*|televiz\w*|\btw\b)\b/.test(f) &&
+      !/\b(v\s+kalend|do\s+kalend)\b/.test(f)
+    )
+      return "notes";
     if (/\b(kdy|v\s+kolik|program|kalendar|schuz|meeting|porad|zubar|doktor|navstev|uvidim|potkam|sejdu|zitra|dnes|udalost)\b/.test(f)) return "calendar";
     if (/\b(najdi|vyhledej|ukaz|ukaž|hledej)\b/.test(f)) return "all";
     if (/\bco\s+mam\s+k\s+\S+/.test(f)) return "all";
@@ -38807,7 +38844,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /^\s*jako[uů]\s+barvu\s+m[eě]lo\s+/i,
       /^\s*jaky\s+m[aá]m\s+program\s+/i,
       /^\s*jake\s+mam\s+ukol\w*\s*/i,
-      /^\s*jaky\s+mam\s+ukol\w*\s*/i
+      /^\s*jaky\s+mam\s+ukol\w*\s*/i,
+      /^\s*kdy\s+mi\s+konc\w*\s+/i,
+      /^\s*kdy\s+konc\w*\s+/i,
+      /^\s*do\s+kdy\s+konc\w*\s+/i,
+      /^\s*jak\s+dlouho\s+(?:jeste\s+|je\s+)?/i
     ];
     for (let si = 0; si < 20; si++) {
       const prev = t;
@@ -39110,6 +39151,18 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return { work: main, note: iuSilverHumanizeRoughNote(noteRaw) };
   }
 
+  /** P0 real mobile: připomenutí v kalendářové větě → pole poznámky události, ne název. */
+  function iuSilverStripCalendarReminderClauseFromWork(work) {
+    const s0 = String(work || "").trim();
+    if (!s0) return { work: "", rem: "" };
+    const re = /\s+(?:a\s+)?p[rř]ipome[nň](?:te)?\s+mi(?:\s+a[ťt])?\s+.+/i;
+    const m = s0.match(re);
+    if (!m || m.index == null || m.index < 1) return { work: s0, rem: "" };
+    const rem = s0.slice(m.index).trim();
+    const main = s0.slice(0, m.index).replace(/\s+/g, " ").trim();
+    return { work: main, rem: rem };
+  }
+
   function stripDuration(work) {
     let w = work;
     let minutes = null;
@@ -39133,17 +39186,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     let w = work;
     let loc = "";
     const pats = [
+      /\bm[ií]sto\s+je\s+(.+?)(?=\s+(?:a\s+)?p[rř]ipome|\s+a\s+p[rř]ipome|\s+do\s+pozn|\s+a\s+do\s+pozn|[.!?]|$)/i,
       /\bm[ií]sto\s*:\s*([^.!?]+?)(?=\.|$|pozn[aá]mka)/i,
       /\badresa\s*:\s*([^.!?]+?)(?=\.|$|pozn[aá]mka)/i,
       /\badresa\s+je\s+(.+?)(?=\s*$|\.|\s+do\s+pozn|\s+a\s+do\s+pozn)/i,
       /\bv\s+ordinaci\s+([^.!?]+)/i,
-      /\bna\s+adrese\s+([^.!?]+)/i,
+      /\bna\s+adrese\s+(.+?)(?=\s+a\s+do\s+pozn|\s+do\s+pozn|\s*$|\.|\!|\?)/i,
       /\b(Praha\s+\d{1,2})\b/i
     ];
     for (const re of pats) {
       const m = w.match(re);
       if (m && m[1]) {
         loc = String(m[1]).trim().slice(0, 200);
+        loc = loc.replace(/\s+a\s*$/i, "").trim();
         w = w.replace(re, " ");
         break;
       }
@@ -40293,6 +40348,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       confidence.note = "certain";
     }
     work = looseNote.work;
+
+    const remStrip = iuSilverStripCalendarReminderClauseFromWork(work);
+    if (remStrip.rem) {
+      notePieces.push(iuSilverHumanizeRoughNote(remStrip.rem));
+      confidence.note = "certain";
+    }
+    work = remStrip.work;
 
     const durHit = stripDuration(work);
     if (durHit.minutes != null) {

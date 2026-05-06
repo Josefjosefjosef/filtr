@@ -134,7 +134,42 @@ function run() {
     calNote.indexOf("destnik") < 0;
   console.log(JSON.stringify({ case: "REAL_MULTI_INTENT_CAL_NOTE_SPLIT", pass: dualOk }));
   const exitDual = dualOk ? 0 : 1;
-  process.exit(summary.exitCode !== 0 ? summary.exitCode : exitDual);
+
+  /** P0 real mobile v1 — doplněné produkční věty (kalendář + adresace + připomenutí + dual-write). */
+  const RM_NOW = new Date("2026-03-27T12:00:00");
+  const rmZel =
+    "Ulož mi ve čtvrtek schůzku s panem Zelenkou na adrese Praha jedna vinohradská a do poznámky mi dej ať si připravím smlouvu";
+  const rmZR = eng.processUserTurn(rmZel, eng.createEmptyDraft(), { now: RM_NOW });
+  const zOk =
+    rmZR.normalizedIntent === "calendar.create" &&
+    !!rmZR.silverCompanionNoteTurn &&
+    String((rmZR.silverCompanionNoteTurn.draft && rmZR.silverCompanionNoteTurn.draft.silverNoteText) || "")
+      .toLowerCase()
+      .indexOf("smlouv") >= 0 &&
+    String((rmZR.draft && rmZR.draft.address) || "").toLowerCase().indexOf("vinohrad") >= 0;
+  console.log(JSON.stringify({ case: "REAL_MULTI_INTENT_ZELENKA_CAL_NOTE", pass: zOk }));
+
+  const rmW = "Kdy mi končí záruka TV";
+  const rmWR = eng.processUserTurn(rmW, eng.createEmptyDraft(), { now: RM_NOW });
+  const wOk =
+    rmWR.normalizedIntent === "notes.read" &&
+    rmWR.processingState === "READ_OK" &&
+    !/\bkalend/i.test(String(rmWR.assistantLead || rmWR.userFacingSummary || "").toLowerCase());
+  console.log(JSON.stringify({ case: "REAL_MOBILE_WARRANTY_NOTE_QUERY", pass: wOk }));
+
+  const rmT1 = "Nesmím zapomenout napsat do knihy úvodní kapitolu";
+  const rmT1R = eng.processUserTurn(rmT1, eng.createEmptyDraft(), { now: RM_NOW });
+  const t1Ok = rmT1R.normalizedIntent === "tasks.create" && rmT1R.processingState === "READY_TO_SAVE";
+  console.log(JSON.stringify({ case: "REAL_MOBILE_NESMIM_NAPSAT_TASK", pass: t1Ok }));
+
+  const rmT2 = "Nesmím zapomenout zaplatit nájem do pátku";
+  const rmT2R = eng.processUserTurn(rmT2, eng.createEmptyDraft(), { now: RM_NOW });
+  const t2Ok = rmT2R.normalizedIntent === "tasks.create" && rmT2R.processingState === "READY_TO_SAVE";
+  console.log(JSON.stringify({ case: "REAL_MOBILE_NESMIM_ZAPLATIT_TASK", pass: t2Ok }));
+
+  const exitRm = zOk && wOk && t1Ok && t2Ok ? 0 : 1;
+  const exitFinal = summary.exitCode !== 0 ? summary.exitCode : exitDual !== 0 ? exitDual : exitRm;
+  process.exit(exitFinal);
 }
 
 run();
