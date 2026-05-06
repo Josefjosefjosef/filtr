@@ -2068,6 +2068,52 @@ function main() {
         zNote.indexOf("smlouv") >= 0 &&
         zAddr.indexOf("vinohrad") >= 0
     ) && rmAll;
+
+  const p1CalQuerySpot = [
+    ["p1_cal_q_co_dnes_v_kal", "Co mám dnes v kalendáři"],
+    ["p1_cal_q_jake_zitra_schuz", "Jaké mám zítra schůzky"],
+    ["p1_cal_q_ukaz_kal_zitra", "Ukaž mi kalendář na zítra"],
+    ["p1_cal_q_najdi_schuz_novak", "Najdi schůzku s Novákem"],
+    ["p1_cal_q_mam_dnes_nejakou_schuz", "Mám dnes nějakou schůzku"],
+    ["p1_cal_q_co_dnes_v_planu_v_kal", "Co mám dnes v plánu v kalendáři"]
+  ];
+  for (let iCq = 0; iCq < p1CalQuerySpot.length; iCq++) {
+    try {
+      if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
+    } catch (eCq) {
+      void eCq;
+    }
+    const tCq = eng.processUserTurn(p1CalQuerySpot[iCq][1], eng.createEmptyDraft(), ctxQuery());
+    const okCq =
+      engineToAuditIntent(tCq.normalizedIntent, "calendar_query") === "calendar.query" &&
+      tCq.processingState === "READ_OK" &&
+      tCq.normalizedIntent !== "create.storage_disambiguation";
+    rmAll = auditRmPass(p1CalQuerySpot[iCq][0], okCq) && rmAll;
+  }
+
+  try {
+    if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
+  } catch (eRmCalN) {
+    void eRmCalN;
+  }
+  const rmCalNeg = eng.processUserTurn(
+    "Silvere jen se podívej do kalendáře, nic neukládej",
+    eng.createEmptyDraft(),
+    ctxQuery()
+  );
+  rmAll =
+    auditRmPass(
+      "read_only_silvere_do_kalendar_neg",
+      rmCalNeg.processingState !== "STORAGE_DISAMBIGUATION" &&
+        rmCalNeg.normalizedIntent !== "create.storage_disambiguation" &&
+        !(
+          rmCalNeg.normalizedIntent === "calendar.create" &&
+          rmCalNeg.processingState === "READY_TO_SAVE"
+        ) &&
+        !(rmCalNeg.normalizedIntent === "notes.create" && rmCalNeg.processingState === "READY_TO_SAVE") &&
+        !(rmCalNeg.normalizedIntent === "tasks.create" && rmCalNeg.processingState === "READY_TO_SAVE")
+    ) && rmAll;
+
   try {
     if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
   } catch (eRm5) {
