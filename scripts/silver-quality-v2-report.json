@@ -2,15 +2,15 @@
   "harness_id": "audit_silver_quality_v2_foundation",
   "fixed_now": "2026-05-04T12:00:00",
   "quality_total_cases": 532,
-  "quality_passed": 462,
-  "quality_failed": 70,
-  "quality_accuracy": "86.84",
+  "quality_passed": 492,
+  "quality_failed": 40,
+  "quality_accuracy": "92.48",
   "routing_accuracy": "96.43",
   "field_quality_accuracy": "98.12",
   "safety_accuracy": "100.00",
   "title_cleanliness_accuracy": "100.00",
   "note_quality_accuracy": "100.00",
-  "address_quality_accuracy": "6.25",
+  "address_quality_accuracy": "100.00",
   "retrieval_quality_accuracy": "100.00",
   "normalization_quality_accuracy": "100.00",
   "update_flow_accuracy": "0.00",
@@ -19,257 +19,16 @@
   "query_created_write_count": 0,
   "unnecessary_disambiguation_count": 6,
   "top_fail_clusters": [
-    "address_location_detection||address_in_title_only=30",
     "calendar_write_quality||update_risk_new_create=15",
     "task_query_quality||query_wrong_dataset=10",
     "task_query_quality||routing_fail=9",
     "normalization_observed_cases||unnecessary_disambiguation=6"
   ],
-  "recommended_next_fix_cluster": "address_location_detection",
-  "recommended_next_fix_reason": "Largest fail mass: cluster «address_location_detection» / tag «address_in_title_only» (30 cases); safest next step is a narrow Silver change targeting this phrasing family (audit-only signal).",
+  "recommended_next_fix_cluster": "calendar_write_quality",
+  "recommended_next_fix_reason": "Largest fail mass: cluster «calendar_write_quality» / tag «update_risk_new_create» (15 cases); safest next step is a narrow Silver change targeting this phrasing family (audit-only signal).",
   "quality_audit_v2_script_crash": "NO",
   "quality_report_written": "YES",
   "sample_fails": [
-    {
-      "id": "qv2_00057",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Schůzka s Petrou v pondělí 9:00 na Mánesově mostě v Praze, jen kalendář."
-    },
-    {
-      "id": "qv2_00058",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Schůzka s Jakubem ve čtvrtek v 11 na Václavském náměstí 1 Praha, jen kalendář."
-    },
-    {
-      "id": "qv2_00059",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Jednání s Pavlem zítra v 15:00 na Karlově mostě, jen kalendář."
-    },
-    {
-      "id": "qv2_00060",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Schůzka s Monikou v pátek v 10 na Hlavním nádraží Praha, jen kalendář."
-    },
-    {
-      "id": "qv2_00061",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Oběd s Tomášem dnes v 12:30 v centru Brna na náměstí Svobody, jen kalendář."
-    },
-    {
-      "id": "qv2_00062",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Schůzka s Petrou v pondělí 9:00 na Mánesově mostě v Praze, jen kalendář."
-    },
-    {
-      "id": "qv2_00063",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Schůzka s Jakubem ve čtvrtek v 11 na Václavském náměstí 1 Praha, jen kalendář."
-    },
-    {
-      "id": "qv2_00064",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Jednání s Pavlem zítra v 15:00 na Karlově mostě, jen kalendář."
-    },
-    {
-      "id": "qv2_00065",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Schůzka s Monikou v pátek v 10 na Hlavním nádraží Praha, jen kalendář."
-    },
-    {
-      "id": "qv2_00066",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Oběd s Tomášem dnes v 12:30 v centru Brna na náměstí Svobody, jen kalendář."
-    },
-    {
-      "id": "qv2_00067",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Schůzka s Petrou v pondělí 9:00 na Mánesově mostě v Praze, jen kalendář."
-    },
-    {
-      "id": "qv2_00068",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Schůzka s Jakubem ve čtvrtek v 11 na Václavském náměstí 1 Praha, jen kalendář."
-    },
-    {
-      "id": "qv2_00069",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Jednání s Pavlem zítra v 15:00 na Karlově mostě, jen kalendář."
-    },
-    {
-      "id": "qv2_00070",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Schůzka s Monikou v pátek v 10 na Hlavním nádraží Praha, jen kalendář."
-    },
-    {
-      "id": "qv2_00071",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Oběd s Tomášem dnes v 12:30 v centru Brna na náměstí Svobody, jen kalendář."
-    },
-    {
-      "id": "qv2_00072",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Schůzka s Petrou v pondělí 9:00 na Mánesově mostě v Praze, jen kalendář."
-    },
-    {
-      "id": "qv2_00073",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Schůzka s Jakubem ve čtvrtek v 11 na Václavském náměstí 1 Praha, jen kalendář."
-    },
-    {
-      "id": "qv2_00074",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Jednání s Pavlem zítra v 15:00 na Karlově mostě, jen kalendář."
-    },
-    {
-      "id": "qv2_00075",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Schůzka s Monikou v pátek v 10 na Hlavním nádraží Praha, jen kalendář."
-    },
-    {
-      "id": "qv2_00076",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Oběd s Tomášem dnes v 12:30 v centru Brna na náměstí Svobody, jen kalendář."
-    },
-    {
-      "id": "qv2_00077",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Schůzka s Petrou v pondělí 9:00 na Mánesově mostě v Praze, jen kalendář."
-    },
-    {
-      "id": "qv2_00078",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Schůzka s Jakubem ve čtvrtek v 11 na Václavském náměstí 1 Praha, jen kalendář."
-    },
-    {
-      "id": "qv2_00079",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Jednání s Pavlem zítra v 15:00 na Karlově mostě, jen kalendář."
-    },
-    {
-      "id": "qv2_00080",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Schůzka s Monikou v pátek v 10 na Hlavním nádraží Praha, jen kalendář."
-    },
-    {
-      "id": "qv2_00081",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Oběd s Tomášem dnes v 12:30 v centru Brna na náměstí Svobody, jen kalendář."
-    },
-    {
-      "id": "qv2_00082",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Schůzka s Petrou v pondělí 9:00 na Mánesově mostě v Praze, jen kalendář."
-    },
-    {
-      "id": "qv2_00083",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Schůzka s Jakubem ve čtvrtek v 11 na Václavském náměstí 1 Praha, jen kalendář."
-    },
-    {
-      "id": "qv2_00084",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Jednání s Pavlem zítra v 15:00 na Karlově mostě, jen kalendář."
-    },
-    {
-      "id": "qv2_00085",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Schůzka s Monikou v pátek v 10 na Hlavním nádraží Praha, jen kalendář."
-    },
-    {
-      "id": "qv2_00086",
-      "cluster": "address_location_detection",
-      "tags": [
-        "address_in_title_only"
-      ],
-      "input": "Oběd s Tomášem dnes v 12:30 v centru Brna na náměstí Svobody, jen kalendář."
-    },
     {
       "id": "qv2_00328",
       "cluster": "task_query_quality",
@@ -354,6 +113,251 @@
         "routing_fail"
       ],
       "input": "úkoly do pátku"
+    },
+    {
+      "id": "qv2_00353",
+      "cluster": "task_query_quality",
+      "tags": [
+        "query_wrong_dataset",
+        "routing_fail"
+      ],
+      "input": "co mám dnes za úkoly?"
+    },
+    {
+      "id": "qv2_00357",
+      "cluster": "task_query_quality",
+      "tags": [
+        "routing_fail"
+      ],
+      "input": "úkoly do pátku?"
+    },
+    {
+      "id": "qv2_00358",
+      "cluster": "task_query_quality",
+      "tags": [
+        "query_wrong_dataset",
+        "routing_fail"
+      ],
+      "input": "co mám dnes za úkoly"
+    },
+    {
+      "id": "qv2_00362",
+      "cluster": "task_query_quality",
+      "tags": [
+        "routing_fail"
+      ],
+      "input": "úkoly do pátku"
+    },
+    {
+      "id": "qv2_00363",
+      "cluster": "task_query_quality",
+      "tags": [
+        "query_wrong_dataset",
+        "routing_fail"
+      ],
+      "input": "co mám dnes za úkoly?"
+    },
+    {
+      "id": "qv2_00367",
+      "cluster": "task_query_quality",
+      "tags": [
+        "routing_fail"
+      ],
+      "input": "úkoly do pátku?"
+    },
+    {
+      "id": "qv2_00368",
+      "cluster": "task_query_quality",
+      "tags": [
+        "query_wrong_dataset",
+        "routing_fail"
+      ],
+      "input": "co mám dnes za úkoly"
+    },
+    {
+      "id": "qv2_00372",
+      "cluster": "task_query_quality",
+      "tags": [
+        "routing_fail"
+      ],
+      "input": "úkoly do pátku"
+    },
+    {
+      "id": "qv2_00373",
+      "cluster": "task_query_quality",
+      "tags": [
+        "query_wrong_dataset",
+        "routing_fail"
+      ],
+      "input": "co mám dnes za úkoly?"
+    },
+    {
+      "id": "qv2_00452",
+      "cluster": "normalization_observed_cases",
+      "tags": [
+        "unnecessary_disambiguation"
+      ],
+      "input": "Ulož mi schůzku Praha jedna zítra v 15, jen kalendář."
+    },
+    {
+      "id": "qv2_00457",
+      "cluster": "normalization_observed_cases",
+      "tags": [
+        "unnecessary_disambiguation"
+      ],
+      "input": "Ulož mi schůzku Praha jedna zítra v 15, jen kalendář."
+    },
+    {
+      "id": "qv2_00462",
+      "cluster": "normalization_observed_cases",
+      "tags": [
+        "unnecessary_disambiguation"
+      ],
+      "input": "Ulož mi schůzku Praha jedna zítra v 15, jen kalendář."
+    },
+    {
+      "id": "qv2_00467",
+      "cluster": "normalization_observed_cases",
+      "tags": [
+        "unnecessary_disambiguation"
+      ],
+      "input": "Ulož mi schůzku Praha jedna zítra v 15, jen kalendář."
+    },
+    {
+      "id": "qv2_00472",
+      "cluster": "normalization_observed_cases",
+      "tags": [
+        "unnecessary_disambiguation"
+      ],
+      "input": "Ulož mi schůzku Praha jedna zítra v 15, jen kalendář."
+    },
+    {
+      "id": "qv2_00477",
+      "cluster": "normalization_observed_cases",
+      "tags": [
+        "unnecessary_disambiguation"
+      ],
+      "input": "Ulož mi schůzku Praha jedna zítra v 15, jen kalendář."
+    },
+    {
+      "id": "qv2_00504",
+      "cluster": "calendar_write_quality",
+      "tags": [
+        "update_risk_new_create"
+      ],
+      "input": "Posuň schůzku s Petrem na 16:00"
+    },
+    {
+      "id": "qv2_00505",
+      "cluster": "calendar_write_quality",
+      "tags": [
+        "update_risk_new_create"
+      ],
+      "input": "Přesuň zítřejší schůzku s Jakubem na pátek dopoledne"
+    },
+    {
+      "id": "qv2_00506",
+      "cluster": "calendar_write_quality",
+      "tags": [
+        "update_risk_new_create"
+      ],
+      "input": "Změň čas schůzky s právníkem na 17:30"
+    },
+    {
+      "id": "qv2_00507",
+      "cluster": "calendar_write_quality",
+      "tags": [
+        "update_risk_new_create"
+      ],
+      "input": "Posuň schůzku s Petrem na 16:00"
+    },
+    {
+      "id": "qv2_00508",
+      "cluster": "calendar_write_quality",
+      "tags": [
+        "update_risk_new_create"
+      ],
+      "input": "Přesuň zítřejší schůzku s Jakubem na pátek dopoledne"
+    },
+    {
+      "id": "qv2_00509",
+      "cluster": "calendar_write_quality",
+      "tags": [
+        "update_risk_new_create"
+      ],
+      "input": "Změň čas schůzky s právníkem na 17:30"
+    },
+    {
+      "id": "qv2_00510",
+      "cluster": "calendar_write_quality",
+      "tags": [
+        "update_risk_new_create"
+      ],
+      "input": "Posuň schůzku s Petrem na 16:00"
+    },
+    {
+      "id": "qv2_00511",
+      "cluster": "calendar_write_quality",
+      "tags": [
+        "update_risk_new_create"
+      ],
+      "input": "Přesuň zítřejší schůzku s Jakubem na pátek dopoledne"
+    },
+    {
+      "id": "qv2_00512",
+      "cluster": "calendar_write_quality",
+      "tags": [
+        "update_risk_new_create"
+      ],
+      "input": "Změň čas schůzky s právníkem na 17:30"
+    },
+    {
+      "id": "qv2_00513",
+      "cluster": "calendar_write_quality",
+      "tags": [
+        "update_risk_new_create"
+      ],
+      "input": "Posuň schůzku s Petrem na 16:00"
+    },
+    {
+      "id": "qv2_00514",
+      "cluster": "calendar_write_quality",
+      "tags": [
+        "update_risk_new_create"
+      ],
+      "input": "Přesuň zítřejší schůzku s Jakubem na pátek dopoledne"
+    },
+    {
+      "id": "qv2_00515",
+      "cluster": "calendar_write_quality",
+      "tags": [
+        "update_risk_new_create"
+      ],
+      "input": "Změň čas schůzky s právníkem na 17:30"
+    },
+    {
+      "id": "qv2_00516",
+      "cluster": "calendar_write_quality",
+      "tags": [
+        "update_risk_new_create"
+      ],
+      "input": "Posuň schůzku s Petrem na 16:00"
+    },
+    {
+      "id": "qv2_00517",
+      "cluster": "calendar_write_quality",
+      "tags": [
+        "update_risk_new_create"
+      ],
+      "input": "Přesuň zítřejší schůzku s Jakubem na pátek dopoledne"
+    },
+    {
+      "id": "qv2_00518",
+      "cluster": "calendar_write_quality",
+      "tags": [
+        "update_risk_new_create"
+      ],
+      "input": "Změň čas schůzky s právníkem na 17:30"
     }
   ]
 }
