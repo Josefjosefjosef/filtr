@@ -34890,6 +34890,23 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return t;
   }
 
+  /**
+   * P0 realistic mobile corpus (task_write_basic): úzké české leady k zápisu úkolu,
+   * typicky spolu s explicitním „do úkolů …“ (volající musí spárovat s explicitním cílem).
+   */
+  function iuSilverCzechMobileTaskWriteBasicCueFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    return (
+      /\bnezapom\w*\b/.test(x) ||
+      /\bnesmim\s+zapomenout\b/.test(x) ||
+      /\bpripom\w*\s+mi\b/.test(x) ||
+      /\bmusim\s+udelat\b/.test(x) ||
+      /\bmam\s+zaridit\b/.test(x) ||
+      /\bpridej\s+ukol\w*\b/.test(x)
+    );
+  }
+
   /** --- Explicit intent gating (P0): NEGATION / READ / targets / clarification --- */
   function iuSilverIsNegatedWriteIntentNarrow(f, rawOpt) {
     const foldUse = String(f || "");
@@ -34901,7 +34918,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
      * P0: modulová negace kalendáře + explicitní zápis do úkolů („…do úkolů… ale ne do kalendáře“) —
      * negace se vztahuje jen na kalendář, ne na celý imperativ.
      */
-    if (/\bne\s+do\s+kalend/.test(foldUse) && iuSilverHasExplicitTasksTarget(foldUse) && iuSilverHasWriteVerb(foldUse)) return false;
+    if (
+      /\bne\s+do\s+kalend/.test(foldUse) &&
+      iuSilverHasExplicitTasksTarget(foldUse) &&
+      (iuSilverHasWriteVerb(foldUse) || iuSilverCzechMobileTaskWriteBasicCueFolded(foldUse))
+    )
+      return false;
     /**
      * P0: „neukládej do kalendáře“ + explicitní poznámka — cíl je poznámka, ne globální zákaz zápisu.
      * (tryParse může vrátit null, pokud fráze není na začátku věty — stačí spolehlivý signál „napiš poznámku“.)
@@ -34916,9 +34938,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
      * modulová negace nesmí zablokovat samotný task.create (task_write_06433).
      */
     if (
-      /^\s*ne\s+do\s+ukol/i.test(String(rawStr || "").trim()) &&
+      /^\s*ne\s+do\s+ukol/i.test(foldCs(String(rawStr || "").trim())) &&
       iuSilverHasExplicitTasksTarget(foldUse) &&
-      iuSilverHasWriteVerb(foldUse)
+      (iuSilverHasWriteVerb(foldUse) || iuSilverCzechMobileTaskWriteBasicCueFolded(foldUse))
     )
       return false;
     if (/nechci\s+to\s+do\s+kalend/.test(foldUse)) return true;
@@ -35264,7 +35286,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function iuSilverHasExplicitTasksTarget(f) {
     const x = String(f || "");
-    if ((/\bdo\s+ukolu\b/.test(x) || /\bdo\s+ukol\b/.test(x)) && !/\bne\s+do\s+ukol/.test(x)) return true;
+    {
+      const reG = /\bdo\s+ukol\w*\b/g;
+      let mPos;
+      while ((mPos = reG.exec(x)) !== null) {
+        const beforeDo = x.slice(Math.max(0, mPos.index - 4), mPos.index);
+        if (!/\bne\s+$/i.test(beforeDo)) return true;
+      }
+    }
     if (/\bv\s+ukolech\b/.test(x)) return true;
     if (/\bdo\s+todo\b/.test(x) || /\bdo\s+to-do\b/.test(x)) return true;
     if (/\bdo\s+tasks?\b/.test(x) || /\bdo\s+task\s+listu\b/.test(x)) return true;
@@ -36326,7 +36355,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     if (
       iuSilverHasExplicitTasksTarget(folded) &&
-      (iuSilverHasWriteVerb(folded) || (colonTaskLine && iuSilverHasTaskActionVerb(folded))) &&
+      (iuSilverHasWriteVerb(folded) ||
+        iuSilverCzechMobileTaskWriteBasicCueFolded(folded) ||
+        (colonTaskLine && iuSilverHasTaskActionVerb(folded))) &&
       !iuSilverTaskReadNegativeWriteWithScopeFolded(folded)
     ) {
       const strippedT = iuSilverStripTaskTargetPhrases(raw);
@@ -36393,7 +36424,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
 
     const trCtxRoute = iuSilverTaskReadContextFolded(folded);
-    const explicitTaskWriteRoute = iuSilverHasExplicitTasksTarget(folded) && iuSilverHasWriteVerb(folded);
+    const explicitTaskWriteRoute =
+      iuSilverHasExplicitTasksTarget(folded) &&
+      (iuSilverHasWriteVerb(folded) || iuSilverCzechMobileTaskWriteBasicCueFolded(folded));
     if (
       iuSilverHasTaskActionVerb(folded) &&
       !calendarOverridesTask &&
