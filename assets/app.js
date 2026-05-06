@@ -34954,6 +34954,28 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (/\bdo\s+kalendar/.test(foldUse) && /\b(dej|uloz|zapis|nahod|vloz|pridej|naplanuj|vytvor)\b/.test(foldUse)) return false;
       if (iuSilverExplicitCalendarReadScopeFolded(foldUse)) return false;
       if (iuSilverCalendarScopedDetailReadMatchFolded(foldUse)) return false;
+      /**
+       * P0 realistic mobile (calendar_write_address): trail „, ne do úkolů“ u zápisu události
+       * (sloveso + datum/čas + schůzka|lékař|adresa|…) je modulová negace vůči úkolům, ne globální zákaz.
+       */
+      if (
+        !/\bnic\s+neukladej\b/.test(foldUse) &&
+        !/\bnic\s+nevytvarej\b/.test(foldUse) &&
+        !/\bjen\s+cti\b/.test(foldUse) &&
+        !/\bpouze\s+cti\b/.test(foldUse) &&
+        !/\bjen\s+se\s+podivej\b/.test(foldUse) &&
+        iuSilverHasWriteVerb(foldUse) &&
+        (iuSilverLooksLikeSchedulingFragment(foldUse, rawStr) || iuSilverImplicitCalendarOnlyWriteTimeDateSignalFolded(foldUse)) &&
+        (iuSilverCalendarEntityContextFolded(foldUse) ||
+          /\bna\s+adres\w*\b/.test(foldUse) ||
+          /\bmisto\s+je\b/.test(foldUse) ||
+          /\bna\s+namest\w*\b/.test(foldUse) ||
+          /\bpotkam\w*\s+se\s+na\b/.test(foldUse) ||
+          /\boc\s+chodov\b/.test(foldUse) ||
+          /\b(praha|brno|ostrava)\b.*\b(korunn|spalen|vinohradsk|chodov|stvanic)\b/.test(foldUse))
+      ) {
+        return false;
+      }
       return true;
     }
     if (/nechci\s+to\s+do\s+pozn/.test(foldUse)) return true;
