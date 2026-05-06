@@ -2,356 +2,358 @@
   "harness_id": "audit_silver_quality_v2_foundation",
   "fixed_now": "2026-05-04T12:00:00",
   "quality_total_cases": 532,
-  "quality_passed": 410,
-  "quality_failed": 122,
-  "quality_accuracy": "77.07",
-  "routing_accuracy": "88.91",
-  "field_quality_accuracy": "83.70",
+  "quality_passed": 462,
+  "quality_failed": 70,
+  "quality_accuracy": "86.84",
+  "routing_accuracy": "96.43",
+  "field_quality_accuracy": "98.12",
   "safety_accuracy": "100.00",
-  "title_cleanliness_accuracy": "68.75",
+  "title_cleanliness_accuracy": "100.00",
   "note_quality_accuracy": "100.00",
   "address_quality_accuracy": "6.25",
   "retrieval_quality_accuracy": "100.00",
-  "normalization_quality_accuracy": "60.00",
+  "normalization_quality_accuracy": "100.00",
   "update_flow_accuracy": "0.00",
   "dangerous_write_count": 0,
   "false_write_count": 0,
   "query_created_write_count": 0,
-  "unnecessary_disambiguation_count": 12,
+  "unnecessary_disambiguation_count": 6,
   "top_fail_clusters": [
-    "title_pollution_detection||routing_fail=40",
-    "address_location_detection||address_in_title_only=24",
+    "address_location_detection||address_in_title_only=30",
     "calendar_write_quality||update_risk_new_create=15",
-    "normalization_observed_cases||normalization_observed_gap=12",
     "task_query_quality||query_wrong_dataset=10",
     "task_query_quality||routing_fail=9",
-    "address_location_detection||unnecessary_disambiguation=6",
     "normalization_observed_cases||unnecessary_disambiguation=6"
   ],
-  "recommended_next_fix_cluster": "title_pollution_detection",
-  "recommended_next_fix_reason": "Largest fail mass: cluster «title_pollution_detection» / tag «routing_fail» (40 cases); safest next step is a narrow Silver change targeting this phrasing family (audit-only signal).",
+  "recommended_next_fix_cluster": "address_location_detection",
+  "recommended_next_fix_reason": "Largest fail mass: cluster «address_location_detection» / tag «address_in_title_only» (30 cases); safest next step is a narrow Silver change targeting this phrasing family (audit-only signal).",
   "quality_audit_v2_script_crash": "NO",
   "quality_report_written": "YES",
   "sample_fails": [
     {
-      "id": "qv2_00001",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00057",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že v sobotu v 9 mám schůzku s Monikou, jen kalendář."
+      "input": "Schůzka s Petrou v pondělí 9:00 na Mánesově mostě v Praze, jen kalendář."
     },
     {
-      "id": "qv2_00002",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00058",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že v neděli v 9:00 mám schůzku s Petrou, jen kalendář."
+      "input": "Schůzka s Jakubem ve čtvrtek v 11 na Václavském náměstí 1 Praha, jen kalendář."
     },
     {
-      "id": "qv2_00003",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00059",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že v pondělí v 15 mám schůzku s Jakubem, jen kalendář."
+      "input": "Jednání s Pavlem zítra v 15:00 na Karlově mostě, jen kalendář."
     },
     {
-      "id": "qv2_00004",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00060",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že v úterý v 15:00 mám schůzku s Tomášem, jen kalendář."
+      "input": "Schůzka s Monikou v pátek v 10 na Hlavním nádraží Praha, jen kalendář."
     },
     {
-      "id": "qv2_00005",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00061",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že ve středu ve 3 mám schůzku s Pavlem, jen kalendář."
+      "input": "Oběd s Tomášem dnes v 12:30 v centru Brna na náměstí Svobody, jen kalendář."
     },
     {
-      "id": "qv2_00006",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00062",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že ve čtvrtek v 10:30 mám schůzku s Marianou, jen kalendář."
+      "input": "Schůzka s Petrou v pondělí 9:00 na Mánesově mostě v Praze, jen kalendář."
     },
     {
-      "id": "qv2_00007",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00063",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že v pátek v 18:00 mám schůzku s Petrem, jen kalendář."
+      "input": "Schůzka s Jakubem ve čtvrtek v 11 na Václavském náměstí 1 Praha, jen kalendář."
     },
     {
-      "id": "qv2_00008",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00064",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že zítra v 9 mám schůzku s Jirkou, jen kalendář."
+      "input": "Jednání s Pavlem zítra v 15:00 na Karlově mostě, jen kalendář."
     },
     {
-      "id": "qv2_00009",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00065",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že pozítří v 9:00 mám schůzku s Monikou, jen kalendář."
+      "input": "Schůzka s Monikou v pátek v 10 na Hlavním nádraží Praha, jen kalendář."
     },
     {
-      "id": "qv2_00010",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00066",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že v sobotu v 15 mám schůzku s Petrou, jen kalendář."
+      "input": "Oběd s Tomášem dnes v 12:30 v centru Brna na náměstí Svobody, jen kalendář."
     },
     {
-      "id": "qv2_00011",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00067",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že v neděli v 15:00 mám schůzku s Jakubem, jen kalendář."
+      "input": "Schůzka s Petrou v pondělí 9:00 na Mánesově mostě v Praze, jen kalendář."
     },
     {
-      "id": "qv2_00012",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00068",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že v pondělí ve 3 mám schůzku s Tomášem, jen kalendář."
+      "input": "Schůzka s Jakubem ve čtvrtek v 11 na Václavském náměstí 1 Praha, jen kalendář."
     },
     {
-      "id": "qv2_00013",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00069",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že v úterý v 10:30 mám schůzku s Pavlem, jen kalendář."
+      "input": "Jednání s Pavlem zítra v 15:00 na Karlově mostě, jen kalendář."
     },
     {
-      "id": "qv2_00014",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00070",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že ve středu v 18:00 mám schůzku s Marianou, jen kalendář."
+      "input": "Schůzka s Monikou v pátek v 10 na Hlavním nádraží Praha, jen kalendář."
     },
     {
-      "id": "qv2_00015",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00071",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že ve čtvrtek v 9 mám schůzku s Petrem, jen kalendář."
+      "input": "Oběd s Tomášem dnes v 12:30 v centru Brna na náměstí Svobody, jen kalendář."
     },
     {
-      "id": "qv2_00016",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00072",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že v pátek v 9:00 mám schůzku s Jirkou, jen kalendář."
+      "input": "Schůzka s Petrou v pondělí 9:00 na Mánesově mostě v Praze, jen kalendář."
     },
     {
-      "id": "qv2_00017",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00073",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že zítra v 15 mám schůzku s Monikou, jen kalendář."
+      "input": "Schůzka s Jakubem ve čtvrtek v 11 na Václavském náměstí 1 Praha, jen kalendář."
     },
     {
-      "id": "qv2_00018",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00074",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že pozítří v 15:00 mám schůzku s Petrou, jen kalendář."
+      "input": "Jednání s Pavlem zítra v 15:00 na Karlově mostě, jen kalendář."
     },
     {
-      "id": "qv2_00019",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00075",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že v sobotu ve 3 mám schůzku s Jakubem, jen kalendář."
+      "input": "Schůzka s Monikou v pátek v 10 na Hlavním nádraží Praha, jen kalendář."
     },
     {
-      "id": "qv2_00020",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00076",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že v neděli v 10:30 mám schůzku s Tomášem, jen kalendář."
+      "input": "Oběd s Tomášem dnes v 12:30 v centru Brna na náměstí Svobody, jen kalendář."
     },
     {
-      "id": "qv2_00021",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00077",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že v pondělí v 18:00 mám schůzku s Pavlem, jen kalendář."
+      "input": "Schůzka s Petrou v pondělí 9:00 na Mánesově mostě v Praze, jen kalendář."
     },
     {
-      "id": "qv2_00022",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00078",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že v úterý v 9 mám schůzku s Marianou, jen kalendář."
+      "input": "Schůzka s Jakubem ve čtvrtek v 11 na Václavském náměstí 1 Praha, jen kalendář."
     },
     {
-      "id": "qv2_00023",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00079",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že ve středu v 9:00 mám schůzku s Petrem, jen kalendář."
+      "input": "Jednání s Pavlem zítra v 15:00 na Karlově mostě, jen kalendář."
     },
     {
-      "id": "qv2_00024",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00080",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že ve čtvrtek v 15 mám schůzku s Jirkou, jen kalendář."
+      "input": "Schůzka s Monikou v pátek v 10 na Hlavním nádraží Praha, jen kalendář."
     },
     {
-      "id": "qv2_00025",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00081",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že v pátek v 15:00 mám schůzku s Monikou, jen kalendář."
+      "input": "Oběd s Tomášem dnes v 12:30 v centru Brna na náměstí Svobody, jen kalendář."
     },
     {
-      "id": "qv2_00026",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00082",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že zítra ve 3 mám schůzku s Petrou, jen kalendář."
+      "input": "Schůzka s Petrou v pondělí 9:00 na Mánesově mostě v Praze, jen kalendář."
     },
     {
-      "id": "qv2_00027",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00083",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že pozítří v 10:30 mám schůzku s Jakubem, jen kalendář."
+      "input": "Schůzka s Jakubem ve čtvrtek v 11 na Václavském náměstí 1 Praha, jen kalendář."
     },
     {
-      "id": "qv2_00028",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00084",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že v sobotu v 18:00 mám schůzku s Tomášem, jen kalendář."
+      "input": "Jednání s Pavlem zítra v 15:00 na Karlově mostě, jen kalendář."
     },
     {
-      "id": "qv2_00029",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00085",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že v neděli v 9 mám schůzku s Pavlem, jen kalendář."
+      "input": "Schůzka s Monikou v pátek v 10 na Hlavním nádraží Praha, jen kalendář."
     },
     {
-      "id": "qv2_00030",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00086",
+      "cluster": "address_location_detection",
       "tags": [
-        "routing_fail"
+        "address_in_title_only"
       ],
-      "input": "Hoď mi do kalendáře že v pondělí v 9:00 mám schůzku s Marianou, jen kalendář."
+      "input": "Oběd s Tomášem dnes v 12:30 v centru Brna na náměstí Svobody, jen kalendář."
     },
     {
-      "id": "qv2_00031",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00328",
+      "cluster": "task_query_quality",
       "tags": [
+        "query_wrong_dataset",
         "routing_fail"
       ],
-      "input": "Hoď mi do kalendáře že v úterý v 15 mám schůzku s Petrem, jen kalendář."
+      "input": "co mám dnes za úkoly"
     },
     {
-      "id": "qv2_00032",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00332",
+      "cluster": "task_query_quality",
       "tags": [
         "routing_fail"
       ],
-      "input": "Hoď mi do kalendáře že ve středu v 15:00 mám schůzku s Jirkou, jen kalendář."
+      "input": "úkoly do pátku"
     },
     {
-      "id": "qv2_00033",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00333",
+      "cluster": "task_query_quality",
       "tags": [
+        "query_wrong_dataset",
         "routing_fail"
       ],
-      "input": "Hoď mi do kalendáře že ve čtvrtek ve 3 mám schůzku s Monikou, jen kalendář."
+      "input": "co mám dnes za úkoly?"
     },
     {
-      "id": "qv2_00034",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00337",
+      "cluster": "task_query_quality",
       "tags": [
         "routing_fail"
       ],
-      "input": "Hoď mi do kalendáře že v pátek v 10:30 mám schůzku s Petrou, jen kalendář."
+      "input": "úkoly do pátku?"
     },
     {
-      "id": "qv2_00035",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00338",
+      "cluster": "task_query_quality",
       "tags": [
+        "query_wrong_dataset",
         "routing_fail"
       ],
-      "input": "Hoď mi do kalendáře že zítra v 18:00 mám schůzku s Jakubem, jen kalendář."
+      "input": "co mám dnes za úkoly"
     },
     {
-      "id": "qv2_00036",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00342",
+      "cluster": "task_query_quality",
       "tags": [
         "routing_fail"
       ],
-      "input": "Hoď mi do kalendáře že pozítří v 9 mám schůzku s Tomášem, jen kalendář."
+      "input": "úkoly do pátku"
     },
     {
-      "id": "qv2_00037",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00343",
+      "cluster": "task_query_quality",
       "tags": [
+        "query_wrong_dataset",
         "routing_fail"
       ],
-      "input": "Hoď mi do kalendáře že v sobotu v 9:00 mám schůzku s Pavlem, jen kalendář."
+      "input": "co mám dnes za úkoly?"
     },
     {
-      "id": "qv2_00038",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00347",
+      "cluster": "task_query_quality",
       "tags": [
         "routing_fail"
       ],
-      "input": "Hoď mi do kalendáře že v neděli v 15 mám schůzku s Marianou, jen kalendář."
+      "input": "úkoly do pátku?"
     },
     {
-      "id": "qv2_00039",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00348",
+      "cluster": "task_query_quality",
       "tags": [
+        "query_wrong_dataset",
         "routing_fail"
       ],
-      "input": "Hoď mi do kalendáře že v pondělí v 15:00 mám schůzku s Petrem, jen kalendář."
+      "input": "co mám dnes za úkoly"
     },
     {
-      "id": "qv2_00040",
-      "cluster": "title_pollution_detection",
+      "id": "qv2_00352",
+      "cluster": "task_query_quality",
       "tags": [
         "routing_fail"
       ],
-      "input": "Hoď mi do kalendáře že v úterý ve 3 mám schůzku s Jirkou, jen kalendář."
+      "input": "úkoly do pátku"
     }
   ]
 }

@@ -36343,11 +36343,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     let draft = cloneDraft(prev);
     draft.targetContainer = "calendar";
     draft.activeCalendarSession = true;
-    const parseRaw = eff || raw;
-    const extracted = extractFromUtterance(parseRaw, now);
+    /* P1: extractFromUtterance musí vidět celou větu vč. „do kalendáře“ — jinak title pipeline zůstane na „Hoď mi že…“ a sanitize znehodnotí název. */
+    const parseRawFull = String(raw || "").trim();
+    const extracted = extractFromUtterance(parseRawFull, now);
     draft = mergeIntoDraft(draft, extracted);
-    draft = applyFragmentFallback(parseRaw, draft, now);
-    iuSilverApplyExtractedEntitiesToCalendarDraft(draft, iuSilverExtractEntities(parseRaw, now));
+    draft = applyFragmentFallback(parseRawFull, draft, now);
+    iuSilverApplyExtractedEntitiesToCalendarDraft(draft, iuSilverExtractEntities(parseRawFull, now));
     iuSilverSanitizeDraftTitle(draft);
 
     let processingState = "NEEDS_CLARIFICATION";
@@ -37381,7 +37382,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!f) return false;
     const fProbe = iuSilverStripStorageTargetQuestionNegationClausesFolded(f);
     if (
-      /\buloz(?:it|te|i)?\b|\bulož(?:te)?\b|\bzapis(?:it|te|i)?\b|\bzapiš(?:te)?\b|\bpridej\b|\bpřidej\b|\bvytvor\w*\b|\bvytvoř\w*\b|\bnaplanuj\b|\bnaplánuj\b|\bzanes\b|\bnahod\w*\b|dej\s+to\s+do\s+kalend|dej\s+mi\s+to\s+do\s+kalend|dej\s+mi\s+do\s+kalend/.test(
+      /\buloz(?:it|te|i)?\b|\bulož(?:te)?\b|\bzapis(?:it|te|i)?\b|\bzapiš(?:te)?\b|\bpridej\b|\bpřidej\b|\bvytvor\w*\b|\bvytvoř\w*\b|\bnaplanuj\b|\bnaplánuj\b|\bzanes\b|\bnahod\w*\b|dej\s+to\s+do\s+kalend|dej\s+mi\s+to\s+do\s+kalend|dej\s+mi\s+do\s+kalend|\b(ho[dď]|hod)\s+mi\s+do\s+kalend/.test(
         fProbe
       )
     ) {
@@ -40225,6 +40226,41 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return iuSilverNormalizeWs(iuSilverStripCommandBoilerplateIterative(String(work || "")));
   }
 
+  /**
+   * P1: úzký strip jen pro calendar.create title — hovorové „hoď/dej/ulož … do kalendáře“ + mostové „že“ před „mám …“.
+   * Nevolat pro task/note tituly.
+   */
+  function iuSilverStripConversationalCalendarWriteTitlePrefix(s0) {
+    let s = iuSilverNormalizeWs(String(s0 || ""));
+    if (!s) return s;
+    for (let iter = 0; iter < 18; iter++) {
+      const prev = s;
+      /* Po odparsování data/času často zbývá „že mám schůzku…“ — mostové že před mám. */
+      s = s.replace(/^že\s+(?:mám|mam)\s+/i, "");
+      s = s.replace(/^(ho[dď]|hod)\s+mi\s+do\s+kalend[aá]ře?\s+/i, "");
+      s = s.replace(/^dej\s+mi\s+do\s+kalend[aá]ře?\s+/i, "");
+      s = s.replace(/^dej\s+do\s+kalend[aá]ře?\s+/i, "");
+      s = s.replace(/^(ulo[zž]|uloz)\s+mi\s+do\s+kalend[aá]ře?\s+/i, "");
+      s = s.replace(/^zapi[sš]\s+mi\s+do\s+kalend[aá]ře?\s+/i, "");
+      s = s.replace(/^přidej\s+mi\s+do\s+kalend[aá]ře?\s+/i, "");
+      s = s.replace(/^pridej\s+mi\s+do\s+kalend[aá]ře?\s+/i, "");
+      s = s.replace(/^připomeň\s+mi\s+v\s+kalend[aá]ř[ie]\s+/i, "");
+      s = s.replace(/^pripomen\s+mi\s+v\s+kalend[aá]ř[ie]\s+/i, "");
+      s = s.replace(/^napl[áa]nuj\s+v\s+kalend[aá]ř[ie]\s+/i, "");
+      s = s.replace(/[,\s]+jen\s+kalend[aá]ř[aá]?\s*\.?$/i, "");
+      s = s.replace(/\s*,\s*ne\s+do\s+úkol[uů]\s*\.?$/i, "");
+      s = s.replace(/\s*,\s*ne\s+do\s+ukol[uu]\s*\.?$/i, "");
+      s = iuSilverNormalizeWs(s);
+      if (s === prev) break;
+    }
+    return s;
+  }
+
+  /** P1: odstranění mostu „že mám …“ na začátku titulu po odparsování data/času (fold-safe vstup). */
+  function iuSilverStripLeadingZeMamCalendarBridge(t0) {
+    return iuSilverNormalizeWs(String(t0 || "").replace(/^[\s\uFEFF]*(?:že|ze)\s+(?:mám|mam)\b/iu, ""));
+  }
+
   function iuSilverNormalizeWs(s) {
     return String(s || "")
       .replace(/\s+/g, " ")
@@ -40347,6 +40383,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   /** "mám zubaře" → "Zubař"; "mám vyzvednout …" → infinitive sentence title. */
   function iuSilverMamToEventTitle(s) {
     let t = iuSilverNormalizeWs(s);
+    t = t.replace(/^\s*že\s+/i, "").trim();
     const m = t.match(/^\s*mám\s+(.+)$/i);
     if (!m) return t;
     let inner = m[1].trim();
@@ -40542,15 +40579,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const f = foldCs(t);
     if (!t || t.length < 2) return false;
     if (t.length < 3) return false;
-    if (/^(že|tento|tato|mám|je|tak)\b/.test(f)) return false;
-    if (/\s+(to|tak|mi|že)\s*$/.test(t)) return false;
+    /* f je foldCs — úvodní tokeny přes ASCII (ze/mam), jinak projde např. „že mám…“. */
+    if (/^(ze|tento|tato|je|tak)\b/.test(f)) return false;
+    if (/^ze\s+mam\b/.test(f)) return false;
+    if (/\s+(to|tak|mi|že)\s*$/i.test(t)) return false;
     if (/\d{1,2}\s*[.\/\-]\s*\d{1,2}/.test(t)) return false;
     if (/\d{1,2}\s*\.\s*\d{1,2}\s*\./.test(t)) return false;
     if (/\.\s*\./.test(t)) return false;
     if (/^\s*s\s*$/i.test(t)) return false;
     if (/uloz|ulož|přidej|pridej|zapis|zapiš|kalend|napl[áa]nuj|vytvor|vytvoř/.test(f)) return false;
-    if (/\bmám\b/.test(f)) return false;
-    if (/\b(že|tento)\b/.test(f)) return false;
+    if (/^mam\s+/.test(f)) return false;
     if (/\bto\b|\btak\b|\bmi\b/.test(f)) return false;
     if (/\bsch[uů]zku\b/.test(f) && !/\bsch[uů]zku\s+s\b/i.test(t) && !/^schůzka\s+u\b/i.test(t)) return false;
     if (iuSilverReWeekdayOnce().test(t)) return false;
@@ -40567,12 +40605,18 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /** Deterministic multi-step title pipeline — not a copy of user command text. */
-  function iuSilverTitlePipelineFull(work) {
+  function iuSilverTitlePipelineFull(work, pipeOpts) {
     let t = iuSilverNormalizeWs(work);
+    if (pipeOpts && pipeOpts.calendarConversationalTitleStrip) {
+      t = iuSilverStripConversationalCalendarWriteTitlePrefix(t);
+    }
     t = iuSilverDropInstructionSentences(t);
     t = iuSilverStripCommandBoilerplateIterative(t);
     t = iuSilverStripDateTokensFromTitle(t);
     t = iuSilverStripTimeTokensFromTitle(t);
+    if (pipeOpts && pipeOpts.calendarConversationalTitleStrip) {
+      t = iuSilverStripConversationalCalendarWriteTitlePrefix(t);
+    }
     t = iuSilverStripCommandBoilerplateIterative(t);
     t = iuSilverStripGarbageOrphanTokens(t);
     const core = iuSilverExtractEventCoreTitle(t);
@@ -40582,6 +40626,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       t = iuSilverNormalizeWs(t);
       t = iuSilverPolishTitleNoun(t);
       t = iuSilverNormalizeWs(t);
+      if (pipeOpts && pipeOpts.calendarConversationalTitleStrip) {
+        t = iuSilverStripLeadingZeMamCalendarBridge(t);
+      }
       if (!iuSilverValidateFinalTitle(t)) return { text: "", ok: false };
       return { text: t.slice(0, 120), ok: true };
     }
@@ -40598,12 +40645,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     t = iuSilverPolishTitleNoun(t);
     t = iuSilverLexiconSingleWordProfession(t);
     t = iuSilverNormalizeWs(t);
+    if (pipeOpts && pipeOpts.calendarConversationalTitleStrip) {
+      t = iuSilverStripLeadingZeMamCalendarBridge(t);
+    }
     if (!iuSilverValidateFinalTitle(t)) return { text: "", ok: false };
     return { text: t.slice(0, 120), ok: true };
   }
 
-  function iuSilverFinalizeTitle(work) {
-    return iuSilverTitlePipelineFull(work);
+  function iuSilverFinalizeTitle(work, pipeOpts) {
+    return iuSilverTitlePipelineFull(work, pipeOpts);
   }
 
   /**
@@ -40612,11 +40662,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
    * words inside the real title; if the result would be empty or too short, returns original.
    */
   function normalizeSilverTitleV1(title, context) {
-    /* context: optional { kind: "calendar"|"task"|"note"|"multi" } for callers (v1 uses same prefix rules). */
-    void context;
+    const kind = context && context.kind ? String(context.kind) : "";
     const original = String(title || "").trim();
     if (!original) return original;
     let work = iuSilverNormalizeWs(original);
+    /* P1 calendar-only: audit „že mám schůzku…“ zůstane po parsování data — odstranit jen most před mám. */
+    if (kind === "calendar") {
+      work = work.replace(/^\s*(že|ze)\s+(?:mám|mam)\s+/i, "").trim();
+      work = iuSilverNormalizeWs(work);
+    }
     const phraseRes = [
       /^(pros[ií]m|prosim)\s+(ho[dď]|hod)\s+mi\s+/iu,
       /^(pros[ií]m|prosim)\s+(ho[dď]|hod)\s+/iu,
@@ -40657,7 +40711,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       draft.meta.title = "missing";
       return;
     }
-    const fin = iuSilverTitlePipelineFull(rawT);
+    const calConvStrip = draft.targetContainer === "calendar" || draft.activeCalendarSession === true;
+    const fin = iuSilverTitlePipelineFull(rawT, { calendarConversationalTitleStrip: calConvStrip });
     if (fin.ok) {
       const kind =
         draft.targetContainer === "tasks" ? "task" : draft.targetContainer === "notes" ? "note" : "calendar";
@@ -40777,7 +40832,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       consumeTimeFromWork();
     }
 
-    const fin = iuSilverTitlePipelineFull(work);
+    const fin = iuSilverTitlePipelineFull(work, { calendarConversationalTitleStrip: true });
     if (fin.ok) {
       values.title = fin.text;
       confidence.title = "certain";
@@ -40866,7 +40921,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const hasAbs = !!findAbsoluteDate(line, now);
       const hasRel = /\bz[ií]tra|dnes|poz[ií]t[rř][ií]\b/i.test(foldCs(line));
       if (!onlyTime.time && !hasWd && !hasAbs && !hasRel) {
-        const fin = iuSilverFinalizeTitle(line);
+        const fin = iuSilverFinalizeTitle(line, {
+          calendarConversationalTitleStrip: d.targetContainer === "calendar" || d.activeCalendarSession === true
+        });
         if (fin.ok) {
           d.title = fin.text;
           d.meta.title = "certain";
