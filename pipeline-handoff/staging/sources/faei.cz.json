@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-06T09:05:09.434980Z",
+  "ingestedAt": "2026-05-06T10:19:57.185322Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Kdo nespoří, není Čech. Rodiny se opět obávají zdražování energií",
+      "url": "https://profitonline.cz/kdo-nespori-neni-cech-rodiny-se-opet-obavaji-zdrazovani-energii/",
+      "dt": "2026-05-06T10:00:27Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "energií",
+        "nespoří",
+        "obávají",
+        "opět",
+        "rodiny",
+        "zdražování",
+        "čech"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -261,30 +285,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Firmám v Česku rostou náklady nejvýrazněji za čtyři roky",
-      "url": "https://profitonline.cz/firmam-v-cesku-rostou-naklady-nejvyrazneji-za-ctyri-roky/",
-      "dt": "2026-05-04T20:10:02Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "firmám",
-        "nejvýrazněji",
-        "náklady",
-        "roky",
-        "rostou",
-        "česku",
-        "čtyři"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -295,7 +295,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18816,
+      "bytes": 18801,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -332,7 +332,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-06T08:00:13Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T10:00:27Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -348,6 +348,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kdo nespoří, není Čech. Rodiny se opět obávají zdražování energií",
+            "publishedAt": "2026-05-06T10:00:27Z"
+          },
           {
             "title": "Seagate překvapil trh: Silné výsledky a optimistický výhled",
             "publishedAt": "2026-05-06T08:00:13Z"
@@ -375,10 +379,6 @@
           {
             "title": "Kdo a proč shodil akcie Czechoslovak Group na burze v Amsterodamu",
             "publishedAt": "2026-05-05T08:20:21Z"
-          },
-          {
-            "title": "Colt CZ: Amsterdamská burza není jen symbolický doplněk",
-            "publishedAt": "2026-05-05T07:00:10Z"
           }
         ]
       }
