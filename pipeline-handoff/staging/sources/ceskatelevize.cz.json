@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-06T18:49:14.109720Z",
+  "ingestedAt": "2026-05-06T19:29:34.779294Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Povinnou kastraci toulavých koček podpořila vláda, samosprávy mají výhrady",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/povinnou-kastraci-toulavych-kocek-podporila-vlada-samospravy-maji-vyhrady-373179",
+      "dt": "2026-05-06T18:52:17Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "kastraci",
+        "koček",
+        "mají",
+        "podpořila",
+        "povinnou",
+        "samosprávy",
+        "toulavých",
+        "vláda",
+        "výhrady"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -720,26 +746,28 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Opozice ve sněmovně zamezila zahájení schvalování vládní novely k rozpočtům",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/poslanci-by-na-mimoradne-schuzi-meli-schvalovat-novelu-k-rozpoctum-373151",
-      "dt": "2026-05-06T07:03:01Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Nad Roland Garros visí Damoklův meč bojkotu, tenisté chtějí víc peněz",
+      "url": "https://sport.ceskatelevize.cz/clanek/tenis/nad-roland-garros-visi-damokluv-mec-bojkotu-teniste-chteji-vic-penez-156630",
+      "dt": "2026-05-06T19:17:08Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "novely",
-        "opozice",
-        "rozpočtům",
-        "schvalování",
-        "sněmovně",
-        "vládní",
-        "zahájení",
-        "zamezila"
+        "bojkotu",
+        "chtějí",
+        "damoklův",
+        "garros",
+        "meč",
+        "peněz",
+        "roland",
+        "tenisté",
+        "visí",
+        "víc"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1474,32 +1502,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Blues padli v lize pošesté v řadě, City si zkomplikovalo boj o titul",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/nottingham-prohloubil-krizi-chelsea-blues-padli-v-lize-poseste-v-rade-156601",
-      "dt": "2026-05-04T16:27:44Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "blues",
-        "boj",
-        "city",
-        "lize",
-        "padli",
-        "pošesté",
-        "titul",
-        "zkomplikovalo",
-        "řadě"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1510,7 +1512,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42150,
+      "bytes": 42301,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1570,7 +1572,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T18:10:08Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T18:52:17Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -1587,6 +1589,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Povinnou kastraci toulavých koček podpořila vláda, samosprávy mají výhrady",
+            "publishedAt": "2026-05-06T18:52:17Z"
+          },
           {
             "title": "Rok od nástupu Merze do úřadu panuje v Německu nespokojenost s vládou",
             "publishedAt": "2026-05-06T18:10:08Z"
@@ -1614,10 +1620,6 @@
           {
             "title": "Z třicítky amerických koncertů zbyl jeden. Návrat Pussycat Dolls se nedaří",
             "publishedAt": "2026-05-06T14:52:14Z"
-          },
-          {
-            "title": "Hrad nepodá stížnost proti odložení prověřování Macinkových zpráv",
-            "publishedAt": "2026-05-06T14:49:47Z"
           }
         ]
       }
@@ -1629,7 +1631,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38022,
+      "bytes": 37894,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1666,7 +1668,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T14:50:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T19:17:08Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1681,6 +1683,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nad Roland Garros visí Damoklův meč bojkotu, tenisté chtějí víc peněz",
+            "publishedAt": "2026-05-06T19:17:08Z"
+          },
           {
             "title": "Rezerva Baníku uhrála remízu se Zbrojovkou, Sparta oživila naději na záchranu",
             "publishedAt": "2026-05-06T14:50:00Z"
@@ -1708,10 +1714,6 @@
           {
             "title": "Sparta oznámila první posilu, ze Švýcarska se vrací Sekáč",
             "publishedAt": "2026-05-06T09:58:50Z"
-          },
-          {
-            "title": "Oklahoma přejela Lakers, Detroit si poradil s Clevelandem",
-            "publishedAt": "2026-05-06T07:01:01Z"
           }
         ]
       }
@@ -1723,7 +1725,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78495,
+      "bytes": 78510,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

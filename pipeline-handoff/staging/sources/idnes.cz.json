@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-06T18:49:14.109720Z",
+  "ingestedAt": "2026-05-06T19:29:34.779294Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Česko zasáhly silné bouřky. Experti varovali před nárazy větru nebo požáry",
+      "url": "https://www.idnes.cz/zpravy/domaci/silne-bourky-chmu-kroupy-pozar-silny-vitr-vystraha.A260506_163916_domaci_linh",
+      "dt": "2026-05-06T18:56:43Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "bouřky",
+        "experti",
+        "nebo",
+        "nárazy",
+        "požáry",
+        "silné",
+        "varovali",
+        "větru",
+        "zasáhly",
+        "česko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -545,32 +572,6 @@
         "sudetských",
         "vlády",
         "šťastný"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Česko zasáhnou silné bouřky. Experti varují i před kroupami nebo požáry",
-      "url": "https://www.idnes.cz/zpravy/domaci/silne-bourky-chmu-kroupy-pozar-silny-vitr-vystraha.A260506_163916_domaci_linh",
-      "dt": "2026-05-06T15:01:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bouřky",
-        "experti",
-        "kroupami",
-        "nebo",
-        "požáry",
-        "silné",
-        "varují",
-        "zasáhnou",
-        "česko"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1579,7 +1580,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48513,
+      "bytes": 48490,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1616,7 +1617,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T18:37:45Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T18:56:43Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 29,
@@ -1632,6 +1633,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česko zasáhly silné bouřky. Experti varovali před nárazy větru nebo požáry",
+            "publishedAt": "2026-05-06T18:56:43Z"
+          },
           {
             "title": "Poslanci schválili změnu stavebního zákona, odložili využívání geoportálu",
             "publishedAt": "2026-05-06T18:37:45Z"
@@ -1659,10 +1664,6 @@
           {
             "title": "„Jděte do pr...,“ ujely nervy Fialovi z SPD. Nebyl moc v kondici, naznačil Rakušan",
             "publishedAt": "2026-05-06T17:45:00Z"
-          },
-          {
-            "title": "Zasáhněte USA raketou šetrnosti. Íránský předák připravuje krajany na období bídy",
-            "publishedAt": "2026-05-06T17:44:00Z"
           }
         ]
       }

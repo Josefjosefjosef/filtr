@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-06T18:49:14.109720Z",
+  "ingestedAt": "2026-05-06T19:29:34.779294Z",
   "items": [
     {
       "section": "veda",
@@ -24,6 +24,33 @@
         "vysvětluje",
         "všechna",
         "záměr"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Copilot s hraním na konzolích radit nebude. Microsoft zařízl jeho integraci do Xboxu",
+      "url": "https://doupe.zive.cz/copilot-bude-radit-se-zaseky-ve-hrach-i-na-konzolich-microsoft-chce-svoji-ai-nacpat-na-xbox-jeste-letos-202605",
+      "dt": "2026-05-06T18:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "copilot",
+        "hraním",
+        "integraci",
+        "jeho",
+        "konzolích",
+        "microsoft",
+        "nebude",
+        "radit",
+        "xboxu",
+        "zařízl"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -945,34 +972,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Které hry vyjdou v květnu 2026: Závody v Japonsku, adventura s českým dabingem a dalších 25 novinek",
-      "url": "https://doupe.zive.cz/ktere-hry-vyjdou-v-kvetnu-2026-zavody-v-japonsku-adventura-s-ceskym-dabingem-a-dalsich-25-novinek",
-      "dt": "2026-05-02T17:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "2026",
-        "adventura",
-        "dabingem",
-        "dalších",
-        "hry",
-        "japonsku",
-        "květnu",
-        "novinek",
-        "vyjdou",
-        "závody",
-        "českým"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -983,7 +982,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23616,
+      "bytes": 23423,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1020,7 +1019,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-06T17:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T18:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1038,6 +1037,10 @@
           {
             "title": "Stačí spustit Edge a všechna vaše hesla jsou v paměti jako na podnosu. Microsoft vysvětluje, že to je záměr…",
             "publishedAt": "2026-05-06T12:45:00Z"
+          },
+          {
+            "title": "Copilot s hraním na konzolích radit nebude. Microsoft zařízl jeho integraci do Xboxu",
+            "publishedAt": "2026-05-06T18:45:00Z"
           },
           {
             "title": "O víkendu vypukne Maker Faire Prague, svátek všech inovátorů, kutilů a dalších nadšenců do kreativity a technologií",
@@ -1062,10 +1065,6 @@
           {
             "title": "Největší technologické faily Googlu. Proč to nevyšlo s brýlemi z kartónu, ani s mobilem z kostiček",
             "publishedAt": "2026-05-06T10:45:00Z"
-          },
-          {
-            "title": "Asus Vivobook S14 má 32 GB RAM, OLED a vydrží celý den. Teď stojí jen 16 tisíc",
-            "publishedAt": "2026-05-06T08:45:00Z"
           }
         ]
       }

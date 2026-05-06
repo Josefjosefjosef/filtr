@@ -1,27 +1,53 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-06T18:49:14.109720Z",
+  "ingestedAt": "2026-05-06T19:29:34.779294Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Béčko Sparty rozstřílelo Prostějov, debakl schytala i rezerva Slavie. Brno remizovalo",
-      "url": "https://www.idnes.cz/fotbal/domaci-souteze/sparta-b-zbrojovka-brno-druha-liga-fotbal.A260506_193807_fot_dsouteze_hava",
-      "dt": "2026-05-06T17:49:00Z",
+      "title": "ONLINE: Bayern - PSG 0:1, hosté jdou v odvetě semifinále rychle do vedení",
+      "url": "https://www.idnes.cz/fotbal/pohary/liga-mistru-semifinale-bayern-psg-online-vysledek.A260506_153640_fot_pohary_duff",
+      "dt": "2026-05-06T19:07:45Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "brno",
+        "bayern",
+        "hosté",
+        "jdou",
+        "odvetě",
+        "psg",
+        "rychle",
+        "semifinále",
+        "vedení"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Béčko Sparty živí naději, rezerva Slavie schytala debakl. Táborsko je blízko baráži",
+      "url": "https://www.idnes.cz/fotbal/domaci-souteze/sparta-b-zbrojovka-brno-druha-liga-fotbal.A260506_193807_fot_dsouteze_hava",
+      "dt": "2026-05-06T19:02:55Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "baráži",
+        "blízko",
         "béčko",
         "debakl",
-        "prostějov",
-        "remizovalo",
+        "naději",
         "rezerva",
-        "rozstřílelo",
         "schytala",
         "slavie",
-        "sparty"
+        "sparty",
+        "táborsko",
+        "živí"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -775,35 +801,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ústecký šéf: Vyoral nemá formu, ale zapne. Ještě proti Opavě zamícháme karty",
-      "url": "https://www.idnes.cz/sport/basket/ctvrtfinale-nbl-usti-opava-a-decin-brno.A260506_073204_sport-basket_pbi",
-      "dt": "2026-05-06T05:46:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "ale",
-        "formu",
-        "ještě",
-        "karty",
-        "nemá",
-        "opavě",
-        "proti",
-        "vyoral",
-        "zamícháme",
-        "zapne",
-        "ústecký",
-        "šéf"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -814,7 +811,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 49031,
+      "bytes": 48680,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -851,7 +848,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T17:49:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T19:07:45Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -868,8 +865,12 @@
         },
         "sample_titles": [
           {
-            "title": "Béčko Sparty rozstřílelo Prostějov, debakl schytala i rezerva Slavie. Brno remizovalo",
-            "publishedAt": "2026-05-06T17:49:00Z"
+            "title": "ONLINE: Bayern - PSG 0:1, hosté jdou v odvetě semifinále rychle do vedení",
+            "publishedAt": "2026-05-06T19:07:45Z"
+          },
+          {
+            "title": "Béčko Sparty živí naději, rezerva Slavie schytala debakl. Táborsko je blízko baráži",
+            "publishedAt": "2026-05-06T19:02:55Z"
           },
           {
             "title": "Opravdu šla bez opory? Vonnová ukázala zákulisí triumfálního vstupu na Met Gala",
@@ -894,10 +895,6 @@
           {
             "title": "Opustit tým nebylo snadné, ale správné. Kapitán Tampy přiznal psychické problémy",
             "publishedAt": "2026-05-06T15:17:00Z"
-          },
-          {
-            "title": "Nikdy jsem tu nic podobného nezažil, díky. Arteta o postupu do finále Ligy mistrů",
-            "publishedAt": "2026-05-06T14:14:00Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-06T18:49:14.109720Z",
+  "ingestedAt": "2026-05-06T19:29:34.779294Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Anthropic se dohodl s Muskovou firmou SpaceX na využití jejího datového centra",
+      "url": "https://byznys.hn.cz/c1-67874590-anthropic-se-dohodl-s-muskovou-firmou-spacex-na-vyuziti-jejiho-datoveho-centra",
+      "dt": "2026-05-06T18:45:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "anthropic",
+        "centra",
+        "datového",
+        "dohodl",
+        "firmou",
+        "jejího",
+        "muskovou",
+        "spacex",
+        "využití"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1144,26 +1170,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Finanční trhy (6. 5. 2026)",
-      "url": "https://archiv.hn.cz/c1-67874080-financni-trhy-6-5-2026",
-      "dt": "2026-05-05T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "2026",
-        "finanční",
-        "trhy"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1174,7 +1180,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184109,
+      "bytes": 184173,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1211,7 +1217,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-06T18:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T18:45:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 33,
@@ -1228,6 +1234,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Anthropic se dohodl s Muskovou firmou SpaceX na využití jejího datového centra",
+            "publishedAt": "2026-05-06T18:45:00Z"
+          },
           {
             "title": "Sněmovna schválila roční odklad povinného používání národního geoportálu",
             "publishedAt": "2026-05-06T18:31:00Z"
@@ -1255,10 +1265,6 @@
           {
             "title": "Je to jen pojistka, říká Schillerová ke kritice &bdquo;rozpočtového armagedonu&ldquo;",
             "publishedAt": "2026-05-06T15:27:00Z"
-          },
-          {
-            "title": "Týden s technologiemi: Apple se připravuje na otevřenou budoucnost s AI, mezitím však zaplatí 250 milionů dolarů za zpoždění",
-            "publishedAt": "2026-05-06T15:14:00Z"
           }
         ]
       }
