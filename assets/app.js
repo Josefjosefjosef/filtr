@@ -35865,23 +35865,61 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return { headRaw: headRaw, noteRaw: tailRaw, noteBody: String(nh.body || "").trim() };
   }
 
+  /** P0: výjimka — samostatná poznámka mimo událost (zvlášť / samostatně / vytvoř samostatnou …). */
+  function iuSilverCalendarEmbeddedNoteTailExplicitSeparateStandaloneFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (/\bzvlast\w*\b/.test(x)) return true;
+    if (/\bsamostatne\b/.test(x)) return true;
+    if (/\bsamostatnou\s+poznamku\b/.test(x)) return true;
+    if (/\bvytvor\w*\s+samostatnou\s+poznamku\b/.test(x)) return true;
+    if (/\btaky\s+vytvor\w*\s+samostatnou\b/.test(x)) return true;
+    if (/\bsamostatne\s+do\s+poznam\w*\b/.test(x)) return true;
+    return false;
+  }
+
   /**
-   * P0 real multi-intent: kalendářová hlava + „do poznámky …“ → calendar.create z headRaw + samostatný notes.create (ne pole události).
+   * P0: „… schůzku … a zvlášť|samostatně … poznámku …“ → calendar.create + samostatná notes.create.
    */
-  function iuSilverTryCalendarNoteDualWriteP0Turn(raw, now, folded, prevDraft) {
+  function iuSilverTryCalendarExplicitSeparateNoteAfterConnectorP0Turn(raw, now, folded, prevDraft) {
     if (iuSilverHasGlobalWriteNegationVersusExplicitWriteSignalFolded(String(folded || ""))) return null;
-    const comp = iuSilverTryCalendarNoteCompositeHeadNoteTailP0(raw, folded);
-    if (!comp || !comp.headRaw || !String(comp.noteBody || "").trim()) return null;
-    const tailFoldGate = foldCs(String(comp.noteRaw || ""));
-    /** P0: „do poznámky mi dej|napiš|ulož …“ — stejný dual-write jako PR #4008. */
-    const tailHasCompanionNoteCue =
-      /\bdo\s+poznam\w*\s+mi\s+(dej|dejte|napi[sš]|ulo[zž])\b/.test(tailFoldGate) ||
-      /\bdo\s+poznam\w*\s+napi[sš]\b/.test(tailFoldGate);
-    if (!tailHasCompanionNoteCue) return null;
+    const r = String(raw || "").trim();
+    if (!r || r.length < 28) return null;
+    let sepIdx = -1;
+    let sepLen = 0;
+    const mA = r.match(/\s+a\s+zvl[aá]š[tť]\s+(?:si\s+)?napi[sš]\w*\s+pozn[aá]m(?:ku|ce)\b/i);
+    if (mA && typeof mA.index === "number" && mA.index >= 10) {
+      sepIdx = mA.index;
+      sepLen = mA[0].length;
+    }
+    if (sepIdx < 0) {
+      const mB = r.match(/\s+a\s+samostatn[eě]\s+(?:do\s+pozn[aá]m(?:ek|ky|ce)\s+)?napi[sš]\b/i);
+      if (mB && typeof mB.index === "number" && mB.index >= 10) {
+        sepIdx = mB.index;
+        sepLen = mB[0].length;
+      }
+    }
+    if (sepIdx < 0) {
+      const mC = r.match(/\s+a\s+taky\s+vytvor\w*\s+samostatnou\s+poznamku\b/i);
+      if (mC && typeof mC.index === "number" && mC.index >= 10) {
+        sepIdx = mC.index;
+        sepLen = mC[0].length;
+      }
+    }
+    if (sepIdx < 0 || sepLen < 1) return null;
+    const leftRaw = r.slice(0, sepIdx).trim();
+    let rightRaw = r.slice(sepIdx + sepLen).trim();
+    if (leftRaw.length < 14 || rightRaw.length < 6) return null;
+    const lf = foldCs(leftRaw);
+    if (iuSilverNotesScopeBlocksCalendarWriteRouteFolded(lf)) return null;
+    if (!iuSilverLooksLikeSchedulingFragment(lf, leftRaw)) return null;
     const prev = prevDraft || createEmptyDraft();
-    const calTurn = iuSilverBuildCalendarCreateTurn(comp.headRaw, now, prev);
+    const calTurn = iuSilverBuildCalendarCreateTurn(leftRaw, now, prev);
     if (!calTurn || calTurn.normalizedIntent !== "calendar.create") return null;
-    const noteTurn = iuSilverBuildNoteCreateTurn(comp.noteBody, now);
+    rightRaw = rightRaw.replace(/^(?:ze|že)\s+/i, "").trim();
+    const bodyNote = iuSilverNoteCreateFinalizeBody(rightRaw);
+    if (!bodyNote || String(bodyNote).trim().length < 2) return null;
+    const noteTurn = iuSilverBuildNoteCreateTurn(bodyNote, now);
     if (!noteTurn || noteTurn.normalizedIntent !== "notes.create") return null;
     return {
       normalizedIntent: calTurn.normalizedIntent,
@@ -35914,6 +35952,88 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         clarificationText: noteTurn.clarificationText,
         draft: noteTurn.draft
       }
+    };
+  }
+
+  /**
+   * P0: kalendářová hlava + embedded „do poznámky …“ / „k tomu do poznámky …“ → calendar.create;
+   * poznámka jen pole události (žádný samostatný notes.create), kromě výjimky explicitní samostatné poznámky.
+   */
+  function iuSilverTryCalendarNoteDualWriteP0Turn(raw, now, folded, prevDraft) {
+    if (iuSilverHasGlobalWriteNegationVersusExplicitWriteSignalFolded(String(folded || ""))) return null;
+    const comp = iuSilverTryCalendarNoteCompositeHeadNoteTailP0(raw, folded);
+    if (!comp || !comp.headRaw || !String(comp.noteBody || "").trim()) return null;
+    const tailFoldGate = foldCs(String(comp.noteRaw || ""));
+    const fullFold = String(folded || "");
+    const explicitSep = iuSilverCalendarEmbeddedNoteTailExplicitSeparateStandaloneFolded(fullFold);
+    const tailHasCompanionNoteCue =
+      /\bdo\s+poznam\w*\s+mi\s+(dej|dejte|napi[sš]|ulo[zž]|pridej|p[rř]idej)\b/.test(tailFoldGate) ||
+      /\bdo\s+poznam\w*\s+napi[sš]\b/.test(tailFoldGate) ||
+      /\bdo\s+poznam\w*\s+pridej\b/.test(tailFoldGate) ||
+      /\bdo\s+poznam\w*\s+p[rř]idej\b/.test(tailFoldGate) ||
+      /\bk\s+tomu\s+do\s+poznam\w*\b/.test(tailFoldGate);
+    if (!tailHasCompanionNoteCue) return null;
+    const prev = prevDraft || createEmptyDraft();
+    const calTurn = iuSilverBuildCalendarCreateTurn(comp.headRaw, now, prev);
+    if (!calTurn || calTurn.normalizedIntent !== "calendar.create") return null;
+    if (explicitSep) {
+      const noteTurn = iuSilverBuildNoteCreateTurn(comp.noteBody, now);
+      if (!noteTurn || noteTurn.normalizedIntent !== "notes.create") return null;
+      return {
+        normalizedIntent: calTurn.normalizedIntent,
+        targetContainer: calTurn.targetContainer,
+        processingState: calTurn.processingState,
+        clarificationReason: calTurn.clarificationReason,
+        futureIntentCandidate: calTurn.futureIntentCandidate,
+        readQuery: calTurn.readQuery,
+        readAnswer: calTurn.readAnswer,
+        extractedFields: calTurn.extractedFields,
+        missingFields: calTurn.missingFields,
+        ambiguousFields: calTurn.ambiguousFields,
+        userFacingSummary: calTurn.userFacingSummary,
+        assistantLead: calTurn.assistantLead,
+        clarificationText: calTurn.clarificationText,
+        draft: calTurn.draft,
+        silverCompanionNoteTurn: {
+          normalizedIntent: noteTurn.normalizedIntent,
+          targetContainer: noteTurn.targetContainer,
+          processingState: noteTurn.processingState,
+          clarificationReason: noteTurn.clarificationReason,
+          futureIntentCandidate: noteTurn.futureIntentCandidate,
+          readQuery: noteTurn.readQuery,
+          readAnswer: noteTurn.readAnswer,
+          extractedFields: noteTurn.extractedFields,
+          missingFields: noteTurn.missingFields,
+          ambiguousFields: noteTurn.ambiguousFields,
+          userFacingSummary: noteTurn.userFacingSummary,
+          assistantLead: noteTurn.assistantLead,
+          clarificationText: noteTurn.clarificationText,
+          draft: noteTurn.draft
+        }
+      };
+    }
+    const bodyFin = iuSilverNoteCreateFinalizeBody(comp.noteBody) || String(comp.noteBody || "").trim();
+    const nBody = iuSilverHumanizeRoughNote(bodyFin);
+    if (!String(nBody || "").trim()) return null;
+    const dOut = cloneDraft(calTurn.draft);
+    dOut.note = String(nBody || "").trim().slice(0, 1000);
+    dOut.meta.note = "certain";
+    const ap2 = buildAssistantParts(dOut, calTurn.processingState);
+    return {
+      normalizedIntent: calTurn.normalizedIntent,
+      targetContainer: calTurn.targetContainer,
+      processingState: calTurn.processingState,
+      clarificationReason: calTurn.clarificationReason,
+      futureIntentCandidate: calTurn.futureIntentCandidate,
+      readQuery: calTurn.readQuery,
+      readAnswer: calTurn.readAnswer,
+      extractedFields: calTurn.extractedFields,
+      missingFields: calTurn.missingFields,
+      ambiguousFields: calTurn.ambiguousFields,
+      userFacingSummary: calTurn.userFacingSummary,
+      assistantLead: ap2.assistantLead,
+      clarificationText: ap2.clarificationText,
+      draft: dOut
     };
   }
 
@@ -39264,6 +39384,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function stripNote(raw) {
     const patterns = [
+      /\s+a\s+do\s+pozn[aá]m(?:ek|ky|ce)\b\s+mi\s+(?:dej|ulož|uloz|zapiš|zapis|přidej|pridej|hoď|hod)\s+(.+)$/i,
+      /\s+k\s+tomu\s+do\s+pozn[aá]m(?:ek|ky|ce)\b\s+(?:dej|mi\s+dej|ulož|uloz|zapiš|zapis|přidej|pridej)\s+(.+)$/i,
       /\s+a\s+do\s+pozn[aá]m(?:ek|ky|ce)\b\s+(?:dej|ulož|uloz|zapiš|zapis|přidej|pridej|hoď|hod)\s+(.+)$/i,
       /\bdo\s+pozn[aá]mky\s+(.+?)\s+a\s+adresa\s+je\b/i,
       /\bdo\s+pozn[aá]mky\s+(.+?)(?=\s+adresa\s+je\b)/i,
@@ -39305,6 +39427,26 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const main = s.slice(0, m.index).replace(/\s+/g, " ").trim();
     const noteRaw = s.slice(m.index).trim();
     return { work: main, note: iuSilverHumanizeRoughNote(noteRaw) };
+  }
+
+  /** P0: kalendářová věta + „ať si vezmu / nezapomenout vzít …“ → text do pole poznámky události, ne samostatná poznámka. */
+  function iuSilverStripEmbeddedEventPackTailFromCalendarWorkP0(work) {
+    const s0 = String(work || "").trim();
+    if (!s0) return { work: "", note: "" };
+    const pats = [
+      /\s+a[tť]\s+si\s+vez(mu|mi)\b[\s\S]+$/i,
+      /\s+a(?:by)?ch\s+si\s+(?:sebou\s+)?vzal\w*\b[\s\S]+$/i,
+      /\s+nezapomen(?:out)?\s+vz[ií]t\w*\b[\s\S]+$/i
+    ];
+    for (let pi = 0; pi < pats.length; pi++) {
+      const m = s0.match(pats[pi]);
+      if (m && typeof m.index === "number" && m.index >= 1) {
+        const noteRaw = s0.slice(m.index).trim();
+        const main = s0.slice(0, m.index).replace(/\s+/g, " ").trim();
+        return { work: main, note: iuSilverHumanizeRoughNote(noteRaw) };
+      }
+    }
+    return { work: s0.replace(/\s+/g, " ").trim(), note: "" };
   }
 
   /** P0 real mobile: připomenutí v kalendářové větě → pole poznámky události, ne název. */
@@ -40504,6 +40646,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       confidence.note = "certain";
     }
     work = looseNote.work;
+
+    const packTail = iuSilverStripEmbeddedEventPackTailFromCalendarWorkP0(work);
+    if (packTail.note) {
+      notePieces.push(packTail.note);
+      confidence.note = "certain";
+    }
+    work = packTail.work;
 
     const remStrip = iuSilverStripCalendarReminderClauseFromWork(work);
     if (remStrip.rem) {
@@ -41776,6 +41925,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const multiIntentP0 = iuSilverTryMultiIntentP0Turn(raw, now, folded, ctx || {}, empty, prevDraft);
     if (multiIntentP0) {
       return multiIntentP0;
+    }
+
+    const explicitSepCalNoteP0 = iuSilverTryCalendarExplicitSeparateNoteAfterConnectorP0Turn(raw, now, folded, prevDraft);
+    if (explicitSepCalNoteP0) {
+      return explicitSepCalNoteP0;
     }
 
     const dualCalNoteP0 = iuSilverTryCalendarNoteDualWriteP0Turn(raw, now, folded, prevDraft);

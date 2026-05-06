@@ -2052,15 +2052,13 @@ function main() {
     eng.createEmptyDraft(),
     ctxEmpty()
   );
-  const zNote = foldCs(
-    String((rmZel.silverCompanionNoteTurn && rmZel.silverCompanionNoteTurn.draft && rmZel.silverCompanionNoteTurn.draft.silverNoteText) || "")
-  );
+  const zNote = foldCs(String((rmZel.draft && rmZel.draft.note) || ""));
   const zAddr = foldCs(String((rmZel.draft && (rmZel.draft.address || rmZel.draft.location)) || ""));
   rmAll =
     auditRmPass(
       "real_multi_intent_calendar_note_zelenka",
       rmZel.normalizedIntent === "calendar.create" &&
-        !!rmZel.silverCompanionNoteTurn &&
+        !rmZel.silverCompanionNoteTurn &&
         zNote.indexOf("smlouv") >= 0 &&
         zAddr.indexOf("vinohrad") >= 0
     ) && rmAll;
