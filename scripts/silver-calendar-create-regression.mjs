@@ -117,7 +117,24 @@ function run() {
     exitCode: fail > 0 ? 1 : 0
   };
   console.log(JSON.stringify({ summary }));
-  process.exit(summary.exitCode);
+
+  /** P0 PR #4008: real multi-intent — calendar.create (head) + notes.create (tail), not event note only. */
+  const DUAL_NOW = new Date("2026-05-06T12:00:00");
+  const dualIn =
+    "Ulož mi schůzku ve středu s Tomášem na adrese Korunní 44 Praha do poznámky mi dej abych si sebou vzal deštník";
+  const dualR = eng.processUserTurn(dualIn, eng.createEmptyDraft(), { now: DUAL_NOW });
+  const comp = !!dualR.silverCompanionNoteTurn;
+  const noteTxt = String((dualR.silverCompanionNoteTurn && dualR.silverCompanionNoteTurn.draft && dualR.silverCompanionNoteTurn.draft.silverNoteText) || "").toLowerCase();
+  const calNote = String((dualR.draft && dualR.draft.note) || "").toLowerCase();
+  const dualOk =
+    dualR.normalizedIntent === "calendar.create" &&
+    comp &&
+    (noteTxt.indexOf("deštník") >= 0 || noteTxt.indexOf("destnik") >= 0) &&
+    calNote.indexOf("deštník") < 0 &&
+    calNote.indexOf("destnik") < 0;
+  console.log(JSON.stringify({ case: "REAL_MULTI_INTENT_CAL_NOTE_SPLIT", pass: dualOk }));
+  const exitDual = dualOk ? 0 : 1;
+  process.exit(summary.exitCode !== 0 ? summary.exitCode : exitDual);
 }
 
 run();
