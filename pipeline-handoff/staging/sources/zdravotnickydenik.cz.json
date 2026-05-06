@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-06T20:10:08.022193Z",
+  "ingestedAt": "2026-05-06T20:48:57.810059Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Hantavirus na výletní lodi: Hygienici prověřili, zda jsou na palubě Češi. Vydali doporučení pro turisty",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/hantavirus-hygienici-cesi-doporuceni-pro-turisty/",
+      "dt": "2026-05-06T20:35:45Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "doporučení",
+        "hantavirus",
+        "hygienici",
+        "lodi",
+        "palubě",
+        "prověřili",
+        "turisty",
+        "vydali",
+        "výletní",
+        "zda",
+        "češi"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -247,34 +275,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Pacient v českém systému často bloudí. Šéfka Penta Hospitals popsala, co je potřeba změnit",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/proc-pacient-bloudi-systemem-soukromi-poskytovatele/",
-      "dt": "2026-05-06T06:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "bloudí",
-        "hospitals",
-        "pacient",
-        "penta",
-        "popsala",
-        "potřeba",
-        "systému",
-        "změnit",
-        "často",
-        "českém",
-        "šéfka"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -285,7 +285,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 78588,
+      "bytes": 76818,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -322,12 +322,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-06T15:52:46Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T20:35:45Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
+          "zdravi": 8,
           "zpravy": 1,
-          "finance": 1,
-          "zdravi": 8
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -339,6 +339,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hantavirus na výletní lodi: Hygienici prověřili, zda jsou na palubě Češi. Vydali doporučení pro turisty",
+            "publishedAt": "2026-05-06T20:35:45Z"
+          },
           {
             "title": "Záchranáři, policie i armáda pod jednou střechou. Babiš chce v republice síť supercenter IZS",
             "publishedAt": "2026-05-06T15:52:46Z"
@@ -366,10 +370,6 @@
           {
             "title": "Nový ředitel ZP MV mění vedení pojišťovny. Bez náhrady ruší pozici s osmimilionovým platem",
             "publishedAt": "2026-05-06T09:43:46Z"
-          },
-          {
-            "title": "Nejzáhadnější orgán se vrací do centra pozornosti. Může souviset s dlouhověkostí i rizikem rakoviny",
-            "publishedAt": "2026-05-06T08:00:00Z"
           }
         ]
       }

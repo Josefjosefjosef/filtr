@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-06T20:10:08.022193Z",
+  "ingestedAt": "2026-05-06T20:48:57.810059Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Plíšková po boji otočila, v Římě jdou dál i Siniaková, Valentová a Kopřiva",
+      "url": "https://sport.aktualne.cz/tenis/siniakova-i-kopriva-jdou-dal-bejlekova-v-rime-padla-po-velke-bitve/r~aaa2966125ff79779b678e8400d2deae/",
+      "dt": "2026-05-06T15:32:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "boji",
+        "jdou",
+        "kopřiva",
+        "otočila",
+        "plíšková",
+        "siniaková",
+        "valentová",
+        "římě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -21,31 +46,6 @@
         "velitel",
         "vysoký",
         "údajně"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Siniaková, Valentová i Kopřiva jdou dál. Bejlek v Římě po boji padla",
-      "url": "https://sport.aktualne.cz/tenis/siniakova-i-kopriva-jdou-dal-bejlekova-v-rime-padla-po-velke-bitve/r~aaa2966125ff79779b678e8400d2deae/",
-      "dt": "2026-05-06T15:32:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "bejlek",
-        "boji",
-        "jdou",
-        "kopřiva",
-        "padla",
-        "siniaková",
-        "valentová",
-        "římě"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -547,7 +547,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21874,
+      "bytes": 22027,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -587,8 +587,8 @@
         "raw_feed_latest_publishedAt": "2026-05-06T19:49:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 18,
-          "sport": 2
+          "sport": 2,
+          "zpravy": 18
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -601,12 +601,12 @@
         },
         "sample_titles": [
           {
-            "title": "Izrael bez varování udeřil na Bejrút, cílem byl údajně vysoký velitel Hizballáhu",
-            "publishedAt": "2026-02-28T14:04:00Z"
+            "title": "Plíšková po boji otočila, v Římě jdou dál i Siniaková, Valentová a Kopřiva",
+            "publishedAt": "2026-05-06T15:32:00Z"
           },
           {
-            "title": "Siniaková, Valentová i Kopřiva jdou dál. Bejlek v Římě po boji padla",
-            "publishedAt": "2026-05-06T15:32:00Z"
+            "title": "Izrael bez varování udeřil na Bejrút, cílem byl údajně vysoký velitel Hizballáhu",
+            "publishedAt": "2026-02-28T14:04:00Z"
           },
           {
             "title": "Zabíjení navzdory příměří. Ruské útoky připravily o život nejméně 20 lidí, oběti hlásí i Krym",
