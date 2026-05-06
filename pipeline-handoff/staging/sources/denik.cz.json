@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-06T16:00:19.624370Z",
+  "ingestedAt": "2026-05-06T16:44:30.108638Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Ze skály v Tisé na Ústecku se zřítil nezletilý cizinec. Letěl pro něj vrtulník",
+      "url": "https://www.denik.cz/krimi/ze-skaly-v-tise-na-ustecku-se-zritil-nezletily-cizinec-letel-pro-nej-vrtulnik-20.html",
+      "dt": "2026-05-06T16:04:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "cizinec",
+        "letěl",
+        "nezletilý",
+        "něj",
+        "skály",
+        "tisé",
+        "vrtulník",
+        "zřítil",
+        "ústecku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -622,32 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kluci u ní hledají ženské srdce. Zpěvačka Billie Eilish míří do kin",
-      "url": "https://www.denik.cz/film-a-televize/billie-eilish-film-james-cameron.html",
-      "dt": "2026-05-06T06:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "billie",
-        "eilish",
-        "hledají",
-        "kin",
-        "kluci",
-        "míří",
-        "srdce",
-        "zpěvačka",
-        "ženské"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -658,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28737,
+      "bytes": 28491,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -695,7 +695,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-06T15:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T16:04:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -711,6 +711,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ze skály v Tisé na Ústecku se zřítil nezletilý cizinec. Letěl pro něj vrtulník",
+            "publishedAt": "2026-05-06T16:04:00Z"
+          },
           {
             "title": "Nová výstraha před bouřkami: V některých krajích hrozí i kroupy, sledujte radar",
             "publishedAt": "2026-05-06T15:01:00Z"
@@ -738,10 +742,6 @@
           {
             "title": "Chrom, burácení motorů a elegance. Světlá hostila sraz amerických aut",
             "publishedAt": "2026-05-06T13:00:00Z"
-          },
-          {
-            "title": "České přehrady se výrazně oteplují. Vědci narazili na jarní paradox",
-            "publishedAt": "2026-05-06T12:00:00Z"
           }
         ]
       }

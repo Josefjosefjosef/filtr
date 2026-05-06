@@ -1,8 +1,64 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-06T16:00:19.624370Z",
+  "ingestedAt": "2026-05-06T16:44:30.108638Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Unie utahuje opasky, trhy doufají v mír: Žádné další dluhy kvůli drahým palivům",
+      "url": "https://ekonomickydenik.cz/unie-utahuje-opasky-trhy-doufaji-v-mir-zadne-dalsi-dluhy-kvuli-drahym-palivum/",
+      "dt": "2026-05-06T16:36:21Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "další",
+        "dluhy",
+        "doufají",
+        "drahým",
+        "kvůli",
+        "mír",
+        "opasky",
+        "palivům",
+        "trhy",
+        "unie",
+        "utahuje",
+        "žádné"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Průvan v městských kasách. České obce se poprvé od roku 2010 propadly do minusu",
+      "url": "https://ekonomickydenik.cz/pruvan-v-mestskych-kasach-ceske-obce-se-poprve-od-roku-2010-propadly-do-minusu/",
+      "dt": "2026-05-06T16:02:03Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "2010",
+        "kasách",
+        "minusu",
+        "městských",
+        "obce",
+        "poprvé",
+        "propadly",
+        "průvan",
+        "roku",
+        "české"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -728,58 +784,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dva prezidenti si zaběhali v centru Prahy. S olympioničkou a hvězdným fotbalistou",
-      "url": "https://ekonomickydenik.cz/dva-prezidenti-zabehali-centrum-prahy/",
-      "dt": "2026-05-05T08:58:23Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "centru",
-        "dva",
-        "fotbalistou",
-        "hvězdným",
-        "olympioničkou",
-        "prahy",
-        "prezidenti",
-        "zaběhali"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Putinovy obavy, kulomety v Kremlu: Moskva se mění v pevnost kvůli strachu z úderu",
-      "url": "https://ekonomickydenik.cz/putinovy-obavy-kulomety-kreml/",
-      "dt": "2026-05-05T08:33:15Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "kremlu",
-        "kulomety",
-        "kvůli",
-        "moskva",
-        "mění",
-        "obavy",
-        "pevnost",
-        "putinovy",
-        "strachu",
-        "úderu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74181,
+      "bytes": 73947,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,13 +831,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T14:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T16:36:21Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "finance": 26,
           "zpravy": 3,
-          "finance": 25,
-          "zdravi": 1,
-          "sport": 1
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -845,6 +848,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Unie utahuje opasky, trhy doufají v mír: Žádné další dluhy kvůli drahým palivům",
+            "publishedAt": "2026-05-06T16:36:21Z"
+          },
+          {
+            "title": "Průvan v městských kasách. České obce se poprvé od roku 2010 propadly do minusu",
+            "publishedAt": "2026-05-06T16:02:03Z"
+          },
           {
             "title": "Nejkrvavější rok historie a soudní teror. Kdy začne Evropa chránit své novináře?",
             "publishedAt": "2026-05-06T14:30:00Z"
@@ -868,14 +879,6 @@
           {
             "title": "Nenechávají nic náhodě: V armádě chtějí nahradit Pandury, ladí proto smlouvy s českými partnery",
             "publishedAt": "2026-05-06T10:29:47Z"
-          },
-          {
-            "title": "Stopka pro každoroční STK starých vozů? Kontroly se ale chystají na asistenční systémy",
-            "publishedAt": "2026-05-06T09:55:36Z"
-          },
-          {
-            "title": "Kvůli drahým palivům roste inflace. V příštích měsících má dál zrychlit",
-            "publishedAt": "2026-05-06T09:30:56Z"
           }
         ]
       }

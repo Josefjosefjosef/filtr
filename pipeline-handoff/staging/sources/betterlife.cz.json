@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-05-06T16:00:19.624370Z",
+  "ingestedAt": "2026-05-06T16:44:30.108638Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Úřad NASA představil novou aplikaci. Vaše jméno poskládá z útesů a jezer vyfotografovaných ze satelitů",
+      "url": "https://www.betterlife.cz/urad-nasa-predstavil-novou-aplikaci-vase-jmeno-posklada-z-utesu-a-jezer-vyfotografovanych-ze-satelitu/",
+      "dt": "2026-05-06T15:59:36Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "aplikaci",
+        "jezer",
+        "jméno",
+        "nasa",
+        "novou",
+        "poskládá",
+        "představil",
+        "satelitů",
+        "vaše",
+        "vyfotografovaných",
+        "útesů",
+        "úřad"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -258,33 +287,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Ulice: Koldu zbije otec, Lumíra zatknou před bistrem a Martina se vrací do děje",
-      "url": "https://www.betterlife.cz/ulice-koldu-zbije-otec-lumira-zatknou-pred-bistrem-a-martina-se-vraci-do-deje/",
-      "dt": "2026-05-02T07:44:56Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "bistrem",
-        "děje",
-        "koldu",
-        "lumíra",
-        "martina",
-        "otec",
-        "ulice",
-        "vrací",
-        "zatknou",
-        "zbije"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -295,7 +297,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 71638,
+      "bytes": 71142,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -355,7 +357,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-06T09:44:02Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T15:59:36Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -371,6 +373,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Úřad NASA představil novou aplikaci. Vaše jméno poskládá z útesů a jezer vyfotografovaných ze satelitů",
+            "publishedAt": "2026-05-06T15:59:36Z"
+          },
           {
             "title": "Ulice: Erik je zděšený. Soňa mluví o manželství se sestřenicí, Egon ale vidí problém úplně jinde",
             "publishedAt": "2026-05-06T09:44:02Z"
@@ -398,10 +404,6 @@
           {
             "title": "Příští týden v seriálu Ulice: Konflikty, pobyt za mřížemi, návrat a hrdinský čin",
             "publishedAt": "2026-05-03T15:59:57Z"
-          },
-          {
-            "title": "Pavol Habera oslavil 64. narozeniny. Fanouškům přiznal jaký bere důchod, televize ho vypípala",
-            "publishedAt": "2026-05-02T15:56:08Z"
           }
         ]
       }

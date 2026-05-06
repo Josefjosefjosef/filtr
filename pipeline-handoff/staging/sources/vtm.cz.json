@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-06T16:00:19.624370Z",
+  "ingestedAt": "2026-05-06T16:44:30.108638Z",
   "items": [
     {
       "section": "veda",
@@ -24,6 +24,34 @@
         "vysvětluje",
         "všechna",
         "záměr"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Z CZC zůstal jen stín. Na Allegru prodává zlomek produktů a jeho značky skončily",
+      "url": "https://www.zive.cz/clanky/z-czc-zustal-jen-stin-na-allegru-prodava-zlomek-produktu-a-jeho-znacky-skoncily/sc-3-a-241036/default.aspx",
+      "dt": "2026-05-06T15:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "allegru",
+        "czc",
+        "jeho",
+        "jen",
+        "produktů",
+        "prodává",
+        "skončily",
+        "stín",
+        "zlomek",
+        "značky",
+        "zůstal"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -946,35 +974,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Jak dobře vybrat powerbanku. Kapacita není vše, zajímat vás musí také rychlost nabíjení a porty",
-      "url": "https://mobilmania.zive.cz/clanky/jak-vybrat-powerbanku-202604/sc-3-a-1364640/default.aspx",
-      "dt": "2026-05-03T15:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "dobře",
-        "kapacita",
-        "musí",
-        "nabíjení",
-        "porty",
-        "powerbanku",
-        "rychlost",
-        "také",
-        "vybrat",
-        "vás",
-        "vše",
-        "zajímat"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -985,7 +984,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23709,
+      "bytes": 23690,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1022,7 +1021,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-06T14:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T15:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1040,6 +1039,10 @@
           {
             "title": "Stačí spustit Edge a všechna vaše hesla jsou v paměti jako na podnosu. Microsoft vysvětluje, že to je záměr…",
             "publishedAt": "2026-05-06T12:45:00Z"
+          },
+          {
+            "title": "Z CZC zůstal jen stín. Na Allegru prodává zlomek produktů a jeho značky skončily",
+            "publishedAt": "2026-05-06T15:45:00Z"
           },
           {
             "title": "Google má novou captchu. Že nejste robot, prokážete naskenování QR kódu",
@@ -1064,10 +1067,6 @@
           {
             "title": "AlzaBoxy otevírají dvířka Knihobotu. Odeslání knih k prodeji je zdarma, ani nemusíte tisknout štítek",
             "publishedAt": "2026-05-06T06:45:00Z"
-          },
-          {
-            "title": "Zvenku nenápadná dodávka, za dvě hodiny mobilní vysílač. O2 na festivaly přijede s anténou na čtyřech kolech",
-            "publishedAt": "2026-05-05T17:45:00Z"
           }
         ]
       }
