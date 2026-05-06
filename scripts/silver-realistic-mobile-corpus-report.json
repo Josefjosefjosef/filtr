@@ -2,7 +2,7 @@
   "harness_id": "audit_silver_realistic_mobile_corpus_v1",
   "fixed_now": "2026-05-04T12:00:00",
   "total_cases": 10000,
-  "overall_accuracy_realistic": "97.87",
+  "overall_accuracy_realistic": "98.74",
   "accuracy_by_cluster": {
     "calendar_write_basic:schuzka": "96.25",
     "calendar_write_basic:zubar": "96.25",
@@ -22,7 +22,7 @@
     "note_write_warranty_object": "100.00",
     "note_query": "100.00",
     "task_query": "100.00",
-    "calendar_query": "93.31",
+    "calendar_query": "100.00",
     "multi_intent_calendar_note": "100.00",
     "negation_safety:calendar_read": "80.00",
     "negation_safety:task_read": "80.00",
@@ -48,7 +48,7 @@
     "note_write_warranty_object": 0,
     "note_query": 0,
     "task_query": 0,
-    "calendar_query": 87,
+    "calendar_query": 0,
     "multi_intent_calendar_note": 0,
     "negation_safety:calendar_read": 30,
     "negation_safety:task_read": 30,
@@ -56,7 +56,6 @@
     "messy_czech_mobile": 0
   },
   "top_20_fail_clusters": [
-    "calendar_query||intent_fail=87",
     "negation_safety:calendar_read||false_negative=30",
     "negation_safety:task_read||calendar_vs_task_confusion=30",
     "calendar_write_basic:lekar||intent_fail=8",
@@ -378,7 +377,7 @@
   "unknown_when_uncertain_count": 0,
   "write_when_negated_count": 0,
   "calendar_write_accuracy": "98.00",
-  "calendar_query_accuracy": "91.93",
+  "calendar_query_accuracy": "97.93",
   "task_write_accuracy": "100.00",
   "task_query_accuracy": "96.84",
   "note_write_accuracy": "100.00",
@@ -389,9 +388,11 @@
   "note_write_basic_unnecessary_disambiguation_fail_count": 0,
   "note_write_basic_unnecessary_disambiguation_reduced": "YES",
   "embedded_event_note_tail_standalone_note_create_count": 0,
+  "calendar_query_intent_fail_count": 0,
+  "calendar_query_intent_fail_reduced": "YES",
   "explicit_separate_note_exception_passed": "YES",
-  "recommended_next_fix_cluster": "calendar_query",
-  "recommended_next_fix_reason": "Highest fail mass in «calendar_query» dominated by «intent_fail»; safest follow-up is a narrow Silver routing/read-guard change scoped to this Czech mobile phrasing family (no UI).",
+  "recommended_next_fix_cluster": "negation_safety:calendar_read",
+  "recommended_next_fix_reason": "Highest fail mass in «negation_safety:calendar_read» dominated by «false_negative»; safest follow-up is a narrow Silver routing/read-guard change scoped to this Czech mobile phrasing family (no UI).",
   "baseline_20k": {
     "overall_accuracy": "94.07",
     "calendar_write": "3000/3000",
@@ -408,6 +409,6 @@
     "title_clean": "9645 / 10000",
     "date_parsed": "10000 / 10000",
     "time_parsed": "10000 / 10000",
-    "entity_detected": "7556 / 10000"
+    "entity_detected": "7643 / 10000"
   }
 }

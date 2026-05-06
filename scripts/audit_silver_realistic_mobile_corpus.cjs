@@ -1931,6 +1931,51 @@ function main() {
     rmAll = auditRmPass(p1NoteWriteBasicSpot[iPs][0], okPs) && rmAll;
   }
 
+  const p1CalQuerySpot = [
+    ["p1_cal_q_co_dnes_v_kal", "Co mám dnes v kalendáři"],
+    ["p1_cal_q_jake_zitra_schuz", "Jaké mám zítra schůzky"],
+    ["p1_cal_q_ukaz_kal_zitra", "Ukaž mi kalendář na zítra"],
+    ["p1_cal_q_najdi_schuz_novak", "Najdi schůzku s Novákem"],
+    ["p1_cal_q_mam_dnes_nejakou_schuz", "Mám dnes nějakou schůzku"],
+    ["p1_cal_q_co_dnes_v_planu_v_kal", "Co mám dnes v plánu v kalendáři"]
+  ];
+  for (let iCq = 0; iCq < p1CalQuerySpot.length; iCq++) {
+    try {
+      if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
+    } catch (eCq) {
+      void eCq;
+    }
+    const tCq = eng.processUserTurn(p1CalQuerySpot[iCq][1], eng.createEmptyDraft(), ctxQuery());
+    const okCq =
+      engineToAuditIntent(tCq.normalizedIntent, "calendar_query") === "calendar.query" &&
+      tCq.processingState === "READ_OK" &&
+      tCq.normalizedIntent !== "create.storage_disambiguation";
+    rmAll = auditRmPass(p1CalQuerySpot[iCq][0], okCq) && rmAll;
+  }
+
+  try {
+    if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
+  } catch (eRmCalN) {
+    void eRmCalN;
+  }
+  const rmCalNeg = eng.processUserTurn(
+    "Silvere jen se podívej do kalendáře, nic neukládej",
+    eng.createEmptyDraft(),
+    ctxQuery()
+  );
+  rmAll =
+    auditRmPass(
+      "read_only_silvere_do_kalendar_neg",
+      rmCalNeg.processingState !== "STORAGE_DISAMBIGUATION" &&
+        rmCalNeg.normalizedIntent !== "create.storage_disambiguation" &&
+        !(
+          rmCalNeg.normalizedIntent === "calendar.create" &&
+          rmCalNeg.processingState === "READY_TO_SAVE"
+        ) &&
+        !(rmCalNeg.normalizedIntent === "notes.create" && rmCalNeg.processingState === "READY_TO_SAVE") &&
+        !(rmCalNeg.normalizedIntent === "tasks.create" && rmCalNeg.processingState === "READY_TO_SAVE")
+    ) && rmAll;
+
   try {
     if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
   } catch (eRm5) {
@@ -2089,7 +2134,14 @@ function main() {
 
   const dangerousWriteCount = dangerousCaseIds.size;
   const queryCreatedWriteRealistic = catCount.query_created_write || 0;
-  const mainCommitBefore = "d3ae1f8dc99bdc0745ea80737d58db07d47fa47c";
+  let calendarQueryIntentFailCount = 0;
+  for (let cqf = 0; cqf < fails.length; cqf++) {
+    if (fails[cqf].cluster === "calendar_query" && fails[cqf].cat === "intent_fail") calendarQueryIntentFailCount++;
+  }
+  const calQueryIntentFailBaseline = 87;
+  const calendarQueryIntentFailReduced =
+    calendarQueryIntentFailCount < calQueryIntentFailBaseline ? "YES" : "NO";
+  const mainCommitBefore = "fc7c837351fcedd73a7aad5ae6eddeb32e38b5d4";
   const mergedNo = "NO";
   const smokeFlag = process.env.SILVER_REALISTIC_AUDIT_SMOKE || "SKIPPED";
   const prodProofFlag = process.env.SILVER_REALISTIC_AUDIT_PROD || "SKIPPED";
@@ -2132,6 +2184,8 @@ function main() {
     note_write_basic_unnecessary_disambiguation_reduced:
       noteWriteBasicUnnecessaryDisambiguationFails === 0 ? "YES" : "NO",
     embedded_event_note_tail_standalone_note_create_count: embeddedEventNoteTailStandaloneNoteCreateCount,
+    calendar_query_intent_fail_count: calendarQueryIntentFailCount,
+    calendar_query_intent_fail_reduced: calendarQueryIntentFailReduced,
     explicit_separate_note_exception_passed: explicitSeparateNoteExceptionPassed ? "YES" : "NO",
     recommended_next_fix_cluster: recommendedNextFixCluster,
     recommended_next_fix_reason: recommendedNextFixReason,
@@ -2167,6 +2221,8 @@ function main() {
     "false_write_count=" + falseWriteCount,
     "dangerous_write_count=" + dangerousWriteCount,
     "query_created_write_count_realistic=" + queryCreatedWriteRealistic,
+    "calendar_query_intent_fail_count=" + calendarQueryIntentFailCount,
+    "calendar_query_intent_fail_reduced=" + calendarQueryIntentFailReduced,
     "unknown_when_uncertain_count=" + unknownWhenUncertainCount,
     "write_when_negated_count=" + writeWhenNegatedCount,
     "top_20_fail_clusters=" + String(top20Line || "(none)"),
