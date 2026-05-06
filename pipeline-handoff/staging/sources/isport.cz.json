@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "isport.cz",
-  "ingestedAt": "2026-05-06T14:50:18.130226Z",
+  "ingestedAt": "2026-05-06T15:25:28.354719Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Hraje se celé kolo druhé ligy. Artis hostí Příbram, poslední šance pro béčko Sparty",
+      "url": "https://isport.blesk.cz/clanek/fotbal-domaci-souteze-chance-narodni-liga/475178/online-hraje-se-cele-kolo-druhe-ligy-artis-hosti-pribram-posledni-sance-pro-becko-sparty.html",
+      "dt": "2026-05-06T14:45:00Z",
+      "media_raw": "iSport",
+      "media_norm": "iSport",
+      "tokens": [
+        "artis",
+        "béčko",
+        "celé",
+        "druhé",
+        "hostí",
+        "hraje",
+        "kolo",
+        "ligy",
+        "poslední",
+        "příbram",
+        "sparty",
+        "šance"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_isport",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "isport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -181,35 +210,6 @@
         "sobol",
         "zdražil",
         "změny"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_isport",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "isport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "ONLINE: Hraje se celé kolo druhé ligy. Artis hostí Příbram, poslední šance pro béčko Sparty",
-      "url": "https://isport.blesk.cz/clanek/fotbal-domaci-souteze-chance-narodni-liga/475178/online-hraje-se-cele-kolo-druhe-ligy-artis-hosti-pribram-posledni-sance-pro-becko-sparty.html",
-      "dt": "2026-05-06T12:00:00Z",
-      "media_raw": "iSport",
-      "media_norm": "iSport",
-      "tokens": [
-        "artis",
-        "béčko",
-        "celé",
-        "druhé",
-        "hostí",
-        "hraje",
-        "kolo",
-        "ligy",
-        "poslední",
-        "příbram",
-        "sparty",
-        "šance"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1086,7 +1086,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://isport.blesk.cz/rss",
-      "bytes": 55013,
+      "bytes": 55008,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1123,7 +1123,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-06T14:24:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T14:45:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1138,6 +1138,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "ONLINE: Hraje se celé kolo druhé ligy. Artis hostí Příbram, poslední šance pro béčko Sparty",
+            "publishedAt": "2026-05-06T14:45:00Z"
+          },
           {
             "title": "Politici, šéf F1 i lyžař Tomba na Zanardiho pohřbu: Sbohem, bojovníku!",
             "publishedAt": "2026-05-06T14:24:00Z"
@@ -1164,10 +1168,6 @@
           },
           {
             "title": "Změny hodnot hráčů v iSport Fantasy před 32. kolem: Sobol si pohoršil, Kuchta zdražil",
-            "publishedAt": "2026-05-06T12:00:00Z"
-          },
-          {
-            "title": "ONLINE: Hraje se celé kolo druhé ligy. Artis hostí Příbram, poslední šance pro béčko Sparty",
             "publishedAt": "2026-05-06T12:00:00Z"
           }
         ]

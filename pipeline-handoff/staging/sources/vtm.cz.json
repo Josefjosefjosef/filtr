@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-06T14:50:18.130226Z",
+  "ingestedAt": "2026-05-06T15:25:28.354719Z",
   "items": [
     {
       "section": "veda",
@@ -24,6 +24,31 @@
         "vysvětluje",
         "všechna",
         "záměr"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Google má novou captchu. Že nejste robot, prokážete naskenování QR kódu",
+      "url": "https://www.zive.cz/clanky/google-ma-novou-captchu-ze-nejste-robot-prokazete-naskenovani-qr-kodu/sc-3-a-241044/default.aspx",
+      "dt": "2026-05-06T14:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "captchu",
+        "google",
+        "kódu",
+        "naskenování",
+        "nejste",
+        "novou",
+        "prokážete",
+        "robot"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -950,32 +975,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Co se nejvíc hraje na Steamu? Toto jsou nejoblíbenější hry pro PC. Aktualizace květen 2026",
-      "url": "https://doupe.zive.cz/steam-nejoblibenejsi-hry-pro-pc-202605",
-      "dt": "2026-05-03T05:10:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "2026",
-        "aktualizace",
-        "hraje",
-        "hry",
-        "květen",
-        "nejoblíbenější",
-        "nejvíc",
-        "steamu",
-        "toto"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -986,7 +985,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23605,
+      "bytes": 23709,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1023,7 +1022,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-06T12:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T14:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1041,6 +1040,10 @@
           {
             "title": "Stačí spustit Edge a všechna vaše hesla jsou v paměti jako na podnosu. Microsoft vysvětluje, že to je záměr…",
             "publishedAt": "2026-05-06T12:45:00Z"
+          },
+          {
+            "title": "Google má novou captchu. Že nejste robot, prokážete naskenování QR kódu",
+            "publishedAt": "2026-05-06T14:45:00Z"
           },
           {
             "title": "Apple zaplatí 5 miliard korun za chytřejší Siri v iPhonech. Sliby o AI předběhly realitu",
@@ -1064,10 +1067,6 @@
           },
           {
             "title": "Zvenku nenápadná dodávka, za dvě hodiny mobilní vysílač. O2 na festivaly přijede s anténou na čtyřech kolech",
-            "publishedAt": "2026-05-05T17:45:00Z"
-          },
-          {
-            "title": "Notepad++ pro Mac už má za sebou první skandál. Autor nakonec změnil název i ikonku",
             "publishedAt": "2026-05-05T17:45:00Z"
           }
         ]

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-06T14:50:18.130226Z",
+  "ingestedAt": "2026-05-06T15:25:28.354719Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Agresivního muže na čerpací stanici v Berouně zpacifikoval až služební pes tamních strážníků",
+      "url": "https://tydenikpolicie.cz/agresivniho-muze-na-cerpaci-stanici-v-beroune-zpacifikoval-az-sluzebni-pes-tamnich-strazniku/",
+      "dt": "2026-05-06T15:10:17Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "agresivního",
+        "berouně",
+        "muže",
+        "pes",
+        "služební",
+        "stanici",
+        "strážníků",
+        "tamních",
+        "zpacifikoval",
+        "čerpací"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -237,31 +264,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Internetové známosti připravily muže z Děčínska o 900 tisíc korun",
-      "url": "https://tydenikpolicie.cz/internetove-znamosti-pripravily-muze-z-decinska-o-900-tisic-korun/",
-      "dt": "2026-05-06T07:15:42Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "900",
-        "děčínska",
-        "internetové",
-        "korun",
-        "muže",
-        "připravily",
-        "tisíc",
-        "známosti"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -272,7 +274,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16335,
+      "bytes": 16508,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -309,7 +311,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-06T14:34:41Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T15:10:17Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -324,6 +326,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Agresivního muže na čerpací stanici v Berouně zpacifikoval až služební pes tamních strážníků",
+            "publishedAt": "2026-05-06T15:10:17Z"
+          },
           {
             "title": "Srážka škodovky s kamionem uzavřela frekventovanou silnici u Nesovic",
             "publishedAt": "2026-05-06T14:34:41Z"
@@ -351,10 +357,6 @@
           {
             "title": "Při nehodě v Lanškrouně zemřel motorkář. Policisté hledají řidiče dalšího motocyklu, který se měl na místě nacházet",
             "publishedAt": "2026-05-06T08:22:41Z"
-          },
-          {
-            "title": "Policistům na Ostravsku ujížděl řidič fordu se zákazem řízení. Po zastavení špatně zajistil auto",
-            "publishedAt": "2026-05-06T07:49:23Z"
           }
         ]
       }
