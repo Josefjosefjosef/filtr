@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-06T07:44:56.575050Z",
+  "ingestedAt": "2026-05-06T08:25:39.879543Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kniha poukazuje na zneužívání psychiatrie v časech StB",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/kniha-poukazuje-na-zneuzivani-psychiatrie-v-casech-stb-373133",
+      "dt": "2026-05-06T08:10:48Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "kniha",
+        "poukazuje",
+        "psychiatrie",
+        "stb",
+        "zneužívání",
+        "časech"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Senát rozhodne o přerozdělení osmi miliard korun z VZP mezi menší pojišťovny",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/senat-rozhodne-o-prerozdeleni-osmi-miliard-korun-z-vzp-mezi-mensi-pojistovny-373153",
+      "dt": "2026-05-06T08:00:14Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "korun",
+        "menší",
+        "miliard",
+        "osmi",
+        "pojišťovny",
+        "přerozdělení",
+        "rozhodne",
+        "senát",
+        "vzp"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -698,55 +747,6 @@
         "sjezdu",
         "sněmovna",
         "sudetských"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rumunský parlament vyjádřil nedůvěru vládě",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/rumunsky-parlament-vyjadril-neduveru-vlade-373124",
-      "dt": "2026-05-05T11:48:09Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "nedůvěru",
-        "parlament",
-        "rumunský",
-        "vládě",
-        "vyjádřil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Středověcí Češi zavrhli proso, nastoupili na cestu „dietní transformace“, popsala studie",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/stredoveci-cesi-zavrhli-proso-nastoupili-na-cestu-dietni-transformace-popsala-studie-372978",
-      "dt": "2026-05-05T11:45:30Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "cestu",
-        "dietní",
-        "nastoupili",
-        "popsala",
-        "proso",
-        "studie",
-        "středověcí",
-        "transformace",
-        "zavrhli",
-        "češi"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1525,7 +1525,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44872,
+      "bytes": 44648,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1585,11 +1585,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T07:15:13Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T08:10:48Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
-          "other": 3
+          "other": 3,
+          "zpravy": 27
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1601,6 +1601,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kniha poukazuje na zneužívání psychiatrie v časech StB",
+            "publishedAt": "2026-05-06T08:10:48Z"
+          },
+          {
+            "title": "Senát rozhodne o přerozdělení osmi miliard korun z VZP mezi menší pojišťovny",
+            "publishedAt": "2026-05-06T08:00:14Z"
+          },
           {
             "title": "Jurečka a Žbánek probrali okolnosti sněmovní debaty o srazu sudetských Němců",
             "publishedAt": "2026-05-06T07:15:13Z"
@@ -1624,14 +1632,6 @@
           {
             "title": "Rodriguezová vede přestavbu venezuelského režimu. Sama má „zbraň u hlavy“",
             "publishedAt": "2026-05-06T05:02:00Z"
-          },
-          {
-            "title": "Ceny leteckého paliva rostou. Brusel chystá opatření",
-            "publishedAt": "2026-05-06T04:31:00Z"
-          },
-          {
-            "title": "Británii čekají místní volby. Starmerovi hrozí stranický puč",
-            "publishedAt": "2026-05-06T04:01:00Z"
           }
         ]
       }
@@ -1737,7 +1737,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78436,
+      "bytes": 78340,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,65 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-06T07:44:56.575050Z",
+  "ingestedAt": "2026-05-06T08:25:39.879543Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "BMW doplácí na cla i slabší Čínu. Zisk luxusní automobilky klesl o 23 procent",
+      "url": "https://www.e15.cz/byznys/doprava-a-logistika/bmw-doplaci-na-cla-i-slabsi-cinu-zisk-luxusni-automobilky-klesl-o-23-procent-1432616",
+      "dt": "2026-05-06T08:10:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "automobilky",
+        "bmw",
+        "cla",
+        "doplácí",
+        "klesl",
+        "luxusní",
+        "procent",
+        "slabší",
+        "zisk",
+        "čínu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Píše se rok 2040 a Čína prohrála ve válce peněz s USA. Evropa boj o stupně vítězů prohraje",
+      "url": "https://www.e15.cz/ekonomika/pise-se-rok-2040-a-cina-prohrala-ve-valce-penez-s-usa-evropa-boj-o-stupne-vitezu-prohraje-1431068",
+      "dt": "2026-05-06T07:52:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "2040",
+        "boj",
+        "evropa",
+        "peněz",
+        "prohraje",
+        "prohrála",
+        "píše",
+        "rok",
+        "stupně",
+        "usa",
+        "válce",
+        "vítězů",
+        "čína"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -1029,61 +1086,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Státní žalobce obvinil další tři lidi v kauze darovaných bitcoinů. Je mezi nimi i exministr",
-      "url": "https://www.e15.cz/domaci/statni-zalobce-obvinil-dalsi-tri-lidi-v-kauze-darovanych-bitcoinu-je-mezi-nimi-i-exministr-1432569",
-      "dt": "2026-05-04T12:34:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "bitcoinů",
-        "další",
-        "darovaných",
-        "exministr",
-        "kauze",
-        "lidi",
-        "nimi",
-        "obvinil",
-        "státní",
-        "tři",
-        "žalobce"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Konec tajností u výplat: Zaměstnanci získají právo vědět, kolik berou ostatní",
-      "url": "https://www.e15.cz/finexpert/prace-a-mzda/konec-tajnosti-u-vyplat-zamestnanci-ziskaji-pravo-vedet-kolik-berou-ostatni-1432460",
-      "dt": "2026-05-04T12:30:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "berou",
-        "kolik",
-        "konec",
-        "ostatní",
-        "právo",
-        "tajností",
-        "výplat",
-        "vědět",
-        "zaměstnanci",
-        "získají"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1094,7 +1096,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 54092,
+      "bytes": 54137,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1131,12 +1133,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-06T06:42:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T08:10:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zdravi": 1,
+          "zpravy": 3,
           "finance": 36,
-          "zpravy": 3
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1148,6 +1150,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "BMW doplácí na cla i slabší Čínu. Zisk luxusní automobilky klesl o 23 procent",
+            "publishedAt": "2026-05-06T08:10:00Z"
+          },
+          {
+            "title": "Píše se rok 2040 a Čína prohrála ve válce peněz s USA. Evropa boj o stupně vítězů prohraje",
+            "publishedAt": "2026-05-06T07:52:00Z"
+          },
           {
             "title": "Elektřina v ČR byla loni šestá nejdražší v EU, naopak ceny plynu pod průměrem",
             "publishedAt": "2026-05-06T06:42:00Z"
@@ -1171,14 +1181,6 @@
           {
             "title": "Nová EET má mezery. Už teď se nabízejí tři cesty, jak systém od příštího roku obcházet",
             "publishedAt": "2026-05-06T03:30:00Z"
-          },
-          {
-            "title": "Konec plošných dotací: Regiony sází na adresné investice a talenty",
-            "publishedAt": "2026-05-05T22:00:00Z"
-          },
-          {
-            "title": "Investoři míří do střední Evropy. Biotech z Česka láká stovky milionů dolarů",
-            "publishedAt": "2026-05-05T17:00:00Z"
           }
         ]
       }

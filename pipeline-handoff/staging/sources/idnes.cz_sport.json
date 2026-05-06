@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-06T07:44:56.575050Z",
+  "ingestedAt": "2026-05-06T08:25:39.879543Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nedělá si hlavu, proto je dobrej. Šimek o parťákovi Galvasovi i další absenci na MS",
+      "url": "https://www.idnes.cz/hokej/extraliga/radim-simek-liberec-rozhovor.A260506_082241_hokej_kazdt",
+      "dt": "2026-05-06T08:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "absenci",
+        "další",
+        "dobrej",
+        "galvasovi",
+        "hlavu",
+        "nedělá",
+        "parťákovi",
+        "proto",
+        "šimek"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Baníkovská naděje Drozd: První start v lize mám, teď se soustředím hlavně na sebe",
+      "url": "https://www.idnes.cz/fotbal/domaci-souteze/simon-drozd-banik-ostrava.A260506_090518_fot_dsouteze_kazdt",
+      "dt": "2026-05-06T07:45:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "baníkovská",
+        "drozd",
+        "hlavně",
+        "lize",
+        "mám",
+        "naděje",
+        "první",
+        "sebe",
+        "soustředím",
+        "start"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -736,59 +789,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vítězný návrat Krejčíkové v Římě. Po  Jacquemotové ji čeká světová jednička",
-      "url": "https://www.idnes.cz/sport/tenis/barbora-krejcikova-navrat-po-zraneni-rim-prvni-kolo-vitezstvi.A260505_134708_tenis_ipet",
-      "dt": "2026-05-05T11:55:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "jacquemotové",
-        "jednička",
-        "krejčíkové",
-        "návrat",
-        "světová",
-        "vítězný",
-        "čeká",
-        "římě"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Jasné zakázané uvolnění! Kouč Anaheimu na střídačce zuřil, pozor museli dát i hráči",
-      "url": "https://www.idnes.cz/hokej/nhl/joel-quenneville-trener-anaheim-vegas-vztek-frustrace.A260505_094844_nhl_drev",
-      "dt": "2026-05-05T11:12:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "anaheimu",
-        "dát",
-        "hráči",
-        "jasné",
-        "kouč",
-        "museli",
-        "pozor",
-        "střídačce",
-        "uvolnění",
-        "zakázané",
-        "zuřil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +799,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46800,
+      "bytes": 46964,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,7 +836,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T07:24:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T08:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -851,6 +851,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nedělá si hlavu, proto je dobrej. Šimek o parťákovi Galvasovi i další absenci na MS",
+            "publishedAt": "2026-05-06T08:00:00Z"
+          },
+          {
+            "title": "Baníkovská naděje Drozd: První start v lize mám, teď se soustředím hlavně na sebe",
+            "publishedAt": "2026-05-06T07:45:00Z"
+          },
           {
             "title": "Posily z NHL na MS: přehlídka hvězd v útoku Kanady, dorazit má také Celebrini",
             "publishedAt": "2026-05-06T07:24:00Z"
@@ -874,14 +882,6 @@
           {
             "title": "Nečas dvěma body nasměroval Colorado za druhou výhrou proti Minnesotě",
             "publishedAt": "2026-05-06T05:41:14Z"
-          },
-          {
-            "title": "Konec kariéry visel na vlásku, připouští Plíšková. Motivaci měla i díky sestře",
-            "publishedAt": "2026-05-06T05:29:00Z"
-          },
-          {
-            "title": "Dvakrát přemohl rakovinu a zase trénoval. Italský hrdina ale ucítil: Je čas říct dost",
-            "publishedAt": "2026-05-06T04:01:00Z"
           }
         ]
       }

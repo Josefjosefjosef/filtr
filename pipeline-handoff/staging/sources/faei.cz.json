@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-06T07:44:56.575050Z",
+  "ingestedAt": "2026-05-06T08:25:39.879543Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Seagate překvapil trh: Silné výsledky a optimistický výhled",
+      "url": "https://profitonline.cz/seagate-prekvapil-trh-silne-vysledky-a-optimisticky-vyhled/",
+      "dt": "2026-05-06T08:00:13Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "optimistický",
+        "překvapil",
+        "seagate",
+        "silné",
+        "trh",
+        "výhled",
+        "výsledky"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -261,31 +285,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Dědictví zrušení superhrubé mzdy: Letos už chybí 122 miliard",
-      "url": "https://profitonline.cz/dedictvi-zruseni-superhrube-mzdy-letos-uz-chybi-122-miliard/",
-      "dt": "2026-05-04T10:00:10Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "122",
-        "chybí",
-        "dědictví",
-        "letos",
-        "miliard",
-        "mzdy",
-        "superhrubé",
-        "zrušení"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -296,7 +295,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18819,
+      "bytes": 18816,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -333,7 +332,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-06T06:00:59Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T08:00:13Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -349,6 +348,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Seagate překvapil trh: Silné výsledky a optimistický výhled",
+            "publishedAt": "2026-05-06T08:00:13Z"
+          },
           {
             "title": "Karolina Kyselová vede marketing OMV v Česku",
             "publishedAt": "2026-05-06T06:00:59Z"
@@ -376,10 +379,6 @@
           {
             "title": "Colt CZ: Amsterdamská burza není jen symbolický doplněk",
             "publishedAt": "2026-05-05T07:00:10Z"
-          },
-          {
-            "title": "Martin Vránek novým generálním ředitelem Rema Systém",
-            "publishedAt": "2026-05-05T06:00:21Z"
           }
         ]
       }
