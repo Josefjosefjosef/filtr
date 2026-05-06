@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-05-06T10:19:57.185322Z",
+  "ingestedAt": "2026-05-06T10:56:45.978915Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Bergamo z Brna, Vídně i Prahy. Letenky od 732 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/bergamo-z-brna-vidne-i-prahy",
+      "dt": "2026-05-06T10:52:28Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "732",
+        "bergamo",
+        "brna",
+        "letenky",
+        "prahy",
+        "vídně"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -481,30 +504,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Tropický Hainan z Prahy přímým letem. Letenky od 14 160 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/tropicky-hainan-z-prahy-primym-letem",
-      "dt": "2026-04-28T09:16:48Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "160",
-        "hainan",
-        "letem",
-        "letenky",
-        "prahy",
-        "přímým",
-        "tropický"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -515,7 +514,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 44139,
+      "bytes": 43924,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -552,7 +551,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-05T18:10:06Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T10:52:28Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -567,6 +566,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bergamo z Brna, Vídně i Prahy. Letenky od 732 Kč",
+            "publishedAt": "2026-05-06T10:52:28Z"
+          },
           {
             "title": "Týden na Kypru s polopenzí jen kousek od pláže Nissi Beach. Zájezd od 12 990 Kč",
             "publishedAt": "2026-05-05T18:10:06Z"
@@ -594,10 +597,6 @@
           {
             "title": "Málaga z Pardubic v červnu. Letenky od 1 308 Kč",
             "publishedAt": "2026-05-01T06:00:37Z"
-          },
-          {
-            "title": "Týden v Marsa Matrouh ve 4* hotelu přímo u pláže z Ostravy. Zájezd od 10 990 Kč",
-            "publishedAt": "2026-04-30T14:37:23Z"
           }
         ]
       }

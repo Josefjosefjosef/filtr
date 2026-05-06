@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-06T10:19:57.185322Z",
+  "ingestedAt": "2026-05-06T10:56:45.978915Z",
   "items": [
     {
       "section": "finance",
@@ -379,6 +379,38 @@
         "uspět",
         "větší",
         "šanci"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Hisense UR9S je technicky fascinující televize. S RGB podsvícením konkuruje OLED panelům, dojem ale kazí drzý software",
+      "url": "https://tech.hn.cz/c1-67874150-hisense-ur9s-je-technicky-fascinujici-televize-s-rgb-podsvicenim-konkuruje-oled-panelum-dojem-ale-kazi-drzy-software",
+      "dt": "2026-05-06T03:07:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "ale",
+        "dojem",
+        "drzý",
+        "fascinující",
+        "hisense",
+        "kazí",
+        "konkuruje",
+        "oled",
+        "panelům",
+        "podsvícením",
+        "rgb",
+        "software",
+        "technicky",
+        "televize",
+        "ur9s"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1118,42 +1150,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Příští konflikt bude zcela jiný, než jaký známe z učebnic. Armádní špičky však Evropu připravují na tradiční válku, říká brigádní generál v záloze",
-      "url": "https://byznys.hn.cz/c1-67872580-pristi-konflikt-bude-zcela-jiny-nez-jaky-zname-z-ucebnic-armadni-spicky-vsak-evropu-pripravuji-na-tradicni-valku-rika-brigadni-general-v-zaloze",
-      "dt": "2026-05-05T07:40:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "armádní",
-        "brigádní",
-        "evropu",
-        "generál",
-        "jaký",
-        "jiný",
-        "konflikt",
-        "než",
-        "připravují",
-        "příští",
-        "tradiční",
-        "učebnic",
-        "válku",
-        "však",
-        "zcela",
-        "známe",
-        "záloze",
-        "říká",
-        "špičky"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1164,7 +1160,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183347,
+      "bytes": 183295,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1204,9 +1200,9 @@
         "raw_feed_latest_publishedAt": "2026-05-06T09:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 34,
+          "finance": 33,
           "zdravi": 4,
-          "zpravy": 2
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,

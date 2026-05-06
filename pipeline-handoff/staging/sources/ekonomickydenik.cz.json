@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-06T10:19:57.185322Z",
+  "ingestedAt": "2026-05-06T10:56:45.978915Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nenechávají nic náhodě: V armádě chtějí nahradit Pandury, ladí proto smlouvy s českými partnery",
+      "url": "https://ekonomickydenik.cz/armada-chteji-nahradit-pandury-smlouvy/",
+      "dt": "2026-05-06T10:29:47Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "armádě",
+        "chtějí",
+        "ladí",
+        "nahradit",
+        "nenechávají",
+        "nic",
+        "náhodě",
+        "pandury",
+        "partnery",
+        "proto",
+        "smlouvy",
+        "českými"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -751,33 +780,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Trutnovská elektrárna přejde od uhlí k biomase a plynu. Podobný záměr má ČEZ v Hodoníně",
-      "url": "https://ekonomickydenik.cz/trutnovska-elektrarna-uhli-biomasa-plyn/",
-      "dt": "2026-05-05T04:05:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "biomase",
-        "elektrárna",
-        "hodoníně",
-        "plynu",
-        "podobný",
-        "přejde",
-        "trutnovská",
-        "uhlí",
-        "záměr",
-        "čez"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -788,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74834,
+      "bytes": 75214,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -825,11 +827,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T09:55:36Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T10:29:47Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 25,
-          "zdravi": 2,
+          "finance": 26,
+          "zdravi": 1,
           "zpravy": 2,
           "sport": 1
         },
@@ -843,6 +845,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nenechávají nic náhodě: V armádě chtějí nahradit Pandury, ladí proto smlouvy s českými partnery",
+            "publishedAt": "2026-05-06T10:29:47Z"
+          },
           {
             "title": "Stopka pro každoroční STK starých vozů? Kontroly se ale chystají na asistenční systémy",
             "publishedAt": "2026-05-06T09:55:36Z"
@@ -870,10 +876,6 @@
           {
             "title": "Neobvyklé partnerství: ČEZ postaví s firmou exministra větrníky na Olomoucku",
             "publishedAt": "2026-05-06T05:20:54Z"
-          },
-          {
-            "title": "Do důchodu s generálskou frčkou? BIS navrhla povýšení pro estébáka",
-            "publishedAt": "2026-05-06T04:05:00Z"
           }
         ]
       }
