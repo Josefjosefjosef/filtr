@@ -35005,10 +35005,55 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return false;
   }
 
+  /**
+   * P0 realistic mobile task_query (calendar_vs_task_confusion): list-style task reads where
+   * tryParseCalendarRead would otherwise claim coMam+dnes/zitra agenda. foldCs-safe; narrow —
+   * explicit calendar tail (v kalendáři, událost, schůzka…) excluded via CalendarReadWinsOverTaskRead.
+   */
+  function iuSilverRealisticMobileTaskQueryListCueFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (/\bco\s+musim\s+zaplatit\b/.test(x)) return true;
+    if (/\bjake\s+mam\s+rest\b/i.test(x)) return true;
+    if (/\bco\s+m(am|ame)\s+jeste\s+zaridit\b/.test(x)) return true;
+    if (
+      /\bco\s+m(am|ame)\s+do\s+patku\b/.test(x) &&
+      !/\bkalend/i.test(x) &&
+      !/\bschuz/i.test(x) &&
+      !/\budalost/i.test(x)
+    )
+      return true;
+    const daySeg = "(?:dnes(?:ka|ek)?|zitra\\w*|pozitri|pristi\\s+den)";
+    if (
+      new RegExp(
+        "\\bco\\s+m(am|ame)\\s+" + daySeg + "\\s+(?!v\\s+kalend)(?:udelat|splnit|dokoncit|zaridit|vyrizit|zaplatit|hotove|nehotove|jeste\\s+zaridit)\\b",
+        "i"
+      ).test(x)
+    )
+      return true;
+    if (
+      new RegExp(
+        "\\bco\\s+m(am|ame)\\s+" + daySeg + "\\s+\\w+\\s+(?:udelat|splnit|dokoncit|zaridit|vyrizit|zaplatit|hotove|nehotove)\\b",
+        "i"
+      ).test(x)
+    )
+      return true;
+    if (
+      /\bco\s+m(am|ame)\s+(?:vyrizit|zaridit|splnit|udelat|zaplatit)\b/.test(x) &&
+      /\b(?:tento|tenhle)\s+tyden\b/.test(x) &&
+      !/\bkalend/i.test(x) &&
+      !/\bschuz/i.test(x) &&
+      !/\budalost/i.test(x)
+    )
+      return true;
+    return false;
+  }
+
   /** P0: task_query audit — dotazy, které nesmí spadnout do create / storage disambiguation. */
   function iuSilverTaskQueryHardSignalFolded(f) {
     const x = String(f || "");
     if (!x) return false;
+    if (iuSilverRealisticMobileTaskQueryListCueFolded(x)) return true;
     if (/\b(do\s+ukol|v\s+ukolech)\s+se\s+podivej/.test(x)) return true;
     if (/\bpodivej\s+se\s+do\s+ukol/.test(x)) return true;
     if (/\bzjist(i|it)\s+v\s+ukol/.test(x)) return true;
@@ -35132,6 +35177,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverWantsTaskListOnlyFolded(f) {
     const x = String(f || "");
     if (!x) return false;
+    if (iuSilverRealisticMobileTaskQueryListCueFolded(x)) return true;
     if (
       /\bco\s+mam\s+udelat\b/.test(x) ||
       /\bco\s+mam\s+splnit\b/.test(x) ||
@@ -35703,6 +35749,20 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverCalendarReadWinsOverTaskReadFolded(f) {
     const x = String(f || "");
     if (!x) return false;
+    /**
+     * P0 20k task_query: „Najdi úkol rohlíky, nevracej schůzku“ — negace obsahuje „schůzku“,
+     * nesmí spustit CalendarEntityContext přes substring schuz a ukrást task.search před calendar.read.
+     */
+    if (
+      (/\bnajdi\s+ukol\b/.test(x) || /\bhledej\s+ukol\b/.test(x) || /\bvyhledej\s+ukol\b/.test(x)) &&
+      !/\bnajdi\s+(?:mi\s+)?v\s+kalend/i.test(x) &&
+      !/\bhledej\s+v\s+kalend/i.test(x) &&
+      !/\bv\s+kalend/i.test(x) &&
+      !/\bdo\s+kalend/i.test(x) &&
+      !iuSilverExplicitCalendarReadScopeFolded(x)
+    ) {
+      return false;
+    }
     if (
       /\bv\s+ukolech\b/.test(x) &&
       (/\bmam\s+neco\s+do\s+patku\b/.test(x) ||
@@ -37515,7 +37575,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (/\bodpoledne\b/.test(fx)) return "afternoon";
       return null;
     })(f);
-    if (coMam && /\bdnes(?:ka|ek)?\b/i.test(f) && dpTodayTomorrow) {
+    if (coMam && /\bdnes(?:ka|ek)?\b/i.test(f) && dpTodayTomorrow && !iuSilverRealisticMobileTaskQueryListCueFolded(f)) {
       return {
         intent: "agenda_for_iso",
         dateIso: toDateOnly(now),
@@ -37524,7 +37584,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         filter: null
       };
     }
-    if (coMam && /\bz[ií]tra\b/i.test(f) && dpTodayTomorrow) {
+    if (coMam && /\bz[ií]tra\b/i.test(f) && dpTodayTomorrow && !iuSilverRealisticMobileTaskQueryListCueFolded(f)) {
       return {
         intent: "agenda_for_iso",
         dateIso: addDays(toDateOnly(now), 1),
@@ -37534,10 +37594,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       };
     }
 
-    if (coMam && /\bdnes(?:ka|ek)?\b/i.test(f)) {
+    if (coMam && /\bdnes(?:ka|ek)?\b/i.test(f) && !iuSilverRealisticMobileTaskQueryListCueFolded(f)) {
       return { intent: "agenda_for_day", dateRange: "today", filter: null };
     }
-    if (coMam && /\bz[ií]tra\b/i.test(f)) {
+    if (coMam && /\bz[ií]tra\b/i.test(f) && !iuSilverRealisticMobileTaskQueryListCueFolded(f)) {
       return { intent: "agenda_for_day", dateRange: "tomorrow", filter: null };
     }
 
