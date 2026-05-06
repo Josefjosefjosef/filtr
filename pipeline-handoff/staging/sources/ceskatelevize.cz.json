@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-06T20:48:57.810059Z",
+  "ingestedAt": "2026-05-06T21:24:28.819582Z",
   "items": [
     {
       "section": "aktualne",
@@ -748,6 +748,33 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Bayern doma jen remizoval, do finále Ligy mistrů jde znovu PSG",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/bayern-doma-jen-remizoval-do-finale-ligy-mistru-jde-psg-156633",
+      "dt": "2026-05-06T21:01:29Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "bayern",
+        "doma",
+        "finále",
+        "jde",
+        "jen",
+        "ligy",
+        "mistrů",
+        "psg",
+        "remizoval",
+        "znovu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Sluneta odvrátila první mečbol Opavy, porazila ji 87:72",
       "url": "https://sport.ceskatelevize.cz/clanek/basketbal/sluneta-odvratila-prvni-mecbol-opavy-porazila-ji-8772-156632",
       "dt": "2026-05-06T19:39:06Z",
@@ -1472,33 +1499,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Červenkova one-man show: Ovládl anketu Hokejista sezony a potvrdil start na MS",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/slavnostni-vyhlaseni-ankety-hokejista-sezony-tipsport-extraligy-20252026-156599",
-      "dt": "2026-05-04T19:15:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "anketu",
-        "hokejista",
-        "man",
-        "one",
-        "ovládl",
-        "potvrdil",
-        "sezony",
-        "show",
-        "start",
-        "červenkova"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1628,7 +1628,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37668,
+      "bytes": 37548,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1665,7 +1665,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T19:39:06Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T21:01:29Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1680,6 +1680,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bayern doma jen remizoval, do finále Ligy mistrů jde znovu PSG",
+            "publishedAt": "2026-05-06T21:01:29Z"
+          },
           {
             "title": "Sluneta odvrátila první mečbol Opavy, porazila ji 87:72",
             "publishedAt": "2026-05-06T19:39:06Z"
@@ -1707,10 +1711,6 @@
           {
             "title": "Seemanovou čeká náročný závodní trojboj. Pak už jen kempy a kempy, líčí před ME",
             "publishedAt": "2026-05-06T12:35:00Z"
-          },
-          {
-            "title": "Kopřiva na úvod v Římě porazil Marozsána, postoupila i Siniaková a Plíšková",
-            "publishedAt": "2026-05-06T12:17:37Z"
           }
         ]
       }
@@ -1722,7 +1722,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78463,
+      "bytes": 78457,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

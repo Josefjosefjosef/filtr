@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-06T20:48:57.810059Z",
+  "ingestedAt": "2026-05-06T21:24:28.819582Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Írán podle Trumpa slíbil a souhlasil, že nebude mít jaderné zbraně",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/trump-iran-jaderne-zbrane-teheran.A260506_220855_zahranicni_votr",
+      "dt": "2026-05-06T20:52:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "jaderné",
+        "mít",
+        "nebude",
+        "podle",
+        "slíbil",
+        "souhlasil",
+        "trumpa",
+        "zbraně",
+        "írán"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -751,32 +777,6 @@
         "střelci",
         "vrchol",
         "čápa"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Německá policie zadržela pět Čechů. Podezírá je ze série vloupání v Bavorsku",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/nemecko-policie-cesi-podezreli-serie-vloupani-bavorsko.A260506_152918_zahranicni_mikp",
-      "dt": "2026-05-06T14:02:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bavorsku",
-        "německá",
-        "podezírá",
-        "policie",
-        "pět",
-        "série",
-        "vloupání",
-        "zadržela",
-        "čechů"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1579,7 +1579,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47721,
+      "bytes": 47722,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1616,7 +1616,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T20:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T20:52:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 29,
@@ -1632,6 +1632,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Írán podle Trumpa slíbil a souhlasil, že nebude mít jaderné zbraně",
+            "publishedAt": "2026-05-06T20:52:00Z"
+          },
           {
             "title": "Francouzští poslanci schválili zákon o vrácení umění z koloniální éry",
             "publishedAt": "2026-05-06T20:10:00Z"
@@ -1659,10 +1663,6 @@
           {
             "title": "Nečekaný izraelský útok na Bejrút nejspíš zabil vysokého velitele Hizballáhu",
             "publishedAt": "2026-05-06T18:34:00Z"
-          },
-          {
-            "title": "V Sofii protestovali proti uzavření českého centra. Petici podepsalo přes 3000 lidí",
-            "publishedAt": "2026-05-06T18:32:00Z"
           }
         ]
       }
