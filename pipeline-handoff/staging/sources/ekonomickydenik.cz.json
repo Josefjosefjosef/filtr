@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-06T07:05:25.390919Z",
+  "ingestedAt": "2026-05-06T07:44:56.575050Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zpěvačka ombudsmankou ministerstva. Zaměří se na práva dětí i dospělých",
+      "url": "https://ekonomickydenik.cz/zpevacka-ombudsmankou-ministerstva/",
+      "dt": "2026-05-06T07:34:55Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dospělých",
+        "dětí",
+        "ministerstva",
+        "ombudsmankou",
+        "práva",
+        "zaměří",
+        "zpěvačka"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -760,33 +784,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Konec extrémně laciných kočárků a bot z Číny? Na přísnější pravidla tlačí Polsko",
-      "url": "https://ekonomickydenik.cz/konec-lacine-cinske-kocarky-boty/",
-      "dt": "2026-05-04T15:55:32Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "bot",
-        "extrémně",
-        "konec",
-        "kočárků",
-        "laciných",
-        "polsko",
-        "pravidla",
-        "přísnější",
-        "tlačí",
-        "číny"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -797,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 75002,
+      "bytes": 75154,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -834,11 +831,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T06:39:36Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T07:34:55Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 2,
           "finance": 25,
+          "zdravi": 2,
           "zpravy": 2,
           "sport": 1
         },
@@ -852,6 +849,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zpěvačka ombudsmankou ministerstva. Zaměří se na práva dětí i dospělých",
+            "publishedAt": "2026-05-06T07:34:55Z"
+          },
           {
             "title": "Šestá nejdražší v EU: Cena elektřiny v Česku loni překonala Německo. Vývoj ale dává naději",
             "publishedAt": "2026-05-06T06:39:36Z"
@@ -879,10 +880,6 @@
           {
             "title": "Britský lev se vrací. Strach z ruských ponorek nutí Londýn spolupracovat s EU",
             "publishedAt": "2026-05-05T16:30:47Z"
-          },
-          {
-            "title": "Trump ničí dohodu z golfového resortu. Vyšší cla na auta poškodí i české firmy",
-            "publishedAt": "2026-05-05T15:26:00Z"
           }
         ]
       }
