@@ -1,0 +1,416 @@
+{
+  "harness_id": "audit_silver_realistic_mobile_corpus_v1",
+  "fixed_now": "2026-05-04T12:00:00",
+  "total_cases": 10000,
+  "overall_accuracy_realistic": "73.19",
+  "accuracy_by_cluster": {
+    "calendar_write_basic:schuzka": "93.13",
+    "calendar_write_basic:zubar": "93.13",
+    "calendar_write_basic:lekar": "91.88",
+    "calendar_write_basic:pravnik": "93.13",
+    "calendar_write_basic:kontrola": "93.13",
+    "calendar_write_basic:navsteva": "91.88",
+    "calendar_write_basic:jednani": "93.13",
+    "calendar_write_basic:restaurace": "93.13",
+    "calendar_write_basic:skola": "93.75",
+    "calendar_write_basic:urad": "93.13",
+    "calendar_write_address": "20.00",
+    "calendar_write_note_tail": "40.00",
+    "task_write_basic": "16.74",
+    "task_write_deadline": "100.00",
+    "note_write_basic": "80.00",
+    "note_write_warranty_object": "100.00",
+    "note_query": "80.00",
+    "task_query": "60.00",
+    "calendar_query": "93.31",
+    "multi_intent_calendar_note": "100.00",
+    "negation_safety:calendar_read": "80.00",
+    "negation_safety:task_read": "60.00",
+    "negation_safety:note_read": "100.00",
+    "messy_czech_mobile": "50.00"
+  },
+  "fail_count_by_cluster": {
+    "calendar_write_basic:schuzka": 11,
+    "calendar_write_basic:zubar": 11,
+    "calendar_write_basic:lekar": 13,
+    "calendar_write_basic:pravnik": 11,
+    "calendar_write_basic:kontrola": 11,
+    "calendar_write_basic:navsteva": 13,
+    "calendar_write_basic:jednani": 11,
+    "calendar_write_basic:restaurace": 11,
+    "calendar_write_basic:skola": 10,
+    "calendar_write_basic:urad": 11,
+    "calendar_write_address": 360,
+    "calendar_write_note_tail": 270,
+    "task_write_basic": 791,
+    "task_write_deadline": 0,
+    "note_write_basic": 90,
+    "note_write_warranty_object": 0,
+    "note_query": 160,
+    "task_query": 320,
+    "calendar_query": 87,
+    "multi_intent_calendar_note": 0,
+    "negation_safety:calendar_read": 30,
+    "negation_safety:task_read": 60,
+    "negation_safety:note_read": 0,
+    "messy_czech_mobile": 400
+  },
+  "top_20_fail_clusters": [
+    "task_write_basic||intent_fail=791",
+    "messy_czech_mobile||intent_fail=400",
+    "calendar_write_address||intent_fail=360",
+    "calendar_write_note_tail||intent_fail=270",
+    "note_query||intent_fail=160",
+    "task_query||calendar_vs_task_confusion=160",
+    "task_query||intent_fail=160",
+    "note_write_basic||unnecessary_disambiguation=90",
+    "calendar_query||intent_fail=87",
+    "negation_safety:task_read||calendar_vs_task_confusion=60",
+    "negation_safety:calendar_read||false_negative=30",
+    "calendar_write_basic:lekar||intent_fail=13",
+    "calendar_write_basic:navsteva||intent_fail=13",
+    "calendar_write_basic:jednani||intent_fail=11",
+    "calendar_write_basic:kontrola||intent_fail=11",
+    "calendar_write_basic:pravnik||intent_fail=11",
+    "calendar_write_basic:restaurace||intent_fail=11",
+    "calendar_write_basic:schuzka||intent_fail=11",
+    "calendar_write_basic:urad||intent_fail=11",
+    "calendar_write_basic:zubar||intent_fail=11"
+  ],
+  "top_50_failed_examples": [
+    {
+      "id": "rmb_08757",
+      "cluster": "negation_safety:calendar_read",
+      "category": "false_negative",
+      "input": "Nic neukládej, jen zjisti kdy mám zubaře."
+    },
+    {
+      "id": "rmb_04403",
+      "cluster": "note_write_basic",
+      "category": "unnecessary_disambiguation",
+      "input": "napiš si poznámku do poznámek že soused má klíče, ne úkol."
+    },
+    {
+      "id": "rmb_04408",
+      "cluster": "note_write_basic",
+      "category": "unnecessary_disambiguation",
+      "input": "napiš si poznámku do poznámek že lednice má záruku do 2028, ne úkol."
+    },
+    {
+      "id": "rmb_04413",
+      "cluster": "note_write_basic",
+      "category": "unnecessary_disambiguation",
+      "input": "napis si poznamku do poznamek ze PIN je v supliku, ne ukol."
+    },
+    {
+      "id": "rmb_04418",
+      "cluster": "note_write_basic",
+      "category": "unnecessary_disambiguation",
+      "input": "napis si poznamku do poznamek ze soused ma klice, ne ukol."
+    },
+    {
+      "id": "rmb_04423",
+      "cluster": "note_write_basic",
+      "category": "unnecessary_disambiguation",
+      "input": "napis si poznamku do poznamek ze lednice ma zaruku do 2028, ne úkol."
+    },
+    {
+      "id": "rmb_04428",
+      "cluster": "note_write_basic",
+      "category": "unnecessary_disambiguation",
+      "input": "napiš si poznámku do poznámek že PIN je v šuplíku, ne úkol."
+    },
+    {
+      "id": "rmb_04438",
+      "cluster": "note_write_basic",
+      "category": "unnecessary_disambiguation",
+      "input": "napis si poznamku do poznamek ze lednice ma zaruku do 2028, ne ukol."
+    },
+    {
+      "id": "rmb_04443",
+      "cluster": "note_write_basic",
+      "category": "unnecessary_disambiguation",
+      "input": "napis si poznamku do poznamek ze PIN je v supliku, ne úkol."
+    },
+    {
+      "id": "rmb_04538",
+      "cluster": "note_write_basic",
+      "category": "unnecessary_disambiguation",
+      "input": "napis si poznamku do poznamek ze soused ma klice, ne úkol."
+    },
+    {
+      "id": "rmb_00019",
+      "cluster": "calendar_write_basic:schuzka",
+      "category": "intent_fail",
+      "input": "Potrebuju ulozit do kalendare na vikend v vecer schůzku o smlouve s Marie, ne do úkolů."
+    },
+    {
+      "id": "rmb_00022",
+      "cluster": "calendar_write_basic:schuzka",
+      "category": "intent_fail",
+      "input": "Chci mit zapsané v kalendari pristi mesic v 14:30 pracovni schůzku s Petr, ne do úkolů."
+    },
+    {
+      "id": "rmb_00049",
+      "cluster": "calendar_write_basic:schuzka",
+      "category": "intent_fail",
+      "input": "Potřebuju uložit do kalendáře dnes v 09:00 schůzku s advokát, ne do úkolů."
+    },
+    {
+      "id": "rmb_00052",
+      "cluster": "calendar_write_basic:schuzka",
+      "category": "intent_fail",
+      "input": "Chci mít zapsané v kalendáři zitra v odpoledne pracovní jednání s Pavel, ne do úkolů."
+    },
+    {
+      "id": "rmb_00079",
+      "cluster": "calendar_write_basic:schuzka",
+      "category": "intent_fail",
+      "input": "Potřebuju uložit do kalendáře tento týden v večer schůzku o smlouvě s zubař, ne do úkolů."
+    },
+    {
+      "id": "rmb_00082",
+      "cluster": "calendar_write_basic:schuzka",
+      "category": "intent_fail",
+      "input": "Chci mit zapsane v kalendari pristi pondeli v 14:30 pracovni schuzku s Marie, ne do ukolu."
+    },
+    {
+      "id": "rmb_00092",
+      "cluster": "calendar_write_basic:schuzka",
+      "category": "intent_fail",
+      "input": "Chci mit zapsané v kalendari na vikend v odpoledne pracovni jednani s doktor, ne do poznamek."
+    },
+    {
+      "id": "rmb_00109",
+      "cluster": "calendar_write_basic:schuzka",
+      "category": "intent_fail",
+      "input": "Potrebuju ulozit do kalendare do patku v 09:00 schuzku s lekar, ne do ukolu."
+    },
+    {
+      "id": "rmb_00112",
+      "cluster": "calendar_write_basic:schuzka",
+      "category": "intent_fail",
+      "input": "Chci mit zapsané v kalendari do deseti dnů v odpoledne pracovni jednani s advokat, ne do úkolů."
+    },
+    {
+      "id": "rmb_00139",
+      "cluster": "calendar_write_basic:schuzka",
+      "category": "intent_fail",
+      "input": "Potřebuju uložit do kalendáře na víkend v večer schůzku o smlouvě s soused, ne do úkolů."
+    },
+    {
+      "id": "rmb_00142",
+      "cluster": "calendar_write_basic:schuzka",
+      "category": "intent_fail",
+      "input": "Chci mít zapsané v kalendáři pristi mesic v 14:30 pracovní schůzku s zubař, ne do úkolů."
+    },
+    {
+      "id": "rmb_00179",
+      "cluster": "calendar_write_basic:zubar",
+      "category": "intent_fail",
+      "input": "Potřebuju uložit do kalendáře ve čtvrtek v večer kontrolu chrupu u zubaře s máma, ne do úkolů."
+    },
+    {
+      "id": "rmb_00182",
+      "cluster": "calendar_write_basic:zubar",
+      "category": "intent_fail",
+      "input": "Chci mít zapsané v kalendáři do patku v 14:30 preventivku u zubaře s zubar, ne do úkolů."
+    },
+    {
+      "id": "rmb_00209",
+      "cluster": "calendar_write_basic:zubar",
+      "category": "intent_fail",
+      "input": "Potrebuju ulozit do kalendare za tyden v 09:00 zubare s Tomas, ne do ukolu."
+    },
+    {
+      "id": "rmb_00212",
+      "cluster": "calendar_write_basic:zubar",
+      "category": "intent_fail",
+      "input": "Chci mit zapsane v kalendari na vikend v odpoledne osetreni u zubare s ucetni, ne do ukolu."
+    },
+    {
+      "id": "rmb_00239",
+      "cluster": "calendar_write_basic:zubar",
+      "category": "intent_fail",
+      "input": "Potrebuju ulozit do kalendare koncem tydne v vecer kontrolu chrupu u zubare s Petra, ne do úkolů."
+    },
+    {
+      "id": "rmb_00242",
+      "cluster": "calendar_write_basic:zubar",
+      "category": "intent_fail",
+      "input": "Chci mít zapsané v kalendáři dneska v 14:30 preventivku u zubaře s máma, ne do úkolů."
+    },
+    {
+      "id": "rmb_00252",
+      "cluster": "calendar_write_basic:zubar",
+      "category": "intent_fail",
+      "input": "Chci mít zapsané v kalendáři ve ctvrtek v odpoledne ošetření u zubaře s Marie, ne do poznámek."
+    },
+    {
+      "id": "rmb_00269",
+      "cluster": "calendar_write_basic:zubar",
+      "category": "intent_fail",
+      "input": "Potřebuju uložit do kalendáře pozítří v 09:00 zubaře s Jana, ne do úkolů."
+    },
+    {
+      "id": "rmb_00272",
+      "cluster": "calendar_write_basic:zubar",
+      "category": "intent_fail",
+      "input": "Chci mít zapsané v kalendáři tenhle týden v odpoledne ošetření u zubaře s Tomáš, ne do úkolů."
+    },
+    {
+      "id": "rmb_00299",
+      "cluster": "calendar_write_basic:zubar",
+      "category": "intent_fail",
+      "input": "Potrebuju ulozit do kalendare ve ctvrtek v vecer kontrolu chrupu u zubare s pravnik, ne do ukolu."
+    },
+    {
+      "id": "rmb_00302",
+      "cluster": "calendar_write_basic:zubar",
+      "category": "intent_fail",
+      "input": "Chci mit zapsane v kalendari do patku v 14:30 preventivku u zubare s Petra, ne do ukolu."
+    },
+    {
+      "id": "rmb_00322",
+      "cluster": "calendar_write_basic:lekar",
+      "category": "intent_fail",
+      "input": "Chci mít zapsané v kalendáři pristi pondeli v 14:30 kontrolu u lékaře s pravnik, ne do poznámek."
+    },
+    {
+      "id": "rmb_00339",
+      "cluster": "calendar_write_basic:lekar",
+      "category": "intent_fail",
+      "input": "Potrebuju ulozit do kalendare zitra v vecer ockovani u lekare s pravnik, ne do ukolu."
+    },
+    {
+      "id": "rmb_00342",
+      "cluster": "calendar_write_basic:lekar",
+      "category": "intent_fail",
+      "input": "Chci mit zapsané v kalendari pozitri v 14:30 kontrolu u lékare s Mariana, ne do úkolů."
+    },
+    {
+      "id": "rmb_00369",
+      "cluster": "calendar_write_basic:lekar",
+      "category": "intent_fail",
+      "input": "Potřebuju uložit do kalendáře příští pondělí v 09:00 lékaře s doktor, ne do úkolů."
+    },
+    {
+      "id": "rmb_00372",
+      "cluster": "calendar_write_basic:lekar",
+      "category": "intent_fail",
+      "input": "Chci mít zapsané v kalendáři ve ctvrtek v odpoledne vyšetření u lékaře s Honza, ne do úkolů."
+    },
+    {
+      "id": "rmb_00399",
+      "cluster": "calendar_write_basic:lekar",
+      "category": "intent_fail",
+      "input": "Potřebuju uložit do kalendáře do 10 dnů v večer očkování u lékaře s kurýr, ne do úkolů."
+    },
+    {
+      "id": "rmb_00402",
+      "cluster": "calendar_write_basic:lekar",
+      "category": "intent_fail",
+      "input": "Chci mit zapsane v kalendari za tyden v 14:30 kontrolu u lekare s pravnik, ne do ukolu."
+    },
+    {
+      "id": "rmb_00412",
+      "cluster": "calendar_write_basic:lekar",
+      "category": "intent_fail",
+      "input": "Chci mit zapsané v kalendari zitra v odpoledne vysetreni u lékare s mama, ne do poznamek."
+    },
+    {
+      "id": "rmb_00429",
+      "cluster": "calendar_write_basic:lekar",
+      "category": "intent_fail",
+      "input": "Potrebuju ulozit do kalendare pristi mesic v 09:00 lekare s tata, ne do ukolu."
+    },
+    {
+      "id": "rmb_00432",
+      "cluster": "calendar_write_basic:lekar",
+      "category": "intent_fail",
+      "input": "Chci mit zapsané v kalendari koncem tydne v odpoledne vysetreni u lékare s doktor, ne do úkolů."
+    },
+    {
+      "id": "rmb_00442",
+      "cluster": "calendar_write_basic:lekar",
+      "category": "intent_fail",
+      "input": "Chci mít zapsané v kalendáři pristi pondeli v 14:30 kontrolu u lékaře s Tomáš, ne do poznámek."
+    },
+    {
+      "id": "rmb_00459",
+      "cluster": "calendar_write_basic:lekar",
+      "category": "intent_fail",
+      "input": "Potrebuju ulozit do kalendare zitra v vecer ockovani u lékare s Tomasek, ne do úkolů."
+    },
+    {
+      "id": "rmb_00462",
+      "cluster": "calendar_write_basic:lekar",
+      "category": "intent_fail",
+      "input": "Chci mít zapsané v kalendáři pozitri v 14:30 kontrolu u lékaře s kurýr, ne do úkolů."
+    },
+    {
+      "id": "rmb_00499",
+      "cluster": "calendar_write_basic:pravnik",
+      "category": "intent_fail",
+      "input": "Potřebuju uložit do kalendáře na víkend v večer schůzku s právníkem s Pavel, ne do úkolů."
+    },
+    {
+      "id": "rmb_00502",
+      "cluster": "calendar_write_basic:pravnik",
+      "category": "intent_fail",
+      "input": "Chci mít zapsané v kalendáři pristi mesic v 14:30 advokáta s soused, ne do úkolů."
+    },
+    {
+      "id": "rmb_00529",
+      "cluster": "calendar_write_basic:pravnik",
+      "category": "intent_fail",
+      "input": "Potrebuju ulozit do kalendare dnes v 09:00 pravnika s Marie, ne do ukolu."
+    },
+    {
+      "id": "rmb_00532",
+      "cluster": "calendar_write_basic:pravnik",
+      "category": "intent_fail",
+      "input": "Chci mit zapsane v kalendari zitra v odpoledne jednani s advokatem s Petr, ne do ukolu."
+    },
+    {
+      "id": "rmb_00559",
+      "cluster": "calendar_write_basic:pravnik",
+      "category": "intent_fail",
+      "input": "Potrebuju ulozit do kalendare tento tyden v vecer schůzku s pravnikem s advokat, ne do úkolů."
+    }
+  ],
+  "false_write_count": 0,
+  "dangerous_write_count": 0,
+  "query_created_write_count_realistic": 0,
+  "unknown_when_uncertain_count": 0,
+  "write_when_negated_count": 0,
+  "calendar_write_accuracy": "65.36",
+  "calendar_query_accuracy": "91.93",
+  "task_write_accuracy": "58.37",
+  "task_query_accuracy": "60.00",
+  "note_write_accuracy": "90.00",
+  "note_query_accuracy": "83.16",
+  "multi_intent_accuracy": "100.00",
+  "negation_safety_accuracy": "80.00",
+  "messy_czech_mobile_accuracy": "50.00",
+  "recommended_next_fix_cluster": "task_write_basic",
+  "recommended_next_fix_reason": "Highest fail mass in «task_write_basic» dominated by «intent_fail»; safest follow-up is a narrow Silver routing/read-guard change scoped to this Czech mobile phrasing family (no UI).",
+  "baseline_20k": {
+    "overall_accuracy": "",
+    "calendar_write": "",
+    "calendar_query": "",
+    "task_write": "",
+    "task_query": "",
+    "note_write": "",
+    "note_query": "",
+    "multi_intent": "",
+    "query_created_write_count": ""
+  },
+  "real_mobile_cases": "PASS",
+  "title_quality": {
+    "title_clean": "9803 / 10000",
+    "date_parsed": "10000 / 10000",
+    "time_parsed": "10000 / 10000",
+    "entity_detected": "5506 / 10000"
+  }
+}
