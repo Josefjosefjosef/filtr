@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-06T05:09:55.697400Z",
+  "ingestedAt": "2026-05-06T05:45:33.922835Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nečas dvěma body nasměroval Colorado za druhou výhrou proti Minnesotě",
+      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-play-off-necas.A260506_071152_nhl_mkr",
+      "dt": "2026-05-06T05:38:11Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "body",
+        "colorado",
+        "druhou",
+        "dvěma",
+        "minnesotě",
+        "nasměroval",
+        "nečas",
+        "proti",
+        "výhrou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Konec kariéry visel na vlásku, připouští Plíšková. Motivaci měla i díky sestře",
+      "url": "https://www.idnes.cz/sport/tenis/karolina-pliskova-rozhovor-konec.A260505_193207_tenis_ikuc",
+      "dt": "2026-05-06T05:29:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "díky",
+        "kariéry",
+        "konec",
+        "motivaci",
+        "měla",
+        "plíšková",
+        "připouští",
+        "sestře",
+        "visel",
+        "vlásku"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -736,57 +789,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hvězdná posila pro Kladno. Přichází Kempný, mistr světa a vítěz Stanley Cupu",
-      "url": "https://www.idnes.cz/hokej/extraliga/kladno-posilil-reprezentant-michal-kempny.A260505_110523_hokej_pbi",
-      "dt": "2026-05-05T09:32:26Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "cupu",
-        "hvězdná",
-        "kempný",
-        "kladno",
-        "mistr",
-        "posila",
-        "přichází",
-        "stanley",
-        "světa",
-        "vítěz"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "POHLED: Ve čtyřiceti dominuje, ohromuje, vládne. Kdo Červenku zastaví? A kdy?",
-      "url": "https://www.idnes.cz/hokej/extraliga/pohled-ve-ctyriceti-dominuje-ohromuje-vladne-kdo-cervenku-zastavi-a-kdy.A260504_190332_hokej_tit",
-      "dt": "2026-05-05T09:03:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dominuje",
-        "ohromuje",
-        "pohled",
-        "vládne",
-        "zastaví",
-        "červenku",
-        "čtyřiceti"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -797,7 +799,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47342,
+      "bytes": 46704,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -834,7 +836,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T04:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T05:38:11Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -849,6 +851,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nečas dvěma body nasměroval Colorado za druhou výhrou proti Minnesotě",
+            "publishedAt": "2026-05-06T05:38:11Z"
+          },
+          {
+            "title": "Konec kariéry visel na vlásku, připouští Plíšková. Motivaci měla i díky sestře",
+            "publishedAt": "2026-05-06T05:29:00Z"
+          },
           {
             "title": "Dvakrát přemohl rakovinu a zase trénoval. Italský hrdina ale ucítil: Je čas říct dost",
             "publishedAt": "2026-05-06T04:01:00Z"
@@ -872,14 +882,6 @@
           {
             "title": "Hokejová reprezentace zamířila na Švédské hry s osmi novými hráči",
             "publishedAt": "2026-05-05T18:35:00Z"
-          },
-          {
-            "title": "Karlovarsko urvalo volejbalový titul, v pátém finále porazilo obhajující Lvy",
-            "publishedAt": "2026-05-05T18:14:00Z"
-          },
-          {
-            "title": "Vypukne v tenise válka? Hvězdám nestačí 68 milionů, hrozí bojkotem grandslamů",
-            "publishedAt": "2026-05-05T17:26:00Z"
           }
         ]
       }

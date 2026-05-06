@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-06T05:09:55.697400Z",
+  "ingestedAt": "2026-05-06T05:45:33.922835Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Neobvyklé partnerství: ČEZ postaví s firmou exministra větrníky na Olomoucku",
+      "url": "https://ekonomickydenik.cz/cez-postavi-exministr-milek-vetrniky-olomoucko/",
+      "dt": "2026-05-06T05:20:54Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "exministra",
+        "firmou",
+        "neobvyklé",
+        "olomoucku",
+        "partnerství",
+        "postaví",
+        "větrníky",
+        "čez"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -761,34 +786,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ruské vlajky zpět na stadiony? Debata ukázala proruskou část poslanců, třeba Konečnou",
-      "url": "https://ekonomickydenik.cz/ruske-vlajky-proruska-konecna/",
-      "dt": "2026-05-04T13:46:31Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "debata",
-        "konečnou",
-        "poslanců",
-        "proruskou",
-        "ruské",
-        "stadiony",
-        "třeba",
-        "ukázala",
-        "vlajky",
-        "zpět",
-        "část"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 75174,
+      "bytes": 75140,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T04:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T05:20:54Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 26,
@@ -854,6 +851,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Neobvyklé partnerství: ČEZ postaví s firmou exministra větrníky na Olomoucku",
+            "publishedAt": "2026-05-06T05:20:54Z"
+          },
           {
             "title": "Do důchodu s generálskou frčkou? BIS navrhla povýšení pro estébáka",
             "publishedAt": "2026-05-06T04:05:00Z"
@@ -881,10 +882,6 @@
           {
             "title": "ČSA a Smartwings pod tureckou vlajkou: Antimonopolní úřad prověřuje miliardový kontrakt",
             "publishedAt": "2026-05-05T13:50:27Z"
-          },
-          {
-            "title": "Turek dostal poslední varování. Hnutí Duha žádá omluvu",
-            "publishedAt": "2026-05-05T12:56:45Z"
           }
         ]
       }
