@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-06T06:25:43.246792Z",
+  "ingestedAt": "2026-05-06T07:05:25.390919Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nová generace EZKarty se blíží: Přinese osobní QR kód i přehled o branné povinnosti",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/nova-generace-ezkarty-se-blizi-prinese-osobni-qr-kod-i-prehled-o-branne-povinnosti/",
+      "dt": "2026-05-06T07:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "blíží",
+        "branné",
+        "ezkarty",
+        "generace",
+        "kód",
+        "nová",
+        "osobní",
+        "povinnosti",
+        "přehled",
+        "přinese"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -238,33 +265,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Inovace v Česku vznikají v chaosu. Experti mluví o skandálních podmínkách a kultuře strachu",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/inovace-v-cesku-vznikaji-v-chaosu/",
-      "dt": "2026-05-05T07:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "chaosu",
-        "experti",
-        "inovace",
-        "kultuře",
-        "mluví",
-        "podmínkách",
-        "skandálních",
-        "strachu",
-        "vznikají",
-        "česku"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -275,7 +275,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 84010,
+      "bytes": 81461,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -312,7 +312,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-06T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T07:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -327,6 +327,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nová generace EZKarty se blíží: Přinese osobní QR kód i přehled o branné povinnosti",
+            "publishedAt": "2026-05-06T07:00:00Z"
+          },
           {
             "title": "Pacient v českém systému často bloudí. Šéfka Penta Hospitals popsala, co je potřeba změnit",
             "publishedAt": "2026-05-06T06:00:00Z"
@@ -354,10 +358,6 @@
           {
             "title": "Kontrola a odstranění znamének: Kdy to máte zdarma a kdy si musíte připravit peněženku?",
             "publishedAt": "2026-05-05T11:02:29Z"
-          },
-          {
-            "title": "Konec ředitele Holobrady: Příbramská nemocnice reaguje na policejní zásah",
-            "publishedAt": "2026-05-05T08:50:44Z"
           }
         ]
       }

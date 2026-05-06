@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-06T06:25:43.246792Z",
+  "ingestedAt": "2026-05-06T07:05:25.390919Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Oscaři zase modernizují. Šance pro zahraniční filmy a herce výrazně vzrostou",
+      "url": "https://www.kinobox.cz/clanky/festivaly/53390-oscari-zase-modernizuji-sance-pro-zahranicni-filmy-a-vsechny-herce-vyrazne-vzrostou",
+      "dt": "2026-05-06T07:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "filmy",
+        "herce",
+        "modernizují",
+        "oscaři",
+        "vzrostou",
+        "výrazně",
+        "zahraniční",
+        "zase",
+        "šance"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -531,32 +557,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Ucho, Chalupáři i Nesmrtelná teta. Památné role oslavenkyně Jiřiny Bohdalové",
-      "url": "https://www.kinobox.cz/clanky/tema/38783-ucho-chalupari-nesmrtelna-teta-pamatne-role-jiriny-bohdalove",
-      "dt": "2026-05-03T09:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "bohdalové",
-        "chalupáři",
-        "jiřiny",
-        "nesmrtelná",
-        "oslavenkyně",
-        "památné",
-        "role",
-        "teta",
-        "ucho"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -567,7 +567,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 29106,
+      "bytes": 29573,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -604,11 +604,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-05T17:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T07:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "other": 19
+          "other": 19,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -620,6 +620,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Oscaři zase modernizují. Šance pro zahraniční filmy a herce výrazně vzrostou",
+            "publishedAt": "2026-05-06T07:00:00Z"
+          },
           {
             "title": "Mrazivá česká detektivka boduje na streamu. Děsivá vražda zde není pro slabé povahy",
             "publishedAt": "2026-05-05T17:00:00Z"
@@ -647,10 +651,6 @@
           {
             "title": "Akční bůh 90. let vzpomíná na obří pirátské fiasko. Nyní natočil nejvěrohodnější leteckou katastrofu",
             "publishedAt": "2026-05-05T07:00:00Z"
-          },
-          {
-            "title": "TV tipy: Oscarový Pan Nikdo proti Putinovi, Tarantinův Kill Bill i Nicholas Winton",
-            "publishedAt": "2026-05-04T17:00:00Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-06T06:25:43.246792Z",
+  "ingestedAt": "2026-05-06T07:05:25.390919Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kluci u ní hledají ženské srdce. Zpěvačka Billie Eilish míří do kin",
+      "url": "https://www.denik.cz/film-a-televize/billie-eilish-film-james-cameron.html",
+      "dt": "2026-05-06T06:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "billie",
+        "eilish",
+        "hledají",
+        "kin",
+        "kluci",
+        "míří",
+        "srdce",
+        "zpěvačka",
+        "ženské"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -626,32 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Jednorázový incident? Nikoli. Žena z autobusu 348 čelí podezření ze stalkingu",
-      "url": "https://www.denik.cz/regiony/cestujici-z-autobusu-348-celi-podezreni-ze-stalkingu.html",
-      "dt": "2026-05-05T12:22:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "348",
-        "autobusu",
-        "incident",
-        "jednorázový",
-        "nikoli",
-        "podezření",
-        "stalkingu",
-        "čelí",
-        "žena"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30362,
+      "bytes": 30519,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,7 +699,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-06T06:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T06:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -715,6 +715,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kluci u ní hledají ženské srdce. Zpěvačka Billie Eilish míří do kin",
+            "publishedAt": "2026-05-06T06:30:00Z"
+          },
           {
             "title": "Koťata čekala v krabici na smrt. Záchrana přišla na poslední chvíli",
             "publishedAt": "2026-05-06T06:10:00Z"
@@ -742,10 +746,6 @@
           {
             "title": "Lidé už letos potkali desítky zmijí: Jaká jsou rizika, co dělat při uštknutí",
             "publishedAt": "2026-05-06T02:30:00Z"
-          },
-          {
-            "title": "Prelátská zahrada v Olomouci: Barokní oáza klidu u Klášterního Hradiska",
-            "publishedAt": "2026-05-06T02:15:00Z"
           }
         ]
       }

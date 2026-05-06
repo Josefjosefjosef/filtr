@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-06T06:25:43.246792Z",
+  "ingestedAt": "2026-05-06T07:05:25.390919Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Elektřina v ČR byla loni šestá nejdražší v EU, naopak ceny plynu pod průměrem",
+      "url": "https://www.e15.cz/finexpert/bydleni/elektrina-v-cr-byla-loni-sesta-nejdrazsi-v-eu-naopak-ceny-plynu-pod-prumerem-1432611",
+      "dt": "2026-05-06T06:42:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "ceny",
+        "elektřina",
+        "loni",
+        "naopak",
+        "nejdražší",
+        "plynu",
+        "průměrem",
+        "šestá"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1059,35 +1084,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Proč vláda zavádí EET a kdo zapláče nejvíc. Nová elektronická evidence tržeb v otázkách a odpovědích",
-      "url": "https://www.e15.cz/ekonomika/proc-vlada-zavadi-eet-a-kdo-zaplace-nejvic-nova-elektronicka-evidence-trzeb-v-otazkach-a-odpovedich-1432567",
-      "dt": "2026-05-04T12:28:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "eet",
-        "elektronická",
-        "evidence",
-        "nejvíc",
-        "nová",
-        "odpovědích",
-        "otázkách",
-        "proč",
-        "tržeb",
-        "vláda",
-        "zapláče",
-        "zavádí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1098,7 +1094,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 54080,
+      "bytes": 54062,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1135,10 +1131,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-06T05:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T06:42:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 37,
+          "zdravi": 1,
+          "finance": 36,
           "zpravy": 3
         },
         "drop_counts": {
@@ -1151,6 +1148,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Elektřina v ČR byla loni šestá nejdražší v EU, naopak ceny plynu pod průměrem",
+            "publishedAt": "2026-05-06T06:42:00Z"
+          },
           {
             "title": "USA přerušují doprovod lodí v Hormuzském průlivu. Trump věří v dohodu s Teheránem",
             "publishedAt": "2026-05-06T05:45:00Z"
@@ -1178,10 +1179,6 @@
           {
             "title": "Investoři míří do střední Evropy. Biotech z Česka láká stovky milionů dolarů",
             "publishedAt": "2026-05-05T17:00:00Z"
-          },
-          {
-            "title": "Za slevy v aplikaci poukaz na dovolenou. Raiffeisenbank spouští letní kampaň",
-            "publishedAt": "2026-05-05T14:05:00Z"
           }
         ]
       }

@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-06T06:25:43.246792Z",
+  "ingestedAt": "2026-05-06T07:05:25.390919Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Šestá nejdražší v EU: Cena elektřiny v Česku loni překonala Německo. Vývoj ale dává naději",
+      "url": "https://ekonomickydenik.cz/sesta-nejdrazsi-eu-elektrina-cesko/",
+      "dt": "2026-05-06T06:39:36Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "ale",
+        "cena",
+        "dává",
+        "elektřiny",
+        "loni",
+        "naději",
+        "nejdražší",
+        "německo",
+        "překonala",
+        "vývoj",
+        "česku",
+        "šestá"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -758,33 +787,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Trump chce stáhnout vojáky od českých hranic. Plán se týká základny v Bavorsku",
-      "url": "https://ekonomickydenik.cz/trump-stahnout-vojaky-ceskych-hranic/",
-      "dt": "2026-05-04T15:41:26Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "bavorsku",
-        "chce",
-        "hranic",
-        "plán",
-        "stáhnout",
-        "trump",
-        "týká",
-        "vojáky",
-        "základny",
-        "českých"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 75222,
+      "bytes": 75002,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,13 +834,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T05:53:21Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T06:39:36Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 26,
+          "zdravi": 2,
+          "finance": 25,
           "zpravy": 2,
-          "sport": 1,
-          "zdravi": 1
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -850,6 +852,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šestá nejdražší v EU: Cena elektřiny v Česku loni překonala Německo. Vývoj ale dává naději",
+            "publishedAt": "2026-05-06T06:39:36Z"
+          },
           {
             "title": "Lodě v Hormuzském průlivu bez ochrany. Trump to vysvětluje jednáním",
             "publishedAt": "2026-05-06T05:53:21Z"
@@ -877,10 +883,6 @@
           {
             "title": "Trump ničí dohodu z golfového resortu. Vyšší cla na auta poškodí i české firmy",
             "publishedAt": "2026-05-05T15:26:00Z"
-          },
-          {
-            "title": "Černochová vrací úder: Babišovy nedělní „podcasty“ už bude řešit advokát",
-            "publishedAt": "2026-05-05T14:51:07Z"
           }
         ]
       }

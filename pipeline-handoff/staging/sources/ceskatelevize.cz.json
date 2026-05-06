@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-06T06:25:43.246792Z",
+  "ingestedAt": "2026-05-06T07:05:25.390919Z",
   "items": [
     {
       "section": "aktualne",
@@ -57,23 +57,21 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Šéfka Venezuely vyhazuje ministry i generály. Jako by měla dle úředníků „zbraň u hlavy“",
+      "title": "Prezidentka Venezuely vyhazuje ministry i generály. „Jako by měla zbraň u hlavy“",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/sefka-venezuely-vyhazuje-ministry-i-generaly-jako-by-mela-dle-uredniku-zbran-u-hlavy-372986",
       "dt": "2026-05-06T05:02:00Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "dle",
         "generály",
         "hlavy",
         "jako",
         "ministry",
         "měla",
+        "prezidentka",
         "venezuely",
         "vyhazuje",
-        "zbraň",
-        "úředníků",
-        "šéfka"
+        "zbraň"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -751,6 +749,29 @@
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Oklahoma přejela Lakers, Detroit si poradil s Clevelandem",
+      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/oklahoma-prejela-lakers-detroit-si-poradil-s-clevelandem-156622",
+      "dt": "2026-05-06T07:01:01Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "clevelandem",
+        "detroit",
+        "lakers",
+        "oklahoma",
+        "poradil",
+        "přejela"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1492,31 +1513,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dobeš dotlačil Montreal k postupu. Divoký zápas prožil Nečas",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/dobes-dotlacil-montreal-k-postupu-divoky-zapas-prozil-necas-156592",
-      "dt": "2026-05-04T05:14:54Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "divoký",
-        "dobeš",
-        "dotlačil",
-        "montreal",
-        "nečas",
-        "postupu",
-        "prožil",
-        "zápas"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1527,7 +1523,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43869,
+      "bytes": 43844,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1612,7 +1608,7 @@
             "publishedAt": "2026-05-06T05:40:00Z"
           },
           {
-            "title": "Šéfka Venezuely vyhazuje ministry i generály. Jako by měla dle úředníků „zbraň u hlavy“",
+            "title": "Prezidentka Venezuely vyhazuje ministry i generály. „Jako by měla zbraň u hlavy“",
             "publishedAt": "2026-05-06T05:02:00Z"
           },
           {
@@ -1645,7 +1641,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38067,
+      "bytes": 37917,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1682,7 +1678,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T06:19:04Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T07:01:01Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1697,6 +1693,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Oklahoma přejela Lakers, Detroit si poradil s Clevelandem",
+            "publishedAt": "2026-05-06T07:01:01Z"
+          },
           {
             "title": "Arsenal si postup zasloužil, připustil Simeone. Neuvěřitelný večer, zářil Arteta",
             "publishedAt": "2026-05-06T06:19:04Z"
@@ -1724,10 +1724,6 @@
           {
             "title": "Florbalistky budou na juniorském MS útočit na pátou medaili v řadě",
             "publishedAt": "2026-05-05T15:56:11Z"
-          },
-          {
-            "title": "Kovařík končí, komisi rozhodčích nově povede Španěl Clos",
-            "publishedAt": "2026-05-05T14:40:14Z"
           }
         ]
       }
@@ -1739,7 +1735,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78424,
+      "bytes": 78432,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

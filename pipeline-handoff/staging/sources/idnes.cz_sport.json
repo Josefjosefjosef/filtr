@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-06T06:25:43.246792Z",
+  "ingestedAt": "2026-05-06T07:05:25.390919Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Oklahoma City bez potíží kontrolovala Lakers, druhé kolo zahájil vítězně i Detroit",
+      "url": "https://www.idnes.cz/sport/basket/oklahoma-nba-play-off-lakers-detroit-cleveland-thunder-pistons.A260506_083756_sport-basket_kazdt",
+      "dt": "2026-05-06T06:46:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "city",
+        "detroit",
+        "druhé",
+        "kolo",
+        "kontrolovala",
+        "lakers",
+        "oklahoma",
+        "potíží",
+        "vítězně",
+        "zahájil"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "I s mladíky se dají zvládnout bitvy! Trenér Jihostroje o extralize i parádě s Italy",
+      "url": "https://www.idnes.cz/sport/ostatni/zdenek-smejkal-jihostroj-ceske-budejovice-rozhovor.A260506_075020_sporty_kazdt",
+      "dt": "2026-05-06T06:36:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bitvy",
+        "dají",
+        "extralize",
+        "italy",
+        "jihostroje",
+        "mladíky",
+        "parádě",
+        "trenér",
+        "zvládnout"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -738,59 +791,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sluší jí to? Krasobruslařka Alysa Liuová je novou tváří Louis Vuitton, oblékla denim",
-      "url": "https://www.idnes.cz/sport/trendy/slusi-ji-to-krasobruslarka-alysa-liuova-je-novou-tvari-louis-vuitton-oblekla-denim.A260505_111434_trendy_blah",
-      "dt": "2026-05-05T10:30:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "alysa",
-        "denim",
-        "krasobruslařka",
-        "liuová",
-        "louis",
-        "novou",
-        "oblékla",
-        "sluší",
-        "tváří",
-        "vuitton"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ze skejťáka ultramaratoncem. Polman o krizích, vůli i motivaci: Rád testuju limity",
-      "url": "https://www.idnes.cz/sport/cyklistika/ze-skejtaka-ultramaratoncem-polman-o-krizich-vuli-i-motivaci-rad-testuju-limity.A260428_204746_cyklistika_mkou",
-      "dt": "2026-05-05T10:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "krizích",
-        "limity",
-        "motivaci",
-        "polman",
-        "rád",
-        "skejťáka",
-        "testuju",
-        "ultramaratoncem",
-        "vůli"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46960,
+      "bytes": 46730,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T05:46:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T06:46:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -853,6 +853,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Oklahoma City bez potíží kontrolovala Lakers, druhé kolo zahájil vítězně i Detroit",
+            "publishedAt": "2026-05-06T06:46:00Z"
+          },
+          {
+            "title": "I s mladíky se dají zvládnout bitvy! Trenér Jihostroje o extralize i parádě s Italy",
+            "publishedAt": "2026-05-06T06:36:00Z"
+          },
           {
             "title": "Ústecký šéf: Vyoral nemá formu, ale zapne. Ještě proti Opavě zamícháme karty",
             "publishedAt": "2026-05-06T05:46:00Z"
@@ -876,14 +884,6 @@
           {
             "title": "Arsenal - Atlético 1:0, Angličané zvládli odvetu. Po dvaceti letech je čeká finále LM",
             "publishedAt": "2026-05-05T21:16:50Z"
-          },
-          {
-            "title": "Pavouk Ligy mistrů 2025/26: program a výsledky od semifinále po finále",
-            "publishedAt": "2026-05-05T21:00:00Z"
-          },
-          {
-            "title": "Nymburští rozebrali Ostravu třetí stovkou, v semifinále jsou i Pardubice. Brno se drží",
-            "publishedAt": "2026-05-05T20:25:31Z"
           }
         ]
       }
