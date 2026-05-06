@@ -34540,6 +34540,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bbez\s+ukol/.test(x)) return true;
     if (/\bneni\s+to\s+ukol\b/.test(x)) return true;
     if (/\bne\s+jako\s+ukol\b/.test(x)) return true;
+    /** P0 note_write: „neukládej … ne úkol“ = modulová negace vůči úkolům, ne globální zákaz zápisu poznámky. */
+    if (/\bneukladej\b/.test(x) && /\bne\s+ukol\b/.test(x)) return true;
     if (/\bneukladej\b/.test(x) && (/\bjako\s+ukol/.test(x) || /\bdo\s+ukol/.test(x))) return true;
     if (/\bneukladat\b/.test(x) && /\bjako\s+ukol/.test(x)) return true;
     if ((/\bnedavej\b/.test(x) || /\bnedej\b/.test(x)) && /\bdo\s+ukol/.test(x)) return true;
@@ -36575,6 +36577,39 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P0: read-only / globální zákaz vs explicitní zápis do poznámek → žádný note.create (prefer unknown v routeru).
+   */
+  /**
+   * P0: „nic neukládej“ jako globální zákaz vs segment „do poznámky napiš …, nic neukládej“ (multi harness).
+   * Vrací true, když nic neukládej má zablokovat parsování note.create.
+   */
+  function iuSilverNicNeukladejBlocksNoteParseFolded(x) {
+    const f = String(x || "");
+    if (!/\bnic\s+neukladej\b/.test(f)) return false;
+    if (/\bnic\s+neukladej\s+do\s+kalendar/.test(f)) return false;
+    if (/\bzaroven\b|\bzároveň\b/.test(f) && /\b(do\s+kalend|\buloz\s+do\s+kalend|\buloz\s+mi\s+do\s+kalend|\bnahod)/.test(f)) return false;
+    if (/^\s*do\s+poznam\w*\s+.*\bnapis/i.test(f) || /^\s*napis\w*\s+do\s+poznam/i.test(f)) return false;
+    return true;
+  }
+
+  function iuSilverReadOnlyTailBlocksNoteCreateFolded(tailFolded) {
+    const x = String(tailFolded || "");
+    if (!x) return false;
+    return (
+      /\bjen\s+cti\b/.test(x) ||
+      /\bpouze\s+cti\b/.test(x) ||
+      /\bjen\s+zjist/.test(x) ||
+      /\bjen\s+se\s+podivej\b/.test(x) ||
+      /\bjen\s+vypis\b/.test(x) ||
+      /\bjen\s+over\b/.test(x) ||
+      iuSilverNicNeukladejBlocksNoteParseFolded(x) ||
+      (/\bnic\s+nevytvarej\b/.test(x) && !/\bnic\s+nevytvarej\s+do\s+kalendar/.test(x)) ||
+      /\bpokud\s+nic\s+nenajdes\b/.test(x) ||
+      /\bpokud\s+nis\s+vysledek\b/.test(x)
+    );
+  }
+
+  /**
    * Širší parsování vět s cílem „do poznámek / do poznámky“ (reálný chat; bez NLP backendu).
    */
   function iuSilverTryParseLooseNoteToBody(s0) {
@@ -36586,8 +36621,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const f = foldCs(s);
     if (!iuSilverHasExplicitNotesTarget(f)) return null;
 
-    let m = s.match(/^([\s\S]{2,4800}?)\s+(?:ulož|uloz|vlož|vloz|dej)(?:te)?(?:\s+mi)?(?:\s+to)?\s+do\s+pozn[aá]m(?:ek|ky|ce)\b[.!?,…\s]*$/i);
+    let m = s.match(/^([\s\S]{2,4800}?)\s+(?:ulož|uloz|vlož|vloz|dej)(?:te)?(?:\s+mi)?(?:\s+to)?\s+do\s+pozn[aá]m(?:ek|ky|ce)\b/i);
     if (m && m[1]) {
+      const endIdx = m.index + m[0].length;
+      const tailF = foldCs(s.slice(endIdx).trim());
+      if (iuSilverReadOnlyTailBlocksNoteCreateFolded(tailF)) return null;
       const b = iuSilverNoteCreateFinalizeBody(m[1]);
       if (b) return { kind: "body", body: b };
     }
@@ -36608,8 +36646,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const b = iuSilverNoteCreateFinalizeBody(m[1]);
       if (b) return { kind: "body", body: b };
     }
-    m = s.match(/^(?:ul[oó]ž|uloz)(?:te)?\s+([\s\S]+?)\s+do\s+pozn[aá]m(?:ek|ky|ce)\b[.!?,…\s]*$/i);
+    m = s.match(/^(?:ul[oó]ž|uloz)(?:te)?\s+([\s\S]+?)\s+do\s+pozn[aá]m(?:ek|ky|ce)\b/i);
     if (m && m[1]) {
+      const endIdx = m.index + m[0].length;
+      const tailF = foldCs(s.slice(endIdx).trim());
+      if (iuSilverReadOnlyTailBlocksNoteCreateFolded(tailF)) return null;
       const b = iuSilverNoteCreateFinalizeBody(m[1]);
       if (b) return { kind: "body", body: b };
     }
@@ -36623,6 +36664,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const s0 = String(rawIn || "").trim();
     if (!s0) return null;
     let s = s0.replace(/^\s*pros[ií]m,?\s+/i, "").trim();
+    s = s.replace(/^\s*bez\s+diakritiky\s*:\s*/i, "").trim();
     /* P0: modulová negace kalendáře na začátku věty nesmí zablokovat „napiš/ulož do poznámek …“. */
     if (/^\s*neukladej\s+do\s+kalendar/i.test(foldCs(s))) {
       /* „kalendáře“ obsahuje „ř“ — ASCII [a-z]* by useklo prefix uprostřed slova. */
@@ -36632,6 +36674,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const fEarly = foldCs(s);
     if (iuSilverShouldForceCalendarOverCompositeNote(s, fEarly)) return null;
     if (iuSilverHasExplicitTasksTarget(fEarly)) return null;
+    if (
+      (iuSilverHasExplicitNotesTarget(fEarly) ||
+        /\bzapamatuj\s+si\b/.test(fEarly) ||
+        /\bpoznamenej\s+si\b/.test(fEarly) ||
+        /\buloz\w*\s+[\s\S]{0,4000}?\s+do\s+poznam/.test(fEarly)) &&
+      iuSilverReadOnlyTailBlocksNoteCreateFolded(fEarly)
+    )
+      return null;
     if (/^add\s+note\s+/i.test(s)) {
       const b0 = iuSilverNoteCreateFinalizeBody(s.replace(/^add\s+note\s+/i, "").trim());
       if (b0) return { kind: "body", body: b0 };
@@ -36707,6 +36757,18 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (!rest) return { kind: "empty" };
       const bodyNorm = iuSilverNormalizeCzechNumberWords(iuSilverNormalizeCzechPlaceWords(rest));
       return { kind: "body", body: bodyNorm.slice(0, IU_SILVER_NOTE_BODY_MAX) };
+    }
+    const zmSi = s.match(/^zapamatuj\s+si\s+([\s\S]+)$/i);
+    if (zmSi && zmSi[1]) {
+      let restZ = String(zmSi[1] || "")
+        .trim()
+        .replace(/\s*,\s*(?:ne\s+v\s+kalend|ne\s+kalendar|neplet\s+to\s+s\s+poznam|jen\s+over)[\s\S]*$/i, "")
+        .trim();
+      restZ = iuSilverNormalizeWs(restZ);
+      if (restZ) {
+        const bodyZ = iuSilverNoteCreateFinalizeBody(restZ);
+        if (bodyZ) return { kind: "body", body: bodyZ };
+      }
     }
     const loose = iuSilverTryParseLooseNoteToBody(s);
     if (loose) return loose;
