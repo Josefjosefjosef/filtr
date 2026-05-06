@@ -35002,7 +35002,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bjen\s+zjist/.test(x) ||
       /\bjen\s+over/.test(x) ||
       /\bjen\s+vypis/.test(x) ||
-      (/\bnevytvarej\b/.test(x) && !/\bcesta\s*:/.test(x)) ||
+      (/\bnevytvarej\b/.test(x) &&
+        !/\bcesta\s*:/.test(x) &&
+        !/\bnevytvarej\s+udalost\b/.test(x) &&
+        !/\bnevytvarej\s+ukol\b/.test(x) &&
+        !/\bnevytvarej\s+poznam/.test(x)) ||
       /\bnevytvor\w*\s+zadn\w*\s+nov\w*\s+ukol/.test(x) ||
       /\bnejde\s+o\s+ulozen/i.test(x) ||
       /\bnechci\s+vytvor/i.test(x) ||
@@ -35698,6 +35702,101 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return false;
   }
 
+  /**
+   * P0 real multi-intent: „schůzka/zubař/… + datum/místo + do poznámky …“ → hlava pro kalendář před poznámkovým ocasem.
+   * Vrací { headRaw, noteBody } nebo null (bez hádání — bez platného note parsování tailu null).
+   */
+  function iuSilverTryCalendarNoteCompositeHeadNoteTailP0(raw, folded) {
+    const f = String(folded != null ? folded : foldCs(String(raw || "")));
+    const r = String(raw || "").trim();
+    if (!r || !f) return null;
+    if (iuSilverNotesScopeBlocksCalendarWriteRouteFolded(f)) return null;
+    let bestIx = -1;
+    const reDo = new RegExp("\\s+do\\s+pozn[aá]m(?:ek|ky|ce|kach)\\b", "gi");
+    let m;
+    while ((m = reDo.exec(r)) !== null) {
+      const idx = m.index;
+      const headFold = foldCs(r.slice(0, idx));
+      if (/\bne\s+$/.test(headFold)) continue;
+      if (idx >= 0 && (bestIx < 0 || idx < bestIx)) bestIx = idx;
+    }
+    const mColon = /\s+pozn[aá]mk[ay]\s*:/i.exec(r);
+    if (mColon && typeof mColon.index === "number" && mColon.index >= 1) {
+      const idxC = mColon.index;
+      const headFoldC = foldCs(r.slice(0, idxC));
+      if (!/\bne\s+$/.test(headFoldC) && (bestIx < 0 || idxC < bestIx)) bestIx = idxC;
+    }
+    if (bestIx < 1) return null;
+    const headRaw = r.slice(0, bestIx).trim();
+    const tailRaw = r.slice(bestIx).trim();
+    if (headRaw.length < 12 || tailRaw.length < 10) return null;
+    const headF = foldCs(headRaw);
+    const strongHead =
+      iuSilverHasExplicitCalendarTarget(headF) ||
+      /\bkalend/.test(headF) ||
+      /\bschuz|jednan|kontrol|zubar|lekar|pravn|advok|meeting|navstev|udalost|porad\b/i.test(headF);
+    if (!strongHead) return null;
+    const schedFull = iuSilverLooksLikeSchedulingFragment(f, r);
+    const anchorHead =
+      iuSilverLooksLikeSchedulingFragment(headF, headRaw) ||
+      /\bs\s+[a-z]{3,}\b/.test(headF) ||
+      /\bna\s+adres/i.test(headF) ||
+      /\bna\s+[a-z]{2,40}\s+\d{1,4}\b/i.test(headF) ||
+      /\b(praha|brno|ostrava|plzen|liberec|olomouc|pardubice|hradec|kladno|zlin|uherske|uhersk|jihlava|opava|most|karvina|cesk\w*\s*budej\w*)\b/.test(headF);
+    if (!schedFull && !anchorHead) return null;
+    const nh = iuSilverTryParseExplicitNoteCreate(tailRaw);
+    if (!nh || nh.kind !== "body" || !String(nh.body || "").trim()) return null;
+    return { headRaw: headRaw, noteRaw: tailRaw, noteBody: String(nh.body || "").trim() };
+  }
+
+  /**
+   * P0 real multi-intent: kalendářová hlava + „do poznámky …“ → calendar.create z headRaw + samostatný notes.create (ne pole události).
+   */
+  function iuSilverTryCalendarNoteDualWriteP0Turn(raw, now, folded, prevDraft) {
+    if (iuSilverHasGlobalWriteNegationVersusExplicitWriteSignalFolded(String(folded || ""))) return null;
+    const comp = iuSilverTryCalendarNoteCompositeHeadNoteTailP0(raw, folded);
+    if (!comp || !comp.headRaw || !String(comp.noteBody || "").trim()) return null;
+    const tailFoldGate = foldCs(String(comp.noteRaw || ""));
+    if (!/\bdo\s+poznam\w*\s+mi\s+dej\b/.test(tailFoldGate)) return null;
+    const prev = prevDraft || createEmptyDraft();
+    const calTurn = iuSilverBuildCalendarCreateTurn(comp.headRaw, now, prev);
+    if (!calTurn || calTurn.normalizedIntent !== "calendar.create") return null;
+    const noteTurn = iuSilverBuildNoteCreateTurn(comp.noteBody, now);
+    if (!noteTurn || noteTurn.normalizedIntent !== "notes.create") return null;
+    return {
+      normalizedIntent: calTurn.normalizedIntent,
+      targetContainer: calTurn.targetContainer,
+      processingState: calTurn.processingState,
+      clarificationReason: calTurn.clarificationReason,
+      futureIntentCandidate: calTurn.futureIntentCandidate,
+      readQuery: calTurn.readQuery,
+      readAnswer: calTurn.readAnswer,
+      extractedFields: calTurn.extractedFields,
+      missingFields: calTurn.missingFields,
+      ambiguousFields: calTurn.ambiguousFields,
+      userFacingSummary: calTurn.userFacingSummary,
+      assistantLead: calTurn.assistantLead,
+      clarificationText: calTurn.clarificationText,
+      draft: calTurn.draft,
+      silverCompanionNoteTurn: {
+        normalizedIntent: noteTurn.normalizedIntent,
+        targetContainer: noteTurn.targetContainer,
+        processingState: noteTurn.processingState,
+        clarificationReason: noteTurn.clarificationReason,
+        futureIntentCandidate: noteTurn.futureIntentCandidate,
+        readQuery: noteTurn.readQuery,
+        readAnswer: noteTurn.readAnswer,
+        extractedFields: noteTurn.extractedFields,
+        missingFields: noteTurn.missingFields,
+        ambiguousFields: noteTurn.ambiguousFields,
+        userFacingSummary: noteTurn.userFacingSummary,
+        assistantLead: noteTurn.assistantLead,
+        clarificationText: noteTurn.clarificationText,
+        draft: noteTurn.draft
+      }
+    };
+  }
+
   /** P0 v1.7: „kalendář + datum/čas + poznámka“ → hlavní intent calendar.create (poznámka jen pole události). */
   function iuSilverShouldForceCalendarOverCompositeNote(raw, folded) {
     const f = String(folded || "");
@@ -35705,6 +35804,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!r) return false;
     if (iuSilverNotesScopeBlocksCalendarWriteRouteFolded(f) || iuSilverNegativeCreateGuardFolded(f)) return false;
     if (iuSilverHasExplicitNotesTarget(f) && iuSilverCalendarQuerySignalFolded(f)) return false;
+    if (iuSilverTryCalendarNoteCompositeHeadNoteTailP0(r, f)) return true;
     const calPart = iuSilverHasExplicitCalendarTarget(f) || /\bkalend/.test(f);
     const sched = iuSilverLooksLikeSchedulingFragment(f, r);
     const notePart = iuSilverHasExplicitNotesTarget(f) || /\bdo\s+poznam/.test(f) || /\bpoznamk/.test(f);
@@ -36757,6 +36857,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (!rest) return { kind: "empty" };
       const bodyNorm = iuSilverNormalizeCzechNumberWords(iuSilverNormalizeCzechPlaceWords(rest));
       return { kind: "body", body: bodyNorm.slice(0, IU_SILVER_NOTE_BODY_MAX) };
+    }
+    const mDej = s.match(/^do\s+pozn[aá]m(?:ek|ky|ce)\b(?:\s+mi)?\s+dej\s+([\s\S]+)$/i);
+    if (mDej && mDej[1]) {
+      const bDej = iuSilverNoteCreateFinalizeBody(mDej[1]);
+      if (bDej) return { kind: "body", body: bDej };
     }
     const zmSi = s.match(/^zapamatuj\s+si\s+([\s\S]+)$/i);
     if (zmSi && zmSi[1]) {
@@ -41436,6 +41541,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return multiIntentP0;
     }
 
+    const dualCalNoteP0 = iuSilverTryCalendarNoteDualWriteP0Turn(raw, now, folded, prevDraft);
+    if (dualCalNoteP0) {
+      return dualCalNoteP0;
+    }
+
     const taskReadListEarly = iuSilverTryTaskReadListQueryEarly(raw, now, folded, ctx || {}, empty);
     if (taskReadListEarly) {
       return taskReadListEarly;
@@ -42095,6 +42205,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   const chatState = {
     draft: createEmptyDraft(),
     lastDraftTurn: null,
+    silverCompanionNoteDraft: null,
     cardEditMode: false,
     saveBusy: false,
     trapOn: false,
@@ -42111,6 +42222,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!host) return null;
     const cards = host.querySelectorAll("[data-iu-silver-draft-card]");
     return cards.length ? cards[cards.length - 1] : null;
+  }
+
+  function getCalendarDraftCardElFromHost() {
+    const host = document.getElementById("iuSilverChatMessages");
+    if (!host) return null;
+    const cards = host.querySelectorAll("[data-iu-silver-draft-card]");
+    for (let ci = cards.length - 1; ci >= 0; ci--) {
+      if (cards[ci].querySelector('[data-iu-silver-field="date"]')) return cards[ci];
+    }
+    return null;
   }
 
   function patchDraftCardMessageCopy(cardEl) {
@@ -42145,6 +42266,31 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function syncDraftFromCardInputs(cardEl) {
     if (!cardEl) return;
+    const noteField = cardEl.querySelector('[data-iu-silver-note-field="text"]');
+    if (noteField && chatState.silverCompanionNoteDraft) {
+      const dn = cloneDraft(chatState.silverCompanionNoteDraft);
+      const nt0 = String(noteField.value || "")
+        .trim()
+        .slice(0, IU_SILVER_NOTE_BODY_MAX);
+      dn.silverNoteText = normalizeSilverTitleV1(nt0, { kind: "note" }).slice(0, IU_SILVER_NOTE_BODY_MAX);
+      chatState.silverCompanionNoteDraft = dn;
+      const psN = silverProcessingStateFromDraft(dn);
+      const apN = buildAssistantParts(dn, psN);
+      if (chatState.lastDraftTurn && chatState.lastDraftTurn.silverCompanionNoteTurn) {
+        chatState.lastDraftTurn = {
+          ...chatState.lastDraftTurn,
+          silverCompanionNoteTurn: {
+            ...chatState.lastDraftTurn.silverCompanionNoteTurn,
+            draft: cloneDraft(dn),
+            assistantLead: apN.assistantLead,
+            clarificationText: apN.clarification,
+            processingState: psN
+          }
+        };
+      }
+      patchDraftCardMessageCopy(cardEl);
+      return;
+    }
     const d = cloneDraft(chatState.draft);
     if (d.targetContainer === "notes") {
       const ta = cardEl.querySelector('[data-iu-silver-note-field="text"]');
@@ -42310,7 +42456,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!card) return;
     syncDraftFromCardInputs(card);
     const saveBtn = card.querySelector('[data-iu-silver-action="save"]');
-    if (saveBtn) saveBtn.disabled = !isSilverDraftSaveable(chatState.draft);
+    if (saveBtn) {
+      if (chatState.silverCompanionNoteDraft && card.querySelector('[data-iu-silver-note-field="text"]')) {
+        saveBtn.disabled = !isNoteDraftSaveable(chatState.silverCompanionNoteDraft);
+      } else {
+        saveBtn.disabled = !isSilverDraftSaveable(chatState.draft);
+      }
+    }
   }
 
   function openChatOverlay(fromEl) {
@@ -42347,6 +42499,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (typeof window.iuSilverGuidedResetFromNav === "function") window.iuSilverGuidedResetFromNav();
     } catch (_) {}
     clearPendingStorageDisambiguation();
+    chatState.silverCompanionNoteDraft = null;
     try {
       if (window.iuSilverCalendarEngine && typeof window.iuSilverCalendarEngine.iuSilverConversationReset === "function") {
         window.iuSilverCalendarEngine.iuSilverConversationReset();
@@ -42419,8 +42572,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!host) return;
     if (turn.confirmOnly) {
       chatState.lastDraftTurn = null;
+      chatState.silverCompanionNoteDraft = null;
       chatState.cardEditMode = false;
       clearPendingStorageDisambiguation();
+    } else if (
+      turn.silverCompanionNoteTurn &&
+      turn.draft &&
+      turn.draft.targetContainer === "calendar" &&
+      turn.normalizedIntent === "calendar.create"
+    ) {
+      chatState.cardEditMode = false;
+      clearPendingStorageDisambiguation();
+      chatState.lastDraftTurn = { ...turn, draft: cloneDraft(turn.draft) };
+      chatState.silverCompanionNoteDraft = cloneDraft(turn.silverCompanionNoteTurn.draft);
     } else if (
       turn.silverMultiIntentComposite &&
       turn.draft &&
@@ -42428,6 +42592,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     ) {
       chatState.cardEditMode = false;
       clearPendingStorageDisambiguation();
+      chatState.silverCompanionNoteDraft = null;
       chatState.lastDraftTurn = { ...turn, draft: cloneDraft(turn.draft) };
     } else if (
       turn.processingState === "READ_OK" ||
@@ -42438,12 +42603,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       (turn.readAnswer && turn.readAnswer.message)
     ) {
       chatState.lastDraftTurn = null;
+      chatState.silverCompanionNoteDraft = null;
       chatState.cardEditMode = false;
       chatState.draft = createEmptyDraft();
       clearPendingStorageDisambiguation();
     } else if (turn.processingState === "STORAGE_DISAMBIGUATION" || turn.storageDisambiguation) {
       chatState.cardEditMode = false;
       chatState.lastDraftTurn = null;
+      chatState.silverCompanionNoteDraft = null;
       chatState.draft = cloneDraft(turn.draft);
       chatState.pendingStorageAction = {
         type: "create",
@@ -42463,26 +42630,36 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       turn.normalizedIntent === "notes.empty_prompt"
     ) {
       chatState.lastDraftTurn = null;
+      chatState.silverCompanionNoteDraft = null;
       chatState.cardEditMode = false;
       chatState.draft = createEmptyDraft();
       clearPendingStorageDisambiguation();
     } else if (turn.normalizedIntent === "notes.create" || (turn.draft && turn.draft.targetContainer === "notes")) {
       chatState.cardEditMode = false;
       clearPendingStorageDisambiguation();
+      chatState.silverCompanionNoteDraft = null;
       chatState.lastDraftTurn = { ...turn, draft: cloneDraft(turn.draft) };
     } else if (turn.normalizedIntent === "tasks.create" || (turn.draft && turn.draft.targetContainer === "tasks")) {
       chatState.cardEditMode = false;
       clearPendingStorageDisambiguation();
+      chatState.silverCompanionNoteDraft = null;
       chatState.lastDraftTurn = { ...turn, draft: cloneDraft(turn.draft) };
     } else if (turn.normalizedIntent === "calendar.create" || turn.processingState === "NEEDS_CLARIFICATION" || turn.processingState === "READY_TO_SAVE") {
       chatState.cardEditMode = false;
       clearPendingStorageDisambiguation();
+      if (!turn.silverCompanionNoteTurn) chatState.silverCompanionNoteDraft = null;
       chatState.lastDraftTurn = { ...turn, draft: cloneDraft(turn.draft) };
     }
     const wrap = document.createElement("div");
     wrap.innerHTML = renderDraftCard(turn, { editMode: chatState.cardEditMode }).trim();
     const node = wrap.firstElementChild;
     if (node) host.appendChild(node);
+    if (turn.silverCompanionNoteTurn) {
+      const wrapN = document.createElement("div");
+      wrapN.innerHTML = renderDraftCard(turn.silverCompanionNoteTurn, { editMode: false }).trim();
+      const nodeN = wrapN.firstElementChild;
+      if (nodeN) host.appendChild(nodeN);
+    }
     scrollMessagesToEnd();
   }
 
@@ -42541,6 +42718,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const msgHost = document.getElementById("iuSilverChatMessages");
     if (msgHost) msgHost.innerHTML = "";
     chatState.draft = createEmptyDraft();
+    chatState.silverCompanionNoteDraft = null;
     chatState.saveBusy = false;
     clearPendingStorageDisambiguation();
     try {
@@ -42805,9 +42983,58 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return "na " + iuSilverFormatDateCs(taskDueYmd);
   }
 
-  async function handleSaveClick() {
+  async function handleSaveClick(sourceCardEl) {
     if (chatState.saveBusy) return;
-    const cardEl = getLastDraftCardEl();
+    const clickedCard = sourceCardEl && sourceCardEl.getAttribute ? sourceCardEl : null;
+    const noteFieldClick = clickedCard && clickedCard.querySelector('[data-iu-silver-note-field="text"]');
+    if (noteFieldClick && chatState.silverCompanionNoteDraft) {
+      syncDraftFromCardInputs(clickedCard);
+      const nd = cloneDraft(chatState.silverCompanionNoteDraft);
+      if (!isNoteDraftSaveable(nd)) return;
+      const nsvc = window.iuNotesService;
+      if (!nsvc || typeof nsvc.notesSaveSilverDraft !== "function") {
+        appendAssistantTurn({
+          processingState: "CLARIFICATION",
+          normalizedIntent: "clarification",
+          assistantLead: "Poznámky teď nejdou uložit. Zkuste obnovit stránku.",
+          clarificationText: "",
+          draft: createEmptyDraft(),
+          clarificationReason: "unsupported_request"
+        });
+        return;
+      }
+      chatState.saveBusy = true;
+      try {
+        const resN = nsvc.notesSaveSilverDraft({
+          text: String(nd.silverNoteText || "").trim(),
+          createdTs: nd.silverNoteCreatedTs || Date.now()
+        });
+        if (resN && resN.ok && resN.note) {
+          appendAssistantTurn({
+            confirmOnly: true,
+            processingState: "READ_OK",
+            assistantLead: "Poznámku jsem uložil v tomto prohlížeči.",
+            clarificationText: "",
+            draft: createEmptyDraft()
+          });
+          chatState.silverCompanionNoteDraft = null;
+          if (chatState.lastDraftTurn && chatState.lastDraftTurn.silverCompanionNoteTurn) {
+            chatState.lastDraftTurn = { ...chatState.lastDraftTurn, silverCompanionNoteTurn: null };
+          }
+        } else {
+          appendAssistantTurn({
+            processingState: "CLARIFICATION",
+            normalizedIntent: "clarification",
+            assistantLead: "Nepodařilo se uložit poznámku. Zkuste to znovu.",
+            clarificationText: "",
+            draft: chatState.draft
+          });
+        }
+      } finally {
+        chatState.saveBusy = false;
+      }
+      return;
+    }
     if (chatState.draft && chatState.draft.targetContainer === "notes") {
       await handleNoteSaveClick();
       return;
@@ -42816,8 +43043,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       await handleTaskSaveClick();
       return;
     }
-    if (cardEl && cardEl.querySelector("[data-iu-silver-field]")) {
-      syncDraftFromCardInputs(cardEl);
+    const calCard =
+      clickedCard && clickedCard.querySelector('[data-iu-silver-field="date"]')
+        ? clickedCard
+        : getCalendarDraftCardElFromHost();
+    if (calCard && calCard.querySelector("[data-iu-silver-field]")) {
+      syncDraftFromCardInputs(calCard);
     }
     const svc = window.iuCalendarService;
     if (!svc || typeof svc.calendarCreateEvent !== "function") {
@@ -42860,10 +43091,26 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           window.__iuSilverLastSaveResult = { ok: true, eventId: ev.id };
         } catch {}
         const dateHuman = iuSilverFormatDateCs(String(ev.date || "")) || String(ev.date || "");
+        let noteAlso = "";
+        const compD = chatState.silverCompanionNoteDraft;
+        if (compD && isNoteDraftSaveable(compD)) {
+          const nsvc2 = window.iuNotesService;
+          if (nsvc2 && typeof nsvc2.notesSaveSilverDraft === "function") {
+            const res2 = nsvc2.notesSaveSilverDraft({
+              text: String(compD.silverNoteText || "").trim(),
+              createdTs: compD.silverNoteCreatedTs || Date.now()
+            });
+            if (res2 && res2.ok && res2.note) noteAlso = " Poznámka je též uložena.";
+          }
+        }
+        chatState.silverCompanionNoteDraft = null;
+        if (chatState.lastDraftTurn && chatState.lastDraftTurn.silverCompanionNoteTurn) {
+          chatState.lastDraftTurn = { ...chatState.lastDraftTurn, silverCompanionNoteTurn: null };
+        }
         appendAssistantTurn({
           confirmOnly: true,
           processingState: "READY_TO_SAVE",
-          assistantLead: "Uloženo do kalendáře: " + dateHuman + " v " + ev.time + " — " + ev.title + ".",
+          assistantLead: "Uloženo do kalendáře: " + dateHuman + " v " + ev.time + " — " + ev.title + "." + noteAlso,
           clarificationText: "",
           draft: createEmptyDraft()
         });
@@ -42909,7 +43156,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       handleStorageTasksCreate();
     } else if (a === "save") {
       e.preventDefault();
-      void handleSaveClick();
+      const draftCard = act.closest("[data-iu-silver-draft-card]");
+      void handleSaveClick(draftCard || null);
     } else if (a === "edit") {
       e.preventDefault();
       chatState.cardEditMode = !chatState.cardEditMode;
