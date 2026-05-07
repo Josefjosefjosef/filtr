@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-07T10:25:01.430370Z",
+  "ingestedAt": "2026-05-07T11:05:23.157051Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Staredown boxerek se zvrhl. Podprsenka šla dolů",
+      "url": "https://www.mmamag.cz/staredown-boxerek-se-zvrhl-podprsenka-sla-dolu/",
+      "dt": "2026-05-07T10:30:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "boxerek",
+        "dolů",
+        "podprsenka",
+        "staredown",
+        "zvrhl",
+        "šla"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1066,32 +1089,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "video",
-      "title": "McGregor našel soupeře, který se nezlomil. Diaz z jejich rivality udělal kult",
-      "url": "https://www.mmamag.cz/mcgregor-vs-diaz-rivalita-ktera-nezestarla/",
-      "dt": "2026-05-05T16:30:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "diaz",
-        "jejich",
-        "kult",
-        "mcgregor",
-        "našel",
-        "nezlomil",
-        "rivality",
-        "soupeře",
-        "udělal"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1102,7 +1099,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 81495,
+      "bytes": 81372,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1139,7 +1136,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-07T09:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T10:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1154,6 +1151,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Staredown boxerek se zvrhl. Podprsenka šla dolů",
+            "publishedAt": "2026-05-07T10:30:00Z"
+          },
           {
             "title": "Strickland se opřel do UFC. MMA prý ničí příliv bojovníků z východu",
             "publishedAt": "2026-05-07T09:45:00Z"
@@ -1181,10 +1182,6 @@
           {
             "title": "Boxerská šampionka se ukázala nahoře bez. Cherneka Johnson ví, jak upoutat pozornost",
             "publishedAt": "2026-05-07T06:47:08Z"
-          },
-          {
-            "title": "McGregor tvrdí, že pás střední váhy patří jemu. Chimaev ho rychle uzemnil",
-            "publishedAt": "2026-05-07T06:37:27Z"
           }
         ]
       }

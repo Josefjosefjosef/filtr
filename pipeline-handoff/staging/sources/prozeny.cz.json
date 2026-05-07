@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-05-07T10:25:01.430370Z",
+  "ingestedAt": "2026-05-07T11:05:23.157051Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Kde si nakoupíte o státním svátku? Otevírací doba obchodů 8. května",
+      "url": "https://www.prozeny.cz/clanek/zdravi-a-zivotni-styl-kveten-obchody-8-5-oteviraci-doba-na-statni-svatek-den-vitezstvi-kde-si-nakoupite-103339",
+      "dt": "2026-05-07T10:43:59Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "doba",
+        "května",
+        "nakoupíte",
+        "obchodů",
+        "otevírací",
+        "státním",
+        "svátku"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -802,33 +826,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "To jsou kočky! Monika Absolonová ukázala maminku (70): Vypadá jako její starší sestra!",
-      "url": "https://www.prozeny.cz/clanek/zdravi-a-zivotni-styl-zaujalo-nas-to-jsou-kocky-monika-absolonova-ukazala-maminku-70-vypada-jako-jeji-starsi-sestra-103368",
-      "dt": "2026-05-05T11:30:09Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "absolonová",
-        "jako",
-        "její",
-        "kočky",
-        "maminku",
-        "monika",
-        "sestra",
-        "starší",
-        "ukázala",
-        "vypadá"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -839,7 +836,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 39631,
+      "bytes": 39525,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -876,7 +873,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T10:06:56Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T10:43:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 29,
@@ -892,6 +889,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kde si nakoupíte o státním svátku? Otevírací doba obchodů 8. května",
+            "publishedAt": "2026-05-07T10:43:59Z"
+          },
           {
             "title": "Kam na léto? Vyrazte na slovinské pobřeží za sluncem, historií i skvělým jídlem",
             "publishedAt": "2026-05-07T10:06:56Z"
@@ -918,10 +919,6 @@
           },
           {
             "title": "Žádný Ozempic, dřeme do úmoru! 7 slavných přiznalo, co stojí za jejich výraznou proměnou",
-            "publishedAt": "2026-05-07T03:00:00Z"
-          },
-          {
-            "title": "Nejsladší superpotravina je nejen zdravá, ale i zábavná. Milují ji vegani, vitariáni a všichni ostatní!",
             "publishedAt": "2026-05-07T03:00:00Z"
           }
         ]

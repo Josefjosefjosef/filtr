@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-07T10:25:01.430370Z",
+  "ingestedAt": "2026-05-07T11:05:23.157051Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,36 @@
         "zlomek",
         "značky",
         "zůstal"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Nová éra je zde a začíná to do sebe zapadat. Většinu kódu už v Googlu píše AI, firma masivně investuje",
+      "url": "https://www.zive.cz/clanky/nova-era-je-zde-a-zacina-to-do-sebe-zapadat-vetsinu-kodu-uz-v-googlu-pise-ai-firma-masivne-investuje/sc-3-a-241058/default.aspx",
+      "dt": "2026-05-07T10:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "firma",
+        "googlu",
+        "investuje",
+        "kódu",
+        "masivně",
+        "nová",
+        "píše",
+        "sebe",
+        "většinu",
+        "zapadat",
+        "začíná",
+        "zde",
+        "éra"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -935,35 +965,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Už chybí jen alobalová čepice. KitKat ukázal obal, který odřízne mobil od signálu. Naštěstí je to jen reklama",
-      "url": "https://mobilmania.zive.cz/clanky/uz-chybi-jen-alobalova-cepice-kitkat-ukazal-obal-ktery-odrizne-mobil-od-signalu-nastesti-je-to-jen-reklama/sc-3-a-1364665/default.aspx",
-      "dt": "2026-05-04T13:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "alobalová",
-        "chybí",
-        "jen",
-        "kitkat",
-        "mobil",
-        "naštěstí",
-        "obal",
-        "odřízne",
-        "reklama",
-        "signálu",
-        "ukázal",
-        "čepice"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -974,7 +975,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23198,
+      "bytes": 23191,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1011,7 +1012,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-07T08:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T10:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1029,6 +1030,10 @@
           {
             "title": "Z CZC zůstal jen stín. Na Allegru prodává zlomek produktů a jeho značky skončily",
             "publishedAt": "2026-05-06T15:45:00Z"
+          },
+          {
+            "title": "Nová éra je zde a začíná to do sebe zapadat. Většinu kódu už v Googlu píše AI, firma masivně investuje",
+            "publishedAt": "2026-05-07T10:45:00Z"
           },
           {
             "title": "Málo změn, ale stojí za to. DJI Osmo Pocket 4 láká na vnitřní paměť a extrémní slow-mo",
@@ -1053,10 +1058,6 @@
           {
             "title": "O víkendu vypukne Maker Faire Prague, svátek všech inovátorů, kutilů a dalších nadšenců do kreativity a technologií",
             "publishedAt": "2026-05-06T17:45:00Z"
-          },
-          {
-            "title": "Google má novou captchu. Že nejste robot, prokážete naskenování QR kódu",
-            "publishedAt": "2026-05-06T14:45:00Z"
           }
         ]
       }

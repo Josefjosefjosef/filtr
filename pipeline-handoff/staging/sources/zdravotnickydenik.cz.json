@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-07T10:25:01.430370Z",
+  "ingestedAt": "2026-05-07T11:05:23.157051Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Obviněný exšéf příbramské nemocnice přišel o další funkci. V kauze má jít o 280 milionů",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/holobrada-predstavenstvo-odvolani/",
+      "dt": "2026-05-07T10:26:14Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "280",
+        "další",
+        "exšéf",
+        "funkci",
+        "jít",
+        "kauze",
+        "milionů",
+        "nemocnice",
+        "obviněný",
+        "přišel",
+        "příbramské"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -245,31 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Šebelová varuje před „zpackáním“ supernemocnice: Babišův zásah ohrožuje péči",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/sebelova-varuje-babis-pece/",
-      "dt": "2026-05-06T13:27:26Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "babišův",
-        "ohrožuje",
-        "péči",
-        "supernemocnice",
-        "varuje",
-        "zpackáním",
-        "zásah",
-        "šebelová"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 87520,
+      "bytes": 84696,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +320,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-07T10:08:28Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T10:26:14Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 8,
@@ -334,6 +337,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Obviněný exšéf příbramské nemocnice přišel o další funkci. V kauze má jít o 280 milionů",
+            "publishedAt": "2026-05-07T10:26:14Z"
+          },
           {
             "title": "Evropa v pozoru: Letuška se měla nakazit od umírající ženy z lodi, hantavirus se šíří dál",
             "publishedAt": "2026-05-07T10:08:28Z"
@@ -361,10 +368,6 @@
           {
             "title": "Hantavirus na výletní lodi: Hygienici prověřili, zda jsou na palubě Češi. Vydali doporučení pro turisty",
             "publishedAt": "2026-05-06T20:35:45Z"
-          },
-          {
-            "title": "Záchranáři, policie i armáda pod jednou střechou. Babiš chce v republice síť supercenter IZS",
-            "publishedAt": "2026-05-06T15:52:46Z"
           }
         ]
       }
