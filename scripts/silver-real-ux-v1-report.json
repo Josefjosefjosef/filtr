@@ -3,7 +3,7 @@
   "fixed_now": "2026-05-04T12:00:00",
   "partition_note": "Requested bucket sum was 33500; normalized to 30000 by calendar_write=3500, calendar_query=3500, multi_intent=2000 (other buckets unchanged).",
   "total_cases": 30000,
-  "overall_accuracy": "62.54",
+  "overall_accuracy": "62.91",
   "calendar_write_accuracy": "27.03",
   "calendar_query_accuracy": "51.17",
   "task_write_accuracy": "47.13",
@@ -14,9 +14,9 @@
   "safety_negation_accuracy": "71.45",
   "update_vs_create_accuracy": "100.00",
   "reminder_intent_accuracy": "86.70",
-  "temporal_reasoning_accuracy": "36.50",
+  "temporal_reasoning_accuracy": "47.60",
   "dirty_mobile_czech_accuracy": "46.70",
-  "past_query_accuracy": "0.00",
+  "past_query_accuracy": "7.40",
   "future_query_accuracy": "77.54",
   "present_query_accuracy": "75.04",
   "counting_query_accuracy": "13.96",
@@ -26,36 +26,13 @@
   "completed_tasks_query_accuracy": "100.00",
   "active_tasks_query_accuracy": "100.00",
   "write_accuracy": "68.11",
-  "query_accuracy": "79.18",
+  "query_accuracy": "79.97",
   "update_risk_new_create_count": 0,
   "dangerous_write_count": 0,
   "false_write_count": 0,
   "query_created_write_count": 0,
   "write_when_negated_count": 0,
   "top_25_fail_clusters": [
-    {
-      "cluster_name": "intent_fail|calendar_query",
-      "fail_count": 1704,
-      "severity": "P1",
-      "affected_module": "calendar_query",
-      "example_inputs": [
-        "Kdy mám schůzku s právníkem?",
-        "Kdy jsem byl naposledy u zubaře?",
-        "Kdy jsem měl poslední schůzku s Petrem?",
-        "Kdy jsem byl naposledy u zubaře?",
-        "Kdy jdu příště k doktorovi?",
-        "Kdy jsem měl poslední schůzku s Petrem?",
-        "Mam ted neco?",
-        "Kdy jsem byl naposledy u zubare?",
-        "Kdy jsem mel posledni schuzku s Petrem?",
-        "Kdy jsem byl naposledy u zubare?"
-      ],
-      "expected_summary": "note.query",
-      "actual_summary": "calendar.read/READ_OK :: Našel jsem více událostí (4).\n4. 5. 2026 10:15 — Schůzka s Tomášem\n4. 5. 2026 18:00 — Schůzka s Marianou\n5. 5. 2026 15:0",
-      "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
-      "recommended_next_scope": "Narrow Silver change in calendar_query for pattern «intent_fail» (do not broaden unrelated modules).",
-      "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
-    },
     {
       "cluster_name": "intent_fail|note_write",
       "fail_count": 1604,
@@ -172,26 +149,49 @@
       "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
     },
     {
-      "cluster_name": "intent_fail|temporal_reasoning",
-      "fail_count": 635,
-      "severity": "P1",
-      "affected_module": "temporal_reasoning",
+      "cluster_name": "false_negative|calendar_query",
+      "fail_count": 893,
+      "severity": "P2",
+      "affected_module": "calendar_query",
       "example_inputs": [
-        "Kdy jsem měl poslední schůzku u zubaře?",
-        "Kolikrát jsem byl letos u zubaře?",
-        "Kolik schůzek s právníkem jsem měl minulý měsíc?",
-        "Co jsem měl minulý týden?",
-        "Měl jsem včera něco? nic neukládej.",
-        "Budu mít v pátek nějakou schůzku?",
-        "Kdy jsem měl poslední schůzku u zubaře?",
-        "Kolikrat jsem byl letos u zubare?",
-        "Kolik schuzek s pravnikem jsem mel minuly mesic?",
-        "Co jsem mel minuly tyden? nic neukladej."
+        "Kdy jsem byl naposledy u zubaře?",
+        "Kdy jsem byl naposledy u zubaře?",
+        "Kdy jsem byl naposledy u zubare?",
+        "Kdy jsem mel posledni schuzku s Petrem?",
+        "Kdy jsem byl naposledy u zubare?",
+        "Kdy jsem mel posledni schůzku s Petrem?",
+        "Kdy jsem byl naposledy u zubaře?",
+        "Kdy jsem byl naposledy u zubaře?",
+        "Kdy jsem mel posledni schuzku s Petrem?",
+        "Kdy jsem byl naposledy u zubare?"
       ],
       "expected_summary": "calendar.query",
-      "actual_summary": "create.storage_disambiguation/STORAGE_DISAMBIGUATION :: Kam to chceš uložit?",
+      "actual_summary": "calendar.read/READ_OK :: Nic jsem k tomu nenašel.",
       "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
-      "recommended_next_scope": "Narrow Silver change in temporal_reasoning for pattern «intent_fail» (do not broaden unrelated modules).",
+      "recommended_next_scope": "Narrow Silver change in calendar_query for pattern «false_negative» (do not broaden unrelated modules).",
+      "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
+    },
+    {
+      "cluster_name": "intent_fail|calendar_query",
+      "fail_count": 816,
+      "severity": "P1",
+      "affected_module": "calendar_query",
+      "example_inputs": [
+        "Kdy mám schůzku s právníkem?",
+        "Kdy jsem měl poslední schůzku s Petrem?",
+        "Kdy jdu příště k doktorovi?",
+        "Kdy jsem měl poslední schůzku s Petrem?",
+        "Mam ted neco?",
+        "Mám teď něco?",
+        "ne do kalendáře Kdy mám Pavlem zitra v kalendari?",
+        "Kdy jsem měl poslední schůzku s Petrem?",
+        "Kdy jdu příště k doktorovi?",
+        "Mam ted neco?"
+      ],
+      "expected_summary": "note.query",
+      "actual_summary": "calendar.read/READ_OK :: Našel jsem více událostí (4).\n4. 5. 2026 10:15 — Schůzka s Tomášem\n4. 5. 2026 18:00 — Schůzka s Marianou\n5. 5. 2026 15:0",
+      "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
+      "recommended_next_scope": "Narrow Silver change in calendar_query for pattern «intent_fail» (do not broaden unrelated modules).",
       "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
     },
     {
@@ -238,6 +238,29 @@
       "actual_summary": "clarification/CLARIFICATION :: Rozumím, zápis neprovedu.",
       "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
       "recommended_next_scope": "Narrow Silver change in multi_intent for pattern «embedded_not_calendar» (do not broaden unrelated modules).",
+      "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
+    },
+    {
+      "cluster_name": "intent_fail|temporal_reasoning",
+      "fail_count": 524,
+      "severity": "P1",
+      "affected_module": "temporal_reasoning",
+      "example_inputs": [
+        "Kdy jsem měl poslední schůzku u zubaře?",
+        "Kolikrát jsem byl letos u zubaře?",
+        "Kolik schůzek s právníkem jsem měl minulý měsíc?",
+        "Co jsem měl minulý týden?",
+        "Budu mít v pátek nějakou schůzku?",
+        "Kdy jsem měl poslední schůzku u zubaře?",
+        "Kolikrat jsem byl letos u zubare?",
+        "Kolik schuzek s pravnikem jsem mel minuly mesic?",
+        "Co jsem mel minuly tyden? nic neukladej.",
+        "Budu mit v patek nejakou schuzku?"
+      ],
+      "expected_summary": "calendar.query",
+      "actual_summary": "create.storage_disambiguation/STORAGE_DISAMBIGUATION :: Kam to chceš uložit?",
+      "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
+      "recommended_next_scope": "Narrow Silver change in temporal_reasoning for pattern «intent_fail» (do not broaden unrelated modules).",
       "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
     },
     {
@@ -446,29 +469,11 @@
       "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
       "recommended_next_scope": "Narrow Silver change in task_write for pattern «calendar_vs_task_confusion» (do not broaden unrelated modules).",
       "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
-    },
-    {
-      "cluster_name": "false_negative|calendar_query",
-      "fail_count": 5,
-      "severity": "P2",
-      "affected_module": "calendar_query",
-      "example_inputs": [
-        "jen se podivej Kdy mam pravnikem zitra v kalendari?",
-        "jen se podívej Kdy mám zubařem zitra v kalendari?",
-        "jen se podivej Kdy mam Petrem zitra v kalendari?",
-        "jen se podívej Kdy mám právníkem zitra v kalendari?",
-        "jen se podivej Kdy mam zubarem zitra v kalendari?"
-      ],
-      "expected_summary": "calendar.query",
-      "actual_summary": "calendar.read/READ_OK :: Nic jsem k tomu nenašel.",
-      "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
-      "recommended_next_scope": "Narrow Silver change in calendar_query for pattern «false_negative» (do not broaden unrelated modules).",
-      "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
     }
   ],
-  "recommended_next_fix_cluster": "intent_fail|calendar_query",
-  "recommended_next_fix_reason": "Largest cluster «intent_fail|calendar_query» (1704 fails); fix routing/semantics for this phrasing family first.",
-  "exact_next_scope": "Silver engine: handle «intent_fail» in module «calendar_query».",
+  "recommended_next_fix_cluster": "intent_fail|note_write",
+  "recommended_next_fix_reason": "Largest cluster «intent_fail|note_write» (1604 fails); fix routing/semantics for this phrasing family first.",
+  "exact_next_scope": "Silver engine: handle «intent_fail» in module «note_write».",
   "peer_quality_accuracy": "97.18",
   "peer_realistic_routing_accuracy": "99.34",
   "peer_20k_overall_accuracy": null,
@@ -534,9 +539,9 @@
       "quality_fail": 0
     },
     "temporal_reasoning": {
-      "pass": 365,
-      "fail": 635,
-      "core_pass": 365,
+      "pass": 476,
+      "fail": 524,
+      "core_pass": 476,
       "quality_fail": 0
     },
     "dirty_mobile_czech": {
