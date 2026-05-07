@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-07T17:35:02.999396Z",
+  "ingestedAt": "2026-05-07T18:20:11.537991Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,33 @@
         "smazat",
         "spolkl",
         "stahuje"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Tohle je 10 nejprodávanějších telefonů současnosti. Oblíbené jsou špičkové modely i lowendy za pár tisíc",
+      "url": "https://mobilmania.zive.cz/clanky/nejprodavanejsi-telefony-soucasnosti-202605/sc-3-a-1364674/default.aspx",
+      "dt": "2026-05-07T17:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "lowendy",
+        "modely",
+        "nejprodávanějších",
+        "oblíbené",
+        "pár",
+        "současnosti",
+        "telefonů",
+        "tisíc",
+        "tohle",
+        "špičkové"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -931,35 +958,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "T-Mobile ukázal výhody 5G SA sítě. V mobilu ji nepoznáte, ale v nemocnicích nebo fabrikách mění pravidla",
-      "url": "https://mobilmania.zive.cz/clanky/t-mobile-ukazal-vyhody-5g-sa-site-v-mobilu-ji-nepoznate-ale-v-nemocnicich-nebo-fabrikach-meni-pravidla/sc-3-a-1364668/default.aspx",
-      "dt": "2026-05-04T15:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "ale",
-        "fabrikách",
-        "mobile",
-        "mobilu",
-        "mění",
-        "nebo",
-        "nemocnicích",
-        "nepoznáte",
-        "pravidla",
-        "sítě",
-        "ukázal",
-        "výhody"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -970,7 +968,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23289,
+      "bytes": 23394,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1007,7 +1005,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-07T16:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T17:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1025,6 +1023,10 @@
           {
             "title": "Chrome na počítačích spolkl 4 GB místa navíc, Google potají stahuje AI model. Jak jej smazat?",
             "publishedAt": "2026-05-07T14:45:00Z"
+          },
+          {
+            "title": "Tohle je 10 nejprodávanějších telefonů současnosti. Oblíbené jsou špičkové modely i lowendy za pár tisíc",
+            "publishedAt": "2026-05-07T17:45:00Z"
           },
           {
             "title": "Jak dobře vybrat reproduktory k počítači. Kdy sáhnout po 5.1 zvuku, studiových monitorech nebo soundbaru",
@@ -1049,10 +1051,6 @@
           {
             "title": "Končí další e-shop s elektronikou a počítači. Exasoft vyhlásil bankrot",
             "publishedAt": "2026-05-07T07:45:00Z"
-          },
-          {
-            "title": "Stačí spustit Edge a všechna vaše hesla jsou v paměti jako na podnosu. Microsoft vysvětluje, že to je záměr…",
-            "publishedAt": "2026-05-06T12:45:00Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-07T17:35:02.999396Z",
+  "ingestedAt": "2026-05-07T18:20:11.537991Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Týden na akciových trzích: Optimismus podpořila vidina konce konfliktu na Blízkém východě",
+      "url": "https://profitonline.cz/tyden-na-akciovych-trzich-optimismus-podporila-vidina-konce-konfliktu-na-blizkem-vychode/",
+      "dt": "2026-05-07T18:00:37Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "akciových",
+        "blízkém",
+        "konce",
+        "konfliktu",
+        "optimismus",
+        "podpořila",
+        "trzích",
+        "týden",
+        "vidina",
+        "východě"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -258,30 +285,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Konec zlaté rally? Zlato ztratilo už osmnáct procent",
-      "url": "https://profitonline.cz/konec-zlate-rally-zlato-ztratilo-uz-osmnact-procent/",
-      "dt": "2026-05-05T17:30:08Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "konec",
-        "osmnáct",
-        "procent",
-        "rally",
-        "zlato",
-        "zlaté",
-        "ztratilo"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -292,7 +295,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18606,
+      "bytes": 18876,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -329,7 +332,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-07T16:30:07Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T18:00:37Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -344,6 +347,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Týden na akciových trzích: Optimismus podpořila vidina konce konfliktu na Blízkém východě",
+            "publishedAt": "2026-05-07T18:00:37Z"
+          },
           {
             "title": "ČNB sazby nemění",
             "publishedAt": "2026-05-07T16:30:07Z"
@@ -371,10 +378,6 @@
           {
             "title": "Inflace v dubnu překonala odhady. Hlavním viníkem jsou energie",
             "publishedAt": "2026-05-06T14:00:44Z"
-          },
-          {
-            "title": "Kdo nespoří, není Čech. Rodiny se opět obávají zdražování energií",
-            "publishedAt": "2026-05-06T10:00:27Z"
           }
         ]
       }
