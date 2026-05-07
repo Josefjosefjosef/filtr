@@ -288,16 +288,7 @@ function auditSilverNicNeukladejBlocksNoteWriteExpectationFolded(fx) {
 function auditSilverNoteWriteReadOnlyVersusExplicitWriteFolded(fx) {
   const x = String(fx || "");
   if (!x) return false;
-  const hasNote =
-    /\bdo\s+poznam/.test(x) ||
-    /\bdej\s+mi\s+do\s+poznam/.test(x) ||
-    /\bdej\s+do\s+poznam/.test(x) ||
-    /\bzapamatuj\s+si\b/.test(x) ||
-    /\bpoznamenej\s+si\b/.test(x) ||
-    /\buloz\s+si\b/.test(x) ||
-    /\buloz\s+poznamku\b/.test(x) ||
-    /\buloz\w*\s+[\s\S]{0,4000}?\s+do\s+poznam/.test(x);
-  if (!hasNote) return false;
+  if (!noteWritePositiveCueFolded(x)) return false;
   return (
     /\bjen\s+cti\b/.test(x) ||
     /\bpouze\s+cti\b/.test(x) ||
@@ -305,6 +296,7 @@ function auditSilverNoteWriteReadOnlyVersusExplicitWriteFolded(fx) {
     /\bjen\s+se\s+podivej\b/.test(x) ||
     /\bjen\s+vypis\b/.test(x) ||
     /\bjen\s+over\b/.test(x) ||
+    hasExplicitNoNotes(x) ||
     auditSilverNicNeukladejBlocksNoteWriteExpectationFolded(x) ||
     (/\bnic\s+nevytvarej\b/.test(x) && !/\bnic\s+nevytvarej\s+do\s+kalendar/.test(x)) ||
     /\bpokud\s+nic\s+nenajdes\b/.test(x) ||
@@ -344,6 +336,37 @@ function hasExplicitNoTasks(f) {
 }
 function hasExplicitNoNotes(f) {
   return /\bne\s+do\s+poznam|\bne\s+v\s+poznam|\bne\s+poznam|\bnic\s+z\s+toho\s+nedavej\s+do\s+poznam/.test(f);
+}
+
+/** Explicitní zápis / obsah poznámky (ne šum z „ne do poznámek“). */
+function noteWritePositiveCueFolded(fx) {
+  const x = String(fx || "");
+  if (!x) return false;
+  return (
+    /\buloz\w*\s+poznamku\b/.test(x) ||
+    /\buloz\w*\s+mi\s+poznamku\b/.test(x) ||
+    /\buloz\w*\s+me\s+poznamku\b/.test(x) ||
+    /\buloz\w*\s+[\s\S]{0,48}?\bpoznamku\b/.test(x) ||
+    /\bnapis\w*\s+si\s+do\s+poznam\w*\b/.test(x) ||
+    /\bzapamatuj\s+si\b/.test(x) ||
+    /\bpoznamenej\s+si\b/.test(x) ||
+    /\buloz\s+si\b/.test(x) ||
+    /\bpoznamka\s*:/.test(x) ||
+    (/\bnapis\w*\s+si\b/.test(x) && /\bze\b/.test(x))
+  );
+}
+
+/**
+ * Prefix „ne do/v kalendáři“ + jasný zápis do poznámky → často abstain (unknown).
+ * Nepoužívat pro příponu „…, ne do kalendáře“ (jen modul kalendáře, zápis poznámky platí).
+ */
+function noteWriteCalendarScopeNegationExpectNoWriteFolded(fx) {
+  const x = String(fx || "").trim();
+  if (!x) return false;
+  if (!hasExplicitNoCalendar(x)) return false;
+  if (hasExplicitNoNotes(x)) return false;
+  if (!noteWritePositiveCueFolded(x)) return false;
+  return /^(ne\s+do\s+kalend|ne\s+v\s+kalend|neuklad\w*\s+do\s+kalend|nic\s+z\s+toho\s+nedavej\s+do\s+kalend)/.test(x);
 }
 
 function calendarWriteSemantic(turn, raw, foldedIn) {
@@ -573,6 +596,7 @@ function gitTrackedClean() {
       "scripts/audit_silver_real_ux_v1.cjs",
       "scripts/silver-real-ux-v1-report.json",
       "scripts/audit_silver_20000_routing_stable.cjs",
+      "scripts/audit_silver_realistic_mobile_corpus.cjs",
       "scripts/silver-quality-v2-report.json",
       "scripts/silver-realistic-mobile-corpus-report.json",
       "assets/app.js"
@@ -781,6 +805,21 @@ function evaluateCore(c, turn) {
     (eng === "tasks.read" || auditIntent === "task.query")
   ) {
     auditIntent = "unknown";
+  }
+  if (
+    c.group === "note_write" &&
+    expectedIntent === "unknown" &&
+    c.meta &&
+    c.meta.readWritePriorityGate
+  ) {
+    const dangerousWrite =
+      (eng === "notes.create" && turn.processingState === "READY_TO_SAVE") ||
+      (eng === "calendar.create" && turn.processingState === "READY_TO_SAVE") ||
+      (eng === "tasks.create" && turn.processingState === "READY_TO_SAVE");
+    if (dangerousWrite) {
+      return { pass: false, cat: "write_when_negated", auditIntent, raw };
+    }
+    return { pass: true, cat: "", auditIntent, raw };
   }
   if (auditIntent === "unknown" || eng === "clarification") {
     if (expectedIntent !== "unknown") {
@@ -1198,7 +1237,8 @@ function buildCases() {
   for (let nwi = 0; nwi < cases.length; nwi++) {
     const nwc = cases[nwi];
     if (nwc.group !== "note_write") continue;
-    if (auditSilverNoteWriteReadOnlyVersusExplicitWriteFolded(foldCs(nwc.input))) {
+    const fNw = foldCs(nwc.input);
+    if (auditSilverNoteWriteReadOnlyVersusExplicitWriteFolded(fNw) || noteWriteCalendarScopeNegationExpectNoWriteFolded(fNw)) {
       nwc.expectedIntent = "unknown";
       nwc.meta = Object.assign({}, nwc.meta || {}, { readWritePriorityGate: true });
     }
