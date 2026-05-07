@@ -3,7 +3,7 @@
   "fixed_now": "2026-05-04T12:00:00",
   "partition_note": "Requested bucket sum was 33500; normalized to 30000 by calendar_write=3500, calendar_query=3500, multi_intent=2000 (other buckets unchanged).",
   "total_cases": 30000,
-  "overall_accuracy": "69.21",
+  "overall_accuracy": "70.16",
   "calendar_write_accuracy": "27.03",
   "calendar_query_accuracy": "51.17",
   "task_write_accuracy": "47.13",
@@ -11,7 +11,7 @@
   "note_write_accuracy": "83.34",
   "note_query_accuracy": "100.00",
   "multi_intent_accuracy": "60.00",
-  "safety_negation_accuracy": "85.70",
+  "safety_negation_accuracy": "100.00",
   "update_vs_create_accuracy": "100.00",
   "reminder_intent_accuracy": "86.70",
   "temporal_reasoning_accuracy": "47.60",
@@ -26,7 +26,7 @@
   "completed_tasks_query_accuracy": "100.00",
   "active_tasks_query_accuracy": "100.00",
   "write_accuracy": "79.56",
-  "query_accuracy": "82.01",
+  "query_accuracy": "84.05",
   "update_risk_new_create_count": 0,
   "dangerous_write_count": 0,
   "false_write_count": 0,
@@ -264,29 +264,6 @@
       "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
     },
     {
-      "cluster_name": "false_negative|safety_negation",
-      "fail_count": 286,
-      "severity": "P2",
-      "affected_module": "safety_negation",
-      "example_inputs": [
-        "Ne do úkolů, podívej se do kalendáře na právníka.",
-        "Ne do úkolů, podívej se do kalendáře na právníka.",
-        "Ne do úkolů, podívej se do kalendáře na právníka.",
-        "Ne do úkolů, podívej se do kalendáře na právníka.",
-        "Ne do úkolů, podívej se do kalendáře na právníka.",
-        "Ne do úkolů, podívej se do kalendáře na právníka.",
-        "Ne do úkolů, podívej se do kalendáře na právníka.",
-        "Ne do úkolů, podívej se do kalendáře na právníka.",
-        "Ne do úkolů, podívej se do kalendáře na právníka.",
-        "Ne do úkolů, podívej se do kalendáře na právníka."
-      ],
-      "expected_summary": "calendar.query",
-      "actual_summary": "calendar.read/READ_OK :: Nic jsem k tomu nenašel.",
-      "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
-      "recommended_next_scope": "Narrow Silver change in safety_negation for pattern «false_negative» (do not broaden unrelated modules).",
-      "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
-    },
-    {
       "cluster_name": "embedded_note_missing|multi_intent",
       "fail_count": 250,
       "severity": "P1",
@@ -475,9 +452,9 @@
       "quality_fail": 800
     },
     "safety_negation": {
-      "pass": 1714,
-      "fail": 286,
-      "core_pass": 1714,
+      "pass": 2000,
+      "fail": 0,
+      "core_pass": 2000,
       "quality_fail": 0
     },
     "update_vs_create": {
