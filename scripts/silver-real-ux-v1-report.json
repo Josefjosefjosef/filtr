@@ -3,10 +3,10 @@
   "fixed_now": "2026-05-04T12:00:00",
   "partition_note": "Requested bucket sum was 33500; normalized to 30000 by calendar_write=3500, calendar_query=3500, multi_intent=2000 (other buckets unchanged).",
   "total_cases": 30000,
-  "overall_accuracy": "72.84",
+  "overall_accuracy": "74.38",
   "calendar_write_accuracy": "50.00",
   "calendar_query_accuracy": "51.17",
-  "task_write_accuracy": "47.13",
+  "task_write_accuracy": "58.65",
   "task_query_accuracy": "100.00",
   "note_write_accuracy": "83.34",
   "note_query_accuracy": "100.00",
@@ -20,12 +20,12 @@
   "future_query_accuracy": "77.54",
   "present_query_accuracy": "75.04",
   "counting_query_accuracy": "13.96",
-  "title_cleanliness_accuracy": "66.51",
+  "title_cleanliness_accuracy": "64.10",
   "address_location_accuracy": "100.00",
   "embedded_note_tail_accuracy": "15.45",
   "completed_tasks_query_accuracy": "100.00",
   "active_tasks_query_accuracy": "100.00",
-  "write_accuracy": "79.56",
+  "write_accuracy": "86.70",
   "query_accuracy": "84.05",
   "update_risk_new_create_count": 0,
   "dangerous_write_count": 0,
@@ -34,26 +34,26 @@
   "write_when_negated_count": 0,
   "top_25_fail_clusters": [
     {
-      "cluster_name": "intent_fail|task_write",
-      "fail_count": 1114,
+      "cluster_name": "dirty_title|task_write",
+      "fail_count": 1500,
       "severity": "P1",
       "affected_module": "task_write",
       "example_inputs": [
-        "nic neukládej Přidej úkol zaplatit elektřinu.",
+        "Připomeň mi koupit mléko.",
+        "Zapiš mi úkol, že mám v pátek poslat fakturu.",
         "Hele napiš mi prosím úkol, že mám do pondělí poslat Petrovi ty dokumenty, ale nedávej to do kalendáře.",
-        "nezapomenout zavolat ucetni, jen ukol.",
-        "nezapomenout zavolat ucetni, jen ukol.",
+        "Pripomen mi koupit mleko.",
+        "Zapis mi ukol, ze mam v patek poslat fakturu.",
+        "ne do ukolu Hele napis mi prosim ukol, ze mam do pondeli poslat Petrovi ty dokumenty, ale nedavej to do kalendare.",
+        "Pripomeň mi koupit mléko.",
+        "Zapis mi úkol, ze mam v patek poslat fakturu.",
         "Hele napis mi prosim úkol, ze mam do pondeli poslat Petrovi ty dokumenty, ale nedavej to do kalendare.",
-        "nezapomenout zavolat ucetni, jen ukol.",
-        "Hele napiš mi prosím úkol, že mám do pondělí poslat Petrovi ty dokumenty, ale nedávej to do kalendáře.",
-        "nezapomenout zavolat ucetni, jen ukol.",
-        "Hele napis mi prosim ukol, ze mam do pondeli poslat Petrovi ty dokumenty, ale nedavej to do kalendare.",
-        "pokud nic nenajdes nic nevytvarej nezapomenout zavolat ucetni, jen ukol."
+        "Připomeň mi koupit mléko."
       ],
       "expected_summary": "task.create",
-      "actual_summary": "unknown/CLARIFICATION :: V jedné větě je rozpor mezi zákazem zápisu a požadavkem uložit do úkolů nebo poznámek — upřesni prosím, co přesně mám ud",
+      "actual_summary": "tasks.create/READY_TO_SAVE :: Připravil jsem návrh úkolu.",
       "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
-      "recommended_next_scope": "Narrow Silver change in task_write for pattern «intent_fail» (do not broaden unrelated modules).",
+      "recommended_next_scope": "Narrow Silver change in task_write for pattern «dirty_title» (do not broaden unrelated modules).",
       "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
     },
     {
@@ -77,29 +77,6 @@
       "actual_summary": "clarification/CLARIFICATION :: Rozumím, zápis neprovedu.",
       "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
       "recommended_next_scope": "Narrow Silver change in calendar_write for pattern «intent_fail» (do not broaden unrelated modules).",
-      "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
-    },
-    {
-      "cluster_name": "dirty_title|task_write",
-      "fail_count": 962,
-      "severity": "P1",
-      "affected_module": "task_write",
-      "example_inputs": [
-        "Připomeň mi koupit mléko.",
-        "Zapiš mi úkol, že mám v pátek poslat fakturu.",
-        "Pripomen mi koupit mleko.",
-        "Zapis mi ukol, ze mam v patek poslat fakturu.",
-        "Pripomeň mi koupit mléko.",
-        "Zapis mi úkol, ze mam v patek poslat fakturu.",
-        "Připomeň mi koupit mléko.",
-        "Zapiš mi úkol, že mám v pátek poslat fakturu.",
-        "Pripomen mi koupit mleko.",
-        "Zapis mi ukol, ze mam v patek poslat fakturu."
-      ],
-      "expected_summary": "task.create",
-      "actual_summary": "tasks.create/READY_TO_SAVE :: Připravil jsem návrh úkolu.",
-      "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
-      "recommended_next_scope": "Narrow Silver change in task_write for pattern «dirty_title» (do not broaden unrelated modules).",
       "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
     },
     {
@@ -333,6 +310,29 @@
       "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
     },
     {
+      "cluster_name": "intent_fail|task_write",
+      "fail_count": 154,
+      "severity": "P1",
+      "affected_module": "task_write",
+      "example_inputs": [
+        "nic neukládej Přidej úkol zaplatit elektřinu.",
+        "pokud nic nenajdes nic nevytvarej nezapomenout zavolat ucetni, jen ukol.",
+        "jen cti Musim zitra zavolat pravnikovi.",
+        "ne do poznámek ukol: koupit rohliky, ne kalendář.",
+        "nic neukladej Pridej ukol zaplatit elektrinu.",
+        "pokud nic nenajdeš nic nevytvářej nezapomenout zavolat ucetni, jen ukol.",
+        "jen čti Musím zítra zavolat právníkovi.",
+        "ne do poznamek ukol: koupit rohliky, ne kalendar.",
+        "nic neukládej Přidej úkol zaplatit elektřinu.",
+        "pokud nic nenajdes nic nevytvarej nezapomenout zavolat ucetni, jen ukol."
+      ],
+      "expected_summary": "task.create",
+      "actual_summary": "unknown/CLARIFICATION :: V jedné větě je rozpor mezi zákazem zápisu a požadavkem uložit do úkolů nebo poznámek — upřesni prosím, co přesně mám ud",
+      "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
+      "recommended_next_scope": "Narrow Silver change in task_write for pattern «intent_fail» (do not broaden unrelated modules).",
+      "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
+    },
+    {
       "cluster_name": "unnecessary_disambiguation|reminder_intent",
       "fail_count": 133,
       "severity": "P2",
@@ -354,34 +354,11 @@
       "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
       "recommended_next_scope": "Narrow Silver change in reminder_intent for pattern «unnecessary_disambiguation» (do not broaden unrelated modules).",
       "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
-    },
-    {
-      "cluster_name": "calendar_vs_task_confusion|task_write",
-      "fail_count": 39,
-      "severity": "P1",
-      "affected_module": "task_write",
-      "example_inputs": [
-        "ne do ukolu Hele napis mi prosim ukol, ze mam do pondeli poslat Petrovi ty dokumenty, ale nedavej to do kalendare.",
-        "ne do úkolů Hele napiš mi prosím úkol, že mám do pondělí poslat Petrovi ty dokumenty, ale nedávej to do kalendáře.",
-        "ne do ukolu Hele napis mi prosim ukol, ze mam do pondeli poslat Petrovi ty dokumenty, ale nedavej to do kalendare.",
-        "ne do úkolů Hele napiš mi prosím úkol, že mám do pondělí poslat Petrovi ty dokumenty, ale nedávej to do kalendáře.",
-        "ne do ukolu Hele napis mi prosim ukol, ze mam do pondeli poslat Petrovi ty dokumenty, ale nedavej to do kalendare.",
-        "ne do úkolů Hele napiš mi prosím úkol, že mám do pondělí poslat Petrovi ty dokumenty, ale nedávej to do kalendáře.",
-        "ne do ukolu Hele napis mi prosim ukol, ze mam do pondeli poslat Petrovi ty dokumenty, ale nedavej to do kalendare.",
-        "ne do úkolů Hele napiš mi prosím úkol, že mám do pondělí poslat Petrovi ty dokumenty, ale nedávej to do kalendáře.",
-        "ne do ukolu Hele napis mi prosim ukol, ze mam do pondeli poslat Petrovi ty dokumenty, ale nedavej to do kalendare.",
-        "ne do úkolů Hele napiš mi prosím úkol, že mám do pondělí poslat Petrovi ty dokumenty, ale nedávej to do kalendáře."
-      ],
-      "expected_summary": "task.create",
-      "actual_summary": "calendar.create/NEEDS_CLARIFICATION :: V kolik hodin to mám uložit?",
-      "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
-      "recommended_next_scope": "Narrow Silver change in task_write for pattern «calendar_vs_task_confusion» (do not broaden unrelated modules).",
-      "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
     }
   ],
-  "recommended_next_fix_cluster": "intent_fail|task_write",
-  "recommended_next_fix_reason": "Largest cluster «intent_fail|task_write» (1114 fails); fix routing/semantics for this phrasing family first.",
-  "exact_next_scope": "Silver engine: handle «intent_fail» in module «task_write».",
+  "recommended_next_fix_cluster": "dirty_title|task_write",
+  "recommended_next_fix_reason": "Largest cluster «dirty_title|task_write» (1500 fails); fix routing/semantics for this phrasing family first.",
+  "exact_next_scope": "Silver engine: handle «dirty_title» in module «task_write».",
   "peer_quality_accuracy": "97.18",
   "peer_realistic_routing_accuracy": "100.00",
   "peer_20k_overall_accuracy": null,
@@ -399,10 +376,10 @@
       "quality_fail": 0
     },
     "task_write": {
-      "pass": 1885,
-      "fail": 2115,
-      "core_pass": 1885,
-      "quality_fail": 962
+      "pass": 2346,
+      "fail": 1654,
+      "core_pass": 2346,
+      "quality_fail": 1500
     },
     "task_query": {
       "pass": 4000,

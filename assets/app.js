@@ -34552,6 +34552,17 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return false;
   }
 
+  /**
+   * P0 task_write_router_split: „nedávej (to) do kalendáře“ = modulová negace vůči kalendáři,
+   * nesmí spadnout do globálního „nedávej / nezapis …“ broad-verb zákazu zápisu úkolu.
+   */
+  function iuSilverNegationTargetsCalendarModuleOnlyFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if ((/\bnedavej\b/.test(x) || /\bnedej\b/.test(x)) && /\bdo\s+kalend/.test(x)) return true;
+    return false;
+  }
+
   /** P0 v1.7: negace zápisu — create flow (calendar.create / návrh uložení) je zakázaný. */
   function iuSilverNegativeCreateGuardFolded(f) {
     const x = String(f || "");
@@ -34966,11 +34977,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     /**
      * P0: modulová negace kalendáře + explicitní zápis do úkolů („…do úkolů… ale ne do kalendáře“) —
      * negace se vztahuje jen na kalendář, ne na celý imperativ.
+     * P0 task_write_router_split: totéž pro „ne v kalendáři“, „nedávej (to) do kalendáře“ + akční úkol (např. poslat …).
      */
     if (
-      /\bne\s+do\s+kalend/.test(foldUse) &&
+      (/\bne\s+do\s+kalend/.test(foldUse) ||
+        /\bne\s+v\s+kalend/.test(foldUse) ||
+        /\bnedavej\s+(?:to\s+)?do\s+kalend/.test(foldUse)) &&
       iuSilverHasExplicitTasksTarget(foldUse) &&
-      (iuSilverHasWriteVerb(foldUse) || iuSilverCzechMobileTaskWriteBasicCueFolded(foldUse))
+      (iuSilverHasWriteVerb(foldUse) ||
+        iuSilverCzechMobileTaskWriteBasicCueFolded(foldUse) ||
+        iuSilverHasTaskActionVerb(foldUse))
     )
       return false;
     /**
@@ -35037,7 +35053,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   function iuSilverIsNegatedBroadVerbExcludingTaskOnlyFolded(f) {
-    return iuSilverIsNegatedBroadVerb(f) && !iuSilverNegationTargetsTasksOnlyFolded(f);
+    return (
+      iuSilverIsNegatedBroadVerb(f) &&
+      !iuSilverNegationTargetsTasksOnlyFolded(f) &&
+      !iuSilverNegationTargetsCalendarModuleOnlyFolded(f)
+    );
   }
 
   /** P0: „jen v úkolech“ / „jen úkoly“ — read scope; foldCs-safe. */
@@ -35048,7 +35068,20 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bjen\s+do\s+ukol/.test(x)) return true;
     if (/\bpouze\s+v\s+ukol/.test(x)) return true;
     if (/\bpouze\s+do\s+ukol/.test(x)) return true;
-    if (/\bjen\s+ukol(y|u|um|e|emi)?\b/.test(x)) return true;
+    if (/\bjen\s+ukol(y|u|um|e|emi)?\b/.test(x)) {
+      /**
+       * P0 task_write_router_split: „nezapomenout … zavolat …, jen úkol“ = zápis úkolu, ne read-scope „jen úkoly“.
+       * Tvrdé read-only („nic neukládej“, „jen čti“, …) musí zůstat read/clarification.
+       */
+      if (
+        iuSilverHasTaskActionVerb(x) &&
+        iuSilverCzechMobileTaskWriteBasicCueFolded(x) &&
+        !iuSilverNegativeReadOnlyTaskPhrasesFolded(x)
+      ) {
+        return false;
+      }
+      return true;
+    }
     if (/\bpouze\s+ukol(y|u)?\b/.test(x)) return true;
     if (/\bjen\s+cti\s+ukol/.test(x)) return true;
     return false;
@@ -35439,6 +35472,17 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const f = String(folded || "");
     const r0 = String(raw || "").trim();
     if (!r0 || !iuSilverTaskReadContextFolded(f)) return null;
+    /**
+     * P0 task_write_router_split: stejná pojistka jako u TryTaskReadListQueryEarly — konflikt read-only + „jen úkol“
+     * nesmí skončit prázdným tasks.read přes task-query prioritu.
+     */
+    if (
+      iuSilverNegativeReadOnlyTaskPhrasesFolded(f) &&
+      /\bjen\s+ukol/.test(f) &&
+      (iuSilverCzechMobileTaskWriteBasicCueFolded(f) || iuSilverHasTaskActionVerb(f))
+    ) {
+      return null;
+    }
     if (iuSilverWantsTaskListOnlyFolded(f)) {
       return iuSilverBuildTasksReadListTurn(ctx || {}, empty, f, now);
     }
@@ -35549,6 +35593,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bjako\s+ukol\b/.test(x) && !iuSilverNegationTargetsTasksOnlyFolded(x)) return true;
     if (/\bmam\s+udelat\s+ukol\w*\b/.test(x)) return true;
     if (/^\s*ukol\w*\s*:/.test(x) || /^\s*ukoly\w*\s*:/.test(x)) return true;
+    /**
+     * P0 task_write_router_split: „napiš mi (prosím) úkol“ / „hele napiš … úkol“ — mezi „mi“ a „úkol“ jen prosím/čárka,
+     * ne volný text (aby „napiš mi co mám za úkol“ zůstalo mimo).
+     */
+    if (/(?:\bhele\s+)?\bnapis\w*\s+mi(?:\s+prosim)?[\s,]+ukol\w*\b/.test(x)) return true;
+    if (/\bzapis\w*\s+mi(?:\s+prosim)?[\s,]+ukol\w*\b/.test(x)) return true;
     return false;
   }
 
@@ -39665,6 +39715,17 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const r0 = String(raw || "").trim();
     if (!r0) return null;
     if (iuSilverCalendarReadWinsOverTaskReadFolded(f)) return null;
+    /**
+     * P0 task_write_router_split: tvrdý read-only / „nic nevytvářej“ + „nezapomenout … jen úkol“
+     * nesmí spadnout do prázdného tasks.read listu — nech pozdější bezpečnou clarifikaci / fallback.
+     */
+    if (
+      iuSilverNegativeReadOnlyTaskPhrasesFolded(f) &&
+      /\bjen\s+ukol/.test(f) &&
+      (iuSilverCzechMobileTaskWriteBasicCueFolded(f) || iuSilverHasTaskActionVerb(f))
+    ) {
+      return null;
+    }
     const trCtx = iuSilverTaskReadContextFolded(f);
     if (!trCtx && (iuSilverIsNegatedWriteIntentNarrow(f, r0) || iuSilverIsNegatedBroadVerbExcludingTaskOnlyFolded(f))) return null;
     if (iuSilverCalendarReadSuppressedForWriteIntent(f)) return null;
