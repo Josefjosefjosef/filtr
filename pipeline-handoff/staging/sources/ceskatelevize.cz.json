@@ -1,21 +1,54 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-07T21:40:22.476407Z",
+  "ingestedAt": "2026-05-07T22:25:31.871045Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Americká armáda udeřila v Hormuzu",
+      "title": "AFP: Izraelské údery na jihu Libanonu zabily 12 lidí, včetně dvou děti",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/afp-izraelske-udery-na-jihu-libanonu-zabily-12-lidi-vcetne-dvou-deti-373227",
+      "dt": "2026-05-07T21:36:07Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "afp",
+        "dvou",
+        "děti",
+        "izraelské",
+        "jihu",
+        "libanonu",
+        "lidí",
+        "včetně",
+        "zabily",
+        "údery"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Reuters: USA provedly údery na íránský ostrov Kešm a přístav Bandar Abbás",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/americka-armada-uderila-v-hormuzu-373226",
       "dt": "2026-05-07T21:01:51Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "americká",
-        "armáda",
-        "hormuzu",
-        "udeřila"
+        "abbás",
+        "bandar",
+        "kešm",
+        "ostrov",
+        "provedly",
+        "přístav",
+        "reuters",
+        "usa",
+        "íránský",
+        "údery"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -716,28 +749,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Evropská unie zakáže svlékací aplikace",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/evropska-unie-zakaze-svlekaci-aplikace-373192",
-      "dt": "2026-05-07T07:56:16Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "aplikace",
-        "evropská",
-        "svlékací",
-        "unie",
-        "zakáže"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "sport",
       "contentType": "article",
       "title": "Horníček si finále Evropské ligy nezahraje, Braga odvetu nezvládla",
@@ -920,20 +931,19 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Nosková a Macháč v Římě postupují, Valentová, Svrčina, Siniaková i Bouzková se loučí",
+      "title": "Nosková a Macháč v Římě postupují, další česká pětice se loučí",
       "url": "https://sport.ceskatelevize.cz/clanek/tenis/svrcinu-zradil-servis-s-turnajem-v-rime-se-louci-hned-v-prvnim-kole-156643",
       "dt": "2026-05-07T11:37:39Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
-        "bouzková",
+        "další",
         "loučí",
         "macháč",
         "nosková",
         "postupují",
-        "siniaková",
-        "svrčina",
-        "valentová",
+        "pětice",
+        "česká",
         "římě"
       ],
       "feedCategory": "sport",
@@ -1509,7 +1519,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42024,
+      "bytes": 41839,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1569,7 +1579,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T21:01:51Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T21:36:07Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1586,7 +1596,11 @@
         },
         "sample_titles": [
           {
-            "title": "Americká armáda udeřila v Hormuzu",
+            "title": "AFP: Izraelské údery na jihu Libanonu zabily 12 lidí, včetně dvou děti",
+            "publishedAt": "2026-05-07T21:36:07Z"
+          },
+          {
+            "title": "Reuters: USA provedly údery na íránský ostrov Kešm a přístav Bandar Abbás",
             "publishedAt": "2026-05-07T21:01:51Z"
           },
           {
@@ -1612,10 +1626,6 @@
           {
             "title": "ODS se možná kvůli novým pravidlům rozpočtové odpovědnosti obrátí na ÚS, říká Skopeček",
             "publishedAt": "2026-05-07T18:08:47Z"
-          },
-          {
-            "title": "Hanácké kasárny ožívají. Do areálu se nastěhuje divadlo, škola i kavárny",
-            "publishedAt": "2026-05-07T17:52:44Z"
           }
         ]
       }
@@ -1627,7 +1637,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38373,
+      "bytes": 38442,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1708,7 +1718,7 @@
             "publishedAt": "2026-05-07T12:50:53Z"
           },
           {
-            "title": "Nosková a Macháč v Římě postupují, Valentová, Svrčina, Siniaková i Bouzková se loučí",
+            "title": "Nosková a Macháč v Římě postupují, další česká pětice se loučí",
             "publishedAt": "2026-05-07T11:37:39Z"
           }
         ]
@@ -1721,7 +1731,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78234,
+      "bytes": 78180,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

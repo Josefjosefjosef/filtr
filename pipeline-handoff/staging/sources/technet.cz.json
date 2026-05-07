@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-05-07T21:40:22.476407Z",
+  "ingestedAt": "2026-05-07T22:25:31.871045Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Rusko nejen pomáhalo nacistickému Německu, ale šlo ještě dál",
+      "url": "https://www.idnes.cz/technet/vojenstvi/zacatek-druhe-svetova-valky-spoluprace-sovetsky-svaz-treti-rise.A260507_014555_vojenstvi_erp",
+      "dt": "2026-05-07T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "ale",
+        "ještě",
+        "nacistickému",
+        "nejen",
+        "německu",
+        "pomáhalo",
+        "rusko",
+        "šlo"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -311,7 +336,7 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Celebrity a láska k létání: 21 příběhů, které vás možná překvapí",
       "url": "https://www.idnes.cz/technet/celebrity-a-laska-k-letani-21-pribehu-ktere-vas-mozna-prekvapi.Q260427_225802_technet_alv",
@@ -740,31 +765,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Radiací poškozená buňka „páchá sebevraždu“. Jak probíhá nemoc z ozáření",
-      "url": "https://www.idnes.cz/technet/veda/cernobyl-vyroci-ozareni-lidske-telo.A260420_134845_veda_alv",
-      "dt": "2026-04-25T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "buňka",
-        "nemoc",
-        "ozáření",
-        "poškozená",
-        "probíhá",
-        "páchá",
-        "radiací",
-        "sebevraždu"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -775,7 +775,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 46375,
+      "bytes": 46549,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -812,7 +812,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T08:38:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 13,
@@ -828,6 +828,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rusko nejen pomáhalo nacistickému Německu, ale šlo ještě dál",
+            "publishedAt": "2026-05-07T22:00:00Z"
+          },
           {
             "title": "Zemi jako drahokam a tajemný Měsíc ukazují nové snímky mise Artemis II",
             "publishedAt": "2026-05-07T08:38:00Z"
@@ -855,10 +859,6 @@
           {
             "title": "Měly nahradit walkmany, ale nakonec je musela zachránit paměť RAM",
             "publishedAt": "2026-05-04T22:00:00Z"
-          },
-          {
-            "title": "Budoucí český astronaut Svoboda má za sebou základní výcvik. Čeká na misi",
-            "publishedAt": "2026-05-04T12:49:00Z"
           }
         ]
       }
