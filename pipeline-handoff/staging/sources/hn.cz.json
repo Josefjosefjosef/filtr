@@ -1,8 +1,41 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-07T16:05:22.350393Z",
+  "ingestedAt": "2026-05-07T16:50:07.764458Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Mezi Twistem a &bdquo;Pepou od kytek&ldquo; se rozjela otevřená válka. Franšízingová skupina chce po zahradníkovi deset milionů a hrozí žalobami",
+      "url": "https://byznys.hn.cz/c1-67874900-mezi-twistem-a-bdquo-pepou-od-kytek-ldquo-se-rozjela-otevrena-valka-fransizingova-skupina-chce-po-zahradnikovi-deset-milionu-a-hrozi-zalobami",
+      "dt": "2026-05-07T16:30:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bdquo",
+        "chce",
+        "deset",
+        "franšízingová",
+        "hrozí",
+        "kytek",
+        "ldquo",
+        "milionů",
+        "otevřená",
+        "pepou",
+        "rozjela",
+        "skupina",
+        "twistem",
+        "válka",
+        "zahradníkovi",
+        "žalobami"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -1098,36 +1131,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Muskovy firmy chystají výrobu čipů pro AI. SpaceX do ní chce investovat 55 miliard dolarů, část odborníků je skeptických",
-      "url": "https://archiv.hn.cz/c1-67874430-muskovy-firmy-chystaji-vyrobu-cipu-pro-ai-spacex-do-ni-chce-investovat-55-miliard-dolaru-cast-odborniku-je-skeptickych",
-      "dt": "2026-05-06T12:50:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "chce",
-        "chystají",
-        "dolarů",
-        "firmy",
-        "investovat",
-        "miliard",
-        "muskovy",
-        "odborníků",
-        "skeptických",
-        "spacex",
-        "výrobu",
-        "čipů",
-        "část"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1138,7 +1141,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183686,
+      "bytes": 183592,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1175,11 +1178,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-07T14:14:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T16:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 3,
           "finance": 34,
+          "zpravy": 3,
           "zdravi": 3
         },
         "drop_counts": {
@@ -1192,6 +1195,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mezi Twistem a &bdquo;Pepou od kytek&ldquo; se rozjela otevřená válka. Franšízingová skupina chce po zahradníkovi deset milionů a hrozí žalobami",
+            "publishedAt": "2026-05-07T16:30:00Z"
+          },
           {
             "title": "Obecní byt nebyl nadstandard, od Babiše cítím podporu, řekla Mrázová. Problém s &bdquo;černými stavbami&ldquo; chce dát do pořádku",
             "publishedAt": "2026-05-07T14:14:00Z"
@@ -1219,10 +1226,6 @@
           {
             "title": "Kam investuje peníze ČNB? Její strategie není tak pasivní, jak by se mohlo zdát",
             "publishedAt": "2026-05-07T09:45:00Z"
-          },
-          {
-            "title": "Od července začne platit nové clo na čínské balíčky. Přinést může desítky miliard eur a změnit celý systém dovozu. Jak to bude v Česku?",
-            "publishedAt": "2026-05-07T09:00:00Z"
           }
         ]
       }
