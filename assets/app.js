@@ -34911,10 +34911,55 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     );
   }
 
+  /**
+   * P0 realistic mobile calendar_write_basic: „chci mít zapsané v kalendáři“ + relativní den + čas + typ události.
+   * Modulové „ne do úkolů / ne do poznámek“ nesmí vyhodit negated_write; tvrdé safety negace (nic neukládej, jen čti, …) zůstávají mimo.
+   * foldCs vstup v `folded`.
+   */
+  function iuSilverExplicitCalendarWriteBasicMobileOpenerBundleFolded(folded) {
+    const x = String(folded || "");
+    if (!x) return false;
+    if (/\bnic\s+neukladej\b/.test(x)) return false;
+    if (/\bnic\s+noveho\s+neukladej\b/.test(x)) return false;
+    if (/\bnic\s+nevytvarej\b/.test(x)) return false;
+    if (/\bjen\s+se\s+podivej\b/.test(x)) return false;
+    if (/\bjen\s+cti\b/.test(x)) return false;
+    if (/\bpouze\s+cti\b/.test(x)) return false;
+    if (!/\bchci\s+(?:mit\s+zapsane|zapsat)\s+v\s+kalendari\b/.test(x)) return false;
+    const relDate =
+      /\bzitra\b|\bzittra\b|\bpozitri\b|\bpozitre\b|\bdnes(?:ka)?\b|\bpristi\s+(pondeli|utery|stredu|streda|ctvrtek|patek|sobotu|sobota|nedeli|nedele|tyden|mesic)\b|\bza\s+tyden\b|\bna\s+vikend\b|\bkoncem\s+tydne\b|\btenhle\s+tyden\b|\btento\s+tyden\b|\bdo\s+patku\b|\bdo\s+deseti\s+dnu\b/.test(x) ||
+      iuSilverReWeekdayOnce().test(x);
+    if (!relDate) return false;
+    const timeCue =
+      /\b\d{1,2}\s*[:.]\s*\d{1,2}\b/.test(x) ||
+      /\bv\s+\d{1,2}\b/.test(x) ||
+      /\bve\s+\d{1,2}\b/.test(x) ||
+      /\bv\s+odpoledne\b/.test(x) ||
+      /\bv\s+rano\b/.test(x) ||
+      /\bv\s+pul\b/.test(x) ||
+      /\bdopoledne\b/.test(x) ||
+      /\bodpoledne\b/.test(x) ||
+      /\bvecer\b/.test(x) ||
+      /\bv\s+\d{1,2}\s+hodin/.test(x);
+    if (!timeCue) return false;
+    const eventCue =
+      /\blekar|\blekare\b|\bnavstev|\bskol(a|u|y)\b|\bjednan|\bkontrol|\bpravnik|\badvok|\brestaur|\brestaurac|\bobed|\brezervac|\bschuz|\bzubar|\bzubare|\bzubni|\bosetren|\bpreventiv|\breviz|\bkotel|\burad|\bpodan|\btridn/.test(x);
+    if (!eventCue) return false;
+    return true;
+  }
+
   /** --- Explicit intent gating (P0): NEGATION / READ / targets / clarification --- */
   function iuSilverIsNegatedWriteIntentNarrow(f, rawOpt) {
     const foldUse = String(f || "");
     const rawStr = rawOpt != null ? String(rawOpt) : foldUse;
+    if (
+      iuSilverExplicitCalendarWriteBasicMobileOpenerBundleFolded(foldUse) &&
+      !/\bne\s+do\s+kalend/.test(foldUse) &&
+      !/\bneukladej\s+do\s+kalendar/.test(foldUse) &&
+      !/\bnechci\s+to\s+do\s+kalend/.test(foldUse)
+    ) {
+      return false;
+    }
     if (iuSilverExplicitCalendarWriteOverridesSoftModuleNegationFolded(foldUse) && /\bne\s+do\s+pozn/.test(foldUse)) return false;
     if (iuSilverImplicitCalendarOnlyWriteSignalFolded(foldUse, rawStr)) return false;
     if (/\b(co|jake|kolik)\s+m(am|ame)\b[^?.!]{0,200}\bv\s+kalendari\b[^?.!]{0,120}\bne\s+do\s+ukol/.test(foldUse)) return false;
@@ -37569,6 +37614,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverCalendarReadSuppressedForWriteIntentCore(f) {
     if (!f) return false;
     const fProbe = iuSilverStripStorageTargetQuestionNegationClausesFolded(f);
+    if (iuSilverExplicitCalendarWriteBasicMobileOpenerBundleFolded(fProbe)) return true;
     if (
       /\buloz(?:it|te|i)?\b|\bulož(?:te)?\b|\bzapis(?:it|te|i)?\b|\bzapiš(?:te)?\b|\bpridej\b|\bpřidej\b|\bvytvor\w*\b|\bvytvoř\w*\b|\bnaplanuj\b|\bnaplánuj\b|\bzanes\b|\bnahod\w*\b|dej\s+to\s+do\s+kalend|dej\s+mi\s+to\s+do\s+kalend|dej\s+mi\s+do\s+kalend|\b(ho[dď]|hod)\s+mi\s+do\s+kalend/.test(
         fProbe
