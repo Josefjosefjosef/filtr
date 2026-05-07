@@ -36325,7 +36325,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       };
     }
     const bodyFin = iuSilverNoteCreateFinalizeBody(comp.noteBody) || String(comp.noteBody || "").trim();
-    const nBody = iuSilverHumanizeRoughNote(bodyFin);
+    const nBodyH = iuSilverHumanizeRoughNote(bodyFin);
+    const nBody = iuSilverCleanCalendarNoteTailV1(nBodyH, nBodyH);
     if (!String(nBody || "").trim()) return null;
     const dOut = cloneDraft(calTurn.draft);
     dOut.note = String(nBody || "").trim().slice(0, 1000);
@@ -36682,6 +36683,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     draft = applyFragmentFallback(parseRawFull, draft, now);
     iuSilverApplyExtractedEntitiesToCalendarDraft(draft, iuSilverExtractEntities(parseRawFull, now));
     iuSilverSanitizeDraftTitle(draft);
+    if (draft.meta.note === "certain" && String(draft.note || "").trim()) {
+      const nRaw = String(draft.note || "").trim();
+      const nCl = iuSilverCleanCalendarNoteTailV1(nRaw, nRaw);
+      draft.note = nCl.slice(0, 1000);
+    }
 
     let processingState = "NEEDS_CLARIFICATION";
     if (draft.meta.date === "certain" && draft.meta.time === "certain" && draft.meta.title === "certain" && String(draft.title || "").trim()) {
@@ -37306,7 +37312,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const title = iuSilverFinalizeTaskTitle(w);
     if (!title || title.length < 2) return null;
     const titleNorm = normalizeSilverTitleV1(title, { kind: "task" }).slice(0, 200);
-    const titleForDraft = iuSilverCleanTaskCreateTitleV1(titleNorm, titleNorm);
+    const titleForDraft0 = iuSilverCleanTaskCreateTitleV1(titleNorm, titleNorm);
+    const titleForDraft = iuSilverCleanTaskReminderTitleV1(titleForDraft0, titleForDraft0);
 
     const draft = createEmptyDraft();
     draft.targetContainer = "tasks";
@@ -37349,6 +37356,96 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!r || r.length < 2) return null;
     const b = iuSilverNormalizeCzechNumberWords(iuSilverNormalizeCzechPlaceWords(r));
     return b.slice(0, IU_SILVER_NOTE_BODY_MAX);
+  }
+
+  /**
+   * P0 Silver v1: bezpečné odstranění zápisových prefixů jen pro uložené tělo poznámky (notes.create write).
+   * Prázdný výsledek → původní text (žádná ztráta obsahu).
+   */
+  function iuSilverCleanNoteWriteTextV1(noteText) {
+    const orig = iuSilverNormalizeWs(String(noteText == null ? "" : noteText));
+    if (!orig) return String(noteText == null ? "" : noteText);
+    let s = orig;
+    const pats = [
+      /^abych\s+nezapomn[eě]l\s+(?:že|ze)\s+/iu,
+      /^zapamatuj\s+si\s+(?:že|ze)\s+/iu,
+      /^do\s+pam[eě]ti\s+(?:že|ze)\s+/iu,
+      /^ul[oó][zž](?:te)?\s+mi\s+(?:že|ze)\s+/iu,
+      /^ul[oó][zž](?:te)?\s+(?:že|ze)\s+/iu,
+      /^uloz\s+mi\s+(?:ze|že)\s+/iu,
+      /^uloz\s+(?:ze|že)\s+/iu
+    ];
+    for (let rnd = 0; rnd < 24; rnd++) {
+      const prev = s;
+      for (let pi = 0; pi < pats.length; pi++) {
+        s = s.replace(pats[pi], "").trim();
+      }
+      s = iuSilverNormalizeWs(s);
+      if (s === prev) break;
+    }
+    if (!s || s.length < 2) return orig;
+    return s.slice(0, IU_SILVER_NOTE_BODY_MAX);
+  }
+
+  /**
+   * P0 Silver v1: úzké odstranění připomínkového lepidla v titulku úkolu (tasks.create write).
+   * Prázdný výsledek → safeFallback.
+   */
+  function iuSilverCleanTaskReminderTitleV1(titleIn, safeFallback) {
+    const fb = iuSilverNormalizeWs(String(safeFallback != null ? safeFallback : "")).slice(0, 200);
+    let s = iuSilverNormalizeWs(String(titleIn || ""));
+    if (!s) return fb;
+    const orig = s;
+    const pats = [
+      /^\s*p[rř]ipome[nň]\s+mi\s+(?:že|ze)\s+/iu,
+      /^\s*p[rř]ipome[nň]\s+(?:že|ze)\s+/iu,
+      /^\s*p[rř]ipome[nň]\s+mi\s+/iu,
+      /^\s*p[rř]ipome[nň]\s+/iu,
+      /^\s*mi\s+/iu,
+      /^\s*(?:musím|musim)\s+/iu,
+      /^\s*(?:že|ze)\s+/iu
+    ];
+    for (let rnd = 0; rnd < 24; rnd++) {
+      const prev = s;
+      for (let pi = 0; pi < pats.length; pi++) {
+        s = s.replace(pats[pi], "").trim();
+      }
+      s = iuSilverNormalizeWs(s);
+      if (s === prev) break;
+    }
+    let out = iuSilverFinalizeTaskTitle(s);
+    if (!out || String(out).trim().length < 2) return fb || orig.slice(0, 200);
+    out = iuSilverNormalizeWs(String(out));
+    return out.slice(0, 200);
+  }
+
+  /**
+   * P0 Silver v1: prefixy „do poznámky … přidej“ / holé „přidej“ u poznámky události (calendar.create write).
+   * Prázdný výsledek → původní text.
+   */
+  function iuSilverCleanCalendarNoteTailV1(noteTail, safeFallback) {
+    const orig = iuSilverNormalizeWs(String(safeFallback != null ? safeFallback : ""));
+    if (!orig) return String(noteTail == null ? "" : noteTail);
+    let s = orig;
+    const pats = [
+      /^\s*do\s+pozn[aá]m(?:ek|ky|ce)\s+mi\s+p[rř]idej\s+/iu,
+      /^\s*do\s+pozn[aá]m(?:ek|ky|ce)\s+mi\s+pridej\s+/iu,
+      /^\s*do\s+pozn[aá]m(?:ek|ky|ce)\s+p[rř]idej\s+/iu,
+      /^\s*do\s+pozn[aá]m(?:ek|ky|ce)\s+pridej\s+/iu,
+      /^\s*p[rř]idej\s+/iu,
+      /^\s*pridej\s+/iu
+    ];
+    for (let rnd = 0; rnd < 24; rnd++) {
+      const prev = s;
+      for (let pi = 0; pi < pats.length; pi++) {
+        s = s.replace(pats[pi], "").trim();
+      }
+      s = iuSilverNormalizeWs(s);
+      if (s === prev) break;
+    }
+    if (!s || s.length < 2) return orig;
+    const c = s.charAt(0).toLocaleUpperCase("cs-CZ") + s.slice(1);
+    return c.slice(0, 1000);
   }
 
   /**
@@ -37585,7 +37682,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!hit || hit.kind !== "body") return null;
     const d = createEmptyDraft();
     d.targetContainer = "notes";
-    d.silverNoteText = hit.body;
+    d.silverNoteText = iuSilverCleanNoteWriteTextV1(
+      normalizeSilverTitleV1(String(hit.body || "").trim(), { kind: "note" }).slice(0, IU_SILVER_NOTE_BODY_MAX)
+    );
     d.silverNoteCreatedTs = (nowOpt || new Date()).getTime();
     return d;
   }
@@ -37596,7 +37695,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const body0 = String(body || "")
       .trim()
       .slice(0, IU_SILVER_NOTE_BODY_MAX);
-    draft.silverNoteText = normalizeSilverTitleV1(body0, { kind: "note" }).slice(0, IU_SILVER_NOTE_BODY_MAX);
+    draft.silverNoteText = iuSilverCleanNoteWriteTextV1(
+      normalizeSilverTitleV1(body0, { kind: "note" }).slice(0, IU_SILVER_NOTE_BODY_MAX)
+    );
     draft.silverNoteCreatedTs = now.getTime();
     const processingState = "READY_TO_SAVE";
     const ap = buildAssistantParts(draft, processingState);
