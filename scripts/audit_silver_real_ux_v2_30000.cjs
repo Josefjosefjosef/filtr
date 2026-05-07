@@ -1714,6 +1714,15 @@ function main() {
   const mainCommit = gitRevParseHead();
   const changedFiles = gitNameOnlyPorcelainTracked();
   const gitStatusClean = git.ok ? "YES" : "NO";
+  const bucket_counts = {};
+  let bucket_sum = 0;
+  for (let gi = 0; gi < groups.length; gi++) {
+    const g = groups[gi];
+    const n = byGroup[g].pass + byGroup[g].fail;
+    bucket_counts[g] = n;
+    bucket_sum += n;
+  }
+  const bucket_counts_valid = bucket_sum === TOTAL ? "YES" : "NO";
   const readyForEngineFix = dangerousWriteCount === 0 && falseWriteCount === 0 ? "YES" : "NO";
   const riskAssessment =
     dangerousWriteCount > 0
@@ -1731,7 +1740,10 @@ function main() {
     engine_changed: "NO",
     assets_app_changed: "NO",
     partition_note:
-      "Buckets: calendar_write=4000, calendar_query=5000, task_write=4000, task_query=6000 (>=5000 stress), note_write=3500, note_query=4000, multi_intent=2000, ambiguity_safety=1500; total=30000.",
+      "Buckets: calendar_write=4000, calendar_query=5000, task_write=4000, task_query=6000 (>=5000 stress), note_write=3500, note_query=4000, multi_intent=2000, ambiguity_safety=1500; total=30000. task_query=6000 is the task_query bucket size only, not total_cases.",
+    bucket_counts: bucket_counts,
+    bucket_sum: bucket_sum,
+    bucket_counts_valid: bucket_counts_valid,
     total_cases: TOTAL,
     overall_accuracy: overallAcc,
     calendar_write_accuracy: pct(byGroup.calendar_write.pass, byGroup.calendar_write.pass + byGroup.calendar_write.fail),
