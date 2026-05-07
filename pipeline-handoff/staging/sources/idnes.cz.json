@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-07T02:44:33.673681Z",
+  "ingestedAt": "2026-05-07T03:19:59.644852Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Jediná devaterčata na světě oslavila páté narozeniny. Kolik stojí jídlo pro ně na měsíc?",
+      "url": "https://www.idnes.cz/magaziny/koktejl/jedina-devatercata-na-svete-oslavila-pate-narozeniny-kolik-stoji-jidlo-pro-ne-na-mesic.A260506_140326_koktejl_brna",
+      "dt": "2026-05-07T03:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "devaterčata",
+        "jediná",
+        "jídlo",
+        "kolik",
+        "měsíc",
+        "narozeniny",
+        "oslavila",
+        "páté",
+        "stojí",
+        "světě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -213,18 +240,18 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Poslanci schválili změnu stavebního zákona, odložili využívání geoportálu",
+      "title": "Poslanci schválili změnu stavebního zákona, jednali i o rodičovském příspěvku",
       "url": "https://www.idnes.cz/zpravy/domaci/snemovna-novela-stavebniho-zakonu-odklad-vyuzivani-geoportalu.A260506_193422_domaci_kop",
       "dt": "2026-05-06T18:37:45Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
-        "geoportálu",
-        "odložili",
+        "jednali",
         "poslanci",
+        "příspěvku",
+        "rodičovském",
         "schválili",
         "stavebního",
-        "využívání",
         "změnu",
         "zákona"
       ],
@@ -752,34 +779,6 @@
         "sudetských",
         "vlády",
         "šťastný"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Hasičům v Českém Švýcarsku pomohl noční déšť. Majitel letiště začne sčítat škody",
-      "url": "https://www.idnes.cz/usti/zpravy/ceske-svycarsko-pozar-letiste-skody-dest-pricina.A260506_074949_usti-zpravy_grr",
-      "dt": "2026-05-06T14:26:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "déšť",
-        "hasičům",
-        "letiště",
-        "majitel",
-        "noční",
-        "pomohl",
-        "sčítat",
-        "začne",
-        "českém",
-        "škody",
-        "švýcarsku"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1581,7 +1580,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47258,
+      "bytes": 46753,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1618,11 +1617,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T03:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 2,
-          "zpravy": 28
+          "zpravy": 28,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1634,6 +1633,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jediná devaterčata na světě oslavila páté narozeniny. Kolik stojí jídlo pro ně na měsíc?",
+            "publishedAt": "2026-05-07T03:00:00Z"
+          },
           {
             "title": "Bankomat obere turisty na poplatcích i o stovky korun. Jak ho poznat a na co pozor",
             "publishedAt": "2026-05-06T22:00:00Z"
@@ -1661,10 +1664,6 @@
           {
             "title": "Americký letoun vyřadil íránský tanker z provozu zásahem citlivého místa",
             "publishedAt": "2026-05-06T19:30:00Z"
-          },
-          {
-            "title": "Česko zasáhly silné bouřky. Experti varovali před nárazy větru nebo požáry",
-            "publishedAt": "2026-05-06T18:56:43Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-07T02:44:33.673681Z",
+  "ingestedAt": "2026-05-07T03:19:59.644852Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "IKEA v Česku prudce oslabuje. Už probublává krize, varují nábytkáři",
+      "url": "https://www.e15.cz/byznys/obchod-a-sluzby/ikea-v-cesku-prudce-oslabuje-uz-probublava-krize-varuji-nabytkari-1432639",
+      "dt": "2026-05-07T03:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "ikea",
+        "krize",
+        "nábytkáři",
+        "oslabuje",
+        "probublává",
+        "prudce",
+        "varují",
+        "česku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1054,34 +1079,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Dálkové letenky zlevní, má to ale dva háčky, říká šéf Řízení letového provozu",
-      "url": "https://www.e15.cz/byznys/doprava-a-logistika/dalkove-letenky-zlevni-ma-to-ale-dva-hacky-rika-sef-rizeni-letoveho-provozu-1432418",
-      "dt": "2026-05-05T09:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "ale",
-        "dva",
-        "dálkové",
-        "háčky",
-        "letenky",
-        "letového",
-        "provozu",
-        "zlevní",
-        "říká",
-        "řízení",
-        "šéf"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1092,7 +1089,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 52710,
+      "bytes": 52557,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1129,11 +1126,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-06T22:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T03:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 35,
-          "zpravy": 4,
+          "finance": 36,
+          "zpravy": 3,
           "zdravi": 1
         },
         "drop_counts": {
@@ -1146,6 +1143,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "IKEA v Česku prudce oslabuje. Už probublává krize, varují nábytkáři",
+            "publishedAt": "2026-05-07T03:00:00Z"
+          },
           {
             "title": "Banky trestají nejistotu. Hypotéky opět mírně zdražily, připlácí se za nejoblíbenější fixace",
             "publishedAt": "2026-05-06T22:01:00Z"
@@ -1173,10 +1174,6 @@
           {
             "title": "Už brzy začne platit přísný zákaz prodeje. Češi u supermarketů narazí na zavřené dveře",
             "publishedAt": "2026-05-06T11:25:00Z"
-          },
-          {
-            "title": "Konec dvojích cen nafty na Slovensku. Vláda ruší omezení, které kritizovala Evropská komise",
-            "publishedAt": "2026-05-06T10:50:00Z"
           }
         ]
       }
