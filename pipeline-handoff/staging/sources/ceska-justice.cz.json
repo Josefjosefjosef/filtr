@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-05-07T03:59:29.570884Z",
+  "ingestedAt": "2026-05-07T05:19:23.715417Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Končí éra protokolů. U trestních kauz je nahradí automatické přepisy",
+      "url": "https://www.ceska-justice.cz/2026/05/konci-era-protokolu-trestni-kauzy-prepisy/",
+      "dt": "2026-05-07T04:15:00Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "automatické",
+        "kauz",
+        "končí",
+        "nahradí",
+        "protokolů",
+        "přepisy",
+        "trestních",
+        "éra"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -236,31 +261,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vláda hodila toulavé kočky na krk obcím. Co všechno budou platit?",
-      "url": "https://www.ceska-justice.cz/2026/05/vlada-hodila-toulave-kocky-na-krk-obcim-co-vsechno-budou-platit/",
-      "dt": "2026-05-04T12:57:14Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "hodila",
-        "kočky",
-        "krk",
-        "obcím",
-        "platit",
-        "toulavé",
-        "vláda",
-        "všechno"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -271,7 +271,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 90460,
+      "bytes": 91012,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -308,7 +308,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-06T12:09:56Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T04:15:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -323,6 +323,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Končí éra protokolů. U trestních kauz je nahradí automatické přepisy",
+            "publishedAt": "2026-05-07T04:15:00Z"
+          },
           {
             "title": "Blažkovi s Titzem hrozí pozastavení činnosti. Advokátní komora řeší bitcoinovou kauzu",
             "publishedAt": "2026-05-06T12:09:56Z"
@@ -350,10 +354,6 @@
           {
             "title": "Lobbista Janoušek žádal 10 milionů. Jako odškodnění za zabavené peníze",
             "publishedAt": "2026-05-05T10:11:07Z"
-          },
-          {
-            "title": "Pokuta pro Cermat za maturity: Proč měl úřad platit za situaci, kterou nezpůsobil?",
-            "publishedAt": "2026-05-05T04:15:00Z"
           }
         ]
       }

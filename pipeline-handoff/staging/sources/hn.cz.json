@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-07T03:59:29.570884Z",
+  "ingestedAt": "2026-05-07T05:19:23.715417Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Inflace bude vyšší než loni, ale neměl by to být šok",
+      "url": "https://podcasty.hn.cz/c1-67874440-inflace-bude-vyssi-nez-loni-ale-nemel-by-to-byt-sok",
+      "dt": "2026-05-07T04:43:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "ale",
+        "být",
+        "inflace",
+        "loni",
+        "neměl",
+        "než",
+        "vyšší",
+        "šok"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1120,37 +1145,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Dražší než Německo, Francie nebo Španělsko. České domácnosti platí za elektřinu jedny z nejvyšších cen v celé EU",
-      "url": "https://byznys.hn.cz/c1-67874170-drazsi-nez-nemecko-francie-nebo-spanelsko-ceske-domacnosti-plati-za-elektrinu-jedny-z-nejvyssich-cen-v-cele-eu",
-      "dt": "2026-05-06T04:42:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "celé",
-        "cen",
-        "domácnosti",
-        "dražší",
-        "elektřinu",
-        "francie",
-        "jedny",
-        "nebo",
-        "nejvyšších",
-        "než",
-        "německo",
-        "platí",
-        "české",
-        "španělsko"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1161,7 +1155,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183814,
+      "bytes": 183724,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1198,7 +1192,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-06T22:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T04:43:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 35,
@@ -1215,6 +1209,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Inflace bude vyšší než loni, ale neměl by to být šok",
+            "publishedAt": "2026-05-07T04:43:00Z"
+          },
           {
             "title": "Kulturní tipy: Dva osudy spojené vášní a rozdělené osudem, legendární šachový souboj či hororový příběh z Irska",
             "publishedAt": "2026-05-06T22:01:00Z"
@@ -1242,10 +1240,6 @@
           {
             "title": "Sněmovna schválila roční odklad povinného používání národního geoportálu",
             "publishedAt": "2026-05-06T18:31:00Z"
-          },
-          {
-            "title": "Izrael bez varování udeřil na Bejrút. Netanjahu nařídil zlikvidovat vysokého velitele Hizballáhu",
-            "publishedAt": "2026-05-06T18:22:00Z"
           }
         ]
       }

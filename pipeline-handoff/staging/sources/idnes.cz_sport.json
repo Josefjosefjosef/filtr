@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-07T03:59:29.570884Z",
+  "ingestedAt": "2026-05-07T05:19:23.715417Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pan nezlomný. Jak Zanardi unikal smrti, vracel se na vrchol a inspiroval miliony",
+      "url": "https://www.idnes.cz/sport/motorsport/alessandro-zanardi-pribeh-formule-1-nehoda.A260506_184516_motorsport_mrg",
+      "dt": "2026-05-07T04:56:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "inspiroval",
+        "miliony",
+        "nezlomný",
+        "pan",
+        "smrti",
+        "unikal",
+        "vracel",
+        "vrchol",
+        "zanardi"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -774,33 +800,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Baníkovská naděje Drozd: První start v lize mám, teď se soustředím hlavně na sebe",
-      "url": "https://www.idnes.cz/fotbal/domaci-souteze/simon-drozd-banik-ostrava.A260506_090518_fot_dsouteze_kazdt",
-      "dt": "2026-05-06T07:45:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "baníkovská",
-        "drozd",
-        "hlavně",
-        "lize",
-        "mám",
-        "naděje",
-        "první",
-        "sebe",
-        "soustředím",
-        "start"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -811,7 +810,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 49266,
+      "bytes": 49584,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -848,7 +847,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T04:56:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -864,6 +863,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pan nezlomný. Jak Zanardi unikal smrti, vracel se na vrchol a inspiroval miliony",
+            "publishedAt": "2026-05-07T04:56:00Z"
+          },
           {
             "title": "Hirt na Giru, díl devátý. Formu mám. Věřím, že top 10 je v mých silách, hlásí",
             "publishedAt": "2026-05-06T22:00:00Z"
@@ -891,10 +894,6 @@
           {
             "title": "Béčko Sparty živí naději, rezerva Slavie schytala debakl. Táborsko je blízko baráži",
             "publishedAt": "2026-05-06T19:02:55Z"
-          },
-          {
-            "title": "Opravdu šla bez opory? Vonnová ukázala zákulisí triumfálního vstupu na Met Gala",
-            "publishedAt": "2026-05-06T16:38:00Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-07T03:59:29.570884Z",
+  "ingestedAt": "2026-05-07T05:19:23.715417Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Naděje není strategie. Proč musí ČNB v komunikaci přitvrdit dřív, než bude pozdě",
+      "url": "https://www.e15.cz/nazory-a-analyzy/nadeje-neni-strategie-proc-musi-cnb-v-komunikaci-pritvrdit-driv-nez-bude-pozde-1432637",
+      "dt": "2026-05-07T04:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "dřív",
+        "komunikaci",
+        "musí",
+        "naděje",
+        "než",
+        "pozdě",
+        "proč",
+        "přitvrdit",
+        "strategie",
+        "čnb"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1055,31 +1082,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "CSG odmítá „lživou“ analýzu a brání svůj pád na burze",
-      "url": "https://www.e15.cz/byznys/obrana-a-zbrojni-prumysl/csg-odmita-lzivou-analyzu-a-brani-svuj-pad-na-burze-1432592",
-      "dt": "2026-05-05T09:38:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "analýzu",
-        "brání",
-        "burze",
-        "csg",
-        "lživou",
-        "odmítá",
-        "pád",
-        "svůj"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1090,7 +1092,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 52617,
+      "bytes": 52409,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1127,7 +1129,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-07T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T04:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 36,
@@ -1144,6 +1146,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Naděje není strategie. Proč musí ČNB v komunikaci přitvrdit dřív, než bude pozdě",
+            "publishedAt": "2026-05-07T04:00:00Z"
+          },
           {
             "title": "ČEZ pod kontrolou státu? I naše pravicová vláda kdysi zvýšila státní podíl, říká expremiér Nečas",
             "publishedAt": "2026-05-07T03:30:00Z"
@@ -1171,10 +1177,6 @@
           {
             "title": "Bez zahraničních pracovníků nové jaderné bloky nepostavíme, uvedli experti",
             "publishedAt": "2026-05-06T13:00:00Z"
-          },
-          {
-            "title": "Trump opět hrozí nejintenzivnějším bombardováním v historii, chce otevření Hormuzského průlivu",
-            "publishedAt": "2026-05-06T12:59:00Z"
           }
         ]
       }

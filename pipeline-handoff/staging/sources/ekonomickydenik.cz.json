@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-07T03:59:29.570884Z",
+  "ingestedAt": "2026-05-07T05:19:23.715417Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ani zaměstnanec, ani živnostník. Komu by pomohl chystaný „třetí režim“?",
+      "url": "https://ekonomickydenik.cz/jen-zamestnanec-a-podnikatel-nestaci/",
+      "dt": "2026-05-07T04:30:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "chystaný",
+        "komu",
+        "pomohl",
+        "režim",
+        "třetí",
+        "zaměstnanec",
+        "živnostník"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -755,34 +779,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Každá uspořená tuna emisí se počítá. Veolia staví fotovoltaiky na střechách dalších budov",
-      "url": "https://ekonomickydenik.cz/veolia-stavi-fotovoltaiky-na-strechach-budov/",
-      "dt": "2026-05-05T10:27:02Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "budov",
-        "dalších",
-        "emisí",
-        "fotovoltaiky",
-        "každá",
-        "počítá",
-        "staví",
-        "střechách",
-        "tuna",
-        "uspořená",
-        "veolia"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74013,
+      "bytes": 73314,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T17:40:57Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T04:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 26,
@@ -847,6 +843,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ani zaměstnanec, ani živnostník. Komu by pomohl chystaný „třetí režim“?",
+            "publishedAt": "2026-05-07T04:30:00Z"
+          },
           {
             "title": "Průliv, nebo peklo? Trump dává Íránu ultimátum",
             "publishedAt": "2026-05-06T17:40:57Z"
@@ -874,10 +874,6 @@
           {
             "title": "Dárek pro Čínu a USA? Snadná pravidla pro podnikání narazila u odborů i investorů",
             "publishedAt": "2026-05-06T12:37:34Z"
-          },
-          {
-            "title": "Odmítáme, aby dotování vodíku zdražilo cenu plynu, vzkazují vládě zástupci byznysu",
-            "publishedAt": "2026-05-06T11:39:32Z"
           }
         ]
       }
