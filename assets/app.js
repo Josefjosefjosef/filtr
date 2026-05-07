@@ -37795,6 +37795,132 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P0 Silver V2: write-cue gate for read-only past/present calendar guard (foldCs).
+   * Nesmí aktivovat čistý read, když uživatel explicitně žádá zápis / připomenutí / plán.
+   */
+  function iuSilverCalendarQueryReadonlyPastPresentGuardWriteCueFolded(x) {
+    const f = String(x || "");
+    if (!f) return false;
+    if (iuSilverHasWriteVerb(f)) return true;
+    if (/\bchci\s+zapsat\b/.test(f)) return true;
+    if (/\bchci\s+ulozit\b/.test(f)) return true;
+    if (/\bdej\s+do\s+kalend/.test(f)) return true;
+    if (/\bpripomen\w*\s+mi\b/.test(f)) return true;
+    if (/\bnaplanuj\b/.test(f)) return true;
+    if (/\bnaplánuj\b/.test(f)) return true;
+    return false;
+  }
+
+  /**
+   * P0 Silver V2: úzký read-only guard (foldCs) — „kdy jsem měl / kolik…letos / v kolik… / mám teď / co mám dnes|zítra|pozítří“
+   * bez write-cue; návrat calendar.read spec před blokací WRITE_SCHED / storage disambiguation.
+   */
+  function iuSilverTryCalendarQueryReadonlyPastPresentGuardReadSpec(r0, f0, rawIn, now) {
+    const r = String(r0 || "").trim();
+    const f = String(f0 || "");
+    if (!r || !f) return null;
+    if (iuSilverCalendarQueryReadonlyPastPresentGuardWriteCueFolded(f)) return null;
+    const qf = f.replace(/\s*[?.!…]+$/u, "").trim();
+    const y0 = now.getFullYear();
+    const yStart = y0 + "-01-01";
+    const yEnd = y0 + "-12-31";
+    const todayS = toDateOnly(now);
+    let m = qf.match(/^\s*kdy\s+(jsem|sem)\s+mel\s+posledn\w*\s+schuz\w*\s+s\s+(.+)$/);
+    if (m && m[2]) {
+      const tailP = String(m[2] || "")
+        .trim()
+        .replace(/\s*[?.!…]+$/u, "")
+        .trim();
+      const canP = tailP.length >= 2 ? iuSilverCanonicalCalendarEntityTitleFromPersonFragment(tailP) : null;
+      if (canP && canP.query) {
+        const qfP = canP.queryFolded || foldCs(String(canP.query || ""));
+        return {
+          intent: "find_by_title",
+          query: canP.query,
+          normalizedQuery: canP.query,
+          diacriticInsensitive: true,
+          queryFolded: qfP,
+          preferPast: true,
+          preferPastMostRecent: true,
+          meetingPersonHint: /\bpetrem\b|\bpetra\b|\bpetr\b/.test(qfP)
+        };
+      }
+    }
+    m = qf.match(/^\s*kdy\s+(jsem|sem)\s+mel\s+schuz\w*\s+s\s+(.+)$/);
+    if (m && m[2]) {
+      const tailS = String(m[2] || "")
+        .trim()
+        .replace(/\s*[?.!…]+$/u, "")
+        .trim();
+      const canS = tailS.length >= 2 ? iuSilverCanonicalCalendarEntityTitleFromPersonFragment(tailS) : null;
+      if (canS && canS.query) {
+        const qfS = canS.queryFolded || foldCs(String(canS.query || ""));
+        return {
+          intent: "find_by_title",
+          query: canS.query,
+          normalizedQuery: canS.query,
+          diacriticInsensitive: true,
+          queryFolded: qfS,
+          preferPast: true,
+          meetingPersonHint: /\bpetrem\b|\bpetra\b|\bpetr\b/.test(qfS)
+        };
+      }
+    }
+    if (/\bkolik\s+(jsem|sem)\s+mel\b/.test(qf) && /\bletos\b/.test(qf) && iuSilverCalendarEntityContextFolded(qf)) {
+      let tailG = "";
+      const mSchL = qf.match(/\bschuz\w*\s+s\s+(.+)$/);
+      if (mSchL && mSchL[1]) tailG = String(mSchL[1] || "").trim();
+      if (!tailG.length && /\bpravnik|advokat\b/.test(qf)) tailG = /\badvokat/.test(qf) ? "Advokát" : "Právník";
+      if (!tailG.length && /\bzubar\b/.test(qf)) tailG = "Zubař";
+      if (!tailG.length && /\bdoktor|lekaf|lekari\b/.test(qf)) tailG = "Doktor";
+      if (tailG.length >= 2) {
+        const canY = iuSilverCanonicalCalendarEntityTitleFromPersonFragment(tailG);
+        if (canY && canY.query) {
+          return {
+            intent: "find_by_title",
+            query: canY.query,
+            normalizedQuery: canY.query,
+            diacriticInsensitive: true,
+            queryFolded: canY.queryFolded,
+            restrictDateStart: yStart,
+            restrictDateEnd: yEnd
+          };
+        }
+      }
+    }
+    if (/\bkolikrat\b/.test(qf) && /\bletos\b/.test(qf) && /\b(jsem|sem)\s+byl\w*\b/.test(qf) && (/\bu\s+zubar/.test(qf) || /\bzubar/.test(qf))) {
+      return {
+        intent: "find_by_title",
+        query: "Zubař",
+        normalizedQuery: "Zubař",
+        diacriticInsensitive: true,
+        queryFolded: foldCs("Zubař"),
+        restrictDateStart: yStart,
+        restrictDateEnd: yEnd
+      };
+    }
+    if (/\bv\s+kolik\b/.test(qf) && /\b(jsem|sem)\s+mel\b/.test(qf) && /\b(vcere|vcera|vceraj)/.test(qf) && (/\bschuz|\budalost/.test(qf))) {
+      return { intent: "agenda_for_day", dateRange: "yesterday", filter: null };
+    }
+    if (/\bm(am|ame)\s+ted\s+neco\b/.test(qf) && !iuSilverRealisticMobileTaskQueryListCueFolded(f)) {
+      return { intent: "agenda_for_day", dateRange: "today", filter: null };
+    }
+    if (
+      (/\bco\s+mam\s+dnes\b/.test(qf) || /\bco\s+mam\s+zitr\w*\b/.test(qf) || /\bco\s+mam\s+pozitri\b/.test(qf)) &&
+      !iuSilverRealisticMobileTaskQueryListCueFolded(f)
+    ) {
+      if (/\bco\s+mam\s+pozitri\b/.test(qf)) {
+        return { intent: "agenda_for_iso", dateIso: addDays(todayS, 2), dayPart: null, timeHHMM: null, filter: null };
+      }
+      if (/\bco\s+mam\s+zitr\w*\b/.test(qf)) {
+        return { intent: "agenda_for_day", dateRange: "tomorrow", filter: null };
+      }
+      return { intent: "agenda_for_day", dateRange: "today", filter: null };
+    }
+    return null;
+  }
+
+  /**
    * Structured read query (P0). Returns null if utterance is not calendar.read.
    */
   function tryParseCalendarRead(rawIn, now) {
@@ -37811,6 +37937,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (iuSilverNoteQueryWithCalendarContextSignalFolded(f)) return null;
     /** P0 realistic mobile note_query: „co jsem si psal o …“ nesmí spadnout na calendar.read (co mám / kdy mám větve). */
     if (iuSilverNoteArchiveQueryCueFolded(f)) return null;
+    {
+      const roPastPresentGuard = iuSilverTryCalendarQueryReadonlyPastPresentGuardReadSpec(r, f, rawIn, now);
+      if (roPastPresentGuard) return roPastPresentGuard;
+    }
     if (iuSilverCalendarReadSuppressedForWriteIntent(f)) return null;
     const rCalReadLeadStrip = r.replace(
       /^(?:nic\s+neukl[áa]dej|nic\s+noveho\s+neukl[áa]dej|jen\s+se\s+pod[íi]vej|jen\s+cti|jen\s+čti|pouze\s+cti|pouze\s+čti)\s*,\s*/i,
@@ -37881,7 +38011,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           }
         }
         const mPastSch = qPast.match(
-          /^\s*kdy\s+(jsem|sem)\s+(mel|mela)\s+posledn\S*\s+sch[uů]z(?:ku|ce|kou)?\s+s\s+(.+)$/i
+          /^\s*kdy\s+(jsem|sem)\s+(m[eě]l|m[eě]la)\s+posledn\S*\s+sch[uů]z(?:ku|ce|kou)?\s+s\s+(.+)$/i
         );
         if (mPastSch && mPastSch[3]) {
           const tailP = String(mPastSch[3] || "")
@@ -37903,7 +38033,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
             };
           }
         }
-        const mSchS = qPast.match(/^\s*kdy\s+(jsem|sem)\s+(mel|mela)\s+sch[uů]z(?:ku|ce|kou)?\s+s\s+(.+)$/i);
+        const mSchS = qPast.match(/^\s*kdy\s+(jsem|sem)\s+(m[eě]l|m[eě]la)\s+sch[uů]z(?:ku|ce|kou)?\s+s\s+(.+)$/i);
         if (mSchS && mSchS[3]) {
           const tailS = String(mSchS[3] || "")
             .trim()
@@ -42936,7 +43066,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
             iuSilverNegativeReadOnlyTaskPhrasesFolded(folded) ||
             iuSilverIsNegatedBroadVerbExcludingTaskOnlyFolded(folded))
         ) {
-          const readSpecProbe = tryParseCalendarRead(raw, now);
+          const rpProbe = iuSilverNormalizeUtteranceForReadParse(raw);
+          const readSpecProbe =
+            tryParseCalendarRead(raw, now) ||
+            iuSilverTryCalendarQueryReadonlyPastPresentGuardReadSpec(rpProbe, foldCs(rpProbe), raw, now);
           if (readSpecProbe) {
             const snapP = ctx && typeof ctx.getEventsSnapshot === "function" ? ctx.getEventsSnapshot() : [];
             const matchedP = iuSilverRetrieveReadQuery(readSpecProbe, snapP, now);
