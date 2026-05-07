@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-07T18:20:11.537991Z",
+  "ingestedAt": "2026-05-07T19:00:03.890230Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Pavel chce po jednání s Babišem oznámit, že na summit NATO pojedou oba. Jinak podá kompetenční žalobu",
+      "url": "https://domaci.hn.cz/c1-67874980-pavel-chce-po-jednani-s-babisem-oznamit-ze-na-summit-nato-pojedou-oba-jinak-poda-kompetencni-zalobu",
+      "dt": "2026-05-07T18:20:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "babišem",
+        "chce",
+        "jednání",
+        "jinak",
+        "kompetenční",
+        "nato",
+        "oba",
+        "oznámit",
+        "pavel",
+        "podá",
+        "pojedou",
+        "summit",
+        "žalobu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1104,33 +1134,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Přichází éra &bdquo;agentní AI&ldquo;, čeká se extrémní nárůst poptávky po procesorech",
-      "url": "https://archiv.hn.cz/c1-67874400-prichazi-era-bdquo-agentni-ai-ldquo-ceka-se-extremni-narust-poptavky-po-procesorech",
-      "dt": "2026-05-06T12:59:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "agentní",
-        "bdquo",
-        "extrémní",
-        "ldquo",
-        "nárůst",
-        "poptávky",
-        "procesorech",
-        "přichází",
-        "éra",
-        "čeká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1141,7 +1144,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183592,
+      "bytes": 183419,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1178,7 +1181,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-07T16:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T18:20:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 34,
@@ -1195,6 +1198,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pavel chce po jednání s Babišem oznámit, že na summit NATO pojedou oba. Jinak podá kompetenční žalobu",
+            "publishedAt": "2026-05-07T18:20:00Z"
+          },
           {
             "title": "Mezi Twistem a &bdquo;Pepou od kytek&ldquo; se rozjela otevřená válka. Franšízingová skupina chce po zahradníkovi deset milionů a hrozí žalobami",
             "publishedAt": "2026-05-07T16:30:00Z"
@@ -1222,10 +1229,6 @@
           {
             "title": "Německo by mohlo mít prvního zemského premiéra z AfD, ukázal průzkum. Je to obrovská vzpruha, slaví extremisté",
             "publishedAt": "2026-05-07T11:51:00Z"
-          },
-          {
-            "title": "Kam investuje peníze ČNB? Její strategie není tak pasivní, jak by se mohlo zdát",
-            "publishedAt": "2026-05-07T09:45:00Z"
           }
         ]
       }

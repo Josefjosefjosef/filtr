@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-07T18:20:11.537991Z",
+  "ingestedAt": "2026-05-07T19:00:03.890230Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Pavel na summit NATO pojede. Pokud Babiš neustoupí, podá žalobu",
+      "url": "https://ekonomickydenik.cz/pavel-summit-nato-babis-zaloba/",
+      "dt": "2026-05-07T18:37:42Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "babiš",
+        "nato",
+        "neustoupí",
+        "pavel",
+        "podá",
+        "pojede",
+        "pokud",
+        "summit",
+        "žalobu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -755,31 +781,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Neobvyklé partnerství: ČEZ postaví s firmou exministra větrníky na Olomoucku",
-      "url": "https://ekonomickydenik.cz/cez-postavi-exministr-milek-vetrniky-olomoucko/",
-      "dt": "2026-05-06T05:20:54Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "exministra",
-        "firmou",
-        "neobvyklé",
-        "olomoucku",
-        "partnerství",
-        "postaví",
-        "větrníky",
-        "čez"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72743,
+      "bytes": 72868,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,7 +828,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T17:07:33Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T18:37:42Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 23,
@@ -844,6 +845,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pavel na summit NATO pojede. Pokud Babiš neustoupí, podá žalobu",
+            "publishedAt": "2026-05-07T18:37:42Z"
+          },
           {
             "title": "Dron dopadl na sklad ropy v Lotyšsku. Stroj měl pocházet z Ukrajiny",
             "publishedAt": "2026-05-07T17:07:33Z"
@@ -871,10 +876,6 @@
           {
             "title": "Kanada má blíž do evropského zbrojního klubu. Bude mít Česko méně levných peněz?",
             "publishedAt": "2026-05-07T09:50:57Z"
-          },
-          {
-            "title": "Funguje to. GasNet otestoval na Ašsku distribuci směsi zemního plynu s vodíkem",
-            "publishedAt": "2026-05-07T09:42:24Z"
           }
         ]
       }
