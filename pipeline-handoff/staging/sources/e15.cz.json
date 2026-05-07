@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-07T05:19:23.715417Z",
+  "ingestedAt": "2026-05-07T06:15:45.403402Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Receptem dolarových milionářů jsou data místo emocí, ukazuje průzkum J&T Banka Wealth Report",
+      "url": "https://www.e15.cz/tiskove-zpravy/receptem-dolarovych-milionaru-jsou-data-misto-emoci-ukazuje-pruzkum-j-t-banka-wealth-report-1432658",
+      "dt": "2026-05-07T05:30:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "banka",
+        "data",
+        "dolarových",
+        "emocí",
+        "milionářů",
+        "místo",
+        "průzkum",
+        "receptem",
+        "report",
+        "ukazuje",
+        "wealth"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1056,32 +1084,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Svátky 2026 a otevírací doba: Kdy mají obchody zavřeno a kdy nakoupíte bez omezení?",
-      "url": "https://www.e15.cz/kdy-jsou-zavrene-obchody-statni-svatky-kdy-otevrene",
-      "dt": "2026-05-05T10:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "2026",
-        "doba",
-        "mají",
-        "nakoupíte",
-        "obchody",
-        "omezení",
-        "otevírací",
-        "svátky",
-        "zavřeno"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1092,11 +1094,11 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 52409,
+      "bytes": 53601,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 46,
+      "itemsParsed": 47,
       "itemsKept": 40,
       "accepted": 40,
       "status": "OK",
@@ -1129,7 +1131,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-07T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T05:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 36,
@@ -1146,6 +1148,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Receptem dolarových milionářů jsou data místo emocí, ukazuje průzkum J&T Banka Wealth Report",
+            "publishedAt": "2026-05-07T05:30:00Z"
+          },
           {
             "title": "Naděje není strategie. Proč musí ČNB v komunikaci přitvrdit dřív, než bude pozdě",
             "publishedAt": "2026-05-07T04:00:00Z"
@@ -1173,10 +1179,6 @@
           {
             "title": "Snížení sociálních odvodů pro živnostníky na loňskou úroveň Senát odmítl",
             "publishedAt": "2026-05-06T13:07:00Z"
-          },
-          {
-            "title": "Bez zahraničních pracovníků nové jaderné bloky nepostavíme, uvedli experti",
-            "publishedAt": "2026-05-06T13:00:00Z"
           }
         ]
       }

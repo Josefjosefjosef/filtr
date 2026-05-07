@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-07T05:19:23.715417Z",
+  "ingestedAt": "2026-05-07T06:15:45.403402Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ivo Šíf šéfem právního oddělení Provident Financial",
+      "url": "https://profitonline.cz/ivo-sif-sefem-pravniho-oddeleni-provident-financial/",
+      "dt": "2026-05-07T06:00:29Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "financial",
+        "ivo",
+        "oddělení",
+        "provident",
+        "právního",
+        "šéfem",
+        "šíf"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -261,29 +285,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Colt CZ: Amsterdamská burza není jen symbolický doplněk",
-      "url": "https://profitonline.cz/colt-cz-amsterdamska-burza-neni-jen-symbolicky-doplnek/",
-      "dt": "2026-05-05T07:00:10Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "amsterdamská",
-        "burza",
-        "colt",
-        "doplněk",
-        "jen",
-        "symbolický"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -294,7 +295,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18854,
+      "bytes": 18843,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -331,7 +332,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-07T05:00:22Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T06:00:29Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -347,6 +348,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ivo Šíf šéfem právního oddělení Provident Financial",
+            "publishedAt": "2026-05-07T06:00:29Z"
+          },
           {
             "title": "Inflace letos může atakovat tříprocentní úroveň",
             "publishedAt": "2026-05-07T05:00:22Z"
@@ -374,10 +379,6 @@
           {
             "title": "Dočkáme se po vládním zmocněnci pro NATO i zmocněnce pro kulturu?",
             "publishedAt": "2026-05-06T04:00:00Z"
-          },
-          {
-            "title": "Konec zlaté rally? Zlato ztratilo už osmnáct procent",
-            "publishedAt": "2026-05-05T17:30:08Z"
           }
         ]
       }
