@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-07T20:20:50.127061Z",
+  "ingestedAt": "2026-05-07T21:00:33.733722Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Muž obviněný z útoku na proizraelskou demonstraci v Coloradu dostal doživotí",
+      "url": "https://zpravy.aktualne.cz/zahranici/muz-obvineny-z-utoku-na-proizraelskou-demonstraci-v-coloradu-dostal-dozivoti/r~aaa29b05df6cbe9463444ece376b1803/",
+      "dt": "2026-05-07T20:14:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "coloradu",
+        "demonstraci",
+        "dostal",
+        "doživotí",
+        "muž",
+        "obviněný",
+        "proizraelskou",
+        "útoku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -266,7 +291,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Krejčíková - Sabalenková 0:1. Po skvělém startu Češky se jednička probrala",
+      "title": "Krejčíková - Sabalenková 0:2. Jednička se rychle probrala, Češka nestačila",
       "url": "https://sport.aktualne.cz/tenis/krejcikova-sabalenkova-obri-vyzva-pro-cesku-po-navratu-jde-proti-svetove-jednicce/r~aaa29fb437fa1061083067973d652215/",
       "dt": "2026-05-07T18:00:00Z",
       "media_raw": "Aktuálně",
@@ -274,11 +299,11 @@
       "tokens": [
         "jednička",
         "krejčíková",
+        "nestačila",
         "probrala",
+        "rychle",
         "sabalenková",
-        "skvělém",
-        "startu",
-        "češky"
+        "češka"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -493,33 +518,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Otrávená dětská výživa nalezená v Rakousku nebyla podle testu životu nebezpečná",
-      "url": "https://zpravy.aktualne.cz/zahranici/otravena-detska-vyziva-nalezena-v-rakousku-nebyla-podle-testu-zivotu-nebezpecna/r~aaa29aa3b6b5c4bea28fdcbca68e4233/",
-      "dt": "2026-05-07T14:41:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dětská",
-        "nalezená",
-        "nebezpečná",
-        "nebyla",
-        "otrávená",
-        "podle",
-        "rakousku",
-        "testu",
-        "výživa",
-        "životu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -530,7 +528,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 20989,
+      "bytes": 21079,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -567,11 +565,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-07T19:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T20:14:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 7,
           "zpravy": 12,
+          "sport": 7,
           "zdravi": 1
         },
         "drop_counts": {
@@ -584,6 +582,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Muž obviněný z útoku na proizraelskou demonstraci v Coloradu dostal doživotí",
+            "publishedAt": "2026-05-07T20:14:00Z"
+          },
           {
             "title": "Skandál před El Clásicem. Hráči Realu se poprali, jeden skončil v nemocnici",
             "publishedAt": "2026-05-07T19:59:00Z"
@@ -611,10 +613,6 @@
           {
             "title": "Kvůli ruským útokům hoří 2400 hektarů lesa na severu Ukrajiny",
             "publishedAt": "2026-01-21T06:45:00Z"
-          },
-          {
-            "title": "V Perském zálivu je kvůli íránské blokádě uvízlých 1500 lodí",
-            "publishedAt": "2026-02-28T14:04:00Z"
           }
         ]
       }
