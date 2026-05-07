@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-07T13:55:03.649634Z",
+  "ingestedAt": "2026-05-07T14:39:45.975505Z",
   "items": [
     {
       "section": "aktualne",
@@ -428,19 +428,19 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Policie pátrá po pachatelích, kteří odpálili bankomat v Praze 4",
+      "title": "Pachatelé v Praze odpálili bankomat a ukradli statisíce korun",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/v-obchodnim-centru-v-praze-4-nekdo-odpalil-bankomat-373188",
       "dt": "2026-05-07T06:07:15Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
         "bankomat",
-        "kteří",
+        "korun",
         "odpálili",
-        "pachatelích",
-        "policie",
+        "pachatelé",
         "praze",
-        "pátrá"
+        "statisíce",
+        "ukradli"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -737,7 +737,35 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Švédské hokejové hry: Finsko – Švýcarsko",
+      "title": "Bělorusko se může vrátit na sportovní scénu. MOV doporučil zrušit sankce, omezení Ruska trvá",
+      "url": "https://sport.ceskatelevize.cz/clanek/olympijske-hry/belorusko-se-muze-vratit-na-sportovni-scenu-mov-doporucil-zrusit-sankce-omezeni-ruska-trva-156645",
+      "dt": "2026-05-07T14:15:42Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "bělorusko",
+        "doporučil",
+        "mov",
+        "omezení",
+        "ruska",
+        "sankce",
+        "scénu",
+        "sportovní",
+        "trvá",
+        "vrátit",
+        "zrušit"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Švédské hokejové hry: Finsko – Švýcarsko 2:",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/svedske-hokejove-hry-finsko-svycarsko-156644",
       "dt": "2026-05-07T12:50:53Z",
       "media_raw": "ČT sport",
@@ -759,7 +787,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Svrčinu zradil servis, s turnajem v Římě se loučí hned v prvním kole",
+      "title": "Nosková si v Římě poradila se Zacharovovou, Svrčina končí hned v prvním kole",
       "url": "https://sport.ceskatelevize.cz/clanek/tenis/svrcinu-zradil-servis-s-turnajem-v-rime-se-louci-hned-v-prvnim-kole-156643",
       "dt": "2026-05-07T11:37:39Z",
       "media_raw": "ČT sport",
@@ -767,12 +795,12 @@
       "tokens": [
         "hned",
         "kole",
-        "loučí",
+        "končí",
+        "nosková",
+        "poradila",
         "prvním",
-        "servis",
-        "svrčinu",
-        "turnajem",
-        "zradil",
+        "svrčina",
+        "zacharovovou",
         "římě"
       ],
       "feedCategory": "sport",
@@ -1464,33 +1492,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Všichni mají dobré nastavení, vyhlíží další úspěchy bronzový kouč Tomajko",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/vsichni-maji-dobre-nastaveni-vyhlizi-dalsi-uspechy-bronzovy-kouc-tomajko-156613",
-      "dt": "2026-05-05T14:30:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "bronzový",
-        "další",
-        "dobré",
-        "kouč",
-        "mají",
-        "nastavení",
-        "tomajko",
-        "vyhlíží",
-        "všichni",
-        "úspěchy"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1501,7 +1502,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41847,
+      "bytes": 41921,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1619,7 +1620,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37575,
+      "bytes": 37487,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1656,7 +1657,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T12:50:53Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T14:15:42Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1672,11 +1673,15 @@
         },
         "sample_titles": [
           {
-            "title": "Švédské hokejové hry: Finsko – Švýcarsko",
+            "title": "Bělorusko se může vrátit na sportovní scénu. MOV doporučil zrušit sankce, omezení Ruska trvá",
+            "publishedAt": "2026-05-07T14:15:42Z"
+          },
+          {
+            "title": "Švédské hokejové hry: Finsko – Švýcarsko 2:",
             "publishedAt": "2026-05-07T12:50:53Z"
           },
           {
-            "title": "Svrčinu zradil servis, s turnajem v Římě se loučí hned v prvním kole",
+            "title": "Nosková si v Římě poradila se Zacharovovou, Svrčina končí hned v prvním kole",
             "publishedAt": "2026-05-07T11:37:39Z"
           },
           {
@@ -1698,10 +1703,6 @@
           {
             "title": "Není lepší mužstvo než PSG. Bayern se na naši úroveň dostal, říkal po postupu Enrique",
             "publishedAt": "2026-05-07T06:01:47Z"
-          },
-          {
-            "title": "Buffalo odčarovalo Dobešovo kouzlo. Dostálovi se vedlo lépe",
-            "publishedAt": "2026-05-07T05:54:21Z"
           }
         ]
       }
@@ -1713,7 +1714,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78296,
+      "bytes": 78252,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

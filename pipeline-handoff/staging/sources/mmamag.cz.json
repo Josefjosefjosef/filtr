@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-07T13:55:03.649634Z",
+  "ingestedAt": "2026-05-07T14:39:45.975505Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Clash 16 bere Ostravu útokem. Sivák jde do klece, Bendu čeká Baba Jaga",
+      "url": "https://www.mmamag.cz/clash-16-v-ostrave-sivak-benda-i-mikulasek/",
+      "dt": "2026-05-07T14:15:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "baba",
+        "bendu",
+        "bere",
+        "clash",
+        "jaga",
+        "jde",
+        "klece",
+        "ostravu",
+        "sivák",
+        "útokem",
+        "čeká"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "video",
@@ -1061,33 +1089,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Šampion Chimaev nahání hrůzu. Profesionálové z UFC předpovídají Stricklandovi naprostou demolici",
-      "url": "https://www.mmamag.cz/chimaev-vs-strickland-bojovnici-maji-jasno/",
-      "dt": "2026-05-06T05:33:15Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "chimaev",
-        "demolici",
-        "hrůzu",
-        "nahání",
-        "naprostou",
-        "profesionálové",
-        "předpovídají",
-        "stricklandovi",
-        "ufc",
-        "šampion"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1098,7 +1099,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 82203,
+      "bytes": 82096,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1135,7 +1136,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-07T13:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T14:15:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1150,6 +1151,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Clash 16 bere Ostravu útokem. Sivák jde do klece, Bendu čeká Baba Jaga",
+            "publishedAt": "2026-05-07T14:15:00Z"
+          },
           {
             "title": "Říkali mu „Experiment“ a svou silou budil respekt a hrůzu. Zápasník Alexandr Karelin porazil 887 soupeřů",
             "publishedAt": "2026-05-07T13:30:00Z"
@@ -1177,10 +1182,6 @@
           {
             "title": "Strickland se opřel do UFC. MMA prý ničí příliv bojovníků z východu",
             "publishedAt": "2026-05-07T09:45:00Z"
-          },
-          {
-            "title": "UFC 328: Bojovníci věří Vanovi. Bookmakeři zase Tairovi",
-            "publishedAt": "2026-05-07T09:00:00Z"
           }
         ]
       }

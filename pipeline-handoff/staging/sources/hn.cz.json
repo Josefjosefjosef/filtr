@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-07T13:55:03.649634Z",
+  "ingestedAt": "2026-05-07T14:39:45.975505Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Pomáhat a chránit? Přišla nahlásit brutální znásilnění, policisté ji ale vyhodili a pachatel útočil znovu",
+      "url": "https://domaci.hn.cz/c1-67874760-pomahat-a-chranit-prisla-nahlasit-brutalni-znasilneni-policiste-ji-ale-vyhodili-a-pachatel-utocil-znovu",
+      "dt": "2026-05-07T14:00:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "ale",
+        "brutální",
+        "chránit",
+        "nahlásit",
+        "pachatel",
+        "policisté",
+        "pomáhat",
+        "přišla",
+        "vyhodili",
+        "znovu",
+        "znásilnění",
+        "útočil"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -21,6 +50,32 @@
         "příběh",
         "rafinerie",
         "zachránit"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "ČNB mírní optimismus, očekává letos pomalejší růst a vyšší inflaci",
+      "url": "https://byznys.hn.cz/c1-67874890-cnb-mirni-optimismus-ocekava-letos-pomalejsi-rust-a-vyssi-inflaci",
+      "dt": "2026-05-07T13:32:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "inflaci",
+        "letos",
+        "mírní",
+        "optimismus",
+        "očekává",
+        "pomalejší",
+        "růst",
+        "vyšší",
+        "čnb"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1067,69 +1122,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Efekt Čapí hnízdo? Tejc chce omezit pravomoci odvolacích soudů, experti se ale obávají nekonečného &bdquo;ping-pongu&ldquo;",
-      "url": "https://archiv.hn.cz/c1-67874240-efekt-capi-hnizdo-tejc-chce-omezit-pravomoci-odvolacich-soudu-experti-se-ale-obavaji-nekonecneho-bdquo-ping-pongu-ldquo",
-      "dt": "2026-05-06T11:26:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "ale",
-        "bdquo",
-        "chce",
-        "efekt",
-        "experti",
-        "hnízdo",
-        "ldquo",
-        "nekonečného",
-        "obávají",
-        "odvolacích",
-        "omezit",
-        "ping",
-        "pongu",
-        "pravomoci",
-        "soudů",
-        "tejc",
-        "čapí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Pozměňte ten pozměňovák! Z novely stavebního zákona se stala nepřehledná paragrafová změť, v které se už teď nikdo nevyzná",
-      "url": "https://archiv.hn.cz/c1-67874380-pozmente-ten-pozmenovak-z-novely-stavebniho-zakona-se-stala-neprehledna-paragrafova-zmet-v-ktere-se-uz-ted-nikdo-nevyzna",
-      "dt": "2026-05-06T10:49:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "nepřehledná",
-        "nevyzná",
-        "nikdo",
-        "novely",
-        "paragrafová",
-        "pozměňovák",
-        "pozměňte",
-        "stala",
-        "stavebního",
-        "ten",
-        "změť",
-        "zákona"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1140,7 +1132,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183329,
+      "bytes": 183429,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1177,12 +1169,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-07T13:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T14:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
+          "zpravy": 2,
           "finance": 36,
-          "zdravi": 2,
-          "zpravy": 2
+          "zdravi": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1195,8 +1187,16 @@
         },
         "sample_titles": [
           {
+            "title": "Pomáhat a chránit? Přišla nahlásit brutální znásilnění, policisté ji ale vyhodili a pachatel útočil znovu",
+            "publishedAt": "2026-05-07T14:00:00Z"
+          },
+          {
             "title": "Rafinerie, která může zachránit evropské aerolinky. Příběh největší energetické investice v Africe",
             "publishedAt": "2026-05-07T13:35:00Z"
+          },
+          {
+            "title": "ČNB mírní optimismus, očekává letos pomalejší růst a vyšší inflaci",
+            "publishedAt": "2026-05-07T13:32:00Z"
           },
           {
             "title": "Evropa vyhání technologické start-upy. Kvůli regulaci AI jich odešla už víc než stovka",
@@ -1217,14 +1217,6 @@
           {
             "title": "Předdůchod je skvělá věc. Ušetří statisíce a přináší klid, když už to v práci dál nejde",
             "publishedAt": "2026-05-07T08:22:00Z"
-          },
-          {
-            "title": "ČSÚ: Růst českého průmyslu čtvrtý měsíc v řadě zpomaluje, daří se stavebnictví",
-            "publishedAt": "2026-05-07T07:59:00Z"
-          },
-          {
-            "title": "Má Evropu táhnout šest ekonomicky silných zemí? Jak by se Česko mělo postavit k dvourychlostní EU",
-            "publishedAt": "2026-05-07T07:32:00Z"
           }
         ]
       }
