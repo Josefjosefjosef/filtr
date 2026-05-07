@@ -1,6 +1,6 @@
 {
   "date": "2026-04-30",
-  "generatedAt": "2026-05-07T11:07:56.287933Z",
+  "generatedAt": "2026-05-07T11:52:49.379636Z",
   "items": [
     {
       "topic": "aktualne",
@@ -271,8 +271,8 @@
       "feedId": "zpr_idnes_zpravy",
       "url": "https://www.idnes.cz/kultura/halo-jdeme-loupit-znate-dobre-komedii-eva-tropi-hlouposti.Q260429_144424_kultura_jgo",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.04037026438604884,
-      "iuReleaseAt": "2026-05-07T11:07:57.287933Z",
+      "displayScore": 0.04018194681789974,
+      "iuReleaseAt": "2026-05-07T11:52:50.379636Z",
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "kultura",
@@ -1328,7 +1328,7 @@
       "feedId": "zpr_seznam_domaci",
       "url": "https://www.seznamzpravy.cz/clanek/sport-fotbal-ms-ve-fotbale-iransti-fotbaliste-se-zucastni-ms-v-usa-potvrdil-na-kongresu-sef-fifa-infantino-305274",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.04134466678334291,
+      "displayScore": 0.04115571856741988,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "sport",
@@ -2077,7 +2077,7 @@
       "feedId": "kul_vtelce",
       "url": "https://www.vtelce.cz/policie-modrava-statisicove-platy-hercu-smrt-pred-premierou-a-zmrzly-kun-na-place/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.026742293256284404,
+      "displayScore": 0.026621078920189237,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -3316,7 +3316,7 @@
       "feedId": "zpr_novinky_domaci",
       "url": "https://www.novinky.cz/clanek/pocasi-obri-kroupy-nicily-majetek-ve-springfieldu-40575915",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.04051125041002102,
+      "displayScore": 0.04032982625427462,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -3665,7 +3665,7 @@
       "feedId": "zpr_aktualne",
       "url": "https://zpravy.aktualne.cz/domaci/nehoda-kamionu-s-herbicidy-a-auta-zastavila-v-ostrave-d1-na-polsko-jeden-zraneny/r~aaa29f6c473d29ef1ad2fe9e8c8208eb/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03342716374615982,
+      "displayScore": 0.033277636837979824,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -4460,7 +4460,7 @@
       "feedId": "hry_zing",
       "url": "https://zing.cz/article/film-podle-herni-serie-resident-evil-obdrzel",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.029739921271282097,
+      "displayScore": 0.029607634762524374,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -4739,7 +4739,7 @@
       "feedId": "fin_hn",
       "url": "https://archiv.hn.cz/c1-67872480-biotech-bdquo-olympiada-ldquo-miri-do-prahy-sjedou-se-na-ni-globalni-investori-mezi-nimi-i-fondy-ze-skupiny-novo-nordisk-nebo-novartis",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03478529718069241,
+      "displayScore": 0.03463146135491689,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "sport",
@@ -5255,6 +5255,38 @@
       }
     },
     {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "iPhony 17 trápí zvláštní problém. Po úplném vybití se nezapnou ani po připojení k nabíječce",
+      "publishedAt": "2026-04-30T11:45:00Z",
+      "sources": [
+        {
+          "name": "VTM",
+          "url": "https://mobilmania.zive.cz/clanky/iphony-17-trapi-zvlastni-problem-po-uplnem-vybiti-se-nezapnou-ani-po-pripojeni-k-nabijecce/sc-3-a-1364646/default.aspx"
+        }
+      ],
+      "primaryCategory": "veda",
+      "topicHash": "baf7333eab4b9e38",
+      "feedType": "rss",
+      "sourceDisplayWeight": 0.95,
+      "sectionPrimary": "veda",
+      "sourceLabel": "VTM",
+      "feedId": "ved_vtm",
+      "url": "https://mobilmania.zive.cz/clanky/iphony-17-trapi-zvlastni-problem-po-uplnem-vybiti-se-nezapnou-ani-po-pripojeni-k-nabijecce/sc-3-a-1364646/default.aspx",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.03266421960607047,
+      "iuReleaseAt": "2026-05-06T12:18:04.593759Z",
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "tech",
+        "reason": "tech_url_regex",
+        "confidence": 0.9,
+        "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
+    {
       "topic": "sport",
       "section": "sport",
       "contentType": "article",
@@ -5282,38 +5314,6 @@
         "reason": "url_strong_vertical",
         "confidence": 0.94,
         "railSectionKey": "sport",
-        "guardFlags": []
-      }
-    },
-    {
-      "topic": "veda",
-      "section": "veda",
-      "contentType": "article",
-      "title": "iPhony 17 trápí zvláštní problém. Po úplném vybití se nezapnou ani po připojení k nabíječce",
-      "publishedAt": "2026-04-30T11:45:00Z",
-      "sources": [
-        {
-          "name": "VTM",
-          "url": "https://mobilmania.zive.cz/clanky/iphony-17-trapi-zvlastni-problem-po-uplnem-vybiti-se-nezapnou-ani-po-pripojeni-k-nabijecce/sc-3-a-1364646/default.aspx"
-        }
-      ],
-      "primaryCategory": "veda",
-      "topicHash": "baf7333eab4b9e38",
-      "feedType": "rss",
-      "sourceDisplayWeight": 0.95,
-      "sectionPrimary": "veda",
-      "sourceLabel": "VTM",
-      "feedId": "ved_vtm",
-      "url": "https://mobilmania.zive.cz/clanky/iphony-17-trapi-zvlastni-problem-po-uplnem-vybiti-se-nezapnou-ani-po-pripojeni-k-nabijecce/sc-3-a-1364646/default.aspx",
-      "duplicatePenalty": 1.0,
-      "displayScore": 0.03778520462112906,
-      "iuReleaseAt": "2026-05-06T12:18:04.593759Z",
-      "iuFeedClassification": {
-        "v": 1,
-        "mediaTopicKey": "tech",
-        "reason": "tech_url_regex",
-        "confidence": 0.9,
-        "railSectionKey": "veda",
         "guardFlags": []
       }
     },
@@ -6727,7 +6727,7 @@
       "feedId": "spt_sportcz",
       "url": "https://www.sport.cz/clanek/moto-motocykly-smolny-start-sezony-i-desivy-karambol-ovlivnily-moji-psychiku-priznava-salac-5446187",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03937051527148462,
+      "displayScore": 0.039199142910626636,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -7006,7 +7006,7 @@
       "feedId": "hry_zing",
       "url": "https://zing.cz/article/saros-otevira-sve-brany-hodnocenim-prekonava-vsechny-dosavadni-hry-studia",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.029062036801935545,
+      "displayScore": 0.02893569936664228,
       "iuReleaseAt": "2026-05-06T07:08:01.355924Z",
       "iuFeedClassification": {
         "v": 1,
@@ -7263,7 +7263,7 @@
       "feedId": "hry_indian",
       "url": "https://indian-tv.cz/clanek/assassins-creed-hexe-v-problemech-ubisoft-presouva-vyvojare-wprb11",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.030754140679806266,
+      "displayScore": 0.03062052278192672,
       "iuReleaseAt": "2026-05-06T14:09:03.071600Z",
       "iuFeedClassification": {
         "v": 1,
@@ -8365,7 +8365,7 @@
       "feedId": "ved_vtm",
       "url": "https://mobilmania.zive.cz/clanky/airpods-na-androidu-konecne-funguji-skoro-jako-s-iphonem-komunita-obesla-omezeni-applu/sc-3-a-1363775/default.aspx",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.032251371870859906,
+      "displayScore": 0.03211215719734873,
       "iuReleaseAt": "2026-05-06T07:47:44.001826Z",
       "iuFeedClassification": {
         "v": 1,
@@ -9224,7 +9224,7 @@
       "feedId": "ved_technet",
       "url": "https://www.idnes.cz/technet/software/rozstrel-jan-halic-ai-brusel-evropska-umela-inteligence-brusel-zakaz.A260429_190035_software_vov",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03380535603048188,
+      "displayScore": 0.03366004747617693,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -10457,7 +10457,7 @@
       "feedId": "fin_faei",
       "url": "https://profitonline.cz/novy-most-v-praze-je-dvakrat-drazsi-nez-podobna-stavba-v-helsinkach/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.026844844990553264,
+      "displayScore": 0.02673030273430382,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -10523,7 +10523,7 @@
       "feedId": "zpr_seznam_domaci",
       "url": "https://www.seznamzpravy.cz/clanek/sport-popelka-v-tretrach-ukrajinsky-zednik-s-ceskym-pasem-sni-o-medailich-304467",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.038514493824800516,
+      "displayScore": 0.0383504771254026,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "sport",
@@ -10585,7 +10585,7 @@
       "feedId": "hry_indian",
       "url": "https://indian-tv.cz/clanek/sony-reaguje-na-obavy-z-nove-protipiratske-ochrany-playstationu-vi8bww",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03013047216812921,
+      "displayScore": 0.030002207341474005,
       "iuReleaseAt": "2026-05-06T11:39:12.323610Z",
       "iuFeedClassification": {
         "v": 1,
@@ -11250,7 +11250,7 @@
       "feedId": "zpr_aktualne",
       "url": "https://zpravy.aktualne.cz/domaci/zdravotnictvi-22850dba-908b-4192-badc-0e7f1c003a00/rodice-stale-volaji-hrozba-otravy-kojencu-trva-poslanci-si-dupli-na-babisovy-ministry/r~aaa2991e5a26b3a7ffd2d87f09ef56b9/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.031677812334374965,
+      "displayScore": 0.03154349491827322,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
