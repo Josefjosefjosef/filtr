@@ -35237,10 +35237,25 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return false;
   }
 
+  /**
+   * P0 calendar_vs_task_confusion|task_query: „kdy mám kupovat …“, „dokdy / do kdy mám koupit …“
+   * → tasks.read (ne calendar find_by_title přes kdy-mám větev v tryParseCalendarRead).
+   * foldCs text; bez úkolového tailu věta stejně směřuje na nákupní deadline v úkolech.
+   */
+  function iuSilverTaskQueryPurchaseDeadlineCueFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (/\bkdy\s+mam\s+kupovat\b/.test(x)) return true;
+    if (/\bdokdy\s+mam\s+koupit\b/.test(x)) return true;
+    if (/\bdo\s+kdy\s+mam\s+koupit\b/.test(x)) return true;
+    return false;
+  }
+
   /** P0: task_query audit — dotazy, které nesmí spadnout do create / storage disambiguation. */
   function iuSilverTaskQueryHardSignalFolded(f) {
     const x = String(f || "");
     if (!x) return false;
+    if (iuSilverTaskQueryPurchaseDeadlineCueFolded(x)) return true;
     if (iuSilverTaskStatusReadQuerySignalFolded(x)) return true;
     if (iuSilverTaskReadNegatedCalendarModuleFolded(x)) return true;
     if (iuSilverTaskQueryNegatedCalendarScopeFolded(x)) return true;
@@ -35491,6 +35506,62 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return iuSilverBuildTasksReadListTurn(ctx || {}, empty, f, now);
     }
     const preferFuture = /\bkdy\b/.test(f) || /\bdo\s+10\s+dnu\b/.test(f);
+    const dateHint = /\bzitra\b|\bzittra\b/.test(f) ? "tomorrow" : /\bdnes\b|\bdneska\b/.test(f) ? "today" : "";
+    const sr = iuSilverSearchLocalData(q, {
+      target: "tasks",
+      now: now,
+      preferFuture: preferFuture,
+      dateHint: dateHint,
+      getEventsSnapshot: ctx && ctx.getEventsSnapshot,
+      getTasksSnapshot: ctx && ctx.getTasksSnapshot,
+      getNotesSnapshot: ctx && ctx.getNotesSnapshot,
+      rawFoldedHint: f
+    });
+    const ans = iuSilverBuildAnswerFromSearch(sr);
+    return {
+      normalizedIntent: "tasks.read",
+      targetContainer: "none",
+      processingState: "READ_OK",
+      clarificationReason: null,
+      futureIntentCandidate: null,
+      readQuery: { silverReadSearch: true, target: "tasks", query: q },
+      readAnswer: { message: ans.message, silverSearch: sr },
+      extractedFields: {},
+      missingFields: [],
+      ambiguousFields: [],
+      userFacingSummary: ans.message,
+      assistantLead: ans.message,
+      clarificationText: "",
+      draft: empty,
+      silverSearchResult: sr
+    };
+  }
+
+  /**
+   * P0: nákupní deadline dotaz před tryParseCalendarRead — tasks.read / task search, žádný write.
+   * Respektuje explicitní kalendářní scope, calendar-wins, write-cues a calendar-read write suppression.
+   */
+  function iuSilverTryTaskQueryPurchaseDeadlineReadTurn(raw, now, folded, ctx, empty) {
+    const f = String(folded || "");
+    const r0 = String(raw || "").trim();
+    if (!r0 || !f) return null;
+    if (!iuSilverTaskQueryPurchaseDeadlineCueFolded(f)) return null;
+    if (iuSilverCalendarReadSuppressedForWriteIntent(f)) return null;
+    if (iuSilverHasWriteVerb(f)) return null;
+    if (iuSilverExplicitCalendarReadScopeFolded(f)) return null;
+    if (iuSilverCalendarReadWinsOverTaskReadFolded(f)) return null;
+    let rTail = String(r0 || "")
+      .replace(/^\s*kdy\s+m[aá]m\s+kupovat\b\s*/i, "")
+      .replace(/^\s*dokdy\s+m[aá]m\s+koupit\b\s*/i, "")
+      .replace(/^\s*do\s+kdy\s+m[aá]m\s+koupit\b\s*/i, "")
+      .trim();
+    rTail = rTail.replace(/\s*[?.!…]+$/u, "").trim();
+    const fTail = foldCs(rTail);
+    let q = iuSilverExtractTaskQuerySearchSubject(rTail, fTail);
+    if (!String(q || "").trim()) {
+      return iuSilverBuildTasksReadListTurn(ctx || {}, empty, f, now);
+    }
+    const preferFuture = true;
     const dateHint = /\bzitra\b|\bzittra\b/.test(f) ? "tomorrow" : /\bdnes\b|\bdneska\b/.test(f) ? "today" : "";
     const sr = iuSilverSearchLocalData(q, {
       target: "tasks",
@@ -42868,6 +42939,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const salEarly = iuSilverBuildSalutationPreferenceTurn(raw0);
     if (salEarly) {
       return salEarly;
+    }
+
+    const purchaseDeadlineTaskRead = iuSilverTryTaskQueryPurchaseDeadlineReadTurn(raw, now, folded, ctx || {}, empty);
+    if (purchaseDeadlineTaskRead) {
+      return purchaseDeadlineTaskRead;
     }
 
     {
