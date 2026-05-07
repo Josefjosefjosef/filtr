@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-06T22:44:12.558313Z",
+  "ingestedAt": "2026-05-07T00:09:16.008861Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Miliarda z kapes daňových poplatníků na Trumpův taneční sál: Demokraté zuří",
+      "url": "https://www.epenize.eu/miliarda-z-kapes-danovych-poplatniku-na-trumpuv-tanecni-sal-demokrate-zuri/",
+      "dt": "2026-05-06T23:00:20Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "daňových",
+        "demokraté",
+        "kapes",
+        "miliarda",
+        "poplatníků",
+        "sál",
+        "taneční",
+        "trumpův",
+        "zuří"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -478,30 +504,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Střelba jako jednoduchý marketing na pozlacený Trumpův sál",
-      "url": "https://www.epenize.eu/strelba-jako-jednoduchy-marketing-na-pozlaceny-trumpuv-sal/",
-      "dt": "2026-04-26T23:00:59Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "jako",
-        "jednoduchý",
-        "marketing",
-        "pozlacený",
-        "střelba",
-        "sál",
-        "trumpův"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -512,7 +514,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 106585,
+      "bytes": 107093,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -549,11 +551,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-06T07:17:54Z",
+        "raw_feed_latest_publishedAt": "2026-05-06T23:00:20Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 18,
-          "zpravy": 2
+          "finance": 19,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -565,6 +567,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Miliarda z kapes daňových poplatníků na Trumpův taneční sál: Demokraté zuří",
+            "publishedAt": "2026-05-06T23:00:20Z"
+          },
           {
             "title": "Nehorázný alibismus: Zahradil zřejmě chce nabudit dojem krize a revidovat výdaje na obranu",
             "publishedAt": "2026-05-06T07:17:54Z"
@@ -592,10 +598,6 @@
           {
             "title": "Czexit. Mudrování Vondráčka o vystoupení z EU je trapné",
             "publishedAt": "2026-05-03T12:46:11Z"
-          },
-          {
-            "title": "Newsom se snaží porazit Trumpa tím, že ho kopíruje. Průzkumy mu tleskají",
-            "publishedAt": "2026-05-02T23:00:00Z"
           }
         ]
       }
