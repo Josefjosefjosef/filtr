@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-07T11:05:23.157051Z",
+  "ingestedAt": "2026-05-07T11:50:17.835133Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Roky znásilňoval chlapce. Pionýrský vedoucí z Plzně chtěl nižší trest, neuspěl",
+      "url": "https://www.denik.cz/krimi/pionyrsky-vedouci-plzen-znasilneni-deti-dovolani-nejvyssi-soud-rozsudek-trest.html",
+      "dt": "2026-05-07T11:19:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "chlapce",
+        "chtěl",
+        "neuspěl",
+        "nižší",
+        "pionýrský",
+        "plzně",
+        "roky",
+        "trest",
+        "vedoucí",
+        "znásilňoval"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -625,32 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ve věku 87 let zemřel zakladatel americké televizní stanice Ted Turner",
-      "url": "https://www.denik.cz/ze_sveta/umrti-cnn-amerika-televizni-stanice-usa-ted-turner.html",
-      "dt": "2026-05-06T14:41:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "americké",
-        "let",
-        "stanice",
-        "ted",
-        "televizní",
-        "turner",
-        "věku",
-        "zakladatel",
-        "zemřel"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -661,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28854,
+      "bytes": 29028,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -698,7 +699,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-07T10:51:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T11:19:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -714,6 +715,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Roky znásilňoval chlapce. Pionýrský vedoucí z Plzně chtěl nižší trest, neuspěl",
+            "publishedAt": "2026-05-07T11:19:00Z"
+          },
           {
             "title": "Hantavirus na výletní lodi: Našel se zřejmě pacient nula, stopy vedou na skládku",
             "publishedAt": "2026-05-07T10:51:00Z"
@@ -741,10 +746,6 @@
           {
             "title": "Žena se odstěhovala, Montyho nechala v zamčeném bytě. Pes živořil několik dní",
             "publishedAt": "2026-05-07T08:35:00Z"
-          },
-          {
-            "title": "Hrozba hantaviru: WHO rozjela pátrání. Hledá 80 lidí, kteří letěli s nakaženou",
-            "publishedAt": "2026-05-07T08:32:00Z"
           }
         ]
       }
