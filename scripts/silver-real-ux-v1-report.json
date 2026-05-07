@@ -3,8 +3,8 @@
   "fixed_now": "2026-05-04T12:00:00",
   "partition_note": "Requested bucket sum was 33500; normalized to 30000 by calendar_write=3500, calendar_query=3500, multi_intent=2000 (other buckets unchanged).",
   "total_cases": 30000,
-  "overall_accuracy": "70.16",
-  "calendar_write_accuracy": "27.03",
+  "overall_accuracy": "72.84",
+  "calendar_write_accuracy": "50.00",
   "calendar_query_accuracy": "51.17",
   "task_write_accuracy": "47.13",
   "task_query_accuracy": "100.00",
@@ -20,8 +20,8 @@
   "future_query_accuracy": "77.54",
   "present_query_accuracy": "75.04",
   "counting_query_accuracy": "13.96",
-  "title_cleanliness_accuracy": "66.35",
-  "address_location_accuracy": "18.57",
+  "title_cleanliness_accuracy": "66.51",
+  "address_location_accuracy": "100.00",
   "embedded_note_tail_accuracy": "15.45",
   "completed_tasks_query_accuracy": "100.00",
   "active_tasks_query_accuracy": "100.00",
@@ -54,29 +54,6 @@
       "actual_summary": "unknown/CLARIFICATION :: V jedné větě je rozpor mezi zákazem zápisu a požadavkem uložit do úkolů nebo poznámek — upřesni prosím, co přesně mám ud",
       "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
       "recommended_next_scope": "Narrow Silver change in task_write for pattern «intent_fail» (do not broaden unrelated modules).",
-      "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
-    },
-    {
-      "cluster_name": "address_in_title_only|calendar_write",
-      "fail_count": 1096,
-      "severity": "P1",
-      "affected_module": "calendar_write",
-      "example_inputs": [
-        "Hele prosím tě hoď mi na zítra kolem třetí schůzku s právníkem, potkáme se někde Vinohradská 3 Praha a do poznámky mi dej že mám vzít ty modrý desky k baráku.",
-        "Ulož mi zítra schůzku v 15:00 s panem Novákem, potkat se máme na Náměstí Míru a do poznámky mi přidej, že si mám vzít výkresy k rodinnému domu.",
-        "hod mi zitra v 15 schuzku s pravnikem na korunovacni 44 praha",
-        "dej mi do kalendare pristi stredu schuzku s novakem na namesti miru",
-        "Vlastne sorry zrus to — ne, pockej: uloz mi zitra v 16 schuzku s Jakubem na u Andela, poznamka: donest vykresy.",
-        "Hele prosim te hoď mi na zitra kolem treti schůzku s úcetni, potkame se nekde Korunni 44 Praha a do poznamky mi dej ze mam vzit ty modry desky k baraku.",
-        "Uloz mi zitra schůzku v 15:00 s panem Novakem, potkat se mame na Namesti Miru a do poznamky mi pridej, ze si mam vzit vykresy k rodinnému domu.",
-        "ne do úkolů Hoď mi prosim do kalendare na pristi útery odpoledne schůzku s pravnikem, bude to v Praze na Korunni 44 a do poznamky dej, ze mam vzit smlouvu, obcanku a kopii usneseni.",
-        "hod mi zitra v 15 schuzku s pravnikem na korunovacni 44 praha",
-        "dej mi do kalendare pristi stredu schuzku s novakem na namesti miru"
-      ],
-      "expected_summary": "calendar.create",
-      "actual_summary": "calendar.create/NEEDS_CLARIFICATION :: V kolik hodin to mám uložit?",
-      "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
-      "recommended_next_scope": "Narrow Silver change in calendar_write for pattern «address_in_title_only» (do not broaden unrelated modules).",
       "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
     },
     {
@@ -218,6 +195,29 @@
       "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
     },
     {
+      "cluster_name": "embedded_note_missing|calendar_write",
+      "fail_count": 525,
+      "severity": "P1",
+      "affected_module": "calendar_write",
+      "example_inputs": [
+        "Hele prosím tě hoď mi na zítra kolem třetí schůzku s právníkem, potkáme se někde Vinohradská 3 Praha a do poznámky mi dej že mám vzít ty modrý desky k baráku.",
+        "hod mi zitra v 15 schuzku s pravnikem na korunovacni 44 praha",
+        "Dnes schuzka s Petrem v osm.",
+        "Uloz mi zitra schůzku v 15:00 s panem Novakem, potkat se mame na Namesti Miru a do poznamky mi pridej, ze si mam vzit vykresy k rodinnému domu.",
+        "Uloš mi do kalendaře schuzku s Petrem.",
+        "V pátek právník 10:30.",
+        "dej mi do kalendare pristi stredu schuzku s novakem na namesti miru",
+        "Vlastne sorry zrus to — ne, pockej: uloz mi zitra v 16 schůzku s Novakem na Vinohradska 3 Praha, poznamka: donést vykresy.",
+        "Hoť mi do kalendáře zítra schůzku s právníkem.",
+        "Hele prosim te hoď mi na zitra kolem treti schůzku s Mariana, potkame se nekde Namesti Miru Praha a do poznamky mi dej ze mam vzit ty modry desky k baraku."
+      ],
+      "expected_summary": "calendar.create",
+      "actual_summary": "calendar.create/NEEDS_CLARIFICATION :: V kolik hodin to mám uložit?",
+      "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
+      "recommended_next_scope": "Narrow Silver change in calendar_write for pattern «embedded_note_missing» (do not broaden unrelated modules).",
+      "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
+    },
+    {
       "cluster_name": "intent_fail|temporal_reasoning",
       "fail_count": 524,
       "severity": "P1",
@@ -310,29 +310,6 @@
       "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
     },
     {
-      "cluster_name": "embedded_note_missing|calendar_write",
-      "fail_count": 233,
-      "severity": "P1",
-      "affected_module": "calendar_write",
-      "example_inputs": [
-        "Dnes schuzka s Petrem v osm.",
-        "Uloš mi do kalendaře schuzku s Petrem.",
-        "V pátek právník 10:30.",
-        "Hoť mi do kalendáře zítra schůzku s právníkem.",
-        "Dnes schůzka s Petrem v osm.",
-        "Ulos mi do kalendare schuzku s Petrem.",
-        "V pátek právník 10:30.",
-        "Hoť mi do kalendáře zítra schůzku s právníkem.",
-        "Dnes schůzka s Petrem v osm.",
-        "Uloš mi do kalendaře schuzku s Petrem."
-      ],
-      "expected_summary": "calendar.create",
-      "actual_summary": "calendar.create/READY_TO_SAVE :: Připravil jsem návrh události do kalendáře.",
-      "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
-      "recommended_next_scope": "Narrow Silver change in calendar_write for pattern «embedded_note_missing» (do not broaden unrelated modules).",
-      "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
-    },
-    {
       "cluster_name": "intent_fail|dirty_mobile_czech",
       "fail_count": 200,
       "severity": "P1",
@@ -410,10 +387,10 @@
   "peer_20k_overall_accuracy": null,
   "by_group": {
     "calendar_write": {
-      "pass": 946,
-      "fail": 2554,
-      "core_pass": 946,
-      "quality_fail": 1562
+      "pass": 1750,
+      "fail": 1750,
+      "core_pass": 1750,
+      "quality_fail": 758
     },
     "calendar_query": {
       "pass": 1791,

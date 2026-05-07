@@ -40017,16 +40017,135 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return { work: w, location: "" };
   }
 
+  /** P0: oříznutí omylu „místo + , ne do úkolů“ zachyceného do location (kalendářová věta). */
+  function iuSilverTrimTrailingNeDoFromCalendarLoc(s) {
+    let t = iuSilverNormalizeWs(String(s || ""));
+    t = t.replace(/\s*,\s*ne\s+do\b[\s\S]*$/i, "").trim();
+    return t.replace(/[,.;:!?]+$/g, "").trim();
+  }
+
+  /**
+   * P0 narrow: calendar.create — konverzační adresa ve větě (Real UX address_in_title_only|calendar_write).
+   * Doplňuje stripLocation; striktní terminátory (poznámka / „ne do“ / konec); nezasahuje do času/datu.
+   */
+  function iuSilverTryStripNarrowCalendarAddressFragment(wIn) {
+    let w = iuSilverNormalizeWs(String(wIn || ""));
+    if (!w) return { work: w, location: "" };
+    const specs = [
+      {
+        re: /\bpotk[aá]me\s+se\s+n[eě]kde\s+(.+?)(?=\s+a\s+do\s+pozn[aá]mk|\s+do\s+pozn[aá]mk|\s*,\s*ne\s+do\b|$)/iu,
+        pick: function (m) {
+          return String(m[1] || "").trim();
+        }
+      },
+      {
+        re: /\bpotkat\s+se\s+m[aá]me\s+na\s+(.+?)(?=\s+a\s+do\s+pozn|\s+do\s+pozn|\s*,\s*ne\s+do\b|$)/iu,
+        pick: function (m) {
+          return String(m[1] || "").trim();
+        }
+      },
+      {
+        re: /\bbude\s+to\s+v\s+Praze\s+na\s+(.+?)(?=\s+a\s+do\s+pozn|\s+do\s+pozn|\s*,\s*ne\s+do\b|$)/iu,
+        pick: function (m) {
+          return String(m[1] || "").trim();
+        }
+      },
+      {
+        re: /\bv\s+Praze\s+na\s+([A-ZÁČÉĚÍŇÓŘŠŤÚŮÝŽa-záčéěíňóřšťúůýž]+(?:sk[áaýy]|sk[ée]|sk[ýy]|ov[áa]|ick[áaýy]|ick[ée])?\s+\d{1,4})(?:\s+Praha)?(?=\s|,|\s+a\s+do\s+pozn|\s+do\s+pozn|\s*,\s*ne\s+do|$)/iu,
+        pick: function (m) {
+          return String(m[1] || "").trim();
+        }
+      },
+      {
+        re: /\bv\s+Ostrav[eě]\s+na\s+ulici\s+(.+?)(?=\s+a\s+|\s+p[rř]ipome|\s*,\s*ne\s+do\b|$)/iu,
+        pick: function (m) {
+          const core = String(m[1] || "").trim();
+          if (!core) return "";
+          return "Ostrava " + core.replace(/^\s*Hlavni\b/i, "Hlavní ").replace(/^\s*Hlavní\s+/i, "Hlavní ");
+        }
+      },
+      {
+        re: /\bna\s+n[aá]m[eě]st[ií]\s+brat[rř][ií]\s+synk[uů](?:\s+Praha)?(?=\s|,|\s*,\s*ne\s+do|$)/iu,
+        loc: "náměstí Bratří Synků Praha"
+      },
+      {
+        re: /\bna\s+n[aá]m[eě]st[ií]\s+m[ií]ru(?:\s+Praha)?(?=\s|,|\s+a\s+do|\s+do\s+pozn|\s*,\s*ne\s+do|$)/iu,
+        loc: "Náměstí Míru Praha"
+      },
+      {
+        re: /\s*,\s*potk[aá]me\s+se\s+na\s+Štvanic[ei]\b/iu,
+        loc: "Štvanice Praha"
+      },
+      {
+        re: /\bu\s+And[eě]la\b/iu,
+        loc: "Anděl Praha"
+      },
+      {
+        re: /\bPraha\s+jedna\s+Vinohradsk[aá](?:\s+\d{1,4})?\b/iu,
+        locFrom: function (m) {
+          const rawM = String(m[0] || "").trim();
+          if (!rawM) return "";
+          return rawM.replace(/\s+jedna\s+/i, " 1 ");
+        }
+      },
+      {
+        re: /\bna\s+n[aá]m[eě]st[ií]\s+m[ií]ru(?:\s+Praha)?\s*$/iu,
+        loc: "Náměstí Míru Praha"
+      },
+      {
+        re: /\bsch[uů]zku\s+s\s+.+?(?<!\bse)\s+na\s+(.+?)(?=\s*,\s*pozn[aá]mk|\s*,\s*pozn\b|\s*,\s*ne\s+do\b|\s*$|\.)/iu,
+        pick: function (m) {
+          return String(m[1] || "").trim();
+        }
+      },
+      {
+        re: /\bna\s+Brno\s+centrum\b(?=\s|,|\s*,\s*pozn|\s*,\s*ne\s+do|$)/iu,
+        loc: "Brno centrum"
+      },
+      {
+        re: /\bna\s+(Vinohradsk[aá]|Spálen[aá]|Korunn[ií]|Korunni)\s+(\d{1,4})(?:\s+Praha)?(?=\s|,|\s*,\s*pozn|\s*,\s*ne\s+do|$|\.)/iu,
+        locFrom: function (m) {
+          const street = String(m[1] || "").trim();
+          const num = String(m[2] || "").trim();
+          if (!street || !num) return "";
+          return street + " " + num + " Praha";
+        }
+      },
+      {
+        re: /\bna\s+korunovacni\s+(\d{1,4})\s+praha\b/iu,
+        locFrom: function (m) {
+          return "Korunní " + String(m[1] || "").trim() + " Praha";
+        }
+      }
+    ];
+    for (let si = 0; si < specs.length; si++) {
+      const sp = specs[si];
+      const m = w.match(sp.re);
+      if (!m) continue;
+      let loc = "";
+      if (typeof sp.pick === "function") loc = String(sp.pick(m) || "").trim();
+      else if (typeof sp.locFrom === "function") loc = String(sp.locFrom(m) || "").trim();
+      else loc = String(sp.loc || "").trim();
+      loc = iuSilverTrimTrailingNeDoFromCalendarLoc(loc);
+      loc = iuSilverNormalizeWs(loc).slice(0, 200);
+      if (loc.length >= 6) {
+        w = iuSilverNormalizeWs(w.replace(sp.re, " "));
+        return { work: w, location: loc };
+      }
+    }
+    return { work: w, location: "" };
+  }
+
   function stripLocation(work) {
     let w = work;
     let loc = "";
     const pats = [
-      /\bm[ií]sto\s+je\s+(.+?)(?=\s+(?:a\s+)?p[rř]ipome|\s+a\s+p[rř]ipome|\s+do\s+pozn|\s+a\s+do\s+pozn|[.!?]|$)/i,
+      /\bm[ií]sto\s+je\s+(.+?)(?=\s+(?:a\s+)?p[rř]ipome|\s+a\s+p[rř]ipome|\s+do\s+pozn|\s+a\s+do\s+pozn|\s*,\s*ne\s+do\b|[.!?]|$)/i,
       /\bm[ií]sto\s*:\s*([^.!?]+?)(?=\.|$|pozn[aá]mka)/i,
       /\badresa\s*:\s*([^.!?]+?)(?=\.|$|pozn[aá]mka)/i,
-      /\badresa\s+je\s+(.+?)(?=\s*$|\.|\s+do\s+pozn|\s+a\s+do\s+pozn)/i,
+      /\badresa\s+je\s+(.+?)(?=\s*$|\.|\s+do\s+pozn|\s+a\s+do\s+pozn|\s*,\s*ne\s+do\b)/i,
       /\bv\s+ordinaci\s+([^.!?]+)/i,
-      /\bna\s+adrese\s+(.+?)(?=\s+a\s+do\s+pozn|\s+do\s+pozn|\s*$|\.|\!|\?)/i,
+      /\bna\s+adrese\s+(.+?)(?=\s+a\s+do\s+pozn|\s+do\s+pozn|\s*,\s*ne\s+do\b|\s*$|\.|\!|\?)/i,
       /\b(Praha\s+\d{1,2})\b/i
     ];
     for (const re of pats) {
@@ -40034,6 +40153,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (m && m[1]) {
         loc = String(m[1]).trim().slice(0, 200);
         loc = loc.replace(/\s+a\s*$/i, "").trim();
+        loc = iuSilverTrimTrailingNeDoFromCalendarLoc(loc);
         w = w.replace(re, " ");
         break;
       }
@@ -40041,9 +40161,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!loc || String(loc).trim().length < 6) {
       const ven = iuSilverTryStripNarrowCalendarVenueTail(w);
       if (ven.location && String(ven.location).trim().length >= 6) {
-        loc = ven.location;
+        loc = iuSilverTrimTrailingNeDoFromCalendarLoc(ven.location);
         w = ven.work;
       }
+    }
+    if (!loc || String(loc).trim().length < 6) {
+      const frag = iuSilverTryStripNarrowCalendarAddressFragment(w);
+      if (frag.location && String(frag.location).trim().length >= 6) {
+        loc = frag.location;
+        w = frag.work;
+      }
+    }
+    if (loc) {
+      loc = iuSilverTrimTrailingNeDoFromCalendarLoc(String(loc)).slice(0, 200);
     }
     return { work: w.replace(/\s+/g, " ").trim(), location: loc };
   }
