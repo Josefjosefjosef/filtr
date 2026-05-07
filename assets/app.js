@@ -36326,7 +36326,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     const bodyFin = iuSilverNoteCreateFinalizeBody(comp.noteBody) || String(comp.noteBody || "").trim();
     const nBodyH = iuSilverHumanizeRoughNote(bodyFin);
-    const nBody = iuSilverCleanCalendarNoteTailV1(nBodyH, nBodyH);
+    const nBody = iuSilverCleanCalendarNoteTailV2(nBodyH, nBodyH);
     if (!String(nBody || "").trim()) return null;
     const dOut = cloneDraft(calTurn.draft);
     dOut.note = String(nBody || "").trim().slice(0, 1000);
@@ -36565,7 +36565,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!calTurn || calTurn.normalizedIntent !== "calendar.create") return null;
     const bodyFin = iuSilverNoteCreateFinalizeBody(core.noteBody) || String(core.noteBody || "").trim();
     const nBodyH = iuSilverHumanizeRoughNote(bodyFin);
-    const nBody = iuSilverCleanCalendarNoteTailV1(nBodyH, nBodyH);
+    const nBody = iuSilverCleanCalendarNoteTailV2(nBodyH, nBodyH);
     if (!String(nBody || "").trim()) return null;
     const dOut = cloneDraft(calTurn.draft);
     if (!String(dOut.title || "").trim()) {
@@ -36942,7 +36942,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     iuSilverSanitizeDraftTitle(draft);
     if (draft.meta.note === "certain" && String(draft.note || "").trim()) {
       const nRaw = String(draft.note || "").trim();
-      const nCl = iuSilverCleanCalendarNoteTailV1(nRaw, nRaw);
+      const nCl = iuSilverCleanCalendarNoteTailV2(nRaw, nRaw);
       draft.note = nCl.slice(0, 1000);
     }
 
@@ -37701,6 +37701,48 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (s === prev) break;
     }
     if (!s || s.length < 2) return orig;
+    const c = s.charAt(0).toLocaleUpperCase("cs-CZ") + s.slice(1);
+    return c.slice(0, 1000);
+  }
+
+  /**
+   * P0 Silver v2: úzký strip instrukčního lešení jen u calendar.create draft.note (po V1).
+   * Odstraní hovorové „napiš že / napis ze / … do poznámky napiš že …“ z čela poznámky události.
+   */
+  function iuSilverCleanCalendarNoteTailV2(noteTail, safeFallback) {
+    const v1 = iuSilverCleanCalendarNoteTailV1(noteTail, safeFallback);
+    const base = iuSilverNormalizeWs(String(v1 != null ? v1 : ""));
+    if (!base) return String(noteTail == null ? "" : noteTail);
+    let s = base;
+    const pats = [
+      /^\s*do\s+pozn[aá]m(?:ek|ky|ce)\s+napi[sš]\s+že\s+/iu,
+      /^\s*do\s+pozn[aá]m(?:ek|ky|ce)\s+napis\s+ze\s+/iu,
+      /^\s*napi[sš]\s+mi\s+že\s+/iu,
+      /^\s*napis\s+mi\s+ze\s+/iu,
+      /^\s*p[rř]ipi[sš]\s+mi\s+že\s+/iu,
+      /^\s*pripis\s+mi\s+ze\s+/iu,
+      /^\s*p[rř]ipi[sš]\s+k\s+tomu\s+že\s+/iu,
+      /^\s*pripis\s+k\s+tomu\s+ze\s+/iu,
+      /^\s*napi[sš]\s+si\s+k\s+tomu\s+že\s+/iu,
+      /^\s*napis\s+si\s+k\s+tomu\s+ze\s+/iu,
+      /^\s*dopl[nň]\s+že\s+/iu,
+      /^\s*dopln\s+ze\s+/iu,
+      /^\s*napi[sš]\s+že\s+/iu,
+      /^\s*napis\s+ze\s+/iu,
+      /^\s*p[rř]ipi[sš]\s+že\s+/iu,
+      /^\s*pripis\s+ze\s+/iu,
+      /^\s*dej\s+že\s+/iu,
+      /^\s*dej\s+ze\s+/iu
+    ];
+    for (let rnd = 0; rnd < 24; rnd++) {
+      const prev = s;
+      for (let pi = 0; pi < pats.length; pi++) {
+        s = s.replace(pats[pi], "").trim();
+      }
+      s = iuSilverNormalizeWs(s);
+      if (s === prev) break;
+    }
+    if (!s || s.length < 2) return base;
     const c = s.charAt(0).toLocaleUpperCase("cs-CZ") + s.slice(1);
     return c.slice(0, 1000);
   }
