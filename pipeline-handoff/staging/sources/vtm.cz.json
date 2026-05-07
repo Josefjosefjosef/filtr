@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-07T06:55:40.338057Z",
+  "ingestedAt": "2026-05-07T07:35:03.891596Z",
   "items": [
     {
       "section": "veda",
@@ -24,6 +24,30 @@
         "vysvětluje",
         "všechna",
         "záměr"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Garmin Fénix 8 Pro s LTE a satelitním připojením zlevnily na minimum",
+      "url": "https://mobilmania.zive.cz/clanky/nejlevnejsi-hodinky-garmin-fenix-8-pro/sc-3-a-1364685/default.aspx",
+      "dt": "2026-05-07T06:50:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "fénix",
+        "garmin",
+        "lte",
+        "minimum",
+        "připojením",
+        "satelitním",
+        "zlevnily"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -943,35 +967,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Na Slovensku zítra startuje éra bez hotovosti. Obchody a služby budou muset brát karty nebo QR kódy",
-      "url": "https://www.zive.cz/clanky/na-slovensku-zitra-startuje-era-bez-hotovosti-obchody-a-sluzby-budou-muset-brat-karty-nebo-qr-kody/sc-3-a-240957/default.aspx",
-      "dt": "2026-04-30T16:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "brát",
-        "hotovosti",
-        "karty",
-        "kódy",
-        "muset",
-        "nebo",
-        "obchody",
-        "slovensku",
-        "služby",
-        "startuje",
-        "zítra",
-        "éra"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -982,7 +977,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23423,
+      "bytes": 23332,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1019,7 +1014,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-06T18:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T06:50:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1037,6 +1032,10 @@
           {
             "title": "Stačí spustit Edge a všechna vaše hesla jsou v paměti jako na podnosu. Microsoft vysvětluje, že to je záměr…",
             "publishedAt": "2026-05-06T12:45:00Z"
+          },
+          {
+            "title": "Garmin Fénix 8 Pro s LTE a satelitním připojením zlevnily na minimum",
+            "publishedAt": "2026-05-07T06:50:00Z"
           },
           {
             "title": "Z CZC zůstal jen stín. Na Allegru prodává zlomek produktů a jeho značky skončily",
@@ -1061,10 +1060,6 @@
           {
             "title": "Asus Vivobook S14 má 32 GB RAM, OLED a vydrží celý den. Teď stojí jen 16 tisíc",
             "publishedAt": "2026-05-06T08:45:00Z"
-          },
-          {
-            "title": "Notepad++ pro Mac už má za sebou první skandál. Autor nakonec změnil název i ikonku",
-            "publishedAt": "2026-05-05T17:45:00Z"
           }
         ]
       }

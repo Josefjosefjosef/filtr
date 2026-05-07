@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "plnezdravi.cz",
-  "ingestedAt": "2026-05-07T06:55:40.338057Z",
+  "ingestedAt": "2026-05-07T07:35:03.891596Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Návrat zapomenuté hrozby: Příušnice způsobí i potrat",
+      "url": "https://www.plnezdravi.cz/navrat-zapomenute-hrozby-priusnice-zpusobi-i-potrat/",
+      "dt": "2026-05-07T07:00:48Z",
+      "media_raw": "Plné zdraví",
+      "media_norm": "Plné zdraví",
+      "tokens": [
+        "hrozby",
+        "návrat",
+        "potrat",
+        "příušnice",
+        "zapomenuté",
+        "způsobí"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_plnezdravi",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "plnezdravi.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -488,35 +511,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "plnezdravi.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Ztráta stálého zubu: na vině je parodontóza, věk i skřípání zuby. Vyražený zub jde vrátit",
-      "url": "https://www.plnezdravi.cz/ztrata-staleho-zubu-na-vine-je-parodontoza-vek-i-skripani-zuby-vyrazeny-zub-jde-vratit/",
-      "dt": "2026-04-21T07:40:25Z",
-      "media_raw": "Plné zdraví",
-      "media_norm": "Plné zdraví",
-      "tokens": [
-        "jde",
-        "parodontóza",
-        "skřípání",
-        "stálého",
-        "vině",
-        "vrátit",
-        "vyražený",
-        "věk",
-        "ztráta",
-        "zub",
-        "zubu",
-        "zuby"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_plnezdravi",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "plnezdravi.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -527,7 +521,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.plnezdravi.cz/feed/",
-      "bytes": 146574,
+      "bytes": 146386,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -564,7 +558,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-06T14:41:23Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T07:00:48Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -579,6 +573,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Návrat zapomenuté hrozby: Příušnice způsobí i potrat",
+            "publishedAt": "2026-05-07T07:00:48Z"
+          },
           {
             "title": "Mezinárodní den celiakie aneb nejde jen o lepek, ale o složitou imunitní reakci. Co o ní říkají nejnovější studie?",
             "publishedAt": "2026-05-06T14:41:23Z"
@@ -606,10 +604,6 @@
           {
             "title": "Když tělo tvoří krystaly: Příčiny vzniku ledvinových kamenů",
             "publishedAt": "2026-05-02T07:00:38Z"
-          },
-          {
-            "title": "Zimní deprese pod lupou: Jak se nenechat pohltit tmou",
-            "publishedAt": "2026-05-01T07:00:01Z"
           }
         ]
       }

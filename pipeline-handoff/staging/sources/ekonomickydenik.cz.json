@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-07T06:55:40.338057Z",
+  "ingestedAt": "2026-05-07T07:35:03.891596Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Další exploze bankomatu. Pražská policie pátrá po pachatelích",
+      "url": "https://ekonomickydenik.cz/dalsi-exploze-bankomatu-prazska-policie-patra-po-pachatelich/",
+      "dt": "2026-05-07T07:31:48Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bankomatu",
+        "další",
+        "exploze",
+        "pachatelích",
+        "policie",
+        "pražská",
+        "pátrá"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Soudní bitva o rychlovlaky: Proč se komplikuje příprava tratě do Německa?",
+      "url": "https://ekonomickydenik.cz/spor-vysokorychlostni-koridor-sever/",
+      "dt": "2026-05-07T07:10:19Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bitva",
+        "komplikuje",
+        "německa",
+        "proč",
+        "příprava",
+        "rychlovlaky",
+        "soudní",
+        "tratě"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -732,56 +781,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Přišlo to WhatsAppem. Jak podvodníci ukradli sdružení vlastníků bytů 4 miliony",
-      "url": "https://ekonomickydenik.cz/svj-utoku-hackeru-4-miliony/",
-      "dt": "2026-05-05T12:03:56Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "bytů",
-        "miliony",
-        "podvodníci",
-        "přišlo",
-        "sdružení",
-        "ukradli",
-        "vlastníků",
-        "whatsappem"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Evropa „vyfoukla“ Arménii Putinovi pod nosem. Přidala se i Británie a Kanada",
-      "url": "https://ekonomickydenik.cz/evropa-vyfoukla-armenii-putinovi-pod-nosem-pridala-se-i-britanie-a-kanada/",
-      "dt": "2026-05-05T11:26:48Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "arménii",
-        "británie",
-        "evropa",
-        "kanada",
-        "nosem",
-        "putinovi",
-        "přidala",
-        "vyfoukla"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73605,
+      "bytes": 73197,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,11 +828,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T05:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T07:31:48Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 26,
-          "zpravy": 3,
+          "zpravy": 4,
+          "finance": 25,
           "zdravi": 1
         },
         "drop_counts": {
@@ -846,6 +845,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Další exploze bankomatu. Pražská policie pátrá po pachatelích",
+            "publishedAt": "2026-05-07T07:31:48Z"
+          },
+          {
+            "title": "Soudní bitva o rychlovlaky: Proč se komplikuje příprava tratě do Německa?",
+            "publishedAt": "2026-05-07T07:10:19Z"
+          },
           {
             "title": "Jak mohl bývalý příslušník StB udělat kariéru v BIS? Povýšení otevírá staré otázky",
             "publishedAt": "2026-05-07T05:30:00Z"
@@ -869,14 +876,6 @@
           {
             "title": "Nejkrvavější rok historie a soudní teror. Kdy začne Evropa chránit své novináře?",
             "publishedAt": "2026-05-06T14:30:00Z"
-          },
-          {
-            "title": "Úlevy pro živnostníky stopnul Senát, rozhodne Sněmovna",
-            "publishedAt": "2026-05-06T13:54:47Z"
-          },
-          {
-            "title": "Cesta k obřím dluhům a destrukce pravidel. Opozice útočí na plány Schillerové",
-            "publishedAt": "2026-05-06T12:51:32Z"
           }
         ]
       }
