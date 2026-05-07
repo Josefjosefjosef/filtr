@@ -1,29 +1,53 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-07T13:10:06.191895Z",
+  "ingestedAt": "2026-05-07T13:55:03.649634Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "TENIS ONLINE: Nosková má nakročeno k postupu, do druhé sady vstoupila parádně. Chystají se další Češky",
+      "title": "TENIS ONLINE: Výborně, Siniaková sahá po zisku první sady. Nosková slaví. Valentová se chystá na světovou čtyřku",
       "url": "https://www.sport.cz/clanek/tenis-v-rime-hraje-pet-cesek-zacne-noskova-valentovou-ceka-svetova-ctyrka-krejcikova-vyzve-sabalenkovou-5448935",
       "dt": "2026-05-07T06:59:30Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "chystají",
-        "další",
-        "druhé",
-        "nakročeno",
+        "chystá",
         "nosková",
         "online",
-        "parádně",
-        "postupu",
+        "první",
         "sady",
+        "sahá",
+        "siniaková",
+        "slaví",
+        "světovou",
         "tenis",
-        "vstoupila",
-        "češky"
+        "valentová",
+        "výborně",
+        "zisku",
+        "čtyřku"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Karviná vypraví pro fanoušky speciální vlak",
+      "url": "https://www.sport.cz/clanek/fotbal-pohar-karvina-vypravi-pro-fanousky-specialni-vlak-5449110",
+      "dt": "2026-05-07T13:33:42Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "fanoušky",
+        "karviná",
+        "speciální",
+        "vlak",
+        "vypraví"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -758,33 +782,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Krádež, stupidní pravidlo! Bayern se marně dožadoval penalty za naprosto jasnou ruku",
-      "url": "https://www.sport.cz/clanek/fotbal-liga-mistru-kradez-stupidni-pravidlo-bayern-se-marne-dozadoval-penalty-za-naprosto-jasnou-ruku-5448894",
-      "dt": "2026-05-06T21:16:06Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bayern",
-        "dožadoval",
-        "jasnou",
-        "krádež",
-        "marně",
-        "naprosto",
-        "penalty",
-        "pravidlo",
-        "ruku",
-        "stupidní"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40288,
+      "bytes": 40133,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +829,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T12:29:15Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T13:33:42Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -848,8 +845,12 @@
         },
         "sample_titles": [
           {
-            "title": "TENIS ONLINE: Nosková má nakročeno k postupu, do druhé sady vstoupila parádně. Chystají se další Češky",
+            "title": "TENIS ONLINE: Výborně, Siniaková sahá po zisku první sady. Nosková slaví. Valentová se chystá na světovou čtyřku",
             "publishedAt": "2026-05-07T06:59:30Z"
+          },
+          {
+            "title": "Karviná vypraví pro fanoušky speciální vlak",
+            "publishedAt": "2026-05-07T13:33:42Z"
           },
           {
             "title": "Proč není Pastrňák kapitánem? Boston pořád váhá",
@@ -874,10 +875,6 @@
           {
             "title": "Víme, že je za námi skvělý gólman. Ducks velebili Dostála, hrdinu večera zpovídal jeho idol",
             "publishedAt": "2026-05-07T09:45:03Z"
-          },
-          {
-            "title": "Tříminutový fén kliďase Kompanyho. Kouč Bayernu se po odvetě s PSG pustil do sudího",
-            "publishedAt": "2026-05-07T08:23:18Z"
           }
         ]
       }
