@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-07T12:29:50.121812Z",
+  "ingestedAt": "2026-05-07T13:10:06.191895Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Bitcoinová kauza: Proti stíhání se ohradili stížností všichni tři noví obvinění",
+      "url": "https://www.denik.cz/z_domova/bitcoinova-kauza-obvineni-stiznost-trestni-stihani.html",
+      "dt": "2026-05-07T12:35:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bitcoinová",
+        "kauza",
+        "noví",
+        "obvinění",
+        "ohradili",
+        "proti",
+        "stíhání",
+        "stížností",
+        "tři",
+        "všichni"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -629,31 +656,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Ze skály v Tisé se zřítil chlapec z Nizozemska. Utrpěl vážná zranění",
-      "url": "https://www.denik.cz/nehody/ze-skaly-v-tise-na-ustecku-se-zritil-nezletily-cizinec-letel-pro-nej-vrtulnik-20.html",
-      "dt": "2026-05-06T16:04:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "chlapec",
-        "nizozemska",
-        "skály",
-        "tisé",
-        "utrpěl",
-        "vážná",
-        "zranění",
-        "zřítil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -664,7 +666,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29552,
+      "bytes": 29948,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -701,7 +703,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-07T12:03:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T12:35:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -717,6 +719,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bitcoinová kauza: Proti stíhání se ohradili stížností všichni tři noví obvinění",
+            "publishedAt": "2026-05-07T12:35:00Z"
+          },
           {
             "title": "Krádež hlavy zavražděné modelky Geniniové: Policie vyslýchá expartnera",
             "publishedAt": "2026-05-07T12:03:00Z"
@@ -744,10 +750,6 @@
           {
             "title": "Czech Press Photo 2025: Snímky fotografa Deníku.cz lidé uvidí v Národním muzeu",
             "publishedAt": "2026-05-07T10:17:00Z"
-          },
-          {
-            "title": "Dva lidé zemřeli na Slovensku při nehodě, kterou zřejmě způsobil český řidič",
-            "publishedAt": "2026-05-07T10:05:00Z"
           }
         ]
       }

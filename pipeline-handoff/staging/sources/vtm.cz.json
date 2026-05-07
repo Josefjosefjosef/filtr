@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-07T12:29:50.121812Z",
+  "ingestedAt": "2026-05-07T13:10:06.191895Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,29 @@
         "zlomek",
         "značky",
         "zůstal"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "ChatGPT teď bude méně halucinovat. Zároveň je stručnější a má lepší paměť",
+      "url": "https://www.zive.cz/clanky/chatgpt-ted-bude-mene-halucinovat-zaroven-je-strucnejsi-a-ma-lepsi-pamet/sc-3-a-241045/default.aspx",
+      "dt": "2026-05-07T12:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "chatgpt",
+        "halucinovat",
+        "lepší",
+        "paměť",
+        "stručnější",
+        "zároveň"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -942,33 +965,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Problém pro AMD? Intel sází na více jader za méně peněz a mění tak pravidla hry",
-      "url": "https://www.zive.cz/clanky/problem-pro-amd-intel-sazi-na-vice-jader-za-mene-penez-a-meni-tak-pravidla-hry/sc-3-a-240683/default.aspx",
-      "dt": "2026-05-04T06:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "amd",
-        "hry",
-        "intel",
-        "jader",
-        "mění",
-        "peněz",
-        "pravidla",
-        "problém",
-        "sází",
-        "tak"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -979,7 +975,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23296,
+      "bytes": 23383,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1016,7 +1012,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-07T11:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T12:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1034,6 +1030,10 @@
           {
             "title": "Z CZC zůstal jen stín. Na Allegru prodává zlomek produktů a jeho značky skončily",
             "publishedAt": "2026-05-06T15:45:00Z"
+          },
+          {
+            "title": "ChatGPT teď bude méně halucinovat. Zároveň je stručnější a má lepší paměť",
+            "publishedAt": "2026-05-07T12:45:00Z"
           },
           {
             "title": "Garmin vstupuje do světa High-End Hi-Fi. Představil aktivní audiosystém za miliony s automatickou kalibrací",
@@ -1058,10 +1058,6 @@
           {
             "title": "Nová éra je zde a začíná to do sebe zapadat. Většinu kódu už v Googlu píše AI, firma masivně investuje",
             "publishedAt": "2026-05-07T10:45:00Z"
-          },
-          {
-            "title": "Jak stáhnout video z YouTube: 11 nejlepších nástrojů, všechny jsou zdarma",
-            "publishedAt": "2026-05-06T16:45:00Z"
           }
         ]
       }

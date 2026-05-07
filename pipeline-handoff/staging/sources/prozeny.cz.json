@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-05-07T12:29:50.121812Z",
+  "ingestedAt": "2026-05-07T13:10:06.191895Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zažíváme epidemii Parkinsonovy choroby. Dlouho předem mohou varovat pohyby ve spánku, říká neurolog",
+      "url": "https://www.prozeny.cz/clanek/zdravi-mudrovani-s-danielou-zazivame-epidemii-parkinsonovy-choroby-dlouho-predem-mohou-varovat-pohyby-ve-spanku-rika-neurolog-98659",
+      "dt": "2026-05-07T12:28:27Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "choroby",
+        "dlouho",
+        "epidemii",
+        "neurolog",
+        "parkinsonovy",
+        "pohyby",
+        "předem",
+        "spánku",
+        "varovat",
+        "zažíváme",
+        "říká"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -799,33 +827,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Zelený poklad našich předků: smrkové výhonky na kašel i klouby. Kde je můžete sbírat?",
-      "url": "https://www.prozeny.cz/clanek/smrkove-vyhonky-nabite-ceckem-leci-klouby-i-kasel-44760",
-      "dt": "2026-05-06T03:00:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "kašel",
-        "klouby",
-        "můžete",
-        "našich",
-        "poklad",
-        "předků",
-        "sbírat",
-        "smrkové",
-        "výhonky",
-        "zelený"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -836,7 +837,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 39525,
+      "bytes": 39729,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -873,7 +874,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T10:43:59Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T12:28:27Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 29,
@@ -889,6 +890,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zažíváme epidemii Parkinsonovy choroby. Dlouho předem mohou varovat pohyby ve spánku, říká neurolog",
+            "publishedAt": "2026-05-07T12:28:27Z"
+          },
           {
             "title": "Kde si nakoupíte o státním svátku? Otevírací doba obchodů 8. května",
             "publishedAt": "2026-05-07T10:43:59Z"
@@ -915,10 +920,6 @@
           },
           {
             "title": "Dům pro dvě rodiny na kraji Prahy překvapí: Interiér plný dřeva, zeleně a klidu působí jako oáza",
-            "publishedAt": "2026-05-07T03:00:00Z"
-          },
-          {
-            "title": "Žádný Ozempic, dřeme do úmoru! 7 slavných přiznalo, co stojí za jejich výraznou proměnou",
             "publishedAt": "2026-05-07T03:00:00Z"
           }
         ]

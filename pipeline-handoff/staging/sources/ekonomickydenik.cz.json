@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-07T12:29:50.121812Z",
+  "ingestedAt": "2026-05-07T13:10:06.191895Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Češi důvěřují armádě, policii a volbám. Kdo nejvíc pohořel zřejmě nepřekvapí",
+      "url": "https://ekonomickydenik.cz/cesi-duveruji-armade-policii-volbam/",
+      "dt": "2026-05-07T12:59:51Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "armádě",
+        "důvěřují",
+        "nejvíc",
+        "nepřekvapí",
+        "pohořel",
+        "policii",
+        "volbám",
+        "zřejmě",
+        "češi"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -754,32 +780,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Britský lev se vrací. Strach z ruských ponorek nutí Londýn spolupracovat s EU",
-      "url": "https://ekonomickydenik.cz/britsky-lev-se-vraci-do-evropy-strach-ruske-ponorky/",
-      "dt": "2026-05-05T16:30:47Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "britský",
-        "lev",
-        "londýn",
-        "nutí",
-        "ponorek",
-        "ruských",
-        "spolupracovat",
-        "strach",
-        "vrací"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72939,
+      "bytes": 73165,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,11 +827,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T11:18:13Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T12:59:51Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 5,
           "finance": 23,
+          "zpravy": 5,
           "zdravi": 2
         },
         "drop_counts": {
@@ -844,6 +844,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Češi důvěřují armádě, policii a volbám. Kdo nejvíc pohořel zřejmě nepřekvapí",
+            "publishedAt": "2026-05-07T12:59:51Z"
+          },
           {
             "title": "Putinův strach z útoku na přehlídce se stupňuje. Kreml omezí internet i esemesky",
             "publishedAt": "2026-05-07T11:18:13Z"
@@ -871,10 +875,6 @@
           {
             "title": "Další exploze bankomatu. Pražská policie pátrá po pachatelích",
             "publishedAt": "2026-05-07T07:31:48Z"
-          },
-          {
-            "title": "Soudní bitva o rychlovlaky: Proč se komplikuje příprava tratě do Německa?",
-            "publishedAt": "2026-05-07T07:10:19Z"
           }
         ]
       }

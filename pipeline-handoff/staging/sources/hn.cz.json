@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-07T12:29:50.121812Z",
+  "ingestedAt": "2026-05-07T13:10:06.191895Z",
   "items": [
     {
       "section": "finance",
@@ -24,6 +24,35 @@
         "upy",
         "vyhání",
         "víc"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Německo by mohlo mít prvního zemského premiéra z AfD, ukázal průzkum. Je to obrovská vzpruha, slaví extremisté",
+      "url": "https://zahranicni.hn.cz/c1-67874860-nemecko-by-mohlo-mit-prvniho-zemskeho-premiera-z-afd-ukazal-pruzkum-je-to-obrovska-vzpruha-slavi-extremiste",
+      "dt": "2026-05-07T11:51:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "afd",
+        "extremisté",
+        "mít",
+        "německo",
+        "obrovská",
+        "premiéra",
+        "prvního",
+        "průzkum",
+        "slaví",
+        "ukázal",
+        "vzpruha",
+        "zemského"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1104,38 +1133,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Krachuje tradiční středočeský výrobce obalů. Firma z Čáslavi dluží desítky milionů, svůj pád odůvodňuje i válkou v Íránu",
-      "url": "https://archiv.hn.cz/c1-67874290-krachuje-tradicni-stredocesky-vyrobce-obalu-firma-z-caslavi-dluzi-desitky-milionu-svuj-pad-oduvodnuje-i-valkou-v-iranu",
-      "dt": "2026-05-06T09:30:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "desítky",
-        "dluží",
-        "firma",
-        "krachuje",
-        "milionů",
-        "obalů",
-        "odůvodňuje",
-        "pád",
-        "středočeský",
-        "svůj",
-        "tradiční",
-        "válkou",
-        "výrobce",
-        "íránu",
-        "čáslavi"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1146,7 +1143,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183231,
+      "bytes": 183333,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1205,6 +1202,10 @@
             "publishedAt": "2026-05-07T12:00:00Z"
           },
           {
+            "title": "Německo by mohlo mít prvního zemského premiéra z AfD, ukázal průzkum. Je to obrovská vzpruha, slaví extremisté",
+            "publishedAt": "2026-05-07T11:51:00Z"
+          },
+          {
             "title": "Kam investuje peníze ČNB? Její strategie není tak pasivní, jak by se mohlo zdát",
             "publishedAt": "2026-05-07T09:45:00Z"
           },
@@ -1227,10 +1228,6 @@
           {
             "title": "Konec &bdquo;svlékacích aplikací&ldquo;. EU zakáže umělé inteligenci vytvářet nahé fotky skutečných lidí",
             "publishedAt": "2026-05-07T07:21:00Z"
-          },
-          {
-            "title": "Hasiči zlikvidovali požár v Českém Švýcarsku, dohled předali správě národního parku",
-            "publishedAt": "2026-05-07T06:32:00Z"
           }
         ]
       }

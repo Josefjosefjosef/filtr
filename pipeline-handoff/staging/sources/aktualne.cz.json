@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-07T12:29:50.121812Z",
+  "ingestedAt": "2026-05-07T13:10:06.191895Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Co napsal Epstein před smrtí? Soud odkryl detaily z údajného posledního vzkazu",
+      "url": "https://zpravy.aktualne.cz/zahranici/co-napsal-epstein-pred-smrti-soud-odkryl-detaily-z-udajneho-posledniho-vzkazu/r~aaa290703ba19123636a21b3e23b364a/",
+      "dt": "2026-05-07T12:40:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "detaily",
+        "epstein",
+        "napsal",
+        "odkryl",
+        "posledního",
+        "smrtí",
+        "soud",
+        "vzkazu",
+        "údajného"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ceny paliv v Česku klesnou,  ale benzin už bude dražší než nafta, oznámila vláda",
+      "url": "https://zpravy.aktualne.cz/ekonomika/ceska-ekonomika/ceny-paliv-v-cesku-klesnou-ale-benzin-uz-bude-drazsi-nez-nafta-oznamila-vlada/r~aaa2911b202702a17347245a5d9fddab/",
+      "dt": "2026-05-07T12:28:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "ale",
+        "benzin",
+        "ceny",
+        "dražší",
+        "klesnou",
+        "nafta",
+        "než",
+        "oznámila",
+        "paliv",
+        "vláda",
+        "česku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -472,59 +526,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Finové rozjeli v Česku kobercový nálet proti Strnadovi. Zůna jednal s prezidentem",
-      "url": "https://zpravy.aktualne.cz/domaci/finove-rozjeli-v-cesku-kobercovy-nalet-proti-strnadovi-zuna-jednal-s-prezidentem/r~aaa2988d3f1e73d74d63f712a5adec00/",
-      "dt": "2026-05-07T08:01:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "finové",
-        "jednal",
-        "kobercový",
-        "nálet",
-        "prezidentem",
-        "proti",
-        "rozjeli",
-        "strnadovi",
-        "zůna",
-        "česku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Hypotéky mírně zdražují, ale drží se nad pěti procenty, ukázal Hypoindex",
-      "url": "https://zpravy.aktualne.cz/ekonomika/ceska-ekonomika/hypoteky-mirne-zdrazuji-ale-drzi-se-nad-peti-procenty-ukazal-hypoindex/r~aaa290bd3d19dee34e6b41ba416a73c0/",
-      "dt": "2026-05-07T07:58:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "ale",
-        "drží",
-        "hypoindex",
-        "hypotéky",
-        "mírně",
-        "procenty",
-        "pěti",
-        "ukázal",
-        "zdražují"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -535,7 +536,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22391,
+      "bytes": 22283,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -572,12 +573,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-07T11:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T12:40:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 10,
-          "sport": 4,
           "finance": 4,
+          "sport": 4,
           "other": 2
         },
         "drop_counts": {
@@ -590,6 +591,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Co napsal Epstein před smrtí? Soud odkryl detaily z údajného posledního vzkazu",
+            "publishedAt": "2026-05-07T12:40:00Z"
+          },
+          {
+            "title": "Ceny paliv v Česku klesnou,  ale benzin už bude dražší než nafta, oznámila vláda",
+            "publishedAt": "2026-05-07T12:28:00Z"
+          },
           {
             "title": "Zabíjení navzdory příměří. Od začátku května zahynulo na Ukrajině podle OSN přes 70 civilistů",
             "publishedAt": "2026-01-21T06:45:00Z"
@@ -613,14 +622,6 @@
           {
             "title": "Oslabený Putin může být nebezpečnější. Cestu ven vidí v eskalaci, varuje politik",
             "publishedAt": "2026-05-07T11:13:00Z"
-          },
-          {
-            "title": "Stát rozdělí pět miliard. Rodinné podniky si mohou bezúročně půjčit až 120 milionů",
-            "publishedAt": "2026-05-07T10:53:00Z"
-          },
-          {
-            "title": "Paliva v Česku přes týden opět zdražila, litr benzinu stojí skoro 43 korun",
-            "publishedAt": "2026-05-07T10:33:00Z"
           }
         ]
       }

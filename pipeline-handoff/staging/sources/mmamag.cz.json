@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-07T12:29:50.121812Z",
+  "ingestedAt": "2026-05-07T13:10:06.191895Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Strickland nepřestává řádit. Chimaevův doprovod označil za fanatiky",
+      "url": "https://www.mmamag.cz/strickland-radil-chimaevuv-doprovod-oznacil-za-fanatiky/",
+      "dt": "2026-05-07T12:45:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "chimaevův",
+        "doprovod",
+        "fanatiky",
+        "nepřestává",
+        "označil",
+        "strickland",
+        "řádit"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1060,32 +1084,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "P4P žebříček štve fanoušky. Srovnává bojovníky, kteří se nikdy nepotkají",
-      "url": "https://www.mmamag.cz/co-znamena-pound-for-pound-v-mma/",
-      "dt": "2026-05-05T19:30:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "bojovníky",
-        "fanoušky",
-        "kteří",
-        "nepotkají",
-        "nikdy",
-        "p4p",
-        "srovnává",
-        "štve",
-        "žebříček"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1096,7 +1094,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 81501,
+      "bytes": 81530,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1133,7 +1131,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-07T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T12:45:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1148,6 +1146,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Strickland nepřestává řádit. Chimaevův doprovod označil za fanatiky",
+            "publishedAt": "2026-05-07T12:45:00Z"
+          },
           {
             "title": "Staré UFC byl divoký experiment. Proto dnes MMA vypadá jako jiný sport",
             "publishedAt": "2026-05-07T12:00:00Z"
@@ -1175,10 +1177,6 @@
           {
             "title": "Byl posledním, kdo porazil legendárního Mayweathera. Dnes Bulhar Todorov dře bídu s nouzí",
             "publishedAt": "2026-05-07T07:58:28Z"
-          },
-          {
-            "title": "Vybral si špatného chlapa. MMA bojovník agresora rychle uzemnil",
-            "publishedAt": "2026-05-07T07:43:12Z"
           }
         ]
       }
