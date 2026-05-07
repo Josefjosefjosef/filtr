@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-07T09:44:50.149569Z",
+  "ingestedAt": "2026-05-07T10:25:01.430370Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Kam investuje peníze ČNB? Její strategie není tak pasivní, jak by se mohlo zdát",
+      "url": "https://investice.hn.cz/c1-67874700-kam-investuje-penize-cnb-jeji-strategie-neni-tak-pasivni-jak-by-se-mohlo-zdat",
+      "dt": "2026-05-07T09:45:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "investuje",
+        "její",
+        "kam",
+        "pasivní",
+        "peníze",
+        "strategie",
+        "tak",
+        "zdát",
+        "čnb"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1115,37 +1141,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Můžou nové hubnoucí léky způsobit slepotu? Studie potvrdila vyšší riziko &bdquo;oční mrtvice&ldquo;",
-      "url": "https://archiv.hn.cz/c1-67874270-spatne-prokrveni-vedouci-az-k-bdquo-ocni-mrtvici-ldquo-studie-potvrdila-vyssi-riziko-slepoty-u-lidi-uzivajicich-hubnouci-leky",
-      "dt": "2026-05-06T08:25:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bdquo",
-        "hubnoucí",
-        "ldquo",
-        "léky",
-        "mrtvice",
-        "můžou",
-        "nové",
-        "oční",
-        "potvrdila",
-        "riziko",
-        "slepotu",
-        "studie",
-        "vyšší",
-        "způsobit"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1156,7 +1151,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183317,
+      "bytes": 183282,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1193,11 +1188,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-07T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T09:45:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 35,
-          "zdravi": 3,
+          "finance": 36,
+          "zdravi": 2,
           "zpravy": 2
         },
         "drop_counts": {
@@ -1210,6 +1205,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kam investuje peníze ČNB? Její strategie není tak pasivní, jak by se mohlo zdát",
+            "publishedAt": "2026-05-07T09:45:00Z"
+          },
           {
             "title": "Od července začne platit nové clo na čínské balíčky. Přinést může desítky miliard eur a změnit celý systém dovozu. Jak to bude v Česku?",
             "publishedAt": "2026-05-07T09:00:00Z"
@@ -1237,10 +1236,6 @@
           {
             "title": "Vliv koktejlového efektu pesticidů zatím není jasný. Studie o spojení s rakovinou ale mnohé naznačují",
             "publishedAt": "2026-05-07T05:39:00Z"
-          },
-          {
-            "title": "Slibované zjednodušení evropské digitální agendy se rozplývá, firmám chybí jasná pravidla pro AI",
-            "publishedAt": "2026-05-07T05:16:00Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-07T09:44:50.149569Z",
+  "ingestedAt": "2026-05-07T10:25:01.430370Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kinobox Daily: Film, který z Edwarda Nortona během jediné noci udělal hvězdu",
+      "url": "https://www.kinobox.cz/clanky/daily/53558-kinobox-daily-film-ktery-z-edwarda-nortona-udelal-hvezdu-behem-jedine-noci",
+      "dt": "2026-05-07T10:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "během",
+        "daily",
+        "edwarda",
+        "film",
+        "hvězdu",
+        "jediné",
+        "kinobox",
+        "noci",
+        "nortona",
+        "udělal"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -532,33 +559,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "„Zábavná krvavá lázeň.\" První reakce na Mortal Kombat II lákají na videoherní nářez",
-      "url": "https://www.kinobox.cz/clanky/filmy/53232-zabavna-krvava-lazen-prvni-reakce-na-mortal-kombat-ii-lakaji-na-videoherni-narez",
-      "dt": "2026-05-04T13:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "kombat",
-        "krvavá",
-        "lákají",
-        "lázeň",
-        "mortal",
-        "nářez",
-        "první",
-        "reakce",
-        "videoherní",
-        "zábavná"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -569,7 +569,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28786,
+      "bytes": 28866,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -606,7 +606,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-07T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T10:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 19,
@@ -622,6 +622,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinobox Daily: Film, který z Edwarda Nortona během jediné noci udělal hvězdu",
+            "publishedAt": "2026-05-07T10:00:00Z"
+          },
           {
             "title": "Konečně se dočkáme? Pokračování nejzábavnější akční sci-fi století s Tomem Cruisem se blíží",
             "publishedAt": "2026-05-07T09:00:00Z"
@@ -649,10 +653,6 @@
           {
             "title": "Jaký vliv mají Královny Brna na diváky? Nabízejí motivaci i načančané zkreslení reality",
             "publishedAt": "2026-05-06T11:00:00Z"
-          },
-          {
-            "title": "Kinobox Daily: Jak parta chudých veslařů pokořila Hitlera v jeho vlastním revíru?",
-            "publishedAt": "2026-05-06T10:00:00Z"
           }
         ]
       }

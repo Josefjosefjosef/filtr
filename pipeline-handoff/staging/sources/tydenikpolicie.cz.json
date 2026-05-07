@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-07T09:44:50.149569Z",
+  "ingestedAt": "2026-05-07T10:25:01.430370Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Policisté v Praze řešili dva případy, kdy se je někdo pokoušel podplatit",
+      "url": "https://tydenikpolicie.cz/policiste-v-praze-resili-dva-pripady-kdy-se-je-nekdo-pokousel-podplatit/",
+      "dt": "2026-05-07T10:19:01Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "dva",
+        "někdo",
+        "podplatit",
+        "pokoušel",
+        "policisté",
+        "praze",
+        "případy",
+        "řešili"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -228,33 +253,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Agresivního muže na čerpací stanici v Berouně zpacifikoval až služební pes tamních strážníků",
-      "url": "https://tydenikpolicie.cz/agresivniho-muze-na-cerpaci-stanici-v-beroune-zpacifikoval-az-sluzebni-pes-tamnich-strazniku/",
-      "dt": "2026-05-06T15:10:17Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "agresivního",
-        "berouně",
-        "muže",
-        "pes",
-        "služební",
-        "stanici",
-        "strážníků",
-        "tamních",
-        "zpacifikoval",
-        "čerpací"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -265,7 +263,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15952,
+      "bytes": 15698,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -302,7 +300,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-07T09:39:46Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T10:19:01Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -317,6 +315,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policisté v Praze řešili dva případy, kdy se je někdo pokoušel podplatit",
+            "publishedAt": "2026-05-07T10:19:01Z"
+          },
           {
             "title": "Stovky kilogramů surovin k výrobě pervitinu k nám mělo být přivezeno z Ukrajiny a ze Španělska",
             "publishedAt": "2026-05-07T09:39:46Z"
@@ -344,10 +346,6 @@
           {
             "title": "Osobní vlak projel v Rajhradě návěstidlo zakazující další jízdu",
             "publishedAt": "2026-05-07T05:49:42Z"
-          },
-          {
-            "title": "Policisté ve Vyškově hledají svědky dvou dopravních nehod",
-            "publishedAt": "2026-05-07T05:47:06Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-07T09:44:50.149569Z",
+  "ingestedAt": "2026-05-07T10:25:01.430370Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Amsterodamu hospitalizovali ženu s příznaky hantaviru, zřejmě jde o letušku",
+      "url": "https://www.denik.cz/staty-eu/nozizemsko-hospitalizace-hantavirus-nakaza.html",
+      "dt": "2026-05-07T09:48:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "amsterodamu",
+        "hantaviru",
+        "hospitalizovali",
+        "jde",
+        "letušku",
+        "příznaky",
+        "zřejmě",
+        "ženu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -620,31 +645,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nervozita a obviňování. Pasažéři popisují zoufalství na lodi zasažené hantavirem",
-      "url": "https://www.denik.cz/staty-eu/mv-hondius-hantavirus-cestujici-spanelsko-kanarske-ostrovy-tenerife.html",
-      "dt": "2026-05-06T11:19:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "hantavirem",
-        "lodi",
-        "nervozita",
-        "obviňování",
-        "pasažéři",
-        "popisují",
-        "zasažené",
-        "zoufalství"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -655,7 +655,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28872,
+      "bytes": 28974,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -692,7 +692,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-07T08:37:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T09:48:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -708,6 +708,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Amsterodamu hospitalizovali ženu s příznaky hantaviru, zřejmě jde o letušku",
+            "publishedAt": "2026-05-07T09:48:00Z"
+          },
           {
             "title": "Hasiči hlásí úspěch. Požár v Českém Švýcarsku uhasili i díky intenzivnímu dešti",
             "publishedAt": "2026-05-07T08:37:00Z"
@@ -735,10 +739,6 @@
           {
             "title": "Zloději v obchodním centru v Praze odpálili bankomat, pátrá po nich i vrtulník",
             "publishedAt": "2026-05-07T06:13:00Z"
-          },
-          {
-            "title": "Na východě Lotyšska se zřítily dva cizí drony, jeden mohl zasáhnout sklad ropy",
-            "publishedAt": "2026-05-07T05:32:00Z"
           }
         ]
       }

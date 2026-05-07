@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-07T09:44:50.149569Z",
+  "ingestedAt": "2026-05-07T10:25:01.430370Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Hypotéka, nebo nájemné? Aktuální data jsou jednoznačná",
+      "url": "https://profitonline.cz/hypoteka-nebo-najemne-aktualni-data-jsou-jednoznacna/",
+      "dt": "2026-05-07T10:00:13Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "aktuální",
+        "data",
+        "hypotéka",
+        "jednoznačná",
+        "nebo",
+        "nájemné"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -261,31 +284,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nemohla popadnout dech. Zrádná nemoc vede ke kolapsu srdce",
-      "url": "https://profitonline.cz/nemohla-popadnout-dech-zradna-nemoc-vede-ke-kolapsu-srdce/",
-      "dt": "2026-05-05T10:20:05Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "dech",
-        "kolapsu",
-        "nemoc",
-        "nemohla",
-        "popadnout",
-        "srdce",
-        "vede",
-        "zrádná"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -296,7 +294,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18880,
+      "bytes": 18860,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -333,11 +331,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-07T09:00:37Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T10:00:13Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 11,
-          "zdravi": 1
+          "finance": 12
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -349,6 +346,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hypotéka, nebo nájemné? Aktuální data jsou jednoznačná",
+            "publishedAt": "2026-05-07T10:00:13Z"
+          },
           {
             "title": "Zbrojařská CSG pod palbou. Chytili se investoři na až moc dokonalý příběh?",
             "publishedAt": "2026-05-07T09:00:37Z"
@@ -376,10 +377,6 @@
           {
             "title": "Seagate překvapil trh: Silné výsledky a optimistický výhled",
             "publishedAt": "2026-05-06T08:00:13Z"
-          },
-          {
-            "title": "Karolina Kyselová vede marketing OMV v Česku",
-            "publishedAt": "2026-05-06T06:00:59Z"
           }
         ]
       }
