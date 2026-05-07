@@ -3,10 +3,10 @@
   "fixed_now": "2026-05-04T12:00:00",
   "partition_note": "Requested bucket sum was 33500; normalized to 30000 by calendar_write=3500, calendar_query=3500, multi_intent=2000 (other buckets unchanged).",
   "total_cases": 30000,
-  "overall_accuracy": "74.38",
-  "calendar_write_accuracy": "50.00",
+  "overall_accuracy": "80.65",
+  "calendar_write_accuracy": "60.89",
   "calendar_query_accuracy": "51.17",
-  "task_write_accuracy": "58.65",
+  "task_write_accuracy": "96.15",
   "task_query_accuracy": "100.00",
   "note_write_accuracy": "83.34",
   "note_query_accuracy": "100.00",
@@ -20,12 +20,12 @@
   "future_query_accuracy": "77.54",
   "present_query_accuracy": "75.04",
   "counting_query_accuracy": "13.96",
-  "title_cleanliness_accuracy": "64.10",
+  "title_cleanliness_accuracy": "84.43",
   "address_location_accuracy": "100.00",
   "embedded_note_tail_accuracy": "15.45",
   "completed_tasks_query_accuracy": "100.00",
   "active_tasks_query_accuracy": "100.00",
-  "write_accuracy": "86.70",
+  "write_accuracy": "90.46",
   "query_accuracy": "84.05",
   "update_risk_new_create_count": 0,
   "dangerous_write_count": 0,
@@ -33,52 +33,6 @@
   "query_created_write_count": 0,
   "write_when_negated_count": 0,
   "top_25_fail_clusters": [
-    {
-      "cluster_name": "dirty_title|task_write",
-      "fail_count": 1500,
-      "severity": "P1",
-      "affected_module": "task_write",
-      "example_inputs": [
-        "Připomeň mi koupit mléko.",
-        "Zapiš mi úkol, že mám v pátek poslat fakturu.",
-        "Hele napiš mi prosím úkol, že mám do pondělí poslat Petrovi ty dokumenty, ale nedávej to do kalendáře.",
-        "Pripomen mi koupit mleko.",
-        "Zapis mi ukol, ze mam v patek poslat fakturu.",
-        "ne do ukolu Hele napis mi prosim ukol, ze mam do pondeli poslat Petrovi ty dokumenty, ale nedavej to do kalendare.",
-        "Pripomeň mi koupit mléko.",
-        "Zapis mi úkol, ze mam v patek poslat fakturu.",
-        "Hele napis mi prosim úkol, ze mam do pondeli poslat Petrovi ty dokumenty, ale nedavej to do kalendare.",
-        "Připomeň mi koupit mléko."
-      ],
-      "expected_summary": "task.create",
-      "actual_summary": "tasks.create/READY_TO_SAVE :: Připravil jsem návrh úkolu.",
-      "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
-      "recommended_next_scope": "Narrow Silver change in task_write for pattern «dirty_title» (do not broaden unrelated modules).",
-      "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
-    },
-    {
-      "cluster_name": "intent_fail|calendar_write",
-      "fail_count": 992,
-      "severity": "P1",
-      "affected_module": "calendar_write",
-      "example_inputs": [
-        "nic neukládej Zítra zubař v 15.",
-        "nic nevytvářej Příští středu doktor.",
-        "jen čti pripomen mi v kalendari ze musim v patek rano k zubari",
-        "ne do kalendare Pripomen mi ze mam zitra doktora.",
-        "pokud nic nenajdes nic nevytvarej Zitra zubar v 15.",
-        "jen se podivej Pristi stredu doktor.",
-        "nic neukládej pripomen mi v kalendari ze musim v patek rano k zubari",
-        "nic nevytvářej Pripomen mi že mám zitra doktora.",
-        "jen čti Příští středu doktor.",
-        "ne do kalendare Hod mi prosim do kalendare na pristi utery odpoledne schuzku s pravnikem, bude to v Praze na Korunni 44 a do poznamky dej, ze mam vzit smlouvu, obcanku a kopii usneseni."
-      ],
-      "expected_summary": "calendar.create",
-      "actual_summary": "clarification/CLARIFICATION :: Rozumím, zápis neprovedu.",
-      "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
-      "recommended_next_scope": "Narrow Silver change in calendar_write for pattern «intent_fail» (do not broaden unrelated modules).",
-      "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
-    },
     {
       "cluster_name": "false_negative|calendar_query",
       "fail_count": 893,
@@ -218,6 +172,29 @@
       "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
     },
     {
+      "cluster_name": "intent_fail|calendar_write",
+      "fail_count": 378,
+      "severity": "P1",
+      "affected_module": "calendar_write",
+      "example_inputs": [
+        "ne do kalendare Pripomen mi ze mam zitra doktora.",
+        "ne do kalendare Hod mi prosim do kalendare na pristi utery odpoledne schuzku s pravnikem, bude to v Praze na Korunni 44 a do poznamky dej, ze mam vzit smlouvu, obcanku a kopii usneseni.",
+        "ne do úkolů Zitra zubar v 15.",
+        "ne do poznámek pripomen mi v kalendari ze musim v patek rano k zubari",
+        "ne do kalendare Zitra zubar v 15.",
+        "jen se podivej Hoď mi prosim do kalendare na pristi útery odpoledne schůzku s pravnikem, bude to v Praze na Korunni 44 a do poznamky dej, ze mam vzit smlouvu, obcanku a kopii usneseni.",
+        "ne do úkolů pripomen mi v kalendari ze musim v patek rano k zubari",
+        "jen cti Hod mi prosim do kalendare na pristi utery odpoledne schuzku s pravnikem, bude to v Praze na Korunni 44 a do poznamky dej, ze mam vzit smlouvu, obcanku a kopii usneseni.",
+        "ne do kalendare pripomen mi v kalendari ze musim v patek rano k zubari",
+        "ne do úkolů Příští středu doktor."
+      ],
+      "expected_summary": "calendar.create",
+      "actual_summary": "calendar.read/READ_OK :: Na zítřek nemáš žádné události.",
+      "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
+      "recommended_next_scope": "Narrow Silver change in calendar_write for pattern «intent_fail» (do not broaden unrelated modules).",
+      "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
+    },
+    {
       "cluster_name": "dirty_title|dirty_mobile_czech",
       "fail_count": 333,
       "severity": "P1",
@@ -333,6 +310,29 @@
       "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
     },
     {
+      "cluster_name": "embedded_not_calendar|calendar_write",
+      "fail_count": 146,
+      "severity": "P1",
+      "affected_module": "calendar_write",
+      "example_inputs": [
+        "nic neukládej Zítra zubař v 15.",
+        "nic neukládej pripomen mi v kalendari ze musim v patek rano k zubari",
+        "nic neukládej Příští středu doktor.",
+        "nic neukládej Pripomen mi že mám zitra doktora.",
+        "nic neukládej Hoď mi prosím do kalendáře na příští úterý odpoledne schůzku s právníkem, bude to v Praze na Korunní 44 a do poznámky dej, že mám vzít smlouvu, občanku a kopii usnesení.",
+        "nic neukládej Zítra zubař v 15.",
+        "nic neukládej pripomen mi v kalendari ze musim v patek rano k zubari",
+        "nic neukládej Příští středu doktor.",
+        "nic neukládej Pripomen mi že mám zitra doktora.",
+        "nic neukládej Hoď mi prosím do kalendáře na příští úterý odpoledne schůzku s právníkem, bude to v Praze na Korunní 44 a do poznámky dej, že mám vzít smlouvu, občanku a kopii usnesení."
+      ],
+      "expected_summary": "unknown",
+      "actual_summary": "clarification/CLARIFICATION :: Rozumím, zápis neprovedu.",
+      "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
+      "recommended_next_scope": "Narrow Silver change in calendar_write for pattern «embedded_not_calendar» (do not broaden unrelated modules).",
+      "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
+    },
+    {
       "cluster_name": "unnecessary_disambiguation|reminder_intent",
       "fail_count": 133,
       "severity": "P2",
@@ -354,20 +354,43 @@
       "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
       "recommended_next_scope": "Narrow Silver change in reminder_intent for pattern «unnecessary_disambiguation» (do not broaden unrelated modules).",
       "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
+    },
+    {
+      "cluster_name": "false_negative|calendar_write",
+      "fail_count": 87,
+      "severity": "P2",
+      "affected_module": "calendar_write",
+      "example_inputs": [
+        "jen se podivej Zitra zubar v 15.",
+        "jen cti Zitra zubar v 15.",
+        "jen se podivej pripomen mi v kalendari ze musim v patek rano k zubari",
+        "jen se podívej Zítra zubař v 15.",
+        "jen cti Zitra zubar v 15.",
+        "jen se podívej pripomen mi v kalendari ze musim v patek rano k zubari",
+        "jen se podívej Zítra zubař v 15.",
+        "jen čti Zítra zubař v 15.",
+        "jen se podívej pripomen mi v kalendari ze musim v patek rano k zubari",
+        "jen se podivej Zitra zubar v 15."
+      ],
+      "expected_summary": "unknown",
+      "actual_summary": "calendar.read/READ_OK :: Nic jsem k tomu nenašel.",
+      "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
+      "recommended_next_scope": "Narrow Silver change in calendar_write for pattern «false_negative» (do not broaden unrelated modules).",
+      "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
     }
   ],
-  "recommended_next_fix_cluster": "dirty_title|task_write",
-  "recommended_next_fix_reason": "Largest cluster «dirty_title|task_write» (1500 fails); fix routing/semantics for this phrasing family first.",
-  "exact_next_scope": "Silver engine: handle «dirty_title» in module «task_write».",
+  "recommended_next_fix_cluster": "false_negative|calendar_query",
+  "recommended_next_fix_reason": "Largest cluster «false_negative|calendar_query» (893 fails); fix routing/semantics for this phrasing family first.",
+  "exact_next_scope": "Silver engine: handle «false_negative» in module «calendar_query».",
   "peer_quality_accuracy": "97.18",
   "peer_realistic_routing_accuracy": "100.00",
   "peer_20k_overall_accuracy": null,
   "by_group": {
     "calendar_write": {
-      "pass": 1750,
-      "fail": 1750,
-      "core_pass": 1750,
-      "quality_fail": 758
+      "pass": 2131,
+      "fail": 1369,
+      "core_pass": 2131,
+      "quality_fail": 904
     },
     "calendar_query": {
       "pass": 1791,
@@ -376,10 +399,10 @@
       "quality_fail": 0
     },
     "task_write": {
-      "pass": 2346,
-      "fail": 1654,
-      "core_pass": 2346,
-      "quality_fail": 1500
+      "pass": 3846,
+      "fail": 154,
+      "core_pass": 3846,
+      "quality_fail": 0
     },
     "task_query": {
       "pass": 4000,

@@ -226,6 +226,31 @@ function calendarWriteHarnessIntentOverride(folded) {
   return "calendar.query";
 }
 
+/**
+ * Hard global read-only / no-save negation (foldCs). Does NOT include module-only lines
+ * like „ne do úkolů / ne do poznámek“ — those may still pair with calendar.create when a write cue exists.
+ */
+function calendarWriteHardNoWriteFolded(fx) {
+  const f = String(fx || "");
+  if (!f) return false;
+  if (/\bnic\s+neuklad\w*\b/.test(f)) return true;
+  if (/\bnic\s+nevytvare\w*\b/.test(f)) return true;
+  if (/\bjen\s+cti\b/.test(f)) return true;
+  if (/\bjen\s+se\s+podivej\b/.test(f)) return true;
+  if (/\bpouze\s+cti\b/.test(f)) return true;
+  if (/\bpokud\s+nic\s+nenajdes\b/.test(f) && /\bnic\s+nevytvare\w*\b/.test(f)) return true;
+  return false;
+}
+
+/** Single source for Real UX calendar_write bucket expectations (harness-only). */
+function calendarWriteHarnessExpectedIntent(folded) {
+  const f = String(folded || "");
+  const ov = calendarWriteHarnessIntentOverride(f);
+  if (ov) return ov;
+  if (calendarWriteHardNoWriteFolded(f)) return "unknown";
+  return "calendar.create";
+}
+
 function auditSilverTaskWriteReadOnlyNegVsExplicitJedenUkolFolded(fx) {
   const x = String(fx || "");
   if (!/\bjako\s+jeden\s+ukol\b/.test(x)) return false;
@@ -687,14 +712,13 @@ function evaluateCore(c, turn) {
   const folded = foldCs(c.input);
   const eng = turn.normalizedIntent;
   const rc = routingCategoryForEngine(c);
+  const semG = semanticGroupForEval(c);
   let expectedIntent = c.expectedIntent;
-  if (semanticGroupForEval(c) === "calendar_write" || c.group === "calendar_write" || (c.group === "dirty_mobile_czech" && c.meta && c.meta.underlying === "calendar_write")) {
-    const ov = calendarWriteHarnessIntentOverride(folded);
-    if (ov) expectedIntent = ov;
+  if (semG === "calendar_write" || c.group === "calendar_write" || (c.group === "dirty_mobile_czech" && c.meta && c.meta.underlying === "calendar_write")) {
+    expectedIntent = calendarWriteHarnessExpectedIntent(folded);
   }
   let auditIntent = engineToAuditIntent(eng, rc);
-  const semG = semanticGroupForEval(c);
-  const conf = detectCollectionConfusion(semG === "reminder_intent" ? (c.meta.reminder_target === "task" ? "task_write" : "calendar_write") : semG, eng, c.expectedIntent);
+  const conf = detectCollectionConfusion(semG === "reminder_intent" ? (c.meta.reminder_target === "task" ? "task_write" : "calendar_write") : semG, eng, expectedIntent);
   if (conf) return { pass: false, cat: conf, auditIntent, raw };
 
   if (c.group === "safety_negation") {
@@ -821,7 +845,19 @@ function evaluateCore(c, turn) {
     }
     return { pass: true, cat: "", auditIntent, raw };
   }
+  const calWriteHarness =
+    semG === "calendar_write" || (c.group === "dirty_mobile_czech" && c.meta && c.meta.underlying === "calendar_write");
+  if (calWriteHarness && expectedIntent === "unknown" && auditIntent === "calendar.query") {
+    const semQUnk = calendarQuerySemantic(c.input, folded, turn, raw, "calendar.query");
+    if (!semQUnk.ok) return { pass: false, cat: semQUnk.cat, auditIntent, raw };
+    return { pass: true, cat: "", auditIntent, raw };
+  }
   if (auditIntent === "unknown" || eng === "clarification") {
+    if (expectedIntent === "calendar.query" && calWriteHarness) {
+      const semQOv = calendarQuerySemantic(c.input, folded, turn, raw, "calendar.query");
+      if (!semQOv.ok) return { pass: false, cat: semQOv.cat, auditIntent, raw };
+      return { pass: true, cat: "", auditIntent, raw };
+    }
     if (expectedIntent !== "unknown") {
       return { pass: false, cat: "intent_fail", auditIntent, raw };
     }
@@ -960,7 +996,8 @@ function buildCases() {
     ];
     const inp = diacVariant(i, lines[i % lines.length]);
     const meta = i % 4 === 0 ? { embed_needle: embedNeedle } : {};
-    push({ group: "calendar_write", input: inp, expectedIntent: "calendar.create", meta });
+    const expCalW = calendarWriteHarnessExpectedIntent(foldCs(inp));
+    push({ group: "calendar_write", input: inp, expectedIntent: expCalW, meta });
   }
 
   for (let i = 0; i < 3500; i++) {
