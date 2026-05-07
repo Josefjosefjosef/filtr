@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-07T15:25:16.883804Z",
+  "ingestedAt": "2026-05-07T16:05:22.350393Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "Hra na city a sehrané divadlo? Ministryně Mrázová cítí podporu Babiše, rezignovat nechce",
+      "url": "https://ekonomickydenik.cz/city-divadlo-ministryne-mrazova-babis/",
+      "dt": "2026-05-07T15:39:20Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "babiše",
+        "city",
+        "cítí",
+        "divadlo",
+        "hra",
+        "ministryně",
+        "mrázová",
+        "nechce",
+        "podporu",
+        "rezignovat",
+        "sehrané"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -750,34 +778,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "Patří politici do obecních bytů? Piráti chtějí kvůli kauze Mrázová nová pravidla",
-      "url": "https://ekonomickydenik.cz/pirati-chteji-kvuli-kauze-mrazova-nova-pravidla/",
-      "dt": "2026-05-05T18:01:09Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "bytů",
-        "chtějí",
-        "kauze",
-        "kvůli",
-        "mrázová",
-        "nová",
-        "obecních",
-        "patří",
-        "piráti",
-        "politici",
-        "pravidla"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -788,7 +788,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73213,
+      "bytes": 73548,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -825,11 +825,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T14:52:53Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T15:39:20Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 23,
           "zpravy": 5,
+          "finance": 23,
           "zdravi": 2
         },
         "drop_counts": {
@@ -842,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hra na city a sehrané divadlo? Ministryně Mrázová cítí podporu Babiše, rezignovat nechce",
+            "publishedAt": "2026-05-07T15:39:20Z"
+          },
           {
             "title": "Národní banka zhoršila výhled ekonomiky. Inflaci čeká vyšší",
             "publishedAt": "2026-05-07T14:52:53Z"
@@ -869,10 +873,6 @@
           {
             "title": "Konec půlnoční pasti na dálnicích? Ministerstvo u 24hodinové známky varuje před náklady",
             "publishedAt": "2026-05-07T09:10:55Z"
-          },
-          {
-            "title": "Nová éra Teplárny Malešice? Křetínského firma chce v Praze postavit velkou elektrárnu",
-            "publishedAt": "2026-05-07T08:34:41Z"
           }
         ]
       }

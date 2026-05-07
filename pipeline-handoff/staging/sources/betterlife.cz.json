@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-05-07T15:25:16.883804Z",
+  "ingestedAt": "2026-05-07T16:05:22.350393Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Ulice: Soňa pořádně zavaří Lumírovi, z toho už se nevykecá",
+      "url": "https://www.betterlife.cz/ulice-sona-poradne-zavari-lumirovi-z-toho-uz-se-nevykeca/",
+      "dt": "2026-05-07T15:19:08Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "lumírovi",
+        "nevykecá",
+        "pořádně",
+        "soňa",
+        "toho",
+        "ulice",
+        "zavaří"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -259,34 +283,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Pavol Habera oslavil 64. narozeniny. Fanouškům přiznal jaký bere důchod, televize ho vypípala",
-      "url": "https://www.betterlife.cz/pavol-habera-oslavil-64-narozeniny-fanouskum-priznal-jaky-bere-duchod-televize-ho-vypipala/",
-      "dt": "2026-05-02T15:56:08Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "bere",
-        "důchod",
-        "fanouškům",
-        "habera",
-        "jaký",
-        "narozeniny",
-        "oslavil",
-        "pavol",
-        "přiznal",
-        "televize",
-        "vypípala"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -297,7 +293,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 71857,
+      "bytes": 70925,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -357,11 +353,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-07T12:11:03Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T15:19:08Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "finance": 2,
-          "zdravi": 8
+          "zdravi": 8,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -373,6 +369,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ulice: Soňa pořádně zavaří Lumírovi, z toho už se nevykecá",
+            "publishedAt": "2026-05-07T15:19:08Z"
+          },
           {
             "title": "Světový den těhotenství každoročně připomíná důležitost pečlivé péče o matky",
             "publishedAt": "2026-05-07T12:11:03Z"
@@ -400,10 +400,6 @@
           {
             "title": "Dřevo a krb bez televize. Lucie Vondráčková se pochlubila zrekonstruovanou vilou, sklep připomíná ateliér",
             "publishedAt": "2026-05-04T16:27:13Z"
-          },
-          {
-            "title": "Záludné otázky a etické testy. Pracovní pohovory vyžadují přípravu, otázky na rodinu, zdraví i orientaci jsou tabu",
-            "publishedAt": "2026-05-04T09:02:57Z"
           }
         ]
       }

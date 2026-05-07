@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-07T15:25:16.883804Z",
+  "ingestedAt": "2026-05-07T16:05:22.350393Z",
   "items": [
     {
       "section": "pocasi",
@@ -227,6 +227,34 @@
         "července",
         "česku",
         "čínské"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nemoc hlodavců, která se rozšířila na výletní lodi. Co je hantavirus, odkud se vzal a jak velkou může být hrozbou?",
+      "url": "https://zahranicni.hn.cz/c1-67874710-nemoc-hlodavcu-ktera-se-rozsirila-na-vyletni-lodi-co-je-hantavirus-odkud-se-vzal-a-jak-velkou-muze-byt-hrozbou",
+      "dt": "2026-05-07T08:31:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "být",
+        "hantavirus",
+        "hlodavců",
+        "hrozbou",
+        "lodi",
+        "nemoc",
+        "odkud",
+        "rozšířila",
+        "velkou",
+        "vzal",
+        "výletní"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1100,35 +1128,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Evropa je plná neoblíbených politiků, jako první může padnout britský premiér Starmer. Co je v království špatně?",
-      "url": "https://archiv.hn.cz/c1-67874260-evropa-je-plna-neoblibenych-politiku-jako-prvni-muze-padnout-britsky-premier-starmer-co-je-v-kralovstvi-spatne",
-      "dt": "2026-05-06T12:16:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "britský",
-        "evropa",
-        "jako",
-        "království",
-        "neoblíbených",
-        "padnout",
-        "plná",
-        "politiků",
-        "premiér",
-        "první",
-        "starmer",
-        "špatně"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1139,7 +1138,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183591,
+      "bytes": 183686,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1180,8 +1179,8 @@
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "zpravy": 3,
-          "finance": 35,
-          "zdravi": 2
+          "finance": 34,
+          "zdravi": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,

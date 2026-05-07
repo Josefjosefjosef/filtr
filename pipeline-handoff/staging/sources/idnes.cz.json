@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-07T15:25:16.883804Z",
+  "ingestedAt": "2026-05-07T16:05:22.350393Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Vymíráme!“ varuje Jiří Čunek. Zaskočilo ho přiznání gaye v maturitě z angličtiny",
+      "url": "https://www.idnes.cz/zpravy/domaci/jiri-cunek-senator-maturita-anglictina-didakticke-testy-lgbt.A260507_162059_domaci_sahu",
+      "dt": "2026-05-07T15:20:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "angličtiny",
+        "gaye",
+        "jiří",
+        "maturitě",
+        "přiznání",
+        "varuje",
+        "vymíráme",
+        "zaskočilo",
+        "čunek"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -754,32 +780,6 @@
         "slova",
         "úřad",
         "čro"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "RECENZE: Billie Eilish a James Cameron. Dva perfekcionisté vytvořili strhující dílo",
-      "url": "https://www.idnes.cz/kultura/film-televize/billie-eilish-film-james-cameron-recenze-billie-eilish-hit-me-hard-and-soft-the-tour.A260505_134615_filmvideo_jgo",
-      "dt": "2026-05-07T12:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "billie",
-        "cameron",
-        "dva",
-        "dílo",
-        "eilish",
-        "james",
-        "perfekcionisté",
-        "strhující",
-        "vytvořili"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1579,7 +1579,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48269,
+      "bytes": 48022,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1616,11 +1616,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T15:17:43Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T15:20:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 28,
-          "other": 2
+          "zpravy": 29,
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1632,6 +1632,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Vymíráme!“ varuje Jiří Čunek. Zaskočilo ho přiznání gaye v maturitě z angličtiny",
+            "publishedAt": "2026-05-07T15:20:00Z"
+          },
           {
             "title": "V kabinetu školy unikly chemikálie, hasiči budovu evakuovali",
             "publishedAt": "2026-05-07T15:17:43Z"
@@ -1659,10 +1663,6 @@
           {
             "title": "Loď zasaženou hantavirem opustily tři desítky cestujících. Úřady po nich pátrají",
             "publishedAt": "2026-05-07T14:07:00Z"
-          },
-          {
-            "title": "Lupiči z odpáleného bankomatu vzali 300 tisíc. Ujeli na koloběžkách",
-            "publishedAt": "2026-05-07T13:58:00Z"
           }
         ]
       }
