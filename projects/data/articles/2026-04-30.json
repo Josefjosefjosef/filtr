@@ -1,6 +1,6 @@
 {
   "date": "2026-04-30",
-  "generatedAt": "2026-05-07T16:09:26.489415Z",
+  "generatedAt": "2026-05-07T16:52:35.206709Z",
   "items": [
     {
       "topic": "aktualne",
@@ -271,8 +271,8 @@
       "feedId": "zpr_idnes_zpravy",
       "url": "https://www.idnes.cz/kultura/halo-jdeme-loupit-znate-dobre-komedii-eva-tropi-hlouposti.Q260429_144424_kultura_jgo",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.039160810276959265,
-      "iuReleaseAt": "2026-05-07T16:09:27.489415Z",
+      "displayScore": 0.03899574531626267,
+      "iuReleaseAt": "2026-05-07T16:52:36.206709Z",
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "kultura",
@@ -1328,7 +1328,7 @@
       "feedId": "zpr_seznam_domaci",
       "url": "https://www.seznamzpravy.cz/clanek/sport-fotbal-ms-ve-fotbale-iransti-fotbaliste-se-zucastni-ms-v-usa-potvrdil-na-kongresu-sef-fifa-infantino-305274",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.040130536103394336,
+      "displayScore": 0.03996471776653881,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "sport",
@@ -2077,7 +2077,7 @@
       "feedId": "kul_vtelce",
       "url": "https://www.vtelce.cz/policie-modrava-statisicove-platy-hercu-smrt-pred-premierou-a-zmrzly-kun-na-place/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.025963243586701393,
+      "displayScore": 0.02585681668334707,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -2310,6 +2310,38 @@
       }
     },
     {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na Slovensku zítra startuje éra bez hotovosti. Obchody a služby budou muset brát karty nebo QR kódy",
+      "publishedAt": "2026-04-30T16:45:00Z",
+      "sources": [
+        {
+          "name": "VTM",
+          "url": "https://www.zive.cz/clanky/na-slovensku-zitra-startuje-era-bez-hotovosti-obchody-a-sluzby-budou-muset-brat-karty-nebo-qr-kody/sc-3-a-240957/default.aspx"
+        }
+      ],
+      "primaryCategory": "veda",
+      "topicHash": "09b35a29f1bd7214",
+      "feedType": "rss",
+      "sourceDisplayWeight": 0.95,
+      "sectionPrimary": "veda",
+      "sourceLabel": "VTM",
+      "feedId": "ved_vtm",
+      "url": "https://www.zive.cz/clanky/na-slovensku-zitra-startuje-era-bez-hotovosti-obchody-a-sluzby-budou-muset-brat-karty-nebo-qr-kody/sc-3-a-240957/default.aspx",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.0326648999429297,
+      "iuReleaseAt": "2026-05-07T08:22:24.380199Z",
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "tech",
+        "reason": "tech_url_regex",
+        "confidence": 0.9,
+        "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
+    {
       "topic": "sport",
       "section": "sport",
       "contentType": "article",
@@ -2337,38 +2369,6 @@
         "reason": "topic_field",
         "confidence": 0.95,
         "railSectionKey": "sport",
-        "guardFlags": []
-      }
-    },
-    {
-      "topic": "veda",
-      "section": "veda",
-      "contentType": "article",
-      "title": "Na Slovensku zítra startuje éra bez hotovosti. Obchody a služby budou muset brát karty nebo QR kódy",
-      "publishedAt": "2026-04-30T16:45:00Z",
-      "sources": [
-        {
-          "name": "VTM",
-          "url": "https://www.zive.cz/clanky/na-slovensku-zitra-startuje-era-bez-hotovosti-obchody-a-sluzby-budou-muset-brat-karty-nebo-qr-kody/sc-3-a-240957/default.aspx"
-        }
-      ],
-      "primaryCategory": "veda",
-      "topicHash": "09b35a29f1bd7214",
-      "feedType": "rss",
-      "sourceDisplayWeight": 0.95,
-      "sectionPrimary": "veda",
-      "sourceLabel": "VTM",
-      "feedId": "ved_vtm",
-      "url": "https://www.zive.cz/clanky/na-slovensku-zitra-startuje-era-bez-hotovosti-obchody-a-sluzby-budou-muset-brat-karty-nebo-qr-kody/sc-3-a-240957/default.aspx",
-      "duplicatePenalty": 1.0,
-      "displayScore": 0.03434359917289688,
-      "iuReleaseAt": "2026-05-07T08:22:24.380199Z",
-      "iuFeedClassification": {
-        "v": 1,
-        "mediaTopicKey": "tech",
-        "reason": "tech_url_regex",
-        "confidence": 0.9,
-        "railSectionKey": "veda",
         "guardFlags": []
       }
     },
@@ -3316,7 +3316,7 @@
       "feedId": "zpr_novinky_domaci",
       "url": "https://www.novinky.cz/clanek/pocasi-obri-kroupy-nicily-majetek-ve-springfieldu-40575915",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.0393448842888759,
+      "displayScore": 0.039185482088893074,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -3665,7 +3665,7 @@
       "feedId": "zpr_aktualne",
       "url": "https://zpravy.aktualne.cz/domaci/nehoda-kamionu-s-herbicidy-a-auta-zastavila-v-ostrave-d1-na-polsko-jeden-zraneny/r~aaa29f6c473d29ef1ad2fe9e8c8208eb/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.032465836316210785,
+      "displayScore": 0.032334450899020435,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -4460,7 +4460,7 @@
       "feedId": "hry_zing",
       "url": "https://zing.cz/article/film-podle-herni-serie-resident-evil-obdrzel",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.028889318103285398,
+      "displayScore": 0.028773044037062274,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -4739,7 +4739,7 @@
       "feedId": "ved_technet",
       "url": "https://www.idnes.cz/technet/audio-foto-video/nova-aplikace-netflix-pro-smartphony-vertikalni-video-kanal-reels.A260430_104550_audio-foto-video_nyv",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03379599321874031,
+      "displayScore": 0.033660733811902606,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -4770,7 +4770,7 @@
       "feedId": "fin_hn",
       "url": "https://archiv.hn.cz/c1-67872480-biotech-bdquo-olympiada-ldquo-miri-do-prahy-sjedou-se-na-ni-globalni-investori-mezi-nimi-i-fondy-ze-skupiny-novo-nordisk-nebo-novartis",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03379599321858167,
+      "displayScore": 0.03366073381179769,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "sport",
@@ -5274,7 +5274,7 @@
       "feedId": "ved_vtm",
       "url": "https://mobilmania.zive.cz/clanky/iphony-17-trapi-zvlastni-problem-po-uplnem-vybiti-se-nezapnou-ani-po-pripojeni-k-nabijecce/sc-3-a-1364646/default.aspx",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03188171972597837,
+      "displayScore": 0.031755010255385185,
       "iuReleaseAt": "2026-05-06T12:18:04.593759Z",
       "iuFeedClassification": {
         "v": 1,
@@ -6726,7 +6726,7 @@
       "feedId": "spt_sportcz",
       "url": "https://www.sport.cz/clanek/moto-motocykly-smolny-start-sezony-i-desivy-karambol-ovlivnily-moji-psychiku-priznava-salac-5446187",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.038268016714623196,
+      "displayScore": 0.038117204043111086,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -7005,7 +7005,7 @@
       "feedId": "hry_zing",
       "url": "https://zing.cz/article/saros-otevira-sve-brany-hodnocenim-prekonava-vsechny-dosavadni-hry-studia",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.02824923868813868,
+      "displayScore": 0.02813805002678176,
       "iuReleaseAt": "2026-05-06T07:08:01.355924Z",
       "iuFeedClassification": {
         "v": 1,
@@ -7262,7 +7262,7 @@
       "feedId": "hry_indian",
       "url": "https://indian-tv.cz/clanek/assassins-creed-hexe-v-problemech-ubisoft-presouva-vyvojare-wprb11",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.029894491845679032,
+      "displayScore": 0.029776892010303917,
       "iuReleaseAt": "2026-05-06T14:09:03.071600Z",
       "iuFeedClassification": {
         "v": 1,
@@ -9223,7 +9223,7 @@
       "feedId": "ved_technet",
       "url": "https://www.idnes.cz/technet/software/rozstrel-jan-halic-ai-brusel-evropska-umela-inteligence-brusel-zakaz.A260429_190035_software_vov",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.032870257371738626,
+      "displayScore": 0.032742292469269005,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -10456,7 +10456,7 @@
       "feedId": "fin_faei",
       "url": "https://profitonline.cz/novy-most-v-praze-je-dvakrat-drazsi-nez-podobna-stavba-v-helsinkach/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.026107608504644355,
+      "displayScore": 0.02600669692992741,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -10522,7 +10522,7 @@
       "feedId": "zpr_seznam_domaci",
       "url": "https://www.seznamzpravy.cz/clanek/sport-popelka-v-tretrach-ukrajinsky-zednik-s-ceskym-pasem-sni-o-medailich-304467",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.037458773878420906,
+      "displayScore": 0.037314260107426556,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "sport",
@@ -10584,7 +10584,7 @@
       "feedId": "hry_indian",
       "url": "https://indian-tv.cz/clanek/sony-reaguje-na-obavy-z-nove-protipiratske-ochrany-playstationu-vi8bww",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.02930486774894492,
+      "displayScore": 0.029191852357847287,
       "iuReleaseAt": "2026-05-06T11:39:12.323610Z",
       "iuFeedClassification": {
         "v": 1,
@@ -11249,7 +11249,7 @@
       "feedId": "zpr_aktualne",
       "url": "https://zpravy.aktualne.cz/domaci/zdravotnictvi-22850dba-908b-4192-badc-0e7f1c003a00/rodice-stale-volaji-hrozba-otravy-kojencu-trva-poslanci-si-dupli-na-babisovy-ministry/r~aaa2991e5a26b3a7ffd2d87f09ef56b9/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.030813169465661108,
+      "displayScore": 0.030694795500990323,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
