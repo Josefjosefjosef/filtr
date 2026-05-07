@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-07T06:15:45.403402Z",
+  "ingestedAt": "2026-05-07T06:55:40.338057Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Kriminalisté řeší další výbuch bankomatu. Policie hledá pachatele v Praze 4",
+      "url": "https://www.denik.cz/krimi/kriminaliste-resi-dalsi-vybuch-bankomatu-policie-hleda-pachatele-v-praze-4-20260.html",
+      "dt": "2026-05-07T06:13:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bankomatu",
+        "další",
+        "hledá",
+        "kriminalisté",
+        "pachatele",
+        "policie",
+        "praze",
+        "výbuch",
+        "řeší"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -621,32 +647,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Neobvyklý pohled. K jezeru Most se slétlo třicet čápů, nevyrušil je ani traktor",
-      "url": "https://www.denik.cz/regiony/jezero-most-cap-louka-20260506.html",
-      "dt": "2026-05-06T09:25:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "jezeru",
-        "most",
-        "neobvyklý",
-        "nevyrušil",
-        "pohled",
-        "slétlo",
-        "traktor",
-        "třicet",
-        "čápů"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -657,7 +657,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28891,
+      "bytes": 28983,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -694,7 +694,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-07T05:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T06:13:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -710,6 +710,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kriminalisté řeší další výbuch bankomatu. Policie hledá pachatele v Praze 4",
+            "publishedAt": "2026-05-07T06:13:00Z"
+          },
           {
             "title": "Na východě Lotyšska se zřítily dva cizí drony, jeden mohl zasáhnout sklad ropy",
             "publishedAt": "2026-05-07T05:32:00Z"
@@ -737,10 +741,6 @@
           {
             "title": "Putin se obává atentátu. Pracovníkům Kremlu zakázal mobily i přístup k internetu",
             "publishedAt": "2026-05-06T17:00:00Z"
-          },
-          {
-            "title": "Policisté zasahují u Univerzity Karlovy. Nález tašky s municí vyvolal rozruch",
-            "publishedAt": "2026-05-06T16:56:00Z"
           }
         ]
       }

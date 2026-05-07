@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-07T06:15:45.403402Z",
+  "ingestedAt": "2026-05-07T06:55:40.338057Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Likvidaci požáru v Českém Švýcarsku pomohl déšť, hasiči národní park postupně opouštějí",
+      "url": "https://domaci.hn.cz/c1-67874640-likvidaci-pozaru-v-ceskem-svycarsku-pomohl-dest-hasici-narodni-park-postupne-opousteji",
+      "dt": "2026-05-07T06:32:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "déšť",
+        "hasiči",
+        "likvidaci",
+        "národní",
+        "opouštějí",
+        "park",
+        "pomohl",
+        "postupně",
+        "požáru",
+        "českém",
+        "švýcarsku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -305,7 +333,7 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Co může za blamáž Leo Expressu s ojetými Talgy? Insideři pojmenovali hlavní příčiny",
+      "title": "Co může za blamáž Leo Expressu s ojetými Talgy? Insideři pojmenovali tři hlavní příčiny",
       "url": "https://archiv.hn.cz/c1-67874450-co-muze-za-blamaz-leo-expressu-s-ojetymi-talgy-insideri-pojmenovali-hlavni-priciny",
       "dt": "2026-05-06T17:30:00Z",
       "media_raw": "HN / Ekonomika",
@@ -319,7 +347,8 @@
         "ojetými",
         "pojmenovali",
         "příčiny",
-        "talgy"
+        "talgy",
+        "tři"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -592,25 +621,24 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Jistě, pane řediteli! Schopný a neústupný úředník, který přerostl svého ministra. Kdo ve skutečnosti vládne v resortu práce?",
+      "title": "Schopný a neústupný &bdquo;ajťák&ldquo;, který rychle přerostl Juchelku. Kdo ve skutečnosti vládne na ministerstvu práce?",
       "url": "https://archiv.hn.cz/c1-67873950-jiste-pane-rediteli-schopny-a-neustupny-urednik-ktery-prerostl-sveho-ministra-kdo-ve-skutecnosti-vladne-v-resortu-prace",
       "dt": "2026-05-06T14:34:00Z",
       "media_raw": "HN / Ekonomika",
       "media_norm": "HN / Ekonomika",
       "tokens": [
-        "jistě",
-        "ministra",
+        "ajťák",
+        "bdquo",
+        "juchelku",
+        "ldquo",
+        "ministerstvu",
         "neústupný",
-        "pane",
         "práce",
         "přerostl",
-        "resortu",
+        "rychle",
         "schopný",
         "skutečnosti",
-        "svého",
-        "vládne",
-        "úředník",
-        "řediteli"
+        "vládne"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1116,39 +1144,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Před vydáním vše zkontroluje vláda. Microsoft, Google a xAI dají úřadům USA přístup k novým modelům AI před jejich uvedením na trh",
-      "url": "https://zahranicni.hn.cz/c1-67874180-pred-vydanim-vse-zkontroluje-vlada-microsoft-google-a-xai-daji-uradum-usa-pristup-k-novym-modelum-ai-pred-jejich-uvedenim-na-trh",
-      "dt": "2026-05-06T05:52:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "dají",
-        "google",
-        "jejich",
-        "microsoft",
-        "modelům",
-        "novým",
-        "přístup",
-        "trh",
-        "usa",
-        "uvedením",
-        "vláda",
-        "vydáním",
-        "vše",
-        "xai",
-        "zkontroluje",
-        "úřadům"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1159,7 +1154,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183641,
+      "bytes": 183661,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1196,11 +1191,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-07T05:39:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T06:32:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zdravi": 3,
           "finance": 34,
+          "zdravi": 3,
           "zpravy": 3
         },
         "drop_counts": {
@@ -1213,6 +1208,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Likvidaci požáru v Českém Švýcarsku pomohl déšť, hasiči národní park postupně opouštějí",
+            "publishedAt": "2026-05-07T06:32:00Z"
+          },
           {
             "title": "Vliv koktejlového efektu pesticidů zatím není jasný. Studie o spojení s rakovinou ale mnohé naznačují",
             "publishedAt": "2026-05-07T05:39:00Z"
@@ -1240,10 +1239,6 @@
           {
             "title": "Čínský humanoid trénuje v českých laboratořích. Učit ho je jako vychovávat dítě. Včetně obav, aby si neublížil",
             "publishedAt": "2026-05-06T22:00:00Z"
-          },
-          {
-            "title": "Anthropic se dohodl s Muskovou firmou SpaceX na využití jejího datového centra",
-            "publishedAt": "2026-05-06T18:45:00Z"
           }
         ]
       }
