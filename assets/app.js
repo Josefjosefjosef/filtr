@@ -37120,6 +37120,64 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return t.charAt(0).toLocaleUpperCase("cs-CZ") + t.slice(1);
   }
 
+  /**
+   * P0 Silver v1: úzké čištění titulku jen pro task.create (dirty_title|task_write).
+   * Musí projít stejným titleCleanForDraft gate jako audit (TITLE_POLLUTION_RE + max 100 znaků).
+   */
+  const IU_SILVER_TASK_TITLE_POLLUTION_AUDIT_RE =
+    /\bhod\s+mi\b|\bdej\s+(mi\s+)?do\s+kalend|\buloz\s+mi\b|\bpripomen\s+mi\b|\bze\s+mam\b|\bze\s+[^s]/i;
+
+  function iuSilverCleanTaskCreateTitleV1(titleNorm, safeFallbackTitle) {
+    const fb = String(safeFallbackTitle != null ? safeFallbackTitle : "").trim();
+    let s = String(titleNorm || "").trim();
+    if (!s) return fb.slice(0, 200);
+    s = s.replace(/,\s*(?:že|ze)\s+m[aá]m\s+/gi, " ").replace(/\s+/g, " ").trim();
+    const leadRes = [
+      /^\s*hele\s+/iu,
+      /^\s*(?:pros[ií]m|prosim)\s*[,;:]?\s+/iu,
+      /^\s*ne\s+do\s+kalend[aá]r\w*\s*,\s+/iu,
+      /^\s*jen\s+(?:cti|čti)\s+/iu,
+      /^\s*jen\s+se\s+pod[ií]vej\s+/iu,
+      /^\s*nic\s+neukl[aá]dej\s+/iu,
+      /^\s*nic\s+nevytv[aá](?:ř|r)\w*ej\s+/iu,
+      /^\s*p[rř]ipome[nň]\s+mi\s+/iu,
+      /^\s*zapi[sš]\s+mi\s+(?:[uú]kol\w*\s*)?(?:,\s*)?/iu,
+      /^\s*nap[ií][sš]\s+mi\s+(?:[uú]kol\w*\s*)?(?:,\s*)?/iu,
+      /^\s*zapi[sš]\s+si\s+(?:[uú]kol\w*\s+)?/iu,
+      /^\s*ho[dď]\s+mi\s+/iu,
+      /^\s*ul[oó][zž]\s+mi\s+/iu,
+      /^\s*p[rř]idej\s+mi\s+(?:[uú]kol\w*\s*)?(?:,\s*)?/iu,
+      /^\s*pridej\s+mi\s+(?:[uú]kol\w*\s*)?(?:,\s*)?/iu,
+      /^\s*p[rř]idej\s+(?:[uú]kol\w*\s+)?/iu,
+      /^\s*pridej\s+(?:[uú]kol\w*\s+)?/iu,
+      /^\s*jako\s+[uú]kol\w*\s+/iu,
+      /^\s*[uú]kol\w*\s*,\s*/iu,
+      /^\s*[uú]kol\w*\s+/iu,
+      /^\s*(?:že|ze)\s+m[aá]m\s+/iu,
+      /^\s*(?:že|ze)\s+/iu
+    ];
+    for (let round = 0; round < 24; round++) {
+      const prev = s;
+      for (let j = 0; j < leadRes.length; j++) {
+        s = s.replace(leadRes[j], "").trim();
+      }
+      s = s.replace(/,\s*(?:že|ze)\s+m[aá]m\s+/gi, " ").replace(/\s+/g, " ").trim();
+      s = iuSilverNormalizeWs(s);
+      if (s === prev) break;
+    }
+    if (!s || s.length < 2) return fb.slice(0, 200);
+    s = s.charAt(0).toLocaleUpperCase("cs-CZ") + s.slice(1);
+    let out = iuSilverNormalizeWs(s);
+    if (IU_SILVER_TASK_TITLE_POLLUTION_AUDIT_RE.test(foldCs(out))) out = fb;
+    if (out.length > 100) out = out.slice(0, 100).trim();
+    if (!out || out.length < 2) return fb.slice(0, 200);
+    if (IU_SILVER_TASK_TITLE_POLLUTION_AUDIT_RE.test(foldCs(out))) return fb.slice(0, 200);
+    out = out.replace(/[.!?…]+$/u, "").trim();
+    if (!out || out.length < 2) return fb.slice(0, 200);
+    out = out.charAt(0).toLocaleUpperCase("cs-CZ") + out.slice(1);
+    return out.slice(0, 200);
+  }
+
   function iuSilverBuildTaskCreateTurn(rawIn, now, opts) {
     opts = opts || {};
     if (opts.calendarOverridesTask) return null;
@@ -37177,12 +37235,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const title = iuSilverFinalizeTaskTitle(w);
     if (!title || title.length < 2) return null;
     const titleNorm = normalizeSilverTitleV1(title, { kind: "task" }).slice(0, 200);
+    const titleForDraft = iuSilverCleanTaskCreateTitleV1(titleNorm, titleNorm);
 
     const draft = createEmptyDraft();
     draft.targetContainer = "tasks";
     draft.taskDueAt = dueYmd || "";
     draft.taskNote = "";
-    draft.title = titleNorm;
+    draft.title = titleForDraft;
     draft.meta.title = "certain";
     draft.date = "";
     draft.meta.date = "missing";
