@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-07T19:00:03.890230Z",
+  "ingestedAt": "2026-05-07T19:39:56.882826Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Miloval motorky i Hořice. Kamil Holán tragicky zahynul na North West 200",
+      "url": "https://jicinsky.denik.cz/ostatni_region/smutna-zprava-miloval-motorky-i-horice-kamil-holan-zemrel-pri-zavode-v-irsku-202.html",
+      "dt": "2026-05-07T17:42:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "200",
+        "holán",
+        "hořice",
+        "kamil",
+        "miloval",
+        "motorky",
+        "north",
+        "tragicky",
+        "west",
+        "zahynul"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -627,34 +654,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Šíří se snímek maskovaného člověka, prý jde o Ivana Bartoše. Ten byl ale jinde",
-      "url": "https://www.denik.cz/z_domova/maskovany-clovek-pry-je-to-ivan-bartos-afa-fest-dezinformace-tarabova-kubasek.html",
-      "dt": "2026-05-07T02:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ale",
-        "bartoše",
-        "ivana",
-        "jde",
-        "jinde",
-        "maskovaného",
-        "prý",
-        "snímek",
-        "ten",
-        "člověka",
-        "šíří"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -665,7 +664,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30584,
+      "bytes": 30439,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -702,7 +701,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-07T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T17:42:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -719,6 +718,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Miloval motorky i Hořice. Kamil Holán tragicky zahynul na North West 200",
+            "publishedAt": "2026-05-07T17:42:00Z"
+          },
           {
             "title": "Jednání s Íránem jsou plná nástrah. Trump je v úzkých, má tři možnosti",
             "publishedAt": "2026-05-07T15:00:00Z"
@@ -746,10 +749,6 @@
           {
             "title": "Krádež hlavy zavražděné modelky Geniniové: Policie vyslýchá expartnera",
             "publishedAt": "2026-05-07T12:03:00Z"
-          },
-          {
-            "title": "Blbka, Komedie omylů i western. Letní divadelní přehlídky jsou na startu",
-            "publishedAt": "2026-05-07T12:00:00Z"
           }
         ]
       }

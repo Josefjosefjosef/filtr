@@ -1,26 +1,54 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-07T19:00:03.890230Z",
+  "ingestedAt": "2026-05-07T19:39:56.882826Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Monsieur Řehka“ dostal od Francie významné ocenění za zásluhy. Řád založil de Gaulle",
+      "url": "https://zpravy.aktualne.cz/domaci/monsieur-rehka-dostal-od-francie-vyznamne-oceneni-za-zasluhy-rad-zalozil-de-gaulle/r~aaa29442259677a859a78ab7227fb911/",
+      "dt": "2026-05-07T19:03:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dostal",
+        "francie",
+        "gaulle",
+        "monsieur",
+        "ocenění",
+        "významné",
+        "založil",
+        "zásluhy",
+        "řehka",
+        "řád"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
-      "title": "Z „lodi smrti“ zmizelo čtyřicet lidí. Nikdo neví, kde jsou a jestli nemají hantavirus",
+      "title": "Čtyřicet lidí z „lodi smrti“ zmizelo neznámo kam. Stopa k zákeřnému hantaviru se rýsuje",
       "url": "https://zpravy.aktualne.cz/domaci/zdravotnictvi-22850dba-908b-4192-badc-0e7f1c003a00/z-lodi-smrti-zmizelo-ctyricet-lidi-nikdo-nevi-kde-jsou-a-jestli-nemaji-hantavirus/r~aaa29f5e5d2cbb96ed17bb103d7f8483/",
       "dt": "2026-05-07T18:48:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "hantavirus",
-        "jestli",
+        "hantaviru",
+        "kam",
         "lidí",
         "lodi",
-        "nemají",
-        "neví",
-        "nikdo",
+        "neznámo",
+        "rýsuje",
         "smrti",
+        "stopa",
         "zmizelo",
+        "zákeřnému",
         "čtyřicet"
       ],
       "feedCategory": "zpravy",
@@ -165,22 +193,20 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Krejčíková - Sabalenková. Obří výzva pro Češku, po návratu jde proti světové jedničce",
+      "title": "Krejčíková - Sabalenková. Češka proti světové jedničce začala skvěle",
       "url": "https://sport.aktualne.cz/tenis/krejcikova-sabalenkova-obri-vyzva-pro-cesku-po-navratu-jde-proti-svetove-jednicce/r~aaa29fb437fa1061083067973d652215/",
       "dt": "2026-05-07T18:00:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "jde",
         "jedničce",
         "krejčíková",
-        "návratu",
-        "obří",
         "proti",
         "sabalenková",
+        "skvěle",
         "světové",
-        "výzva",
-        "češku"
+        "začala",
+        "češka"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -502,34 +528,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ceny paliv v Česku klesnou,  ale benzin už bude dražší než nafta, oznámila vláda",
-      "url": "https://zpravy.aktualne.cz/ekonomika/ceska-ekonomika/ceny-paliv-v-cesku-klesnou-ale-benzin-uz-bude-drazsi-nez-nafta-oznamila-vlada/r~aaa2911b202702a17347245a5d9fddab/",
-      "dt": "2026-05-07T12:28:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "ale",
-        "benzin",
-        "ceny",
-        "dražší",
-        "klesnou",
-        "nafta",
-        "než",
-        "oznámila",
-        "paliv",
-        "vláda",
-        "česku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -540,7 +538,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21500,
+      "bytes": 21451,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -577,13 +575,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-07T18:48:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T19:03:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 14,
           "zdravi": 1,
-          "zpravy": 13,
-          "sport": 5,
-          "finance": 1
+          "sport": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -596,7 +593,11 @@
         },
         "sample_titles": [
           {
-            "title": "Z „lodi smrti“ zmizelo čtyřicet lidí. Nikdo neví, kde jsou a jestli nemají hantavirus",
+            "title": "„Monsieur Řehka“ dostal od Francie významné ocenění za zásluhy. Řád založil de Gaulle",
+            "publishedAt": "2026-05-07T19:03:00Z"
+          },
+          {
+            "title": "Čtyřicet lidí z „lodi smrti“ zmizelo neznámo kam. Stopa k zákeřnému hantaviru se rýsuje",
             "publishedAt": "2026-05-07T18:48:00Z"
           },
           {
@@ -620,12 +621,8 @@
             "publishedAt": "2026-05-07T18:20:00Z"
           },
           {
-            "title": "Krejčíková - Sabalenková. Obří výzva pro Češku, po návratu jde proti světové jedničce",
+            "title": "Krejčíková - Sabalenková. Češka proti světové jedničce začala skvěle",
             "publishedAt": "2026-05-07T18:00:00Z"
-          },
-          {
-            "title": "Americkým státem Mississippi se prohnala nejméně tři tornáda, 17 lidí je zraněných",
-            "publishedAt": "2026-05-07T17:33:00Z"
           }
         ]
       }

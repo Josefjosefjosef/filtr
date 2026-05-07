@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-07T19:00:03.890230Z",
+  "ingestedAt": "2026-05-07T19:39:56.882826Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pavel chce s Babišem oznámit společnou účast na summitu NATO, nevyloučil žalobu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/pavel-chce-s-babisem-oznamit-spolecnou-ucast-na-summitu-nato-nevyloucil-zalobu-373223",
+      "dt": "2026-05-07T19:12:50Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "babišem",
+        "chce",
+        "nato",
+        "nevyloučil",
+        "oznámit",
+        "pavel",
+        "společnou",
+        "summitu",
+        "účast",
+        "žalobu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -712,31 +739,9 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Hasiči uhasili požár v Českém Švýcarsku",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/hasici-v-ceskem-svycarsku-snizili-stupen-poplachu-na-druhy-373187",
-      "dt": "2026-05-07T05:18:03Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "hasiči",
-        "požár",
-        "uhasili",
-        "českém",
-        "švýcarsku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "sport",
       "contentType": "article",
-      "title": "Švédské hry: Česko – Švédsko 2:0",
+      "title": "Švédské hry: Česko – Švédsko 3:1",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/svedske-hry-cesko-svedsko-156648",
       "dt": "2026-05-07T16:30:00Z",
       "media_raw": "ČT sport",
@@ -860,12 +865,13 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Nosková a Macháč v Římě postupují, Valentová, Svrčina i Siniaková se loučí",
+      "title": "Nosková a Macháč v Římě postupují, Valentová, Svrčina, Siniaková i Bouzková se loučí",
       "url": "https://sport.ceskatelevize.cz/clanek/tenis/svrcinu-zradil-servis-s-turnajem-v-rime-se-louci-hned-v-prvnim-kole-156643",
       "dt": "2026-05-07T11:37:39Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
+        "bouzková",
         "loučí",
         "macháč",
         "nosková",
@@ -1497,7 +1503,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42171,
+      "bytes": 42307,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1557,7 +1563,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T18:39:47Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T19:12:50Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1573,6 +1579,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pavel chce s Babišem oznámit společnou účast na summitu NATO, nevyloučil žalobu",
+            "publishedAt": "2026-05-07T19:12:50Z"
+          },
           {
             "title": "Ve Svatavě vznikla nová expozice o ženách vězněných v nacistickém táboře",
             "publishedAt": "2026-05-07T18:39:47Z"
@@ -1600,10 +1610,6 @@
           {
             "title": "SOUHRN: Zásadní události čtvrtka 7. května",
             "publishedAt": "2026-05-07T16:28:00Z"
-          },
-          {
-            "title": "Arménie se přiblížila vstupu do Evropské unie jen „mentálně“",
-            "publishedAt": "2026-05-07T16:15:00Z"
           }
         ]
       }
@@ -1615,7 +1621,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38253,
+      "bytes": 38369,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1668,7 +1674,7 @@
         },
         "sample_titles": [
           {
-            "title": "Švédské hry: Česko – Švédsko 2:0",
+            "title": "Švédské hry: Česko – Švédsko 3:1",
             "publishedAt": "2026-05-07T16:30:00Z"
           },
           {
@@ -1688,7 +1694,7 @@
             "publishedAt": "2026-05-07T12:50:53Z"
           },
           {
-            "title": "Nosková a Macháč v Římě postupují, Valentová, Svrčina i Siniaková se loučí",
+            "title": "Nosková a Macháč v Římě postupují, Valentová, Svrčina, Siniaková i Bouzková se loučí",
             "publishedAt": "2026-05-07T11:37:39Z"
           },
           {
@@ -1709,7 +1715,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78249,
+      "bytes": 78344,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

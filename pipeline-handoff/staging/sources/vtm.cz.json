@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-07T19:00:03.890230Z",
+  "ingestedAt": "2026-05-07T19:39:56.882826Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,33 @@
         "smazat",
         "spolkl",
         "stahuje"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Dnes je světový den hesel. Ideální čas na jejich kontrolu a aktualizaci nejen v mobilu",
+      "url": "https://mobilmania.zive.cz/clanky/dnes-je-svetovy-den-hesel-idealni-cas-na-jejich-kontrolu-a-aktualizaci-nejen-v-mobilu/sc-3-a-1364691/default.aspx",
+      "dt": "2026-05-07T18:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "aktualizaci",
+        "den",
+        "hesel",
+        "ideální",
+        "jejich",
+        "kontrolu",
+        "mobilu",
+        "nejen",
+        "světový",
+        "čas"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -927,37 +954,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Hyrox tlačí tělo do extrémů. V nejtvrdším fitness závodu už nestačí jen pocity, potřebujete senzory a přesná data",
-      "url": "https://www.zive.cz/clanky/hyrox-tlaci-telo-do-extremu-v-nejtvrdsim-fitness-zavodu-uz-nestaci-jen-pocity-potrebujete-senzory-a-presna-data/sc-3-a-240874/default.aspx",
-      "dt": "2026-05-05T06:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "data",
-        "extrémů",
-        "fitness",
-        "hyrox",
-        "jen",
-        "nejtvrdším",
-        "nestačí",
-        "pocity",
-        "potřebujete",
-        "přesná",
-        "senzory",
-        "tlačí",
-        "tělo",
-        "závodu"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -968,7 +964,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23394,
+      "bytes": 23124,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1005,7 +1001,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-07T17:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T18:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1023,6 +1019,10 @@
           {
             "title": "Chrome na počítačích spolkl 4 GB místa navíc, Google potají stahuje AI model. Jak jej smazat?",
             "publishedAt": "2026-05-07T14:45:00Z"
+          },
+          {
+            "title": "Dnes je světový den hesel. Ideální čas na jejich kontrolu a aktualizaci nejen v mobilu",
+            "publishedAt": "2026-05-07T18:45:00Z"
           },
           {
             "title": "Jak dobře vybrat reproduktory k počítači. Kdy sáhnout po 5.1 zvuku, studiových monitorech nebo soundbaru",
@@ -1047,10 +1047,6 @@
           {
             "title": "Z CZC zůstal jen stín. Na Allegru prodává zlomek produktů a jeho značky skončily",
             "publishedAt": "2026-05-06T15:45:00Z"
-          },
-          {
-            "title": "Končí další e-shop s elektronikou a počítači. Exasoft vyhlásil bankrot",
-            "publishedAt": "2026-05-07T07:45:00Z"
           }
         ]
       }
