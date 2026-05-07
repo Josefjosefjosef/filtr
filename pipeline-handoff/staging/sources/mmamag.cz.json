@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-07T11:50:17.835133Z",
+  "ingestedAt": "2026-05-07T12:29:50.121812Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Staré UFC byl divoký experiment. Proto dnes MMA vypadá jako jiný sport",
+      "url": "https://www.mmamag.cz/stare-ufc-byla-divocina-mma-dnes-vypada-jako-jiny-sport/",
+      "dt": "2026-05-07T12:00:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "divoký",
+        "experiment",
+        "jako",
+        "jiný",
+        "mma",
+        "proto",
+        "sport",
+        "staré",
+        "ufc",
+        "vypadá"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1059,36 +1086,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "McGregor trénuje s bývalým bojovníkem UFC. Video mělo ukázat formu, místo toho spustilo posměch",
-      "url": "https://www.mmamag.cz/mcgregoruv-sparing-s-veteranem-ufc-schytal-kritiku/",
-      "dt": "2026-05-05T18:45:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "bojovníkem",
-        "bývalým",
-        "formu",
-        "mcgregor",
-        "místo",
-        "mělo",
-        "posměch",
-        "spustilo",
-        "toho",
-        "trénuje",
-        "ufc",
-        "ukázat",
-        "video"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1099,7 +1096,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 81417,
+      "bytes": 81501,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1136,7 +1133,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-07T11:39:55Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1151,6 +1148,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Staré UFC byl divoký experiment. Proto dnes MMA vypadá jako jiný sport",
+            "publishedAt": "2026-05-07T12:00:00Z"
+          },
           {
             "title": "Je čas prověřit, jak dobře znáte techniky bojových sportů. Jen skutečně zkušení borci zvládnou 10 otázek bez zaváhání",
             "publishedAt": "2026-05-07T11:39:55Z"
@@ -1178,10 +1179,6 @@
           {
             "title": "Vybral si špatného chlapa. MMA bojovník agresora rychle uzemnil",
             "publishedAt": "2026-05-07T07:43:12Z"
-          },
-          {
-            "title": "Chimaev řekl, že Stricklanda miluje. Nikdy prý za zápas nevydělal víc",
-            "publishedAt": "2026-05-07T07:31:31Z"
           }
         ]
       }

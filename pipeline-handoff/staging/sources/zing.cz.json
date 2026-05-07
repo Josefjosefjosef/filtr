@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-07T11:50:17.835133Z",
+  "ingestedAt": "2026-05-07T12:29:50.121812Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Pragmata pokořila další významný prodejní milník",
+      "url": "https://zing.cz/article/pragmata-pokorila-dalsi-vyznamny-prodejni-milnik",
+      "dt": "2026-05-07T10:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "další",
+        "milník",
+        "pokořila",
+        "pragmata",
+        "prodejní",
+        "významný"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -978,32 +1001,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Dohráli jste Overcooked? Těchto 5 her prověří vaše nervy podobně",
-      "url": "https://zing.cz/article/dohrali-jste-overcooked-techto-5-her-proveri-vase-nervy-podobne",
-      "dt": "2026-05-02T18:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "dohráli",
-        "her",
-        "jste",
-        "nervy",
-        "overcooked",
-        "podobně",
-        "prověří",
-        "těchto",
-        "vaše"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1014,7 +1011,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125951,
+      "bytes": 125957,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1051,7 +1048,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-07T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1066,6 +1063,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pragmata pokořila další významný prodejní milník",
+            "publishedAt": "2026-05-07T10:00:00Z"
+          },
           {
             "title": "Přípravy fantasy RPG od tvůrců Hitmana a chystané bondovky pokračují",
             "publishedAt": "2026-05-07T08:00:00Z"
@@ -1093,10 +1094,6 @@
           {
             "title": "Ubisoft reaguje na uniklý obrázek z multiplayerového Assassin's Creed",
             "publishedAt": "2026-05-06T15:00:00Z"
-          },
-          {
-            "title": "Na Steam se po více než dekádě překvapivě vrátila oceňovaná hra od Ubisoftu",
-            "publishedAt": "2026-05-06T14:00:00Z"
           }
         ]
       }

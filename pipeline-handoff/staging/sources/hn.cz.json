@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-07T11:50:17.835133Z",
+  "ingestedAt": "2026-05-07T12:29:50.121812Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Evropa vyhání technologické start-upy. Kvůli regulaci AI jich odešla už víc než stovka",
+      "url": "https://domaci.hn.cz/c1-67873670-evropa-vyhani-technologicke-start-upy-kvuli-regulaci-ai-jich-odesla-uz-vic-nez-stovka",
+      "dt": "2026-05-07T12:00:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "evropa",
+        "jich",
+        "kvůli",
+        "než",
+        "odešla",
+        "regulaci",
+        "start",
+        "stovka",
+        "technologické",
+        "upy",
+        "vyhání",
+        "víc"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1107,40 +1136,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Úleva pro sport. Nový stavební zákon počítá s rychlejší výstavbou tribun nebo šaten, některá sportoviště se smí objevit i v záplavových zónách",
-      "url": "https://archiv.hn.cz/c1-67874320-uleva-pro-sport-novy-stavebni-zakon-pocita-s-rychlejsi-vystavbou-tribun-nebo-saten-nektera-sportoviste-se-smi-objevit-i-v-zaplavovych-zonach",
-      "dt": "2026-05-06T09:28:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "nebo",
-        "nový",
-        "některá",
-        "objevit",
-        "počítá",
-        "rychlejší",
-        "smí",
-        "sport",
-        "sportoviště",
-        "stavební",
-        "tribun",
-        "výstavbou",
-        "zákon",
-        "záplavových",
-        "zónách",
-        "úleva",
-        "šaten"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1151,7 +1146,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183282,
+      "bytes": 183231,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1188,7 +1183,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-07T09:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 36,
@@ -1205,6 +1200,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Evropa vyhání technologické start-upy. Kvůli regulaci AI jich odešla už víc než stovka",
+            "publishedAt": "2026-05-07T12:00:00Z"
+          },
           {
             "title": "Kam investuje peníze ČNB? Její strategie není tak pasivní, jak by se mohlo zdát",
             "publishedAt": "2026-05-07T09:45:00Z"
@@ -1232,10 +1231,6 @@
           {
             "title": "Hasiči zlikvidovali požár v Českém Švýcarsku, dohled předali správě národního parku",
             "publishedAt": "2026-05-07T06:32:00Z"
-          },
-          {
-            "title": "Vliv koktejlového efektu pesticidů zatím není jasný. Studie o spojení s rakovinou ale mnohé naznačují",
-            "publishedAt": "2026-05-07T05:39:00Z"
           }
         ]
       }

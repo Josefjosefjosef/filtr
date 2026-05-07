@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "travelbible.cz",
-  "ingestedAt": "2026-05-07T11:50:17.835133Z",
+  "ingestedAt": "2026-05-07T12:29:50.121812Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Kutná Hora: průvodce městem v UNESCO – památky, co vidět, kde se najíst a ubytovat",
+      "url": "https://travelbible.cz/kutna-hora-pruvodce-pamatky/",
+      "dt": "2026-05-07T12:09:47Z",
+      "media_raw": "TravelBible",
+      "media_norm": "TravelBible",
+      "tokens": [
+        "hora",
+        "kutná",
+        "městem",
+        "najíst",
+        "památky",
+        "průvodce",
+        "ubytovat",
+        "unesco",
+        "vidět"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_travelbible",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "travelbible.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -217,29 +243,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "travelbible.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Průvodce Loket: Co vidět, kde se najíst a kam v okolí",
-      "url": "https://travelbible.cz/loket-pruvodce-cesko/",
-      "dt": "2026-03-30T12:31:00Z",
-      "media_raw": "TravelBible",
-      "media_norm": "TravelBible",
-      "tokens": [
-        "kam",
-        "loket",
-        "najíst",
-        "okolí",
-        "průvodce",
-        "vidět"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_travelbible",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "travelbible.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -250,7 +253,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://travelbible.cz/feed/",
-      "bytes": 13483,
+      "bytes": 13604,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -287,11 +290,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-30T08:29:01Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T12:09:47Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "cestovani": 6,
-          "zpravy": 4
+          "cestovani": 7,
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -303,6 +306,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kutná Hora: průvodce městem v UNESCO – památky, co vidět, kde se najíst a ubytovat",
+            "publishedAt": "2026-05-07T12:09:47Z"
+          },
           {
             "title": "Průvodce Karlovy Vary: co vidět, zažít a ochutnat + praktické tipy",
             "publishedAt": "2026-04-30T08:29:01Z"
@@ -330,10 +337,6 @@
           {
             "title": "La Palma, Kanárské ostrovy: 32+ tipů, co vidět a zažít",
             "publishedAt": "2026-04-06T08:54:55Z"
-          },
-          {
-            "title": "TŘEBÍČ: 31 tipů co vidět, zažít a kde se najíst",
-            "publishedAt": "2026-04-05T12:47:59Z"
           }
         ]
       }

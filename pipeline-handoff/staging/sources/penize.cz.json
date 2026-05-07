@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-07T11:50:17.835133Z",
+  "ingestedAt": "2026-05-07T12:29:50.121812Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Natankovat ještě před volnem? Nové maximální ceny benzinu a nafty",
+      "url": "https://www.penize.cz/doprava/489376-natankovat-jeste-pred-volnem-nove-maximalni-ceny-benzinu-a-nafty",
+      "dt": "2026-05-07T13:59:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "benzinu",
+        "ceny",
+        "ještě",
+        "maximální",
+        "nafty",
+        "natankovat",
+        "nové",
+        "volnem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -465,31 +490,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Jarní úklid v předplatném. Jak si udělat pořádek a ušetřit až tisíce měsíčně",
-      "url": "https://www.penize.cz/nakupy/489190-jarni-uklid-v-predplatnem-jak-si-udelat-poradek-a-usetrit-az-tisice-mesicne",
-      "dt": "2026-05-03T08:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "jarní",
-        "měsíčně",
-        "pořádek",
-        "předplatném",
-        "tisíce",
-        "udělat",
-        "ušetřit",
-        "úklid"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -500,7 +500,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 17921,
+      "bytes": 17881,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -537,11 +537,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-07T05:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T13:59:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 15,
-          "zpravy": 4,
+          "zpravy": 5,
+          "finance": 14,
           "sport": 1
         },
         "drop_counts": {
@@ -554,6 +554,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Natankovat ještě před volnem? Nové maximální ceny benzinu a nafty",
+            "publishedAt": "2026-05-07T13:59:00Z"
+          },
           {
             "title": "Hypotéky zdražily, potvrzují nová čísla z bank. Rozdíly mezi fixacemi rostou",
             "publishedAt": "2026-05-07T05:05:00Z"
@@ -581,10 +585,6 @@
           {
             "title": "Prodejní doba obchodů 8. května. Jak je otevřeno na svátek",
             "publishedAt": "2026-05-06T05:00:00Z"
-          },
-          {
-            "title": "Maximální ceny benzinu a nafty na středu 6. května",
-            "publishedAt": "2026-05-05T13:59:00Z"
           }
         ]
       }

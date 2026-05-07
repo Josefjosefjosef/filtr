@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-07T11:50:17.835133Z",
+  "ingestedAt": "2026-05-07T12:29:50.121812Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Zapovězený Kevin Spacey míří do Česka. V novém filmu ztvární dirigenta s temnou minulostí",
+      "url": "https://www.kinobox.cz/clanky/filmy/53496-kevin-spacey-se-podiva-do-cannes-v-novem-filmu-ztvarni-dirigenta-s-temnou-minulosti",
+      "dt": "2026-05-07T12:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "dirigenta",
+        "filmu",
+        "kevin",
+        "minulostí",
+        "míří",
+        "novém",
+        "spacey",
+        "temnou",
+        "zapovězený",
+        "ztvární",
+        "česka"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -528,34 +556,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "TV tipy: Oscarový Pan Nikdo proti Putinovi, Tarantinův Kill Bill i Nicholas Winton",
-      "url": "https://www.kinobox.cz/clanky/tema/53394-tv-tipy-oscarovy-pan-nikdo-proti-putinovi-tarantinuv-kill-bill-i-nicholas-winton",
-      "dt": "2026-05-04T17:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "bill",
-        "kill",
-        "nicholas",
-        "nikdo",
-        "oscarový",
-        "pan",
-        "proti",
-        "putinovi",
-        "tarantinův",
-        "tipy",
-        "winton"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -566,7 +566,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28925,
+      "bytes": 28829,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -603,7 +603,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-07T11:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T12:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 19,
@@ -619,6 +619,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zapovězený Kevin Spacey míří do Česka. V novém filmu ztvární dirigenta s temnou minulostí",
+            "publishedAt": "2026-05-07T12:00:00Z"
+          },
           {
             "title": "Dostane Polabí vážnou konkurenci? Úspěšná autorka odhalila chystaný hit Novy",
             "publishedAt": "2026-05-07T11:00:00Z"
@@ -646,10 +650,6 @@
           {
             "title": "Předčí Spielberg Nolana? Mistrova komplexní sci-fi o mimozemšťanech má být delší než Odysea",
             "publishedAt": "2026-05-06T14:00:00Z"
-          },
-          {
-            "title": "Nový Texaský masakr se bude věnovat kanibalské rodině. Tvůrci se vydají neprobádaným směrem",
-            "publishedAt": "2026-05-06T12:00:00Z"
           }
         ]
       }
