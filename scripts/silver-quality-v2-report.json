@@ -2,10 +2,10 @@
   "harness_id": "audit_silver_quality_v2_foundation",
   "fixed_now": "2026-05-04T12:00:00",
   "quality_total_cases": 532,
-  "quality_passed": 507,
-  "quality_failed": 25,
-  "quality_accuracy": "95.30",
-  "routing_accuracy": "96.43",
+  "quality_passed": 517,
+  "quality_failed": 15,
+  "quality_accuracy": "97.18",
+  "routing_accuracy": "98.31",
   "field_quality_accuracy": "98.12",
   "safety_accuracy": "100.00",
   "title_cleanliness_accuracy": "100.00",
@@ -19,24 +19,14 @@
   "query_created_write_count": 0,
   "unnecessary_disambiguation_count": 6,
   "top_fail_clusters": [
-    "task_query_quality||query_wrong_dataset=10",
     "task_query_quality||routing_fail=9",
     "normalization_observed_cases||unnecessary_disambiguation=6"
   ],
   "recommended_next_fix_cluster": "task_query_quality",
-  "recommended_next_fix_reason": "Largest fail mass: cluster «task_query_quality» / tag «query_wrong_dataset» (10 cases); safest next step is a narrow Silver change targeting this phrasing family (audit-only signal).",
+  "recommended_next_fix_reason": "Largest fail mass: cluster «task_query_quality» / tag «routing_fail» (9 cases); safest next step is a narrow Silver change targeting this phrasing family (audit-only signal).",
   "quality_audit_v2_script_crash": "NO",
   "quality_report_written": "YES",
   "sample_fails": [
-    {
-      "id": "qv2_00328",
-      "cluster": "task_query_quality",
-      "tags": [
-        "query_wrong_dataset",
-        "routing_fail"
-      ],
-      "input": "co mám dnes za úkoly"
-    },
     {
       "id": "qv2_00332",
       "cluster": "task_query_quality",
@@ -44,15 +34,6 @@
         "routing_fail"
       ],
       "input": "úkoly do pátku"
-    },
-    {
-      "id": "qv2_00333",
-      "cluster": "task_query_quality",
-      "tags": [
-        "query_wrong_dataset",
-        "routing_fail"
-      ],
-      "input": "co mám dnes za úkoly?"
     },
     {
       "id": "qv2_00337",
@@ -63,30 +44,12 @@
       "input": "úkoly do pátku?"
     },
     {
-      "id": "qv2_00338",
-      "cluster": "task_query_quality",
-      "tags": [
-        "query_wrong_dataset",
-        "routing_fail"
-      ],
-      "input": "co mám dnes za úkoly"
-    },
-    {
       "id": "qv2_00342",
       "cluster": "task_query_quality",
       "tags": [
         "routing_fail"
       ],
       "input": "úkoly do pátku"
-    },
-    {
-      "id": "qv2_00343",
-      "cluster": "task_query_quality",
-      "tags": [
-        "query_wrong_dataset",
-        "routing_fail"
-      ],
-      "input": "co mám dnes za úkoly?"
     },
     {
       "id": "qv2_00347",
@@ -97,30 +60,12 @@
       "input": "úkoly do pátku?"
     },
     {
-      "id": "qv2_00348",
-      "cluster": "task_query_quality",
-      "tags": [
-        "query_wrong_dataset",
-        "routing_fail"
-      ],
-      "input": "co mám dnes za úkoly"
-    },
-    {
       "id": "qv2_00352",
       "cluster": "task_query_quality",
       "tags": [
         "routing_fail"
       ],
       "input": "úkoly do pátku"
-    },
-    {
-      "id": "qv2_00353",
-      "cluster": "task_query_quality",
-      "tags": [
-        "query_wrong_dataset",
-        "routing_fail"
-      ],
-      "input": "co mám dnes za úkoly?"
     },
     {
       "id": "qv2_00357",
@@ -131,30 +76,12 @@
       "input": "úkoly do pátku?"
     },
     {
-      "id": "qv2_00358",
-      "cluster": "task_query_quality",
-      "tags": [
-        "query_wrong_dataset",
-        "routing_fail"
-      ],
-      "input": "co mám dnes za úkoly"
-    },
-    {
       "id": "qv2_00362",
       "cluster": "task_query_quality",
       "tags": [
         "routing_fail"
       ],
       "input": "úkoly do pátku"
-    },
-    {
-      "id": "qv2_00363",
-      "cluster": "task_query_quality",
-      "tags": [
-        "query_wrong_dataset",
-        "routing_fail"
-      ],
-      "input": "co mám dnes za úkoly?"
     },
     {
       "id": "qv2_00367",
@@ -165,30 +92,12 @@
       "input": "úkoly do pátku?"
     },
     {
-      "id": "qv2_00368",
-      "cluster": "task_query_quality",
-      "tags": [
-        "query_wrong_dataset",
-        "routing_fail"
-      ],
-      "input": "co mám dnes za úkoly"
-    },
-    {
       "id": "qv2_00372",
       "cluster": "task_query_quality",
       "tags": [
         "routing_fail"
       ],
       "input": "úkoly do pátku"
-    },
-    {
-      "id": "qv2_00373",
-      "cluster": "task_query_quality",
-      "tags": [
-        "query_wrong_dataset",
-        "routing_fail"
-      ],
-      "input": "co mám dnes za úkoly?"
     },
     {
       "id": "qv2_00452",
