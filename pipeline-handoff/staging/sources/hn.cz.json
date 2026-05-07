@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-07T07:35:03.891596Z",
+  "ingestedAt": "2026-05-07T08:19:52.469040Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Konec &bdquo;svlékacích aplikací&ldquo;. EU zakáže umělé inteligenci vytvářet nahé fotky skutečných lidí",
+      "url": "https://zahranicni.hn.cz/c1-67874650-konec-bdquo-svlekacich-aplikaci-ldquo-eu-zakaze-umele-inteligenci-vytvaret-nahe-fotky-skutecnych-lidi",
+      "dt": "2026-05-07T07:21:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "aplikací",
+        "bdquo",
+        "fotky",
+        "inteligenci",
+        "konec",
+        "ldquo",
+        "lidí",
+        "nahé",
+        "skutečných",
+        "svlékacích",
+        "umělé",
+        "vytvářet",
+        "zakáže"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1114,36 +1144,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Španělsko oznámilo, že na Kanárských ostrovech přijme výletní loď na které se šíří nebezpečný virus. Místní vládě se to nelíbí",
-      "url": "https://zahranicni.hn.cz/c1-67874190-na-vyletni-lodi-u-kapverd-se-siri-nebezpecny-hantavirus-urady-ji-nepovolily-zakotvit-v-pristavu-spanelsko-resi-jak-lidem-na-palube-pomoct",
-      "dt": "2026-05-06T06:04:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "kanárských",
-        "loď",
-        "místní",
-        "nebezpečný",
-        "nelíbí",
-        "ostrovech",
-        "oznámilo",
-        "přijme",
-        "virus",
-        "vládě",
-        "výletní",
-        "španělsko",
-        "šíří"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1154,7 +1154,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183664,
+      "bytes": 183622,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1191,11 +1191,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-07T06:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T07:21:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 34,
-          "zdravi": 3,
+          "zdravi": 4,
+          "finance": 33,
           "zpravy": 3
         },
         "drop_counts": {
@@ -1208,6 +1208,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec &bdquo;svlékacích aplikací&ldquo;. EU zakáže umělé inteligenci vytvářet nahé fotky skutečných lidí",
+            "publishedAt": "2026-05-07T07:21:00Z"
+          },
           {
             "title": "Likvidaci požáru v Českém Švýcarsku pomohl déšť, hasiči národní park postupně opouštějí",
             "publishedAt": "2026-05-07T06:32:00Z"
@@ -1234,10 +1238,6 @@
           },
           {
             "title": "Jak vyzrát na alergie. Kam už dokázala pokročit věda a čeho se podle špiček v oboru ideálně vyvarovat",
-            "publishedAt": "2026-05-06T22:00:00Z"
-          },
-          {
-            "title": "Čínský humanoid trénuje v českých laboratořích. Učit ho je jako vychovávat dítě. Včetně obav, aby si neublížil",
             "publishedAt": "2026-05-06T22:00:00Z"
           }
         ]
