@@ -36945,6 +36945,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const nCl = iuSilverCleanCalendarNoteTailV2(nRaw, nRaw);
       draft.note = nCl.slice(0, 1000);
     }
+    iuSilverFixCalendarTitleCommandCollapseV1(draft, parseRawFull);
 
     let processingState = "NEEDS_CLARIFICATION";
     if (draft.meta.date === "certain" && draft.meta.time === "certain" && draft.meta.title === "certain" && String(draft.title || "").trim()) {
@@ -42121,6 +42122,69 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const folded = foldCs(work);
     if (!folded || folded.length < 2) return original;
     return work;
+  }
+
+  /**
+   * P0 v1: úzký fallback pro calendar_title_command_collapse — prázdný / příkazový title (dej, přidej, hoď, zapiš)
+   * při calendar.create, když draft už má datum/čas nebo adresu nebo poznámku; název jen z jasné event fráze v původní větě.
+   */
+  function iuSilverFixCalendarTitleCommandCollapseV1(draft, rawFullIn) {
+    if (!draft || draft.targetContainer !== "calendar") return;
+    const raw = String(rawFullIn || "").trim();
+    if (!raw) return;
+    const hasCtx =
+      draft.meta.date === "certain" ||
+      draft.meta.time === "certain" ||
+      String(draft.address || draft.location || "").trim().length > 0 ||
+      (draft.meta.note === "certain" && String(draft.note || "").trim().length > 0);
+    if (!hasCtx) return;
+    const t0 = String(draft.title || "").trim();
+    const tf = foldCs(t0);
+    const scaff = new Set(["dej", "pridej", "hod", "zapis"]);
+    const needs = !t0 || draft.meta.title !== "certain" || scaff.has(tf);
+    if (!needs) return;
+
+    const rf = foldCs(raw);
+    let cand = "";
+
+    let m = raw.match(
+      /\b(sch[uů]zku|sch[uů]zka|schuzku|schuzka)\s+s\s+panem\s+([A-Za-zÁÉÍÓÚÝČĎĚŇŘŠŤŮÝŽáéíóúůýčďěňřšťůýž]{2,48})\b/iu
+    );
+    if (m && m[2]) {
+      const nm = String(m[2] || "")
+        .replace(/[.,;:]+$/g, "")
+        .trim();
+      if (nm) cand = iuSilverNormalizeEventTypeTitle(("schůzku s panem " + nm).trim());
+    }
+    if (!cand) {
+      m = raw.match(/\bjedn[aá]n[ií]\s+s\s+panem\s+([A-Za-zÁÉÍÓÚÝČĎĚŇŘŠŤŮÝŽáéíóúůýčďěňřšťůýž]{2,48})\b/iu);
+      if (m && m[1]) {
+        const nm = String(m[1] || "")
+          .replace(/[.,;:]+$/g, "")
+          .trim();
+        if (nm) cand = "Jednání s panem " + nm.charAt(0).toLocaleUpperCase("cs-CZ") + nm.slice(1);
+      }
+    }
+    if (!cand) {
+      m = raw.match(/\bkonzultac[ei]\s+s\s+panem\s+([A-Za-zÁÉÍÓÚÝČĎĚŇŘŠŤŮÝŽáéíóúůýčďěňřšťůýž]{2,48})\b/iu);
+      if (m && m[1]) {
+        const nm = String(m[1] || "")
+          .replace(/[.,;:]+$/g, "")
+          .trim();
+        if (nm) cand = "Konzultace s panem " + nm.charAt(0).toLocaleUpperCase("cs-CZ") + nm.slice(1);
+      }
+    }
+    if (!cand && /\bporad[ua]\b/.test(rf) && !/\bporadit\b/.test(rf)) cand = "Porada";
+    if (!cand && /\btenis\b/.test(rf)) cand = "Tenis";
+    if (!cand && /\bobed\b/.test(rf)) cand = "Oběd";
+    if (!cand && (/\bveceri\b/.test(rf) || /\bvecere\b/.test(rf))) cand = "Večeře";
+
+    cand = String(cand || "").trim();
+    if (!cand) return;
+    const fin = iuSilverTitlePipelineFull(cand, { calendarConversationalTitleStrip: true });
+    if (!fin.ok || !String(fin.text || "").trim()) return;
+    draft.title = normalizeSilverTitleV1(String(fin.text || "").trim(), { kind: "calendar" }).slice(0, 120);
+    draft.meta.title = String(draft.title || "").trim() ? "certain" : "missing";
   }
 
   function iuSilverSanitizeDraftTitle(draft) {
