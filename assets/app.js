@@ -35040,6 +35040,54 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P0: read-only task status / backlog / completed list — foldCs vstup; úzké signály (ne broad normalizace).
+   * Blokuje agenda_for_day (co mám dnes…) když jde o úkoly; nutné pro Real UX task_query.
+   */
+  function iuSilverTaskCompletedOnlyListCueFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (/\bhotov\w*\s+ukol/.test(x)) return true;
+    if (/\bco\s+uz\s+m(am|ame)\s+spln/.test(x)) return true;
+    if (/\bco\s+m(am|ame)\s+splneno/.test(x)) return true;
+    if (/\bco\s+m(am|ame)\s+splnen\b/.test(x)) return true;
+    if (/\bktere\s+ukol\w*\s+jsem\s+dokonc/.test(x)) return true;
+    if (/\bukol\w*\s+jsem\s+dokonc/.test(x)) return true;
+    if (/\bdokoncen\w*\s+ukol/.test(x)) return true;
+    if (/\bco\s+jsem\s+tento\s+tyden\s+odskrtl/.test(x)) return true;
+    if (/\bodskrtl/.test(x) && /\b(tento|tenhle)\s+tyden\b/.test(x)) return true;
+    if (/\bvypi[sš]\s+mi\s+hotov\w*\s+ukol/.test(x)) return true;
+    if (/\bnajdi\s+hotov\w*\s+ukol/.test(x)) return true;
+    return false;
+  }
+
+  function iuSilverTaskStatusReadQuerySignalFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (iuSilverTaskCompletedOnlyListCueFolded(x)) return true;
+    if (/\bnesplnen\w*\s+ukol/.test(x)) return true;
+    if (/\bvypi[sš]\s+mi\s+nesplnen\w*\s+ukol/.test(x)) return true;
+    if (/\bvypi[sš]\s+mi\s+dnesn\w*\s+ukol/.test(x)) return true;
+    if (/\bco\s+mi\s+jeste\s+zbyva/.test(x)) return true;
+    if (/\bco\s+jsem\s+jeste\s+neudelal/.test(x)) return true;
+    if (/\bco\s+jeste\s+neudelal/.test(x)) return true;
+    if (/\bco\s+musim\s+dodelat/.test(x)) return true;
+    if (/\bco\s+zbyva\s+udelat/.test(x)) return true;
+    if (/\bco\s+zbyva\b/.test(x) && /\bukol/.test(x)) return true;
+    if (
+      !/\bne\s+do\s+ukol/.test(x) &&
+      /\bco\s+m(am|ame)\b/.test(x) &&
+      /\bukol/.test(x) &&
+      (/\bdnes(?:ka|ek)?\b/.test(x) || /\bzitr\w*\b/.test(x)) &&
+      !/\bv\s+kalend/.test(x) &&
+      !/\bkalendari\b/.test(x) &&
+      !/\bkalendare\b/.test(x) &&
+      !/\bkalend\w*\s+ohled/.test(x)
+    )
+      return true;
+    return false;
+  }
+
+  /**
    * P0 realistic mobile task_query (calendar_vs_task_confusion): list-style task reads where
    * tryParseCalendarRead would otherwise claim coMam+dnes/zitra agenda. foldCs-safe; narrow —
    * explicit calendar tail (v kalendáři, událost, schůzka…) excluded via CalendarReadWinsOverTaskRead.
@@ -35047,6 +35095,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverRealisticMobileTaskQueryListCueFolded(f) {
     const x = String(f || "");
     if (!x) return false;
+    if (iuSilverTaskStatusReadQuerySignalFolded(x)) return true;
     if (/\bco\s+musim\s+zaplatit\b/.test(x)) return true;
     if (/\bjake\s+mam\s+rest\b/i.test(x)) return true;
     if (/\bco\s+m(am|ame)\s+jeste\s+zaridit\b/.test(x)) return true;
@@ -35087,6 +35136,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverTaskQueryHardSignalFolded(f) {
     const x = String(f || "");
     if (!x) return false;
+    if (iuSilverTaskStatusReadQuerySignalFolded(x)) return true;
     if (iuSilverTaskReadNegatedCalendarModuleFolded(x)) return true;
     if (iuSilverRealisticMobileTaskQueryListCueFolded(x)) return true;
     if (/\b(do\s+ukol|v\s+ukolech)\s+se\s+podivej/.test(x)) return true;
@@ -35212,6 +35262,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverWantsTaskListOnlyFolded(f) {
     const x = String(f || "");
     if (!x) return false;
+    if (iuSilverTaskStatusReadQuerySignalFolded(x)) return true;
     if (iuSilverRealisticMobileTaskQueryListCueFolded(x)) return true;
     if (
       /\bco\s+mam\s+udelat\b/.test(x) ||
@@ -35785,6 +35836,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverCalendarReadWinsOverTaskReadFolded(f) {
     const x = String(f || "");
     if (!x) return false;
+    if (iuSilverTaskStatusReadQuerySignalFolded(x)) return false;
     if (iuSilverTaskReadNegatedCalendarModuleFolded(x)) return false;
     /**
      * P0 20k task_query: „Najdi úkol rohlíky, nevracej schůzku“ — negace obsahuje „schůzku“,
@@ -37531,6 +37583,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return null;
     if (iuSilverExplicitTaskReadScopeFolded(f)) return null;
     if (iuSilverTaskReadNegatedCalendarModuleFolded(f)) return null;
+    if (iuSilverTaskStatusReadQuerySignalFolded(f)) return null;
     if (!iuSilverCalendarReadWinsOverTaskReadFolded(f) && iuSilverTaskQueryHardSignalFolded(f)) return null;
 
     if (
@@ -38606,7 +38659,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     let bestScore = -1;
     const todayStr = toDateOnly(now);
     const tomorrowStr = addDays(todayStr, 1);
-    const wantDone = /\b(hotove|hotovy|splnene|vyrizene)\b/.test(iuSilverNormalizeForSearch(String(options.rawFoldedHint || "")));
+    const rhFold = String(options.rawFoldedHint || "");
+    const wantDone =
+      /\b(hotove|hotovy|splnene|splneno|vyrizene|dokoncil|dokoncen|dokoncene|odskrtl|odskrtnut)\b/.test(
+        iuSilverNormalizeForSearch(rhFold)
+      ) || iuSilverTaskCompletedOnlyListCueFolded(rhFold);
 
     function pushRes(kind, score, payload) {
       const row = { kind: kind, score: score, payload: payload };
@@ -38790,6 +38847,32 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       });
       for (let j = 0; j < act.length; j++) {
         pushRes("task", 50 - j * 0.1, { task: act[j] });
+      }
+      return {
+        query: rawQ,
+        normalizedQuery: normalizedQuery,
+        target: target,
+        results: results,
+        bestResult: results.length ? results[0] : null,
+        confidence: results.length ? 0.9 : 0,
+        answerType: results.length ? "list" : "none",
+        source: "local_browser_only"
+      };
+    }
+
+    if (listMode === "tasks_done" && (target === "tasks" || target === "all")) {
+      const arrD = Array.isArray(tasks) ? tasks : [];
+      const done = [];
+      for (let id = 0; id < arrD.length; id++) {
+        const tkD = arrD[id];
+        if (!tkD || tkD.status !== "done") continue;
+        done.push(tkD);
+      }
+      done.sort(function (a, b) {
+        return (Number(b.updatedAt || 0) || 0) - (Number(a.updatedAt || 0) || 0);
+      });
+      for (let jd = 0; jd < done.length; jd++) {
+        pushRes("task", 50 - jd * 0.1, { task: done[jd] });
       }
       return {
         query: rawQ,
@@ -39285,10 +39368,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function iuSilverBuildTasksReadListTurn(ctx, empty, foldedHint, now) {
     const f = String(foldedHint || "");
+    const listMode = iuSilverTaskCompletedOnlyListCueFolded(f) ? "tasks_done" : "tasks_active";
     const sr = iuSilverSearchLocalData("", {
       target: "tasks",
       now: now,
-      listMode: "tasks_active",
+      listMode: listMode,
       getEventsSnapshot: ctx && ctx.getEventsSnapshot,
       getTasksSnapshot: ctx && ctx.getTasksSnapshot,
       getNotesSnapshot: ctx && ctx.getNotesSnapshot,
@@ -39301,7 +39385,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       processingState: "READ_OK",
       clarificationReason: null,
       futureIntentCandidate: null,
-      readQuery: { silverReadSearch: true, target: "tasks", listMode: "tasks_active" },
+      readQuery: { silverReadSearch: true, target: "tasks", listMode: listMode },
       readAnswer: { message: ans.message, silverSearch: sr },
       extractedFields: {},
       missingFields: [],

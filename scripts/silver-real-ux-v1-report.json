@@ -3,11 +3,11 @@
   "fixed_now": "2026-05-04T12:00:00",
   "partition_note": "Requested bucket sum was 33500; normalized to 30000 by calendar_write=3500, calendar_query=3500, multi_intent=2000 (other buckets unchanged).",
   "total_cases": 30000,
-  "overall_accuracy": "54.54",
+  "overall_accuracy": "62.54",
   "calendar_write_accuracy": "27.03",
   "calendar_query_accuracy": "51.17",
   "task_write_accuracy": "47.13",
-  "task_query_accuracy": "40.00",
+  "task_query_accuracy": "100.00",
   "note_write_accuracy": "37.51",
   "note_query_accuracy": "100.00",
   "multi_intent_accuracy": "60.00",
@@ -23,39 +23,16 @@
   "title_cleanliness_accuracy": "66.35",
   "address_location_accuracy": "18.57",
   "embedded_note_tail_accuracy": "15.45",
-  "completed_tasks_query_accuracy": "19.95",
+  "completed_tasks_query_accuracy": "100.00",
   "active_tasks_query_accuracy": "100.00",
   "write_accuracy": "68.11",
-  "query_accuracy": "62.04",
+  "query_accuracy": "79.18",
   "update_risk_new_create_count": 0,
   "dangerous_write_count": 0,
   "false_write_count": 0,
   "query_created_write_count": 0,
   "write_when_negated_count": 0,
   "top_25_fail_clusters": [
-    {
-      "cluster_name": "intent_fail|task_query",
-      "fail_count": 2133,
-      "severity": "P1",
-      "affected_module": "task_query",
-      "example_inputs": [
-        "Co už mám splněno?",
-        "Co jsem ještě neudělal?",
-        "Co jsem ještě neudělal?",
-        "Které úkoly jsem dokončil?",
-        "Co jsem ještě neudělal?",
-        "Co jsem jeste neudelal?",
-        "Co jsem tento tyden odskrtl?",
-        "Co jsem jeste neudelal?",
-        "Co uz mam splneno?",
-        "Co jsem jeste neudelal?"
-      ],
-      "expected_summary": "task.query",
-      "actual_summary": "clarification/CLARIFICATION :: Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
-      "recommended_next_scope": "Narrow Silver change in task_query for pattern «intent_fail» (do not broaden unrelated modules).",
-      "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
-    },
     {
       "cluster_name": "intent_fail|calendar_query",
       "fail_count": 1704,
@@ -333,29 +310,6 @@
       "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
     },
     {
-      "cluster_name": "calendar_vs_task_confusion|task_query",
-      "fail_count": 267,
-      "severity": "P1",
-      "affected_module": "task_query",
-      "example_inputs": [
-        "Najdi hotové úkoly k právníkovi.",
-        "Najdi hotové úkoly k pravnikovi.",
-        "Najdi hotove ukoly k pravnikovi.",
-        "Najdi hotové úkoly k právníkovi.",
-        "Najdi hotové úkoly k pravnikovi.",
-        "Najdi hotové úkoly k právníkovi.",
-        "Najdi hotové úkoly k právníkovi.",
-        "Najdi hotove ukoly k pravnikovi.",
-        "Najdi hotové úkoly k právníkovi.",
-        "Najdi hotové úkoly k právníkovi."
-      ],
-      "expected_summary": "task.query",
-      "actual_summary": "calendar.read/READ_OK :: Nic jsem k tomu nenašel.",
-      "root_cause_guess": "Harness mismatch or Silver routing/semantic gap on chaotic Czech phrasing (audit-only).",
-      "recommended_next_scope": "Narrow Silver change in task_query for pattern «calendar_vs_task_confusion» (do not broaden unrelated modules).",
-      "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
-    },
-    {
       "cluster_name": "embedded_note_missing|multi_intent",
       "fail_count": 250,
       "severity": "P1",
@@ -512,10 +466,10 @@
       "must_not_touch": "assets/app.js only via deliberate engine PR; this audit PR stays scripts-only."
     }
   ],
-  "recommended_next_fix_cluster": "intent_fail|task_query",
-  "recommended_next_fix_reason": "Largest cluster «intent_fail|task_query» (2133 fails); fix routing/semantics for this phrasing family first.",
-  "exact_next_scope": "Silver engine: handle «intent_fail» in module «task_query».",
-  "peer_quality_accuracy": "95.30",
+  "recommended_next_fix_cluster": "intent_fail|calendar_query",
+  "recommended_next_fix_reason": "Largest cluster «intent_fail|calendar_query» (1704 fails); fix routing/semantics for this phrasing family first.",
+  "exact_next_scope": "Silver engine: handle «intent_fail» in module «calendar_query».",
+  "peer_quality_accuracy": "97.18",
   "peer_realistic_routing_accuracy": "99.34",
   "peer_20k_overall_accuracy": null,
   "by_group": {
@@ -538,9 +492,9 @@
       "quality_fail": 962
     },
     "task_query": {
-      "pass": 1600,
-      "fail": 2400,
-      "core_pass": 1600,
+      "pass": 4000,
+      "fail": 0,
+      "core_pass": 4000,
       "quality_fail": 0
     },
     "note_write": {
