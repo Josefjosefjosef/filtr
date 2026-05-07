@@ -37512,6 +37512,79 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return out.slice(0, 200);
   }
 
+  /**
+   * P0 Silver v2: post-routing strip modulových / příkazových / redundantních datumových zbytků
+   * jen u tasks.create draft.title (po V1 + reminder V1). Nemění routing ani parsování data.
+   */
+  function iuSilverCleanTaskCreateTitleV2(titleIn, safeFallback, opts) {
+    opts = opts || {};
+    const hasDue = String(opts.taskDueYmd || "").trim().length > 0;
+    const fb = String(safeFallback != null ? safeFallback : "").trim();
+    let s = iuSilverNormalizeWs(String(titleIn || ""));
+    if (!s) return fb.slice(0, 200);
+
+    const glueRes = [
+      /\bale\s+fakt\b/gi,
+      /\bdej\s+mi\s+to\b/gi,
+      /\bne\s+do\s+udalost\w*\b/gi,
+      /\bne\s+do\s+kalend\w*\b/gi,
+      /\bdo\s+ukol\w*\b/gi,
+      /\bdo\s+kalend[aá]r\w*\b/gi,
+      /\budelej\s+mi\b/gi,
+      /\bud[eě]lej\s+mi\b/gi,
+      /\bupom[ií]nku\b/gi,
+      /\bze\s+mus[ií]m\b/gi,
+      /\bze\s+musim\b/gi,
+      /\bhod\s+mi\b/gi,
+      /\bp[rř]ipome[nň]\s+mi\b/gi,
+      /\bto\s+dej\b/gi,
+      /\s*,\s*to\s+dej\b/gi
+    ];
+
+    const leadDateNoise = [
+      /^\s*ukol\w*\s+na\s+z[ií]t\w*\s*[,:]\s*/iu,
+      /^\s*ukol\w*\s+na\s+z[ií]t\w*\s+/iu,
+      /^\s*ukol\w*\s+(?=koupit\b|zavolat\b|zaplatit\b|poslat\b|vyzvednout\b|nab[ií]t\b|odeslat\b|domluvit\b|p[rř]ipravit\b|zkontrolovat\b)/iu,
+      /^\s*na\s+z[ií]t\w*\s*[,:]\s*/iu,
+      /^\s*z[ií]t\w*\s+mi\s+/iu,
+      /^\s*mi\s+p[rř]ipome[nň]\s+/iu,
+      /^\s*r[aá]no\s+/iu
+    ];
+
+    for (let round = 0; round < 24; round++) {
+      const prev = s;
+      let gi;
+      for (gi = 0; gi < glueRes.length; gi++) {
+        s = s.replace(glueRes[gi], " ").trim();
+      }
+      let li;
+      for (li = 0; li < leadDateNoise.length; li++) {
+        s = s.replace(leadDateNoise[li], "").trim();
+      }
+      if (hasDue) {
+        s = s.replace(/\bna\s+z[ií]t\w*\b/gi, " ").trim();
+        s = s.replace(/\b(?:ráno|dopoledne|odpoledne|večer|vecer)\b/gi, " ").trim();
+      }
+      s = s.replace(/^\s*[,:;]+\s*/u, "").trim();
+      s = iuSilverNormalizeWs(s);
+      if (s === prev) break;
+    }
+
+    s = iuSilverNormalizeWs(String(s || "").replace(/[,;:]+$/u, "").trim());
+
+    let out = iuSilverFinalizeTaskTitle(s);
+    if (!out || String(out).trim().length < 2) out = fb;
+    out = iuSilverNormalizeWs(String(out || ""));
+    if (IU_SILVER_TASK_TITLE_POLLUTION_AUDIT_RE.test(foldCs(out))) out = fb;
+    if (out.length > 100) out = out.slice(0, 100).trim();
+    if (!out || out.length < 2) return fb.slice(0, 200);
+    if (IU_SILVER_TASK_TITLE_POLLUTION_AUDIT_RE.test(foldCs(out))) return fb.slice(0, 200);
+    out = out.replace(/[.!?…]+$/u, "").trim();
+    if (!out || out.length < 2) return fb.slice(0, 200);
+    out = out.charAt(0).toLocaleUpperCase("cs-CZ") + out.slice(1);
+    return out.slice(0, 200);
+  }
+
   function iuSilverBuildTaskCreateTurn(rawIn, now, opts) {
     opts = opts || {};
     if (opts.calendarOverridesTask) return null;
@@ -37570,7 +37643,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!title || title.length < 2) return null;
     const titleNorm = normalizeSilverTitleV1(title, { kind: "task" }).slice(0, 200);
     const titleForDraft0 = iuSilverCleanTaskCreateTitleV1(titleNorm, titleNorm);
-    const titleForDraft = iuSilverCleanTaskReminderTitleV1(titleForDraft0, titleForDraft0);
+    const titleForDraft1 = iuSilverCleanTaskReminderTitleV1(titleForDraft0, titleForDraft0);
+    const titleForDraft = iuSilverCleanTaskCreateTitleV2(titleForDraft1, titleForDraft1, { taskDueYmd: dueYmd || "" });
 
     const draft = createEmptyDraft();
     draft.targetContainer = "tasks";
