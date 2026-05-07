@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-07T09:05:27.628850Z",
+  "ingestedAt": "2026-05-07T09:44:50.149569Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hvězdy u prezidenta. Trump žasl z Pereiry, odhalil i speciální pás",
+      "url": "https://www.sport.cz/clanek/bojove-sporty-mma-hvezdy-u-prezidenta-trump-zasl-z-pereiry-odhalil-i-specialni-pas-5448952",
+      "dt": "2026-05-07T09:31:04Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "hvězdy",
+        "odhalil",
+        "pereiry",
+        "prezidenta",
+        "pás",
+        "speciální",
+        "trump",
+        "žasl"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -769,32 +794,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Po debutu v NHL útočí na mistrovství. Za mladíka už se neberu, líčí český bek",
-      "url": "https://www.sport.cz/clanek/hokej-reprezentace-po-debutu-v-nhl-utoci-na-mistrovstvi-za-mladika-uz-se-neberu-lici-cesky-bek-5448790",
-      "dt": "2026-05-06T15:53:49Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bek",
-        "debutu",
-        "líčí",
-        "mistrovství",
-        "mladíka",
-        "neberu",
-        "nhl",
-        "útočí",
-        "český"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -805,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40890,
+      "bytes": 40391,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -842,7 +841,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T08:53:06Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T09:31:04Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -857,6 +856,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hvězdy u prezidenta. Trump žasl z Pereiry, odhalil i speciální pás",
+            "publishedAt": "2026-05-07T09:31:04Z"
+          },
           {
             "title": "Čeští hokejisté chtějí přerušit úctyhodnou sérii domácího favorita. Chytat bude čerstvá posila",
             "publishedAt": "2026-05-07T07:55:46Z"
@@ -884,10 +887,6 @@
           {
             "title": "Hádka u českých soupeřů. Kluby se před MS přou o hráče, reprezentační trenér vyhrožuje",
             "publishedAt": "2026-05-07T08:03:54Z"
-          },
-          {
-            "title": "Irští kapitáni vyzývají k bojkotu fotbalového zápasu s Izraelem kvůli Gaze",
-            "publishedAt": "2026-05-07T07:26:44Z"
           }
         ]
       }

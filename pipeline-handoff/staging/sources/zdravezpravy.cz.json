@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-07T09:05:27.628850Z",
+  "ingestedAt": "2026-05-07T09:44:50.149569Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Senát vetoval nižší odvody OSVČ. Převod miliard z VZP ČR přijal",
+      "url": "https://www.zdravezpravy.cz/2026/05/07/senat-vetoval-nizsi-odvody-osvc-prevod-miliard-z-vzp-cr-prijal/",
+      "dt": "2026-05-07T08:34:28Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "miliard",
+        "nižší",
+        "odvody",
+        "osvč",
+        "převod",
+        "přijal",
+        "senát",
+        "vetoval",
+        "vzp"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -471,31 +497,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Šanci zestárnout mají v Česku bohatí lidé. Ti chudí už moc ne",
-      "url": "https://www.zdravezpravy.cz/2026/04/28/sanci-zestarnout-maji-v-cesku-bohati-lide-ti-chudi-uz-ne/",
-      "dt": "2026-04-28T15:30:09Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "bohatí",
-        "chudí",
-        "lidé",
-        "mají",
-        "moc",
-        "zestárnout",
-        "česku",
-        "šanci"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -506,7 +507,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 193417,
+      "bytes": 196721,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -543,7 +544,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-06T13:55:54Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T08:34:28Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -559,6 +560,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Senát vetoval nižší odvody OSVČ. Převod miliard z VZP ČR přijal",
+            "publishedAt": "2026-05-07T08:34:28Z"
+          },
           {
             "title": "Biotechnologie nesou miliardy, ale ČR chybí víc než dostatek kapitálu",
             "publishedAt": "2026-05-06T13:55:54Z"
@@ -586,10 +591,6 @@
           {
             "title": "Analýza: V investicích do zdravotnictví dál zaostáváme za západem",
             "publishedAt": "2026-05-05T07:00:24Z"
-          },
-          {
-            "title": "Zdravotní benefity na kardio a onko prevenci nebudou daňově omezené",
-            "publishedAt": "2026-05-04T16:13:17Z"
           }
         ]
       }

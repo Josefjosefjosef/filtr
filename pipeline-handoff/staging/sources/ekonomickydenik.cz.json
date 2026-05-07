@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-07T09:05:27.628850Z",
+  "ingestedAt": "2026-05-07T09:44:50.149569Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Funguje to. GasNet otestoval na Ašsku distribuci směsi zemního plynu s vodíkem",
+      "url": "https://ekonomickydenik.cz/gasnet-otestoval-distribuci-smesi-s-vodikem/",
+      "dt": "2026-05-07T09:42:24Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "ašsku",
+        "distribuci",
+        "funguje",
+        "gasnet",
+        "otestoval",
+        "plynu",
+        "směsi",
+        "vodíkem",
+        "zemního"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Konec půlnoční pasti na dálnicích? Ministerstvo u 24hodinové známky varuje před náklady",
+      "url": "https://ekonomickydenik.cz/jednodenni-dalnicni-znamka-zakon/",
+      "dt": "2026-05-07T09:10:55Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "24hodinové",
+        "dálnicích",
+        "konec",
+        "ministerstvo",
+        "náklady",
+        "pasti",
+        "půlnoční",
+        "varuje",
+        "známky"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -730,59 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Turek dostal poslední varování. Hnutí Duha žádá omluvu",
-      "url": "https://ekonomickydenik.cz/turek-posledni-varovani-hnuti-duha-omluva/",
-      "dt": "2026-05-05T12:56:45Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "dostal",
-        "duha",
-        "hnutí",
-        "omluvu",
-        "poslední",
-        "turek",
-        "varování",
-        "žádá"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Vnitro přiznalo, proč musí stopnout klíčové informační systémy. Aby ochránilo data občanů",
-      "url": "https://ekonomickydenik.cz/vnitro-stopka-klicove-systemy-data-obcanu/",
-      "dt": "2026-05-05T12:50:38Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "data",
-        "informační",
-        "klíčové",
-        "musí",
-        "občanů",
-        "ochránilo",
-        "proč",
-        "přiznalo",
-        "stopnout",
-        "systémy",
-        "vnitro"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73271,
+      "bytes": 73116,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,12 +829,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T08:34:41Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T09:42:24Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "finance": 24,
           "zdravi": 2,
-          "zpravy": 4,
-          "finance": 24
+          "zpravy": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -847,6 +846,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Funguje to. GasNet otestoval na Ašsku distribuci směsi zemního plynu s vodíkem",
+            "publishedAt": "2026-05-07T09:42:24Z"
+          },
+          {
+            "title": "Konec půlnoční pasti na dálnicích? Ministerstvo u 24hodinové známky varuje před náklady",
+            "publishedAt": "2026-05-07T09:10:55Z"
+          },
           {
             "title": "Nová éra Teplárny Malešice? Křetínského firma chce v Praze postavit velkou elektrárnu",
             "publishedAt": "2026-05-07T08:34:41Z"
@@ -870,14 +877,6 @@
           {
             "title": "Průliv, nebo peklo? Trump dává Íránu ultimátum",
             "publishedAt": "2026-05-06T17:40:57Z"
-          },
-          {
-            "title": "Unie utahuje opasky, trhy doufají v mír: Žádné další dluhy kvůli drahým palivům",
-            "publishedAt": "2026-05-06T16:36:21Z"
-          },
-          {
-            "title": "Průvan v městských kasách. České obce se poprvé od roku 2010 propadly do minusu",
-            "publishedAt": "2026-05-06T16:02:03Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-07T09:05:27.628850Z",
+  "ingestedAt": "2026-05-07T09:44:50.149569Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Češi pociťují drahotu. Domácnostem rostou výdaje hlavně kvůli potravinám",
+      "url": "https://www.e15.cz/byznys/finance-a-bankovnictvi/cesi-pocituji-drahotu-domacnostem-rostou-vydaje-hlavne-kvuli-potravinam-1432670",
+      "dt": "2026-05-07T09:20:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "domácnostem",
+        "drahotu",
+        "hlavně",
+        "kvůli",
+        "pociťují",
+        "potravinám",
+        "rostou",
+        "výdaje",
+        "češi"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1059,31 +1085,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Státní svátky v Německu 2026: Přehled, otevírací doba obchodů",
-      "url": "https://www.e15.cz/svatky-nemecko",
-      "dt": "2026-05-05T10:30:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "2026",
-        "doba",
-        "německu",
-        "obchodů",
-        "otevírací",
-        "přehled",
-        "státní",
-        "svátky"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1094,7 +1095,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 52249,
+      "bytes": 52294,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1131,7 +1132,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-07T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T09:20:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 36,
@@ -1148,6 +1149,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Češi pociťují drahotu. Domácnostem rostou výdaje hlavně kvůli potravinám",
+            "publishedAt": "2026-05-07T09:20:00Z"
+          },
           {
             "title": "INVESTIČNÍ ONLINE: Čtvrtletní zisk Shellu kvůli vyšším cenám ropy a plynu vzrostl o 24 procent",
             "publishedAt": "2026-05-07T08:00:00Z"
@@ -1175,10 +1180,6 @@
           {
             "title": "IKEA v Česku prudce oslabuje. Už probublává krize, varují nábytkáři",
             "publishedAt": "2026-05-07T03:00:00Z"
-          },
-          {
-            "title": "Banky trestají nejistotu. Hypotéky opět mírně zdražily, připlácí se za nejoblíbenější fixace",
-            "publishedAt": "2026-05-06T22:01:00Z"
           }
         ]
       }

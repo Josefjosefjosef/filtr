@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-07T09:05:27.628850Z",
+  "ingestedAt": "2026-05-07T09:44:50.149569Z",
   "items": [
     {
       "section": "aktualne",
@@ -31,32 +31,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fantastický Dostál. Gól dostal až šest vteřin před koncem, Anaheim srovnal",
-      "url": "https://sport.aktualne.cz/hokej/fantasticky-dostal-gol-dostal-az-sest-vterin-pred-koncem-anaheim-srovnal/r~aaa291c0f1a50c1716e25b11faeaca27/",
-      "dt": "2026-05-07T06:45:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "anaheim",
-        "dostal",
-        "dostál",
-        "fantastický",
-        "gól",
-        "koncem",
-        "srovnal",
-        "vteřin",
-        "šest"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "aktualne",
       "contentType": "article",
       "title": "Hasiči zlikvidovali požár v Českém Švýcarsku, území předali správě parku",
@@ -74,6 +48,61 @@
         "území",
         "českém",
         "švýcarsku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nová čínská auta do Prahy dotlačili. JAC jde i po Octavii, sází na nečekaně nízké ceny",
+      "url": "https://zpravy.aktualne.cz/ekonomika/auto/nove-automobily/nova-cinska-auta-do-prahy-dotlacili-jac-jde-i-po-octavii-sazi-na-necekane-nizke-ceny/r~aaa2960c4fa864ce89edaaf11956ceef/",
+      "dt": "2026-05-07T08:57:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "auta",
+        "ceny",
+        "dotlačili",
+        "jac",
+        "jde",
+        "nečekaně",
+        "nová",
+        "nízké",
+        "octavii",
+        "prahy",
+        "sází",
+        "čínská"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Fantastický Dostál. Gól dostal až šest vteřin před koncem, Anaheim srovnal",
+      "url": "https://sport.aktualne.cz/hokej/fantasticky-dostal-gol-dostal-az-sest-vterin-pred-koncem-anaheim-srovnal/r~aaa291c0f1a50c1716e25b11faeaca27/",
+      "dt": "2026-05-07T06:45:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "anaheim",
+        "dostal",
+        "dostál",
+        "fantastický",
+        "gól",
+        "koncem",
+        "srovnal",
+        "vteřin",
+        "šest"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -498,32 +527,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Izrael bez varování udeřil na Bejrút, cílem byl údajně vysoký velitel Hizballáhu",
-      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
-      "dt": "2026-02-28T14:04:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "bejrút",
-        "cílem",
-        "hizballáhu",
-        "izrael",
-        "udeřil",
-        "varování",
-        "velitel",
-        "vysoký",
-        "údajně"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -534,7 +537,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22819,
+      "bytes": 22898,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -571,12 +574,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-07T08:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T08:57:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 15,
+          "zpravy": 14,
+          "finance": 2,
           "sport": 3,
-          "finance": 1,
           "other": 1
         },
         "drop_counts": {
@@ -594,12 +597,16 @@
             "publishedAt": "2026-01-21T06:45:00Z"
           },
           {
-            "title": "Fantastický Dostál. Gól dostal až šest vteřin před koncem, Anaheim srovnal",
-            "publishedAt": "2026-05-07T06:45:00Z"
-          },
-          {
             "title": "Hasiči zlikvidovali požár v Českém Švýcarsku, území předali správě parku",
             "publishedAt": "2026-05-07T04:54:00Z"
+          },
+          {
+            "title": "Nová čínská auta do Prahy dotlačili. JAC jde i po Octavii, sází na nečekaně nízké ceny",
+            "publishedAt": "2026-05-07T08:57:00Z"
+          },
+          {
+            "title": "Fantastický Dostál. Gól dostal až šest vteřin před koncem, Anaheim srovnal",
+            "publishedAt": "2026-05-07T06:45:00Z"
           },
           {
             "title": "Odpálili bankomat v Kunraticích. Po zlodějích pátrá i policejní vrtulník",
@@ -616,10 +623,6 @@
           {
             "title": "Finové rozjeli v Česku kobercový nálet proti Strnadovi. Zůna jednal s prezidentem",
             "publishedAt": "2026-05-07T08:01:00Z"
-          },
-          {
-            "title": "Hypotéky mírně zdražují, ale drží se nad pěti procenty, ukázal Hypoindex",
-            "publishedAt": "2026-05-07T07:58:00Z"
           }
         ]
       }
