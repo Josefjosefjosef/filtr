@@ -36350,6 +36350,261 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     };
   }
 
+  /**
+   * P0: úzký dominance cluster — signál události + datum/čas v hlavě + embedded poznámkový ocas
+   * („… zítra … poradu a do poznámky napiš …“ / „… připiš k tomu …“) → calendar.create; bez notes.create / storage_disambiguation.
+   */
+  function iuSilverEmbeddedEventNoteDominanceEventInFolded(x) {
+    const h = String(x || "");
+    if (!h) return false;
+    return (
+      /\bporad\w*\b/.test(h) ||
+      /\bschuz\w*\b/.test(h) ||
+      /\bmeeting\w*\b/.test(h) ||
+      /\bjednan\w*\b/.test(h) ||
+      /\bkonzult\w*\b/.test(h) ||
+      /\bhovor\w*\b/.test(h) ||
+      /\bnavstev\w*\b/.test(h) ||
+      /\bservis\w*\b/.test(h) ||
+      /\btenis\w*\b/.test(h) ||
+      /\bobed\w*\b/.test(h) ||
+      /\bvecer\w*\b/.test(h)
+    );
+  }
+
+  function iuSilverEmbeddedEventNoteDominanceUpdateIntentBlockFolded(f, rawIn) {
+    const ff = String(f || "");
+    const rr = String(rawIn || "");
+    if (!/\bzmen(?:te)?\s+mi\b/i.test(ff) && !/\bprepis\s+mi\b/i.test(ff)) return false;
+    if (!/\b(?:schuz|porad|udalost)\w*\b/i.test(ff)) return false;
+    if (/\bna\s+\d{1,2}\s*[.:]\s*\d{1,2}\b/i.test(ff)) return true;
+    if (/\bz\s+\d{1,2}\s*[.:]\s*\d{1,2}\b.*\bna\s+\d{1,2}/i.test(rr)) return true;
+    if (/\bposun\w*\b/i.test(ff)) return true;
+    if (/\b(zitrejs|zitrejsi)\s+\w*\s*(?:schuz|porad|udalost)/i.test(rr)) return true;
+    return false;
+  }
+
+  function iuSilverEmbeddedEventNoteDominanceEarliestSplitIndexP0(rawIn) {
+    const r = String(rawIn || "");
+    if (!r || r.length < 28) return null;
+    const patterns = [
+      /\s+a\s+do\s+pozn[aá]m(?:ek|ky|ce|kach)\b/i,
+      /\s+do\s+pozn[aá]m(?:ek|ky|ce|kach)\s+mi\s+(?:napi[sš]|pripis|připi[sš]|ulo[zž]|uloz|dej|pridej|p[rř]idej|poznamenej|poznac)\b/i,
+      /\s+do\s+pozn[aá]m(?:ek|ky|ce|kach)\s+(?:napi[sš]|pripis|připi[sš])\b/i,
+      /\s+poznamenej\s+k\s+tomu\b/i,
+      /\s+poznac\s+k\s+tomu\b/i,
+      /\s+pripis\s+k\s+tomu\b/i,
+      /\s+připiš\s+k\s+tomu\b/i,
+      /\s+připis\s+k\s+tomu\b/i,
+      /\s+napis\s+si\s+k\s+tomu\b/i,
+      /\s+napis\s+k\s+tomu\b/i,
+      /\s+dopl[nň]\s+tam\b/i,
+      /\s+dej\s+do\s+pozn[aá]m(?:ek|ky|ce)\b/i,
+      /\s+a\s+poznamenej\s+k\s+tomu\b/i
+    ];
+    let bestIx = -1;
+    for (let pi = 0; pi < patterns.length; pi++) {
+      const re = patterns[pi];
+      const rx = new RegExp(re.source, re.flags.indexOf("g") >= 0 ? re.flags : re.flags + "g");
+      let m;
+      while ((m = rx.exec(r)) !== null) {
+        const idx = m.index;
+        const headProbe = foldCs(r.slice(0, idx));
+        if (/\bne\s+$/.test(headProbe)) continue;
+        if (idx < 12) continue;
+        if (bestIx < 0 || idx < bestIx) bestIx = idx;
+      }
+      rx.lastIndex = 0;
+    }
+    return bestIx >= 0 ? bestIx : null;
+  }
+
+  function iuSilverEmbeddedEventNoteDominanceExtractNoteBodyP0(tailRaw) {
+    const t0 = String(tailRaw || "").trim();
+    if (!t0) return "";
+    let u = t0;
+    u = u.replace(
+      /^do\s+pozn[aá]m(?:ek|ky|ce|kach)(?:\s+mi)?\s+(?:napi[sš]|pripis|připi[sš]?|ulo[zž]|uloz|dej|pridej|p[rř]idej|poznamenej|poznac)\s*/i,
+      ""
+    );
+    u = u.replace(/^(?:a\s+)?(?:pripis|připiš|připis)\s+k\s+tomu\s*/i, "");
+    u = u.replace(/^(?:a\s+)?napis(?:\s+si)?\s+k\s+tomu\s*/i, "");
+    u = u.replace(/^(?:a\s+)?poznamenej\s+k\s+tomu\s*/i, "");
+    u = u.replace(/^(?:a\s+)?poznac\s+k\s+tomu\s*/i, "");
+    u = u.replace(/^(?:a\s+)?dopl[nň]\s+tam\s*/i, "");
+    u = u.replace(/^dej\s+do\s+pozn[aá]m(?:ek|ky|ce)\s*/i, "");
+    u = u.replace(/^a\s+do\s+pozn[aá]m(?:ek|ky|ce)\s*/i, "");
+    u = u.replace(/^mi\s+pripis\s*(?:ze|že)?\s*/i, "").trim();
+    u = u.replace(/^mi\s+napi[sš]\s*(?:ze|že)?\s*/i, "").trim();
+    u = u.replace(/^(?:napi[sš]|pripis|připi[sš]?)\s*(?:ze|že)?\s*/i, "").trim();
+    u = u.replace(/^(?:ze|že)\s+/i, "").trim();
+    let fb = iuSilverNoteCreateFinalizeBody(u) || String(u).trim();
+    if (fb && String(fb).trim().length >= 2) return String(fb).trim();
+    let loose = null;
+    try {
+      loose = iuSilverTryParseLooseNoteToBody(t0);
+    } catch (_) {
+      loose = null;
+    }
+    if (loose && loose.kind === "body" && String(loose.body || "").trim()) return String(loose.body || "").trim();
+    return "";
+  }
+
+  function iuSilverTryEmbeddedEventNoteDominanceCoreP0(rawIn, foldedIn) {
+    const r = String(rawIn || "").trim();
+    const f = String(foldedIn != null ? foldedIn : foldCs(r));
+    if (!r || r.length < 26) return null;
+    if (/\bpin\s+ke\s+kart/i.test(f)) return null;
+    if (iuSilverNotesScopeBlocksCalendarWriteRouteFolded(f)) return null;
+    if (iuSilverHasGlobalWriteNegationVersusExplicitWriteSignalFolded(f)) return null;
+    if (iuSilverNegativeCreateGuardFolded(f)) return null;
+    if (iuSilverEmbeddedEventNoteDominanceUpdateIntentBlockFolded(f, r)) return null;
+    const splitIx = iuSilverEmbeddedEventNoteDominanceEarliestSplitIndexP0(r);
+    if (splitIx == null || splitIx < 12) return null;
+    const headRaw = r.slice(0, splitIx).trim();
+    const tailRaw = r.slice(splitIx).trim();
+    if (headRaw.length < 14 || tailRaw.length < 8) return null;
+    const headF = foldCs(headRaw);
+    if (/\bne\s+$/.test(foldCs(r.slice(0, splitIx)))) return null;
+    if (!iuSilverEmbeddedEventNoteDominanceEventInFolded(headF)) return null;
+    if (!iuSilverLooksLikeSchedulingFragment(headF, headRaw)) return null;
+    const noteBody = iuSilverEmbeddedEventNoteDominanceExtractNoteBodyP0(tailRaw);
+    if (!noteBody || String(noteBody).trim().length < 2) return null;
+    return { headRaw: headRaw, tailRaw: tailRaw, noteBody: String(noteBody).trim() };
+  }
+
+  function iuSilverEmbeddedEventNoteDominanceGateP0(rawIn, foldedIn) {
+    return !!iuSilverTryEmbeddedEventNoteDominanceCoreP0(rawIn, foldedIn);
+  }
+
+  /**
+   * P0: čistá poznámka „PIN ke kartě … a do poznámky …“ — žádný calendar.create / storage_disambiguation
+   * (tryParse může narazit na zápisové sloveso v ocasu před dosažením NOTE_BODY).
+   */
+  function iuSilverTryPinnedNoteEmbeddedDoPoznamP0Turn(raw, now, folded) {
+    const f = String(folded || "");
+    const r = String(raw || "").trim();
+    if (!r || !f) return null;
+    if (!/\bpin\s+ke\s+kart/i.test(f) || !/\bdo\s+poznam/i.test(f)) return null;
+    if (iuSilverEmbeddedEventNoteDominanceEventInFolded(f)) return null;
+    if (iuSilverHasGlobalWriteNegationVersusExplicitWriteSignalFolded(f)) return null;
+    if (iuSilverNegativeCreateGuardFolded(f)) return null;
+    const hit = iuSilverTryParseExplicitNoteCreate(r);
+    if (hit && hit.kind === "body") {
+      return iuSilverBuildNoteCreateTurn(hit.body, now);
+    }
+    const m = r.match(/^[zn]api[sš]\s+si\s+ze\s+([\s\S]+?)(?:\s+a\s+do\s+poznam|\s+do\s+poznam)/i);
+    if (!m || !m[1]) return null;
+    const b = iuSilverNoteCreateFinalizeBody(String(m[1] || "").trim());
+    if (!b) return null;
+    return iuSilverBuildNoteCreateTurn(b, now);
+  }
+
+  function iuSilverEmbeddedEventNoteDominanceStripHeadForCalendarParseP0(headRawIn) {
+    let w = iuSilverNormalizeWs(String(headRawIn || ""));
+    if (!w) return w;
+    const leadPats = [
+      /^[zn]api[sš]\s+si\s+ze\s+/i,
+      /^[zn]api[sš]\s+si\s+že\s+/i,
+      /^ul[oó][zž](?:te)?\s+mi\s+ze\s+/i,
+      /^ul[oó][zž](?:te)?\s+mi\s+že\s+/i,
+      /^ul[oó][zž](?:te)?\s+mi\s+/i,
+      /^zapi[sš]\s+mi\s+/i,
+      /^napl[áa]nuj\s+/i,
+      /^naplanuj\s+/i
+    ];
+    for (let gi = 0; gi < 14; gi++) {
+      const prevW = w;
+      for (let li = 0; li < leadPats.length; li++) {
+        w = w.replace(leadPats[li], "").trim();
+      }
+      w = iuSilverNormalizeWs(w);
+      if (w === prevW) break;
+    }
+    w = w.replace(/\s+a\s*$/i, "").trim();
+    return w;
+  }
+
+  function iuSilverEmbeddedEventNoteDominanceFallbackTitleFromHeadP0(headRawIn, headFolded) {
+    const h = String(headRawIn || "");
+    const hf = String(headFolded != null ? headFolded : foldCs(h));
+    if (!h || !hf) return "";
+    const m = hf.match(/\b(?:mam|m[aá]m)\s+([a-z]{3,})\b/i);
+    if (!m || !m[1]) return "";
+    const tok = String(m[1] || "").toLowerCase();
+    if (/^porad/.test(tok)) return "Porada";
+    if (/^schuz/.test(tok)) return "Schůzka";
+    if (/^jednan/.test(tok)) return "Jednání";
+    if (/^meeting/.test(tok)) return "Meeting";
+    if (/^tenis/.test(tok)) return "Tenis";
+    if (/^hovor/.test(tok)) return "Hovor";
+    if (/^navstev/.test(tok)) return "Návštěva";
+    if (/^konzult/.test(tok)) return "Konzultace";
+    if (/^servis/.test(tok)) return "Servis";
+    if (/^obed/.test(tok)) return "Oběd";
+    if (/^vecer/.test(tok)) return "Večeře";
+    return "";
+  }
+
+  function iuSilverTryEmbeddedEventNoteDominanceP0Turn(raw, now, folded, prevDraft) {
+    if (iuSilverHasGlobalWriteNegationVersusExplicitWriteSignalFolded(String(folded || ""))) return null;
+    if (iuSilverNegativeCreateGuardFolded(String(folded || ""))) return null;
+    const r = String(raw || "").trim();
+    const f = String(folded != null ? folded : foldCs(r));
+    if (iuSilverEmbeddedEventNoteDominanceUpdateIntentBlockFolded(f, r)) return null;
+    const core = iuSilverTryEmbeddedEventNoteDominanceCoreP0(r, f);
+    if (!core || !core.headRaw || !String(core.noteBody || "").trim()) return null;
+    const prev = prevDraft || createEmptyDraft();
+    let headForCal = iuSilverEmbeddedEventNoteDominanceStripHeadForCalendarParseP0(core.headRaw);
+    const foldHeadRaw = foldCs(String(core.headRaw || ""));
+    if (/\bul[oó][zž](?:te)?\s+mi\s+ze\b/i.test(foldHeadRaw) || /\bul[oó][zž](?:te)?\s+mi\s+že\b/i.test(foldHeadRaw)) {
+      headForCal = String(core.headRaw || "").trim();
+    }
+    if (!String(headForCal || "").trim()) return null;
+    const calTurn = iuSilverBuildCalendarCreateTurn(headForCal, now, prev);
+    if (!calTurn || calTurn.normalizedIntent !== "calendar.create") return null;
+    const bodyFin = iuSilverNoteCreateFinalizeBody(core.noteBody) || String(core.noteBody || "").trim();
+    const nBodyH = iuSilverHumanizeRoughNote(bodyFin);
+    const nBody = iuSilverCleanCalendarNoteTailV1(nBodyH, nBodyH);
+    if (!String(nBody || "").trim()) return null;
+    const dOut = cloneDraft(calTurn.draft);
+    if (!String(dOut.title || "").trim()) {
+      const fbTit = iuSilverEmbeddedEventNoteDominanceFallbackTitleFromHeadP0(headForCal, foldCs(headForCal));
+      if (fbTit) {
+        dOut.title = String(fbTit || "").trim().slice(0, 200);
+        dOut.meta.title = "certain";
+      }
+    }
+    dOut.note = String(nBody || "").trim().slice(0, 1000);
+    dOut.meta.note = "certain";
+    let procOut = calTurn.processingState;
+    if (
+      dOut.meta.date === "certain" &&
+      dOut.meta.time === "certain" &&
+      dOut.meta.title === "certain" &&
+      String(dOut.title || "").trim()
+    ) {
+      procOut = "READY_TO_SAVE";
+    }
+    const ap2 = buildAssistantParts(dOut, procOut);
+    return {
+      normalizedIntent: calTurn.normalizedIntent,
+      targetContainer: calTurn.targetContainer,
+      processingState: procOut,
+      clarificationReason: calTurn.clarificationReason,
+      futureIntentCandidate: calTurn.futureIntentCandidate,
+      readQuery: calTurn.readQuery,
+      readAnswer: calTurn.readAnswer,
+      extractedFields: calTurn.extractedFields,
+      missingFields: calTurn.missingFields,
+      ambiguousFields: calTurn.ambiguousFields,
+      userFacingSummary: calTurn.userFacingSummary,
+      assistantLead: ap2.assistantLead,
+      clarificationText: ap2.clarificationText,
+      draft: dOut
+    };
+  }
+
   /** P0 v1.7: „kalendář + datum/čas + poznámka“ → hlavní intent calendar.create (poznámka jen pole události). */
   function iuSilverShouldForceCalendarOverCompositeNote(raw, folded) {
     const f = String(folded || "");
@@ -36357,7 +36612,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!r) return false;
     if (iuSilverNotesScopeBlocksCalendarWriteRouteFolded(f) || iuSilverNegativeCreateGuardFolded(f)) return false;
     if (iuSilverHasExplicitNotesTarget(f) && iuSilverCalendarQuerySignalFolded(f)) return false;
+    if (/\bpin\s+ke\s+kart/i.test(f) && /\bdo\s+poznam/i.test(f) && !iuSilverEmbeddedEventNoteDominanceEventInFolded(f)) return false;
     if (iuSilverTryCalendarNoteCompositeHeadNoteTailP0(r, f)) return true;
+    if (iuSilverEmbeddedEventNoteDominanceGateP0(r, f)) return true;
     const calPart = iuSilverHasExplicitCalendarTarget(f) || /\bkalend/.test(f);
     const sched = iuSilverLooksLikeSchedulingFragment(f, r);
     const notePart = iuSilverHasExplicitNotesTarget(f) || /\bdo\s+poznam/.test(f) || /\bpoznamk/.test(f);
@@ -37544,7 +37801,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (st.length >= 6 && st.length < s.length) s = st;
     }
     const fEarly = foldCs(s);
-    if (iuSilverShouldForceCalendarOverCompositeNote(s, fEarly)) return null;
+    const pinKeKartNotesTailP0 =
+      /\bpin\s+ke\s+kart/i.test(fEarly) &&
+      /\bdo\s+poznam/i.test(fEarly) &&
+      !iuSilverEmbeddedEventNoteDominanceEventInFolded(fEarly);
+    if (!pinKeKartNotesTailP0 && iuSilverShouldForceCalendarOverCompositeNote(s, fEarly)) return null;
     if (iuSilverHasExplicitTasksTarget(fEarly)) return null;
     if (
       (iuSilverHasExplicitNotesTarget(fEarly) ||
@@ -43094,6 +43355,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const dualCalNoteP0 = iuSilverTryCalendarNoteDualWriteP0Turn(raw, now, folded, prevDraft);
     if (dualCalNoteP0) {
       return dualCalNoteP0;
+    }
+
+    const embeddedEventNoteDomP0 = iuSilverTryEmbeddedEventNoteDominanceP0Turn(raw, now, folded, prevDraft);
+    if (embeddedEventNoteDomP0) {
+      return embeddedEventNoteDomP0;
+    }
+
+    const pinnedNoteEmbeddedDoPozP0 = iuSilverTryPinnedNoteEmbeddedDoPoznamP0Turn(raw, now, folded);
+    if (pinnedNoteEmbeddedDoPozP0) {
+      return pinnedNoteEmbeddedDoPozP0;
     }
 
     const taskReadListEarly = iuSilverTryTaskReadListQueryEarly(raw, now, folded, ctx || {}, empty);
