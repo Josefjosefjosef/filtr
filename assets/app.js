@@ -35889,6 +35889,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     )
       return true;
     if (/\bv\s+kolik\s+mam\b/.test(x) && (/\bkalend/.test(x) || iuSilverCalendarEntityContextFolded(x))) return true;
+    if (
+      !iuSilverCalendarPastQueryCountingCueFolded(x) &&
+      iuSilverCalendarPastReadQueryLeadFolded(x) &&
+      iuSilverCalendarPastReadEntityOrScopeFolded(x)
+    )
+      return true;
     if (/\bjakou\s+adresu\b/.test(x) && (/\bkalend/.test(x) || /schuz|udalost|porad|zubar|advokat|pravnik/.test(x))) return true;
     if (/\bjaka\s+je\s+adres/.test(x) && (/\bkalend/.test(x) || /schuz|udalost|porad|zubar|advokat|pravnik/.test(x))) return true;
     if (
@@ -37545,6 +37551,43 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return iuSilverCalendarReadSuppressedForWriteIntentCore(f);
   }
 
+  /** P0: široké počítání (kolikrát / kolik … letos … schůz) — past read routing se ho nesmí dotknout. */
+  function iuSilverCalendarPastQueryCountingCueFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (/\bkolikrat\b/.test(x)) return true;
+    if (/\bkolik\b/.test(x) && /\bletos\b/.test(x) && (/\bschuz|\bzubar|\budalost|\bpravnik|\badvokat|\bdoktor|\bkalend/.test(x))) return true;
+    return false;
+  }
+
+  /**
+   * P0 Real UX calendar_query past: úzký lead ve folded textu (kdy jsem měl / naposledy / včera / minulý týden …).
+   */
+  function iuSilverCalendarPastReadQueryLeadFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (/\bkdy\s+(jsem|sem)\s+(mel|mela)\b/.test(x)) return true;
+    if (/\bkdy\s+jsem\s+byl\w*\s+naposledy\b/.test(x)) return true;
+    if (/\bkdy\s+jsem\s+naposledy\b/.test(x)) return true;
+    if (/\bco\s+(jsem|sem)\s+(mel|mela)\s+minul\w*\s+tyden\b/.test(x)) return true;
+    if (/\bm(el|ela)\s+jsem\s+(vcere|vcera|vcerajs)/.test(x)) return true;
+    if (/\bbyl\s+jsem\s+naposledy\s+u\b/.test(x)) return true;
+    if (/\bsem\s+(mel|mela|byl|byla)\s+(vcere|vcera|vcerajs)/.test(x)) return true;
+    return false;
+  }
+
+  /** P0: kalendářní entita / časový rámec pro past read (foldCs), včetně letos jen bez kolik-counting. */
+  function iuSilverCalendarPastReadEntityOrScopeFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (iuSilverCalendarEntityContextFolded(x)) return true;
+    if (/\bminul\w*\s+tyden\b/.test(x)) return true;
+    if (/\bvcere\b|\bvcera\b|\bvcerajs/.test(x)) return true;
+    if (/\bv\s+kalend|\bkalend/.test(x)) return true;
+    if (/\bletos\b/.test(x) && !/\bkolik\b/.test(x)) return true;
+    return false;
+  }
+
   /**
    * Structured read query (P0). Returns null if utterance is not calendar.read.
    */
@@ -37585,6 +37628,88 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (iuSilverTaskReadNegatedCalendarModuleFolded(f)) return null;
     if (iuSilverTaskStatusReadQuerySignalFolded(f)) return null;
     if (!iuSilverCalendarReadWinsOverTaskReadFolded(f) && iuSilverTaskQueryHardSignalFolded(f)) return null;
+
+    if (!iuSilverCalendarPastQueryCountingCueFolded(f)) {
+      if (iuSilverCalendarPastReadQueryLeadFolded(f) && iuSilverCalendarPastReadEntityOrScopeFolded(f)) {
+        const qPast = String(rUse || "")
+          .trim()
+          .replace(/\s*[?.!…]+$/u, "")
+          .trim();
+        if (/\bco\s+(jsem|sem)\s+(mel|mela)\s+minul\w*\s+tyden\b/.test(f) && /\b(v\s+kalend|kalend)/.test(f)) {
+          return { intent: "agenda_for_range", range: "last_week", filter: null };
+        }
+        if (
+          /\bm(el|ela)\s+jsem\s+(vcere|vcera|vcerajs)/.test(f) &&
+          (/\bneco\b|\bnejak\w*\b|\bnic\w*\b|\bnej\w*\b|\bkalend|\bschuz|\budalost|\bzubar|\bpravnik|\badvokat|\bdoktor\b/.test(f))
+        ) {
+          return { intent: "agenda_for_day", dateRange: "yesterday", filter: null };
+        }
+        const mNapU = qPast.match(/^\s*kdy\s+jsem\s+byl\w*\s+naposledy\s+u\s+(.+)$/i);
+        if (mNapU && mNapU[1]) {
+          const tailN = String(mNapU[1] || "")
+            .trim()
+            .replace(/\s*[?.!…]+$/u, "")
+            .trim();
+          if (tailN.length >= 2) {
+            const canN = iuSilverCanonicalCalendarEntityTitleFromPersonFragment(tailN);
+            if (canN && canN.query) {
+              return {
+                intent: "find_by_title",
+                query: canN.query,
+                normalizedQuery: canN.query,
+                diacriticInsensitive: true,
+                queryFolded: canN.queryFolded,
+                preferPast: true,
+                preferPastMostRecent: true
+              };
+            }
+          }
+        }
+        const mPastSch = qPast.match(
+          /^\s*kdy\s+(jsem|sem)\s+(mel|mela)\s+posledn\S*\s+sch[uů]z(?:ku|ce|kou)?\s+s\s+(.+)$/i
+        );
+        if (mPastSch && mPastSch[3]) {
+          const tailP = String(mPastSch[3] || "")
+            .trim()
+            .replace(/\s*[?.!…]+$/u, "")
+            .trim();
+          const canP = iuSilverCanonicalCalendarEntityTitleFromPersonFragment(tailP);
+          if (canP && canP.query) {
+            const qfP = canP.queryFolded || foldCs(String(canP.query || ""));
+            return {
+              intent: "find_by_title",
+              query: canP.query,
+              normalizedQuery: canP.query,
+              diacriticInsensitive: true,
+              queryFolded: qfP,
+              preferPast: true,
+              preferPastMostRecent: true,
+              meetingPersonHint: /\bpetrem\b|\bpetra\b|\bpetr\b/.test(qfP)
+            };
+          }
+        }
+        const mSchS = qPast.match(/^\s*kdy\s+(jsem|sem)\s+(mel|mela)\s+sch[uů]z(?:ku|ce|kou)?\s+s\s+(.+)$/i);
+        if (mSchS && mSchS[3]) {
+          const tailS = String(mSchS[3] || "")
+            .trim()
+            .replace(/\s*[?.!…]+$/u, "")
+            .trim();
+          const canS = iuSilverCanonicalCalendarEntityTitleFromPersonFragment(tailS);
+          if (canS && canS.query) {
+            const qfS = canS.queryFolded || foldCs(String(canS.query || ""));
+            return {
+              intent: "find_by_title",
+              query: canS.query,
+              normalizedQuery: canS.query,
+              diacriticInsensitive: true,
+              queryFolded: qfS,
+              preferPast: true,
+              meetingPersonHint: /\bpetrem\b|\bpetra\b|\bpetr\b/.test(qfS)
+            };
+          }
+        }
+      }
+    }
 
     if (
       iuSilverCalendarScopedDetailReadMatchFolded(f) &&
@@ -38095,7 +38220,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const sorted = iuSilverSortEventsChrono(events);
 
     if (spec.intent === "agenda_for_day") {
-      const dr = spec.dateRange === "tomorrow" ? addDays(todayStr, 1) : todayStr;
+      let dr = todayStr;
+      if (spec.dateRange === "tomorrow") dr = addDays(todayStr, 1);
+      else if (spec.dateRange === "yesterday") dr = addDays(todayStr, -1);
       return sorted.filter(function (e) {
         return String(e.date).slice(0, 10) === dr;
       });
@@ -38135,8 +38262,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       });
     }
 
-    if (spec.intent === "agenda_for_range" && spec.range === "week") {
-      const start = startOfWeekMondayFromDateStr(todayStr);
+    if (spec.intent === "agenda_for_range" && (spec.range === "week" || spec.range === "last_week")) {
+      let start = startOfWeekMondayFromDateStr(todayStr);
+      if (spec.range === "last_week") start = addDays(start, -7);
       const end = addDays(start, 6);
       return sorted.filter(function (e) {
         const ds = String(e.date).slice(0, 10);
@@ -38231,6 +38359,20 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           return parseDateTimeIso(e.date, e.time).getTime() >= t0;
         });
         if (fut.length) hits = fut;
+      }
+      if (spec.preferPast) {
+        const t0p = now.getTime();
+        const pastOnly = hits.filter(function (e) {
+          return parseDateTimeIso(e.date, e.time).getTime() < t0p;
+        });
+        if (pastOnly.length) {
+          hits = pastOnly;
+          if (spec.preferPastMostRecent && hits.length > 1) {
+            hits = [hits[hits.length - 1]];
+          }
+        } else {
+          hits = [];
+        }
       }
       return hits;
     }
@@ -38359,17 +38501,22 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
 
     if (type === "agenda_for_day") {
-      const dr = spec.dateRange === "tomorrow" ? tomorrowStr : todayStr;
-      const dayWord = spec.dateRange === "tomorrow" ? "zítra" : "dnes";
+      let naSlot = "Na dnešek ";
+      if (spec.dateRange === "tomorrow") {
+        naSlot = "Na zítřek ";
+      } else if (spec.dateRange === "yesterday") {
+        naSlot = "Na včerejšek ";
+      }
       if (count === 0) {
-        message = (spec.dateRange === "tomorrow" ? "Na zítřek " : "Na dnešek ") + "nemáš žádné události.";
+        message = naSlot + "nemáš žádné události.";
         return { success: true, type: type, count: 0, events: [], message: message, ambiguity: false };
       }
       if (count === 1) {
         const ev = evs[0];
         const tit = String(ev.title || "");
-        message =
-          (spec.dateRange === "tomorrow" ? "Zítra máš " : "Dnes máš ") + tit + " v " + String(ev.time || "") + ".";
+        const headEv =
+          spec.dateRange === "tomorrow" ? "Zítra máš " : spec.dateRange === "yesterday" ? "Včera jsi měl " : "Dnes máš ";
+        message = headEv + tit + " v " + String(ev.time || "") + ".";
         return { success: true, type: type, count: 1, events: evs, message: message, ambiguity: false };
       }
       ambiguity = count > 1;
@@ -38377,8 +38524,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const lines = preview.map(function (e) {
         return String(e.time || "") + " — " + String(e.title || "");
       });
+      const headMulti =
+        spec.dateRange === "tomorrow" ? "Zítra " : spec.dateRange === "yesterday" ? "Včera " : "Dnes ";
       message =
-        (spec.dateRange === "tomorrow" ? "Zítra " : "Dnes ") +
+        headMulti +
         "máš " +
         count +
         " událostí. Například:\n" +
@@ -38448,8 +38597,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
 
     if (type === "agenda_for_range") {
+      const lw = spec.range === "last_week";
+      const head0 = lw ? "Minulý týden " : "Tento týden ";
       if (count === 0) {
-        message = "Tento týden nemáš žádné události.";
+        message = head0.trim() + " nemáš žádné události.";
         return { success: true, type: type, count: 0, events: [], message: message, ambiguity: false };
       }
       ambiguity = count > 1;
@@ -38458,7 +38609,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         return iuSilverFormatEventLine(e);
       });
       message =
-        "Tento týden máš " +
+        head0 +
+        "máš " +
         count +
         " událostí. Ukázka:\n" +
         lines.join("\n") +
