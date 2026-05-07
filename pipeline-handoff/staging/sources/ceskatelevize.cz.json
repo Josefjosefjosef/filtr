@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-07T08:19:52.469040Z",
+  "ingestedAt": "2026-05-07T09:05:27.628850Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Brusel měl další otázky k řešení Babišova střetu zájmů, píší Seznam Zprávy",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/brusel-mel-dalsi-otazky-k-reseni-babisova-stretu-zajmu-pisi-seznam-zpravy-373196",
+      "dt": "2026-05-07T08:57:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "babišova",
+        "brusel",
+        "další",
+        "měl",
+        "otázky",
+        "píší",
+        "seznam",
+        "střetu",
+        "zprávy",
+        "zájmů",
+        "řešení"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -124,19 +152,15 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Hasiči v Českém Švýcarsku snížili stupeň poplachu na druhý, území opouští",
+      "title": "Hasiči uhasili požár v Českém Švýcarsku",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/hasici-v-ceskem-svycarsku-snizili-stupen-poplachu-na-druhy-373187",
       "dt": "2026-05-07T05:18:03Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "druhý",
         "hasiči",
-        "opouští",
-        "poplachu",
-        "snížili",
-        "stupeň",
-        "území",
+        "požár",
+        "uhasili",
         "českém",
         "švýcarsku"
       ],
@@ -709,26 +733,26 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "sport",
       "contentType": "article",
-      "title": "AI se nevyrovná lékaři, stále si vymýšlí. Experti připravili návod, jak ji využívat",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/ai-se-nevyrovna-lekari-stale-si-vymysli-experti-pripravili-navod-jak-ji-vyuzivat-373134",
-      "dt": "2026-05-06T10:27:37Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Profi peloton Saganovi nechybí, práce má víc než dřív",
+      "url": "https://sport.ceskatelevize.cz/clanek/cyklistika/profi-peloton-saganovi-nechybi-prace-ma-vic-nez-driv-156638",
+      "dt": "2026-05-07T08:25:41Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "experti",
-        "lékaři",
-        "nevyrovná",
-        "návod",
-        "připravili",
-        "stále",
-        "vymýšlí",
-        "využívat"
+        "dřív",
+        "nechybí",
+        "než",
+        "peloton",
+        "profi",
+        "práce",
+        "saganovi",
+        "víc"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1466,28 +1490,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kempný se vrací do Česka, posílí Kladno",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/kempny-se-vraci-do-ceska-posili-kladno-156608",
-      "dt": "2026-05-05T09:41:57Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "kempný",
-        "kladno",
-        "posílí",
-        "vrací",
-        "česka"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1498,7 +1500,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42100,
+      "bytes": 41597,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1558,11 +1560,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T07:57:46Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T08:57:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
-          "other": 4,
+          "zpravy": 26,
+          "other": 3,
           "finance": 1
         },
         "drop_counts": {
@@ -1575,6 +1577,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Brusel měl další otázky k řešení Babišova střetu zájmů, píší Seznam Zprávy",
+            "publishedAt": "2026-05-07T08:57:00Z"
+          },
           {
             "title": "Rekreanti si „rezervovali“ lehátka ručníky. Němec vysoudil tisíc eur",
             "publishedAt": "2026-05-07T07:57:46Z"
@@ -1596,16 +1602,12 @@
             "publishedAt": "2026-05-07T06:07:15Z"
           },
           {
-            "title": "Hasiči v Českém Švýcarsku snížili stupeň poplachu na druhý, území opouští",
+            "title": "Hasiči uhasili požár v Českém Švýcarsku",
             "publishedAt": "2026-05-07T05:18:03Z"
           },
           {
             "title": "Vláda chce zakázat odvolacím soudům zavázat nižší soud k rozsudku",
             "publishedAt": "2026-05-07T05:01:00Z"
-          },
-          {
-            "title": "Umělá inteligence hledá lesní požáry na západě USA",
-            "publishedAt": "2026-05-07T04:31:00Z"
           }
         ]
       }
@@ -1617,7 +1619,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37251,
+      "bytes": 37385,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1654,7 +1656,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T06:53:59Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T08:25:41Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1669,6 +1671,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Profi peloton Saganovi nechybí, práce má víc než dřív",
+            "publishedAt": "2026-05-07T08:25:41Z"
+          },
           {
             "title": "New Yorku Knicks se v play-off daří a má už druhou výhru",
             "publishedAt": "2026-05-07T06:53:59Z"
@@ -1696,10 +1702,6 @@
           {
             "title": "Kousal bude po konci v Pardubicích pokračovat v Hradci",
             "publishedAt": "2026-05-06T19:32:00Z"
-          },
-          {
-            "title": "Nad Roland Garros visí Damoklův meč bojkotu, tenisté chtějí víc peněz",
-            "publishedAt": "2026-05-06T19:17:08Z"
           }
         ]
       }
@@ -1711,7 +1713,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78469,
+      "bytes": 78500,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

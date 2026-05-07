@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-07T08:19:52.469040Z",
+  "ingestedAt": "2026-05-07T09:05:27.628850Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Bizarní pravidlo, o němž nikdo nevěděl? Bayern si stěžoval na ruku ve vápně",
+      "url": "https://www.idnes.cz/fotbal/pohary/liga-mistru-bayern-psg-penalta-ruka-pravidla.A260507_083338_fot_pohary_duff",
+      "dt": "2026-05-07T08:06:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bayern",
+        "bizarní",
+        "nevěděl",
+        "nikdo",
+        "němž",
+        "pravidlo",
+        "ruku",
+        "stěžoval",
+        "vápně"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -774,32 +800,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Na Kladno kvůli vizi i trenérům. Kempný před MS radí mladým: Nebojte se hrát",
-      "url": "https://www.idnes.cz/hokej/ms-2026/michal-kempny-prestup-kladno-reprezentace.A260506_094344_ms-hokej-2026_ivt",
-      "dt": "2026-05-06T09:40:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "hrát",
-        "kempný",
-        "kladno",
-        "kvůli",
-        "mladým",
-        "nebojte",
-        "radí",
-        "trenérům",
-        "vizi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -810,7 +810,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 49585,
+      "bytes": 49599,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -847,7 +847,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T07:56:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T08:06:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -863,6 +863,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bizarní pravidlo, o němž nikdo nevěděl? Bayern si stěžoval na ruku ve vápně",
+            "publishedAt": "2026-05-07T08:06:00Z"
+          },
           {
             "title": "Ustáli jsme kritické chvíle, cení si kouč Pardubic. Písek jeho hochy pořádně ždímal",
             "publishedAt": "2026-05-07T07:56:00Z"
@@ -890,10 +894,6 @@
           {
             "title": "Bayern - PSG 1:1, Pařížané si opět zahrají finále LM. Pomohl jim i sporný moment",
             "publishedAt": "2026-05-06T21:28:00Z"
-          },
-          {
-            "title": "Plíšková dotáhla v Římě otočku, ve druhém kole jsou Kopřiva, Siniaková i Valentová",
-            "publishedAt": "2026-05-06T20:12:00Z"
           }
         ]
       }

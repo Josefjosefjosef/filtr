@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-05-07T08:19:52.469040Z",
+  "ingestedAt": "2026-05-07T09:05:27.628850Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Zemi jako drahokam a tajemný Měsíc ukazují nové snímky mise Artemis II",
+      "url": "https://www.idnes.cz/technet/vesmir/vesmir-artemis-ii-fotografie-snimky-oblet-mesice-nasa.A260506_125719_tec_vesmir_vse/foto",
+      "dt": "2026-05-07T08:38:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "artemis",
+        "drahokam",
+        "jako",
+        "mise",
+        "měsíc",
+        "nové",
+        "snímky",
+        "tajemný",
+        "ukazují",
+        "zemi"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -738,31 +765,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Dědictví Černobylu. Havárie byla i k něčemu dobrá, vysvětluje jaderný vědec",
-      "url": "https://www.idnes.cz/technet/veda/dedictvi-cernobylu-jaderna-elektrarna-havarie.A260423_205147_veda_bury",
-      "dt": "2026-04-25T13:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "dobrá",
-        "dědictví",
-        "havárie",
-        "jaderný",
-        "něčemu",
-        "vysvětluje",
-        "vědec",
-        "černobylu"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -773,7 +775,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 46258,
+      "bytes": 46375,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -810,11 +812,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-06T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T08:38:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 13,
-          "zpravy": 17
+          "other": 14,
+          "zpravy": 16
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -826,6 +828,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zemi jako drahokam a tajemný Měsíc ukazují nové snímky mise Artemis II",
+            "publishedAt": "2026-05-07T08:38:00Z"
+          },
           {
             "title": "Němci z něj byli nešťastní. Tank T-34 se stal symbolem vítězství i vzorem",
             "publishedAt": "2026-05-06T22:00:00Z"
@@ -853,10 +859,6 @@
           {
             "title": "Budoucí český astronaut Svoboda má za sebou základní výcvik. Čeká na misi",
             "publishedAt": "2026-05-04T12:49:00Z"
-          },
-          {
-            "title": "Z kdysi monumentálního Anhaltského nádraží v Berlíně zbylo jen torzo",
-            "publishedAt": "2026-05-03T22:00:00Z"
           }
         ]
       }

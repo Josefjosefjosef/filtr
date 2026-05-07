@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-07T08:19:52.469040Z",
+  "ingestedAt": "2026-05-07T09:05:27.628850Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zbrojařská CSG pod palbou. Chytili se investoři na až moc dokonalý příběh?",
+      "url": "https://profitonline.cz/zbrojarska-csg-pod-palbou-chytili-se-investori-na-az-moc-dokonaly-pribeh/",
+      "dt": "2026-05-07T09:00:37Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "chytili",
+        "csg",
+        "dokonalý",
+        "investoři",
+        "moc",
+        "palbou",
+        "příběh",
+        "zbrojařská"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -261,30 +286,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kdo a proč shodil akcie Czechoslovak Group na burze v Amsterodamu",
-      "url": "https://profitonline.cz/kdo-a-proc-shodil-akcie-czechoslovak-group-burze-v-amsterodamu/",
-      "dt": "2026-05-05T08:20:21Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "akcie",
-        "amsterodamu",
-        "burze",
-        "czechoslovak",
-        "group",
-        "proč",
-        "shodil"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -293,9 +294,9 @@
       "source": "FAEI",
       "topic": "finance",
       "httpStatus": 200,
-      "contentType": "text/xml;charset=utf-8",
+      "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18843,
+      "bytes": 18880,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -332,7 +333,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-07T06:00:29Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T09:00:37Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -348,6 +349,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zbrojařská CSG pod palbou. Chytili se investoři na až moc dokonalý příběh?",
+            "publishedAt": "2026-05-07T09:00:37Z"
+          },
           {
             "title": "Ivo Šíf šéfem právního oddělení Provident Financial",
             "publishedAt": "2026-05-07T06:00:29Z"
@@ -375,10 +380,6 @@
           {
             "title": "Karolina Kyselová vede marketing OMV v Česku",
             "publishedAt": "2026-05-06T06:00:59Z"
-          },
-          {
-            "title": "Dočkáme se po vládním zmocněnci pro NATO i zmocněnce pro kulturu?",
-            "publishedAt": "2026-05-06T04:00:00Z"
           }
         ]
       }

@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-07T08:19:52.469040Z",
+  "ingestedAt": "2026-05-07T09:05:27.628850Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nová éra Teplárny Malešice? Křetínského firma chce v Praze postavit velkou elektrárnu",
+      "url": "https://ekonomickydenik.cz/nova-era-teplarny-malesice-paroplynova-elektrarna/",
+      "dt": "2026-05-07T08:34:41Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "chce",
+        "elektrárnu",
+        "firma",
+        "křetínského",
+        "malešice",
+        "nová",
+        "postavit",
+        "praze",
+        "teplárny",
+        "velkou",
+        "éra"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -755,32 +783,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Letadla s prázdnými nádržemi? Nejistota ohledně paliv dostává Evropu pod tlak",
-      "url": "https://ekonomickydenik.cz/letadla-s-prazdnymi-nadrzemi-nejistota-ohledne-paliv-dostava-evropu-pod-tlak/",
-      "dt": "2026-05-05T12:12:28Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "dostává",
-        "evropu",
-        "letadla",
-        "nejistota",
-        "nádržemi",
-        "ohledně",
-        "paliv",
-        "prázdnými",
-        "tlak"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73197,
+      "bytes": 73271,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,12 +830,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T07:31:48Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T08:34:41Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "zdravi": 2,
           "zpravy": 4,
-          "finance": 25,
-          "zdravi": 1
+          "finance": 24
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -845,6 +847,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nová éra Teplárny Malešice? Křetínského firma chce v Praze postavit velkou elektrárnu",
+            "publishedAt": "2026-05-07T08:34:41Z"
+          },
           {
             "title": "Další exploze bankomatu. Pražská policie pátrá po pachatelích",
             "publishedAt": "2026-05-07T07:31:48Z"
@@ -872,10 +878,6 @@
           {
             "title": "Průvan v městských kasách. České obce se poprvé od roku 2010 propadly do minusu",
             "publishedAt": "2026-05-06T16:02:03Z"
-          },
-          {
-            "title": "Nejkrvavější rok historie a soudní teror. Kdy začne Evropa chránit své novináře?",
-            "publishedAt": "2026-05-06T14:30:00Z"
           }
         ]
       }

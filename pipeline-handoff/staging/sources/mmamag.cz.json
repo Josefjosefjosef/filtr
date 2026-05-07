@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-07T08:19:52.469040Z",
+  "ingestedAt": "2026-05-07T09:05:27.628850Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "UFC 328: Bojovníci věří Vanovi. Bookmakeři zase Tairovi",
+      "url": "https://www.mmamag.cz/ufc-328-van-je-outsider-bojovnici-mu-ale-veri/",
+      "dt": "2026-05-07T09:00:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "328",
+        "bojovníci",
+        "bookmakeři",
+        "tairovi",
+        "ufc",
+        "vanovi",
+        "věří",
+        "zase"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1071,31 +1096,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nechutný trash talk Mikuláška s Frimpongem: nadávky a vyhrožování násilím",
-      "url": "https://www.mmamag.cz/frimpong-zautocil-na-mikulaskovu-matku/",
-      "dt": "2026-05-05T14:15:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "frimpongem",
-        "mikuláška",
-        "nadávky",
-        "nechutný",
-        "násilím",
-        "talk",
-        "trash",
-        "vyhrožování"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1106,7 +1106,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 81547,
+      "bytes": 81434,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1143,7 +1143,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-07T07:58:28Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T09:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1158,6 +1158,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "UFC 328: Bojovníci věří Vanovi. Bookmakeři zase Tairovi",
+            "publishedAt": "2026-05-07T09:00:00Z"
+          },
           {
             "title": "Byl posledním, kdo porazil legendárního Mayweathera. Dnes Bulhar Todorov dře bídu s nouzí",
             "publishedAt": "2026-05-07T07:58:28Z"
@@ -1185,10 +1189,6 @@
           {
             "title": "Zjistěte, jak moc znáte historii světového boxu. Plný počet dá jen ten, kdo sleduje ring už pěkných pár let",
             "publishedAt": "2026-05-07T03:53:00Z"
-          },
-          {
-            "title": "McGregor a Khabib překročili hranici. Jejich nenávist změnila UFC",
-            "publishedAt": "2026-05-06T20:15:00Z"
           }
         ]
       }

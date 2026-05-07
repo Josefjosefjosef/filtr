@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-07T08:19:52.469040Z",
+  "ingestedAt": "2026-05-07T09:05:27.628850Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,35 @@
         "zlomek",
         "značky",
         "zůstal"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Málo změn, ale stojí za to. DJI Osmo Pocket 4 láká na vnitřní paměť a extrémní slow-mo",
+      "url": "https://digiarena.zive.cz/malo-zmen-ale-stoji-za-to-dji-osmo-pocket-4-laka-na-vnitrni-pamet-a-extremni-slow-mo",
+      "dt": "2026-05-07T08:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "ale",
+        "dji",
+        "extrémní",
+        "láká",
+        "málo",
+        "osmo",
+        "paměť",
+        "pocket",
+        "slow",
+        "stojí",
+        "vnitřní",
+        "změn"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -935,34 +964,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Konec fyzických SIM karet je v nedohlednu. Zákazníci o přechod na eSIM zase tolik nestojí",
-      "url": "https://mobilmania.zive.cz/clanky/konec-fyzickych-sim-karet-je-zatim-v-nedohlednu-zakaznici-o-prechod-na-esim-proste-nestoji/sc-3-a-1364645/default.aspx",
-      "dt": "2026-05-04T07:15:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "esim",
-        "fyzických",
-        "karet",
-        "konec",
-        "nedohlednu",
-        "nestojí",
-        "přechod",
-        "sim",
-        "tolik",
-        "zase",
-        "zákazníci"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -973,7 +974,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23464,
+      "bytes": 23198,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1010,7 +1011,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-07T07:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T08:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1028,6 +1029,10 @@
           {
             "title": "Z CZC zůstal jen stín. Na Allegru prodává zlomek produktů a jeho značky skončily",
             "publishedAt": "2026-05-06T15:45:00Z"
+          },
+          {
+            "title": "Málo změn, ale stojí za to. DJI Osmo Pocket 4 láká na vnitřní paměť a extrémní slow-mo",
+            "publishedAt": "2026-05-07T08:45:00Z"
           },
           {
             "title": "Garmin Fénix 8 Pro s LTE a satelitním připojením zlevnily na minimum",
@@ -1052,10 +1057,6 @@
           {
             "title": "Google má novou captchu. Že nejste robot, prokážete naskenování QR kódu",
             "publishedAt": "2026-05-06T14:45:00Z"
-          },
-          {
-            "title": "Apple zaplatí 5 miliard korun za chytřejší Siri v iPhonech. Sliby o AI předběhly realitu",
-            "publishedAt": "2026-05-06T11:45:00Z"
           }
         ]
       }
