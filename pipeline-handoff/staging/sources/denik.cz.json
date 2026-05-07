@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-07T03:19:59.644852Z",
+  "ingestedAt": "2026-05-07T03:59:29.570884Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Uplaval 3 km, teď zmizel. Experti se vydali po stopě prvního kojota z Alcatrazu",
+      "url": "https://www.denik.cz/ze_sveta/veznice-alcatraz-prvni-kojot-uplaval-tri-kilometry-puvod.html",
+      "dt": "2026-05-07T03:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "alcatrazu",
+        "experti",
+        "kojota",
+        "prvního",
+        "stopě",
+        "uplaval",
+        "vydali",
+        "zmizel"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -620,31 +645,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ve Švýcarsku se léčí muž s hantavirem, plavil se na výletní lodi MV Hondius",
-      "url": "https://www.denik.cz/staty-mimo-eu/hantavirus-vyletni-lod-svycarsko.html",
-      "dt": "2026-05-06T08:37:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "hantavirem",
-        "hondius",
-        "lodi",
-        "léčí",
-        "muž",
-        "plavil",
-        "výletní",
-        "švýcarsku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -655,7 +655,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28767,
+      "bytes": 28753,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -692,7 +692,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-07T02:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T03:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -708,6 +708,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Uplaval 3 km, teď zmizel. Experti se vydali po stopě prvního kojota z Alcatrazu",
+            "publishedAt": "2026-05-07T03:30:00Z"
+          },
           {
             "title": "Šíří se snímek maskovaného člověka, prý jde o Ivana Bartoše. Ten byl ale jinde",
             "publishedAt": "2026-05-07T02:30:00Z"
@@ -735,10 +739,6 @@
           {
             "title": "Ze skály v Tisé na Ústecku se zřítil nezletilý cizinec. Letěl pro něj vrtulník",
             "publishedAt": "2026-05-06T16:04:00Z"
-          },
-          {
-            "title": "VIDEO: Hustá temná mračna a blesky. Českem se prohnala supercela",
-            "publishedAt": "2026-05-06T15:01:00Z"
           }
         ]
       }
