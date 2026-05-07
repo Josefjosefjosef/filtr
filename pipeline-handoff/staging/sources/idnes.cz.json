@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-07T21:00:33.733722Z",
+  "ingestedAt": "2026-05-07T21:40:22.476407Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Izraelské údery na jihu Libanonu zabíjely. Mezi oběťmi jsou děti",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/izraelske-udery-na-jihu-libanonu-zabily-12-lidi-vcetne-dvou-deti.A260507_230335_zahranicni_air",
+      "dt": "2026-05-07T21:25:46Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "děti",
+        "izraelské",
+        "jihu",
+        "libanonu",
+        "oběťmi",
+        "zabíjely",
+        "údery"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -762,31 +786,6 @@
         "platby",
         "vypne",
         "česku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Mezi pečivem ležely statisíce. S odpáleným bankomatem to nesouvisí, říká policie",
-      "url": "https://www.idnes.cz/praha/zpravy/billa-kunratice-k-verneraku-financni-hotovost-nalez-policie.A260507_143049_praha-zpravy_pari",
-      "dt": "2026-05-07T13:38:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bankomatem",
-        "ležely",
-        "nesouvisí",
-        "odpáleným",
-        "pečivem",
-        "policie",
-        "statisíce",
-        "říká"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1586,7 +1585,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47979,
+      "bytes": 47708,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1623,7 +1622,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T19:22:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T21:25:46Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 30
@@ -1638,6 +1637,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Izraelské údery na jihu Libanonu zabíjely. Mezi oběťmi jsou děti",
+            "publishedAt": "2026-05-07T21:25:46Z"
+          },
           {
             "title": "Trump má nasazené růžové brýle. Írán vydrží blokádu i měsíce, varují tajné služby",
             "publishedAt": "2026-05-07T19:22:00Z"
@@ -1665,10 +1668,6 @@
           {
             "title": "Španělsko zabavilo 30 tun kokainu, jde o rekordní množství v rámci Evropy",
             "publishedAt": "2026-05-07T17:48:00Z"
-          },
-          {
-            "title": "Kameníci omylem zničili rodinný hrob. Rodina řeší, zda zmizely i ostatky",
-            "publishedAt": "2026-05-07T17:24:00Z"
           }
         ]
       }
