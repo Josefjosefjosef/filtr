@@ -35946,6 +35946,25 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P0 false_negative|safety_negation: negace úkolů + explicitní kalendářní read + právník
+   * (např. „Ne do úkolů, podívej se do kalendáře na právníka.“) — nesmí zůstat find_by_title přes celou větu (prázdný hit / „Nic jsem…“).
+   */
+  function iuSilverCalendarReadSafetyNegationTasksLawyerExplicitCalFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (!/\bne\s+do\s+ukol/.test(x) && !/\bne\s+v\s+ukolech/.test(x)) return false;
+    const explicitCal =
+      /\bpodivej\s+se\s+do\s+kalend/.test(x) ||
+      /\b(koukni|kouknete)\s+do\s+kalend/.test(x) ||
+      /\bnajdi\s+(?:mi\s+)?v\s+kalend/.test(x) ||
+      /\bhledej\s+(?:mi\s+)?v\s+kalend/.test(x) ||
+      /\bvyhledej\s+(?:mi\s+)?v\s+kalend/.test(x);
+    if (!explicitCal) return false;
+    if (!/\bpravnik/.test(x)) return false;
+    return true;
+  }
+
+  /**
    * P0 real multi-intent: „schůzka/zubař/… + datum/místo + do poznámky …“ → hlava pro kalendář před poznámkovým ocasem.
    * Vrací { headRaw, noteBody } nebo null (bez hádání — bez platného note parsování tailu null).
    */
@@ -37660,6 +37679,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (iuSilverTaskReadNegatedCalendarModuleFolded(f)) return null;
     if (iuSilverTaskStatusReadQuerySignalFolded(f)) return null;
     if (!iuSilverCalendarReadWinsOverTaskReadFolded(f) && iuSilverTaskQueryHardSignalFolded(f)) return null;
+    if (iuSilverCalendarReadSafetyNegationTasksLawyerExplicitCalFolded(f)) {
+      return {
+        intent: "find_by_title",
+        query: "Právník",
+        normalizedQuery: "Právník",
+        diacriticInsensitive: true,
+        queryFolded: foldCs("Právník")
+      };
+    }
 
     if (!iuSilverCalendarPastQueryCountingCueFolded(f)) {
       if (iuSilverCalendarPastReadQueryLeadFolded(f) && iuSilverCalendarPastReadEntityOrScopeFolded(f)) {
