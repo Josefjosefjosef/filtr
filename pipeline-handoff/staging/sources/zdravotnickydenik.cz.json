@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-07T14:39:45.975505Z",
+  "ingestedAt": "2026-05-07T15:25:16.883804Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Rakovina slinivky už nemusí být osudovou diagnózou. FDA bleskově schválil nadějný lék",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/fda-lek-rakovina/",
+      "dt": "2026-05-07T15:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "bleskově",
+        "být",
+        "diagnózou",
+        "fda",
+        "lék",
+        "nadějný",
+        "nemusí",
+        "osudovou",
+        "rakovina",
+        "schválil",
+        "slinivky"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -240,34 +268,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Bém v Bruselu: Represivní válka proti drogám selhala, kandidátské země EU potřebují změnu",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/bem-brusel-valka-proti-drogam-kandidatske-zeme-eu/",
-      "dt": "2026-05-07T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "bruselu",
-        "bém",
-        "drogám",
-        "kandidátské",
-        "potřebují",
-        "proti",
-        "represivní",
-        "selhala",
-        "válka",
-        "země",
-        "změnu"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +278,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 96932,
+      "bytes": 94748,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +315,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-07T14:35:14Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T15:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -330,6 +330,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rakovina slinivky už nemusí být osudovou diagnózou. FDA bleskově schválil nadějný lék",
+            "publishedAt": "2026-05-07T15:00:00Z"
+          },
           {
             "title": "Projevuje se jako chřipka, ale útočí na ledviny: Co všechno víme o hantaviru v Česku?",
             "publishedAt": "2026-05-07T14:35:14Z"
@@ -357,10 +361,6 @@
           {
             "title": "Větší autonomie pro pacienty musí počkat. Kdy Senát rozhodne?",
             "publishedAt": "2026-05-07T07:01:29Z"
-          },
-          {
-            "title": "Vlastní komora pro sestry? Kubek je ostře proti, jejich naděje označil za naivní",
-            "publishedAt": "2026-05-07T07:00:00Z"
           }
         ]
       }

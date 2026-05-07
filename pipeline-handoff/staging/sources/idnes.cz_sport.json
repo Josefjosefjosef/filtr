@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-07T14:39:45.975505Z",
+  "ingestedAt": "2026-05-07T15:25:16.883804Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "MOV vzal na milost Bělorusko. Do soutěží se vrátí jeho týmy, a to s vlajkou i hymnou",
+      "url": "https://www.idnes.cz/sport/ostatni/mov-zrusil-omezeni-startu-beloruskych-sportovcu-soutezit-mohou-i-tymy.A260507_161711_sporty_kazdt",
+      "dt": "2026-05-07T14:48:20Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bělorusko",
+        "hymnou",
+        "jeho",
+        "milost",
+        "mov",
+        "soutěží",
+        "týmy",
+        "vlajkou",
+        "vrátí",
+        "vzal"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -763,32 +790,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kousal míří k rivalům. V Hradci věří, že týmu přinese cenné zkušenosti",
-      "url": "https://www.idnes.cz/hokej/extraliga/extraliga-prestup-robert-kousal-hradec-kralove.A260506_212444_hokej_czo",
-      "dt": "2026-05-06T19:31:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "cenné",
-        "hradci",
-        "kousal",
-        "míří",
-        "přinese",
-        "rivalům",
-        "týmu",
-        "věří",
-        "zkušenosti"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 49818,
+      "bytes": 49684,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,7 +837,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T13:49:12Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T14:48:20Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -851,6 +852,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "MOV vzal na milost Bělorusko. Do soutěží se vrátí jeho týmy, a to s vlajkou i hymnou",
+            "publishedAt": "2026-05-07T14:48:20Z"
+          },
           {
             "title": "Nosková v Římě postupuje do třetího kola, Svrčina nestačil na Kecmanoviče",
             "publishedAt": "2026-05-07T13:49:12Z"
@@ -878,10 +883,6 @@
           {
             "title": "Soupiska Česka před MS v hokeji 2026: kdy Rulík oznámí nominaci?",
             "publishedAt": "2026-05-07T12:12:00Z"
-          },
-          {
-            "title": "Jak to vy Češi jenom děláte? Dostál po skvělém výkonu vtipkoval s legendou",
-            "publishedAt": "2026-05-07T12:00:00Z"
           }
         ]
       }

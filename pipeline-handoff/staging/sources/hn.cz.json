@@ -1,8 +1,42 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-07T14:39:45.975505Z",
+  "ingestedAt": "2026-05-07T15:25:16.883804Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "Obecní byt nebyl nadstandard, od Babiše cítím podporu, řekla Mrázová. Problém s &bdquo;černými stavbami&ldquo; chce dát do pořádku",
+      "url": "https://domaci.hn.cz/c1-67874930-obecni-byt-nebyl-nadstandard-od-babise-citim-podporu-rekla-mrazova-problem-s-bdquo-cernymi-stavbami-ldquo-chce-dat-do-poradku",
+      "dt": "2026-05-07T14:14:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "babiše",
+        "bdquo",
+        "byt",
+        "chce",
+        "cítím",
+        "dát",
+        "ldquo",
+        "mrázová",
+        "nadstandard",
+        "nebyl",
+        "obecní",
+        "podporu",
+        "pořádku",
+        "problém",
+        "stavbami",
+        "černými",
+        "řekla"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -1095,33 +1129,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Senát odmítl snížení odvodů pro živnostníky. Opozice se bojí výpadku v důchodovém systému",
-      "url": "https://archiv.hn.cz/c1-67874410-senat-odmitl-snizeni-odvodu-pro-zivnostniky-opozice-se-boji-vypadku-v-duchodovem-systemu",
-      "dt": "2026-05-06T11:53:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bojí",
-        "důchodovém",
-        "odmítl",
-        "odvodů",
-        "opozice",
-        "senát",
-        "snížení",
-        "systému",
-        "výpadku",
-        "živnostníky"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1132,7 +1139,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183429,
+      "bytes": 183591,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1169,11 +1176,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-07T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T14:14:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 2,
-          "finance": 36,
+          "zpravy": 3,
+          "finance": 35,
           "zdravi": 2
         },
         "drop_counts": {
@@ -1186,6 +1193,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Obecní byt nebyl nadstandard, od Babiše cítím podporu, řekla Mrázová. Problém s &bdquo;černými stavbami&ldquo; chce dát do pořádku",
+            "publishedAt": "2026-05-07T14:14:00Z"
+          },
           {
             "title": "Pomáhat a chránit? Přišla nahlásit brutální znásilnění, policisté ji ale vyhodili a pachatel útočil znovu",
             "publishedAt": "2026-05-07T14:00:00Z"
@@ -1213,10 +1224,6 @@
           {
             "title": "Od července začne platit nové clo na čínské balíčky. Přinést může desítky miliard eur a změnit celý systém dovozu. Jak to bude v Česku?",
             "publishedAt": "2026-05-07T09:00:00Z"
-          },
-          {
-            "title": "Předdůchod je skvělá věc. Ušetří statisíce a přináší klid, když už to v práci dál nejde",
-            "publishedAt": "2026-05-07T08:22:00Z"
           }
         ]
       }

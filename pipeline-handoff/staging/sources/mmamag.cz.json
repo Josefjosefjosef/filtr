@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-07T14:39:45.975505Z",
+  "ingestedAt": "2026-05-07T15:25:16.883804Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "UFC prodává lístky na galavečer v Bílém domě za 31 milionů. Součástí balíčku je i McGregorův návrat",
+      "url": "https://www.mmamag.cz/ufc-prodava-listky-na-galavecer-v-bilem-dome-za-31-milionu/",
+      "dt": "2026-05-07T15:00:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "balíčku",
+        "bílém",
+        "domě",
+        "galavečer",
+        "lístky",
+        "mcgregorův",
+        "milionů",
+        "návrat",
+        "prodává",
+        "součástí",
+        "ufc"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1064,31 +1092,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Marpo brání Růžičku. Kritika podle něj zašla za hranu",
-      "url": "https://www.mmamag.cz/marpo-brani-ruzicku-kritika-podle-nej-zasla-za-hranu/",
-      "dt": "2026-05-06T05:45:17Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "brání",
-        "hranu",
-        "kritika",
-        "marpo",
-        "něj",
-        "podle",
-        "růžičku",
-        "zašla"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1099,7 +1102,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 82096,
+      "bytes": 82140,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1136,7 +1139,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-07T14:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T15:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1151,6 +1154,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "UFC prodává lístky na galavečer v Bílém domě za 31 milionů. Součástí balíčku je i McGregorův návrat",
+            "publishedAt": "2026-05-07T15:00:00Z"
+          },
           {
             "title": "Clash 16 bere Ostravu útokem. Sivák jde do klece, Bendu čeká Baba Jaga",
             "publishedAt": "2026-05-07T14:15:00Z"
@@ -1178,10 +1185,6 @@
           {
             "title": "Staredown boxerek se zvrhl. Podprsenka šla dolů",
             "publishedAt": "2026-05-07T10:30:00Z"
-          },
-          {
-            "title": "Strickland se opřel do UFC. MMA prý ničí příliv bojovníků z východu",
-            "publishedAt": "2026-05-07T09:45:00Z"
           }
         ]
       }
