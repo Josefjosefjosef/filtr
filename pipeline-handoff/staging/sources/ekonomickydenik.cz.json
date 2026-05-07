@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-07T16:50:07.764458Z",
+  "ingestedAt": "2026-05-07T17:35:02.999396Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Dron dopadl na sklad ropy v Lotyšsku. Stroj měl pocházet z Ukrajiny",
+      "url": "https://ekonomickydenik.cz/dron-sklad-ropy-lotyssko-ukrajina/",
+      "dt": "2026-05-07T17:07:33Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dopadl",
+        "dron",
+        "lotyšsku",
+        "měl",
+        "pocházet",
+        "ropy",
+        "sklad",
+        "stroj",
+        "ukrajiny"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -754,30 +780,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Do důchodu s generálskou frčkou? BIS navrhla povýšení pro estébáka",
-      "url": "https://ekonomickydenik.cz/estebak-komunista-generalem-navrhla-bis/",
-      "dt": "2026-05-06T04:05:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "bis",
-        "důchodu",
-        "estébáka",
-        "frčkou",
-        "generálskou",
-        "navrhla",
-        "povýšení"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -788,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73548,
+      "bytes": 72743,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -825,11 +827,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T15:39:20Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T17:07:33Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 5,
           "finance": 23,
+          "zpravy": 5,
           "zdravi": 2
         },
         "drop_counts": {
@@ -842,6 +844,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dron dopadl na sklad ropy v Lotyšsku. Stroj měl pocházet z Ukrajiny",
+            "publishedAt": "2026-05-07T17:07:33Z"
+          },
           {
             "title": "Hra na city a sehrané divadlo? Ministryně Mrázová cítí podporu Babiše, rezignovat nechce",
             "publishedAt": "2026-05-07T15:39:20Z"
@@ -869,10 +875,6 @@
           {
             "title": "Funguje to. GasNet otestoval na Ašsku distribuci směsi zemního plynu s vodíkem",
             "publishedAt": "2026-05-07T09:42:24Z"
-          },
-          {
-            "title": "Konec půlnoční pasti na dálnicích? Ministerstvo u 24hodinové známky varuje před náklady",
-            "publishedAt": "2026-05-07T09:10:55Z"
           }
         ]
       }

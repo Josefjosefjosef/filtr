@@ -1,23 +1,50 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-07T16:50:07.764458Z",
+  "ingestedAt": "2026-05-07T17:35:02.999396Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Česko - Švédsko. Poslední turnaj před MS, hokejisté čelí domácím",
-      "url": "https://www.idnes.cz/hokej/ms-2026/euro-hockey-tour-cesko-svedsko-online-zpravodajstvi.A260507_095219_ms-hokej-2026_drev",
-      "dt": "2026-05-07T16:28:00Z",
+      "title": "Siniaková promarnila 9 mečbolů, Macháč v Římě přehrál Tsitsipase. Dál jde i Nosková",
+      "url": "https://www.idnes.cz/sport/tenis/turnaj-rim-zpravodajstvi-prvni-druhe-kolo.A260507_131739_tenis_ten",
+      "dt": "2026-05-07T17:25:49Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "domácím",
-        "hokejisté",
-        "poslední",
-        "turnaj",
-        "čelí",
+        "jde",
+        "macháč",
+        "mečbolů",
+        "nosková",
+        "promarnila",
+        "přehrál",
+        "siniaková",
+        "tsitsipase",
+        "římě"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Česko - Švédsko 0:0. Svižné tempo, šanci Pavlíka likviduje Söderblom",
+      "url": "https://www.idnes.cz/hokej/ms-2026/euro-hockey-tour-cesko-svedsko-online-zpravodajstvi.A260507_095219_ms-hokej-2026_drev",
+      "dt": "2026-05-07T17:25:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "likviduje",
+        "pavlíka",
+        "svižné",
+        "söderblom",
+        "tempo",
         "česko",
+        "šanci",
         "švédsko"
       ],
       "feedCategory": "sport",
@@ -202,31 +229,6 @@
         "vlajkou",
         "vrátí",
         "vzal"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nosková v Římě postupuje do třetího kola, Svrčina nestačil na Kecmanoviče",
-      "url": "https://www.idnes.cz/sport/tenis/turnaj-rim-zpravodajstvi-prvni-druhe-kolo.A260507_131739_tenis_ten",
-      "dt": "2026-05-07T13:49:12Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "kecmanoviče",
-        "kola",
-        "nestačil",
-        "nosková",
-        "postupuje",
-        "svrčina",
-        "třetího",
-        "římě"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -797,7 +799,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48338,
+      "bytes": 48676,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -834,7 +836,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T16:28:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-07T17:25:49Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -851,8 +853,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Česko - Švédsko. Poslední turnaj před MS, hokejisté čelí domácím",
-            "publishedAt": "2026-05-07T16:28:00Z"
+            "title": "Siniaková promarnila 9 mečbolů, Macháč v Římě přehrál Tsitsipase. Dál jde i Nosková",
+            "publishedAt": "2026-05-07T17:25:49Z"
+          },
+          {
+            "title": "ONLINE: Česko - Švédsko 0:0. Svižné tempo, šanci Pavlíka likviduje Söderblom",
+            "publishedAt": "2026-05-07T17:25:00Z"
           },
           {
             "title": "Přestřelka na úvod Švédských her. Švýcaři po nájezdech zdolali Finsko",
@@ -877,10 +883,6 @@
           {
             "title": "Jen led a sníh, rozhodl MOV. Na hrách ve Francii nebude cyklokros ani přespolní běh",
             "publishedAt": "2026-05-07T15:16:00Z"
-          },
-          {
-            "title": "MOV vzal na milost Bělorusko. Do soutěží se vrátí jeho týmy, a to s vlajkou i hymnou",
-            "publishedAt": "2026-05-07T14:48:20Z"
           }
         ]
       }
