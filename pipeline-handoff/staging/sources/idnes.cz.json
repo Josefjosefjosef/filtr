@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-08T15:09:54.618215Z",
+  "ingestedAt": "2026-05-08T15:54:34.045773Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Letecký provoz nad Prahou narušil dron. Policie zadržela osmatřicetiletého muže",
+      "url": "https://www.idnes.cz/praha/zpravy/letecky-provoz-v-praze-dnes-narusil-dron-v-bezletove-zone-ruzynskeho-letiste.A260508_163319_domaci_mikp",
+      "dt": "2026-05-08T15:07:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dron",
+        "letecký",
+        "muže",
+        "narušil",
+        "osmatřicetiletého",
+        "policie",
+        "prahou",
+        "provoz",
+        "zadržela"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ostré projevy i potyčky na Dni vítězství na Olšanech. Emoce vyvolaly sporné symboly",
+      "url": "https://www.idnes.cz/zpravy/domaci/oslavy-8-kvetna-nocni-vlci-kaputin-vystrcil-zvaryc.A260508_150954_domaci_sahu",
+      "dt": "2026-05-08T15:06:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dni",
+        "emoce",
+        "olšanech",
+        "ostré",
+        "potyčky",
+        "projevy",
+        "sporné",
+        "symboly",
+        "vyvolaly",
+        "vítězství"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -22,32 +75,6 @@
         "premiérem",
         "vysoké",
         "řešili"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Letecký provoz nad Prahou narušil dron. Policie zadržela jednoho člověka",
-      "url": "https://www.idnes.cz/praha/zpravy/letecky-provoz-v-praze-dnes-narusil-dron-v-bezletove-zone-ruzynskeho-letiste.A260508_163319_domaci_mikp",
-      "dt": "2026-05-08T14:42:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "dron",
-        "jednoho",
-        "letecký",
-        "narušil",
-        "policie",
-        "prahou",
-        "provoz",
-        "zadržela",
-        "člověka"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -100,34 +127,6 @@
         "trasu",
         "využil",
         "česko"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ostré projevy i slovní potyčky na Dni vítězství na Olšanech. Pak přijeli Noční vlci",
-      "url": "https://www.idnes.cz/zpravy/domaci/oslavy-8-kvetna-nocni-vlci-kaputin-vystrcil-zvaryc.A260508_150954_domaci_sahu",
-      "dt": "2026-05-08T14:08:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "dni",
-        "noční",
-        "olšanech",
-        "ostré",
-        "pak",
-        "potyčky",
-        "projevy",
-        "přijeli",
-        "slovní",
-        "vlci",
-        "vítězství"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1592,7 +1591,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48232,
+      "bytes": 48456,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1629,11 +1628,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T15:07:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 5,
-          "zpravy": 25
+          "zpravy": 25,
+          "finance": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1646,12 +1645,16 @@
         },
         "sample_titles": [
           {
-            "title": "Babiš jednal s belgickým premiérem, řešili vysoké ceny energií i emisní povolenky",
-            "publishedAt": "2026-05-08T15:00:00Z"
+            "title": "Letecký provoz nad Prahou narušil dron. Policie zadržela osmatřicetiletého muže",
+            "publishedAt": "2026-05-08T15:07:00Z"
           },
           {
-            "title": "Letecký provoz nad Prahou narušil dron. Policie zadržela jednoho člověka",
-            "publishedAt": "2026-05-08T14:42:00Z"
+            "title": "Ostré projevy i potyčky na Dni vítězství na Olšanech. Emoce vyvolaly sporné symboly",
+            "publishedAt": "2026-05-08T15:06:00Z"
+          },
+          {
+            "title": "Babiš jednal s belgickým premiérem, řešili vysoké ceny energií i emisní povolenky",
+            "publishedAt": "2026-05-08T15:00:00Z"
           },
           {
             "title": "Farage spláchl Starmera v místních volbách. Premiér přesto odmítá odstoupit",
@@ -1660,10 +1663,6 @@
           {
             "title": "Fico míří na oslavy do Moskvy. Podle médií využil trasu přes Česko",
             "publishedAt": "2026-05-08T14:22:00Z"
-          },
-          {
-            "title": "Ostré projevy i slovní potyčky na Dni vítězství na Olšanech. Pak přijeli Noční vlci",
-            "publishedAt": "2026-05-08T14:08:00Z"
           },
           {
             "title": "Policie našla dva rukojmí z přepadené banky na západě Německa. Pachatelé utekli",

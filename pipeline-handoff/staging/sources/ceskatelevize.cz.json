@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-08T15:09:54.618215Z",
+  "ingestedAt": "2026-05-08T15:54:34.045773Z",
   "items": [
     {
       "section": "aktualne",
@@ -753,6 +753,31 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Hrochová si doběhla pro 22. mistrovský titul, slavila také Sasínek Mäki",
+      "url": "https://sport.ceskatelevize.cz/clanek/atletika/hrochova-si-dobehla-pro-22-mistrovsky-titul-slavila-take-sasinek-maki-156659",
+      "dt": "2026-05-08T15:29:01Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "doběhla",
+        "hrochová",
+        "mistrovský",
+        "mäki",
+        "sasínek",
+        "slavila",
+        "také",
+        "titul"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Závěrečný spurt na úvod Gira ovlivnil hromadný pád, vyhrál Magnier",
       "url": "https://sport.ceskatelevize.cz/clanek/cyklistika/zaverecny-spurt-na-uvod-gira-ovlivnil-hromadny-pad-vyhral-magnier-156658",
       "dt": "2026-05-08T15:05:56Z",
@@ -1485,32 +1510,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Florbalistky překonaly proti Dánsku rekord MS, Štekerová zazářila devíti body",
-      "url": "https://sport.ceskatelevize.cz/clanek/florbal/florbalistky-prekonaly-proti-dansku-rekord-ms-stekerova-zazarila-deviti-body-156628",
-      "dt": "2026-05-06T14:36:59Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "body",
-        "devíti",
-        "dánsku",
-        "florbalistky",
-        "proti",
-        "překonaly",
-        "rekord",
-        "zazářila",
-        "štekerová"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1641,7 +1640,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38871,
+      "bytes": 38776,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1678,7 +1677,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T15:05:56Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T15:29:01Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1693,6 +1692,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hrochová si doběhla pro 22. mistrovský titul, slavila také Sasínek Mäki",
+            "publishedAt": "2026-05-08T15:29:01Z"
+          },
           {
             "title": "Závěrečný spurt na úvod Gira ovlivnil hromadný pád, vyhrál Magnier",
             "publishedAt": "2026-05-08T15:05:56Z"
@@ -1720,10 +1723,6 @@
           {
             "title": "Trošku jsem se sebou bojoval, ale pomohl mi ten první gól, přiznal Kovařčík",
             "publishedAt": "2026-05-08T05:00:00Z"
-          },
-          {
-            "title": "Fuksovi a Dostálovi začne v Maďarsku boj o příští olympijské hry",
-            "publishedAt": "2026-05-08T04:00:00Z"
           }
         ]
       }
@@ -1735,7 +1734,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78198,
+      "bytes": 78192,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

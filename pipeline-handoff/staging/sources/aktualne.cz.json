@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-08T15:09:54.618215Z",
+  "ingestedAt": "2026-05-08T15:54:34.045773Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Tvrdý hromadný pád očesal spurtující peloton. První etapu Gira pak vyhrál Magnier",
+      "url": "https://sport.aktualne.cz/ostatni-sporty/tvrdy-hromadny-pad-ocesal-spurtujici-peloton-prvni-etapu-gira-pak-vyhral-magnier/r~aaa29a23d72a18d3364da900cb895ae6/",
+      "dt": "2026-05-08T15:39:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "etapu",
+        "gira",
+        "hromadný",
+        "magnier",
+        "očesal",
+        "pak",
+        "peloton",
+        "první",
+        "pád",
+        "spurtující",
+        "tvrdý",
+        "vyhrál"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -515,34 +544,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Odkud se hantavirus dostal na výletní loď? Stopa vede do Ohňové země, říká virolog",
-      "url": "https://magazin.aktualne.cz/odkud-se-hantavirus-dostal-na-vyletni-lod-stopa-vede-do-ohnove-zeme-rika-virolog/r~aaa296fac7ce45dd80cf4dd1b7a01017/",
-      "dt": "2026-05-08T08:05:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dostal",
-        "hantavirus",
-        "loď",
-        "odkud",
-        "ohňové",
-        "stopa",
-        "vede",
-        "virolog",
-        "výletní",
-        "země",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -553,7 +554,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21819,
+      "bytes": 21837,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -590,12 +591,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-08T14:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T15:39:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 5,
           "finance": 2,
-          "zpravy": 14,
-          "sport": 4
+          "zpravy": 13
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -607,6 +608,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tvrdý hromadný pád očesal spurtující peloton. První etapu Gira pak vyhrál Magnier",
+            "publishedAt": "2026-05-08T15:39:00Z"
+          },
           {
             "title": "Slevy jako droga. Všichni vědí, že narušují důvěru, ale neumí s tím přestat, říká odborník",
             "publishedAt": "2026-05-08T14:33:00Z"
@@ -634,10 +639,6 @@
           {
             "title": "Tolik Čechů, podivovala se legenda. V play off NHL zastiňují giganty",
             "publishedAt": "2026-05-08T13:22:00Z"
-          },
-          {
-            "title": "„Mohl být trochu nad věcí, nejsem jeho podřízený.“ Babiš se ohradil vůči Pavlově kritice",
-            "publishedAt": "2026-05-08T12:30:00Z"
           }
         ]
       }
