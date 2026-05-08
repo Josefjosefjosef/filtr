@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-08T06:50:24.422999Z",
+  "ingestedAt": "2026-05-08T07:25:06.412125Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vodní slalomáři se utkají o reprezentaci, mezi kajakáři je jedno volné místo",
+      "url": "https://www.sport.cz/clanek/vodni-sporty-vodni-slalomari-se-utkaji-o-reprezentaci-mezi-kajakari-je-jedno-volne-misto-5450060",
+      "dt": "2026-05-08T07:08:58Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "jedno",
+        "kajakáři",
+        "místo",
+        "reprezentaci",
+        "slalomáři",
+        "utkají",
+        "vodní",
+        "volné"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -763,33 +788,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bránili mu opustit zemi. Díky úspěchu v Lize mistrů je ale národním hrdinou",
-      "url": "https://www.sport.cz/clanek/fotbal-liga-mistru-branili-mu-opustit-zemi-ted-rusove-oslavuji-brankaruv-uspech-v-lize-mistru-5449113",
-      "dt": "2026-05-07T14:28:06Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "ale",
-        "bránili",
-        "díky",
-        "hrdinou",
-        "lize",
-        "mistrů",
-        "národním",
-        "opustit",
-        "zemi",
-        "úspěchu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42524,
+      "bytes": 42600,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,7 +835,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T06:38:38Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T07:08:58Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -852,6 +850,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vodní slalomáři se utkají o reprezentaci, mezi kajakáři je jedno volné místo",
+            "publishedAt": "2026-05-08T07:08:58Z"
+          },
           {
             "title": "Brutální útok hantaviru, nejhorší dny v životě! Jako jehla v hlavě, líčí chvíle hrůzy úspěšný kouč",
             "publishedAt": "2026-05-08T06:38:38Z"
@@ -879,10 +881,6 @@
           {
             "title": "Rvačka v kabině Realu! Hvězda skončila po potyčce se spoluhráčem v nemocnici",
             "publishedAt": "2026-05-08T04:39:45Z"
-          },
-          {
-            "title": "Snový kontrakt přinesl úsměvné trable. Můj podpis vypadal jako od třeťáka, vtipkuje český talent",
-            "publishedAt": "2026-05-08T04:20:08Z"
           }
         ]
       }

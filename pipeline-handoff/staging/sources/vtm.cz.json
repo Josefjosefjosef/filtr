@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-08T06:50:24.422999Z",
+  "ingestedAt": "2026-05-08T07:25:06.412125Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,35 @@
         "smazat",
         "spolkl",
         "stahuje"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Vše, co víme o skládacím iPhonu. Bude menší než konkurenční Foldy a nechá zmizet rýhu v displeji",
+      "url": "https://mobilmania.zive.cz/clanky/vse-co-vime-o-skladacim-iphonu-rozlozeny-bude-jako-ipad-zobrazi-dve-aplikace-vedle-sebe-202605/sc-3-a-1364687/default.aspx",
+      "dt": "2026-05-08T06:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "displeji",
+        "foldy",
+        "iphonu",
+        "konkurenční",
+        "menší",
+        "nechá",
+        "než",
+        "rýhu",
+        "skládacím",
+        "víme",
+        "vše",
+        "zmizet"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -925,36 +954,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Netflix a 30 nejoblíbenějších filmů a seriálů v květnu 2026. Mimoni, Harry Hole, Radiační poplach, Válečné monstrum…",
-      "url": "https://avmania.zive.cz/nejoblibenejsi-filmy-a-serialy-na-netflixu",
-      "dt": "2026-05-05T09:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "2026",
-        "filmů",
-        "harry",
-        "hole",
-        "květnu",
-        "mimoni",
-        "monstrum",
-        "nejoblíbenějších",
-        "netflix",
-        "poplach",
-        "radiační",
-        "seriálů",
-        "válečné"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -965,7 +964,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23083,
+      "bytes": 22939,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1002,7 +1001,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-08T05:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T06:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1020,6 +1019,10 @@
           {
             "title": "Chrome na počítačích spolkl 4 GB místa navíc, Google potají stahuje AI model. Jak jej smazat?",
             "publishedAt": "2026-05-07T14:45:00Z"
+          },
+          {
+            "title": "Vše, co víme o skládacím iPhonu. Bude menší než konkurenční Foldy a nechá zmizet rýhu v displeji",
+            "publishedAt": "2026-05-08T06:45:00Z"
           },
           {
             "title": "Hry zadarmo, nebo se slevou: Diablo IV za tři stovky a správa obchodu s haraburdím zdarma",
@@ -1044,10 +1047,6 @@
           {
             "title": "Garmin Fénix 8 Pro s LTE a satelitním připojením zlevnily na minimum",
             "publishedAt": "2026-05-07T06:50:00Z"
-          },
-          {
-            "title": "Tohle je 10 nejprodávanějších telefonů současnosti. Oblíbené jsou špičkové modely i lowendy za pár tisíc",
-            "publishedAt": "2026-05-07T17:45:00Z"
           }
         ]
       }

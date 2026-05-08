@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-08T06:50:24.422999Z",
+  "ingestedAt": "2026-05-08T07:25:06.412125Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Pravá blondýnka je zpátky. Nová verze se vrátí k počátkům milované postavy",
+      "url": "https://www.kinobox.cz/clanky/serialy/53561-prava-blondynka-zpatky-na-stredni-serial-elle-se-vrati-k-pocatkum-milovane-postavy",
+      "dt": "2026-05-08T07:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "blondýnka",
+        "milované",
+        "nová",
+        "postavy",
+        "počátkům",
+        "pravá",
+        "verze",
+        "vrátí",
+        "zpátky"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -522,34 +548,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Kevin Costner má v rukou nejvelkolepější filmové selhání. Jeho vysněný western neuvidíme ani letos",
-      "url": "https://www.kinobox.cz/clanky/filmy/53389-kevin-costner-ma-v-rukach-nejvelkolepejsi-filmove-selhani-westernovy-horizont-neuvidime-ani-letos",
-      "dt": "2026-05-05T12:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "costner",
-        "filmové",
-        "jeho",
-        "kevin",
-        "letos",
-        "nejvelkolepější",
-        "neuvidíme",
-        "rukou",
-        "selhání",
-        "vysněný",
-        "western"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -560,7 +558,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28556,
+      "bytes": 28032,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -597,7 +595,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-07T17:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T07:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 19,
@@ -613,6 +611,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pravá blondýnka je zpátky. Nová verze se vrátí k počátkům milované postavy",
+            "publishedAt": "2026-05-08T07:00:00Z"
+          },
           {
             "title": "Mortal Kombat II je hrdým krvavým brakem. Umí pracovat s postavami i brutální akcí",
             "publishedAt": "2026-05-07T17:00:00Z"
@@ -640,10 +642,6 @@
           {
             "title": "Konečně se dočkáme? Pokračování nejzábavnější akční sci-fi století s Tomem Cruisem se blíží",
             "publishedAt": "2026-05-07T09:00:00Z"
-          },
-          {
-            "title": "Nová Audrey Hepburn na prvních fotkách. Očekávaný snímek zachytí noc legendární herečky",
-            "publishedAt": "2026-05-07T07:00:00Z"
           }
         ]
       }

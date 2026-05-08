@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-08T06:50:24.422999Z",
+  "ingestedAt": "2026-05-08T07:25:06.412125Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Hvězda reality show Jake Hall zemřel během dovolené. Vrazil do prosklených dveří",
+      "url": "https://www.denik.cz/staty-eu/reality-star-zemrela-na-mallorce-policie-vysetruje-podivne-okolnosti-smrti.html",
+      "dt": "2026-05-08T06:40:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "během",
+        "dovolené",
+        "dveří",
+        "hall",
+        "hvězda",
+        "jake",
+        "prosklených",
+        "reality",
+        "show",
+        "vrazil",
+        "zemřel"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -627,33 +655,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Dva lidé zemřeli na Slovensku při nehodě, kterou zřejmě způsobil český řidič",
-      "url": "https://www.denik.cz/staty-eu/dva-lide-zemreli-na-slovensku-pri-nehode-kterou-zrejme-zpusobil-cesky-ridic.html",
-      "dt": "2026-05-07T10:05:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dva",
-        "lidé",
-        "nehodě",
-        "při",
-        "slovensku",
-        "zemřeli",
-        "způsobil",
-        "zřejmě",
-        "český",
-        "řidič"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -664,7 +665,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30717,
+      "bytes": 30778,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -701,11 +702,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-08T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T06:40:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 21,
-          "finance": 3,
+          "finance": 4,
+          "zpravy": 20,
           "zdravi": 1
         },
         "drop_counts": {
@@ -718,6 +719,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hvězda reality show Jake Hall zemřel během dovolené. Vrazil do prosklených dveří",
+            "publishedAt": "2026-05-08T06:40:00Z"
+          },
           {
             "title": "David Attenborough má 100: Ukázal krásu přírody. Teď varuje před jejím koncem",
             "publishedAt": "2026-05-08T06:00:00Z"
@@ -745,10 +750,6 @@
           {
             "title": "Hororová noc na Everestu: Při sérii tragédií horolezci umírali jeden po druhém",
             "publishedAt": "2026-05-08T03:00:00Z"
-          },
-          {
-            "title": "Z žen udělá bohyně. Fotograf zachytil novinky oceňované návrhářky Pištejové",
-            "publishedAt": "2026-05-08T02:51:00Z"
           }
         ]
       }

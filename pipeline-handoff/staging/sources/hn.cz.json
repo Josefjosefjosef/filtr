@@ -1,8 +1,40 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-08T06:50:24.422999Z",
+  "ingestedAt": "2026-05-08T07:25:06.412125Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Solar Global předčasně splatila dluhopisy. Na nové miliardové investice do baterek, fotovoltaik i vodíku chce nalákat velké investory",
+      "url": "https://byznys.hn.cz/c1-67874870-solar-global-predcasne-splatila-dluhopisy-na-nove-miliardove-investice-do-baterek-fotovoltaik-i-vodiku-chce-nalakat-velke-investory",
+      "dt": "2026-05-08T06:52:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "baterek",
+        "chce",
+        "dluhopisy",
+        "fotovoltaik",
+        "global",
+        "investice",
+        "investory",
+        "miliardové",
+        "nalákat",
+        "nové",
+        "předčasně",
+        "solar",
+        "splatila",
+        "velké",
+        "vodíku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -1105,35 +1137,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Schopný a neústupný &bdquo;ajťák&ldquo;, který rychle přerostl Juchelku. Kdo ve skutečnosti vládne na ministerstvu práce?",
-      "url": "https://archiv.hn.cz/c1-67873950-jiste-pane-rediteli-schopny-a-neustupny-urednik-ktery-prerostl-sveho-ministra-kdo-ve-skutecnosti-vladne-v-resortu-prace",
-      "dt": "2026-05-06T14:34:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "ajťák",
-        "bdquo",
-        "juchelku",
-        "ldquo",
-        "ministerstvu",
-        "neústupný",
-        "práce",
-        "přerostl",
-        "rychle",
-        "schopný",
-        "skutečnosti",
-        "vládne"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1144,7 +1147,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183416,
+      "bytes": 183576,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1181,11 +1184,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-08T06:25:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T06:52:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zdravi": 4,
           "finance": 33,
+          "zdravi": 4,
           "zpravy": 3
         },
         "drop_counts": {
@@ -1198,6 +1201,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Solar Global předčasně splatila dluhopisy. Na nové miliardové investice do baterek, fotovoltaik i vodíku chce nalákat velké investory",
+            "publishedAt": "2026-05-08T06:52:00Z"
+          },
           {
             "title": "Platíme za elektřinu nejvíc v Evropě. Za pár let ji budeme od sousedů dokupovat a bude ještě hůř",
             "publishedAt": "2026-05-08T06:25:00Z"
@@ -1225,10 +1232,6 @@
           {
             "title": "ČNB mírní optimismus, očekává letos pomalejší růst a vyšší inflaci",
             "publishedAt": "2026-05-07T13:32:00Z"
-          },
-          {
-            "title": "Evropa vyhání technologické start-upy. Kvůli regulaci AI jich odešla už víc než stovka",
-            "publishedAt": "2026-05-07T12:00:00Z"
           }
         ]
       }

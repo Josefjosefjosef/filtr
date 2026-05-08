@@ -1,14 +1,40 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-08T06:50:24.422999Z",
+  "ingestedAt": "2026-05-08T07:25:06.412125Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Pavel přijímá Babiše kvůli summitu NATO. Pojedu v každém případě, řekl prezident",
+      "title": "Zachytili kometu v souhvězdí Orionu. Fotka českých astronomů uspěla v NASA",
+      "url": "https://www.idnes.cz/zpravy/domaci/nasa-astronomove-snimek-fotografie-orion.A260508_083627_domaci_tty",
+      "dt": "2026-05-08T06:59:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "astronomů",
+        "fotka",
+        "kometu",
+        "nasa",
+        "orionu",
+        "souhvězdí",
+        "uspěla",
+        "zachytili",
+        "českých"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pavel přijal Babiše kvůli summitu NATO. Pojedu v každém případě, řekl prezident",
       "url": "https://www.idnes.cz/zpravy/domaci/prezident-pavel-premier-babis-jednani-o-ucasti-na-summitu-nato.A260508_040950_domaci_kop",
-      "dt": "2026-05-08T06:46:18Z",
+      "dt": "2026-05-08T06:55:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
@@ -19,7 +45,7 @@
         "pavel",
         "pojedu",
         "prezident",
-        "přijímá",
+        "přijal",
         "případě",
         "summitu",
         "řekl"
@@ -757,30 +783,6 @@
         "vymíráme",
         "zaskočilo",
         "čunek"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V kabinetu školy unikly chemikálie, hasiči budovu evakuovali",
-      "url": "https://www.idnes.cz/praha/zpravy/unik-chemicke-latky-trezor-skola-hasici-evakuace.A260507_150944_praha-zpravy_syko",
-      "dt": "2026-05-07T15:17:43Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "budovu",
-        "chemikálie",
-        "evakuovali",
-        "hasiči",
-        "kabinetu",
-        "unikly",
-        "školy"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1580,7 +1582,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47289,
+      "bytes": 47682,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1617,7 +1619,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T06:46:18Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T06:59:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1634,8 +1636,12 @@
         },
         "sample_titles": [
           {
-            "title": "Pavel přijímá Babiše kvůli summitu NATO. Pojedu v každém případě, řekl prezident",
-            "publishedAt": "2026-05-08T06:46:18Z"
+            "title": "Zachytili kometu v souhvězdí Orionu. Fotka českých astronomů uspěla v NASA",
+            "publishedAt": "2026-05-08T06:59:00Z"
+          },
+          {
+            "title": "Pavel přijal Babiše kvůli summitu NATO. Pojedu v každém případě, řekl prezident",
+            "publishedAt": "2026-05-08T06:55:00Z"
           },
           {
             "title": "Příměří jako cár papíru. Rusko a Ukrajina pokračovaly ve válce na zemi i ve vzduchu",
@@ -1660,10 +1666,6 @@
           {
             "title": "Krušné hory v létě? Nejlepší výlety kolem Klínovce a adrenalin v evropském unikátu",
             "publishedAt": "2026-05-08T04:00:00Z"
-          },
-          {
-            "title": "Státní penze nestačí na základní potřeby, varuje expertka. Radí, jak se krizi vyhnout",
-            "publishedAt": "2026-05-07T22:00:00Z"
           }
         ]
       }
