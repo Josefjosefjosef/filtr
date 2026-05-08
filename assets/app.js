@@ -35182,6 +35182,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bvypi[sš]\s+mi\s+nesplnen\w*\s+ukol/.test(x)) return true;
     if (/\bvypi[sš]\s+mi\s+dnesn\w*\s+ukol/.test(x)) return true;
     if (/\bco\s+mi\s+jeste\s+zbyva/.test(x)) return true;
+    if (/\bco\s+mi\s+zbyva\b/.test(x) && !/\b(v\s+kalend|schuz|udalost|kalendar)/.test(x)) return true;
+    if (/\bco\s+uz\s+m(?:am|ame)\s+hotov/.test(x)) return true;
+    if (/\bco\s+jsem\s+odskrtl/.test(x)) return true;
+    if (/\bco\s+m(?:am|ame)\s+jeste\s+udelat\b/.test(x)) return true;
     if (/\bco\s+jsem\s+jeste\s+neudelal/.test(x)) return true;
     if (/\bco\s+jeste\s+neudelal/.test(x)) return true;
     if (/\bco\s+musim\s+dodelat/.test(x)) return true;
@@ -37300,6 +37304,49 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P1: úprava / dokončení existujícího úkolu nebo připomínky — bez bezpečného task.update ukládání
+   * nesmí spadnout do task.create ani calendar.create (unsupported_request / unknown).
+   * foldCs vstup; žádný zápis.
+   */
+  function iuSilverIsUnsupportedTaskUpdateCompletionIntentP1Folded(foldedIn) {
+    const x = String(foldedIn || "");
+    if (!x) return false;
+    if (/\bne\s+uprav/.test(x) || /\bneuprav/.test(x)) return false;
+    if (/\bne\s+zmen/.test(x) && /\bukol/.test(x)) return false;
+    if (/\bne\s+prepis/.test(x)) return false;
+    if (/\bne\s+posun/.test(x)) return false;
+    if (/\bne\s+odskrtn/.test(x)) return false;
+
+    const hotovoVerbTail =
+      /\bhotovo\s+(koupit|udelat|zavolat|vyridit|vyrit|zaplatit|poslat|objednat|pripomenout|zkontrolovat|zaridit|uklidit|vyzvednout|opravit|napsat|precist|pripravit|odeslat|dokoncit|nastudovat|domluvit)\b/;
+    if (hotovoVerbTail.test(x)) return true;
+
+    if (/\bsplnil\s+jsem\s+ukol/.test(x)) return true;
+
+    const hasPrip = /\bpripomink\w*\b/.test(x) || /\bupomink\w*\b/.test(x);
+    if (hasPrip) {
+      if (/\buprav(?:it)?\s+pripomink/.test(x)) return true;
+      if (/\bzmen(?:it)?\s+pripomink/.test(x)) return true;
+      if (/\bprepis(?:at)?\s+pripomink/.test(x)) return true;
+      if (/\bposun(?:out)?\s+pripomink/.test(x)) return true;
+      if (/\bodskrtn\w*\s+pripomink/.test(x)) return true;
+      if (/\bodskrtn\w*\s+upomink/.test(x)) return true;
+    }
+
+    if (/\bukol\w*\b/.test(x)) {
+      if (/\bzmen(?:it)?\s+ukol/.test(x)) return true;
+      if (/\buprav(?:it)?\s+ukol/.test(x)) return true;
+      if (/\bprepis(?:at)?\s+ukol/.test(x)) return true;
+      if (/\bposun(?:out)?\s+ukol/.test(x)) return true;
+      if (/\bodskrtn\w*\s+(?:mi\s+|prosim\s+)?ukol/.test(x)) return true;
+      if (/\boznac\w*\s+ukol\s+jako\s+hotov/.test(x)) return true;
+      if (/\boznac\w*\s+ukol/.test(x) && /\bhotov/.test(x)) return true;
+    }
+
+    return false;
+  }
+
+  /**
    * Silver Brain v1 — central intent routing (calendar / tasks / notes / fallback).
    * Pořadí: explicitní zápis úkolu (P0.5) → explicitní poznámka → legacy explicitní cíl poznámky → úkoly (sloveso) → kalendář → disambiguace → nejasné.
    */
@@ -37324,6 +37371,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         route: "fallback",
         reason: "ambiguous_write",
         kind: "AMBIGUOUS_WRITE",
+        calendarFallbackWanted: false
+      };
+    }
+    if (iuSilverIsUnsupportedTaskUpdateCompletionIntentP1Folded(folded)) {
+      return {
+        intent: "unknown",
+        confidence: 0.91,
+        route: "fallback",
+        reason: "unsupported_task_update_intent",
+        kind: "UNSUPPORTED_TASK_UPDATE",
         calendarFallbackWanted: false
       };
     }
@@ -44829,6 +44886,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     if (route.kind === "AMBIGUOUS_WRITE") {
       return baseClarification("ambiguous_write", "unknown");
+    }
+
+    if (route.kind === "UNSUPPORTED_TASK_UPDATE") {
+      return baseClarification("unsupported_request", "unknown");
     }
 
     if (route.kind === "NOTE_EMPTY") {
