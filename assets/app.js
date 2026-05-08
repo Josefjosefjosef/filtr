@@ -38714,6 +38714,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const r = iuSilverNormalizeUtteranceForReadParse(rawIn);
     const f = foldCs(r);
     if (!r) return null;
+    if (iuSilverIsNoteRetrievalIntentV1(String(rawIn || "").trim())) return null;
+    if (iuSilverTryParseExplicitNoteCreate(String(rawIn || "").trim())) return null;
     /** P0: dotaz na konec záruky / TV v poznámkách — nesmí spadnout na calendar.read před notes.read. */
     if (
       /\b(kdy|do\s+kdy|jak\s+dlouho|konci|vyprsi)\b/.test(f) &&
@@ -40416,6 +40418,62 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P0 narrow note retrieval routing (Czech): „Mám tam někde v poznámkách číslo na instalatéra?“ → notes.read,
+   * ne clarification / calendar.read. Kombinace anchor A + osobní fakt B + read tvar C; bez široké normalizace.
+   */
+  function iuSilverIsNoteRetrievalIntentV1(rawInput) {
+    const r0 = String(rawInput || "").trim();
+    if (!r0) return false;
+    const f = foldCs(r0);
+    if (!f) return false;
+    if (iuSilverTryParseExplicitNoteCreate(r0)) return false;
+    if (iuSilverHasWriteVerb(f)) return false;
+    if (/\bzmen(?:te)?\s+mi\b/.test(f) || /\bprepis\s+mi\b/.test(f)) return false;
+    if (iuSilverIsCalendarUpdateIntentV1(f)) return false;
+    if (/\bnajdi\s+mi\s+v\s+kalend/.test(f) || /\bnajdi\s+v\s+kalend/.test(f)) return false;
+    if (iuSilverHasExplicitTasksTarget(f) && (iuSilverCzechMobileTaskWriteBasicCueFolded(f) || iuSilverHasTaskActionVerb(f))) return false;
+    if (/\bpridej\s+mi\s+ukol/.test(f)) return false;
+    if (/\bzapis\w*\s+mi\s+zitr\w*\s+v\s+\d/.test(f)) return false;
+    const hasA =
+      /\bpoznamk/.test(f) ||
+      /\bpoznamenan/.test(f) ||
+      /\bulozene\b/.test(f) ||
+      /\bulozen\w/.test(f) ||
+      /\bmam\s+tam\s+nekde\b/.test(f) ||
+      /\bmam\s+nekde\b/.test(f) ||
+      /\bnajdi\b/.test(f) ||
+      /\bhledam\b/.test(f);
+    const hasB =
+      /\bcislo\b/.test(f) ||
+      /\binstalater/.test(f) ||
+      /\belektrikar/.test(f) ||
+      /\bpravnik/.test(f) ||
+      /\bsoud/.test(f) ||
+      /\bvelikost\w*\s+bot\w*/.test(f) ||
+      /\bpojistk\w*\s+aut/.test(f) ||
+      /\bwifi\b/.test(f) ||
+      /\bheslo/.test(f) ||
+      /\b(aut|aute|auta|autu|autem)\b/.test(f);
+    const hasC =
+      /\bm(am|ame)\s+uloz/i.test(f) ||
+      /\bmam\s+tam\s+nekde\b/.test(f) ||
+      /\bmam\s+nekde\b/.test(f) ||
+      /\bmam\s+tam\b/.test(f) ||
+      /\bco\s+mam\s+poznamen/.test(f) ||
+      /\bjakou\s+mam\b/.test(f) ||
+      /\bnajdi\s+mi\b/.test(f) ||
+      /\bnajdi\s+poznam/.test(f) ||
+      /\bhledam\b/.test(f) ||
+      /\bmam\s+v\s+poznamk/.test(f) ||
+      /\bmam\s+v\s+poznamk\w*\s+neco\b/.test(f) ||
+      /\bmam\s+v\s+poznamk\w*\s+nejak/.test(f) ||
+      /\bmam\s+tam\s+nekde\s+v\s+poznamk/.test(f);
+    if (/\bjakou\s+mam\s+velikost\s+bot\b/.test(f) && hasB) return true;
+    if (hasA && hasB && hasC) return true;
+    return false;
+  }
+
+  /**
    * P0: dotaz na poznámku s kalendářním kontextem + negace „nepleť s kalendářem“
    * nesmí spadnout do intent_fail / calendar.create — výsledek notes.read.
    */
@@ -40734,6 +40792,44 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     let q = iuSilverReadSearchExtractQuery(r0, f, target);
     const qFold0 = foldCs(String(q || "").trim());
     if ((!qFold0 || qFold0.length < 2) && /\bsmlouv/.test(f)) q = "smlouva";
+    const sr = iuSilverSearchLocalData(q, {
+      target: target,
+      now: now,
+      getEventsSnapshot: ctx && ctx.getEventsSnapshot,
+      getTasksSnapshot: ctx && ctx.getTasksSnapshot,
+      getNotesSnapshot: ctx && ctx.getNotesSnapshot,
+      rawFoldedHint: f
+    });
+    const ans = iuSilverBuildAnswerFromSearch(sr);
+    return {
+      normalizedIntent: "notes.read",
+      targetContainer: "none",
+      processingState: "READ_OK",
+      clarificationReason: null,
+      futureIntentCandidate: null,
+      readQuery: { silverReadSearch: true, target: target, query: q },
+      readAnswer: { message: ans.message, silverSearch: sr },
+      extractedFields: {},
+      missingFields: [],
+      ambiguousFields: [],
+      userFacingSummary: ans.message,
+      assistantLead: ans.message,
+      clarificationText: "",
+      draft: empty,
+      silverSearchResult: sr
+    };
+  }
+
+  /**
+   * P0: úzký note retrieval guard — před tryParseCalendarRead / clarification / storage disambiguation.
+   */
+  function iuSilverTryNoteRetrievalReadTurn(raw, now, folded, ctx, empty) {
+    const r0 = String(raw || "").trim();
+    const f = String(folded || "");
+    if (!r0 || !f) return null;
+    if (!iuSilverIsNoteRetrievalIntentV1(r0)) return null;
+    const target = "notes";
+    const q = iuSilverReadSearchExtractQuery(r0, f, target);
     const sr = iuSilverSearchLocalData(q, {
       target: target,
       now: now,
@@ -44025,6 +44121,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return noteCalCtxRead;
     }
 
+    const noteRetrievalRead = iuSilverTryNoteRetrievalReadTurn(raw, now, folded, ctx || {}, empty);
+    if (noteRetrievalRead) {
+      return noteRetrievalRead;
+    }
+
     const readSpec = tryParseCalendarRead(raw, now);
     if (readSpec) {
       const snap = ctx && typeof ctx.getEventsSnapshot === "function" ? ctx.getEventsSnapshot() : [];
@@ -44246,6 +44347,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     createEmptyDraft,
     processUserTurn,
     extractFromUtterance,
+    iuSilverIsNoteRetrievalIntentV1: iuSilverIsNoteRetrievalIntentV1,
     iuSilverIsCalendarUpdateIntentV1: iuSilverIsCalendarUpdateIntentV1,
     proofWeekdayRuleSnippet,
     calendarReadProbe,
