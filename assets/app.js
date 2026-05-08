@@ -37650,6 +37650,134 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return out.slice(0, 200);
   }
 
+  /**
+   * P1 Silver: post-routing úzké čištění titulku tasks.create pro cross-intent „poznámka + override do úkolů“.
+   * Nemění routing. Aktivní jen při kombinaci override signálu (raw nebo zbytek v titulku po strip cíle) + note-meta v raw/title,
+   * případně osiřelé „ale dej to“ v titulku při note-meta (taskRaw už nemusí obsahovat „do úkolů“).
+   */
+  function iuSilverCleanCrossIntentTaskTitleV1(titleIn, rawInput, opts) {
+    opts = opts || {};
+    const fb = iuSilverNormalizeWs(String(titleIn != null ? titleIn : "")).trim();
+    if (!fb || fb.length < 2) return fb.slice(0, 200);
+    const raw = String(rawInput != null ? rawInput : "").trim();
+    const rawF = foldCs(raw);
+    if (!rawF) return fb.slice(0, 200);
+
+    const titleStr = String(titleIn || "");
+    const titleF = foldCs(titleStr);
+    const hasTaskOverrideInRaw =
+      /\bdej\s+to\s+do\s+ukol/.test(rawF) ||
+      /\bdej\s+do\s+ukol/.test(rawF) ||
+      /\buloz\s+to\s+jako\s+ukol/.test(rawF) ||
+      /\bale\s+dej\s+to\s+do\s+ukol/.test(rawF) ||
+      /\bale\s+dej\s+do\s+ukol/.test(rawF) ||
+      /\bale\s+uloz\s+to\s+jako\s+ukol/.test(rawF);
+    const hasTaskOverrideTailInTitle =
+      /\bdej\s+to\s+do\s+ukol/.test(titleF) ||
+      /\bdej\s+do\s+ukol/.test(titleF) ||
+      /\buloz\s+to\s+jako\s+ukol/.test(titleF) ||
+      /\bale\s+dej\s+to\s+do\s+ukol/.test(titleF) ||
+      /\bale\s+dej\s+do\s+ukol/.test(titleF) ||
+      /\bale\s+uloz\s+to\s+jako\s+ukol/.test(titleF);
+    const hasOrphanAleDejToInTitle = /\bale\s+dej\s+to\b/.test(titleF);
+    const hasNoteMeta =
+      /\bpoznamku\s*,\s*ze\b/.test(rawF) ||
+      /\bpoznamku\s+ze\b/.test(rawF) ||
+      /\bpoznamka\s*:/.test(rawF) ||
+      /\bnapis\s+si\s+poznamku\b/.test(rawF) ||
+      /\bnechci\s+poznamku\b/.test(rawF) ||
+      /\bpoznamku\s*,\s*ze\b/.test(titleF) ||
+      /\bpoznamku\s+ze\b/.test(titleF) ||
+      /\bpoznamka\s*:/.test(titleF) ||
+      /\bnapis\s+si\s+poznamku\b/.test(titleF) ||
+      /\bnechci\s+poznamku\b/.test(titleF) ||
+      /^\s*napis\s+si\s*,\s*ze\b/.test(rawF) ||
+      /^\s*napis\s+si\s*,\s*ze\b/.test(titleF);
+    if (!hasTaskOverrideInRaw && !hasTaskOverrideTailInTitle && !(hasNoteMeta && hasOrphanAleDejToInTitle)) {
+      return fb.slice(0, 200);
+    }
+    if (!hasNoteMeta && !hasTaskOverrideTailInTitle) return fb.slice(0, 200);
+
+    let s = iuSilverNormalizeWs(titleStr);
+    const ukTail = "[^\\s.,;:!?…]+";
+    const tailEnd = "(?:\\s*[.!?…]*)?\\s*$";
+    const tailPatStrs = [
+      ",\\s*ale\\s+nechci\\s+pozn[aá]mku\\s*,\\s*dej\\s+to\\s+do\\s+" + ukTail + tailEnd,
+      "\\s+ale\\s+nechci\\s+pozn[aá]mku\\s*,\\s*dej\\s+to\\s+do\\s+" + ukTail + tailEnd,
+      ",\\s*ale\\s+nechci\\s+pozn[aá]mku\\s*,\\s*dej\\s+do\\s+" + ukTail + tailEnd,
+      "\\s+ale\\s+nechci\\s+pozn[aá]mku\\s*,\\s*dej\\s+do\\s+" + ukTail + tailEnd,
+      ",\\s*ale\\s+nechci\\s+pozn[aá]mku\\s*,\\s*dej\\s+to\\s+do\\s+ukol" + ukTail + tailEnd,
+      ",\\s*ale\\s+nechci\\s+pozn[aá]mku\\s*,\\s*dej\\s+do\\s+ukol" + ukTail + tailEnd,
+      ",\\s*ale\\s+nechci\\s+pozn[aá]mku" + tailEnd,
+      "\\s+ale\\s+nechci\\s+pozn[aá]mku" + tailEnd,
+      ",\\s*ale\\s+dej\\s+to\\s+do\\s+" + ukTail + tailEnd,
+      "\\s+ale\\s+dej\\s+to\\s+do\\s+" + ukTail + tailEnd,
+      ",\\s*ale\\s+dej\\s+do\\s+" + ukTail + tailEnd,
+      "\\s+ale\\s+dej\\s+do\\s+" + ukTail + tailEnd,
+      ",\\s*ale\\s+ulo[zž]\\s+to\\s+jako\\s+" + ukTail + tailEnd,
+      "\\s+ale\\s+ulo[zž]\\s+to\\s+jako\\s+" + ukTail + tailEnd,
+      ",\\s*ale\\s+uloz\\s+to\\s+jako\\s+" + ukTail + tailEnd,
+      "\\s+ale\\s+uloz\\s+to\\s+jako\\s+" + ukTail + tailEnd,
+      ",\\s*dej\\s+to\\s+do\\s+" + ukTail + tailEnd,
+      "\\s+dej\\s+to\\s+do\\s+" + ukTail + tailEnd,
+      ",\\s*dej\\s+do\\s+" + ukTail + tailEnd,
+      "\\s+dej\\s+do\\s+" + ukTail + tailEnd,
+      ",\\s*ulo[zž]\\s+to\\s+jako\\s+" + ukTail + tailEnd,
+      "\\s+ulo[zž]\\s+to\\s+jako\\s+" + ukTail + tailEnd,
+      ",\\s*uloz\\s+to\\s+jako\\s+" + ukTail + tailEnd,
+      "\\s+uloz\\s+to\\s+jako\\s+" + ukTail + tailEnd,
+      ",\\s*ale\\s+dej\\s+to\\s*[.]?" + tailEnd,
+      "\\s+ale\\s+dej\\s+to\\s*[.]?" + tailEnd,
+      ",\\s*nechci\\s+pozn[aá]mku" + tailEnd,
+      "\\s+nechci\\s+pozn[aá]mku" + tailEnd
+    ];
+    const tailRes = [];
+    for (let ri = 0; ri < tailPatStrs.length; ri++) {
+      tailRes.push(new RegExp(tailPatStrs[ri], "iu"));
+    }
+    const leadRes = [
+      /^\s*nap[ií][sš]\s+si\s+pozn[aá]mku\s*,\s*(že|ze)\s+/iu,
+      /^\s*nap[ií][sš]\s+si\s+pozn[aá]mku\s+(že|ze)\s+/iu,
+      /^\s*pozn[aá]mku\s*,\s*(že|ze)\s+/iu,
+      /^\s*pozn[aá]mku\s+(že|ze)\s+/iu,
+      /^\s*pozn[aá]mka:\s*/iu,
+      /^\s*nap[ií][sš]\s+si\s*,\s*(že|ze)\s+/iu,
+      /^\s*nap[ií][sš]\s+si\s+(že|ze)\s+/iu
+    ];
+    for (let round = 0; round < 48; round++) {
+      const prev = s;
+      let ti;
+      for (ti = 0; ti < tailRes.length; ti++) {
+        s = s.replace(tailRes[ti], "").trim();
+      }
+      let li;
+      for (li = 0; li < leadRes.length; li++) {
+        s = s.replace(leadRes[li], "").trim();
+      }
+      s = iuSilverNormalizeWs(
+        String(s || "")
+          .replace(/,\s*ale\s+nechci\s+pozn[aá]mku\s*,?\s*/giu, ", ")
+          .replace(/,\s*,+/g, ",")
+          .replace(/^[,;:]+/u, "")
+          .replace(/[,;:]+$/u, "")
+          .trim()
+      );
+      if (s === prev) break;
+    }
+
+    if (/\bnechci\s+poznamku\b/.test(rawF)) {
+      s = iuSilverNormalizeWs(String(s || "").replace(/^\s*pozn[aá]mku\s+(?!že\b|ze\b)/iu, "").trim());
+    }
+
+    if (!s || s.length < 2) return fb.slice(0, 200);
+    const fbSafe = iuSilverNormalizeWs(s).trim().length >= 2 ? iuSilverNormalizeWs(s).trim() : fb;
+    const titleNorm0 = normalizeSilverTitleV1(fbSafe, { kind: "task" }).slice(0, 200);
+    let out = iuSilverCleanTaskCreateTitleV1(titleNorm0, fbSafe);
+    out = iuSilverCleanTaskReminderTitleV1(out, fbSafe);
+    out = iuSilverCleanTaskCreateTitleV2(out, fbSafe, { taskDueYmd: String(opts.taskDueYmd || "") });
+    return out.slice(0, 200);
+  }
+
   function iuSilverBuildTaskCreateTurn(rawIn, now, opts) {
     opts = opts || {};
     if (opts.calendarOverridesTask) return null;
@@ -37709,7 +37837,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const titleNorm = normalizeSilverTitleV1(title, { kind: "task" }).slice(0, 200);
     const titleForDraft0 = iuSilverCleanTaskCreateTitleV1(titleNorm, titleNorm);
     const titleForDraft1 = iuSilverCleanTaskReminderTitleV1(titleForDraft0, titleForDraft0);
-    const titleForDraft = iuSilverCleanTaskCreateTitleV2(titleForDraft1, titleForDraft1, { taskDueYmd: dueYmd || "" });
+    const titleForDraft2 = iuSilverCleanTaskCreateTitleV2(titleForDraft1, titleForDraft1, { taskDueYmd: dueYmd || "" });
+    const titleForDraft = iuSilverCleanCrossIntentTaskTitleV1(titleForDraft2, String(rawIn || "").trim(), {
+      taskDueYmd: dueYmd || ""
+    });
 
     const draft = createEmptyDraft();
     draft.targetContainer = "tasks";
