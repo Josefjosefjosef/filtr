@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-08T13:49:27.093247Z",
+  "ingestedAt": "2026-05-08T14:29:48.544390Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Fico je na cestě do Moskvy, využil leteckou trasu přes Česko",
+      "url": "https://zpravy.aktualne.cz/zahranici/fico-je-na-ceste-do-moskvy-vyuzil-leteckou-trasu-pres-cesko/r~aaa299254f1218281c19d5d14a63ebdf/",
+      "dt": "2026-05-08T13:52:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "cestě",
+        "fico",
+        "leteckou",
+        "moskvy",
+        "trasu",
+        "využil",
+        "česko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -519,32 +543,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Divoká scéna v Římě. Krejčíková chrlila nadávky, komentátoři zesměšňovali Sabalenkovou",
-      "url": "https://sport.aktualne.cz/tenis/divoka-scena-v-rime-krejcikova-chrlila-nadavky-komentatori-zesmesnovali-sabalenkovou/r~aaa29a498c350b7f17a0e60868c8dffd/",
-      "dt": "2026-05-08T06:34:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "chrlila",
-        "divoká",
-        "komentátoři",
-        "krejčíková",
-        "nadávky",
-        "sabalenkovou",
-        "scéna",
-        "zesměšňovali",
-        "římě"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -555,7 +553,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21755,
+      "bytes": 21607,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -592,11 +590,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-08T13:25:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T13:52:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 15,
-          "sport": 4,
+          "zpravy": 16,
+          "sport": 3,
           "finance": 1
         },
         "drop_counts": {
@@ -609,6 +607,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fico je na cestě do Moskvy, využil leteckou trasu přes Česko",
+            "publishedAt": "2026-05-08T13:52:00Z"
+          },
           {
             "title": "Jako z Pchjongjangu: Trump má obří zlatou sochu, internet se baví",
             "publishedAt": "2026-05-08T13:25:00Z"
@@ -636,10 +638,6 @@
           {
             "title": "„Babiš se chová jako malé dítě.“ Opozice tepe premiéra po schůzce na Hradě",
             "publishedAt": "2026-05-08T08:47:00Z"
-          },
-          {
-            "title": "Kdo to podcenil? Macinka v Německu diskutoval o sudetoněmeckém sjezdu v Brně",
-            "publishedAt": "2026-05-08T11:03:00Z"
           }
         ]
       }

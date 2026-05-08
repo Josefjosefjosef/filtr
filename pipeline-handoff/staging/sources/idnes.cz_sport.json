@@ -1,27 +1,77 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-08T13:49:27.093247Z",
+  "ingestedAt": "2026-05-08T14:29:48.544390Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Giro ONLINE: Peloton projíždí Bulharskem. Úvodní etapa míří k sprinterskému souboji",
+      "title": "Puškař Nepejchal je na ME v třípolohové malorážce čtvrtý, český tým slaví zlato",
+      "url": "https://www.idnes.cz/sport/ostatni/mistrovstvi-evropy-sportovni-strelba-osijek-malorazka.A260508_160747_sporty_ten",
+      "dt": "2026-05-08T14:10:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "malorážce",
+        "nepejchal",
+        "puškař",
+        "slaví",
+        "tým",
+        "třípolohové",
+        "zlato",
+        "český",
+        "čtvrtý"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Porazila všechny muže. K ultramaratonské výhře jí pomohla kaše a 19 minut spánku",
+      "url": "https://www.idnes.cz/sport/trendy/rachel-entrekinova-vyhra-ultramaraton-recept-na-uspech.A260508_095513_trendy_subt",
+      "dt": "2026-05-08T13:53:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "kaše",
+        "minut",
+        "muže",
+        "pomohla",
+        "porazila",
+        "spánku",
+        "ultramaratonské",
+        "výhře",
+        "všechny"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Giro ONLINE: Peloton se blíží do Burgasu a chystá hromadný dojezd",
       "url": "https://www.idnes.cz/sport/cyklistika/giro-2026-1-etapa-online-souhrn-vysledky.A260507_151211_cyklistika_ipet",
       "dt": "2026-05-08T13:42:28Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "bulharskem",
-        "etapa",
+        "blíží",
+        "burgasu",
+        "chystá",
+        "dojezd",
         "giro",
-        "míří",
+        "hromadný",
         "online",
-        "peloton",
-        "projíždí",
-        "souboji",
-        "sprinterskému",
-        "úvodní"
+        "peloton"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -737,56 +787,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Přestřelka na úvod Švédských her. Švýcaři po nájezdech zdolali Finsko",
-      "url": "https://www.idnes.cz/hokej/reprezentace/svycarsko-finsko-na-svedskych-hrach.A260507_175032_reprezentace_ald",
-      "dt": "2026-05-07T16:22:39Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "finsko",
-        "her",
-        "nájezdech",
-        "přestřelka",
-        "zdolali",
-        "úvod",
-        "švédských",
-        "švýcaři"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sikora vykročil do NHL. Kapitán stříbrných juniorů podepsal s Washingtonem",
-      "url": "https://www.idnes.cz/hokej/nhl/petr-sikora-washington-nhl-novacky-kontrakt-tredinec-draft-2024.A260507_174555_nhl_kazdt",
-      "dt": "2026-05-07T15:54:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "juniorů",
-        "kapitán",
-        "nhl",
-        "podepsal",
-        "sikora",
-        "stříbrných",
-        "vykročil",
-        "washingtonem"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -797,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47241,
+      "bytes": 47131,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -834,7 +834,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T13:42:28Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T14:10:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -851,7 +851,15 @@
         },
         "sample_titles": [
           {
-            "title": "Giro ONLINE: Peloton projíždí Bulharskem. Úvodní etapa míří k sprinterskému souboji",
+            "title": "Puškař Nepejchal je na ME v třípolohové malorážce čtvrtý, český tým slaví zlato",
+            "publishedAt": "2026-05-08T14:10:00Z"
+          },
+          {
+            "title": "Porazila všechny muže. K ultramaratonské výhře jí pomohla kaše a 19 minut spánku",
+            "publishedAt": "2026-05-08T13:53:00Z"
+          },
+          {
+            "title": "Giro ONLINE: Peloton se blíží do Burgasu a chystá hromadný dojezd",
             "publishedAt": "2026-05-08T13:42:28Z"
           },
           {
@@ -873,14 +881,6 @@
           {
             "title": "Bezradní soupeři, legendy na dosah. Co stojí za perfektní bilancí Caroliny?",
             "publishedAt": "2026-05-08T11:14:00Z"
-          },
-          {
-            "title": "Poslední zápas ryšavého čahouna za Plzeň. Bláha před finále hlásí: Není se na co šetřit",
-            "publishedAt": "2026-05-08T10:30:00Z"
-          },
-          {
-            "title": "Švýcarský Asterix se Spartou v srdci. Na Letnou se jednou vrátím, slibuje Lustrinelli",
-            "publishedAt": "2026-05-08T10:00:00Z"
           }
         ]
       }
