@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-08T01:55:41.438075Z",
+  "ingestedAt": "2026-05-08T03:20:38.891045Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Mladík se na Klatovsku nestyděl oloupit vlastního otce",
+      "url": "https://tydenikpolicie.cz/mladik-se-na-klatovsku-nestydel-oloupit-vlastniho-otce/",
+      "dt": "2026-05-08T02:02:57Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "klatovsku",
+        "mladík",
+        "nestyděl",
+        "oloupit",
+        "otce",
+        "vlastního"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -244,29 +267,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Řidič ve Strakonicích najel na chodník, kde srazil chodkyni",
-      "url": "https://tydenikpolicie.cz/ridic-ve-strakonicich-najel-na-chodnik-kde-srazil-chodkyni/",
-      "dt": "2026-05-07T10:23:32Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "chodkyni",
-        "chodník",
-        "najel",
-        "srazil",
-        "strakonicích",
-        "řidič"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -277,7 +277,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16249,
+      "bytes": 16219,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -314,7 +314,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-07T22:02:24Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T02:02:57Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -329,6 +329,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mladík se na Klatovsku nestyděl oloupit vlastního otce",
+            "publishedAt": "2026-05-08T02:02:57Z"
+          },
           {
             "title": "V Ústí nad Labem se srazila posunovaná lokomotiva s osobním vlakem. Tři zranění",
             "publishedAt": "2026-05-07T22:02:24Z"
@@ -356,10 +360,6 @@
           {
             "title": "Jízda kamionu s nelegálním odpadem z Itálie skončila v Dolním Dvořišti",
             "publishedAt": "2026-05-07T11:06:11Z"
-          },
-          {
-            "title": "Podnapilá mladá řidička nacouvala v Jihlavě do projíždějícího auta",
-            "publishedAt": "2026-05-07T10:59:21Z"
           }
         ]
       }
