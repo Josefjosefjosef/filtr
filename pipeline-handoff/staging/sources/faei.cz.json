@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-08T04:00:17.598795Z",
+  "ingestedAt": "2026-05-08T05:21:22.663063Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jen vodítko nestačí. Dovolená se zvířetem má svá pravidla",
+      "url": "https://profitonline.cz/jen-voditko-nestaci-dovolena-se-zviretem-ma-sva-pravidla/",
+      "dt": "2026-05-08T04:00:57Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dovolená",
+        "jen",
+        "nestačí",
+        "pravidla",
+        "svá",
+        "vodítko",
+        "zvířetem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -262,29 +286,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Dočkáme se po vládním zmocněnci pro NATO i zmocněnce pro kulturu?",
-      "url": "https://profitonline.cz/dockame-se-po-vladnim-zmocnenci-pro-nato-i-zmocnence-pro-kulturu/",
-      "dt": "2026-05-06T04:00:00Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "dočkáme",
-        "kulturu",
-        "nato",
-        "vládním",
-        "zmocněnce",
-        "zmocněnci"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -295,7 +296,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18876,
+      "bytes": 18963,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -332,7 +333,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-07T18:00:37Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T04:00:57Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -347,6 +348,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jen vodítko nestačí. Dovolená se zvířetem má svá pravidla",
+            "publishedAt": "2026-05-08T04:00:57Z"
+          },
           {
             "title": "Týden na akciových trzích: Optimismus podpořila vidina konce konfliktu na Blízkém východě",
             "publishedAt": "2026-05-07T18:00:37Z"
@@ -374,10 +379,6 @@
           {
             "title": "Slovenské varování pro Česko: Většina mladých chce emigrovat",
             "publishedAt": "2026-05-07T04:00:51Z"
-          },
-          {
-            "title": "Inflace v dubnu překonala odhady. Hlavním viníkem jsou energie",
-            "publishedAt": "2026-05-06T14:00:44Z"
           }
         ]
       }

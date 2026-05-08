@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-08T04:00:17.598795Z",
+  "ingestedAt": "2026-05-08T05:21:22.663063Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zaplacená dovolená může zdražit. Nad 8 % mají klienti právo odstoupit",
+      "url": "https://ekonomickydenik.cz/krize-ceny-zajezdy-pojisteni/",
+      "dt": "2026-05-08T04:05:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dovolená",
+        "klienti",
+        "mají",
+        "odstoupit",
+        "právo",
+        "zaplacená",
+        "zdražit"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -757,30 +781,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Lodě v Hormuzském průlivu bez ochrany. Trump to vysvětluje jednáním",
-      "url": "https://ekonomickydenik.cz/lode-hormuzskem-prulivu-ochrana-trump/",
-      "dt": "2026-05-06T05:53:21Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "hormuzském",
-        "jednáním",
-        "lodě",
-        "ochrany",
-        "průlivu",
-        "trump",
-        "vysvětluje"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72969,
+      "bytes": 73204,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,7 +828,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T18:37:42Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T04:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 23,
@@ -845,6 +845,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zaplacená dovolená může zdražit. Nad 8 % mají klienti právo odstoupit",
+            "publishedAt": "2026-05-08T04:05:00Z"
+          },
           {
             "title": "Pavel na summit NATO pojede. Pokud Babiš neustoupí, podá žalobu",
             "publishedAt": "2026-05-07T18:37:42Z"
@@ -872,10 +876,6 @@
           {
             "title": "Hledá se kupec. Lokomotivy „banány“ u Českých drah definitivně končí",
             "publishedAt": "2026-05-07T11:14:32Z"
-          },
-          {
-            "title": "Kanada má blíž do evropského zbrojního klubu. Bude mít Česko méně levných peněz?",
-            "publishedAt": "2026-05-07T09:50:57Z"
           }
         ]
       }

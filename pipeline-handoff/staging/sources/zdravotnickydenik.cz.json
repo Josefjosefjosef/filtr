@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-08T04:00:17.598795Z",
+  "ingestedAt": "2026-05-08T05:21:22.663063Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Vládní zmocněnec o supernemocnici: Změníme celé pražské zdravotnictví. Co všechno se stane?",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/vladni-zmocnenec-supernemocnice-prazske-zdravotnictvi/",
+      "dt": "2026-05-08T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "celé",
+        "pražské",
+        "stane",
+        "supernemocnici",
+        "vládní",
+        "všechno",
+        "zdravotnictví",
+        "zmocněnec",
+        "změníme"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -241,33 +267,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Hazard s diagnostikou: Plátci chtějí odměňovat lékaře, kteří odešlou na vyšetření méně pacientů",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/diagnostika-platci-odmeny-lekaru-mene-vysetreni/",
-      "dt": "2026-05-07T06:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "chtějí",
-        "diagnostikou",
-        "hazard",
-        "kteří",
-        "lékaře",
-        "odešlou",
-        "odměňovat",
-        "pacientů",
-        "plátci",
-        "vyšetření"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +277,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 94748,
+      "bytes": 111870,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +314,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-07T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -330,6 +329,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vládní zmocněnec o supernemocnici: Změníme celé pražské zdravotnictví. Co všechno se stane?",
+            "publishedAt": "2026-05-08T05:00:00Z"
+          },
           {
             "title": "Rakovina slinivky už nemusí být osudovou diagnózou. FDA bleskově schválil nadějný lék",
             "publishedAt": "2026-05-07T15:00:00Z"
@@ -357,10 +360,6 @@
           {
             "title": "Revoluce v onkologické prevenci: 3 screeningové programy se dočkají zásadních změn",
             "publishedAt": "2026-05-07T09:15:16Z"
-          },
-          {
-            "title": "Větší autonomie pro pacienty musí počkat. Kdy Senát rozhodne?",
-            "publishedAt": "2026-05-07T07:01:29Z"
           }
         ]
       }

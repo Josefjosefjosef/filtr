@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-08T04:00:17.598795Z",
+  "ingestedAt": "2026-05-08T05:21:22.663063Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Při nehodách na Hodonínsku byly vážně zraněny dvě chodkyně",
+      "url": "https://tydenikpolicie.cz/pri-nehodach-na-hodoninsku-byly-vazne-zraneny-dve-chodkyne/",
+      "dt": "2026-05-08T04:02:20Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "byly",
+        "chodkyně",
+        "dvě",
+        "hodonínsku",
+        "nehodách",
+        "při",
+        "vážně",
+        "zraněny"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -240,33 +265,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Děti volaly na tísňovou linku s tím, že se u školy v Ledči nad Sázavou nachází vrah",
-      "url": "https://tydenikpolicie.cz/deti-volaly-na-tisnovou-linku-s-tim-ze-se-u-skoly-v-ledci-nad-sazavou-nachazi-vrah/",
-      "dt": "2026-05-07T10:52:28Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "děti",
-        "ledči",
-        "linku",
-        "nachází",
-        "sázavou",
-        "tím",
-        "tísňovou",
-        "volaly",
-        "vrah",
-        "školy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -277,7 +275,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16219,
+      "bytes": 16245,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -314,7 +312,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-08T02:02:57Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T04:02:20Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -329,6 +327,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Při nehodách na Hodonínsku byly vážně zraněny dvě chodkyně",
+            "publishedAt": "2026-05-08T04:02:20Z"
+          },
           {
             "title": "Mladík se na Klatovsku nestyděl oloupit vlastního otce",
             "publishedAt": "2026-05-08T02:02:57Z"
@@ -356,10 +358,6 @@
           {
             "title": "Psychicky nemocná žena nechtěla spolupracovat se záchranáři a na policisty vytáhla zbraň. Zpacifikovala ji zásahová jednotka",
             "publishedAt": "2026-05-07T19:29:51Z"
-          },
-          {
-            "title": "Jízda kamionu s nelegálním odpadem z Itálie skončila v Dolním Dvořišti",
-            "publishedAt": "2026-05-07T11:06:11Z"
           }
         ]
       }
