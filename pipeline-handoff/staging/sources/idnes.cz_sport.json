@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-08T21:39:18.711820Z",
+  "ingestedAt": "2026-05-08T22:19:52.618141Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Titul v derby? Rychle pryč! Sparta ponížila Slavii před čtvrtstoletím. Blíží se odveta",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/derby-sparta-slavia-rozhodnuti-o-titulu-rok-2000.A260508_153419_fotbal_ten",
+      "dt": "2026-05-08T22:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "blíží",
+        "derby",
+        "odveta",
+        "ponížila",
+        "pryč",
+        "rychle",
+        "slavii",
+        "sparta",
+        "titul",
+        "čtvrtstoletím"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -758,34 +785,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pocitově bída, výsledkově paráda. Bojoval jsem sám se sebou, říká střelec Kovařčík",
-      "url": "https://www.idnes.cz/hokej/ms-2026/kovarcik-michal-svedske-hry-trefy-reprezentace-trinec-washington-sikora.A260507_235742_reprezentace_kazdt",
-      "dt": "2026-05-07T22:05:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bojoval",
-        "bída",
-        "jsem",
-        "kovařčík",
-        "paráda",
-        "pocitově",
-        "sebou",
-        "střelec",
-        "sám",
-        "výsledkově",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46967,
+      "bytes": 47197,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T21:26:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -849,6 +848,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Titul v derby? Rychle pryč! Sparta ponížila Slavii před čtvrtstoletím. Blíží se odveta",
+            "publishedAt": "2026-05-08T22:00:00Z"
+          },
           {
             "title": "Lehečka, Plíšková a Bartůňková postupují, Muchová a Kopřiva v Římě dohráli",
             "publishedAt": "2026-05-08T21:26:00Z"
@@ -876,10 +879,6 @@
           {
             "title": "Slavia - Sparta živě v TV: kde sledovat derby, výsledky, historie, bilance",
             "publishedAt": "2026-05-08T16:55:00Z"
-          },
-          {
-            "title": "Posily z NHL na MS: Američané s mladými i Tkachukem, Kanada oznámila výběr hvězd",
-            "publishedAt": "2026-05-08T16:12:00Z"
           }
         ]
       }

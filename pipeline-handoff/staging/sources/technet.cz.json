@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-05-08T21:39:18.711820Z",
+  "ingestedAt": "2026-05-08T22:19:52.618141Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Poznáte lokomotivy ČSD a ČD na modelovém kolejišti?",
+      "url": "https://www.idnes.cz/technet/poznate-lokomotivy-csd-a-cd-na-modelovem-kolejisti.Q260506_162736_technet_erp",
+      "dt": "2026-05-08T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "kolejišti",
+        "lokomotivy",
+        "modelovém",
+        "poznáte",
+        "čsd"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -312,7 +334,7 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Problémy se skafandry i raketou New Glenn mohou ohrozit přistání na Měsíci",
       "url": "https://www.idnes.cz/technet/vesmir/vesmir-zeme-mesic-artemis-iii-test-let-start-skafandr-mise.A260424_112530_tec_vesmir_vse",
@@ -738,33 +760,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Chce nás osvobodit od velkých firem. A takto funguje jeho správa fotografií",
-      "url": "https://www.idnes.cz/technet/software/immich-platforma-cloudova-galerie-google-fotky-icloud-microsoft-onedrive-fotky-galerie-nas-docker.A260219_090120_software_dvr",
-      "dt": "2026-04-26T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "chce",
-        "firem",
-        "fotografií",
-        "funguje",
-        "jeho",
-        "nás",
-        "osvobodit",
-        "správa",
-        "takto",
-        "velkých"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -775,7 +770,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 45963,
+      "bytes": 45826,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -812,7 +807,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T08:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 13,
@@ -828,6 +823,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Poznáte lokomotivy ČSD a ČD na modelovém kolejišti?",
+            "publishedAt": "2026-05-08T22:00:00Z"
+          },
           {
             "title": "Jupiter je placatější, než jsme mysleli. Měření mu ubralo dvanáct kilometrů",
             "publishedAt": "2026-05-08T08:02:00Z"
@@ -855,10 +854,6 @@
           {
             "title": "Meteorický roj způsobený prachem z Halleyovy komety vyvrcholí v noci na středu",
             "publishedAt": "2026-05-05T14:59:00Z"
-          },
-          {
-            "title": "Už i WhatsApp můžete mít za peníze, ale zatím jen někde",
-            "publishedAt": "2026-05-05T11:48:00Z"
           }
         ]
       }
