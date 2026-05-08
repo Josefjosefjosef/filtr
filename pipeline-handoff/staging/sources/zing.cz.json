@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-08T17:24:40.236982Z",
+  "ingestedAt": "2026-05-08T18:09:11.920224Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Paranormal Activity: Threshold bylo oficiálně zrušeno",
+      "url": "https://zing.cz/article/paranormal-activity-threshold-bylo-oficialne-zruseno",
+      "dt": "2026-05-08T18:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "activity",
+        "oficiálně",
+        "paranormal",
+        "threshold",
+        "zrušeno"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -974,29 +996,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "EA nově zavádí možnost předobjednat si battlepass v Battlefield 6",
-      "url": "https://zing.cz/article/ea-nove-zavadi-moznost-predobjednat-si-battlepass-v-battlefield-6",
-      "dt": "2026-05-04T13:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "battlefield",
-        "battlepass",
-        "možnost",
-        "nově",
-        "předobjednat",
-        "zavádí"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1007,7 +1006,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125520,
+      "bytes": 125436,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1044,7 +1043,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-08T16:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T18:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1059,6 +1058,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Paranormal Activity: Threshold bylo oficiálně zrušeno",
+            "publishedAt": "2026-05-08T18:00:00Z"
+          },
           {
             "title": "Bez varování vyšel nový mód v Resident Evil Requiem",
             "publishedAt": "2026-05-08T16:00:00Z"
@@ -1086,10 +1089,6 @@
           {
             "title": "Ženské zbroje v Lords of the Fallen 2 budí emoce",
             "publishedAt": "2026-05-08T04:00:00Z"
-          },
-          {
-            "title": "The Sinking City 2 odhalilo nový gameplay a orientační datum vydání",
-            "publishedAt": "2026-05-07T16:00:00Z"
           }
         ]
       }

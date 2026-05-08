@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-08T17:24:40.236982Z",
+  "ingestedAt": "2026-05-08T18:09:11.920224Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
       "title": "Děčín doma promarnil vedení o 21 bodů, čtvrtfinále s Brnem rozhodne sedmý zápas",
       "url": "https://www.idnes.cz/sport/basket/ctvrtfinale-play-off-maxa-nbl-6-zapas-decin-brno-81-86.A260508_185449_sport-basket_ten",
-      "dt": "2026-05-08T16:58:00Z",
+      "dt": "2026-05-08T17:50:02Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
@@ -22,6 +22,31 @@
         "vedení",
         "zápas",
         "čtvrtfinále"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Bude to hit jako Waka Waka? Shakira nazpívala oficiální píseň pro MS ve fotbale",
+      "url": "https://www.idnes.cz/sport/trendy/shakira-po-16-letech-nazpivala-oficialni-pisen-pro-fotbalovy-sampionat.A260508_193725_trendy_ald",
+      "dt": "2026-05-08T17:47:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "fotbale",
+        "hit",
+        "jako",
+        "nazpívala",
+        "oficiální",
+        "píseň",
+        "shakira",
+        "waka"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -765,31 +790,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Česko - Švédsko 3:1. Skalp neporažených. Dvěma trefami rozhodl Kovařčík",
-      "url": "https://www.idnes.cz/hokej/ms-2026/hokej-cesko-svedsko-online.A260507_095219_ms-hokej-2026_drev",
-      "dt": "2026-05-07T21:17:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dvěma",
-        "kovařčík",
-        "neporažených",
-        "rozhodl",
-        "skalp",
-        "trefami",
-        "česko",
-        "švédsko"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46999,
+      "bytes": 47235,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,7 +837,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T16:58:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T17:50:02Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -855,7 +855,11 @@
         "sample_titles": [
           {
             "title": "Děčín doma promarnil vedení o 21 bodů, čtvrtfinále s Brnem rozhodne sedmý zápas",
-            "publishedAt": "2026-05-08T16:58:00Z"
+            "publishedAt": "2026-05-08T17:50:02Z"
+          },
+          {
+            "title": "Bude to hit jako Waka Waka? Shakira nazpívala oficiální píseň pro MS ve fotbale",
+            "publishedAt": "2026-05-08T17:47:00Z"
           },
           {
             "title": "Slavia - Sparta živě v TV: kde sledovat derby, výsledky, historie, bilance",
@@ -880,10 +884,6 @@
           {
             "title": "Giro d’Italia 2026: program, přehled a výsledky etap, favorité, Češi na startu",
             "publishedAt": "2026-05-08T14:59:00Z"
-          },
-          {
-            "title": "Puškař Nepejchal je na ME v třípolohové malorážce čtvrtý, český tým slaví zlato",
-            "publishedAt": "2026-05-08T14:10:00Z"
           }
         ]
       }

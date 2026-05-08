@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-08T17:24:40.236982Z",
+  "ingestedAt": "2026-05-08T18:09:11.920224Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Do systému Jenda se teď nepřihlásíte. Na prodloužený víkend si vzal volno",
+      "url": "https://www.penize.cz/socialni-davky/489443-do-aplikace-jenda-se-neprihlasite-na-prodlouzeny-vikend-si-bere-volno",
+      "dt": "2026-05-08T19:35:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "jenda",
+        "nepřihlásíte",
+        "prodloužený",
+        "systému",
+        "volno",
+        "vzal",
+        "víkend"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -31,21 +55,22 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Lidl po letech váhání testuje online prodej potravin. Má to ale háček",
+      "title": "Lidl konečně testuje online prodej potravin. Od konkurence se ale dost liší",
       "url": "https://www.penize.cz/nakupy/489422-lidl-testuje-online-prodej-potravin-po-letech-vahani-zacal-prodavat-pres-aplikaci",
       "dt": "2026-05-08T08:31:00Z",
       "media_raw": "Peníze.cz",
       "media_norm": "Peníze.cz",
       "tokens": [
         "ale",
-        "háček",
-        "letech",
+        "dost",
+        "konečně",
+        "konkurence",
         "lidl",
+        "liší",
         "online",
         "potravin",
         "prodej",
-        "testuje",
-        "váhání"
+        "testuje"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -476,30 +501,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "EET bude od ledna, schválila vláda. Do košíku vám neuvidí",
-      "url": "https://www.penize.cz/podnikani/489235-evidenci-trzeb-od-ledna-2027-schvalila-vlada-do-kosiku-vam-neuvidi",
-      "dt": "2026-05-04T12:47:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "eet",
-        "košíku",
-        "ledna",
-        "neuvidí",
-        "schválila",
-        "vláda",
-        "vám"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -510,7 +511,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18325,
+      "bytes": 18417,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -547,7 +548,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-08T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T19:35:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 14,
@@ -565,11 +566,15 @@
         },
         "sample_titles": [
           {
+            "title": "Do systému Jenda se teď nepřihlásíte. Na prodloužený víkend si vzal volno",
+            "publishedAt": "2026-05-08T19:35:00Z"
+          },
+          {
             "title": "Který úrok je výhodnější? Češi neumí počítat procenta, ukázal průzkum",
             "publishedAt": "2026-05-08T12:00:00Z"
           },
           {
-            "title": "Lidl po letech váhání testuje online prodej potravin. Má to ale háček",
+            "title": "Lidl konečně testuje online prodej potravin. Od konkurence se ale dost liší",
             "publishedAt": "2026-05-08T08:31:00Z"
           },
           {
@@ -591,10 +596,6 @@
           {
             "title": "Hypotéky zdražily, potvrzují nová čísla z bank. Rozdíly mezi fixacemi rostou",
             "publishedAt": "2026-05-07T05:05:00Z"
-          },
-          {
-            "title": "Kam míří ceny bytů? Český nemovitostní trh očima developera",
-            "publishedAt": "2026-05-07T05:00:00Z"
           }
         ]
       }
