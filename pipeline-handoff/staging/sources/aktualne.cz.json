@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-08T07:25:06.412125Z",
+  "ingestedAt": "2026-05-08T08:05:08.192560Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pavel s Babišem se opět nedohodli. Prezident i tak hodlá na summit NATO jet, premiér nesouhlasí",
+      "url": "https://zpravy.aktualne.cz/domaci/napjata-schuzka-na-hrade-pavel-s-babisem-resi-summit-nato-ve-vzduchu-visi-zaloba/r~aaa2913ee98741f06bc63fac56e5224b/",
+      "dt": "2026-05-08T07:34:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "babišem",
+        "hodlá",
+        "jet",
+        "nato",
+        "nedohodli",
+        "nesouhlasí",
+        "opět",
+        "pavel",
+        "premiér",
+        "prezident",
+        "summit",
+        "tak"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -504,31 +533,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Skandál před El Clásicem. Hráči Realu se poprali, jeden skončil v nemocnici",
-      "url": "https://sport.aktualne.cz/skandal-pred-el-clasicem-hraci-realu-se-poprali-jeden-skoncil-v-nemocnici/r~aaa2939815a588674eb2c4432303180f/",
-      "dt": "2026-05-07T19:59:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "clásicem",
-        "hráči",
-        "jeden",
-        "nemocnici",
-        "poprali",
-        "realu",
-        "skandál",
-        "skončil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -539,7 +543,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21692,
+      "bytes": 21730,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -576,11 +580,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-08T07:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T07:34:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 11,
-          "sport": 6,
+          "zpravy": 12,
+          "sport": 5,
           "other": 2,
           "finance": 1
         },
@@ -594,6 +598,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pavel s Babišem se opět nedohodli. Prezident i tak hodlá na summit NATO jet, premiér nesouhlasí",
+            "publishedAt": "2026-05-08T07:34:00Z"
+          },
           {
             "title": "Klíšťata o víkendu zaútočí s větší silou. Podle čeho vědci poznají, kde bude nejhůř?",
             "publishedAt": "2026-05-08T07:15:00Z"
@@ -621,10 +629,6 @@
           {
             "title": "Lev XIV. si potřeboval změnit údaje v bance. Když řekl, že je papež, operátorka zavěsila",
             "publishedAt": "2026-05-08T05:59:00Z"
-          },
-          {
-            "title": "Kouč se zázračnou aurou vypráví: Will je jako Sheldon. Se změnou stylu radil i Dostál",
-            "publishedAt": "2026-05-08T05:23:00Z"
           }
         ]
       }

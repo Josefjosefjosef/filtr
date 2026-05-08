@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "plnezdravi.cz",
-  "ingestedAt": "2026-05-08T07:25:06.412125Z",
+  "ingestedAt": "2026-05-08T08:05:08.192560Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Chvění a třes těla: Od nervozity po vážné varování organismu",
+      "url": "https://www.plnezdravi.cz/chveni-a-tres-tela-od-nervozity-po-vazne-varovani-organismu/",
+      "dt": "2026-05-08T07:00:18Z",
+      "media_raw": "Plné zdraví",
+      "media_norm": "Plné zdraví",
+      "tokens": [
+        "chvění",
+        "nervozity",
+        "organismu",
+        "těla",
+        "třes",
+        "varování",
+        "vážné"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_plnezdravi",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "plnezdravi.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -490,30 +514,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "plnezdravi.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Jak se starat o pigmentové skvrny na jaře v létě? Slunci se vyhněte",
-      "url": "https://www.plnezdravi.cz/jak-se-starat-o-pigmentove-skvrny-na-jare-v-lete-slunci-se-vyhnete/",
-      "dt": "2026-04-22T23:00:11Z",
-      "media_raw": "Plné zdraví",
-      "media_norm": "Plné zdraví",
-      "tokens": [
-        "jaře",
-        "létě",
-        "pigmentové",
-        "skvrny",
-        "slunci",
-        "starat",
-        "vyhněte"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_plnezdravi",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "plnezdravi.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -524,7 +524,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.plnezdravi.cz/feed/",
-      "bytes": 150317,
+      "bytes": 152812,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -561,7 +561,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-07T07:42:01Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T07:00:18Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -576,6 +576,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chvění a třes těla: Od nervozity po vážné varování organismu",
+            "publishedAt": "2026-05-08T07:00:18Z"
+          },
           {
             "title": "Honba za dokonalou pletí: základem je pravidelná péče. Doplňky stravy ani červené světlo nejsou zázračné",
             "publishedAt": "2026-05-07T07:42:01Z"
@@ -603,10 +607,6 @@
           {
             "title": "Past při léčbě beder: Proč vás záda bolí a jak to změnit",
             "publishedAt": "2026-05-04T07:00:10Z"
-          },
-          {
-            "title": "Tajemství nafouklého břicha: Co za tím vězí",
-            "publishedAt": "2026-05-03T07:00:22Z"
           }
         ]
       }

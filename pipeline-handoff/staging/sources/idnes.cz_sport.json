@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-08T07:25:06.412125Z",
+  "ingestedAt": "2026-05-08T08:05:08.192560Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Lakers odcházeli v emocích, Oklahoma City s úsměvem. Výhru číslo dva má i Detroit",
+      "url": "https://www.idnes.cz/sport/basket/nba-play-off-okc-thunder-la-lakers-vysledky-kontroverze.A260508_072503_sport-basket_czo",
+      "dt": "2026-05-08T07:29:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "city",
+        "detroit",
+        "dva",
+        "emocích",
+        "lakers",
+        "odcházeli",
+        "oklahoma",
+        "výhru",
+        "úsměvem",
+        "číslo"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Znovuzrozený šampion, domácí naděje i mazák z UAE. Kdo vyzve Vingegaarda?",
+      "url": "https://www.idnes.cz/sport/cyklistika/znovuzrozeny-sampion-domaci-nadeje-i-mazak-z-uae-kdo-vyzve-vingegaarda.A260507_165052_cyklistika_mrg",
+      "dt": "2026-05-08T07:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "domácí",
+        "mazák",
+        "naděje",
+        "uae",
+        "vingegaarda",
+        "vyzve",
+        "znovuzrozený",
+        "šampion"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -735,63 +787,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Práh nepokořen, Sršni stále bez medaile. Kouč však cítí hrdost: Je to víc než sport",
-      "url": "https://www.idnes.cz/sport/basket/maxa-nbl-ctvrtfinale-pardubice-pisek-jan-cech-ohlednuti.A260507_931841_sport-basket_ten",
-      "dt": "2026-05-07T11:32:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "cítí",
-        "hrdost",
-        "kouč",
-        "medaile",
-        "nepokořen",
-        "než",
-        "práh",
-        "sport",
-        "sršni",
-        "stále",
-        "víc",
-        "však"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Enriqueho fotbalová mašina. Říkal jsem vám, že jsme nejlepší, smál se kouč PSG",
-      "url": "https://www.idnes.cz/fotbal/pohary/liga-mistru-semifinale-odveta.A260507_093518_fot_pohary_tals",
-      "dt": "2026-05-07T11:01:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "enriqueho",
-        "fotbalová",
-        "jsem",
-        "jsme",
-        "kouč",
-        "mašina",
-        "nejlepší",
-        "psg",
-        "smál",
-        "vám",
-        "říkal"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47330,
+      "bytes": 46966,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,11 +834,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T06:37:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T07:29:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 2,
-          "sport": 28
+          "sport": 28,
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -855,6 +850,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lakers odcházeli v emocích, Oklahoma City s úsměvem. Výhru číslo dva má i Detroit",
+            "publishedAt": "2026-05-08T07:29:00Z"
+          },
+          {
+            "title": "Znovuzrozený šampion, domácí naděje i mazák z UAE. Kdo vyzve Vingegaarda?",
+            "publishedAt": "2026-05-08T07:00:00Z"
+          },
           {
             "title": "U svých nehod ani nevím, co se stalo, říkal Kamil Holán. Poslední rozhovor s legendou",
             "publishedAt": "2026-05-08T06:37:00Z"
@@ -878,14 +881,6 @@
           {
             "title": "Hele, brácho, letím s tebou na Giro. A vyhrajeme etapu. Jak si Kopečtí plní sny",
             "publishedAt": "2026-05-07T22:00:00Z"
-          },
-          {
-            "title": "MS v hokeji 2026: Program, složení skupin, kde a s kým budou hrát Češi?",
-            "publishedAt": "2026-05-07T21:44:00Z"
-          },
-          {
-            "title": "Rayo znovu vyzrálo na Štrasburk, ve finále Konferenční ligy vyzve Crystal Palace",
-            "publishedAt": "2026-05-07T21:18:00Z"
           }
         ]
       }

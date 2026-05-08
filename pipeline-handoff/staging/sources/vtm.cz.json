@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-08T07:25:06.412125Z",
+  "ingestedAt": "2026-05-08T08:05:08.192560Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,33 @@
         "smazat",
         "spolkl",
         "stahuje"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Velký test 27\" monitorů na home office. Do 10 000 Kč pořídíte 4K, 100 Hz i napájení pro notebook",
+      "url": "https://www.zive.cz/clanky/velky-test-27-monitoru-na-home-office-do-10-000-kc-poridite-4k-100-hz-i-napajeni-pro-notebook/sc-3-a-239757/default.aspx",
+      "dt": "2026-05-08T07:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "000",
+        "100",
+        "home",
+        "monitorů",
+        "napájení",
+        "notebook",
+        "office",
+        "pořídíte",
+        "test",
+        "velký"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -929,31 +956,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Dost bylo nekonečného vysvětlování. Gemini si zapamatuje, kdo jste a co máte rádi",
-      "url": "https://www.zive.cz/clanky/dost-bylo-nekonecneho-vysvetlovani-gemini-si-zapamatuje-kdo-jste-a-co-mate-radi/sc-3-a-241009/default.aspx",
-      "dt": "2026-05-05T10:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "dost",
-        "gemini",
-        "jste",
-        "máte",
-        "nekonečného",
-        "rádi",
-        "vysvětlování",
-        "zapamatuje"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -964,7 +966,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22939,
+      "bytes": 22909,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1001,7 +1003,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-08T06:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T07:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1019,6 +1021,10 @@
           {
             "title": "Chrome na počítačích spolkl 4 GB místa navíc, Google potají stahuje AI model. Jak jej smazat?",
             "publishedAt": "2026-05-07T14:45:00Z"
+          },
+          {
+            "title": "Velký test 27\" monitorů na home office. Do 10 000 Kč pořídíte 4K, 100 Hz i napájení pro notebook",
+            "publishedAt": "2026-05-08T07:45:00Z"
           },
           {
             "title": "Vše, co víme o skládacím iPhonu. Bude menší než konkurenční Foldy a nechá zmizet rýhu v displeji",
@@ -1043,10 +1049,6 @@
           {
             "title": "ChatGPT teď bude méně halucinovat. Zároveň je stručnější a má lepší paměť",
             "publishedAt": "2026-05-07T12:45:00Z"
-          },
-          {
-            "title": "Garmin Fénix 8 Pro s LTE a satelitním připojením zlevnily na minimum",
-            "publishedAt": "2026-05-07T06:50:00Z"
           }
         ]
       }
