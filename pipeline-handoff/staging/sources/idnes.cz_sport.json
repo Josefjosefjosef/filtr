@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-08T09:35:12.534881Z",
+  "ingestedAt": "2026-05-08T10:20:28.298123Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Švýcarský Asterix se Spartou v srdci. Na Letnou se jednou vrátím, slibuje Lustrinelli",
+      "url": "https://www.idnes.cz/fotbal/zahranici/mauro-lustrinelli-rozhovor-thun.A260506_111154_fot_zahranici_tit",
+      "dt": "2026-05-08T10:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "asterix",
+        "jednou",
+        "letnou",
+        "lustrinelli",
+        "slibuje",
+        "spartou",
+        "srdci",
+        "vrátím",
+        "švýcarský"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -765,33 +791,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Chce někdo baráž? Opavský kouč o bláznivé 2. lize: Tento ročník bude památný",
-      "url": "https://www.idnes.cz/fotbal/domaci-souteze/treneri-usti-a-opava-o-boji-o-baraz-ve-druhe-fotbalove-lize.A260507_113000_fot_dsouteze_pbi",
-      "dt": "2026-05-07T12:30:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "baráž",
-        "bláznivé",
-        "chce",
-        "kouč",
-        "lize",
-        "někdo",
-        "opavský",
-        "památný",
-        "ročník",
-        "tento"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47458,
+      "bytes": 46967,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T09:03:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T10:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 28,
@@ -855,6 +854,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Švýcarský Asterix se Spartou v srdci. Na Letnou se jednou vrátím, slibuje Lustrinelli",
+            "publishedAt": "2026-05-08T10:00:00Z"
+          },
           {
             "title": "Jeden gól Lehmannové stačil. Ocenění hráčky sezony v Leicesteru budí rozpaky",
             "publishedAt": "2026-05-08T09:03:00Z"
@@ -882,10 +885,6 @@
           {
             "title": "Rulík si pochvaloval obrannou práci. Zastal se i chybujícího Klapky: Příště si dá pozor",
             "publishedAt": "2026-05-08T06:00:00Z"
-          },
-          {
-            "title": "Jízda Caroliny pokračuje. Vladař čtyřikrát inkasoval a Philadelphia je blízko vyřazení",
-            "publishedAt": "2026-05-08T05:43:16Z"
           }
         ]
       }

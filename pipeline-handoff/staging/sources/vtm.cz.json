@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-08T09:35:12.534881Z",
+  "ingestedAt": "2026-05-08T10:20:28.298123Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,36 @@
         "smazat",
         "spolkl",
         "stahuje"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Recenze filmu Mortal Kombat II: Brutální, vtipné a překvapivě chytré. Takhle má vypadat poctivá videoherní řežba",
+      "url": "https://avmania.zive.cz/recenze-filmu-mortal-kombat-ii-brutalni-vtipne-a-prekvapive-chytre-takhle-ma-vypadat-poctiva-videoherni-rezba",
+      "dt": "2026-05-08T09:15:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "brutální",
+        "chytré",
+        "filmu",
+        "kombat",
+        "mortal",
+        "poctivá",
+        "překvapivě",
+        "recenze",
+        "takhle",
+        "videoherní",
+        "vtipné",
+        "vypadat",
+        "řežba"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -927,36 +957,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Micro RGB místo QLED: Samsung ukazuje novou generaci prémiových LCD televizorů, známe ceny",
-      "url": "https://avmania.zive.cz/micro-rgb-misto-qled-samsung-ukazuje-novou-generaci-premiovych-lcd-televizoru",
-      "dt": "2026-05-05T12:00:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "ceny",
-        "generaci",
-        "lcd",
-        "micro",
-        "místo",
-        "novou",
-        "prémiových",
-        "qled",
-        "rgb",
-        "samsung",
-        "televizorů",
-        "ukazuje",
-        "známe"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -967,7 +967,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22899,
+      "bytes": 23006,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1004,7 +1004,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-08T08:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T09:15:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1022,6 +1022,10 @@
           {
             "title": "Chrome na počítačích spolkl 4 GB místa navíc, Google potají stahuje AI model. Jak jej smazat?",
             "publishedAt": "2026-05-07T14:45:00Z"
+          },
+          {
+            "title": "Recenze filmu Mortal Kombat II: Brutální, vtipné a překvapivě chytré. Takhle má vypadat poctivá videoherní řežba",
+            "publishedAt": "2026-05-08T09:15:00Z"
           },
           {
             "title": "Postavte si Lego verzi konzole, na které začínal ježek Sonic. Na poličce ji můžete mít už v červnu",
@@ -1046,10 +1050,6 @@
           {
             "title": "Jak dobře vybrat reproduktory k počítači. Kdy sáhnout po 5.1 zvuku, studiových monitorech nebo soundbaru",
             "publishedAt": "2026-05-07T16:45:00Z"
-          },
-          {
-            "title": "35 vězeňských filmů, které by vám neměly uniknout. Většinu si můžete pustit online",
-            "publishedAt": "2026-05-07T15:45:00Z"
           }
         ]
       }

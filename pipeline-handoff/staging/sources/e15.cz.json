@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-08T09:35:12.534881Z",
+  "ingestedAt": "2026-05-08T10:20:28.298123Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Amazon jde po byznysu UPS a FedEx. Otevře svou logistiku jiným firmám",
+      "url": "https://www.e15.cz/byznys/doprava-a-logistika/amazon-jde-po-byznysu-ups-a-fedex-otevre-svou-logistiku-jinym-firmam-1432634",
+      "dt": "2026-05-08T09:30:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "amazon",
+        "byznysu",
+        "fedex",
+        "firmám",
+        "jde",
+        "jiným",
+        "logistiku",
+        "otevře",
+        "svou",
+        "ups"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1067,32 +1094,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Důchod neznamená klid od finančáku. Kdy musíte státu nečekaně odevzdat peníze?",
-      "url": "https://www.e15.cz/finexpert/duchody/duchod-neznamena-klid-od-financaku-kdy-musite-statu-necekane-odevzdat-penize-1432576",
-      "dt": "2026-05-06T08:30:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "důchod",
-        "finančáku",
-        "klid",
-        "musíte",
-        "neznamená",
-        "nečekaně",
-        "odevzdat",
-        "peníze",
-        "státu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1103,7 +1104,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 53601,
+      "bytes": 53460,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1140,11 +1141,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-08T08:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T09:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 39,
-          "zpravy": 1
+          "zpravy": 2,
+          "finance": 38
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1156,6 +1157,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Amazon jde po byznysu UPS a FedEx. Otevře svou logistiku jiným firmám",
+            "publishedAt": "2026-05-08T09:30:00Z"
+          },
           {
             "title": "Hantavirus na výletní lodi dál zaměstnává úřady. Test hospitalizované letušky byl negativní",
             "publishedAt": "2026-05-08T08:55:00Z"
@@ -1183,10 +1188,6 @@
           {
             "title": "Na Wall Street se jim smáli, teď je už nemůžou ignorovat. Drobní investoři ovládli americké burzy",
             "publishedAt": "2026-05-08T04:00:00Z"
-          },
-          {
-            "title": "Předlužený ráj? Singapur i Maledivy jedou na sekyru. Žebříček 10 zemí, které se řítí do pasti",
-            "publishedAt": "2026-05-08T03:30:00Z"
           }
         ]
       }

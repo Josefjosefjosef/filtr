@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-08T09:35:12.534881Z",
+  "ingestedAt": "2026-05-08T10:20:28.298123Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kinobox Daily: Příběh legendárního Angličana, který zachránil stovky českých dětí před nacisty",
+      "url": "https://www.kinobox.cz/clanky/daily/53564-kinobox-daily-pribeh-anglicana-ktery-zachranil-stovky-ceskych-deti-pred-nacisty",
+      "dt": "2026-05-08T10:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "angličana",
+        "daily",
+        "dětí",
+        "kinobox",
+        "legendárního",
+        "nacisty",
+        "příběh",
+        "stovky",
+        "zachránil",
+        "českých"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -522,34 +549,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Ještě lepší než Michael? 10 životopisných filmů, které by měl vidět každý hudební fanoušek",
-      "url": "https://www.kinobox.cz/clanky/filmy/53257-lepsi-nez-michael-10-zivotopisnych-filmu-ktere-by-mel-videt-kazdy-hudebni-fanousek",
-      "dt": "2026-05-05T15:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "fanoušek",
-        "filmů",
-        "hudební",
-        "ještě",
-        "každý",
-        "lepší",
-        "michael",
-        "měl",
-        "než",
-        "vidět",
-        "životopisných"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -560,7 +559,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28504,
+      "bytes": 28165,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -597,7 +596,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-08T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T10:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 19,
@@ -613,6 +612,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinobox Daily: Příběh legendárního Angličana, který zachránil stovky českých dětí před nacisty",
+            "publishedAt": "2026-05-08T10:00:00Z"
+          },
           {
             "title": "David Attenborough dál zprostředkovává kontakt se ztraceným světem. Televizní legenda slaví 100. narozeniny",
             "publishedAt": "2026-05-08T09:00:00Z"
@@ -640,10 +643,6 @@
           {
             "title": "Dostane Polabí vážnou konkurenci? Úspěšná autorka odhalila chystaný hit Novy",
             "publishedAt": "2026-05-07T11:00:00Z"
-          },
-          {
-            "title": "Kinobox Daily: Film, který z Edwarda Nortona během jediné noci udělal hvězdu",
-            "publishedAt": "2026-05-07T10:00:00Z"
           }
         ]
       }

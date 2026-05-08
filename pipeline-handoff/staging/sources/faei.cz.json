@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-08T09:35:12.534881Z",
+  "ingestedAt": "2026-05-08T10:20:28.298123Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Kde máme tu konstruktivní opozici? Zatím nevymyslela prakticky nic",
+      "url": "https://profitonline.cz/kde-mame-tu-konstruktivni-opozici-zatim-nevymyslela-prakticky-nic/",
+      "dt": "2026-05-08T10:00:56Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "konstruktivní",
+        "máme",
+        "nevymyslela",
+        "nic",
+        "opozici",
+        "prakticky",
+        "zatím"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -258,30 +282,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kdo nespoří, není Čech. Rodiny se opět obávají zdražování energií",
-      "url": "https://profitonline.cz/kdo-nespori-neni-cech-rodiny-se-opet-obavaji-zdrazovani-energii/",
-      "dt": "2026-05-06T10:00:27Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "energií",
-        "nespoří",
-        "obávají",
-        "opět",
-        "rodiny",
-        "zdražování",
-        "čech"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -292,7 +292,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18623,
+      "bytes": 18585,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -329,7 +329,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-08T08:00:56Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T10:00:56Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -344,6 +344,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kde máme tu konstruktivní opozici? Zatím nevymyslela prakticky nic",
+            "publishedAt": "2026-05-08T10:00:56Z"
+          },
           {
             "title": "Nejistota prospěla dolaru",
             "publishedAt": "2026-05-08T08:00:56Z"
@@ -371,10 +375,6 @@
           {
             "title": "Zbrojařská CSG pod palbou. Chytili se investoři na až moc dokonalý příběh?",
             "publishedAt": "2026-05-07T09:00:37Z"
-          },
-          {
-            "title": "Ivo Šíf šéfem právního oddělení Provident Financial",
-            "publishedAt": "2026-05-07T06:00:29Z"
           }
         ]
       }

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-08T09:35:12.534881Z",
+  "ingestedAt": "2026-05-08T10:20:28.298123Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Lupiči přepadli banku na západě Německa. Drží rukojmí",
+      "url": "https://www.denik.cz/staty-eu/nemecko-prepadeni-banky-rukojmi.html",
+      "dt": "2026-05-08T09:43:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "banku",
+        "drží",
+        "lupiči",
+        "německa",
+        "přepadli",
+        "rukojmí",
+        "západě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -620,32 +644,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nečekaný objev v pražském obchodě: Krabička plná peněz čekala mezi pečivem",
-      "url": "https://prazsky.denik.cz/zpravy_region/krabicka-plna-penez-cekala-mezi-pecivem-necekany-objev-v-prazskem-obchode-202605.html",
-      "dt": "2026-05-07T13:21:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "krabička",
-        "nečekaný",
-        "obchodě",
-        "objev",
-        "peněz",
-        "pečivem",
-        "plná",
-        "pražském",
-        "čekala"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -656,7 +654,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30901,
+      "bytes": 30624,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -693,7 +691,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-08T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T09:43:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 20,
@@ -710,6 +708,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lupiči přepadli banku na západě Německa. Drží rukojmí",
+            "publishedAt": "2026-05-08T09:43:00Z"
+          },
           {
             "title": "Pozadí vraždící chamtivosti: vila v Praze, auto v Maďarsku. A těla v Želivce",
             "publishedAt": "2026-05-08T09:00:00Z"
@@ -736,10 +738,6 @@
           },
           {
             "title": "Nemohl v Řecku najít volné lehátko. Turista vysoudil odškodnění za dovolenou",
-            "publishedAt": "2026-05-08T08:00:00Z"
-          },
-          {
-            "title": "Myslela si, že je to láska. Na Oneplay míří oceňovaná série Monyová",
             "publishedAt": "2026-05-08T08:00:00Z"
           }
         ]
