@@ -129,6 +129,54 @@ const CASES = [
     }
   },
   {
+    id: "NTG_V2_ZAPIS_PETR_HLAVNE",
+    cluster: "calendar_note_tail_gap_v2",
+    input: "Zapis mi zitra v 15:00 schuzku s Petrem a hlavne nezapomen smlouvu",
+    expectedIntent: "calendar.create",
+    expect: {
+      processingState: "READY_TO_SAVE",
+      title: "Schůzka s Petrem",
+      note: "Nezapomenout smlouvu",
+      location: ""
+    }
+  },
+  {
+    id: "NTG_V2_ZAPIS_PETR_POZN",
+    cluster: "calendar_note_tail_gap_v2",
+    input: "Zapis mi zitra v 15:00 schuzku s Petrem a poznamenej ze mam vzit smlouvu",
+    expectedIntent: "calendar.create",
+    expect: {
+      processingState: "READY_TO_SAVE",
+      title: "Schůzka s Petrem",
+      note: "Mam vzít smlouvu",
+      location: ""
+    }
+  },
+  {
+    id: "NTG_V2_ZAPIS_MARTIN_HLAVNE",
+    cluster: "calendar_note_tail_gap_v2",
+    input: "Zapis mi zitra v 15:00 schuzku s Martinem a hlavne nezapomen prezentaci",
+    expectedIntent: "calendar.create",
+    expect: {
+      processingState: "READY_TO_SAVE",
+      title: "Schůzka s Martinem",
+      note: "Nezapomenout prezentaci",
+      location: ""
+    }
+  },
+  {
+    id: "NTG_V2_ZAPIS_JANA_POZN",
+    cluster: "calendar_note_tail_gap_v2",
+    input: "Zapis mi zitra v 15:00 schuzku s Janou a poznamenej ze mam poslat podklady",
+    expectedIntent: "calendar.create",
+    expect: {
+      processingState: "READY_TO_SAVE",
+      title: "Schůzka s Janou",
+      note: "Mam poslat podklady",
+      location: ""
+    }
+  },
+  {
     id: "NEG_NEVER_SAVE_CAL",
     cluster: "negative_no_write_guards",
     input: "Nikdy mi neukládej do kalendáře soukromé věci",
