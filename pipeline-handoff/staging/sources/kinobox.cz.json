@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-08T08:50:17.025468Z",
+  "ingestedAt": "2026-05-08T09:35:12.534881Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "David Attenborough dál zprostředkovává kontakt se ztraceným světem. Televizní legenda slaví 100. narozeniny",
+      "url": "https://www.kinobox.cz/clanky/tema/53560-david-attenborough-dal-zprostredkovava-kontakt-se-ztracenym-svetem-televizni-legenda-slavi-100-narozeniny",
+      "dt": "2026-05-08T09:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "100",
+        "attenborough",
+        "david",
+        "kontakt",
+        "legenda",
+        "narozeniny",
+        "slaví",
+        "světem",
+        "televizní",
+        "zprostředkovává",
+        "ztraceným"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -522,32 +550,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "S Bondem se to komplikuje. Studio začíná být otrávené, má k tomu dobrý důvod",
-      "url": "https://www.kinobox.cz/clanky/filmy/53397-s-bondem-se-to-komplikuje-studio-udajne-zacina-byt-otravene-a-ma-k-tomu-dobry-duvod",
-      "dt": "2026-05-05T14:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "bondem",
-        "být",
-        "dobrý",
-        "důvod",
-        "komplikuje",
-        "otrávené",
-        "studio",
-        "tomu",
-        "začíná"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -558,7 +560,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28032,
+      "bytes": 28504,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -595,7 +597,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-08T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T09:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 19,
@@ -611,6 +613,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "David Attenborough dál zprostředkovává kontakt se ztraceným světem. Televizní legenda slaví 100. narozeniny",
+            "publishedAt": "2026-05-08T09:00:00Z"
+          },
           {
             "title": "Pravá blondýnka je zpátky. Nová verze se vrátí k počátkům milované postavy",
             "publishedAt": "2026-05-08T07:00:00Z"
@@ -638,10 +644,6 @@
           {
             "title": "Kinobox Daily: Film, který z Edwarda Nortona během jediné noci udělal hvězdu",
             "publishedAt": "2026-05-07T10:00:00Z"
-          },
-          {
-            "title": "Konečně se dočkáme? Pokračování nejzábavnější akční sci-fi století s Tomem Cruisem se blíží",
-            "publishedAt": "2026-05-07T09:00:00Z"
           }
         ]
       }

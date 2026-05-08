@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-08T08:50:17.025468Z",
+  "ingestedAt": "2026-05-08T09:35:12.534881Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Dlužena von Bankrot: Kupka to za svou kritiku schytává",
+      "url": "https://www.epenize.eu/dluzena-von-bankrot-kupka-to-za-svou-kritiku-schytava/",
+      "dt": "2026-05-08T08:12:13Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "bankrot",
+        "dlužena",
+        "kritiku",
+        "kupka",
+        "schytává",
+        "svou",
+        "von"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -482,31 +506,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "ODS prý vymlčela Klause. Kupka udělal ze Zahradila kašpárka",
-      "url": "https://www.epenize.eu/ods-pry-vymlcela-klause-kupka-udelal-ze-zahradila-kasparka/",
-      "dt": "2026-04-28T06:26:37Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "kašpárka",
-        "klause",
-        "kupka",
-        "ods",
-        "prý",
-        "udělal",
-        "vymlčela",
-        "zahradila"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -517,7 +516,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 107803,
+      "bytes": 108769,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -554,7 +553,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-07T23:00:56Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T08:12:13Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 19,
@@ -570,6 +569,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dlužena von Bankrot: Kupka to za svou kritiku schytává",
+            "publishedAt": "2026-05-08T08:12:13Z"
+          },
           {
             "title": "59 % Američanů pochybuje o Trumpově mentální bystrosti. Trump odpovídá: zvládl jsem tři kognitivní testy",
             "publishedAt": "2026-05-07T23:00:56Z"
@@ -597,10 +600,6 @@
           {
             "title": "Trumpův seznam: Itálie s ničím nepomohla, Španělsko je hrozné, Británie zbabělá a Francie blokuje přelety",
             "publishedAt": "2026-05-04T23:00:41Z"
-          },
-          {
-            "title": "Komentář: Tak jsem asi méněcenný. Macinka mi jde na nervy",
-            "publishedAt": "2026-05-04T07:00:46Z"
           }
         ]
       }

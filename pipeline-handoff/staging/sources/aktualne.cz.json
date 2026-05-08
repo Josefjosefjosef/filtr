@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-08T08:50:17.025468Z",
+  "ingestedAt": "2026-05-08T09:35:12.534881Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Babiš se chová jako malé dítě.“ Opozice tepe premiéra po schůzce na Hradě",
+      "url": "https://zpravy.aktualne.cz/domaci/babis-se-chova-jako-male-dite-opozice-tepe-premiera-po-schuzce-na-hrade/r~aaa297eadc8986168fd63f40bb0799f4/",
+      "dt": "2026-05-08T08:47:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "babiš",
+        "chová",
+        "dítě",
+        "hradě",
+        "jako",
+        "malé",
+        "opozice",
+        "premiéra",
+        "schůzce",
+        "tepe"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -508,32 +535,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Z pěti Češek uspěla jen Nosková. Siniaková nevyužila devět mečbolů",
-      "url": "https://sport.aktualne.cz/devet-nevyuzitych-mecbolu-siniakova-nezvladla-triapulhodinovou-bitvu/r~aaa2987469c7d7d867bb8ebf43e2c452/",
-      "dt": "2026-05-07T17:18:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "devět",
-        "jen",
-        "mečbolů",
-        "nevyužila",
-        "nosková",
-        "pěti",
-        "siniaková",
-        "uspěla",
-        "češek"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -544,7 +545,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21862,
+      "bytes": 21865,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -581,11 +582,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-08T08:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T08:47:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 12,
-          "sport": 5,
+          "zpravy": 13,
+          "sport": 4,
           "other": 2,
           "finance": 1
         },
@@ -599,6 +600,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Babiš se chová jako malé dítě.“ Opozice tepe premiéra po schůzce na Hradě",
+            "publishedAt": "2026-05-08T08:47:00Z"
+          },
           {
             "title": "Pavel s Babišem se na summitu NATO neshodli. Premiér po jednání odešel zadním vchodem",
             "publishedAt": "2026-05-08T07:34:00Z"
@@ -626,10 +631,6 @@
           {
             "title": "Kvůli ruským útokům hoří 2400 hektarů lesa na severu Ukrajiny",
             "publishedAt": "2026-01-21T06:45:00Z"
-          },
-          {
-            "title": "Z Dubaje do džungle. Češka na Bali vybudovala farmu, o které snila od dětství",
-            "publishedAt": "2026-05-08T06:15:00Z"
           }
         ]
       }
