@@ -36947,6 +36947,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     iuSilverFixCalendarTitleCommandCollapseV1(draft, parseRawFull);
     iuSilverSplitCalendarTitleLocationNoteTailV1(draft, parseRawFull);
+    iuSilverCleanCalendarTitleTemporalLeakV1(draft);
 
     let processingState = "NEEDS_CLARIFICATION";
     if (draft.meta.date === "certain" && draft.meta.time === "certain" && draft.meta.title === "certain" && String(draft.title || "").trim()) {
@@ -42262,6 +42263,76 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
   }
 
+  /**
+   * P0: úzký post-routing helper jen pro calendar.create draft.title — odstraní leading temporal/command
+   * zbytek (týden, na příští týden, dej týden, v úterý, …) před bezpečnou hlavou schůzka|porada,
+   * pokud už má draft jisté datum nebo čas. Nemění nic bez této hlavy ani při neznámém prefixu.
+   */
+  function iuSilverCleanCalendarTitleTemporalLeakV1(draft) {
+    if (!draft || draft.targetContainer !== "calendar") return;
+    const title0 = String(draft.title || "").trim();
+    if (!title0 || draft.meta.title !== "certain") return;
+    const hasDate = draft.meta.date === "certain";
+    const hasTime = draft.meta.time === "certain";
+    if (!hasDate && !hasTime) return;
+
+    const tNorm = iuSilverNormalizeWs(title0);
+    const headSch = tNorm.match(/\b(schůzk|schuzk)[a-záéěíóúůýščřďťňA-ZÁÉĚÍÓÚŮÝŠČŘĎŤŇ]*\b/i);
+    const headPor = tNorm.match(/\bporad[uay]\b/i);
+    const cand = [];
+    if (headSch) cand.push({ idx: headSch.index });
+    if (headPor) cand.push({ idx: headPor.index });
+    cand.sort(function (a, b) {
+      return a.idx - b.idx;
+    });
+    const first = cand[0];
+    if (!first || first.idx < 0) return;
+    if (first.idx === 0) return;
+
+    const suffix = tNorm.slice(first.idx).trim();
+    let work = tNorm.slice(0, first.idx).trim();
+    const wsEnd = "(?:\\s+|$)";
+    for (let iter = 0; iter < 48; iter++) {
+      const prev = work;
+      work = work.replace(
+        new RegExp("^(ho[dď]|hod)\\s+mi\\s+(?:\\S+\\s+){0,8}?(?:tyden|týden)" + wsEnd, "i"),
+        ""
+      );
+      work = work.replace(
+        new RegExp("^dej\\s+(?:na\\s+)?(?:pristi\\s+|příští\\s+)?(?:tyden|týden)" + wsEnd, "i"),
+        ""
+      );
+      work = work.replace(new RegExp("^dej\\s+(?:tyden|týden)" + wsEnd, "i"), "");
+      work = work.replace(
+        new RegExp("^(?:na\\s+)?(?:pristi\\s+|příští\\s+)?(?:tyden|týden)" + wsEnd, "i"),
+        ""
+      );
+      work = work.replace(new RegExp("^(?:tyden|týden)" + wsEnd, "i"), "");
+      if (hasDate) {
+        work = work.replace(
+          new RegExp(
+            "^v\\s+(?:úterý|utery|útery|pondělí|pondeli|ponděl|pátek|patek)" + wsEnd,
+            "i"
+          ),
+          ""
+        );
+      }
+      work = iuSilverNormalizeWs(work);
+      if (work === prev) break;
+    }
+    if (work) return;
+
+    let out = suffix;
+    out = iuSilverNormalizeEventTypeTitle(out);
+    out = iuSilverSchuzkaSPersonTitle(out);
+    out = iuSilverNormalizeWs(out);
+    out = normalizeSilverTitleV1(out, { kind: "calendar" }).slice(0, 120);
+    out = iuSilverNormalizeWs(out);
+    if (!iuSilverValidateFinalTitle(out)) return;
+    draft.title = out;
+    draft.meta.title = "certain";
+  }
+
   function iuSilverSanitizeDraftTitle(draft) {
     const rawT = String(draft.title || "").trim();
     if (!rawT) {
@@ -42991,6 +43062,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       d.time = th.time;
       d.meta.time = "certain";
       iuSilverSanitizeDraftTitle(d);
+      iuSilverCleanCalendarTitleTemporalLeakV1(d);
       const ps = processingStateFromDraft(d);
       const ap = buildAssistantParts(d, ps);
       return {
@@ -43019,6 +43091,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       d.title = titleIn;
       d.meta.title = "certain";
       iuSilverSanitizeDraftTitle(d);
+      iuSilverCleanCalendarTitleTemporalLeakV1(d);
       const ps = processingStateFromDraft(d);
       const ap = buildAssistantParts(d, ps);
       return {
@@ -43053,6 +43126,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         const d = cloneDraft(p);
         iuSilverApplyExtractedEntitiesToCalendarDraft(d, { locationNormalized: ent.locationNormalized });
         iuSilverSanitizeDraftTitle(d);
+        iuSilverCleanCalendarTitleTemporalLeakV1(d);
         const ps = processingStateFromDraft(d);
         const ap = buildAssistantParts(d, ps);
         const out = {
