@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-08T14:29:48.544390Z",
+  "ingestedAt": "2026-05-08T15:09:54.618215Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hromadný dojezd na úvod Gira ovlivnil pád, životní vítězství slaví Magnier",
+      "url": "https://www.idnes.cz/sport/cyklistika/giro-2026-1-etapa-online-souhrn-vysledky.A260507_151211_cyklistika_ipet",
+      "dt": "2026-05-08T15:03:37Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dojezd",
+        "gira",
+        "hromadný",
+        "magnier",
+        "ovlivnil",
+        "pád",
+        "slaví",
+        "vítězství",
+        "úvod",
+        "životní"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Giro d’Italia 2026: program, přehled a výsledky etap, favorité, Češi na startu",
+      "url": "https://www.idnes.cz/sport/cyklistika/giro-d-italia-prehled-souhrn-trasy-vysledky.A260423_130030_cyklistika_ipet",
+      "dt": "2026-05-08T14:59:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "2026",
+        "etap",
+        "favorité",
+        "giro",
+        "italia",
+        "program",
+        "přehled",
+        "startu",
+        "výsledky",
+        "češi"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -47,31 +101,6 @@
         "ultramaratonské",
         "výhře",
         "všechny"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Giro ONLINE: Peloton se blíží do Burgasu a chystá hromadný dojezd",
-      "url": "https://www.idnes.cz/sport/cyklistika/giro-2026-1-etapa-online-souhrn-vysledky.A260507_151211_cyklistika_ipet",
-      "dt": "2026-05-08T13:42:28Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "blíží",
-        "burgasu",
-        "chystá",
-        "dojezd",
-        "giro",
-        "hromadný",
-        "online",
-        "peloton"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -761,32 +790,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Úvodní etapu Portugalské rallye ovládl Solberg, vede o tři sekundy",
-      "url": "https://www.idnes.cz/sport/motorsport/portugalska-rallye-prvni-etapa-solberg.A260507_200428_motorsport_kazdt",
-      "dt": "2026-05-07T18:07:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "etapu",
-        "ovládl",
-        "portugalské",
-        "rallye",
-        "sekundy",
-        "solberg",
-        "tři",
-        "vede",
-        "úvodní"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -797,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47131,
+      "bytes": 47492,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -834,7 +837,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T14:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T15:03:37Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -851,16 +854,20 @@
         },
         "sample_titles": [
           {
+            "title": "Hromadný dojezd na úvod Gira ovlivnil pád, životní vítězství slaví Magnier",
+            "publishedAt": "2026-05-08T15:03:37Z"
+          },
+          {
+            "title": "Giro d’Italia 2026: program, přehled a výsledky etap, favorité, Češi na startu",
+            "publishedAt": "2026-05-08T14:59:00Z"
+          },
+          {
             "title": "Puškař Nepejchal je na ME v třípolohové malorážce čtvrtý, český tým slaví zlato",
             "publishedAt": "2026-05-08T14:10:00Z"
           },
           {
             "title": "Porazila všechny muže. K ultramaratonské výhře jí pomohla kaše a 19 minut spánku",
             "publishedAt": "2026-05-08T13:53:00Z"
-          },
-          {
-            "title": "Giro ONLINE: Peloton se blíží do Burgasu a chystá hromadný dojezd",
-            "publishedAt": "2026-05-08T13:42:28Z"
           },
           {
             "title": "Dvě královny: Hrochová si doběhla pro 22. český titul, Sasínek Mäki pro dvacátý",
@@ -877,10 +884,6 @@
           {
             "title": "Nejlepší hráčky světa do akce! WNBA je tu, začne s hvězdami z USK a zřejmě i Češkami",
             "publishedAt": "2026-05-08T12:05:00Z"
-          },
-          {
-            "title": "Bezradní soupeři, legendy na dosah. Co stojí za perfektní bilancí Caroliny?",
-            "publishedAt": "2026-05-08T11:14:00Z"
           }
         ]
       }

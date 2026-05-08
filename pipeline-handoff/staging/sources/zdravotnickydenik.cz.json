@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-08T14:29:48.544390Z",
+  "ingestedAt": "2026-05-08T15:09:54.618215Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Paliativní pavilon na jihu Čech a operace bez řezu v Praze. Souhrn novinek z českého zdravotnictví",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/paliativni-pavilon-operace-bez-rezu-souhrn-zdravotnictvi/",
+      "dt": "2026-05-08T14:30:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "jihu",
+        "novinek",
+        "operace",
+        "paliativní",
+        "pavilon",
+        "praze",
+        "souhrn",
+        "zdravotnictví",
+        "čech",
+        "českého",
+        "řezu"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -241,31 +269,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Revoluce v onkologické prevenci: 3 screeningové programy se dočkají zásadních změn",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/onkologicka-prevenci-3-screeningove-programy-zmeny/",
-      "dt": "2026-05-07T09:15:16Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "dočkají",
-        "onkologické",
-        "prevenci",
-        "programy",
-        "revoluce",
-        "screeningové",
-        "změn",
-        "zásadních"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -276,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 109946,
+      "bytes": 126147,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-08T11:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T14:30:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -328,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Paliativní pavilon na jihu Čech a operace bez řezu v Praze. Souhrn novinek z českého zdravotnictví",
+            "publishedAt": "2026-05-08T14:30:00Z"
+          },
           {
             "title": "Virus z klíštěte udeří během minut. Podívejte se, kde hrozí největší riziko",
             "publishedAt": "2026-05-08T11:30:00Z"
@@ -355,10 +362,6 @@
           {
             "title": "Pylová sezóna bez kýchání? 8 tipů, které vám konečně pomohou zvládnout alergie",
             "publishedAt": "2026-05-07T12:11:51Z"
-          },
-          {
-            "title": "Obviněný exšéf příbramské nemocnice přišel o další funkci. V kauze má jít o 280 milionů",
-            "publishedAt": "2026-05-07T10:26:14Z"
           }
         ]
       }
