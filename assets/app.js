@@ -103,6 +103,14 @@ try {
   if (typeof window !== "undefined") window.iuSilentSwReloadFromWorker = iuSilentSwReloadFromWorker;
 } catch (_) {}
 
+/** Shared CZ diacritic-insensitive fold: lowercase + NFD combining-mark strip. Module-scope for overlay IIFEs + Silver P0 foldCs wrappers. */
+function iuFoldCsShared(value) {
+  return String(value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
 /* P0: reload always returns to top (like seznam.cz) */
 try {
   if (typeof history !== "undefined" && "scrollRestoration" in history) history.scrollRestoration = "manual";
@@ -6268,8 +6276,7 @@ function buildVideoAsArticleCard(it) {
     let t = iuUserAddressCollapseSpaces(String(raw || ""));
     if (!t) return "";
     t = t.replace(/^[\s.,!?;:]+|[\s.,!?;:]+$/g, "");
-    t = t.toLowerCase();
-    t = t.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    t = iuFoldCsShared(t);
     return iuUserAddressCollapseSpaces(t.replace(/\s+/g, " "));
   }
 
@@ -30662,10 +30669,7 @@ function buildVideoAsArticleCard(it) {
   function uid(prefix){ return prefix + "_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
   function esc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, (m)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m])); }
   function foldCs(s){
-    return String(s || "")
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
+    return iuFoldCsShared(s);
   }
   function fmtDate(ts){
     try{
@@ -31493,10 +31497,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   function foldCs(s){
-    return String(s || "")
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
+    return iuFoldCsShared(s);
   }
 
   function matchesSearch(t, q){
@@ -34218,6 +34219,17 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 (function () {
   "use strict";
 
+  /**
+   * Same body as module-level iuFoldCsShared (assets/app.js top).
+   * scripts/silver-field-cleanup-replay-suite.cjs vm.runInContext loads only this IIFE slice — must be self-contained.
+   */
+  function iuFoldCsShared(value) {
+    return String(value || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  }
+
   const PENDING_KEY = "iuSilver.pendingFirstMessage.v1";
   const SILVER_HOME_INPUT_MAX = 450;
   /** Musí odpovídat scripts/test_salutation_intent.js (grep guard). */
@@ -34262,10 +34274,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return day + ". " + mo + ". " + y;
   }
   function foldCs(s) {
-    return String(s || "")
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
+    return iuFoldCsShared(s);
   }
 
   /** Inflected weekday forms (v/ve/na + nominative/locative/etc.) — "ve středu" MUST match. */
