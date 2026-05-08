@@ -37219,6 +37219,35 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P0 úzký guard: narozeniny / popřát + datum nebo „připomeň mi“, bez výslovného zápisu do kalendáře
+   * → tasks.create (ne WRITE_SCHED_PROBE / storage disambiguation).
+   * foldCs-safe; žádný širší reminder split.
+   */
+  function iuSilverIsBirthdayReminderIntentV1(rawInput) {
+    const raw = String(rawInput || "").trim();
+    if (!raw) return false;
+    const f = foldCs(raw);
+    if (
+      /\bdo\s+kalendar\w*\b/.test(f) ||
+      /\bzapis\w*\s+mi\s+do\s+kalendar\w*\b/.test(f) ||
+      /\bzapis\w*\s+do\s+kalendar\w*\b/.test(f) ||
+      /\bdej\s+mi\s+do\s+kalendar\w*\b/.test(f) ||
+      /\bdej\s+do\s+kalendar\w*\b/.test(f)
+    ) {
+      return false;
+    }
+    const hasBirthdayAnchor =
+      /\bnarozeniny\b/.test(f) || /\bnarozeninam\b/.test(f) || /\bpoprat\b/.test(f);
+    if (!hasBirthdayAnchor) return false;
+    const hasDmDate =
+      /\b\d{1,2}\s*\.\s*\d{1,2}\s*\./.test(f) ||
+      /\b\d{1,2}\s*\.\s*\d{1,2}\.(?!\d)/.test(f) ||
+      /\b\d{1,2}\s*\.\s*\d{1,2}(?=\s|[,;!?]|$)/i.test(f);
+    const hasDateOrRemind = /\bpripomen\s+mi\b/.test(f) || hasDmDate;
+    return !!hasDateOrRemind;
+  }
+
+  /**
    * Silver Brain v1 — central intent routing (calendar / tasks / notes / fallback).
    * Pořadí: explicitní zápis úkolu (P0.5) → explicitní poznámka → legacy explicitní cíl poznámky → úkoly (sloveso) → kalendář → disambiguace → nejasné.
    */
@@ -37317,6 +37346,25 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         reason: "explicit_notes_target_unparsed",
         kind: "FUTURE_NOTES_CLARIFY",
         calendarFallbackWanted: false
+      };
+    }
+
+    if (iuSilverIsBirthdayReminderIntentV1(raw)) {
+      const calOverBirth = iuSilverCalendarEventOverridesTask(raw, folded);
+      return {
+        intent: "task.create",
+        confidence: 0.97,
+        route: "tasks",
+        reason: "birthday_reminder_intent_guard_v1",
+        kind: "TASK_TRY",
+        taskRaw: raw,
+        taskOpts: {
+          skipTargetStrip: false,
+          calendarOverridesTask: !!calOverBirth,
+          fromExplicitTarget: true,
+          birthdayReminderIntentGuardV1: true
+        },
+        calendarFallbackWanted: calWanted
       };
     }
 
@@ -37842,9 +37890,32 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const titleForDraft0 = iuSilverCleanTaskCreateTitleV1(titleNorm, titleNorm);
     const titleForDraft1 = iuSilverCleanTaskReminderTitleV1(titleForDraft0, titleForDraft0);
     const titleForDraft2 = iuSilverCleanTaskCreateTitleV2(titleForDraft1, titleForDraft1, { taskDueYmd: dueYmd || "" });
-    const titleForDraft = iuSilverCleanCrossIntentTaskTitleV1(titleForDraft2, String(rawIn || "").trim(), {
+    let titleForDraft = iuSilverCleanCrossIntentTaskTitleV1(titleForDraft2, String(rawIn || "").trim(), {
       taskDueYmd: dueYmd || ""
     });
+
+    if (opts.birthdayReminderIntentGuardV1) {
+      const foldT = foldCs(String(titleForDraft || ""));
+      if (/\bnarozeniny\b/.test(foldT) && !/\bpoprat\b/.test(foldT)) {
+        const rawStr = String(rawIn || "");
+        const mName = rawStr.match(/\bm[aá]\s+([^\s,;.!?…]+)\s+narozeniny\b/i);
+        if (mName && mName[1]) {
+          const nameRaw = String(mName[1] || "").trim();
+          if (nameRaw.length >= 1) {
+            const cap =
+              nameRaw.charAt(0).toLocaleUpperCase("cs-CZ") + nameRaw.slice(1).toLocaleLowerCase("cs-CZ");
+            let canon = "Popřát " + cap + " k narozeninám";
+            canon = normalizeSilverTitleV1(canon, { kind: "task" }).slice(0, 200);
+            let tCanon = iuSilverCleanTaskCreateTitleV1(canon, canon);
+            tCanon = iuSilverCleanTaskReminderTitleV1(tCanon, tCanon);
+            tCanon = iuSilverCleanTaskCreateTitleV2(tCanon, tCanon, { taskDueYmd: dueYmd || "" });
+            titleForDraft = iuSilverCleanCrossIntentTaskTitleV1(tCanon, rawStr, {
+              taskDueYmd: dueYmd || ""
+            });
+          }
+        }
+      }
+    }
 
     const draft = createEmptyDraft();
     draft.targetContainer = "tasks";
@@ -44658,6 +44729,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     iuSilverBuildAnswerFromSearch: iuSilverBuildAnswerFromSearch,
     hasSilverStorageDisambiguationPayload,
     iuSilverBrainRoute: iuSilverBrainRoute,
+    iuSilverIsBirthdayReminderIntentV1: iuSilverIsBirthdayReminderIntentV1,
     iuSilverExtractEntities: iuSilverExtractEntities,
     iuSilverNormalizeCzechNumberWords: iuSilverNormalizeCzechNumberWords,
     iuSilverNormalizeCzechPlaceWords: iuSilverNormalizeCzechPlaceWords,
