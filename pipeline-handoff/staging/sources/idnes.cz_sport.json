@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-08T15:54:34.045773Z",
+  "ingestedAt": "2026-05-08T16:39:23.474196Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Posily z NHL na MS: Američané s mladými i Tkachukem, Kanada oznámila výběr hvězd",
+      "url": "https://www.idnes.cz/hokej/ms-2026/posily-z-nhl-finsko-kanada-usa-barkov.A260417_090517_nhl_ivt",
+      "dt": "2026-05-08T16:12:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "američané",
+        "hvězd",
+        "kanada",
+        "mladými",
+        "nhl",
+        "oznámila",
+        "posily",
+        "tkachukem",
+        "výběr"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Obří pokuta pro kohouty z Realu. Valverde i Tchouaméni zaplatí půl milionu eur",
+      "url": "https://www.idnes.cz/fotbal/zahranici/real-potrestal-valverdeho-a-tchouameniho-obri-pokutou.A260508_175222_fot_zahranici_ald",
+      "dt": "2026-05-08T15:52:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "eur",
+        "kohouty",
+        "milionu",
+        "obří",
+        "pokuta",
+        "půl",
+        "realu",
+        "tchouaméni",
+        "valverde",
+        "zaplatí"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -738,57 +791,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Švédské hokejové hry 2026: Program, soupisky, výsledky, Češi",
-      "url": "https://www.idnes.cz/hokej/reprezentace/svedske-hokejove-hry-2026.A260504_091832_reprezentace_ald",
-      "dt": "2026-05-07T19:39:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "2026",
-        "hokejové",
-        "hry",
-        "program",
-        "soupisky",
-        "výsledky",
-        "češi",
-        "švédské"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zemřel Kamil Holán. Zkušený český jezdec fatálně havaroval v kvalifikaci",
-      "url": "https://www.idnes.cz/sport/motorsport/kamil-holan-north-west-200-nehoda-kvalifikace-superbiky-severni-irsko.A260507_201549_motorsport_kazdt",
-      "dt": "2026-05-07T18:21:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "fatálně",
-        "havaroval",
-        "holán",
-        "jezdec",
-        "kamil",
-        "kvalifikaci",
-        "zemřel",
-        "zkušený",
-        "český"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47282,
+      "bytes": 47573,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T15:08:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T16:12:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -852,6 +854,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Posily z NHL na MS: Američané s mladými i Tkachukem, Kanada oznámila výběr hvězd",
+            "publishedAt": "2026-05-08T16:12:00Z"
+          },
+          {
+            "title": "Obří pokuta pro kohouty z Realu. Valverde i Tchouaméni zaplatí půl milionu eur",
+            "publishedAt": "2026-05-08T15:52:00Z"
+          },
           {
             "title": "Lehečka prošel v Římě do třetího kola, Muchová prohrála s Potapovovou",
             "publishedAt": "2026-05-08T15:08:00Z"
@@ -875,14 +885,6 @@
           {
             "title": "Dvě královny: Hrochová si doběhla pro 22. český titul, Sasínek Mäki pro dvacátý",
             "publishedAt": "2026-05-08T13:26:00Z"
-          },
-          {
-            "title": "Kladno má čtvrtou posilu, po čtyřech letech se vrací z Litvínova útočník Hlava",
-            "publishedAt": "2026-05-08T12:50:00Z"
-          },
-          {
-            "title": "Chytal v JAR, šílel z vuvuzel, teď Ciupa tvrdí: Na MS jsme proti nim favorit",
-            "publishedAt": "2026-05-08T12:42:00Z"
           }
         ]
       }
