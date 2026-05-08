@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-08T12:26:10.825632Z",
+  "ingestedAt": "2026-05-08T13:09:44.313788Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Mohl být trochu nad věcí, nejsem jeho podřízený.“ Babiš se ohradil vůči Pavlově kritice",
+      "url": "https://zpravy.aktualne.cz/domaci/mohl-byt-trochu-nad-veci-nejsem-jeho-podrizeny-ohradil-se-babis-vuci-pavlove-kritice/r~aaa299a5b4639a368f25447a639237c9/",
+      "dt": "2026-05-08T12:30:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "babiš",
+        "být",
+        "jeho",
+        "kritice",
+        "nejsem",
+        "ohradil",
+        "pavlově",
+        "podřízený",
+        "trochu",
+        "věcí",
+        "vůči"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -519,34 +547,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kouč se zázračnou aurou vypráví: Will je jako Sheldon. Se změnou stylu radil i Dostál",
-      "url": "https://sport.aktualne.cz/hokej/kouc-se-zazracnou-aurou-vypravi-will-je-jako-sheldon-se-zmenou-stylu-radil-i-dostal/r~aaa29daa2ee32b87e0907e7eb185e668/",
-      "dt": "2026-05-08T05:23:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "aurou",
-        "dostál",
-        "jako",
-        "kouč",
-        "radil",
-        "sheldon",
-        "stylu",
-        "vypráví",
-        "will",
-        "změnou",
-        "zázračnou"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -557,7 +557,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22085,
+      "bytes": 22077,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -594,11 +594,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-08T12:04:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T12:30:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 15,
-          "sport": 4,
+          "zpravy": 16,
+          "sport": 3,
           "finance": 1
         },
         "drop_counts": {
@@ -611,6 +611,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Mohl být trochu nad věcí, nejsem jeho podřízený.“ Babiš se ohradil vůči Pavlově kritice",
+            "publishedAt": "2026-05-08T12:30:00Z"
+          },
           {
             "title": "„To si můžeme říkat v kavárně s kamarády.“ Špaček ostře zajel do Babiše za zpoždění, Sklenář je smířlivý",
             "publishedAt": "2026-05-08T12:04:00Z"
@@ -638,10 +642,6 @@
           {
             "title": "Prostě jsem upadl na stůl, hájí Valverde rvačku se spoluhráčem. Řeší i únik informací",
             "publishedAt": "2026-05-08T10:31:00Z"
-          },
-          {
-            "title": "Drama na západě Německa. Lupiči přepadli banku a drží v ní rukojmí",
-            "publishedAt": "2026-05-08T10:18:00Z"
           }
         ]
       }

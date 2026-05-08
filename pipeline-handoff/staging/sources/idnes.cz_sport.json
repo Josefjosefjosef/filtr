@@ -1,28 +1,56 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-08T12:26:10.825632Z",
+  "ingestedAt": "2026-05-08T13:09:44.313788Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Giro ONLINE: První Grand Tour roku začíná. Ovládne premiéru v Bulharsku sprinter?",
+      "title": "Giro ONLINE: První Grand Tour roku začíná. Sprinterské týmy kontrolují duo v úniku",
       "url": "https://www.idnes.cz/sport/cyklistika/giro-2026-1-etapa-online-souhrn-vysledky.A260507_151211_cyklistika_ipet",
-      "dt": "2026-05-08T11:55:00Z",
+      "dt": "2026-05-08T12:40:24Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "bulharsku",
+        "duo",
         "giro",
         "grand",
+        "kontrolují",
         "online",
-        "ovládne",
-        "premiéru",
         "první",
         "roku",
-        "sprinter",
+        "sprinterské",
         "tour",
-        "začíná"
+        "týmy",
+        "začíná",
+        "úniku"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nejlepší hráčky světa do akce! WNBA je tu, začne s hvězdami z USK a zřejmě i Češkami",
+      "url": "https://www.idnes.cz/sport/basket/wnba-2026-preview-sezona-cesky-hamzova-cechova-minnesota.A260508_125813_sport-basket_czo",
+      "dt": "2026-05-08T12:05:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "akce",
+        "hráčky",
+        "hvězdami",
+        "nejlepší",
+        "světa",
+        "usk",
+        "wnba",
+        "začne",
+        "zřejmě",
+        "češkami"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -763,33 +791,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "MOV vzal na milost Bělorusko. Do soutěží se vrátí jeho týmy, a to s vlajkou i hymnou",
-      "url": "https://www.idnes.cz/sport/ostatni/mov-zrusil-omezeni-startu-beloruskych-sportovcu-soutezit-mohou-i-tymy.A260507_161711_sporty_kazdt",
-      "dt": "2026-05-07T14:48:20Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bělorusko",
-        "hymnou",
-        "jeho",
-        "milost",
-        "mov",
-        "soutěží",
-        "týmy",
-        "vlajkou",
-        "vrátí",
-        "vzal"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46743,
+      "bytes": 47000,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T11:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T12:40:24Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 28,
@@ -854,8 +855,12 @@
         },
         "sample_titles": [
           {
-            "title": "Giro ONLINE: První Grand Tour roku začíná. Ovládne premiéru v Bulharsku sprinter?",
-            "publishedAt": "2026-05-08T11:55:00Z"
+            "title": "Giro ONLINE: První Grand Tour roku začíná. Sprinterské týmy kontrolují duo v úniku",
+            "publishedAt": "2026-05-08T12:40:24Z"
+          },
+          {
+            "title": "Nejlepší hráčky světa do akce! WNBA je tu, začne s hvězdami z USK a zřejmě i Češkami",
+            "publishedAt": "2026-05-08T12:05:00Z"
           },
           {
             "title": "Bezradní soupeři, legendy na dosah. Co stojí za perfektní bilancí Caroliny?",
@@ -880,10 +885,6 @@
           {
             "title": "Napětí v kabině Realu. Po hádce se spoluhráčem skončil Valverde v nemocnici",
             "publishedAt": "2026-05-08T08:14:00Z"
-          },
-          {
-            "title": "Lakers odcházeli v emocích, Oklahoma City s úsměvem. Výhru číslo dva má i Detroit",
-            "publishedAt": "2026-05-08T07:29:00Z"
           }
         ]
       }

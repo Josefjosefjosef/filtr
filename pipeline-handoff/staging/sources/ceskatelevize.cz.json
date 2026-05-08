@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-08T12:26:10.825632Z",
+  "ingestedAt": "2026-05-08T13:09:44.313788Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Zpětně zdražovat letenky není možné, uvedla Evropská komise",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/zpetne-zdrazovat-letenky-neni-mozne-uvedla-evropska-komise-373237",
+      "dt": "2026-05-08T12:32:54Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "evropská",
+        "komise",
+        "letenky",
+        "možné",
+        "uvedla",
+        "zdražovat",
+        "zpětně"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -256,18 +280,21 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Pavel s Babišem se na účasti na summitu NATO neshodli",
+      "title": "Pavel s Babišem se neshodli. Vláda o delegaci na summit NATO rozhodne v červnu",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/pavel-se-sejde-s-babisem-projednaji-ucast-na-cervencovem-summitu-nato-v-ankare-373228",
       "dt": "2026-05-08T03:28:55Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
         "babišem",
+        "delegaci",
         "nato",
         "neshodli",
         "pavel",
-        "summitu",
-        "účasti"
+        "rozhodne",
+        "summit",
+        "vláda",
+        "červnu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -712,29 +739,6 @@
         "saúdi",
         "trumpovi",
         "zařízli"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V Jižní Koreji se robot stal buddhistickým mnichem",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/v-jizni-koreji-se-robot-stal-buddhistickym-mnichem-373202",
-      "dt": "2026-05-07T12:14:57Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "buddhistickým",
-        "jižní",
-        "koreji",
-        "mnichem",
-        "robot",
-        "stal"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1515,7 +1519,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43908,
+      "bytes": 44217,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1575,10 +1579,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T10:10:31Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T12:32:54Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
+          "cestovani": 1,
+          "zpravy": 26,
           "finance": 1,
           "other": 2
         },
@@ -1592,6 +1597,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zpětně zdražovat letenky není možné, uvedla Evropská komise",
+            "publishedAt": "2026-05-08T12:32:54Z"
+          },
           {
             "title": "Hasiči bojují u elektrárny v Černobylu s lesním požárem",
             "publishedAt": "2026-05-08T10:10:31Z"
@@ -1619,10 +1628,6 @@
           {
             "title": "Baterií u domácích fotovoltaik přibývá. Stát chce pravidla recyklace",
             "publishedAt": "2026-05-08T06:00:00Z"
-          },
-          {
-            "title": "Hosté Událostí, komentářů řešili spor vlády s prezidentem o zahraniční politice",
-            "publishedAt": "2026-05-08T05:55:48Z"
           }
         ]
       }
@@ -1728,7 +1733,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78208,
+      "bytes": 78190,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
