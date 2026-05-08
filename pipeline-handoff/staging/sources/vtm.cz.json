@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-08T16:39:23.474196Z",
+  "ingestedAt": "2026-05-08T17:24:40.236982Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,34 @@
         "smazat",
         "spolkl",
         "stahuje"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Ideální notebook nesmí šetřit na displeji a klávesnici. Výkonu už máme dost (Podcast Živě)",
+      "url": "https://www.zive.cz/clanky/idealni-notebook-nesmi-setrit-na-displeji-a-klavesnici-vykonu-uz-mame-dost-podcast-zive/sc-3-a-240949/default.aspx",
+      "dt": "2026-05-08T16:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "displeji",
+        "dost",
+        "ideální",
+        "klávesnici",
+        "máme",
+        "nesmí",
+        "notebook",
+        "podcast",
+        "výkonu",
+        "šetřit",
+        "živě"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -932,34 +960,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "AlzaBoxy otevírají dvířka Knihobotu. Odeslání knih k prodeji je zdarma, ani nemusíte tisknout štítek",
-      "url": "https://www.zive.cz/clanky/alzaboxy-oteviraji-dvirka-knihobotu-odeslani-knih-k-prodeji-je-zdarma-ani-nemusite-tisknout-stitek/sc-3-a-241013/default.aspx",
-      "dt": "2026-05-06T06:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "alzaboxy",
-        "dvířka",
-        "knih",
-        "knihobotu",
-        "nemusíte",
-        "odeslání",
-        "otevírají",
-        "prodeji",
-        "tisknout",
-        "zdarma",
-        "štítek"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -970,7 +970,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23002,
+      "bytes": 22981,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1007,7 +1007,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-08T15:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T16:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1025,6 +1025,10 @@
           {
             "title": "Chrome na počítačích spolkl 4 GB místa navíc, Google potají stahuje AI model. Jak jej smazat?",
             "publishedAt": "2026-05-07T14:45:00Z"
+          },
+          {
+            "title": "Ideální notebook nesmí šetřit na displeji a klávesnici. Výkonu už máme dost (Podcast Živě)",
+            "publishedAt": "2026-05-08T16:45:00Z"
           },
           {
             "title": "Microsoft hráčům doporučoval 32 GB RAM. Po kritice tohle tvrzení smazal",
@@ -1049,10 +1053,6 @@
           {
             "title": "Velký test 27\" monitorů na home office. Do 10 000 Kč pořídíte 4K, 100 Hz i napájení pro notebook",
             "publishedAt": "2026-05-08T07:45:00Z"
-          },
-          {
-            "title": "Vše, co víme o skládacím iPhonu. Bude menší než konkurenční Foldy a nechá zmizet rýhu v displeji",
-            "publishedAt": "2026-05-08T06:45:00Z"
           }
         ]
       }
