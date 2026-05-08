@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vlasta.cz",
-  "ingestedAt": "2026-05-08T05:21:22.663063Z",
+  "ingestedAt": "2026-05-08T06:05:16.141492Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Toto je jediný syn Petra Sepéšiho, podívejte! Nikdy otce nepoznal, dodnes mu chodí tantiémy",
+      "url": "https://www.vlasta.cz/celebrity/petr-sepesi-belhocine-jediny-syn-narodil-se-po-otcove-smrti-jediny-dedic/",
+      "dt": "2026-05-08T05:36:00Z",
+      "media_raw": "Vlasta",
+      "media_norm": "Vlasta",
+      "tokens": [
+        "chodí",
+        "dodnes",
+        "jediný",
+        "nepoznal",
+        "nikdy",
+        "otce",
+        "petra",
+        "podívejte",
+        "sepéšiho",
+        "syn",
+        "tantiémy",
+        "toto"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vlasta",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "vlasta.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -1120,33 +1149,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "vlasta.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Příběhy nejkrásnějších zahrad: Odkud posílali květiny Havlovým a jak zahradničil Karel Čapek",
-      "url": "https://www.vlasta.cz/inspirace/pribehy-nejkrasnejsich-zahrad-vanek-stivinovi-capek-marie-rosulkova/",
-      "dt": "2026-05-03T05:34:00Z",
-      "media_raw": "Vlasta",
-      "media_norm": "Vlasta",
-      "tokens": [
-        "havlovým",
-        "karel",
-        "květiny",
-        "nejkrásnějších",
-        "odkud",
-        "posílali",
-        "příběhy",
-        "zahrad",
-        "zahradničil",
-        "čapek"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vlasta",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "vlasta.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1157,7 +1159,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.vlasta.cz/rss/vse.xml",
-      "bytes": 62555,
+      "bytes": 62463,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1194,7 +1196,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-08T05:04:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T05:36:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 38,
@@ -1210,6 +1212,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Toto je jediný syn Petra Sepéšiho, podívejte! Nikdy otce nepoznal, dodnes mu chodí tantiémy",
+            "publishedAt": "2026-05-08T05:36:00Z"
+          },
           {
             "title": "Žádný plevel, jen krásně upravená zahrada bez pletí záhonů. Zařaďte půdopokryvné rostliny",
             "publishedAt": "2026-05-08T05:04:00Z"
@@ -1237,10 +1243,6 @@
           {
             "title": "Ája z Ulice byla podle lékařů neplodná. Dnes čeká druhé dítě a září. „Přišla k nám dušička,“ oznámila",
             "publishedAt": "2026-05-07T06:02:00Z"
-          },
-          {
-            "title": "Dádě Patrasové předpověděla kartářka vnučku, zatím má ale jen vnuky. „Holčička přijde,“ věří herečka",
-            "publishedAt": "2026-05-07T05:32:00Z"
           }
         ]
       }

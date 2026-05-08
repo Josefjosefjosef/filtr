@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-08T05:21:22.663063Z",
+  "ingestedAt": "2026-05-08T06:05:16.141492Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "David Musil v čele Penta Real Estate",
+      "url": "https://profitonline.cz/david-musil-v-cele-penta-real-estate/",
+      "dt": "2026-05-08T06:00:51Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "david",
+        "estate",
+        "musil",
+        "penta",
+        "real",
+        "čele"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -263,29 +286,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Karolina Kyselová vede marketing OMV v Česku",
-      "url": "https://profitonline.cz/karolina-kyselova-vede-marketing-omv-v-cesku/",
-      "dt": "2026-05-06T06:00:59Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "karolina",
-        "kyselová",
-        "marketing",
-        "omv",
-        "vede",
-        "česku"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -296,7 +296,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18963,
+      "bytes": 18909,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -333,7 +333,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-08T04:00:57Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T06:00:51Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -348,6 +348,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "David Musil v čele Penta Real Estate",
+            "publishedAt": "2026-05-08T06:00:51Z"
+          },
           {
             "title": "Jen vodítko nestačí. Dovolená se zvířetem má svá pravidla",
             "publishedAt": "2026-05-08T04:00:57Z"
@@ -375,10 +379,6 @@
           {
             "title": "Inflace letos může atakovat tříprocentní úroveň",
             "publishedAt": "2026-05-07T05:00:22Z"
-          },
-          {
-            "title": "Slovenské varování pro Česko: Většina mladých chce emigrovat",
-            "publishedAt": "2026-05-07T04:00:51Z"
           }
         ]
       }

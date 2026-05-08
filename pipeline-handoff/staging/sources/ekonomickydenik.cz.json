@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-08T05:21:22.663063Z",
+  "ingestedAt": "2026-05-08T06:05:16.141492Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Tajná zbraň proti Rusku. Ukrajinské nápady a evropské peníze mění zbrojení",
+      "url": "https://ekonomickydenik.cz/tajna-zbran-ukrajina-zbrojeni/",
+      "dt": "2026-05-08T05:55:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "evropské",
+        "mění",
+        "nápady",
+        "peníze",
+        "proti",
+        "rusku",
+        "tajná",
+        "ukrajinské",
+        "zbraň",
+        "zbrojení"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -752,35 +779,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Šestá nejdražší v EU: Cena elektřiny v Česku loni překonala Německo. Vývoj ale dává naději",
-      "url": "https://ekonomickydenik.cz/sesta-nejdrazsi-eu-elektrina-cesko/",
-      "dt": "2026-05-06T06:39:36Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "ale",
-        "cena",
-        "dává",
-        "elektřiny",
-        "loni",
-        "naději",
-        "nejdražší",
-        "německo",
-        "překonala",
-        "vývoj",
-        "česku",
-        "šestá"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73204,
+      "bytes": 72786,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,12 +826,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T04:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T05:55:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 23,
+          "finance": 24,
           "zpravy": 5,
-          "zdravi": 2
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -845,6 +843,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tajná zbraň proti Rusku. Ukrajinské nápady a evropské peníze mění zbrojení",
+            "publishedAt": "2026-05-08T05:55:00Z"
+          },
           {
             "title": "Zaplacená dovolená může zdražit. Nad 8 % mají klienti právo odstoupit",
             "publishedAt": "2026-05-08T04:05:00Z"
@@ -872,10 +874,6 @@
           {
             "title": "Putinův strach z útoku na přehlídce se stupňuje. Kreml omezí internet i esemesky",
             "publishedAt": "2026-05-07T11:18:13Z"
-          },
-          {
-            "title": "Hledá se kupec. Lokomotivy „banány“ u Českých drah definitivně končí",
-            "publishedAt": "2026-05-07T11:14:32Z"
           }
         ]
       }
