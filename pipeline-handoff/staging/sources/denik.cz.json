@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-08T11:40:25.308193Z",
+  "ingestedAt": "2026-05-08T12:26:10.825632Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Babišovo zpoždění u prezidenta? Neomluvitelné, říká expert na etiketu Špaček",
+      "url": "https://www.denik.cz/z_domova/andrej-babis-zpozdeni-na-schuzku-s-prezidentem-ladislav-spacek.html",
+      "dt": "2026-05-08T11:48:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "babišovo",
+        "etiketu",
+        "expert",
+        "neomluvitelné",
+        "prezidenta",
+        "zpoždění",
+        "říká",
+        "špaček"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -33,6 +58,31 @@
     {
       "section": "aktualne",
       "contentType": "article",
+      "title": "Attenborough se zblízka setkal i s gorilou. Štáb se děsil, že mu utrhne hlavu",
+      "url": "https://www.denik.cz/film-a-televize/david-attenborough-setkani-s-gorilou-zivot-na-zemi.html",
+      "dt": "2026-05-08T11:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "attenborough",
+        "děsil",
+        "gorilou",
+        "hlavu",
+        "setkal",
+        "utrhne",
+        "zblízka",
+        "štáb"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
       "title": "Hantavirus na lodi: Desítky lidí zmizely, zdravotníci rozjeli obří pátrací akce",
       "url": "https://www.denik.cz/ze_sveta/hantavirus-na-lodi-desitky-cestujicich-zmizely-obri-patraci-akce-po-svete.html",
       "dt": "2026-05-08T11:00:00Z",
@@ -49,31 +99,6 @@
         "rozjeli",
         "zdravotníci",
         "zmizely"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Attenborough se zblízka setkal i s gorilou. Štáb se děsil, že mu utrhne hlavu",
-      "url": "https://www.denik.cz/film-a-televize/david-attenborough-setkani-s-gorilou-zivot-na-zemi.html",
-      "dt": "2026-05-08T11:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "attenborough",
-        "děsil",
-        "gorilou",
-        "hlavu",
-        "setkal",
-        "utrhne",
-        "zblízka",
-        "štáb"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -616,33 +641,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Pivní index Deníku: Do cen piva se v Česku promítnou i dražší pohonné hmoty",
-      "url": "https://www.denik.cz/ekonomika/ekonomika-ceny-piva-cesko-kraje-zdrazovani-jaro-2026.html",
-      "dt": "2026-05-08T02:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "cen",
-        "deníku",
-        "dražší",
-        "hmoty",
-        "index",
-        "piva",
-        "pivní",
-        "pohonné",
-        "promítnou",
-        "česku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -653,7 +651,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30182,
+      "bytes": 30421,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -690,11 +688,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-08T11:06:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T11:48:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "finance": 3
+          "zpravy": 23,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -707,15 +705,19 @@
         },
         "sample_titles": [
           {
+            "title": "Babišovo zpoždění u prezidenta? Neomluvitelné, říká expert na etiketu Špaček",
+            "publishedAt": "2026-05-08T11:48:00Z"
+          },
+          {
             "title": "Pes rok trpěl na krátkém řetězu v tmavé garáži. Nemohl si skoro ani lehnout",
             "publishedAt": "2026-05-08T11:06:00Z"
           },
           {
-            "title": "Hantavirus na lodi: Desítky lidí zmizely, zdravotníci rozjeli obří pátrací akce",
+            "title": "Attenborough se zblízka setkal i s gorilou. Štáb se děsil, že mu utrhne hlavu",
             "publishedAt": "2026-05-08T11:00:00Z"
           },
           {
-            "title": "Attenborough se zblízka setkal i s gorilou. Štáb se děsil, že mu utrhne hlavu",
+            "title": "Hantavirus na lodi: Desítky lidí zmizely, zdravotníci rozjeli obří pátrací akce",
             "publishedAt": "2026-05-08T11:00:00Z"
           },
           {
@@ -733,10 +735,6 @@
           {
             "title": "Pozadí vraždící chamtivosti: Vila v Praze, auto v Maďarsku. A těla v Želivce",
             "publishedAt": "2026-05-08T09:00:00Z"
-          },
-          {
-            "title": "Politici i vojáci si na Vítkově připomněli výročí konce druhé světové války",
-            "publishedAt": "2026-05-08T08:50:00Z"
           }
         ]
       }

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-08T11:40:25.308193Z",
+  "ingestedAt": "2026-05-08T12:26:10.825632Z",
   "items": [
     {
       "section": "aktualne",
@@ -746,6 +746,31 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Hamzová s Čechovou se dostaly na finální soupisku Minnesoty a zahrají si WNBA",
+      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/hamzova-s-cechovou-se-dostaly-na-finalni-soupisku-minnesoty-a-zahraji-si-wnba-156655",
+      "dt": "2026-05-08T12:14:44Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "dostaly",
+        "finální",
+        "hamzová",
+        "minnesoty",
+        "soupisku",
+        "wnba",
+        "zahrají",
+        "čechovou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "James odehrál 300. zápas v play-off, Lakers ale v Oklahomě neuspěli",
       "url": "https://sport.ceskatelevize.cz/clanek/basketbal/james-odehral-300-zapas-v-play-off-lakers-ale-v-oklahome-neuspeli-156653",
       "dt": "2026-05-08T07:52:57Z",
@@ -1480,30 +1505,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hokejisté museli zrušit trénink kvůli díře v ledu",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/hokejiste-museli-zrusit-trenink-kvuli-dire-v-ledu-156624",
-      "dt": "2026-05-06T11:50:12Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "díře",
-        "hokejisté",
-        "kvůli",
-        "ledu",
-        "museli",
-        "trénink",
-        "zrušit"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1514,7 +1515,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43896,
+      "bytes": 43908,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1633,7 +1634,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38959,
+      "bytes": 38928,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1670,7 +1671,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T07:52:57Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T12:14:44Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1685,6 +1686,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hamzová s Čechovou se dostaly na finální soupisku Minnesoty a zahrají si WNBA",
+            "publishedAt": "2026-05-08T12:14:44Z"
+          },
           {
             "title": "James odehrál 300. zápas v play-off, Lakers ale v Oklahomě neuspěli",
             "publishedAt": "2026-05-08T07:52:57Z"
@@ -1712,10 +1717,6 @@
           {
             "title": "O triumf v Konferenční lize se premiérově poperou fotbalisté Crystal Palace a Vallecana",
             "publishedAt": "2026-05-07T21:25:51Z"
-          },
-          {
-            "title": "Češi utnuli neporazitelnost Švédů v EHT, dvě branky zapsal Kovařčík",
-            "publishedAt": "2026-05-07T16:30:00Z"
           }
         ]
       }
@@ -1727,7 +1728,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78139,
+      "bytes": 78208,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

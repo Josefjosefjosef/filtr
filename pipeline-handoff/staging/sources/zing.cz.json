@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-08T11:40:25.308193Z",
+  "ingestedAt": "2026-05-08T12:26:10.825632Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Podle úniků se v roce 2027 dočkáme pokračování série Zelda",
+      "url": "https://zing.cz/article/podle-uniku-se-v-roce-2027-dockame-pokracovani-serie-zelda",
+      "dt": "2026-05-08T12:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "2027",
+        "dočkáme",
+        "podle",
+        "pokračování",
+        "roce",
+        "série",
+        "zelda",
+        "úniků"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -976,30 +1001,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Halo Studios údajně připravuje remake původní trilogie",
-      "url": "https://zing.cz/article/halo-studios-udajne-pripravuje-remake-puvodni-trilogie",
-      "dt": "2026-05-04T11:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "halo",
-        "připravuje",
-        "původní",
-        "remake",
-        "studios",
-        "trilogie",
-        "údajně"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1010,7 +1011,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125758,
+      "bytes": 125666,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1047,7 +1048,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-08T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1062,6 +1063,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Podle úniků se v roce 2027 dočkáme pokračování série Zelda",
+            "publishedAt": "2026-05-08T12:00:00Z"
+          },
           {
             "title": "Hráči Diabla 4 po třech letech konečně našli tajný Cow level",
             "publishedAt": "2026-05-08T10:00:00Z"
@@ -1089,10 +1094,6 @@
           {
             "title": "Epic nabízí zdarma dvě hry",
             "publishedAt": "2026-05-07T15:00:00Z"
-          },
-          {
-            "title": "Série Worms údajně dostane pokračování, objevily se obrázky a gameplay záběry",
-            "publishedAt": "2026-05-07T14:00:00Z"
           }
         ]
       }
