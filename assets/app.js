@@ -36946,6 +36946,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       draft.note = nCl.slice(0, 1000);
     }
     iuSilverFixCalendarTitleCommandCollapseV1(draft, parseRawFull);
+    iuSilverSplitCalendarTitleLocationNoteTailV1(draft, parseRawFull);
 
     let processingState = "NEEDS_CLARIFICATION";
     if (draft.meta.date === "certain" && draft.meta.time === "certain" && draft.meta.title === "certain" && String(draft.title || "").trim()) {
@@ -42185,6 +42186,80 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!fin.ok || !String(fin.text || "").trim()) return;
     draft.title = normalizeSilverTitleV1(String(fin.text || "").trim(), { kind: "calendar" }).slice(0, 120);
     draft.meta.title = String(draft.title || "").trim() ? "certain" : "missing";
+  }
+
+  /**
+   * P0 narrow post-routing helper for calendar.create only.
+   * Splits contaminated title into clean event title + location + note,
+   * but ONLY for a small whitelist of safe event heads, location markers and
+   * note-tail markers. Never touches generic titles, addresses or temporal phrases.
+   */
+  function iuSilverSplitCalendarTitleLocationNoteTailV1(draft, rawFullIn) {
+    if (!draft || draft.targetContainer !== "calendar") return;
+    const title0 = String(draft.title || "").trim();
+    if (!title0) return;
+    const hasDate = draft.meta && draft.meta.date === "certain";
+    const hasTime = draft.meta && draft.meta.time === "certain";
+    if (!hasDate && !hasTime) return;
+    const raw = String(rawFullIn || "").trim();
+    if (!raw) return;
+    const rf = foldCs(raw);
+    const tf = foldCs(title0);
+
+    let canonicalHead = "";
+    if (/\btenis\b/.test(rf) && /\btenis\b/.test(tf)) canonicalHead = "Tenis";
+    else if (/\bobed\b/.test(rf) && /\bobed\b/.test(tf)) canonicalHead = "Oběd";
+    else if (/\bporad[uay]\b/.test(rf) && /\bporad[uay]\b/.test(tf) && !/\bporadit\b/.test(rf)) canonicalHead = "Porada";
+    if (!canonicalHead) return;
+
+    let noteFromTail = "";
+    let rawNoNote = raw;
+    const reNoteTail = /\b(a\s+(?:hlavn[eě]|poznamenej(?:\s+(?:ze|že))?))\b\s+(.+)$/iu;
+    const mNote = raw.match(reNoteTail);
+    if (mNote && mNote[2]) {
+      noteFromTail = String(mNote[2] || "").replace(/^[,;:.\-\s]+/, "").trim();
+      rawNoNote = raw.slice(0, mNote.index).replace(/[\s,;:]+$/g, "").trim();
+    }
+
+    let locExtracted = "";
+    let locInRaw = false;
+    if (/\bv\s+brn[eě]\b/i.test(rawNoNote)) {
+      locExtracted = "Brno";
+      locInRaw = true;
+    } else if (/\bv\s+praz[eě]\b/i.test(rawNoNote)) {
+      locExtracted = "Praha";
+      locInRaw = true;
+    } else {
+      const mZ = rawNoNote.match(/\bv\s+(zasedac[ck][eě])(?:\s+([A-Z0-9][A-Za-z0-9]{0,2}))?\b/i);
+      if (mZ) {
+        let s = "Zasedačka";
+        if (mZ[2]) s += " " + mZ[2].toUpperCase();
+        locExtracted = s;
+        locInRaw = true;
+      }
+    }
+
+    if (!locInRaw && !noteFromTail) return;
+
+    const titleContaminated = /\b(brn|praz|zasedac|hlavn|poznamenej|nezapomen|rezervac|prinest|prines|report)/.test(tf);
+    if (titleContaminated) {
+      draft.title = canonicalHead;
+      draft.meta.title = "certain";
+    }
+
+    const hasLoc = draft.meta.location === "certain" && String(draft.location || draft.address || "").trim().length > 0;
+    if (locInRaw && !hasLoc) {
+      draft.location = locExtracted;
+      draft.address = locExtracted;
+      draft.meta.location = "certain";
+    }
+
+    const hasNote = draft.meta.note === "certain" && String(draft.note || "").trim().length > 0;
+    if (noteFromTail && !hasNote) {
+      const c = noteFromTail.charAt(0).toLocaleUpperCase("cs-CZ") + noteFromTail.slice(1);
+      draft.note = c.slice(0, 1000);
+      draft.meta.note = "certain";
+    }
   }
 
   function iuSilverSanitizeDraftTitle(draft) {
