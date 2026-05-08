@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-08T13:09:44.313788Z",
+  "ingestedAt": "2026-05-08T13:49:27.093247Z",
   "items": [
     {
       "section": "cestovani",
@@ -53,20 +53,20 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Pachatelé zajali rukojmí při přepadení banky v německém Sinzigu",
+      "title": "Policie nalezla živá rukojmí po přepadení banky v německém Sinzigu",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/pachatele-zajali-rukojmi-pri-prepadeni-banky-v-nemeckem-sinzigu-373235",
       "dt": "2026-05-08T09:43:38Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
         "banky",
+        "nalezla",
         "německém",
-        "pachatelé",
+        "policie",
         "přepadení",
-        "při",
         "rukojmí",
         "sinzigu",
-        "zajali"
+        "živá"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -743,6 +743,31 @@
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nepejchal si spravil chuť, s Hrčkulákem a Přívratským vyhráli na ME soutěž družstev",
+      "url": "https://sport.ceskatelevize.cz/clanek/sportovni-strelba/nepejchal-si-spravil-chut-s-hrckulakem-a-privratskym-vyhrali-na-me-soutez-druzstev-156656",
+      "dt": "2026-05-08T13:43:05Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "chuť",
+        "družstev",
+        "hrčkulákem",
+        "nepejchal",
+        "přívratským",
+        "soutěž",
+        "spravil",
+        "vyhráli"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1484,31 +1509,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kopřiva na úvod v Římě porazil Marozsána, postoupila i Siniaková a Plíšková",
-      "url": "https://sport.ceskatelevize.cz/clanek/tenis/kopriva-na-uvod-v-rime-porazil-madara-marozsana-156626",
-      "dt": "2026-05-06T12:17:37Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "kopřiva",
-        "marozsána",
-        "plíšková",
-        "porazil",
-        "postoupila",
-        "siniaková",
-        "úvod",
-        "římě"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1519,7 +1519,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44217,
+      "bytes": 44083,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1606,7 +1606,7 @@
             "publishedAt": "2026-05-08T10:10:31Z"
           },
           {
-            "title": "Pachatelé zajali rukojmí při přepadení banky v německém Sinzigu",
+            "title": "Policie nalezla živá rukojmí po přepadení banky v německém Sinzigu",
             "publishedAt": "2026-05-08T09:43:38Z"
           },
           {
@@ -1639,7 +1639,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38928,
+      "bytes": 38984,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1676,7 +1676,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T12:14:44Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T13:43:05Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1691,6 +1691,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nepejchal si spravil chuť, s Hrčkulákem a Přívratským vyhráli na ME soutěž družstev",
+            "publishedAt": "2026-05-08T13:43:05Z"
+          },
           {
             "title": "Hamzová s Čechovou se dostaly na finální soupisku Minnesoty a zahrají si WNBA",
             "publishedAt": "2026-05-08T12:14:44Z"
@@ -1718,10 +1722,6 @@
           {
             "title": "Horníček si finále Evropské ligy nezahraje, Braga odvetu nezvládla",
             "publishedAt": "2026-05-07T21:33:56Z"
-          },
-          {
-            "title": "O triumf v Konferenční lize se premiérově poperou fotbalisté Crystal Palace a Vallecana",
-            "publishedAt": "2026-05-07T21:25:51Z"
           }
         ]
       }
@@ -1733,7 +1733,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78190,
+      "bytes": 78196,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

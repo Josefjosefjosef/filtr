@@ -1,8 +1,42 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-08T13:09:44.313788Z",
+  "ingestedAt": "2026-05-08T13:49:27.093247Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Čínský Titanic šel ke dnu. Replika v reálné velikosti měla být turistickým magnetem, stala se však jedním ze symbolů přehnaných ambicí",
+      "url": "https://byznys.hn.cz/c1-67874960-cinsky-titanic-sel-ke-dnu-replika-v-realne-velikosti-mela-byt-turistickym-magnetem-stala-se-vsak-jednim-ze-symbolu-prehnanych-ambici",
+      "dt": "2026-05-08T12:53:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "ambicí",
+        "být",
+        "dnu",
+        "jedním",
+        "magnetem",
+        "měla",
+        "přehnaných",
+        "replika",
+        "reálné",
+        "stala",
+        "symbolů",
+        "titanic",
+        "turistickým",
+        "velikosti",
+        "však",
+        "čínský",
+        "šel"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1106,38 +1140,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Ochromení výroby během desítek sekund. Počet kyberútoků na firmy v Česku prudce roste, některým chybí i základní ochrana",
-      "url": "https://archiv.hn.cz/c1-67874300-ochromeni-vyroby-behem-desitek-sekund-pocet-kyberutoku-na-firmy-v-cesku-prudce-roste-nekterym-chybi-i-zakladni-ochrana",
-      "dt": "2026-05-06T14:48:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "během",
-        "chybí",
-        "desítek",
-        "firmy",
-        "kyberútoků",
-        "některým",
-        "ochrana",
-        "ochromení",
-        "počet",
-        "prudce",
-        "roste",
-        "sekund",
-        "výroby",
-        "základní",
-        "česku"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1148,7 +1150,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183479,
+      "bytes": 183709,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1185,12 +1187,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-08T07:43:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T12:53:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 33,
+          "finance": 34,
           "zdravi": 4,
-          "zpravy": 3
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1202,6 +1204,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Čínský Titanic šel ke dnu. Replika v reálné velikosti měla být turistickým magnetem, stala se však jedním ze symbolů přehnaných ambicí",
+            "publishedAt": "2026-05-08T12:53:00Z"
+          },
           {
             "title": "&bdquo;Není to vlamování se do zavřených dveří.&ldquo; Prezident Pavel trvá na své účasti na summitu NATO",
             "publishedAt": "2026-05-08T07:43:00Z"
@@ -1229,10 +1235,6 @@
           {
             "title": "Pomáhat a chránit? Přišla nahlásit brutální znásilnění, policisté ji ale vyhodili a pachatel útočil znovu",
             "publishedAt": "2026-05-07T14:00:00Z"
-          },
-          {
-            "title": "Rafinerie, která může zachránit evropské aerolinky. Příběh největší energetické investice v Africe",
-            "publishedAt": "2026-05-07T13:35:00Z"
           }
         ]
       }

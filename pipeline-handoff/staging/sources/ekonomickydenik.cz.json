@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-08T13:09:44.313788Z",
+  "ingestedAt": "2026-05-08T13:49:27.093247Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "„Tak mi to nevyšlo, no.“ Prezident by mohl být velkorysý, říká Babiš o zpoždění",
+      "url": "https://ekonomickydenik.cz/prezident-velkorysy-babis-zpozdeni/",
+      "dt": "2026-05-08T13:38:32Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "babiš",
+        "být",
+        "nevyšlo",
+        "prezident",
+        "tak",
+        "velkorysý",
+        "zpoždění",
+        "říká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -752,32 +777,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Cesta k obřím dluhům a destrukce pravidel. Opozice útočí na plány Schillerové",
-      "url": "https://ekonomickydenik.cz/obri-dluhy-destrukce-pravidel-schillerova/",
-      "dt": "2026-05-06T12:51:32Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "cesta",
-        "destrukce",
-        "dluhům",
-        "obřím",
-        "opozice",
-        "plány",
-        "pravidel",
-        "schillerové",
-        "útočí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -788,7 +787,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74249,
+      "bytes": 74755,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -825,7 +824,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T12:54:30Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T13:38:32Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -842,6 +841,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Tak mi to nevyšlo, no.“ Prezident by mohl být velkorysý, říká Babiš o zpoždění",
+            "publishedAt": "2026-05-08T13:38:32Z"
+          },
           {
             "title": "Fico letí do Moskvy za Putinem. Využívá trasu přes Česko",
             "publishedAt": "2026-05-08T12:54:30Z"
@@ -869,10 +872,6 @@
           {
             "title": "Trump znovu vyhrožuje Evropě. Cla skokově zvýší do měsíce",
             "publishedAt": "2026-05-08T06:40:55Z"
-          },
-          {
-            "title": "Tajná zbraň proti Rusku. Ukrajinské nápady a evropské peníze mění zbrojení",
-            "publishedAt": "2026-05-08T05:55:00Z"
           }
         ]
       }
