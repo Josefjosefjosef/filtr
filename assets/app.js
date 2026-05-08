@@ -36881,11 +36881,70 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P0 úzký signál: český imperativ úpravy existující kalendářové položky (datum/čas/cíl přesunu),
+   * nikoli holý zápis — foldCs vstup; bez NLP.
+   */
+  function iuSilverIsCalendarUpdateIntentV1(foldedIn) {
+    const x = String(foldedIn || "");
+    if (!x) return false;
+    if (/\bkdy\s+m(am|ame)\b/.test(x)) return false;
+    if (/\bco\s+jsem\b/.test(x)) return false;
+    if (/\bjak(e|y)\s+m(am|ame)\b/.test(x)) return false;
+    if (/\bjak\s+m(am|ame)\b/.test(x)) return false;
+    if (/\bnajdi\s+mi\b/.test(x)) return false;
+    if (/\bco\s+m(am|ame)\s+v\s+kalendar/.test(x)) return false;
+    const updateVerb =
+      /\bzmen(?:it)?\b/.test(x) ||
+      /\bpresun(?:out)?\b/.test(x) ||
+      /\buprav(?:it)?\b/.test(x) ||
+      /\bprepis(?:at)?\b/.test(x) ||
+      /\bposun(?:out)?\b/.test(x) ||
+      /\bprehod\b/.test(x) ||
+      /\bzmen(?:it)?\s+cas\b/.test(x) ||
+      /\buprav(?:it)?\s+cas\b/.test(x) ||
+      /\bdej\s+to\s+na\s+jiny\s+cas\b/.test(x);
+    if (!updateVerb) return false;
+    const calAnchor =
+      /\bzubar/.test(x) ||
+      /\bschuz/.test(x) ||
+      /\budalost/.test(x) ||
+      /\bkalendar/.test(x) ||
+      /\bpravn/.test(x) ||
+      /\bporad/.test(x) ||
+      /\bkonzultac/.test(x) ||
+      /\bnavstev/.test(x) ||
+      /\badvok/.test(x);
+    if (!calAnchor) return false;
+    const temporal =
+      /\bzitrej/.test(x) ||
+      /\bzitra\b/.test(x) ||
+      /\bpatecn/.test(x) ||
+      /\bna\s+\d{1,2}\s*[:.]\s*\d{1,2}\b/.test(x) ||
+      /\bna\s+(desat|jedenact|dvanact|trinact|ctrnact|patnact|sestnact|sedmnact|osmnact|devatenact|dvacet)/.test(x) ||
+      /\b(desat|jedenact|patnact|dvanact|trinact|ctrnact)\s+hodin/.test(x) ||
+      /\bze\s+zitr/.test(x) ||
+      /\bna\s+pondel/.test(x) ||
+      /\bna\s+uterk/.test(x) ||
+      /\bna\s+stred/.test(x) ||
+      /\bna\s+ctvrt/.test(x) ||
+      /\bna\s+patek/.test(x) ||
+      /\bna\s+sobot/.test(x) ||
+      /\bna\s+nedel/.test(x) ||
+      /\brano\b/.test(x) ||
+      /\bdopoledne\b/.test(x) ||
+      /\bodpoledne\b/.test(x) ||
+      /\bvecer\b/.test(x) ||
+      iuSilverReWeekdayOnce().test(x);
+    return !!temporal;
+  }
+
+  /**
    * P1: explicitní „posuň / přesuň / změň čas …“ — bez jednoznačně vybrané existující události
    * nesmí skončit jako nový calendar.create READY_TO_SAVE (riziko falešného create).
    * foldCs vstup; žádný širší NLP.
    */
   function iuSilverExplicitCalendarUpdateMoveIntentFolded(f) {
+    if (iuSilverIsCalendarUpdateIntentV1(f)) return true;
     const x = String(f || "");
     if (!x) return false;
     if (/\bposunout\s+schuz/.test(x)) return true;
@@ -43861,6 +43920,29 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const readSearchTurn = iuSilverTryReadSearchTurn(raw, now, folded, ctx || {}, empty);
     if (readSearchTurn) return readSearchTurn;
 
+    {
+      const prevEarly = prevDraft || createEmptyDraft();
+      if (iuSilverIsCalendarUpdateIntentV1(folded) && !iuSilverCalendarUpdateRiskAllowCreateDespiteExplicitMoveP1(prevEarly)) {
+        const leadSel = iuSilverClarificationCopy("needs_existing_event_selection");
+        return {
+          normalizedIntent: "unknown",
+          targetContainer: "none",
+          processingState: "CLARIFICATION",
+          clarificationReason: "needs_existing_event_selection",
+          futureIntentCandidate: null,
+          readQuery: null,
+          readAnswer: null,
+          extractedFields: {},
+          missingFields: [],
+          ambiguousFields: [],
+          userFacingSummary: "",
+          assistantLead: leadSel,
+          clarificationText: "",
+          draft: createEmptyDraft()
+        };
+      }
+    }
+
     if (
       iuSilverIsNegatedWriteIntentNarrow(folded, raw) &&
       !iuSilverTaskReadContextFolded(folded) &&
@@ -44033,6 +44115,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     createEmptyDraft,
     processUserTurn,
     extractFromUtterance,
+    iuSilverIsCalendarUpdateIntentV1: iuSilverIsCalendarUpdateIntentV1,
     proofWeekdayRuleSnippet,
     calendarReadProbe,
     iuSilverNormalizeForSearch: iuSilverNormalizeForSearch,
