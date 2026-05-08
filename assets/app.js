@@ -37248,6 +37248,49 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P0 úzký guard: reminder lexém + chore/task obsah + bez výslovného kalendářního/event signálu
+   * → tasks.create (ne implicitní calendar.create). foldCs-safe; žádný širší reminder refaktor.
+   */
+  function iuSilverIsReminderTaskChoreSemanticGuardP0Folded(rawInput) {
+    const raw = String(rawInput || "").trim();
+    if (!raw) return false;
+    const f = foldCs(raw);
+    const reminderHit =
+      /\bpripomen\s+mi\b/.test(f) ||
+      /\bupominku\b/.test(f) ||
+      /\bpripominku\b/.test(f);
+    if (!reminderHit) return false;
+    const choreHit =
+      /\bmusim\b/.test(f) ||
+      /\bvyndat\b/.test(f) ||
+      /\bpradlo\b/.test(f) ||
+      /\bpracka\b/.test(f) ||
+      /\bzaplatit\b/.test(f) ||
+      /\bkoupit\b/.test(f) ||
+      /\bzavolat\b/.test(f) ||
+      /\budelat\b/.test(f) ||
+      /\bnezapomenout\b/.test(f) ||
+      /\bnezapomen\b/.test(f) ||
+      /\bza[rř][ií]dit\b/.test(f) ||
+      /\bzaridit\b/.test(f);
+    if (!choreHit) return false;
+    if (
+      /\bdo\s+kalendar\w*\b/.test(f) ||
+      /\bkalendar\w*\b/.test(f) ||
+      /\bschuzk\w*\b/.test(f) ||
+      /\bporad\w*\b/.test(f) ||
+      /\bzubar\w*\b/.test(f) ||
+      /\blekar\w*\b/.test(f) ||
+      /\bnavstev\w*\b/.test(f) ||
+      /\budalost\w*\b/.test(f) ||
+      /\bevent\b/.test(f)
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
    * Silver Brain v1 — central intent routing (calendar / tasks / notes / fallback).
    * Pořadí: explicitní zápis úkolu (P0.5) → explicitní poznámka → legacy explicitní cíl poznámky → úkoly (sloveso) → kalendář → disambiguace → nejasné.
    */
@@ -37363,6 +37406,24 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           calendarOverridesTask: !!calOverBirth,
           fromExplicitTarget: true,
           birthdayReminderIntentGuardV1: true
+        },
+        calendarFallbackWanted: calWanted
+      };
+    }
+
+    if (iuSilverIsReminderTaskChoreSemanticGuardP0Folded(raw)) {
+      const calOverRemChore = iuSilverCalendarEventOverridesTask(raw, folded);
+      return {
+        intent: "task.create",
+        confidence: 0.96,
+        route: "tasks",
+        reason: "reminder_task_chore_semantic_guard_p0",
+        kind: "TASK_TRY",
+        taskRaw: raw,
+        taskOpts: {
+          skipTargetStrip: false,
+          calendarOverridesTask: !!calOverRemChore,
+          fromExplicitTarget: true
         },
         calendarFallbackWanted: calWanted
       };
