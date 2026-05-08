@@ -38088,11 +38088,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   /** Max body length for Silver → Poznámky (explicit phrase flow). */
   const IU_SILVER_NOTE_BODY_MAX = 5000;
 
-  function iuSilverNoteCreateFinalizeBody(rest) {
-    const r = iuSilverNormalizeWs(String(rest || "").replace(/^(že|ze)\s+/i, "").trim());
-    if (!r || r.length < 2) return null;
-    const b = iuSilverNormalizeCzechNumberWords(iuSilverNormalizeCzechPlaceWords(r));
-    return b.slice(0, IU_SILVER_NOTE_BODY_MAX);
+  /* IU_SILVER_NOTE_WRITE_LEAF_P0 */
+  function iuSilverNormalizeWs(s) {
+    return String(s || "")
+      .replace(/\s+/g, " ")
+      .replace(/[\u00a0]+/g, " ")
+      .trim();
   }
 
   /**
@@ -38122,6 +38123,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     if (!s || s.length < 2) return orig;
     return s.slice(0, IU_SILVER_NOTE_BODY_MAX);
+  }
+  /* IU_SILVER_NOTE_WRITE_LEAF_P0_END */
+
+  function iuSilverNoteCreateFinalizeBody(rest) {
+    const r = iuSilverNormalizeWs(String(rest || "").replace(/^(že|ze)\s+/i, "").trim());
+    if (!r || r.length < 2) return null;
+    const b = iuSilverNormalizeCzechNumberWords(iuSilverNormalizeCzechPlaceWords(r));
+    return b.slice(0, IU_SILVER_NOTE_BODY_MAX);
   }
 
   /**
@@ -42318,13 +42327,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   /** P1: odstranění mostu „že mám …“ na začátku titulu po odparsování data/času (fold-safe vstup). */
   function iuSilverStripLeadingZeMamCalendarBridge(t0) {
     return iuSilverNormalizeWs(String(t0 || "").replace(/^[\s\uFEFF]*(?:že|ze)\s+(?:mám|mam)\b/iu, ""));
-  }
-
-  function iuSilverNormalizeWs(s) {
-    return String(s || "")
-      .replace(/\s+/g, " ")
-      .replace(/[\u00a0]+/g, " ")
-      .trim();
   }
 
   /** Drop trailing sentence(s) that are pure calendar commands (after ". "). */
