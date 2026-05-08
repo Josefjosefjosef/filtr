@@ -36948,6 +36948,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     iuSilverFixCalendarTitleCommandCollapseV1(draft, parseRawFull);
     iuSilverSplitCalendarTitleLocationNoteTailV1(draft, parseRawFull);
     iuSilverCleanCalendarTitleTemporalLeakV1(draft);
+    iuSilverSplitCalendarSchuzkaNoteTailV2(draft);
 
     let processingState = "NEEDS_CLARIFICATION";
     if (draft.meta.date === "certain" && draft.meta.time === "certain" && draft.meta.title === "certain" && String(draft.title || "").trim()) {
@@ -42331,6 +42332,52 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!iuSilverValidateFinalTitle(out)) return;
     draft.title = out;
     draft.meta.title = "certain";
+  }
+
+  /**
+   * P0: post-routing calendar.create — kontaminovaný název „Schůzka s … a hlavně|a poznamenej (že) …“
+   * → kanonický titulek + poznámka. Jen prefix „Schůzka s <jedno slovo>“, prázdné draft.note, úzké markery.
+   */
+  function iuSilverSplitCalendarSchuzkaNoteTailV2(draft) {
+    if (!draft || draft.targetContainer !== "calendar") return;
+    const noteTrim0 = String(draft.note || "").trim();
+    if (noteTrim0) return;
+    const title0 = String(draft.title || "").trim();
+    if (!title0) return;
+    if (!/^Schůzka\s+s\s+\S+/i.test(title0)) return;
+    const hasDate = draft.meta && draft.meta.date === "certain";
+    const hasTime = draft.meta && draft.meta.time === "certain";
+    if (!hasDate && !hasTime) return;
+
+    let m = title0.match(/\s+a\s+poznamenej\s+(že|ze)\s+/iu);
+    if (!m) m = title0.match(/\s+a\s+hlavn[eě]\s+/iu);
+    if (!m) m = title0.match(/\s+a\s+poznamenej\s+/iu);
+    if (!m || typeof m.index !== "number") return;
+
+    const pref = title0.slice(0, m.index).trim();
+    if (!/^Schůzka\s+s\s+\S+$/i.test(pref)) return;
+
+    const tailRaw = title0.slice(m.index + m[0].length).trim();
+    if (!tailRaw) return;
+
+    let n = iuSilverHumanizeRoughNote(tailRaw);
+    n = String(n || "");
+    const fN0 = foldCs(n);
+    if (/^nezapomen(?!out\b)/.test(fN0)) {
+      const sp = n.search(/\s/);
+      n = "Nezapomenout" + (sp >= 0 ? n.slice(sp) : "");
+    }
+    n = iuSilverNormalizeWs(n);
+    if (!n) return;
+
+    const nCl = iuSilverCleanCalendarNoteTailV2(n, n);
+    const noteOut = String(nCl || n).trim().slice(0, 1000);
+    if (!noteOut) return;
+
+    draft.title = pref;
+    draft.meta.title = "certain";
+    draft.note = noteOut;
+    draft.meta.note = "certain";
   }
 
   function iuSilverSanitizeDraftTitle(draft) {
