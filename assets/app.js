@@ -36782,6 +36782,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
    */
   function iuSilverBrainCalendarWantedInternal(raw, now, prev, folded) {
     const fGate = String(folded || "");
+    if (iuSilverIsPastRecallReadQueryV1(raw, fGate)) return false;
     if (
       /\bjen\s+zjist/i.test(fGate) &&
       !iuSilverHasWriteVerb(fGate) &&
@@ -38366,6 +38367,36 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P0 narrow safety: past/present recall („co jsem řešil včera dopoledne?“) is READ, never implicit calendar.create.
+   * foldCs text; must stay false when explicit write/plan cues are present (see negative regression cases).
+   */
+  function iuSilverIsPastRecallReadQueryV1(rawOpt, fFolded) {
+    void rawOpt;
+    const f = String(fFolded || "");
+    if (!f) return false;
+    if (iuSilverCalendarQueryReadonlyPastPresentGuardWriteCueFolded(f)) return false;
+    const recallLead =
+      /\bco\s+(jsem|sem|jsme)\s+(resil|resi|mel|mela|meli|delal|delala|delali|pracoval|pracovala|pracovali)\b/.test(f) ||
+      /\bna\s+cem\s+jsem\s+(pracoval|pracovala|pracovali|delal|delala|resil|resi|mel|mela)\b/.test(f) ||
+      /\bco\s+jsme\s+(resili|resil|delali|meli)\b/.test(f);
+    if (!recallLead) return false;
+    const hasVcera = /\bvcere\b|\bvcera\b|\bvcerajs/.test(f);
+    const hasDnesPart =
+      /\bdnes\b/.test(f) && (/\brano\b/.test(f) || /\bdopoledne\b/.test(f) || /\bodpoledne\b/.test(f));
+    const dayPartTodayNoFuture =
+      !/\bzittra\b|\bzitra\b|\bpristi\b|\bpozitri\b/.test(f) &&
+      (/\bdopoledne\b/.test(f) || /\bodpoledne\b/.test(f) || /\brano\b/.test(f));
+    const minulyTyden = /\bminul\w*\s+tyden\b/.test(f) || /\bminuly\s+tyden\b/.test(f);
+    const minuleLoose = /\bminule\b/.test(f) || /\bminuly\b/.test(f) || /\bminuli\b/.test(f);
+    if (hasVcera) return true;
+    if (hasDnesPart) return true;
+    if (dayPartTodayNoFuture) return true;
+    if (minulyTyden) return true;
+    if (minuleLoose) return true;
+    return false;
+  }
+
+  /**
    * P0 Silver V2: úzký read-only guard (foldCs) — „kdy jsem měl / kolik…letos / v kolik… / mám teď / co mám dnes|zítra|pozítří“
    * bez write-cue; návrat calendar.read spec před blokací WRITE_SCHED / storage disambiguation.
    */
@@ -38374,6 +38405,18 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const f = String(f0 || "");
     if (!r || !f) return null;
     if (iuSilverCalendarQueryReadonlyPastPresentGuardWriteCueFolded(f)) return null;
+    if (iuSilverIsPastRecallReadQueryV1(rawIn, f)) {
+      if (/\bvcere\b|\bvcera\b|\bvcerajs/.test(f)) {
+        return { intent: "agenda_for_day", dateRange: "yesterday", filter: null };
+      }
+      if (/\bminul\w*\s+tyden\b/.test(f) || /\bminuly\s+tyden\b/.test(f)) {
+        return { intent: "agenda_for_range", range: "last_week", filter: null };
+      }
+      if (/\bminule\b/.test(f) || /\bminuly\b/.test(f) || /\bminuli\b/.test(f)) {
+        return { intent: "agenda_for_day", dateRange: "yesterday", filter: null };
+      }
+      return { intent: "agenda_for_day", dateRange: "today", filter: null };
+    }
     const qf = f.replace(/\s*[?.!…]+$/u, "").trim();
     const y0 = now.getFullYear();
     const yStart = y0 + "-01-01";
