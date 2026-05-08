@@ -8,6 +8,7 @@
  * Cluster coverage (foundation / guard rails before engine title+tail fixes):
  * - calendar_title_temporal_cleanup — three Czech temporal-in-title shapes (inspired by PR #4113 scope).
  * - calendar_location_note_tail_split — three location + note-tail splits (inspired by PR #4112 scope).
+ * - dej_hod_schuzka_title_canonicalization — Dej/Hod + schůzka s … → title head „Schůzka s …“ (PR scope).
  */
 /* eslint-disable no-console */
 const fs = require("fs");
@@ -177,6 +178,54 @@ const CASES = [
     }
   },
   {
+    id: "DH_CANON_DEJ_PETR_HLAVNE",
+    cluster: "dej_hod_schuzka_title_canonicalization",
+    input: "Dej mi zitra v 15:00 do kalendare schuzku s Petrem a hlavne nezapomen smlouvu",
+    expectedIntent: "calendar.create",
+    expect: {
+      processingState: "READY_TO_SAVE",
+      title: "Schůzka s Petrem",
+      note: "Nezapomenout smlouvu",
+      location: ""
+    }
+  },
+  {
+    id: "DH_CANON_HOD_PETR_POZN",
+    cluster: "dej_hod_schuzka_title_canonicalization",
+    input: "Hod mi do kalendare zitra v 15:00 schuzku s Petrem a poznamenej ze mam vzit smlouvu",
+    expectedIntent: "calendar.create",
+    expect: {
+      processingState: "READY_TO_SAVE",
+      title: "Schůzka s Petrem",
+      note: "Mam vzít smlouvu",
+      location: ""
+    }
+  },
+  {
+    id: "DH_CANON_HOD_ADVO_HLAVNE",
+    cluster: "dej_hod_schuzka_title_canonicalization",
+    input: "Hod mi zitra v 15:00 do kalendare schuzku s advokatem a hlavne nezapomen plnou moc",
+    expectedIntent: "calendar.create",
+    expect: {
+      processingState: "READY_TO_SAVE",
+      title: "Schůzka s advokatem",
+      note: "Nezapomenout plnou moc",
+      location: ""
+    }
+  },
+  {
+    id: "DH_CANON_DEJ_MARTIN_POZN",
+    cluster: "dej_hod_schuzka_title_canonicalization",
+    input: "Dej mi zitra v 15:00 do kalendare schuzku s Martinem a poznamenej ze mam vzit prezentaci",
+    expectedIntent: "calendar.create",
+    expect: {
+      processingState: "READY_TO_SAVE",
+      title: "Schůzka s Martinem",
+      note: "Mam vzít prezentaci",
+      location: ""
+    }
+  },
+  {
     id: "NEG_NEVER_SAVE_CAL",
     cluster: "negative_no_write_guards",
     input: "Nikdy mi neukládej do kalendáře soukromé věci",
@@ -194,6 +243,27 @@ const CASES = [
     id: "NEG_READ_ONLY_SCHUZKA",
     cluster: "negative_no_write_guards",
     input: "Schůzka zítra v 10 ale neukládej nic jen čti",
+    expectedIntent: "calendar.read",
+    expect: { processingState: "READ_OK", title: "", note: "", location: "" }
+  },
+  {
+    id: "NEG_READ_DEJ_SCHUZKA_PETR",
+    cluster: "negative_no_write_guards",
+    input: "Nic neukladej, jen se podivej kdy mam zitra schuzku s Petrem",
+    expectedIntent: "calendar.read",
+    expect: { processingState: "READ_OK", title: "", note: "", location: "" }
+  },
+  {
+    id: "NEG_READ_NEZAPISUJ_SCHUZKU",
+    cluster: "negative_no_write_guards",
+    input: "Nezapisuj do kalendare schuzku s Petrem, jen zjisti kdy ji mam",
+    expectedIntent: "calendar.read",
+    expect: { processingState: "READ_OK", title: "", note: "", location: "" }
+  },
+  {
+    id: "NEG_READ_JEN_PODIVEJ",
+    cluster: "negative_no_write_guards",
+    input: "Jen se podivej do kalendare, nic nevytvarej",
     expectedIntent: "calendar.read",
     expect: { processingState: "READ_OK", title: "", note: "", location: "" }
   },
@@ -434,7 +504,11 @@ function main() {
           calendar_location_note_tail_split: { cases: countCluster("calendar_location_note_tail_split"), fail: failCluster("calendar_location_note_tail_split") },
           calendar_known_event_title_gap: { cases: countCluster("calendar_known_event_title_gap"), fail: failCluster("calendar_known_event_title_gap") },
           non_schuzka_out_of_scope: { cases: countCluster("non_schuzka_out_of_scope"), fail: failCluster("non_schuzka_out_of_scope") },
-          negative_no_write_guards: { cases: countCluster("negative_no_write_guards"), fail: failCluster("negative_no_write_guards") }
+          negative_no_write_guards: { cases: countCluster("negative_no_write_guards"), fail: failCluster("negative_no_write_guards") },
+          dej_hod_schuzka_title_canonicalization: {
+            cases: countCluster("dej_hod_schuzka_title_canonicalization"),
+            fail: failCluster("dej_hod_schuzka_title_canonicalization")
+          }
         },
         exitCode: failCount > 0 ? 1 : 0
       }

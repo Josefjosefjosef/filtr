@@ -36948,6 +36948,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     iuSilverFixCalendarTitleCommandCollapseV1(draft, parseRawFull);
     iuSilverSplitCalendarTitleLocationNoteTailV1(draft, parseRawFull);
     iuSilverCleanCalendarTitleTemporalLeakV1(draft);
+    iuSilverCanonicalizeCalendarDejHodSchuzkaTitleV1(draft);
     iuSilverSplitCalendarSchuzkaNoteTailV2(draft);
 
     let processingState = "NEEDS_CLARIFICATION";
@@ -42329,6 +42330,39 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     out = iuSilverNormalizeWs(out);
     out = normalizeSilverTitleV1(out, { kind: "calendar" }).slice(0, 120);
     out = iuSilverNormalizeWs(out);
+    if (!iuSilverValidateFinalTitle(out)) return;
+    draft.title = out;
+    draft.meta.title = "certain";
+  }
+
+  /**
+   * P0 v1: post-routing calendar.create — úzká hlava „(Dej )schůzku|schuzku s <osoba>…“
+   * → titulek začíná „Schůzka s …“ (iuSilverNormalizeEventTypeTitle). Jen při jistém datu nebo času;
+   * bez oběda/večeře/snídaně/konzultace v titulku; bez zásahu do routingu.
+   */
+  function iuSilverCanonicalizeCalendarDejHodSchuzkaTitleV1(draft) {
+    if (!draft || draft.targetContainer !== "calendar") return;
+    const hasDate = draft.meta && draft.meta.date === "certain";
+    const hasTime = draft.meta && draft.meta.time === "certain";
+    if (!hasDate && !hasTime) return;
+    if (!draft.meta || draft.meta.title !== "certain") return;
+    const title0 = String(draft.title || "").trim();
+    if (!title0) return;
+    const tf = foldCs(title0);
+    if (/\b(vecere|veceri|vecere|obed|snidan|snidane|snidani|konzultac)\b/.test(tf)) return;
+    if (/^schůzka\s+s\s+/i.test(title0)) return;
+
+    const m = title0.match(/^\s*(?:dej\s+)?((?:sch[uů]zku|schuzku)\s+s\s+.+)$/i);
+    if (!m || !m[1]) return;
+    const frag = String(m[1] || "").trim();
+    const tailProbe = frag.replace(/^(?:sch[uů]zku|schuzku)\s+s\s+/i, "").trim();
+    if (!tailProbe) return;
+    const c0 = tailProbe.charAt(0);
+    if (!/[A-Za-zÁÉÍÓÚÝČĎĚŇŘŠŤŮÝŽáéíóúůýčďěňřšťůýž]/.test(c0)) return;
+
+    let out = iuSilverNormalizeEventTypeTitle(frag);
+    out = iuSilverNormalizeWs(String(out || "")).trim().slice(0, 120);
+    if (!out || !/^Schůzka\s+s\s+/i.test(out)) return;
     if (!iuSilverValidateFinalTitle(out)) return;
     draft.title = out;
     draft.meta.title = "certain";
