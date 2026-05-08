@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-08T06:05:16.141492Z",
+  "ingestedAt": "2026-05-08T06:50:24.422999Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Trump znovu vyhrožuje Evropě. Cla skokově zvýší do měsíce",
+      "url": "https://ekonomickydenik.cz/trump-vyhrozuje-cla-skokove-zvysit/",
+      "dt": "2026-05-08T06:40:55Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "cla",
+        "evropě",
+        "měsíce",
+        "skokově",
+        "trump",
+        "vyhrožuje",
+        "znovu",
+        "zvýší"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -755,30 +780,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zpěvačka ombudsmankou ministerstva. Zaměří se na práva dětí i dospělých",
-      "url": "https://ekonomickydenik.cz/zpevacka-ombudsmankou-ministerstva/",
-      "dt": "2026-05-06T07:34:55Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "dospělých",
-        "dětí",
-        "ministerstva",
-        "ombudsmankou",
-        "práva",
-        "zaměří",
-        "zpěvačka"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72786,
+      "bytes": 72289,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T05:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T06:40:55Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -843,6 +844,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump znovu vyhrožuje Evropě. Cla skokově zvýší do měsíce",
+            "publishedAt": "2026-05-08T06:40:55Z"
+          },
           {
             "title": "Tajná zbraň proti Rusku. Ukrajinské nápady a evropské peníze mění zbrojení",
             "publishedAt": "2026-05-08T05:55:00Z"
@@ -870,10 +875,6 @@
           {
             "title": "Češi důvěřují armádě, policii a volbám. Kdo nejvíc pohořel zřejmě nepřekvapí",
             "publishedAt": "2026-05-07T12:59:51Z"
-          },
-          {
-            "title": "Putinův strach z útoku na přehlídce se stupňuje. Kreml omezí internet i esemesky",
-            "publishedAt": "2026-05-07T11:18:13Z"
           }
         ]
       }

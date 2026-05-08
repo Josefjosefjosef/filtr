@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-08T06:05:16.141492Z",
+  "ingestedAt": "2026-05-08T06:50:24.422999Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "FutureLife Group premiéra Babiše zavádí AI do umělého oplodnění",
+      "url": "https://www.zdravezpravy.cz/2026/05/08/babisova-futurelife-group-zavadi-ai-do-umeleho-oplodneni/",
+      "dt": "2026-05-08T06:30:12Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "babiše",
+        "futurelife",
+        "group",
+        "oplodnění",
+        "premiéra",
+        "umělého",
+        "zavádí"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -468,30 +492,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "České Lékaře bez hranic nově vede Tomáš Bendl",
-      "url": "https://www.zdravezpravy.cz/2026/04/29/ceske-lekare-bez-hranic-nove-vede-tomas-bendl/",
-      "dt": "2026-04-29T11:32:20Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "bendl",
-        "hranic",
-        "lékaře",
-        "nově",
-        "tomáš",
-        "vede",
-        "české"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -502,7 +502,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 192051,
+      "bytes": 196891,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -539,7 +539,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-07T14:52:02Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T06:30:12Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -555,6 +555,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "FutureLife Group premiéra Babiše zavádí AI do umělého oplodnění",
+            "publishedAt": "2026-05-08T06:30:12Z"
+          },
           {
             "title": "Na epilepsii teď předepíší i lékaři FN Ostrava moderní léky",
             "publishedAt": "2026-05-07T14:52:02Z"
@@ -582,10 +586,6 @@
           {
             "title": "Pesticidy škodí zdraví. Přesto je obsahuje 40 % potravin",
             "publishedAt": "2026-05-06T08:30:00Z"
-          },
-          {
-            "title": "Na práva dětí a dospělých na MPSV dohlédne zpěvačka Nosková",
-            "publishedAt": "2026-05-05T12:27:51Z"
           }
         ]
       }

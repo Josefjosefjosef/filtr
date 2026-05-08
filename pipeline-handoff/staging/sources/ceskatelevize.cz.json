@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-08T06:05:16.141492Z",
+  "ingestedAt": "2026-05-08T06:50:24.422999Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Soud částečně zablokoval Trumpova nejnovější cla",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/soud-castecne-zablokoval-trumpova-nejnovejsi-cla-373230",
+      "dt": "2026-05-08T06:08:41Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "cla",
+        "nejnovější",
+        "soud",
+        "trumpova",
+        "zablokoval",
+        "částečně"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -108,21 +131,20 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Pavel se sejde s Babišem, projednají účast na červencovém summitu NATO v Ankaře",
+      "title": "Pavel přijal Babiše, projednají účast na summitu NATO v Ankaře",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/pavel-se-sejde-s-babisem-projednaji-ucast-na-cervencovem-summitu-nato-v-ankare-373228",
       "dt": "2026-05-08T03:28:55Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
         "ankaře",
-        "babišem",
+        "babiše",
         "nato",
         "pavel",
         "projednají",
-        "sejde",
+        "přijal",
         "summitu",
-        "účast",
-        "červencovém"
+        "účast"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -725,24 +747,24 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Hantavirus není počátkem další pandemie, ujišťuje WHO",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/v-amsterdamu-leci-dalsi-zenu-s-priznaky-hantaviru-373199",
-      "dt": "2026-05-07T10:02:32Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Vladař čtyřikrát inkasoval, Flyers jsou na hraně vyřazení",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/vladar-ctyrikrat-inkasoval-flyers-jsou-na-hrane-vyrazeni-156652",
+      "dt": "2026-05-08T06:35:44Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "další",
-        "hantavirus",
-        "pandemie",
-        "počátkem",
-        "ujišťuje",
-        "who"
+        "flyers",
+        "hraně",
+        "inkasoval",
+        "vladař",
+        "vyřazení",
+        "čtyřikrát"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1482,29 +1504,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Oklahoma přejela Lakers, Detroit si poradil s Clevelandem",
-      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/oklahoma-prejela-lakers-detroit-si-poradil-s-clevelandem-156622",
-      "dt": "2026-05-06T07:01:01Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "clevelandem",
-        "detroit",
-        "lakers",
-        "oklahoma",
-        "poradil",
-        "přejela"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1515,7 +1514,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44006,
+      "bytes": 43959,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1575,10 +1574,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T06:08:41Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
+          "finance": 1,
+          "zpravy": 25,
           "other": 4
         },
         "drop_counts": {
@@ -1591,6 +1591,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Soud částečně zablokoval Trumpova nejnovější cla",
+            "publishedAt": "2026-05-08T06:08:41Z"
+          },
           {
             "title": "Baterií u domácích fotovoltaik přibývá. Stát chce pravidla recyklace",
             "publishedAt": "2026-05-08T06:00:00Z"
@@ -1608,7 +1612,7 @@
             "publishedAt": "2026-05-08T04:00:00Z"
           },
           {
-            "title": "Pavel se sejde s Babišem, projednají účast na červencovém summitu NATO v Ankaře",
+            "title": "Pavel přijal Babiše, projednají účast na summitu NATO v Ankaře",
             "publishedAt": "2026-05-08T03:28:55Z"
           },
           {
@@ -1618,10 +1622,6 @@
           {
             "title": "AFP: Izraelské údery na jihu Libanonu zabily 12 lidí, včetně dvou děti",
             "publishedAt": "2026-05-07T21:36:07Z"
-          },
-          {
-            "title": "Příměří s Íránem je stále platné, řekl Trump po amerických odvetných úderech",
-            "publishedAt": "2026-05-07T21:01:51Z"
           }
         ]
       }
@@ -1633,7 +1633,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38827,
+      "bytes": 38960,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1670,7 +1670,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T06:35:44Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1685,6 +1685,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vladař čtyřikrát inkasoval, Flyers jsou na hraně vyřazení",
+            "publishedAt": "2026-05-08T06:35:44Z"
+          },
           {
             "title": "Trošku jsem se sebou bojoval, ale pomohl mi ten první gól, přiznal Kovařčík",
             "publishedAt": "2026-05-08T05:00:00Z"
@@ -1712,10 +1716,6 @@
           {
             "title": "Bohemians 1905 musí za chování svých fanoušků v derby se Spartou zaplatit 450 tisíc",
             "publishedAt": "2026-05-07T15:31:33Z"
-          },
-          {
-            "title": "Přívratský si v Osijeku vystřílel zlato a bronz, tréninky s malorážkou ho ale nepovzbudily",
-            "publishedAt": "2026-05-07T14:58:16Z"
           }
         ]
       }
@@ -1727,7 +1727,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78181,
+      "bytes": 78193,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

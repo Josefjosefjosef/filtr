@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-08T06:05:16.141492Z",
+  "ingestedAt": "2026-05-08T06:50:24.422999Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Platíme za elektřinu nejvíc v Evropě. Za pár let ji budeme od sousedů dokupovat a bude ještě hůř",
+      "url": "https://podcasty.hn.cz/c1-67875130-platime-za-elektrinu-nejvic-v-evrope-za-par-let-ji-budeme-od-sousedu-dokupovat-a-bude-jeste-hur",
+      "dt": "2026-05-08T06:25:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "budeme",
+        "dokupovat",
+        "elektřinu",
+        "evropě",
+        "hůř",
+        "ještě",
+        "let",
+        "nejvíc",
+        "platíme",
+        "pár",
+        "sousedů"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1106,34 +1134,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Maďarsko vrátilo peníze zabavené ukrajinské bance. Konstruktivní a civilizovaný krok, reagoval Zelenskyj",
-      "url": "https://zahranicni.hn.cz/c1-67874480-madarsko-vratilo-penize-zabavene-ukrajinske-bance-konstruktivni-a-civilizovany-krok-reagoval-zelenskyj",
-      "dt": "2026-05-06T13:32:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bance",
-        "civilizovaný",
-        "konstruktivní",
-        "krok",
-        "maďarsko",
-        "peníze",
-        "reagoval",
-        "ukrajinské",
-        "vrátilo",
-        "zabavené",
-        "zelenskyj"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1144,7 +1144,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183419,
+      "bytes": 183416,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1181,12 +1181,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-07T18:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T06:25:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 34,
-          "zpravy": 3,
-          "zdravi": 3
+          "zdravi": 4,
+          "finance": 33,
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1198,6 +1198,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Platíme za elektřinu nejvíc v Evropě. Za pár let ji budeme od sousedů dokupovat a bude ještě hůř",
+            "publishedAt": "2026-05-08T06:25:00Z"
+          },
           {
             "title": "Pavel chce po jednání s Babišem oznámit, že na summit NATO pojedou oba. Jinak podá kompetenční žalobu",
             "publishedAt": "2026-05-07T18:20:00Z"
@@ -1225,10 +1229,6 @@
           {
             "title": "Evropa vyhání technologické start-upy. Kvůli regulaci AI jich odešla už víc než stovka",
             "publishedAt": "2026-05-07T12:00:00Z"
-          },
-          {
-            "title": "Německo by mohlo mít prvního zemského premiéra z AfD, ukázal průzkum. Je to obrovská vzpruha, slaví extremisté",
-            "publishedAt": "2026-05-07T11:51:00Z"
           }
         ]
       }
