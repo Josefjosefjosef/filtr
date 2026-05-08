@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-08T03:20:38.891045Z",
+  "ingestedAt": "2026-05-08T04:00:17.598795Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Hororová noc na Everestu: Při sérii tragédií horolezci umírali jeden po druhém",
+      "url": "https://www.denik.cz/historie/tragedie-everest-1996-rob-hall-scott-fischer-mountain-madness-adventure-tym.html",
+      "dt": "2026-05-08T03:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "druhém",
+        "everestu",
+        "horolezci",
+        "hororová",
+        "jeden",
+        "noc",
+        "při",
+        "sérii",
+        "tragédií",
+        "umírali"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -629,31 +656,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Soud zveřejnil Epsteinův dopis, který měl napsat před svou sebevraždou",
-      "url": "https://www.denik.cz/ze_sveta/jeffrey-epstein-sebevrazda-dopis-na-rozloucenou.html",
-      "dt": "2026-05-07T07:52:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dopis",
-        "epsteinův",
-        "měl",
-        "napsat",
-        "sebevraždou",
-        "soud",
-        "svou",
-        "zveřejnil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -664,7 +666,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30343,
+      "bytes": 30641,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -701,7 +703,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-08T02:51:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T03:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -718,6 +720,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hororová noc na Everestu: Při sérii tragédií horolezci umírali jeden po druhém",
+            "publishedAt": "2026-05-08T03:00:00Z"
+          },
           {
             "title": "Z žen udělá bohyně. Fotograf zachytil novinky oceňované návrhářky Pištejové",
             "publishedAt": "2026-05-08T02:51:00Z"
@@ -745,10 +751,6 @@
           {
             "title": "Britové ve velkém shánějí ivermektin, i nelegálně. Úřady varují: Je to rizikové",
             "publishedAt": "2026-05-07T13:39:00Z"
-          },
-          {
-            "title": "Nečekaný objev v pražském obchodě: Krabička plná peněz čekala mezi pečivem",
-            "publishedAt": "2026-05-07T13:21:00Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-08T03:20:38.891045Z",
+  "ingestedAt": "2026-05-08T04:00:17.598795Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pavel bude s Babišem jednat o účasti na summitu NATO. Pojede tam každopádně",
+      "url": "https://www.idnes.cz/zpravy/domaci/prezident-pavel-premier-babis-jednani-o-ucasti-na-summitu-nato.A260508_040950_domaci_kop",
+      "dt": "2026-05-08T03:15:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "babišem",
+        "jednat",
+        "každopádně",
+        "nato",
+        "pavel",
+        "pojede",
+        "summitu",
+        "tam",
+        "účasti"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -756,33 +782,6 @@
         "soud",
         "trestné",
         "zrušil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Loď zasaženou hantavirem opustily tři desítky cestujících. Úřady po nich pátrají",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/hantavirus-nemoc-vyletni-lod-atlantik.A260507_134722_zahranicni_tmps",
-      "dt": "2026-05-07T14:07:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "cestujících",
-        "desítky",
-        "hantavirem",
-        "loď",
-        "nich",
-        "opustily",
-        "pátrají",
-        "tři",
-        "zasaženou",
-        "úřady"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1582,7 +1581,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47592,
+      "bytes": 47467,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1619,7 +1618,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-07T22:03:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T03:15:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 28,
@@ -1635,6 +1634,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pavel bude s Babišem jednat o účasti na summitu NATO. Pojede tam každopádně",
+            "publishedAt": "2026-05-08T03:15:00Z"
+          },
           {
             "title": "USA opět zaútočily. Porušení příměří, říká íránská armáda",
             "publishedAt": "2026-05-07T22:03:00Z"
@@ -1662,10 +1665,6 @@
           {
             "title": "Trump má nasazené růžové brýle. Írán vydrží blokádu i měsíce, varují tajné služby",
             "publishedAt": "2026-05-07T19:22:00Z"
-          },
-          {
-            "title": "Trump zrušil ochranu lodí v Hormuzu kvůli roztržce se Saúdskou Arábií",
-            "publishedAt": "2026-05-07T19:11:00Z"
           }
         ]
       }
