@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-05-08T11:05:28.676149Z",
+  "ingestedAt": "2026-05-08T11:40:25.308193Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Valve kvůli překupníkům mění pravidla pro nákup Steam Controlleru - INDIAN",
+      "url": "https://indian-tv.cz/clanek/valve-kvuli-prekupnikum-meni-pravidla-pro-nakup-fki6qd",
+      "dt": "2026-05-08T11:30:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "controlleru",
+        "indian",
+        "kvůli",
+        "mění",
+        "nákup",
+        "pravidla",
+        "překupníkům",
+        "steam",
+        "valve"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1063,35 +1089,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Final Fantasy XIV vyjde pro Switch 2. Poběží ve 30 fps a potvrzena podpora klávesnice a myši - INDIAN",
-      "url": "https://indian-tv.cz/clanek/final-fantasy-xiv-vyjde-pro-switch-2-pobezi-ve-30-fps-1zgkcj",
-      "dt": "2026-05-05T06:00:25Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "fantasy",
-        "final",
-        "fps",
-        "indian",
-        "klávesnice",
-        "myši",
-        "poběží",
-        "podpora",
-        "potvrzena",
-        "switch",
-        "vyjde",
-        "xiv"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1102,7 +1099,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 229467,
+      "bytes": 229644,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1139,7 +1136,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-08T10:20:46Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T11:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1154,6 +1151,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Valve kvůli překupníkům mění pravidla pro nákup Steam Controlleru - INDIAN",
+            "publishedAt": "2026-05-08T11:30:00Z"
+          },
           {
             "title": "Nintendo zdražuje Switch 2, ale ne tak drasticky jako konkurence - INDIAN",
             "publishedAt": "2026-05-08T10:20:46Z"
@@ -1181,10 +1182,6 @@
           {
             "title": "Microsoft prozradil první detaily o nové generaci. Půjde o PC převlečené do Xboxu - INDIAN",
             "publishedAt": "2026-05-07T16:56:40Z"
-          },
-          {
-            "title": "Singleplayerová příběhovka, kterou nehrajete sami – Tides of Tomorrow - INDIAN",
-            "publishedAt": "2026-05-07T16:00:00Z"
           }
         ]
       }

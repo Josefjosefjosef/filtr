@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-08T11:05:28.676149Z",
+  "ingestedAt": "2026-05-08T11:40:25.308193Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Plameny u Černobylu. Hasiči bojují s rozsáhlým požárem po pádu dronu",
+      "url": "https://ekonomickydenik.cz/plameny-cernobyl-hasici-lesni-pozar/",
+      "dt": "2026-05-08T11:16:23Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bojují",
+        "dronu",
+        "hasiči",
+        "plameny",
+        "požárem",
+        "pádu",
+        "rozsáhlým",
+        "černobylu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -755,33 +780,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Odmítáme, aby dotování vodíku zdražilo cenu plynu, vzkazují vládě zástupci byznysu",
-      "url": "https://ekonomickydenik.cz/odmitame-aby-dotovani-vodiku-prodrazilo-plyn/",
-      "dt": "2026-05-06T11:39:32Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "byznysu",
-        "cenu",
-        "dotování",
-        "odmítáme",
-        "plynu",
-        "vládě",
-        "vodíku",
-        "vzkazují",
-        "zdražilo",
-        "zástupci"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73698,
+      "bytes": 73625,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T10:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T11:16:23Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -846,6 +844,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Plameny u Černobylu. Hasiči bojují s rozsáhlým požárem po pádu dronu",
+            "publishedAt": "2026-05-08T11:16:23Z"
+          },
           {
             "title": "Americké rakety budou chybět. Polsko vábí jednotky stahované z Německa",
             "publishedAt": "2026-05-08T10:05:00Z"
@@ -873,10 +875,6 @@
           {
             "title": "Zaplacená dovolená může zdražit. Nad 8 % mají klienti právo odstoupit",
             "publishedAt": "2026-05-08T04:05:00Z"
-          },
-          {
-            "title": "Pavel na summit NATO pojede. Pokud Babiš neustoupí, podá žalobu",
-            "publishedAt": "2026-05-07T18:37:42Z"
           }
         ]
       }

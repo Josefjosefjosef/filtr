@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-08T11:05:28.676149Z",
+  "ingestedAt": "2026-05-08T11:40:25.308193Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Virus z klíštěte udeří během minut. Podívejte se, kde hrozí největší riziko",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/virus-z-klistete-kde-hrozi-nejvetsi-riziko/",
+      "dt": "2026-05-08T11:30:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "během",
+        "hrozí",
+        "klíštěte",
+        "minut",
+        "největší",
+        "podívejte",
+        "riziko",
+        "udeří",
+        "virus"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -240,30 +266,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Větší autonomie pro pacienty musí počkat. Kdy Senát rozhodne?",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/paliativni-pece-senat-prochazkova/",
-      "dt": "2026-05-07T07:01:29Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "autonomie",
-        "musí",
-        "pacienty",
-        "počkat",
-        "rozhodne",
-        "senát",
-        "větší"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,7 +276,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 107543,
+      "bytes": 109946,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -311,7 +313,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-08T10:01:25Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T11:30:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -326,6 +328,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Virus z klíštěte udeří během minut. Podívejte se, kde hrozí největší riziko",
+            "publishedAt": "2026-05-08T11:30:00Z"
+          },
           {
             "title": "Je hantavirus nový covid? WHO se vyjádřila k možnosti pandemie",
             "publishedAt": "2026-05-08T10:01:25Z"
@@ -353,10 +359,6 @@
           {
             "title": "Obviněný exšéf příbramské nemocnice přišel o další funkci. V kauze má jít o 280 milionů",
             "publishedAt": "2026-05-07T10:26:14Z"
-          },
-          {
-            "title": "Evropa v pozoru: Letuška se měla nakazit od umírající ženy z lodi, hantavirus se šíří dál",
-            "publishedAt": "2026-05-07T10:08:28Z"
           }
         ]
       }
