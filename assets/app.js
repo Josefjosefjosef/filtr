@@ -37339,7 +37339,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         reason: "explicit_tasks_target",
         kind: "TASK_TRY",
         taskRaw: strippedT,
-        taskOpts: { skipTargetStrip: true, calendarOverridesTask: calOverStrip, fromExplicitTarget: true },
+        taskOpts: {
+          skipTargetStrip: true,
+          calendarOverridesTask: calOverStrip,
+          fromExplicitTarget: true,
+          titleCleanupFullRawGate: raw
+        },
         calendarFallbackWanted: calWanted
       };
     }
@@ -37764,6 +37769,58 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P1 Silver: post-routing úzký strip command-scaffoldingu „Dej mi do úkolů že…“ / „Dej to do úkolů…“
+   * jen pro tasks.create titulek. Aktivní jen když raw obsahuje příslušný scaffold (foldCs).
+   * Nemění routing; nemění „Přidej mi úkol…“ / „Ulož mi jako úkol…“ (ty scaffold v raw nemají).
+   */
+  function iuSilverCleanTaskCommandScaffoldingTitleP1(titleIn, rawInput) {
+    const rawF = foldCs(String(rawInput != null ? rawInput : "").trim());
+    const hasScaffold =
+      /\bdej\s+mi\s+do\s+ukol/.test(rawF) ||
+      /\bdej\s+to\s+do\s+ukol/.test(rawF);
+    if (!hasScaffold) return String(titleIn != null ? titleIn : "");
+
+    const fb0 = iuSilverNormalizeWs(String(titleIn != null ? titleIn : "")).trim();
+    if (!fb0 || fb0.length < 2) return fb0;
+
+    const pats = [
+      /^\s*dej\s+mi\s+do\s+[uú]kol[uůyí]*\s+(?:že|ze)\s+/iu,
+      /^\s*dej\s+to\s+do\s+[uú]kol[uůyí]*\s+(?:že|ze)\s+/iu,
+      /^\s*dej\s+mi\s+do\s+[uú]kol[uůyí]*\s+/iu,
+      /^\s*dej\s+to\s+do\s+[uú]kol[uůyí]*\s+/iu,
+      /^\s*dej\s+mi\s+(?:že|ze)\s+/iu,
+      /^\s*dej\s+mi\s+/iu,
+      /^\s*(?:že|ze)\s+/iu,
+      /^\s*mus[ií]m\s+/iu,
+      /^\s*musim\s+/iu,
+      /^\s*m[aá]m\s+/iu,
+      /^\s*mam\s+/iu
+    ];
+
+    let s = fb0;
+    for (let round = 0; round < 48; round++) {
+      const prev = s;
+      let pi;
+      for (pi = 0; pi < pats.length; pi++) {
+        s = s.replace(pats[pi], "").trim();
+      }
+      s = iuSilverNormalizeWs(s);
+      if (s === prev) break;
+    }
+
+    if (!s || s.length < 2) return fb0.slice(0, 200);
+    let out = iuSilverFinalizeTaskTitle(s);
+    if (!out || String(out).trim().length < 2) return fb0.slice(0, 200);
+    if (IU_SILVER_TASK_TITLE_POLLUTION_AUDIT_RE.test(foldCs(out))) return fb0.slice(0, 200);
+    if (out.length > 100) out = out.slice(0, 100).trim();
+    if (!out || out.length < 2) return fb0.slice(0, 200);
+    out = out.replace(/[.!?…]+$/u, "").trim();
+    if (!out || out.length < 2) return fb0.slice(0, 200);
+    out = out.charAt(0).toLocaleUpperCase("cs-CZ") + out.slice(1);
+    return out.slice(0, 200);
+  }
+
+  /**
    * P1 Silver: post-routing úzké čištění titulku tasks.create pro cross-intent „poznámka + override do úkolů“.
    * Nemění routing. Aktivní jen při kombinaci override signálu (raw nebo zbytek v titulku po strip cíle) + note-meta v raw/title,
    * případně osiřelé „ale dej to“ v titulku při note-meta (taskRaw už nemusí obsahovat „do úkolů“).
@@ -37960,6 +38017,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     let titleForDraft = iuSilverCleanCrossIntentTaskTitleV1(titleForDraft2, String(rawIn || "").trim(), {
       taskDueYmd: dueYmd || ""
     });
+    const gateRawForScaffold = String((opts && opts.titleCleanupFullRawGate) || rawIn || "").trim();
+    titleForDraft = iuSilverCleanTaskCommandScaffoldingTitleP1(titleForDraft, gateRawForScaffold);
 
     if (opts.birthdayReminderIntentGuardV1) {
       const foldT = foldCs(String(titleForDraft || ""));
