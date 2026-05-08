@@ -37887,6 +37887,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const titleNorm0 = normalizeSilverTitleV1(fbSafe, { kind: "task" }).slice(0, 200);
     let out = iuSilverCleanTaskCreateTitleV1(titleNorm0, fbSafe);
     out = iuSilverCleanTaskReminderTitleV1(out, fbSafe);
+    if (iuSilverRawHasReminderTaskLexemeP1(raw) && !iuSilverIsBirthdayReminderIntentV1(raw)) {
+      out = iuSilverCleanReminderTaskTitleV1(out, raw, fbSafe);
+    }
     out = iuSilverCleanTaskCreateTitleV2(out, fbSafe, { taskDueYmd: String(opts.taskDueYmd || "") });
     return out.slice(0, 200);
   }
@@ -37949,7 +37952,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!title || title.length < 2) return null;
     const titleNorm = normalizeSilverTitleV1(title, { kind: "task" }).slice(0, 200);
     const titleForDraft0 = iuSilverCleanTaskCreateTitleV1(titleNorm, titleNorm);
-    const titleForDraft1 = iuSilverCleanTaskReminderTitleV1(titleForDraft0, titleForDraft0);
+    let titleForDraft1 = iuSilverCleanTaskReminderTitleV1(titleForDraft0, titleForDraft0);
+    if (iuSilverRawHasReminderTaskLexemeP1(rawIn) && !iuSilverIsBirthdayReminderIntentV1(rawIn)) {
+      titleForDraft1 = iuSilverCleanReminderTaskTitleV1(titleForDraft1, rawIn, titleForDraft0);
+    }
     const titleForDraft2 = iuSilverCleanTaskCreateTitleV2(titleForDraft1, titleForDraft1, { taskDueYmd: dueYmd || "" });
     let titleForDraft = iuSilverCleanCrossIntentTaskTitleV1(titleForDraft2, String(rawIn || "").trim(), {
       taskDueYmd: dueYmd || ""
@@ -38079,6 +38085,92 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     let out = iuSilverFinalizeTaskTitle(s);
     if (!out || String(out).trim().length < 2) return fb || orig.slice(0, 200);
     out = iuSilverNormalizeWs(String(out));
+    return out.slice(0, 200);
+  }
+
+  /**
+   * P1 Silver: přítomnost upomínkového lexému ve vstupu (foldCs) pro úzké title-only čištění tasks.create.
+   */
+  function iuSilverRawHasReminderTaskLexemeP1(rawInput) {
+    const f = foldCs(String(rawInput || ""));
+    if (!f) return false;
+    return (
+      /\bpripomen\s+mi\b/.test(f) ||
+      /\bupominku\b/.test(f) ||
+      /\bpripominku\b/.test(f)
+    );
+  }
+
+  /**
+   * P1 Silver: post-routing úzký cleanup titulku tasks.create jen při reminder lexému v raw vstupu.
+   * Odstraní dlouhé upomínkové prefixy a tail šum (Silvere / fakt na to nezapomen); nemění routing ani due metadata.
+   */
+  function iuSilverCleanReminderTaskTitleV1(titleIn, rawInput, safeFallback) {
+    const fb = iuSilverNormalizeWs(String(safeFallback != null ? safeFallback : "")).trim();
+    const fb200 = fb.slice(0, 200);
+    if (!iuSilverRawHasReminderTaskLexemeP1(rawInput) || iuSilverIsBirthdayReminderIntentV1(rawInput)) {
+      const passthrough = iuSilverNormalizeWs(String(titleIn || "")).trim();
+      return (passthrough || fb200).slice(0, 200);
+    }
+    let s = iuSilverNormalizeWs(String(titleIn || ""));
+    if (!s) return fb200;
+    const leadRemP1 = [
+      /^\s*ud[eě]lej\s+mi\s+upom[ií]nku\s+(?:že|ze)\s+/iu,
+      /^\s*ud[eě]lej\s+mi\s+upom[ií]nku\s+/iu,
+      /^\s*ud[eě]lej\s+mi\s+p[rř]ipom[ií]nku\s+(?:že|ze)\s+/iu,
+      /^\s*ud[eě]lej\s+mi\s+p[rř]ipom[ií]nku\s+/iu,
+      /^\s*p[rř]ipome[nň]\s+mi\s+/iu,
+      /^\s*(?:že|ze)\s+mus[ií]m\s+/iu,
+      /^\s*(?:že|ze)\s+musim\s+/iu,
+      /^\s*mus[ií]m\s+/iu,
+      /^\s*musim\s+/iu
+    ];
+    let rnd;
+    for (rnd = 0; rnd < 24; rnd++) {
+      const prev = s;
+      let pi;
+      for (pi = 0; pi < leadRemP1.length; pi++) {
+        s = s.replace(leadRemP1[pi], "").trim();
+      }
+      s = iuSilverNormalizeWs(s);
+      if (s === prev) break;
+    }
+    const glueRemP1 = [
+      /\bv\s+p[aá]t(?:ku|ek)\s+v\s+dev[eě]t(?:\s+ve[eč]er)?\b/giu,
+      /\bv\s+patek\s+v\s+devet(?:\s+vecer)?\b/giu,
+      /\bv\s+dev[eě]t(?:\s+ve[eč]er)?\b/giu,
+      /\bv\s+devet(?:\s+vecer)?\b/giu,
+      /\ba\s+fakt\s+na\s+to\s+nezapomeň(?:\s+silvere)?\b/giu,
+      /\ba\s+fakt\s+na\s+to\s+nezapomen(?:\s+silvere)?\b/giu,
+      /\bfakt\s+na\s+to\s+nezapomeň\b/giu,
+      /\bfakt\s+na\s+to\s+nezapomen\b/giu,
+      /\bna\s+to\s+nezapomeň\b/giu,
+      /\bna\s+to\s+nezapomen\b/giu,
+      /\bud[eě]lej\s+mi\s+upom[ií]nku\b/giu,
+      /\bud[eě]lej\s+mi\s+p[rř]ipom[ií]nku\b/giu,
+      /\bže\s+mus[ií]m\b/giu,
+      /\bze\s+musim\b/giu,
+      /\bsilvere\b/giu
+    ];
+    for (rnd = 0; rnd < 24; rnd++) {
+      const prevG = s;
+      let gi;
+      for (gi = 0; gi < glueRemP1.length; gi++) {
+        s = s.replace(glueRemP1[gi], " ").trim();
+      }
+      s = iuSilverNormalizeWs(s);
+      if (s === prevG) break;
+    }
+    let out = iuSilverFinalizeTaskTitle(s);
+    if (!out || String(out).trim().length < 2) out = fb200;
+    out = iuSilverNormalizeWs(String(out || ""));
+    if (IU_SILVER_TASK_TITLE_POLLUTION_AUDIT_RE.test(foldCs(out))) out = fb200;
+    if (out.length > 100) out = out.slice(0, 100).trim();
+    if (!out || out.length < 2) return fb200;
+    if (IU_SILVER_TASK_TITLE_POLLUTION_AUDIT_RE.test(foldCs(out))) return fb200;
+    out = out.replace(/[.!?…]+$/u, "").trim();
+    if (!out || out.length < 2) return fb200;
+    out = out.charAt(0).toLocaleUpperCase("cs-CZ") + out.slice(1);
     return out.slice(0, 200);
   }
 
