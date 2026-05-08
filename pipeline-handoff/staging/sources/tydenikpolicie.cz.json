@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-08T10:20:28.298123Z",
+  "ingestedAt": "2026-05-08T11:05:28.676149Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "S kradeným citroenem ujel od benzínky bez placení, na svědomí má mít také další trestnou činnost",
+      "url": "https://tydenikpolicie.cz/s-kradenym-citroenem-ujel-od-benzinky-bez-placeni-na-svedomi-ma-mit-take-dalsi-trestnou-cinnost/",
+      "dt": "2026-05-08T11:00:31Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "benzínky",
+        "citroenem",
+        "další",
+        "kradeným",
+        "mít",
+        "placení",
+        "svědomí",
+        "také",
+        "trestnou",
+        "ujel",
+        "činnost"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -241,37 +269,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Záchranáři na Brněnsku chtěli pomoci ženě. Na sousední dům vylezl muž a ze střechy začal po všech házet tašky",
-      "url": "https://tydenikpolicie.cz/zachranari-na-brnensku-chteli-pomoci-zene-na-sousedni-dum-vylezl-muz-a-ze-strechy-zacal-po-vsech-hazet-tasky/",
-      "dt": "2026-05-07T19:36:56Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "brněnsku",
-        "chtěli",
-        "dům",
-        "házet",
-        "muž",
-        "pomoci",
-        "sousední",
-        "střechy",
-        "tašky",
-        "vylezl",
-        "všech",
-        "začal",
-        "záchranáři",
-        "ženě"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16549,
+      "bytes": 16684,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-08T07:18:15Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T11:00:31Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -334,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "S kradeným citroenem ujel od benzínky bez placení, na svědomí má mít také další trestnou činnost",
+            "publishedAt": "2026-05-08T11:00:31Z"
+          },
           {
             "title": "Muž dojížděl vlakem do Světlé nad Sázavou, kde pak měl opakovaně krást na železnici",
             "publishedAt": "2026-05-08T07:18:15Z"
@@ -361,10 +362,6 @@
           {
             "title": "Ke dvěma vážným nehodám v Moravskoslezském kraji vzlétl vrtulník LZS",
             "publishedAt": "2026-05-07T20:04:55Z"
-          },
-          {
-            "title": "Dvojice s malým dítětem skončila po nehodě na Prachaticku se škodovkou převrácená v potoce",
-            "publishedAt": "2026-05-07T19:56:19Z"
           }
         ]
       }

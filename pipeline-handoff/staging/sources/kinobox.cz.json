@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-08T10:20:28.298123Z",
+  "ingestedAt": "2026-05-08T11:05:28.676149Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Oblíbená postava Ulice je definitivně zpátky. Po velkém návratu ale ihned musí na policii",
+      "url": "https://www.kinobox.cz/clanky/serialy/53557-oblibena-postava-ulice-je-definitivne-zpatky-po-velkem-navratu-ale-ihned-musi-na-policii",
+      "dt": "2026-05-08T11:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "ale",
+        "definitivně",
+        "ihned",
+        "musí",
+        "návratu",
+        "oblíbená",
+        "policii",
+        "postava",
+        "ulice",
+        "velkém",
+        "zpátky"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -522,33 +550,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Mrazivá česká detektivka boduje na streamu. Děsivá vražda zde není pro slabé povahy",
-      "url": "https://www.kinobox.cz/clanky/vod/53489-mraziva-ceska-detektivka-boduje-na-streamu-desiva-vrazda-zde-neni-pro-slabe-povahy",
-      "dt": "2026-05-05T17:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "boduje",
-        "detektivka",
-        "děsivá",
-        "mrazivá",
-        "povahy",
-        "slabé",
-        "streamu",
-        "vražda",
-        "zde",
-        "česká"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -559,7 +560,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28165,
+      "bytes": 28181,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -596,11 +597,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-08T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T11:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "other": 19,
-          "zpravy": 1
+          "other": 20
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -612,6 +612,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Oblíbená postava Ulice je definitivně zpátky. Po velkém návratu ale ihned musí na policii",
+            "publishedAt": "2026-05-08T11:00:00Z"
+          },
           {
             "title": "Kinobox Daily: Příběh legendárního Angličana, který zachránil stovky českých dětí před nacisty",
             "publishedAt": "2026-05-08T10:00:00Z"
@@ -639,10 +643,6 @@
           {
             "title": "Zapovězený Kevin Spacey míří do Česka. V novém filmu ztvární dirigenta s temnou minulostí",
             "publishedAt": "2026-05-07T12:00:00Z"
-          },
-          {
-            "title": "Dostane Polabí vážnou konkurenci? Úspěšná autorka odhalila chystaný hit Novy",
-            "publishedAt": "2026-05-07T11:00:00Z"
           }
         ]
       }

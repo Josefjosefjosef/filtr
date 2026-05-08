@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-05-08T10:20:28.298123Z",
+  "ingestedAt": "2026-05-08T11:05:28.676149Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Komu hrozí rakovina kůže nejčastěji? Nepodceňujte 6 varovných příznaků",
+      "url": "https://www.prozeny.cz/clanek/zdravi-komu-hrozi-rakovina-kuze-nejcasteji-nepodcenujte-6-varovnych-priznaku-100317",
+      "dt": "2026-05-08T10:29:10Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "hrozí",
+        "komu",
+        "kůže",
+        "nejčastěji",
+        "nepodceňujte",
+        "příznaků",
+        "rakovina",
+        "varovných"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -792,31 +817,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Co udělat na zahrádce v květnu: sázejte, stříhejte a těšte se z první úrody",
-      "url": "https://www.prozeny.cz/clanek/bydleni-kvetiny-a-zahrada-zahrada-v-kvetnu-94718",
-      "dt": "2026-05-06T06:00:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "květnu",
-        "první",
-        "stříhejte",
-        "sázejte",
-        "těšte",
-        "udělat",
-        "zahrádce",
-        "úrody"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -827,7 +827,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 39397,
+      "bytes": 39553,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -864,7 +864,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T09:42:41Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T10:29:10Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 30
@@ -879,6 +879,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Komu hrozí rakovina kůže nejčastěji? Nepodceňujte 6 varovných příznaků",
+            "publishedAt": "2026-05-08T10:29:10Z"
+          },
           {
             "title": "3 důvody, proč se začnou partneři odcizovat. Zarazte to hned na začátku, jinak se rozejdete",
             "publishedAt": "2026-05-08T09:42:41Z"
@@ -905,10 +909,6 @@
           },
           {
             "title": "Jak udržet chléb dlouho čerstvý? Kdy pomůže utěrka, kdy mrazák a kdy ho dát pod tekoucí vodu",
-            "publishedAt": "2026-05-08T03:00:00Z"
-          },
-          {
-            "title": "Bára Kodetová vzpomíná na Jiřího Kodeta: „Táta mi pořád chybí.“",
             "publishedAt": "2026-05-08T03:00:00Z"
           }
         ]

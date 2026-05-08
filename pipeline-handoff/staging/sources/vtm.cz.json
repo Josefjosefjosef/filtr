@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-08T10:20:28.298123Z",
+  "ingestedAt": "2026-05-08T11:05:28.676149Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,36 @@
         "smazat",
         "spolkl",
         "stahuje"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Pro-Ject modernizuje klasické stereo. Stream Box E přidá streaming, Wireless Box E udělá z beden bezdrátový systém",
+      "url": "https://avmania.zive.cz/pro-ject-modernizuje-klasicke-stereo-stream-box-e-prida-streaming-wireless-box-e-udela-z-beden-bezdratovy-system",
+      "dt": "2026-05-08T10:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "beden",
+        "bezdrátový",
+        "box",
+        "ject",
+        "klasické",
+        "modernizuje",
+        "přidá",
+        "stereo",
+        "stream",
+        "streaming",
+        "systém",
+        "udělá",
+        "wireless"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -927,36 +957,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Tim Cook předává Apple v top formě. Rekordní březnový kvartál táhly iPhony a „levný hardware“",
-      "url": "https://www.zive.cz/clanky/tim-cook-predava-apple-v-top-forme-rekordni-breznovy-kvartal-tahly-iphony-a-levny-hardware/sc-3-a-241016/default.aspx",
-      "dt": "2026-05-05T15:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "apple",
-        "březnový",
-        "cook",
-        "formě",
-        "hardware",
-        "iphony",
-        "kvartál",
-        "levný",
-        "předává",
-        "rekordní",
-        "tim",
-        "top",
-        "táhly"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -967,7 +967,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23006,
+      "bytes": 22991,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1004,7 +1004,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-08T09:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T10:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1022,6 +1022,10 @@
           {
             "title": "Chrome na počítačích spolkl 4 GB místa navíc, Google potají stahuje AI model. Jak jej smazat?",
             "publishedAt": "2026-05-07T14:45:00Z"
+          },
+          {
+            "title": "Pro-Ject modernizuje klasické stereo. Stream Box E přidá streaming, Wireless Box E udělá z beden bezdrátový systém",
+            "publishedAt": "2026-05-08T10:45:00Z"
           },
           {
             "title": "Recenze filmu Mortal Kombat II: Brutální, vtipné a překvapivě chytré. Takhle má vypadat poctivá videoherní řežba",
@@ -1046,10 +1050,6 @@
           {
             "title": "Fitbit Air je minimalistický náramek bez displeje. S pomocí Gemini potichu hlídá vaše zdraví",
             "publishedAt": "2026-05-07T18:45:00Z"
-          },
-          {
-            "title": "Jak dobře vybrat reproduktory k počítači. Kdy sáhnout po 5.1 zvuku, studiových monitorech nebo soundbaru",
-            "publishedAt": "2026-05-07T16:45:00Z"
           }
         ]
       }
