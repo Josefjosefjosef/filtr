@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-08T19:34:19.788932Z",
+  "ingestedAt": "2026-05-08T20:14:27.909588Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zadlužené Zimbabwe vrací farmy bělochům, chce se vymanit z finanční krize",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/zimbabwe-farmy-cizinci-evropa-zapad-emmerson-mnangagwa-robert-mugabe.A260507_185335_zahranicni_dvou",
+      "dt": "2026-05-08T19:13:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "bělochům",
+        "chce",
+        "farmy",
+        "finanční",
+        "krize",
+        "vrací",
+        "vymanit",
+        "zadlužené",
+        "zimbabwe"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -768,31 +794,6 @@
         "uspěla",
         "zachytili",
         "českých"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Soud rozhodl, že Trumpova nejnovější cla jsou nezákonná. Částečně je zablokoval",
-      "url": "https://www.idnes.cz/ekonomika/zahranicni/soud-rozhodl-ze-trumpova-nejnovejsi-cla-jsou-nezakonna-castecne-je-zablokoval.A260508_081008_eko-zahranicni_remy",
-      "dt": "2026-05-08T06:10:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "cla",
-        "nejnovější",
-        "nezákonná",
-        "rozhodl",
-        "soud",
-        "trumpova",
-        "zablokoval",
-        "částečně"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1594,7 +1595,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48918,
+      "bytes": 48944,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1631,11 +1632,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T18:58:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-08T19:13:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
-          "finance": 4
+          "zpravy": 27,
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1647,6 +1648,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zadlužené Zimbabwe vrací farmy bělochům, chce se vymanit z finanční krize",
+            "publishedAt": "2026-05-08T19:13:00Z"
+          },
           {
             "title": "Trump oznámil třídenní příměří ve válce Ruska a Ukrajiny. Dohodu potvrdila i Moskva",
             "publishedAt": "2026-05-08T18:58:00Z"
@@ -1674,10 +1679,6 @@
           {
             "title": "Nemáme prezidentský systém, hájí koalice, že nechce Pavla na summitu NATO",
             "publishedAt": "2026-05-08T16:08:09Z"
-          },
-          {
-            "title": "Nehoda auta zkomplikovala dopravu na dálnici D8, dva lidé skončili v nemocnici",
-            "publishedAt": "2026-05-08T15:50:00Z"
           }
         ]
       }
