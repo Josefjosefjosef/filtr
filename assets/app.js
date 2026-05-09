@@ -37502,6 +37502,100 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P0 narrow: globální „nic neukládej / neukládej / neukládat“ před write-like kotvou (úkol, ulož, připomeň, …)
+   * → žádný task/note/calendar write (AMBIGUOUS_WRITE v BrainRoute).
+   * Vynechá modulární „neukládej do kalendáře|poznámek|úkolů“; neřeší „ne do úkolů, ulož poznámku“ (mimo scope).
+   */
+  function iuSilverP0NoWriteNegationBeatsWriteLikeCueFolded(f) {
+    const x = String(f || "").trim();
+    if (!x) return false;
+
+    function earliestNegIdx() {
+      let best = -1;
+      const push = (idx) => {
+        if (idx < 0) return;
+        if (best < 0 || idx < best) best = idx;
+      };
+      {
+        const re = /\bnic\s+neukladej\b/g;
+        let m;
+        while ((m = re.exec(x)) !== null) {
+          const tail = x.slice(m.index + m[0].length);
+          if (/^\s+do\s+kalendar/.test(tail)) continue;
+          push(m.index);
+        }
+        re.lastIndex = 0;
+      }
+      if (!iuSilverNegationTargetsTasksOnlyFolded(x)) {
+        {
+          const re = /\bneukladat\b/g;
+          let m;
+          while ((m = re.exec(x)) !== null) {
+            push(m.index);
+          }
+          re.lastIndex = 0;
+        }
+        {
+          const re = /\bneukladej\b/g;
+          let m;
+          while ((m = re.exec(x)) !== null) {
+            const tail = x.slice(m.index + m[0].length);
+            if (/^\s+do\s+kalendar/.test(tail)) continue;
+            if (/^\s+do\s+poznam/.test(tail)) continue;
+            if (/^\s+do\s+ukol/.test(tail)) continue;
+            push(m.index);
+          }
+          re.lastIndex = 0;
+        }
+      }
+      return best;
+    }
+
+    function earliestWriteLikeIdx() {
+      const patterns = [
+        /\bukol\w*\b/gi,
+        /\btask\b/gi,
+        /\bpripomen/gi,
+        /\bzapis/gi,
+        /\buloz/gi,
+        /\bdej\b/gi,
+        /\bpridej\b/gi
+      ];
+      let best = -1;
+      for (let pi = 0; pi < patterns.length; pi++) {
+        const re = patterns[pi];
+        let m;
+        while ((m = re.exec(x)) !== null) {
+          const idx = m.index;
+          if (best < 0 || idx < best) best = idx;
+        }
+        re.lastIndex = 0;
+      }
+      return best;
+    }
+
+    const ni = earliestNegIdx();
+    const wi = earliestWriteLikeIdx();
+    if (ni < 0 || wi < 0) return false;
+    if (ni < wi) {
+      if (
+        iuSilverHasExplicitCalendarTarget(x) &&
+        /\buloz|zapis|pridej|vloz|naplanuj|vytvor|zaloz|nahod|\bdej\s+mi\b/i.test(x)
+      ) {
+        return false;
+      }
+      const taskCue = iuSilverEarliestExplicitTaskWriteCueIndexFolded(x);
+      if (taskCue >= 0 && taskCue > ni) {
+        return false;
+      }
+      if (/\bukol\w*\s*,\s*ne\s+kalendar/.test(x) || /\bukol\w*\s+ne\s+kalendar/.test(x)) {
+        return false;
+      }
+    }
+    return ni < wi;
+  }
+
+  /**
    * P1 narrow: explicitní task token (EN „task“ / ulož mi task / dej mi task / leading task …) bez update sloves.
    */
   function iuSilverExplicitTaskCreateAnchorP1Folded(f) {
@@ -37509,6 +37603,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!x) return false;
     if (/\bzmen\b/.test(x) || /\buprav\b/.test(x) || /\bprepis\b/.test(x) || /\bodskrtn/.test(x)) return false;
     if (/\boznac\w*\s+.*\bhotov/.test(x)) return false;
+    if (/\buloz\s+mi\s+ukoly\b/.test(x) || /\buloz\s+mi\s+ukol\b/.test(x)) return true;
     if (/\buloz\s+mi\s+task\b/.test(x) || /\bdej\s+mi\s+task\b/.test(x)) return true;
     if (/^\s*task\s+\S/.test(x)) return true;
     return false;
@@ -37537,6 +37632,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const raw = String(rawText || "").trim();
     const folded = foldCs(raw);
     const prev = prevDraft || createEmptyDraft();
+    if (iuSilverP0NoWriteNegationBeatsWriteLikeCueFolded(folded)) {
+      return {
+        intent: "unknown",
+        confidence: 0.93,
+        route: "fallback",
+        reason: "ambiguous_write",
+        kind: "AMBIGUOUS_WRITE",
+        calendarFallbackWanted: false
+      };
+    }
     if (iuSilverGlobalWriteNegationConflictsExplicitModuleWriteFolded(raw, folded)) {
       return {
         intent: "unknown",
@@ -44986,6 +45091,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
 
     if (iuSilverGlobalWriteNegationConflictsExplicitModuleWriteFolded(raw, folded)) {
+      return baseClarification("ambiguous_write", "unknown");
+    }
+
+    if (iuSilverP0NoWriteNegationBeatsWriteLikeCueFolded(folded)) {
       return baseClarification("ambiguous_write", "unknown");
     }
 
