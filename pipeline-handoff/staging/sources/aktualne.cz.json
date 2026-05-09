@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-09T16:54:10.796840Z",
+  "ingestedAt": "2026-05-09T17:39:24.452680Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Slavia - Sparta 0:1. Kuchta po rohu otevírá skóre",
+      "url": "https://sport.aktualne.cz/fotbal/ceska-liga/slavia-sparta-domaci-jdou-do-posledniho-derby-s-buzkem-a-oscarem-v-sestave/r~aaa299ea2a1983f2180a3a0ae89839b8/",
+      "dt": "2026-05-09T16:24:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "kuchta",
+        "otevírá",
+        "rohu",
+        "skóre",
+        "slavia",
+        "sparta"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -23,32 +46,6 @@
         "vlajku",
         "vlády",
         "změně"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Slavia - Sparta. Domácí jdou do posledního derby s Bužkem a Oscarem v sestavě",
-      "url": "https://sport.aktualne.cz/fotbal/ceska-liga/slavia-sparta-domaci-jdou-do-posledniho-derby-s-buzkem-a-oscarem-v-sestave/r~aaa299ea2a1983f2180a3a0ae89839b8/",
-      "dt": "2026-05-09T16:24:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "bužkem",
-        "derby",
-        "domácí",
-        "jdou",
-        "oscarem",
-        "posledního",
-        "sestavě",
-        "slavia",
-        "sparta"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -550,7 +547,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22533,
+      "bytes": 22503,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -590,8 +587,8 @@
         "raw_feed_latest_publishedAt": "2026-05-09T16:24:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 13,
-          "sport": 7
+          "sport": 7,
+          "zpravy": 13
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -604,12 +601,12 @@
         },
         "sample_titles": [
           {
-            "title": "\"Mám mandát ke změně systému.\" Magyar se ujal vlády, na budovu parlamentu dal vlajku EU",
-            "publishedAt": "2026-05-09T12:43:00Z"
+            "title": "Slavia - Sparta 0:1. Kuchta po rohu otevírá skóre",
+            "publishedAt": "2026-05-09T16:24:00Z"
           },
           {
-            "title": "Slavia - Sparta. Domácí jdou do posledního derby s Bužkem a Oscarem v sestavě",
-            "publishedAt": "2026-05-09T16:24:00Z"
+            "title": "\"Mám mandát ke změně systému.\" Magyar se ujal vlády, na budovu parlamentu dal vlajku EU",
+            "publishedAt": "2026-05-09T12:43:00Z"
           },
           {
             "title": "Izrael útočil na jih Libanonu, Bahrajn zatýká lidi s vazbami na íránské revoluční gardy",

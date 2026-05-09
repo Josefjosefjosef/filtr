@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-09T16:54:10.796840Z",
+  "ingestedAt": "2026-05-09T17:39:24.452680Z",
   "items": [
     {
       "section": "aktualne",
@@ -78,7 +78,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "„Nebudu vládnout, ale sloužit.\" Magyar se stal maďarským premiérem",
+      "title": "„Nebudu vládnout, ale sloužit.“ Magyar se stal maďarským premiérem",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/v-madarsku-poprve-zaseda-novy-parlament-ocekava-se-zvoleni-magyara-premierem-373250",
       "dt": "2026-05-09T10:48:09Z",
       "media_raw": "ČT24 / Domácí",
@@ -743,6 +743,28 @@
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Espaňol ve španělské lize nevyhrál už 18 kol",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/espanol-ve-spanelske-lize-nevyhral-uz-18-kol-156680",
+      "dt": "2026-05-09T17:03:41Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "espaňol",
+        "kol",
+        "lize",
+        "nevyhrál",
+        "španělské"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1473,31 +1495,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fuksovi a Dostálovi začne v Maďarsku boj o příští olympijské hry",
-      "url": "https://sport.ceskatelevize.cz/clanek/rychlostni-kanoistika/fuksovi-a-dostalovi-zacne-v-madarsku-boj-o-pristi-olympijske-hry-156640",
-      "dt": "2026-05-08T04:00:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "boj",
-        "dostálovi",
-        "fuksovi",
-        "hry",
-        "maďarsku",
-        "olympijské",
-        "příští",
-        "začne"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1508,7 +1505,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42251,
+      "bytes": 42256,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1599,7 +1596,7 @@
             "publishedAt": "2026-05-09T11:17:46Z"
           },
           {
-            "title": "„Nebudu vládnout, ale sloužit.\" Magyar se stal maďarským premiérem",
+            "title": "„Nebudu vládnout, ale sloužit.“ Magyar se stal maďarským premiérem",
             "publishedAt": "2026-05-09T10:48:09Z"
           },
           {
@@ -1628,7 +1625,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39148,
+      "bytes": 38859,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1665,7 +1662,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-09T16:33:30Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T17:03:41Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1680,6 +1677,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Espaňol ve španělské lize nevyhrál už 18 kol",
+            "publishedAt": "2026-05-09T17:03:41Z"
+          },
           {
             "title": "Ústí další obrat nepředvedlo. Opavští basketbalisté postoupili do semifinále",
             "publishedAt": "2026-05-09T16:33:30Z"
@@ -1707,10 +1708,6 @@
           {
             "title": "Počtvrté z první řady: Salač si v kvalifikaci v Le Mans vyjel třetí místo",
             "publishedAt": "2026-05-09T13:05:16Z"
-          },
-          {
-            "title": "MacLeodová už nepovede české hokejistky",
-            "publishedAt": "2026-05-09T10:50:45Z"
           }
         ]
       }
@@ -1722,7 +1719,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78247,
+      "bytes": 78315,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

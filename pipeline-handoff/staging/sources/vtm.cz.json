@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-09T16:54:10.796840Z",
+  "ingestedAt": "2026-05-09T17:39:24.452680Z",
   "items": [
     {
       "section": "aktualne",
@@ -25,6 +25,33 @@
         "verzi",
         "změna",
         "číslování"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Za deset let možná i ve vašich počítačích. PCI Express 8.0 opět zdvojnásobí rychlost",
+      "url": "https://www.zive.cz/clanky/za-deset-let-mozna-i-ve-vasich-pocitacich-pci-express-80-opet-zdvojnasobi-rychlost-202605/sc-3-a-241067/default.aspx",
+      "dt": "2026-05-09T16:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "deset",
+        "express",
+        "let",
+        "možná",
+        "opět",
+        "pci",
+        "počítačích",
+        "rychlost",
+        "vašich",
+        "zdvojnásobí"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -942,31 +969,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Google má novou captchu. Že nejste robot, prokážete naskenováním QR kódu",
-      "url": "https://www.zive.cz/clanky/google-ma-novou-captchu-ze-nejste-robot-prokazete-naskenovani-qr-kodu/sc-3-a-241044/default.aspx",
-      "dt": "2026-05-06T14:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "captchu",
-        "google",
-        "kódu",
-        "naskenováním",
-        "nejste",
-        "novou",
-        "prokážete",
-        "robot"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -977,7 +979,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23301,
+      "bytes": 23325,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1014,7 +1016,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-09T14:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T16:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "zpravy": 1,
@@ -1033,6 +1035,10 @@
           {
             "title": "Total Commander má novou finální verzi. Změna v číslování je malá, ale přináší pár užitečných drobností",
             "publishedAt": "2026-05-09T07:45:00Z"
+          },
+          {
+            "title": "Za deset let možná i ve vašich počítačích. PCI Express 8.0 opět zdvojnásobí rychlost",
+            "publishedAt": "2026-05-09T16:45:00Z"
           },
           {
             "title": "Jak poznám, že si mě někdo zablokoval. Telefonní číslo, textovky, e-maily i sociální sítě",
@@ -1057,10 +1063,6 @@
           {
             "title": "Ideální notebook nesmí šetřit na displeji a klávesnici. Výkonu už máme dost (Podcast Živě)",
             "publishedAt": "2026-05-08T16:45:00Z"
-          },
-          {
-            "title": "Recenze filmu Mortal Kombat II: Brutální, vtipné a překvapivě chytré. Takhle má vypadat poctivá videoherní řežba",
-            "publishedAt": "2026-05-08T09:15:00Z"
           }
         ]
       }
