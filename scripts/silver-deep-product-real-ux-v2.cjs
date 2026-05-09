@@ -14,7 +14,7 @@ const REPO = path.resolve(__dirname, "..");
 const HARNESS_ID = "silver_deep_product_real_ux_v2";
 const FIXED_NOW_ISO = "2026-05-04T12:00:00";
 const REPORT_JSON = path.join(__dirname, "silver-deep-product-real-ux-v2-report.json");
-const USER_MAIN_COMMIT = "d89a8ae6ad0ab0a0935b16ca02b5003d4d8a8869";
+const USER_MAIN_COMMIT = "326bf6be040a14178b0231c00f0d6789b7802434";
 
 const harness = require("./audit_silver_realistic_mobile_corpus.cjs");
 const { loadEngine, evaluateOne, foldCs, rawUserMessage, hasNegWrite, cardType } = harness;
@@ -820,7 +820,7 @@ function main() {
 
   const clusters = aggregateClusters(fails);
   const head = mainCommitResolved();
-  const changedFiles = "scripts/silver-deep-product-real-ux-v2.cjs;scripts/silver-deep-product-real-ux-v2-report.json";
+  const changedFiles = "assets/app.js;scripts/silver-deep-product-real-ux-v2.cjs;scripts/silver-deep-product-real-ux-v2-report.json";
 
   const gates = {
     smoke: skipGates ? "SKIP" : runGate("smoke", 'npm run smoke'),
@@ -1010,7 +1010,7 @@ function main() {
       input: x.case.input.slice(0, 220),
       replay: x.case.input.slice(0, 220)
     })),
-    engine_changed: "NO",
+    engine_changed: changedFiles.indexOf("assets/app.js") >= 0 ? "YES" : "NO",
     behavior_changed: "NO",
     ui_changed: "NO",
     css_changed: "NO",
@@ -1018,8 +1018,6 @@ function main() {
     changed_files: changedFiles,
     recommended_next_fix_scope: highestProblem === "NONE" ? "Monitor production; keep silver harness needles aligned with real CZ phrasing" : "See top_cluster_1_root_cause — diagnostic only; no code change in this task"
   };
-
-  fs.writeFileSync(REPORT_JSON, JSON.stringify(report, null, 2), "utf8");
 
   const oneLine = (s) => String(s || "").replace(/\r?\n/g, "\\n").slice(0, 520);
 
@@ -1183,6 +1181,8 @@ function main() {
   lines.push("git_status_short=" + (gAfter || "(empty)").replace(/\r?\n/g, " | "));
   lines.push("");
   lines.push("======= END_SILVER_DEEP_PRODUCT_REAL_UX_V2_RESULT ===");
+
+  fs.writeFileSync(REPORT_JSON, JSON.stringify(report, null, 2), "utf8");
 
   console.log(deepenLines.join("\n") + "\n\n" + deepenBlock.join("\n") + "\n\n" + lines.join("\n"));
 
