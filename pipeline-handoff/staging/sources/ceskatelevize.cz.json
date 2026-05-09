@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-09T13:29:38.496333Z",
+  "ingestedAt": "2026-05-09T14:04:06.560958Z",
   "items": [
     {
       "section": "aktualne",
@@ -748,6 +748,29 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Chelsea po šesti porážkách uhrála v Liverpoolu remízu",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/chelsea-po-sesti-porazkach-uhrala-v-liverpoolu-remizu-156674",
+      "dt": "2026-05-09T13:44:42Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "chelsea",
+        "liverpoolu",
+        "porážkách",
+        "remízu",
+        "uhrála",
+        "šesti"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Počtvrté z první řady: Salač si v kvalifikaci v Le Mans vyjel třetí místo",
       "url": "https://sport.ceskatelevize.cz/clanek/motorsport/poctvrte-z-prvni-rady-salac-si-v-kvalifikaci-v-le-mans-vyjel-treti-misto-156673",
       "dt": "2026-05-09T13:05:16Z",
@@ -1475,32 +1498,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Přívratský si v Osijeku vystřílel zlato a bronz, tréninky s malorážkou ho ale nepovzbudily",
-      "url": "https://sport.ceskatelevize.cz/clanek/sportovni-strelba/privratsky-si-v-osijeku-vystrilel-zlato-a-bronz-treninky-s-malorazkou-ho-ale-nepovzbudily-156646",
-      "dt": "2026-05-07T14:58:16Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "ale",
-        "bronz",
-        "malorážkou",
-        "nepovzbudily",
-        "osijeku",
-        "přívratský",
-        "tréninky",
-        "vystřílel",
-        "zlato"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1511,7 +1508,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42310,
+      "bytes": 42294,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1631,7 +1628,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39601,
+      "bytes": 39130,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1668,7 +1665,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-09T13:05:16Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T13:44:42Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1683,6 +1680,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chelsea po šesti porážkách uhrála v Liverpoolu remízu",
+            "publishedAt": "2026-05-09T13:44:42Z"
+          },
           {
             "title": "Počtvrté z první řady: Salač si v kvalifikaci v Le Mans vyjel třetí místo",
             "publishedAt": "2026-05-09T13:05:16Z"
@@ -1710,10 +1711,6 @@
           {
             "title": "Dobeš vychytal Montrealu výhru nad Buffalem, Dostál po první třetině střídal",
             "publishedAt": "2026-05-09T06:41:32Z"
-          },
-          {
-            "title": "Knicks dělí od semifinále jedna výhra, Wembanyama táhl Spurs 39 body",
-            "publishedAt": "2026-05-09T06:29:49Z"
           }
         ]
       }
@@ -1725,7 +1722,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78260,
+      "bytes": 78283,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

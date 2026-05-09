@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-09T13:29:38.496333Z",
+  "ingestedAt": "2026-05-09T14:04:06.560958Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Je mu 13 let a zvedá 165 kilo. Maximus Hall jde ve stopách slavného otce",
+      "url": "https://www.mmamag.cz/je-mu-13-let-a-zveda-165-kilo-maximus-hall-otce-nezapre/",
+      "dt": "2026-05-09T13:30:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "165",
+        "hall",
+        "jde",
+        "kilo",
+        "let",
+        "maximus",
+        "otce",
+        "slavného",
+        "stopách",
+        "zvedá"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1118,36 +1145,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Oktagon mění pravidla hry: Diváci budou rozhodovat o průběhu zápasů. Neruda slibuje, že z MMA nebude fraška",
-      "url": "https://www.mmamag.cz/oktagon-spousti-cage-game-fanousci-zasahnou-do-zapasu/",
-      "dt": "2026-05-07T19:30:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "diváci",
-        "fraška",
-        "hry",
-        "mma",
-        "mění",
-        "nebude",
-        "neruda",
-        "oktagon",
-        "pravidla",
-        "průběhu",
-        "rozhodovat",
-        "slibuje",
-        "zápasů"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1158,7 +1155,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 77851,
+      "bytes": 77968,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1195,7 +1192,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-09T11:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T13:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1210,6 +1207,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Je mu 13 let a zvedá 165 kilo. Maximus Hall jde ve stopách slavného otce",
+            "publishedAt": "2026-05-09T13:30:00Z"
+          },
           {
             "title": "Soukup jde znovu do ringu. Vančura mu před zápasem v Bratislavě slíbil tvrdou demolici",
             "publishedAt": "2026-05-09T11:00:00Z"
@@ -1237,10 +1238,6 @@
           {
             "title": "Bojovnice UFC se rozhodně nestydí. V odvážných bikinách předvedla postavu snů",
             "publishedAt": "2026-05-09T08:05:12Z"
-          },
-          {
-            "title": "Tiskovka před UFC v Bílém domě se zvrhla v chaos. Hokit sprostě napadl Pereiru, na jeho obranu vyskočil Topuria",
-            "publishedAt": "2026-05-09T07:50:12Z"
           }
         ]
       }

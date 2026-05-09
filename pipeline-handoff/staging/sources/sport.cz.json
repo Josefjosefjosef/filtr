@@ -1,30 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-09T13:29:38.496333Z",
+  "ingestedAt": "2026-05-09T14:04:06.560958Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Baník vykřesává naději, Dukla je v průšvihu. Boleslav udeřila. Slavia může v derby definitivně získat titul",
+      "title": "FOTBAL ONLINE: Baník padl v Teplicích. Dukla v průšvihu. Zlín srovnal. Plzeň jde na Liberec. Slavia může v derby definitivně získat titul",
       "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-slavia-muze-v-domacim-derby-definitivne-ziskat-titul-5450306",
       "dt": "2026-05-09T07:17:30Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
         "baník",
-        "boleslav",
         "definitivně",
         "derby",
         "dukla",
         "fotbal",
-        "naději",
+        "jde",
+        "liberec",
         "online",
+        "padl",
+        "plzeň",
         "průšvihu",
         "slavia",
+        "srovnal",
+        "teplicích",
         "titul",
-        "udeřila",
-        "vykřesává",
+        "zlín",
         "získat"
       ],
       "feedCategory": "sport",
@@ -37,7 +40,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Salač třetí v kvalifikaci! Do závodu v Le Mans odstartuje z první řady",
+      "title": "Salač zajel skvěle kvalifikaci! Do závodu v Le Mans odstartuje z první řady",
       "url": "https://www.sport.cz/clanek/moto-motocykly-salac-treti-v-kvalifikaci-do-zavodu-v-le-mans-odstartuje-z-prvni-rady-5450700",
       "dt": "2026-05-09T12:59:35Z",
       "media_raw": "Sport.cz",
@@ -48,9 +51,38 @@
         "odstartuje",
         "první",
         "salač",
-        "třetí",
+        "skvěle",
+        "zajel",
         "závodu",
         "řady"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Fotbalisté Chelsea v lize ukončili sérii šesti porážek, udrželi naději na pohárovou Evropu",
+      "url": "https://www.sport.cz/clanek/fotbal-premier-league-fotbaliste-chelsea-v-lize-ukoncili-serii-sesti-porazek-udrzeli-nadeji-na-poharovou-evropu-5450789",
+      "dt": "2026-05-09T13:36:56Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "chelsea",
+        "evropu",
+        "fotbalisté",
+        "lize",
+        "naději",
+        "pohárovou",
+        "porážek",
+        "sérii",
+        "udrželi",
+        "ukončili",
+        "šesti"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -90,7 +122,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Po hrozivém startu se Češi zvedli. Nakonec ale s Finskem nezískali ani bod",
+      "title": "SESTŘIH: Po hrozivém startu se Češi zvedli. Nakonec ale s Finskem nezískali ani bod",
       "url": "https://www.sport.cz/clanek/hokej-euro-hockey-tour-reprezentace-prozradila-jednicku-na-finy-odpocivat-bude-karlovarska-letka-5450195",
       "dt": "2026-05-08T13:51:21Z",
       "media_raw": "Sport.cz",
@@ -102,6 +134,7 @@
         "hrozivém",
         "nakonec",
         "nezískali",
+        "sestřih",
         "startu",
         "zvedli",
         "češi"
@@ -765,26 +798,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dortmund je vicemistrem bundesligy",
-      "url": "https://www.sport.cz/clanek/fotbal-bundesliga-dortmund-je-vicemistrem-bundesligy-5450301",
-      "dt": "2026-05-08T20:34:29Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bundesligy",
-        "dortmund",
-        "vicemistrem"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +808,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42330,
+      "bytes": 42712,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +845,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-09T12:59:35Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T13:36:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -849,19 +862,23 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Baník vykřesává naději, Dukla je v průšvihu. Boleslav udeřila. Slavia může v derby definitivně získat titul",
+            "title": "FOTBAL ONLINE: Baník padl v Teplicích. Dukla v průšvihu. Zlín srovnal. Plzeň jde na Liberec. Slavia může v derby definitivně získat titul",
             "publishedAt": "2026-05-09T07:17:30Z"
           },
           {
-            "title": "Salač třetí v kvalifikaci! Do závodu v Le Mans odstartuje z první řady",
+            "title": "Salač zajel skvěle kvalifikaci! Do závodu v Le Mans odstartuje z první řady",
             "publishedAt": "2026-05-09T12:59:35Z"
+          },
+          {
+            "title": "Fotbalisté Chelsea v lize ukončili sérii šesti porážek, udrželi naději na pohárovou Evropu",
+            "publishedAt": "2026-05-09T13:36:56Z"
           },
           {
             "title": "Kontroverze po Fuksově triumfu. Na první místo posunuli i Rusa, české eso nešlo na vyhlášení",
             "publishedAt": "2026-05-09T08:58:14Z"
           },
           {
-            "title": "Po hrozivém startu se Češi zvedli. Nakonec ale s Finskem nezískali ani bod",
+            "title": "SESTŘIH: Po hrozivém startu se Češi zvedli. Nakonec ale s Finskem nezískali ani bod",
             "publishedAt": "2026-05-08T13:51:21Z"
           },
           {
@@ -875,10 +892,6 @@
           {
             "title": "Hrdličková skončila osmá ve střelbě na trap na Světovém poháru v Almaty",
             "publishedAt": "2026-05-09T11:46:12Z"
-          },
-          {
-            "title": "Skvělá Nosková postupuje v Římě do osmifinále, odpoledne bude hrát Menšík. Macháč skrečoval",
-            "publishedAt": "2026-05-09T06:12:04Z"
           }
         ]
       }

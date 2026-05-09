@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-09T13:29:38.496333Z",
+  "ingestedAt": "2026-05-09T14:04:06.560958Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Prelude: Dark Pain vypadá jako slibné taktické RPG",
+      "url": "https://zing.cz/article/prelude-dark-pain-vypada-jako-slibne-takticke-rpg",
+      "dt": "2026-05-09T14:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "dark",
+        "jako",
+        "pain",
+        "prelude",
+        "rpg",
+        "slibné",
+        "taktické",
+        "vypadá"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -962,31 +987,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Steam ovladač se vyprodal za 30 minut, servery při spuštění nevydržely",
-      "url": "https://zing.cz/article/steam-ovladac-se-vyprodal-za-30-minut-servery-pri-spusteni-nevydrzely",
-      "dt": "2026-05-05T05:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "minut",
-        "nevydržely",
-        "ovladač",
-        "při",
-        "servery",
-        "spuštění",
-        "steam",
-        "vyprodal"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -997,7 +997,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125221,
+      "bytes": 125271,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1034,7 +1034,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-09T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T14:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1049,6 +1049,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Prelude: Dark Pain vypadá jako slibné taktické RPG",
+            "publishedAt": "2026-05-09T14:00:00Z"
+          },
           {
             "title": "Nový Vampire: The Masquerade láká na temný příběh plný politiky",
             "publishedAt": "2026-05-09T12:00:00Z"
@@ -1076,10 +1080,6 @@
           {
             "title": "Bez varování vyšel nový mód v Resident Evil Requiem",
             "publishedAt": "2026-05-08T16:00:00Z"
-          },
-          {
-            "title": "Cyberpunk: Edgerunners míří do Wuthering Waves",
-            "publishedAt": "2026-05-08T14:00:00Z"
           }
         ]
       }
