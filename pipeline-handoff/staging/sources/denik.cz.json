@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-09T14:49:29.222680Z",
+  "ingestedAt": "2026-05-09T15:34:32.879435Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "MAPA: Do Česka se vrátí déšť, bouřky a mráz. Bude také sněžit. Sledujte radar",
+      "url": "https://www.denik.cz/pocasi/mapa-do-ceska-se-vrati-dest-bourky-i-mraz-bude-dokonce-snezit-predpoved-pocasi.html",
+      "dt": "2026-05-09T15:15:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bouřky",
+        "déšť",
+        "mapa",
+        "mráz",
+        "radar",
+        "sledujte",
+        "sněžit",
+        "také",
+        "vrátí",
+        "česka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -181,22 +208,21 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Pentagon zveřejnil tajné dokumenty. Důkaz o UFO chybí, svědectví přesto zaujmou",
+      "title": "Co obsahují odtajněné dokumenty o UFO: Vojenské záznamy, výpovědi i popis videí",
       "url": "https://www.denik.cz/ze_sveta/pentagon-zverejnil-dokumenty-ufo-mise-apollo.html",
       "dt": "2026-05-09T09:05:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
-        "chybí",
         "dokumenty",
-        "důkaz",
-        "pentagon",
-        "přesto",
-        "svědectví",
-        "tajné",
+        "obsahují",
+        "odtajněné",
+        "popis",
         "ufo",
-        "zaujmou",
-        "zveřejnil"
+        "videí",
+        "vojenské",
+        "výpovědi",
+        "záznamy"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -618,30 +644,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "V ČR se kradou stále dražší kola: Které kraje jsou nejrizikovější, co dělat",
-      "url": "https://www.denik.cz/krimi/krimi-cesko-kradou-se-stale-drazsi-kola-nejrizikovejsi-kraje-jak-kolo-zabezpecit.html",
-      "dt": "2026-05-08T14:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dražší",
-        "dělat",
-        "kola",
-        "kradou",
-        "kraje",
-        "nejrizikovější",
-        "stále"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -652,7 +654,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29970,
+      "bytes": 30024,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -689,7 +691,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-09T13:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T15:15:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -705,6 +707,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "MAPA: Do Česka se vrátí déšť, bouřky a mráz. Bude také sněžit. Sledujte radar",
+            "publishedAt": "2026-05-09T15:15:00Z"
+          },
           {
             "title": "EU varovala aerolinky: Dodatečné příplatky po prodeji letenek jsou zakázané",
             "publishedAt": "2026-05-09T13:30:00Z"
@@ -732,10 +738,6 @@
           {
             "title": "Fico se setkal s Putinem. Vojenské přehlídky se nezúčastnil",
             "publishedAt": "2026-05-09T09:44:00Z"
-          },
-          {
-            "title": "Pentagon zveřejnil tajné dokumenty. Důkaz o UFO chybí, svědectví přesto zaujmou",
-            "publishedAt": "2026-05-09T09:05:00Z"
           }
         ]
       }

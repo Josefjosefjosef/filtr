@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-09T14:49:29.222680Z",
+  "ingestedAt": "2026-05-09T15:34:32.879435Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Izrael zaútočil na jihu Libanonu i na okraj Bejrútu",
+      "title": "Izrael zaútočil na jihu Libanonu i u Bejrútu",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/izrael-po-vyzve-k-evakuaci-deviti-vesnic-zautocil-na-jihu-libanonu-373251",
       "dt": "2026-05-09T11:37:15Z",
       "media_raw": "ČT24 / Domácí",
@@ -16,7 +16,6 @@
         "izrael",
         "jihu",
         "libanonu",
-        "okraj",
         "zaútočil"
       ],
       "feedCategory": "zpravy",
@@ -276,18 +275,19 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "WHO potvrdila šest případů nákazy hantavirem z osmi podezřelých",
+      "title": "WHO potvrdila šest případů nákazy hantavirem, loď míří k Tenerife",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/who-potvrdila-sest-pripadu-nakazy-hantavirem-z-osmi-podezrelych-373246",
       "dt": "2026-05-09T01:38:34Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
         "hantavirem",
+        "loď",
+        "míří",
         "nákazy",
-        "osmi",
-        "podezřelých",
         "potvrdila",
         "případů",
+        "tenerife",
         "who",
         "šest"
       ],
@@ -739,6 +739,32 @@
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Teplice přehrály Baník, Boleslav remizovala se Zlínem, Dukla nestačila na Slovácko",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/mlada-boleslav-remizovala-se-zlinem-a-neprohrala-pojedenacte-za-sebou-156675",
+      "dt": "2026-05-09T14:50:16Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "baník",
+        "boleslav",
+        "dukla",
+        "nestačila",
+        "přehrály",
+        "remizovala",
+        "slovácko",
+        "teplice",
+        "zlínem"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1466,34 +1492,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bohemians 1905 musí za chování svých fanoušků v derby se Spartou zaplatit 450 tisíc",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/bohemians-1905-musi-za-chovani-svych-fanousku-v-derby-se-spartou-zaplatit-450-tisic-156647",
-      "dt": "2026-05-07T15:31:33Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "1905",
-        "450",
-        "bohemians",
-        "chování",
-        "derby",
-        "fanoušků",
-        "musí",
-        "spartou",
-        "svých",
-        "tisíc",
-        "zaplatit"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1504,7 +1502,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42442,
+      "bytes": 42448,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1583,7 +1581,7 @@
         },
         "sample_titles": [
           {
-            "title": "Izrael zaútočil na jihu Libanonu i na okraj Bejrútu",
+            "title": "Izrael zaútočil na jihu Libanonu i u Bejrútu",
             "publishedAt": "2026-05-09T11:37:15Z"
           },
           {
@@ -1624,7 +1622,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39002,
+      "bytes": 39130,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1661,7 +1659,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-09T13:44:42Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T14:50:16Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1676,6 +1674,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Teplice přehrály Baník, Boleslav remizovala se Zlínem, Dukla nestačila na Slovácko",
+            "publishedAt": "2026-05-09T14:50:16Z"
+          },
           {
             "title": "Chelsea po šesti porážkách uhrála v Liverpoolu remízu",
             "publishedAt": "2026-05-09T13:44:42Z"
@@ -1703,10 +1705,6 @@
           {
             "title": "Fuksa ovládl úvodní kilometr. Na maratonce dobrý, vtipkoval",
             "publishedAt": "2026-05-09T09:09:20Z"
-          },
-          {
-            "title": "Dobeš vychytal Montrealu výhru nad Buffalem, Dostál po první třetině střídal",
-            "publishedAt": "2026-05-09T06:41:32Z"
           }
         ]
       }
@@ -1718,7 +1716,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78271,
+      "bytes": 78265,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

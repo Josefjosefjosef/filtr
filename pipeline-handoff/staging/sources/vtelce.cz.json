@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-05-09T14:49:29.222680Z",
+  "ingestedAt": "2026-05-09T15:34:32.879435Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Slečna Drsňák: Vymazaná scéna o orientaci, rány bez kaskadérů a mast na hemoroidy jako recept na krásu",
+      "url": "https://www.vtelce.cz/slecna-drsnak-vymazana-scena-o-orientaci-rany-bez-kaskaderu-a-mast-na-hemoroidy-jako-recept-na-krasu/",
+      "dt": "2026-05-09T14:55:53Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "drsňák",
+        "hemoroidy",
+        "jako",
+        "kaskadérů",
+        "krásu",
+        "mast",
+        "orientaci",
+        "recept",
+        "rány",
+        "scéna",
+        "slečna",
+        "vymazaná"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -258,33 +287,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Dařbuján a Pandrhola: Zákaz z Barrandova, zkažené maso na place a záhada zmizelých zbraní",
-      "url": "https://www.vtelce.cz/darbujan-a-pandrhola-zakaz-z-barrandova-zkazene-maso-na-place-a-zahada-zmizelych-zbrani/",
-      "dt": "2026-05-08T10:23:20Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "barrandova",
-        "dařbuján",
-        "maso",
-        "pandrhola",
-        "place",
-        "zbraní",
-        "zkažené",
-        "zmizelých",
-        "záhada",
-        "zákaz"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -295,7 +297,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 80141,
+      "bytes": 85543,
       "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
@@ -332,11 +334,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-09T11:53:43Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T14:55:53Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zpravy": 2,
-          "other": 8
+          "other": 8,
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -348,6 +350,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Slečna Drsňák: Vymazaná scéna o orientaci, rány bez kaskadérů a mast na hemoroidy jako recept na krásu",
+            "publishedAt": "2026-05-09T14:55:53Z"
+          },
           {
             "title": "Master & Commander: Tvrdý vojenský dril, nepřístupný pánský klub, mořská nemoc a vodní nádrž po Titanicu",
             "publishedAt": "2026-05-09T11:53:43Z"
@@ -375,10 +381,6 @@
           {
             "title": "Obušku, z pytle ven: Noční tragédie na place, utajené chyby v obraze a zásadní spor o délku filmu",
             "publishedAt": "2026-05-08T12:14:54Z"
-          },
-          {
-            "title": "Zlatí úhoři: Vyhazov dětské hvězdy na příkaz shora, Menšíkovo utajené trápení a cizí hlas",
-            "publishedAt": "2026-05-08T12:11:58Z"
           }
         ]
       }
