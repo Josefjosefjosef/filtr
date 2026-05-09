@@ -39985,7 +39985,79 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
       return { intent: "agenda_for_day", dateRange: "today", filter: null };
     }
+    {
+      const tlSpec = iuSilverTryTimelineScopeAndTenseCalendarReadSpecP1(r, f);
+      if (tlSpec) return tlSpec;
+    }
     return null;
+  }
+
+  /**
+   * P1 timeline_scope_and_tense: úzký guard pro past / relative / last-occurrence kalendářové read dotazy
+   * typu „co/kdy jsem (naposledy) měl …", „před měsícem", „minulý týden", „naposledy".
+   * Cíl: routovat na calendar.read místo generické read-vs-write clarification.
+   * Blokuje write/update/create imperativy (přidej/ulož/vytvoř/nastav/změň/přesuň/posuň/uprav/smaž).
+   */
+  function iuSilverTryTimelineScopeAndTenseCalendarReadSpecP1(r0, f0) {
+    const r = String(r0 || "").trim().replace(/\s*[?.!…]+$/u, "").trim();
+    const f = String(f0 || "");
+    if (!r || !f) return null;
+    if (
+      /\bpridej\w*\b/.test(f) ||
+      /\bvytvor\w*\b/.test(f) ||
+      /\bnastav\w*\b/.test(f) ||
+      /\bzmen\w*\b/.test(f) ||
+      /\bpresun\w*\b/.test(f) ||
+      /\bposun\w*\b/.test(f) ||
+      /\buprav\w*\b/.test(f) ||
+      /\bsmaz\w*\b/.test(f) ||
+      /\buloz\w*\b/.test(f)
+    ) {
+      return null;
+    }
+    if (iuSilverHasWriteVerb(f)) return null;
+    const hasCoJsemMel = /\bco\s+(?:jsem|sem)\s+m(?:el|ela|eli)\b/.test(f);
+    const hasKdyJsemMel = /\bkdy\s+(?:jsem|sem)\s+(?:naposledy\s+)?m(?:el|ela|eli)\b/.test(f);
+    const hasNaposledy = /\bnaposledy\b/.test(f);
+    const hasPredMesicem = /\bpred\s+mesic\w*\b/.test(f);
+    const hasMinulyTyden = /\bminul\w*\s+tyden\b/.test(f) || /\bminuly\s+tyden\b/.test(f);
+    if (!hasCoJsemMel && !hasKdyJsemMel && !hasPredMesicem && !hasMinulyTyden && !hasNaposledy) {
+      return null;
+    }
+    let tail = "";
+    let m;
+    if ((m = f.match(/\b(?:co|kdy)\s+(?:jsem|sem)\s+(?:naposledy\s+)?m(?:el|ela|eli)\b[^]*?\bu\s+([a-z]+)\w*/i)) && m[1]) {
+      tail = m[1].trim();
+    } else if ((m = f.match(/\bkdy\s+(?:jsem|sem)\s+(?:naposledy\s+)?m(?:el|ela|eli)\s+([a-z]+)\w*/i)) && m[1]) {
+      tail = m[1].trim();
+    } else if ((m = f.match(/\bco\s+(?:jsem|sem)\s+m(?:el|ela|eli)\s+([a-z]+)\w*/i)) && m[1]) {
+      tail = m[1].trim();
+    }
+    if (!tail) return null;
+    let canQ = "";
+    if (/^zubar/.test(tail)) canQ = "Zubař";
+    else if (/^pravnik/.test(tail)) canQ = "Právník";
+    else if (/^advokat/.test(tail)) canQ = "Advokát";
+    else if (/^doktor/.test(tail) || /^lekaf/.test(tail) || /^lekari/.test(tail)) canQ = "Doktor";
+    else if (/^kuryr/.test(tail)) canQ = "Kurýr";
+    else if (/^ucetn/.test(tail)) canQ = "Účetní";
+    else if (/^petra/.test(tail)) canQ = "Petra";
+    else if (/^petr/.test(tail)) canQ = "Petr";
+    else if (/^tomas/.test(tail)) canQ = "Tomáš";
+    else if (/^pavel/.test(tail) || /^pavl/.test(tail)) canQ = "Pavel";
+    else if (/^mariana/.test(tail) || /^marian/.test(tail)) canQ = "Mariana";
+    else if (/^hypotek/.test(tail) || /^hypotec/.test(tail)) canQ = "Hypotéka";
+    else if (/^najem/.test(tail) || /^najmu/.test(tail) || /^najmem/.test(tail)) canQ = "Nájem";
+    else canQ = tail;
+    if (!canQ || canQ.length < 2) return null;
+    const out = {
+      intent: "find_by_title",
+      query: canQ,
+      normalizedQuery: canQ,
+      diacriticInsensitive: true,
+      queryFolded: foldCs(canQ)
+    };
+    return out;
   }
 
   /**
