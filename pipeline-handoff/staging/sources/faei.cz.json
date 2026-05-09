@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-09T07:04:11.148089Z",
+  "ingestedAt": "2026-05-09T08:29:21.024372Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Elektřina Čechům ukusuje z peněženky skoro nejvíce v EU",
+      "url": "https://profitonline.cz/elektrina-cechum-ukusuje-z-penezenky-skoro-nejvice-v-eu/",
+      "dt": "2026-05-09T08:15:16Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "elektřina",
+        "nejvíce",
+        "peněženky",
+        "skoro",
+        "ukusuje",
+        "čechům"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -256,31 +279,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zbrojařská CSG pod palbou. Chytili se investoři na až moc dokonalý příběh?",
-      "url": "https://profitonline.cz/zbrojarska-csg-pod-palbou-chytili-se-investori-na-az-moc-dokonaly-pribeh/",
-      "dt": "2026-05-07T09:00:37Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "chytili",
-        "csg",
-        "dokonalý",
-        "investoři",
-        "moc",
-        "palbou",
-        "příběh",
-        "zbrojařská"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -291,7 +289,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18242,
+      "bytes": 18114,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -328,10 +326,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-09T06:00:08Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T08:15:16Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 12
+          "zdravi": 1,
+          "finance": 11
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -343,6 +342,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Elektřina Čechům ukusuje z peněženky skoro nejvíce v EU",
+            "publishedAt": "2026-05-09T08:15:16Z"
+          },
           {
             "title": "Petr Chalupný propojí oborová řešení napříč segmenty Dachser v Česku",
             "publishedAt": "2026-05-09T06:00:08Z"
@@ -370,10 +373,6 @@
           {
             "title": "David Musil v čele Penta Real Estate",
             "publishedAt": "2026-05-08T06:00:51Z"
-          },
-          {
-            "title": "Jen vodítko nestačí. Dovolená se zvířetem má svá pravidla",
-            "publishedAt": "2026-05-08T04:00:57Z"
           }
         ]
       }
