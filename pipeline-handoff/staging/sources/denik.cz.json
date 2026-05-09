@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-09T01:54:45.272393Z",
+  "ingestedAt": "2026-05-09T02:40:28.039189Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Blackouty a sabotáže v Česku. Bezpečnostní experti varují před Ruskem",
+      "url": "https://www.denik.cz/z_domova/cesko-hrozba-z-ruska-blackout-sabotaze-hybridni-valka-napadeni-pobalti.html",
+      "dt": "2026-05-09T02:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bezpečnostní",
+        "blackouty",
+        "experti",
+        "ruskem",
+        "sabotáže",
+        "varují",
+        "česku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -618,30 +642,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Myslela si, že je to láska. Na Oneplay míří oceňovaná série Monyová",
-      "url": "https://www.denik.cz/film-a-televize/serie-monyova-oneplay.html",
-      "dt": "2026-05-08T08:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "láska",
-        "monyová",
-        "myslela",
-        "míří",
-        "oceňovaná",
-        "oneplay",
-        "série"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -652,7 +652,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30250,
+      "bytes": 30212,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -689,7 +689,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-08T18:21:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T02:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -705,6 +705,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Blackouty a sabotáže v Česku. Bezpečnostní experti varují před Ruskem",
+            "publishedAt": "2026-05-09T02:00:00Z"
+          },
           {
             "title": "USA odtajnily desítky dokumentů o UFO. Jsou mezi nimi i snímky z misí Apollo",
             "publishedAt": "2026-05-08T18:21:00Z"
@@ -732,10 +736,6 @@
           {
             "title": "Provoz na letišti v Praze ochromil dron. Policie zadržela jednoho člověka",
             "publishedAt": "2026-05-08T14:40:00Z"
-          },
-          {
-            "title": "V ČR se kradou stále dražší kola: Které kraje jsou nejrizikovější, co dělat",
-            "publishedAt": "2026-05-08T14:30:00Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-09T01:54:45.272393Z",
+  "ingestedAt": "2026-05-09T02:40:28.039189Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Během několika měsíců měl muž v Havířově krást ve 31 případech v tamních prodejnách",
+      "url": "https://tydenikpolicie.cz/behem-nekolika-mesicu-mel-muz-v-havirove-krast-ve-31-pripadech-v-tamnich-prodejnach/",
+      "dt": "2026-05-09T02:02:21Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "během",
+        "havířově",
+        "krást",
+        "muž",
+        "měl",
+        "měsíců",
+        "několika",
+        "prodejnách",
+        "případech",
+        "tamních"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -239,32 +266,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V Ústí nad Labem se srazila posunovaná lokomotiva s osobním vlakem. Tři zranění",
-      "url": "https://tydenikpolicie.cz/v-usti-nad-labem-se-srazila-posunovana-lokomotiva-s-osobnim-vlakem-tri-zraneni/",
-      "dt": "2026-05-07T22:02:24Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "labem",
-        "lokomotiva",
-        "osobním",
-        "posunovaná",
-        "srazila",
-        "tři",
-        "vlakem",
-        "zranění",
-        "ústí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -275,7 +276,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16929,
+      "bytes": 17019,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -312,7 +313,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-08T21:03:44Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T02:02:21Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -327,6 +328,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Během několika měsíců měl muž v Havířově krást ve 31 případech v tamních prodejnách",
+            "publishedAt": "2026-05-09T02:02:21Z"
+          },
           {
             "title": "Řidič škodovky na sebe v Chomutově upozornil nebezpečnou jízdou a nedáním přednosti strážníkům",
             "publishedAt": "2026-05-08T21:03:44Z"
@@ -354,10 +359,6 @@
           {
             "title": "Seniorku v domě na Brněnsku po dobu, kdy muž ze střechy házel po všech střešní tašky, hlídala zásahová jednotka",
             "publishedAt": "2026-05-08T06:53:53Z"
-          },
-          {
-            "title": "Při nehodách na Hodonínsku byly vážně zraněny dvě chodkyně",
-            "publishedAt": "2026-05-08T04:02:20Z"
           }
         ]
       }
