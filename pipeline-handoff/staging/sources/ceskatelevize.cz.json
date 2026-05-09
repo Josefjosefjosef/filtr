@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-09T04:54:19.110157Z",
+  "ingestedAt": "2026-05-09T05:35:24.237555Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ojeté pneumatiky mohou lidé odevzdávat zdarma. Přesto část končí v přírodě",
+      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/ojete-pneumatiky-mohou-lide-odevzdavat-zdarma-presto-cast-konci-v-prirode-373178",
+      "dt": "2026-05-09T05:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "končí",
+        "lidé",
+        "odevzdávat",
+        "ojeté",
+        "pneumatiky",
+        "přesto",
+        "přírodě",
+        "zdarma",
+        "část"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -718,31 +744,6 @@
         "rozpočtové",
         "skopeček",
         "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Hanácké kasárny ožívají. Do areálu se nastěhuje divadlo, škola i kavárny",
-      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/olomoucky-kraj/hanacka-kasarna-ozivaji-do-arealu-se-nastehuje-divadlo-skola-i-kavarny-373215",
-      "dt": "2026-05-07T17:52:44Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "areálu",
-        "divadlo",
-        "hanácké",
-        "kasárny",
-        "kavárny",
-        "nastěhuje",
-        "ožívají",
-        "škola"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1520,7 +1521,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43186,
+      "bytes": 43294,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1580,11 +1581,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-09T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T05:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 2,
           "zpravy": 26,
+          "finance": 2,
           "cestovani": 1,
           "other": 1
         },
@@ -1598,6 +1599,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ojeté pneumatiky mohou lidé odevzdávat zdarma. Přesto část končí v přírodě",
+            "publishedAt": "2026-05-09T05:00:00Z"
+          },
           {
             "title": "Válka s Íránem zdražuje plyn zejména pro nové zákazníky",
             "publishedAt": "2026-05-09T04:00:00Z"
@@ -1625,10 +1630,6 @@
           {
             "title": "SOUHRN: Zásadní události pátku 8. května",
             "publishedAt": "2026-05-08T16:28:00Z"
-          },
-          {
-            "title": "Kvůli dronu odklonilo pražské letiště letadlo, jeden člověk byl zadržen",
-            "publishedAt": "2026-05-08T14:44:20Z"
           }
         ]
       }
@@ -1734,7 +1735,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78302,
+      "bytes": 78298,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

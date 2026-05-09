@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-09T04:54:19.110157Z",
+  "ingestedAt": "2026-05-09T05:35:24.237555Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nemocniční nákazy: Oficiální čísla vypadají skvěle, realita je ale jiná",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/nemocnicni-nakazy-cisla/",
+      "dt": "2026-05-09T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "ale",
+        "jiná",
+        "nemocniční",
+        "nákazy",
+        "oficiální",
+        "realita",
+        "skvěle",
+        "vypadají",
+        "čísla"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,33 +268,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Evropa v pozoru: Letuška se měla nakazit od umírající ženy z lodi, hantavirus se šíří dál",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/hantavirus-letuska-nizozemi/",
-      "dt": "2026-05-07T10:08:28Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "evropa",
-        "hantavirus",
-        "letuška",
-        "lodi",
-        "měla",
-        "nakazit",
-        "pozoru",
-        "umírající",
-        "šíří",
-        "ženy"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +278,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 126147,
+      "bytes": 132330,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +315,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-08T14:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -331,6 +330,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nemocniční nákazy: Oficiální čísla vypadají skvěle, realita je ale jiná",
+            "publishedAt": "2026-05-09T05:00:00Z"
+          },
           {
             "title": "Paliativní pavilon na jihu Čech a operace bez řezu v Praze. Souhrn novinek z českého zdravotnictví",
             "publishedAt": "2026-05-08T14:30:00Z"
@@ -358,10 +361,6 @@
           {
             "title": "Jak nové nařízení EU změní zacházení s krví dárců a jak se musíme připravit? Odpoví sympozium ZD",
             "publishedAt": "2026-05-07T14:07:13Z"
-          },
-          {
-            "title": "Pylová sezóna bez kýchání? 8 tipů, které vám konečně pomohou zvládnout alergie",
-            "publishedAt": "2026-05-07T12:11:51Z"
           }
         ]
       }
