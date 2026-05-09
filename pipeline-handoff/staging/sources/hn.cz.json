@@ -1,8 +1,41 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-09T10:39:21.247667Z",
+  "ingestedAt": "2026-05-09T11:24:03.395510Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "&bdquo;Nějak mě to nevyšlo.&ldquo; Klukovská válka premiéra s prezidentem je trapná, ale může mít zásadní dopad na samotné základy Česka",
+      "url": "https://nazory.hn.cz/c1-67875190-bdquo-nejak-me-to-nevyslo-ldquo-klukovska-valka-premiera-s-prezidentem-je-trapna-ale-muze-mit-zasadni-dopad-na-samotne-zaklady-ceska",
+      "dt": "2026-05-09T10:21:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "ale",
+        "bdquo",
+        "dopad",
+        "klukovská",
+        "ldquo",
+        "mít",
+        "nevyšlo",
+        "nějak",
+        "premiéra",
+        "prezidentem",
+        "samotné",
+        "trapná",
+        "válka",
+        "základy",
+        "zásadní",
+        "česka"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -1107,41 +1140,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "České dráhy během jara odepsaly čtyři typy vozidel, které bývaly elitou. Firma dál mohutně nakupuje, dluží přitom skoro 100 miliard",
-      "url": "https://archiv.hn.cz/c1-67874340-ceske-drahy-behem-jara-odepsaly-ctyri-typy-vozu-ktere-byvaly-elitou-firma-dal-mohutne-nakupuje-dluzi-pritom-skoro-100-miliard",
-      "dt": "2026-05-06T15:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "100",
-        "bývaly",
-        "během",
-        "dluží",
-        "dráhy",
-        "elitou",
-        "firma",
-        "jara",
-        "miliard",
-        "mohutně",
-        "nakupuje",
-        "odepsaly",
-        "přitom",
-        "skoro",
-        "typy",
-        "vozidel",
-        "české",
-        "čtyři"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1152,7 +1150,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183852,
+      "bytes": 184462,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1189,11 +1187,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-09T01:19:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T10:21:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 3,
           "finance": 34,
+          "zpravy": 3,
           "zdravi": 3
         },
         "drop_counts": {
@@ -1206,6 +1204,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "&bdquo;Nějak mě to nevyšlo.&ldquo; Klukovská válka premiéra s prezidentem je trapná, ale může mít zásadní dopad na samotné základy Česka",
+            "publishedAt": "2026-05-09T10:21:00Z"
+          },
           {
             "title": "Celý hi-fi systém v malém balení: KEF Coda W je lepší než soundbary, nepotřebuje zesilovač a poradí si i s gramofony",
             "publishedAt": "2026-05-09T01:19:00Z"
@@ -1233,10 +1235,6 @@
           {
             "title": "Pavel chce po jednání s Babišem oznámit, že na summit NATO pojedou oba. Jinak podá kompetenční žalobu",
             "publishedAt": "2026-05-07T18:20:00Z"
-          },
-          {
-            "title": "Mezi Twistem a &bdquo;Pepou od kytek&ldquo; se rozjela otevřená válka. Franšízingová skupina chce po zahradníkovi deset milionů a hrozí žalobami",
-            "publishedAt": "2026-05-07T16:30:00Z"
           }
         ]
       }

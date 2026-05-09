@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-09T10:39:21.247667Z",
+  "ingestedAt": "2026-05-09T11:24:03.395510Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Soukup jde znovu do ringu. Vančura mu před zápasem v Bratislavě slíbil tvrdou demolici",
+      "url": "https://www.mmamag.cz/vancura-varuje-soukupa-pred-fnc-11-v-bratislave/",
+      "dt": "2026-05-09T11:00:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "bratislavě",
+        "demolici",
+        "jde",
+        "ringu",
+        "slíbil",
+        "soukup",
+        "tvrdou",
+        "vančura",
+        "znovu",
+        "zápasem"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1121,30 +1148,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "video",
-      "title": "Wrestling láme zápasy. V MMA rozhoduje o tom, kde se bude bojovat",
-      "url": "https://www.mmamag.cz/proc-je-wrestling-v-mma-tak-silna-zbran/",
-      "dt": "2026-05-07T19:27:45Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "bojovat",
-        "láme",
-        "mma",
-        "rozhoduje",
-        "tom",
-        "wrestling",
-        "zápasy"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1155,7 +1158,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 77872,
+      "bytes": 77851,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1192,7 +1195,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-09T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T11:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1207,6 +1210,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Soukup jde znovu do ringu. Vančura mu před zápasem v Bratislavě slíbil tvrdou demolici",
+            "publishedAt": "2026-05-09T11:00:00Z"
+          },
           {
             "title": "Kopal kanály za pár dolarů, hodně pil a kouřil. Pak Rocky Marciano dobyl svět boxu",
             "publishedAt": "2026-05-09T10:00:00Z"
@@ -1234,10 +1241,6 @@
           {
             "title": "Tiskovka před UFC v Bílém domě se zvrhla v chaos. Hokit sprostě napadl Pereiru, na jeho obranu vyskočil Topuria",
             "publishedAt": "2026-05-09T07:50:12Z"
-          },
-          {
-            "title": "Růžička vyšel z vězení a Novotný změnil názor. Doživotní ban v Oktagonu možná neplatí",
-            "publishedAt": "2026-05-09T07:34:53Z"
           }
         ]
       }

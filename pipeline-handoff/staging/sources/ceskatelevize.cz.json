@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-09T10:39:21.247667Z",
+  "ingestedAt": "2026-05-09T11:24:03.395510Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Maďarsku poprvé zasedá nový parlament, očekává se zvolení Magyara premiérem",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/v-madarsku-poprve-zaseda-novy-parlament-ocekava-se-zvoleni-magyara-premierem-373250",
+      "dt": "2026-05-09T10:48:09Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "magyara",
+        "maďarsku",
+        "nový",
+        "očekává",
+        "parlament",
+        "poprvé",
+        "premiérem",
+        "zasedá",
+        "zvolení"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -728,27 +754,22 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Příměří s Íránem je stále platné, řekl Trump po amerických odvetných úderech",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/americka-armada-uderila-v-hormuzu-373226",
-      "dt": "2026-05-07T21:01:51Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "MacLeodová už nepovede české hokejistky",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/macleodova-uz-nepovede-ceske-hokejistky-156672",
+      "dt": "2026-05-09T10:50:45Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "amerických",
-        "odvetných",
-        "platné",
-        "příměří",
-        "stále",
-        "trump",
-        "íránem",
-        "úderech",
-        "řekl"
+        "hokejistky",
+        "macleodová",
+        "nepovede",
+        "české"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -756,14 +777,14 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Macháč proti Medveděvovi nenastoupil, z turnaje odstoupil",
+      "title": "Macháč proti Medvěděvovi nenastoupil, z turnaje odstoupil",
       "url": "https://sport.ceskatelevize.cz/clanek/tenis/machac-proti-medvedevovi-nenastoupil-z-turnaje-odstoupil-156671",
       "dt": "2026-05-09T10:07:21Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
         "macháč",
-        "medveděvovi",
+        "medvěděvovi",
         "nenastoupil",
         "odstoupil",
         "proti",
@@ -779,7 +800,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Euro Hockey Tour Finsko – Česko 2:0",
+      "title": "Euro Hockey Tour Finsko – Česko 2:2",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/euro-hockey-tour-finsko-cesko-156670",
       "dt": "2026-05-09T09:55:00Z",
       "media_raw": "ČT sport",
@@ -801,7 +822,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Liga fotbalistek: Baník Ostrava – Viktoria Plzeň 0:0",
+      "title": "Liga fotbalistek: Baník Ostrava – Viktoria Plzeň 0:1",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/liga-fotbalistek-banik-ostrava-viktoria-plzen-156668",
       "dt": "2026-05-09T09:55:00Z",
       "media_raw": "ČT sport",
@@ -1482,27 +1503,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Finové padli se Švýcary v nájezdech",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/svedske-hokejove-hry-finsko-svycarsko-156644",
-      "dt": "2026-05-07T12:50:53Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "finové",
-        "nájezdech",
-        "padli",
-        "švýcary"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1513,7 +1513,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42320,
+      "bytes": 42434,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1573,7 +1573,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-09T09:52:50Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T10:48:09Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1591,6 +1591,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Maďarsku poprvé zasedá nový parlament, očekává se zvolení Magyara premiérem",
+            "publishedAt": "2026-05-09T10:48:09Z"
+          },
           {
             "title": "Ochladí se. V pondělí se čeká déšť, v úterý na horách sníh",
             "publishedAt": "2026-05-09T09:52:50Z"
@@ -1618,10 +1622,6 @@
           {
             "title": "Ojeté pneumatiky mohou lidé odevzdávat zdarma. Přesto část končí v přírodě",
             "publishedAt": "2026-05-09T05:00:00Z"
-          },
-          {
-            "title": "Válka s Íránem zdražuje plyn zejména pro nové zákazníky",
-            "publishedAt": "2026-05-09T04:00:00Z"
           }
         ]
       }
@@ -1633,7 +1633,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39639,
+      "bytes": 39691,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1670,7 +1670,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-09T10:07:21Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T10:50:45Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1686,15 +1686,19 @@
         },
         "sample_titles": [
           {
-            "title": "Macháč proti Medveděvovi nenastoupil, z turnaje odstoupil",
+            "title": "MacLeodová už nepovede české hokejistky",
+            "publishedAt": "2026-05-09T10:50:45Z"
+          },
+          {
+            "title": "Macháč proti Medvěděvovi nenastoupil, z turnaje odstoupil",
             "publishedAt": "2026-05-09T10:07:21Z"
           },
           {
-            "title": "Euro Hockey Tour Finsko – Česko 2:0",
+            "title": "Euro Hockey Tour Finsko – Česko 2:2",
             "publishedAt": "2026-05-09T09:55:00Z"
           },
           {
-            "title": "Liga fotbalistek: Baník Ostrava – Viktoria Plzeň 0:0",
+            "title": "Liga fotbalistek: Baník Ostrava – Viktoria Plzeň 0:1",
             "publishedAt": "2026-05-09T09:55:00Z"
           },
           {
@@ -1712,10 +1716,6 @@
           {
             "title": "Národní tým vyzve v předposledním testu před šampionátem Finsko",
             "publishedAt": "2026-05-09T04:00:00Z"
-          },
-          {
-            "title": "Vodní slalomáře čekají v Troji souboje o volná místa v reprezentaci",
-            "publishedAt": "2026-05-09T04:00:00Z"
           }
         ]
       }
@@ -1727,7 +1727,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78303,
+      "bytes": 78338,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
