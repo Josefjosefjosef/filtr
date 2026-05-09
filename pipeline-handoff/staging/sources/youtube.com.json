@@ -1,24 +1,24 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "youtube.com",
-  "ingestedAt": "2026-05-09T00:29:21.787740Z",
+  "ingestedAt": "2026-05-09T01:09:28.346711Z",
   "items": [],
   "feedReports": [
     {
       "feed": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
       "source": "YouTube – ČT24",
       "topic": "aktualne",
-      "httpStatus": 500,
-      "contentType": "text/html; charset=utf-8",
+      "httpStatus": 200,
+      "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
-      "bytes": 0,
-      "reason": "http_500",
+      "bytes": 8263,
+      "reason": "http_404",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 0,
-      "itemsKept": 0,
-      "accepted": 0,
-      "status": "BOZO",
+      "itemsParsed": 4,
+      "itemsKept": 4,
+      "accepted": 4,
+      "status": "OK",
       "bozo_but_used": false,
       "registryId": "yt_playlist_PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
       "registryGroup": [
@@ -27,35 +27,10 @@
           "label": "ČT24",
           "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ"
         }
-      ]
-    },
-    {
-      "feed": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
-      "source": "YouTube – ČT24",
-      "topic": "aktualne",
-      "httpStatus": 200,
-      "contentType": "text/xml; charset=utf-8",
-      "finalUrl": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
-      "bytes": 21580,
-      "reason": "http_404",
-      "bozo": false,
-      "bozoException": "",
-      "itemsParsed": 15,
-      "itemsKept": 15,
-      "accepted": 15,
-      "status": "OK",
-      "bozo_but_used": false,
-      "registryId": "yt_playlist_PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
-      "registryGroup": [
-        {
-          "id": "yt_playlist_PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
-          "label": "ČT24",
-          "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw"
-        }
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 0,
-        "raw_feed_latest_publishedAt": "2024-07-19T09:05:16Z",
+        "raw_feed_latest_publishedAt": "2026-01-20T08:01:05Z",
         "valid_publishedAt_count": 0,
         "mapped_to_section_count": {},
         "drop_counts": {
@@ -69,6 +44,31 @@
         },
         "sample_titles": []
       }
+    },
+    {
+      "feed": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
+      "source": "YouTube – ČT24",
+      "topic": "aktualne",
+      "httpStatus": 404,
+      "contentType": "text/html; charset=utf-8",
+      "finalUrl": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
+      "bytes": 0,
+      "reason": "http_404",
+      "bozo": false,
+      "bozoException": "",
+      "itemsParsed": 0,
+      "itemsKept": 0,
+      "accepted": 0,
+      "status": "BOZO",
+      "bozo_but_used": false,
+      "registryId": "yt_playlist_PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
+      "registryGroup": [
+        {
+          "id": "yt_playlist_PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
+          "label": "ČT24",
+          "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw"
+        }
+      ]
     }
   ]
 }
