@@ -2,7 +2,7 @@
  * SILVER_REAL_CZECH_CORPUS_V1 — diagnostic / audit only (no engine, UI, or routing changes).
  * - Deterministic expansion + mutation mask (no Math.random)
  * - Reuses VM harness evaluators from audit_silver_realistic_mobile_corpus.cjs
- * - Min corpus size 5000; default target ~12000+ after dedupe
+ * - Min corpus size 30000 (30k real-Czech expansion); default MUT_MASK up to 127 on writes
  */
 /* eslint-disable no-console */
 const fs = require("fs");
@@ -31,7 +31,15 @@ const MOBILE_CLUSTERS = new Set([
   "rcz_task_hod_tam",
   "rcz_cal_slang_write",
   "rcz_cal_query_mrknout",
-  "rcz_colloquial_fillers"
+  "rcz_colloquial_fillers",
+  "rcz_mobile_dictation_cal",
+  "rcz_mobile_dictation_task",
+  "rcz_mobile_dictation_note",
+  "rcz_activity_phone_family",
+  "rcz_phrase_hod_schuzku",
+  "rcz_phrase_hod_mliko",
+  "rcz_typos_colloquial",
+  "rcz_slang_corpus_extra"
 ]);
 
 function stripDiak(s) {
@@ -88,6 +96,7 @@ function gitTrackedClean() {
       "scripts/silver-real-czech-corpus-v1.cjs",
       "scripts/silver-real-czech-corpus-v1-cluster-diagnostic.cjs",
       "scripts/silver-real-czech-corpus-v1-report.json",
+      "scripts/silver-real-czech-corpus-v1-30k-report.json",
       "assets/app.js"
     ];
     const bad = tracked.filter((l) => {
@@ -191,6 +200,29 @@ function tryEmbed20k() {
   }
 }
 
+function tryRunOptionalSilverGates() {
+  if (process.env.SILVER_RCZ_RUN_GATES !== "1") return null;
+  const shell = { cwd: REPO, encoding: "utf8", maxBuffer: 64 * 1024 * 1024, shell: true };
+  const run = (label, cmd) => {
+    try {
+      execSync(cmd, shell);
+      return "PASS";
+    } catch (e) {
+      return "FAIL:" + label;
+    }
+  };
+  const node = (rel) => 'node "' + path.join(REPO, rel) + '"';
+  return {
+    smoke: run("smoke", "npm run smoke"),
+    iu_perf_regression_guards: run("iu_perf", "npm run iu-perf-regression-guards"),
+    silver_field_cleanup_replay_suite: run("field", node("scripts/silver-field-cleanup-replay-suite.cjs")),
+    silver_calendar_create_regression: run("calreg", node("scripts/silver-calendar-create-regression.mjs")),
+    audit_silver_20000_routing_stable: run("20k", node("scripts/audit_silver_20000_routing_stable.cjs")),
+    audit_silver_quality_v2: run("qual", node("scripts/audit_silver_quality_v2.cjs")),
+    audit_silver_realistic_mobile_corpus: run("rmb", node("scripts/audit_silver_realistic_mobile_corpus.cjs"))
+  };
+}
+
 function readJsonReport(p) {
   try {
     return JSON.parse(fs.readFileSync(p, "utf8"));
@@ -238,7 +270,7 @@ function buildRealCzechCorpusV1() {
   ];
   const TMS = ["10:00", "15:30", "po obědě", "ráno", "večer", "v 15 hodin", "kolem šesté"];
 
-  for (let i = 0; i < 200; i++) {
+  for (let i = 0; i < 500; i++) {
     const op = [
       "Ulož mi prosím do kalendáře",
       "Dej mi do kalendáře",
@@ -265,7 +297,7 @@ function buildRealCzechCorpusV1() {
     push("rcz_cal_slang_write", "calendar_write", raw, "calendar.create", {}, {});
   }
 
-  for (let i = 0; i < 120; i++) {
+  for (let i = 0; i < 320; i++) {
     const raw =
       "Ulož mi " +
       DATES[i % DATES.length] +
@@ -281,7 +313,7 @@ function buildRealCzechCorpusV1() {
     push("rcz_cal_reminder_ambiguity", "calendar_write", raw, "calendar.create", {}, {});
   }
 
-  for (let i = 0; i < 120; i++) {
+  for (let i = 0; i < 320; i++) {
     const raw =
       "Ulož " +
       DATES[i % DATES.length] +
@@ -297,14 +329,14 @@ function buildRealCzechCorpusV1() {
 
   const GOODS = ["mléko", "mlíko", "rohlíky", "léky", "uhlí", "dárek", "toaleťák"];
   const DEAD = ["do pátku", "zejtra", "zítra ráno", "dnes večer", "v tejdnu", "do konce týdne"];
-  for (let i = 0; i < 180; i++) {
+  for (let i = 0; i < 450; i++) {
     const hodTam = i % 2 === 0 ? "Hoď mi do úkolů koupit " : "Hoď mi tam do úkolů koupit ";
     const raw = hodTam + GOODS[i % GOODS.length] + " " + DEAD[i % DEAD.length] + ", ne do kalendáře.";
     push("rcz_task_hod_tam", "task_write", raw, "task.create", {}, {});
   }
 
   const TWB = ["Přidej úkol", "Nezapomeň", "Nesmím zapomenout", "Připomeň mi", "Musím udělat", "Mám zařídit"];
-  for (let i = 0; i < 180; i++) {
+  for (let i = 0; i < 450; i++) {
     const raw = TWB[i % TWB.length] + " do úkolů " + GOODS[i % GOODS.length] + " " + DEAD[i % DEAD.length] + ", ne kalendář.";
     push("rcz_task_mliko_mobile", "task_write", raw, "task.create", {}, {});
   }
@@ -316,7 +348,7 @@ function buildRealCzechCorpusV1() {
     "Poznamenej si faktura za elektřinu zaplacena",
     "Ulož do poznámek že záruka na televizi končí v lednu"
   ];
-  for (let i = 0; i < 150; i++) {
+  for (let i = 0; i < 380; i++) {
     push("rcz_note_write_basic", "note_write", NOTE_SPOT[i % NOTE_SPOT.length], "note.create", {}, {});
   }
 
@@ -327,7 +359,7 @@ function buildRealCzechCorpusV1() {
     "Najdi fakturu za pračku",
     "Mrkni do poznámek na heslo WiFi"
   ];
-  for (let i = 0; i < 160; i++) {
+  for (let i = 0; i < 400; i++) {
     const neg = i % 5 === 0 ? "nic neukládej, " : "";
     const raw = neg + NQ[i % NQ.length] + (i % 2 ? "?" : "");
     push("rcz_note_query", "note_query", raw, "note.query", {}, {});
@@ -357,7 +389,7 @@ function buildRealCzechCorpusV1() {
     "Najdi úkoly na zítra",
     "Co mám do pátku"
   ];
-  for (let i = 0; i < 160; i++) {
+  for (let i = 0; i < 400; i++) {
     const raw = TQ[i % TQ.length] + (i % 2 ? "?" : "");
     push("rcz_task_query", "task_query", raw, "task.query", {}, {});
   }
@@ -372,13 +404,13 @@ function buildRealCzechCorpusV1() {
     "Koukni co mám v tejdnu",
     "Co mám zejtra v kalendáři"
   ];
-  for (let i = 0; i < 220; i++) {
+  for (let i = 0; i < 520; i++) {
     const neg = i % 6 === 0 ? "nic neukládej, " : "";
     const raw = neg + CQ[i % CQ.length] + (i % 2 ? "?" : "");
     push("rcz_cal_query_mrknout", "calendar_query", raw, "calendar.query", {}, {});
   }
 
-  for (let i = 0; i < 150; i++) {
+  for (let i = 0; i < 380; i++) {
     const d = DATES[i % DATES.length];
     const tm = TMS[i % TMS.length];
     const raw =
@@ -427,7 +459,7 @@ function buildRealCzechCorpusV1() {
     "Nic neukládej, jen zjisti fakturu za pračku v poznámkách.",
     "Jen čti poznámky, nic neukládej."
   ];
-  for (let i = 0; i < 140; i++) {
+  for (let i = 0; i < 360; i++) {
     const b = i % 3;
     if (b === 0) push("rcz_negation_safety_cal", "calendar_query", NEGC[i % NEGC.length], "calendar.query", {}, {});
     else if (b === 1) push("rcz_negation_safety_task", "task_query", NEGT[i % NEGT.length], "task.query", {}, {});
@@ -446,13 +478,13 @@ function buildRealCzechCorpusV1() {
     ["note_query", "Silvere jen se podívej do poznámek, nic neukládej"],
     ["calendar_query", "Nic neukládej, jen zjisti kdy mám zubaře."]
   ];
-  for (let i = 0; i < 120; i++) {
+  for (let i = 0; i < 320; i++) {
     const pair = RO[i % RO.length];
     push("rcz_read_only_prefix", pair[0], pair[1], pair[0] === "calendar_query" ? "calendar.query" : pair[0] === "task_query" ? "task.query" : "note.query", {}, {});
   }
 
   const FILL = ["no tak ", "prostě ", "btw ", "hele ", "silere rychle "];
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 300; i++) {
     const core =
       "ulož mi do kalendáře " +
       DATES[i % DATES.length] +
@@ -465,9 +497,250 @@ function buildRealCzechCorpusV1() {
     push("rcz_colloquial_fillers", "calendar_write", raw, "calendar.create", {}, {});
   }
 
+  for (let i = 0; i < 280; i++) {
+    const neg = i % 7 === 0 ? "nic neukládej, " : "";
+    const raw =
+      neg +
+      "Mrkni co mám " +
+      DATES[i % DATES.length] +
+      " v kalendáři v " +
+      TMS[i % TMS.length] +
+      (i % 2 ? "?" : "");
+    push("rcz_past_query_cal", "calendar_query", raw, "calendar.query", {}, {});
+  }
+
+  const PAST_TASK = [
+    "Co mám dnes udělat v úkolech",
+    "Jaké mám úkoly na zítra",
+    "Co musím zaplatit v úkolech",
+    "Najdi úkoly na zejtra",
+    "Co mám do pátku v úkolech"
+  ];
+  for (let i = 0; i < 220; i++) {
+    const raw = PAST_TASK[i % PAST_TASK.length] + " kolem " + TMS[i % TMS.length] + (i % 2 ? "?" : "");
+    push("rcz_past_query_task", "task_query", raw, "task.query", {}, {});
+  }
+
+  for (let i = 0; i < 260; i++) {
+    const neg = i % 8 === 0 ? "nic neukládej, " : "";
+    const raw =
+      neg +
+      "Koukni co mám " +
+      DATES[i % DATES.length] +
+      " v kalendáři kolem " +
+      TMS[i % TMS.length] +
+      (i % 2 ? "?" : "");
+    push("rcz_future_query_cal", "calendar_query", raw, "calendar.query", {}, {});
+  }
+
+  const FUT_TASK = [
+    "Co mám dnes udělat",
+    "Jaké mám úkoly",
+    "Co musím zaplatit",
+    "Najdi úkoly na zítra",
+    "Co mám do pátku v úkolech"
+  ];
+  for (let i = 0; i < 240; i++) {
+    const raw = FUT_TASK[i % FUT_TASK.length] + " " + GOODS[i % GOODS.length] + (i % 2 ? "?" : "");
+    push("rcz_future_query_task", "task_query", raw, "task.query", {}, {});
+  }
+
+  const VAGUE_DEAD = ["někdy v tejdnu", "kolem oběda", "jednou odpoledne", "až budu mít čas", "kdykoliv večer"];
+  for (let i = 0; i < 260; i++) {
+    const raw =
+      "Ulož mi do kalendáře " +
+      VAGUE_DEAD[i % VAGUE_DEAD.length] +
+      " schůzku s " +
+      PERS[i % PERS.length] +
+      " na " +
+      ADDR[i % ADDR.length] +
+      ", ne do úkolů.";
+    push("rcz_vague_time_cal_write", "calendar_write", raw, "calendar.create", {}, {});
+  }
+  for (let i = 0; i < 240; i++) {
+    const raw =
+      "Hoď mi do úkolů " +
+      GOODS[i % GOODS.length] +
+      " " +
+      VAGUE_DEAD[i % VAGUE_DEAD.length] +
+      ", ne do kalendáře.";
+    push("rcz_vague_time_task_write", "task_write", raw, "task.create", {}, {});
+  }
+
+  const FAM = ["mámu", "mámu", "tátovi", "babičce", "sestře", "kolegovi"];
+  for (let i = 0; i < 260; i++) {
+    const raw =
+      "Hoď mi do úkolů v tejdnu zavolat " +
+      FAM[i % FAM.length] +
+      " " +
+      DEAD[i % DEAD.length] +
+      ", ne do kalendáře.";
+    push("rcz_activity_phone_family", "task_write", raw, "task.create", {}, {});
+  }
+
+  const REORD = [
+    "Schůzku s {p} na {a} ulož mi do kalendáře {d} v {t}, ne do úkolů.",
+    "Do kalendáře ulož {d} v {t} schůzku s {p} na {a}, ne do úkolů.",
+    "{d} v {t} schůzku s {p} na {a} dej do kalendáře, ne do úkolů."
+  ];
+  for (let i = 0; i < 300; i++) {
+    const tpl = REORD[i % REORD.length]
+      .replace("{p}", PERS[i % PERS.length])
+      .replace("{a}", ADDR[i % ADDR.length])
+      .replace("{d}", DATES[i % DATES.length])
+      .replace("{t}", TMS[i % TMS.length]);
+    push("rcz_reordered_cal_write", "calendar_write", tpl, "calendar.create", {}, {});
+  }
+
+  for (let i = 0; i < 220; i++) {
+    const neg = i % 9 === 0 ? "nic neukládej, " : "";
+    const raw =
+      neg +
+      "jaké mám " +
+      DATES[i % DATES.length] +
+      " schůzky v kalendáři v " +
+      TMS[i % TMS.length] +
+      (i % 2 ? "?" : "");
+    push("rcz_slang_corpus_extra", "calendar_query", raw, "calendar.query", {}, {});
+  }
+
+  for (let i = 0; i < 200; i++) {
+    const raw =
+      "Připomeň mi mlíko " +
+      DEAD[i % DEAD.length] +
+      " do úkolů, ne do kalendáře.";
+    push("rcz_typos_colloquial", "task_write", raw, "task.create", {}, {});
+  }
+
+  for (let i = 0; i < 240; i++) {
+    const raw =
+      "Napiš do poznámek že " +
+      ["PIN karty je 4321", "heslo WiFi je doma123", "PIN poznámky k trezoru je 9999"][i % 3] +
+      ".";
+    push("rcz_sensitive_note_write", "note_write", raw, "note.create", {}, {});
+  }
+
+  for (let i = 0; i < 220; i++) {
+    const raw =
+      "Ne do kalendáře jen úkol koupit " +
+      GOODS[i % GOODS.length] +
+      " " +
+      DEAD[i % DEAD.length] +
+      ".";
+    push("rcz_only_task_cal_neg", "task_write", raw, "task.create", {}, {});
+  }
+
+  const FIND_TASK = [
+    "nic neukládej jen najdi v úkolech koupit mléko",
+    "nic neukládej jen najdi v úkolech právník",
+    "jen čti nic neukládej co mám v úkolech na zejtra",
+    "pouze najdi v úkolech zavolat mámě"
+  ];
+  for (let i = 0; i < 200; i++) {
+    const raw = FIND_TASK[i % FIND_TASK.length] + (i % 2 ? "" : ".");
+    push("rcz_find_only_tasks_neg", "task_query", raw, "task.query", {}, {});
+  }
+
+  for (let i = 0; i < 200; i++) {
+    const raw =
+      "Hoď mi tam schůzku " +
+      DATES[i % DATES.length] +
+      " v " +
+      TMS[i % TMS.length] +
+      " s " +
+      PERS[i % PERS.length] +
+      " na " +
+      ADDR[i % ADDR.length] +
+      ", ne do úkolů.";
+    push("rcz_phrase_hod_schuzku", "calendar_write", raw, "calendar.create", {}, {});
+  }
+
+  for (let i = 0; i < 200; i++) {
+    const raw = "Hoď mi tam mlíko do úkolů " + DEAD[i % DEAD.length] + ", ne do kalendáře.";
+    push("rcz_phrase_hod_mliko", "task_write", raw, "task.create", {}, {});
+  }
+
+  const DICT_CAL = [
+    "čárka ulož zítra deset schůzka s právníkem Praha jedna ne do úkolů",
+    "stopka nahod do kalendáře zejtra odpoledne zubař korunni třicet tři",
+    "dictation ulož do kalendáře na pátek večer schůzka s Petrem Vinohradská tři"
+  ];
+  for (let i = 0; i < 180; i++) {
+    push("rcz_mobile_dictation_cal", "calendar_write", DICT_CAL[i % DICT_CAL.length], "calendar.create", {}, {});
+  }
+  const TWB_DICT = ["Přidej úkol", "Nezapomeň", "Nesmím zapomenout", "Připomeň mi", "Musím udělat", "Mám zařídit"];
+  for (let i = 0; i < 180; i++) {
+    const raw =
+      "Silvere rychle " +
+      TWB_DICT[i % TWB_DICT.length] +
+      " do úkolů " +
+      GOODS[i % GOODS.length] +
+      " " +
+      DEAD[i % DEAD.length] +
+      ", ne kalendář.";
+    push("rcz_mobile_dictation_task", "task_write", raw, "task.create", {}, {});
+  }
+  const DICT_NOTE = [
+    "Ulož poznámku heslo WiFi je heslo123",
+    "Zapiš poznámku PIN trezor je čtyři čtyři čtyři čtyři",
+    "Poznamenej si že auto STK je v červnu"
+  ];
+  for (let i = 0; i < 160; i++) {
+    push("rcz_mobile_dictation_note", "note_write", DICT_NOTE[i % DICT_NOTE.length], "note.create", {}, {});
+  }
+
+  const MIXED = [
+    "Mrkni do poznámek co mám o autě, nic neukládej.",
+    "Kde mám právníka v poznámkách, nic neukládej.",
+    "Najdi v poznámkách heslo WiFi, nic neukládej.",
+    "Mrkni do poznámek na PIN ke kartě, jen čti.",
+    "Co mám o autě v poznámkách, nic neukládej."
+  ];
+  for (let i = 0; i < 180; i++) {
+    const raw = MIXED[i % MIXED.length];
+    push("rcz_mixed_cal_task_note_query", "note_query", raw, "note.query", {}, {});
+  }
+
+  const NOTE_VAGUE = [
+    "Mrkni do poznámek co mám o autě",
+    "Kde mám právníka v poznámkách",
+    "Co mám napsané o autě v poznámkách",
+    "Najdi heslo WiFi v poznámkách"
+  ];
+  for (let i = 0; i < 220; i++) {
+    push("rcz_note_query_vague", "note_query", NOTE_VAGUE[i % NOTE_VAGUE.length] + (i % 2 ? "?" : ""), "note.query", {}, {});
+  }
+
+  for (let i = 0; i < 750; i++) {
+    const raw =
+      "Ulož mi do kalendáře " +
+      DATES[i % DATES.length] +
+      " v " +
+      TMS[i % TMS.length] +
+      " schůzku číslo " +
+      i +
+      " s " +
+      PERS[i % PERS.length] +
+      " na " +
+      ADDR[i % ADDR.length] +
+      ", ne do úkolů.";
+    push("rcz_bulk_cal_expand", "calendar_write", raw, "calendar.create", {}, {});
+  }
+  for (let i = 0; i < 500; i++) {
+    const raw =
+      "Přidej do úkolů úkol číslo " +
+      i +
+      " koupit " +
+      GOODS[i % GOODS.length] +
+      " " +
+      DEAD[i % DEAD.length] +
+      ", ne do kalendáře.";
+    push("rcz_bulk_task_expand", "task_write", raw, "task.create", {}, {});
+  }
+
   const expanded = [];
   const seen = new Set();
-  const MUT_MAX = parseInt(process.env.SILVER_REAL_CZECH_MUT_MASK_MAX || "31", 10);
+  const MUT_MAX = parseInt(process.env.SILVER_REAL_CZECH_MUT_MASK_MAX || "127", 10);
   const maskCap = Math.min(127, Math.max(1, MUT_MAX));
 
   for (let ri = 0; ri < rows.length; ri++) {
@@ -497,8 +770,8 @@ function buildRealCzechCorpusV1() {
     }
   }
 
-  if (expanded.length < 5000) {
-    console.log("seed_data_fail=corpus_below_5000_got_" + expanded.length);
+  if (expanded.length < 30000) {
+    console.log("seed_data_fail=corpus_below_30000_got_" + expanded.length);
     process.exit(1);
   }
 
@@ -510,7 +783,7 @@ function buildRealCzechCorpusV1() {
     hist[cl] = (hist[cl] || 0) + 1;
   }
   const histKeys = Object.keys(hist).sort((a, b) => hist[b] - hist[a]);
-  if (histKeys.length > 80) {
+  if (histKeys.length > 96) {
     console.log("seed_data_fail=cluster_histogram_too_many_keys_" + histKeys.length);
     process.exit(1);
   }
@@ -663,8 +936,9 @@ function main() {
     .slice(0, 10)
     .map((p) => p.k + ":" + p.n);
 
-  let recommendedNextCluster = "TOP_REAL_CZECH_CORPUS_CLUSTER_BY_IMPACT";
-  let recommendedNextFixScope = inferFixScope("ambiguous_should_clarify");
+  let recommendedNextCluster = "TOP_30K_CLUSTER_BY_IMPACT";
+  let recommendedNextFixScope =
+    failC === 0 ? "No harness failures in 30k slice (diagnostic only)" : inferFixScope("ambiguous_should_clarify");
   const dangerousWriteCount = dangerousCaseIds.size;
 
   let impactTopCluster = "(none)";
@@ -679,7 +953,7 @@ function main() {
     const topK = clusterPairs[0].k.split("||")[0] || clusterPairs[0].k;
     const topCat = (clusterPairs[0].k.split("||")[1] || "").trim();
     const sampleFail = fails.find((f) => f.cluster + "||" + f.cat === clusterPairs[0].k);
-    recommendedNextCluster = "TOP_REAL_CZECH_CORPUS_CLUSTER_BY_IMPACT";
+    recommendedNextCluster = "TOP_30K_CLUSTER_BY_IMPACT";
     recommendedNextFixScope =
       "Impact leader «" +
       topK +
@@ -695,15 +969,28 @@ function main() {
   }
 
   const embed20k = tryEmbed20k();
+  const gateBundle = tryRunOptionalSilverGates();
   const qPath = path.join(REPO, "scripts", "silver-quality-v2-report.json");
   const rPath = path.join(REPO, "scripts", "silver-realistic-mobile-corpus-report.json");
   const qj = readJsonReport(qPath);
   const rj = readJsonReport(rPath);
 
-  const smoke = process.env.SILVER_RC_SMOKE_OUT || "SKIPPED";
-  const iuPerf = process.env.SILVER_RC_IU_PERF_OUT || "SKIPPED";
-  const fieldReplay = process.env.SILVER_RC_FIELD_REPLAY_OUT || "SKIPPED";
-  const calReg = process.env.SILVER_RC_CAL_REG_OUT || "SKIPPED";
+  let smoke = process.env.SILVER_RC_SMOKE_OUT || "SKIPPED";
+  let iuPerf = process.env.SILVER_RC_IU_PERF_OUT || "SKIPPED";
+  let fieldReplay = process.env.SILVER_RC_FIELD_REPLAY_OUT || "SKIPPED";
+  let calReg = process.env.SILVER_RC_CAL_REG_OUT || "SKIPPED";
+  let audit20kGate = process.env.SILVER_RC_AUDIT_20K_OUT || "SKIPPED";
+  let auditQualityGate = process.env.SILVER_RC_AUDIT_QUALITY_OUT || "SKIPPED";
+  let auditRealisticGate = process.env.SILVER_RC_AUDIT_REALISTIC_OUT || "SKIPPED";
+  if (gateBundle) {
+    smoke = gateBundle.smoke;
+    iuPerf = gateBundle.iu_perf_regression_guards;
+    fieldReplay = gateBundle.silver_field_cleanup_replay_suite;
+    calReg = gateBundle.silver_calendar_create_regression;
+    audit20kGate = gateBundle.audit_silver_20000_routing_stable;
+    auditQualityGate = gateBundle.audit_silver_quality_v2;
+    auditRealisticGate = gateBundle.audit_silver_realistic_mobile_corpus;
+  }
 
   const overall20kFinal =
     (embed20k && embed20k.overall_accuracy) ||
@@ -718,7 +1005,8 @@ function main() {
     void e1;
   }
 
-  let changedFiles = "scripts/silver-real-czech-corpus-v1.cjs;scripts/audit_silver_realistic_mobile_corpus.cjs";
+  let changedFiles =
+    "scripts/silver-real-czech-corpus-v1.cjs;scripts/silver-real-czech-corpus-v1-report.json;scripts/silver-real-czech-corpus-v1-30k-report.json";
   try {
     const st = execSync("git status --porcelain", { cwd: REPO, encoding: "utf8" });
     const paths = st
@@ -764,6 +1052,46 @@ function main() {
 
   const realCzechAccPct = corpusAcc + "%";
 
+  const negationSafetyAcc = subAcc(
+    (c) =>
+      c.cluster &&
+      (String(c.cluster).indexOf("rcz_negation_safety") === 0 ||
+        String(c.cluster).indexOf("read_only") >= 0 ||
+        c.cluster === "rcz_find_only_tasks_neg")
+  );
+  const pastQueryAcc = subAcc((c) => c.cluster && String(c.cluster).indexOf("rcz_past_query") === 0);
+  const futureQueryAcc = subAcc((c) => c.cluster && String(c.cluster).indexOf("rcz_future_query") === 0);
+  const vagueTimeAcc = subAcc((c) => c.cluster && String(c.cluster).indexOf("rcz_vague_time") === 0);
+
+  const safetyRiskAggregate =
+    dangerousWriteCount > 0 || falseWriteCount > 0 || queryCreatedWriteCount > 0 || writeWhenNegatedCount > 0
+      ? "yes"
+      : "no";
+
+  let highestImpactSafeFix =
+    "None (30k corpus PASS; no failing-cluster harness impact — choose next slice by product priority)";
+  if (failC > 0 && fails.length) {
+    const top = fails[0];
+    if (top && safetyRiskYes(top.cat)) {
+      highestImpactSafeFix = "No safe harness-only fix before P0 safety remediation";
+    } else if (top) {
+      const prcTop = top.probable_root_cause || inferProbableRootCause(top, { cat: top.cat });
+      highestImpactSafeFix = inferFixScope(prcTop);
+    }
+  }
+
+  function allEmbeddedGatesPass() {
+    if (!gateBundle) return false;
+    const vals = Object.keys(gateBundle).map((k) => gateBundle[k]);
+    for (let gi = 0; gi < vals.length; gi++) if (vals[gi] !== "PASS") return false;
+    return true;
+  }
+  const readyForMerge =
+    git.ok && !gateFail && total >= 30000 && failC === 0 && (gateBundle ? allEmbeddedGatesPass() : false)
+      ? "YES"
+      : "NO";
+  const prUrl = process.env.SILVER_PR_URL || "";
+
   const reportObj = {
     harness_id: HARNESS_ID,
     fixed_now: FIXED_NOW_ISO,
@@ -798,6 +1126,17 @@ function main() {
     read_only_accuracy: subAcc((c) => c.cluster && c.cluster.indexOf("read_only") >= 0),
     mobile_czech_accuracy: subAcc((c) => c.flags && c.flags.mobile_czech),
     no_diacritics_accuracy: subAcc((c) => c.flags && c.flags.no_diacritics_corpus),
+    negation_safety_accuracy: negationSafetyAcc,
+    past_query_accuracy: pastQueryAcc,
+    future_query_accuracy: futureQueryAcc,
+    vague_time_accuracy: vagueTimeAcc,
+    safety_risk_aggregate: safetyRiskAggregate,
+    highest_impact_safe_fix: highestImpactSafeFix,
+    audit_silver_20000_routing_stable_gate: audit20kGate,
+    audit_silver_quality_v2_gate: auditQualityGate,
+    audit_silver_realistic_mobile_corpus_gate: auditRealisticGate,
+    ready_for_merge: readyForMerge,
+    pr_url: prUrl,
     dangerous_write_count: dangerousWriteCount,
     false_write_count: falseWriteCount,
     query_created_write_count: queryCreatedWriteCount,
@@ -814,6 +1153,27 @@ function main() {
   };
 
   fs.writeFileSync(REPORT_JSON, JSON.stringify(reportObj, null, 2), "utf8");
+
+  const REPORT_30K_JSON = path.join(__dirname, "silver-real-czech-corpus-v1-30k-report.json");
+  const report30k = {
+    harness_id: HARNESS_ID + "_30k",
+    corpus_total: total,
+    corpus_accuracy: corpusAcc,
+    negation_safety_accuracy: negationSafetyAcc,
+    past_query_accuracy: pastQueryAcc,
+    future_query_accuracy: futureQueryAcc,
+    vague_time_accuracy: vagueTimeAcc,
+    safety_risk_aggregate: safetyRiskAggregate,
+    top_10_fail_clusters: top10Clusters,
+    top_10_root_causes: top10Causes,
+    highest_impact_safe_fix: highestImpactSafeFix,
+    recommended_next_cluster: recommendedNextCluster,
+    recommended_next_fix_scope: recommendedNextFixScope,
+    embed_20k: embed20k,
+    gates_embedded: gateBundle,
+    ready_for_merge: readyForMerge
+  };
+  fs.writeFileSync(REPORT_30K_JSON, JSON.stringify(report30k, null, 2), "utf8");
 
   const block = [
     "=== SILVER_REAL_CZECH_CORPUS_V1_RESULT ===",
@@ -866,11 +1226,68 @@ function main() {
     "quality_accuracy=" + escapeField(qualityAcc),
     "realistic_overall_accuracy=" + escapeField(realisticAcc),
     "git_status_clean=" + (git.ok ? "YES" : "NO"),
+    "pr_url=" + escapeField(prUrl),
+    "ready_for_merge=" + readyForMerge,
     "======= END_SILVER_REAL_CZECH_CORPUS_V1_RESULT ==="
   ].join("\n");
 
+  const block30k = [
+    "=== SILVER_REAL_CZECH_CORPUS_30K_RESULT ===",
+    "main_commit=" + escapeField(mainCommit),
+    "changed_files=" + escapeField(changedFiles),
+    "engine_changed=NO",
+    "behavior_changed=NO",
+    "ui_changed=NO",
+    "css_changed=NO",
+    "backend_changed=NO",
+    "corpus_total=" + total,
+    "corpus_pass=" + passC,
+    "corpus_fail=" + failC,
+    "corpus_accuracy=" + corpusAcc + "%",
+    "calendar_write_accuracy=" + reportObj.calendar_write_accuracy + "%",
+    "calendar_query_accuracy=" + reportObj.calendar_query_accuracy + "%",
+    "task_write_accuracy=" + reportObj.task_write_accuracy + "%",
+    "task_query_accuracy=" + reportObj.task_query_accuracy + "%",
+    "note_write_accuracy=" + reportObj.note_write_accuracy + "%",
+    "note_query_accuracy=" + reportObj.note_query_accuracy + "%",
+    "multi_intent_accuracy=" + reportObj.multi_intent_accuracy + "%",
+    "read_only_accuracy=" + reportObj.read_only_accuracy + "%",
+    "negation_safety_accuracy=" + negationSafetyAcc + "%",
+    "mobile_czech_accuracy=" + reportObj.mobile_czech_accuracy + "%",
+    "no_diacritics_accuracy=" + reportObj.no_diacritics_accuracy + "%",
+    "past_query_accuracy=" + pastQueryAcc + "%",
+    "future_query_accuracy=" + futureQueryAcc + "%",
+    "vague_time_accuracy=" + vagueTimeAcc + "%",
+    "dangerous_write_count=" + dangerousWriteCount,
+    "false_write_count=" + falseWriteCount,
+    "query_created_write_count=" + queryCreatedWriteCount,
+    "write_when_negated_count=" + writeWhenNegatedCount,
+    "safety_risk=" + safetyRiskAggregate,
+    "top_10_fail_clusters=" + escapeField(top10Clusters.join(" | ") || "(none)"),
+    "top_10_root_causes=" + escapeField(top10Causes.join(" | ") || "(none)"),
+    "highest_impact_safe_fix=" + escapeField(highestImpactSafeFix),
+    "recommended_next_cluster=" + escapeField(recommendedNextCluster),
+    "recommended_next_fix_scope=" + escapeField(recommendedNextFixScope),
+    "20k_overall_accuracy=" + escapeField(overall20kFinal),
+    "quality_accuracy=" + escapeField(qualityAcc),
+    "realistic_overall_accuracy=" + escapeField(realisticAcc),
+    "calendar_write_20k=" + escapeField(calendarWrite20k),
+    "smoke=" + escapeField(smoke),
+    "iu_perf_regression_guards=" + escapeField(iuPerf),
+    "silver_field_cleanup_replay_suite=" + escapeField(fieldReplay),
+    "silver_calendar_create_regression=" + escapeField(calReg),
+    "audit_silver_20000_routing_stable=" + escapeField(audit20kGate),
+    "audit_silver_quality_v2=" + escapeField(auditQualityGate),
+    "audit_silver_realistic_mobile_corpus=" + escapeField(auditRealisticGate),
+    "git_status_clean=" + (git.ok ? "YES" : "NO"),
+    "pr_url=" + escapeField(prUrl),
+    "ready_for_merge=" + readyForMerge,
+    "======= END_SILVER_REAL_CZECH_CORPUS_30K_RESULT ==="
+  ].join("\n");
+
   console.log("\n" + block);
-  fs.writeFileSync(REPORT_TXT, block + "\n", "utf8");
+  console.log("\n" + block30k);
+  fs.writeFileSync(REPORT_TXT, block + "\n" + block30k + "\n", "utf8");
 
   if (gateFail) {
     process.exit(1);

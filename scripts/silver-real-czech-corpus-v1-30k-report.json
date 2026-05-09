@@ -1,0 +1,35 @@
+{
+  "harness_id": "silver_real_czech_corpus_v1_30k",
+  "corpus_total": 34907,
+  "corpus_accuracy": "100.00",
+  "negation_safety_accuracy": "100.00",
+  "past_query_accuracy": "100.00",
+  "future_query_accuracy": "100.00",
+  "vague_time_accuracy": "100.00",
+  "safety_risk_aggregate": "no",
+  "top_10_fail_clusters": [],
+  "top_10_root_causes": [],
+  "highest_impact_safe_fix": "None (30k corpus PASS; no failing-cluster harness impact — choose next slice by product priority)",
+  "recommended_next_cluster": "TOP_30K_CLUSTER_BY_IMPACT",
+  "recommended_next_fix_scope": "No harness failures in 30k slice (diagnostic only)",
+  "embed_20k": {
+    "overall_accuracy": "95.48",
+    "calendar_write": "3000/3000",
+    "task_write": "2852/3000",
+    "calendar_query": "3000/3000",
+    "task_query": "2944/3000",
+    "note_write": "2400/3000",
+    "note_query": "2900/3000",
+    "multi_intent": "2000/2000"
+  },
+  "gates_embedded": {
+    "smoke": "PASS",
+    "iu_perf_regression_guards": "PASS",
+    "silver_field_cleanup_replay_suite": "PASS",
+    "silver_calendar_create_regression": "PASS",
+    "audit_silver_20000_routing_stable": "PASS",
+    "audit_silver_quality_v2": "PASS",
+    "audit_silver_realistic_mobile_corpus": "PASS"
+  },
+  "ready_for_merge": "YES"
+}
