@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-09T06:19:53.560223Z",
+  "ingestedAt": "2026-05-09T07:04:11.148089Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "ŽIVĚ: Jak skromná je vojenská přehlídka? Rusko slaví vítězství nad nacisty",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/rusko-si-pripomina-vyroci-konce-2-svetove-valky-omezi-vojenskou-prehlidku.A260509_082735_zahranicni_remy",
+      "dt": "2026-05-09T06:34:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "nacisty",
+        "přehlídka",
+        "rusko",
+        "skromná",
+        "slaví",
+        "vojenská",
+        "vítězství"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -762,32 +786,6 @@
         "sudetských",
         "tvrdí",
         "české"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Hasiči v uzavřené zóně černobylské elektrárny bojují s požárem po pádu dronu",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/hasici-u-elektrarny-v-cernobylu-bojuji-s-rozsahlym-lesnim-pozarem-uvedly-urady.A260508_114657_zahranicni_idh",
-      "dt": "2026-05-08T10:50:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bojují",
-        "dronu",
-        "elektrárny",
-        "hasiči",
-        "požárem",
-        "pádu",
-        "uzavřené",
-        "zóně",
-        "černobylské"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1590,7 +1588,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49329,
+      "bytes": 49278,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1627,7 +1625,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-09T05:27:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T06:34:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1643,6 +1641,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "ŽIVĚ: Jak skromná je vojenská přehlídka? Rusko slaví vítězství nad nacisty",
+            "publishedAt": "2026-05-09T06:34:00Z"
+          },
           {
             "title": "WHO potvrdila šest případů nákazy hantavirem, tři lidé na nemoc zemřeli",
             "publishedAt": "2026-05-09T05:27:00Z"
@@ -1670,10 +1672,6 @@
           {
             "title": "Čtvrtina mladistvých v Česku je závislá na nikotinu. A cigarety k tomu nepotřebují",
             "publishedAt": "2026-05-08T22:00:00Z"
-          },
-          {
-            "title": "Zadlužené Zimbabwe vrací farmy bělochům, chce se vymanit z finanční krize",
-            "publishedAt": "2026-05-08T19:13:00Z"
           }
         ]
       }

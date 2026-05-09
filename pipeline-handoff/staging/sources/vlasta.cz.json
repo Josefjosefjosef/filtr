@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vlasta.cz",
-  "ingestedAt": "2026-05-09T06:19:53.560223Z",
+  "ingestedAt": "2026-05-09T07:04:11.148089Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Jak bydlí Daniel Landa: Nenápadné království na pražském Vyšehradě za téměř 70 milionů korun",
+      "url": "https://www.vlasta.cz/celebrity/jak-bydli-danile-landa-bydleni-dum-vysehrad-interier/",
+      "dt": "2026-05-09T06:35:00Z",
+      "media_raw": "Vlasta",
+      "media_norm": "Vlasta",
+      "tokens": [
+        "bydlí",
+        "daniel",
+        "korun",
+        "království",
+        "landa",
+        "milionů",
+        "nenápadné",
+        "pražském",
+        "téměř",
+        "vyšehradě"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vlasta",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "vlasta.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -1127,32 +1154,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "vlasta.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Dnes v Ulici: Vanda si myslí, že je Luďkova milenka zlatokopka. A Lumíra zadrží policie",
-      "url": "https://www.vlasta.cz/inspirace/dnes-v-ulici-novy-dil-pondeli-dej-herci-lumir-vanda-ludek-kristyna-blanka/",
-      "dt": "2026-05-04T07:55:19Z",
-      "media_raw": "Vlasta",
-      "media_norm": "Vlasta",
-      "tokens": [
-        "lumíra",
-        "luďkova",
-        "milenka",
-        "myslí",
-        "policie",
-        "ulici",
-        "vanda",
-        "zadrží",
-        "zlatokopka"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vlasta",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "vlasta.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1163,7 +1164,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.vlasta.cz/rss/vse.xml",
-      "bytes": 62516,
+      "bytes": 62402,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1200,11 +1201,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-09T06:06:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T06:35:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "other": 38,
-          "zpravy": 2
+          "other": 39,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1216,6 +1217,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jak bydlí Daniel Landa: Nenápadné království na pražském Vyšehradě za téměř 70 milionů korun",
+            "publishedAt": "2026-05-09T06:35:00Z"
+          },
           {
             "title": "Návrat do práce po mateřské je pro ženy peklo. Klíčové jsou krácené úvazky a lepší organizace",
             "publishedAt": "2026-05-09T06:06:00Z"
@@ -1243,10 +1248,6 @@
           {
             "title": "Dnes v Ulici: Vlasta myslí, že je Adriana společnice. „Prodáváš se chlapům, toho jsem se dožít nechtěl“",
             "publishedAt": "2026-05-08T06:32:00Z"
-          },
-          {
-            "title": "Vařené brambory jezte až druhý den. Budou chutnější a získají jednu pro tělo velmi důležitou látku",
-            "publishedAt": "2026-05-08T06:05:00Z"
           }
         ]
       }
