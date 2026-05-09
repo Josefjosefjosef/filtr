@@ -35504,6 +35504,85 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P0: tvrdý read-only lead (jen|pouze čti, jen se podívej) před zápisovým signálem ve stejné větě
+   * → AMBIGUOUS_WRITE. Neplatí na multi-intent konektor „a zároveň …“ (tam řeší split).
+   * Doplňuje iuSilverP0NoWriteNegationBeatsWriteLikeCueFolded (nezapomen / zavolat nejsou v jeho write-like množině).
+   */
+  function iuSilverP0ReadOnlyLeadBlocksWriteIntentFolded(f) {
+    const x = String(f || "").trim();
+    if (!x) return false;
+
+    function earliestHardReadPick() {
+      let bestS = -1;
+      let bestE = -1;
+      const push = (st, en) => {
+        if (st < 0) return;
+        if (bestS < 0 || st < bestS) {
+          bestS = st;
+          bestE = en;
+        }
+      };
+      const runs = [/\bjen\s+cti\b/gi, /\bpouze\s+cti\b/gi, /\bjen\s+se\s+podivej\b/gi];
+      for (let ri = 0; ri < runs.length; ri++) {
+        const re = runs[ri];
+        let m;
+        while ((m = re.exec(x)) !== null) {
+          push(m.index, m.index + m[0].length);
+        }
+        re.lastIndex = 0;
+      }
+      return bestS >= 0 ? { start: bestS, end: bestE } : null;
+    }
+
+    const pick = earliestHardReadPick();
+    if (!pick) return false;
+    if (pick.start > 12) return false;
+    if (pick.start > 0) {
+      const pre = x.slice(0, pick.start).trim();
+      if (pre.length > 24) return false;
+      if (
+        !/^(?:prosim|pros[ií]m|ahoj|hej|cus|cau|ok)\b[,!\s]*$/i.test(pre) &&
+        !/^(?:ano|jo|jop|jj|hmm|hm)\b[,!\s]*$/i.test(pre)
+      ) {
+        return false;
+      }
+    }
+
+    function earliestWriteIdx() {
+      let best = -1;
+      const push = (idx) => {
+        if (typeof idx !== "number" || idx < 0) return;
+        if (best < 0 || idx < best) best = idx;
+      };
+      const patterns = [/\bzapis/gi, /\buloz/gi, /\bnezapomen(?:out)?\b/gi, /\bdej\b/gi, /\bpridej\b/gi];
+      for (let pi = 0; pi < patterns.length; pi++) {
+        const re = patterns[pi];
+        let mm;
+        while ((mm = re.exec(x)) !== null) {
+          push(mm.index);
+        }
+        re.lastIndex = 0;
+      }
+      const rePm = /\bpripomen\s+mi\b/gi;
+      let mPm;
+      while ((mPm = rePm.exec(x)) !== null) {
+        const tailPm = x.slice(mPm.index);
+        if (/\bpripomen\s+mi\b.*\b(schuz|schuzk|udalost|kalendar|kalend|porad|zubar|zuba[rř]|lekar|advokat)\w*\b/i.test(tailPm))
+          continue;
+        push(mPm.index);
+      }
+      rePm.lastIndex = 0;
+      return best;
+    }
+
+    const wi = earliestWriteIdx();
+    if (wi < 0 || !(pick.start < wi)) return false;
+    const gap = x.slice(pick.end, wi);
+    if (/\.\s+/.test(gap) || /[!?]\s+/.test(gap)) return false;
+    return true;
+  }
+
+  /**
    * P1 FIX_SCOPED_NEGATION_NOTE_WRITE: odstřihni modulární „ne do úkolů / ne do tasků“ prefix z raw vstupu
    * jen když není globální read-only / no-write — aby iuSilverTryParseExplicitNoteCreate viděl čistý imperativ poznámky.
    */
@@ -37525,7 +37604,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bnezapomenout\b/.test(f) ||
       /\bnezapomen\b/.test(f) ||
       /\bza[rř][ií]dit\b/.test(f) ||
-      /\bzaridit\b/.test(f);
+      /\bzaridit\b/.test(f) ||
+      (/\bzitra\s+rano\b/.test(f) && /\b(vstavat|vstat)\b/.test(f));
     if (!choreHit) return false;
     if (
       /\bdo\s+kalendar\w*\b/.test(f) ||
@@ -37773,6 +37853,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         confidence: 0.93,
         route: "fallback",
         reason: "ambiguous_write",
+        kind: "AMBIGUOUS_WRITE",
+        calendarFallbackWanted: false
+      };
+    }
+    if (!iuSilverMultiIntentSplitOnConnectorP0(raw) && iuSilverP0ReadOnlyLeadBlocksWriteIntentFolded(folded)) {
+      return {
+        intent: "unknown",
+        confidence: 0.94,
+        route: "fallback",
+        reason: "read_only_write_conflict",
         kind: "AMBIGUOUS_WRITE",
         calendarFallbackWanted: false
       };
@@ -45443,6 +45533,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
 
     if (iuSilverP0NoWriteNegationBeatsWriteLikeCueFolded(folded)) {
+      return baseClarification("ambiguous_write", "unknown");
+    }
+
+    if (!iuSilverMultiIntentSplitOnConnectorP0(raw) && iuSilverP0ReadOnlyLeadBlocksWriteIntentFolded(folded)) {
       return baseClarification("ambiguous_write", "unknown");
     }
 
