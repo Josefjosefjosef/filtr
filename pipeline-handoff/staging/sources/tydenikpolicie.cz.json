@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-09T17:39:24.452680Z",
+  "ingestedAt": "2026-05-09T18:23:59.315167Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Fanoušci Sparty vyrazili na derby pražských „S“ v Edenu pochodem",
+      "url": "https://tydenikpolicie.cz/fanousci-sparty-vyrazili-na-derby-prazskych-s-v-edenu-pochodem/",
+      "dt": "2026-05-09T17:42:00Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "derby",
+        "edenu",
+        "fanoušci",
+        "pochodem",
+        "pražských",
+        "sparty",
+        "vyrazili"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -243,31 +267,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Při nehodách na Hodonínsku byly vážně zraněny dvě chodkyně",
-      "url": "https://tydenikpolicie.cz/pri-nehodach-na-hodoninsku-byly-vazne-zraneny-dve-chodkyne/",
-      "dt": "2026-05-08T04:02:20Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "byly",
-        "chodkyně",
-        "dvě",
-        "hodonínsku",
-        "nehodách",
-        "při",
-        "vážně",
-        "zraněny"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +277,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 17185,
+      "bytes": 17303,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +314,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-09T12:37:29Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T17:42:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -330,6 +329,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fanoušci Sparty vyrazili na derby pražských „S“ v Edenu pochodem",
+            "publishedAt": "2026-05-09T17:42:00Z"
+          },
           {
             "title": "Pátrací akce po pohřešovaném seniorovi na Vsetínsku měla šťastný konec",
             "publishedAt": "2026-05-09T12:37:29Z"
@@ -357,10 +360,6 @@
           {
             "title": "Muž dojížděl vlakem do Světlé nad Sázavou, kde pak měl opakovaně krást na železnici",
             "publishedAt": "2026-05-08T07:18:15Z"
-          },
-          {
-            "title": "Za sérií krádeží nafty měli stát čtyři mladíci. Tři z nich jsou ještě studenti",
-            "publishedAt": "2026-05-08T07:04:16Z"
           }
         ]
       }
