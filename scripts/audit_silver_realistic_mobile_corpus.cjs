@@ -1567,6 +1567,8 @@ function gitTrackedClean() {
       "scripts/audit_silver_real_ux_v1.cjs",
       "scripts/silver-quality-v2-report.json",
       "scripts/silver-real-ux-v1-report.json",
+      "scripts/silver-real-czech-corpus-v1.cjs",
+      "scripts/silver-real-czech-corpus-v1-report.json",
       "assets/app.js"
     ];
     const bad = tracked.filter((l) => {
@@ -2298,4 +2300,19 @@ function main() {
   fs.writeFileSync(REPORT_TXT, lines.join("\n\n") + "\n\n" + block + "\n", "utf8");
 }
 
-main();
+if (require.main === module) {
+  main();
+}
+
+module.exports = {
+  loadEngine,
+  evaluateOne,
+  applyHarnessExpectationHarmonization,
+  ctxForCase,
+  foldCs,
+  hasNegWrite,
+  FAIL_CATS,
+  engineToAuditIntent,
+  rawUserMessage,
+  cardType
+};
