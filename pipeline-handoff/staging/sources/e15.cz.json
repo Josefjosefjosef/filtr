@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-09T02:40:28.039189Z",
+  "ingestedAt": "2026-05-09T03:24:44.602445Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Kurýr není zaměstnanec? Zákon pro poslíčky čeká tvrdý boj, chtějí ochranu",
+      "url": "https://www.e15.cz/byznys/kuryr-neni-zamestnanec-zakon-pro-poslicky-ceka-tvrdy-boj-chteji-ochranu-1432649",
+      "dt": "2026-05-09T03:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "boj",
+        "chtějí",
+        "kurýr",
+        "ochranu",
+        "poslíčky",
+        "tvrdý",
+        "zaměstnanec",
+        "zákon",
+        "čeká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -1072,33 +1098,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Peníze z prodeje bytu či dědictví budou ve větším bezpečí. Ochrana vkladů se výrazně zvyšuje",
-      "url": "https://www.e15.cz/finexpert/banky-a-ucty/penize-z-prodeje-bytu-ci-dedictvi-budou-ve-vetsim-bezpeci-ochrana-vkladu-se-vyrazne-zvysuje-1432629",
-      "dt": "2026-05-06T09:59:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "bezpečí",
-        "bytu",
-        "dědictví",
-        "ochrana",
-        "peníze",
-        "prodeje",
-        "vkladů",
-        "výrazně",
-        "větším",
-        "zvyšuje"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1109,7 +1108,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 53131,
+      "bytes": 53135,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1146,11 +1145,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-08T16:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T03:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 2,
-          "finance": 38
+          "finance": 38,
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1162,6 +1161,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kurýr není zaměstnanec? Zákon pro poslíčky čeká tvrdý boj, chtějí ochranu",
+            "publishedAt": "2026-05-09T03:00:00Z"
+          },
           {
             "title": "Dron narušil provoz Letiště Václava Havla. Policie zadržela podezřelého muže",
             "publishedAt": "2026-05-08T16:30:00Z"
@@ -1189,10 +1192,6 @@
           {
             "title": "Spor o české křeslo na summitu NATO pokračuje. Pavel s Babišem se znovu nedohodli",
             "publishedAt": "2026-05-08T08:40:00Z"
-          },
-          {
-            "title": "INVESTIČNÍ ONLINE: Americká Eli Lilly je nejhodnotnější farmaceutická firma na světě",
-            "publishedAt": "2026-05-08T06:00:00Z"
           }
         ]
       }
