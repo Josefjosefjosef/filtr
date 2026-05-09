@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-09T09:14:18.478308Z",
+  "ingestedAt": "2026-05-09T09:54:26.866403Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Giro ONLINE: Nejzajímavější bulharská etapa. Rozhodne nevyzpytatelný závěr",
+      "url": "https://www.idnes.cz/sport/cyklistika/giro-d-italia-druha-etapa-bulharsko.A260509_091103_cyklistika_kazdt",
+      "dt": "2026-05-09T09:05:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bulharská",
+        "etapa",
+        "giro",
+        "nejzajímavější",
+        "nevyzpytatelný",
+        "online",
+        "rozhodne",
+        "závěr"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -764,32 +789,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Poslední zápas ryšavého čahouna za Plzeň. Bláha před finále hlásí: Není se na co šetřit",
-      "url": "https://www.idnes.cz/sport/ostatni/daniel-blaha-preview-finale-karvina-plzen-hazena.A260508_111233_sporty_czo",
-      "dt": "2026-05-08T10:30:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bláha",
-        "finále",
-        "hlásí",
-        "plzeň",
-        "poslední",
-        "ryšavého",
-        "zápas",
-        "čahouna",
-        "šetřit"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +799,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46747,
+      "bytes": 46376,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,7 +836,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-09T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T09:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -852,6 +851,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Giro ONLINE: Nejzajímavější bulharská etapa. Rozhodne nevyzpytatelný závěr",
+            "publishedAt": "2026-05-09T09:05:00Z"
+          },
           {
             "title": "Neřešil jsem, co hraju. Miluju fotbal, proto jsem až tady, říká Vacek před rozlučkou",
             "publishedAt": "2026-05-09T09:00:00Z"
@@ -879,10 +882,6 @@
           {
             "title": "Jonáš Patzel je zpátky. A rve se s Karvinou o titul: S Plzní se už nemáme čím překvapit",
             "publishedAt": "2026-05-09T06:23:00Z"
-          },
-          {
-            "title": "Bez traséra bych nedojela do cíle. Co o sobě prozradila hvězda parasportu?",
-            "publishedAt": "2026-05-09T06:00:00Z"
           }
         ]
       }

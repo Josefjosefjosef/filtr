@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-05-09T09:14:18.478308Z",
+  "ingestedAt": "2026-05-09T09:54:26.866403Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Ulice: Tvrdý úder pro zamilovanou dvojici",
+      "url": "https://www.betterlife.cz/ulice-tvrdy-uder-pro-zamilovanou-dvojici/",
+      "dt": "2026-05-09T09:47:41Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "dvojici",
+        "tvrdý",
+        "ulice",
+        "zamilovanou",
+        "úder"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -255,35 +277,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Slovenští senioři letos dostanou přes 16 tisíc korun k důchodu navíc. Štědré bonusy jsou i jinde v Evropě",
-      "url": "https://www.betterlife.cz/slovensti-seniori-letos-dostanou-pres-16-tisic-korun-k-duchodu-navic-stedre-bonusy-jsou-i-jinde-v-evrope/",
-      "dt": "2026-05-05T09:34:38Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "bonusy",
-        "dostanou",
-        "důchodu",
-        "evropě",
-        "jinde",
-        "korun",
-        "letos",
-        "navíc",
-        "senioři",
-        "slovenští",
-        "tisíc",
-        "štědré"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -294,7 +287,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 61561,
+      "bytes": 59362,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -354,11 +347,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-09T08:22:37Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T09:47:41Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "sport": 1,
           "zdravi": 8,
+          "sport": 1,
           "finance": 1
         },
         "drop_counts": {
@@ -371,6 +364,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ulice: Tvrdý úder pro zamilovanou dvojici",
+            "publishedAt": "2026-05-09T09:47:41Z"
+          },
           {
             "title": "Velká fotbalová utkání míří do českých kin. Diváci zažijí atmosféru jako na skutečném stadionu",
             "publishedAt": "2026-05-09T08:22:37Z"
@@ -398,10 +395,6 @@
           {
             "title": "Ulice: Erik je zděšený. Soňa mluví o manželství se sestřenicí, Egon ale vidí problém úplně jinde",
             "publishedAt": "2026-05-06T09:44:02Z"
-          },
-          {
-            "title": "Německý Kaufland vyplácí zálohy za prázdnou kosmetiku. Bez splnění podmínek ale lidé o peníze přijdou",
-            "publishedAt": "2026-05-06T07:30:23Z"
           }
         ]
       }
