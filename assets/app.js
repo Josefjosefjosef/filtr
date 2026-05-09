@@ -37363,10 +37363,86 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return !!(p.activeCalendarSession && p.targetContainer === "calendar");
   }
 
+  /**
+   * P1 FIX long_memorandum_wrong_container: jasný kalendářový čas/událost — nesmí přemapovat
+   * hovorové „zapamatuj si …“ na notes.create. Bez širokého „porad“ (kolize s „pořád“ po foldCs).
+   */
+  function iuSilverLongMemorandumExplicitCalendarBlockP1Folded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (/\bzitra\s+v\b/.test(x)) return true;
+    if (/\bdnes\s+v\b/.test(x)) return true;
+    if (/\bv\s+pondel\w*\s+v\b/.test(x)) return true;
+    if (/\bschuz/.test(x)) return true;
+    if (/\bporad[ua]\w*\b/.test(x) || /\bna\s+porad/.test(x) || /\bk\s+porad/.test(x)) return true;
+    if (/\bdoktor/.test(x)) return true;
+    if (/\bzubar/.test(x)) return true;
+    return false;
+  }
+
+  /**
+   * P1: dlouhé hovorové „zapamatuj si / pamatuj si / poznamenej si …“ + osobní signál,
+   * bez jasného kalendářového zápisu → tělo poznámky (notes.create přes BuildNoteCreateTurn).
+   * Globální negace před mem-cue → žádný přesměr (spoléhá na negace v processUserTurn).
+   */
+  function iuSilverTryLongMemorandumRememberNoteBodyP1(raw, folded) {
+    const f = String(folded || "").trim();
+    const r0 = String(raw || "").trim();
+    if (!f || !r0) return null;
+    if (iuSilverLongMemorandumExplicitCalendarBlockP1Folded(f)) return null;
+
+    const negIdx = iuSilverEarliestGlobalWriteNegationIndexFolded(f);
+    const memRe = /\b(?:zapamatuj(?:\s+si)?|pamatuj\s+si|poznamenej\s+si)\b/i;
+    const mm = memRe.exec(f);
+    if (!mm) return null;
+    const memIdx = mm.index;
+    if (negIdx >= 0 && negIdx < memIdx) return null;
+
+    const personalSig =
+      /\bpin\b/.test(f) ||
+      /\bhesl/.test(f) ||
+      /\bkart/.test(f) ||
+      /\bdoma\b/.test(f) ||
+      /\bsuplik/.test(f) ||
+      /\bschrank/.test(f) ||
+      /\bkluc/.test(f) ||
+      /\bpoznamk/.test(f) ||
+      /\brikam\s+jednou\b/.test(f) ||
+      /\bneptej\s+se\b/.test(f) ||
+      /\bneptejs\s+se\b/.test(f);
+    if (!personalSig) return null;
+
+    let cleaned = r0.replace(/\s+/g, " ").trim();
+    cleaned = cleaned.replace(/^\s*hele\s+/i, "");
+    cleaned = cleaned.replace(
+      /\bjo\s+a\s+neptej\s+se\s+m[nňeě]\s+p[oů][rř][aá]d\s+dokola\b/giu,
+      " "
+    );
+    cleaned = cleaned.replace(/\bjo\s+a\s+neptej\s+se\s+me\s+porad\s+dokola\b/gi, " ");
+    cleaned = cleaned.replace(/\bj[aá]\s+ti\s+to\s+(?:r|ř)[ií]k[aá]m\s+jednou\s+a\s+dost\b/giu, " ");
+    cleaned = cleaned.replace(/\bzapamatuj\s+si\s+(?:že|ze)\s+/gi, "");
+    cleaned = cleaned.replace(/\bzapamatuj\s+si\s+/gi, "");
+    cleaned = cleaned.replace(/\bzapamatuj\s+(?:že|ze)\s+/gi, "");
+    cleaned = cleaned.replace(/\bzapamatuj\s+ze\s+/gi, "");
+    cleaned = cleaned.replace(/\bzapamatuj\s+/gi, "");
+    cleaned = cleaned.replace(/\bpamatuj\s+si\s+(?:že|ze)\s+/gi, "");
+    cleaned = cleaned.replace(/\bpamatuj\s+si\s+/gi, "");
+    cleaned = cleaned.replace(/\bpoznamenej\s+si\s+(?:že|ze)\s+/gi, "");
+    cleaned = cleaned.replace(/\bpoznamenej\s+si\s+/gi, "");
+    cleaned = cleaned.replace(/^(?:že|ze)\s+/i, "");
+    cleaned = cleaned.replace(/\s+/g, " ").trim();
+    if (!cleaned || cleaned.length < 8) return null;
+    return cleaned;
+  }
+
   function iuSilverBuildCalendarCreateTurn(raw, now, prevDraft, rawFullForFieldCleanupOpt) {
     const folded = foldCs(raw);
     const prev = prevDraft || createEmptyDraft();
     const empty = createEmptyDraft();
+    {
+      const memBody = iuSilverTryLongMemorandumRememberNoteBodyP1(String(raw || "").trim(), folded);
+      if (memBody) return iuSilverBuildNoteCreateTurn(memBody, now);
+    }
     const hasCalExplicit = iuSilverHasExplicitCalendarTarget(folded);
     const inCalSession = !!prev.activeCalendarSession && prev.targetContainer === "calendar";
     const workRaw = hasCalExplicit ? iuSilverStripCalendarTargetPhrases(raw) : raw;
@@ -45948,7 +46024,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
 
     if (wk === "note") {
-      const noteTurn = iuSilverBuildNoteCreateTurn(wRoute.noteBody, now);
+      const memNoteBodyP1 = iuSilverTryLongMemorandumRememberNoteBodyP1(raw, folded);
+      const noteTurn = iuSilverBuildNoteCreateTurn(memNoteBodyP1 || wRoute.noteBody, now);
       return {
         normalizedIntent: "notes.create",
         targetContainer: "notes",
@@ -46272,7 +46349,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       };
     }
     if (route.kind === "NOTE_BODY") {
-      return iuSilverBuildNoteCreateTurn(route.noteBody, now);
+      const memNoteBodyP1 = iuSilverTryLongMemorandumRememberNoteBodyP1(raw, folded);
+      return iuSilverBuildNoteCreateTurn(memNoteBodyP1 || route.noteBody, now);
     }
     if (route.kind === "FUTURE_NOTES_CLARIFY") {
       return baseClarification("future_target_not_supported_yet", "clarification");

@@ -1,47 +1,25 @@
 {
   "harness_id": "silver_deep_product_real_ux_v2",
-  "user_reference_main_commit": "d89a8ae6ad0ab0a0935b16ca02b5003d4d8a8869",
-  "main_commit": "d89a8ae6ad0ab0a0935b16ca02b5003d4d8a8869",
+  "user_reference_main_commit": "326bf6be040a14178b0231c00f0d6789b7802434",
+  "main_commit": "b7def5c1575292f4b68864d6e8ea56d77c87b435",
   "fixed_now_iso": "2026-05-04T12:00:00",
   "deep_product_cases_total": 90,
-  "deep_product_pass": 71,
-  "deep_product_fail": 19,
-  "deep_product_accuracy": "78.89",
+  "deep_product_pass": 79,
+  "deep_product_fail": 11,
+  "deep_product_accuracy": "87.78",
   "retrieval_relevance_accuracy": "60.00",
   "update_vs_create_accuracy": "100.00",
   "clarification_quality_accuracy": "100.00",
   "cross_module_accuracy": "100.00",
-  "timeline_reasoning_accuracy": "25.00",
+  "timeline_reasoning_accuracy": "100.00",
   "dirty_czech_accuracy": "75.00",
   "title_cleanliness_accuracy": "88.89",
-  "long_chaotic_czech_accuracy": "53.33",
+  "long_chaotic_czech_accuracy": "66.67",
   "dangerous_write_count": 0,
   "false_write_count": 0,
   "query_created_write_count": 0,
   "write_when_negated_count": 0,
   "top_clusters": [
-    {
-      "key": "timeline_scope_and_tense",
-      "count": 6,
-      "severity": 70,
-      "root_cause": "past_window_and_relative_time_phrases_weak_in_calendar_read",
-      "replay": [
-        "Co jsem měl před měsícem u doktora?",
-        "Co jsem mel pred mesicem u doktora?",
-        "Kdy jsem naposledy měl právníka?"
-      ]
-    },
-    {
-      "key": "cross_module_collection_routing",
-      "count": 4,
-      "severity": 78,
-      "root_cause": "ambiguous_czech_router_picked_adjacent_container",
-      "replay": [
-        "Co mám s právníkem?",
-        "Co mam s pravnikem?",
-        "hele zapamatuj si že pin ke kartě je furt doma v šuplíku jo a neptej se mě pořád dokola já ti to říkám jednou a dost"
-      ]
-    },
     {
       "key": "general_intent_mismatch",
       "count": 8,
@@ -51,6 +29,16 @@
         "Kdy jsem byl u doktora?",
         "Kdy jsem byl u doktora?",
         "vole hele já potřebuju vědět jestli mám zítra toho zubaře nebo jestli je to až pozítří protože mi to mamka říkala a já si to nepamatuju a je"
+      ]
+    },
+    {
+      "key": "cross_module_collection_routing",
+      "count": 2,
+      "severity": 78,
+      "root_cause": "ambiguous_czech_router_picked_adjacent_container",
+      "replay": [
+        "Co mám s právníkem?",
+        "Co mam s pravnikem?"
       ]
     },
     {
@@ -83,14 +71,14 @@
     "examples": []
   },
   "gates": {
-    "smoke": "SKIP",
-    "iu_perf_regression_guards": "SKIP",
-    "silver_field_cleanup_replay_suite": "SKIP",
-    "silver_calendar_create_regression": "SKIP",
-    "audit_20k": "SKIP",
-    "quality_v2": "SKIP",
-    "realistic_mobile": "SKIP",
-    "real_czech_corpus": "SKIP",
+    "smoke": "PASS",
+    "iu_perf_regression_guards": "PASS",
+    "silver_field_cleanup_replay_suite": "PASS",
+    "silver_calendar_create_regression": "PASS",
+    "audit_20k": "PASS",
+    "quality_v2": "PASS",
+    "realistic_mobile": "PASS",
+    "real_czech_corpus": "PASS",
     "deep_product_real_ux_v2": "PASS"
   },
   "fails": [
@@ -167,70 +155,6 @@
       "replay": "vole hele ja potrebuju vedet jestli mam zitra toho zubare nebo jestli je to az pozitri protoze mi to mamka rikala a ja si to nepamatuju a jeste k tomu mi kuryr volal takze se v tom ztracim díky"
     },
     {
-      "id": "lcc_note_chaos_m4",
-      "base_id": "lcc_note_chaos",
-      "slice": "long_chaotic_czech",
-      "cat": "wrong_collection",
-      "input": "hele zapamatuj si že pin ke kartě je furt doma v šuplíku jo a neptej se mě pořád dokola já ti to říkám jednou a dost",
-      "replay": "hele zapamatuj si že pin ke kartě je furt doma v šuplíku jo a neptej se mě pořád dokola já ti to říkám jednou a dost"
-    },
-    {
-      "id": "lcc_note_chaos_m5",
-      "base_id": "lcc_note_chaos",
-      "slice": "long_chaotic_czech",
-      "cat": "wrong_collection",
-      "input": "hele zapamatuj si ze pin ke karte je furt doma v supliku jo a neptej se me porad dokola ja ti to rikam jednou a dost",
-      "replay": "hele zapamatuj si ze pin ke karte je furt doma v supliku jo a neptej se me porad dokola ja ti to rikam jednou a dost"
-    },
-    {
-      "id": "tl_pred_mesicem_m0",
-      "base_id": "tl_pred_mesicem",
-      "slice": "timeline_reasoning",
-      "cat": "intent_fail",
-      "input": "Co jsem měl před měsícem u doktora?",
-      "replay": "Co jsem měl před měsícem u doktora?"
-    },
-    {
-      "id": "tl_pred_mesicem_m1",
-      "base_id": "tl_pred_mesicem",
-      "slice": "timeline_reasoning",
-      "cat": "intent_fail",
-      "input": "Co jsem mel pred mesicem u doktora?",
-      "replay": "Co jsem mel pred mesicem u doktora?"
-    },
-    {
-      "id": "tl_kdy_naposledy_pravnik_m0",
-      "base_id": "tl_kdy_naposledy_pravnik",
-      "slice": "timeline_reasoning",
-      "cat": "intent_fail",
-      "input": "Kdy jsem naposledy měl právníka?",
-      "replay": "Kdy jsem naposledy měl právníka?"
-    },
-    {
-      "id": "tl_kdy_naposledy_pravnik_m1",
-      "base_id": "tl_kdy_naposledy_pravnik",
-      "slice": "timeline_reasoning",
-      "cat": "intent_fail",
-      "input": "Kdy jsem naposledy mel pravnika?",
-      "replay": "Kdy jsem naposledy mel pravnika?"
-    },
-    {
-      "id": "tl_kdy_jsem_mel_m0",
-      "base_id": "tl_kdy_jsem_mel",
-      "slice": "timeline_reasoning",
-      "cat": "intent_fail",
-      "input": "Kdy jsem měl kurýra?",
-      "replay": "Kdy jsem měl kurýra?"
-    },
-    {
-      "id": "tl_kdy_jsem_mel_m1",
-      "base_id": "tl_kdy_jsem_mel",
-      "slice": "timeline_reasoning",
-      "cat": "intent_fail",
-      "input": "Kdy jsem mel kuryra?",
-      "replay": "Kdy jsem mel kuryra?"
-    },
-    {
       "id": "dc_pravnik_typo_m0",
       "base_id": "dc_pravnik_typo",
       "slice": "dirty_czech",
@@ -247,11 +171,11 @@
       "replay": "hele Poznámka: PIN karta je v šuplíku."
     }
   ],
-  "engine_changed": "NO",
+  "engine_changed": "YES",
   "behavior_changed": "NO",
   "ui_changed": "NO",
   "css_changed": "NO",
   "backend_changed": "NO",
-  "changed_files": "scripts/silver-deep-product-real-ux-v2.cjs;scripts/silver-deep-product-real-ux-v2-report.json",
+  "changed_files": "assets/app.js;scripts/silver-deep-product-real-ux-v2.cjs;scripts/silver-deep-product-real-ux-v2-report.json",
   "recommended_next_fix_scope": "See top_cluster_1_root_cause — diagnostic only; no code change in this task"
 }
