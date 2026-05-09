@@ -40,6 +40,7 @@ const PATEK = addDaysIso(TODAY, 4);
 const PRISTI_PONDELI = addDaysIso(TODAY, 7);
 const STREDa = addDaysIso(TODAY, 2);
 const MINULY_TYDEN_DEN = addDaysIso(TODAY, -5);
+const PRED_MESICEM = addDaysIso(TODAY, -30);
 
 function stripDiak(s) {
   return String(s || "")
@@ -108,6 +109,7 @@ function buildSeed() {
     { id: "e_mariana", date: TODAY, time: "18:00", title: "Schůzka s Marianou", address: "", note: "vzít červenou tašku" },
     { id: "e_advokat", date: CTVRTEK, time: "14:30", title: "Advokát", address: "Praha 1", note: "vzít plnou moc" },
     { id: "e_doktor", date: POZITRI, time: "09:00", title: "Doktor", address: "Vinohradská 3 Praha", note: "vzít zprávu" },
+    { id: "e_doktor_pred_mesicem", date: PRED_MESICEM, time: "10:00", title: "Doktor", address: "Vinohradská 3 Praha", note: "lékařská prohlídka — vzít zprávu" },
     { id: "e_ucetni", date: PRISTI_PONDELI, time: "11:00", title: "Účetní", address: "Dlouhá 12 Praha", note: "vzít faktury" },
     { id: "e_kuryr", date: TODAY, time: "12:30", title: "Kurýr", address: "Ostrava centrum", note: "převzít balík" },
     {
