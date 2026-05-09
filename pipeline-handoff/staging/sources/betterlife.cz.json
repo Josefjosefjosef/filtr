@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-05-09T08:29:21.024372Z",
+  "ingestedAt": "2026-05-09T09:14:18.478308Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Velká fotbalová utkání míří do českých kin. Diváci zažijí atmosféru jako na skutečném stadionu",
+      "url": "https://www.betterlife.cz/velka-fotbalova-utkani-miri-do-ceskych-kin-divaci-zaziji-atmosferu-jako-na-skutecnem-stadionu/",
+      "dt": "2026-05-09T08:22:37Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "atmosféru",
+        "diváci",
+        "fotbalová",
+        "jako",
+        "kin",
+        "míří",
+        "skutečném",
+        "stadionu",
+        "utkání",
+        "velká",
+        "zažijí",
+        "českých"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -255,34 +284,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Dřevo a krb bez televize. Lucie Vondráčková se pochlubila zrekonstruovanou vilou, sklep připomíná ateliér",
-      "url": "https://www.betterlife.cz/drevo-a-krb-bez-televize-lucie-vondrackova-se-pochlubila-zrekonstruovanou-vilou-sklep-pripomina-atelier/",
-      "dt": "2026-05-04T16:27:13Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "ateliér",
-        "dřevo",
-        "krb",
-        "lucie",
-        "pochlubila",
-        "připomíná",
-        "sklep",
-        "televize",
-        "vilou",
-        "vondráčková",
-        "zrekonstruovanou"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -293,7 +294,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 70341,
+      "bytes": 61561,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -353,11 +354,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-08T15:32:48Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T08:22:37Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
+          "sport": 1,
           "zdravi": 8,
-          "finance": 2
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -369,6 +371,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Velká fotbalová utkání míří do českých kin. Diváci zažijí atmosféru jako na skutečném stadionu",
+            "publishedAt": "2026-05-09T08:22:37Z"
+          },
           {
             "title": "Natáčení filmu Postřižiny provázely zdravotní problémy i nečekané herecké změny",
             "publishedAt": "2026-05-08T15:32:48Z"
@@ -396,10 +402,6 @@
           {
             "title": "Německý Kaufland vyplácí zálohy za prázdnou kosmetiku. Bez splnění podmínek ale lidé o peníze přijdou",
             "publishedAt": "2026-05-06T07:30:23Z"
-          },
-          {
-            "title": "Josef Klíma už dopředu nic neplánuje: Zubatá si ho podle jeho vlastních slov už ocejchovala a má ho ve svém výběhu",
-            "publishedAt": "2026-05-05T16:49:27Z"
           }
         ]
       }
