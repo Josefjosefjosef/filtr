@@ -37398,7 +37398,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bpoznamenej\b/i,
       /\bzapis\w*\s+do\s+poznam\w*\b/i,
       /\bnapis\w*\s+si\s+do\s+poznam\w*\b/i,
-      /\bnapis\w*\s+poznam\w*\b/i
+      /\bnapis\w*\s+poznam\w*\b/i,
+      /\b(?:prosim\s+)?(?:jen|pouze)\s+pozn[aá]mk[aáuy]?\b/i,
+      /\b(?:[zn]api[sš]|napis)\s+(?:jen|pouze)\s+pozn[aá]mk[uůay]?\b/i
     ];
     let best = -1;
     for (let qi = 0; qi < patterns.length; qi++) {
@@ -38924,6 +38926,68 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P1 B_mobile_note_misroute: globální/read-only signály vs mobilní „jen|pouze poznámka“ zápis.
+   * true = notes.create z tohoto úzkého cue nesmí vzniknout.
+   */
+  function iuSilverMobileNoteOnlyExplicitCueReadOnlyOrNoWriteBlocksP1Folded(f) {
+    const x = String(f || "");
+    if (!x) return true;
+    if (/\bnic\s+neukladej\b/.test(x)) return true;
+    if (/\bnic\s+noveho\s+neukladej\b/.test(x)) return true;
+    if (/\bjen\s+se\s+podivej\b/.test(x)) return true;
+    if (/\bpouze\s+cti\b/.test(x)) return true;
+    if (/\bjen\s+cti\b/.test(x)) return true;
+    if (/\bjen\s+hledej\b/.test(x)) return true;
+    if (/\bneukladej\b/.test(x)) {
+      if (/\bneukladej\s+do\s+kalendar/.test(x)) return false;
+      if (/\bneukladej\s+do\s+poznam/.test(x)) return false;
+      if (/\bneukladej\s+do\s+ukol/.test(x)) return false;
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * P1 B_mobile_note_misroute: úzký mobilní cue „jen|pouze poznámka“ / „napiš jen poznámku“ (+ trailing prosim jen poznamka)
+   * s významovým tělem; foldCs jen pro gating, tělo z raw.
+   */
+  function iuSilverTryExtractMobileNoteOnlyCueBodyP1(rawLine, foldedLine) {
+    const s = String(rawLine || "").trim();
+    const f = String(foldedLine || "");
+    if (!s || !f) return "";
+    if (iuSilverMobileNoteOnlyExplicitCueReadOnlyOrNoWriteBlocksP1Folded(f)) return "";
+    if (/\b(jen|pouze)\s+ukol\w*\b/.test(f)) return "";
+    if (/\b(jen|pouze)\s+kalendar\w*\b/.test(f)) return "";
+    if (/\b(jen|pouze)\s+task\b/.test(f)) return "";
+    let bodyRaw = "";
+    {
+      /** Nejdřív „… prosim jen poznamka“ (jinak volitelné (prosim)? sežere jen mezeru před „jen“ a nechá „prosim“ v těle). */
+      const sufPros = s.match(/\s+(?:pros[ií]m|prosim)\s+(?:jen|pouze)\s+pozn[aá]mk[aáuy]?\s*$/i);
+      if (sufPros && typeof sufPros.index === "number") bodyRaw = s.slice(0, sufPros.index).trim();
+      else {
+        const sufBare = s.match(/\s+(?:jen|pouze)\s+pozn[aá]mk[aáuy]?\s*$/i);
+        if (sufBare && typeof sufBare.index === "number") bodyRaw = s.slice(0, sufBare.index).trim();
+      }
+    }
+    if (!bodyRaw) {
+      const preRe =
+        /^(?:(?:pros[ií]m|prosim)\s+)?(?:(?:jen|pouze)\s+pozn[aá]mk[aáuy]?|(?:[zn]api[sš]|napis)\s+(?:jen|pouze)\s+pozn[aá]mk[uůay]?)\s+([\s\S]+)$/i;
+      const pre = s.match(preRe);
+      if (pre && pre[1]) bodyRaw = String(pre[1] || "").trim();
+    }
+    if (!bodyRaw) return "";
+    const fb = foldCs(bodyRaw);
+    if (iuSilverReadOnlyTailBlocksNoteCreateFolded(fb)) return "";
+    if (iuSilverMobileNoteOnlyExplicitCueReadOnlyOrNoWriteBlocksP1Folded(fb)) return "";
+    if (/\b(jen|pouze)\s+ukol\w*\b/.test(fb)) return "";
+    if (/\b(jen|pouze)\s+kalendar\w*\b/.test(fb)) return "";
+    if (/\b(jen|pouze)\s+task\b/.test(fb)) return "";
+    const tailNorm = iuSilverNormalizeWs(bodyRaw);
+    if (tailNorm.replace(/\s+/g, " ").trim().length < 8) return "";
+    return bodyRaw;
+  }
+
+  /**
    * Širší parsování vět s cílem „do poznámek / do poznámky“ (reálný chat; bez NLP backendu).
    */
   function iuSilverTryParseLooseNoteToBody(s0) {
@@ -39002,6 +39066,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       iuSilverReadOnlyTailBlocksNoteCreateFolded(fEarly)
     )
       return null;
+    {
+      const mobileTailRaw = iuSilverTryExtractMobileNoteOnlyCueBodyP1(s, fEarly);
+      if (mobileTailRaw) {
+        const bodyFin = iuSilverNoteCreateFinalizeBody(mobileTailRaw);
+        if (bodyFin) return { kind: "body", body: bodyFin };
+      }
+    }
     if (/^add\s+note\s+/i.test(s)) {
       const b0 = iuSilverNoteCreateFinalizeBody(s.replace(/^add\s+note\s+/i, "").trim());
       if (b0) return { kind: "body", body: b0 };
