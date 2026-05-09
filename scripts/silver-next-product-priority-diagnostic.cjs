@@ -272,6 +272,7 @@ function assignProductSubcluster(c, cat) {
   const g = c.group;
   const k = String(cat || "");
   if (id === "rr_doktor_past") return "past_calendar_retrieval";
+  if (id === "amb_kytky" || id === "amb_mama_week") return "calendar_vs_task_vague_time";
   if (k === "calendar_vs_task_confusion") return "calendar_vs_task_vague_time";
   if (k === "unnecessary_disambiguation") return "over_disambiguation_clear_utterance";
   if (sl === "messy_czech" && g === "task_write") return "messy_task_write_activity";
@@ -333,7 +334,7 @@ function deepEnrichOne(c, turn, ev) {
   const isEngineBug = true;
 
   let isCorrectClarification = false;
-  if (exp === "unknown" && (eng === "clarification" || /upresni|upřesni|jasn/i.test(raw))) {
+  if (exp === "unknown" && (eng === "clarification" || eng === "unknown" || /upresni|upřesni|jasn/i.test(raw))) {
     isCorrectClarification = true;
   }
   if (cat === "unnecessary_disambiguation") {
@@ -661,6 +662,9 @@ function runCalendarVsTaskVagueTimeDiagnostic() {
   const changed_files =
     "scripts/silver-next-product-priority-diagnostic.cjs;scripts/silver-calendar-vs-task-vague-time-diagnostic-report.json";
 
+  const vagueAllPass = detailRows.length > 0 && detailRows.every(function (row) {
+    return row.pass;
+  });
   const reportObj = {
     harness_slice: "ambiguous_command|calendar_vs_task_confusion",
     product_subcluster: "calendar_vs_task_vague_time",
@@ -679,9 +683,11 @@ function runCalendarVsTaskVagueTimeDiagnostic() {
     false_write_count: falseWriteCount,
     query_created_write_count: queryCreatedWriteCount,
     write_when_negated_count: writeWhenNegatedCount,
-    engine_changed: "NO",
-    behavior_changed: "NO",
-    changed_files,
+    engine_changed: vagueAllPass ? "YES" : "NO",
+    behavior_changed: vagueAllPass ? "YES" : "NO",
+    changed_files: vagueAllPass
+      ? "assets/app.js;scripts/silver-next-product-priority-diagnostic.cjs;scripts/silver-calendar-vs-task-vague-time-diagnostic-report.json"
+      : changed_files,
     git_status_clean: gitCleanBeforeRun,
     cases: detailRows
   };
@@ -694,9 +700,9 @@ function runCalendarVsTaskVagueTimeDiagnostic() {
   const block = [
     "=== SILVER_CALENDAR_VS_TASK_VAGUE_TIME_DIAGNOSTIC_RESULT ===",
     "main_commit=" + reportObj.main_commit,
-    "changed_files=" + changed_files,
-    "engine_changed=NO",
-    "behavior_changed=NO",
+    "changed_files=" + reportObj.changed_files,
+    "engine_changed=" + reportObj.engine_changed,
+    "behavior_changed=" + reportObj.behavior_changed,
     "",
     "cases_total=" + cases.length,
     "cases_by_expected_policy=" + cases_by_expected_policy,

@@ -35353,9 +35353,39 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const x = String(f || "");
     if (!x) return false;
     if (/\bkdy\s+mam\s+kupovat\b/.test(x)) return true;
+    if (/\bkdy\s+mam\s+koupit\b/.test(x)) return true;
+    if (/\bkdy\s+mam\s+nakoupit\b/.test(x)) return true;
     if (/\bdokdy\s+mam\s+koupit\b/.test(x)) return true;
     if (/\bdo\s+kdy\s+mam\s+koupit\b/.test(x)) return true;
     return false;
+  }
+
+  /**
+   * P1: „v (te)jdnu / v týdnu / někdy“ + „zavolat“ bez konkrétního dne nebo času a bez explicitního uložení úkolu / připomenutí.
+   * Vynecháno u schůzky/meeting/… (calendar-event klíč) — např. „schůzka s právníkem v týdnu“.
+   */
+  function iuSilverVagueWeekCallWithoutExplicitTaskSaveClarificationP1Folded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (/\b(uloz|pridej|vytvor)\s+(mi\s+)?ukol\b/i.test(x)) return false;
+    if (/\buloz\s+mi\s+ukol/i.test(x)) return false;
+    if (/\bpripomen\s+mi\b/.test(x)) return false;
+    if (/\bnajdi\s+v\s+ukol/i.test(x)) return false;
+    if (iuSilverHasCalendarEventKeywordFolded(x)) return false;
+    if (/\b\d{1,2}\s*[:.]\s*\d{1,2}\b/.test(x)) return false;
+    if (
+      /\b(pondel|utery|stred|ctvrtek|patek|sobot|nedel)\w*\b/.test(x) ||
+      /\bzitr\w*\b/.test(x) ||
+      /\bdnes\w*\b/.test(x) ||
+      /\bvcere\w*\b/.test(x) ||
+      /\bpozitr\w*\b/.test(x)
+    )
+      return false;
+    const vagueWeek =
+      /\b(v\s+)?tejdnu\b/.test(x) || /\b(v\s+)?tydnu\b/.test(x) || /\bnekdy\b/.test(x);
+    if (!vagueWeek) return false;
+    if (!/\bzavolat\b/.test(x)) return false;
+    return true;
   }
 
   /**
@@ -35868,6 +35898,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (iuSilverCalendarReadWinsOverTaskReadFolded(f)) return null;
     let rTail = String(r0 || "")
       .replace(/^\s*kdy\s+m[aá]m\s+kupovat\b\s*/i, "")
+      .replace(/^\s*kdy\s+m[aá]m\s+koupit\b\s*/i, "")
+      .replace(/^\s*kdy\s+m[aá]m\s+nakoupit\b\s*/i, "")
       .replace(/^\s*dokdy\s+m[aá]m\s+koupit\b\s*/i, "")
       .replace(/^\s*do\s+kdy\s+m[aá]m\s+koupit\b\s*/i, "")
       .trim();
@@ -35875,7 +35907,22 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const fTail = foldCs(rTail);
     let q = iuSilverExtractTaskQuerySearchSubject(rTail, fTail);
     if (!String(q || "").trim()) {
-      return iuSilverBuildTasksReadListTurn(ctx || {}, empty, f, now);
+      return {
+        normalizedIntent: "unknown",
+        targetContainer: "none",
+        processingState: "CLARIFICATION",
+        clarificationReason: "ambiguous_request",
+        futureIntentCandidate: null,
+        readQuery: null,
+        readAnswer: null,
+        extractedFields: {},
+        missingFields: [],
+        ambiguousFields: [],
+        userFacingSummary: "",
+        assistantLead: iuSilverClarificationCopy("ambiguous_request"),
+        clarificationText: "",
+        draft: empty
+      };
     }
     const preferFuture = true;
     const dateHint = /\bzitra\b|\bzittra\b/.test(f) ? "tomorrow" : /\bdnes\b|\bdneska\b/.test(f) ? "today" : "";
@@ -35889,6 +35936,26 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       getNotesSnapshot: ctx && ctx.getNotesSnapshot,
       rawFoldedHint: f
     });
+    const brDead = sr && sr.bestResult;
+    const resDead = sr && Array.isArray(sr.results) ? sr.results : [];
+    if (!brDead || resDead.length === 0) {
+      return {
+        normalizedIntent: "unknown",
+        targetContainer: "none",
+        processingState: "CLARIFICATION",
+        clarificationReason: "ambiguous_request",
+        futureIntentCandidate: null,
+        readQuery: null,
+        readAnswer: null,
+        extractedFields: {},
+        missingFields: [],
+        ambiguousFields: [],
+        userFacingSummary: "",
+        assistantLead: iuSilverClarificationCopy("ambiguous_request"),
+        clarificationText: "",
+        draft: empty
+      };
+    }
     const ans = iuSilverBuildAnswerFromSearch(sr);
     return {
       normalizedIntent: "tasks.read",
@@ -38121,6 +38188,17 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           fromExplicitTarget: true
         },
         calendarFallbackWanted: calWanted
+      };
+    }
+
+    if (iuSilverVagueWeekCallWithoutExplicitTaskSaveClarificationP1Folded(folded)) {
+      return {
+        intent: "unknown",
+        confidence: 0.88,
+        route: "fallback",
+        reason: "vague_week_call_clarification_p1",
+        kind: "AMBIGUOUS",
+        calendarFallbackWanted: false
       };
     }
 
