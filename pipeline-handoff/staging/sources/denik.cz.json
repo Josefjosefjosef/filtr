@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-09T20:34:46.763346Z",
+  "ingestedAt": "2026-05-09T21:19:19.501396Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Fanoušci Slavie napadli hráče Sparty. Čin šetří policie jako možné výtržnictví",
+      "url": "https://www.denik.cz/krimi/fotbal-slavia-sparta-derby-policie-podezreni-z-vytrznictvi.html",
+      "dt": "2026-05-09T20:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "fanoušci",
+        "hráče",
+        "jako",
+        "možné",
+        "napadli",
+        "policie",
+        "slavie",
+        "sparty",
+        "výtržnictví",
+        "čin",
+        "šetří"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -619,32 +647,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Provoz na letišti v Praze ochromil dron. Policie zadržela jednoho člověka",
-      "url": "https://www.denik.cz/regiony/letecky-provoz-v-praze-ruzyni-narusil-dron-ochromil-provoz-na-letisti-20260508.html",
-      "dt": "2026-05-08T14:40:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dron",
-        "jednoho",
-        "letišti",
-        "ochromil",
-        "policie",
-        "praze",
-        "provoz",
-        "zadržela",
-        "člověka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -655,7 +657,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29992,
+      "bytes": 30053,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -692,10 +694,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-09T15:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T20:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
+          "sport": 1,
+          "zpravy": 22,
           "finance": 2
         },
         "drop_counts": {
@@ -708,6 +711,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fanoušci Slavie napadli hráče Sparty. Čin šetří policie jako možné výtržnictví",
+            "publishedAt": "2026-05-09T20:30:00Z"
+          },
           {
             "title": "MAPA: Do Česka se vrátí déšť, bouřky a mráz. Bude také sněžit. Sledujte radar",
             "publishedAt": "2026-05-09T15:15:00Z"
@@ -735,10 +742,6 @@
           {
             "title": "V pražském hotelu hořela bývalá sauna. Hasiči evakuovali několik hostů",
             "publishedAt": "2026-05-09T10:10:00Z"
-          },
-          {
-            "title": "Fico se v Moskvě sešel s Putinem, vojenské přehlídky se nezúčastnil",
-            "publishedAt": "2026-05-09T09:44:00Z"
           }
         ]
       }
