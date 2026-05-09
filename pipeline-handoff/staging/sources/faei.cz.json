@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-09T09:54:26.866403Z",
+  "ingestedAt": "2026-05-09T10:39:21.247667Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Okamžiky historie: Den, kdy se otevřelo pražské metro",
+      "url": "https://profitonline.cz/okamziky-historie-den-kdy-se-otevrelo-prazske-metro/",
+      "dt": "2026-05-09T10:00:33Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "den",
+        "historie",
+        "metro",
+        "okamžiky",
+        "otevřelo",
+        "pražské"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -256,29 +279,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Hypotéka, nebo nájemné? Aktuální data jsou jednoznačná",
-      "url": "https://profitonline.cz/hypoteka-nebo-najemne-aktualni-data-jsou-jednoznacna/",
-      "dt": "2026-05-07T10:00:13Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "aktuální",
-        "data",
-        "hypotéka",
-        "jednoznačná",
-        "nebo",
-        "nájemné"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -326,11 +326,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-09T08:15:16Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T10:00:33Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
+          "zpravy": 1,
           "zdravi": 1,
-          "finance": 11
+          "finance": 10
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -342,6 +343,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Okamžiky historie: Den, kdy se otevřelo pražské metro",
+            "publishedAt": "2026-05-09T10:00:33Z"
+          },
           {
             "title": "Elektřina Čechům ukusuje z peněženky skoro nejvíce v EU",
             "publishedAt": "2026-05-09T08:15:16Z"
@@ -369,10 +374,6 @@
           {
             "title": "Nejistota prospěla dolaru",
             "publishedAt": "2026-05-08T08:00:56Z"
-          },
-          {
-            "title": "David Musil v čele Penta Real Estate",
-            "publishedAt": "2026-05-08T06:00:51Z"
           }
         ]
       }

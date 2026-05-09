@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-09T09:54:26.866403Z",
+  "ingestedAt": "2026-05-09T10:39:21.247667Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Fico se setkal s Putinem. Vojenské přehlídky se nezúčastnil",
+      "url": "https://www.denik.cz/staty-mimo-eu/fico-priletel-do-moskvy-setkal-se-s-putinem.html",
+      "dt": "2026-05-09T09:44:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "fico",
+        "nezúčastnil",
+        "putinem",
+        "přehlídky",
+        "setkal",
+        "vojenské"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -623,31 +646,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Legendární zpěvačka Bonnie Tyler skončila po akutní operaci v kómatu",
-      "url": "https://www.denik.cz/hudba/bonnie-tyle-v-nemocnici-akutni-operace-koma.html",
-      "dt": "2026-05-08T10:32:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "akutní",
-        "bonnie",
-        "kómatu",
-        "legendární",
-        "operaci",
-        "skončila",
-        "tyler",
-        "zpěvačka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -658,7 +656,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29726,
+      "bytes": 29995,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -695,7 +693,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-09T09:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T09:44:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -710,6 +708,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fico se setkal s Putinem. Vojenské přehlídky se nezúčastnil",
+            "publishedAt": "2026-05-09T09:44:00Z"
+          },
           {
             "title": "Pentagon zveřejnil tajné dokumenty. Důkaz o UFO chybí, svědectví přesto zaujmou",
             "publishedAt": "2026-05-09T09:05:00Z"
@@ -737,10 +739,6 @@
           {
             "title": "Češi se do Chorvatska dostanou i vlakem: Expres zastaví na Moravě i ve Slovinsku",
             "publishedAt": "2026-05-09T03:30:00Z"
-          },
-          {
-            "title": "Podívejte se: Čtenářka Deníku zachytila příchod bouře nad Nymburkem",
-            "publishedAt": "2026-05-09T03:18:00Z"
           }
         ]
       }

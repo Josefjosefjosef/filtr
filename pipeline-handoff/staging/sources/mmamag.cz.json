@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-09T09:54:26.866403Z",
+  "ingestedAt": "2026-05-09T10:39:21.247667Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kopal kanály za pár dolarů, hodně pil a kouřil. Pak Rocky Marciano dobyl svět boxu",
+      "url": "https://www.mmamag.cz/rocky-marciano-neporazena-legenda-tezke-vahy/",
+      "dt": "2026-05-09T10:00:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "boxu",
+        "dobyl",
+        "dolarů",
+        "hodně",
+        "kanály",
+        "kopal",
+        "kouřil",
+        "marciano",
+        "pak",
+        "pil",
+        "pár",
+        "rocky",
+        "svět"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1115,33 +1145,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "video",
-      "title": "Kincl a Vémola neřešili jen pás. Jejich spor rozdělil domácí scénu",
-      "url": "https://www.mmamag.cz/kincl-vs-vemola-rivalita-ktera-rozdelila-domaci-scenu/",
-      "dt": "2026-05-07T19:08:49Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "domácí",
-        "jejich",
-        "jen",
-        "kincl",
-        "neřešili",
-        "pás",
-        "rozdělil",
-        "scénu",
-        "spor",
-        "vémola"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1152,7 +1155,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 77891,
+      "bytes": 77872,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1189,7 +1192,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-09T09:01:45Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1204,6 +1207,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kopal kanály za pár dolarů, hodně pil a kouřil. Pak Rocky Marciano dobyl svět boxu",
+            "publishedAt": "2026-05-09T10:00:00Z"
+          },
           {
             "title": "Chimaev váhu nesplnil, tvrdí veterán UFC. Chtějí, aby Strickland prohrál, proto to zamaskovali",
             "publishedAt": "2026-05-09T09:01:45Z"
@@ -1231,10 +1238,6 @@
           {
             "title": "Růžička vyšel z vězení a Novotný změnil názor. Doživotní ban v Oktagonu možná neplatí",
             "publishedAt": "2026-05-09T07:34:53Z"
-          },
-          {
-            "title": "Před UFC 328 bylo znovu dusno. Finální staredown Chimaeva se Stricklandem hlídala početná ochranka",
-            "publishedAt": "2026-05-09T07:22:51Z"
           }
         ]
       }

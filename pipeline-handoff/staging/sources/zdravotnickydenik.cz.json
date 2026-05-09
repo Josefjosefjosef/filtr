@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-09T09:54:26.866403Z",
+  "ingestedAt": "2026-05-09T10:39:21.247667Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "„Peklo na zemi.“ Přeživší hantaviru popsali boj o život po vzácné nákaze",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/peklo-na-zemi-prezivsi-popsali-hantavirus/",
+      "dt": "2026-05-09T10:30:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "boj",
+        "hantaviru",
+        "nákaze",
+        "peklo",
+        "popsali",
+        "přeživší",
+        "vzácné",
+        "zemi",
+        "život"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -240,34 +266,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Obviněný exšéf příbramské nemocnice přišel o další funkci. V kauze má jít o 280 milionů",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/holobrada-predstavenstvo-odvolani/",
-      "dt": "2026-05-07T10:26:14Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "280",
-        "další",
-        "exšéf",
-        "funkci",
-        "jít",
-        "kauze",
-        "milionů",
-        "nemocnice",
-        "obviněný",
-        "přišel",
-        "příbramské"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +276,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 132330,
+      "bytes": 134975,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +313,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-09T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T10:30:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -330,6 +328,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Peklo na zemi.“ Přeživší hantaviru popsali boj o život po vzácné nákaze",
+            "publishedAt": "2026-05-09T10:30:00Z"
+          },
           {
             "title": "Nemocniční nákazy: Oficiální čísla vypadají skvěle, realita je ale jiná",
             "publishedAt": "2026-05-09T05:00:00Z"
@@ -357,10 +359,6 @@
           {
             "title": "Projevuje se jako chřipka, ale útočí na ledviny: Co všechno víme o hantaviru v Česku?",
             "publishedAt": "2026-05-07T14:35:14Z"
-          },
-          {
-            "title": "Jak nové nařízení EU změní zacházení s krví dárců a jak se musíme připravit? Odpoví sympozium ZD",
-            "publishedAt": "2026-05-07T14:07:13Z"
           }
         ]
       }

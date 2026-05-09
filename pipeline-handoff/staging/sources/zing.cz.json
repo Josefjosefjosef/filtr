@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-09T09:54:26.866403Z",
+  "ingestedAt": "2026-05-09T10:39:21.247667Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Cozy novinky s Terry #53",
+      "url": "https://zing.cz/article/cozy-novinky-s-terry-53",
+      "dt": "2026-05-09T10:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "cozy",
+        "novinky",
+        "terry"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -966,30 +986,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Akce 007 First Light odhaluje herní dobu",
-      "url": "https://zing.cz/article/akce-007-first-light-odhaluje-herni-dobu",
-      "dt": "2026-05-04T18:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "007",
-        "akce",
-        "dobu",
-        "first",
-        "herní",
-        "light",
-        "odhaluje"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1000,7 +996,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125304,
+      "bytes": 125242,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1037,7 +1033,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-09T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1052,6 +1048,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cozy novinky s Terry #53",
+            "publishedAt": "2026-05-09T10:00:00Z"
+          },
           {
             "title": "Nový Mortal Kombat potvrzen",
             "publishedAt": "2026-05-09T08:00:00Z"
@@ -1079,10 +1079,6 @@
           {
             "title": "Podle úniků se v roce 2027 dočkáme pokračování série Zelda",
             "publishedAt": "2026-05-08T12:00:00Z"
-          },
-          {
-            "title": "Hráči Diabla 4 po třech letech konečně našli tajný Cow level",
-            "publishedAt": "2026-05-08T10:00:00Z"
           }
         ]
       }

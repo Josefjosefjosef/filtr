@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-09T09:54:26.866403Z",
+  "ingestedAt": "2026-05-09T10:39:21.247667Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nový strážce obranné pokladny nastupuje: Kdo si posvítí na miliardové toky?",
+      "url": "https://ekonomickydenik.cz/novy-strazce-armadni-pokladny-miliardove-toky/",
+      "dt": "2026-05-09T10:05:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "miliardové",
+        "nastupuje",
+        "nový",
+        "obranné",
+        "pokladny",
+        "posvítí",
+        "strážce",
+        "toky"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -751,30 +776,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Průliv, nebo peklo? Trump dává Íránu ultimátum",
-      "url": "https://ekonomickydenik.cz/pruliv-nebo-peklo-trump-dava-iranu-ultimatum/",
-      "dt": "2026-05-06T17:40:57Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "dává",
-        "nebo",
-        "peklo",
-        "průliv",
-        "trump",
-        "ultimátum",
-        "íránu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -785,7 +786,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 75380,
+      "bytes": 75555,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -822,7 +823,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-09T08:22:05Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T10:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 23,
@@ -839,6 +840,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nový strážce obranné pokladny nastupuje: Kdo si posvítí na miliardové toky?",
+            "publishedAt": "2026-05-09T10:05:00Z"
+          },
           {
             "title": "Dřívější důchod, nebo povinné spoření? MPSV navrhuje tři cesty pro náročné profese",
             "publishedAt": "2026-05-09T08:22:05Z"
@@ -866,10 +871,6 @@
           {
             "title": "Plameny u Černobylu. Hasiči bojují s rozsáhlým požárem po pádu dronu",
             "publishedAt": "2026-05-08T11:16:23Z"
-          },
-          {
-            "title": "Americké rakety budou chybět. Polsko vábí jednotky stahované z Německa",
-            "publishedAt": "2026-05-08T10:05:00Z"
           }
         ]
       }
