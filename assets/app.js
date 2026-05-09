@@ -35012,7 +35012,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
      * modulová negace nesmí zablokovat samotný task.create (task_write_06433).
      */
     if (
-      /^\s*ne\s+do\s+ukol/i.test(foldCs(String(rawStr || "").trim())) &&
+      /^\s*ne\s+do\s+(?:ukol\w*|task\w*|tasks)\b/i.test(foldCs(String(rawStr || "").trim())) &&
       iuSilverHasExplicitTasksTarget(foldUse) &&
       (iuSilverHasWriteVerb(foldUse) || iuSilverCzechMobileTaskWriteBasicCueFolded(foldUse))
     )
@@ -35024,7 +35024,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (/\bdo\s+kalendar/.test(foldUse) && /\b(dej|uloz|zapis|nahod|vloz|pridej|naplanuj|vytvor)\b/.test(foldUse)) return false;
       return true;
     }
-    if (/\bne\s+do\s+ukol/.test(foldUse)) {
+    if (/\bne\s+do\s+(?:ukol\w*|task\w*|tasks)\b/.test(foldUse)) {
       if (/\bdo\s+kalendar/.test(foldUse) && /\b(dej|uloz|zapis|nahod|vloz|pridej|naplanuj|vytvor)\b/.test(foldUse)) return false;
       if (iuSilverExplicitCalendarReadScopeFolded(foldUse)) return false;
       if (iuSilverCalendarScopedDetailReadMatchFolded(foldUse)) return false;
@@ -35050,6 +35050,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       ) {
         return false;
       }
+      if (iuSilverScopedTaskNegationExplicitNoteCarveOutP1Folded(foldUse, rawStr)) return false;
       return true;
     }
     if (/nechci\s+to\s+do\s+pozn/.test(foldUse)) return true;
@@ -35415,6 +35416,43 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P1 FIX_SCOPED_NEGATION_NOTE_WRITE: odstřihni modulární „ne do úkolů / ne do tasků“ prefix z raw vstupu
+   * jen když není globální read-only / no-write — aby iuSilverTryParseExplicitNoteCreate viděl čistý imperativ poznámky.
+   */
+  function iuSilverScopedTaskNegationStripPrefixFromRawForNoteParseP0(rawIn) {
+    let s = String(rawIn || "").trim();
+    if (!s) return s;
+    const fc = foldCs(s);
+    if (!/^\s*ne\s+do\s+(?:ukol\w*|task\w*|tasks)\b/i.test(fc)) return s;
+    if (iuSilverNegativeReadOnlyTaskPhrasesFolded(fc)) return s;
+    /** `\w` nezahrnuje „ů“ — odstřihni raw prefix jen když fold tokenu = úkol/task modul. */
+    const mPx = s.match(/^\s*ne\s+do\s+([^,\s]+)(?:\s*,)?\s*/iu);
+    if (!mPx || !mPx[0] || !mPx[1]) return s;
+    const tokF = foldCs(String(mPx[1] || ""));
+    if (!/^(?:ukol\w*|task\w*|tasks)$/i.test(tokF)) return s;
+    const st = s.slice(mPx[0].length).trim();
+    if (st.length >= 4 && st.length < s.length) return st;
+    return s;
+  }
+
+  /**
+   * P1: tělo po odstřižení scoped task-negation — explicitní zápis/připomínka ÚKOLU (ne poznámky).
+   */
+  function iuSilverScopedTaskNegationTailHasExplicitTaskWriteAnchorFolded(tailFolded) {
+    const t = String(tailFolded || "");
+    if (!t) return false;
+    if (/\bpripomen\w*\b/.test(t)) return true;
+    if (/\breminder\b/.test(t)) return true;
+    if (/\buloz\s+mi\s+ukol\w*\b/.test(t)) return true;
+    if (/\bvytvor\w*\s+ukol\w*\b/.test(t)) return true;
+    if (/\bdej\s+mi\s+ukol\w*\b/.test(t)) return true;
+    if (/^\s*task\b/.test(t)) return true;
+    if (/\b,\s*task\b/.test(t)) return true;
+    if (/\buloz\s+ukol\w*\b/.test(t) && !/\buloz\s+mi\s+poznam/.test(t) && !/\buloz\s+poznamku\b/.test(t)) return true;
+    return false;
+  }
+
+  /**
    * P0 calendar_query_03080: explicitní čtení poznámky + zákaz vytvoření úkolu („nevytvářej úkol“)
    * nesmí aktivovat task-read kontext přes heuristiku smlouva+úkol ani přes „najdi … … úkol“.
    */
@@ -35757,7 +35795,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     if (/\bv\s+ukolech\b/.test(x)) return true;
     if (/\bdo\s+todo\b/.test(x) || /\bdo\s+to-do\b/.test(x)) return true;
-    if (/\bdo\s+tasks?\b/.test(x) || /\bdo\s+task\s+listu\b/.test(x)) return true;
+    {
+      const reTs = /\bdo\s+tasks?\b|\bdo\s+task\s+listu\b/g;
+      let mTs;
+      while ((mTs = reTs.exec(x)) !== null) {
+        const beforeDoTs = x.slice(Math.max(0, mTs.index - 4), mTs.index);
+        if (!/\bne\s+$/i.test(beforeDoTs)) return true;
+      }
+    }
     if (/\bdo\s+seznamu\s+ukol/.test(x)) return true;
     if (/\bzapis\s+do\s+ukol/.test(x)) return true;
     if (/\badd\s+task\b/.test(x)) return true;
@@ -38803,6 +38848,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const st = s.replace(/^\s*neukl[aá]dej\s+do\s+[^\s,]+(?:\s*,)?\s*/i, "").trim();
       if (st.length >= 6 && st.length < s.length) s = st;
     }
+    s = iuSilverScopedTaskNegationStripPrefixFromRawForNoteParseP0(s);
     const fEarly = foldCs(s);
     const pinKeKartNotesTailP0 =
       /\bpin\s+ke\s+kart/i.test(fEarly) &&
@@ -38935,6 +38981,20 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     }
     return null;
+  }
+
+  /**
+   * P1 FIX_SCOPED_NEGATION_NOTE_WRITE: modulová negace vůči úkolům + explicitní notes.create — negated_write nesmí zabít turn.
+   */
+  function iuSilverScopedTaskNegationExplicitNoteCarveOutP1Folded(folded, rawOpt) {
+    const foldUse = String(folded || "");
+    const rawStr = String(rawOpt != null ? rawOpt : foldUse);
+    if (!/\bne\s+do\s+(?:ukol\w*|task\w*|tasks)\b/.test(foldUse)) return false;
+    if (iuSilverNegativeReadOnlyTaskPhrasesFolded(foldUse)) return false;
+    const strippedRaw = iuSilverScopedTaskNegationStripPrefixFromRawForNoteParseP0(rawStr);
+    const strippedF = foldCs(strippedRaw);
+    if (iuSilverScopedTaskNegationTailHasExplicitTaskWriteAnchorFolded(strippedF)) return false;
+    return !!iuSilverTryParseExplicitNoteCreate(strippedRaw);
   }
 
   function iuSilverDetectNoteIntent(text) {
