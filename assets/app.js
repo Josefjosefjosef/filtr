@@ -39826,6 +39826,137 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P1 messy_short_query_read: calendar entity tail for colloquial peek (foldCs), bez širokých osob (máma/táta).
+   */
+  function iuSilverMessyShortCalendarPeekEntityFolded(fx) {
+    const x = String(fx || "");
+    if (!x) return false;
+    return (
+      /\bpravnik\w*\b/.test(x) ||
+      /\badvokat/.test(x) ||
+      /\bucetni\w*\b/.test(x) ||
+      /\bdoktor\w*\b/.test(x) ||
+      /\blekaf\w*\b/.test(x) ||
+      /\blekari\w*\b/.test(x) ||
+      /\bzubar\w*\b/.test(x) ||
+      /\bschuz\w*\b/.test(x) ||
+      /\btermin\w*\b/.test(x) ||
+      /\bobed\w*\b/.test(x) ||
+      /\bnavstev\w*\b/.test(x)
+    );
+  }
+
+  /**
+   * P1 messy_short_query_read: časové kotvy pro „vole …“ větev (foldCs).
+   */
+  function iuSilverMessyShortCalendarPeekTimeFolded(fx) {
+    const x = String(fx || "");
+    if (!x) return false;
+    return (
+      /\bdnes(?:ka|ek)?\b/.test(x) ||
+      /\bzitr\w*\b/.test(x) ||
+      /\bzejtra\b/.test(x) ||
+      /\bvcere\w*\b/.test(x) ||
+      /\bvcera\w*\b/.test(x) ||
+      /\bpristi\s+tyden\b/.test(x) ||
+      /\bv\s+tejdnu\b/.test(x) ||
+      /\btejdnu\b/.test(x)
+    );
+  }
+
+  /**
+   * P1 messy_short_query_read: úzký colloquial calendar.read (calendar.query v harnessu) — mrkni/kde mám/kdy jsem měl/vole+zítra + role.
+   */
+  function iuSilverTryMessyShortColloquialCalendarReadSpecFolded(rUseIn, fFold, nowOpt) {
+    const rU = String(rUseIn || "")
+      .trim()
+      .replace(/\s*[?.!…]+$/u, "")
+      .trim();
+    const fAll = String(fFold || "");
+    if (!rU || rU.length < 4 || rU.length > 80) return null;
+    if (!fAll) return null;
+    const wc = rU.split(/\s+/).filter(Boolean).length;
+    if (wc > 14) return null;
+    if (/\b(mrkni|mrknete)\s+do\s+ukol/.test(fAll)) return null;
+    if (/\b(koukni|kouknete)\s+do\s+ukol/.test(fAll)) return null;
+
+    const nowD = nowOpt instanceof Date ? nowOpt : new Date();
+    const todayS = toDateOnly(nowD);
+    let tail = "";
+    let preferFuturePeek = false;
+    let dateIso = null;
+    let restrictDateStart = "";
+    let restrictDateEnd = "";
+    let m;
+
+    if ((m = rU.match(/^\s*(?:mrkni|mrknete)\s+(.+)$/i)) && m[1]) {
+      tail = String(m[1] || "").trim();
+      if (!tail || /\bdo\s+ukol/.test(foldCs(tail))) return null;
+    } else if ((m = rU.match(/^\s*(?:koukni|kouknete)\s+(.+)$/i)) && m[1]) {
+      tail = String(m[1] || "").trim();
+      if (!tail || /\bdo\s+ukol/.test(foldCs(tail))) return null;
+    } else if ((m = rU.match(/^\s*kde\s+m[aá]m\s+(.+)$/i)) && m[1]) {
+      tail = String(m[1] || "").trim();
+      const fTailKde = foldCs(tail);
+      if (/\bzaznam\b|\budalost\b|\bv\s+kalend|\bdo\s+kalend/.test(fTailKde)) return null;
+      if (tail.split(/\s+/).filter(Boolean).length > 4) return null;
+    } else if ((m = rU.match(/^\s*kdy\s+(jsem|sem)\s+(měl|mel|měla|mela)\s+(.+)$/i)) && m[3]) {
+      tail = String(m[3] || "").trim();
+      /* Bez preferPast: mobilní „kdy jsem měl doktora“ často hledá nejbližší termín (včetně budoucího seedu). */
+    } else if (
+      (m = rU.match(
+        /^\s*vole\s+(zejtra|zitra|zittra|dnes(?:ka|ek)?|včera|vcera|vcere|vcerajs|příští\s+týden|pristi\s+tyden|v\s+tejdnu)\s+(.+)$/i
+      )) &&
+      m[2]
+    ) {
+      const tw = foldCs(String(m[1] || ""));
+      tail = String(m[2] || "").trim();
+      if (!iuSilverMessyShortCalendarPeekTimeFolded(tw)) return null;
+      if (/\bzejtra\b|\bzitr/.test(tw)) {
+        /* Colloquial „zejtra“ + role: seed může mít titul dnes — nefiltrovat jen na zítřek (prázdný hit). */
+        preferFuturePeek = true;
+      } else if (/\bdnes/.test(tw)) dateIso = todayS;
+      else if (/\bvcere|\bvcera|\bvcerajs/.test(tw)) dateIso = addDays(todayS, -1);
+      else if (/\bpristi\s+tyden\b/.test(tw)) {
+        const thisMon = startOfWeekMondayFromDateStr(todayS);
+        const nextMon = addDays(thisMon, 7);
+        restrictDateStart = nextMon;
+        restrictDateEnd = addDays(nextMon, 6);
+      } else if (/\bv\s+tejdnu\b|\btejdnu\b/.test(tw)) {
+        restrictDateStart = startOfWeekMondayFromDateStr(todayS);
+        restrictDateEnd = addDays(restrictDateStart, 6);
+      }
+    } else if ((m = rU.match(/^\s*kdy\s+m[aá]m\s+(.+)$/i)) && m[1]) {
+      if (/\bkdy\s+mam\s+(koupit|nakoupit|kupovat|zaplatit|zavolat|poslat|objednat|udelat|napsat)\b/.test(fAll)) return null;
+      tail = String(m[1] || "").trim();
+    } else {
+      return null;
+    }
+
+    if (!tail || tail.length < 2) return null;
+    const fTail = foldCs(tail);
+    if (!iuSilverMessyShortCalendarPeekEntityFolded(fTail)) return null;
+
+    const can = iuSilverCanonicalCalendarEntityTitleFromPersonFragment(tail);
+    if (!can || !can.query || String(can.query).trim().length < 2) return null;
+
+    const out = {
+      intent: "find_by_title",
+      query: can.query,
+      normalizedQuery: can.query,
+      diacriticInsensitive: true,
+      queryFolded: can.queryFolded || foldCs(String(can.query || ""))
+    };
+    if (preferFuturePeek) out.preferFuture = true;
+    if (dateIso) out.dateIso = dateIso;
+    if (restrictDateStart && restrictDateEnd) {
+      out.restrictDateStart = restrictDateStart;
+      out.restrictDateEnd = restrictDateEnd;
+    }
+    return out;
+  }
+
+  /**
    * Structured read query (P0). Returns null if utterance is not calendar.read.
    */
   function tryParseCalendarRead(rawIn, now) {
@@ -39880,6 +40011,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         diacriticInsensitive: true,
         queryFolded: foldCs("Právník")
       };
+    }
+
+    {
+      const messyFast = iuSilverTryMessyShortColloquialCalendarReadSpecFolded(rUse, f, now);
+      if (messyFast) return messyFast;
     }
 
     if (!iuSilverCalendarPastQueryCountingCueFolded(f)) {
