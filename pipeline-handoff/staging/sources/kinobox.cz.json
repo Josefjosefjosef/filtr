@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-09T11:59:43.670233Z",
+  "ingestedAt": "2026-05-09T12:44:06.426686Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kvíz: Rebelové slaví 25 let od premiéry. Otestujte si, jak dobře slavný muzikál znáte",
+      "url": "https://www.kinobox.cz/clanky/tema/53559-kviz-rebelove-slavi-25-let-od-premiery-otestujte-si-jak-dobre-slavny-muzikal-znate",
+      "dt": "2026-05-09T12:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "dobře",
+        "kvíz",
+        "let",
+        "muzikál",
+        "otestujte",
+        "premiéry",
+        "rebelové",
+        "slavný",
+        "slaví",
+        "znáte"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -516,33 +543,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Sympatický zlodějíček, vrah i prezidentský kandidát. Charismatický George Clooney slaví 65 let",
-      "url": "https://www.kinobox.cz/clanky/filmy/53494-george-clooney-slavi",
-      "dt": "2026-05-06T15:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "charismatický",
-        "clooney",
-        "george",
-        "kandidát",
-        "let",
-        "prezidentský",
-        "slaví",
-        "sympatický",
-        "vrah",
-        "zlodějíček"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -553,7 +553,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 27759,
+      "bytes": 27897,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -590,7 +590,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-09T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T12:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -605,6 +605,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kvíz: Rebelové slaví 25 let od premiéry. Otestujte si, jak dobře slavný muzikál znáte",
+            "publishedAt": "2026-05-09T12:00:00Z"
+          },
           {
             "title": "Kinobox Daily: Jak vypadá katastrofický film v podání Larse von Triera?",
             "publishedAt": "2026-05-09T10:00:00Z"
@@ -632,10 +636,6 @@
           {
             "title": "Oblíbená postava Ulice je definitivně zpátky. Po velkém návratu ale ihned musí na policii",
             "publishedAt": "2026-05-08T11:00:00Z"
-          },
-          {
-            "title": "Kinobox Daily: Příběh legendárního Angličana, který zachránil stovky českých dětí před nacisty",
-            "publishedAt": "2026-05-08T10:00:00Z"
           }
         ]
       }

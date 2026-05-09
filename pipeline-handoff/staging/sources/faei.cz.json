@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-09T11:59:43.670233Z",
+  "ingestedAt": "2026-05-09T12:44:06.426686Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Český průmysl v březnu zpomalil",
+      "url": "https://profitonline.cz/cesky-prumysl-v-breznu-zpomalil/",
+      "dt": "2026-05-09T12:00:53Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "březnu",
+        "průmysl",
+        "zpomalil",
+        "český"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -259,26 +280,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "ČNB sazby nemění",
-      "url": "https://profitonline.cz/cnb-sazby-nemeni/",
-      "dt": "2026-05-07T16:30:07Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "nemění",
-        "sazby",
-        "čnb"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -289,7 +290,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18114,
+      "bytes": 18205,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -326,12 +327,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-09T10:00:33Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T12:00:53Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
+          "finance": 10,
           "zpravy": 1,
-          "zdravi": 1,
-          "finance": 10
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -343,6 +344,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Český průmysl v březnu zpomalil",
+            "publishedAt": "2026-05-09T12:00:53Z"
+          },
           {
             "title": "Okamžiky historie: Den, kdy se otevřelo pražské metro",
             "publishedAt": "2026-05-09T10:00:33Z"
@@ -370,10 +375,6 @@
           {
             "title": "Kde máme tu konstruktivní opozici? Zatím nevymyslela prakticky nic",
             "publishedAt": "2026-05-08T10:00:56Z"
-          },
-          {
-            "title": "Nejistota prospěla dolaru",
-            "publishedAt": "2026-05-08T08:00:56Z"
           }
         ]
       }

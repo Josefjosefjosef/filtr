@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-09T11:59:43.670233Z",
+  "ingestedAt": "2026-05-09T12:44:06.426686Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Bezpečnost v ohrožení? Jen 17 procent Čechů chce škrty, většina chce silnější armádu",
+      "url": "https://ekonomickydenik.cz/17-procent-cechu-chce-skrty-vetsina-chce-silnejsi-armadu/",
+      "dt": "2026-05-09T12:31:57Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "armádu",
+        "bezpečnost",
+        "chce",
+        "jen",
+        "ohrožení",
+        "procent",
+        "silnější",
+        "většina",
+        "čechů",
+        "škrty"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -750,33 +777,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Jak mohl bývalý příslušník StB udělat kariéru v BIS? Povýšení otevírá staré otázky",
-      "url": "https://ekonomickydenik.cz/general-estebak-bis-mohl-vstoupit-do-nove-tajnesluzby/",
-      "dt": "2026-05-07T05:30:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "bis",
-        "bývalý",
-        "kariéru",
-        "otevírá",
-        "otázky",
-        "povýšení",
-        "příslušník",
-        "staré",
-        "stb",
-        "udělat"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -787,7 +787,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 75362,
+      "bytes": 74685,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -824,7 +824,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-09T11:22:33Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T12:31:57Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 23,
@@ -841,6 +841,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bezpečnost v ohrožení? Jen 17 procent Čechů chce škrty, většina chce silnější armádu",
+            "publishedAt": "2026-05-09T12:31:57Z"
+          },
           {
             "title": "Tanky jsou na frontě. Moskva oslavila Den vítězství v „úsporném“ režimu",
             "publishedAt": "2026-05-09T11:22:33Z"
@@ -868,10 +872,6 @@
           {
             "title": "„Tak mi to nevyšlo, no.“ Prezident by mohl být velkorysý, říká Babiš o zpoždění",
             "publishedAt": "2026-05-08T13:38:32Z"
-          },
-          {
-            "title": "Fico letí do Moskvy za Putinem. Využívá trasu přes Česko",
-            "publishedAt": "2026-05-08T12:54:30Z"
           }
         ]
       }

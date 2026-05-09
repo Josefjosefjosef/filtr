@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-09T11:59:43.670233Z",
+  "ingestedAt": "2026-05-09T12:44:06.426686Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Nový Vampire: The Masquerade láká na temný příběh plný politiky",
+      "url": "https://zing.cz/article/novy-vampire-the-masquerade-laka-na-temny-pribeh-plny-politiky",
+      "dt": "2026-05-09T12:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "láká",
+        "masquerade",
+        "nový",
+        "plný",
+        "politiky",
+        "příběh",
+        "temný",
+        "the",
+        "vampire"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -961,31 +987,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Letošní Call of Duty vyjde pouze na současnou generaci konzolí",
-      "url": "https://zing.cz/article/letosni-call-of-duty-vyjde-pouze-na-soucasnou-generaci-konzoli",
-      "dt": "2026-05-05T04:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "call",
-        "duty",
-        "generaci",
-        "konzolí",
-        "letošní",
-        "pouze",
-        "současnou",
-        "vyjde"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -996,7 +997,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125242,
+      "bytes": 125221,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1033,7 +1034,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-09T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1048,6 +1049,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nový Vampire: The Masquerade láká na temný příběh plný politiky",
+            "publishedAt": "2026-05-09T12:00:00Z"
+          },
           {
             "title": "Cozy novinky s Terry #53",
             "publishedAt": "2026-05-09T10:00:00Z"
@@ -1075,10 +1080,6 @@
           {
             "title": "Cyberpunk: Edgerunners míří do Wuthering Waves",
             "publishedAt": "2026-05-08T14:00:00Z"
-          },
-          {
-            "title": "Podle úniků se v roce 2027 dočkáme pokračování série Zelda",
-            "publishedAt": "2026-05-08T12:00:00Z"
           }
         ]
       }
