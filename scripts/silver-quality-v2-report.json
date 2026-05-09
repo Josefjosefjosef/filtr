@@ -2,11 +2,11 @@
   "harness_id": "audit_silver_quality_v2_foundation",
   "fixed_now": "2026-05-04T12:00:00",
   "quality_total_cases": 532,
-  "quality_passed": 517,
-  "quality_failed": 15,
-  "quality_accuracy": "97.18",
-  "routing_accuracy": "98.31",
-  "field_quality_accuracy": "98.12",
+  "quality_passed": 532,
+  "quality_failed": 0,
+  "quality_accuracy": "100.00",
+  "routing_accuracy": "100.00",
+  "field_quality_accuracy": "100.00",
   "safety_accuracy": "100.00",
   "title_cleanliness_accuracy": "100.00",
   "note_quality_accuracy": "100.00",
@@ -17,135 +17,11 @@
   "dangerous_write_count": 0,
   "false_write_count": 0,
   "query_created_write_count": 0,
-  "unnecessary_disambiguation_count": 6,
-  "top_fail_clusters": [
-    "task_query_quality||routing_fail=9",
-    "normalization_observed_cases||unnecessary_disambiguation=6"
-  ],
-  "recommended_next_fix_cluster": "task_query_quality",
-  "recommended_next_fix_reason": "Largest fail mass: cluster «task_query_quality» / tag «routing_fail» (9 cases); safest next step is a narrow Silver change targeting this phrasing family (audit-only signal).",
+  "unnecessary_disambiguation_count": 0,
+  "top_fail_clusters": [],
+  "recommended_next_fix_cluster": "title_pollution_detection",
+  "recommended_next_fix_reason": "No recorded fails in this baseline slice; default focus remains title/command-stripping hygiene for Czech mobile prompts.",
   "quality_audit_v2_script_crash": "NO",
   "quality_report_written": "YES",
-  "sample_fails": [
-    {
-      "id": "qv2_00332",
-      "cluster": "task_query_quality",
-      "tags": [
-        "routing_fail"
-      ],
-      "input": "úkoly do pátku"
-    },
-    {
-      "id": "qv2_00337",
-      "cluster": "task_query_quality",
-      "tags": [
-        "routing_fail"
-      ],
-      "input": "úkoly do pátku?"
-    },
-    {
-      "id": "qv2_00342",
-      "cluster": "task_query_quality",
-      "tags": [
-        "routing_fail"
-      ],
-      "input": "úkoly do pátku"
-    },
-    {
-      "id": "qv2_00347",
-      "cluster": "task_query_quality",
-      "tags": [
-        "routing_fail"
-      ],
-      "input": "úkoly do pátku?"
-    },
-    {
-      "id": "qv2_00352",
-      "cluster": "task_query_quality",
-      "tags": [
-        "routing_fail"
-      ],
-      "input": "úkoly do pátku"
-    },
-    {
-      "id": "qv2_00357",
-      "cluster": "task_query_quality",
-      "tags": [
-        "routing_fail"
-      ],
-      "input": "úkoly do pátku?"
-    },
-    {
-      "id": "qv2_00362",
-      "cluster": "task_query_quality",
-      "tags": [
-        "routing_fail"
-      ],
-      "input": "úkoly do pátku"
-    },
-    {
-      "id": "qv2_00367",
-      "cluster": "task_query_quality",
-      "tags": [
-        "routing_fail"
-      ],
-      "input": "úkoly do pátku?"
-    },
-    {
-      "id": "qv2_00372",
-      "cluster": "task_query_quality",
-      "tags": [
-        "routing_fail"
-      ],
-      "input": "úkoly do pátku"
-    },
-    {
-      "id": "qv2_00452",
-      "cluster": "normalization_observed_cases",
-      "tags": [
-        "unnecessary_disambiguation"
-      ],
-      "input": "Ulož mi schůzku Praha jedna zítra v 15, jen kalendář."
-    },
-    {
-      "id": "qv2_00457",
-      "cluster": "normalization_observed_cases",
-      "tags": [
-        "unnecessary_disambiguation"
-      ],
-      "input": "Ulož mi schůzku Praha jedna zítra v 15, jen kalendář."
-    },
-    {
-      "id": "qv2_00462",
-      "cluster": "normalization_observed_cases",
-      "tags": [
-        "unnecessary_disambiguation"
-      ],
-      "input": "Ulož mi schůzku Praha jedna zítra v 15, jen kalendář."
-    },
-    {
-      "id": "qv2_00467",
-      "cluster": "normalization_observed_cases",
-      "tags": [
-        "unnecessary_disambiguation"
-      ],
-      "input": "Ulož mi schůzku Praha jedna zítra v 15, jen kalendář."
-    },
-    {
-      "id": "qv2_00472",
-      "cluster": "normalization_observed_cases",
-      "tags": [
-        "unnecessary_disambiguation"
-      ],
-      "input": "Ulož mi schůzku Praha jedna zítra v 15, jen kalendář."
-    },
-    {
-      "id": "qv2_00477",
-      "cluster": "normalization_observed_cases",
-      "tags": [
-        "unnecessary_disambiguation"
-      ],
-      "input": "Ulož mi schůzku Praha jedna zítra v 15, jen kalendář."
-    }
-  ]
+  "sample_fails": []
 }

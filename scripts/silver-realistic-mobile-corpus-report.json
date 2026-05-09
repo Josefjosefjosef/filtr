@@ -2,7 +2,7 @@
   "harness_id": "audit_silver_realistic_mobile_corpus_v1",
   "fixed_now": "2026-05-04T12:00:00",
   "total_cases": 10000,
-  "overall_accuracy_realistic": "100.00",
+  "overall_accuracy_realistic": "99.70",
   "accuracy_by_cluster": {
     "calendar_write_basic:schuzka": "100.00",
     "calendar_write_basic:zubar": "100.00",
@@ -25,7 +25,7 @@
     "calendar_query": "100.00",
     "multi_intent_calendar_note": "100.00",
     "negation_safety:calendar_read": "100.00",
-    "negation_safety:task_read": "100.00",
+    "negation_safety:task_read": "80.00",
     "negation_safety:note_read": "100.00",
     "messy_czech_mobile": "100.00"
   },
@@ -51,12 +51,21 @@
     "calendar_query": 0,
     "multi_intent_calendar_note": 0,
     "negation_safety:calendar_read": 0,
-    "negation_safety:task_read": 0,
+    "negation_safety:task_read": 30,
     "negation_safety:note_read": 0,
     "messy_czech_mobile": 0
   },
-  "top_20_fail_clusters": [],
-  "top_50_failed_examples": [],
+  "top_20_fail_clusters": [
+    "negation_safety:task_read||intent_fail=30"
+  ],
+  "top_50_failed_examples": [
+    {
+      "id": "rmb_08752",
+      "cluster": "negation_safety:task_read",
+      "category": "intent_fail",
+      "input": "Nic neukládej, jen zjisti jestli mám koupit mléko v úkolech."
+    }
+  ],
   "false_write_count": 0,
   "dangerous_write_count": 0,
   "query_created_write_count_realistic": 0,
@@ -65,11 +74,11 @@
   "calendar_write_accuracy": "100.00",
   "calendar_query_accuracy": "100.00",
   "task_write_accuracy": "100.00",
-  "task_query_accuracy": "100.00",
+  "task_query_accuracy": "96.84",
   "note_write_accuracy": "100.00",
   "note_query_accuracy": "100.00",
   "multi_intent_accuracy": "100.00",
-  "negation_safety_accuracy": "100.00",
+  "negation_safety_accuracy": "93.33",
   "messy_czech_mobile_accuracy": "100.00",
   "note_write_basic_unnecessary_disambiguation_fail_count": 0,
   "note_write_basic_unnecessary_disambiguation_reduced": "YES",
@@ -77,8 +86,8 @@
   "calendar_query_intent_fail_count": 0,
   "calendar_query_intent_fail_reduced": "YES",
   "explicit_separate_note_exception_passed": "YES",
-  "recommended_next_fix_cluster": "(none)",
-  "recommended_next_fix_reason": "No fails in this corpus slice; collect more edge cases before engine edits.",
+  "recommended_next_fix_cluster": "negation_safety:task_read",
+  "recommended_next_fix_reason": "Highest fail mass in «negation_safety:task_read» dominated by «intent_fail»; safest follow-up is a narrow Silver routing/read-guard change scoped to this Czech mobile phrasing family (no UI).",
   "baseline_20k": {
     "overall_accuracy": "",
     "calendar_write": "",
@@ -95,6 +104,6 @@
     "title_clean": "9652 / 10000",
     "date_parsed": "10000 / 10000",
     "time_parsed": "10000 / 10000",
-    "entity_detected": "7850 / 10000"
+    "entity_detected": "7880 / 10000"
   }
 }
