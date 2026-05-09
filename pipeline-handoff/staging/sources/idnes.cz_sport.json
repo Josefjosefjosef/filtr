@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-09T21:19:19.501396Z",
+  "ingestedAt": "2026-05-09T22:04:04.317543Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
       "title": "Tvrdík po skandálu odsoudil fanoušky: Nepřijatelné, největší ostuda za 11 let",
       "url": "https://www.idnes.cz/fotbal/prvni-liga/slavia-sparta-derby-zaver-fanousci-na-hristi.A260509_204731_fotbal_jic",
-      "dt": "2026-05-09T21:07:32Z",
+      "dt": "2026-05-09T21:54:58Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
@@ -20,6 +20,56 @@
         "ostuda",
         "skandálu",
         "tvrdík"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Disciplinárka mimořádně zasedne už v neděli. Rozhodne o kontumaci derby?",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/derby-317-slavia-sparta-disciplinarni-komise-lfa.A260509_231023_fotbal_min",
+      "dt": "2026-05-09T21:46:42Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "derby",
+        "disciplinárka",
+        "kontumaci",
+        "mimořádně",
+        "neděli",
+        "rozhodne",
+        "zasedne"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Předčili i Nymburk a došli si pro titul. Rytas si po obratu podmanil Ligu mistrů",
+      "url": "https://www.idnes.cz/sport/basket/basketbalova-liga-mistru-final-four-vysledky-titul-rytas-vilnius.A260509_232258_sport-basket_czo",
+      "dt": "2026-05-09T21:26:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "došli",
+        "ligu",
+        "mistrů",
+        "nymburk",
+        "obratu",
+        "podmanil",
+        "předčili",
+        "rytas",
+        "titul"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -739,62 +789,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Neřešil jsem, co hraju. Miluju fotbal, proto jsem až tady, říká Vacek před rozlučkou",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/pardubice-kamil-vacek-rozlucka-konec-kariery.A260509_932158_fotbal_ipet",
-      "dt": "2026-05-09T09:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "fotbal",
-        "hraju",
-        "jsem",
-        "miluju",
-        "neřešil",
-        "proto",
-        "rozlučkou",
-        "tady",
-        "vacek",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vaněk: Jsem pyšný, z čeho jsme se dostali. V Brně musíme chtít víc, velí Pomikálek",
-      "url": "https://www.idnes.cz/sport/basket/narodni-basketbalova-liga-ctvrtfinale-decin-brno-6-zapas.A260509_100119_sport-basket_ipet",
-      "dt": "2026-05-09T08:15:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "brně",
-        "chtít",
-        "dostali",
-        "jsem",
-        "jsme",
-        "musíme",
-        "pomikálek",
-        "pyšný",
-        "vaněk",
-        "velí",
-        "víc",
-        "čeho"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -805,7 +799,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48949,
+      "bytes": 48224,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -842,7 +836,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-09T21:07:32Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T21:54:58Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -859,7 +853,15 @@
         "sample_titles": [
           {
             "title": "Tvrdík po skandálu odsoudil fanoušky: Nepřijatelné, největší ostuda za 11 let",
-            "publishedAt": "2026-05-09T21:07:32Z"
+            "publishedAt": "2026-05-09T21:54:58Z"
+          },
+          {
+            "title": "Disciplinárka mimořádně zasedne už v neděli. Rozhodne o kontumaci derby?",
+            "publishedAt": "2026-05-09T21:46:42Z"
+          },
+          {
+            "title": "Předčili i Nymburk a došli si pro titul. Rytas si po obratu podmanil Ligu mistrů",
+            "publishedAt": "2026-05-09T21:26:00Z"
           },
           {
             "title": "Rozhodla obrovská vůle i maličkosti. Házenkáři Plzně jásali: Finále plné příběhů!",
@@ -880,14 +882,6 @@
           {
             "title": "Slavia - Sparta 3:2, nedohráno, domácí mířili k titulu, ale na hřiště vtrhli fanoušci",
             "publishedAt": "2026-05-09T19:39:00Z"
-          },
-          {
-            "title": "Hložek si poprvé od prosince zahrál v bundeslize. Schickovi a spol. se vzdálila LM",
-            "publishedAt": "2026-05-09T19:01:00Z"
-          },
-          {
-            "title": "Liverpool remizoval s Chelsea, Sunderland uhrál proti United bod. Slaví Brighton i City",
-            "publishedAt": "2026-05-09T18:51:16Z"
           }
         ]
       }

@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-09T21:19:19.501396Z",
+  "ingestedAt": "2026-05-09T22:04:04.317543Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Největší ostuda, omlouval se zlomený Tvrdík. Slavii hrozí kontumace a tvrdé tresty",
+      "title": "Největší ostuda, prohlásil Tvrdík. Slavii hrozí kontumace, události už řeší policie",
       "url": "https://sport.aktualne.cz/fotbal/fanousci-slavie-napadli-brankare-sparty-ta-odmita-pokracovat-zapas-se-nedohraje/r~aaa29daf2af17a2c107cfb4baca2f58c/",
       "dt": "2026-05-09T19:17:00Z",
       "media_raw": "Aktuálně",
@@ -15,13 +15,38 @@
         "hrozí",
         "kontumace",
         "největší",
-        "omlouval",
         "ostuda",
+        "policie",
+        "prohlásil",
         "slavii",
-        "tresty",
-        "tvrdé",
         "tvrdík",
-        "zlomený"
+        "události",
+        "řeší"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Fotbalisté Plzně porazili Liberec 2:0 a přiblížili se konečnému třetímu místu",
+      "url": "https://sport.aktualne.cz/fotbal/fotbaliste-plzne-porazili-liberec-2-0-a-priblizili-se-konecnemu-tretimu-mistu/r~aaa29bdc28fc4257f00c5c85164eec48/",
+      "dt": "2026-05-09T21:30:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "fotbalisté",
+        "konečnému",
+        "liberec",
+        "místu",
+        "plzně",
+        "porazili",
+        "přiblížili",
+        "třetímu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -511,34 +536,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Loď stiženou hantavirem očekávají Kanáry nad ránem. Několik zemí chystá evakuační lety",
-      "url": "https://zpravy.aktualne.cz/zahranici/lod-stizenou-hantavirem-ocekavaji-kanary-nad-ranem-nekolik-zemi-chysta-evakuacni-lety/r~aaa29e305e37a763af7462b4a713423b/",
-      "dt": "2026-05-09T11:48:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "chystá",
-        "evakuační",
-        "hantavirem",
-        "kanáry",
-        "lety",
-        "loď",
-        "několik",
-        "očekávají",
-        "ránem",
-        "stiženou",
-        "zemí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -549,7 +546,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22718,
+      "bytes": 22567,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -586,11 +583,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-09T19:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T21:30:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 8,
-          "zpravy": 12
+          "sport": 9,
+          "zpravy": 11
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -603,8 +600,12 @@
         },
         "sample_titles": [
           {
-            "title": "Největší ostuda, omlouval se zlomený Tvrdík. Slavii hrozí kontumace a tvrdé tresty",
+            "title": "Největší ostuda, prohlásil Tvrdík. Slavii hrozí kontumace, události už řeší policie",
             "publishedAt": "2026-05-09T19:17:00Z"
+          },
+          {
+            "title": "Fotbalisté Plzně porazili Liberec 2:0 a přiblížili se konečnému třetímu místu",
+            "publishedAt": "2026-05-09T21:30:00Z"
           },
           {
             "title": "Konflikt na Ukrajině se chýlí ke konci, řekl Putin. Zelenskému vzkázal, ať mu zavolá",
@@ -629,10 +630,6 @@
           {
             "title": "Rulíka potěšilo, jak se Češi zvedli. A řekl, čeho se musí vyvarovat, aby byli úspěšní",
             "publishedAt": "2026-05-09T16:04:00Z"
-          },
-          {
-            "title": "\"Rád bych, aby trvalo déle.\" Trump oznámil třídenní příměří mezi Ruskem a Ukrajinou",
-            "publishedAt": "2026-01-21T06:45:00Z"
           }
         ]
       }
