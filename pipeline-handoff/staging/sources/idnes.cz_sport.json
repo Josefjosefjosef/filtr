@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-09T04:09:43.716791Z",
+  "ingestedAt": "2026-05-09T04:54:19.110157Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Chodkyni Klimentové vyšly Poděbrady. Na posledním kilometru nadávám, směje se",
+      "url": "https://www.idnes.cz/sport/atletika/ema-klimentova-sesta-mitink-podebrady-walking.A260508_220951_atletika_ikuc",
+      "dt": "2026-05-09T04:33:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "chodkyni",
+        "kilometru",
+        "klimentové",
+        "nadávám",
+        "poděbrady",
+        "posledním",
+        "směje",
+        "vyšly"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -760,31 +785,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fotbalisté Kroměříže vstali z mrtvých. Odpadlík má tři záchranářské mečboly",
-      "url": "https://www.idnes.cz/fotbal/domaci-souteze/fotbal-2-liga-kromeriz-slavia-praha-b.A260507_200020_fot_dsouteze_epfoj",
-      "dt": "2026-05-08T05:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "fotbalisté",
-        "kroměříže",
-        "mečboly",
-        "mrtvých",
-        "odpadlík",
-        "tři",
-        "vstali",
-        "záchranářské"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47197,
+      "bytes": 47118,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T04:33:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -848,6 +848,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chodkyni Klimentové vyšly Poděbrady. Na posledním kilometru nadávám, směje se",
+            "publishedAt": "2026-05-09T04:33:00Z"
+          },
           {
             "title": "Titul v derby? Rychle pryč! Sparta ponížila Slavii před čtvrtstoletím. Blíží se odveta",
             "publishedAt": "2026-05-08T22:00:00Z"
@@ -875,10 +879,6 @@
           {
             "title": "Bude to hit jako Waka Waka? Shakira nazpívala oficiální píseň pro MS ve fotbale",
             "publishedAt": "2026-05-08T17:47:00Z"
-          },
-          {
-            "title": "Slavia - Sparta živě v TV: kde sledovat derby, výsledky, historie, bilance",
-            "publishedAt": "2026-05-08T16:55:00Z"
           }
         ]
       }

@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-05-09T04:09:43.716791Z",
+  "ingestedAt": "2026-05-09T04:54:19.110157Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Neplatnost celé smlouvy, nebo jen úroku? Soud se zastal věřitele v kauze skryté lichvy",
+      "url": "https://www.ceska-justice.cz/2026/05/smlouva-urok-soud-lichva/",
+      "dt": "2026-05-09T04:15:00Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "celé",
+        "jen",
+        "kauze",
+        "lichvy",
+        "nebo",
+        "neplatnost",
+        "skryté",
+        "smlouvy",
+        "soud",
+        "věřitele",
+        "zastal",
+        "úroku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -238,32 +267,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Klášter, miliony a ruské vazby. Matce představené hrozí za zpronevěru 10 let",
-      "url": "https://www.ceska-justice.cz/2026/05/klaster-miliony-a-ruske-vazby-matce-predstavene-hrozi-za-zproneveru-10-let/",
-      "dt": "2026-05-05T14:48:32Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "hrozí",
-        "klášter",
-        "let",
-        "matce",
-        "miliony",
-        "představené",
-        "ruské",
-        "vazby",
-        "zpronevěru"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,7 +277,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 95887,
+      "bytes": 99131,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -311,7 +314,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-08T10:11:16Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T04:15:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -326,6 +329,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Neplatnost celé smlouvy, nebo jen úroku? Soud se zastal věřitele v kauze skryté lichvy",
+            "publishedAt": "2026-05-09T04:15:00Z"
+          },
           {
             "title": "Stížnosti proti stíhání v bitcoinové kauze. Podali je Blažek, Daňhel i Titz",
             "publishedAt": "2026-05-08T10:11:16Z"
@@ -353,10 +360,6 @@
           {
             "title": "Více funkcí neznamená více plných odměn. Ústavní soud nevyhověl senátorům",
             "publishedAt": "2026-05-06T08:12:58Z"
-          },
-          {
-            "title": "Konec her na schovávanou: Kvůli nedoručené poště vás vypátrá policie",
-            "publishedAt": "2026-05-06T04:18:50Z"
           }
         ]
       }

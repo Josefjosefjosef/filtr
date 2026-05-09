@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-09T04:09:43.716791Z",
+  "ingestedAt": "2026-05-09T04:54:19.110157Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Majitelé fotovoltaik z let boomu teď vydělávají nejvíc. Do 5 let o štědré dotace přijdou",
+      "url": "https://ekonomickydenik.cz/majitele-fotovoltaik-let-boomu-vydelavaji-nejvic/",
+      "dt": "2026-05-09T04:15:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "boomu",
+        "dotace",
+        "fotovoltaik",
+        "let",
+        "majitelé",
+        "nejvíc",
+        "přijdou",
+        "vydělávají",
+        "štědré"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -753,33 +779,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Nejkrvavější rok historie a soudní teror. Kdy začne Evropa chránit své novináře?",
-      "url": "https://ekonomickydenik.cz/nejkrvavejsi-rok-evropa-slibila-ochranu-novinaru/",
-      "dt": "2026-05-06T14:30:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "chránit",
-        "evropa",
-        "historie",
-        "nejkrvavější",
-        "novináře",
-        "rok",
-        "soudní",
-        "své",
-        "teror",
-        "začne"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 75577,
+      "bytes": 76317,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,11 +826,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-08T15:42:34Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T04:15:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 6,
-          "finance": 23,
+          "finance": 24,
+          "zpravy": 5,
           "zdravi": 1
         },
         "drop_counts": {
@@ -844,6 +843,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Majitelé fotovoltaik z let boomu teď vydělávají nejvíc. Do 5 let o štědré dotace přijdou",
+            "publishedAt": "2026-05-09T04:15:00Z"
+          },
           {
             "title": "Odklon letadla a zpoždění. Policie zasahovala kvůli dronu na pražském letišti",
             "publishedAt": "2026-05-08T15:42:34Z"
@@ -871,10 +874,6 @@
           {
             "title": "Pavel s Babišem se ohledně summitu neshodli. Žalobu vidí jako poslední možnost",
             "publishedAt": "2026-05-08T08:15:41Z"
-          },
-          {
-            "title": "Generálská hvězda pro muže z StB, který slouží v BIS? Političtí vězni pociťují hluboké znepokojení",
-            "publishedAt": "2026-05-08T07:09:55Z"
           }
         ]
       }
