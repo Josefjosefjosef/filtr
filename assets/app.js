@@ -39657,6 +39657,38 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         if (tok.startsWith(prefix) || prefix.startsWith(tok.slice(0, Math.min(prefixLen, tok.length)))) return true;
       }
     }
+    /**
+     * P1 read_empty_fix: multi-word query — tokenize fq, skip date-filler words,
+     * and check each remaining query token against title tokens by 4-char prefix.
+     * Example: fq="zitra zubare" should match title "Zubař" via the "zubare" token.
+     * Narrow: only fires when fq has whitespace (no behavior change for single-word).
+     */
+    if (fq.indexOf(" ") >= 0) {
+      const dateFiller = {
+        zitra: 1, zitrek: 1, zitrejsi: 1, dnes: 1, dneska: 1, dnesek: 1, dnesni: 1,
+        vcera: 1, vcerejs: 1, vcerejsi: 1, pozitri: 1, pozitrejs: 1,
+        pondeli: 1, utery: 1, streda: 1, ctvrtek: 1, patek: 1, sobota: 1, nedele: 1,
+        rano: 1, dopoledne: 1, odpoledne: 1, vecer: 1, vecerni: 1, noc: 1, noci: 1,
+        priste: 1, pristi: 1, pristich: 1, minuly: 1, minulou: 1, minuleho: 1,
+        tento: 1, tenhle: 1, tomto: 1, tom: 1
+      };
+      const qTokens = fq.split(/\s+/).filter(function (q) {
+        return q && q.length >= 3 && !dateFiller[q];
+      });
+      for (let qi = 0; qi < qTokens.length; qi++) {
+        const qt = qTokens[qi];
+        const qPrefixLen = Math.min(4, qt.length);
+        const qPrefix = qt.slice(0, qPrefixLen);
+        for (let ti = 0; ti < tokens.length; ti++) {
+          const tk = tokens[ti];
+          if (qt.length < 4) {
+            if (tk === qt) return true;
+          } else if (tk.startsWith(qPrefix) || qPrefix.startsWith(tk.slice(0, Math.min(qPrefixLen, tk.length)))) {
+            return true;
+          }
+        }
+      }
+    }
     return false;
   }
 
@@ -41415,7 +41447,42 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         melo: 1,
         mely: 1,
         mela: 1,
-        mit: 1
+        mit: 1,
+        /* P1 read_empty_fix: Czech filler/scaffolding tokens that are not entity anchors. */
+        veci: 1,
+        vecech: 1,
+        vecmi: 1,
+        kolem: 1,
+        okolo: 1,
+        ohledne: 1,
+        ohledně: 1,
+        souvislosti: 1,
+        souvisejic: 1,
+        tykajic: 1,
+        tykajici: 1,
+        tykaji: 1,
+        cti: 1,
+        ctete: 1,
+        precti: 1,
+        prosim: 1,
+        diky: 1,
+        dik: 1,
+        dekuju: 1,
+        hele: 1,
+        vole: 1,
+        prosi: 1,
+        bez: 1,
+        /* P1 read_empty_fix: write-negation imperatives must not gate read retrieval. */
+        neukladej: 1,
+        neuklad: 1,
+        neukladat: 1,
+        nezapomen: 1,
+        nezapomenout: 1,
+        nevkladej: 1,
+        nepridavej: 1,
+        nemen: 1,
+        nezapomin: 1,
+        nezapominej: 1
       };
       const commonStorage = {
         objednavka: 1,
@@ -41458,13 +41525,31 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         autem: 1
       };
       const parts = qn.split(/\s+/);
+      /**
+       * P1 read_empty_fix: align hard gate with scoreHaystack — when query word is not a
+       * direct substring, also accept bidirectional substring against any haystack word
+       * (≥4 chars). This handles Czech inflection (e.g. "uhlim" vs "uhli", "pravnikovi"
+       * vs "pravnik", "zubare" vs "zubar") without changing scoring or routing.
+       */
+      const hWordsForGate = hn.split(/\s+/).filter(function (xx) {
+        return xx && xx.length >= 4;
+      });
       for (let pi = 0; pi < parts.length; pi++) {
         let w = parts[pi];
         if (!w) continue;
         if (w.length < 4) continue;
         if (/^\d+$/.test(w)) continue;
         if (weakNav[w] || commonStorage[w]) continue;
-        if (hn.indexOf(w) < 0) return false;
+        if (hn.indexOf(w) >= 0) continue;
+        let bidirHit = false;
+        for (let hi = 0; hi < hWordsForGate.length; hi++) {
+          const hw = hWordsForGate[hi];
+          if (hw.indexOf(w) >= 0 || w.indexOf(hw) >= 0) {
+            bidirHit = true;
+            break;
+          }
+        }
+        if (!bidirHit) return false;
       }
       return true;
     }
@@ -42055,9 +42140,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /^\s*vyhledej\s+v\s+kalend[aá]ři\s+/i,
       /^\s*najdi\s+ukol\s+/i,
       /^\s*vyhledej\s+ukol\s+/i,
-      /^\s*najdi\s+pozn[aá]mk\w*\s+/i,
-      /^\s*vyhledej\s+pozn[aá]mk\w*\s+/i,
-      /^\s*hled[aá]m\s+pozn[aá]mk\w*\s+/i,
+      /^\s*najdi\s+pozn[aá]mk[^\s]*\s+/i,
+      /^\s*vyhledej\s+pozn[aá]mk[^\s]*\s+/i,
+      /^\s*hled[aá]m\s+pozn[aá]mk[^\s]*\s+/i,
       /^\s*(jaky|jake)\s+(je|m[aá]m)\s+/i,
       /^\s*kde\s+(je|jsou|m[aá]m|m[eě]la|m[eě]l)\s+/i,
       /^\s*kde\s+m[aá]m\s+(ulozen\w*|poznamenan\w*)\s+/i,
@@ -42067,15 +42152,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /^\s*co\s+jsem\s+si\s+poznamenal\s+o\s+/i,
       /^\s*co\s+jsem\s+si\s+psal\w*\s+o\s+/i,
       /^\s*co\s+jsem\s+si\s+zapsal\w*\s+o\s+/i,
-      /^\s*co\s+m[aá]m\s+v\s+pozn[aá]mk\w*\s+o\s+/i,
-      /^\s*co\s+mam\s+v\s+poznamk\w*\s+o\s+/i,
-      /^\s*najdi\s+pozn[aá]mk\w*\s+o\s+/i,
-      /^\s*uka[zž]\s+pozn[aá]mk\w*\s+/i,
-      /^\s*ukaz\s+pozn[aá]mk\w*\s+/i,
-      /^\s*co\s+je\s+v\s+pozn[aá]mk\w*\s*(o\s+)?/i,
+      /**
+       * P1 read_empty_fix: Czech inflection — `pozn[aá]mk\w*` would not match "poznámkách"
+       * because JS `\w` excludes Latin Extended (á,č,…); use `[^\s]*` to consume the suffix.
+       */
+      /^\s*co\s+m[aá]m\s+v\s+pozn[aá]mk[^\s]*\s+o\s+/i,
+      /^\s*co\s+mam\s+v\s+poznamk[^\s]*\s+o\s+/i,
+      /^\s*najdi\s+pozn[aá]mk[^\s]*\s+o\s+/i,
+      /^\s*uka[zž]\s+pozn[aá]mk[^\s]*\s+/i,
+      /^\s*ukaz\s+pozn[aá]mk[^\s]*\s+/i,
+      /^\s*co\s+je\s+v\s+pozn[aá]mk[^\s]*\s*(o\s+)?/i,
       /^\s*co\s+m[aá]m\s+poznamenan[eé]\s+o\s+/i,
       /^\s*co\s+jsem\s+si\s+ulo[zž]il\s+(ke|k)\s+/i,
-      /^\s*pod[ií]vej\s+(?:se\s+)?(?:do\s+)?pozn[aá]mk\w*\s+/i,
+      /^\s*pod[ií]vej\s+(?:se\s+)?(?:do\s+)?pozn[aá]mk[^\s]*\s+/i,
       /^\s*(najdi|vyhledej|hledej|ukaž|ukaz|zobraz|vypiš|vypis)\s+(mi\s+)?/i,
       /^\s*najdi\s+(muj|moje|mi\s+)?ukol/i,
       /^\s*co\s+mám\s+k\s+/i,

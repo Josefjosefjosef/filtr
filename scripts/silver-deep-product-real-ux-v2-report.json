@@ -1,0 +1,257 @@
+{
+  "harness_id": "silver_deep_product_real_ux_v2",
+  "user_reference_main_commit": "d89a8ae6ad0ab0a0935b16ca02b5003d4d8a8869",
+  "main_commit": "d89a8ae6ad0ab0a0935b16ca02b5003d4d8a8869",
+  "fixed_now_iso": "2026-05-04T12:00:00",
+  "deep_product_cases_total": 90,
+  "deep_product_pass": 71,
+  "deep_product_fail": 19,
+  "deep_product_accuracy": "78.89",
+  "retrieval_relevance_accuracy": "60.00",
+  "update_vs_create_accuracy": "100.00",
+  "clarification_quality_accuracy": "100.00",
+  "cross_module_accuracy": "100.00",
+  "timeline_reasoning_accuracy": "25.00",
+  "dirty_czech_accuracy": "75.00",
+  "title_cleanliness_accuracy": "88.89",
+  "long_chaotic_czech_accuracy": "53.33",
+  "dangerous_write_count": 0,
+  "false_write_count": 0,
+  "query_created_write_count": 0,
+  "write_when_negated_count": 0,
+  "top_clusters": [
+    {
+      "key": "timeline_scope_and_tense",
+      "count": 6,
+      "severity": 70,
+      "root_cause": "past_window_and_relative_time_phrases_weak_in_calendar_read",
+      "replay": [
+        "Co jsem měl před měsícem u doktora?",
+        "Co jsem mel pred mesicem u doktora?",
+        "Kdy jsem naposledy měl právníka?"
+      ]
+    },
+    {
+      "key": "cross_module_collection_routing",
+      "count": 4,
+      "severity": 78,
+      "root_cause": "ambiguous_czech_router_picked_adjacent_container",
+      "replay": [
+        "Co mám s právníkem?",
+        "Co mam s pravnikem?",
+        "hele zapamatuj si že pin ke kartě je furt doma v šuplíku jo a neptej se mě pořád dokola já ti to říkám jednou a dost"
+      ]
+    },
+    {
+      "key": "general_intent_mismatch",
+      "count": 8,
+      "severity": 60,
+      "root_cause": "classifier_gap_on_colloquial_or_multi_clause_czech",
+      "replay": [
+        "Kdy jsem byl u doktora?",
+        "Kdy jsem byl u doktora?",
+        "vole hele já potřebuju vědět jestli mám zítra toho zubaře nebo jestli je to až pozítří protože mi to mamka říkala a já si to nepamatuju a je"
+      ]
+    },
+    {
+      "key": "dirty_czech_token_recovery",
+      "count": 1,
+      "severity": 68,
+      "root_cause": "ascii_typos_and_dictation_tokens_misrouted_vs_read",
+      "replay": [
+        "mrkni prawnik"
+      ]
+    }
+  ],
+  "cluster_1_retrieval_deepen": {
+    "cluster": "retrieval_summary_missing_entity_signals",
+    "cluster_total": 0,
+    "inspected_examples": 0,
+    "subcluster_counts": {
+      "route_wrong": 0,
+      "route_correct_summary_weak": 0,
+      "ranking_wrong": 0,
+      "harness_too_strict": 0,
+      "ambiguous_user_input": 0,
+      "timeline_scope_problem": 0,
+      "entity_alias_problem": 0
+    },
+    "dominant_subcluster": "route_wrong",
+    "dominant_subcluster_count": 0,
+    "true_product_fail_count": 0,
+    "harness_problem_count": 0,
+    "examples": []
+  },
+  "gates": {
+    "smoke": "SKIP",
+    "iu_perf_regression_guards": "SKIP",
+    "silver_field_cleanup_replay_suite": "SKIP",
+    "silver_calendar_create_regression": "SKIP",
+    "audit_20k": "SKIP",
+    "quality_v2": "SKIP",
+    "realistic_mobile": "SKIP",
+    "real_czech_corpus": "SKIP",
+    "deep_product_real_ux_v2": "PASS"
+  },
+  "fails": [
+    {
+      "id": "rr_pravnik_task_m0",
+      "base_id": "rr_pravnik_task",
+      "slice": "retrieval_relevance",
+      "cat": "calendar_vs_task_confusion",
+      "input": "Co mám s právníkem?",
+      "replay": "Co mám s právníkem?"
+    },
+    {
+      "id": "rr_pravnik_task_m1",
+      "base_id": "rr_pravnik_task",
+      "slice": "retrieval_relevance",
+      "cat": "calendar_vs_task_confusion",
+      "input": "Co mam s pravnikem?",
+      "replay": "Co mam s pravnikem?"
+    },
+    {
+      "id": "rr_doktor_kdy_byl_m0",
+      "base_id": "rr_doktor_kdy_byl",
+      "slice": "retrieval_relevance",
+      "cat": "intent_fail",
+      "input": "Kdy jsem byl u doktora?",
+      "replay": "Kdy jsem byl u doktora?"
+    },
+    {
+      "id": "rr_doktor_kdy_byl_m1",
+      "base_id": "rr_doktor_kdy_byl",
+      "slice": "retrieval_relevance",
+      "cat": "intent_fail",
+      "input": "Kdy jsem byl u doktora?",
+      "replay": "Kdy jsem byl u doktora?"
+    },
+    {
+      "id": "lcc_dlouhe_souveti_kalendar_m0",
+      "base_id": "lcc_dlouhe_souveti_kalendar",
+      "slice": "long_chaotic_czech",
+      "cat": "intent_fail",
+      "input": "vole hele já potřebuju vědět jestli mám zítra toho zubaře nebo jestli je to až pozítří protože mi to mamka říkala a já si to nepamatuju a ještě k tomu mi kurýr volal takže se v tom ztrácím",
+      "replay": "vole hele já potřebuju vědět jestli mám zítra toho zubaře nebo jestli je to až pozítří protože mi to mamka říkala a já si to nepamatuju a ještě k tomu mi kurýr volal takže se v tom ztrácím"
+    },
+    {
+      "id": "lcc_dlouhe_souveti_kalendar_m1",
+      "base_id": "lcc_dlouhe_souveti_kalendar",
+      "slice": "long_chaotic_czech",
+      "cat": "intent_fail",
+      "input": "vole hele ja potrebuju vedet jestli mam zitra toho zubare nebo jestli je to az pozitri protoze mi to mamka rikala a ja si to nepamatuju a jeste k tomu mi kuryr volal takze se v tom ztracim",
+      "replay": "vole hele ja potrebuju vedet jestli mam zitra toho zubare nebo jestli je to az pozitri protoze mi to mamka rikala a ja si to nepamatuju a jeste k tomu mi kuryr volal takze se v tom ztracim"
+    },
+    {
+      "id": "lcc_dlouhe_souveti_kalendar_m4",
+      "base_id": "lcc_dlouhe_souveti_kalendar",
+      "slice": "long_chaotic_czech",
+      "cat": "intent_fail",
+      "input": "hele vole hele já potřebuju vědět jestli mám zítra toho zubaře nebo jestli je to až pozítří protože mi to mamka říkala a já si to nepamatuju a ještě k tomu mi kurýr volal takže se v tom ztrácím",
+      "replay": "hele vole hele já potřebuju vědět jestli mám zítra toho zubaře nebo jestli je to až pozítří protože mi to mamka říkala a já si to nepamatuju a ještě k tomu mi kurýr volal takže se v tom ztrácím"
+    },
+    {
+      "id": "lcc_dlouhe_souveti_kalendar_m5",
+      "base_id": "lcc_dlouhe_souveti_kalendar",
+      "slice": "long_chaotic_czech",
+      "cat": "intent_fail",
+      "input": "hele vole hele ja potrebuju vedet jestli mam zitra toho zubare nebo jestli je to az pozitri protoze mi to mamka rikala a ja si to nepamatuju a jeste k tomu mi kuryr volal takze se v tom ztracim",
+      "replay": "hele vole hele ja potrebuju vedet jestli mam zitra toho zubare nebo jestli je to az pozitri protoze mi to mamka rikala a ja si to nepamatuju a jeste k tomu mi kuryr volal takze se v tom ztracim"
+    },
+    {
+      "id": "lcc_dlouhe_souveti_kalendar_m9",
+      "base_id": "lcc_dlouhe_souveti_kalendar",
+      "slice": "long_chaotic_czech",
+      "cat": "intent_fail",
+      "input": "vole hele ja potrebuju vedet jestli mam zitra toho zubare nebo jestli je to az pozitri protoze mi to mamka rikala a ja si to nepamatuju a jeste k tomu mi kuryr volal takze se v tom ztracim díky",
+      "replay": "vole hele ja potrebuju vedet jestli mam zitra toho zubare nebo jestli je to az pozitri protoze mi to mamka rikala a ja si to nepamatuju a jeste k tomu mi kuryr volal takze se v tom ztracim díky"
+    },
+    {
+      "id": "lcc_note_chaos_m4",
+      "base_id": "lcc_note_chaos",
+      "slice": "long_chaotic_czech",
+      "cat": "wrong_collection",
+      "input": "hele zapamatuj si že pin ke kartě je furt doma v šuplíku jo a neptej se mě pořád dokola já ti to říkám jednou a dost",
+      "replay": "hele zapamatuj si že pin ke kartě je furt doma v šuplíku jo a neptej se mě pořád dokola já ti to říkám jednou a dost"
+    },
+    {
+      "id": "lcc_note_chaos_m5",
+      "base_id": "lcc_note_chaos",
+      "slice": "long_chaotic_czech",
+      "cat": "wrong_collection",
+      "input": "hele zapamatuj si ze pin ke karte je furt doma v supliku jo a neptej se me porad dokola ja ti to rikam jednou a dost",
+      "replay": "hele zapamatuj si ze pin ke karte je furt doma v supliku jo a neptej se me porad dokola ja ti to rikam jednou a dost"
+    },
+    {
+      "id": "tl_pred_mesicem_m0",
+      "base_id": "tl_pred_mesicem",
+      "slice": "timeline_reasoning",
+      "cat": "intent_fail",
+      "input": "Co jsem měl před měsícem u doktora?",
+      "replay": "Co jsem měl před měsícem u doktora?"
+    },
+    {
+      "id": "tl_pred_mesicem_m1",
+      "base_id": "tl_pred_mesicem",
+      "slice": "timeline_reasoning",
+      "cat": "intent_fail",
+      "input": "Co jsem mel pred mesicem u doktora?",
+      "replay": "Co jsem mel pred mesicem u doktora?"
+    },
+    {
+      "id": "tl_kdy_naposledy_pravnik_m0",
+      "base_id": "tl_kdy_naposledy_pravnik",
+      "slice": "timeline_reasoning",
+      "cat": "intent_fail",
+      "input": "Kdy jsem naposledy měl právníka?",
+      "replay": "Kdy jsem naposledy měl právníka?"
+    },
+    {
+      "id": "tl_kdy_naposledy_pravnik_m1",
+      "base_id": "tl_kdy_naposledy_pravnik",
+      "slice": "timeline_reasoning",
+      "cat": "intent_fail",
+      "input": "Kdy jsem naposledy mel pravnika?",
+      "replay": "Kdy jsem naposledy mel pravnika?"
+    },
+    {
+      "id": "tl_kdy_jsem_mel_m0",
+      "base_id": "tl_kdy_jsem_mel",
+      "slice": "timeline_reasoning",
+      "cat": "intent_fail",
+      "input": "Kdy jsem měl kurýra?",
+      "replay": "Kdy jsem měl kurýra?"
+    },
+    {
+      "id": "tl_kdy_jsem_mel_m1",
+      "base_id": "tl_kdy_jsem_mel",
+      "slice": "timeline_reasoning",
+      "cat": "intent_fail",
+      "input": "Kdy jsem mel kuryra?",
+      "replay": "Kdy jsem mel kuryra?"
+    },
+    {
+      "id": "dc_pravnik_typo_m0",
+      "base_id": "dc_pravnik_typo",
+      "slice": "dirty_czech",
+      "cat": "intent_fail",
+      "input": "mrkni prawnik",
+      "replay": "mrkni prawnik"
+    },
+    {
+      "id": "tc_note_pin_m4",
+      "base_id": "tc_note_pin",
+      "slice": "title_cleanliness",
+      "cat": "intent_fail",
+      "input": "hele Poznámka: PIN karta je v šuplíku.",
+      "replay": "hele Poznámka: PIN karta je v šuplíku."
+    }
+  ],
+  "engine_changed": "NO",
+  "behavior_changed": "NO",
+  "ui_changed": "NO",
+  "css_changed": "NO",
+  "backend_changed": "NO",
+  "changed_files": "scripts/silver-deep-product-real-ux-v2.cjs;scripts/silver-deep-product-real-ux-v2-report.json",
+  "recommended_next_fix_scope": "See top_cluster_1_root_cause — diagnostic only; no code change in this task"
+}
