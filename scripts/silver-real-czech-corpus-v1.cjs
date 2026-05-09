@@ -333,6 +333,23 @@ function buildRealCzechCorpusV1() {
     push("rcz_note_query", "note_query", raw, "note.query", {}, {});
   }
 
+  const NOTE_QUERY_ANCHOR_GUARD = [
+    { raw: "Mrkni do poznámek heslo WiFi", exp: "note.query", g: "note_query" },
+    { raw: "Mrkni v poznámkách na heslo k WiFi", exp: "note.query", g: "note_query" },
+    { raw: "najdi v poznamkach PIN", exp: "note.query", g: "note_query" },
+    { raw: "koukni do poznamek co mam o aute", exp: "note.query", g: "note_query" },
+    { raw: "jen čti, mrkni do poznámek na heslo WiFi", exp: "note.query", g: "note_query" },
+    { raw: "nic neukládej, najdi v poznámkách PIN", exp: "note.query", g: "note_query" },
+    { raw: "ulož poznámku heslo WiFi je abc123", exp: "note.create", g: "note_write" },
+    { raw: "zapiš poznámku PIN je 1234", exp: "note.create", g: "note_write" },
+    { raw: "mrkni do úkolů koupit mléko", exp: "task.query", g: "task_query" },
+    { raw: "Mrkni co mám zítra v kalendáři", exp: "calendar.query", g: "calendar_query" }
+  ];
+  for (let gi = 0; gi < NOTE_QUERY_ANCHOR_GUARD.length; gi++) {
+    const row = NOTE_QUERY_ANCHOR_GUARD[gi];
+    push("rcz_note_query_anchor_guard", row.g, row.raw, row.exp, {}, {});
+  }
+
   const TQ = [
     "Co mám dnes udělat",
     "Jaké mám úkoly",

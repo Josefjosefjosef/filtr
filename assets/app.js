@@ -35403,7 +35403,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!hasTaskLex) return false;
 
     const listVerb =
-      /\b(ukaz|uka[zž]|zobraz|vypi[sš]|najdi|hledej|vyhledej)\b/i.test(x) ||
+      /\b(ukaz|uka[zž]|zobraz|vypi[sš]|najdi|hledej|vyhledej|mrkni|mrknete|koukni|kouknete)\b/i.test(x) ||
       /^\s*(jen\s+se\s+)?podivej(?:te)?\s+se\s+(?:mi\s+)?(?:na\s+)?(?:moje\s+)?ukol/i.test(x);
 
     if (listVerb && /\bukol\w*\b/.test(strippedUkNeg)) return true;
@@ -37825,12 +37825,44 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P1 rcz_note_query_anchor_alias_fix: poznámkové read-kotvy (do/v/z poznám…, holé „poznamky“)
+   * + dotazové sloveso (mrkni, koukni, podívej, najdi, zjisti, ukaž, co mám, kde mám) → notes.read před clarifikací.
+   * Neplatí pro čisté „do úkolů“ / „v úkolech“ bez poznámkového ramene.
+   */
+  function iuSilverRczNoteQueryAnchorVerbP1Folded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    const noteLoc =
+      /\bdo\s+poznam/.test(x) ||
+      /\bv\s+poznamk/.test(x) ||
+      /\bz\s+poznam/.test(x) ||
+      /\bpoznamky\b/.test(x);
+    if (!noteLoc) return false;
+    if (/\bne\s+v\s+poznamk/.test(x) || /\bne\s+do\s+poznam/.test(x)) return false;
+    const readVerb =
+      /\b(mrkni|mrknete|koukni|kouknete)\b/.test(x) ||
+      /\bpodivej(?:te)?\b/.test(x) ||
+      /\bnajdi\b/.test(x) ||
+      /\bzjist(?:i|it|te)\b/.test(x) ||
+      /\b(?:ukaz|uka[zž])\b/.test(x) ||
+      /\bco\s+mam\b/.test(x) ||
+      /\bco\s+mame\b/.test(x) ||
+      /\bkde\s+mam\b/.test(x) ||
+      /\bkde\s+mame\b/.test(x);
+    if (!readVerb) return false;
+    if (/\bdo\s+ukol\w*\b/.test(x) && !/\bdo\s+poznam/.test(x)) return false;
+    if (/\bv\s+ukolech\b/.test(x) && !/\bv\s+poznamk/.test(x) && !/\bdo\s+poznam/.test(x)) return false;
+    return true;
+  }
+
+  /**
    * P1 narrow: dotaz na poznámku (poznámka + najdi/ukaž/co mám …) — před calendar.read tie-break.
    * Nesmí chytit „není to poznámka“ (substring poznam…) u task-only vět.
    */
   function iuSilverExplicitNoteQueryAnchorP1Folded(f) {
     const x = String(f || "");
     if (!x) return false;
+    if (iuSilverRczNoteQueryAnchorVerbP1Folded(x)) return true;
     if (/\bnajdi\s+poznam/i.test(x)) return true;
     if (/\bukaz\s+poznam/i.test(x) || /uka[zž]\s+poznam/i.test(x)) return true;
     if (/\bco\s+mam\s+v\s+poznam/i.test(x) || /\bco\s+mame\s+v\s+poznam/i.test(x)) return true;
