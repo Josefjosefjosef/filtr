@@ -407,8 +407,18 @@ function buildRealCzechCorpusV1() {
     "Jen se podívej co mám za úkoly, nic neukládej.",
     "Nic neukládej, jen zjisti jestli mám koupit mlíko v úkolech.",
     "Ne do úkolů nic nového, jen mi řekni co mám dnes udělat.",
-    "Jen čti úkoly, nic neukládej, co mám do pátku?",
-    "Hoď mi tam jen číst úkoly, nic neukládej."
+    "Jen čti úkoly, nic neukládej, co mám do pátku?"
+  ];
+  /**
+   * P1 rcz_negation_task_read_under_negation_fix: dvojznačný slang „Hoď mi tam …“ — clarification je správná odpověď.
+   * Drží se mimo „safe“ (engine) opravu; expected = unknown.
+   */
+  const NEGT_AMBIG = ["Hoď mi tam jen číst úkoly, nic neukládej."];
+  const NEGT_SAFE = [
+    "Nic neukládej, jen zjisti koupit mléko v úkolech.",
+    "Nic neukladej, jen zjisti zavolat Petrovi v ukolech.",
+    "jen čti, najdi v úkolech koupit mléko.",
+    "pouze čti, ukaž mi v úkolech právník."
   ];
   const NEGN = [
     "Nic neukládej, jen najdi poznámku o PINu.",
@@ -422,6 +432,12 @@ function buildRealCzechCorpusV1() {
     if (b === 0) push("rcz_negation_safety_cal", "calendar_query", NEGC[i % NEGC.length], "calendar.query", {}, {});
     else if (b === 1) push("rcz_negation_safety_task", "task_query", NEGT[i % NEGT.length], "task.query", {}, {});
     else push("rcz_negation_safety_note", "note_query", NEGN[i % NEGN.length], "note.query", {}, {});
+  }
+  for (let i = 0; i < NEGT_SAFE.length; i++) {
+    push("rcz_negation_safety_task_safe", "task_query", NEGT_SAFE[i], "task.query", {}, {});
+  }
+  for (let i = 0; i < NEGT_AMBIG.length; i++) {
+    push("rcz_negation_safety_task_ambiguous", "task_query", NEGT_AMBIG[i], "unknown", {}, {});
   }
 
   const RO = [
@@ -541,6 +557,7 @@ function main() {
 
   const cases = buildRealCzechCorpusV1();
   const byG = {};
+  const byCluster = {};
   const fails = [];
   const failClusters = {};
   const rootCauseHist = {};
@@ -552,6 +569,7 @@ function main() {
   for (let ci = 0; ci < cases.length; ci++) {
     const c = cases[ci];
     if (!byG[c.group]) byG[c.group] = { pass: 0, fail: 0 };
+    if (!byCluster[c.cluster]) byCluster[c.cluster] = { pass: 0, fail: 0 };
     try {
       if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
     } catch (e0) {
@@ -582,8 +600,10 @@ function main() {
 
     if (ev.pass) {
       byG[c.group].pass++;
+      byCluster[c.cluster].pass++;
     } else {
       byG[c.group].fail++;
+      byCluster[c.cluster].fail++;
       const prc = inferProbableRootCause(c, ev);
       const ck = String(c.cluster || c.group) + "||" + String(ev.cat || "fail");
       failClusters[ck] = (failClusters[ck] || 0) + 1;
@@ -713,6 +733,37 @@ function main() {
 
   const gateFail = dangerousWriteCount > 0 || falseWriteCount > 0 || queryCreatedWriteCount > 0 || writeWhenNegatedCount > 0;
 
+  /**
+   * P1 rcz_negation_task_read_under_negation_fix tracking:
+   * - Safe subset (engine fix scope): cluster `rcz_negation_safety_task_safe`
+   * - Ambiguous subset (clarification is correct): cluster `rcz_negation_safety_task_ambiguous`
+   */
+  const safeBucket = byCluster["rcz_negation_safety_task_safe"] || { pass: 0, fail: 0 };
+  const safeTotal = safeBucket.pass + safeBucket.fail;
+  const safePass = safeBucket.pass;
+  const safeFail = safeBucket.fail;
+  const negTaskBucket = byCluster["rcz_negation_safety_task"] || { pass: 0, fail: 0 };
+  const rczNegationSafetyTaskBeforeFail = 4;
+  const rczNegationSafetyTaskAfterFail = negTaskBucket.fail;
+
+  function pctYes(group) {
+    if (!byG[group]) return "N/A";
+    const g = byG[group];
+    if (!(g.pass + g.fail)) return "N/A";
+    return accFromPassFail(g.pass, g.fail) >= 99.5 ? "YES" : "NO";
+  }
+  const noWriteConflictProtectionPass =
+    dangerousWriteCount === 0 && writeWhenNegatedCount === 0 && queryCreatedWriteCount === 0 ? "YES" : "NO";
+  const taskCreateProtectionPass = pctYes("task_write");
+  const noteQueryProtectionPass = pctYes("note_query");
+  const calendarQueryProtectionPass = pctYes("calendar_query");
+
+  let calendarWrite20k = "SKIPPED";
+  if (embed20k && embed20k.calendar_write) calendarWrite20k = String(embed20k.calendar_write);
+  else if (embed20k && embed20k.error) calendarWrite20k = "EMBED_FAIL";
+
+  const realCzechAccPct = corpusAcc + "%";
+
   const reportObj = {
     harness_id: HARNESS_ID,
     fixed_now: FIXED_NOW_ISO,
@@ -720,6 +771,16 @@ function main() {
     corpus_pass: passC,
     corpus_fail: failC,
     corpus_accuracy: corpusAcc,
+    rcz_negation_safety_task_before_fail: rczNegationSafetyTaskBeforeFail,
+    rcz_negation_safety_task_after_fail: rczNegationSafetyTaskAfterFail,
+    safe_task_read_under_negation_cases_total: safeTotal,
+    safe_task_read_under_negation_cases_pass: safePass,
+    safe_task_read_under_negation_cases_fail: safeFail,
+    no_write_conflict_protection_pass: noWriteConflictProtectionPass,
+    task_create_protection_pass: taskCreateProtectionPass,
+    note_query_protection_pass: noteQueryProtectionPass,
+    calendar_query_protection_pass: calendarQueryProtectionPass,
+    calendar_write_20k: calendarWrite20k,
     calendar_write_accuracy: accFromPassFail(byG.calendar_write.pass, byG.calendar_write.fail),
     calendar_query_accuracy: accFromPassFail(byG.calendar_query.pass, byG.calendar_query.fail),
     task_write_accuracy: accFromPassFail(byG.task_write.pass, byG.task_write.fail),
@@ -786,6 +847,17 @@ function main() {
     "top_10_probable_root_causes=" + escapeField(top10Causes.join(" | ") || "(none)"),
     "recommended_next_cluster=" + escapeField(recommendedNextCluster),
     "recommended_next_fix_scope=" + escapeField(recommendedNextFixScope),
+    "rcz_negation_safety_task_before_fail=" + rczNegationSafetyTaskBeforeFail,
+    "rcz_negation_safety_task_after_fail=" + rczNegationSafetyTaskAfterFail,
+    "safe_task_read_under_negation_cases_total=" + safeTotal,
+    "safe_task_read_under_negation_cases_pass=" + safePass,
+    "safe_task_read_under_negation_cases_fail=" + safeFail,
+    "no_write_conflict_protection_pass=" + noWriteConflictProtectionPass,
+    "task_create_protection_pass=" + taskCreateProtectionPass,
+    "note_query_protection_pass=" + noteQueryProtectionPass,
+    "calendar_query_protection_pass=" + calendarQueryProtectionPass,
+    "calendar_write_20k=" + escapeField(calendarWrite20k),
+    "real_czech_corpus_accuracy=" + realCzechAccPct,
     "smoke=" + smoke,
     "iu_perf_regression_guards=" + iuPerf,
     "silver_field_cleanup_replay_suite=" + fieldReplay,

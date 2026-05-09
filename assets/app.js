@@ -35689,6 +35689,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (iuSilverExplicitTaskReadScopeFolded(f, rawOpt)) return true;
     if (iuSilverCalendarReadWinsOverTaskReadFolded(f)) return false;
     if (iuSilverTaskQueryHardSignalFolded(f)) return true;
+    if (iuSilverP1ReadOnlyTaskQueryUnderNegationP1Folded(f)) return true;
     return iuSilverTaskReadNegativeWriteWithScopeFolded(f, rawOpt);
   }
 
@@ -37717,6 +37718,38 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P1 rcz_negation_task_read_under_negation_fix: read-only task query under negation
+   * (např. „nic neukládej, jen zjisti / jen najdi / jen čti / pouze čti … v úkolech“) — narrow.
+   * Vstup je foldCs; nesmí chytit „hoď mi tam …“ (dvojznačný slang) ani write slovesa
+   * (přidej, ulož, nahoď, zapiš, vlož, nezapomeň, vytvoř, naplánuj, připomeň mi, dej mi do úkolů).
+   * Scope musí být `v úkolech` / `v úkolu` (locativ — read scope), ne `do úkolů` (write target).
+   */
+  function iuSilverP1ReadOnlyTaskQueryUnderNegationP1Folded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (/\bhod\s+mi\s+tam\b/.test(x)) return false;
+    if (/\b(?:pridej|uloz|nahod|zapis|vloz|nezapomen|vytvor|naplanuj|zaloz)\w*\b/.test(x)) return false;
+    if (/\bpripomen\s+mi\b/.test(x)) return false;
+    if (/\bdej\s+mi\s+do\s+ukol/.test(x)) return false;
+    if (/\bpotrebuju\s+ulozit\b/.test(x)) return false;
+    const hasTaskReadScope = /\bv\s+ukolech\b/.test(x) || /\bv\s+ukolu\b/.test(x);
+    if (!hasTaskReadScope) return false;
+    const hasNegation =
+      /\bnic\s+neukladej\b/.test(x) || /\bnic\s+noveho\s+neukladej\b/.test(x);
+    const hasJenRead =
+      /\bjen\s+zjist\w*\b/.test(x) ||
+      /\bpouze\s+zjist\w*\b/.test(x) ||
+      /\bjen\s+najdi\b/.test(x) ||
+      /\bpouze\s+najdi\b/.test(x) ||
+      /\bjen\s+(?:ukaz|uka[zž])\w*\b/.test(x) ||
+      /\bpouze\s+(?:ukaz|uka[zž])\w*\b/.test(x) ||
+      /\bjen\s+cti\b/.test(x) ||
+      /\bpouze\s+cti\b/.test(x);
+    if (!hasNegation && !hasJenRead) return false;
+    return true;
+  }
+
+  /**
    * P0 narrow: globální „nic neukládej / neukládej / neukládat“ před write-like kotvou (úkol, ulož, připomeň, …)
    * → žádný task/note/calendar write (AMBIGUOUS_WRITE v BrainRoute).
    * Vynechá modulární „neukládej do kalendáře|poznámek|úkolů“; neřeší „ne do úkolů, ulož poznámku“ (mimo scope).
@@ -37724,6 +37757,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverP0NoWriteNegationBeatsWriteLikeCueFolded(f) {
     const x = String(f || "").trim();
     if (!x) return false;
+    if (iuSilverP1ReadOnlyTaskQueryUnderNegationP1Folded(x)) return false;
 
     function earliestNegIdx() {
       let best = -1;
