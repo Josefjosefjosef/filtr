@@ -1,27 +1,49 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-09T11:24:03.395510Z",
+  "ingestedAt": "2026-05-09T11:59:43.670233Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "HOKEJ ONLINE: Vysoká hůl zrušila finský gól, vzápětí Češi vyrovnávají!",
+      "title": "HOKEJ ONLINE: Češi vyrovnali a tlačí se za dalším gólem",
       "url": "https://www.sport.cz/clanek/hokej-euro-hockey-tour-reprezentace-prozradila-jednicku-na-finy-odpocivat-bude-karlovarska-letka-5450195",
       "dt": "2026-05-08T13:51:21Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "finský",
-        "gól",
+        "dalším",
+        "gólem",
         "hokej",
-        "hůl",
         "online",
-        "vyrovnávají",
-        "vysoká",
-        "vzápětí",
-        "zrušila",
+        "tlačí",
+        "vyrovnali",
         "češi"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Hrdličková skončila osmá ve střelbě na trap na Světovém poháru v Almaty",
+      "url": "https://www.sport.cz/clanek/ostatni-hrdlickova-skoncila-osma-ve-strelbe-na-trap-na-svetovem-poharu-v-almaty-5450529",
+      "dt": "2026-05-09T11:46:12Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "almaty",
+        "hrdličková",
+        "osmá",
+        "poháru",
+        "skončila",
+        "střelbě",
+        "světovém",
+        "trap"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -750,32 +772,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bonusové páté místo v Lize mistrů získala po Anglii i další velmoc",
-      "url": "https://www.sport.cz/clanek/fotbal-liga-mistru-bonusove-pate-misto-v-lize-mistru-ziskala-po-anglii-i-dalsi-velmoc-5450294",
-      "dt": "2026-05-08T19:30:58Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "anglii",
-        "bonusové",
-        "další",
-        "lize",
-        "mistrů",
-        "místo",
-        "páté",
-        "velmoc",
-        "získala"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -786,7 +782,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41249,
+      "bytes": 41260,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -823,10 +819,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-09T10:29:33Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T11:46:12Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 30
+          "sport": 29,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -839,8 +836,12 @@
         },
         "sample_titles": [
           {
-            "title": "HOKEJ ONLINE: Vysoká hůl zrušila finský gól, vzápětí Češi vyrovnávají!",
+            "title": "HOKEJ ONLINE: Češi vyrovnali a tlačí se za dalším gólem",
             "publishedAt": "2026-05-08T13:51:21Z"
+          },
+          {
+            "title": "Hrdličková skončila osmá ve střelbě na trap na Světovém poháru v Almaty",
+            "publishedAt": "2026-05-09T11:46:12Z"
           },
           {
             "title": "Skvělá Nosková postupuje v Římě do osmifinále, odpoledne bude hrát Menšík. Macháč skrečoval",
@@ -865,10 +866,6 @@
           {
             "title": "Nezničitelný Fuksa jel týden po maratonu nejlepší čas historie! Na první místo ale posunuli i Rusa",
             "publishedAt": "2026-05-09T08:58:14Z"
-          },
-          {
-            "title": "Vypusťte Gudase! Anaheim zoufale potřebuje svého šerifa. Umí soupeře zastrašit, zní z kabiny",
-            "publishedAt": "2026-05-09T09:20:30Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-09T11:24:03.395510Z",
+  "ingestedAt": "2026-05-09T11:59:43.670233Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Tanky jsou na frontě. Moskva oslavila Den vítězství v „úsporném“ režimu",
+      "url": "https://ekonomickydenik.cz/moskva-oslavila-den-vitezstvi-v-uspornem-rezimu/",
+      "dt": "2026-05-09T11:22:33Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "den",
+        "frontě",
+        "moskva",
+        "oslavila",
+        "režimu",
+        "tanky",
+        "vítězství",
+        "úsporném"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -752,30 +777,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ani zaměstnanec, ani živnostník. Komu by pomohl chystaný „třetí režim“?",
-      "url": "https://ekonomickydenik.cz/jen-zamestnanec-a-podnikatel-nestaci/",
-      "dt": "2026-05-07T04:30:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "chystaný",
-        "komu",
-        "pomohl",
-        "režim",
-        "třetí",
-        "zaměstnanec",
-        "živnostník"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -786,7 +787,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 75555,
+      "bytes": 75362,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -823,7 +824,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-09T10:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T11:22:33Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 23,
@@ -840,6 +841,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tanky jsou na frontě. Moskva oslavila Den vítězství v „úsporném“ režimu",
+            "publishedAt": "2026-05-09T11:22:33Z"
+          },
           {
             "title": "Nový strážce obranné pokladny nastupuje: Kdo si posvítí na miliardové toky?",
             "publishedAt": "2026-05-09T10:05:00Z"
@@ -867,10 +872,6 @@
           {
             "title": "Fico letí do Moskvy za Putinem. Využívá trasu přes Česko",
             "publishedAt": "2026-05-08T12:54:30Z"
-          },
-          {
-            "title": "Plameny u Černobylu. Hasiči bojují s rozsáhlým požárem po pádu dronu",
-            "publishedAt": "2026-05-08T11:16:23Z"
           }
         ]
       }

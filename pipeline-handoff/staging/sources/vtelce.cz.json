@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-05-09T11:24:03.395510Z",
+  "ingestedAt": "2026-05-09T11:59:43.670233Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Master & Commander: Tvrdý vojenský dril, nepřístupný pánský klub, mořská nemoc a vodní nádrž po Titanicu",
+      "url": "https://www.vtelce.cz/master-commander-tvrdy-vojensky-dril-nepristupny-pansky-klub-morska-nemoc-a-vodni-nadrz-po-titanicu/",
+      "dt": "2026-05-09T11:53:43Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "commander",
+        "dril",
+        "klub",
+        "master",
+        "mořská",
+        "nemoc",
+        "nepřístupný",
+        "nádrž",
+        "pánský",
+        "titanicu",
+        "tvrdý",
+        "vodní",
+        "vojenský"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -255,33 +285,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Lidice: Výhrůžky scenáristovi od komunistů, výměna hlavní herečky a setkání s opravdovým vrahem",
-      "url": "https://www.vtelce.cz/lidice-vyhruzky-scenaristovi-od-komunistu-vymena-hlavni-herecky-a-setkani-s-opravdovym-vrahem/",
-      "dt": "2026-05-07T17:28:43Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "herečky",
-        "hlavní",
-        "komunistů",
-        "lidice",
-        "opravdovým",
-        "scenáristovi",
-        "setkání",
-        "vrahem",
-        "výhrůžky",
-        "výměna"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -292,8 +295,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 81668,
-      "reason": "",
+      "bytes": 80141,
+      "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -329,11 +332,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-09T10:20:15Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T11:53:43Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "other": 9
+          "zpravy": 2,
+          "other": 8
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -345,6 +348,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Master & Commander: Tvrdý vojenský dril, nepřístupný pánský klub, mořská nemoc a vodní nádrž po Titanicu",
+            "publishedAt": "2026-05-09T11:53:43Z"
+          },
           {
             "title": "Čtyři vraždy stačí, drahoušku: Vynucené střízlivění v posteli, utajená bolest komisaře a rozkradené pásy",
             "publishedAt": "2026-05-09T10:20:15Z"
@@ -372,10 +379,6 @@
           {
             "title": "Zlatí úhoři: Vyhazov dětské hvězdy na příkaz shora, Menšíkovo utajené trápení a cizí hlas",
             "publishedAt": "2026-05-08T12:11:58Z"
-          },
-          {
-            "title": "Světáci: Nechtěné intimní odhalení Bohdalové, skutečný požár v restauraci a vtip, který musel pryč",
-            "publishedAt": "2026-05-08T10:44:05Z"
           }
         ]
       }

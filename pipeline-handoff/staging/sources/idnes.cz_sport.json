@@ -1,24 +1,50 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-09T11:24:03.395510Z",
+  "ingestedAt": "2026-05-09T11:59:43.670233Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Česko - Finsko 1:2. Hokejisté se drží na dostřel, Päivärintův gól neplatí",
-      "url": "https://www.idnes.cz/hokej/ms-2026/cesko-finsko-svedske-hry-online-zpravodajstvi-souhrn-priprava.A260508_195910_ms-hokej-2026_huda",
-      "dt": "2026-05-09T11:19:41Z",
+      "title": "ONLINE: Liverpool hraje s Chelsea, pak v akci United i Wolves. Večer City - Brentford",
+      "url": "https://www.idnes.cz/fotbal/zahranici/premier-league-36-kolo-zpravodajstvi-online-vysledky.A260509_084228_fot_zahranici_duff",
+      "dt": "2026-05-09T11:30:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "dostřel",
-        "drží",
+        "akci",
+        "brentford",
+        "chelsea",
+        "city",
+        "hraje",
+        "liverpool",
+        "pak",
+        "united",
+        "večer",
+        "wolves"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Česko - Finsko 2:2. Päivärintův gól neplatí, Tomášek vyrovnává",
+      "url": "https://www.idnes.cz/hokej/ms-2026/cesko-finsko-svedske-hry-online-zpravodajstvi-souhrn-priprava.A260508_195910_ms-hokej-2026_huda",
+      "dt": "2026-05-09T11:23:24Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
         "finsko",
         "gól",
-        "hokejisté",
         "neplatí",
         "päivärintův",
+        "tomášek",
+        "vyrovnává",
         "česko"
       ],
       "feedCategory": "sport",
@@ -761,32 +787,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Porazila všechny muže. K ultramaratonské výhře jí pomohla kaše a 19 minut spánku",
-      "url": "https://www.idnes.cz/sport/trendy/rachel-entrekinova-vyhra-ultramaraton-recept-na-uspech.A260508_095513_trendy_subt",
-      "dt": "2026-05-08T13:53:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "kaše",
-        "minut",
-        "muže",
-        "pomohla",
-        "porazila",
-        "spánku",
-        "ultramaratonské",
-        "výhře",
-        "všechny"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -797,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46590,
+      "bytes": 46314,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -834,7 +834,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-09T11:19:41Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T11:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -850,8 +850,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Česko - Finsko 1:2. Hokejisté se drží na dostřel, Päivärintův gól neplatí",
-            "publishedAt": "2026-05-09T11:19:41Z"
+            "title": "ONLINE: Liverpool hraje s Chelsea, pak v akci United i Wolves. Večer City - Brentford",
+            "publishedAt": "2026-05-09T11:30:00Z"
+          },
+          {
+            "title": "ONLINE: Česko - Finsko 2:2. Päivärintův gól neplatí, Tomášek vyrovnává",
+            "publishedAt": "2026-05-09T11:23:24Z"
           },
           {
             "title": "Slavia - Sparta živě v TV: kde sledovat derby, výsledky, historie, bilance",
@@ -876,10 +880,6 @@
           {
             "title": "Giro ONLINE: Nejzajímavější bulharská etapa. Do úniku se dostala pouze dvojice",
             "publishedAt": "2026-05-09T09:05:00Z"
-          },
-          {
-            "title": "Neřešil jsem, co hraju. Miluju fotbal, proto jsem až tady, říká Vacek před rozlučkou",
-            "publishedAt": "2026-05-09T09:00:00Z"
           }
         ]
       }
