@@ -37131,6 +37131,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     iuSilverCanonicalizeCalendarDejHodSchuzkaTitleV1(draft);
     iuSilverSplitCalendarSchuzkaNoteTailV2(draft);
     iuSilverCalendarFieldSplitterCleanupV2(draft, cleanupRawFull);
+    iuSilverCleanCalendarCreateTitleScheduledLeakStripP1(draft);
 
     let processingState = "NEEDS_CLARIFICATION";
     if (draft.meta.date === "certain" && draft.meta.time === "certain" && draft.meta.title === "certain" && String(draft.title || "").trim()) {
@@ -37523,6 +37524,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bnajdi\s+poznam/i.test(x)) return true;
     if (/\bukaz\s+poznam/i.test(x) || /uka[zž]\s+poznam/i.test(x)) return true;
     if (/\bco\s+mam\s+v\s+poznam/i.test(x) || /\bco\s+mame\s+v\s+poznam/i.test(x)) return true;
+    if (/\bjen\s+cti\b/.test(x) && /\bpoznamk/.test(x)) return true;
     if (/\bpodivej\b/.test(x) && /\b(do\s+poznamk|v\s+poznamkach)\b/i.test(x)) return true;
     return false;
   }
@@ -38406,6 +38408,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!s) return fb;
     const orig = s;
     const pats = [
+      /^\s*nezapome[nň]\s+mi\s+/iu,
+      /^\s*nezapomen\s+mi\s+/iu,
       /^\s*p[rř]ipome[nň]\s+mi\s+(?:že|ze)\s+/iu,
       /^\s*p[rř]ipome[nň]\s+(?:že|ze)\s+/iu,
       /^\s*p[rř]ipome[nň]\s+mi\s+/iu,
@@ -38436,6 +38440,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!f) return false;
     return (
       /\bpripomen\s+mi\b/.test(f) ||
+      /\bnezapomen\s+mi\b/.test(f) ||
+      /\bnezapome[nň]\s+mi\b/.test(f) ||
       /\bupominku\b/.test(f) ||
       /\bpripominku\b/.test(f)
     );
@@ -38455,6 +38461,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     let s = iuSilverNormalizeWs(String(titleIn || ""));
     if (!s) return fb200;
     const leadRemP1 = [
+      /^\s*nezapome[nň]\s+mi\s+/iu,
+      /^\s*nezapomen\s+mi\s+/iu,
       /^\s*ud[eě]lej\s+mi\s+upom[ií]nku\s+(?:že|ze)\s+/iu,
       /^\s*ud[eě]lej\s+mi\s+upom[ií]nku\s+/iu,
       /^\s*ud[eě]lej\s+mi\s+p[rř]ipom[ií]nku\s+(?:že|ze)\s+/iu,
@@ -41033,6 +41041,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bpojistk\w*\s+aut/.test(f) ||
       /\bwifi\b/.test(f) ||
       /\bheslo/.test(f) ||
+      /\bpin(?:u|a|em|y|e|i)?\b/.test(f) ||
       /\b(aut|aute|auta|autu|autem)\b/.test(f);
     const hasC =
       /\bm(am|ame)\s+uloz/i.test(f) ||
@@ -41047,7 +41056,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bmam\s+v\s+poznamk/.test(f) ||
       /\bmam\s+v\s+poznamk\w*\s+neco\b/.test(f) ||
       /\bmam\s+v\s+poznamk\w*\s+nejak/.test(f) ||
-      /\bmam\s+tam\s+nekde\s+v\s+poznamk/.test(f);
+      /\bmam\s+tam\s+nekde\s+v\s+poznamk/.test(f) ||
+      (/\bjen\s+cti\b/.test(f) && /\bpoznamk/.test(f)) ||
+      (/\bpouze\s+cti\b/.test(f) && /\bpoznamk/.test(f));
     if (/\bjakou\s+mam\s+velikost\s+bot\b/.test(f) && hasB) return true;
     if (hasA && hasB && hasC) return true;
     return false;
@@ -41630,6 +41641,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function stripNote(raw) {
     const patterns = [
+      /\s+a\s+pozn[aá]mk[aá]?\s+(.+)$/i,
       /\s+a\s+do\s+pozn[aá]m(?:ek|ky|ce)\b\s+mi\s+(?:dej|ulož|uloz|zapiš|zapis|přidej|pridej|hoď|hod)\s+(.+)$/i,
       /\s+k\s+tomu\s+do\s+pozn[aá]m(?:ek|ky|ce)\b\s+(?:dej|mi\s+dej|ulož|uloz|zapiš|zapis|přidej|pridej)\s+(.+)$/i,
       /\s+a\s+do\s+pozn[aá]m(?:ek|ky|ce)\b\s+(?:dej|ulož|uloz|zapiš|zapis|přidej|pridej|hoď|hod)\s+(.+)$/i,
@@ -41869,6 +41881,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           const num = String(m[2] || "").trim();
           if (!street || !num) return "";
           return street + " " + num + " Praha";
+        }
+      },
+      {
+        re: /\b(?:Korunn[ií]|Korunni)\s+(\d{1,4})(?:\s+Praha)?(?=\s+a\s+pozn|\s+a\s+poznam|\s+a\s+do\s+pozn|\s*,\s*ne\s+do\b|$|\.|!|\?)/iu,
+        locFrom: function (m) {
+          const num = String(m[1] || "").trim();
+          if (!num) return "";
+          return "Korunní " + num + " Praha";
         }
       },
       {
@@ -42877,7 +42897,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function iuSilverStripTimeTokensFromTitle(s) {
     let t = iuSilverNormalizeWs(s);
-    t = t.replace(/\b(?:ráno|dopoledne|odpoledne|večer|vecer)\b/gi, " ");
+    t = t.replace(/\b(?:ráno|rano|dopoledne|odpoledne|večer|vecer)\b/gi, " ");
     t = t.replace(/\b(?:v|ve)\s+\d{1,2}\s*:\s*\d{2}\b/gi, " ");
     t = t.replace(/\b\d{1,2}\s*:\s*\d{2}\b/g, " ");
     t = t.replace(/\b(?:v|ve)\s+\d{1,2}\b/gi, " ");
@@ -43281,6 +43301,44 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     out = iuSilverNormalizeWs(out);
     if (!iuSilverValidateFinalTitle(out)) return;
     draft.title = out;
+    draft.meta.title = "certain";
+  }
+
+  /**
+   * P1 narrow: calendar.create — po jistém datu/času odstranit z title zbylé datum/čas/adresa,
+   * jen když je vyplněná adresa a titulek vypadá jako událost (zubař/schůzka/…); žádný širší NLP.
+   */
+  function iuSilverCleanCalendarCreateTitleScheduledLeakStripP1(draft) {
+    if (!draft || draft.targetContainer !== "calendar") return;
+    if (draft.meta.title !== "certain") return;
+    const hasWhen = draft.meta.date === "certain" || draft.meta.time === "certain";
+    if (!hasWhen) return;
+    let t = String(draft.title || "").trim();
+    if (!t) return;
+    const addr = iuSilverNormalizeWs(String(draft.address || draft.location || "")).trim();
+    const hasAddr = addr.length >= 6;
+    const foldT = foldCs(t);
+    const entityCue =
+      /\bzubar\w*\b/.test(foldT) ||
+      /\bschuz\w*\b/.test(foldT) ||
+      /\b(porad|jednan|konzult|doktor|lekars|advokat|pravnik)\w*\b/.test(foldT);
+    if (!entityCue) return;
+    const addrLeak = hasAddr && /\b(korunn|korunni|praha)\b/.test(foldT);
+    const timeLeak =
+      /\b(zitr|stred|pondel|utery|ctvrtek|patek|sobot|nedele)\b/.test(foldT) ||
+      /\b(?:v|ve)\s+\d{1,2}\b/.test(foldT) ||
+      /\b(?:rano|dopoledne|odpoledne|vecer)\b/.test(foldT);
+    if (!addrLeak && !timeLeak) return;
+    let w = iuSilverStripDateTokensFromTitle(t);
+    w = iuSilverStripTimeTokensFromTitle(w);
+    if (hasAddr) {
+      w = w.replace(/\b(?:Korunn[ií]|Korunni|korunni)\s+\d{1,4}(?:\s+Praha)?\b/iu, " ");
+      w = w.replace(/\bPraha\b/iu, " ");
+    }
+    w = iuSilverNormalizeWs(w);
+    if (!iuSilverValidateFinalTitle(w)) return;
+    if (!w || w.length < 2) return;
+    draft.title = w.slice(0, 120);
     draft.meta.title = "certain";
   }
 
