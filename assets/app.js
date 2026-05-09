@@ -37926,6 +37926,35 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P1 messy_czech: „hoď mi tam mlíko“ → task.create (colloquial single-domain),
+   * bez STORAGE_DISAMBIGUATION. Tail se schůzkou/poradou/… přenechá kalendářním větvím;
+   * „hoď mi tam poznámku …“ řeší iuSilverTryParseExplicitNoteCreate (úzký pattern).
+   */
+  function iuSilverTryColloquialHodMiTamTaskCreateRawP1(rawIn, foldedIn) {
+    const raw0 = String(rawIn || "").trim();
+    const f = String(foldedIn || "");
+    if (!raw0 || !f) return "";
+    if (!/\bhod\s+mi\s+tam\b/.test(f)) return "";
+    const m = raw0.match(/^(?:hoď|hod)\s+mi\s+tam\s+(.+)$/iu);
+    if (!m) return "";
+    const tailRaw = String(m[1] || "").trim();
+    if (!tailRaw) return "";
+    const tailF = foldCs(tailRaw);
+    if (!tailF) return "";
+    if (/\bnic\s+neukladej\b/.test(tailF)) return "";
+    if (
+      /\bjen\s+(?:cti|cist|zjist|najdi|vypis|over)\w*\b/.test(tailF) ||
+      /\bpouze\s+(?:cti|zjist|najdi)\w*\b/.test(tailF) ||
+      /\bjen\s+se\s+podivej\b/.test(tailF)
+    ) {
+      return "";
+    }
+    if (iuSilverHasCalendarEventKeywordFolded(tailF)) return "";
+    if (iuSilverLooksLikeSchedulingFragment(tailF, tailRaw)) return "";
+    return tailRaw;
+  }
+
+  /**
    * P1 rcz_note_query_anchor_alias_fix: poznámkové read-kotvy (do/v/z poznám…, holé „poznamky“)
    * + dotazové sloveso (mrkni, koukni, podívej, najdi, zjisti, ukaž, co mám, kde mám) → notes.read před clarifikací.
    * Neplatí pro čisté „do úkolů“ / „v úkolech“ bez poznámkového ramene.
@@ -38141,6 +38170,28 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         noteBody: noteHit.body,
         calendarFallbackWanted: false
       };
+    }
+
+    {
+      const hodTamTaskRaw = iuSilverTryColloquialHodMiTamTaskCreateRawP1(raw, folded);
+      if (hodTamTaskRaw) {
+        const calOverHod = iuSilverCalendarEventOverridesTask(hodTamTaskRaw, foldCs(hodTamTaskRaw));
+        return {
+          intent: "task.create",
+          confidence: 0.97,
+          route: "tasks",
+          reason: "colloquial_hod_mi_tam_task_create_p1",
+          kind: "TASK_TRY",
+          taskRaw: hodTamTaskRaw,
+          taskOpts: {
+            skipTargetStrip: false,
+            calendarOverridesTask: !!calOverHod,
+            fromExplicitTarget: true,
+            titleCleanupFullRawGate: raw
+          },
+          calendarFallbackWanted: calWanted
+        };
+      }
     }
 
     if (iuSilverNotesFutureCandidate(folded)) {
@@ -39363,6 +39414,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /^dej\s+do\s+pozn[aá]m(?:ek|ky|ce)\b/i,
       /^hoď\s+mi\s+do\s+pozn[aá]m(?:ek|ky|ce)\b/i,
       /^hod\s+mi\s+do\s+pozn[aá]m(?:ek|ky|ce)\b/i,
+      /^hoď\s+mi\s+tam\s+pozn[aá]mk[auoy]?\b/i,
+      /^hod\s+mi\s+tam\s+pozn[aá]mk[auoy]?\b/i,
       /^hoď\s+do\s+pozn[aá]m(?:ek|ky|ce)\b/i,
       /^hod\s+do\s+pozn[aá]m(?:ek|ky|ce)\b/i,
       /^p[rř]idej\s+mi\s+do\s+pozn[aá]m(?:ek|ky|ce)\b/i,
@@ -46164,6 +46217,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     iuSilverBrainRoute: iuSilverBrainRoute,
     iuSilverExplicitCalendarCreateAnchorP1Folded: iuSilverExplicitCalendarCreateAnchorP1Folded,
     iuSilverExplicitTaskCreateAnchorP1Folded: iuSilverExplicitTaskCreateAnchorP1Folded,
+    iuSilverTryColloquialHodMiTamTaskCreateRawP1: iuSilverTryColloquialHodMiTamTaskCreateRawP1,
     iuSilverExplicitNoteQueryAnchorP1Folded: iuSilverExplicitNoteQueryAnchorP1Folded,
     iuSilverIsBirthdayReminderIntentV1: iuSilverIsBirthdayReminderIntentV1,
     iuSilverExtractEntities: iuSilverExtractEntities,
