@@ -1,0 +1,100 @@
+{
+  "harness_id": "silver_next_product_priority_diagnostic_v1",
+  "main_commit": "4f57247312a3dd32e2868b6728c502e0040a1362",
+  "fixed_now_iso": "2026-05-04T12:00:00",
+  "cases_total": 15,
+  "cases_pass": 8,
+  "cases_fail": 7,
+  "accuracy": "53.33",
+  "retrieval_relevance_accuracy": "80.00",
+  "ambiguous_command_accuracy": "33.33",
+  "update_vs_create_accuracy": "100.00",
+  "messy_czech_accuracy": "0.00",
+  "dangerous_write_count": 0,
+  "false_write_count": 0,
+  "query_created_write_count": 0,
+  "write_when_negated_count": 0,
+  "top_10_fail_clusters": [
+    "messy_czech|intent_fail=3",
+    "ambiguous_command|calendar_vs_task_confusion=2",
+    "retrieval_relevance|intent_fail=1",
+    "messy_czech|unnecessary_disambiguation=1"
+  ],
+  "top_10_root_causes": [
+    "routing_or_intent_mismatch=4",
+    "calendar_vs_task_confusion=2",
+    "over_disambiguation_on_clear_utterance=1"
+  ],
+  "highest_impact_safe_fix": "Tighten routing for colloquial Czech query vs write cues",
+  "recommended_next_cluster": "messy_czech|intent_fail",
+  "recommended_next_fix_scope": "assets/app.js intent classifier + disambiguation thresholds",
+  "fails": [
+    {
+      "id": "rr_doktor_past",
+      "slice": "retrieval_relevance",
+      "input": "Kdy jsem měl doktora?",
+      "cat": "intent_fail",
+      "auditIntent": "unknown",
+      "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
+      "root_cause_guess": "routing_or_intent_mismatch"
+    },
+    {
+      "id": "amb_kytky",
+      "slice": "ambiguous_command",
+      "input": "Kdy mám koupit kytky?",
+      "cat": "calendar_vs_task_confusion",
+      "auditIntent": "calendar.query",
+      "raw": "Nic jsem k tomu nenašel.",
+      "root_cause_guess": "calendar_vs_task_confusion"
+    },
+    {
+      "id": "amb_mama_week",
+      "slice": "ambiguous_command",
+      "input": "V tejdnu zavolat mámě.",
+      "cat": "calendar_vs_task_confusion",
+      "auditIntent": "task.create",
+      "raw": "Připravil jsem návrh úkolu.",
+      "root_cause_guess": "calendar_vs_task_confusion"
+    },
+    {
+      "id": "mc_zejtra_pravnik",
+      "slice": "messy_czech",
+      "input": "vole zejtra právník",
+      "cat": "intent_fail",
+      "auditIntent": "unknown",
+      "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
+      "root_cause_guess": "routing_or_intent_mismatch"
+    },
+    {
+      "id": "mc_hod_mliko",
+      "slice": "messy_czech",
+      "input": "hoď mi tam mlíko",
+      "cat": "unnecessary_disambiguation",
+      "auditIntent": "task.create",
+      "raw": "Kam to chceš uložit?",
+      "root_cause_guess": "over_disambiguation_on_clear_utterance"
+    },
+    {
+      "id": "mc_mrknout_pravnik",
+      "slice": "messy_czech",
+      "input": "mrkni právník",
+      "cat": "intent_fail",
+      "auditIntent": "unknown",
+      "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
+      "root_cause_guess": "routing_or_intent_mismatch"
+    },
+    {
+      "id": "mc_ucetni",
+      "slice": "messy_czech",
+      "input": "kde mám účetní",
+      "cat": "intent_fail",
+      "auditIntent": "unknown",
+      "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
+      "root_cause_guess": "routing_or_intent_mismatch"
+    }
+  ],
+  "engine_changed": "NO",
+  "behavior_changed": "NO",
+  "changed_files": "scripts/silver-next-product-priority-diagnostic.cjs;scripts/silver-next-product-priority-diagnostic-report.json",
+  "git_status_clean": "YES"
+}
