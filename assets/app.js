@@ -38062,6 +38062,30 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   // IU_SILVER_TASK_TITLE_LEAF_P0_END
 
   /**
+   * P2 Silver: měkký cap titulku na hranici slova (audit title_len_gt_100).
+   * Při nejistotě vrátí safeFallback (původní očištěný text před řezem).
+   */
+  function iuSilverTitleSoftCapAtWordBoundaryP2(s, maxLen, safeFallback) {
+    const orig = iuSilverNormalizeWs(String(s != null ? s : ""));
+    const fb = iuSilverNormalizeWs(String(safeFallback != null ? safeFallback : orig));
+    if (!orig || orig.length <= maxLen) return orig;
+    const head = orig.slice(0, maxLen);
+    const sp = head.lastIndexOf(" ");
+    const minWord = Math.max(12, Math.floor(maxLen * 0.28));
+    let out = "";
+    if (sp >= minWord) out = orig.slice(0, sp).trim();
+    if (!out || out.length < 5) {
+      const sp2 = orig.indexOf(" ", maxLen);
+      if (sp2 > maxLen && sp2 < orig.length) out = orig.slice(0, sp2).trim();
+    }
+    if (!out || out.length < 5) out = head.trim();
+    out = out.replace(/[,:;\-–]+$/u, "").trim();
+    if (!out || out.length < 5) return fb.length <= maxLen ? fb : iuSilverNormalizeWs(fb.slice(0, maxLen));
+    if (out.length > maxLen) return fb.length <= maxLen ? fb : iuSilverNormalizeWs(fb.slice(0, maxLen));
+    return iuSilverNormalizeWs(out);
+  }
+
+  /**
    * P0 Silver v1: úzké čištění titulku jen pro task.create (dirty_title|task_write).
    * Musí projít stejným titleCleanForDraft gate jako audit (TITLE_POLLUTION_RE + max 100 znaků).
    */
@@ -38110,7 +38134,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     s = s.charAt(0).toLocaleUpperCase("cs-CZ") + s.slice(1);
     let out = iuSilverNormalizeWs(s);
     if (IU_SILVER_TASK_TITLE_POLLUTION_AUDIT_RE.test(foldCs(out))) out = fb;
-    if (out.length > 100) out = out.slice(0, 100).trim();
+    if (out.length > 100) out = iuSilverTitleSoftCapAtWordBoundaryP2(out, 100, out);
     if (!out || out.length < 2) return fb.slice(0, 200);
     if (IU_SILVER_TASK_TITLE_POLLUTION_AUDIT_RE.test(foldCs(out))) return fb.slice(0, 200);
     out = out.replace(/[.!?…]+$/u, "").trim();
@@ -38183,7 +38207,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!out || String(out).trim().length < 2) out = fb;
     out = iuSilverNormalizeWs(String(out || ""));
     if (IU_SILVER_TASK_TITLE_POLLUTION_AUDIT_RE.test(foldCs(out))) out = fb;
-    if (out.length > 100) out = out.slice(0, 100).trim();
+    if (out.length > 100) out = iuSilverTitleSoftCapAtWordBoundaryP2(out, 100, out);
     if (!out || out.length < 2) return fb.slice(0, 200);
     if (IU_SILVER_TASK_TITLE_POLLUTION_AUDIT_RE.test(foldCs(out))) return fb.slice(0, 200);
     out = out.replace(/[.!?…]+$/u, "").trim();
@@ -38236,7 +38260,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     let out = iuSilverFinalizeTaskTitle(s);
     if (!out || String(out).trim().length < 2) return fb0.slice(0, 200);
     if (IU_SILVER_TASK_TITLE_POLLUTION_AUDIT_RE.test(foldCs(out))) return fb0.slice(0, 200);
-    if (out.length > 100) out = out.slice(0, 100).trim();
+    if (out.length > 100) out = iuSilverTitleSoftCapAtWordBoundaryP2(out, 100, out);
     if (!out || out.length < 2) return fb0.slice(0, 200);
     out = out.replace(/[.!?…]+$/u, "").trim();
     if (!out || out.length < 2) return fb0.slice(0, 200);
@@ -38663,7 +38687,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!out || String(out).trim().length < 2) out = fb200;
     out = iuSilverNormalizeWs(String(out || ""));
     if (IU_SILVER_TASK_TITLE_POLLUTION_AUDIT_RE.test(foldCs(out))) out = fb200;
-    if (out.length > 100) out = out.slice(0, 100).trim();
+    if (out.length > 100) out = iuSilverTitleSoftCapAtWordBoundaryP2(out, 100, out);
     if (!out || out.length < 2) return fb200;
     if (IU_SILVER_TASK_TITLE_POLLUTION_AUDIT_RE.test(foldCs(out))) return fb200;
     out = out.replace(/[.!?…]+$/u, "").trim();
@@ -38907,6 +38931,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (b0) return { kind: "body", body: b0 };
     }
     const patterns = [
+      /^(?:pros[ií]m|prosim)\s+ul[oó][zž](?:te)?\s+mi\s+pozn[aá]mku\b/i,
+      /^(?:pros[ií]m|prosim)\s+uloz\s+mi\s+poznamku\b/i,
       /^[zn]api[sš]\s+si\s+do\s+pozn[aá]m(?:ek|ky|ce)\b/i,
       /^[zn]api[sš]\s+si\s+že\b/i,
       /^pozn[aá]mk[ay]\s*:/i,
@@ -43221,6 +43247,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
    */
   function normalizeSilverTitleV1(title, context) {
     const kind = context && context.kind ? String(context.kind) : "";
+    const kindLower = kind.toLowerCase();
     const original = String(title || "").trim();
     if (!original) return original;
     let work = iuSilverNormalizeWs(original);
@@ -43229,13 +43256,57 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       work = work.replace(/^\s*(že|ze)\s+(?:mám|mam)\s+/i, "").trim();
       work = iuSilverNormalizeWs(work);
     }
-    const phraseRes = [
+
+    const phraseResPre = [];
+    if (kindLower === "calendar") {
+      phraseResPre.push(
+        /^(pros[ií]m|prosim)\s+zapi[sš]\s+mi\s+do\s+kalend[aá]r\w*\s+/iu,
+        /^(pros[ií]m|prosim)\s+zapis\s+mi\s+do\s+kalendare\s+/iu,
+        /^(pros[ií]m|prosim)\s+ul[oó][zž]\s+mi\s+do\s+kalend[aá]r\w*\s+/iu,
+        /^(pros[ií]m|prosim)\s+uloz\s+mi\s+do\s+kalendare\s+/iu,
+        /^(pros[ií]m|prosim)\s+dej\s+mi\s+do\s+kalend[aá]r\w*\s+/iu,
+        /^(napi[sš]|napis)\s+mi\s+do\s+kalend[aá]r\w*\s+/iu,
+        /^(ulo[zž]|uloz)\s+mi\s+do\s+kalend[aá]r\w*\s+/iu,
+        /^zapi[sš]\s+mi\s+do\s+kalend[aá]r\w*\s+/iu,
+        /^dej\s+mi\s+do\s+kalend[aá]r\w*\s+/iu
+      );
+    } else if (kindLower === "note") {
+      phraseResPre.push(
+        /^(pros[ií]m|prosim)\s+ul[oó][zž]\s+mi\s+pozn[aá]m(?:ek|ky|ce)\s+/iu,
+        /^(pros[ií]m|prosim)\s+uloz\s+mi\s+poznam(?:ku|ce|ek)\s+/iu,
+        /^(pros[ií]m|prosim)\s+napi[sš]\s+mi\s+pozn[aá]m(?:ek|ky|ce)\s+/iu,
+        /^(pros[ií]m|prosim)\s+napis\s+mi\s+poznam(?:ku|ce|ek)\s+/iu,
+        /^(pros[ií]m|prosim)\s+zapi[sš]\s+mi\s+pozn[aá]m(?:ek|ky|ce)\s+/iu,
+        /^(pros[ií]m|prosim)\s+zapis\s+mi\s+poznam(?:ku|ce|ek)\s+/iu,
+        /^(pros[ií]m|prosim)\s+zapi[sš]\s+pozn[aá]m(?:ek|ky|ce)\s+/iu,
+        /^(pros[ií]m|prosim)\s+zapis\s+poznam(?:ku|ce|ek)\s+/iu,
+        /^ul[oó][zž]\s+mi\s+pozn[aá]m(?:ek|ky|ce)\s+/iu,
+        /^uloz\s+mi\s+poznam(?:ku|ce|ek)\s+/iu,
+        /^nap[ií][sš]\s+mi\s+pozn[aá]m(?:ek|ky|ce)\s+/iu,
+        /^napis\s+mi\s+poznam(?:ku|ce|ek)\s+/iu
+      );
+    } else if (kindLower === "task") {
+      phraseResPre.push(
+        /^((?:pros[ií]m|prosim)\s*[,;:]?\s*){2,24}/iu,
+        /^dej\s+mi\s+(?:[uú]kol\w*\s*)?(?:p[rř]ipome[nň]|pripomen)out\s+/iu,
+        /^dej\s+mi\s+(?:[uú]kol\w*\s*)?/iu,
+        /^(napi[sš]|napis)\s+mi\s+(?:[uú]kol\w*\s*)?(?:task\s*)?/iu,
+        /^ul[oó][zž]\s+mi\s+(?:[uú]kol\w*\s*)?/iu,
+        /^zapi[sš]\s+mi\s+(?:[uú]kol\w*\s*)?/iu,
+        /^(p[rř]ipome[nň]|pripomen)\s+mi\s+(?:[uú]kol\w*\s*)?/iu,
+        /^\s*nezapome[nň]\s+mi\s+/iu,
+        /^\s*nezapomen\s+mi\s+/iu,
+        /^\s*(?:task|tasks)\s+/iu
+      );
+    }
+
+    const phraseRes = phraseResPre.concat([
       /^(pros[ií]m|prosim)\s+(ho[dď]|hod)\s+mi\s+/iu,
       /^(pros[ií]m|prosim)\s+(ho[dď]|hod)\s+/iu,
       /^(ho[dď]|hod)\s+mi\s+/iu,
       /^(napi[sš]|napis)\s+si\s+/iu,
       /^(ulo[zž]|uloz)\s+si\s+/iu
-    ];
+    ]);
     const singleRes = [
       /^(pros[ií]m|prosim)\s+/iu,
       /^(ho[dď]|hod)\s+/iu,
@@ -43244,6 +43315,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /^\s*mi\s+/iu,
       /^\s*si\s+/iu
     ];
+    if (kindLower === "calendar") {
+      singleRes.push(/^do\s+kalend[aá]r\w*\s+/iu, /^do\s+kalendare\s+/iu);
+    }
     for (let round = 0; round < 24; round++) {
       const prev = work;
       let pi = 0;
@@ -43257,8 +43331,38 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       work = iuSilverNormalizeWs(work);
       if (work === prev) break;
     }
+
+    if (kindLower === "calendar") {
+      for (let pepoR = 0; pepoR < 8; pepoR++) {
+        const prevPepo = work;
+        work = work
+          .replace(/\bpepo\s*,\s*pros[ií]m\s+na\s+/giu, "Pepo, ")
+          .replace(/\bpepo\s*,\s*prosim\s+na\s+/giu, "Pepo, ");
+        work = iuSilverNormalizeWs(work);
+        if (work === prevPepo) break;
+      }
+      for (let calR = 0; calR < 16; calR++) {
+        const prevCal = work;
+        work = work
+          .replace(/^(z[ií]tra|zitra|dnes|poz[ií]t[rř]i)\s+v\s+\d{1,2}(?:\s*[:.]?\s*\d{0,2})?\s+/iu, "")
+          .trim();
+        work = work
+          .replace(/^(z[ií]tra|zitra|dnes)\s+(?:v\s+)?(?:r[aá]no|dopoledne|odpoledne|ve[eč]er|vecer)\s+/iu, "")
+          .trim();
+        work = iuSilverNormalizeWs(work);
+        if (work === prevCal) break;
+      }
+    }
+
     const folded = foldCs(work);
     if (!folded || folded.length < 2) return original;
+    if (kindLower === "task" || kindLower === "calendar") {
+      if (work.length > 100) {
+        const capped = iuSilverTitleSoftCapAtWordBoundaryP2(work, 100, work);
+        const foldCap = foldCs(capped);
+        if (foldCap && foldCap.length >= 2) work = capped;
+      }
+    }
     return work;
   }
 
