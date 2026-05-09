@@ -257,13 +257,49 @@ async function runCalendarSilverSurface(page) {
   await page.fill("#iuSilverHomeInput", phrase);
   await page.click("#iuSilverHomeSend");
   await page.waitForSelector("#iuSilverChatOverlay:not([hidden])", { timeout: 60000 });
-  await page.waitForSelector('[data-iu-silver-storage-disambiguation="1"]', { timeout: 30000 });
+  /**
+   * Phrase "Ulož zítra v 11 schůzka zubař" may route either to:
+   * - STORAGE_DISAMBIGUATION (storage chooser), or
+   * - direct calendar.create (P1 explicit calendar anchor: schůzka + zítra) with event draft card.
+   * Wait for a single stable outcome; do not assume disambiguation always appears.
+   */
+  await page.waitForFunction(
+    () => {
+      if (document.querySelector('[data-iu-silver-storage-disambiguation="1"]')) return true;
+      const cards = document.querySelectorAll('[data-iu-silver-draft-card="1"]');
+      for (let i = 0; i < cards.length; i++) {
+        const c = cards[i];
+        const k = c.getAttribute("data-iu-silver-draft-kind");
+        if (k === "note" || k === "task") continue;
+        return true;
+      }
+      return false;
+    },
+    null,
+    { timeout: 30000 }
+  );
 
   const disambig = await page.evaluate(() => {
+    const dis = document.querySelector('[data-iu-silver-storage-disambiguation="1"]');
     const btn = document.querySelector('[data-iu-silver-action="storage-calendar"]');
+    let calendarDraftEl = null;
+    const cards = document.querySelectorAll('[data-iu-silver-draft-card="1"]');
+    for (let i = 0; i < cards.length; i++) {
+      const c = cards[i];
+      const k = c.getAttribute("data-iu-silver-draft-kind");
+      if (k === "note" || k === "task") continue;
+      calendarDraftEl = c;
+      break;
+    }
+    const mode = dis ? "storage_disambiguation" : calendarDraftEl ? "calendar_draft_direct" : "unknown";
+    const saveInDraft =
+      !!calendarDraftEl && !!(calendarDraftEl.querySelector && calendarDraftEl.querySelector('[data-iu-silver-action="save"]'));
     return {
+      mode,
       calendarButtonFound: !!btn,
       inDisambigCard: !!(btn && btn.closest && btn.closest("[data-iu-silver-storage-disambiguation=\"1\"]")),
+      calendarDraftFound: !!calendarDraftEl,
+      calendarDraftHasSave: saveInDraft,
     };
   });
 
@@ -370,8 +406,14 @@ async function main() {
       await pCal.close();
 
       if (cal && cal.error) fails.push(cal.error);
-      if (cal && cal.disambig && !cal.disambig.calendarButtonFound) {
+      if (cal && cal.disambig && cal.disambig.mode === "storage_disambiguation" && !cal.disambig.calendarButtonFound) {
         fails.push("Silver storage-calendar control not found after disambiguation flow");
+      }
+      if (cal && cal.disambig && cal.disambig.mode === "calendar_draft_direct" && !cal.disambig.calendarDraftHasSave) {
+        fails.push("Silver calendar draft surface missing save control after direct routing");
+      }
+      if (cal && cal.disambig && cal.disambig.mode === "unknown") {
+        fails.push("Silver calendar surface: neither storage disambiguation nor calendar draft appeared");
       }
 
       console.log(JSON.stringify({ calendarSilverSurface: cal }));
