@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-09T15:34:32.879435Z",
+  "ingestedAt": "2026-05-09T16:54:10.796840Z",
   "items": [
     {
       "section": "finance",
@@ -446,6 +446,36 @@
         "ukázal",
         "vzpruha",
         "zemského"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Děti? Nebereme. Sehnat dětského zubaře je nadlidský úkol, lékaři je odmítají i kvůli garantované péči zdarma",
+      "url": "https://domaci.hn.cz/c1-67874840-deti-nebereme-sehnat-detskeho-zubare-je-nadlidsky-ukol-lekari-je-odmitaji-i-kvuli-garantovane-peci-zdarma",
+      "dt": "2026-05-07T11:32:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "děti",
+        "dětského",
+        "garantované",
+        "kvůli",
+        "lékaři",
+        "nadlidský",
+        "nebereme",
+        "odmítají",
+        "péči",
+        "sehnat",
+        "zdarma",
+        "zubaře",
+        "úkol"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1110,36 +1140,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Týden s technologiemi: Apple se připravuje na otevřenou budoucnost s AI, mezitím však zaplatí 250 milionů dolarů za zpoždění",
-      "url": "https://archiv.hn.cz/c1-67874490-tyden-s-technologiemi-apple-se-pripravuje-na-otevrenou-budoucnost-s-ai-mezitim-vsak-zaplati-250-milionu-dolaru-za-zpozdeni",
-      "dt": "2026-05-06T15:14:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "250",
-        "apple",
-        "budoucnost",
-        "dolarů",
-        "mezitím",
-        "milionů",
-        "otevřenou",
-        "připravuje",
-        "technologiemi",
-        "týden",
-        "však",
-        "zaplatí",
-        "zpoždění"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1150,7 +1150,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184494,
+      "bytes": 184557,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1190,9 +1190,9 @@
         "raw_feed_latest_publishedAt": "2026-05-09T10:21:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 34,
+          "finance": 33,
           "zpravy": 3,
-          "zdravi": 3
+          "zdravi": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-09T15:34:32.879435Z",
+  "ingestedAt": "2026-05-09T16:54:10.796840Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Větrníky bez souhlasu obcí? Starostové chystají proti vládním zónám masivní odpor",
+      "url": "https://ekonomickydenik.cz/starostove-chystaji-proti-akceleracnim-zonam-odpor/",
+      "dt": "2026-05-09T16:04:42Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "chystají",
+        "masivní",
+        "obcí",
+        "odpor",
+        "proti",
+        "souhlasu",
+        "starostové",
+        "vládním",
+        "větrníky",
+        "zónám"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -752,34 +779,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nová éra Teplárny Malešice? Křetínského firma chce v Praze postavit velkou elektrárnu",
-      "url": "https://ekonomickydenik.cz/nova-era-teplarny-malesice-paroplynova-elektrarna/",
-      "dt": "2026-05-07T08:34:41Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "chce",
-        "elektrárnu",
-        "firma",
-        "křetínského",
-        "malešice",
-        "nová",
-        "postavit",
-        "praze",
-        "teplárny",
-        "velkou",
-        "éra"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74220,
+      "bytes": 73938,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,12 +826,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-09T14:24:58Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T16:04:42Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 25,
-          "zpravy": 4,
-          "zdravi": 1
+          "finance": 26,
+          "zpravy": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -844,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Větrníky bez souhlasu obcí? Starostové chystají proti vládním zónám masivní odpor",
+            "publishedAt": "2026-05-09T16:04:42Z"
+          },
           {
             "title": "Fico opět jako jediný lídr z EU v Moskvě: S Putinem jednal o energiích",
             "publishedAt": "2026-05-09T14:24:58Z"
@@ -871,10 +873,6 @@
           {
             "title": "Otevřená záležitost. Tahanice o automobily v centru metropole nekončí",
             "publishedAt": "2026-05-09T08:20:00Z"
-          },
-          {
-            "title": "Majitelé fotovoltaik z let boomu teď vydělávají nejvíc. Do 5 let o štědré dotace přijdou",
-            "publishedAt": "2026-05-09T04:15:00Z"
           }
         ]
       }
