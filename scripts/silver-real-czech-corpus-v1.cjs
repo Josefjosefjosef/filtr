@@ -86,6 +86,7 @@ function gitTrackedClean() {
       "scripts/silver-quality-v2-report.json",
       "scripts/silver-real-ux-v1-report.json",
       "scripts/silver-real-czech-corpus-v1.cjs",
+      "scripts/silver-real-czech-corpus-v1-cluster-diagnostic.cjs",
       "scripts/silver-real-czech-corpus-v1-report.json",
       "assets/app.js"
     ];
