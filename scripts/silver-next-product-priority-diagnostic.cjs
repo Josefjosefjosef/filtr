@@ -13,6 +13,7 @@ const REPO = path.resolve(__dirname, "..");
 const HARNESS_ID = "silver_next_product_priority_diagnostic_v1";
 const FIXED_NOW_ISO = "2026-05-04T12:00:00";
 const REPORT_JSON = path.join(__dirname, "silver-next-product-priority-diagnostic-report.json");
+const VAGUE_TIME_REPORT_JSON = path.join(__dirname, "silver-calendar-vs-task-vague-time-diagnostic-report.json");
 
 const harness = require("./audit_silver_realistic_mobile_corpus.cjs");
 const { loadEngine, evaluateOne, foldCs, rawUserMessage, hasNegWrite } = harness;
@@ -541,6 +542,195 @@ function gitStatusClean() {
   }
 }
 
+/**
+ * P1 slice: ambiguous_command|calendar_vs_task_confusion → product_subcluster calendar_vs_task_vague_time only.
+ * Policy readout (harness + engine); no app.js edits.
+ */
+function runCalendarVsTaskVagueTimeDiagnostic() {
+  const gitCleanBeforeRun = gitStatusClean();
+  let eng;
+  try {
+    eng = loadEngine();
+  } catch (e) {
+    console.log(String(e && e.message));
+    process.exit(1);
+  }
+
+  const vagueIds = { amb_kytky: true, amb_mama_week: true };
+  const cases = buildCases().filter((c) => vagueIds[c.id]);
+  const policyTally = {};
+  let dangerousWriteCount = 0;
+  let falseWriteCount = 0;
+  let queryCreatedWriteCount = 0;
+  let writeWhenNegatedCount = 0;
+  let cases_calendar_wrong = 0;
+  let cases_task_wrong = 0;
+  let cases_correct_clarification = 0;
+  let safety_risk_count = 0;
+  const detailRows = [];
+
+  for (let ci = 0; ci < cases.length; ci++) {
+    const c = cases[ci];
+    const pk = String(c.expectedIntent || "missing");
+    policyTally[pk] = (policyTally[pk] || 0) + 1;
+    try {
+      if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
+    } catch {}
+    const empty = eng.createEmptyDraft();
+    const turn = eng.processUserTurn(c.input, empty, ctxForDiagnostic(c));
+    const foldedIn = foldCs(c.input);
+    const engN = turn.normalizedIntent;
+    const psN = turn.processingState;
+    const createLike =
+      psN === "READY_TO_SAVE" || engN === "calendar.create" || engN === "tasks.create" || engN === "notes.create";
+
+    const harnessCase = {
+      id: c.id,
+      group: c.group,
+      input: c.input,
+      expectedIntent: c.expectedIntent,
+      meta: c.meta || {}
+    };
+    let ev = evaluateOne(harnessCase, turn);
+
+    if (
+      !ev.pass &&
+      c.group.indexOf("_query") >= 0 &&
+      (ev.cat === "query_created_write" || ev.cat === "negative_instruction_fail")
+    ) {
+      falseWriteCount++;
+    }
+    if (hasNegWrite(foldedIn) && createLike) {
+      writeWhenNegatedCount++;
+    }
+    if (ev.cat === "query_created_write") {
+      queryCreatedWriteCount++;
+      dangerousWriteCount++;
+    }
+    if (ev.cat === "negative_instruction_fail") {
+      dangerousWriteCount++;
+    }
+
+    const sr = classifySafetyRisk(ev.cat);
+    safety_risk_count += sr.count;
+
+    if (!ev.pass && ev.cat === "calendar_vs_task_confusion") {
+      if (engN === "calendar.read" || engN === "calendar.create") {
+        cases_calendar_wrong++;
+      }
+      if (engN === "tasks.read" || engN === "tasks.create") {
+        cases_task_wrong++;
+      }
+    }
+
+    const deepRow = deepEnrichOne(c, turn, ev);
+    if (deepRow.is_correct_clarification === "YES") {
+      cases_correct_clarification++;
+    }
+
+    detailRows.push({
+      id: c.id,
+      input: c.input,
+      group: c.group,
+      expectedIntent: c.expectedIntent,
+      pass: ev.pass,
+      cat: ev.cat,
+      normalizedIntent: engN,
+      processingState: psN,
+      auditIntent: ev.auditIntent,
+      product_subcluster: deepRow.product_subcluster,
+      is_correct_clarification: deepRow.is_correct_clarification,
+      safety_risk: deepRow.safety_risk
+    });
+  }
+
+  const policyParts = Object.keys(policyTally)
+    .sort()
+    .map((k) => k + "=" + policyTally[k]);
+  const cases_by_expected_policy = policyParts.join(";");
+
+  const recommended_policy =
+    "clarification_primary;harness_expectedIntent_unknown;detectCollectionConfusion_FAIL_on_cross_collection " +
+    "(task_query+calendar.read|calendar_write+tasks.create);not_harness_bug;" +
+    "optional_product_split_later=task.read_for_deadline_shopping_vs_calendar.create_for_week_window_via_disambiguation_not_broad_classifier";
+
+  const recommended_next_cluster = "messy_czech|intent_fail";
+  const recommended_next_fix_scope =
+    "After policy lock: minimal assets/app.js calendar_vs_task_router slice for vague-time Czech; keep harness unknown unless product re-labels expectedIntent per case";
+
+  const changed_files =
+    "scripts/silver-next-product-priority-diagnostic.cjs;scripts/silver-calendar-vs-task-vague-time-diagnostic-report.json";
+
+  const reportObj = {
+    harness_slice: "ambiguous_command|calendar_vs_task_confusion",
+    product_subcluster: "calendar_vs_task_vague_time",
+    main_commit: mainCommit(),
+    fixed_now_iso: FIXED_NOW_ISO,
+    cases_total: cases.length,
+    cases_by_expected_policy: cases_by_expected_policy,
+    cases_calendar_wrong,
+    cases_task_wrong,
+    cases_correct_clarification,
+    safety_risk_count,
+    recommended_policy,
+    recommended_next_cluster,
+    recommended_next_fix_scope,
+    dangerous_write_count: dangerousWriteCount,
+    false_write_count: falseWriteCount,
+    query_created_write_count: queryCreatedWriteCount,
+    write_when_negated_count: writeWhenNegatedCount,
+    engine_changed: "NO",
+    behavior_changed: "NO",
+    changed_files,
+    git_status_clean: gitCleanBeforeRun,
+    cases: detailRows
+  };
+
+  fs.writeFileSync(VAGUE_TIME_REPORT_JSON, JSON.stringify(reportObj, null, 2), "utf8");
+  const gitStatusAfterWrite = gitStatusClean();
+  reportObj.git_status_clean = gitStatusAfterWrite;
+  fs.writeFileSync(VAGUE_TIME_REPORT_JSON, JSON.stringify(reportObj, null, 2), "utf8");
+
+  const block = [
+    "=== SILVER_CALENDAR_VS_TASK_VAGUE_TIME_DIAGNOSTIC_RESULT ===",
+    "main_commit=" + reportObj.main_commit,
+    "changed_files=" + changed_files,
+    "engine_changed=NO",
+    "behavior_changed=NO",
+    "",
+    "cases_total=" + cases.length,
+    "cases_by_expected_policy=" + cases_by_expected_policy,
+    "cases_calendar_wrong=" + cases_calendar_wrong,
+    "cases_task_wrong=" + cases_task_wrong,
+    "cases_correct_clarification=" + cases_correct_clarification,
+    "safety_risk_count=" + safety_risk_count,
+    "",
+    "recommended_policy=" + recommended_policy,
+    "recommended_next_cluster=" + recommended_next_cluster,
+    "recommended_next_fix_scope=" + recommended_next_fix_scope,
+    "",
+    "dangerous_write_count=" + dangerousWriteCount,
+    "false_write_count=" + falseWriteCount,
+    "query_created_write_count=" + queryCreatedWriteCount,
+    "write_when_negated_count=" + writeWhenNegatedCount,
+    "",
+    "git_status_clean=" + gitStatusAfterWrite,
+    "======= END_SILVER_CALENDAR_VS_TASK_VAGUE_TIME_DIAGNOSTIC_RESULT ==="
+  ].join("\n");
+
+  console.log(block);
+
+  try {
+    execSync('powershell.exe -NoProfile -Command "[console]::beep(880,250)"', {
+      cwd: REPO,
+      stdio: "ignore",
+      windowsHide: true
+    });
+  } catch {
+    /* beep is best-effort */
+  }
+}
+
 function main() {
   const gitCleanBeforeRun = gitStatusClean();
   let eng;
@@ -849,4 +1039,10 @@ function main() {
   }
 }
 
-main();
+if (require.main === module) {
+  if (process.argv.indexOf("--calendar-vs-task-vague-time") >= 0) {
+    runCalendarVsTaskVagueTimeDiagnostic();
+  } else {
+    main();
+  }
+}
