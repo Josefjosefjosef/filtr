@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-09T05:35:24.237555Z",
+  "ingestedAt": "2026-05-09T06:19:53.560223Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Bez traséra bych nedojela do cíle. Co o sobě prozradila hvězda parasportu?",
+      "url": "https://www.idnes.cz/sport/ostatni/simona-bubenickova-netradicni-rozhovor.A260508_071955_sporty_pls",
+      "dt": "2026-05-09T06:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bych",
+        "cíle",
+        "hvězda",
+        "nedojela",
+        "parasportu",
+        "prozradila",
+        "sobě",
+        "traséra"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Dobeš se radoval na ledě Buffala, Dostála naopak Vegas vyhnalo z brány",
+      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-dobes-dostal.A260509_072019_nhl_mkr",
+      "dt": "2026-05-09T05:59:40Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "brány",
+        "buffala",
+        "dobeš",
+        "dostála",
+        "ledě",
+        "naopak",
+        "radoval",
+        "vegas",
+        "vyhnalo"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -733,58 +784,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rulík si pochvaloval obrannou práci. Zastal se i chybujícího Klapky: Příště si dá pozor",
-      "url": "https://www.idnes.cz/hokej/ms-2026/trener-rulik-svedske-hry-eht-cesko-svedsko.A260508_000904_ms-hokej-2026_kazdt",
-      "dt": "2026-05-08T06:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "chybujícího",
-        "klapky",
-        "obrannou",
-        "pochvaloval",
-        "pozor",
-        "práci",
-        "příště",
-        "rulík",
-        "zastal"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Jízda Caroliny pokračuje. Vladař čtyřikrát inkasoval a Philadelphia je blízko vyřazení",
-      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-vladar.A260508_071345_nhl_mkr",
-      "dt": "2026-05-08T05:43:16Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "blízko",
-        "caroliny",
-        "inkasoval",
-        "jízda",
-        "philadelphia",
-        "pokračuje",
-        "vladař",
-        "vyřazení",
-        "čtyřikrát"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47118,
+      "bytes": 47374,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-09T04:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T06:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -848,6 +847,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bez traséra bych nedojela do cíle. Co o sobě prozradila hvězda parasportu?",
+            "publishedAt": "2026-05-09T06:00:00Z"
+          },
+          {
+            "title": "Dobeš se radoval na ledě Buffala, Dostála naopak Vegas vyhnalo z brány",
+            "publishedAt": "2026-05-09T05:59:40Z"
+          },
           {
             "title": "Chodkyni Klimentové vyšly Poděbrady. Na posledním kilometru nadávám, směje se",
             "publishedAt": "2026-05-09T04:33:00Z"
@@ -871,14 +878,6 @@
           {
             "title": "Útokem na Hartovu trofej. Třemi uchazeči jsou McDavid, MacKinnon a Kučerov",
             "publishedAt": "2026-05-08T18:04:00Z"
-          },
-          {
-            "title": "Děčín doma promarnil vedení o 21 bodů, čtvrtfinále s Brnem rozhodne sedmý zápas",
-            "publishedAt": "2026-05-08T17:50:02Z"
-          },
-          {
-            "title": "Bude to hit jako Waka Waka? Shakira nazpívala oficiální píseň pro MS ve fotbale",
-            "publishedAt": "2026-05-08T17:47:00Z"
           }
         ]
       }
