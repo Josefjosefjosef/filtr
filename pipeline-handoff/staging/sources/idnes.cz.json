@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-10T06:05:36.784073Z",
+  "ingestedAt": "2026-05-10T06:49:42.210942Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Hasiči tlačili vodu hadicemi přes 64 kilometrů a vrátili ji k pramenu Svratky",
+      "url": "https://www.idnes.cz/jihlava/zpravy/hasici-voda-dalkova-preprava-rekord-tri-studne-vysocina-svratka.A260509_195236_jihlava-zpravy_mv",
+      "dt": "2026-05-10T06:30:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "hadicemi",
+        "hasiči",
+        "kilometrů",
+        "pramenu",
+        "svratky",
+        "tlačili",
+        "vodu",
+        "vrátili"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -750,33 +775,6 @@
         "pražském",
         "sauny",
         "zasahují"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Jsem rád, že Blažka obvinili, říká Grolich. Odmítá spolupráci lidovců s ANO",
-      "url": "https://www.idnes.cz/zpravy/domaci/grolich-blazek-schillerova-lidovci-ano.A260509_115308_domaci_tty",
-      "dt": "2026-05-09T11:31:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "ano",
-        "blažka",
-        "grolich",
-        "jsem",
-        "lidovců",
-        "obvinili",
-        "odmítá",
-        "rád",
-        "spolupráci",
-        "říká"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1579,7 +1577,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49221,
+      "bytes": 49458,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1616,7 +1614,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-10T05:28:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T06:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 28,
@@ -1632,6 +1630,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hasiči tlačili vodu hadicemi přes 64 kilometrů a vrátili ji k pramenu Svratky",
+            "publishedAt": "2026-05-10T06:30:00Z"
+          },
           {
             "title": "Izrael deportoval aktivisty z flotily směřující do Gazy, není zřejmé kam",
             "publishedAt": "2026-05-10T05:28:00Z"
@@ -1658,10 +1660,6 @@
           },
           {
             "title": "Kdo je Nurlan Smagulov. Nejnovější kazachstánský miliardář začínal jako prodejce aut",
-            "publishedAt": "2026-05-09T22:00:00Z"
-          },
-          {
-            "title": "Ruští roboti se stávají čím dál víc součástí války. Kyjev je už zařazuje do statistik",
             "publishedAt": "2026-05-09T22:00:00Z"
           }
         ]
