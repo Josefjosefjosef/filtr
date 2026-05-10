@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-10T09:45:08.090239Z",
+  "ingestedAt": "2026-05-10T10:29:19.397811Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Novinky v osobních financích: Banky sázejí na fanoušky, ať už jde o Spartu, nebo Hvězdné války",
+      "url": "https://profitonline.cz/novinky-v-osobnich-financich-banky-sazeji-na-fanousky-at-uz-jde-o-spartu-nebo-hvezdne-valky/",
+      "dt": "2026-05-10T10:00:38Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "banky",
+        "fanoušky",
+        "financích",
+        "hvězdné",
+        "jde",
+        "nebo",
+        "novinky",
+        "osobních",
+        "spartu",
+        "sázejí",
+        "války"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -260,26 +288,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nejistota prospěla dolaru",
-      "url": "https://profitonline.cz/nejistota-prospela-dolaru/",
-      "dt": "2026-05-08T08:00:56Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "dolaru",
-        "nejistota",
-        "prospěla"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -290,7 +298,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18085,
+      "bytes": 18550,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -327,7 +335,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-10T08:00:36Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T10:00:38Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -344,6 +352,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Novinky v osobních financích: Banky sázejí na fanoušky, ať už jde o Spartu, nebo Hvězdné války",
+            "publishedAt": "2026-05-10T10:00:38Z"
+          },
           {
             "title": "Czechoslovak Group: Přehnaná panika, nebo prozření trhu?",
             "publishedAt": "2026-05-10T08:00:36Z"
@@ -371,10 +383,6 @@
           {
             "title": "Petr Chalupný propojí oborová řešení napříč segmenty Dachser v Česku",
             "publishedAt": "2026-05-09T06:00:08Z"
-          },
-          {
-            "title": "Kam se hrabou evropské sankce. Kyjev ukazuje, jak rozložit Rusko",
-            "publishedAt": "2026-05-09T04:00:33Z"
           }
         ]
       }

@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-10T09:45:08.090239Z",
+  "ingestedAt": "2026-05-10T10:29:19.397811Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Další velký e-shop končí. „Drtič cen“ doplatil na tvrdý boj s Alzou a Datartem",
+      "url": "https://www.e15.cz/byznys/dalsi-velky-e-shop-konci-drtic-cen-doplatil-na-tvrdy-boj-s-alzou-a-datartem-1432692",
+      "dt": "2026-05-10T10:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "alzou",
+        "boj",
+        "cen",
+        "další",
+        "datartem",
+        "doplatil",
+        "drtič",
+        "končí",
+        "shop",
+        "tvrdý",
+        "velký"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -1021,32 +1049,6 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "ČSOB otestovala novinku: AI agent za vás vybere nákup a rovnou ho i zaplatí",
-      "url": "https://www.e15.cz/finexpert/banky-a-ucty/csob-otestovala-novinku-ai-agent-za-vas-vybere-nakup-a-rovnou-ho-i-zaplati-1432672",
-      "dt": "2026-05-07T11:10:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "agent",
-        "novinku",
-        "nákup",
-        "otestovala",
-        "rovnou",
-        "vybere",
-        "vás",
-        "zaplatí",
-        "čsob"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
       "title": "Vítek může převzít zbytek hotelové firmy. CPI tak plně ovládne CZ Hotel Properties",
       "url": "https://www.e15.cz/byznys/finance-a-bankovnictvi/vitek-muze-prevzit-zbytek-hotelove-firmy-cpi-tak-plne-ovladne-cz-hotel-properties-1432676",
       "dt": "2026-05-07T11:10:00Z",
@@ -1075,24 +1077,21 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Roboti přibývají, lidí ale neubývá. Šéf logistiky v Notinu má sen o doručení do deseti minut",
-      "url": "https://www.e15.cz/podcasty/business-club/roboti-pribyvaji-lidi-ale-neubyva-sef-logistiky-v-notinu-ma-sen-o-doruceni-do-deseti-minut-1432444",
-      "dt": "2026-05-07T10:00:00Z",
+      "title": "ČSOB otestovala novinku: AI agent za vás vybere nákup a rovnou ho i zaplatí",
+      "url": "https://www.e15.cz/finexpert/banky-a-ucty/csob-otestovala-novinku-ai-agent-za-vas-vybere-nakup-a-rovnou-ho-i-zaplati-1432672",
+      "dt": "2026-05-07T11:10:00Z",
       "media_raw": "E15",
       "media_norm": "E15",
       "tokens": [
-        "ale",
-        "deseti",
-        "doručení",
-        "lidí",
-        "logistiky",
-        "minut",
-        "neubývá",
-        "notinu",
-        "přibývají",
-        "roboti",
-        "sen",
-        "šéf"
+        "agent",
+        "novinku",
+        "nákup",
+        "otestovala",
+        "rovnou",
+        "vybere",
+        "vás",
+        "zaplatí",
+        "čsob"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1110,7 +1109,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 52291,
+      "bytes": 52201,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1147,11 +1146,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-10T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 3,
-          "finance": 37
+          "finance": 37,
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1163,6 +1162,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Další velký e-shop končí. „Drtič cen“ doplatil na tvrdý boj s Alzou a Datartem",
+            "publishedAt": "2026-05-10T10:00:00Z"
+          },
           {
             "title": "Požáry elektrokol a koloběžek rychle přibývají. Riziko zvyšuje špatné nabíjení i levné baterie",
             "publishedAt": "2026-05-10T05:00:00Z"
@@ -1190,10 +1193,6 @@
           {
             "title": "Kryptotrh v Česku ochladl, objemy spadly o dvě pětiny",
             "publishedAt": "2026-05-09T14:00:00Z"
-          },
-          {
-            "title": "Ministerstvo práce navrhuje tři varianty řešení penzí náročných profesí. Ve hře je časnější odchod do penze",
-            "publishedAt": "2026-05-09T12:05:00Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-10T09:45:08.090239Z",
+  "ingestedAt": "2026-05-10T10:29:19.397811Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Známá zpěvačka novou ombudsmankou MPSV: Juchelka věří v posílení spravedlnosti",
+      "url": "https://www.denik.cz/z_domova/michaela-kolman-noskova-se-stala-novou-ombudsmankou-mpsv-juchelka-rozhodl.html",
+      "dt": "2026-05-10T09:20:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "juchelka",
+        "mpsv",
+        "novou",
+        "ombudsmankou",
+        "posílení",
+        "spravedlnosti",
+        "věří",
+        "známá",
+        "zpěvačka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -613,34 +639,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kvůli ekzému skončila v sektě. Vnímala jsem to jako správnou cestu, říká autorka",
-      "url": "https://www.denik.cz/literatura/kutnohorska-kauza-lecitelstvi-lucie-strachova-kniha-zmanipulovana.html",
-      "dt": "2026-05-09T06:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "autorka",
-        "cestu",
-        "ekzému",
-        "jako",
-        "jsem",
-        "kvůli",
-        "sektě",
-        "skončila",
-        "správnou",
-        "vnímala",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -651,7 +649,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30752,
+      "bytes": 30713,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -688,7 +686,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-10T08:50:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T09:20:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -706,6 +704,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Známá zpěvačka novou ombudsmankou MPSV: Juchelka věří v posílení spravedlnosti",
+            "publishedAt": "2026-05-10T09:20:00Z"
+          },
           {
             "title": "Dívka zemřela po pádu z adrenalinové houpačky, před skokem varovala personál",
             "publishedAt": "2026-05-10T08:50:00Z"
@@ -733,10 +735,6 @@
           {
             "title": "Schwarzwald je kolébkou Německa i proslulé šunky",
             "publishedAt": "2026-05-10T05:00:00Z"
-          },
-          {
-            "title": "Při dalším útoku islamistických povstalců v Mali zahynuly desítky lidí",
-            "publishedAt": "2026-05-10T04:37:00Z"
           }
         ]
       }

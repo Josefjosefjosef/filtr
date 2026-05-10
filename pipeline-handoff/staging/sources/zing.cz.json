@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-10T09:45:08.090239Z",
+  "ingestedAt": "2026-05-10T10:29:19.397811Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Jak šel čas s žánrem point-and-click adventur",
+      "url": "https://zing.cz/article/jak-sel-cas-s-zanrem-point-and-click-adventur",
+      "dt": "2026-05-10T10:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "adventur",
+        "and",
+        "click",
+        "point",
+        "čas",
+        "šel",
+        "žánrem"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -962,30 +986,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Rockstar by se mohl pustit do dalších remasterů svých klasických her",
-      "url": "https://zing.cz/article/rockstar-by-se-mohl-pustit-do-dalsich-remasteru-svych-klasickych-her",
-      "dt": "2026-05-05T10:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "dalších",
-        "her",
-        "klasických",
-        "pustit",
-        "remasterů",
-        "rockstar",
-        "svých"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -996,7 +996,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125331,
+      "bytes": 125315,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1033,7 +1033,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-10T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1048,6 +1048,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jak šel čas s žánrem point-and-click adventur",
+            "publishedAt": "2026-05-10T10:00:00Z"
+          },
           {
             "title": "Slay the Spire 2 odstraňuje nenáviděného bosse",
             "publishedAt": "2026-05-10T06:00:00Z"
@@ -1075,10 +1079,6 @@
           {
             "title": "Nový Mortal Kombat potvrzen",
             "publishedAt": "2026-05-09T08:00:00Z"
-          },
-          {
-            "title": "Nintendo zdražuje svou herní konzoli Switch 2",
-            "publishedAt": "2026-05-09T06:00:00Z"
           }
         ]
       }

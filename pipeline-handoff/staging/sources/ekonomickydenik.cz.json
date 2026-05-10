@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-10T09:45:08.090239Z",
+  "ingestedAt": "2026-05-10T10:29:19.397811Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Český investor postavil zatím největší výrobnu biometanu na Slovensku",
+      "url": "https://ekonomickydenik.cz/cesky-investor-postavil-nejvetsi-vyrobnu-biometanu/",
+      "dt": "2026-05-10T10:05:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "biometanu",
+        "investor",
+        "největší",
+        "postavil",
+        "slovensku",
+        "výrobnu",
+        "zatím",
+        "český"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -757,32 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "Putinův strach z útoku na přehlídce se stupňuje. Kreml omezí internet i esemesky",
-      "url": "https://ekonomickydenik.cz/putin-utok-prehlidka-internet-sms/",
-      "dt": "2026-05-07T11:18:13Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "esemesky",
-        "internet",
-        "kreml",
-        "omezí",
-        "putinův",
-        "přehlídce",
-        "strach",
-        "stupňuje",
-        "útoku"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74172,
+      "bytes": 74081,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,11 +829,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-10T09:11:56Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T10:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 5,
-          "finance": 25
+          "finance": 26,
+          "zpravy": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -846,6 +845,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Český investor postavil zatím největší výrobnu biometanu na Slovensku",
+            "publishedAt": "2026-05-10T10:05:00Z"
+          },
           {
             "title": "Miliony za hluk nad hlavami: Letiště Praha odškodní obce za uzavírku hlavní dráhy",
             "publishedAt": "2026-05-10T09:11:56Z"
@@ -873,10 +876,6 @@
           {
             "title": "Péter Magyar se stal maďarským premiérem, po 16 letech střídá Viktora Orbána",
             "publishedAt": "2026-05-09T14:12:11Z"
-          },
-          {
-            "title": "Bezpečnost v ohrožení? Jen 17 procent Čechů chce škrty, většina chce silnější armádu",
-            "publishedAt": "2026-05-09T12:31:57Z"
           }
         ]
       }
