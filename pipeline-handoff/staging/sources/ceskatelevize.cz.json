@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-10T16:09:02.222723Z",
+  "ingestedAt": "2026-05-10T16:48:56.650867Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "SOUHRN: Zásadní události neděle 10. května",
+      "url": "https://ct24.ceskatelevize.cz/clanek/media/souhrn-zasadni-udalosti-nedele-10-kvetna-373277",
+      "dt": "2026-05-10T16:28:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "května",
+        "neděle",
+        "souhrn",
+        "události",
+        "zásadní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -86,19 +108,18 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Írán poslal USA odpověď na návrh na ukončení války, tvrdí agentura",
+      "title": "Írán odpověděl na návrh na ukončení války. Ta nekončí, vzkázal Netanjahu",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/iran-poslal-usa-odpoved-na-navrh-na-ukonceni-valky-tvrdi-agentura-373272",
       "dt": "2026-05-10T12:47:42Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "agentura",
+        "nekončí",
+        "netanjahu",
         "návrh",
-        "odpověď",
-        "poslal",
-        "tvrdí",
+        "odpověděl",
         "ukončení",
-        "usa",
+        "vzkázal",
         "války",
         "írán"
       ],
@@ -730,27 +751,26 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "sport",
       "contentType": "article",
-      "title": "Strach z krásy, strach ze vztahu. Vědci popsali roli femme fatale v mýtech",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/strach-z-krasy-strach-ze-vztahu-vedci-popsali-roli-femme-fatale-v-mytech-373203",
-      "dt": "2026-05-09T06:02:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Finové v derby deklasovali Švédy a ovládli poslední turnaj EHT",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/finove-v-derby-deklasovali-svedy-a-ovladli-posledni-turnaj-eht-156705",
+      "dt": "2026-05-10T16:17:11Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "fatale",
-        "femme",
-        "krásy",
-        "mýtech",
-        "popsali",
-        "roli",
-        "strach",
-        "vztahu",
-        "vědci"
+        "deklasovali",
+        "derby",
+        "eht",
+        "finové",
+        "ovládli",
+        "poslední",
+        "turnaj",
+        "švédy"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1483,32 +1503,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Počtvrté z první řady: Salač si v kvalifikaci v Le Mans vyjel třetí místo",
-      "url": "https://sport.ceskatelevize.cz/clanek/motorsport/poctvrte-z-prvni-rady-salac-si-v-kvalifikaci-v-le-mans-vyjel-treti-misto-156673",
-      "dt": "2026-05-09T13:05:16Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "kvalifikaci",
-        "mans",
-        "místo",
-        "počtvrté",
-        "první",
-        "salač",
-        "třetí",
-        "vyjel",
-        "řady"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1519,7 +1513,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44396,
+      "bytes": 44471,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1579,12 +1573,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-10T14:48:34Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T16:28:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
+          "zpravy": 26,
           "finance": 2,
-          "other": 3
+          "other": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1596,6 +1590,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "SOUHRN: Zásadní události neděle 10. května",
+            "publishedAt": "2026-05-10T16:28:00Z"
+          },
           {
             "title": "Bývalý polský ministr Ziobro dle médií uprchl z Maďarska do USA",
             "publishedAt": "2026-05-10T14:48:34Z"
@@ -1609,7 +1607,7 @@
             "publishedAt": "2026-05-10T12:55:57Z"
           },
           {
-            "title": "Írán poslal USA odpověď na návrh na ukončení války, tvrdí agentura",
+            "title": "Írán odpověděl na návrh na ukončení války. Ta nekončí, vzkázal Netanjahu",
             "publishedAt": "2026-05-10T12:47:42Z"
           },
           {
@@ -1623,10 +1621,6 @@
           {
             "title": "Ukrajinské úřady informují o zabitých a zraněných při ruských útocích",
             "publishedAt": "2026-05-10T09:37:46Z"
-          },
-          {
-            "title": "Ligová fotbalová asociace zahájila řízení se Slavií, rozhodne v úterý",
-            "publishedAt": "2026-05-10T07:34:28Z"
           }
         ]
       }
@@ -1638,7 +1632,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39240,
+      "bytes": 39288,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1675,7 +1669,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-10T15:13:14Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T16:17:11Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1690,6 +1684,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Finové v derby deklasovali Švédy a ovládli poslední turnaj EHT",
+            "publishedAt": "2026-05-10T16:17:11Z"
+          },
           {
             "title": "A zase Magnier. Francouz slaví druhý triumf na Giru",
             "publishedAt": "2026-05-10T15:13:14Z"
@@ -1717,10 +1715,6 @@
           {
             "title": "Chorý a Douděra byli vyřazeni z kádru Slavie a dostali svolení k přestupu",
             "publishedAt": "2026-05-10T12:37:59Z"
-          },
-          {
-            "title": "Táborsko prohrou s béčkem Slavie odmítlo jistotu baráže",
-            "publishedAt": "2026-05-10T12:06:46Z"
           }
         ]
       }

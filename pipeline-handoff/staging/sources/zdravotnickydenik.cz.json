@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-10T16:09:02.222723Z",
+  "ingestedAt": "2026-05-10T16:48:56.650867Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Politik se obával plavajících krys s hantavirem, opíral se o rešerši od umělé inteligence",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/sef-kanarskych-ostrovu-se-obaval-plavajicich-krys-s-hantavirem/",
+      "dt": "2026-05-10T16:09:22Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "hantavirem",
+        "inteligence",
+        "krys",
+        "obával",
+        "opíral",
+        "plavajících",
+        "politik",
+        "rešerši",
+        "umělé"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -240,32 +266,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Virus z klíštěte udeří během minut. Podívejte se, kde hrozí největší riziko",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/virus-z-klistete-kde-hrozi-nejvetsi-riziko/",
-      "dt": "2026-05-08T11:30:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "během",
-        "hrozí",
-        "klíštěte",
-        "minut",
-        "největší",
-        "podívejte",
-        "riziko",
-        "udeří",
-        "virus"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -276,7 +276,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 115509,
+      "bytes": 113491,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,7 +313,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-10T11:42:53Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T16:09:22Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -328,6 +328,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Politik se obával plavajících krys s hantavirem, opíral se o rešerši od umělé inteligence",
+            "publishedAt": "2026-05-10T16:09:22Z"
+          },
           {
             "title": "SÚKL si může polepšit o 7 milionů ročně. Vláda projedná i postoj k pandemické dohodě",
             "publishedAt": "2026-05-10T11:42:53Z"
@@ -355,10 +359,6 @@
           {
             "title": "„Peklo na zemi.“ Přeživší hantaviru popsali boj o život po vzácné nákaze",
             "publishedAt": "2026-05-09T10:30:00Z"
-          },
-          {
-            "title": "Nemocniční nákazy: Oficiální čísla vypadají skvěle, realita je ale jiná",
-            "publishedAt": "2026-05-09T05:00:00Z"
           }
         ]
       }

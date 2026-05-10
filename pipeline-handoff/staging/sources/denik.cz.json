@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-10T16:09:02.222723Z",
+  "ingestedAt": "2026-05-10T16:48:56.650867Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Statisíce českých řidičů letos čeká výměna řidičáku. Riskují komplikace i pokutu",
+      "url": "https://www.denik.cz/doprava/vymena-ridicskeho-prukazu-cesko-jak-kde-elektronicky-jake-hrozi-pokuty.html",
+      "dt": "2026-05-10T16:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "komplikace",
+        "letos",
+        "pokutu",
+        "riskují",
+        "statisíce",
+        "výměna",
+        "čeká",
+        "českých",
+        "řidičáku",
+        "řidičů"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zavřené obchody? Češi využili svátek k nákupům v Polsku, stačilo přejet hranice",
+      "url": "https://www.denik.cz/regiony/cesi-nakupy-polsko-trznice-kudowa-zdroj-statni-svatek.html",
+      "dt": "2026-05-10T16:20:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "hranice",
+        "nákupům",
+        "obchody",
+        "polsku",
+        "přejet",
+        "stačilo",
+        "svátek",
+        "využili",
+        "zavřené",
+        "češi"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -596,57 +650,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Xindl X: Doktoru Machytkovi vděčím za to, že jsem zhubl třicet kilo",
-      "url": "https://www.denik.cz/hudba/xindl-x-doktoru-machytkovi-vdecim-za-to-ze-jsem-zhubl-tricet-kilo-20280508.html",
-      "dt": "2026-05-09T12:40:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "doktoru",
-        "jsem",
-        "kilo",
-        "machytkovi",
-        "třicet",
-        "vděčím",
-        "xindl",
-        "zhubl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ovoce a rohlík hity festivalů? Řetězce lákají na levné i zdravější občerstvení",
-      "url": "https://www.denik.cz/ekonomika/ovoce-a-rohlik-hity-festivalu-retezce-lakaji-na-levne-i-zdravejsi-obcerstveni-20.html",
-      "dt": "2026-05-09T12:15:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "festivalů",
-        "hity",
-        "levné",
-        "lákají",
-        "občerstvení",
-        "ovoce",
-        "rohlík",
-        "zdravější",
-        "řetězce"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -657,7 +660,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30419,
+      "bytes": 30277,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -694,11 +697,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-10T14:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T16:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 21,
-          "finance": 2,
+          "zpravy": 22,
+          "finance": 1,
           "zdravi": 1,
           "sport": 1
         },
@@ -712,6 +715,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Statisíce českých řidičů letos čeká výměna řidičáku. Riskují komplikace i pokutu",
+            "publishedAt": "2026-05-10T16:30:00Z"
+          },
+          {
+            "title": "Zavřené obchody? Češi využili svátek k nákupům v Polsku, stačilo přejet hranice",
+            "publishedAt": "2026-05-10T16:20:00Z"
+          },
           {
             "title": "KLDR mění jadernou doktrínu: Při útoku na Kim Čong-una hrozí automatická odveta",
             "publishedAt": "2026-05-10T14:35:00Z"
@@ -735,14 +746,6 @@
           {
             "title": "Brit má podezření na hantavirus. Zdravotníci za ním na ostrov seskočili s padáky",
             "publishedAt": "2026-05-10T11:10:00Z"
-          },
-          {
-            "title": "Známá zpěvačka novou ombudsmankou MPSV: Juchelka věří v posílení spravedlnosti",
-            "publishedAt": "2026-05-10T09:20:00Z"
-          },
-          {
-            "title": "Dívka zemřela po pádu z adrenalinové houpačky, na lano přitom předtím upozornila",
-            "publishedAt": "2026-05-10T08:50:00Z"
           }
         ]
       }
