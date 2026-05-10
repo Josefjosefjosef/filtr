@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-10T22:19:19.189759Z",
+  "ingestedAt": "2026-05-10T22:59:36.320375Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Giro d’Italia 2026: program, přehled a výsledky etap, favorité, Češi na startu",
+      "url": "https://www.idnes.cz/sport/cyklistika/giro-d-italia-prehled-souhrn-trasy-vysledky.A260423_130030_cyklistika_ipet",
+      "dt": "2026-05-10T22:12:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "2026",
+        "etap",
+        "favorité",
+        "giro",
+        "italia",
+        "program",
+        "přehled",
+        "startu",
+        "výsledky",
+        "češi"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -752,33 +779,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Padl první doživotní zákaz. Slavia trestá fanouška, co napadl sparťana Surovčíka",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/padl-prvni-dozivotni-zakaz-slavia-tresta-fanouska-co-napadl-spartana-surovcika.A260510_143848_fotbal_duff",
-      "dt": "2026-05-10T13:27:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "doživotní",
-        "fanouška",
-        "napadl",
-        "padl",
-        "první",
-        "slavia",
-        "sparťana",
-        "surovčíka",
-        "trestá",
-        "zákaz"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47420,
+      "bytes": 47059,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-10T22:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T22:12:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -841,6 +841,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Giro d’Italia 2026: program, přehled a výsledky etap, favorité, Češi na startu",
+            "publishedAt": "2026-05-10T22:12:00Z"
+          },
           {
             "title": "Hokej v televizi a plná lednice. Češi si doma staví vlastní fanouškovské zóny",
             "publishedAt": "2026-05-10T22:01:00Z"
@@ -868,10 +872,6 @@
           {
             "title": "USA na MS v hokeji 2026: program, výsledky, soupiska, bilance s Čechy",
             "publishedAt": "2026-05-10T20:43:00Z"
-          },
-          {
-            "title": "Bez největších hvězd z NHL, s Červenkou či Hronkem. Rulík oznámil nominaci na MS",
-            "publishedAt": "2026-05-10T20:39:00Z"
           }
         ]
       }
