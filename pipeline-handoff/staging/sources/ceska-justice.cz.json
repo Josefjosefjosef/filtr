@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-05-10T03:54:12.660450Z",
+  "ingestedAt": "2026-05-10T05:20:22.617164Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Spor o stravenky za 135 korun: Děčínští soudci hledali zastání až u Nejvyššího soudu",
+      "url": "https://www.ceska-justice.cz/2026/05/soudci-stravenky-135-korun-nejvyssi-soud/",
+      "dt": "2026-05-10T04:15:00Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "135",
+        "děčínští",
+        "hledali",
+        "korun",
+        "nejvyššího",
+        "soudci",
+        "soudu",
+        "spor",
+        "stravenky",
+        "zastání"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -243,32 +270,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Konec her na schovávanou: Kvůli nedoručené poště vás vypátrá policie",
-      "url": "https://www.ceska-justice.cz/2026/05/konec-her-na-schovavanou-kvuli-nedorucene-poste-vas-vypatra-policie/",
-      "dt": "2026-05-06T04:18:50Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "her",
-        "konec",
-        "kvůli",
-        "nedoručené",
-        "policie",
-        "poště",
-        "schovávanou",
-        "vypátrá",
-        "vás"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 96738,
+      "bytes": 94008,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-09T07:38:41Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T04:15:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -331,6 +332,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Spor o stravenky za 135 korun: Děčínští soudci hledali zastání až u Nejvyššího soudu",
+            "publishedAt": "2026-05-10T04:15:00Z"
+          },
           {
             "title": "Hledá se mladá krev. Dětský ombudsman otevírá svůj tým pro lidi od 12 do 18 let",
             "publishedAt": "2026-05-09T07:38:41Z"
@@ -358,10 +363,6 @@
           {
             "title": "Blažkovi s Titzem hrozí pozastavení činnosti. Advokátní komora řeší bitcoinovou kauzu",
             "publishedAt": "2026-05-06T12:09:56Z"
-          },
-          {
-            "title": "Za týrání zvířat přísnější tresty. Ministr Tejc proti podmínce pro majitele psa Bladea",
-            "publishedAt": "2026-05-06T11:06:14Z"
           }
         ]
       }

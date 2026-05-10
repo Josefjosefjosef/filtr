@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-10T03:54:12.660450Z",
+  "ingestedAt": "2026-05-10T05:20:22.617164Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Čo bolo tatramatky ródeo? Jak si pamatujete slovenské značky z dob ČSSR",
+      "url": "https://www.penize.cz/nakupy/489426-co-bolo-tatramatky-rodeo-vyzkousejte-v-kvizu-jak-si-pamatujete-slovenske-znacky-z-dob-cssr",
+      "dt": "2026-05-10T07:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "bolo",
+        "dob",
+        "pamatujete",
+        "ródeo",
+        "slovenské",
+        "tatramatky",
+        "značky",
+        "čssr"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -481,30 +506,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Raiffeisenbank láká na slevy, rozdá poukazy na dovolenou zdarma",
-      "url": "https://www.penize.cz/slevy/489270-raiffeisenbank-laka-na-slevy-rozda-poukazy-na-dovolenou-zdarma",
-      "dt": "2026-05-05T04:30:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "dovolenou",
-        "láká",
-        "poukazy",
-        "raiffeisenbank",
-        "rozdá",
-        "slevy",
-        "zdarma"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -515,7 +516,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18496,
+      "bytes": 18719,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -552,7 +553,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-09T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T07:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 15,
@@ -569,6 +570,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Čo bolo tatramatky ródeo? Jak si pamatujete slovenské značky z dob ČSSR",
+            "publishedAt": "2026-05-10T07:00:00Z"
+          },
           {
             "title": "Akcie drtí rekordy. Investoři ale nechtějí vidět rizika, která můžou zdrtit je",
             "publishedAt": "2026-05-09T07:00:00Z"
@@ -596,10 +601,6 @@
           {
             "title": "Čekání pokračuje. ČNB ponechala úrokové sazby beze změny",
             "publishedAt": "2026-05-07T14:30:00Z"
-          },
-          {
-            "title": "Natankovat ještě před volnem? Nové maximální ceny benzinu a nafty",
-            "publishedAt": "2026-05-07T13:59:00Z"
           }
         ]
       }

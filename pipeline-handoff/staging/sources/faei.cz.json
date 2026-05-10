@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-10T03:54:12.660450Z",
+  "ingestedAt": "2026-05-10T05:20:22.617164Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zloději kol si vybírají čím dál dražší modely. Škoda přesáhla 100 milionů",
+      "url": "https://profitonline.cz/zlodeji-kol-si-vybiraji-cim-dal-drazsi-modely-skoda-presahla-100-milionu/",
+      "dt": "2026-05-10T04:00:36Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "100",
+        "dražší",
+        "kol",
+        "milionů",
+        "modely",
+        "přesáhla",
+        "vybírají",
+        "zloději",
+        "čím",
+        "škoda"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -253,33 +280,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Týden na akciových trzích: Optimismus podpořila vidina konce konfliktu na Blízkém východě",
-      "url": "https://profitonline.cz/tyden-na-akciovych-trzich-optimismus-podporila-vidina-konce-konfliktu-na-blizkem-vychode/",
-      "dt": "2026-05-07T18:00:37Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "akciových",
-        "blízkém",
-        "konce",
-        "konfliktu",
-        "optimismus",
-        "podpořila",
-        "trzích",
-        "týden",
-        "vidina",
-        "východě"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -290,7 +290,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18205,
+      "bytes": 18082,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -327,7 +327,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-09T12:00:53Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T04:00:36Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -344,6 +344,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zloději kol si vybírají čím dál dražší modely. Škoda přesáhla 100 milionů",
+            "publishedAt": "2026-05-10T04:00:36Z"
+          },
           {
             "title": "Český průmysl v březnu zpomalil",
             "publishedAt": "2026-05-09T12:00:53Z"
@@ -371,10 +375,6 @@
           {
             "title": "Hypotéky na centrální banku nereagují",
             "publishedAt": "2026-05-08T12:00:50Z"
-          },
-          {
-            "title": "Kde máme tu konstruktivní opozici? Zatím nevymyslela prakticky nic",
-            "publishedAt": "2026-05-08T10:00:56Z"
           }
         ]
       }

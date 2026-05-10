@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-10T03:54:12.660450Z",
+  "ingestedAt": "2026-05-10T05:20:22.617164Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Farmaceutické firmy se na celkovém českém exportu podílejí 1,85 %",
+      "url": "https://www.zdravezpravy.cz/2026/05/10/farmaceuticke-firmy-se-na-celkovem-ceskem-exportu-podileji-185/",
+      "dt": "2026-05-10T04:17:19Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "celkovém",
+        "exportu",
+        "farmaceutické",
+        "firmy",
+        "podílejí",
+        "českém"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -466,32 +489,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Převod dávek, příspěvků a průkazů OZP na ČSSZ se o dva roky odkládá",
-      "url": "https://www.zdravezpravy.cz/2026/04/30/prevod-davek-prispevku-a-prukazu-ozp-na-cssz-se-o-dva-roky-odklada/",
-      "dt": "2026-04-30T06:45:20Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "dva",
-        "dávek",
-        "odkládá",
-        "ozp",
-        "průkazů",
-        "převod",
-        "příspěvků",
-        "roky",
-        "čssz"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -502,7 +499,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 196817,
+      "bytes": 201814,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -539,7 +536,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-08T06:30:12Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T04:17:19Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -555,6 +552,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Farmaceutické firmy se na celkovém českém exportu podílejí 1,85 %",
+            "publishedAt": "2026-05-10T04:17:19Z"
+          },
           {
             "title": "FutureLife Group premiéra Babiše zavádí AI do umělého oplodnění",
             "publishedAt": "2026-05-08T06:30:12Z"
@@ -582,10 +583,6 @@
           {
             "title": "Zhoubné nádory orofaryngu boomují, násobně více u mužů",
             "publishedAt": "2026-05-06T08:30:02Z"
-          },
-          {
-            "title": "Pesticidy škodí zdraví. Přesto je obsahuje 40 % potravin",
-            "publishedAt": "2026-05-06T08:30:00Z"
           }
         ]
       }

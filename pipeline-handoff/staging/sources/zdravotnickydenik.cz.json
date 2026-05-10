@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-10T03:54:12.660450Z",
+  "ingestedAt": "2026-05-10T05:20:22.617164Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Matky spí málo a doplácí na to zdravím. Pomoci mohou 4 kroky",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/matky-spi-malo-doplaci-na-to-zdravim-4-kroky/",
+      "dt": "2026-05-10T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "doplácí",
+        "kroky",
+        "matky",
+        "málo",
+        "pomoci",
+        "spí",
+        "zdravím"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -238,33 +262,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Projevuje se jako chřipka, ale útočí na ledviny: Co všechno víme o hantaviru v Česku?",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/co-vime-o-hantaviru-v-cesku/",
-      "dt": "2026-05-07T14:35:14Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "ale",
-        "chřipka",
-        "hantaviru",
-        "jako",
-        "ledviny",
-        "projevuje",
-        "víme",
-        "všechno",
-        "útočí",
-        "česku"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -275,7 +272,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 133007,
+      "bytes": 135409,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -312,7 +309,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-09T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -327,6 +324,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Matky spí málo a doplácí na to zdravím. Pomoci mohou 4 kroky",
+            "publishedAt": "2026-05-10T05:00:00Z"
+          },
           {
             "title": "Nahradí umělá inteligence farmaceutické reprezentanty? Pravda je složitější, říká expert",
             "publishedAt": "2026-05-09T15:00:00Z"
@@ -354,10 +355,6 @@
           {
             "title": "Je hantavirus nový covid? WHO se vyjádřila k možnosti pandemie",
             "publishedAt": "2026-05-08T10:01:25Z"
-          },
-          {
-            "title": "Vládní zmocněnec o supernemocnici: Změníme celé pražské zdravotnictví. Co všechno se stane?",
-            "publishedAt": "2026-05-08T05:00:00Z"
           }
         ]
       }

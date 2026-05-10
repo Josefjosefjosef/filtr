@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-10T03:54:12.660450Z",
+  "ingestedAt": "2026-05-10T05:20:22.617164Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Konflikt na Ukrajině se chýlí ke konci, řekl Putin. Zelenskému vzkázal, ať mu zavolá",
+      "url": "https://zpravy.aktualne.cz/zahranici/konflikt-na-ukrajine-se-chyli-ke-konci-rekl-putin-zelenskemu-vzkazal-at-mu-zavola/r~aaa29743d6b3f0d459e39e2b998edab6/",
+      "dt": "2026-05-09T19:14:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "chýlí",
+        "konci",
+        "konflikt",
+        "putin",
+        "ukrajině",
+        "vzkázal",
+        "zavolá",
+        "zelenskému",
+        "řekl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Jaká je doopravdy Bára Basiková? ptá se nový časosběrný dokument Heleny Třeštíkové",
+      "url": "https://magazin.aktualne.cz/kultura/film/jak-je-doopravdy-bara-basikova-pta-se-novy-casosberny-dokument-heleny-trestikove/r~aaa29baa6d00c00975f079be93b06227/",
+      "dt": "2026-05-10T05:00:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "basiková",
+        "bára",
+        "dokument",
+        "doopravdy",
+        "heleny",
+        "jaká",
+        "nový",
+        "ptá",
+        "třeštíkové",
+        "časosběrný"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -125,32 +178,6 @@
         "porazili",
         "přiblížili",
         "třetímu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Konflikt na Ukrajině se chýlí ke konci, řekl Putin. Zelenskému vzkázal, ať mu zavolá",
-      "url": "https://zpravy.aktualne.cz/zahranici/konflikt-na-ukrajine-se-chyli-ke-konci-rekl-putin-zelenskemu-vzkazal-at-mu-zavola/r~aaa29743d6b3f0d459e39e2b998edab6/",
-      "dt": "2026-05-09T19:14:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "chýlí",
-        "konci",
-        "konflikt",
-        "putin",
-        "ukrajině",
-        "vzkázal",
-        "zavolá",
-        "zelenskému",
-        "řekl"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -509,31 +536,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kdo pozval kontroverzního Rusa? Objevil se na oslavách spolku spřízněného s obranou",
-      "url": "https://zpravy.aktualne.cz/domaci/kdo-pozval-kontroverzniho-rusa-objevil-se-na-oslavach-spolku-sprizneneho-s-obranou/r~aaa29c64d357b5e63ce1db088d9fe2aa/",
-      "dt": "2026-05-09T13:09:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "kontroverzního",
-        "objevil",
-        "obranou",
-        "oslavách",
-        "pozval",
-        "rusa",
-        "spolku",
-        "spřízněného"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -544,7 +546,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22785,
+      "bytes": 22867,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -581,11 +583,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-10T03:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T05:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 11,
+          "other": 1,
           "finance": 1,
-          "zpravy": 12,
           "sport": 7
         },
         "drop_counts": {
@@ -598,6 +601,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konflikt na Ukrajině se chýlí ke konci, řekl Putin. Zelenskému vzkázal, ať mu zavolá",
+            "publishedAt": "2026-05-09T19:14:00Z"
+          },
+          {
+            "title": "Jaká je doopravdy Bára Basiková? ptá se nový časosběrný dokument Heleny Třeštíkové",
+            "publishedAt": "2026-05-10T05:00:00Z"
+          },
           {
             "title": "Tornádo pokrok na železnici nepřineslo. Mělo smůlu při vývoji i v provozu",
             "publishedAt": "2026-05-10T03:40:00Z"
@@ -619,16 +630,8 @@
             "publishedAt": "2026-05-09T21:30:00Z"
           },
           {
-            "title": "Konflikt na Ukrajině se chýlí ke konci, řekl Putin. Zelenskému vzkázal, ať mu zavolá",
-            "publishedAt": "2026-05-09T19:14:00Z"
-          },
-          {
             "title": "Slavia - Sparta 3:2. Místo mistrovských oslav nechutný exces, zápas se nedohrál",
             "publishedAt": "2026-05-09T16:24:00Z"
-          },
-          {
-            "title": "Nepochopitelné běsnění slávistických fans. Napadený sparťan Surovčík poslal drsný vzkaz",
-            "publishedAt": "2026-05-09T19:20:00Z"
           }
         ]
       }
