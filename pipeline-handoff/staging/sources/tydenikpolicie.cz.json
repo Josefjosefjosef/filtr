@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-10T19:39:27.113006Z",
+  "ingestedAt": "2026-05-10T20:19:34.054765Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Jihočeští záchranáři zasahovali u tří nehod motorkářů. Do vzduchu vzlétl vrtulník LZS",
+      "url": "https://tydenikpolicie.cz/jihocesti-zachranari-zasahovali-u-tri-nehod-motorkaru-do-vzduchu-vzletl-vrtulnik-lzs/",
+      "dt": "2026-05-10T19:58:58Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "jihočeští",
+        "lzs",
+        "motorkářů",
+        "nehod",
+        "tří",
+        "vrtulník",
+        "vzduchu",
+        "vzlétl",
+        "zasahovali",
+        "záchranáři"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -240,33 +267,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Během několika měsíců měl muž v Havířově krást ve 31 případech v tamních prodejnách",
-      "url": "https://tydenikpolicie.cz/behem-nekolika-mesicu-mel-muz-v-havirove-krast-ve-31-pripadech-v-tamnich-prodejnach/",
-      "dt": "2026-05-09T02:02:21Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "během",
-        "havířově",
-        "krást",
-        "muž",
-        "měl",
-        "měsíců",
-        "několika",
-        "prodejnách",
-        "případech",
-        "tamních"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -277,7 +277,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 17252,
+      "bytes": 17381,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -314,7 +314,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-10T17:47:30Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T19:58:58Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -329,6 +329,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jihočeští záchranáři zasahovali u tří nehod motorkářů. Do vzduchu vzlétl vrtulník LZS",
+            "publishedAt": "2026-05-10T19:58:58Z"
+          },
           {
             "title": "Řidič škodovky přejel na Tachovsku do protisměru. Protijedoucí motorkář srážku nepřežil",
             "publishedAt": "2026-05-10T17:47:30Z"
@@ -356,10 +360,6 @@
           {
             "title": "Opilá žena volala na tísňovou linku s tím, aby ji policisté odvezli domů",
             "publishedAt": "2026-05-10T08:12:26Z"
-          },
-          {
-            "title": "Fanoušci Sparty vyrazili na derby pražských „S“ v Edenu pochodem",
-            "publishedAt": "2026-05-09T17:42:00Z"
           }
         ]
       }

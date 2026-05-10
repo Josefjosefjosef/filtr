@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-10T19:39:27.113006Z",
+  "ingestedAt": "2026-05-10T20:19:34.054765Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Loď zasaženou hantavirem opustilo 93 lidí, evakuace bude pokračovat v pondělí",
+      "url": "https://www.denik.cz/ze_sveta/tenerife-hantavirus-lod-evakuace-prvni-den.html",
+      "dt": "2026-05-10T19:15:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "evakuace",
+        "hantavirem",
+        "lidí",
+        "loď",
+        "opustilo",
+        "pokračovat",
+        "pondělí",
+        "zasaženou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -625,31 +650,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Majáles uničovských gymnazistů bavil náměstí, roztančil je i flash mob",
-      "url": "https://www.denik.cz/ctenar-reporter/majales-gymnazium-unicov-2026.html",
-      "dt": "2026-05-09T13:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bavil",
-        "flash",
-        "gymnazistů",
-        "majáles",
-        "mob",
-        "náměstí",
-        "roztančil",
-        "uničovských"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -660,7 +660,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30277,
+      "bytes": 30679,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -697,7 +697,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-10T16:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T19:15:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -715,6 +715,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Loď zasaženou hantavirem opustilo 93 lidí, evakuace bude pokračovat v pondělí",
+            "publishedAt": "2026-05-10T19:15:00Z"
+          },
           {
             "title": "Statisíce českých řidičů letos čeká výměna řidičáku. Riskují komplikace i pokutu",
             "publishedAt": "2026-05-10T16:30:00Z"
@@ -742,10 +746,6 @@
           {
             "title": "Volby by podle průzkumu vyhrálo ANO. Do sněmovny by se dostali i Motoristé",
             "publishedAt": "2026-05-10T11:44:00Z"
-          },
-          {
-            "title": "Brit má podezření na hantavirus. Zdravotníci za ním na ostrov seskočili s padáky",
-            "publishedAt": "2026-05-10T11:10:00Z"
           }
         ]
       }
