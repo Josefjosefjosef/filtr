@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-10T11:08:57.210238Z",
+  "ingestedAt": "2026-05-10T11:54:19.625441Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Brit má podezření na hantavirus. Zdravotníci za ním na ostrov seskočili s padáky",
+      "url": "https://www.denik.cz/ze_sveta/tristan-da-cunha-hantavirus-zdravotnici-seskok-padakem.html",
+      "dt": "2026-05-10T11:10:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "brit",
+        "hantavirus",
+        "ním",
+        "ostrov",
+        "padáky",
+        "podezření",
+        "seskočili",
+        "zdravotníci"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -614,31 +639,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nákaz hantavirem v posledních letech přibývá: Příznaky připomínají chřipku",
-      "url": "https://www.denik.cz/ze_sveta/hantavirus-priznaky-sireni-vyletni-lod-argentina-prudky-narust.html",
-      "dt": "2026-05-09T07:15:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "chřipku",
-        "hantavirem",
-        "letech",
-        "nákaz",
-        "posledních",
-        "přibývá",
-        "připomínají",
-        "příznaky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -649,7 +649,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30713,
+      "bytes": 30749,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -686,7 +686,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-10T09:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T11:10:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -704,6 +704,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Brit má podezření na hantavirus. Zdravotníci za ním na ostrov seskočili s padáky",
+            "publishedAt": "2026-05-10T11:10:00Z"
+          },
           {
             "title": "Známá zpěvačka novou ombudsmankou MPSV: Juchelka věří v posílení spravedlnosti",
             "publishedAt": "2026-05-10T09:20:00Z"
@@ -731,10 +735,6 @@
           {
             "title": "Válka na Ukrajině se podle Putina chýlí ke konci. Chce obnovit vztahy se západem",
             "publishedAt": "2026-05-10T05:06:00Z"
-          },
-          {
-            "title": "Schwarzwald je kolébkou Německa i proslulé šunky",
-            "publishedAt": "2026-05-10T05:00:00Z"
           }
         ]
       }

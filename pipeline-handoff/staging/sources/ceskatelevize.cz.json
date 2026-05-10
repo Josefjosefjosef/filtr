@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-10T11:08:57.210238Z",
+  "ingestedAt": "2026-05-10T11:54:19.625441Z",
   "items": [
     {
       "section": "aktualne",
@@ -754,6 +754,30 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Dostál skončil na Světovém poháru v Segedínu třetí na 500 m",
+      "url": "https://sport.ceskatelevize.cz/clanek/rychlostni-kanoistika/dostal-skoncil-na-svetovem-poharu-v-segedinu-treti-na-500-m-156694",
+      "dt": "2026-05-10T11:23:14Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "500",
+        "dostál",
+        "poháru",
+        "segedínu",
+        "skončil",
+        "světovém",
+        "třetí"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Absolutní šílenství, fanoušci zničili oslavy titulu, hodnotí zahraniční tisk skandální derby",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/absolutni-silenstvi-fanousci-znicili-oslavy-titulu-hodnoti-zahranicni-tisk-nedohrane-derby-156693",
       "dt": "2026-05-10T09:38:50Z",
@@ -782,7 +806,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Euro Hockey Tour Švýcarsko – Česko 2:0",
+      "title": "Euro Hockey Tour Švýcarsko – Česko 3:1",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/euro-hockey-tour-svycarsko-cesko-156692",
       "dt": "2026-05-10T09:38:12Z",
       "media_raw": "ČT sport",
@@ -1476,31 +1500,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vodní slalomáře čekají v Troji souboje o volná místa v reprezentaci",
-      "url": "https://sport.ceskatelevize.cz/clanek/vodni-slalom/vodni-slalomare-cekaji-v-troji-souboje-o-volna-mista-v-reprezentaci-156654",
-      "dt": "2026-05-09T04:00:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "místa",
-        "reprezentaci",
-        "slalomáře",
-        "souboje",
-        "troji",
-        "vodní",
-        "volná",
-        "čekají"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1630,7 +1629,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40001,
+      "bytes": 39843,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1667,7 +1666,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-10T09:38:50Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T11:23:14Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1683,11 +1682,15 @@
         },
         "sample_titles": [
           {
+            "title": "Dostál skončil na Světovém poháru v Segedínu třetí na 500 m",
+            "publishedAt": "2026-05-10T11:23:14Z"
+          },
+          {
             "title": "Absolutní šílenství, fanoušci zničili oslavy titulu, hodnotí zahraniční tisk skandální derby",
             "publishedAt": "2026-05-10T09:38:50Z"
           },
           {
-            "title": "Euro Hockey Tour Švýcarsko – Česko 2:0",
+            "title": "Euro Hockey Tour Švýcarsko – Česko 3:1",
             "publishedAt": "2026-05-10T09:38:12Z"
           },
           {
@@ -1709,10 +1712,6 @@
           {
             "title": "V Portugalské rallye vede po třetí etapě Ogier",
             "publishedAt": "2026-05-09T21:54:27Z"
-          },
-          {
-            "title": "Inter deklasoval Lazio, Juventus po dvou remízách vyhrál",
-            "publishedAt": "2026-05-09T21:16:22Z"
           }
         ]
       }
@@ -1724,7 +1723,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78096,
+      "bytes": 78102,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
