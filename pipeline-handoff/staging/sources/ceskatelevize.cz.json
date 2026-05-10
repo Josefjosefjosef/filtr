@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-10T08:58:52.907928Z",
+  "ingestedAt": "2026-05-10T09:45:08.090239Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ukrajinské úřady informují o zabitých a zraněných při ruských útocích",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/ukrajinske-urady-informuji-o-zabitych-a-zranenych-pri-ruskych-utocich-373267",
+      "dt": "2026-05-10T09:37:46Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "informují",
+        "při",
+        "ruských",
+        "ukrajinské",
+        "zabitých",
+        "zraněných",
+        "útocích",
+        "úřady"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -160,18 +185,18 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Loď s hantavirem dorazila k Tenerife, začala evakuace",
+      "title": "Španělsko evakuuje loď s hantavirem, zakotvila u Tenerife",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/lod-s-hantavirem-dorazila-k-pristavu-na-kanarskych-ostrovech-373264",
       "dt": "2026-05-10T04:58:46Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "dorazila",
-        "evakuace",
+        "evakuuje",
         "hantavirem",
         "loď",
         "tenerife",
-        "začala"
+        "zakotvila",
+        "španělsko"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -727,26 +752,23 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Spor o zahrnutí plateb kartou do EET může skončit u Ústavního soudu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/spor-o-zahrnuti-plateb-kartou-do-eet-muze-skoncit-u-ustavniho-soudu-373239",
-      "dt": "2026-05-08T18:14:25Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Euro Hockey Tour Švýcarsko – Česko",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/euro-hockey-tour-svycarsko-cesko-156692",
+      "dt": "2026-05-10T09:38:12Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "eet",
-        "kartou",
-        "plateb",
-        "skončit",
-        "soudu",
-        "spor",
-        "zahrnutí",
-        "ústavního"
+        "euro",
+        "hockey",
+        "tour",
+        "česko",
+        "švýcarsko"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1476,31 +1498,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dostál se v Szegedu nedostal do finále A, o medaile pojedou Fuksa a Hrabal",
-      "url": "https://sport.ceskatelevize.cz/clanek/rychlostni-kanoistika/dostal-se-v-szegedu-nedostal-do-finale-a-o-medaile-pojedou-fuksa-a-hrabal-156664",
-      "dt": "2026-05-08T18:44:24Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "dostál",
-        "finále",
-        "fuksa",
-        "hrabal",
-        "medaile",
-        "nedostal",
-        "pojedou",
-        "szegedu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1511,7 +1508,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43666,
+      "bytes": 43597,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1571,7 +1568,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-10T07:34:28Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T09:37:46Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1588,6 +1585,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ukrajinské úřady informují o zabitých a zraněných při ruských útocích",
+            "publishedAt": "2026-05-10T09:37:46Z"
+          },
           {
             "title": "Slavia bude chtít po výtržnících z pražského derby náhradu všech škod",
             "publishedAt": "2026-05-10T07:34:28Z"
@@ -1613,12 +1614,8 @@
             "publishedAt": "2026-05-10T05:30:00Z"
           },
           {
-            "title": "Loď s hantavirem dorazila k Tenerife, začala evakuace",
+            "title": "Španělsko evakuuje loď s hantavirem, zakotvila u Tenerife",
             "publishedAt": "2026-05-10T04:58:46Z"
-          },
-          {
-            "title": "Landovský má hlídat závazky vůči NATO. Opozice mluví o trafice",
-            "publishedAt": "2026-05-10T04:30:00Z"
           }
         ]
       }
@@ -1630,7 +1627,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39661,
+      "bytes": 39429,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1667,7 +1664,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-10T07:45:22Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T09:38:12Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1682,6 +1679,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Euro Hockey Tour Švýcarsko – Česko",
+            "publishedAt": "2026-05-10T09:38:12Z"
+          },
           {
             "title": "Dohra derby. Slavia uzavře tribunu Sever, Chorý a Douděra jsou vyřazeni z týmu",
             "publishedAt": "2026-05-10T07:45:22Z"
@@ -1709,10 +1710,6 @@
           {
             "title": "To nejhorší, co jsem ve Slavii zažil, hlásí Tvrdík. Derby bude řešit disciplinární komise",
             "publishedAt": "2026-05-09T20:48:03Z"
-          },
-          {
-            "title": "Napadení Sparty a pyrotechniku šetří policie, Surovčík to bude řešit právní cestou",
-            "publishedAt": "2026-05-09T20:29:09Z"
           }
         ]
       }
@@ -1724,7 +1721,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78029,
+      "bytes": 78062,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

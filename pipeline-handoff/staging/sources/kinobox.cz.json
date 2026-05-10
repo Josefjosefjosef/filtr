@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-10T08:58:52.907928Z",
+  "ingestedAt": "2026-05-10T09:45:08.090239Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Hvězdná dámská jízda plná sexistických vtipů. Bardotky představují oddychový trailer",
+      "url": "https://www.kinobox.cz/clanky/filmy/53527-oddechova-komedie-nebo-zaznam-damske-jizdy-bardotky-predstavuji-prvni-poradny-trailer",
+      "dt": "2026-05-10T09:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "bardotky",
+        "dámská",
+        "hvězdná",
+        "jízda",
+        "oddychový",
+        "plná",
+        "představují",
+        "sexistických",
+        "trailer",
+        "vtipů"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -515,33 +542,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Kinobox Daily: Film, který z Edwarda Nortona během jediné noci udělal hvězdu",
-      "url": "https://www.kinobox.cz/clanky/daily/53558-kinobox-daily-film-ktery-z-edwarda-nortona-udelal-hvezdu-behem-jedine-noci",
-      "dt": "2026-05-07T10:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "během",
-        "daily",
-        "edwarda",
-        "film",
-        "hvězdu",
-        "jediné",
-        "kinobox",
-        "noci",
-        "nortona",
-        "udělal"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -552,7 +552,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28267,
+      "bytes": 28064,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -589,7 +589,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-10T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T09:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -604,6 +604,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hvězdná dámská jízda plná sexistických vtipů. Bardotky představují oddychový trailer",
+            "publishedAt": "2026-05-10T09:00:00Z"
+          },
           {
             "title": "Ranč Duttonových bude plný přestřelek a mrtvol. Nástupce Yellowstonu ukazuje všechny trumfy",
             "publishedAt": "2026-05-10T07:00:00Z"
@@ -631,10 +635,6 @@
           {
             "title": "„Je to Marvel své doby.\" Christopher Nolan vidí v Odyssee předchůdce komiksovek",
             "publishedAt": "2026-05-09T07:00:00Z"
-          },
-          {
-            "title": "VOD tipy: Nový Běžící muž, česká kriminálka i druhý Kaštánek",
-            "publishedAt": "2026-05-08T17:00:00Z"
           }
         ]
       }

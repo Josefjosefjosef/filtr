@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-10T08:58:52.907928Z",
+  "ingestedAt": "2026-05-10T09:45:08.090239Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Miliony za hluk nad hlavami: Letiště Praha odškodní obce za uzavírku hlavní dráhy",
+      "url": "https://ekonomickydenik.cz/miliony-za-hluk-nad-hlavami-letiste-praha-odskodni-obce-za-uzavirku/",
+      "dt": "2026-05-10T09:11:56Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dráhy",
+        "hlavami",
+        "hlavní",
+        "hluk",
+        "letiště",
+        "miliony",
+        "obce",
+        "odškodní",
+        "praha",
+        "uzavírku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -756,31 +783,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Hledá se kupec. Lokomotivy „banány“ u Českých drah definitivně končí",
-      "url": "https://ekonomickydenik.cz/lokomotivy-banany-ceske-drahy/",
-      "dt": "2026-05-07T11:14:32Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "banány",
-        "definitivně",
-        "drah",
-        "hledá",
-        "končí",
-        "kupec",
-        "lokomotivy",
-        "českých"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74289,
+      "bytes": 74172,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,11 +830,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-10T07:08:32Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T09:11:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 26,
-          "zpravy": 4
+          "zpravy": 5,
+          "finance": 25
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -844,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Miliony za hluk nad hlavami: Letiště Praha odškodní obce za uzavírku hlavní dráhy",
+            "publishedAt": "2026-05-10T09:11:56Z"
+          },
           {
             "title": "Putinův vzkaz Západu: Válka končí, jednat chci se svým přítelem Schröderem",
             "publishedAt": "2026-05-10T07:08:32Z"
@@ -871,10 +877,6 @@
           {
             "title": "Bezpečnost v ohrožení? Jen 17 procent Čechů chce škrty, většina chce silnější armádu",
             "publishedAt": "2026-05-09T12:31:57Z"
-          },
-          {
-            "title": "Tanky jsou na frontě. Moskva oslavila Den vítězství v „úsporném“ režimu",
-            "publishedAt": "2026-05-09T11:22:33Z"
           }
         ]
       }

@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-10T08:58:52.907928Z",
+  "ingestedAt": "2026-05-10T09:45:08.090239Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Aston Martin přivezl do Prahy Valhallu. Hypercar s technikou z F1 stojí 30 milionů, přesto nemá o zákazníky nouzi",
+      "url": "https://auto.hn.cz/c1-67875200-aston-martin-privezl-do-prahy-valhallu-hypercar-s-technikou-z-f1-stoji-30-milionu-presto-nema-o-zakazniky-nouzi",
+      "dt": "2026-05-10T09:21:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "aston",
+        "hypercar",
+        "martin",
+        "milionů",
+        "nemá",
+        "nouzi",
+        "prahy",
+        "přesto",
+        "přivezl",
+        "stojí",
+        "technikou",
+        "valhallu",
+        "zákazníky"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1114,32 +1144,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Je to jen pojistka, říká Schillerová ke kritice &bdquo;rozpočtového armagedonu&ldquo;",
-      "url": "https://archiv.hn.cz/c1-67874550-je-to-jen-pojistka-rika-schillerova-ke-kritice-bdquo-rozpoctoveho-armagedonu-ldquo",
-      "dt": "2026-05-06T15:27:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "armagedonu",
-        "bdquo",
-        "jen",
-        "kritice",
-        "ldquo",
-        "pojistka",
-        "rozpočtového",
-        "schillerová",
-        "říká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1150,7 +1154,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184554,
+      "bytes": 184522,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1187,10 +1191,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-09T10:21:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T09:21:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 33,
+          "sport": 1,
+          "finance": 32,
           "zpravy": 3,
           "zdravi": 4
         },
@@ -1204,6 +1209,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Aston Martin přivezl do Prahy Valhallu. Hypercar s technikou z F1 stojí 30 milionů, přesto nemá o zákazníky nouzi",
+            "publishedAt": "2026-05-10T09:21:00Z"
+          },
           {
             "title": "&bdquo;Nějak mi to nevyšlo.&ldquo; Klukovská válka premiéra s prezidentem je trapná, ale může mít zásadní dopad na samotné základy Česka",
             "publishedAt": "2026-05-09T10:21:00Z"
@@ -1231,10 +1240,6 @@
           {
             "title": "Jak to dopadne s ČEZ a kde jsou příležitosti. O energetice a investicích s Michalem Šnobrem",
             "publishedAt": "2026-05-08T06:25:00Z"
-          },
-          {
-            "title": "Pavel chce po jednání s Babišem oznámit, že na summit NATO pojedou oba. Jinak podá kompetenční žalobu",
-            "publishedAt": "2026-05-07T18:20:00Z"
           }
         ]
       }

@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-10T08:58:52.907928Z",
+  "ingestedAt": "2026-05-10T09:45:08.090239Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Omluva za nedochvilnost. Obyčejná slušnost, pane Babiši",
+      "url": "https://www.epenize.eu/omluva-za-nedochvilnost-obycejna-slusnost-pane-babisi/",
+      "dt": "2026-05-10T08:59:13Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "babiši",
+        "nedochvilnost",
+        "obyčejná",
+        "omluva",
+        "pane",
+        "slušnost"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -483,32 +506,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Neuvěřitelný Turek: Smlouvu jen našel, asi někomu na ministerstvu vypadla",
-      "url": "https://www.epenize.eu/neuveritelny-turek-smlouvu-jen-nasel-asi-nekomu-na-ministerstvu-vypadla/",
-      "dt": "2026-04-30T07:00:59Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "asi",
-        "jen",
-        "ministerstvu",
-        "našel",
-        "neuvěřitelný",
-        "někomu",
-        "smlouvu",
-        "turek",
-        "vypadla"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -519,7 +516,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 108791,
+      "bytes": 108290,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -556,7 +553,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-09T23:00:50Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T08:59:13Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 20
@@ -571,6 +568,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Omluva za nedochvilnost. Obyčejná slušnost, pane Babiši",
+            "publishedAt": "2026-05-10T08:59:13Z"
+          },
           {
             "title": "Stará data a nová bída: Trumpův pokus se skvělým průzkumem skončil fiaskem",
             "publishedAt": "2026-05-09T23:00:50Z"
@@ -598,10 +599,6 @@
           {
             "title": "Miliarda z kapes daňových poplatníků na Trumpův taneční sál: Demokraté zuří",
             "publishedAt": "2026-05-06T23:00:20Z"
-          },
-          {
-            "title": "Nehorázný alibismus: Zahradil zřejmě chce nabudit dojem krize a revidovat výdaje na obranu",
-            "publishedAt": "2026-05-06T07:17:54Z"
           }
         ]
       }

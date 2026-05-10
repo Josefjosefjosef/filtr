@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-10T08:58:52.907928Z",
+  "ingestedAt": "2026-05-10T09:45:08.090239Z",
   "items": [
     {
       "section": "aktualne",
@@ -25,6 +25,36 @@
         "verzi",
         "změna",
         "číslování"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Chrome na Androidu umí nově sdílet jen přibližnou polohu. Neprozrazujte o sobě webům zbytečně mnoho",
+      "url": "https://mobilmania.zive.cz/clanky/chrome-na-androidu-umi-nove-sdilet-jen-pribliznou-polohu-neprozrazujte-o-sobe-webum-zbytecne-mnoho/sc-3-a-1364682/default.aspx",
+      "dt": "2026-05-10T08:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "androidu",
+        "chrome",
+        "jen",
+        "mnoho",
+        "neprozrazujte",
+        "nově",
+        "polohu",
+        "přibližnou",
+        "sdílet",
+        "sobě",
+        "umí",
+        "webům",
+        "zbytečně"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -941,34 +971,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Nejlepší světlo na monitor nikdy nebylo levnější. BenQ ScreenBar Halo 2 svítí i na stěnu",
-      "url": "https://www.zive.cz/clanky/nejlevnejsi-svetlo-na-monitor-benq-screenbar-halo-2/sc-3-a-241018/default.aspx",
-      "dt": "2026-05-05T16:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "benq",
-        "halo",
-        "levnější",
-        "monitor",
-        "nebylo",
-        "nejlepší",
-        "nikdy",
-        "screenbar",
-        "stěnu",
-        "svítí",
-        "světlo"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -979,7 +981,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23242,
+      "bytes": 23089,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1016,7 +1018,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-10T07:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T08:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "zpravy": 1,
@@ -1035,6 +1037,10 @@
           {
             "title": "Total Commander má novou finální verzi. Změna v číslování je malá, ale přináší pár užitečných drobností",
             "publishedAt": "2026-05-09T07:45:00Z"
+          },
+          {
+            "title": "Chrome na Androidu umí nově sdílet jen přibližnou polohu. Neprozrazujte o sobě webům zbytečně mnoho",
+            "publishedAt": "2026-05-10T08:45:00Z"
           },
           {
             "title": "Dobrá zpráva pro Rožnov. Onsemi se zotavuje, kromě Nvidie bude dodávat čipy čínským automobilkám",
@@ -1059,10 +1065,6 @@
           {
             "title": "Microsoft hráčům doporučoval 32 GB RAM. Po kritice tohle tvrzení smazal",
             "publishedAt": "2026-05-08T15:45:00Z"
-          },
-          {
-            "title": "Neplaťte u nových telefonů „daň z paměti“. Zjistili jsme, o kolik jsou loňské modely levnější a zda jim něco chybí",
-            "publishedAt": "2026-05-09T08:45:00Z"
           }
         ]
       }

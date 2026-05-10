@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-10T08:58:52.907928Z",
+  "ingestedAt": "2026-05-10T09:45:08.090239Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Slavia Praha po incidentech při derby pražských „S“ uzavírá Tribunu Sever",
+      "url": "https://tydenikpolicie.cz/slavia-praha-po-incidentech-pri-derby-prazskych-s-uzavira-tribunu-sever/",
+      "dt": "2026-05-10T08:58:18Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "derby",
+        "incidentech",
+        "praha",
+        "pražských",
+        "při",
+        "sever",
+        "slavia",
+        "tribunu",
+        "uzavírá"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -233,33 +259,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Muž dojížděl vlakem do Světlé nad Sázavou, kde pak měl opakovaně krást na železnici",
-      "url": "https://tydenikpolicie.cz/muz-dojizdel-vlakem-do-svetle-nad-sazavou-kde-pak-mel-opakovane-krast-na-zeleznici/",
-      "dt": "2026-05-08T07:18:15Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "dojížděl",
-        "krást",
-        "muž",
-        "měl",
-        "opakovaně",
-        "pak",
-        "světlé",
-        "sázavou",
-        "vlakem",
-        "železnici"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -270,7 +269,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16941,
+      "bytes": 17287,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -307,7 +306,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-10T08:27:24Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T08:58:18Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -322,6 +321,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Slavia Praha po incidentech při derby pražských „S“ uzavírá Tribunu Sever",
+            "publishedAt": "2026-05-10T08:58:18Z"
+          },
           {
             "title": "Mladistvý chlapec se v Říčanech vezl na vlaku mezi vagony. Spadl a zemřel",
             "publishedAt": "2026-05-10T08:27:24Z"
@@ -349,10 +352,6 @@
           {
             "title": "Policisté na pražských Olšanech dohlíželi na pietní akci i na ohlášené shromáždění odpůrců",
             "publishedAt": "2026-05-08T20:19:40Z"
-          },
-          {
-            "title": "V areálu brněnské firmy shořelo deset aut",
-            "publishedAt": "2026-05-08T11:05:19Z"
           }
         ]
       }
