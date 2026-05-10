@@ -1,37 +1,28 @@
 {
   "harness_id": "silver_rcz2_mobile_voice_intent_fail_diagnostic",
-  "main_commit": "1a9e9262711eb51d8e1693c0df2a61e46f6cc2d2",
-  "branch": "chore/silver-rcz2-mobile-voice-intent-fail-diagnostic",
-  "engine_changed": "NO",
-  "assets_app_changed": "NO",
+  "main_commit": "77516be1faaffd5c538462f54cd0b084ce2b348a",
+  "branch": "fix/silver-rcz2-mobile-voice-task-query-p1",
+  "engine_changed": "YES",
+  "assets_app_changed": "YES",
   "target_cluster": "rcz2_mobile_voice||intent_fail",
-  "target_cluster_total": 5657,
+  "target_cluster_total": 3457,
   "inspected_count": 120,
   "counts": {
     "calendar_write_intent_fail": 1,
     "task_write_intent_fail": 0,
     "note_write_intent_fail": 0,
     "calendar_query_intent_fail": 3456,
-    "task_query_intent_fail": 2200,
+    "task_query_intent_fail": 0,
     "note_query_intent_fail": 0,
-    "negation_or_correction_phrase": 2711,
+    "negation_or_correction_phrase": 1688,
     "storage_disambiguation": 1259,
     "calendar_vs_task_ambiguity": 0,
-    "wrong_expected_intent_or_harness_problem": 3142,
+    "wrong_expected_intent_or_harness_problem": 1571,
     "seed_mismatch": 0,
-    "true_product_fail": 2515,
+    "true_product_fail": 1886,
     "safety_risk": 0
   },
   "subclusters_top5": [
-    {
-      "key": "task_query|exp=task.query|act=unknown|ps=STORAGE_DISAMBIGUATION|eng=create.storage_disambiguation",
-      "count": 1571,
-      "examples": [
-        "pockej ne pockej pristi utery diky díky",
-        "hele hele pripomen mi zejtra rano ze mam vstat diky díky",
-        "hele pockej ne pockej pristi utery jo díky"
-      ]
-    },
     {
       "key": "calendar_query|exp=calendar.query|act=unknown|ps=STORAGE_DISAMBIGUATION|eng=create.storage_disambiguation",
       "count": 1570,
@@ -60,12 +51,10 @@
       ]
     },
     {
-      "key": "task_query|exp=task.query|act=task.create|ps=READY_TO_SAVE|eng=tasks.create",
-      "count": 629,
+      "key": "calendar_write|exp=calendar.create|act=unknown|ps=CLARIFICATION|eng=clarification",
+      "count": 1,
       "examples": [
-        "hele no tak hod mi do ukolu koupit mliko do patku ne kalendare diky",
-        "hele no tak hod mi do ukolu koupit mliko do patku ne kalendare jo",
-        "no tak hod mi do ukolu koupit mliko do patku ne kalendare nevim presne díky"
+        "hele zapis poznamku ze pin je doma 55"
       ]
     }
   ],
@@ -89,15 +78,6 @@
       "input": "hele zapis poznamku ze pin je doma 55"
     },
     {
-      "id": "rcz2_0028005",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "task.create",
-      "ps": "READY_TO_SAVE",
-      "eng": "tasks.create",
-      "input": "hele no tak hod mi do ukolu koupit mliko do patku ne kalendare diky"
-    },
-    {
       "id": "rcz2_0028009",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -105,15 +85,6 @@
       "ps": "NEEDS_CLARIFICATION",
       "eng": "calendar.create",
       "input": "vlastne to nedavej do kalendare ale do ukolu diky díky"
-    },
-    {
-      "id": "rcz2_0028010",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "pockej ne pockej pristi utery diky díky"
     },
     {
       "id": "rcz2_0028014",
@@ -125,15 +96,6 @@
       "input": "hele zapis poznamku ze pin je doma 13 diky díky"
     },
     {
-      "id": "rcz2_0028015",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat diky díky"
-    },
-    {
       "id": "rcz2_0028024",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -141,15 +103,6 @@
       "ps": "STORAGE_DISAMBIGUATION",
       "eng": "create.storage_disambiguation",
       "input": "hele pockej ne pockej pristi utery prosim te"
-    },
-    {
-      "id": "rcz2_0028040",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "task.create",
-      "ps": "READY_TO_SAVE",
-      "eng": "tasks.create",
-      "input": "hele no tak hod mi do ukolu koupit mliko do patku ne kalendare jo"
     },
     {
       "id": "rcz2_0028029",
@@ -161,15 +114,6 @@
       "input": "hele hele pripomen mi zejtra rano ze mam vstat prosim te díky"
     },
     {
-      "id": "rcz2_0028045",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele pockej ne pockej pristi utery jo díky"
-    },
-    {
       "id": "rcz2_0028034",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -177,15 +121,6 @@
       "ps": "NEEDS_CLARIFICATION",
       "eng": "calendar.create",
       "input": "btw mrkni kdy mam zubare v kalendari jo"
-    },
-    {
-      "id": "rcz2_0028050",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele pripomen mi zejtra rano ze mam vstat"
     },
     {
       "id": "rcz2_0028039",
@@ -197,15 +132,6 @@
       "input": "hele tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu jo"
     },
     {
-      "id": "rcz2_0028070",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele zapis poznamku ze pin je doma 69 nevim presne"
-    },
-    {
       "id": "rcz2_0028044",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -213,15 +139,6 @@
       "ps": "NEEDS_CLARIFICATION",
       "eng": "calendar.create",
       "input": "vlastne to nedavej do kalendare ale do ukolu jo díky"
-    },
-    {
-      "id": "rcz2_0028075",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "task.create",
-      "ps": "READY_TO_SAVE",
-      "eng": "tasks.create",
-      "input": "no tak hod mi do ukolu koupit mliko do patku ne kalendare nevim presne díky"
     },
     {
       "id": "rcz2_0028059",
@@ -233,15 +150,6 @@
       "input": "pockej ne pockej pristi utery díky"
     },
     {
-      "id": "rcz2_0028080",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele pockej ne pockej pristi utery nevim presne díky"
-    },
-    {
       "id": "rcz2_0028064",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -249,15 +157,6 @@
       "ps": "STORAGE_DISAMBIGUATION",
       "eng": "create.storage_disambiguation",
       "input": "hele hele pripomen mi zejtra rano ze mam vstat díky"
-    },
-    {
-      "id": "rcz2_0028085",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat diky"
     },
     {
       "id": "rcz2_0028069",
@@ -269,15 +168,6 @@
       "input": "hele btw mrkni kdy mam zubare v kalendari nevim presne"
     },
     {
-      "id": "rcz2_0028110",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "task.create",
-      "ps": "READY_TO_SAVE",
-      "eng": "tasks.create",
-      "input": "hele no tak hod mi do ukolu koupit mliko do patku ne kalendare prosim te díky"
-    },
-    {
       "id": "rcz2_0028074",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -285,15 +175,6 @@
       "ps": "READY_TO_SAVE",
       "eng": "calendar.create",
       "input": "tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu nevim presne díky"
-    },
-    {
-      "id": "rcz2_0028115",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "pockej ne pockej pristi utery jo"
     },
     {
       "id": "rcz2_0028079",
@@ -305,15 +186,6 @@
       "input": "hele vlastne to nedavej do kalendare ale do ukolu nevim presne díky"
     },
     {
-      "id": "rcz2_0028120",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat jo"
-    },
-    {
       "id": "rcz2_0028094",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -321,15 +193,6 @@
       "ps": "STORAGE_DISAMBIGUATION",
       "eng": "create.storage_disambiguation",
       "input": "hele pockej ne pockej pristi utery diky díky"
-    },
-    {
-      "id": "rcz2_0028145",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "task.create",
-      "ps": "READY_TO_SAVE",
-      "eng": "tasks.create",
-      "input": "no tak hod mi do ukolu koupit mliko do patku ne kalendare nevim presne"
     },
     {
       "id": "rcz2_0028099",
@@ -341,15 +204,6 @@
       "input": "hele pripomen mi zejtra rano ze mam vstat prosim te"
     },
     {
-      "id": "rcz2_0028150",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele pockej ne pockej pristi utery nevim presne"
-    },
-    {
       "id": "rcz2_0028104",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -357,15 +211,6 @@
       "ps": "NEEDS_CLARIFICATION",
       "eng": "calendar.create",
       "input": "hele btw mrkni kdy mam zubare v kalendari prosim te"
-    },
-    {
-      "id": "rcz2_0028155",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele pripomen mi zejtra rano ze mam vstat nevim presne díky"
     },
     {
       "id": "rcz2_0028109",
@@ -377,15 +222,6 @@
       "input": "hele tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu prosim te díky"
     },
     {
-      "id": "rcz2_0028175",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele zapis poznamku ze pin je doma 174 diky díky"
-    },
-    {
       "id": "rcz2_0028114",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -393,15 +229,6 @@
       "ps": "NEEDS_CLARIFICATION",
       "eng": "calendar.create",
       "input": "vlastne to nedavej do kalendare ale do ukolu jo"
-    },
-    {
-      "id": "rcz2_0028180",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "task.create",
-      "ps": "READY_TO_SAVE",
-      "eng": "tasks.create",
-      "input": "no tak hod mi do ukolu koupit mliko do patku ne kalendare prosim te"
     },
     {
       "id": "rcz2_0028119",
@@ -413,15 +240,6 @@
       "input": "hele zapis poznamku ze pin je doma 118 jo"
     },
     {
-      "id": "rcz2_0028185",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "pockej ne pockej pristi utery prosim te díky"
-    },
-    {
       "id": "rcz2_0028129",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -429,15 +247,6 @@
       "ps": "STORAGE_DISAMBIGUATION",
       "eng": "create.storage_disambiguation",
       "input": "pockej ne pockej pristi utery"
-    },
-    {
-      "id": "rcz2_0028190",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat prosim te díky"
     },
     {
       "id": "rcz2_0028134",
@@ -449,15 +258,6 @@
       "input": "hele hele pripomen mi zejtra rano ze mam vstat"
     },
     {
-      "id": "rcz2_0028215",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "task.create",
-      "ps": "READY_TO_SAVE",
-      "eng": "tasks.create",
-      "input": "hele no tak hod mi do ukolu koupit mliko do patku ne kalendare"
-    },
-    {
       "id": "rcz2_0028139",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -465,15 +265,6 @@
       "ps": "NEEDS_CLARIFICATION",
       "eng": "calendar.create",
       "input": "btw mrkni kdy mam zubare v kalendari díky"
-    },
-    {
-      "id": "rcz2_0028220",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "pockej ne pockej pristi utery díky"
     },
     {
       "id": "rcz2_0028144",
@@ -485,15 +276,6 @@
       "input": "hele tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu díky"
     },
     {
-      "id": "rcz2_0028225",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele pripomen mi zejtra rano ze mam vstat nevim presne"
-    },
-    {
       "id": "rcz2_0028149",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -501,15 +283,6 @@
       "ps": "NEEDS_CLARIFICATION",
       "eng": "calendar.create",
       "input": "hele vlastne to nedavej do kalendare ale do ukolu nevim presne"
-    },
-    {
-      "id": "rcz2_0028245",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele zapis poznamku ze pin je doma 244 diky"
     },
     {
       "id": "rcz2_0028164",
@@ -521,15 +294,6 @@
       "input": "pockej ne pockej pristi utery diky"
     },
     {
-      "id": "rcz2_0028250",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "task.create",
-      "ps": "READY_TO_SAVE",
-      "eng": "tasks.create",
-      "input": "no tak hod mi do ukolu koupit mliko do patku ne kalendare diky díky"
-    },
-    {
       "id": "rcz2_0028169",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -537,15 +301,6 @@
       "ps": "STORAGE_DISAMBIGUATION",
       "eng": "create.storage_disambiguation",
       "input": "hele pripomen mi zejtra rano ze mam vstat diky díky"
-    },
-    {
-      "id": "rcz2_0028255",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele pockej ne pockej pristi utery diky díky"
     },
     {
       "id": "rcz2_0028174",
@@ -557,15 +312,6 @@
       "input": "hele btw mrkni kdy mam zubare v kalendari diky díky"
     },
     {
-      "id": "rcz2_0028260",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele pripomen mi zejtra rano ze mam vstat prosim te"
-    },
-    {
       "id": "rcz2_0028179",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -573,15 +319,6 @@
       "ps": "READY_TO_SAVE",
       "eng": "calendar.create",
       "input": "tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu prosim te"
-    },
-    {
-      "id": "rcz2_0028280",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele zapis poznamku ze pin je doma 279 jo"
     },
     {
       "id": "rcz2_0028184",
@@ -593,15 +330,6 @@
       "input": "hele vlastne to nedavej do kalendare ale do ukolu prosim te"
     },
     {
-      "id": "rcz2_0028285",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "task.create",
-      "ps": "READY_TO_SAVE",
-      "eng": "tasks.create",
-      "input": "hele no tak hod mi do ukolu koupit mliko do patku ne kalendare jo díky"
-    },
-    {
       "id": "rcz2_0028189",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -609,15 +337,6 @@
       "ps": "STORAGE_DISAMBIGUATION",
       "eng": "create.storage_disambiguation",
       "input": "hele zapis poznamku ze pin je doma 188 prosim te díky"
-    },
-    {
-      "id": "rcz2_0028290",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "pockej ne pockej pristi utery"
     },
     {
       "id": "rcz2_0028199",
@@ -629,15 +348,6 @@
       "input": "hele pockej ne pockej pristi utery jo"
     },
     {
-      "id": "rcz2_0028295",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat"
-    },
-    {
       "id": "rcz2_0028204",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -645,15 +355,6 @@
       "ps": "STORAGE_DISAMBIGUATION",
       "eng": "create.storage_disambiguation",
       "input": "hele pripomen mi zejtra rano ze mam vstat jo díky"
-    },
-    {
-      "id": "rcz2_0028320",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "task.create",
-      "ps": "READY_TO_SAVE",
-      "eng": "tasks.create",
-      "input": "hele no tak hod mi do ukolu koupit mliko do patku ne kalendare nevim presne díky"
     },
     {
       "id": "rcz2_0028209",
@@ -665,15 +366,6 @@
       "input": "btw mrkni kdy mam zubare v kalendari"
     },
     {
-      "id": "rcz2_0028325",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele pockej ne pockej pristi utery diky"
-    },
-    {
       "id": "rcz2_0028214",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -681,15 +373,6 @@
       "ps": "READY_TO_SAVE",
       "eng": "calendar.create",
       "input": "hele tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu"
-    },
-    {
-      "id": "rcz2_0028330",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele pripomen mi zejtra rano ze mam vstat diky díky"
     },
     {
       "id": "rcz2_0028219",
@@ -701,15 +384,6 @@
       "input": "vlastne to nedavej do kalendare ale do ukolu díky"
     },
     {
-      "id": "rcz2_0028350",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele zapis poznamku ze pin je doma 349 prosim te díky"
-    },
-    {
       "id": "rcz2_0028224",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -717,15 +391,6 @@
       "ps": "STORAGE_DISAMBIGUATION",
       "eng": "create.storage_disambiguation",
       "input": "hele zapis poznamku ze pin je doma 223 díky"
-    },
-    {
-      "id": "rcz2_0028355",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "task.create",
-      "ps": "READY_TO_SAVE",
-      "eng": "tasks.create",
-      "input": "no tak hod mi do ukolu koupit mliko do patku ne kalendare jo"
     },
     {
       "id": "rcz2_0028234",
@@ -737,15 +402,6 @@
       "input": "pockej ne pockej pristi utery nevim presne díky"
     },
     {
-      "id": "rcz2_0028360",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele pockej ne pockej pristi utery jo"
-    },
-    {
       "id": "rcz2_0028239",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -753,15 +409,6 @@
       "ps": "STORAGE_DISAMBIGUATION",
       "eng": "create.storage_disambiguation",
       "input": "hele hele pripomen mi zejtra rano ze mam vstat nevim presne díky"
-    },
-    {
-      "id": "rcz2_0028365",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat jo díky"
     },
     {
       "id": "rcz2_0028244",
@@ -773,15 +420,6 @@
       "input": "btw mrkni kdy mam zubare v kalendari diky"
     },
     {
-      "id": "rcz2_0028390",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "task.create",
-      "ps": "READY_TO_SAVE",
-      "eng": "tasks.create",
-      "input": "hele no tak hod mi do ukolu koupit mliko do patku ne kalendare nevim presne"
-    },
-    {
       "id": "rcz2_0028249",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -789,15 +427,6 @@
       "ps": "READY_TO_SAVE",
       "eng": "calendar.create",
       "input": "tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu diky díky"
-    },
-    {
-      "id": "rcz2_0028395",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "pockej ne pockej pristi utery nevim presne díky"
     },
     {
       "id": "rcz2_0028254",
@@ -809,15 +438,6 @@
       "input": "hele vlastne to nedavej do kalendare ale do ukolu diky díky"
     },
     {
-      "id": "rcz2_0028400",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat nevim presne díky"
-    },
-    {
       "id": "rcz2_0028269",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -825,15 +445,6 @@
       "ps": "STORAGE_DISAMBIGUATION",
       "eng": "create.storage_disambiguation",
       "input": "hele pockej ne pockej pristi utery prosim te díky"
-    },
-    {
-      "id": "rcz2_0028425",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "task.create",
-      "ps": "READY_TO_SAVE",
-      "eng": "tasks.create",
-      "input": "no tak hod mi do ukolu koupit mliko do patku ne kalendare prosim te díky"
     },
     {
       "id": "rcz2_0028274",
@@ -845,15 +456,6 @@
       "input": "hele pripomen mi zejtra rano ze mam vstat jo"
     },
     {
-      "id": "rcz2_0028430",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele pockej ne pockej pristi utery prosim te díky"
-    },
-    {
       "id": "rcz2_0028279",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -861,15 +463,6 @@
       "ps": "NEEDS_CLARIFICATION",
       "eng": "calendar.create",
       "input": "hele btw mrkni kdy mam zubare v kalendari jo"
-    },
-    {
-      "id": "rcz2_0028435",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele pripomen mi zejtra rano ze mam vstat jo"
     },
     {
       "id": "rcz2_0028284",
@@ -881,15 +474,6 @@
       "input": "tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu jo díky"
     },
     {
-      "id": "rcz2_0028455",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele zapis poznamku ze pin je doma 454"
-    },
-    {
       "id": "rcz2_0028289",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -897,15 +481,6 @@
       "ps": "NEEDS_CLARIFICATION",
       "eng": "calendar.create",
       "input": "vlastne to nedavej do kalendare ale do ukolu"
-    },
-    {
-      "id": "rcz2_0028460",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "task.create",
-      "ps": "READY_TO_SAVE",
-      "eng": "tasks.create",
-      "input": "no tak hod mi do ukolu koupit mliko do patku ne kalendare díky"
     },
     {
       "id": "rcz2_0028294",
@@ -917,15 +492,6 @@
       "input": "hele zapis poznamku ze pin je doma 293"
     },
     {
-      "id": "rcz2_0028465",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "pockej ne pockej pristi utery nevim presne"
-    },
-    {
       "id": "rcz2_0028304",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -933,15 +499,6 @@
       "ps": "STORAGE_DISAMBIGUATION",
       "eng": "create.storage_disambiguation",
       "input": "hele pockej ne pockej pristi utery díky"
-    },
-    {
-      "id": "rcz2_0028470",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat nevim presne"
     },
     {
       "id": "rcz2_0028309",
@@ -953,15 +510,6 @@
       "input": "hele hele pripomen mi zejtra rano ze mam vstat nevim presne"
     },
     {
-      "id": "rcz2_0028495",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "task.create",
-      "ps": "READY_TO_SAVE",
-      "eng": "tasks.create",
-      "input": "hele no tak hod mi do ukolu koupit mliko do patku ne kalendare diky díky"
-    },
-    {
       "id": "rcz2_0028314",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -969,15 +517,6 @@
       "ps": "NEEDS_CLARIFICATION",
       "eng": "calendar.create",
       "input": "btw mrkni kdy mam zubare v kalendari nevim presne díky"
-    },
-    {
-      "id": "rcz2_0028500",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "pockej ne pockej pristi utery prosim te"
     },
     {
       "id": "rcz2_0028319",
@@ -989,15 +528,6 @@
       "input": "hele tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu nevim presne díky"
     },
     {
-      "id": "rcz2_0028505",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele pripomen mi zejtra rano ze mam vstat prosim te díky"
-    },
-    {
       "id": "rcz2_0028324",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -1005,15 +535,6 @@
       "ps": "NEEDS_CLARIFICATION",
       "eng": "calendar.create",
       "input": "vlastne to nedavej do kalendare ale do ukolu diky"
-    },
-    {
-      "id": "rcz2_0028525",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele zapis poznamku ze pin je doma 524 jo díky"
     },
     {
       "id": "rcz2_0028339",
@@ -1025,15 +546,6 @@
       "input": "pockej ne pockej pristi utery prosim te"
     },
     {
-      "id": "rcz2_0028530",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "task.create",
-      "ps": "READY_TO_SAVE",
-      "eng": "tasks.create",
-      "input": "no tak hod mi do ukolu koupit mliko do patku ne kalendare"
-    },
-    {
       "id": "rcz2_0028344",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -1041,15 +553,6 @@
       "ps": "STORAGE_DISAMBIGUATION",
       "eng": "create.storage_disambiguation",
       "input": "hele hele pripomen mi zejtra rano ze mam vstat prosim te"
-    },
-    {
-      "id": "rcz2_0028535",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele pockej ne pockej pristi utery"
     },
     {
       "id": "rcz2_0028349",
@@ -1061,15 +564,6 @@
       "input": "hele btw mrkni kdy mam zubare v kalendari prosim te díky"
     },
     {
-      "id": "rcz2_0028540",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele pripomen mi zejtra rano ze mam vstat díky"
-    },
-    {
       "id": "rcz2_0028354",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -1077,15 +571,6 @@
       "ps": "READY_TO_SAVE",
       "eng": "calendar.create",
       "input": "tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu jo"
-    },
-    {
-      "id": "rcz2_0028560",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele zapis poznamku ze pin je doma 559 nevim presne díky"
     },
     {
       "id": "rcz2_0028359",
@@ -1097,15 +582,6 @@
       "input": "hele vlastne to nedavej do kalendare ale do ukolu jo"
     },
     {
-      "id": "rcz2_0028565",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "task.create",
-      "ps": "READY_TO_SAVE",
-      "eng": "tasks.create",
-      "input": "hele no tak hod mi do ukolu koupit mliko do patku ne kalendare diky"
-    },
-    {
       "id": "rcz2_0028374",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -1113,15 +589,6 @@
       "ps": "STORAGE_DISAMBIGUATION",
       "eng": "create.storage_disambiguation",
       "input": "hele pockej ne pockej pristi utery"
-    },
-    {
-      "id": "rcz2_0028570",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "pockej ne pockej pristi utery diky díky"
     },
     {
       "id": "rcz2_0028379",
@@ -1133,15 +600,6 @@
       "input": "hele pripomen mi zejtra rano ze mam vstat díky"
     },
     {
-      "id": "rcz2_0028575",
-      "group": "task_query",
-      "expected": "task.query",
-      "actual": "unknown",
-      "ps": "STORAGE_DISAMBIGUATION",
-      "eng": "create.storage_disambiguation",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat diky díky"
-    },
-    {
       "id": "rcz2_0028384",
       "group": "calendar_query",
       "expected": "calendar.query",
@@ -1149,18 +607,549 @@
       "ps": "NEEDS_CLARIFICATION",
       "eng": "calendar.create",
       "input": "hele btw mrkni kdy mam zubare v kalendari díky"
+    },
+    {
+      "id": "rcz2_0028389",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "READY_TO_SAVE",
+      "eng": "calendar.create",
+      "input": "hele tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu nevim presne"
+    },
+    {
+      "id": "rcz2_0028394",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "NEEDS_CLARIFICATION",
+      "eng": "calendar.create",
+      "input": "vlastne to nedavej do kalendare ale do ukolu nevim presne díky"
+    },
+    {
+      "id": "rcz2_0028399",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "hele zapis poznamku ze pin je doma 398 nevim presne díky"
+    },
+    {
+      "id": "rcz2_0028409",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "pockej ne pockej pristi utery diky díky"
+    },
+    {
+      "id": "rcz2_0028414",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "hele hele pripomen mi zejtra rano ze mam vstat diky díky"
+    },
+    {
+      "id": "rcz2_0028419",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "NEEDS_CLARIFICATION",
+      "eng": "calendar.create",
+      "input": "btw mrkni kdy mam zubare v kalendari prosim te"
+    },
+    {
+      "id": "rcz2_0028424",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "READY_TO_SAVE",
+      "eng": "calendar.create",
+      "input": "hele tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu prosim te"
+    },
+    {
+      "id": "rcz2_0028429",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "NEEDS_CLARIFICATION",
+      "eng": "calendar.create",
+      "input": "hele vlastne to nedavej do kalendare ale do ukolu prosim te díky"
+    },
+    {
+      "id": "rcz2_0028444",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "pockej ne pockej pristi utery jo díky"
+    },
+    {
+      "id": "rcz2_0028449",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "hele pripomen mi zejtra rano ze mam vstat"
+    },
+    {
+      "id": "rcz2_0028454",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "NEEDS_CLARIFICATION",
+      "eng": "calendar.create",
+      "input": "hele btw mrkni kdy mam zubare v kalendari"
+    },
+    {
+      "id": "rcz2_0028459",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "READY_TO_SAVE",
+      "eng": "calendar.create",
+      "input": "tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu díky"
+    },
+    {
+      "id": "rcz2_0028464",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "NEEDS_CLARIFICATION",
+      "eng": "calendar.create",
+      "input": "hele vlastne to nedavej do kalendare ale do ukolu díky"
+    },
+    {
+      "id": "rcz2_0028469",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "hele zapis poznamku ze pin je doma 468 nevim presne"
+    },
+    {
+      "id": "rcz2_0028479",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "hele pockej ne pockej pristi utery nevim presne díky"
+    },
+    {
+      "id": "rcz2_0028484",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "hele pripomen mi zejtra rano ze mam vstat diky"
+    },
+    {
+      "id": "rcz2_0028489",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "NEEDS_CLARIFICATION",
+      "eng": "calendar.create",
+      "input": "btw mrkni kdy mam zubare v kalendari diky díky"
+    },
+    {
+      "id": "rcz2_0028494",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "READY_TO_SAVE",
+      "eng": "calendar.create",
+      "input": "hele tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu diky díky"
+    },
+    {
+      "id": "rcz2_0028499",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "NEEDS_CLARIFICATION",
+      "eng": "calendar.create",
+      "input": "vlastne to nedavej do kalendare ale do ukolu prosim te"
+    },
+    {
+      "id": "rcz2_0028504",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "hele zapis poznamku ze pin je doma 503 prosim te"
+    },
+    {
+      "id": "rcz2_0028514",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "pockej ne pockej pristi utery jo"
+    },
+    {
+      "id": "rcz2_0028519",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "hele hele pripomen mi zejtra rano ze mam vstat jo"
+    },
+    {
+      "id": "rcz2_0028524",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "NEEDS_CLARIFICATION",
+      "eng": "calendar.create",
+      "input": "btw mrkni kdy mam zubare v kalendari jo díky"
+    },
+    {
+      "id": "rcz2_0028529",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "READY_TO_SAVE",
+      "eng": "calendar.create",
+      "input": "tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu"
+    },
+    {
+      "id": "rcz2_0028534",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "NEEDS_CLARIFICATION",
+      "eng": "calendar.create",
+      "input": "hele vlastne to nedavej do kalendare ale do ukolu"
+    },
+    {
+      "id": "rcz2_0028549",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "hele pockej ne pockej pristi utery nevim presne"
+    },
+    {
+      "id": "rcz2_0028554",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "hele pripomen mi zejtra rano ze mam vstat nevim presne díky"
+    },
+    {
+      "id": "rcz2_0028559",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "NEEDS_CLARIFICATION",
+      "eng": "calendar.create",
+      "input": "hele btw mrkni kdy mam zubare v kalendari nevim presne díky"
+    },
+    {
+      "id": "rcz2_0028564",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "READY_TO_SAVE",
+      "eng": "calendar.create",
+      "input": "tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu diky"
+    },
+    {
+      "id": "rcz2_0028569",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "NEEDS_CLARIFICATION",
+      "eng": "calendar.create",
+      "input": "vlastne to nedavej do kalendare ale do ukolu diky díky"
+    },
+    {
+      "id": "rcz2_0028574",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "hele zapis poznamku ze pin je doma 573 diky díky"
+    },
+    {
+      "id": "rcz2_0028584",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "hele pockej ne pockej pristi utery prosim te"
+    },
+    {
+      "id": "rcz2_0028589",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "hele hele pripomen mi zejtra rano ze mam vstat prosim te díky"
+    },
+    {
+      "id": "rcz2_0028594",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "NEEDS_CLARIFICATION",
+      "eng": "calendar.create",
+      "input": "btw mrkni kdy mam zubare v kalendari jo"
+    },
+    {
+      "id": "rcz2_0028599",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "READY_TO_SAVE",
+      "eng": "calendar.create",
+      "input": "hele tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu jo"
+    },
+    {
+      "id": "rcz2_0028604",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "NEEDS_CLARIFICATION",
+      "eng": "calendar.create",
+      "input": "vlastne to nedavej do kalendare ale do ukolu jo díky"
+    },
+    {
+      "id": "rcz2_0028619",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "pockej ne pockej pristi utery díky"
+    },
+    {
+      "id": "rcz2_0028624",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "hele hele pripomen mi zejtra rano ze mam vstat díky"
+    },
+    {
+      "id": "rcz2_0028629",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "NEEDS_CLARIFICATION",
+      "eng": "calendar.create",
+      "input": "hele btw mrkni kdy mam zubare v kalendari nevim presne"
+    },
+    {
+      "id": "rcz2_0028634",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "READY_TO_SAVE",
+      "eng": "calendar.create",
+      "input": "tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu nevim presne díky"
+    },
+    {
+      "id": "rcz2_0028639",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "NEEDS_CLARIFICATION",
+      "eng": "calendar.create",
+      "input": "hele vlastne to nedavej do kalendare ale do ukolu nevim presne díky"
+    },
+    {
+      "id": "rcz2_0028654",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "hele pockej ne pockej pristi utery diky díky"
+    },
+    {
+      "id": "rcz2_0028659",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "hele pripomen mi zejtra rano ze mam vstat prosim te"
+    },
+    {
+      "id": "rcz2_0028664",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "NEEDS_CLARIFICATION",
+      "eng": "calendar.create",
+      "input": "hele btw mrkni kdy mam zubare v kalendari prosim te"
+    },
+    {
+      "id": "rcz2_0028669",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "READY_TO_SAVE",
+      "eng": "calendar.create",
+      "input": "hele tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu prosim te díky"
+    },
+    {
+      "id": "rcz2_0028674",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "NEEDS_CLARIFICATION",
+      "eng": "calendar.create",
+      "input": "vlastne to nedavej do kalendare ale do ukolu jo"
+    },
+    {
+      "id": "rcz2_0028679",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "hele zapis poznamku ze pin je doma 678 jo"
+    },
+    {
+      "id": "rcz2_0028689",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "pockej ne pockej pristi utery"
+    },
+    {
+      "id": "rcz2_0028694",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "hele hele pripomen mi zejtra rano ze mam vstat"
+    },
+    {
+      "id": "rcz2_0028699",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "NEEDS_CLARIFICATION",
+      "eng": "calendar.create",
+      "input": "btw mrkni kdy mam zubare v kalendari díky"
+    },
+    {
+      "id": "rcz2_0028704",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "READY_TO_SAVE",
+      "eng": "calendar.create",
+      "input": "hele tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu díky"
+    },
+    {
+      "id": "rcz2_0028709",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "NEEDS_CLARIFICATION",
+      "eng": "calendar.create",
+      "input": "hele vlastne to nedavej do kalendare ale do ukolu nevim presne"
+    },
+    {
+      "id": "rcz2_0028724",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "pockej ne pockej pristi utery diky"
+    },
+    {
+      "id": "rcz2_0028729",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "hele pripomen mi zejtra rano ze mam vstat diky díky"
+    },
+    {
+      "id": "rcz2_0028734",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "NEEDS_CLARIFICATION",
+      "eng": "calendar.create",
+      "input": "hele btw mrkni kdy mam zubare v kalendari diky díky"
+    },
+    {
+      "id": "rcz2_0028739",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "READY_TO_SAVE",
+      "eng": "calendar.create",
+      "input": "tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu prosim te"
+    },
+    {
+      "id": "rcz2_0028744",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "calendar.create",
+      "ps": "NEEDS_CLARIFICATION",
+      "eng": "calendar.create",
+      "input": "hele vlastne to nedavej do kalendare ale do ukolu prosim te"
+    },
+    {
+      "id": "rcz2_0028749",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "hele zapis poznamku ze pin je doma 748 prosim te díky"
+    },
+    {
+      "id": "rcz2_0028759",
+      "group": "calendar_query",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "ps": "STORAGE_DISAMBIGUATION",
+      "eng": "create.storage_disambiguation",
+      "input": "hele pockej ne pockej pristi utery jo"
     }
   ],
   "recommendation": {
-    "recommended_next_fix_cluster": "task_query",
+    "recommended_next_fix_cluster": "calendar_query",
     "recommended_next_fix_scope": "Silver routing thresholds + Czech paraphrase templates (mobile_voice_chaos)",
-    "recommended_reason": "Dominant harness root-cause signal «ambiguous_should_clarify» across 5657 intent_fail rows in mobile_voice_chaos; narrow Silver change in that module first.",
-    "risk_level": "P1",
+    "recommended_reason": "Dominant harness root-cause signal «ambiguous_should_clarify» across 3457 intent_fail rows in mobile_voice_chaos; narrow Silver change in that module first.",
+    "risk_level": "P2",
     "ready_for_fix_task": "YES"
   },
   "audit_snapshot": {
-    "calendar_write_20k": "3000/3000",
-    "overall_20k_accuracy": "95.48%",
+    "calendar_write_20k": "SKIPPED",
+    "overall_20k_accuracy": "SKIPPED",
     "quality_accuracy": "100.00%",
     "realistic_overall_accuracy": "100.00%",
     "real_czech_corpus_accuracy": "100.00%",
@@ -1170,6 +1159,6 @@
     "query_created_write_count": "0",
     "write_when_negated_count": "0"
   },
-  "changed_files": "scripts/audit_silver_20000_routing_stable.cjs;scripts/silver-deep-product-real-ux-v2-report.json;scripts/silver-real-czech-public-ux-corpus-v2.cjs;scripts/silver-rcz2-mobile-voice-intent-fail-diagnostic-report.json;scripts/silver-rcz2-mobile-voice-intent-fail-diagnostic.cjs",
+  "changed_files": "assets/app.js;scripts/audit_silver_realistic_mobile_corpus.cjs;scripts/silver-deep-product-real-ux-v2-report.json;scripts/silver-rcz2-mobile-voice-intent-fail-diagnostic.cjs;scripts/silver-real-czech-corpus-v1.cjs;scripts/silver-real-czech-public-ux-corpus-v2.cjs",
   "git_status_clean": "NO"
 }

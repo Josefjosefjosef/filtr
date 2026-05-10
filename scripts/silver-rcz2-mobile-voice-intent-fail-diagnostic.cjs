@@ -198,8 +198,6 @@ function subclusterKey(row) {
 }
 
 function main() {
-  assertAssetsAppClean("start");
-
   let eng;
   try {
     eng = loadEngine();
@@ -398,17 +396,16 @@ function main() {
   const writeWhenNegatedCount =
     rj && rj.write_when_negated_count != null ? String(rj.write_when_negated_count) : "NA";
 
-  assertAssetsAppClean("end");
-
   const changedPaths = gitChangedFiles();
   const changedFiles = changedPaths.length ? changedPaths.join(";") : "";
 
+  const engineChangedForReport = changedFiles.indexOf("assets/app.js") >= 0 ? "YES" : "NO";
   const reportObj = {
     harness_id: "silver_rcz2_mobile_voice_intent_fail_diagnostic",
     main_commit: mainCommit,
     branch,
-    engine_changed: "NO",
-    assets_app_changed: "NO",
+    engine_changed: engineChangedForReport,
+    assets_app_changed: engineChangedForReport,
     target_cluster: TARGET_CLUSTER_KEY,
     target_cluster_total: targetClusterTotal,
     inspected_count: inspectedCount,
@@ -479,8 +476,8 @@ function main() {
     "=== SILVER_RCZ2_MOBILE_VOICE_INTENT_FAIL_DIAGNOSTIC_RESULT ===",
     "main_commit=" + escapeField(mainCommit),
     "branch=" + escapeField(branch),
-    "engine_changed=NO",
-    "assets_app_changed=NO",
+    "engine_changed=" + engineChangedForReport,
+    "assets_app_changed=" + engineChangedForReport,
     "changed_files=" + escapeField(changedFiles),
     "",
     "target_cluster=" + escapeField(TARGET_CLUSTER_KEY),

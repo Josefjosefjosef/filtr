@@ -35471,6 +35471,83 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return /\bnajdi\s+ukol\s+\S/i.test(String(f || ""));
   }
 
+  /**
+   * P1 mobile_voice_task_query_anchor: strip mobilního chaos prefixu (foldCs), pak úzké READ/QUERY úkoly.
+   * Blokuje připomínku / zápis poznámky / směrování „do kalendáře ale do úkolu“ z rcz2 šumu.
+   */
+  function iuSilverMobileVoiceChaosLeadStripForTaskQueryP1Folded(x) {
+    let s = String(x || "")
+      .replace(/\s+/g, " ")
+      .trim();
+    for (let iter = 0; iter < 14; iter++) {
+      const prev = s;
+      s = s
+        .replace(
+          /^\s*(?:hele|vole|tyjo|tyio|no|jo|jako|prosim|pls|btw|no\s+tak|vlastne|pockej(?:\s+ne\s+pockej)?|ne\s+pockej)\b[\s,]*/gi,
+          " "
+        )
+        .replace(/\s+/g, " ")
+        .trim();
+      if (s === prev) break;
+    }
+    return s;
+  }
+
+  function iuSilverMobileVoiceTaskQueryWriteAnchorBlocksP1Folded(x) {
+    const s = String(x || "");
+    if (!s) return false;
+    if (/\bpripomen\s+mi\b/i.test(s)) return true;
+    if (/\bdej\s+mi\s+do\s+ukol/i.test(s)) return true;
+    if (/\bhod\s+mi\s+(?:tam\s+)?do\s+ukol/i.test(s)) return true;
+    if (/\buloz\s+mi\s+do\s+kalend/i.test(s)) return true;
+    if (/\bzapis\s+(?:mi\s+)?poznam/i.test(s)) return true;
+    if (/\bvytvor\w*\s+ukol/i.test(s)) return true;
+    if (/\b(pridej|zapis)\s+ukol/i.test(s)) return true;
+    if (
+      /\buloz\s+ukol\w*\b/i.test(s) &&
+      !/\b(jen\s+cti|pouze\s+cti|nic\s+neuklade|jen\s+zjist|jen\s+se\s+podivej|nic\s+noveho\s+neuklade|nevytvarej|nevytvor)\b/i.test(
+        s
+      )
+    )
+      return true;
+    if (/\bto\s+nedavej\s+do\s+kalend/i.test(s) && /\bdo\s+ukol/i.test(s)) return true;
+    return false;
+  }
+
+  function iuSilverMobileVoiceTaskQueryAnchorP1Folded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (iuSilverExplicitNotesPositiveReadScopeFolded(x) && !/\bukol\w*\b/.test(x)) return false;
+    if (iuSilverExplicitCalendarReadScopeFolded(x)) return false;
+    if (iuSilverMobileVoiceTaskQueryWriteAnchorBlocksP1Folded(x)) return false;
+    const stripped = iuSilverMobileVoiceChaosLeadStripForTaskQueryP1Folded(x);
+    const z = stripped.length >= 3 ? stripped : x;
+    if (/\bmrkni\s+kdy\s+mam\b/i.test(x) && /\bkalend/i.test(x)) return false;
+    if (/\b(mrkni|mrknete|koukni|kouknete)\s+do\s+ukol/i.test(z)) return true;
+    if (/\bpodivej(?:te)?\s+se\s+do\s+ukol/i.test(z)) return true;
+    if (/\b(do\s+ukol|v\s+ukolech)\s+se\s+podivej/i.test(z)) return true;
+    if (/\bjen\s+se\s+podivej\s+do\s+ukol/i.test(z)) return true;
+    if (/\bco\s+mam\s+v\s+ukol/i.test(z)) return true;
+    if (/\bnajdi\s+(?:mi\s+)?(?:to\s+)?v\s+ukol/i.test(z)) return true;
+    if (/\bhledej\s+(?:mi\s+)?(?:to\s+)?v\s+ukol/i.test(z)) return true;
+    if (/\bzjist(?:i|it)\s+(?:jen\s+)?v\s+ukol/i.test(z)) return true;
+    if (/\buka[zž]\s+(?:mi\s+)?(?:moje\s+)?ukol\w*/i.test(z)) return true;
+    if (/\bukaz\s+(?:mi\s+)?(?:moje\s+)?ukol\w*/i.test(z)) return true;
+    if (/\bmam\s+neco\s+v\s+ukol/i.test(z)) return true;
+    if (/\bco\s+tam\s+mam\s+za\s+ukol/i.test(z)) return true;
+    if (
+      /\bco\s+mam\s+(?:dnes(?:ka|ek)?|zitra\w*|pozitri|pristi\s+(?:pondel|utery|stred|ctvrtek|patek|sobot|nedel)\w*)\s+udelat\b/.test(
+        z
+      )
+    ) {
+      if (/\b(v\s+ukol|ukoly|ukolu|v\s+ukolech)\b/.test(z)) return true;
+      if (!/\b(schuz|udalost|kalendar|v\s+kalend|zubar|pravnik|porad)\b/.test(z)) return true;
+      return false;
+    }
+    if (/\bco\s+mam\s+udelat\b/.test(z) && /\b(v\s+ukol|ukoly|ukolu|v\s+ukolech|jen\s+v\s+ukol)\b/.test(z)) return true;
+    return false;
+  }
+
   /** P0: task_query audit — dotazy, které nesmí spadnout do create / storage disambiguation. */
   function iuSilverTaskQueryHardSignalFolded(f) {
     const x = String(f || "");
@@ -35503,6 +35580,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bzjist(i|it)\s+jen\s+v\s+ukol/.test(x)) return true;
     if (iuSilverExplicitTaskListQuerySignalP1Folded(x)) return true;
     if (iuSilverRelationshipCoMamSPravnikTaskQueryTieBreakFolded(x)) return true;
+    if (iuSilverMobileVoiceTaskQueryAnchorP1Folded(x)) return true;
     return false;
   }
 
