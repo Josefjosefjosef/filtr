@@ -1569,6 +1569,10 @@ function gitTrackedClean() {
       "scripts/silver-real-ux-v1-report.json",
       "scripts/silver-real-czech-corpus-v1.cjs",
       "scripts/silver-real-czech-corpus-v1-report.json",
+      "scripts/silver-real-czech-public-ux-corpus-v2.cjs",
+      "scripts/silver-rcz2-mobile-voice-intent-fail-diagnostic.cjs",
+      "scripts/silver-rcz2-mobile-voice-intent-fail-diagnostic-report.json",
+      "scripts/silver-deep-product-real-ux-v2-report.json",
       "assets/app.js"
     ];
     const bad = tracked.filter((l) => {

@@ -83,11 +83,15 @@ function gitTrackedClean() {
     const lines = o.split(/\r?\n/).filter(Boolean);
     const tracked = lines.filter((l) => !l.startsWith("??"));
     const allow = [
+      "assets/app.js",
       "scripts/silver-real-czech-public-ux-corpus-v2.cjs",
       "scripts/silver-real-czech-public-ux-corpus-v2-report.json",
       "scripts/silver-rcz2-mobile-voice-intent-fail-diagnostic.cjs",
       "scripts/silver-rcz2-mobile-voice-intent-fail-diagnostic-report.json",
-      "scripts/audit_silver_20000_routing_stable.cjs"
+      "scripts/audit_silver_20000_routing_stable.cjs",
+      "scripts/audit_silver_realistic_mobile_corpus.cjs",
+      "scripts/silver-real-czech-corpus-v1.cjs",
+      "scripts/silver-deep-product-real-ux-v2-report.json"
     ];
     const bad = tracked.filter((l) => {
       const t = l.replace(/^\s+/, "").trim();
@@ -343,11 +347,39 @@ function buildPublicUxCorpusV2() {
     "mrkni kdy mam zubare v kalendari",
     "zapis poznamku ze pin je doma SLOT"
   ];
+  /** rcz2_mobile_voice task_query only: real READ/QUERY úkoly (ne připomínka / poznámka / kalendář z MOB_MID). */
+  const MOB_TASK_QUERY_READ = [
+    "mrkni do ukolu co mam splnit",
+    "koukni do ukolu prosim",
+    "podivej se do ukolu na dnes",
+    "co mam v ukolech na dnes",
+    "najdi v ukolech SLOTGOOD",
+    "zjisti v ukolech co mam delat",
+    "ukaz mi ukoly na dnes",
+    "mam neco v ukolech na SLOTDEAD",
+    "co tam mam za ukol na SLOTDEAD",
+    "co mam dneska udelat v ukolech",
+    "co mam zitra udelat v ukolech",
+    "co mam pristi utery udelat v ukolech",
+    "mrkni do ukolech jestli mam SLOTGOOD",
+    "pockej koukni do ukolu prosim",
+    "vlastne zjisti v ukolech SLOTGOOD",
+    "co mam udelat jen v ukolech",
+    "jen se podivej do ukolu co mam"
+  ];
   for (let i = 0; i < 22000; i++) {
-    const base = MOB_MID[i % MOB_MID.length].replace("SLOT", String(i));
-    let raw = applyMutationMask(MOB_PREFIX[i % MOB_PREFIX.length] + base + MOB_SUFFIX[(i >> 4) % MOB_SUFFIX.length], i % 128);
-    if (raw.length < 6) raw = "hele uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu radek " + i;
     const kind = i % 5;
+    let raw;
+    if (kind === 4) {
+      const tqb = MOB_TASK_QUERY_READ[i % MOB_TASK_QUERY_READ.length]
+        .replace("SLOTGOOD", stripDiak(GOODS[i % GOODS.length]))
+        .replace("SLOTDEAD", stripDiak(DEAD[i % DEAD.length]));
+      raw = applyMutationMask(MOB_PREFIX[i % MOB_PREFIX.length] + tqb + MOB_SUFFIX[(i >> 4) % MOB_SUFFIX.length], i % 128);
+    } else {
+      const base = MOB_MID[i % MOB_MID.length].replace("SLOT", String(i));
+      raw = applyMutationMask(MOB_PREFIX[i % MOB_PREFIX.length] + base + MOB_SUFFIX[(i >> 4) % MOB_SUFFIX.length], i % 128);
+    }
+    if (raw.length < 6) raw = "hele uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu radek " + i;
     if (kind === 0) push("rcz2_mobile_voice", "calendar_write", raw, "calendar.create", {}, { mobile_czech: true }, UX_CAT.MOBILE);
     else if (kind === 1) push("rcz2_mobile_voice", "task_write", raw, "task.create", {}, { mobile_czech: true }, UX_CAT.MOBILE);
     else if (kind === 2) push("rcz2_mobile_voice", "note_write", raw, "note.create", {}, { mobile_czech: true }, UX_CAT.MOBILE);

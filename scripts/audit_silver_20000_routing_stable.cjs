@@ -1855,6 +1855,7 @@ function gitTrackedClean() {
       "scripts/silver-rcz2-mobile-voice-intent-fail-diagnostic-report.json",
       "scripts/silver-deep-product-real-ux-v2-report.json",
       "scripts/silver-real-czech-corpus-v1-report.json",
+      "scripts/silver-real-czech-corpus-v1.cjs",
       "assets/app.js"
     ];
     const bad = tracked.filter((l) => {
