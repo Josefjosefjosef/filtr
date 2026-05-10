@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-09T22:49:11.001788Z",
+  "ingestedAt": "2026-05-10T00:14:02.230748Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Stará data a nová bída: Trumpův pokus se skvělým průzkumem skončil fiaskem",
+      "url": "https://www.epenize.eu/stara-data-a-nova-bida-trumpuv-pokus-se-skvelym-pruzkumem-skoncil-fiaskem/",
+      "dt": "2026-05-09T23:00:50Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "bída",
+        "data",
+        "fiaskem",
+        "nová",
+        "pokus",
+        "průzkumem",
+        "skončil",
+        "skvělým",
+        "stará",
+        "trumpův"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -482,34 +509,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Bývalý ředitel FBI dal na Instagram mušle: MAGA v tom vidí rozkaz k vraždě",
-      "url": "https://www.epenize.eu/byvaly-reditel-fbi-dal-na-instagram-musle-maga-v-tom-vidi-rozkaz-k-vrazde/",
-      "dt": "2026-04-29T23:00:38Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "bývalý",
-        "dal",
-        "fbi",
-        "instagram",
-        "maga",
-        "mušle",
-        "rozkaz",
-        "tom",
-        "vidí",
-        "vraždě",
-        "ředitel"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -520,7 +519,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 108780,
+      "bytes": 108791,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -557,11 +556,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-09T07:00:56Z",
+        "raw_feed_latest_publishedAt": "2026-05-09T23:00:50Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 19,
-          "zpravy": 1
+          "finance": 20
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -573,6 +571,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Stará data a nová bída: Trumpův pokus se skvělým průzkumem skončil fiaskem",
+            "publishedAt": "2026-05-09T23:00:50Z"
+          },
           {
             "title": "Helikoptérový rodič: Noční můra každého učitele",
             "publishedAt": "2026-05-09T07:00:56Z"
@@ -600,10 +602,6 @@
           {
             "title": "Nehorázný alibismus: Zahradil zřejmě chce nabudit dojem krize a revidovat výdaje na obranu",
             "publishedAt": "2026-05-06T07:17:54Z"
-          },
-          {
-            "title": "„Zasloužíš si to“: Trump prý Greeneové napsal, že pokud jejího syna zabijí, může si za to sama",
-            "publishedAt": "2026-05-05T23:00:50Z"
           }
         ]
       }
