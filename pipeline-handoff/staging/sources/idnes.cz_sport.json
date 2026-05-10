@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-10T10:29:19.397811Z",
+  "ingestedAt": "2026-05-10T11:08:57.210238Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Černej den, je mi do breku. Bývalý šéf kotle Slavie kritizuje i aktivní fanoušky",
+      "url": "https://www.lidovky.cz/sport/cernej-den-je-mi-do-breku-byvaly-sef-kotle-slavie-kritizuje-i-aktivni-fanousky.A260510_125204_ln-sport_lvot",
+      "dt": "2026-05-10T10:52:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "aktivní",
+        "breku",
+        "bývalý",
+        "den",
+        "fanoušky",
+        "kotle",
+        "kritizuje",
+        "slavie",
+        "černej",
+        "šéf"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -764,33 +791,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Slavia - Sparta 3:2, nedohráno, domácí mířili k titulu, ale na hřiště vtrhli fanoušci",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-skupina-o-titul-slavia-praha-sparta-derby-online-vysledek.A260508_182345_fotbal_duff",
-      "dt": "2026-05-09T19:39:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "ale",
-        "domácí",
-        "fanoušci",
-        "hřiště",
-        "mířili",
-        "nedohráno",
-        "slavia",
-        "sparta",
-        "titulu",
-        "vtrhli"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48924,
+      "bytes": 48502,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-10T10:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T10:52:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -853,6 +853,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Černej den, je mi do breku. Bývalý šéf kotle Slavie kritizuje i aktivní fanoušky",
+            "publishedAt": "2026-05-10T10:52:00Z"
+          },
           {
             "title": "Giro ONLINE: Loučení s Bulharskem. Očekává se sprint, kdo mu bude vládnout?",
             "publishedAt": "2026-05-10T10:15:00Z"
@@ -879,10 +883,6 @@
           },
           {
             "title": "Ministr Šťastný nemohl po derby usnout, chce se šéfem FAČR mluvit o bezpečnosti",
-            "publishedAt": "2026-05-10T09:04:00Z"
-          },
-          {
-            "title": "Vyhrocené derby sledovali politici, herci i sportovci. Kdo nechyběl v Edenu?",
             "publishedAt": "2026-05-10T09:04:00Z"
           }
         ]
