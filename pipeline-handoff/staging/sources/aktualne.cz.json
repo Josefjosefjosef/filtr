@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-10T21:38:54.717052Z",
+  "ingestedAt": "2026-05-10T22:19:19.189759Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Absolutně nepřijatelné, reagoval Trump na mírovou žádost Íránu",
+      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
+      "dt": "2026-02-28T14:04:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "absolutně",
+        "mírovou",
+        "nepřijatelné",
+        "reagoval",
+        "trump",
+        "íránu",
+        "žádost"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -42,32 +66,6 @@
         "zdolala",
         "češka",
         "římě"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Írán pohrozil Francii a Británii útokem. Prezident Macron má pro Teherán odpověď",
-      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
-      "dt": "2026-02-28T14:04:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "británii",
-        "francii",
-        "macron",
-        "odpověď",
-        "pohrozil",
-        "prezident",
-        "teherán",
-        "írán",
-        "útokem"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -525,7 +523,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21940,
+      "bytes": 21929,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -565,8 +563,8 @@
         "raw_feed_latest_publishedAt": "2026-05-10T21:19:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 10,
-          "zpravy": 10
+          "zpravy": 10,
+          "sport": 10
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -579,16 +577,16 @@
         },
         "sample_titles": [
           {
+            "title": "Absolutně nepřijatelné, reagoval Trump na mírovou žádost Íránu",
+            "publishedAt": "2026-02-28T14:04:00Z"
+          },
+          {
             "title": "Jablonec udržel náskok před Hradcem",
             "publishedAt": "2026-05-10T21:19:00Z"
           },
           {
             "title": "V osmifinále je už třetí Češka. Plíšková válí, v Římě zdolala další soupeřku",
             "publishedAt": "2026-05-10T20:52:00Z"
-          },
-          {
-            "title": "Írán pohrozil Francii a Británii útokem. Prezident Macron má pro Teherán odpověď",
-            "publishedAt": "2026-02-28T14:04:00Z"
           },
           {
             "title": "Čeká se na Vladaře. Šlégr popsal, jak to bylo s Pastrňákem a MS",
