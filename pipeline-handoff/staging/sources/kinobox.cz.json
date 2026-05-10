@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-10T11:54:19.625441Z",
+  "ingestedAt": "2026-05-10T12:38:50.949862Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "„Nikdo si o sobě nemyslí, že je zlý.\" Igor Orozovič hraje násilnického vraha v seriálu Monyová",
+      "url": "https://www.kinobox.cz/clanky/rozhovory/53562-nikdo-si-o-sobe-nemysli-ze-je-zly-igor-orozovic-hraje-nasilnickeho-vraha-v-serialu-monyova",
+      "dt": "2026-05-10T12:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "hraje",
+        "igor",
+        "monyová",
+        "nemyslí",
+        "nikdo",
+        "násilnického",
+        "orozovič",
+        "seriálu",
+        "sobě",
+        "vraha",
+        "zlý"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -513,34 +541,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Zapovězený Kevin Spacey míří do Česka. V novém filmu ztvární dirigenta s temnou minulostí",
-      "url": "https://www.kinobox.cz/clanky/filmy/53496-kevin-spacey-se-podiva-do-cannes-v-novem-filmu-ztvarni-dirigenta-s-temnou-minulosti",
-      "dt": "2026-05-07T12:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "dirigenta",
-        "filmu",
-        "kevin",
-        "minulostí",
-        "míří",
-        "novém",
-        "spacey",
-        "temnou",
-        "zapovězený",
-        "ztvární",
-        "česka"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -551,7 +551,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28144,
+      "bytes": 28526,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -588,7 +588,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-10T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T12:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -603,6 +603,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Nikdo si o sobě nemyslí, že je zlý.\" Igor Orozovič hraje násilnického vraha v seriálu Monyová",
+            "publishedAt": "2026-05-10T12:00:00Z"
+          },
           {
             "title": "Kinobox Daily: Clint Eastwood nabízí pohled do zákulisí válečné propagandy",
             "publishedAt": "2026-05-10T10:00:00Z"
@@ -630,10 +634,6 @@
           {
             "title": "Kinobox Daily: Jak vypadá katastrofický film v podání Larse von Triera?",
             "publishedAt": "2026-05-09T10:00:00Z"
-          },
-          {
-            "title": "Ještě větší než kdy dřív. Čtvrtý Bílý lotos rozpitvá snobské Cannes s nevídaným rozpočtem",
-            "publishedAt": "2026-05-09T09:00:00Z"
           }
         ]
       }
