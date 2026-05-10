@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-10T18:54:03.336354Z",
+  "ingestedAt": "2026-05-10T19:39:27.113006Z",
   "items": [
     {
       "section": "aktualne",
@@ -744,6 +744,31 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Freiburg prohrál 2:3 na hřišti Hamburku, naděje Heidenheimu na záchranu žije",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/freiburg-prohral-23-na-hristi-hamburku-nadeje-heidenheimu-na-zachranu-zije-156708",
+      "dt": "2026-05-10T19:08:56Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "freiburg",
+        "hamburku",
+        "heidenheimu",
+        "hřišti",
+        "naděje",
+        "prohrál",
+        "záchranu",
+        "žije"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Arsenal zvítězil 1:0 na hřišti West Hamu, derby rozhodl Trossard",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/arsenal-zvitezil-10-na-hristi-west-hamu-derby-rozhodl-trossard-156707",
       "dt": "2026-05-10T18:11:12Z",
@@ -769,7 +794,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "V české nominaci na MS chybí Pastrňák a zatím i brankáři z NHL",
+      "title": "V nominaci na MS chybí Pastrňák i brankáři z NHL. Pardubice dodaly pět hráčů včetně Červenky",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/nominacni-tiskova-konference-ceske-reprezentace-156703",
       "dt": "2026-05-10T17:28:00Z",
       "media_raw": "ČT sport",
@@ -777,11 +802,15 @@
       "tokens": [
         "brankáři",
         "chybí",
+        "dodaly",
+        "hráčů",
         "nhl",
         "nominaci",
+        "pardubice",
         "pastrňák",
-        "zatím",
-        "české"
+        "pět",
+        "včetně",
+        "červenky"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -793,21 +822,22 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Olomouc je i přes prohru s Bohemians ve finále play-off o umístění, vyzve Karvinou",
+      "title": "Puškáč zachránil Jablonec, Olomouc ve finále play-off o umístění vyzve Karvinou",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/olomouc-je-i-pres-prohru-s-bohemians-ve-finale-play-off-o-umisteni-vyzve-karvinou-156706",
       "dt": "2026-05-10T17:23:18Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
-        "bohemians",
         "finále",
+        "jablonec",
         "karvinou",
         "off",
         "olomouc",
         "play",
-        "prohru",
+        "puškáč",
         "umístění",
-        "vyzve"
+        "vyzve",
+        "zachránil"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1465,31 +1495,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Souboj o Ligu mistrů zvládl lépe Stuttgart, Schick se neprosadil",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/souboj-o-ligu-mistru-zvladl-lepe-stuttgart-schick-se-neprosadil-156677",
-      "dt": "2026-05-09T15:52:22Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "ligu",
-        "lépe",
-        "mistrů",
-        "neprosadil",
-        "schick",
-        "souboj",
-        "stuttgart",
-        "zvládl"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1619,7 +1624,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39241,
+      "bytes": 39613,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1656,7 +1661,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-10T18:11:12Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T19:08:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1672,15 +1677,19 @@
         },
         "sample_titles": [
           {
+            "title": "Freiburg prohrál 2:3 na hřišti Hamburku, naděje Heidenheimu na záchranu žije",
+            "publishedAt": "2026-05-10T19:08:56Z"
+          },
+          {
             "title": "Arsenal zvítězil 1:0 na hřišti West Hamu, derby rozhodl Trossard",
             "publishedAt": "2026-05-10T18:11:12Z"
           },
           {
-            "title": "V české nominaci na MS chybí Pastrňák a zatím i brankáři z NHL",
+            "title": "V nominaci na MS chybí Pastrňák i brankáři z NHL. Pardubice dodaly pět hráčů včetně Červenky",
             "publishedAt": "2026-05-10T17:28:00Z"
           },
           {
-            "title": "Olomouc je i přes prohru s Bohemians ve finále play-off o umístění, vyzve Karvinou",
+            "title": "Puškáč zachránil Jablonec, Olomouc ve finále play-off o umístění vyzve Karvinou",
             "publishedAt": "2026-05-10T17:23:18Z"
           },
           {
@@ -1698,10 +1707,6 @@
           {
             "title": "Neuville využil Ogierův defekt a v Portugalsku zapsal první triumf v sezoně",
             "publishedAt": "2026-05-10T14:14:50Z"
-          },
-          {
-            "title": "Prskavcovi se vzdálila reprezentace na kánoi, nedařilo se ani Galuškové",
-            "publishedAt": "2026-05-10T14:04:30Z"
           }
         ]
       }
@@ -1713,7 +1718,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78070,
+      "bytes": 78107,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

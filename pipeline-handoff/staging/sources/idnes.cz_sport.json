@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-10T18:54:03.336354Z",
+  "ingestedAt": "2026-05-10T19:39:27.113006Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Na mistrovství světa bez Klapky i gólmanů z NHL. Rulík bere do Švýcarska i Blümela",
+      "url": "https://www.idnes.cz/hokej/ms-2026/cesko-nominace-ms-v-hokeji-2026.A260510_173055_ms-hokej-2026_drev",
+      "dt": "2026-05-10T19:08:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bere",
+        "blümela",
+        "gólmanů",
+        "klapky",
+        "mistrovství",
+        "nhl",
+        "rulík",
+        "světa",
+        "švýcarska"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -97,32 +123,6 @@
         "výsledky",
         "zápasů",
         "čeští"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Na mistrovství světa bez Klapky i gólmanů z NHL. Rulík bere do Švýcarska i Blümela",
-      "url": "https://www.idnes.cz/hokej/ms-2026/cesko-nominace-ms-v-hokeji-2026.A260510_173055_ms-hokej-2026_drev",
-      "dt": "2026-05-10T18:28:25Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bere",
-        "blümela",
-        "gólmanů",
-        "klapky",
-        "mistrovství",
-        "nhl",
-        "rulík",
-        "světa",
-        "švýcarska"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -788,7 +788,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48646,
+      "bytes": 48683,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -825,7 +825,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-10T18:46:08Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T19:08:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -841,6 +841,10 @@
         },
         "sample_titles": [
           {
+            "title": "Na mistrovství světa bez Klapky i gólmanů z NHL. Rulík bere do Švýcarska i Blümela",
+            "publishedAt": "2026-05-10T19:08:00Z"
+          },
+          {
             "title": "Jablonec - Hradec 1:1, boj o čtvrtou příčku skončil remízou, lépe jsou na tom domácí",
             "publishedAt": "2026-05-10T18:46:08Z"
           },
@@ -855,10 +859,6 @@
           {
             "title": "Jak si vedli čeští hokejisté v přípravě? Výsledky zápasů před MS 2026",
             "publishedAt": "2026-05-10T18:36:00Z"
-          },
-          {
-            "title": "Na mistrovství světa bez Klapky i gólmanů z NHL. Rulík bere do Švýcarska i Blümela",
-            "publishedAt": "2026-05-10T18:28:25Z"
           },
           {
             "title": "Švédské hokejové hry 2026: Výsledky generálky na MS ve Švýcarsku",

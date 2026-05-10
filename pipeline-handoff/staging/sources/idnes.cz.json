@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-10T18:54:03.336354Z",
+  "ingestedAt": "2026-05-10T19:39:27.113006Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Lotyšský ministr obrany rezignoval kvůli selhání protidronové ochrany",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/lotyssko-ministr-obrany-rezignace-ukrajinske-drony.A260510_200756_zahranicni_pari",
+      "dt": "2026-05-10T18:41:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "kvůli",
+        "lotyšský",
+        "ministr",
+        "obrany",
+        "ochrany",
+        "protidronové",
+        "rezignoval",
+        "selhání"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -218,7 +243,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Ruské vojenská technika míří do světa. S obcházením sankcí napomáhá Alžírsko",
+      "title": "Ruská vojenská technika míří do světa. S obcházením sankcí napomáhá Alžírsko",
       "url": "https://www.idnes.cz/zpravy/zahranicni/alzirsko-rusko-spojenectvi-preprava-zbrani-a-zbozi-obchazeni-sankci.A260505_111748_zahranicni_jira",
       "dt": "2026-05-10T16:29:00Z",
       "media_raw": "iDNES / Zprávy",
@@ -228,7 +253,7 @@
         "míří",
         "napomáhá",
         "obcházením",
-        "ruské",
+        "ruská",
         "sankcí",
         "světa",
         "technika",
@@ -761,31 +786,6 @@
         "zabil",
         "írán",
         "šéf"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Íránský konflikt Saúdům vyhovuje. Zisky z ropy vzrostly o čtvrtinu",
-      "url": "https://www.idnes.cz/ekonomika/zahranicni/saudskoarabske-ropne-firme-aramco-vzrostl-ctvrtletni-zisk-o-ctvrtinu.A260510_101724_eko-zahranicni_remy",
-      "dt": "2026-05-10T08:21:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "konflikt",
-        "ropy",
-        "saúdům",
-        "vyhovuje",
-        "vzrostly",
-        "zisky",
-        "íránský",
-        "čtvrtinu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1588,7 +1588,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47061,
+      "bytes": 47001,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1625,11 +1625,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-10T18:13:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T18:41:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 29,
-          "finance": 1
+          "zpravy": 30
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1641,6 +1640,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lotyšský ministr obrany rezignoval kvůli selhání protidronové ochrany",
+            "publishedAt": "2026-05-10T18:41:00Z"
+          },
           {
             "title": "V Taškentu jsme porazili Rusko i Čínu. Šéf Škody Group o zakázce v Uzbekistánu",
             "publishedAt": "2026-05-10T18:13:00Z"
@@ -1668,10 +1671,6 @@
           {
             "title": "Nad železniční koridor u Zámrsku vysunuli stavbaři první část provizorního mostu",
             "publishedAt": "2026-05-10T16:35:00Z"
-          },
-          {
-            "title": "Íránu je nutné vzít obohacený uran, válka neskončila, míní Netanjahu",
-            "publishedAt": "2026-05-10T16:34:00Z"
           }
         ]
       }
