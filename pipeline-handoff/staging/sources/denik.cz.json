@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-10T05:20:22.617164Z",
+  "ingestedAt": "2026-05-10T06:05:36.784073Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Válka na Ukrajině se podle Putina chýlí ke konci. Chce obnovit vztahy se západem",
+      "url": "https://www.denik.cz/staty-mimo-eu/valka-na-ukrajine-se-podle-putina-chyli-ke-konci-chce-obnovit-vztahy-se-zapadem.html",
+      "dt": "2026-05-10T05:06:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "chce",
+        "chýlí",
+        "konci",
+        "obnovit",
+        "podle",
+        "putina",
+        "ukrajině",
+        "vztahy",
+        "válka",
+        "západem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -614,30 +641,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Blackouty a sabotáže v Česku. Bezpečnostní experti varují před Ruskem",
-      "url": "https://www.denik.cz/z_domova/cesko-hrozba-z-ruska-blackout-sabotaze-hybridni-valka-napadeni-pobalti.html",
-      "dt": "2026-05-09T02:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bezpečnostní",
-        "blackouty",
-        "experti",
-        "ruskem",
-        "sabotáže",
-        "varují",
-        "česku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -648,7 +651,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30792,
+      "bytes": 30691,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -685,7 +688,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-10T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T05:06:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -703,6 +706,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Válka na Ukrajině se podle Putina chýlí ke konci. Chce obnovit vztahy se západem",
+            "publishedAt": "2026-05-10T05:06:00Z"
+          },
           {
             "title": "Schwarzwald je kolébkou Německa i proslulé šunky",
             "publishedAt": "2026-05-10T05:00:00Z"
@@ -730,10 +737,6 @@
           {
             "title": "Fanoušci Slavie napadli hráče Sparty. Čin šetří policie jako možné výtržnictví",
             "publishedAt": "2026-05-09T20:30:00Z"
-          },
-          {
-            "title": "MAPA: Do Česka se vrátí déšť, bouřky a mráz. Bude také sněžit. Sledujte radar",
-            "publishedAt": "2026-05-09T15:15:00Z"
           }
         ]
       }

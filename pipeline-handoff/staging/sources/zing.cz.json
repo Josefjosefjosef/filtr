@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-10T05:20:22.617164Z",
+  "ingestedAt": "2026-05-10T06:05:36.784073Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Slay the Spire 2 odstraňuje nenáviděného bosse",
+      "url": "https://zing.cz/article/slay-the-spire-2-odstranuje-nenavideneho-bosse",
+      "dt": "2026-05-10T06:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "bosse",
+        "nenáviděného",
+        "odstraňuje",
+        "slay",
+        "spire",
+        "the"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -963,30 +986,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Klávesnice HyperX Origins 2 65 láká na nízkou odezvu a přizpůsobitelnost",
-      "url": "https://zing.cz/article/klavesnice-hyperx-origins-2-65-laka-na-nizkou-odezvu-a-prizpusobitelnost",
-      "dt": "2026-05-05T08:30:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "hyperx",
-        "klávesnice",
-        "láká",
-        "nízkou",
-        "odezvu",
-        "origins",
-        "přizpůsobitelnost"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -997,7 +996,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125364,
+      "bytes": 125331,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1034,7 +1033,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-10T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T06:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1049,6 +1048,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Slay the Spire 2 odstraňuje nenáviděného bosse",
+            "publishedAt": "2026-05-10T06:00:00Z"
+          },
           {
             "title": "V Overwatch můžete tento týden získat přes 2000 XP za zápas",
             "publishedAt": "2026-05-10T04:00:00Z"
@@ -1076,10 +1079,6 @@
           {
             "title": "Nintendo zdražuje svou herní konzoli Switch 2",
             "publishedAt": "2026-05-09T06:00:00Z"
-          },
-          {
-            "title": "Spekulace: FromSoftware možná chystá pirátskou hru",
-            "publishedAt": "2026-05-09T04:00:00Z"
           }
         ]
       }

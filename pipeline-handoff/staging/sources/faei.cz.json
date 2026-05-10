@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-10T05:20:22.617164Z",
+  "ingestedAt": "2026-05-10T06:05:36.784073Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Návrat do práce zůstává pro české matky luxusem",
+      "url": "https://profitonline.cz/navrat-do-prace-zustava-pro-ceske-matky-luxusem/",
+      "dt": "2026-05-10T06:00:52Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "luxusem",
+        "matky",
+        "návrat",
+        "práce",
+        "zůstává",
+        "české"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -256,30 +279,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Jen vodítko nestačí. Dovolená se zvířetem má svá pravidla",
-      "url": "https://profitonline.cz/jen-voditko-nestaci-dovolena-se-zviretem-ma-sva-pravidla/",
-      "dt": "2026-05-08T04:00:57Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "dovolená",
-        "jen",
-        "nestačí",
-        "pravidla",
-        "svá",
-        "vodítko",
-        "zvířetem"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -290,7 +289,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18082,
+      "bytes": 18054,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -327,7 +326,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-10T04:00:36Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T06:00:52Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -344,6 +343,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Návrat do práce zůstává pro české matky luxusem",
+            "publishedAt": "2026-05-10T06:00:52Z"
+          },
           {
             "title": "Zloději kol si vybírají čím dál dražší modely. Škoda přesáhla 100 milionů",
             "publishedAt": "2026-05-10T04:00:36Z"
@@ -371,10 +374,6 @@
           {
             "title": "Červený kříž na straně lidskosti",
             "publishedAt": "2026-05-08T14:00:41Z"
-          },
-          {
-            "title": "Hypotéky na centrální banku nereagují",
-            "publishedAt": "2026-05-08T12:00:50Z"
           }
         ]
       }
