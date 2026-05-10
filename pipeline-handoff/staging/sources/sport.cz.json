@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-10T20:19:34.054765Z",
+  "ingestedAt": "2026-05-10T21:00:10.579402Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Omluvenek bylo hodně, ale chápu to. Klapka a Sikora se prostě nevešli, řekl Rulík po posledním výběru",
+      "url": "https://www.sport.cz/clanek/hokej-reprezentace-omluvenek-bylo-hodne-ale-chapu-to-klapka-a-sikora-se-proste-nevesli-rekl-rulik-po-poslednim-vyberu-5452451",
+      "dt": "2026-05-10T20:43:24Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "ale",
+        "chápu",
+        "hodně",
+        "klapka",
+        "nevešli",
+        "omluvenek",
+        "posledním",
+        "prostě",
+        "rulík",
+        "sikora",
+        "výběru",
+        "řekl"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -751,34 +780,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "O tomhle jsem snil odmala, líčil pyšný Mandát. Premiérový gól má ale pachuť",
-      "url": "https://www.sport.cz/clanek/hokej-euro-hockey-tour-o-tomhle-jsem-snil-odmala-licil-pysny-mandat-premierovy-gol-ma-ale-pachut-5451927",
-      "dt": "2026-05-10T14:05:52Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "ale",
-        "gól",
-        "jsem",
-        "líčil",
-        "mandát",
-        "odmala",
-        "pachuť",
-        "premiérový",
-        "pyšný",
-        "snil",
-        "tomhle"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 46964,
+      "bytes": 47259,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-10T20:12:31Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T20:43:24Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -842,6 +843,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Omluvenek bylo hodně, ale chápu to. Klapka a Sikora se prostě nevešli, řekl Rulík po posledním výběru",
+            "publishedAt": "2026-05-10T20:43:24Z"
+          },
           {
             "title": "Rozjetý střelec Hradce neslavil třetí gól v řadě",
             "publishedAt": "2026-05-10T20:12:31Z"
@@ -869,10 +874,6 @@
           {
             "title": "AS Řím dvěma góly v nastaveném čase otočil ligový duel v Parmě",
             "publishedAt": "2026-05-10T14:02:52Z"
-          },
-          {
-            "title": "SESTŘIH: Jablonečtí stihli srovnat, Hradec před sebe nepustili",
-            "publishedAt": "2026-05-10T18:28:07Z"
           }
         ]
       }

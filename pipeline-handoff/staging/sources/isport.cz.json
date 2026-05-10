@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "isport.cz",
-  "ingestedAt": "2026-05-10T20:19:34.054765Z",
+  "ingestedAt": "2026-05-10T21:00:10.579402Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Ve Francii jako v Edenu: světlice a konec chvíli před hvizdem. Jaký se očekává postup?",
+      "url": "https://isport.blesk.cz/clanek/fotbal-zahranici-francie-ligue-1/475343/ve-francii-jako-v-edenu-svetlice-a-konec-chvili-pred-hvizdem-jaky-se-ocekava-postup.html",
+      "dt": "2026-05-10T20:00:00Z",
+      "media_raw": "iSport",
+      "media_norm": "iSport",
+      "tokens": [
+        "chvíli",
+        "edenu",
+        "francii",
+        "hvizdem",
+        "jako",
+        "jaký",
+        "konec",
+        "očekává",
+        "postup",
+        "světlice"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_isport",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "isport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1044,33 +1071,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "isport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Chorý vs. Sörensen potřetí: slávistický hrubián zase útočil. Přijde o mistrovství světa?",
-      "url": "https://isport.blesk.cz/clanek/fotbal-chance-liga/475315/chory-vs-sorensen-potreti-slavisticky-hrubian-zase-utocil-prijde-o-mistrovstvi-sveta.html",
-      "dt": "2026-05-09T18:40:00Z",
-      "media_raw": "iSport",
-      "media_norm": "iSport",
-      "tokens": [
-        "chorý",
-        "hrubián",
-        "mistrovství",
-        "potřetí",
-        "přijde",
-        "slávistický",
-        "světa",
-        "sörensen",
-        "zase",
-        "útočil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_isport",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "isport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1081,7 +1081,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://isport.blesk.cz/rss",
-      "bytes": 64079,
+      "bytes": 64234,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1118,7 +1118,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-10T19:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T20:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1133,6 +1133,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ve Francii jako v Edenu: světlice a konec chvíli před hvizdem. Jaký se očekává postup?",
+            "publishedAt": "2026-05-10T20:00:00Z"
+          },
           {
             "title": "Český tým pro MS: Rulík bere Galvase, Pastrňák se Zachou se omluvili a Klapka se nevešel",
             "publishedAt": "2026-05-10T19:55:00Z"
@@ -1160,10 +1164,6 @@
           {
             "title": "Giro 2026: program, etapy, trasa, výsledky, Češi a kde sledovat živě?",
             "publishedAt": "2026-05-10T18:30:00Z"
-          },
-          {
-            "title": "Béčko Sparty žije! V boji o záchranu porazilo Žižkov. Táborsko podlehlo rezervě Slavie",
-            "publishedAt": "2026-05-10T18:10:00Z"
           }
         ]
       }
