@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-10T14:49:19.683679Z",
+  "ingestedAt": "2026-05-10T15:30:36.678565Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "KLDR mění jadernou doktrínu: Při útoku na Kim Čong-una hrozí automatická odveta",
+      "url": "https://www.denik.cz/ze_sveta/kldr-meni-jadernou-doktrinu-automaticka-odveta-v-pripade-vrazdy-kim-cong-una.html",
+      "dt": "2026-05-10T14:35:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "automatická",
+        "doktrínu",
+        "hrozí",
+        "jadernou",
+        "kim",
+        "kldr",
+        "mění",
+        "odveta",
+        "při",
+        "una",
+        "útoku",
+        "čong"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -618,32 +647,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Majetkový test u superdávky: Juchelkovi vadí, experti ho považují za moc mírný",
-      "url": "https://www.denik.cz/ekonomika/superdavka-majetkovy-test-uspory-nemovitost-automobily.html",
-      "dt": "2026-05-09T11:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "experti",
-        "juchelkovi",
-        "majetkový",
-        "moc",
-        "mírný",
-        "považují",
-        "superdávky",
-        "test",
-        "vadí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -654,7 +657,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30656,
+      "bytes": 30419,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -691,11 +694,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-10T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T14:35:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 3,
-          "zpravy": 20,
+          "zpravy": 21,
+          "finance": 2,
           "zdravi": 1,
           "sport": 1
         },
@@ -709,6 +712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "KLDR mění jadernou doktrínu: Při útoku na Kim Čong-una hrozí automatická odveta",
+            "publishedAt": "2026-05-10T14:35:00Z"
+          },
           {
             "title": "Místo kytice raději zkrácený úvazek. V návratu matek do práce Česko zaostává",
             "publishedAt": "2026-05-10T14:00:00Z"
@@ -736,10 +743,6 @@
           {
             "title": "Dívka zemřela po pádu z adrenalinové houpačky, na lano přitom předtím upozornila",
             "publishedAt": "2026-05-10T08:50:00Z"
-          },
-          {
-            "title": "Češku zasáhl v rakouských Alpách blesk, vrtulník ji přepravil do nemocnice",
-            "publishedAt": "2026-05-10T07:55:00Z"
           }
         ]
       }

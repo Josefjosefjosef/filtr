@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-10T14:49:19.683679Z",
+  "ingestedAt": "2026-05-10T15:30:36.678565Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ježek v hrdle ruského medvěda. Zaútočí na Evropu „mafiánský stát“?",
+      "url": "https://zpravy.aktualne.cz/zahranici/jezek-v-hrdle-ruskeho-medveda-zautoci-na-evropu-mafiansky-stat/r~aaa29502d703c794b041c583409e87c4/",
+      "dt": "2026-05-10T14:50:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "evropu",
+        "hrdle",
+        "ježek",
+        "mafiánský",
+        "medvěda",
+        "ruského",
+        "stát",
+        "zaútočí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -500,31 +525,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Uvnitř režimu je strach. Analytik mluví o tom, jak se skrývá Putin",
-      "url": "https://zpravy.aktualne.cz/zahranici/uvnitr-rezimu-je-strach-analytik-mluvi-o-tom-jak-se-skryva-putin/r~aaa2960413e33b6b663b4a26c13c977d/",
-      "dt": "2026-05-10T09:08:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "analytik",
-        "mluví",
-        "putin",
-        "režimu",
-        "skrývá",
-        "strach",
-        "tom",
-        "uvnitř"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -535,7 +535,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21460,
+      "bytes": 21289,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -572,11 +572,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-10T14:29:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T14:50:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 7,
-          "zpravy": 13
+          "zpravy": 13,
+          "sport": 7
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -588,6 +588,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ježek v hrdle ruského medvěda. Zaútočí na Evropu „mafiánský stát“?",
+            "publishedAt": "2026-05-10T14:50:00Z"
+          },
           {
             "title": "Chorý není schopen ovládat svoje chování, takhle na hřiště nepatří, prohlásil Tvrdík",
             "publishedAt": "2026-05-10T14:29:00Z"
@@ -615,10 +619,6 @@
           {
             "title": "Fotbal umřel, zlobí se i fanoušci Slavie. To kontroverzní politik pobouřil",
             "publishedAt": "2026-05-10T08:20:00Z"
-          },
-          {
-            "title": "Za Britem s hantavirem skočili zdravotníci s padákem. Žije na odlehlém ostrově",
-            "publishedAt": "2026-05-10T11:27:00Z"
           }
         ]
       }

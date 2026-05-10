@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-10T14:49:19.683679Z",
+  "ingestedAt": "2026-05-10T15:30:36.678565Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Derby hanby v Edenu. Slavia může začít sčítat škody",
+      "url": "https://profitonline.cz/derby-hanby-v-edenu-slavia-muze-zacit-scitat-skody/",
+      "dt": "2026-05-10T15:20:42Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "derby",
+        "edenu",
+        "hanby",
+        "slavia",
+        "sčítat",
+        "začít",
+        "škody"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -264,30 +288,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kde máme tu konstruktivní opozici? Zatím nevymyslela prakticky nic",
-      "url": "https://profitonline.cz/kde-mame-tu-konstruktivni-opozici-zatim-nevymyslela-prakticky-nic/",
-      "dt": "2026-05-08T10:00:56Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "konstruktivní",
-        "máme",
-        "nevymyslela",
-        "nic",
-        "opozici",
-        "prakticky",
-        "zatím"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -298,7 +298,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18550,
+      "bytes": 18477,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -335,7 +335,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-10T10:00:38Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T15:20:42Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -352,6 +352,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Derby hanby v Edenu. Slavia může začít sčítat škody",
+            "publishedAt": "2026-05-10T15:20:42Z"
+          },
           {
             "title": "Novinky v osobních financích: Banky sázejí na fanoušky, ať už jde o Spartu, nebo Hvězdné války",
             "publishedAt": "2026-05-10T10:00:38Z"
@@ -379,10 +383,6 @@
           {
             "title": "Elektřina Čechům ukusuje z peněženky skoro nejvíce v EU",
             "publishedAt": "2026-05-09T08:15:16Z"
-          },
-          {
-            "title": "Petr Chalupný propojí oborová řešení napříč segmenty Dachser v Česku",
-            "publishedAt": "2026-05-09T06:00:08Z"
           }
         ]
       }

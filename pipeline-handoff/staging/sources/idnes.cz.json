@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-10T14:49:19.683679Z",
+  "ingestedAt": "2026-05-10T15:30:36.678565Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Začala evakuace lodi s hantavirem. Španělé už odletěli, další budou Nizozemci",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/lod-s-hantavirem-dorazila-k-pristavu-na-kanarskych-ostrovech.A260510_071243_zahranicni_tty",
+      "dt": "2026-05-10T15:16:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "další",
+        "evakuace",
+        "hantavirem",
+        "lodi",
+        "nizozemci",
+        "odletěli",
+        "začala",
+        "španělé"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -549,31 +574,6 @@
         "spojenci",
         "ukazovat",
         "visingr"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Loď s hantavirem dorazila na Kanárské ostrovy, Španělsko evakuuje pasažéry",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/lod-s-hantavirem-dorazila-k-pristavu-na-kanarskych-ostrovech.A260510_071243_zahranicni_tty",
-      "dt": "2026-05-10T07:28:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "dorazila",
-        "evakuuje",
-        "hantavirem",
-        "kanárské",
-        "loď",
-        "ostrovy",
-        "pasažéry",
-        "španělsko"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1584,7 +1584,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49940,
+      "bytes": 49967,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1621,7 +1621,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-10T14:39:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T15:16:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1638,6 +1638,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Začala evakuace lodi s hantavirem. Španělé už odletěli, další budou Nizozemci",
+            "publishedAt": "2026-05-10T15:16:00Z"
+          },
           {
             "title": "VIDEA TÝDNE: Náraz do kamionu, záběry UFO a turistické peklo v Itálii",
             "publishedAt": "2026-05-10T14:39:00Z"
@@ -1665,10 +1669,6 @@
           {
             "title": "Armagedon na Instagramu. Hvězdy přišly o miliony sledujících, tratil i Trump",
             "publishedAt": "2026-05-10T13:10:00Z"
-          },
-          {
-            "title": "Krizová komunikace Slavie nemá v Česku obdoby, shodují se po derby PR experti",
-            "publishedAt": "2026-05-10T12:59:00Z"
           }
         ]
       }

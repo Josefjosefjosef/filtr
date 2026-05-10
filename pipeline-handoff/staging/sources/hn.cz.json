@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-10T14:49:19.683679Z",
+  "ingestedAt": "2026-05-10T15:30:36.678565Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Průzkum Kantar: ANO by jasně vyhrálo volby se 32 procenty. Podpora Babišova hnutí ale slábne",
+      "url": "https://domaci.hn.cz/c1-67875350-kantar-ano-by-jasne-vyhralo-volby-se-32-procenty-podpora-babisova-hnuti-ale-slabne",
+      "dt": "2026-05-10T14:28:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "ale",
+        "ano",
+        "babišova",
+        "hnutí",
+        "jasně",
+        "kantar",
+        "podpora",
+        "procenty",
+        "průzkum",
+        "slábne",
+        "volby",
+        "vyhrálo"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1121,32 +1150,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Výlety nejen za byznysem. Do jakých zemí letos zamíří čeští politici",
-      "url": "https://ekonom.cz/c1-67873760-vylety-nejen-za-byznysem-do-jakych-zemi-letos-zamiri-cesti-politici",
-      "dt": "2026-05-06T16:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "byznysem",
-        "jakých",
-        "letos",
-        "nejen",
-        "politici",
-        "výlety",
-        "zamíří",
-        "zemí",
-        "čeští"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1157,7 +1160,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184819,
+      "bytes": 184809,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1194,7 +1197,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-10T12:42:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T14:28:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 32,
@@ -1212,6 +1215,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Průzkum Kantar: ANO by jasně vyhrálo volby se 32 procenty. Podpora Babišova hnutí ale slábne",
+            "publishedAt": "2026-05-10T14:28:00Z"
+          },
           {
             "title": "Skandální derby: Slavii hrozí vysoká pokuta i zavření stadionu. Tvrdík se omlouvá a ozval se i sponzor ligy",
             "publishedAt": "2026-05-10T12:42:00Z"
@@ -1239,10 +1246,6 @@
           {
             "title": "&bdquo;Není to vlamování se do zavřených dveří.&ldquo; Prezident Pavel trvá na své účasti na summitu NATO",
             "publishedAt": "2026-05-08T07:43:00Z"
-          },
-          {
-            "title": "Solar Global předčasně splatila dluhopisy. Na nové miliardové investice do baterek, fotovoltaik i vodíku chce nalákat velké investory",
-            "publishedAt": "2026-05-08T06:52:00Z"
           }
         ]
       }
