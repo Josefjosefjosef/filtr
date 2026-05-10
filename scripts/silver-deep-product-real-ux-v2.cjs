@@ -354,6 +354,45 @@ function buildBaseCases() {
       retrievalNeedles: ["pravnik", "smlouv", "poslat", "ukol"]
     },
     {
+      id: "rr_pravnik_task_ascii",
+      slice: "retrieval_relevance",
+      group: "task_query",
+      input: "Co mam s pravnikem?",
+      expectedIntent: "task.query",
+      retrievalNeedles: ["pravnik", "smlouv", "poslat", "ukol"]
+    },
+    {
+      id: "guard_cal_kdy_mam_pravnika",
+      slice: "cross_module_ambiguity",
+      group: "calendar_query",
+      input: "Kdy mám právníka?",
+      expectedIntent: "calendar.query",
+      retrievalNeedles: ["pravnik", "18", "smlouv"]
+    },
+    {
+      id: "guard_cal_v_kolik_mam_pravnika",
+      slice: "cross_module_ambiguity",
+      group: "calendar_query",
+      input: "V kolik mám právníka?",
+      expectedIntent: "calendar.query",
+      retrievalNeedles: ["pravnik", "18", "smlouv"]
+    },
+    {
+      id: "guard_cal_create_schuzka_pravnik_zitra",
+      slice: "cross_module_ambiguity",
+      group: "calendar_write",
+      input: "Přidej schůzku s právníkem zítra v 10",
+      expectedIntent: "calendar.create"
+    },
+    {
+      id: "guard_task_neg_nic_neukladej_zjisti_co_mam_s_pravnikem",
+      slice: "cross_module_ambiguity",
+      group: "task_query",
+      input: "Nic neukládej, jen zjisti co mám s právníkem",
+      expectedIntent: "task.query",
+      retrievalNeedles: ["pravnik", "smlouv", "poslat", "ukol"]
+    },
+    {
       id: "rr_ucetni_kde",
       slice: "retrieval_relevance",
       group: "calendar_query",

@@ -35502,6 +35502,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bmam\s+v\s+ukolech\b/.test(x)) return true;
     if (/\bzjist(i|it)\s+jen\s+v\s+ukol/.test(x)) return true;
     if (iuSilverExplicitTaskListQuerySignalP1Folded(x)) return true;
+    if (iuSilverRelationshipCoMamSPravnikTaskQueryTieBreakFolded(x)) return true;
     return false;
   }
 
@@ -35802,6 +35803,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     t = t.replace(/^\s*mimo\s+kalend\w*\s*,\s*/i, "");
     t = t.replace(/\s*[.?!…]+$/u, "").trim();
     const strips = [
+      /^\s*co\s+m[aá]m\s+s\s+/i,
       /^\s*(silvere|silver[e]?|pepo|tom[aá]si,?)\s+/i,
       /^\s*(podivej\s+se|podivejte\s+se)(?:\s+jen)?(?:\s+mi)?(?:\s+jen)?\s+/i,
       /^\s*zjist(i|it|te)\s+(?:pouze\s+|jen\s+)?(?:v\s+)?(?:ukolech|ukolu|ukoly)\s*,?\s*/i,
@@ -35847,7 +35849,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (iuSilverWantsTaskListOnlyFolded(f)) {
       return iuSilverBuildTasksReadListTurn(ctx || {}, empty, f, now);
     }
-    const q = iuSilverExtractTaskQuerySearchSubject(r0, f);
+    let q = iuSilverExtractTaskQuerySearchSubject(r0, f);
+    /**
+     * P1 narrow: „co mám s právníkem“ → extrahovaný tvar (pravnikem/…) často neprojde
+     * queryHayPassHardGates oproti „pravnikovi“ v titulku — kotva na lemma pro retrieval.
+     */
+    if (iuSilverRelationshipCoMamSPravnikTaskQueryTieBreakFolded(f)) {
+      q = "pravnik";
+    }
     if (!String(q || "").trim()) {
       return iuSilverBuildTasksReadListTurn(ctx || {}, empty, f, now);
     }
@@ -36417,12 +36426,37 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P1 narrow (relationship_entity_query_wrong_container): explicitní kalendářní cue ve větě (foldCs).
+   * Pro „co mám s … právník“ tie-break — při těchto signálech nepreferovat task.query.
+   */
+  function iuSilverRelationshipCoMamSExplicitCalendarCueFolded(x) {
+    const s = String(x || "");
+    if (!s) return false;
+    return /\b(kdy|v\s+kolik|schuz|meeting|udalost|kalendar|termin|dnes|zitra|vcera|datum|cas)\b/.test(s);
+  }
+
+  /**
+   * P1 narrow: „Co mám s právníkem?“ / „Co mam s pravnikem?“ — task.query (tasks.read) před calendar.read,
+   * jen pokud chybí explicitní kalendářní cue (seed: úkol „poslat smlouvu právníkovi“ vs událost „Právník“).
+   * foldCs vstup.
+   */
+  function iuSilverRelationshipCoMamSPravnikTaskQueryTieBreakFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (!/\bco\s+mam\s+s\s+/.test(x)) return false;
+    if (!/\bpravnik/.test(x)) return false;
+    if (iuSilverRelationshipCoMamSExplicitCalendarCueFolded(x)) return false;
+    return true;
+  }
+
+  /**
    * P0 (20k audit): kalendářní dotaz s negací úkolů nesmí prohrát proti tasks.read / storage disambiguation.
    * Neplatí pro explicitní zápis do úkolů (HasExplicitTasksTarget + zápis).
    */
   function iuSilverCalendarReadWinsOverTaskReadFolded(f) {
     const x = String(f || "");
     if (!x) return false;
+    if (iuSilverRelationshipCoMamSPravnikTaskQueryTieBreakFolded(x)) return false;
     if (iuSilverExplicitTaskListQuerySignalP1Folded(x)) return false;
     if (iuSilverTaskStatusReadQuerySignalFolded(x)) return false;
     if (iuSilverTaskReadNegatedCalendarModuleFolded(x)) return false;
