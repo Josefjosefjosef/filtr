@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-10T22:59:36.320375Z",
+  "ingestedAt": "2026-05-10T23:40:15.532390Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Sedmimetrová zlatá socha Trumpa v Miami: Pastor Burns říká „zázrak od Boha“",
+      "url": "https://www.epenize.eu/sedmimetrova-zlata-socha-trumpa-v-miami-pastor-burns-rika-zazrak-od-boha/",
+      "dt": "2026-05-10T23:00:47Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "boha",
+        "burns",
+        "miami",
+        "pastor",
+        "sedmimetrová",
+        "socha",
+        "trumpa",
+        "zlatá",
+        "zázrak",
+        "říká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -484,30 +511,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Miroslav Kalousek: Uzákonili jsme si rozežranost na úkor budoucnosti",
-      "url": "https://www.epenize.eu/miroslav-kalousek-uzakonili-jsme-si-rozezranost-na-ukor-budoucnosti/",
-      "dt": "2026-05-01T07:51:51Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "budoucnosti",
-        "jsme",
-        "kalousek",
-        "miroslav",
-        "rozežranost",
-        "uzákonili",
-        "úkor"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -518,7 +521,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 109800,
+      "bytes": 108660,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -555,11 +558,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-10T12:20:01Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T23:00:47Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 1,
           "sport": 1,
-          "finance": 19
+          "finance": 18
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -571,6 +575,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sedmimetrová zlatá socha Trumpa v Miami: Pastor Burns říká „zázrak od Boha“",
+            "publishedAt": "2026-05-10T23:00:47Z"
+          },
           {
             "title": "Fotbal jako obraz dnešní společnosti. Je mi líto slušných fanoušků Slavie",
             "publishedAt": "2026-05-10T12:20:01Z"
@@ -598,10 +606,6 @@
           {
             "title": "59 % Američanů pochybuje o Trumpově mentální bystrosti. Trump odpovídá: zvládl jsem tři kognitivní testy",
             "publishedAt": "2026-05-07T23:00:56Z"
-          },
-          {
-            "title": "Úplná opilost mocí? Macinka jmenoval méněcenné politiky",
-            "publishedAt": "2026-05-07T06:55:22Z"
           }
         ]
       }
