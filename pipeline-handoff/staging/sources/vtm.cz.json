@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-10T07:34:00.148785Z",
+  "ingestedAt": "2026-05-10T08:19:04.826044Z",
   "items": [
     {
       "section": "aktualne",
@@ -25,6 +25,34 @@
         "verzi",
         "změna",
         "číslování"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Dobrá zpráva pro Rožnov. Onsemi se zotavuje, kromě Nvidie bude dodávat čipy čínským automobilkám",
+      "url": "https://www.zive.cz/clanky/dobra-zprava-pro-roznov-onsemi-se-zotavuje-krome-nvidie-bude-dodavat-cipy-cinskym-automobilkam/sc-3-a-241059/default.aspx",
+      "dt": "2026-05-10T07:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "automobilkám",
+        "dobrá",
+        "dodávat",
+        "kromě",
+        "nvidie",
+        "onsemi",
+        "rožnov",
+        "zotavuje",
+        "zpráva",
+        "čipy",
+        "čínským"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -941,33 +969,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Notepad++ pro Mac už má za sebou první skandál. Autor nakonec změnil název i ikonku",
-      "url": "https://www.zive.cz/clanky/popularni-textovy-editor-z-windows-vysel-i-na-macos-notepad-to-ale-bude-mit-tezke/sc-3-a-240886/default.aspx",
-      "dt": "2026-05-05T17:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "autor",
-        "ikonku",
-        "mac",
-        "nakonec",
-        "notepad",
-        "název",
-        "první",
-        "sebou",
-        "skandál",
-        "změnil"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -978,7 +979,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23201,
+      "bytes": 23242,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1015,7 +1016,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-10T06:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T07:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "zpravy": 1,
@@ -1034,6 +1035,10 @@
           {
             "title": "Total Commander má novou finální verzi. Změna v číslování je malá, ale přináší pár užitečných drobností",
             "publishedAt": "2026-05-09T07:45:00Z"
+          },
+          {
+            "title": "Dobrá zpráva pro Rožnov. Onsemi se zotavuje, kromě Nvidie bude dodávat čipy čínským automobilkám",
+            "publishedAt": "2026-05-10T07:45:00Z"
           },
           {
             "title": "Strhující sci-fi, epické fantasy i osudy obyčejných lidí. Vybrali jsme nejlepší herní příběhy",
@@ -1058,10 +1063,6 @@
           {
             "title": "Neplaťte u nových telefonů „daň z paměti“. Zjistili jsme, o kolik jsou loňské modely levnější a zda jim něco chybí",
             "publishedAt": "2026-05-09T08:45:00Z"
-          },
-          {
-            "title": "Netflix a další na víkend: sci-fi Běžící muž, seriál Kaštánek, nebo horor SOS. A také Eden: Vítejte v ráji",
-            "publishedAt": "2026-05-08T14:45:00Z"
           }
         ]
       }

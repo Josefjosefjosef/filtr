@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "plnezdravi.cz",
-  "ingestedAt": "2026-05-10T07:34:00.148785Z",
+  "ingestedAt": "2026-05-10T08:19:04.826044Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Je klasický rohlík skutečným nepřítelem zdraví?",
+      "url": "https://www.plnezdravi.cz/je-klasicky-rohlik-skutecnym-nepritelem-zdravi/",
+      "dt": "2026-05-10T07:00:15Z",
+      "media_raw": "Plné zdraví",
+      "media_norm": "Plné zdraví",
+      "tokens": [
+        "klasický",
+        "nepřítelem",
+        "rohlík",
+        "skutečným",
+        "zdraví"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_plnezdravi",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "plnezdravi.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -481,33 +503,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "plnezdravi.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Češi cvičí nejraději sami. S udržením kondice jim pomáhají moderní technologie",
-      "url": "https://www.plnezdravi.cz/cesi-cvici-nejradeji-sami-s-udrzenim-kondice-jim-pomahaji-moderni-technologie/",
-      "dt": "2026-04-24T07:00:47Z",
-      "media_raw": "Plné zdraví",
-      "media_norm": "Plné zdraví",
-      "tokens": [
-        "cvičí",
-        "jim",
-        "kondice",
-        "moderní",
-        "nejraději",
-        "pomáhají",
-        "sami",
-        "technologie",
-        "udržením",
-        "češi"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_plnezdravi",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "plnezdravi.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -518,7 +513,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.plnezdravi.cz/feed/",
-      "bytes": 150509,
+      "bytes": 150617,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -555,7 +550,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-09T07:00:26Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T07:00:15Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -570,6 +565,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Je klasický rohlík skutečným nepřítelem zdraví?",
+            "publishedAt": "2026-05-10T07:00:15Z"
+          },
           {
             "title": "Bouře v trávicím traktu: Skryté příčiny nadměrné plynatosti",
             "publishedAt": "2026-05-09T07:00:26Z"
@@ -597,10 +596,6 @@
           {
             "title": "Jak zachránit život a neudělat chybu při mrtvici",
             "publishedAt": "2026-05-05T07:00:24Z"
-          },
-          {
-            "title": "Proč nás dnes světlo obtěžuje víc než dřív? Světloplachost je na vzestupu",
-            "publishedAt": "2026-05-05T04:25:13Z"
           }
         ]
       }

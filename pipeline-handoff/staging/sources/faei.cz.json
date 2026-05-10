@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-10T07:34:00.148785Z",
+  "ingestedAt": "2026-05-10T08:19:04.826044Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Czechoslovak Group: Přehnaná panika, nebo prozření trhu?",
+      "url": "https://profitonline.cz/czechoslovak-group-prehnana-panika-nebo-prozreni-trhu/",
+      "dt": "2026-05-10T08:00:36Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "czechoslovak",
+        "group",
+        "nebo",
+        "panika",
+        "prozření",
+        "přehnaná",
+        "trhu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -256,29 +280,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "David Musil v čele Penta Real Estate",
-      "url": "https://profitonline.cz/david-musil-v-cele-penta-real-estate/",
-      "dt": "2026-05-08T06:00:51Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "david",
-        "estate",
-        "musil",
-        "penta",
-        "real",
-        "čele"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -289,7 +290,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18054,
+      "bytes": 18085,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -326,7 +327,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-10T06:00:52Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T08:00:36Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -343,6 +344,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Czechoslovak Group: Přehnaná panika, nebo prozření trhu?",
+            "publishedAt": "2026-05-10T08:00:36Z"
+          },
           {
             "title": "Návrat do práce zůstává pro české matky luxusem",
             "publishedAt": "2026-05-10T06:00:52Z"
@@ -370,10 +375,6 @@
           {
             "title": "Kam se hrabou evropské sankce. Kyjev ukazuje, jak rozložit Rusko",
             "publishedAt": "2026-05-09T04:00:33Z"
-          },
-          {
-            "title": "Červený kříž na straně lidskosti",
-            "publishedAt": "2026-05-08T14:00:41Z"
           }
         ]
       }

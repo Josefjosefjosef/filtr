@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-10T07:34:00.148785Z",
+  "ingestedAt": "2026-05-10T08:19:04.826044Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Visingr: Kreml už nemá co ukazovat, Putina letos v Moskvě opustili i spojenci",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/visingr-prehlidka-rozstrel-moskva-putin-zbrane.A260509_215151_zahranicni_vov",
+      "dt": "2026-05-10T08:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "kreml",
+        "letos",
+        "moskvě",
+        "nemá",
+        "opustili",
+        "putina",
+        "spojenci",
+        "ukazovat",
+        "visingr"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -745,33 +771,6 @@
         "srazil",
         "vlak",
         "člověka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Méně na obranu podporuje 17 procent lidí, většina chce dvě procenta HDP a víc",
-      "url": "https://www.idnes.cz/zpravy/domaci/stem-snizovani-vydaju-na-obranu-podporuje-17-pct-cechu-vic-jich-chce-rust.A260509_133634_domaci_tty",
-      "dt": "2026-05-09T12:11:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "chce",
-        "dvě",
-        "hdp",
-        "lidí",
-        "obranu",
-        "podporuje",
-        "procent",
-        "procenta",
-        "víc",
-        "většina"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1574,7 +1573,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49943,
+      "bytes": 50260,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1611,7 +1610,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-10T07:28:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T08:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1628,6 +1627,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Visingr: Kreml už nemá co ukazovat, Putina letos v Moskvě opustili i spojenci",
+            "publishedAt": "2026-05-10T08:00:00Z"
+          },
           {
             "title": "Loď s hantavirem dorazila na Kanárské ostrovy, Španělsko evakuuje pasažéry",
             "publishedAt": "2026-05-10T07:28:00Z"
@@ -1654,10 +1657,6 @@
           },
           {
             "title": "Miliony na dopravu šly do slepých ulic či na vjezdy. Stát platil obcím nesmysly",
-            "publishedAt": "2026-05-09T22:00:00Z"
-          },
-          {
-            "title": "Orbánovy trafiky. Magyar slibuje demontáž systému, úklid však bude stát mnoho sil",
             "publishedAt": "2026-05-09T22:00:00Z"
           }
         ]
