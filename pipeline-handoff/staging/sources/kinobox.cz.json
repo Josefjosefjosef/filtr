@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-10T16:48:56.650867Z",
+  "ingestedAt": "2026-05-10T17:29:13.980224Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "10 filmů, které v kinech vydělaly nejvíc peněz za celou dobu kinematografie",
+      "url": "https://www.kinobox.cz/clanky/tema/53491-deset-filmu-ktere-v-kinech-vydelaly-nejvic-penez-za-celou-dobu-kinematografie",
+      "dt": "2026-05-10T17:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "celou",
+        "dobu",
+        "filmů",
+        "kinech",
+        "kinematografie",
+        "nejvíc",
+        "peněz",
+        "vydělaly"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -514,34 +539,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Těžko bude někdy brutálnější. Nový Lesní duch v traileru připíjí na zdraví žhavým voskem",
-      "url": "https://www.kinobox.cz/clanky/filmy/53521-tezko-bude-nekdy-brutalnejsi-novy-lesni-duch-v-traileru-pripiji-na-zdravi-zhavym-voskem",
-      "dt": "2026-05-07T14:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "brutálnější",
-        "duch",
-        "lesní",
-        "nový",
-        "někdy",
-        "připíjí",
-        "traileru",
-        "těžko",
-        "voskem",
-        "zdraví",
-        "žhavým"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -552,7 +549,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28660,
+      "bytes": 28652,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -589,7 +586,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-10T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T17:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -604,6 +601,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "10 filmů, které v kinech vydělaly nejvíc peněz za celou dobu kinematografie",
+            "publishedAt": "2026-05-10T17:00:00Z"
+          },
           {
             "title": "10 pecek, které v květnu opustí Netflix: Nolanův Dunkerk, vojín Ryan i sexy Sydney Sweeney",
             "publishedAt": "2026-05-10T14:00:00Z"
@@ -631,10 +632,6 @@
           {
             "title": "The Madison ukazuje křehkou stránku tvůrce Yellowstonu. Nabízí zážitek plný smutku a melancholie",
             "publishedAt": "2026-05-09T14:00:00Z"
-          },
-          {
-            "title": "Kvíz: Rebelové slaví 25 let od premiéry. Otestujte si, jak dobře slavný muzikál znáte",
-            "publishedAt": "2026-05-09T12:00:00Z"
           }
         ]
       }

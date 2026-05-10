@@ -1,24 +1,28 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-10T16:48:56.650867Z",
+  "ingestedAt": "2026-05-10T17:29:13.980224Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Írán zaslal Američanům odpověď na návrh na ukončení války",
-      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
-      "dt": "2026-02-28T14:04:00Z",
+      "title": "Rusové opět nedodrželi slib, útočí podél fronty, potvrdil Zelenskyj. Příměří navzdory",
+      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
+      "dt": "2026-01-21T06:45:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "američanům",
-        "návrh",
-        "odpověď",
-        "ukončení",
-        "války",
-        "zaslal",
-        "írán"
+        "fronty",
+        "navzdory",
+        "nedodrželi",
+        "opět",
+        "podél",
+        "potvrdil",
+        "příměří",
+        "rusové",
+        "slib",
+        "zelenskyj",
+        "útočí"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -45,6 +49,30 @@
         "velitel",
         "válku",
         "území"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Írán zaslal Američanům odpověď na návrh na ukončení války",
+      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
+      "dt": "2026-02-28T14:04:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "američanům",
+        "návrh",
+        "odpověď",
+        "ukončení",
+        "války",
+        "zaslal",
+        "írán"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -495,34 +523,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Žádný exces, ale budovaná nenávist, běsní Sparta. Zmiňuje další přešlapy Slavie",
-      "url": "https://sport.aktualne.cz/neni-to-izolovany-exces-besni-sparta-zminuje-dalsi-preslapy-slavie/r~aaa290fffa5ba3ccd9fe1869090d3801/",
-      "dt": "2026-05-10T10:24:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "ale",
-        "budovaná",
-        "běsní",
-        "další",
-        "exces",
-        "nenávist",
-        "přešlapy",
-        "slavie",
-        "sparta",
-        "zmiňuje",
-        "žádný"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -533,7 +533,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21863,
+      "bytes": 22061,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -573,8 +573,8 @@
         "raw_feed_latest_publishedAt": "2026-05-10T16:06:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 12,
-          "sport": 8
+          "zpravy": 13,
+          "sport": 7
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -587,12 +587,16 @@
         },
         "sample_titles": [
           {
-            "title": "Írán zaslal Američanům odpověď na návrh na ukončení války",
-            "publishedAt": "2026-02-28T14:04:00Z"
+            "title": "Rusové opět nedodrželi slib, útočí podél fronty, potvrdil Zelenskyj. Příměří navzdory",
+            "publishedAt": "2026-01-21T06:45:00Z"
           },
           {
             "title": "„Přenášíme válku na jejich území.“ Velitel má plán, jak srazit morálku Rusů",
             "publishedAt": "2026-05-10T16:06:00Z"
+          },
+          {
+            "title": "Írán zaslal Američanům odpověď na návrh na ukončení války",
+            "publishedAt": "2026-02-28T14:04:00Z"
           },
           {
             "title": "Orbán mu dal azyl. Polský exministr uprchl z Maďarska do USA, tvrdí média",
@@ -613,10 +617,6 @@
           {
             "title": "Umí krysa doplavat na ostrov a šířit hantavirus? Vylekaného šéfa vlády museli uklidňovat",
             "publishedAt": "2026-05-10T13:53:00Z"
-          },
-          {
-            "title": "Poručíme barvě mraků. Nová metoda by mohla pomoci zastavit oteplování Země",
-            "publishedAt": "2026-05-10T13:21:00Z"
           }
         ]
       }
