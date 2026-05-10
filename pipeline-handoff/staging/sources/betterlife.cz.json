@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-05-10T15:30:36.678565Z",
+  "ingestedAt": "2026-05-10T16:09:02.222723Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Příští týden v seriálu Ulice: Krutý útok stalkera, Vandino nečekané řešení milenky a pochybnosti ve vztahu",
+      "url": "https://www.betterlife.cz/pristi-tyden-v-serialu-ulice-kruty-utok-stalkera-vandino-necekane-reseni-milenky-a-pochybnosti-ve-vztahu/",
+      "dt": "2026-05-10T15:59:14Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "krutý",
+        "milenky",
+        "nečekané",
+        "pochybnosti",
+        "příští",
+        "seriálu",
+        "stalkera",
+        "týden",
+        "ulice",
+        "vandino",
+        "vztahu",
+        "útok",
+        "řešení"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -249,35 +279,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Německý Kaufland vyplácí zálohy za prázdnou kosmetiku. Bez splnění podmínek ale lidé o peníze přijdou",
-      "url": "https://www.betterlife.cz/nemecky-kaufland-vyplaci-zalohy-za-prazdnou-kosmetiku-bez-splneni-podminek-ale-lide-o-penize-prijdou/",
-      "dt": "2026-05-06T07:30:23Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "ale",
-        "kaufland",
-        "kosmetiku",
-        "lidé",
-        "německý",
-        "peníze",
-        "podmínek",
-        "prázdnou",
-        "přijdou",
-        "splnění",
-        "vyplácí",
-        "zálohy"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -288,7 +289,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 59802,
+      "bytes": 64667,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -348,10 +349,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-10T14:59:42Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T15:59:14Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 8,
+          "zpravy": 1,
+          "zdravi": 7,
           "sport": 1,
           "finance": 1
         },
@@ -365,6 +367,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Příští týden v seriálu Ulice: Krutý útok stalkera, Vandino nečekané řešení milenky a pochybnosti ve vztahu",
+            "publishedAt": "2026-05-10T15:59:14Z"
+          },
           {
             "title": "Andrea Čunderlíková alias krásná sestřička Ina oslavila 74. Její začátky s manželem provázela žárlivost Pavla Bobka",
             "publishedAt": "2026-05-10T14:59:42Z"
@@ -392,10 +398,6 @@
           {
             "title": "Světový den těhotenství každoročně připomíná důležitost pečlivé péče o matky",
             "publishedAt": "2026-05-07T12:11:03Z"
-          },
-          {
-            "title": "Úřad NASA představil novou aplikaci. Vaše jméno poskládá z útesů a jezer vyfotografovaných ze satelitů",
-            "publishedAt": "2026-05-06T15:59:36Z"
           }
         ]
       }

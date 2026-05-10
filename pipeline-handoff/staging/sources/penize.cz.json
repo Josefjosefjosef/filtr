@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-10T15:30:36.678565Z",
+  "ingestedAt": "2026-05-10T16:09:02.222723Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Pojištění vkladů v bance čekají změny. Komu pomohou?",
+      "url": "https://www.penize.cz/osobni-ucty/489458-pojisteni-vkladu-v-bance-cekaji-zmeny-komu-pomohou",
+      "dt": "2026-05-10T18:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "bance",
+        "komu",
+        "pojištění",
+        "pomohou",
+        "vkladů",
+        "změny",
+        "čekají"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -483,32 +507,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Jak vylepšit penzijko, aby vydělalo víc? Změny ve spoření na důchod očima expertů",
-      "url": "https://www.penize.cz/doplnkove-penzijni-sporeni/484402-jak-vylepsit-penzijko-aby-vydelalo-vic-zmeny-ve-sporeni-na-duchod-ocima-expertu",
-      "dt": "2026-05-05T05:05:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "důchod",
-        "expertů",
-        "očima",
-        "penzijko",
-        "spoření",
-        "vydělalo",
-        "vylepšit",
-        "víc",
-        "změny"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -519,7 +517,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18591,
+      "bytes": 18388,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -556,7 +554,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-10T17:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T18:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 15,
@@ -573,6 +571,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pojištění vkladů v bance čekají změny. Komu pomohou?",
+            "publishedAt": "2026-05-10T18:00:00Z"
+          },
           {
             "title": "Kolik opravdu zaplatíte za půjčku? Ukažte, jestli dopadnete líp než dvě pětiny Čechů",
             "publishedAt": "2026-05-10T17:00:00Z"
@@ -600,10 +602,6 @@
           {
             "title": "Bitcoin vyšplhal zpátky nad 80 tisíc. Saylor poprvé připouští jeho prodej",
             "publishedAt": "2026-05-08T07:00:00Z"
-          },
-          {
-            "title": "Špičkový nástroj je i výhodná investice, říká šéfka Nadace pro rozvoj České filharmonie",
-            "publishedAt": "2026-05-08T02:00:00Z"
           }
         ]
       }
