@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-10T06:49:42.210942Z",
+  "ingestedAt": "2026-05-10T07:34:00.148785Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kam cestovala vaše zahrada? Nový web ukáže, kde by byl váš dům za časů Pangey",
+      "url": "https://magazin.aktualne.cz/kam-cestovala-vase-zahrada-novy-web-ukaze-kde-by-byl-vas-dum-za-casu-pangey/r~aaa296876a36716f24a443287b8ee30f/",
+      "dt": "2026-05-10T06:55:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "cestovala",
+        "dům",
+        "kam",
+        "nový",
+        "pangey",
+        "ukáže",
+        "vaše",
+        "váš",
+        "web",
+        "zahrada",
+        "časů"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -502,33 +530,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Výletní loď s nákazou děsí Tenerife. Dělníci v přístavu hrozí, že připlutí zabrání",
-      "url": "https://zpravy.aktualne.cz/zahranici/vyletni-lod-s-nakazou-desi-tenerife-delnici-v-pristavu-hrozi-ze-pripluti-zabrani/r~aaa29ec15a7b0ac936c0e4045f9f7b9d/",
-      "dt": "2026-05-09T14:47:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dělníci",
-        "děsí",
-        "hrozí",
-        "loď",
-        "nákazou",
-        "připlutí",
-        "přístavu",
-        "tenerife",
-        "výletní",
-        "zabrání"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -539,7 +540,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22637,
+      "bytes": 22416,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -576,7 +577,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-10T06:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T06:55:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 10,
@@ -594,6 +595,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kam cestovala vaše zahrada? Nový web ukáže, kde by byl váš dům za časů Pangey",
+            "publishedAt": "2026-05-10T06:55:00Z"
+          },
           {
             "title": "Z ruin k dokonalosti. Odvážná rekonstrukce domu v Českém Krumlově ze 16. století",
             "publishedAt": "2026-05-10T06:45:00Z"
@@ -621,10 +626,6 @@
           {
             "title": "Tornádo pokrok na železnici nepřineslo. Mělo smůlu při vývoji i v provozu",
             "publishedAt": "2026-05-10T03:40:00Z"
-          },
-          {
-            "title": "Pod Záporožím se Rusové pohybují v tunelech. Některé jsou dost velké i pro tanky",
-            "publishedAt": "2026-05-10T03:30:00Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-10T06:49:42.210942Z",
+  "ingestedAt": "2026-05-10T07:34:00.148785Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Obrazem: Fotograf Sudek vyrážel za svými třemi přáteli na sever",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/obrazem-fotograf-sudek-vyrazel-za-svymi-tremi-prateli-na-sever-372884",
+      "dt": "2026-05-10T07:01:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "fotograf",
+        "obrazem",
+        "přáteli",
+        "sever",
+        "sudek",
+        "svými",
+        "třemi",
+        "vyrážel"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -83,18 +108,18 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Loď s hantavirem dorazila k přístavu na Kanárských ostrovech",
+      "title": "Loď s hantavirem dorazila k Tenerife, začala evakuace",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/lod-s-hantavirem-dorazila-k-pristavu-na-kanarskych-ostrovech-373264",
       "dt": "2026-05-10T04:58:46Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
         "dorazila",
+        "evakuace",
         "hantavirem",
-        "kanárských",
         "loď",
-        "ostrovech",
-        "přístavu"
+        "tenerife",
+        "začala"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -720,27 +745,24 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Kvůli dronu odklonilo pražské letiště letadlo, jeden člověk byl zadržen",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/kvuli-dronu-odklonilo-prazske-letiste-letadlo-jeden-clovek-byl-zadrzen-373241",
-      "dt": "2026-05-08T14:44:20Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Oklahoma City je dál k nezastavení, v sérii s Lakers vede 3:0",
+      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/oklahoma-city-je-dal-k-nezastaveni-v-serii-s-lakers-vede-30-156690",
+      "dt": "2026-05-10T06:56:42Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "dronu",
-        "jeden",
-        "kvůli",
-        "letadlo",
-        "letiště",
-        "odklonilo",
-        "pražské",
-        "zadržen",
-        "člověk"
+        "city",
+        "lakers",
+        "nezastavení",
+        "oklahoma",
+        "sérii",
+        "vede"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1471,30 +1493,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Florbalistky podlehly Švýcarsku a v semifinále MSJ jdou na Finsko",
-      "url": "https://sport.ceskatelevize.cz/clanek/florbal/florbalistky-podlehly-svycarsku-a-v-semifinale-msj-jdou-na-finsko-156662",
-      "dt": "2026-05-08T18:34:27Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "finsko",
-        "florbalistky",
-        "jdou",
-        "msj",
-        "podlehly",
-        "semifinále",
-        "švýcarsku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1505,7 +1503,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42271,
+      "bytes": 42436,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1565,12 +1563,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-10T06:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T07:01:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "other": 3,
           "finance": 2,
-          "zpravy": 26,
-          "other": 2
+          "zpravy": 25
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1582,6 +1580,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Obrazem: Fotograf Sudek vyrážel za svými třemi přáteli na sever",
+            "publishedAt": "2026-05-10T07:01:00Z"
+          },
           {
             "title": "Příliv zahraničních investic zpomaluje. Podle experta Česko usnulo na vavřínech",
             "publishedAt": "2026-05-10T06:30:00Z"
@@ -1595,7 +1597,7 @@
             "publishedAt": "2026-05-10T05:30:00Z"
           },
           {
-            "title": "Loď s hantavirem dorazila k přístavu na Kanárských ostrovech",
+            "title": "Loď s hantavirem dorazila k Tenerife, začala evakuace",
             "publishedAt": "2026-05-10T04:58:46Z"
           },
           {
@@ -1609,10 +1611,6 @@
           {
             "title": "Rodríguezová míří do Haagu, chce hájit nárok Venezuely na Esequibo",
             "publishedAt": "2026-05-09T20:04:45Z"
-          },
-          {
-            "title": "Policie vyšetřuje napadení fotbalistů v pražském derby. Tvrdík se omluvil",
-            "publishedAt": "2026-05-09T19:58:49Z"
           }
         ]
       }
@@ -1624,7 +1622,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39513,
+      "bytes": 39444,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1661,7 +1659,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-10T06:17:10Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T06:56:42Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1676,6 +1674,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Oklahoma City je dál k nezastavení, v sérii s Lakers vede 3:0",
+            "publishedAt": "2026-05-10T06:56:42Z"
+          },
           {
             "title": "Vladařovi a Phipadelphii skončila sezona, Colorado poprvé v play-off prohrálo",
             "publishedAt": "2026-05-10T06:17:10Z"
@@ -1703,10 +1705,6 @@
           {
             "title": "Prostějov ve druhé lize remizoval s Českými Budějovicemi 1:1",
             "publishedAt": "2026-05-09T19:45:56Z"
-          },
-          {
-            "title": "Plzeň zastavila Karvinou a po třech letech se vrátila na házenkářský trůn",
-            "publishedAt": "2026-05-09T18:45:13Z"
           }
         ]
       }
@@ -1718,7 +1716,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78069,
+      "bytes": 78093,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

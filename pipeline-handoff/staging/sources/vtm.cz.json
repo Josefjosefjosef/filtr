@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-10T06:49:42.210942Z",
+  "ingestedAt": "2026-05-10T07:34:00.148785Z",
   "items": [
     {
       "section": "aktualne",
@@ -25,6 +25,35 @@
         "verzi",
         "změna",
         "číslování"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Strhující sci-fi, epické fantasy i osudy obyčejných lidí. Vybrali jsme nejlepší herní příběhy",
+      "url": "https://doupe.zive.cz/nejlepsi-pribehove-hry-2026",
+      "dt": "2026-05-10T06:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "epické",
+        "fantasy",
+        "herní",
+        "jsme",
+        "lidí",
+        "nejlepší",
+        "obyčejných",
+        "osudy",
+        "příběhy",
+        "sci",
+        "strhující",
+        "vybrali"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -939,36 +968,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "O víkendu vypukne Maker Faire Prague, svátek všech inovátorů, kutilů a dalších nadšenců do kreativity a technologií",
-      "url": "https://www.zive.cz/clanky/o-vikendu-vypukne-maker-faire-prague-svatek-vsech-inovatoru-kutilu-a-dalsich-nadsencu-do-kreativity-a-technologii/sc-3-a-241027/default.aspx",
-      "dt": "2026-05-06T17:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "dalších",
-        "faire",
-        "inovátorů",
-        "kreativity",
-        "kutilů",
-        "maker",
-        "nadšenců",
-        "prague",
-        "svátek",
-        "technologií",
-        "vypukne",
-        "víkendu",
-        "všech"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -979,7 +978,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23326,
+      "bytes": 23201,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1016,7 +1015,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-09T16:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T06:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "zpravy": 1,
@@ -1035,6 +1034,10 @@
           {
             "title": "Total Commander má novou finální verzi. Změna v číslování je malá, ale přináší pár užitečných drobností",
             "publishedAt": "2026-05-09T07:45:00Z"
+          },
+          {
+            "title": "Strhující sci-fi, epické fantasy i osudy obyčejných lidí. Vybrali jsme nejlepší herní příběhy",
+            "publishedAt": "2026-05-10T06:45:00Z"
           },
           {
             "title": "Za deset let možná i ve vašich počítačích. PCI Express 8.0 opět zdvojnásobí rychlost",
@@ -1059,10 +1062,6 @@
           {
             "title": "Netflix a další na víkend: sci-fi Běžící muž, seriál Kaštánek, nebo horor SOS. A také Eden: Vítejte v ráji",
             "publishedAt": "2026-05-08T14:45:00Z"
-          },
-          {
-            "title": "Ideální notebook nesmí šetřit na displeji a klávesnici. Výkonu už máme dost (Podcast Živě)",
-            "publishedAt": "2026-05-08T16:45:00Z"
           }
         ]
       }
