@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-10T18:14:27.991739Z",
+  "ingestedAt": "2026-05-10T18:54:03.336354Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "West Ham cítí křivdu. Po kontroverzi je blíž k sestupu a Arsenal k titulu",
+      "url": "https://sport.aktualne.cz/fotbal/west-ham-citi-krivdu-po-kontroverzi-je-bliz-k-sestupu-a-arsenal-k-titulu/r~aaa29445e3e78a441bf7841ade6a0288/",
+      "dt": "2026-05-10T18:22:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "arsenal",
+        "blíž",
+        "cítí",
+        "ham",
+        "kontroverzi",
+        "křivdu",
+        "sestupu",
+        "titulu",
+        "west"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -498,31 +524,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vláda schválí jmenování Landovského zmocněncem v pondělí, řekl Babiš",
-      "url": "https://zpravy.aktualne.cz/domaci/vlada-schvali-jmenovani-landovskeho-zmocnencem-v-pondeli-rekl-babis/r~aaa29a5a9ca8615fcb70dfec34edca0e/",
-      "dt": "2026-05-10T10:36:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "babiš",
-        "jmenování",
-        "landovského",
-        "pondělí",
-        "schválí",
-        "vláda",
-        "zmocněncem",
-        "řekl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -533,7 +534,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22053,
+      "bytes": 22144,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -570,11 +571,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-10T16:06:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T18:22:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 7,
-          "zpravy": 13
+          "sport": 8,
+          "zpravy": 12
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -586,6 +587,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "West Ham cítí křivdu. Po kontroverzi je blíž k sestupu a Arsenal k titulu",
+            "publishedAt": "2026-05-10T18:22:00Z"
+          },
           {
             "title": "Co hrozí za trest a kdy padne verdikt? Slavia oznámila, jak se k němu postaví",
             "publishedAt": "2026-05-10T11:31:00Z"
@@ -613,10 +618,6 @@
           {
             "title": "Ježek v hrdle ruského medvěda. Zaútočí na Evropu „mafiánský stát“?",
             "publishedAt": "2026-05-10T14:50:00Z"
-          },
-          {
-            "title": "Chorý není schopen ovládat svoje chování, takhle na hřiště nepatří, prohlásil Tvrdík",
-            "publishedAt": "2026-05-10T14:29:00Z"
           }
         ]
       }
