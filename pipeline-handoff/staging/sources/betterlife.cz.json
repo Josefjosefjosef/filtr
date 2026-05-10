@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-05-10T17:29:13.980224Z",
+  "ingestedAt": "2026-05-10T18:14:27.991739Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Natáčení Cesty na západ komplikovaly spory herců s režisérem, Kirk Douglas chtěl ukrást western pro sebe",
+      "url": "https://www.betterlife.cz/nataceni-cesty-na-zapad-komplikovaly-spory-hercu-s-reziserem-kirk-douglas-chtel-ukrast-western-pro-sebe/",
+      "dt": "2026-05-10T17:25:28Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "cesty",
+        "chtěl",
+        "douglas",
+        "herců",
+        "kirk",
+        "komplikovaly",
+        "natáčení",
+        "režisérem",
+        "sebe",
+        "spory",
+        "ukrást",
+        "western",
+        "západ"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -249,36 +279,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Ulice: Erik je zděšený. Soňa mluví o manželství se sestřenicí, Egon ale vidí problém úplně jinde",
-      "url": "https://www.betterlife.cz/ulice-erik-je-zdeseny-sona-mluvi-o-manzelstvi-se-sestrenici-egonovi-ale-vidi-problem-uplne-jinde/",
-      "dt": "2026-05-06T09:44:02Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "ale",
-        "egon",
-        "erik",
-        "jinde",
-        "manželství",
-        "mluví",
-        "problém",
-        "sestřenicí",
-        "soňa",
-        "ulice",
-        "vidí",
-        "zděšený",
-        "úplně"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -289,7 +289,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 64667,
+      "bytes": 64176,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -349,11 +349,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-10T15:59:14Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T17:25:28Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zpravy": 1,
           "zdravi": 7,
+          "zpravy": 1,
           "sport": 1,
           "finance": 1
         },
@@ -367,6 +367,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Natáčení Cesty na západ komplikovaly spory herců s režisérem, Kirk Douglas chtěl ukrást western pro sebe",
+            "publishedAt": "2026-05-10T17:25:28Z"
+          },
           {
             "title": "Příští týden v seriálu Ulice: Krutý útok stalkera, Vandino nečekané řešení milenky a pochybnosti ve vztahu",
             "publishedAt": "2026-05-10T15:59:14Z"
@@ -394,10 +398,6 @@
           {
             "title": "Ulice: Soňa pořádně zavaří Lumírovi, z toho už se nevykecá",
             "publishedAt": "2026-05-07T15:19:08Z"
-          },
-          {
-            "title": "Světový den těhotenství každoročně připomíná důležitost pečlivé péče o matky",
-            "publishedAt": "2026-05-07T12:11:03Z"
           }
         ]
       }

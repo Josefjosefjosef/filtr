@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-10T17:29:13.980224Z",
+  "ingestedAt": "2026-05-10T18:14:27.991739Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Co hrozí za trest a kdy padne verdikt? Slavia oznámila, jak se k němu postaví",
+      "url": "https://sport.aktualne.cz/disciplinarka-uvedla-kdy-rozhodne-jasno-je-o-moznych-trestech-problem-ma-i-sparta/r~aaa29b8893be106cbf80940644436e78/",
+      "dt": "2026-05-10T11:31:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "hrozí",
+        "němu",
+        "oznámila",
+        "padne",
+        "postaví",
+        "slavia",
+        "trest",
+        "verdikt"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -420,31 +445,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Disciplinárka uvedla, kdy rozhodne. Jasno je o možných trestech, problém má i Sparta",
-      "url": "https://sport.aktualne.cz/disciplinarka-uvedla-kdy-rozhodne-jasno-je-o-moznych-trestech-problem-ma-i-sparta/r~aaa29b8893be106cbf80940644436e78/",
-      "dt": "2026-05-10T11:31:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "disciplinárka",
-        "jasno",
-        "možných",
-        "problém",
-        "rozhodne",
-        "sparta",
-        "trestech",
-        "uvedla"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "aktualne",
       "contentType": "article",
       "title": "Škoda tyhle fotky minout: královny v Gala, lovec dronů nebo krok do nicoty",
@@ -533,7 +533,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22061,
+      "bytes": 22053,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -573,8 +573,8 @@
         "raw_feed_latest_publishedAt": "2026-05-10T16:06:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 13,
-          "sport": 7
+          "sport": 7,
+          "zpravy": 13
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -586,6 +586,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Co hrozí za trest a kdy padne verdikt? Slavia oznámila, jak se k němu postaví",
+            "publishedAt": "2026-05-10T11:31:00Z"
+          },
           {
             "title": "Rusové opět nedodrželi slib, útočí podél fronty, potvrdil Zelenskyj. Příměří navzdory",
             "publishedAt": "2026-01-21T06:45:00Z"
@@ -613,10 +617,6 @@
           {
             "title": "Chorý není schopen ovládat svoje chování, takhle na hřiště nepatří, prohlásil Tvrdík",
             "publishedAt": "2026-05-10T14:29:00Z"
-          },
-          {
-            "title": "Umí krysa doplavat na ostrov a šířit hantavirus? Vylekaného šéfa vlády museli uklidňovat",
-            "publishedAt": "2026-05-10T13:53:00Z"
           }
         ]
       }

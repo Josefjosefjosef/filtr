@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-10T17:29:13.980224Z",
+  "ingestedAt": "2026-05-10T18:14:27.991739Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Fanynka MMA se během turnaje chtěla dostat do klece UFC. Ochranka s ní udělala krátký proces",
+      "url": "https://www.mmamag.cz/fanynka-se-chtela-dostat-do-klece-ufc-dostala-tvrdou-lekci/",
+      "dt": "2026-05-10T18:00:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "během",
+        "chtěla",
+        "dostat",
+        "fanynka",
+        "klece",
+        "krátký",
+        "mma",
+        "ochranka",
+        "proces",
+        "turnaje",
+        "udělala",
+        "ufc"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1053,35 +1082,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nikdy nevypadal hůř, řekl Cormier o Chimaevovi. Šampion UFC dorazil na váhu úplně vyřízený",
-      "url": "https://www.mmamag.cz/chimaev-navazil-cormier-se-ale-zhrozil/",
-      "dt": "2026-05-09T07:09:51Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "chimaevovi",
-        "cormier",
-        "dorazil",
-        "hůř",
-        "nevypadal",
-        "nikdy",
-        "ufc",
-        "vyřízený",
-        "váhu",
-        "úplně",
-        "řekl",
-        "šampion"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1092,7 +1092,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 78074,
+      "bytes": 78154,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1129,7 +1129,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-10T16:51:10Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T18:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1144,6 +1144,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fanynka MMA se během turnaje chtěla dostat do klece UFC. Ochranka s ní udělala krátký proces",
+            "publishedAt": "2026-05-10T18:00:00Z"
+          },
           {
             "title": "Paulo Costa se po UFC 328 pustil do Chimaeva: Z vlka je pudl, dejte mi ho co nejdřív",
             "publishedAt": "2026-05-10T16:51:10Z"
@@ -1171,10 +1175,6 @@
           {
             "title": "Poirier vidí v Amosovovi nového Khabiba. Věří, že UFC má budoucího šampiona",
             "publishedAt": "2026-05-10T03:57:05Z"
-          },
-          {
-            "title": "Divočák Hokit na UFC 328 provokoval Costu. Zasahovala ochranka",
-            "publishedAt": "2026-05-10T03:30:58Z"
           }
         ]
       }
