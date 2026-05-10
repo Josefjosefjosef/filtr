@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-10T14:09:08.705461Z",
+  "ingestedAt": "2026-05-10T14:49:19.683679Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Chorý není schopen ovládat svoje chování, takhle na hřiště nepatří, prohlásil Tvrdík",
+      "url": "https://sport.aktualne.cz/fotbal/chory-neni-schopen-ovladat-svoje-chovani-takhle-na-hriste-nepatri-prohlasil-tvrdik/r~aaa29ffa446400509ba1cb106b6b53bb/",
+      "dt": "2026-05-10T14:29:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "chorý",
+        "chování",
+        "hřiště",
+        "nepatří",
+        "ovládat",
+        "prohlásil",
+        "schopen",
+        "svoje",
+        "takhle",
+        "tvrdík"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -498,34 +525,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zvířecí chování fanoušků vrhlo Slavii na divoký východ. Český chaos, žasnou v Evropě",
-      "url": "https://sport.aktualne.cz/fotbal/zvireci-chovani-fanousku-vrhlo-slavii-na-divoky-vychod-cesky-chaos-zasnou-v-evrope/r~aaa29203f935bee0faf0b38afdb03aa7/",
-      "dt": "2026-05-10T08:58:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "chaos",
-        "chování",
-        "divoký",
-        "evropě",
-        "fanoušků",
-        "slavii",
-        "vrhlo",
-        "východ",
-        "zvířecí",
-        "český",
-        "žasnou"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -536,7 +535,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21522,
+      "bytes": 21460,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -573,11 +572,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-10T13:53:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T14:29:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 13,
-          "sport": 7
+          "sport": 7,
+          "zpravy": 13
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -589,6 +588,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chorý není schopen ovládat svoje chování, takhle na hřiště nepatří, prohlásil Tvrdík",
+            "publishedAt": "2026-05-10T14:29:00Z"
+          },
           {
             "title": "Umí krysa doplavat na ostrov a šířit hantavirus? Vylekaného šéfa vlády museli uklidňovat",
             "publishedAt": "2026-05-10T13:53:00Z"
@@ -616,10 +619,6 @@
           {
             "title": "Za Britem s hantavirem skočili zdravotníci s padákem. Žije na odlehlém ostrově",
             "publishedAt": "2026-05-10T11:27:00Z"
-          },
-          {
-            "title": "Nemůžete usnout? Možná jíte „zakázané“ potraviny. Chyby, které vám v noci kradou klid",
-            "publishedAt": "2026-03-16T04:59:00Z"
           }
         ]
       }
