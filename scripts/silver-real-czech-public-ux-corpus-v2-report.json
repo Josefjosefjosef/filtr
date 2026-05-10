@@ -1,26 +1,26 @@
 {
   "harness_id": "silver_real_czech_public_ux_corpus_v2",
   "fixed_now": "2026-05-04T12:00:00",
-  "main_commit": "5e500e43d88197e462ad1747441a81dc0ded64e4",
-  "branch": "chore/silver-real-czech-public-ux-corpus-v2",
+  "main_commit": "41833432a8aef386747e51c276f16c2e8ae9ab40",
+  "branch": "fix/silver-calendar-query-storage-corpus-labels-p1",
   "engine_changed": "NO",
   "assets_app_changed": "NO",
-  "changed_files": "scripts/silver-real-czech-public-ux-corpus-v2-report.json;scripts/silver-real-czech-public-ux-corpus-v2.cjs",
+  "changed_files": "scripts/silver-deep-product-real-ux-v2-report.json;scripts/silver-rcz2-mobile-voice-intent-fail-diagnostic-report.json;scripts/silver-real-czech-public-ux-corpus-v2.cjs",
   "total_cases": 108000,
-  "pass": 76003,
-  "fail": 31997,
-  "accuracy": "70.37",
+  "pass": 84071,
+  "fail": 23929,
+  "accuracy": "77.84",
   "top_clusters": [
-    "rcz2_mobile_voice||intent_fail:5657",
-    "rcz2_mobile_voice||calendar_vs_task_confusion:5027",
     "rcz2_mobile_voice||unnecessary_disambiguation:4715",
     "rcz2_ambiguity||intent_fail:3427",
-    "rcz2_mobile_voice||wrong_collection:2514",
+    "rcz2_mobile_voice||calendar_vs_task_confusion:2513",
     "rcz2_ambiguity||calendar_vs_task_confusion:2400",
     "rcz2_ambiguity||wrong_collection:2400",
-    "rcz2_mobile_voice||note_vs_task_confusion:1257",
+    "rcz2_mobile_voice||wrong_collection:2199",
     "rcz2_ambiguity||note_vs_task_confusion:1200",
-    "rcz2_retrieval||intent_fail:1000"
+    "rcz2_retrieval||intent_fail:1000",
+    "rcz2_mobile_voice||note_vs_task_confusion:942",
+    "rcz2_ultra_short_chaos||calendar_vs_task_confusion:800"
   ],
   "top_fail_examples": [
     {
@@ -28,27 +28,6 @@
       "cluster": "rcz2_mobile_voice",
       "cat": "calendar_vs_task_confusion",
       "input": "vlastne to nedavej do kalendare ale do ukolu diky",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
-      "id": "rcz2_0028019",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "no tak hod mi do ukolu koupit mliko do patku ne kalendare prosim te",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
-      "id": "rcz2_0028020",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "btw mrkni kdy mam zubare v kalendari prosim te",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
-      "id": "rcz2_0028025",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu prosim te díky",
       "ux_category": "mobile_voice_chaos"
     },
     {
@@ -66,13 +45,6 @@
       "ux_category": "mobile_voice_chaos"
     },
     {
-      "id": "rcz2_0028030",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "hele vlastne to nedavej do kalendare ale do ukolu prosim te díky",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
       "id": "rcz2_0028032",
       "cluster": "rcz2_mobile_voice",
       "cat": "calendar_vs_task_confusion",
@@ -84,27 +56,6 @@
       "cluster": "rcz2_mobile_voice",
       "cat": "calendar_vs_task_confusion",
       "input": "hele vlastne to nedavej do kalendare ale do ukolu jo",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
-      "id": "rcz2_0028054",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "hele no tak hod mi do ukolu koupit mliko do patku ne kalendare",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
-      "id": "rcz2_0028055",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "hele btw mrkni kdy mam zubare v kalendari",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
-      "id": "rcz2_0028060",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu díky",
       "ux_category": "mobile_voice_chaos"
     },
     {
@@ -122,13 +73,6 @@
       "ux_category": "mobile_voice_chaos"
     },
     {
-      "id": "rcz2_0028065",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "vlastne to nedavej do kalendare ale do ukolu nevim presne",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
       "id": "rcz2_0028067",
       "cluster": "rcz2_mobile_voice",
       "cat": "calendar_vs_task_confusion",
@@ -140,27 +84,6 @@
       "cluster": "rcz2_mobile_voice",
       "cat": "calendar_vs_task_confusion",
       "input": "hele vlastne to nedavej do kalendare ale do ukolu nevim presne",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
-      "id": "rcz2_0028089",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "no tak hod mi do ukolu koupit mliko do patku ne kalendare diky díky",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
-      "id": "rcz2_0028090",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "btw mrkni kdy mam zubare v kalendari diky díky",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
-      "id": "rcz2_0028095",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "hele tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu diky díky",
       "ux_category": "mobile_voice_chaos"
     },
     {
@@ -178,13 +101,6 @@
       "ux_category": "mobile_voice_chaos"
     },
     {
-      "id": "rcz2_0028100",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "vlastne to nedavej do kalendare ale do ukolu prosim te",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
       "id": "rcz2_0028102",
       "cluster": "rcz2_mobile_voice",
       "cat": "calendar_vs_task_confusion",
@@ -196,27 +112,6 @@
       "cluster": "rcz2_mobile_voice",
       "cat": "calendar_vs_task_confusion",
       "input": "vlastne to nedavej do kalendare ale do ukolu prosim te díky",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
-      "id": "rcz2_0028124",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "no tak hod mi do ukolu koupit mliko do patku ne kalendare jo díky",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
-      "id": "rcz2_0028125",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "hele btw mrkni kdy mam zubare v kalendari jo díky",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
-      "id": "rcz2_0028130",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu",
       "ux_category": "mobile_voice_chaos"
     },
     {
@@ -234,13 +129,6 @@
       "ux_category": "mobile_voice_chaos"
     },
     {
-      "id": "rcz2_0028135",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "hele vlastne to nedavej do kalendare ale do ukolu",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
       "id": "rcz2_0028137",
       "cluster": "rcz2_mobile_voice",
       "cat": "calendar_vs_task_confusion",
@@ -252,27 +140,6 @@
       "cluster": "rcz2_mobile_voice",
       "cat": "calendar_vs_task_confusion",
       "input": "hele vlastne to nedavej do kalendare ale do ukolu díky",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
-      "id": "rcz2_0028159",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "hele no tak hod mi do ukolu koupit mliko do patku ne kalendare nevim presne díky",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
-      "id": "rcz2_0028160",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "hele btw mrkni kdy mam zubare v kalendari nevim presne díky",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
-      "id": "rcz2_0028165",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "hele tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu diky",
       "ux_category": "mobile_voice_chaos"
     },
     {
@@ -290,13 +157,6 @@
       "ux_category": "mobile_voice_chaos"
     },
     {
-      "id": "rcz2_0028170",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "vlastne to nedavej do kalendare ale do ukolu diky díky",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
       "id": "rcz2_0028172",
       "cluster": "rcz2_mobile_voice",
       "cat": "calendar_vs_task_confusion",
@@ -308,27 +168,6 @@
       "cluster": "rcz2_mobile_voice",
       "cat": "calendar_vs_task_confusion",
       "input": "vlastne to nedavej do kalendare ale do ukolu prosim te",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
-      "id": "rcz2_0028194",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "no tak hod mi do ukolu koupit mliko do patku ne kalendare jo",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
-      "id": "rcz2_0028195",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "btw mrkni kdy mam zubare v kalendari jo",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
-      "id": "rcz2_0028200",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "hele tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu jo",
       "ux_category": "mobile_voice_chaos"
     },
     {
@@ -346,13 +185,6 @@
       "ux_category": "mobile_voice_chaos"
     },
     {
-      "id": "rcz2_0028205",
-      "cluster": "rcz2_mobile_voice",
-      "cat": "calendar_vs_task_confusion",
-      "input": "hele vlastne to nedavej do kalendare ale do ukolu jo díky",
-      "ux_category": "mobile_voice_chaos"
-    },
-    {
       "id": "rcz2_0028207",
       "cluster": "rcz2_mobile_voice",
       "cat": "calendar_vs_task_confusion",
@@ -367,17 +199,185 @@
       "ux_category": "mobile_voice_chaos"
     },
     {
-      "id": "rcz2_0028229",
+      "id": "rcz2_0028236",
       "cluster": "rcz2_mobile_voice",
       "cat": "calendar_vs_task_confusion",
-      "input": "hele no tak hod mi do ukolu koupit mliko do patku ne kalendare nevim presne",
+      "input": "no tak hod mi do ukolu koupit mliko do patku ne kalendare nevim presne díky",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028237",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "hele btw mrkni kdy mam zubare v kalendari nevim presne díky",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028242",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu diky",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028247",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "hele vlastne to nedavej do kalendare ale do ukolu diky",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028271",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "hele no tak hod mi do ukolu koupit mliko do patku ne kalendare prosim te díky",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028272",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "hele btw mrkni kdy mam zubare v kalendari prosim te díky",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028277",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "hele tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu jo",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028282",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "vlastne to nedavej do kalendare ale do ukolu jo díky",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028306",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "no tak hod mi do ukolu koupit mliko do patku ne kalendare nevim presne",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028307",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "btw mrkni kdy mam zubare v kalendari nevim presne",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028312",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "hele tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu nevim presne",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028317",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "hele vlastne to nedavej do kalendare ale do ukolu nevim presne díky",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028341",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "hele no tak hod mi do ukolu koupit mliko do patku ne kalendare prosim te",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028342",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "hele btw mrkni kdy mam zubare v kalendari prosim te",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028347",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu prosim te díky",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028352",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "hele vlastne to nedavej do kalendare ale do ukolu prosim te díky",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028376",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "hele no tak hod mi do ukolu koupit mliko do patku ne kalendare",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028377",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "btw mrkni kdy mam zubare v kalendari díky",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028382",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "hele tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu díky",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028387",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "vlastne to nedavej do kalendare ale do ukolu nevim presne",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028411",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "no tak hod mi do ukolu koupit mliko do patku ne kalendare diky díky",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028412",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "btw mrkni kdy mam zubare v kalendari diky díky",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028417",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "tyjo uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu prosim te",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028422",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "hele vlastne to nedavej do kalendare ale do ukolu prosim te",
+      "ux_category": "mobile_voice_chaos"
+    },
+    {
+      "id": "rcz2_0028446",
+      "cluster": "rcz2_mobile_voice",
+      "cat": "calendar_vs_task_confusion",
+      "input": "hele no tak hod mi do ukolu koupit mliko do patku ne kalendare jo díky",
       "ux_category": "mobile_voice_chaos"
     }
   ],
   "category_accuracy": {
     "ultra_short_chaos": "80.00",
     "dirty_czech_no_diacritics": "100.00",
-    "mobile_voice_chaos": "12.86",
+    "mobile_voice_chaos": "49.54",
     "mixed_module_chaos": "100.00",
     "ambiguity": "21.44",
     "retrieval_relevance": "91.67",
@@ -400,20 +400,20 @@
     "query_created_write_count": 0,
     "write_when_negated_count": 0
   },
-  "calendar_write_20k": "3000/3000",
+  "calendar_write_20k": "SKIPPED",
   "calendar_write_20k_preservation": "3000/3000 OK",
   "embedded_audits": {
     "note": "Run audit_silver_20000_routing_stable, audit_silver_quality_v2, audit_silver_realistic_mobile_corpus, silver-real-czech-corpus-v1, silver-deep-product-real-ux-v2 separately to refresh sibling JSON reports before relying on metrics_snapshot."
   },
   "metrics_snapshot": {
-    "20k_overall_accuracy": "95.48%",
-    "quality_accuracy": "100.00",
-    "realistic_overall_accuracy": "100.00",
-    "real_czech_corpus_accuracy": "100.00",
-    "deep_product_real_ux_v2_accuracy": "87.78%"
+    "20k_overall_accuracy": "SKIPPED",
+    "quality_accuracy": "100.00%",
+    "realistic_overall_accuracy": "100.00%",
+    "real_czech_corpus_accuracy": "100.00%",
+    "deep_product_real_ux_v2_accuracy": "91.00%"
   },
-  "recommended_next_cluster": "rcz2_mobile_voice / intent_fail",
-  "recommended_next_fix_scope": "Impact leader «rcz2_mobile_voice» / «intent_fail»: Silver routing thresholds + Czech paraphrase templates",
+  "recommended_next_cluster": "rcz2_mobile_voice / unnecessary_disambiguation",
+  "recommended_next_fix_scope": "Impact leader «rcz2_mobile_voice» / «unnecessary_disambiguation»: Silver routing thresholds + Czech paraphrase templates",
   "recommended_reason": "Top failing cluster indicates highest routing/semantic drift.",
   "risk_level": "P2",
   "ready_for_next_fix_task": "YES",

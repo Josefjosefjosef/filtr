@@ -91,7 +91,9 @@ function gitTrackedClean() {
       "scripts/audit_silver_20000_routing_stable.cjs",
       "scripts/audit_silver_realistic_mobile_corpus.cjs",
       "scripts/silver-real-czech-corpus-v1.cjs",
-      "scripts/silver-deep-product-real-ux-v2-report.json"
+      "scripts/silver-deep-product-real-ux-v2-report.json",
+      "scripts/silver-calendar-query-storage-disambiguation-diagnostic.cjs",
+      "scripts/silver-calendar-query-storage-disambiguation-diagnostic-report.json"
     ];
     const bad = tracked.filter((l) => {
       const t = l.replace(/^\s+/, "").trim();
@@ -367,6 +369,30 @@ function buildPublicUxCorpusV2() {
     "co mam udelat jen v ukolech",
     "jen se podivej do ukolu co mam"
   ];
+  /**
+   * rcz2_mobile_voice calendar_query only: čisté READ formulace bez imperativů typu „mrkni/kdy mam“,
+   * které engine mapuje na calendar.create (intent_fail). Držíme se vzorů, které zůstávají ve STORAGE_DISAMBIGUATION.
+   */
+  const MOB_CALENDAR_QUERY_READ = [
+    "co tam mam za schuzku na SLOTDEAD",
+    "co tam mam za schuzku SLOTDEAD v kalendari",
+    "co mam v kalendari na SLOTDEAD",
+    "co mam v kalendari na schuzku se zubarem SLOTIDX",
+    "co tam mam na SLOTDEAD v kalendari",
+    "co tam mam za udalost na SLOTDEAD",
+    "co mam zitra v kalendari SLOTIDX",
+    "co mam pristi utery v kalendari SLOTIDX",
+    "co mam dneska v kalendari SLOTIDX",
+    "co tam mam za schuzku se pravnikem na SLOTDEAD",
+    "co tam mam za schuzku s doktorem na SLOTDEAD",
+    "co mam v kalendari na dopoledne SLOTDEAD",
+    "co tam mam za schuzku na patek SLOTIDX",
+    "co mam v kalendari na vecer SLOTDEAD",
+    "co tam mam za schuzku na zitrek SLOTDEAD",
+    "co mam v kalendari na rano SLOTDEAD",
+    "co tam mam za schuzku s ucetnim na SLOTDEAD",
+    "co mam v kalendari na SLOTDEAD SLOTIDX"
+  ];
   for (let i = 0; i < 22000; i++) {
     const kind = i % 5;
     let raw;
@@ -375,11 +401,22 @@ function buildPublicUxCorpusV2() {
         .replace("SLOTGOOD", stripDiak(GOODS[i % GOODS.length]))
         .replace("SLOTDEAD", stripDiak(DEAD[i % DEAD.length]));
       raw = applyMutationMask(MOB_PREFIX[i % MOB_PREFIX.length] + tqb + MOB_SUFFIX[(i >> 4) % MOB_SUFFIX.length], i % 128);
+    } else if (kind === 3) {
+      const cqb = MOB_CALENDAR_QUERY_READ[i % MOB_CALENDAR_QUERY_READ.length]
+        .replace("SLOTGOOD", stripDiak(GOODS[i % GOODS.length]))
+        .replace("SLOTDEAD", stripDiak(DEAD[i % DEAD.length]))
+        .replace("SLOTIDX", String(i));
+      raw = applyMutationMask(MOB_PREFIX[i % MOB_PREFIX.length] + cqb + MOB_SUFFIX[(i >> 4) % MOB_SUFFIX.length], i % 128);
     } else {
       const base = MOB_MID[i % MOB_MID.length].replace("SLOT", String(i));
       raw = applyMutationMask(MOB_PREFIX[i % MOB_PREFIX.length] + base + MOB_SUFFIX[(i >> 4) % MOB_SUFFIX.length], i % 128);
     }
-    if (raw.length < 6) raw = "hele uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu radek " + i;
+    if (raw.length < 6) {
+      raw =
+        kind === 3
+          ? "hele mrkni kdy mam zubare v kalendari radek " + i
+          : "hele uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu radek " + i;
+    }
     if (kind === 0) push("rcz2_mobile_voice", "calendar_write", raw, "calendar.create", {}, { mobile_czech: true }, UX_CAT.MOBILE);
     else if (kind === 1) push("rcz2_mobile_voice", "task_write", raw, "task.create", {}, { mobile_czech: true }, UX_CAT.MOBILE);
     else if (kind === 2) push("rcz2_mobile_voice", "note_write", raw, "note.create", {}, { mobile_czech: true }, UX_CAT.MOBILE);

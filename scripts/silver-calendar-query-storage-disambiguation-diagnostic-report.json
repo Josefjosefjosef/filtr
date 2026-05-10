@@ -1,83 +1,38 @@
 {
   "harness_id": "silver_calendar_query_storage_disambiguation_diagnostic",
-  "main_commit": "f98b4ac6889d35987a737d76b2fbb091b51b0851",
+  "main_commit": "41833432a8aef386747e51c276f16c2e8ae9ab40",
   "engine_changed": "NO",
   "assets_app_changed": "NO",
   "target_cluster": "rcz2_mobile_voice||intent_fail",
   "target_subcluster": "calendar_query_storage_disambiguation",
   "target_subcluster_key": "calendar_query|exp=calendar.query|act=unknown|ps=STORAGE_DISAMBIGUATION|eng=create.storage_disambiguation",
-  "target_subcluster_count": 1570,
+  "target_subcluster_count": 488,
   "inspected_count": 120,
   "classification_counts": {
     "true_product_fail": 0,
-    "harness_label_problem": 942,
-    "ambiguous_user_input": 628,
+    "harness_label_problem": 0,
+    "ambiguous_user_input": 207,
     "safety_sensitive": 0,
-    "not_enough_context": 0
+    "not_enough_context": 281
   },
   "root_cause_histogram": {
-    "note_or_task_phrase_mislabeled_as_calendar_query": 314,
-    "correction_phrase_conflict": 628,
-    "create_phrase_mislabeled_as_query": 628
+    "time_only_without_entity": 281,
+    "correction_phrase_conflict": 207
   },
   "top_root_causes": [
     {
+      "k": "time_only_without_entity",
+      "n": 281
+    },
+    {
       "k": "correction_phrase_conflict",
-      "n": 628
-    },
-    {
-      "k": "create_phrase_mislabeled_as_query",
-      "n": 628
-    },
-    {
-      "k": "note_or_task_phrase_mislabeled_as_calendar_query",
-      "n": 314
+      "n": 207
     }
   ],
   "samples": [
     {
-      "id": "rcz2_0028024",
-      "input": "hele pockej ne pockej pristi utery prosim te",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028014",
-      "input": "hele zapis poznamku ze pin je doma 13 diky díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "note_or_task_phrase_mislabeled_as_calendar_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0028059",
-      "input": "pockej ne pockej pristi utery díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028029",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat prosim te díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0028094",
-      "input": "hele pockej ne pockej pristi utery diky díky",
+      "id": "rcz2_0028069",
+      "input": "hele btw co tam mam za schuzku na zitrek zitra rano nevim presne",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
@@ -87,17 +42,17 @@
     },
     {
       "id": "rcz2_0028064",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat díky",
+      "input": "hele hele co tam mam za schuzku se pravnikem na dnes vecer díky",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
       "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
     },
     {
-      "id": "rcz2_0028129",
-      "input": "pockej ne pockej pristi utery",
+      "id": "rcz2_0028154",
+      "input": "co tam mam za schuzku se pravnikem na dnes vecer nevim presne díky",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
@@ -106,18 +61,18 @@
       "classification": "ambiguous_user_input"
     },
     {
-      "id": "rcz2_0028099",
-      "input": "hele pripomen mi zejtra rano ze mam vstat prosim te",
+      "id": "rcz2_0028244",
+      "input": "btw co tam mam za schuzku se pravnikem na dnes vecer diky",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
       "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
     },
     {
-      "id": "rcz2_0028164",
-      "input": "pockej ne pockej pristi utery diky",
+      "id": "rcz2_0028159",
+      "input": "hele no tak co tam mam za schuzku na zitrek zitra rano nevim presne díky",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
@@ -126,98 +81,18 @@
       "classification": "ambiguous_user_input"
     },
     {
-      "id": "rcz2_0028119",
-      "input": "hele zapis poznamku ze pin je doma 118 jo",
+      "id": "rcz2_0028249",
+      "input": "tyjo co tam mam za schuzku na zitrek zitra rano diky díky",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
       "engine_action": "create.storage_disambiguation",
-      "root_cause": "note_or_task_phrase_mislabeled_as_calendar_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0028199",
-      "input": "hele pockej ne pockej pristi utery jo",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028134",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0028234",
-      "input": "pockej ne pockej pristi utery nevim presne díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028169",
-      "input": "hele pripomen mi zejtra rano ze mam vstat diky díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0028269",
-      "input": "hele pockej ne pockej pristi utery prosim te díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028189",
-      "input": "hele zapis poznamku ze pin je doma 188 prosim te díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "note_or_task_phrase_mislabeled_as_calendar_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0028304",
-      "input": "hele pockej ne pockej pristi utery díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028204",
-      "input": "hele pripomen mi zejtra rano ze mam vstat jo díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
     },
     {
       "id": "rcz2_0028339",
-      "input": "pockej ne pockej pristi utery prosim te",
+      "input": "pockej co tam mam za schuzku na zitrek zitra rano prosim te",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
@@ -226,18 +101,18 @@
       "classification": "ambiguous_user_input"
     },
     {
-      "id": "rcz2_0028224",
-      "input": "hele zapis poznamku ze pin je doma 223 díky",
+      "id": "rcz2_0028334",
+      "input": "hele no tak co tam mam za schuzku se pravnikem na dnes vecer diky díky",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
       "engine_action": "create.storage_disambiguation",
-      "root_cause": "note_or_task_phrase_mislabeled_as_calendar_query",
-      "classification": "harness_label_problem"
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
     },
     {
-      "id": "rcz2_0028374",
-      "input": "hele pockej ne pockej pristi utery",
+      "id": "rcz2_0028429",
+      "input": "hele vlastne co tam mam za schuzku na zitrek zitra rano prosim te díky",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
@@ -246,238 +121,18 @@
       "classification": "ambiguous_user_input"
     },
     {
-      "id": "rcz2_0028239",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat nevim presne díky",
+      "id": "rcz2_0028424",
+      "input": "hele tyjo co tam mam za schuzku se pravnikem na dnes vecer prosim te",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
       "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0028409",
-      "input": "pockej ne pockej pristi utery diky díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028274",
-      "input": "hele pripomen mi zejtra rano ze mam vstat jo",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0028444",
-      "input": "pockej ne pockej pristi utery jo díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028294",
-      "input": "hele zapis poznamku ze pin je doma 293",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "note_or_task_phrase_mislabeled_as_calendar_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0028479",
-      "input": "hele pockej ne pockej pristi utery nevim presne díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028309",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat nevim presne",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
     },
     {
       "id": "rcz2_0028514",
-      "input": "pockej ne pockej pristi utery jo",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028344",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat prosim te",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0028549",
-      "input": "hele pockej ne pockej pristi utery nevim presne",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028379",
-      "input": "hele pripomen mi zejtra rano ze mam vstat díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0028584",
-      "input": "hele pockej ne pockej pristi utery prosim te",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028399",
-      "input": "hele zapis poznamku ze pin je doma 398 nevim presne díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "note_or_task_phrase_mislabeled_as_calendar_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0028619",
-      "input": "pockej ne pockej pristi utery díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028414",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat diky díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0028654",
-      "input": "hele pockej ne pockej pristi utery diky díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028449",
-      "input": "hele pripomen mi zejtra rano ze mam vstat",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0028689",
-      "input": "pockej ne pockej pristi utery",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028469",
-      "input": "hele zapis poznamku ze pin je doma 468 nevim presne",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "note_or_task_phrase_mislabeled_as_calendar_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0028724",
-      "input": "pockej ne pockej pristi utery diky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028484",
-      "input": "hele pripomen mi zejtra rano ze mam vstat diky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0028759",
-      "input": "hele pockej ne pockej pristi utery jo",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028504",
-      "input": "hele zapis poznamku ze pin je doma 503 prosim te",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "note_or_task_phrase_mislabeled_as_calendar_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0028794",
-      "input": "pockej ne pockej pristi utery nevim presne díky",
+      "input": "pockej co tam mam za schuzku se pravnikem na dnes vecer jo",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
@@ -487,37 +142,17 @@
     },
     {
       "id": "rcz2_0028519",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat jo",
+      "input": "hele hele co tam mam za schuzku na zitrek zitra rano jo",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
       "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
     },
     {
-      "id": "rcz2_0028829",
-      "input": "hele pockej ne pockej pristi utery prosim te díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028554",
-      "input": "hele pripomen mi zejtra rano ze mam vstat nevim presne díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0028864",
-      "input": "hele pockej ne pockej pristi utery díky",
+      "id": "rcz2_0028604",
+      "input": "vlastne co tam mam za schuzku se pravnikem na dnes vecer jo díky",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
@@ -526,98 +161,18 @@
       "classification": "ambiguous_user_input"
     },
     {
-      "id": "rcz2_0028574",
-      "input": "hele zapis poznamku ze pin je doma 573 diky díky",
+      "id": "rcz2_0028609",
+      "input": "co tam mam za schuzku na zitrek zitra rano",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
       "engine_action": "create.storage_disambiguation",
-      "root_cause": "note_or_task_phrase_mislabeled_as_calendar_query",
-      "classification": "harness_label_problem"
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
     },
     {
-      "id": "rcz2_0028899",
-      "input": "pockej ne pockej pristi utery prosim te",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028589",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat prosim te díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0028934",
-      "input": "hele pockej ne pockej pristi utery",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028624",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0028969",
-      "input": "pockej ne pockej pristi utery diky díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028659",
-      "input": "hele pripomen mi zejtra rano ze mam vstat prosim te",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0029004",
-      "input": "pockej ne pockej pristi utery jo díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028679",
-      "input": "hele zapis poznamku ze pin je doma 678 jo",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "note_or_task_phrase_mislabeled_as_calendar_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0029039",
-      "input": "hele pockej ne pockej pristi utery nevim presne díky",
+      "id": "rcz2_0028789",
+      "input": "hele no tak co tam mam za schuzku na zitrek zitra rano nevim presne",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
@@ -627,37 +182,17 @@
     },
     {
       "id": "rcz2_0028694",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat",
+      "input": "hele hele co tam mam za schuzku se pravnikem na dnes vecer",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
       "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
     },
     {
-      "id": "rcz2_0029074",
-      "input": "pockej ne pockej pristi utery jo",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028729",
-      "input": "hele pripomen mi zejtra rano ze mam vstat diky díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0029109",
-      "input": "hele pockej ne pockej pristi utery nevim presne",
+      "id": "rcz2_0028874",
+      "input": "btw co tam mam za schuzku se pravnikem na dnes vecer nevim presne díky",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
@@ -666,38 +201,18 @@
       "classification": "ambiguous_user_input"
     },
     {
-      "id": "rcz2_0028749",
-      "input": "hele zapis poznamku ze pin je doma 748 prosim te díky",
+      "id": "rcz2_0028699",
+      "input": "btw co tam mam za schuzku na zitrek zitra rano díky",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
       "engine_action": "create.storage_disambiguation",
-      "root_cause": "note_or_task_phrase_mislabeled_as_calendar_query",
-      "classification": "harness_label_problem"
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
     },
     {
-      "id": "rcz2_0029144",
-      "input": "hele pockej ne pockej pristi utery prosim te",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028764",
-      "input": "hele pripomen mi zejtra rano ze mam vstat jo díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0029179",
-      "input": "pockej ne pockej pristi utery díky",
+      "id": "rcz2_0028879",
+      "input": "hele tyjo co tam mam za schuzku na zitrek zitra rano nevim presne díky",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
@@ -707,37 +222,17 @@
     },
     {
       "id": "rcz2_0028784",
-      "input": "hele zapis poznamku ze pin je doma 783 díky",
+      "input": "hele co tam mam za schuzku se pravnikem na dnes vecer díky",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
       "engine_action": "create.storage_disambiguation",
-      "root_cause": "note_or_task_phrase_mislabeled_as_calendar_query",
-      "classification": "harness_label_problem"
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
     },
     {
-      "id": "rcz2_0029214",
-      "input": "hele pockej ne pockej pristi utery diky díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028799",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat nevim presne díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0029249",
-      "input": "pockej ne pockej pristi utery",
+      "id": "rcz2_0028969",
+      "input": "pockej co tam mam za schuzku na zitrek zitra rano diky díky",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
@@ -746,38 +241,18 @@
       "classification": "ambiguous_user_input"
     },
     {
-      "id": "rcz2_0028834",
-      "input": "hele pripomen mi zejtra rano ze mam vstat jo",
+      "id": "rcz2_0028964",
+      "input": "no tak co tam mam za schuzku se pravnikem na dnes vecer diky",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
       "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
     },
     {
-      "id": "rcz2_0029284",
-      "input": "pockej ne pockej pristi utery diky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028854",
-      "input": "hele zapis poznamku ze pin je doma 853",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "note_or_task_phrase_mislabeled_as_calendar_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0029319",
-      "input": "hele pockej ne pockej pristi utery jo",
+      "id": "rcz2_0029059",
+      "input": "vlastne co tam mam za schuzku na zitrek zitra rano prosim te",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
@@ -786,238 +261,18 @@
       "classification": "ambiguous_user_input"
     },
     {
-      "id": "rcz2_0028869",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat nevim presne",
+      "id": "rcz2_0029054",
+      "input": "hele tyjo co tam mam za schuzku se pravnikem na dnes vecer diky díky",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
       "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
     },
     {
-      "id": "rcz2_0029354",
-      "input": "pockej ne pockej pristi utery nevim presne díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028904",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat prosim te",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0029389",
-      "input": "hele pockej ne pockej pristi utery prosim te díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028939",
-      "input": "hele pripomen mi zejtra rano ze mam vstat díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0029424",
-      "input": "hele pockej ne pockej pristi utery díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028959",
-      "input": "hele zapis poznamku ze pin je doma 958 nevim presne díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "note_or_task_phrase_mislabeled_as_calendar_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0029459",
-      "input": "pockej ne pockej pristi utery prosim te",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0028974",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat diky díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0029494",
-      "input": "hele pockej ne pockej pristi utery",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0029009",
-      "input": "hele pripomen mi zejtra rano ze mam vstat",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0029529",
-      "input": "pockej ne pockej pristi utery diky díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0029029",
-      "input": "hele zapis poznamku ze pin je doma 1028 nevim presne",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "note_or_task_phrase_mislabeled_as_calendar_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0029564",
-      "input": "pockej ne pockej pristi utery jo díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0029044",
-      "input": "hele pripomen mi zejtra rano ze mam vstat diky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0029599",
-      "input": "hele pockej ne pockej pristi utery nevim presne díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0029064",
-      "input": "hele zapis poznamku ze pin je doma 1063 prosim te",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "note_or_task_phrase_mislabeled_as_calendar_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0029634",
-      "input": "pockej ne pockej pristi utery jo",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0029079",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat jo",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0029669",
-      "input": "hele pockej ne pockej pristi utery nevim presne",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0029114",
-      "input": "hele pripomen mi zejtra rano ze mam vstat nevim presne díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0029704",
-      "input": "hele pockej ne pockej pristi utery prosim te",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0029134",
-      "input": "hele zapis poznamku ze pin je doma 1133 diky díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "note_or_task_phrase_mislabeled_as_calendar_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0029739",
-      "input": "pockej ne pockej pristi utery díky",
+      "id": "rcz2_0029144",
+      "input": "hele pockej co tam mam za schuzku se pravnikem na dnes vecer prosim te",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
@@ -1027,57 +282,17 @@
     },
     {
       "id": "rcz2_0029149",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat prosim te díky",
+      "input": "hele hele co tam mam za schuzku na zitrek zitra rano prosim te díky",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
       "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
     },
     {
-      "id": "rcz2_0029774",
-      "input": "hele pockej ne pockej pristi utery diky díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0029184",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0029809",
-      "input": "pockej ne pockej pristi utery",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0029219",
-      "input": "hele pripomen mi zejtra rano ze mam vstat prosim te",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0029844",
-      "input": "pockej ne pockej pristi utery diky",
+      "id": "rcz2_0029234",
+      "input": "vlastne co tam mam za schuzku se pravnikem na dnes vecer jo",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
@@ -1087,77 +302,17 @@
     },
     {
       "id": "rcz2_0029239",
-      "input": "hele zapis poznamku ze pin je doma 1238 jo",
+      "input": "hele co tam mam za schuzku na zitrek zitra rano jo",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
       "engine_action": "create.storage_disambiguation",
-      "root_cause": "note_or_task_phrase_mislabeled_as_calendar_query",
-      "classification": "harness_label_problem"
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
     },
     {
-      "id": "rcz2_0029879",
-      "input": "hele pockej ne pockej pristi utery jo",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0029254",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0029914",
-      "input": "pockej ne pockej pristi utery nevim presne díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0029289",
-      "input": "hele pripomen mi zejtra rano ze mam vstat diky díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0029949",
-      "input": "hele pockej ne pockej pristi utery prosim te díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "correction_phrase_conflict",
-      "classification": "ambiguous_user_input"
-    },
-    {
-      "id": "rcz2_0029309",
-      "input": "hele zapis poznamku ze pin je doma 1308 prosim te díky",
-      "expected": "calendar.query",
-      "actual": "unknown",
-      "provider_state": "STORAGE_DISAMBIGUATION",
-      "engine_action": "create.storage_disambiguation",
-      "root_cause": "note_or_task_phrase_mislabeled_as_calendar_query",
-      "classification": "harness_label_problem"
-    },
-    {
-      "id": "rcz2_0029984",
-      "input": "hele pockej ne pockej pristi utery díky",
+      "id": "rcz2_0029509",
+      "input": "hele tyjo co tam mam za schuzku na zitrek zitra rano nevim presne",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
@@ -1167,17 +322,17 @@
     },
     {
       "id": "rcz2_0029324",
-      "input": "hele pripomen mi zejtra rano ze mam vstat jo díky",
+      "input": "hele co tam mam za schuzku se pravnikem na dnes vecer jo díky",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
       "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
     },
     {
-      "id": "rcz2_0030019",
-      "input": "pockej ne pockej pristi utery prosim te",
+      "id": "rcz2_0029594",
+      "input": "no tak co tam mam za schuzku se pravnikem na dnes vecer nevim presne díky",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
@@ -1186,18 +341,18 @@
       "classification": "ambiguous_user_input"
     },
     {
-      "id": "rcz2_0029344",
-      "input": "hele zapis poznamku ze pin je doma 1343 díky",
+      "id": "rcz2_0029329",
+      "input": "btw co tam mam za schuzku na zitrek zitra rano",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
       "engine_action": "create.storage_disambiguation",
-      "root_cause": "note_or_task_phrase_mislabeled_as_calendar_query",
-      "classification": "harness_label_problem"
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
     },
     {
-      "id": "rcz2_0030054",
-      "input": "hele pockej ne pockej pristi utery",
+      "id": "rcz2_0029599",
+      "input": "hele pockej co tam mam za schuzku na zitrek zitra rano nevim presne díky",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
@@ -1206,18 +361,18 @@
       "classification": "ambiguous_user_input"
     },
     {
-      "id": "rcz2_0029359",
-      "input": "hele hele pripomen mi zejtra rano ze mam vstat nevim presne díky",
+      "id": "rcz2_0029414",
+      "input": "hele co tam mam za schuzku se pravnikem na dnes vecer",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
       "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
     },
     {
-      "id": "rcz2_0030089",
-      "input": "pockej ne pockej pristi utery diky díky",
+      "id": "rcz2_0029689",
+      "input": "vlastne co tam mam za schuzku na zitrek zitra rano diky díky",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
@@ -1226,19 +381,859 @@
       "classification": "ambiguous_user_input"
     },
     {
-      "id": "rcz2_0029394",
-      "input": "hele pripomen mi zejtra rano ze mam vstat jo",
+      "id": "rcz2_0029419",
+      "input": "no tak co tam mam za schuzku na zitrek zitra rano díky",
       "expected": "calendar.query",
       "actual": "unknown",
       "provider_state": "STORAGE_DISAMBIGUATION",
       "engine_action": "create.storage_disambiguation",
-      "root_cause": "create_phrase_mislabeled_as_query",
-      "classification": "harness_label_problem"
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0029774",
+      "input": "hele pockej co tam mam za schuzku se pravnikem na dnes vecer diky díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0029504",
+      "input": "hele btw co tam mam za schuzku se pravnikem na dnes vecer díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0029864",
+      "input": "hele vlastne co tam mam za schuzku se pravnikem na dnes vecer prosim te",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0029684",
+      "input": "tyjo co tam mam za schuzku se pravnikem na dnes vecer diky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0030229",
+      "input": "hele pockej co tam mam za schuzku na zitrek zitra rano nevim presne",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0029779",
+      "input": "hele co tam mam za schuzku na zitrek zitra rano prosim te",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0030314",
+      "input": "tyjo co tam mam za schuzku se pravnikem na dnes vecer nevim presne díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0029869",
+      "input": "hele co tam mam za schuzku na zitrek zitra rano prosim te díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0030319",
+      "input": "hele vlastne co tam mam za schuzku na zitrek zitra rano nevim presne díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0029954",
+      "input": "hele co tam mam za schuzku se pravnikem na dnes vecer jo",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0030404",
+      "input": "pockej co tam mam za schuzku se pravnikem na dnes vecer diky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0029959",
+      "input": "hele btw co tam mam za schuzku na zitrek zitra rano jo",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0030494",
+      "input": "hele vlastne co tam mam za schuzku se pravnikem na dnes vecer diky díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0030044",
+      "input": "co tam mam za schuzku se pravnikem na dnes vecer jo díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0030859",
+      "input": "pockej co tam mam za schuzku na zitrek zitra rano díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0030049",
+      "input": "no tak co tam mam za schuzku na zitrek zitra rano",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0030949",
+      "input": "hele vlastne co tam mam za schuzku na zitrek zitra rano nevim presne",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0030134",
+      "input": "hele btw co tam mam za schuzku se pravnikem na dnes vecer",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0031034",
+      "input": "pockej co tam mam za schuzku se pravnikem na dnes vecer nevim presne díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0030139",
+      "input": "tyjo co tam mam za schuzku na zitrek zitra rano díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0031039",
+      "input": "hele hele co tam mam za schuzku na zitrek zitra rano nevim presne díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0030224",
+      "input": "hele no tak co tam mam za schuzku se pravnikem na dnes vecer díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0031124",
+      "input": "vlastne co tam mam za schuzku se pravnikem na dnes vecer diky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0030409",
+      "input": "hele co tam mam za schuzku na zitrek zitra rano diky díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0031489",
+      "input": "pockej co tam mam za schuzku na zitrek zitra rano",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0030499",
+      "input": "co tam mam za schuzku na zitrek zitra rano prosim te",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0031579",
+      "input": "vlastne co tam mam za schuzku na zitrek zitra rano díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0030584",
+      "input": "hele hele co tam mam za schuzku se pravnikem na dnes vecer prosim te",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0031664",
+      "input": "hele pockej co tam mam za schuzku se pravnikem na dnes vecer díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0030589",
+      "input": "hele btw co tam mam za schuzku na zitrek zitra rano prosim te díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0031669",
+      "input": "hele hele co tam mam za schuzku na zitrek zitra rano nevim presne",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0030674",
+      "input": "co tam mam za schuzku se pravnikem na dnes vecer jo",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0031754",
+      "input": "vlastne co tam mam za schuzku se pravnikem na dnes vecer nevim presne díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0030679",
+      "input": "hele no tak co tam mam za schuzku na zitrek zitra rano jo",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0031759",
+      "input": "hele co tam mam za schuzku na zitrek zitra rano nevim presne díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0030764",
+      "input": "btw co tam mam za schuzku se pravnikem na dnes vecer jo díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0032119",
+      "input": "hele pockej co tam mam za schuzku na zitrek zitra rano jo",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0030769",
+      "input": "tyjo co tam mam za schuzku na zitrek zitra rano",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0032209",
+      "input": "vlastne co tam mam za schuzku na zitrek zitra rano",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0030854",
+      "input": "hele no tak co tam mam za schuzku se pravnikem na dnes vecer",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0032294",
+      "input": "hele pockej co tam mam za schuzku se pravnikem na dnes vecer",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0030944",
+      "input": "hele tyjo co tam mam za schuzku se pravnikem na dnes vecer díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0032384",
+      "input": "hele vlastne co tam mam za schuzku se pravnikem na dnes vecer díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0031129",
+      "input": "co tam mam za schuzku na zitrek zitra rano diky díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0032389",
+      "input": "hele co tam mam za schuzku na zitrek zitra rano nevim presne",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0031214",
+      "input": "hele hele co tam mam za schuzku se pravnikem na dnes vecer diky díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0032474",
+      "input": "hele co tam mam za schuzku se pravnikem na dnes vecer nevim presne díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0031219",
+      "input": "btw co tam mam za schuzku na zitrek zitra rano prosim te",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0032479",
+      "input": "hele btw co tam mam za schuzku na zitrek zitra rano nevim presne díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0031304",
+      "input": "hele co tam mam za schuzku se pravnikem na dnes vecer prosim te",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0032749",
+      "input": "hele pockej co tam mam za schuzku na zitrek zitra rano prosim te díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0031309",
+      "input": "hele no tak co tam mam za schuzku na zitrek zitra rano prosim te díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0032839",
+      "input": "hele vlastne co tam mam za schuzku na zitrek zitra rano jo",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0031394",
+      "input": "btw co tam mam za schuzku se pravnikem na dnes vecer jo",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0032924",
+      "input": "pockej co tam mam za schuzku se pravnikem na dnes vecer jo díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0031399",
+      "input": "hele tyjo co tam mam za schuzku na zitrek zitra rano jo",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0033014",
+      "input": "hele vlastne co tam mam za schuzku se pravnikem na dnes vecer",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0031484",
+      "input": "no tak co tam mam za schuzku se pravnikem na dnes vecer jo díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0033109",
+      "input": "hele btw co tam mam za schuzku na zitrek zitra rano nevim presne",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0031574",
+      "input": "hele tyjo co tam mam za schuzku se pravnikem na dnes vecer",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0033194",
+      "input": "co tam mam za schuzku se pravnikem na dnes vecer nevim presne díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0031844",
+      "input": "hele co tam mam za schuzku se pravnikem na dnes vecer diky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0033199",
+      "input": "hele no tak co tam mam za schuzku na zitrek zitra rano nevim presne díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0031849",
+      "input": "btw co tam mam za schuzku na zitrek zitra rano diky díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0033379",
+      "input": "pockej co tam mam za schuzku na zitrek zitra rano prosim te",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0031934",
+      "input": "hele co tam mam za schuzku se pravnikem na dnes vecer diky díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0033469",
+      "input": "hele vlastne co tam mam za schuzku na zitrek zitra rano prosim te díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0031939",
+      "input": "no tak co tam mam za schuzku na zitrek zitra rano prosim te",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0033554",
+      "input": "pockej co tam mam za schuzku se pravnikem na dnes vecer jo",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0032024",
+      "input": "hele btw co tam mam za schuzku se pravnikem na dnes vecer prosim te",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0033644",
+      "input": "vlastne co tam mam za schuzku se pravnikem na dnes vecer jo díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0032029",
+      "input": "hele tyjo co tam mam za schuzku na zitrek zitra rano prosim te díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0033829",
+      "input": "hele no tak co tam mam za schuzku na zitrek zitra rano nevim presne",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0032114",
+      "input": "no tak co tam mam za schuzku se pravnikem na dnes vecer jo",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0033914",
+      "input": "btw co tam mam za schuzku se pravnikem na dnes vecer nevim presne díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0032204",
+      "input": "tyjo co tam mam za schuzku se pravnikem na dnes vecer jo díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0033919",
+      "input": "hele tyjo co tam mam za schuzku na zitrek zitra rano nevim presne díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0032299",
+      "input": "hele co tam mam za schuzku na zitrek zitra rano díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0034009",
+      "input": "pockej co tam mam za schuzku na zitrek zitra rano diky díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0032564",
+      "input": "co tam mam za schuzku se pravnikem na dnes vecer diky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0034099",
+      "input": "vlastne co tam mam za schuzku na zitrek zitra rano prosim te",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0032569",
+      "input": "no tak co tam mam za schuzku na zitrek zitra rano diky díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
+    },
+    {
+      "id": "rcz2_0034184",
+      "input": "hele pockej co tam mam za schuzku se pravnikem na dnes vecer prosim te",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "correction_phrase_conflict",
+      "classification": "ambiguous_user_input"
+    },
+    {
+      "id": "rcz2_0032654",
+      "input": "hele btw co tam mam za schuzku se pravnikem na dnes vecer diky díky",
+      "expected": "calendar.query",
+      "actual": "unknown",
+      "provider_state": "STORAGE_DISAMBIGUATION",
+      "engine_action": "create.storage_disambiguation",
+      "root_cause": "time_only_without_entity",
+      "classification": "not_enough_context"
     }
   ],
-  "safe_fix_candidate": "YES",
-  "safe_fix_scope": "Silver rcz2_mobile_voice: harness-only relabel or template fork for calendar_query mobile_voice slot (kind index 3) rows that are note.create / task.create / calendar.create phrasing in MOB_MID.",
-  "unsafe_or_deferred_reasons": "628 rows remain ambiguous_user_input (correction / mixed storage); engine STORAGE_DISAMBIGUATION untouched; no routing change in this diagnostic.",
-  "git_status_clean": "YES",
-  "changed_files": ""
+  "safe_fix_candidate": "NO",
+  "safe_fix_scope": "NO_SCOPE",
+  "unsafe_or_deferred_reasons": "Dominant signals are not pure harness mislabels; includes true_product_fail, ambiguity, or safety-sensitive rows — narrow auto-fix unsafe without engine/harness co-design.",
+  "git_status_clean": "NO",
+  "changed_files": "scripts/silver-deep-product-real-ux-v2-report.json;scripts/silver-rcz2-mobile-voice-intent-fail-diagnostic-report.json;scripts/silver-real-czech-public-ux-corpus-v2-report.json;scripts/silver-real-czech-public-ux-corpus-v2.cjs"
 }
