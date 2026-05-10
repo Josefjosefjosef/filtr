@@ -1,9 +1,9 @@
 {
   "harness_id": "silver_rcz2_mobile_voice_intent_fail_diagnostic",
-  "main_commit": "77516be1faaffd5c538462f54cd0b084ce2b348a",
+  "main_commit": "465cd4614157d8a6fec451029887e48cb74b336a",
   "branch": "fix/silver-rcz2-mobile-voice-task-query-p1",
-  "engine_changed": "YES",
-  "assets_app_changed": "YES",
+  "engine_changed": "NO",
+  "assets_app_changed": "NO",
   "target_cluster": "rcz2_mobile_voice||intent_fail",
   "target_cluster_total": 3457,
   "inspected_count": 120,
@@ -1148,8 +1148,8 @@
     "ready_for_fix_task": "YES"
   },
   "audit_snapshot": {
-    "calendar_write_20k": "SKIPPED",
-    "overall_20k_accuracy": "SKIPPED",
+    "calendar_write_20k": "3000/3000",
+    "overall_20k_accuracy": "95.48%",
     "quality_accuracy": "100.00%",
     "realistic_overall_accuracy": "100.00%",
     "real_czech_corpus_accuracy": "100.00%",
@@ -1159,6 +1159,6 @@
     "query_created_write_count": "0",
     "write_when_negated_count": "0"
   },
-  "changed_files": "assets/app.js;scripts/audit_silver_realistic_mobile_corpus.cjs;scripts/silver-deep-product-real-ux-v2-report.json;scripts/silver-rcz2-mobile-voice-intent-fail-diagnostic.cjs;scripts/silver-real-czech-corpus-v1.cjs;scripts/silver-real-czech-public-ux-corpus-v2.cjs",
+  "changed_files": "scripts/silver-deep-product-real-ux-v2-report.json",
   "git_status_clean": "NO"
 }
