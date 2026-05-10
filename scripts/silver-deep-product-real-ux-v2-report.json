@@ -1,13 +1,13 @@
 {
   "harness_id": "silver_deep_product_real_ux_v2",
   "user_reference_main_commit": "326bf6be040a14178b0231c00f0d6789b7802434",
-  "main_commit": "b7def5c1575292f4b68864d6e8ea56d77c87b435",
+  "main_commit": "1a9e9262711eb51d8e1693c0df2a61e46f6cc2d2",
   "fixed_now_iso": "2026-05-04T12:00:00",
-  "deep_product_cases_total": 90,
-  "deep_product_pass": 79,
-  "deep_product_fail": 11,
-  "deep_product_accuracy": "87.78",
-  "retrieval_relevance_accuracy": "60.00",
+  "deep_product_cases_total": 100,
+  "deep_product_pass": 91,
+  "deep_product_fail": 9,
+  "deep_product_accuracy": "91.00",
+  "retrieval_relevance_accuracy": "83.33",
   "update_vs_create_accuracy": "100.00",
   "clarification_quality_accuracy": "100.00",
   "cross_module_accuracy": "100.00",
@@ -29,16 +29,6 @@
         "Kdy jsem byl u doktora?",
         "Kdy jsem byl u doktora?",
         "vole hele já potřebuju vědět jestli mám zítra toho zubaře nebo jestli je to až pozítří protože mi to mamka říkala a já si to nepamatuju a je"
-      ]
-    },
-    {
-      "key": "cross_module_collection_routing",
-      "count": 2,
-      "severity": 78,
-      "root_cause": "ambiguous_czech_router_picked_adjacent_container",
-      "replay": [
-        "Co mám s právníkem?",
-        "Co mam s pravnikem?"
       ]
     },
     {
@@ -77,27 +67,11 @@
     "silver_calendar_create_regression": "PASS",
     "audit_20k": "PASS",
     "quality_v2": "PASS",
-    "realistic_mobile": "PASS",
-    "real_czech_corpus": "PASS",
+    "realistic_mobile": "FAIL",
+    "real_czech_corpus": "FAIL",
     "deep_product_real_ux_v2": "PASS"
   },
   "fails": [
-    {
-      "id": "rr_pravnik_task_m0",
-      "base_id": "rr_pravnik_task",
-      "slice": "retrieval_relevance",
-      "cat": "calendar_vs_task_confusion",
-      "input": "Co mám s právníkem?",
-      "replay": "Co mám s právníkem?"
-    },
-    {
-      "id": "rr_pravnik_task_m1",
-      "base_id": "rr_pravnik_task",
-      "slice": "retrieval_relevance",
-      "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s pravnikem?",
-      "replay": "Co mam s pravnikem?"
-    },
     {
       "id": "rr_doktor_kdy_byl_m0",
       "base_id": "rr_doktor_kdy_byl",

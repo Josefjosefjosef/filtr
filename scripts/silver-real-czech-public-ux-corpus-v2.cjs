@@ -84,7 +84,10 @@ function gitTrackedClean() {
     const tracked = lines.filter((l) => !l.startsWith("??"));
     const allow = [
       "scripts/silver-real-czech-public-ux-corpus-v2.cjs",
-      "scripts/silver-real-czech-public-ux-corpus-v2-report.json"
+      "scripts/silver-real-czech-public-ux-corpus-v2-report.json",
+      "scripts/silver-rcz2-mobile-voice-intent-fail-diagnostic.cjs",
+      "scripts/silver-rcz2-mobile-voice-intent-fail-diagnostic-report.json",
+      "scripts/audit_silver_20000_routing_stable.cjs"
     ];
     const bad = tracked.filter((l) => {
       const t = l.replace(/^\s+/, "").trim();
@@ -854,6 +857,8 @@ function main() {
     process.exit(1);
   }
 }
+
+module.exports = { buildPublicUxCorpusV2 };
 
 if (require.main === module) {
   main();
