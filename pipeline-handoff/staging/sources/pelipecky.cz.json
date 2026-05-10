@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "pelipecky.cz",
-  "ingestedAt": "2026-05-10T08:19:04.826044Z",
+  "ingestedAt": "2026-05-10T08:58:52.907928Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "POZNÁVACÍ ZÁJEZD: Moldavsko – vinice, pevnosti a duch Sovětského impéria s průvodcem za 27 490 Kč",
+      "url": "https://pelipecky.cz/poznavaci-zajezd-moldavsko-vinice-pevnosti-a-duch-sovetskeho-imperia-s-pruvodcem-za-27-490-kc/",
+      "dt": "2026-05-10T08:38:45Z",
+      "media_raw": "Pelipecky",
+      "media_norm": "Pelipecky",
+      "tokens": [
+        "490",
+        "duch",
+        "impéria",
+        "moldavsko",
+        "pevnosti",
+        "poznávací",
+        "průvodcem",
+        "sovětského",
+        "vinice",
+        "zájezd"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_pelipecky",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "pelipecky.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -221,33 +248,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "pelipecky.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Economy, ale s postelí: Air New Zealand zavádí „Skynest“ spací kapsle",
-      "url": "https://pelipecky.cz/economy-ale-s-posteli-air-new-zealand-zavadi-skynest-spaci-kapsle/",
-      "dt": "2026-04-27T09:27:46Z",
-      "media_raw": "Pelipecky",
-      "media_norm": "Pelipecky",
-      "tokens": [
-        "air",
-        "ale",
-        "economy",
-        "kapsle",
-        "new",
-        "postelí",
-        "skynest",
-        "spací",
-        "zavádí",
-        "zealand"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_pelipecky",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "pelipecky.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -258,7 +258,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://pelipecky.cz/feed/",
-      "bytes": 118993,
+      "bytes": 113251,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -295,7 +295,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-09T13:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T08:38:45Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "cestovani": 10
@@ -310,6 +310,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "POZNÁVACÍ ZÁJEZD: Moldavsko – vinice, pevnosti a duch Sovětského impéria s průvodcem za 27 490 Kč",
+            "publishedAt": "2026-05-10T08:38:45Z"
+          },
           {
             "title": "Za zážitky do Chile! Letenky za 12 490 Kč",
             "publishedAt": "2026-05-09T13:55:00Z"
@@ -337,10 +341,6 @@
           {
             "title": "POBYT DNE: Dovolená na Ischii ve výborně hodnoceném hotelu s odletem z Prahy od 15 790 Kč",
             "publishedAt": "2026-05-04T08:25:18Z"
-          },
-          {
-            "title": "POBYT DNE: Mallorca z Prahy ve 4* hotelu s polopenzí od 13 690 Kč",
-            "publishedAt": "2026-05-03T07:22:44Z"
           }
         ]
       }

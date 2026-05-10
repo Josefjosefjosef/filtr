@@ -1,14 +1,65 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-10T08:19:04.826044Z",
+  "ingestedAt": "2026-05-10T08:58:52.907928Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Stavěli mi sochy, teď je bourají. Frťala o drsné kritice i údajné rezignaci",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/teplicky-trener-zdenko-frtala-po-vyhre-nad-ostravou-o-kritice.A260510_101326_fotbal_pbi",
+      "dt": "2026-05-10T08:45:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bourají",
+        "drsné",
+        "frťala",
+        "kritice",
+        "rezignaci",
+        "sochy",
+        "stavěli",
+        "údajné"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nepřijatelné! Titulární sponzor odsoudil výtržnosti v derby, fotbalu dává stamiliony",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/titularni-sponzor-fotbalove-ligy-odsoudil-derby-ohrozuje-duveryhodnost-souteze.A260510_094955_fotbal_duff",
+      "dt": "2026-05-10T08:22:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "derby",
+        "dává",
+        "fotbalu",
+        "nepřijatelné",
+        "odsoudil",
+        "sponzor",
+        "stamiliony",
+        "titulární",
+        "výtržnosti"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
       "title": "Slavia řeší derby: doživotní zákazy, Chorý a Douděra ven z áčka, zavřená tribuna Sever",
       "url": "https://www.idnes.cz/fotbal/prvni-liga/slavia-po-derby-uzavira-tribunu-sever-z-a-tymu-pak-vyrazuje-choreho-s-douderou.A260510_092717_fotbal_duff",
-      "dt": "2026-05-10T08:07:27Z",
+      "dt": "2026-05-10T08:15:22Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
@@ -741,59 +792,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Česko - Finsko 2:3. Nevydařený úvod, pak marný boj v závěru o vyrovnání",
-      "url": "https://www.idnes.cz/hokej/ms-2026/cesko-finsko-svedske-hry-online-zpravodajstvi-souhrn-priprava.A260508_195910_ms-hokej-2026_huda",
-      "dt": "2026-05-09T16:41:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "boj",
-        "finsko",
-        "marný",
-        "nevydařený",
-        "pak",
-        "vyrovnání",
-        "závěru",
-        "úvod",
-        "česko"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Plzeň - Liberec 2:0, Touré potrestal chybu v rozehrávce. Sojka se trefil z přímého kopu",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-skupina-o-titul-viktoria-plzen-slovan-liberec-online-vysledek.A260508_180532_fotbal_duff",
-      "dt": "2026-05-09T16:37:14Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "chybu",
-        "kopu",
-        "liberec",
-        "plzeň",
-        "potrestal",
-        "přímého",
-        "rozehrávce",
-        "sojka",
-        "touré",
-        "trefil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47384,
+      "bytes": 47711,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,7 +839,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-10T08:07:27Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T08:45:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -857,8 +855,16 @@
         },
         "sample_titles": [
           {
+            "title": "Stavěli mi sochy, teď je bourají. Frťala o drsné kritice i údajné rezignaci",
+            "publishedAt": "2026-05-10T08:45:00Z"
+          },
+          {
+            "title": "Nepřijatelné! Titulární sponzor odsoudil výtržnosti v derby, fotbalu dává stamiliony",
+            "publishedAt": "2026-05-10T08:22:00Z"
+          },
+          {
             "title": "Slavia řeší derby: doživotní zákazy, Chorý a Douděra ven z áčka, zavřená tribuna Sever",
-            "publishedAt": "2026-05-10T08:07:27Z"
+            "publishedAt": "2026-05-10T08:15:22Z"
           },
           {
             "title": "Kdyby Galvas odešel, nemáme náhradu. Čtvrtfinále je minimum, říká šéf Liberce",
@@ -879,14 +885,6 @@
           {
             "title": "Čechová má za sebou premiéru ve WNBA, nastřílela 12 bodů. Hamzová nehrála",
             "publishedAt": "2026-05-10T07:02:00Z"
-          },
-          {
-            "title": "Pavouk MS v hokeji 2026: program play off a možní soupeři Česka ve čtvrtfinále",
-            "publishedAt": "2026-05-10T06:56:00Z"
-          },
-          {
-            "title": "Vladař a Flyers mají po sezoně. Colorado poprvé prohrálo, Nečas se neprosadil",
-            "publishedAt": "2026-05-10T06:14:39Z"
           }
         ]
       }

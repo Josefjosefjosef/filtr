@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "travelbible.cz",
-  "ingestedAt": "2026-05-10T08:19:04.826044Z",
+  "ingestedAt": "2026-05-10T08:58:52.907928Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Průvodce Děčín: co vidět, zažít a ochutnat + praktické tipy",
+      "url": "https://travelbible.cz/pruvodce-decin/",
+      "dt": "2026-05-10T08:43:56Z",
+      "media_raw": "TravelBible",
+      "media_norm": "TravelBible",
+      "tokens": [
+        "děčín",
+        "ochutnat",
+        "praktické",
+        "průvodce",
+        "tipy",
+        "vidět",
+        "zažít"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_travelbible",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "travelbible.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -224,28 +248,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "travelbible.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "TŘEBÍČ: 31 tipů co vidět, zažít a kde se najíst",
-      "url": "https://travelbible.cz/pruvodce-trebic-unesco/",
-      "dt": "2026-04-05T12:47:59Z",
-      "media_raw": "TravelBible",
-      "media_norm": "TravelBible",
-      "tokens": [
-        "najíst",
-        "tipů",
-        "třebíč",
-        "vidět",
-        "zažít"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_travelbible",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "travelbible.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -256,7 +258,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://travelbible.cz/feed/",
-      "bytes": 13840,
+      "bytes": 13813,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -293,11 +295,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-07T13:34:10Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T08:43:56Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "cestovani": 8,
-          "zpravy": 2
+          "cestovani": 9,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -309,6 +311,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Průvodce Děčín: co vidět, zažít a ochutnat + praktické tipy",
+            "publishedAt": "2026-05-10T08:43:56Z"
+          },
           {
             "title": "Pojištění pro Working Holiday 2026: Kompletní průvodce, jak krýt práci i zdraví bez rizika",
             "publishedAt": "2026-05-07T13:34:10Z"
@@ -336,10 +342,6 @@
           {
             "title": "Španělsko: podrobný praktický průvodce pro každou dovolenou",
             "publishedAt": "2026-04-21T07:25:00Z"
-          },
-          {
-            "title": "Nomádíte, podnikáte a nevíte jak s českou adresou pro úřady? Řešení je jednoduché",
-            "publishedAt": "2026-04-14T11:10:20Z"
           }
         ]
       }
