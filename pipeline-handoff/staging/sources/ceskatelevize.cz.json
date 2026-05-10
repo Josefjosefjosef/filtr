@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-10T13:25:04.228421Z",
+  "ingestedAt": "2026-05-10T14:09:08.705461Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Obsluha dluhu dramaticky poroste a vláda o reformách nemluví, varují exministři",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/obsluha-dluhu-dramaticky-poroste-a-vlada-o-reformach-nemluvi-varuji-exministri-373268",
+      "dt": "2026-05-10T13:31:43Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dluhu",
+        "dramaticky",
+        "exministři",
+        "nemluví",
+        "obsluha",
+        "poroste",
+        "reformách",
+        "varují",
+        "vláda"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -719,32 +745,6 @@
         "spáleniště",
         "českém",
         "švýcarsku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ojeté pneumatiky mohou lidé odevzdávat zdarma. Přesto část končí v přírodě",
-      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/ojete-pneumatiky-mohou-lide-odevzdavat-zdarma-presto-cast-konci-v-prirode-373178",
-      "dt": "2026-05-09T05:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "končí",
-        "lidé",
-        "odevzdávat",
-        "ojeté",
-        "pneumatiky",
-        "přesto",
-        "přírodě",
-        "zdarma",
-        "část"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1517,7 +1517,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43883,
+      "bytes": 44350,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1577,12 +1577,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-10T12:55:57Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T13:31:43Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
-          "other": 3,
-          "finance": 1
+          "finance": 2,
+          "zpravy": 25,
+          "other": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1594,6 +1594,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Obsluha dluhu dramaticky poroste a vláda o reformách nemluví, varují exministři",
+            "publishedAt": "2026-05-10T13:31:43Z"
+          },
           {
             "title": "Sjezd sudetských Němců v Brně otevírá rány, míní Havlíček. Kupka apeluje na smíření",
             "publishedAt": "2026-05-10T12:55:57Z"
@@ -1621,10 +1625,6 @@
           {
             "title": "Sabotáží spojovaných s Ruskem přibývá. Kreml hledá útočníky i na internetu, říká expertka",
             "publishedAt": "2026-05-10T07:30:00Z"
-          },
-          {
-            "title": "Obrazem: Fotograf Sudek vyrážel za svými třemi přáteli na sever",
-            "publishedAt": "2026-05-10T07:01:00Z"
           }
         ]
       }
@@ -1730,7 +1730,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78071,
+      "bytes": 78122,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-10T13:25:04.228421Z",
+  "ingestedAt": "2026-05-10T14:09:08.705461Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Místo kytice raději zkrácený úvazek. V návratu matek do práce Česko zaostává",
+      "url": "https://www.denik.cz/ekonomika/misto-kytice-radeji-zkraceny-uvazek-v-navratu-matek-do-prace-cesko-zaostava-2026.html",
+      "dt": "2026-05-10T14:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "kytice",
+        "matek",
+        "místo",
+        "návratu",
+        "práce",
+        "raději",
+        "zaostává",
+        "zkrácený",
+        "úvazek",
+        "česko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -617,32 +644,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V pražském hotelu hořela bývalá sauna. Hasiči evakuovali několik hostů",
-      "url": "https://www.denik.cz/pozary/v-hotelu-v-praze-zacala-horet-byvala-sauna-hasici-evakuovali-nekolik-hostu-20260.html",
-      "dt": "2026-05-09T10:10:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bývalá",
-        "evakuovali",
-        "hasiči",
-        "hostů",
-        "hotelu",
-        "hořela",
-        "několik",
-        "pražském",
-        "sauna"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -653,7 +654,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30770,
+      "bytes": 30656,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -690,13 +691,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-10T13:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T14:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 21,
+          "finance": 3,
+          "zpravy": 20,
           "zdravi": 1,
-          "sport": 1,
-          "finance": 2
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -708,6 +709,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Místo kytice raději zkrácený úvazek. V návratu matek do práce Česko zaostává",
+            "publishedAt": "2026-05-10T14:00:00Z"
+          },
           {
             "title": "Jak pomoci dětem ve stresu? Setkání ukázala význam asistentů pedagoga ve školách",
             "publishedAt": "2026-05-10T13:00:00Z"
@@ -735,10 +740,6 @@
           {
             "title": "Češku zasáhl v rakouských Alpách blesk, vrtulník ji přepravil do nemocnice",
             "publishedAt": "2026-05-10T07:55:00Z"
-          },
-          {
-            "title": "Loď nakažená hantavirem dorazila na Tenerife: Spustila přísnou evakuační akci",
-            "publishedAt": "2026-05-10T07:19:00Z"
           }
         ]
       }

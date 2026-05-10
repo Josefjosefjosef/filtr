@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-10T13:25:04.228421Z",
+  "ingestedAt": "2026-05-10T14:09:08.705461Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "video",
+      "title": "Pikantní podívaná. Bojovnice se v kleci mlátí jen ve spodním prádle",
+      "url": "https://www.mmamag.cz/bojovnice-se-v-kleci-mlati-jen-ve-spodnim-pradle/",
+      "dt": "2026-05-10T14:00:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "bojovnice",
+        "jen",
+        "kleci",
+        "mlátí",
+        "pikantní",
+        "podívaná",
+        "prádle",
+        "spodním"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1057,35 +1082,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Box psal historii knokauty, které otřásly světem. S 10 otázkami si musí poradit každý, kdo se považuje za fanouška",
-      "url": "https://www.mmamag.cz/box-psal-historii-knokauty-ktere-otrasly-svetem-s-10-otazkami-si-musi-poradit-kazdy-kdo-se-povazuje-za-fanouska/",
-      "dt": "2026-05-09T04:15:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "box",
-        "fanouška",
-        "historii",
-        "každý",
-        "knokauty",
-        "musí",
-        "otázkami",
-        "otřásly",
-        "poradit",
-        "považuje",
-        "psal",
-        "světem"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1096,7 +1092,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 77323,
+      "bytes": 78101,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1133,7 +1129,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-10T12:56:13Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T14:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1148,6 +1144,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pikantní podívaná. Bojovnice se v kleci mlátí jen ve spodním prádle",
+            "publishedAt": "2026-05-10T14:00:00Z"
+          },
           {
             "title": "Chimaev po prohře na UFC 328 končí ve střední váze. Míří za Procházkou a Ulbergem",
             "publishedAt": "2026-05-10T12:56:13Z"
@@ -1175,10 +1175,6 @@
           {
             "title": "Gautier vypnul Diaze tvrdou pravačkou. Po KO si řekl o Adesanyu",
             "publishedAt": "2026-05-10T02:15:41Z"
-          },
-          {
-            "title": "Bývalý král Bellatoru řádil v UFC. Amosov si připsal další rychlé vítězství",
-            "publishedAt": "2026-05-10T01:58:43Z"
           }
         ]
       }

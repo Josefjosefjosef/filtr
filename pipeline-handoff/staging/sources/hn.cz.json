@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-10T13:25:04.228421Z",
+  "ingestedAt": "2026-05-10T14:09:08.705461Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Skandální derby: Slavii hrozí vysoká pokuta i zavření stadionu. Tvrdík se omlouvá a ozval se i sponzor ligy",
+      "url": "https://domaci.hn.cz/c1-67875340-skandalni-derby-slavii-hrozi-vysoka-pokuta-i-zavreni-stadionu-tvrdik-se-omlouva-a-ozval-se-i-sponzor-ligy",
+      "dt": "2026-05-10T12:42:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "derby",
+        "hrozí",
+        "ligy",
+        "omlouvá",
+        "ozval",
+        "pokuta",
+        "skandální",
+        "slavii",
+        "sponzor",
+        "stadionu",
+        "tvrdík",
+        "vysoká",
+        "zavření"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1117,33 +1147,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ve věku 87 let zemřel zakladatel americké televizní stanice CNN Ted Turner",
-      "url": "https://byznys.hn.cz/c1-67874560-ve-veku-87-let-zemrel-zakladatel-americke-televizni-stanice-cnn-ted-turner",
-      "dt": "2026-05-06T15:28:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "americké",
-        "cnn",
-        "let",
-        "stanice",
-        "ted",
-        "televizní",
-        "turner",
-        "věku",
-        "zakladatel",
-        "zemřel"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1154,7 +1157,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184521,
+      "bytes": 184819,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1191,11 +1194,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-10T09:21:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T12:42:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "sport": 1,
           "finance": 32,
+          "sport": 1,
           "zpravy": 3,
           "zdravi": 4
         },
@@ -1209,6 +1212,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Skandální derby: Slavii hrozí vysoká pokuta i zavření stadionu. Tvrdík se omlouvá a ozval se i sponzor ligy",
+            "publishedAt": "2026-05-10T12:42:00Z"
+          },
           {
             "title": "Aston Martin přivezl do Prahy Valhallu. Hypercar s technikou z F1 stojí 30 milionů, přesto nemá o zákazníky nouzi",
             "publishedAt": "2026-05-10T09:21:00Z"
@@ -1236,10 +1243,6 @@
           {
             "title": "Solar Global předčasně splatila dluhopisy. Na nové miliardové investice do baterek, fotovoltaik i vodíku chce nalákat velké investory",
             "publishedAt": "2026-05-08T06:52:00Z"
-          },
-          {
-            "title": "Jak to dopadne s ČEZ a kde jsou příležitosti. O energetice a investicích s Michalem Šnobrem",
-            "publishedAt": "2026-05-08T06:25:00Z"
           }
         ]
       }
