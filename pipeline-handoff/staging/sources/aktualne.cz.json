@@ -1,8 +1,55 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-10T21:00:10.579402Z",
+  "ingestedAt": "2026-05-10T21:38:54.717052Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Jablonec udržel náskok před Hradcem",
+      "url": "https://sport.aktualne.cz/fotbal/jablonec-udrzel-naskok-pred-hradcem/r~aaa2931b071ebbdd8509668cd5d36728/",
+      "dt": "2026-05-10T21:19:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "hradcem",
+        "jablonec",
+        "náskok",
+        "udržel"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "V osmifinále je už třetí Češka. Plíšková válí, v Římě zdolala další soupeřku",
+      "url": "https://sport.aktualne.cz/tenis/v-osmifinale-je-uz-treti-ceska-pliskova-vali-v-rime-zdolala-dalsi-souperku/r~aaa295c5f5c8efb7157895e8ebf72e59/",
+      "dt": "2026-05-10T20:52:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "další",
+        "osmifinále",
+        "plíšková",
+        "soupeřku",
+        "třetí",
+        "válí",
+        "zdolala",
+        "češka",
+        "římě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -468,58 +515,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Macinka: Na summitu NATO „je jen jedna židle“. Odmítá slova o pomstě prezidentovi",
-      "url": "https://zpravy.aktualne.cz/domaci/macinka-na-summitu-nato-je-jen-jedna-zidle-odmita-slova-o-pomste-prezidentovi/r~aaa29bd8830fafb12c264573c53420c6/",
-      "dt": "2026-05-10T11:50:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "jedna",
-        "jen",
-        "macinka",
-        "nato",
-        "odmítá",
-        "pomstě",
-        "prezidentovi",
-        "slova",
-        "summitu",
-        "židle"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bartůňková šokovala Řím. Na turnaj pronikla až dodatečně, teď skolila hvězdu",
-      "url": "https://sport.aktualne.cz/mensik-s-poranenym-kotnikem-poprve-podlehl-popyrinovi/r~aaa29ebfbb5c8791bcf1d708082a6ced/",
-      "dt": "2026-05-10T05:17:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "bartůňková",
-        "dodatečně",
-        "hvězdu",
-        "pronikla",
-        "skolila",
-        "turnaj",
-        "řím",
-        "šokovala"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -530,7 +525,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22299,
+      "bytes": 21940,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -567,11 +562,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-10T19:04:55Z",
+        "raw_feed_latest_publishedAt": "2026-05-10T21:19:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 11,
-          "sport": 9
+          "sport": 10,
+          "zpravy": 10
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -583,6 +578,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jablonec udržel náskok před Hradcem",
+            "publishedAt": "2026-05-10T21:19:00Z"
+          },
+          {
+            "title": "V osmifinále je už třetí Češka. Plíšková válí, v Římě zdolala další soupeřku",
+            "publishedAt": "2026-05-10T20:52:00Z"
+          },
           {
             "title": "Írán pohrozil Francii a Británii útokem. Prezident Macron má pro Teherán odpověď",
             "publishedAt": "2026-02-28T14:04:00Z"
@@ -606,14 +609,6 @@
           {
             "title": "Rusové opět nedodrželi slib, útočí podél fronty, potvrdil Zelenskyj. Příměří navzdory",
             "publishedAt": "2026-01-21T06:45:00Z"
-          },
-          {
-            "title": "„Přenášíme válku na jejich území.“ Velitel má plán, jak srazit morálku Rusů",
-            "publishedAt": "2026-05-10T16:06:00Z"
-          },
-          {
-            "title": "Orbán mu dal azyl. Polský exministr uprchl z Maďarska do USA, tvrdí média",
-            "publishedAt": "2026-05-10T15:23:00Z"
           }
         ]
       }
