@@ -41696,7 +41696,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       [/\bnajem\b|\bnájmu\b|\bnajmu\b|\bnajem\b/g, "najem"],
       [/\belektrinu\b|\belektrina\b|\belektriny\b/g, "elektrina"],
       [/\bpoznamky\b|\bpoznamku\b|\bpoznamce\b|\bpoznamkou\b|\bpoznamka\b/g, "poznamka"],
-      [/\bpoznamenane\b|\bzapsane\b|\bulozene\b|\bulozeneho\b|\bulozenem\b/g, "poznamka"],
+      /** P1 note_retrieval_fail: „uložené věci“ = název poznámky — nesmí se slepit na „poznamka veci“ (ztráta shody s titulkem). */
+      [/\bpoznamenane\b|\bzapsane\b|\bulozeneho\b|\bulozenem\b/g, "poznamka"],
+      [/\bulozene\b(?!\s+veci\b)/g, "poznamka"],
       [/\bobjednavky\b|\bobjednavku\b|\bobjednavce\b|\bobjednavkou\b|\bobjednavka\b/g, "objednavka"],
       [/\bcislo\s+objednavky\b|\bcislo\s+objednavce\b|\bcislo\s+objednavku\b|\bcislo\s+objednavka\b/g, "cislo objednavka"],
       [/\bcislem\b|\bcisla\b|\bcislo\b/g, "cislo"],
@@ -41717,6 +41719,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     for (let ri = 0; ri < reps.length; ri++) {
       s = s.replace(reps[ri][0], " " + String(reps[ri][1]) + " ");
     }
+    /**
+     * P1 note_retrieval_fail (úzký Silver read/search): tvary, u kterých tvrdá brána vyžaduje přesný substring,
+     * ale haystack má nominativ — doplnění jen zde, ne globální normalizace mimo vyhledávání.
+     */
+    s = s.replace(/\bnarozeninach\b/g, "narozeniny");
+    s = s.replace(/\bnarozeninam\b/g, "narozeniny");
+    s = s.replace(/\bnarozeninama\b/g, "narozeniny");
+    s = s.replace(/\bdokumentu\b/g, "dokumenty");
     s = s.replace(/\s+/g, " ").trim();
     return s;
   }
@@ -42529,6 +42539,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverReadSearchPickTarget(folded) {
     const f = String(folded || "");
     if (iuSilverExplicitNoteQueryAnchorP1Folded(f)) return "notes";
+    /** P1 note_retrieval_fail: „Ukaž uložené věci …“ → notes (ne global all, kde kalendářní řádky přebijí odpověď). */
+    if (/\bulozene\s+veci\b/.test(f)) return "notes";
     if (
       iuSilverNotesScopeBlocksCalendarWriteRouteFolded(f) ||
       (iuSilverHasExplicitNotesTarget(f) &&
