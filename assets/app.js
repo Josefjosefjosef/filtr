@@ -39596,6 +39596,21 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P1 RCZ2 mobile_voice: korpus prefixuje věty tokeny hele|vlastne|pockej|tyjo|no tak|btw (viz MOB_PREFIX_*).
+   * Bez opakovaného stripu neprojde produkční `^…` kotva v iuSilverTryParseExplicitNoteCreate → WRITE_SCHED_PROBE → STORAGE_DISAMBIGUATION.
+   */
+  function iuSilverStripRcz2MobVoiceNoteParseLeadP1(sIn) {
+    let s = String(sIn || "").trim();
+    const lead = /^(?:hele|vlastne|pockej|tyjo|no\s+tak|btw)\s+/i;
+    for (let i = 0; i < 8; i++) {
+      const t = s.replace(lead, "").trim();
+      if (t === s) break;
+      s = t;
+    }
+    return s;
+  }
+
+  /**
    * P0: explicit Czech note phrases only (no NLP). Returns { kind:"body", body } or { kind:"empty" } or null.
    */
   function iuSilverTryParseExplicitNoteCreate(rawIn) {
@@ -39610,6 +39625,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (st.length >= 6 && st.length < s.length) s = st;
     }
     s = iuSilverScopedTaskNegationStripPrefixFromRawForNoteParseP0(s);
+    s = iuSilverStripRcz2MobVoiceNoteParseLeadP1(s);
     const fEarly = foldCs(s);
     const pinKeKartNotesTailP0 =
       /\bpin\s+ke\s+kart/i.test(fEarly) &&
