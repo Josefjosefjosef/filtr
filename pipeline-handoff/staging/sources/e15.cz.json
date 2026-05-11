@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-11T03:19:38.649633Z",
+  "ingestedAt": "2026-05-11T03:59:34.898564Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Posázavský pacifik i miliardy z Prahy. RegioJet s Arrivou nabouraly penězovod Českých drah",
+      "url": "https://www.e15.cz/byznys/doprava-a-logistika/posazavsky-pacifik-i-miliardy-z-prahy-regiojet-s-arrivou-nabouraly-penezovod-ceskych-drah-1432674",
+      "dt": "2026-05-11T03:30:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "arrivou",
+        "drah",
+        "miliardy",
+        "nabouraly",
+        "pacifik",
+        "penězovod",
+        "posázavský",
+        "prahy",
+        "regiojet",
+        "českých"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1064,35 +1091,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Babiš bude testovat jak moc zadlužit Česko. Státní ČEZ není tabu, říká bývalý premiér Nečas",
-      "url": "https://www.e15.cz/videoporady/flow/babis-bude-testovat-jak-moc-zadluzit-cesko-statni-cez-neni-tabu-rika-byvaly-premier-necas-1432577",
-      "dt": "2026-05-07T11:15:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "babiš",
-        "bývalý",
-        "moc",
-        "nečas",
-        "premiér",
-        "státní",
-        "tabu",
-        "testovat",
-        "zadlužit",
-        "česko",
-        "čez",
-        "říká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1103,7 +1101,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 49834,
+      "bytes": 49795,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1140,11 +1138,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-10T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T03:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 37,
-          "zpravy": 3
+          "zpravy": 4,
+          "finance": 36
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1156,6 +1154,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Posázavský pacifik i miliardy z Prahy. RegioJet s Arrivou nabouraly penězovod Českých drah",
+            "publishedAt": "2026-05-11T03:30:00Z"
+          },
           {
             "title": "Írán odpověděl na americký mírový návrh k ukončení války",
             "publishedAt": "2026-05-10T14:00:00Z"
@@ -1183,10 +1185,6 @@
           {
             "title": "Po transakční dani přichází další zkouška pro slovenské podnikatele. Týká se plateb nad jedno euro",
             "publishedAt": "2026-05-10T04:00:00Z"
-          },
-          {
-            "title": "Úžina nad všechny prachy světa. Jak může zavřený Hormuz rozleptat americkou nadvládu",
-            "publishedAt": "2026-05-10T03:00:00Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-11T03:19:38.649633Z",
+  "ingestedAt": "2026-05-11T03:59:34.898564Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "MAPA: Ledoví muži udeří. Pankrác přinese citelné ochlazení, na horách nasněží",
+      "url": "https://www.denik.cz/pocasi/pocasi-ledovi-muzi-pankrac-prinese-citelne-ochlazeni-a-na-hory-navrat-snezeni.html",
+      "dt": "2026-05-11T03:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "citelné",
+        "horách",
+        "ledoví",
+        "mapa",
+        "muži",
+        "nasněží",
+        "ochlazení",
+        "pankrác",
+        "přinese",
+        "udeří"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -624,32 +651,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Změny v maturitách: Víc zkoušek nahradí certifikáty, nová pravidla pro pomůcky",
-      "url": "https://www.denik.cz/skolstvi-a-vzdelavani/zmeny-v-maturitach-vic-zkousek-nahradi-certifikaty-a-nova-pravidla-pro-pomucky.html",
-      "dt": "2026-05-10T02:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "certifikáty",
-        "maturitách",
-        "nahradí",
-        "nová",
-        "pomůcky",
-        "pravidla",
-        "víc",
-        "zkoušek",
-        "změny"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -660,7 +661,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30672,
+      "bytes": 30755,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -697,7 +698,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-11T02:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T03:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -714,6 +715,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "MAPA: Ledoví muži udeří. Pankrác přinese citelné ochlazení, na horách nasněží",
+            "publishedAt": "2026-05-11T03:30:00Z"
+          },
           {
             "title": "Tatínka jsme nechali dožít doma. Odměnou nám byly krásné chvilky, říká žena",
             "publishedAt": "2026-05-11T02:30:00Z"
@@ -741,10 +746,6 @@
           {
             "title": "KLDR mění jadernou doktrínu: Při útoku na Kim Čong-una hrozí automatická odveta",
             "publishedAt": "2026-05-10T14:35:00Z"
-          },
-          {
-            "title": "Místo kytice raději zkrácený úvazek. V návratu matek do práce Česko zaostává",
-            "publishedAt": "2026-05-10T14:00:00Z"
           }
         ]
       }
