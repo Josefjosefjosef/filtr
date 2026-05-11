@@ -10,7 +10,7 @@ const { execSync } = require("child_process");
 const REPO = path.resolve(__dirname, "..");
 const REPORT_JSON = path.join(__dirname, "silver-rhc3-top-cluster-diagnostic-report.json");
 
-const EXPECTED_MAIN_COMMIT = "ca354237fd1b211f514baa86c8e3b66864e5bb54";
+const EXPECTED_MAIN_COMMIT = "88b59b6ff7c004f721561070d5bf8e4a1ce66a2e";
 const TARGET_CLUSTER = "rhc3_module_switch_cal_to_note";
 const RANDOM_SAMPLE_SEED = 0xc411a7e3;
 const STRATA = 8;
@@ -22,7 +22,7 @@ const TOTAL_CASES = (() => {
 
 const core = require("./rhc-v3-deterministic-core.cjs");
 const rhc3 = require("./silver-real-human-chaos-v3.cjs");
-const { computeGoldLabels, finalizeModuleSwitchHarnessEval } = rhc3;
+const { computeGoldLabels, finalizeModuleSwitchHarnessEval, finalizeModuleSwitchClarifyLaneHarnessEval } = rhc3;
 const harness = require("./audit_silver_realistic_mobile_corpus.cjs");
 
 const { loadEngine, evaluateOne, applyHarnessExpectationHarmonization, ctxForCase, foldCs, rawUserMessage } = harness;
@@ -328,6 +328,7 @@ function main() {
       turn = eng.processUserTurn(c.input, empty, ctxForCase(c.group));
       ev = evaluateOne(c, turn);
       ev = finalizeModuleSwitchHarnessEval(c, turn, ev);
+      ev = finalizeModuleSwitchClarifyLaneHarnessEval(c, turn, ev);
     } catch (e) {
       clusterFail++;
       turn = { normalizedIntent: "", processingState: "", draft: {} };
