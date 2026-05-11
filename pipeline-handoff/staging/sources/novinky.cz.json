@@ -1,11 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "novinky.cz",
-  "ingestedAt": "2026-05-11T18:44:12.449889Z",
+  "ingestedAt": "2026-05-11T19:24:20.411715Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
+      "title": "Zelenskyj: Rusko se nechystá ukončit válku",
+      "url": "https://www.novinky.cz/clanek/valka-na-ukrajine-zelenskyj-rusko-se-nechysta-ukoncit-valku-40577620",
+      "dt": "2026-05-11T18:40:44Z",
+      "media_raw": "Novinky / Domácí",
+      "media_norm": "Novinky / Domácí",
+      "tokens": [
+        "nechystá",
+        "rusko",
+        "ukončit",
+        "válku",
+        "zelenskyj"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_novinky_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "novinky.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
       "title": "Vyřešeno! Poradní tým Petra Pavla našel způsob, jak dostat prezidenta na summit NATO",
       "url": "https://www.novinky.cz/clanek/vtipy-vyreseno-poradni-tym-petra-pavla-nasel-zpusob-jak-dostat-prezidenta-na-summit-nato-40577622",
       "dt": "2026-05-11T18:37:57Z",
@@ -730,27 +752,23 @@
       "_dt_serialized": true
     },
     {
-      "section": "krimi",
+      "section": "aktualne",
       "contentType": "article",
-      "title": "Policie hledá mladíka z Chebu. Soud na něj vydal příkaz k zatčení",
-      "url": "https://www.novinky.cz/clanek/krimi-policie-hleda-mladika-z-chebu-soud-na-nej-vydal-prikaz-k-zatceni-40577524",
-      "dt": "2026-05-11T13:37:15Z",
-      "media_raw": "Novinky / Domácí",
-      "media_norm": "Novinky / Domácí",
+      "title": "Zelenskyj: Rusko se nechystá ukončit válku",
+      "url": "https://www.novinky.cz/clanek/valka-na-ukrajine-zelenskyj-rusko-se-nechysta-ukoncit-valku-40577620",
+      "dt": "2026-05-11T18:40:44Z",
+      "media_raw": "Novinky / Zahraniční",
+      "media_norm": "Novinky / Zahraniční",
       "tokens": [
-        "chebu",
-        "hledá",
-        "mladíka",
-        "něj",
-        "policie",
-        "příkaz",
-        "soud",
-        "vydal",
-        "zatčení"
+        "nechystá",
+        "rusko",
+        "ukončit",
+        "válku",
+        "zelenskyj"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
-      "feedId": "zpr_novinky_domaci",
+      "feedId": "zpr_novinky_zahranicni",
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "novinky.cz",
       "_dt_serialized": true
@@ -1473,32 +1491,6 @@
         "policie",
         "užívat",
         "ženu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_novinky_zahranicni",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "novinky.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Policie hledá mladíka z Chebu. Soud na něj vydal příkaz k zatčení",
-      "url": "https://www.novinky.cz/clanek/krimi-policie-hleda-mladika-z-chebu-soud-na-nej-vydal-prikaz-k-zatceni-40577524",
-      "dt": "2026-05-11T13:37:15Z",
-      "media_raw": "Novinky / Zahraniční",
-      "media_norm": "Novinky / Zahraniční",
-      "tokens": [
-        "chebu",
-        "hledá",
-        "mladíka",
-        "něj",
-        "policie",
-        "příkaz",
-        "soud",
-        "vydal",
-        "zatčení"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -5256,7 +5248,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/domaci",
-      "bytes": 43402,
+      "bytes": 43377,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -5293,7 +5285,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-11T18:37:57Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T18:40:44Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -5310,6 +5302,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zelenskyj: Rusko se nechystá ukončit válku",
+            "publishedAt": "2026-05-11T18:40:44Z"
+          },
           {
             "title": "Vyřešeno! Poradní tým Petra Pavla našel způsob, jak dostat prezidenta na summit NATO",
             "publishedAt": "2026-05-11T18:37:57Z"
@@ -5337,10 +5333,6 @@
           {
             "title": "Libereckem se prohnal impozantní roll cloud",
             "publishedAt": "2026-05-11T17:32:29Z"
-          },
-          {
-            "title": "Estonci u ruských hranic vyvěsili plakát „Putin - válečný zločinec“",
-            "publishedAt": "2026-05-11T17:21:20Z"
           }
         ]
       }
@@ -5352,7 +5344,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/zahranicni",
-      "bytes": 43402,
+      "bytes": 43377,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -5389,7 +5381,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-11T18:37:57Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T18:40:44Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -5406,6 +5398,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zelenskyj: Rusko se nechystá ukončit válku",
+            "publishedAt": "2026-05-11T18:40:44Z"
+          },
           {
             "title": "Vyřešeno! Poradní tým Petra Pavla našel způsob, jak dostat prezidenta na summit NATO",
             "publishedAt": "2026-05-11T18:37:57Z"
@@ -5433,10 +5429,6 @@
           {
             "title": "Libereckem se prohnal impozantní roll cloud",
             "publishedAt": "2026-05-11T17:32:29Z"
-          },
-          {
-            "title": "Estonci u ruských hranic vyvěsili plakát „Putin - válečný zločinec“",
-            "publishedAt": "2026-05-11T17:21:20Z"
           }
         ]
       }
@@ -5448,7 +5440,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/ekonomika",
-      "bytes": 43375,
+      "bytes": 43377,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -5544,7 +5536,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/cestovani",
-      "bytes": 43375,
+      "bytes": 43377,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -5639,7 +5631,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/hry",
-      "bytes": 43375,
+      "bytes": 43377,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -5734,7 +5726,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/veda",
-      "bytes": 43375,
+      "bytes": 43377,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -5829,7 +5821,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/skola",
-      "bytes": 43375,
+      "bytes": 43377,
       "reason": "",
       "bozo": false,
       "bozoException": "",
