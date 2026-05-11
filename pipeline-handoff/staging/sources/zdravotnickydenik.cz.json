@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-11T08:49:40.120810Z",
+  "ingestedAt": "2026-05-11T09:33:57.430824Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Co teď čeká pasažéry lodi s hantavirem? Rozdílný přístup jednotlivých států budí pozornost",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/co-ceka-pasazery-lodi-s-hantavirem/",
+      "dt": "2026-05-11T09:15:22Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "budí",
+        "hantavirem",
+        "jednotlivých",
+        "lodi",
+        "pasažéry",
+        "pozornost",
+        "přístup",
+        "rozdílný",
+        "států",
+        "čeká"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -247,32 +274,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nahradí umělá inteligence farmaceutické reprezentanty? Pravda je složitější, říká expert",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/umela-inteligence-farmaceuticky-reprezentant/",
-      "dt": "2026-05-09T15:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "expert",
-        "farmaceutické",
-        "inteligence",
-        "nahradí",
-        "pravda",
-        "reprezentanty",
-        "složitější",
-        "umělá",
-        "říká"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -283,7 +284,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 106493,
+      "bytes": 103078,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -320,7 +321,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-11T07:36:15Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T09:15:22Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -335,6 +336,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Co teď čeká pasažéry lodi s hantavirem? Rozdílný přístup jednotlivých států budí pozornost",
+            "publishedAt": "2026-05-11T09:15:22Z"
+          },
           {
             "title": "Nákaza z „lodi smrti“ už je ve Francii. Stav pacientky s hantavirem se v noci prudce zhoršil",
             "publishedAt": "2026-05-11T07:36:15Z"
@@ -362,10 +367,6 @@
           {
             "title": "Výsadek na konci světa: Britští vojenští zdravotníci seskočili na odlehlý ostrov kvůli muži s hantavirem",
             "publishedAt": "2026-05-10T11:17:58Z"
-          },
-          {
-            "title": "Průlom v boji s rakovinou slinivky? Nový model zachytil nemoc s velkým předstihem",
-            "publishedAt": "2026-05-10T10:00:00Z"
           }
         ]
       }
