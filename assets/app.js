@@ -38061,6 +38061,17 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bkde\s+(je|jsou|mam|mas|bylo|byla)\b/.test(x)) return false;
     if (/\bkdy\s+(je|mam|mas|bud|jsou)\b/.test(x)) return false;
     if (/\bco\s+mam\b/.test(x) || /\bco\s+mame\b/.test(x) || /\bco\s+mas\b/.test(x)) return false;
+    /**
+     * P1 rhc3_partial_cal_ref: recall / partial čas + „kolem … v kalendáři“ (ne zápis) — nesmí false anchor calendar.create
+     * přes schůzku|zubař + rano/dopoledne z textu „kolem úterního rána …“.
+     */
+    if (!iuSilverHasWriteVerb(x)) {
+      if (/\bv\s+kalend/.test(x)) {
+        if (/\bco\s+(?:jsem|sem)\s+m(?:el|ela|eli)\b/.test(x) && (/\bkolem\b/.test(x) || /\btenkrat\b|\bkdysi\b|\btamto\b|\bnekdy\s+ten\s+den\b|\bv\s+tom\s+tydnu\b/.test(x))) return false;
+        if (/\bco\s+(?:bylo|byla)\b/.test(x) && /\bkolem\b/.test(x)) return false;
+        if (/\bco\s+je\b/.test(x) && /\bkolem\b/.test(x)) return false;
+      }
+    }
     if (/\bjen\s+zjist/i.test(x) && !iuSilverHasWriteVerb(x)) return false;
     if (/\bjak[ey]\s+m(am|ame)\b/.test(x)) return false;
     if (/\bm(am|eme)\s+dnes\s+nejak/i.test(x) && /\bschuz/.test(x)) return false;
@@ -40362,12 +40373,57 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return null;
     }
     if (iuSilverHasWriteVerb(f)) return null;
+    /** P1 rhc3_partial_cal_ref: „co jsem měl … kolem <topic> v kalendáři?“ — entita z kolem-fragmentu, ne první slovo po měl (tenkrát …). */
+    if (/\bkolem\b/.test(f) && /\bv\s+kalend/i.test(f)) {
+      const readishKolemCal =
+        /\bco\s+(?:jsem|sem)\s+m(?:el|ela|eli)\b/.test(f) ||
+        /\bco\s+m(?:am|ame|as)\b/.test(f) ||
+        /\bco\s+(?:bylo|byla)\b/.test(f) ||
+        /\bco\s+je\b/.test(f);
+      if (readishKolemCal) {
+        const mKolemCal = f.match(/\bkolem\s+(.+?)(?=\s+v\s+kalend)/i);
+        if (mKolemCal && mKolemCal[1]) {
+          let fragKc = String(mKolemCal[1] || "")
+            .trim()
+            .replace(/\s*[?.!…]+$/u, "")
+            .trim();
+          if (fragKc.length >= 2) {
+            const canKc = iuSilverCanonicalCalendarEntityTitleFromPersonFragment(fragKc);
+            if (canKc && canKc.query && String(canKc.query).trim().length >= 2) {
+              const preferPastKc =
+                /\bco\s+(?:jsem|sem)\s+m(?:el|ela|eli)\b/.test(f) || /\bco\s+(?:bylo|byla)\b/.test(f);
+              return {
+                intent: "find_by_title",
+                query: canKc.query,
+                normalizedQuery: canKc.query,
+                diacriticInsensitive: true,
+                queryFolded: canKc.queryFolded || foldCs(String(canKc.query || "")),
+                preferPast: preferPastKc
+              };
+            }
+            return null;
+          }
+        }
+      }
+    }
     const hasCoJsemMel = /\bco\s+(?:jsem|sem)\s+m(?:el|ela|eli)\b/.test(f);
     const hasKdyJsemMel = /\bkdy\s+(?:jsem|sem)\s+(?:naposledy\s+)?m(?:el|ela|eli)\b/.test(f);
     const hasNaposledy = /\bnaposledy\b/.test(f);
     const hasPredMesicem = /\bpred\s+mesic\w*\b/.test(f);
     const hasMinulyTyden = /\bminul\w*\s+tyden\b/.test(f) || /\bminuly\s+tyden\b/.test(f);
-    if (!hasCoJsemMel && !hasKdyJsemMel && !hasPredMesicem && !hasMinulyTyden && !hasNaposledy) {
+    const hasCoMamKolemCal = /\bco\s+m(?:am|ame|as)\b/.test(f) && /\bkolem\b/.test(f) && /\bv\s+kalend/i.test(f);
+    const hasCoByloKolemCal = /\bco\s+(?:bylo|byla)\b/.test(f) && /\bkolem\b/.test(f) && /\bv\s+kalend/i.test(f);
+    const hasCoJeKolemCal = /\bco\s+je\b/.test(f) && /\bkolem\b/.test(f) && /\bv\s+kalend/i.test(f);
+    if (
+      !hasCoJsemMel &&
+      !hasKdyJsemMel &&
+      !hasPredMesicem &&
+      !hasMinulyTyden &&
+      !hasNaposledy &&
+      !hasCoMamKolemCal &&
+      !hasCoByloKolemCal &&
+      !hasCoJeKolemCal
+    ) {
       return null;
     }
     let tail = "";
