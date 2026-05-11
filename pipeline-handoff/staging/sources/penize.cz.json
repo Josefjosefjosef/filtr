@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-11T02:39:22.132891Z",
+  "ingestedAt": "2026-05-11T03:19:38.649633Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Kupujete si cestovní pojištění? Deset případů, kdy vám nepomůže",
+      "url": "https://www.penize.cz/cestovni-pojisteni/489461-kupujete-si-cestovni-pojisteni-deset-pripadu-kdy-vam-nepomuze",
+      "dt": "2026-05-11T05:05:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "cestovní",
+        "deset",
+        "kupujete",
+        "nepomůže",
+        "pojištění",
+        "případů",
+        "vám"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Let byl zrušen, zájezd zdražil? Vaše práva, která mohou ušetřit tisíce",
+      "url": "https://www.penize.cz/spotrebitel/489460-let-byl-zrusen-zajezd-zdrazil-vase-prava-ktera-mohou-usetrit-tisice",
+      "dt": "2026-05-11T05:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "let",
+        "práva",
+        "tisíce",
+        "ušetřit",
+        "vaše",
+        "zdražil",
+        "zrušen",
+        "zájezd"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -461,52 +510,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Maximální ceny benzinu a nafty na středu 6. května",
-      "url": "https://www.penize.cz/doprava/489299-maximalni-ceny-benzinu-a-nafty-na-stredu-6-kvetna",
-      "dt": "2026-05-05T13:59:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "benzinu",
-        "ceny",
-        "května",
-        "maximální",
-        "nafty",
-        "středu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "AlzaBoxy nově slouží i pro odeslání knih do Knihobotu",
-      "url": "https://www.penize.cz/nakupy/489274-alzaboxy-nove-slouzi-i-pro-odeslani-knih-do-knihobotu",
-      "dt": "2026-05-05T09:26:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "alzaboxy",
-        "knih",
-        "knihobotu",
-        "nově",
-        "odeslání",
-        "slouží"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -517,7 +520,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18386,
+      "bytes": 18664,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -554,12 +557,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-10T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T05:05:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 15,
-          "zpravy": 4,
-          "sport": 1
+          "finance": 17,
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -571,6 +573,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kupujete si cestovní pojištění? Deset případů, kdy vám nepomůže",
+            "publishedAt": "2026-05-11T05:05:00Z"
+          },
+          {
+            "title": "Let byl zrušen, zájezd zdražil? Vaše práva, která mohou ušetřit tisíce",
+            "publishedAt": "2026-05-11T05:00:00Z"
+          },
           {
             "title": "Pojištění vkladů v bance čekají změny. Komu pomohou?",
             "publishedAt": "2026-05-10T18:00:00Z"
@@ -594,14 +604,6 @@
           {
             "title": "Který úrok je výhodnější? Češi neumí počítat procenta, ukázal průzkum",
             "publishedAt": "2026-05-08T12:00:00Z"
-          },
-          {
-            "title": "Lidl konečně testuje online prodej potravin. Od konkurence se ale dost liší",
-            "publishedAt": "2026-05-08T08:31:00Z"
-          },
-          {
-            "title": "Bitcoin vyšplhal zpátky nad 80 tisíc. Saylor poprvé připouští jeho prodej",
-            "publishedAt": "2026-05-08T07:00:00Z"
           }
         ]
       }

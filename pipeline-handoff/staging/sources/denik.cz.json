@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-11T02:39:22.132891Z",
+  "ingestedAt": "2026-05-11T03:19:38.649633Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Tatínka jsme nechali dožít doma. Odměnou nám byly krásné chvilky, říká žena",
+      "url": "https://www.denik.cz/z_domova/domaci-paliativni-pece-mobilni-hospic.html",
+      "dt": "2026-05-11T02:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "byly",
+        "chvilky",
+        "doma",
+        "dožít",
+        "jsme",
+        "krásné",
+        "nechali",
+        "nám",
+        "odměnou",
+        "tatínka",
+        "říká",
+        "žena"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -621,34 +650,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fanoušci Slavie napadli hráče Sparty. Čin šetří policie jako možné výtržnictví",
-      "url": "https://www.denik.cz/krimi/fotbal-slavia-sparta-derby-policie-podezreni-z-vytrznictvi.html",
-      "dt": "2026-05-09T20:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "fanoušci",
-        "hráče",
-        "jako",
-        "možné",
-        "napadli",
-        "policie",
-        "slavie",
-        "sparty",
-        "výtržnictví",
-        "čin",
-        "šetří"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +660,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30733,
+      "bytes": 30672,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,13 +697,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-11T02:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T02:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 21,
+          "zpravy": 22,
           "finance": 2,
-          "zdravi": 1,
-          "sport": 1
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -714,6 +714,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tatínka jsme nechali dožít doma. Odměnou nám byly krásné chvilky, říká žena",
+            "publishedAt": "2026-05-11T02:30:00Z"
+          },
           {
             "title": "Z depozitářů Muzea Komenského: Záhadný nález luxusních náramků z Prosenic",
             "publishedAt": "2026-05-11T02:20:00Z"
@@ -741,10 +745,6 @@
           {
             "title": "Místo kytice raději zkrácený úvazek. V návratu matek do práce Česko zaostává",
             "publishedAt": "2026-05-10T14:00:00Z"
-          },
-          {
-            "title": "Jak pomoci dětem ve stresu? Setkání ukázala význam asistentů pedagoga ve školách",
-            "publishedAt": "2026-05-10T13:00:00Z"
           }
         ]
       }
