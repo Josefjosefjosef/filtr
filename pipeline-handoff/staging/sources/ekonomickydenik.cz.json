@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-11T08:08:59.454790Z",
+  "ingestedAt": "2026-05-11T08:49:40.120810Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Z brigádníka kriminálníkem: Za „testování“ bankovních aplikací hrozí rok vězení",
+      "url": "https://ekonomickydenik.cz/z-brigadnika-kriminalnikem-za-testovani-bankovnich-aplikaci-hrozi-rok-vezeni/",
+      "dt": "2026-05-11T08:20:05Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "aplikací",
+        "bankovních",
+        "brigádníka",
+        "hrozí",
+        "kriminálníkem",
+        "rok",
+        "testování",
+        "vězení"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -757,33 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "„Frackovité ego“ Macinky a Babiše. Vláda nemá blokovat prezidenta, brojí opozice",
-      "url": "https://ekonomickydenik.cz/frackovite-ego-macinka-babis-blokovat-prezidenta/",
-      "dt": "2026-05-08T09:37:30Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "babiše",
-        "blokovat",
-        "brojí",
-        "ego",
-        "frackovité",
-        "macinky",
-        "nemá",
-        "opozice",
-        "prezidenta",
-        "vláda"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71033,
+      "bytes": 70274,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +829,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-11T06:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T08:20:05Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 26,
@@ -848,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Z brigádníka kriminálníkem: Za „testování“ bankovních aplikací hrozí rok vězení",
+            "publishedAt": "2026-05-11T08:20:05Z"
+          },
           {
             "title": "Ministr řeší odvoz suchého dřeva z národních parků. Ekologové varují před těžbou",
             "publishedAt": "2026-05-11T06:15:00Z"
@@ -875,10 +877,6 @@
           {
             "title": "Opuštěné staveniště jaderné elektrárny. Dva zamrzlé bloky na jihu USA mají ožít",
             "publishedAt": "2026-05-10T14:55:00Z"
-          },
-          {
-            "title": "Není to pomsta za Turka. Macinka vysvětluje, proč vláda nechce Pavla na summitu NATO",
-            "publishedAt": "2026-05-10T13:06:59Z"
           }
         ]
       }
