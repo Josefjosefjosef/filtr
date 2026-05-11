@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-11T12:55:40.916982Z",
+  "ingestedAt": "2026-05-11T13:34:35.888227Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Proč CSG nemusí být levná ani po nedávném výprodeji",
+      "url": "https://nazory.hn.cz/c1-67875540-proc-csg-nemusi-byt-levna-ani-po-nedavnem-vyprodeji",
+      "dt": "2026-05-11T11:23:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "být",
+        "csg",
+        "levná",
+        "nedávném",
+        "nemusí",
+        "proč",
+        "výprodeji"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -1143,33 +1167,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Předdůchod je skvělá věc. Ušetří statisíce a přináší klid, když už to v práci dál nejde",
-      "url": "https://investice.hn.cz/c1-67874670-predduchod-je-skvela-vec-usetri-statisice-a-prinasi-klid-kdyz-uz-to-v-praci-dal-nejde",
-      "dt": "2026-05-07T08:22:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "když",
-        "klid",
-        "nejde",
-        "práci",
-        "předdůchod",
-        "přináší",
-        "skvělá",
-        "statisíce",
-        "ušetří",
-        "věc"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1180,7 +1177,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183863,
+      "bytes": 183816,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1217,11 +1214,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-11T09:29:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T11:23:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 7,
           "finance": 30,
+          "zpravy": 7,
           "sport": 1,
           "zdravi": 2
         },
@@ -1235,6 +1232,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Proč CSG nemusí být levná ani po nedávném výprodeji",
+            "publishedAt": "2026-05-11T11:23:00Z"
+          },
           {
             "title": "Oppo Find X9 Ultra nabízí obří baterii a výborné fotoaparáty s luxusní značkou. Je navíc levnější",
             "publishedAt": "2026-05-11T09:29:00Z"
@@ -1262,10 +1263,6 @@
           {
             "title": "Politické změny v Maďarsku přitahují investory. Nová vláda musí rychle vyjednat uvolnění zablokovaných eurofondů a otevřít cestu k euru",
             "publishedAt": "2026-05-11T06:18:00Z"
-          },
-          {
-            "title": "Uvěznit krále je středověká metoda, prezident nemůže být vězněm vlády. Kvůli svým kompetencím by se měl obrátit na Ústavní soud",
-            "publishedAt": "2026-05-11T06:01:00Z"
           }
         ]
       }

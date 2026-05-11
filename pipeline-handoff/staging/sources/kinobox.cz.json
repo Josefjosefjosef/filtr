@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-11T12:55:40.916982Z",
+  "ingestedAt": "2026-05-11T13:34:35.888227Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Nová Narnie bude nejdražším filmem Netflixu. Tvůrci chtějí přepsat historii",
+      "url": "https://www.kinobox.cz/clanky/filmy/53533-nova-narnie-bude-nejdrazsim-filmem-netflixu-tvurci-se-zjevne-neboji-riskovat",
+      "dt": "2026-05-11T13:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "chtějí",
+        "filmem",
+        "historii",
+        "narnie",
+        "nejdražším",
+        "netflixu",
+        "nová",
+        "přepsat",
+        "tvůrci"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -510,32 +536,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Oblíbená severská kriminálka je zpátky. Druhý Kaštánek konečně dorazil na Netflix",
-      "url": "https://www.kinobox.cz/clanky/vod/53493-oblibena-severska-kriminalka-je-zpatky-druhy-kastanek-konecne-dorazil-na-netflix",
-      "dt": "2026-05-08T12:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "dorazil",
-        "druhý",
-        "kaštánek",
-        "konečně",
-        "kriminálka",
-        "netflix",
-        "oblíbená",
-        "severská",
-        "zpátky"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -546,7 +546,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28232,
+      "bytes": 28191,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -583,7 +583,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-11T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T13:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -598,6 +598,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nová Narnie bude nejdražším filmem Netflixu. Tvůrci chtějí přepsat historii",
+            "publishedAt": "2026-05-11T13:00:00Z"
+          },
           {
             "title": "TV sledovanost: Polabí porazilo těžkou konkurenci. Nova má seriálový propadák",
             "publishedAt": "2026-05-11T12:00:00Z"
@@ -625,10 +629,6 @@
           {
             "title": "10 pecek, které v květnu opustí Netflix: Nolanův Dunkerk, vojín Ryan i sexy Sydney Sweeney",
             "publishedAt": "2026-05-10T14:00:00Z"
-          },
-          {
-            "title": "„Nikdo si o sobě nemyslí, že je zlý.\" Igor Orozovič hraje násilnického vraha v seriálu Monyová",
-            "publishedAt": "2026-05-10T12:00:00Z"
           }
         ]
       }

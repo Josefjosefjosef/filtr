@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-11T12:55:40.916982Z",
+  "ingestedAt": "2026-05-11T13:34:35.888227Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Babiš pověřil Landovského závazky vůči NATO. Česko má obhájit vyšší výdaje na obranu",
+      "url": "https://www.e15.cz/domaci/babis-poveril-landovskeho-zavazky-vuci-nato-cesko-ma-obhajit-vyssi-vydaje-na-obranu-1432720",
+      "dt": "2026-05-11T12:45:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "babiš",
+        "landovského",
+        "nato",
+        "obhájit",
+        "obranu",
+        "pověřil",
+        "vyšší",
+        "výdaje",
+        "vůči",
+        "závazky",
+        "česko"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1064,33 +1092,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nedělní stopka pro platby i mobilní aplikace. Jedna z velkých bank oznámila odstávku",
-      "url": "https://www.e15.cz/finexpert/banky-a-ucty/nedelni-stopka-pro-platby-i-mobilni-aplikace-jedna-z-velkych-bank-oznamila-odstavku-1432694",
-      "dt": "2026-05-08T08:51:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "aplikace",
-        "bank",
-        "jedna",
-        "mobilní",
-        "nedělní",
-        "odstávku",
-        "oznámila",
-        "platby",
-        "stopka",
-        "velkých"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1101,7 +1102,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 51935,
+      "bytes": 51936,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1138,7 +1139,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-11T12:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T12:45:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 34,
@@ -1155,6 +1156,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Babiš pověřil Landovského závazky vůči NATO. Česko má obhájit vyšší výdaje na obranu",
+            "publishedAt": "2026-05-11T12:45:00Z"
+          },
           {
             "title": "Utáhněte si opasky a rok nekupujte zlato. Nejlidnatější země začíná přenášet válečnou zátěž na obyvatele",
             "publishedAt": "2026-05-11T12:40:00Z"
@@ -1182,10 +1187,6 @@
           {
             "title": "Lákají na tisíce za testování aplikací. Z nevinné brigády se ale vyklube praní špinavých peněz",
             "publishedAt": "2026-05-11T08:20:00Z"
-          },
-          {
-            "title": "INVESTIČNÍ ONLINE: ČNB čeká horší výsledek schodku letošního rozpočtu",
-            "publishedAt": "2026-05-11T07:52:00Z"
           }
         ]
       }

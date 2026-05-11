@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-11T12:55:40.916982Z",
+  "ingestedAt": "2026-05-11T13:34:35.888227Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Tetování má i v obličeji. Policie hledá pacienta, který zmizel z psychiatrické nemocnice",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/pacient-psychiatricka-nemocnice-patrani/",
+      "dt": "2026-05-11T13:15:51Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "hledá",
+        "nemocnice",
+        "obličeji",
+        "pacienta",
+        "policie",
+        "psychiatrické",
+        "tetování",
+        "zmizel"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -249,32 +274,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "SÚKL si může polepšit o 7 milionů ročně. Vláda projedná i postoj k pandemické dohodě",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/sukl-who-pandemicka-dohoda-jednani-vlady/",
-      "dt": "2026-05-10T11:42:53Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "dohodě",
-        "milionů",
-        "pandemické",
-        "polepšit",
-        "postoj",
-        "projedná",
-        "ročně",
-        "súkl",
-        "vláda"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -285,7 +284,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 100260,
+      "bytes": 97382,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -322,7 +321,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-11T12:30:19Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T13:15:51Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -337,6 +336,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tetování má i v obličeji. Policie hledá pacienta, který zmizel z psychiatrické nemocnice",
+            "publishedAt": "2026-05-11T13:15:51Z"
+          },
           {
             "title": "Hantavirus u českých hranic? Němci vezou lidi z „lodi smrti“ do Bavorska a Saska",
             "publishedAt": "2026-05-11T12:30:19Z"
@@ -364,10 +367,6 @@
           {
             "title": "Přípravu nové nemocnice pevně řídí premiér Babiš. Sám bych se do ní hned přesunul, říká poradce",
             "publishedAt": "2026-05-11T06:00:00Z"
-          },
-          {
-            "title": "Bitva o léky na hubnutí: Eli Lilly oslnila zisky, Novo Nordisk má ale v rukávu „tabletové“ eso",
-            "publishedAt": "2026-05-11T05:00:00Z"
           }
         ]
       }

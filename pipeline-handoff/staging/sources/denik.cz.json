@@ -1,12 +1,63 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-11T12:55:40.916982Z",
+  "ingestedAt": "2026-05-11T13:34:35.888227Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Valorizace ano, strop ne. Novela důchodů budí rozpaky odborů",
+      "url": "https://www.denik.cz/ekonomika/duchody-valorizace-zamestnavani-senioru-zakon-vlada-odbory.html",
+      "dt": "2026-05-11T13:18:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ano",
+        "budí",
+        "důchodů",
+        "novela",
+        "odborů",
+        "rozpaky",
+        "strop",
+        "valorizace"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Brněnská Bába pod kořenem: Starší muž šel na fotbal, uvěznily ho stromy",
+      "title": "Ozdoba přírody nebo pochoutka? Plané rostliny lze využít v kuchyni",
+      "url": "https://olomoucky.denik.cz/ctenar-reporter/vareni-bylinky-jaro.html",
+      "dt": "2026-05-11T13:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "kuchyni",
+        "lze",
+        "nebo",
+        "ozdoba",
+        "plané",
+        "pochoutka",
+        "přírody",
+        "rostliny",
+        "využít"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Brněnská Bába pod kořenem: Senior šel na fotbal, uvěznily ho stromy",
       "url": "https://www.denik.cz/regiony/brno-muz-uvezneni-zaklineny-mezi-stromy-fotbal-jako-baba-pod-korenem.html",
       "dt": "2026-05-11T12:20:00Z",
       "media_raw": "Deník",
@@ -16,8 +67,7 @@
         "bába",
         "fotbal",
         "kořenem",
-        "muž",
-        "starší",
+        "senior",
         "stromy",
         "uvěznily",
         "šel"
@@ -602,62 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "MAPA: Blíží se bouřky. Ledoví muži poté přinesou ochlazení, na horách nasněží",
-      "url": "https://www.denik.cz/pocasi/pocasi-ledovi-muzi-pankrac-prinese-citelne-ochlazeni-a-na-hory-navrat-snezeni.html",
-      "dt": "2026-05-11T03:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "blíží",
-        "bouřky",
-        "horách",
-        "ledoví",
-        "mapa",
-        "muži",
-        "nasněží",
-        "ochlazení",
-        "poté",
-        "přinesou"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Tatínka jsme nechali dožít doma. Odměnou nám byly krásné chvilky, říká žena",
-      "url": "https://www.denik.cz/z_domova/domaci-paliativni-pece-mobilni-hospic.html",
-      "dt": "2026-05-11T02:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "byly",
-        "chvilky",
-        "doma",
-        "dožít",
-        "jsme",
-        "krásné",
-        "nechali",
-        "nám",
-        "odměnou",
-        "tatínka",
-        "říká",
-        "žena"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -668,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29704,
+      "bytes": 29444,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -705,10 +699,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-11T12:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T13:18:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 25
+          "finance": 1,
+          "zpravy": 24
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -721,7 +716,15 @@
         },
         "sample_titles": [
           {
-            "title": "Brněnská Bába pod kořenem: Starší muž šel na fotbal, uvěznily ho stromy",
+            "title": "Valorizace ano, strop ne. Novela důchodů budí rozpaky odborů",
+            "publishedAt": "2026-05-11T13:18:00Z"
+          },
+          {
+            "title": "Ozdoba přírody nebo pochoutka? Plané rostliny lze využít v kuchyni",
+            "publishedAt": "2026-05-11T13:00:00Z"
+          },
+          {
+            "title": "Brněnská Bába pod kořenem: Senior šel na fotbal, uvěznily ho stromy",
             "publishedAt": "2026-05-11T12:20:00Z"
           },
           {
@@ -743,14 +746,6 @@
           {
             "title": "Abatyše z Loděnice dostala za zpronevěru šest let. Klášter přišel o miliony",
             "publishedAt": "2026-05-11T10:46:00Z"
-          },
-          {
-            "title": "Zkázu vystřídala pomoc. Zdevastovaná školka na Tachovsku se znovu otevře",
-            "publishedAt": "2026-05-11T10:32:00Z"
-          },
-          {
-            "title": "Krysy skvěle plavou, zdůvodňoval kanárský premiér odmítnutí lodi s hantavirem",
-            "publishedAt": "2026-05-11T10:20:00Z"
           }
         ]
       }
