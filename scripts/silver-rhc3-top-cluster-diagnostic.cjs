@@ -10,7 +10,7 @@ const { execSync } = require("child_process");
 const REPO = path.resolve(__dirname, "..");
 const REPORT_JSON = path.join(__dirname, "silver-rhc3-top-cluster-diagnostic-report.json");
 
-const EXPECTED_MAIN_COMMIT = "ca0d179d05c5983238595a5c4a1ea9d6dd7c5533";
+const EXPECTED_MAIN_COMMIT = "ca354237fd1b211f514baa86c8e3b66864e5bb54";
 const TARGET_CLUSTER = "rhc3_module_switch_cal_to_note";
 const RANDOM_SAMPLE_SEED = 0xc411a7e3;
 const STRATA = 8;
