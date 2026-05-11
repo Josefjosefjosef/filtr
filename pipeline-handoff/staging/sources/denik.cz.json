@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-11T17:24:15.700377Z",
+  "ingestedAt": "2026-05-11T18:04:34.112196Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Při přestřelce v Nice zemřeli dva lidé. Tři jsou těžce zranění",
+      "url": "https://www.denik.cz/staty-eu/strelba-v-nice.html",
+      "dt": "2026-05-11T16:53:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dva",
+        "lidé",
+        "nice",
+        "přestřelce",
+        "při",
+        "těžce",
+        "tři",
+        "zemřeli",
+        "zranění"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -623,33 +649,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Francie hlásí první potvrzený případ hantaviru. Nemocná je žena z výletní lodi",
-      "url": "https://www.denik.cz/staty-eu/francie-hlasi-prvni-potvrzeny-pripad-hantaviru-nemocna-je-pasazerka-z-lodi.html",
-      "dt": "2026-05-11T07:31:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "francie",
-        "hantaviru",
-        "hlásí",
-        "lodi",
-        "nemocná",
-        "potvrzený",
-        "první",
-        "případ",
-        "výletní",
-        "žena"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -660,7 +659,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29391,
+      "bytes": 29175,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -697,7 +696,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-11T15:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T16:53:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -713,6 +712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Při přestřelce v Nice zemřeli dva lidé. Tři jsou těžce zranění",
+            "publishedAt": "2026-05-11T16:53:00Z"
+          },
           {
             "title": "Jásání dětí nebralo konce. Kouzelný svět mašinek u Olomouce znovu otevřel",
             "publishedAt": "2026-05-11T15:30:00Z"
@@ -740,10 +743,6 @@
           {
             "title": "Ozdoba přírody nebo pochoutka? Plané rostliny lze využít v kuchyni",
             "publishedAt": "2026-05-11T13:00:00Z"
-          },
-          {
-            "title": "Brněnská Bába pod kořenem: Senior šel na fotbal, uvěznily ho stromy",
-            "publishedAt": "2026-05-11T12:20:00Z"
           }
         ]
       }

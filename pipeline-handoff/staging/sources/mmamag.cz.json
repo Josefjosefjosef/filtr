@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-11T17:24:15.700377Z",
+  "ingestedAt": "2026-05-11T18:04:34.112196Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Rozmohl se nám tady takový nešvar. Bojovnicím MMA se nechce bojovat, raději se obnažují na sítích",
+      "url": "https://www.mmamag.cz/zapasnicim-se-nechce-bojovat-radeji-se-obnazuji-na-sitich/",
+      "dt": "2026-05-11T18:00:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "bojovat",
+        "bojovnicím",
+        "mma",
+        "nechce",
+        "nešvar",
+        "nám",
+        "obnažují",
+        "raději",
+        "rozmohl",
+        "sítích",
+        "tady",
+        "takový"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1065,33 +1094,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Végh porazil Hutníka, ale fanoušci zuří. Výhra na body budí kontroverzi",
-      "url": "https://www.mmamag.cz/vegh-porazil-hutnika-vyhra-budi-kontroverzi/",
-      "dt": "2026-05-09T20:32:39Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "ale",
-        "body",
-        "budí",
-        "fanoušci",
-        "hutníka",
-        "kontroverzi",
-        "porazil",
-        "végh",
-        "výhra",
-        "zuří"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1102,7 +1104,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 79177,
+      "bytes": 79244,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1139,7 +1141,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-11T17:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T18:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1154,6 +1156,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rozmohl se nám tady takový nešvar. Bojovnicím MMA se nechce bojovat, raději se obnažují na sítích",
+            "publishedAt": "2026-05-11T18:00:00Z"
+          },
           {
             "title": "Neporažený Gantt, korejský veterán Choi i bývalá šampionka Vieira. Sobotní UFC nabízí nabitou kartu",
             "publishedAt": "2026-05-11T17:15:00Z"
@@ -1181,10 +1187,6 @@
           {
             "title": "Strickland po zisku titulu UFC překvapil: Nevěřil jsem, že Chimaeva porazím",
             "publishedAt": "2026-05-11T12:45:00Z"
-          },
-          {
-            "title": "UFC čelila ruské mafii. Dana White se třásl strachy",
-            "publishedAt": "2026-05-11T12:00:00Z"
           }
         ]
       }

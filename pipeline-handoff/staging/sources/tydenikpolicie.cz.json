@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-11T17:24:15.700377Z",
+  "ingestedAt": "2026-05-11T18:04:34.112196Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Dítě po havárii osobního vozu na Českolipsku transportoval do nemocnice vrtulník",
+      "url": "https://tydenikpolicie.cz/dite-po-havarii-osobniho-vozu-na-ceskolipsku-transportoval-do-nemocnice-vrtulnik/",
+      "dt": "2026-05-11T17:28:14Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "dítě",
+        "havárii",
+        "nemocnice",
+        "osobního",
+        "transportoval",
+        "vozu",
+        "vrtulník",
+        "českolipsku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -230,32 +255,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Opilý řidič volhy poškodil při nehodě v Kaplici tři auta",
-      "url": "https://tydenikpolicie.cz/opily-ridic-volhy-poskodil-pri-nehode-v-kaplici-tri-auta/",
-      "dt": "2026-05-11T11:52:31Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "auta",
-        "kaplici",
-        "nehodě",
-        "opilý",
-        "poškodil",
-        "při",
-        "tři",
-        "volhy",
-        "řidič"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -266,7 +265,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16133,
+      "bytes": 16606,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -303,7 +302,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-11T17:20:29Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T17:28:14Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -318,6 +317,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dítě po havárii osobního vozu na Českolipsku transportoval do nemocnice vrtulník",
+            "publishedAt": "2026-05-11T17:28:14Z"
+          },
           {
             "title": "Dvě motorky odcizené v Německu našli policisté v Jablonci nad Nisou",
             "publishedAt": "2026-05-11T17:20:29Z"
@@ -345,10 +348,6 @@
           {
             "title": "Jihočeští kriminalisté dopadli falešného bankéře. Zadrženi byli tři lidé",
             "publishedAt": "2026-05-11T12:52:00Z"
-          },
-          {
-            "title": "Kriminalisté pátrají po mladíkovi z Chebu",
-            "publishedAt": "2026-05-11T12:27:41Z"
           }
         ]
       }
