@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-05-11T11:34:08.397320Z",
+  "ingestedAt": "2026-05-11T12:14:30.714357Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Tejc chce přitvrdit. Za policejní honičky až tři roky vězení",
+      "url": "https://www.ceska-justice.cz/2026/05/tejc-chce-pritvrdit-za-policejni-honicky-az-tri-roky-vezeni/",
+      "dt": "2026-05-11T11:53:14Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "chce",
+        "honičky",
+        "policejní",
+        "přitvrdit",
+        "roky",
+        "tejc",
+        "tři",
+        "vězení"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -240,34 +265,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Konec ručníkové mafie? Turista nenašel místo u bazénu, na cestovce vysoudil tučné odškodné",
-      "url": "https://www.ceska-justice.cz/2026/05/konec-rucnikove-mafie-turista-nenasel-u-bazenu-misto-na-cestovce-vysoudil-tucne-odskodne/",
-      "dt": "2026-05-07T10:24:55Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "bazénu",
-        "cestovce",
-        "konec",
-        "mafie",
-        "místo",
-        "nenašel",
-        "odškodné",
-        "ručníkové",
-        "turista",
-        "tučné",
-        "vysoudil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +275,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 87633,
+      "bytes": 88488,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +312,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-11T11:07:57Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T11:53:14Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -330,6 +327,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tejc chce přitvrdit. Za policejní honičky až tři roky vězení",
+            "publishedAt": "2026-05-11T11:53:14Z"
+          },
           {
             "title": "Vynášení z policejních spisů v hospodě. Bývalý hejtman se brání v kauze Vidkun",
             "publishedAt": "2026-05-11T11:07:57Z"
@@ -357,10 +358,6 @@
           {
             "title": "Neplatnost celé smlouvy, nebo jen úroku? Soud se zastal věřitele v kauze skryté lichvy",
             "publishedAt": "2026-05-09T04:15:00Z"
-          },
-          {
-            "title": "Stížnosti proti stíhání v bitcoinové kauze. Podali je Blažek, Daňhel i Titz",
-            "publishedAt": "2026-05-08T10:11:16Z"
           }
         ]
       }

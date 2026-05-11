@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-11T11:34:08.397320Z",
+  "ingestedAt": "2026-05-11T12:14:30.714357Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Bojům o lehátka je konec. Hotely přitvrzují, hosté mohou přijít o věci i peníze",
+      "url": "https://www.denik.cz/staty-eu/dovolena-spor-o-lehatka-rezervace-hotely-zavadi-pravidla-recko-soud-odskodneni.html",
+      "dt": "2026-05-11T11:35:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bojům",
+        "hosté",
+        "hotely",
+        "konec",
+        "lehátka",
+        "peníze",
+        "přijít",
+        "přitvrzují",
+        "věci"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -630,33 +656,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zavřené obchody? Češi využili svátek k nákupům v Polsku, stačilo přejet hranice",
-      "url": "https://www.denik.cz/regiony/cesi-nakupy-polsko-trznice-kudowa-zdroj-statni-svatek.html",
-      "dt": "2026-05-10T16:20:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "hranice",
-        "nákupům",
-        "obchody",
-        "polsku",
-        "přejet",
-        "stačilo",
-        "svátek",
-        "využili",
-        "zavřené",
-        "češi"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -667,7 +666,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30380,
+      "bytes": 30401,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -704,7 +703,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-11T10:46:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T11:35:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -720,6 +719,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bojům o lehátka je konec. Hotely přitvrzují, hosté mohou přijít o věci i peníze",
+            "publishedAt": "2026-05-11T11:35:00Z"
+          },
           {
             "title": "Abatyše z Loděnice dostala za zpronevěru šest let. Klášter přišel o miliony",
             "publishedAt": "2026-05-11T10:46:00Z"
@@ -747,10 +750,6 @@
           {
             "title": "Lidé nevědomky pili vodu z hrobu. Prý je to menší zlo než jít k Želivce s prutem",
             "publishedAt": "2026-05-11T09:00:00Z"
-          },
-          {
-            "title": "Šest mrtvých nalezli v nákladním vlaku v Texasu u hranice s Mexikem",
-            "publishedAt": "2026-05-11T08:57:00Z"
           }
         ]
       }

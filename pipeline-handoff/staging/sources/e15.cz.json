@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-11T11:34:08.397320Z",
+  "ingestedAt": "2026-05-11T12:14:30.714357Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Co je hantavirus a jaké má příznaky? Vše o přenosu, léčbě a o rizicích v roce 2026",
+      "url": "https://www.e15.cz/zahranicni/co-je-hantavirus-a-jake-ma-priznaky-vse-o-prenosu-lecbe-a-o-rizicich-v-roce-2026-1432685",
+      "dt": "2026-05-11T11:30:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "2026",
+        "hantavirus",
+        "jaké",
+        "léčbě",
+        "přenosu",
+        "příznaky",
+        "rizicích",
+        "roce",
+        "vše"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -1067,35 +1093,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Brusel zásadně změní pravidla pro Česko. Na levné nákupy zbývá čas jen do konce června",
-      "url": "https://www.e15.cz/e15-cz/brusel-zasadne-zmeni-pravidla-pro-cesko-na-levne-nakupy-zbyva-cas-jen-do-konce-cervna-1432593",
-      "dt": "2026-05-08T04:30:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "brusel",
-        "jen",
-        "konce",
-        "levné",
-        "nákupy",
-        "pravidla",
-        "zbývá",
-        "změní",
-        "zásadně",
-        "čas",
-        "června",
-        "česko"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1106,7 +1103,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 50547,
+      "bytes": 50594,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1143,11 +1140,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-11T11:17:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T11:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 5,
-          "finance": 35
+          "finance": 35,
+          "zpravy": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1159,6 +1156,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Co je hantavirus a jaké má příznaky? Vše o přenosu, léčbě a o rizicích v roce 2026",
+            "publishedAt": "2026-05-11T11:30:00Z"
+          },
           {
             "title": "Do Česka se vrátí mráz. Jeden den bude pro zahrádkáře a zemědělce kritický",
             "publishedAt": "2026-05-11T11:17:00Z"
@@ -1186,10 +1187,6 @@
           {
             "title": "ČNB zhoršila výhled veřejných financí. Schodek má letos stoupnout na 2,7 procenta HDP",
             "publishedAt": "2026-05-11T07:44:00Z"
-          },
-          {
-            "title": "Praha opět hostí unikátní Mercedes-Benz Studio s evropskou premiérou nové C Class",
-            "publishedAt": "2026-05-11T06:19:00Z"
           }
         ]
       }

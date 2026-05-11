@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-11T11:34:08.397320Z",
+  "ingestedAt": "2026-05-11T12:14:30.714357Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "video",
+      "title": "UFC čelila ruské mafii. Dana White se třásl strachy",
+      "url": "https://www.mmamag.cz/ufc-celila-ruske-mafii-dana-white-se-trasl-strachy/",
+      "dt": "2026-05-11T12:00:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "dana",
+        "mafii",
+        "ruské",
+        "strachy",
+        "třásl",
+        "ufc",
+        "white",
+        "čelila"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1059,32 +1084,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Krásná bojovnice ráda provokuje. Kay Hansen se znovu odhalila na sítích",
-      "url": "https://www.mmamag.cz/krasna-bojovnice-rada-provokuje-znovu-se-odhalila-na-sitich/",
-      "dt": "2026-05-09T16:30:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "bojovnice",
-        "hansen",
-        "kay",
-        "krásná",
-        "odhalila",
-        "provokuje",
-        "ráda",
-        "sítích",
-        "znovu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1095,7 +1094,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 78334,
+      "bytes": 79074,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1132,7 +1131,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-11T11:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1147,6 +1146,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "UFC čelila ruské mafii. Dana White se třásl strachy",
+            "publishedAt": "2026-05-11T12:00:00Z"
+          },
           {
             "title": "Důvody Chimaevova pádu: skryté zdravotní problémy, drastické shazování nebo nepříjemný Stricklandův styl",
             "publishedAt": "2026-05-11T11:15:00Z"
@@ -1174,10 +1177,6 @@
           {
             "title": "Pět kol s Chimaevem si vybralo tvrdou daň. Strickland po zisku titulu ukázal zdemolovaný obličej",
             "publishedAt": "2026-05-11T07:25:46Z"
-          },
-          {
-            "title": "Vousatá kulturistka budí poprask. Jediné, co připomíná ženu, jsou její plavky",
-            "publishedAt": "2026-05-11T07:11:31Z"
           }
         ]
       }
