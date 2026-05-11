@@ -10,7 +10,7 @@ const { execSync } = require("child_process");
 const REPO = path.resolve(__dirname, "..");
 const REPORT_JSON = path.join(__dirname, "silver-rhc3-top-cluster-diagnostic-report.json");
 
-const EXPECTED_MAIN_COMMIT = "8f6da91f0c436f564718435b7d0bd981d18b4cfa";
+const EXPECTED_MAIN_COMMIT = "ca0d179d05c5983238595a5c4a1ea9d6dd7c5533";
 const TARGET_CLUSTER = "rhc3_module_switch_cal_to_note";
 const RANDOM_SAMPLE_SEED = 0xc411a7e3;
 const STRATA = 8;
@@ -22,6 +22,7 @@ const TOTAL_CASES = (() => {
 
 const core = require("./rhc-v3-deterministic-core.cjs");
 const rhc3 = require("./silver-real-human-chaos-v3.cjs");
+const { computeGoldLabels, finalizeModuleSwitchHarnessEval } = rhc3;
 const harness = require("./audit_silver_realistic_mobile_corpus.cjs");
 
 const { loadEngine, evaluateOne, applyHarnessExpectationHarmonization, ctxForCase, foldCs, rawUserMessage } = harness;
@@ -41,108 +42,6 @@ function safetyNoWriteFolded(fold) {
     /\bjen\s+se\s+podívej\b/i.test(fold) ||
     /\bneukladat\b/i.test(fold)
   );
-}
-
-function expectedModuleFromGroup(g) {
-  const x = String(g || "");
-  if (x.indexOf("calendar") === 0) return "calendar";
-  if (x.indexOf("task") === 0) return "tasks";
-  if (x.indexOf("note") === 0) return "notes";
-  if (x === "multi_intent") return "mixed";
-  return "unknown";
-}
-
-function expectedModeFromRow(row) {
-  if (row.group === "multi_intent") return "mixed";
-  if (row.group.indexOf("query") >= 0) return "query";
-  return "write";
-}
-
-function topicFromFold(fold, row) {
-  for (let i = 0; i < core.RETRIEVAL_TOPIC_FORMS.length; i++) {
-    const t = core.RETRIEVAL_TOPIC_FORMS[i];
-    const tf = foldCs(t);
-    if (fold.indexOf(tf) >= 0) return t;
-  }
-  if (row.family === "calendar_query_chaos" || row.family === "partial_references") return "calendar_scope";
-  return "";
-}
-
-function extractTitleHint(input) {
-  const s = String(input || "");
-  const m = s.match(/ulož mi\s+([^,]+)/i) || s.match(/do kalendáře\s+(.{3,80})/i);
-  return m ? m[1].trim().slice(0, 120) : s.slice(0, 80);
-}
-
-function computeGoldLabels(row) {
-  const fold = foldCs(row.input);
-  const containsNegation =
-    /\b(ne|nic\s+ne|nevytv|nepis|nepiš|jen\s+cti|jen\s+čti|nic\s+neuklad)\b/i.test(fold) ||
-    /\bne\s+do\s+kalend/.test(fold);
-  const containsCorrection = /ne\s+vlastne|ne\s+vlastně|ne\s+ vlastně/i.test(fold);
-  const containsModuleSwitch = /\bne\s+do\s+kalend.*\bdo\s+poznam/i.test(fold) || /\bdo\s+poznam/i.test(fold);
-  const containsFiller = /\b(hele|ee|prostě|no jo|tyjo|echo)\b/i.test(fold);
-  const containsNoDiacritics = !/[áčďéěíňóřšťúůýžÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ]/.test(row.input);
-  const containsTypo = /zejtra|mlíko|schuzka|poznamka|ptže/i.test(fold);
-  const containsRetrieval =
-    row.family === "retrieval_fuzzy_notes" ||
-    row.family === "partial_references" ||
-    /\b(najdi|mrkni|hledej|kde\s+mám)\b/i.test(fold);
-  const containsFillerFamily = row.family === "filler_speech";
-  const containsModuleSwitchFamily = row.family === "module_switching";
-  const containsSelfCorrection = row.family === "self_correction";
-
-  const safetyFold = safetyNoWriteFolded(fold);
-  const readOnlyLead =
-    /\bjen\s+se\s+podivej\b/i.test(fold) ||
-    /\bjen\s+čti\b/i.test(fold) ||
-    /\bjen\s+cti\b/i.test(fold) ||
-    /\bnic\s+neuklad/i.test(fold);
-  let expected_should_write = false;
-  if (row.group.indexOf("query") >= 0) {
-    expected_should_write = false;
-  } else if (row.group === "multi_intent") {
-    expected_should_write = !!(row.meta && row.meta.needsDualWrite);
-  } else if (row.expectedIntent === "unknown") {
-    expected_should_write = false;
-  } else {
-    expected_should_write = !(safetyFold || readOnlyLead);
-  }
-
-  const expected_should_clarify =
-    row.expectedIntent === "unknown" ||
-    row.family === "ambiguity_should_clarify" ||
-    row.family === "nonsense_negative_mining";
-
-  let risk_level = "P2";
-  if (row.family === "nonsense_negative_mining" || row.family === "negation_no_write") risk_level = "P0";
-  else if (row.family === "multi_intent_light" || row.family === "ambiguity_should_clarify") risk_level = "P1";
-
-  let expected_safety = "ok";
-  if (safetyFold || readOnlyLead) expected_safety = "read_only";
-  if (row.family === "nonsense_negative_mining") expected_safety = "clarify_or_unknown";
-
-  return {
-    family: row.family,
-    cluster: row.cluster,
-    expected_module: expectedModuleFromGroup(row.group),
-    expected_intent: row.expectedIntent,
-    expected_mode: expectedModeFromRow(row),
-    expected_safety,
-    expected_should_write,
-    expected_should_clarify,
-    contains_negation: !!containsNegation,
-    contains_correction: !!(containsCorrection || containsSelfCorrection),
-    contains_module_switch: !!(containsModuleSwitch || containsModuleSwitchFamily),
-    contains_filler: !!(containsFiller || containsFillerFamily),
-    contains_no_diacritics: !!containsNoDiacritics,
-    contains_typo: !!containsTypo,
-    contains_retrieval: !!containsRetrieval,
-    expected_query_topic: row.group.indexOf("query") >= 0 ? topicFromFold(fold, row) : "",
-    expected_create_title:
-      row.group.indexOf("query") < 0 && row.group !== "multi_intent" ? extractTitleHint(row.input) : "",
-    risk_level
-  };
 }
 
 function createLikeTurn(turn) {
@@ -309,7 +208,10 @@ function gitAllowListClean() {
     const tracked = lines.filter((l) => !l.startsWith("??"));
     const allow = [
       "scripts/silver-rhc3-top-cluster-diagnostic.cjs",
-      "scripts/silver-rhc3-top-cluster-diagnostic-report.json"
+      "scripts/silver-rhc3-top-cluster-diagnostic-report.json",
+      "scripts/silver-real-human-chaos-v3.cjs",
+      "scripts/silver-real-human-chaos-v3-report.json",
+      "scripts/rhc-v3-deterministic-core.cjs"
     ];
     const bad = tracked.filter((l) => {
       const pathPart = (l.length >= 4 ? l.slice(3) : l).trim().replace(/\\/g, "/");
@@ -360,6 +262,13 @@ function main() {
 
   for (let ci = 0; ci < cases.length; ci++) {
     cases[ci].gold = computeGoldLabels(cases[ci]);
+  }
+
+  for (let sji = 0; sji < cases.length; sji++) {
+    const sj = cases[sji];
+    if (sj.family === "module_switching" && sj.gold) {
+      sj.expectedIntent = sj.gold.expected_intent;
+    }
   }
 
   const clusterCases = cases.filter((c) => c.cluster === TARGET_CLUSTER);
@@ -418,6 +327,7 @@ function main() {
     try {
       turn = eng.processUserTurn(c.input, empty, ctxForCase(c.group));
       ev = evaluateOne(c, turn);
+      ev = finalizeModuleSwitchHarnessEval(c, turn, ev);
     } catch (e) {
       clusterFail++;
       turn = { normalizedIntent: "", processingState: "", draft: {} };
