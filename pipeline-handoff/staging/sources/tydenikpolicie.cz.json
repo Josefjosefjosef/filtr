@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-11T01:53:51.723396Z",
+  "ingestedAt": "2026-05-11T02:39:22.132891Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Podvodné legendy jsou bohužel stále úspěšné. Vyděšená žena poslala podvodníkům 200 tisíc korun",
+      "url": "https://tydenikpolicie.cz/podvodne-legendy-jsou-bohuzel-stale-uspesne-vydesena-zena-poslala-podvodnikum-200-tisic-korun/",
+      "dt": "2026-05-11T02:02:00Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "200",
+        "bohužel",
+        "korun",
+        "legendy",
+        "podvodné",
+        "podvodníkům",
+        "poslala",
+        "stále",
+        "tisíc",
+        "vyděšená",
+        "úspěšné",
+        "žena"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -239,32 +268,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Řidič škodovky přejel na Tachovsku do protisměru. Protijedoucí motorkář srážku nepřežil",
-      "url": "https://tydenikpolicie.cz/ridic-skodovky-prejel-na-tachovsku-do-protismeru-protijedouci-motorkar-srazku-neprezil/",
-      "dt": "2026-05-10T17:47:30Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "motorkář",
-        "nepřežil",
-        "protijedoucí",
-        "protisměru",
-        "přejel",
-        "srážku",
-        "tachovsku",
-        "řidič",
-        "škodovky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -275,7 +278,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16373,
+      "bytes": 16348,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -312,7 +315,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-10T21:15:06Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T02:02:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -327,6 +330,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Podvodné legendy jsou bohužel stále úspěšné. Vyděšená žena poslala podvodníkům 200 tisíc korun",
+            "publishedAt": "2026-05-11T02:02:00Z"
+          },
           {
             "title": "Na motorce bez registrační značky přijela na benzínku v Jablonci nad Nisou žena se zákazem řízení",
             "publishedAt": "2026-05-10T21:15:06Z"
@@ -354,10 +361,6 @@
           {
             "title": "Podezřelého z vloupání do sklepa v Ostravě prozradily divné zvuky. Strážníkům tvrdil, že přišel uklidit babičce",
             "publishedAt": "2026-05-10T20:37:06Z"
-          },
-          {
-            "title": "Motorkáři u Velké Bíteše vběhli do cesty koně",
-            "publishedAt": "2026-05-10T20:35:27Z"
           }
         ]
       }
