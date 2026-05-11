@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-11T10:54:42.815073Z",
+  "ingestedAt": "2026-05-11T11:34:08.397320Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Revoluce v léčbě alergií: 82 % dětí se díky burákům zbavily doživotní hrozby",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/alergie-na-arasidy-lecba/",
+      "dt": "2026-05-11T11:27:02Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "alergií",
+        "burákům",
+        "doživotní",
+        "díky",
+        "dětí",
+        "hrozby",
+        "léčbě",
+        "revoluce",
+        "zbavily"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -251,33 +277,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Průlom v boji s rakovinou slinivky? Nový model zachytil nemoc s velkým předstihem",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/prulom-v-boji-s-rakovinou-slinivky-novy-model/",
-      "dt": "2026-05-10T10:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "boji",
-        "model",
-        "nemoc",
-        "nový",
-        "průlom",
-        "předstihem",
-        "rakovinou",
-        "slinivky",
-        "velkým",
-        "zachytil"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -288,7 +287,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 100252,
+      "bytes": 100013,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -325,7 +324,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-11T09:36:52Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T11:27:02Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -340,6 +339,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Revoluce v léčbě alergií: 82 % dětí se díky burákům zbavily doživotní hrozby",
+            "publishedAt": "2026-05-11T11:27:02Z"
+          },
           {
             "title": "8 dětí za rok zemřelo po krutém zacházení. Nový úřad má zajistit včasnou pomoc všem",
             "publishedAt": "2026-05-11T09:36:52Z"
@@ -367,10 +370,6 @@
           {
             "title": "Politik se obával plavajících krys s hantavirem, opíral se o rešerši od umělé inteligence",
             "publishedAt": "2026-05-10T16:09:22Z"
-          },
-          {
-            "title": "SÚKL si může polepšit o 7 milionů ročně. Vláda projedná i postoj k pandemické dohodě",
-            "publishedAt": "2026-05-10T11:42:53Z"
           }
         ]
       }

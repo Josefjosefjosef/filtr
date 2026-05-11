@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-11T10:54:42.815073Z",
+  "ingestedAt": "2026-05-11T11:34:08.397320Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "Do Česka se vrátí mráz. Jeden den bude pro zahrádkáře a zemědělce kritický",
+      "url": "https://www.e15.cz/domaci/do-ceska-se-vrati-mraz-jeden-den-bude-pro-zahradkare-a-zemedelce-kriticky-1432715",
+      "dt": "2026-05-11T11:17:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "den",
+        "jeden",
+        "kritický",
+        "mráz",
+        "vrátí",
+        "zahrádkáře",
+        "zemědělce",
+        "česka"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Výsledky přijímaček 2026 v DiPSY: Jak je zjistit, termíny druhého kola a změny v odvolání",
+      "url": "https://www.e15.cz/vysledky-prijimacek-2026-termin-odvolani",
+      "dt": "2026-05-11T10:50:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "2026",
+        "dipsy",
+        "druhého",
+        "kola",
+        "odvolání",
+        "přijímaček",
+        "termíny",
+        "výsledky",
+        "zjistit",
+        "změny"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1044,61 +1096,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Na Wall Street se jim smáli, teď je už nemůžou ignorovat. Drobní investoři ovládli americké burzy",
-      "url": "https://www.e15.cz/byznys/burzy-a-trhy/na-wall-street-se-jim-smali-ted-je-uz-nemuzou-ignorovat-drobni-investori-ovladli-americke-burzy-1432688",
-      "dt": "2026-05-08T04:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "americké",
-        "burzy",
-        "drobní",
-        "ignorovat",
-        "investoři",
-        "jim",
-        "nemůžou",
-        "ovládli",
-        "smáli",
-        "street",
-        "wall"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Předlužený ráj? Singapur i Maledivy jedou na sekyru. Žebříček 10 zemí, které se řítí do pasti",
-      "url": "https://www.e15.cz/ekonomika/predluzeny-raj-singapur-i-maledivy-jedou-na-sekyru-zebricek-10-zemi-ktere-se-riti-do-pasti-1432571",
-      "dt": "2026-05-08T03:30:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "jedou",
-        "maledivy",
-        "pasti",
-        "předlužený",
-        "ráj",
-        "sekyru",
-        "singapur",
-        "zemí",
-        "řítí",
-        "žebříček"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1109,7 +1106,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 50729,
+      "bytes": 50547,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1146,11 +1143,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-11T09:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T11:17:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 36,
-          "zpravy": 4
+          "zpravy": 5,
+          "finance": 35
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1162,6 +1159,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Do Česka se vrátí mráz. Jeden den bude pro zahrádkáře a zemědělce kritický",
+            "publishedAt": "2026-05-11T11:17:00Z"
+          },
+          {
+            "title": "Výsledky přijímaček 2026 v DiPSY: Jak je zjistit, termíny druhého kola a změny v odvolání",
+            "publishedAt": "2026-05-11T10:50:00Z"
+          },
           {
             "title": "Slavii přijde řádění fanoušků draho. Tykačův klub žehlí průšvih u naštvaných sponzorů",
             "publishedAt": "2026-05-11T09:33:00Z"
@@ -1185,14 +1190,6 @@
           {
             "title": "Praha opět hostí unikátní Mercedes-Benz Studio s evropskou premiérou nové C Class",
             "publishedAt": "2026-05-11T06:19:00Z"
-          },
-          {
-            "title": "Tato země zbohatla ze všech nejrychleji. Dokážete ji uhádnout v naší hře?",
-            "publishedAt": "2026-05-11T04:30:00Z"
-          },
-          {
-            "title": "Olympijské zlato za pár tisíc. Medaile Roberta Změlíka jsou na prodej, nabídku podal nečekaný zájemce",
-            "publishedAt": "2026-05-11T04:00:00Z"
           }
         ]
       }

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-11T10:54:42.815073Z",
+  "ingestedAt": "2026-05-11T11:34:08.397320Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Aktinickou keratózu má jeden ze tří lidí starších 60 let",
+      "url": "https://www.zdravezpravy.cz/2026/05/11/aktinickou-keratozu-ma-1-ze-tri-lidi-starsich-60-let/",
+      "dt": "2026-05-11T09:48:54Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "aktinickou",
+        "jeden",
+        "keratózu",
+        "let",
+        "lidí",
+        "starších",
+        "tří"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -462,31 +486,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "ZUŠ Open zahájí 13. května benefiční koncert na Pražském hradě",
-      "url": "https://www.zdravezpravy.cz/2026/04/30/festival-zus-open-zahaji-13-kvetna-beneficni-koncert-na-prazskem-hrade/",
-      "dt": "2026-04-30T13:00:35Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "benefiční",
-        "hradě",
-        "koncert",
-        "května",
-        "open",
-        "pražském",
-        "zahájí",
-        "zuš"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -497,7 +496,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 200508,
+      "bytes": 201493,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -534,7 +533,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-11T06:21:05Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T09:48:54Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -550,6 +549,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Aktinickou keratózu má jeden ze tří lidí starších 60 let",
+            "publishedAt": "2026-05-11T09:48:54Z"
+          },
           {
             "title": "Do diskuze se opět vrací pandemická dohoda WHO",
             "publishedAt": "2026-05-11T06:21:05Z"
@@ -577,10 +580,6 @@
           {
             "title": "Biotechnologie nesou miliardy, ale ČR chybí víc než dostatek kapitálu",
             "publishedAt": "2026-05-06T13:55:54Z"
-          },
-          {
-            "title": "Loď, kde se prokázal hantavirus, míří na Kanáry, tam se vylodí",
-            "publishedAt": "2026-05-06T12:49:11Z"
           }
         ]
       }
