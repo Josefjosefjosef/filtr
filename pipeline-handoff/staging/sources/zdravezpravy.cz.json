@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-11T06:44:42.071549Z",
+  "ingestedAt": "2026-05-11T07:24:05.285334Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Do diskuze se opět vrací pandemická dohoda WHO",
+      "url": "https://www.zdravezpravy.cz/2026/05/11/do-diskuze-se-opet-vraci-pandemicka-dohoda-who/",
+      "dt": "2026-05-11T06:21:05Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "diskuze",
+        "dohoda",
+        "opět",
+        "pandemická",
+        "vrací",
+        "who"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -464,31 +487,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Vojtěch: Očkovací strategie očkování nerozšiřuje, na to nemá právní sílu",
-      "url": "https://www.zdravezpravy.cz/2026/04/30/ministr-vojtech-ockovaci-strategie-ockovani-nerozsiruje-na-to-nema-pravni-silu/",
-      "dt": "2026-04-30T12:28:22Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "nemá",
-        "nerozšiřuje",
-        "očkovací",
-        "očkování",
-        "právní",
-        "strategie",
-        "sílu",
-        "vojtěch"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -499,7 +497,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 201814,
+      "bytes": 200508,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -536,7 +534,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-10T04:17:19Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T06:21:05Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -552,6 +550,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Do diskuze se opět vrací pandemická dohoda WHO",
+            "publishedAt": "2026-05-11T06:21:05Z"
+          },
           {
             "title": "Farmaceutické firmy se na celkovém českém exportu podílejí 1,85 %",
             "publishedAt": "2026-05-10T04:17:19Z"
@@ -579,10 +581,6 @@
           {
             "title": "Loď, kde se prokázal hantavirus, míří na Kanáry, tam se vylodí",
             "publishedAt": "2026-05-06T12:49:11Z"
-          },
-          {
-            "title": "Zhoubné nádory orofaryngu boomují, násobně více u mužů",
-            "publishedAt": "2026-05-06T08:30:02Z"
           }
         ]
       }
