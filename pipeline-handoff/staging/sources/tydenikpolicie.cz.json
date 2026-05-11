@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-11T05:20:10.043643Z",
+  "ingestedAt": "2026-05-11T06:44:42.071549Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Řidič Citroenu jel po dálnici D3 v protisměru",
+      "url": "https://tydenikpolicie.cz/ridic-citroenu-jel-po-dalnici-d3-v-protismeru/",
+      "dt": "2026-05-11T06:34:36Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "citroenu",
+        "dálnici",
+        "jel",
+        "protisměru",
+        "řidič"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -240,29 +262,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Motorkáři u Velké Bíteše vběhli do cesty koně",
-      "url": "https://tydenikpolicie.cz/motorkari-u-velke-bitese-vbehli-do-cesty-kone/",
-      "dt": "2026-05-10T20:35:27Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "bíteše",
-        "cesty",
-        "koně",
-        "motorkáři",
-        "vběhli",
-        "velké"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -273,7 +272,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16220,
+      "bytes": 16070,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -310,7 +309,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-11T04:02:13Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T06:34:36Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -325,6 +324,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Řidič Citroenu jel po dálnici D3 v protisměru",
+            "publishedAt": "2026-05-11T06:34:36Z"
+          },
           {
             "title": "Cizinec na Brněnsku ujížděl od benzínek bez placení",
             "publishedAt": "2026-05-11T04:02:13Z"
@@ -352,10 +355,6 @@
           {
             "title": "Po ulici ve Svitavách si vykračoval bobr. Strážníky pěkně prohnal",
             "publishedAt": "2026-05-10T20:44:31Z"
-          },
-          {
-            "title": "Fantomovi vloupání do vozidel se v Ostravě stala osudnou škola",
-            "publishedAt": "2026-05-10T20:39:40Z"
           }
         ]
       }

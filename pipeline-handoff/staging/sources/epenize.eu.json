@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-11T05:20:10.043643Z",
+  "ingestedAt": "2026-05-11T06:44:42.071549Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Obhajuje Novotný bezmozky? Klesneme na úroveň nemyté, sparťanské lůzy",
+      "url": "https://www.epenize.eu/obhajuje-novotny-bezmozky-klesneme-na-uroven-nemyte-spartanske-luzy/",
+      "dt": "2026-05-11T06:06:36Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "bezmozky",
+        "klesneme",
+        "lůzy",
+        "nemyté",
+        "novotný",
+        "obhajuje",
+        "sparťanské",
+        "úroveň"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -488,29 +513,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Greeneová věští konec GOP po fiasku se špehováním",
-      "url": "https://www.epenize.eu/greeneova-vesti-konec-gop-po-fiasku-se-spehovanim/",
-      "dt": "2026-05-01T23:00:35Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "fiasku",
-        "gop",
-        "greeneová",
-        "konec",
-        "věští",
-        "špehováním"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -521,7 +523,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 108660,
+      "bytes": 108732,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -558,12 +560,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-10T23:00:47Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T06:06:36Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "finance": 18,
           "zpravy": 1,
-          "sport": 1,
-          "finance": 18
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -575,6 +577,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Obhajuje Novotný bezmozky? Klesneme na úroveň nemyté, sparťanské lůzy",
+            "publishedAt": "2026-05-11T06:06:36Z"
+          },
           {
             "title": "Sedmimetrová zlatá socha Trumpa v Miami: Pastor Burns říká „zázrak od Boha“",
             "publishedAt": "2026-05-10T23:00:47Z"
@@ -602,10 +608,6 @@
           {
             "title": "Dlužena von Bankrot: Kupka to za svou kritiku schytává",
             "publishedAt": "2026-05-08T08:12:13Z"
-          },
-          {
-            "title": "59 % Američanů pochybuje o Trumpově mentální bystrosti. Trump odpovídá: zvládl jsem tři kognitivní testy",
-            "publishedAt": "2026-05-07T23:00:56Z"
           }
         ]
       }

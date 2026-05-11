@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-11T05:20:10.043643Z",
+  "ingestedAt": "2026-05-11T06:44:42.071549Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Přípravu nové nemocnice pevně řídí premiér Babiš. Sám bych se do ní hned přesunul, říká poradce",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/pripravu-nove-nemocnice-pevne-ridi-premier-babis/",
+      "dt": "2026-05-11T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "babiš",
+        "bych",
+        "hned",
+        "nemocnice",
+        "nové",
+        "pevně",
+        "poradce",
+        "premiér",
+        "přesunul",
+        "přípravu",
+        "sám",
+        "řídí",
+        "říká"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,32 +272,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nemocniční nákazy: Oficiální čísla vypadají skvěle, realita je ale jiná",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/nemocnicni-nakazy-cisla/",
-      "dt": "2026-05-09T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "ale",
-        "jiná",
-        "nemocniční",
-        "nákazy",
-        "oficiální",
-        "realita",
-        "skvěle",
-        "vypadají",
-        "čísla"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 99807,
+      "bytes": 97028,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +319,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-11T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -330,6 +334,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Přípravu nové nemocnice pevně řídí premiér Babiš. Sám bych se do ní hned přesunul, říká poradce",
+            "publishedAt": "2026-05-11T06:00:00Z"
+          },
           {
             "title": "Bitva o léky na hubnutí: Eli Lilly oslnila zisky, Novo Nordisk má ale v rukávu „tabletové“ eso",
             "publishedAt": "2026-05-11T05:00:00Z"
@@ -357,10 +365,6 @@
           {
             "title": "Nahradí umělá inteligence farmaceutické reprezentanty? Pravda je složitější, říká expert",
             "publishedAt": "2026-05-09T15:00:00Z"
-          },
-          {
-            "title": "Steroidy lákají stále mladší sportovce. Lékaři varují před fatálními následky",
-            "publishedAt": "2026-05-09T12:00:00Z"
           }
         ]
       }

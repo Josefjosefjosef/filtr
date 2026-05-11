@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-11T05:20:10.043643Z",
+  "ingestedAt": "2026-05-11T06:44:42.071549Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Kryštof Touška členem představenstva Uniqa",
+      "url": "https://profitonline.cz/krystof-touska-clenem-predstavenstva-uniqa/",
+      "dt": "2026-05-11T06:00:43Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "kryštof",
+        "představenstva",
+        "touška",
+        "uniqa",
+        "členem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -274,27 +296,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Červený kříž na straně lidskosti",
-      "url": "https://profitonline.cz/cerveny-kriz-na-strane-lidskosti/",
-      "dt": "2026-05-08T14:00:41Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "kříž",
-        "lidskosti",
-        "straně",
-        "červený"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -305,7 +306,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18914,
+      "bytes": 18958,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -342,7 +343,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-11T04:00:01Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T06:00:43Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -359,6 +360,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kryštof Touška členem představenstva Uniqa",
+            "publishedAt": "2026-05-11T06:00:43Z"
+          },
           {
             "title": "The Economist: Inflace v Argentině už zase zrychluje. Přestaly Mileiovy radikální reformy fungovat?",
             "publishedAt": "2026-05-11T04:00:01Z"
@@ -386,10 +391,6 @@
           {
             "title": "Český průmysl v březnu zpomalil",
             "publishedAt": "2026-05-09T12:00:53Z"
-          },
-          {
-            "title": "Okamžiky historie: Den, kdy se otevřelo pražské metro",
-            "publishedAt": "2026-05-09T10:00:33Z"
           }
         ]
       }

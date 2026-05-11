@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-11T05:20:10.043643Z",
+  "ingestedAt": "2026-05-11T06:44:42.071549Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Purpurová krása. Kvetoucí jetel přitahuje fotografy, ti ale mohou způsobit škody",
+      "url": "https://www.denik.cz/regiony/na-okraji-olomouce-kvete-jetel-nachovy.html",
+      "dt": "2026-05-11T05:22:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ale",
+        "fotografy",
+        "jetel",
+        "krása",
+        "kvetoucí",
+        "purpurová",
+        "přitahuje",
+        "způsobit",
+        "škody"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Peking potvrdil termín Trumpovy návštěvy Číny, začne ve středu",
+      "url": "https://www.denik.cz/ze_sveta/peking-potvrdil-termin-trumpovy-navstevy-ciny-zacne-ve-stredu.html",
+      "dt": "2026-05-11T05:09:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "návštěvy",
+        "peking",
+        "potvrdil",
+        "středu",
+        "termín",
+        "trumpovy",
+        "začne",
+        "číny"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -262,31 +313,6 @@
         "ukázala",
         "význam",
         "školách"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Purpurová krása na Hané. Kvetoucí jetel přitahuje včely i fotografy",
-      "url": "https://www.denik.cz/regiony/na-okraji-olomouce-kvete-jetel-nachovy.html",
-      "dt": "2026-05-10T12:53:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "fotografy",
-        "hané",
-        "jetel",
-        "krása",
-        "kvetoucí",
-        "purpurová",
-        "přitahuje",
-        "včely"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -627,32 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Konec a kontroly amalgámu? Pocítí to nejen zubní ordinace, ale i krematoria",
-      "url": "https://www.denik.cz/zdravotnictvi/zubari-konec-a-kontroly-amalgamu-pociti-to-nejen-zubni-ordinace-ale-i-krematoria.html",
-      "dt": "2026-05-10T02:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ale",
-        "amalgámu",
-        "konec",
-        "kontroly",
-        "krematoria",
-        "nejen",
-        "ordinace",
-        "pocítí",
-        "zubní"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -663,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30698,
+      "bytes": 30444,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -700,12 +700,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-11T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T05:22:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "finance": 2,
-          "zdravi": 1
+          "zpravy": 23,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -717,6 +716,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Purpurová krása. Kvetoucí jetel přitahuje fotografy, ti ale mohou způsobit škody",
+            "publishedAt": "2026-05-11T05:22:00Z"
+          },
+          {
+            "title": "Peking potvrdil termín Trumpovy návštěvy Číny, začne ve středu",
+            "publishedAt": "2026-05-11T05:09:00Z"
+          },
           {
             "title": "MAPA: Ledoví muži udeří. Pankrác přinese citelné ochlazení, na horách nasněží",
             "publishedAt": "2026-05-11T03:30:00Z"
@@ -740,14 +747,6 @@
           {
             "title": "Statisíce českých řidičů letos čeká výměna řidičáku. Riskují komplikace i pokutu",
             "publishedAt": "2026-05-10T16:30:00Z"
-          },
-          {
-            "title": "Zavřené obchody? Češi využili svátek k nákupům v Polsku, stačilo přejet hranice",
-            "publishedAt": "2026-05-10T16:20:00Z"
-          },
-          {
-            "title": "KLDR mění jadernou doktrínu: Při útoku na Kim Čong-una hrozí automatická odveta",
-            "publishedAt": "2026-05-10T14:35:00Z"
           }
         ]
       }
