@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-11T13:34:35.888227Z",
+  "ingestedAt": "2026-05-11T14:35:37.687047Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Průměrnému Čechovi klesne příjem v důchodu o víc než 17 tisíc",
+      "url": "https://www.penize.cz/doplnkove-penzijni-sporeni/489519-prumernemu-cechovi-klesne-prijem-v-duchodu-o-vic-nez-17-tisic",
+      "dt": "2026-05-11T16:10:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "důchodu",
+        "klesne",
+        "než",
+        "průměrnému",
+        "příjem",
+        "tisíc",
+        "víc",
+        "čechovi"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -492,32 +517,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "HP Tronic diktoval ceny a trestal „neposlušné“ prodejce. Dostal tučnou pokutu",
-      "url": "https://www.penize.cz/nakupy/489343-hp-tronic-diktoval-ceny-a-trestal-neposlusne-prodejce-dostal-pokutu-39-milionu-korun",
-      "dt": "2026-05-06T14:55:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "ceny",
-        "diktoval",
-        "dostal",
-        "neposlušné",
-        "pokutu",
-        "prodejce",
-        "trestal",
-        "tronic",
-        "tučnou"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -528,7 +527,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18765,
+      "bytes": 18780,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -565,11 +564,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-11T13:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T16:10:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 3,
-          "finance": 17
+          "finance": 18,
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -581,6 +580,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Průměrnému Čechovi klesne příjem v důchodu o víc než 17 tisíc",
+            "publishedAt": "2026-05-11T16:10:00Z"
+          },
           {
             "title": "Nafta levnější než benzin. Maximální ceny pohonných hmot na úterý 12. května",
             "publishedAt": "2026-05-11T13:59:00Z"
@@ -608,10 +611,6 @@
           {
             "title": "Kolik opravdu zaplatíte za půjčku? Ukažte, jestli dopadnete líp než dvě pětiny Čechů",
             "publishedAt": "2026-05-10T17:00:00Z"
-          },
-          {
-            "title": "Čo bolo tatramatky ródeo? Retrokvíz se slovenskými značkami z dob ČSSR",
-            "publishedAt": "2026-05-10T07:00:00Z"
           }
         ]
       }

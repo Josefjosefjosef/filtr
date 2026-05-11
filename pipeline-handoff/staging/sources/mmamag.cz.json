@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-11T13:34:35.888227Z",
+  "ingestedAt": "2026-05-11T14:35:37.687047Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Přes 2 miliardy korun za jediný zápas? Mega bitva Furyho s Joshuou dostává jasné obrysy",
+      "url": "https://www.mmamag.cz/fury-a-joshua-mohou-dostat-100-milionu-dolaru/",
+      "dt": "2026-05-11T14:15:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "bitva",
+        "dostává",
+        "furyho",
+        "jasné",
+        "jediný",
+        "joshuou",
+        "korun",
+        "mega",
+        "miliardy",
+        "obrysy",
+        "zápas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "video",
@@ -1054,34 +1082,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dvě sekundy, jeden úder a konec. Američan se postaral o nejrychlejší ukončení v historii BKFC",
-      "url": "https://www.mmamag.cz/american-predvedl-nejrychlejsi-ukonceni-v-historii-bkfc/",
-      "dt": "2026-05-09T18:00:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "američan",
-        "bkfc",
-        "dvě",
-        "historii",
-        "jeden",
-        "konec",
-        "nejrychlejší",
-        "postaral",
-        "sekundy",
-        "ukončení",
-        "úder"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1092,7 +1092,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 79892,
+      "bytes": 79844,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1129,7 +1129,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-11T13:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T14:15:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1144,6 +1144,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Přes 2 miliardy korun za jediný zápas? Mega bitva Furyho s Joshuou dostává jasné obrysy",
+            "publishedAt": "2026-05-11T14:15:00Z"
+          },
           {
             "title": "Ze soupeře Mikea Tysona se stal nájemný zabiják. Za tři vraždy dostal doživotí",
             "publishedAt": "2026-05-11T13:30:00Z"
@@ -1171,10 +1175,6 @@
           {
             "title": "V pondělí mu zemřelo nenarozené dítě, v sobotu uškrtil soupeře. Zápasník UFC po výhře neudržel slzy",
             "publishedAt": "2026-05-11T09:00:00Z"
-          },
-          {
-            "title": "Bojovník UFC se stal Kadyrovovým poskokem a chůvou jeho dětí. Pak upadl v nemilost a už ho nikdy nikdo neviděl",
-            "publishedAt": "2026-05-11T08:15:00Z"
           }
         ]
       }

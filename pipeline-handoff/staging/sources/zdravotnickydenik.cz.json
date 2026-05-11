@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-11T13:34:35.888227Z",
+  "ingestedAt": "2026-05-11T14:35:37.687047Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "SÚKL přitvrdí: Nekvalitní data od výrobců léků se prodraží, vláda schválila nové poplatky",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/sukl-data-vyrobcy-leku-vlada-poplatky/",
+      "dt": "2026-05-11T14:07:24Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "data",
+        "léků",
+        "nekvalitní",
+        "nové",
+        "poplatky",
+        "prodraží",
+        "přitvrdí",
+        "schválila",
+        "súkl",
+        "vláda",
+        "výrobců"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -248,32 +276,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Politik se obával plavajících krys s hantavirem, opíral se o rešerši od umělé inteligence",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/sef-kanarskych-ostrovu-se-obaval-plavajicich-krys-s-hantavirem/",
-      "dt": "2026-05-10T16:09:22Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "hantavirem",
-        "inteligence",
-        "krys",
-        "obával",
-        "opíral",
-        "plavajících",
-        "politik",
-        "rešerši",
-        "umělé"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -284,7 +286,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 97382,
+      "bytes": 95216,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -321,7 +323,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-11T13:15:51Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T14:07:24Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -336,6 +338,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "SÚKL přitvrdí: Nekvalitní data od výrobců léků se prodraží, vláda schválila nové poplatky",
+            "publishedAt": "2026-05-11T14:07:24Z"
+          },
           {
             "title": "Tetování má i v obličeji. Policie hledá pacienta, který zmizel z psychiatrické nemocnice",
             "publishedAt": "2026-05-11T13:15:51Z"
@@ -363,10 +369,6 @@
           {
             "title": "Gamechanger ve screeningových programech: Jaké změny chystá Vojtěch od příštího roku?",
             "publishedAt": "2026-05-11T07:00:00Z"
-          },
-          {
-            "title": "Přípravu nové nemocnice pevně řídí premiér Babiš. Sám bych se do ní hned přesunul, říká poradce",
-            "publishedAt": "2026-05-11T06:00:00Z"
           }
         ]
       }

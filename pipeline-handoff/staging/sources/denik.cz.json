@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-11T13:34:35.888227Z",
+  "ingestedAt": "2026-05-11T14:35:37.687047Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nevšední záběry. Paraglidista zachytil zámky na Blanensku z nebe",
+      "url": "https://www.denik.cz/regiony/nevsedni-dobrodruzstvi-na-kridle-paraglidista-zachytil-zamky-z-nebe-20260510.html",
+      "dt": "2026-05-11T13:50:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "blanensku",
+        "nebe",
+        "nevšední",
+        "paraglidista",
+        "zachytil",
+        "záběry",
+        "zámky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -627,31 +651,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Peking potvrdil termín Trumpovy návštěvy Číny, začne ve středu",
-      "url": "https://www.denik.cz/ze_sveta/peking-potvrdil-termin-trumpovy-navstevy-ciny-zacne-ve-stredu.html",
-      "dt": "2026-05-11T05:09:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "návštěvy",
-        "peking",
-        "potvrdil",
-        "středu",
-        "termín",
-        "trumpovy",
-        "začne",
-        "číny"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +661,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29444,
+      "bytes": 29589,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,11 +698,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-11T13:18:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T13:50:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 1,
-          "zpravy": 24
+          "zpravy": 24,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -715,6 +714,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nevšední záběry. Paraglidista zachytil zámky na Blanensku z nebe",
+            "publishedAt": "2026-05-11T13:50:00Z"
+          },
           {
             "title": "Valorizace ano, strop ne. Novela důchodů budí rozpaky odborů",
             "publishedAt": "2026-05-11T13:18:00Z"
@@ -742,10 +745,6 @@
           {
             "title": "Bojům o lehátka je konec. Hotely přitvrzují, hosté mohou přijít o věci i peníze",
             "publishedAt": "2026-05-11T11:35:00Z"
-          },
-          {
-            "title": "Abatyše z Loděnice dostala za zpronevěru šest let. Klášter přišel o miliony",
-            "publishedAt": "2026-05-11T10:46:00Z"
           }
         ]
       }
