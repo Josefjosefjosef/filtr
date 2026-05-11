@@ -1,19 +1,19 @@
 {
   "harness_id": "silver_deep_product_real_ux_v2",
   "user_reference_main_commit": "326bf6be040a14178b0231c00f0d6789b7802434",
-  "main_commit": "465cd4614157d8a6fec451029887e48cb74b336a",
+  "main_commit": "ef30324fa908812853cf3a75576ca20025df6b5b",
   "fixed_now_iso": "2026-05-04T12:00:00",
   "deep_product_cases_total": 100,
-  "deep_product_pass": 91,
-  "deep_product_fail": 9,
-  "deep_product_accuracy": "91.00",
+  "deep_product_pass": 92,
+  "deep_product_fail": 8,
+  "deep_product_accuracy": "92.00",
   "retrieval_relevance_accuracy": "83.33",
   "update_vs_create_accuracy": "100.00",
   "clarification_quality_accuracy": "100.00",
   "cross_module_accuracy": "100.00",
   "timeline_reasoning_accuracy": "100.00",
   "dirty_czech_accuracy": "75.00",
-  "title_cleanliness_accuracy": "88.89",
+  "title_cleanliness_accuracy": "100.00",
   "long_chaotic_czech_accuracy": "66.67",
   "dangerous_write_count": 0,
   "false_write_count": 0,
@@ -22,7 +22,7 @@
   "top_clusters": [
     {
       "key": "general_intent_mismatch",
-      "count": 8,
+      "count": 7,
       "severity": 60,
       "root_cause": "classifier_gap_on_colloquial_or_multi_clause_czech",
       "replay": [
@@ -68,7 +68,7 @@
     "audit_20k": "FAIL",
     "quality_v2": "PASS",
     "realistic_mobile": "FAIL",
-    "real_czech_corpus": "PASS",
+    "real_czech_corpus": "FAIL",
     "deep_product_real_ux_v2": "PASS"
   },
   "fails": [
@@ -135,14 +135,6 @@
       "cat": "intent_fail",
       "input": "mrkni prawnik",
       "replay": "mrkni prawnik"
-    },
-    {
-      "id": "tc_note_pin_m4",
-      "base_id": "tc_note_pin",
-      "slice": "title_cleanliness",
-      "cat": "intent_fail",
-      "input": "hele Poznámka: PIN karta je v šuplíku.",
-      "replay": "hele Poznámka: PIN karta je v šuplíku."
     }
   ],
   "engine_changed": "YES",
