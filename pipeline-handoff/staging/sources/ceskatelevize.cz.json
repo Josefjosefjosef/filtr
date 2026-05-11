@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-11T19:24:20.411715Z",
+  "ingestedAt": "2026-05-11T20:04:17.013459Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Bezpečnost na fotbale řeší pořadatel, policie slouží jako pojistka",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/bezpecnost-na-fotbale-resi-poradatel-policie-slouzi-jako-pojistka-373309",
+      "dt": "2026-05-11T19:39:36Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "bezpečnost",
+        "fotbale",
+        "jako",
+        "pojistka",
+        "policie",
+        "pořadatel",
+        "slouží",
+        "řeší"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -448,20 +473,19 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Loď s hantavirem opustili poslední evakuovaní, ukazují záběry z místa",
+      "title": "Skončila evakuace lodi s hantavirem na Tenerife, cestující odletěli",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/francie-hlasi-pozitivni-test-na-hantavirus-u-pasazerky-evakuovane-z-vyletni-lodi-373288",
       "dt": "2026-05-11T07:15:57Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "evakuovaní",
+        "cestující",
+        "evakuace",
         "hantavirem",
-        "loď",
-        "místa",
-        "opustili",
-        "poslední",
-        "ukazují",
-        "záběry"
+        "lodi",
+        "odletěli",
+        "skončila",
+        "tenerife"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -713,32 +737,6 @@
         "thajský",
         "vězení",
         "šinavatra"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "O novém náčelníkovi generálního štábu by mohlo být jasno do pátku, řekl Babiš",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/zuna-bude-jednat-s-babisem-o-budoucim-sefovi-armady-373282",
-      "dt": "2026-05-11T01:10:22Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "babiš",
-        "být",
-        "generálního",
-        "jasno",
-        "novém",
-        "náčelníkovi",
-        "pátku",
-        "řekl",
-        "štábu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1504,7 +1502,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43491,
+      "bytes": 43008,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1564,7 +1562,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-11T19:10:47Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T19:39:36Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1581,6 +1579,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bezpečnost na fotbale řeší pořadatel, policie slouží jako pojistka",
+            "publishedAt": "2026-05-11T19:39:36Z"
+          },
           {
             "title": "Zametání kauz, sledování konkurentů. Na Slovensku začal mimořádný proces",
             "publishedAt": "2026-05-11T19:10:47Z"
@@ -1608,10 +1610,6 @@
           {
             "title": "SOUHRN: Zásadní události pondělí 11. května",
             "publishedAt": "2026-05-11T16:27:00Z"
-          },
-          {
-            "title": "Estonsko žádá po incidentech v Pobaltí lepší kontrolu ukrajinských dronů",
-            "publishedAt": "2026-05-11T15:03:25Z"
           }
         ]
       }
@@ -1717,7 +1715,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78302,
+      "bytes": 78216,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

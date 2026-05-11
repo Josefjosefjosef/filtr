@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-11T19:24:20.411715Z",
+  "ingestedAt": "2026-05-11T20:04:17.013459Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Hantavirus v Česku nehrozí, ujišťuje Vojtěch. Úřady přesto sledují nákazu z výletní lodi",
+      "url": "https://www.e15.cz/domaci/hantavirus-v-cesku-nehrozi-ujistuje-vojtech-urady-presto-sleduji-nakazu-z-vyletni-lodi-1432729",
+      "dt": "2026-05-11T19:30:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "hantavirus",
+        "lodi",
+        "nehrozí",
+        "nákazu",
+        "přesto",
+        "sledují",
+        "ujišťuje",
+        "vojtěch",
+        "výletní",
+        "úřady",
+        "česku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1061,33 +1089,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Dron narušil provoz Letiště Václava Havla. Policie zadržela podezřelého muže",
-      "url": "https://www.e15.cz/domaci/dron-narusil-provoz-letiste-vaclava-havla-policie-zadrzela-podezreleho-muze-1432696",
-      "dt": "2026-05-08T16:30:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "dron",
-        "havla",
-        "letiště",
-        "muže",
-        "narušil",
-        "podezřelého",
-        "policie",
-        "provoz",
-        "václava",
-        "zadržela"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1098,7 +1099,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 52546,
+      "bytes": 52313,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1135,12 +1136,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-11T16:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T19:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 35,
+          "finance": 36,
           "cestovani": 1,
-          "zpravy": 4
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1152,6 +1153,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hantavirus v Česku nehrozí, ujišťuje Vojtěch. Úřady přesto sledují nákazu z výletní lodi",
+            "publishedAt": "2026-05-11T19:30:00Z"
+          },
           {
             "title": "Udržitelnost jako konkurenční výhoda? Jihomoravská Tierra Verde uspěla mezi nejlepšími firmami Evropy",
             "publishedAt": "2026-05-11T16:20:00Z"
@@ -1179,10 +1184,6 @@
           {
             "title": "Co je hantavirus a jaké má příznaky? Vše o přenosu, léčbě a o rizicích v roce 2026",
             "publishedAt": "2026-05-11T11:30:00Z"
-          },
-          {
-            "title": "Do Česka se vrátí mráz. Jeden den bude pro zahrádkáře a zemědělce kritický",
-            "publishedAt": "2026-05-11T11:17:00Z"
           }
         ]
       }
