@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-05-11T03:59:34.898564Z",
+  "ingestedAt": "2026-05-11T04:39:47.084595Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Advokát se na soudu pohádal o polední pauzu a odmítl vydat spis. Dostal pokutu",
+      "url": "https://www.ceska-justice.cz/2026/05/advokat-pohadal-poledni-pauza-pokuta/",
+      "dt": "2026-05-11T04:15:00Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "advokát",
+        "dostal",
+        "odmítl",
+        "pauzu",
+        "pohádal",
+        "pokutu",
+        "polední",
+        "soudu",
+        "spis",
+        "vydat"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -245,31 +272,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Více funkcí neznamená více plných odměn. Ústavní soud nevyhověl senátorům",
-      "url": "https://www.ceska-justice.cz/2026/05/vice-funkci-odmen-ustavni-soud/",
-      "dt": "2026-05-06T08:12:58Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "funkcí",
-        "nevyhověl",
-        "neznamená",
-        "odměn",
-        "plných",
-        "senátorům",
-        "soud",
-        "ústavní"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 94008,
+      "bytes": 93518,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +319,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-10T04:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T04:15:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -332,6 +334,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Advokát se na soudu pohádal o polední pauzu a odmítl vydat spis. Dostal pokutu",
+            "publishedAt": "2026-05-11T04:15:00Z"
+          },
           {
             "title": "Spor o stravenky za 135 korun: Děčínští soudci hledali zastání až u Nejvyššího soudu",
             "publishedAt": "2026-05-10T04:15:00Z"
@@ -359,10 +365,6 @@
           {
             "title": "Končí éra protokolů. U trestních kauz je nahradí automatické přepisy",
             "publishedAt": "2026-05-07T04:15:00Z"
-          },
-          {
-            "title": "Blažkovi s Titzem hrozí pozastavení činnosti. Advokátní komora řeší bitcoinovou kauzu",
-            "publishedAt": "2026-05-06T12:09:56Z"
           }
         ]
       }

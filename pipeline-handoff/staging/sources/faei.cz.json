@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-11T03:59:34.898564Z",
+  "ingestedAt": "2026-05-11T04:39:47.084595Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "The Economist: Inflace v Argentině už zase zrychluje. Přestaly Mileiovy radikální reformy fungovat?",
+      "url": "https://profitonline.cz/the-economist-inflace-v-argentine-uz-zase-zrychluje-prestaly-mileiovy-radikalni-reformy-fungovat/",
+      "dt": "2026-05-11T04:00:01Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "argentině",
+        "economist",
+        "fungovat",
+        "inflace",
+        "mileiovy",
+        "přestaly",
+        "radikální",
+        "reformy",
+        "the",
+        "zase",
+        "zrychluje"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -267,27 +295,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Hypotéky na centrální banku nereagují",
-      "url": "https://profitonline.cz/hypoteky-na-centralni-banku-nereaguji/",
-      "dt": "2026-05-08T12:00:50Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "banku",
-        "centrální",
-        "hypotéky",
-        "nereagují"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -298,7 +305,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18477,
+      "bytes": 18914,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -335,7 +342,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-10T15:20:42Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T04:00:01Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -352,6 +359,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "The Economist: Inflace v Argentině už zase zrychluje. Přestaly Mileiovy radikální reformy fungovat?",
+            "publishedAt": "2026-05-11T04:00:01Z"
+          },
           {
             "title": "Derby hanby v Edenu. Slavia může začít sčítat škody",
             "publishedAt": "2026-05-10T15:20:42Z"
@@ -379,10 +390,6 @@
           {
             "title": "Okamžiky historie: Den, kdy se otevřelo pražské metro",
             "publishedAt": "2026-05-09T10:00:33Z"
-          },
-          {
-            "title": "Elektřina Čechům ukusuje z peněženky skoro nejvíce v EU",
-            "publishedAt": "2026-05-09T08:15:16Z"
           }
         ]
       }

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-11T03:59:34.898564Z",
+  "ingestedAt": "2026-05-11T04:39:47.084595Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Subnautica 2 obdržela premiérové záběry z hraní a odhalila cenu",
+      "url": "https://zing.cz/article/subnautica-2-obdrzela-premierove-zabery-z-hrani",
+      "dt": "2026-05-11T04:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "cenu",
+        "hraní",
+        "obdržela",
+        "odhalila",
+        "premiérové",
+        "subnautica",
+        "záběry"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -950,33 +974,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Tvůrci kritizovaného GTA: The Trilogy představili novou hru s názvem BeastLink",
-      "url": "https://zing.cz/article/tvurci-kritizovaneho-gta-the-trilogy-predstavili-novou-hru-s-nazvem-beastlink",
-      "dt": "2026-05-06T06:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "beastlink",
-        "gta",
-        "hru",
-        "kritizovaného",
-        "novou",
-        "názvem",
-        "představili",
-        "the",
-        "trilogy",
-        "tvůrci"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -987,7 +984,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125039,
+      "bytes": 125038,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1024,10 +1021,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-10T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T04:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "other": 40
+          "zpravy": 1,
+          "other": 39
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1039,6 +1037,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Subnautica 2 obdržela premiérové záběry z hraní a odhalila cenu",
+            "publishedAt": "2026-05-11T04:00:00Z"
+          },
           {
             "title": "Hry pro dva, které možná neznáte",
             "publishedAt": "2026-05-10T18:00:00Z"
@@ -1066,10 +1068,6 @@
           {
             "title": "Slay the Spire 2 odstraňuje nenáviděného bosse",
             "publishedAt": "2026-05-10T06:00:00Z"
-          },
-          {
-            "title": "V Overwatch můžete tento týden získat přes 2000 XP za zápas",
-            "publishedAt": "2026-05-10T04:00:00Z"
           }
         ]
       }

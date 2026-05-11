@@ -1,8 +1,63 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-11T03:59:34.898564Z",
+  "ingestedAt": "2026-05-11T04:39:47.084595Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Průšvih v Edenu mají na triku Tvrdík a spol. V Premier League by fotbal dělat nemohli",
+      "url": "https://sport.aktualne.cz/fotbal/prusvih-v-edenu-maji-na-triku-tvrdik-a-spol-v-premier-league-by-fotbal-delat-nemohli/r~aaa29e7ebcbf2423aa8ade47d704db7a/",
+      "dt": "2026-05-11T04:21:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dělat",
+        "edenu",
+        "fotbal",
+        "league",
+        "mají",
+        "nemohli",
+        "premier",
+        "průšvih",
+        "spol",
+        "triku",
+        "tvrdík"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Pokusní králíci pokroku. Dokument o Muskovi ukazuje dopady slepé víry v technologie",
+      "url": "https://magazin.aktualne.cz/kultura/film/pokusni-kralici-pokroku-dokument-o-muskovi-ukazuje-dopady-slepe-viry-v-technologie/r~aaa296b3e9bbc799605a1f01e1df4b40/",
+      "dt": "2026-05-11T04:00:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dokument",
+        "dopady",
+        "králíci",
+        "muskovi",
+        "pokroku",
+        "pokusní",
+        "slepé",
+        "technologie",
+        "ukazuje",
+        "víry"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -470,55 +525,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Poručíme barvě mraků. Nová metoda by mohla pomoci zastavit oteplování Země",
-      "url": "https://zpravy.aktualne.cz/zahranici/porucime-barve-mraku-nova-metoda-by-mohla-pomoci-zastavit-oteplovani-zeme/r~aaa290cee9411a24c596e1fe4ce50bc3/",
-      "dt": "2026-05-10T13:21:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "barvě",
-        "metoda",
-        "mraků",
-        "nová",
-        "oteplování",
-        "pomoci",
-        "poručíme",
-        "zastavit",
-        "země"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Strašidelná generálka na MS: Nejvyšší porážka od Švýcarska v historii",
-      "url": "https://sport.aktualne.cz/hokej/strasidelna-generalka-na-ms-nejvyssi-porazka-od-svycarska-v-historii/r~aaa29bb37ff6ebccb850b6e1a1dd1bea/",
-      "dt": "2026-05-10T12:36:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "generálka",
-        "historii",
-        "nejvyšší",
-        "porážka",
-        "strašidelná",
-        "švýcarska"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -529,7 +535,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22512,
+      "bytes": 22517,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -566,13 +572,14 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-11T03:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T04:21:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 8,
+          "other": 1,
           "finance": 1,
-          "zpravy": 10,
-          "zdravi": 1,
-          "sport": 8
+          "zpravy": 9,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -584,6 +591,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Průšvih v Edenu mají na triku Tvrdík a spol. V Premier League by fotbal dělat nemohli",
+            "publishedAt": "2026-05-11T04:21:00Z"
+          },
+          {
+            "title": "Pokusní králíci pokroku. Dokument o Muskovi ukazuje dopady slepé víry v technologie",
+            "publishedAt": "2026-05-11T04:00:00Z"
+          },
           {
             "title": "Zlaté polské ručičky. Nabouraná Lancia stvořila zapomenuté socialistické monstrum",
             "publishedAt": "2026-05-11T03:45:00Z"
@@ -607,14 +622,6 @@
           {
             "title": "Jablonec udržel náskok před Hradcem",
             "publishedAt": "2026-05-10T21:19:00Z"
-          },
-          {
-            "title": "V osmifinále je už třetí Češka. Plíšková válí, v Římě zdolala další soupeřku",
-            "publishedAt": "2026-05-10T20:52:00Z"
-          },
-          {
-            "title": "Čeká se na Vladaře. Šlégr popsal, jak to bylo s Pastrňákem a MS",
-            "publishedAt": "2026-05-10T19:03:00Z"
           }
         ]
       }

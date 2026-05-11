@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-11T03:59:34.898564Z",
+  "ingestedAt": "2026-05-11T04:39:47.084595Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Cizinec na Brněnsku ujížděl od benzínek bez placení",
+      "url": "https://tydenikpolicie.cz/cizinec-na-brnensku-ujizdel-od-benzinek-bez-placeni/",
+      "dt": "2026-05-11T04:02:13Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "benzínek",
+        "brněnsku",
+        "cizinec",
+        "placení",
+        "ujížděl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -241,33 +263,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Jihočeští záchranáři zasahovali u tří nehod motorkářů. Do vzduchu vzlétl vrtulník LZS",
-      "url": "https://tydenikpolicie.cz/jihocesti-zachranari-zasahovali-u-tri-nehod-motorkaru-do-vzduchu-vzletl-vrtulnik-lzs/",
-      "dt": "2026-05-10T19:58:58Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "jihočeští",
-        "lzs",
-        "motorkářů",
-        "nehod",
-        "tří",
-        "vrtulník",
-        "vzduchu",
-        "vzlétl",
-        "zasahovali",
-        "záchranáři"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +273,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16348,
+      "bytes": 16220,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +310,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-11T02:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T04:02:13Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -330,6 +325,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cizinec na Brněnsku ujížděl od benzínek bez placení",
+            "publishedAt": "2026-05-11T04:02:13Z"
+          },
           {
             "title": "Podvodné legendy jsou bohužel stále úspěšné. Vyděšená žena poslala podvodníkům 200 tisíc korun",
             "publishedAt": "2026-05-11T02:02:00Z"
@@ -357,10 +356,6 @@
           {
             "title": "Fantomovi vloupání do vozidel se v Ostravě stala osudnou škola",
             "publishedAt": "2026-05-10T20:39:40Z"
-          },
-          {
-            "title": "Podezřelého z vloupání do sklepa v Ostravě prozradily divné zvuky. Strážníkům tvrdil, že přišel uklidit babičce",
-            "publishedAt": "2026-05-10T20:37:06Z"
           }
         ]
       }
