@@ -338,16 +338,45 @@ function buildPublicUxCorpusV2() {
     push("rcz2_dirty_note_write", "note_write", raw, "note.create", {}, { no_diacritics_corpus: true }, UX_CAT.DIRTY);
   }
 
-  const MOB_PREFIX = ["hele ", "vlastne ", "pockej ", "tyjo ", "no tak ", "btw ", ""];
   const MOB_SUFFIX = [" diky", " prosim te", " jo", "", " nevim presne"];
-  const MOB_MID = [
-    "pripomen mi zejtra rano ze mam vstat",
-    "to nedavej do kalendare ale do ukolu",
-    "ne pockej pristi utery",
-    "uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu",
-    "hod mi do ukolu koupit mliko do patku ne kalendare",
-    "mrkni kdy mam zubare v kalendari",
-    "zapis poznamku ze pin je doma SLOT"
+  /** Mobile chaos prefixes: same vocabulary per slot, rotated so writes do not share one cyclic stream. */
+  const MOB_PREFIX_CAL = ["hele ", "vlastne ", "pockej ", "tyjo ", "no tak ", "btw ", ""];
+  const MOB_PREFIX_TASK = ["tyjo ", "no tak ", "hele ", "btw ", "pockej ", "vlastne ", ""];
+  const MOB_PREFIX_NOTE = ["pockej ", "vlastne ", "tyjo ", "hele ", "no tak ", "btw ", ""];
+  /** kind===3/4 read/query rows: shared prefix pool (MOB_MID split does not apply). */
+  const MOB_PREFIX_QUERY = ["hele ", "vlastne ", "pockej ", "tyjo ", "no tak ", "btw ", ""];
+  /** kind===0 calendar_write only: calendar/event phrasing (no note/task storage cues as primary). */
+  const MOB_MID_CALENDAR_WRITE = [
+    "uloz mi prosim do kalendare __D__ v __T__ schuzku s __P__ na __A__ radek __S__ ne do ukolu",
+    "dej mi do kalendare na __D__ v __T__ udalost s __P__ __S__ ne do ukolu",
+    "zapis mi do kalendare __D__ __T__ schuzku s pravnikem __S__ ne do ukolu",
+    "pridej do kalendare __D__ v __T__ schuzku na __A__ __S__ ne do ukolu",
+    "nahod mi do kalendare __D__ v __T__ schuzku __P__ radek __S__ ne do ukolu",
+    "potrebuju ulozit do kalendare __D__ kolem __T__ na __A__ __S__ ne do ukolu",
+    "rychle nahod do kalendare __D__ v __T__ schuzku __S__ ne do ukolu",
+    "potrebuju v kalendari mit na __D__ v __T__ schuzku __P__ __S__ ne do ukolu"
+  ];
+  /** kind===1 task_write only: úkol phrasing (aligned with rcz2_dirty_task_write; no calendar/note as primary). */
+  const MOB_MID_TASK_WRITE = [
+    "hod mi do ukolu koupit __G__ __DL__ radek __S__ ne do kalendare",
+    "hod mi tam do ukolu koupit __G__ __DL__ __S__ ne do kalendare",
+    "pridej ukol __G__ na __DL__ __S__ ne do kalendare",
+    "nezapomen do ukolu __G__ __DL__ radek __S__ ne do kalendare",
+    "musim udelat v ukolu __G__ do __DL__ __S__ ne do kalendare",
+    "mam zaridit do ukolu __G__ na __DL__ slot __S__ ne do kalendare",
+    "nesmim zapomenout do ukolu __G__ __DL__ __S__ ne do kalendare",
+    "potrebuju do ukolu mit __G__ do __DL__ __S__ ne do kalendare"
+  ];
+  /** kind===2 note_write only: stejné kotvy jako rcz2_dirty_note_write (žádná schůzka / úkol / kalendář jako cíl). */
+  const MOB_MID_NOTE_WRITE = [
+    "uloz poznamku ze PIN karty je __S__",
+    "zapis poznamku ze auto ma modrou barvu __S__",
+    "uloz do poznamek heslo WiFi je __S__",
+    "zapis poznamku ze variabilni symbol je __S__",
+    "napis do poznamky ze smlouva je na __A__ __S__",
+    "uloz do poznamek cislo OP je __S__",
+    "zapis poznamku ze barva auta je modra __S__",
+    "uloz do poznamek poznamku kod __S__"
   ];
   /** rcz2_mobile_voice task_query only: real READ/QUERY úkoly (ne připomínka / poznámka / kalendář z MOB_MID). */
   const MOB_TASK_QUERY_READ = [
@@ -400,22 +429,54 @@ function buildPublicUxCorpusV2() {
       const tqb = MOB_TASK_QUERY_READ[i % MOB_TASK_QUERY_READ.length]
         .replace("SLOTGOOD", stripDiak(GOODS[i % GOODS.length]))
         .replace("SLOTDEAD", stripDiak(DEAD[i % DEAD.length]));
-      raw = applyMutationMask(MOB_PREFIX[i % MOB_PREFIX.length] + tqb + MOB_SUFFIX[(i >> 4) % MOB_SUFFIX.length], i % 128);
+      raw = applyMutationMask(MOB_PREFIX_QUERY[i % MOB_PREFIX_QUERY.length] + tqb + MOB_SUFFIX[(i >> 4) % MOB_SUFFIX.length], i % 128);
     } else if (kind === 3) {
       const cqb = MOB_CALENDAR_QUERY_READ[i % MOB_CALENDAR_QUERY_READ.length]
         .replace("SLOTGOOD", stripDiak(GOODS[i % GOODS.length]))
         .replace("SLOTDEAD", stripDiak(DEAD[i % DEAD.length]))
         .replace("SLOTIDX", String(i));
-      raw = applyMutationMask(MOB_PREFIX[i % MOB_PREFIX.length] + cqb + MOB_SUFFIX[(i >> 4) % MOB_SUFFIX.length], i % 128);
+      raw = applyMutationMask(MOB_PREFIX_QUERY[i % MOB_PREFIX_QUERY.length] + cqb + MOB_SUFFIX[(i >> 4) % MOB_SUFFIX.length], i % 128);
     } else {
-      const base = MOB_MID[i % MOB_MID.length].replace("SLOT", String(i));
-      raw = applyMutationMask(MOB_PREFIX[i % MOB_PREFIX.length] + base + MOB_SUFFIX[(i >> 4) % MOB_SUFFIX.length], i % 128);
+      const d = stripDiak(DATES[i % DATES.length]);
+      const tm = stripDiak(TMS[i % TMS.length]);
+      const p = stripDiak(PERS[i % PERS.length]);
+      const a = stripDiak(ADDR[i % ADDR.length]);
+      const g = stripDiak(GOODS[i % GOODS.length]);
+      const dl = stripDiak(DEAD[i % DEAD.length]);
+      let tpl;
+      let prefPool;
+      if (kind === 0) {
+        tpl = MOB_MID_CALENDAR_WRITE[i % MOB_MID_CALENDAR_WRITE.length];
+        prefPool = MOB_PREFIX_CAL;
+      } else if (kind === 1) {
+        tpl = MOB_MID_TASK_WRITE[i % MOB_MID_TASK_WRITE.length];
+        prefPool = MOB_PREFIX_TASK;
+      } else {
+        tpl = MOB_MID_NOTE_WRITE[i % MOB_MID_NOTE_WRITE.length];
+        prefPool = MOB_PREFIX_NOTE;
+      }
+      const base = tpl
+        .replace(/__D__/g, d)
+        .replace(/__T__/g, tm)
+        .replace(/__P__/g, p)
+        .replace(/__A__/g, a)
+        .replace(/__G__/g, g)
+        .replace(/__DL__/g, dl)
+        .replace(/__S__/g, String(i));
+      raw = applyMutationMask(prefPool[i % prefPool.length] + base + MOB_SUFFIX[(i >> 4) % MOB_SUFFIX.length], i % 128);
     }
     if (raw.length < 6) {
-      raw =
-        kind === 3
-          ? "hele mrkni kdy mam zubare v kalendari radek " + i
-          : "hele uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu radek " + i;
+      if (kind === 3) {
+        raw = "hele mrkni kdy mam zubare v kalendari radek " + i;
+      } else if (kind === 4) {
+        raw = "hele jen se podivej do ukolu co mam radek " + i;
+      } else if (kind === 0) {
+        raw = "hele uloz mi do kalendare zitra v 15 schuzku s pravnikem ne do ukolu radek " + i;
+      } else if (kind === 1) {
+        raw = "hele hod mi do ukolu koupit mliko do patku ne kalendare radek " + i;
+      } else {
+        raw = "hele zapis poznamku ze pin je doma radek " + i;
+      }
     }
     if (kind === 0) push("rcz2_mobile_voice", "calendar_write", raw, "calendar.create", {}, { mobile_czech: true }, UX_CAT.MOBILE);
     else if (kind === 1) push("rcz2_mobile_voice", "task_write", raw, "task.create", {}, { mobile_czech: true }, UX_CAT.MOBILE);
