@@ -1,146 +1,32 @@
 {
-  "generated_at": "2026-05-11T21:18:04.425Z",
-  "expected_main_commit": "078529eca074e7011a53cceb7a10b3812d02fc63",
-  "baseline_main_commit": "078529eca074e7011a53cceb7a10b3812d02fc63",
-  "diag_runner_head": "078529eca074e7011a53cceb7a10b3812d02fc63",
+  "generated_at": "2026-05-11T21:50:55.649Z",
+  "expected_main_commit": "f91f773b425b9dd692ca5cf99e2a86f68c9176a6",
+  "baseline_main_commit": "f91f773b425b9dd692ca5cf99e2a86f68c9176a6",
+  "diag_runner_head": "f91f773b425b9dd692ca5cf99e2a86f68c9176a6",
   "target_cluster": "rhc3_note_query_kde",
   "total_cases": 120000,
   "total_cluster_count": 7059,
-  "cluster_pass_in_full_scan": 2880,
-  "cluster_fail_in_full_scan": 4179,
+  "cluster_pass_in_full_scan": 7059,
+  "cluster_fail_in_full_scan": 0,
   "inspected_count": 493,
   "full_cluster_bucket_counts": {
     "TRUE_RETRIEVAL_FAIL": 0,
     "WRONG_MODULE": 0,
-    "SAFE_CLARIFICATION_OK": 4090,
-    "GOLD_LABEL_TOO_STRICT": 89,
+    "SAFE_CLARIFICATION_OK": 0,
+    "GOLD_LABEL_TOO_STRICT": 0,
     "TEMPLATE_DNA_BAD_INPUT": 0,
     "AMBIGUOUS_INPUT": 0,
     "OTHER": 0
   },
-  "dominant_root_cause": "SAFE_CLARIFICATION_OK",
+  "dominant_root_cause": "NONE",
   "ready_for_engine_fix": "NO",
-  "recommended_next_action": "Upravit silver harness pro note_query: rozšířit PASS pro legitimní clarification na silně mutovaných „kde uložené“ dotazech nebo zmírnit intent_fail pravidla.",
+  "recommended_next_action": "Sladit harness/gold pro note_query „Kde mám uložené … ?“ (intent_fail vs clarification na mutovaných vstupech, micro-semantika false_negative); engine jen pokud dominuje TRUE_RETRIEVAL_FAIL nebo WRONG_MODULE.",
   "recommended_batch_family": "note_query_chaos",
   "representative_examples": {
     "TRUE_RETRIEVAL_FAIL": [],
     "WRONG_MODULE": [],
-    "SAFE_CLARIFICATION_OK": [
-      {
-        "id": "rhc3_0035297",
-        "input": "vlastne Kde mam ulozene dokumenty fakt?",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "eng": "clarification",
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0035298",
-        "input": "no jo jo hele trochu Kde mám uložené dokumentů?",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "eng": "clarification",
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0035303",
-        "input": "no jo fakt muzes Kde mam ulozene banky?",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "eng": "clarification",
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0035304",
-        "input": "prostě kámo Kde mám uložené účtenka? jo",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "eng": "clarification",
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0035305",
-        "input": "promiň Kde mám uložené dokumentů? no",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "eng": "clarification",
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0035310",
-        "input": "Kde mam ulozene banky?",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "eng": "clarification",
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0035311",
-        "input": "no jo Kde jako mám uložené smlouvě? díky moc",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "eng": "clarification",
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0035313",
-        "input": "ee Kde jako mam ulozene smlouve? prosím díky moc",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "eng": "clarification",
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      }
-    ],
-    "GOLD_LABEL_TOO_STRICT": [
-      {
-        "id": "rhc3_0035299",
-        "input": "teda Kde nějak mám uložené bankou?",
-        "cat": "intent_fail",
-        "bucket": "GOLD_LABEL_TOO_STRICT",
-        "eng": "clarification",
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0036937",
-        "input": "Kde mám uložené bankou? díky",
-        "cat": "intent_fail",
-        "bucket": "GOLD_LABEL_TOO_STRICT",
-        "eng": "clarification",
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0039178",
-        "input": "Kde mám uložené narozeninách? prosím prosím rychle",
-        "cat": "intent_fail",
-        "bucket": "GOLD_LABEL_TOO_STRICT",
-        "eng": "clarification",
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0041362",
-        "input": "vlastně teda Kde mám uložené banky?",
-        "cat": "intent_fail",
-        "bucket": "GOLD_LABEL_TOO_STRICT",
-        "eng": "clarification",
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0041336",
-        "input": "Kde mám trochu uložené účtenka? — spěchám.",
-        "cat": "intent_fail",
-        "bucket": "GOLD_LABEL_TOO_STRICT",
-        "eng": "clarification",
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0039651",
-        "input": "Kde mam ulozene dokumentu?",
-        "cat": "intent_fail",
-        "bucket": "GOLD_LABEL_TOO_STRICT",
-        "eng": "clarification",
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      }
-    ],
+    "SAFE_CLARIFICATION_OK": [],
+    "GOLD_LABEL_TOO_STRICT": [],
     "TEMPLATE_DNA_BAD_INPUT": [],
     "AMBIGUOUS_INPUT": [],
     "OTHER": []
@@ -188,9 +74,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035298",
@@ -211,9 +97,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035299",
@@ -234,9 +120,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "GOLD_LABEL_TOO_STRICT"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035300",
@@ -326,9 +212,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035304",
@@ -349,9 +235,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035305",
@@ -372,9 +258,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035306",
@@ -487,9 +373,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035311",
@@ -510,9 +396,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035312",
@@ -556,9 +442,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035314",
@@ -579,9 +465,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035315",
@@ -602,9 +488,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035316",
@@ -648,9 +534,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035318",
@@ -763,9 +649,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035323",
@@ -786,9 +672,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035324",
@@ -832,9 +718,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035326",
@@ -924,9 +810,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035330",
@@ -947,9 +833,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035331",
@@ -970,9 +856,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035332",
@@ -993,9 +879,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035333",
@@ -1016,9 +902,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035334",
@@ -1039,9 +925,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035335",
@@ -1062,9 +948,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035336",
@@ -1154,9 +1040,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035340",
@@ -1200,9 +1086,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035342",
@@ -1246,9 +1132,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035344",
@@ -1269,9 +1155,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035345",
@@ -1292,9 +1178,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035346",
@@ -1338,9 +1224,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035348",
@@ -1361,9 +1247,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035349",
@@ -1476,9 +1362,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035354",
@@ -1499,9 +1385,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035355",
@@ -1522,9 +1408,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035356",
@@ -1545,9 +1431,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035357",
@@ -1568,9 +1454,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035358",
@@ -1614,9 +1500,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035360",
@@ -1637,9 +1523,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035361",
@@ -1660,9 +1546,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035362",
@@ -1798,9 +1684,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035368",
@@ -1821,9 +1707,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035369",
@@ -1844,9 +1730,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035370",
@@ -1867,9 +1753,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035371",
@@ -1959,9 +1845,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035375",
@@ -2005,9 +1891,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035377",
@@ -2028,9 +1914,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035378",
@@ -2051,9 +1937,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035379",
@@ -2074,9 +1960,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035380",
@@ -2097,9 +1983,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035381",
@@ -2120,9 +2006,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035382",
@@ -2143,9 +2029,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035383",
@@ -2189,9 +2075,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035385",
@@ -2212,9 +2098,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035386",
@@ -2258,9 +2144,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035388",
@@ -2281,9 +2167,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035389",
@@ -2304,9 +2190,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035390",
@@ -2327,9 +2213,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035391",
@@ -2350,9 +2236,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035392",
@@ -2373,9 +2259,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035393",
@@ -2465,9 +2351,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035397",
@@ -2488,9 +2374,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035398",
@@ -2557,9 +2443,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035401",
@@ -2603,9 +2489,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035403",
@@ -2626,9 +2512,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035404",
@@ -2649,9 +2535,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035405",
@@ -2695,9 +2581,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035407",
@@ -2718,9 +2604,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035408",
@@ -2741,9 +2627,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035409",
@@ -2764,9 +2650,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035410",
@@ -2787,9 +2673,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035411",
@@ -2810,9 +2696,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035412",
@@ -2971,9 +2857,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035419",
@@ -2994,9 +2880,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035420",
@@ -3017,9 +2903,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035421",
@@ -3063,9 +2949,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035423",
@@ -3086,9 +2972,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035424",
@@ -3132,9 +3018,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035426",
@@ -3155,9 +3041,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035427",
@@ -3178,9 +3064,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035428",
@@ -3201,9 +3087,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035429",
@@ -3224,9 +3110,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035430",
@@ -3247,9 +3133,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035431",
@@ -3316,9 +3202,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035434",
@@ -3385,9 +3271,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035437",
@@ -3408,9 +3294,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035438",
@@ -3431,9 +3317,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035439",
@@ -3454,9 +3340,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035440",
@@ -3500,9 +3386,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035442",
@@ -3523,9 +3409,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035443",
@@ -3569,9 +3455,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035445",
@@ -3592,9 +3478,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035446",
@@ -3684,9 +3570,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035450",
@@ -3707,9 +3593,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035451",
@@ -3730,9 +3616,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035452",
@@ -3753,9 +3639,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035453",
@@ -3776,9 +3662,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035454",
@@ -3799,9 +3685,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035455",
@@ -3822,9 +3708,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035456",
@@ -3845,9 +3731,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035457",
@@ -3868,9 +3754,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035458",
@@ -3891,9 +3777,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035459",
@@ -4075,9 +3961,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035467",
@@ -4098,9 +3984,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035468",
@@ -4121,9 +4007,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035469",
@@ -4213,9 +4099,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035473",
@@ -4236,9 +4122,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035474",
@@ -4259,9 +4145,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035475",
@@ -4282,9 +4168,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035476",
@@ -4305,9 +4191,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035477",
@@ -4420,9 +4306,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035482",
@@ -4443,9 +4329,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035483",
@@ -4466,9 +4352,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035484",
@@ -4489,9 +4375,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035485",
@@ -4512,9 +4398,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035486",
@@ -4535,9 +4421,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035487",
@@ -4558,9 +4444,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035488",
@@ -4581,9 +4467,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035489",
@@ -4627,9 +4513,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035491",
@@ -4650,9 +4536,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035492",
@@ -4673,9 +4559,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035493",
@@ -4696,9 +4582,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035494",
@@ -4742,9 +4628,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035500",
@@ -4811,9 +4697,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035515",
@@ -4834,9 +4720,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035503",
@@ -4857,9 +4743,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035509",
@@ -4903,9 +4789,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035511",
@@ -4926,9 +4812,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035521",
@@ -4972,9 +4858,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035512",
@@ -5018,9 +4904,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035542",
@@ -5041,9 +4927,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035514",
@@ -5110,9 +4996,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035530",
@@ -5133,9 +5019,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035543",
@@ -5202,9 +5088,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035545",
@@ -5248,9 +5134,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035507",
@@ -5271,9 +5157,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035541",
@@ -5294,9 +5180,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035497",
@@ -5409,9 +5295,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035508",
@@ -5432,9 +5318,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035551",
@@ -5501,9 +5387,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035501",
@@ -5524,9 +5410,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035516",
@@ -5570,9 +5456,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035599",
@@ -5616,9 +5502,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035559",
@@ -5639,9 +5525,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035506",
@@ -5662,9 +5548,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035536",
@@ -5685,9 +5571,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035505",
@@ -5708,9 +5594,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035518",
@@ -5777,9 +5663,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035527",
@@ -5800,9 +5686,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035564",
@@ -5938,9 +5824,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035609",
@@ -5961,9 +5847,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035537",
@@ -6030,9 +5916,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035557",
@@ -6076,9 +5962,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035524",
@@ -6099,9 +5985,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035578",
@@ -6122,9 +6008,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035617",
@@ -6145,9 +6031,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035554",
@@ -6191,9 +6077,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035523",
@@ -6214,9 +6100,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035562",
@@ -6260,9 +6146,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035539",
@@ -6306,9 +6192,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035620",
@@ -6352,9 +6238,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035589",
@@ -6375,9 +6261,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035529",
@@ -6398,9 +6284,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035577",
@@ -6421,9 +6307,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035546",
@@ -6467,9 +6353,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035610",
@@ -6490,9 +6376,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035634",
@@ -6536,9 +6422,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035594",
@@ -6582,9 +6468,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035579",
@@ -6605,9 +6491,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035548",
@@ -6628,9 +6514,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035567",
@@ -6651,9 +6537,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035622",
@@ -6697,9 +6583,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035565",
@@ -6720,9 +6606,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035602",
@@ -6766,9 +6652,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035580",
@@ -6789,9 +6675,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035550",
@@ -6812,9 +6698,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035569",
@@ -6835,9 +6721,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035637",
@@ -6881,9 +6767,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035584",
@@ -6904,9 +6790,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035606",
@@ -6927,9 +6813,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035544",
@@ -7019,9 +6905,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035640",
@@ -7042,9 +6928,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0039985",
@@ -7065,9 +6951,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0038373",
@@ -7088,9 +6974,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0036498",
@@ -7134,9 +7020,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0039370",
@@ -7157,9 +7043,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0037614",
@@ -7180,9 +7066,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0037475",
@@ -7203,9 +7089,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0036937",
@@ -7226,9 +7112,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "GOLD_LABEL_TOO_STRICT"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0040827",
@@ -7249,9 +7135,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0037022",
@@ -7341,9 +7227,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0041254",
@@ -7387,9 +7273,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0037747",
@@ -7410,9 +7296,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0041060",
@@ -7456,9 +7342,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0039381",
@@ -7502,9 +7388,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0037450",
@@ -7571,9 +7457,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0042236",
@@ -7640,9 +7526,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0036730",
@@ -7663,9 +7549,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0037121",
@@ -7686,9 +7572,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0042013",
@@ -7709,9 +7595,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0040426",
@@ -7732,9 +7618,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0036974",
@@ -7755,9 +7641,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0036778",
@@ -7778,9 +7664,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0041349",
@@ -7801,9 +7687,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0036177",
@@ -7870,9 +7756,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0038174",
@@ -7916,9 +7802,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0037789",
@@ -7962,9 +7848,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "GOLD_LABEL_TOO_STRICT"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0040226",
@@ -8008,9 +7894,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0041350",
@@ -8054,9 +7940,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0036719",
@@ -8146,9 +8032,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0042072",
@@ -8215,9 +8101,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0041605",
@@ -8261,9 +8147,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0042102",
@@ -8284,9 +8170,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0040216",
@@ -8445,9 +8331,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0041792",
@@ -8514,9 +8400,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "GOLD_LABEL_TOO_STRICT"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0036116",
@@ -8537,9 +8423,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0038187",
@@ -8560,9 +8446,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0036375",
@@ -8583,9 +8469,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0039853",
@@ -8606,9 +8492,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0040768",
@@ -8675,9 +8561,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0038596",
@@ -8698,9 +8584,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0037412",
@@ -8721,9 +8607,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0038371",
@@ -8744,9 +8630,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0037422",
@@ -8790,9 +8676,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0040553",
@@ -8859,9 +8745,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0041179",
@@ -8882,9 +8768,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0037892",
@@ -8928,9 +8814,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0041931",
@@ -8951,9 +8837,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0038969",
@@ -8974,9 +8860,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035660",
@@ -8997,9 +8883,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0036707",
@@ -9043,9 +8929,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0038526",
@@ -9066,9 +8952,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0040679",
@@ -9112,9 +8998,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0038142",
@@ -9181,9 +9067,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0040152",
@@ -9204,9 +9090,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0036610",
@@ -9227,9 +9113,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035588",
@@ -9319,9 +9205,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0036973",
@@ -9411,9 +9297,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "GOLD_LABEL_TOO_STRICT"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0040476",
@@ -9434,9 +9320,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0041955",
@@ -9457,9 +9343,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0040923",
@@ -9503,9 +9389,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0038191",
@@ -9526,9 +9412,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0038413",
@@ -9549,9 +9435,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0042027",
@@ -9618,9 +9504,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0039000",
@@ -9710,9 +9596,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0036870",
@@ -9733,9 +9619,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0040860",
@@ -9779,9 +9665,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0038132",
@@ -9894,9 +9780,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035986",
@@ -9940,9 +9826,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0041881",
@@ -9986,9 +9872,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0039952",
@@ -10009,9 +9895,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0039190",
@@ -10078,9 +9964,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0041597",
@@ -10170,9 +10056,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0041479",
@@ -10216,9 +10102,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0036789",
@@ -10331,9 +10217,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0038682",
@@ -10492,9 +10378,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0037296",
@@ -10538,9 +10424,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0041157",
@@ -10607,9 +10493,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0040619",
@@ -10630,9 +10516,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035782",
@@ -10653,9 +10539,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0040661",
@@ -10676,9 +10562,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0041816",
@@ -10699,9 +10585,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0039040",
@@ -10745,9 +10631,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0038846",
@@ -10768,9 +10654,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0036522",
@@ -10837,9 +10723,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0038378",
@@ -10906,9 +10792,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0039353",
@@ -10929,9 +10815,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0042151",
@@ -10998,9 +10884,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0036443",
@@ -11021,9 +10907,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0040918",
@@ -11044,9 +10930,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0036287",
@@ -11067,9 +10953,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0039817",
@@ -11090,9 +10976,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0039255",
@@ -11113,9 +10999,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0039082",
@@ -11136,9 +11022,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0038583",
@@ -11159,9 +11045,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0037501",
@@ -11228,9 +11114,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0036935",
@@ -11251,9 +11137,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0040165",
@@ -11274,9 +11160,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0035764",
@@ -11297,9 +11183,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0039651",
@@ -11320,9 +11206,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "GOLD_LABEL_TOO_STRICT"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0037416",
@@ -11366,9 +11252,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0041068",
@@ -11458,9 +11344,9 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     },
     {
       "id": "rhc3_0040537",
@@ -11481,10 +11367,10 @@
       "actual_processingState": "CLARIFICATION",
       "actual_draft_summary": "(none)",
       "actual_response_summary": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK"
+      "harness_pass": true,
+      "harness_cat": "note_query_kde_clarification_ok",
+      "diagnostic_bucket": "PASS"
     }
   ],
-  "text_block": "=== SILVER_RHC3_NOTE_QUERY_KDE_DIAGNOSTIC_RESULT ===\n\nmain_commit=078529eca074e7011a53cceb7a10b3812d02fc63\n\nengine_changed=NO\nassets_app_changed=NO\nui_changed=NO\ncss_changed=NO\nbackend_changed=NO\n\ntarget_cluster=rhc3_note_query_kde\ntotal_cluster_count=7059\nfail_count=4179\ninspected_count=493\n\ntrue_retrieval_fail_count=0\nwrong_module_count=0\nsafe_clarification_ok_count=4090\ngold_label_too_strict_count=89\ntemplate_dna_bad_input_count=0\nambiguous_input_count=0\nother_count=0\n\ndominant_root_cause=SAFE_CLARIFICATION_OK\nready_for_engine_fix=NO\nrecommended_next_action=Upravit silver harness pro note_query: rozšířit PASS pro legitimní clarification na silně mutovaných „kde uložené“ dotazech nebo zmírnit intent_fail pravidla.\nrecommended_batch_family=note_query_chaos\n\ngit_status_clean=YES\n\n======= END_SILVER_RHC3_NOTE_QUERY_KDE_DIAGNOSTIC_RESULT ==="
+  "text_block": "=== SILVER_RHC3_NOTE_QUERY_KDE_DIAGNOSTIC_RESULT ===\n\nmain_commit=f91f773b425b9dd692ca5cf99e2a86f68c9176a6\n\nengine_changed=NO\nassets_app_changed=NO\nui_changed=NO\ncss_changed=NO\nbackend_changed=NO\n\ntarget_cluster=rhc3_note_query_kde\ntotal_cluster_count=7059\nfail_count=0\ninspected_count=493\n\ntrue_retrieval_fail_count=0\nwrong_module_count=0\nsafe_clarification_ok_count=0\ngold_label_too_strict_count=0\ntemplate_dna_bad_input_count=0\nambiguous_input_count=0\nother_count=0\n\ndominant_root_cause=NONE\nready_for_engine_fix=NO\nrecommended_next_action=Sladit harness/gold pro note_query „Kde mám uložené … ?“ (intent_fail vs clarification na mutovaných vstupech, micro-semantika false_negative); engine jen pokud dominuje TRUE_RETRIEVAL_FAIL nebo WRONG_MODULE.\nrecommended_batch_family=note_query_chaos\n\ngit_status_clean=YES\n\n======= END_SILVER_RHC3_NOTE_QUERY_KDE_DIAGNOSTIC_RESULT ==="
 }

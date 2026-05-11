@@ -10,7 +10,7 @@ const { execSync } = require("child_process");
 const REPO = path.resolve(__dirname, "..");
 const REPORT_JSON = path.join(__dirname, "silver-rhc3-note-query-kde-diagnostic-report.json");
 
-const EXPECTED_MAIN_COMMIT = "078529eca074e7011a53cceb7a10b3812d02fc63";
+const EXPECTED_MAIN_COMMIT = "f91f773b425b9dd692ca5cf99e2a86f68c9176a6";
 const TARGET_CLUSTER = "rhc3_note_query_kde";
 const RANDOM_SAMPLE_SEED = 0x4b64654d;
 const STRATA = 8;
@@ -26,7 +26,8 @@ const {
   computeGoldLabels,
   finalizeModuleSwitchHarnessEval,
   finalizeModuleSwitchClarifyLaneHarnessEval,
-  finalizeNegationNoWriteHarnessEval
+  finalizeNegationNoWriteHarnessEval,
+  finalizeNoteQueryKdeHarnessEval
 } = rhc3;
 const harness = require("./audit_silver_realistic_mobile_corpus.cjs");
 
@@ -233,6 +234,8 @@ function gitAllowListClean() {
     const lines = o.split(/\r?\n/).filter(Boolean);
     const tracked = lines.filter((l) => !l.startsWith("??"));
     const allow = [
+      "scripts/silver-real-human-chaos-v3.cjs",
+      "scripts/silver-real-human-chaos-v3-report.json",
       "scripts/silver-rhc3-note-query-kde-diagnostic.cjs",
       "scripts/silver-rhc3-note-query-kde-diagnostic-report.json"
     ];
@@ -350,6 +353,7 @@ function main() {
       ev = finalizeModuleSwitchHarnessEval(c, turn, ev);
       ev = finalizeModuleSwitchClarifyLaneHarnessEval(c, turn, ev);
       ev = finalizeNegationNoWriteHarnessEval(c, turn, ev);
+      ev = finalizeNoteQueryKdeHarnessEval(c, turn, ev);
     } catch (e) {
       clusterFail++;
       turn = { normalizedIntent: "", processingState: "", draft: {} };
