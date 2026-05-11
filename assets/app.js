@@ -38289,7 +38289,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bco\s+mam\b/.test(x) ||
       /\bco\s+mame\b/.test(x) ||
       /\bkde\s+mam\b/.test(x) ||
-      /\bkde\s+mame\b/.test(x);
+      /\bkde\s+mame\b/.test(x) ||
+      /** P1 note_retrieval_fail: „Jaká adresa … v poznámkách?“ → notes.read (ne WRITE_SCHED_PROBE / storage). */
+      /\b(jakou|jaka|jake)\s+adres\w*/.test(x);
     if (!readVerb) return false;
     if (/\bdo\s+ukol\w*\b/.test(x) && !/\bdo\s+poznam/.test(x)) return false;
     if (/\bv\s+ukolech\b/.test(x) && !/\bv\s+poznamk/.test(x) && !/\bdo\s+poznam/.test(x)) return false;
@@ -42577,6 +42579,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /^\s*vyhledej\s+pozn[aá]mk[^\s]*\s+/i,
       /^\s*hled[aá]m\s+pozn[aá]mk[^\s]*\s+/i,
       /^\s*(jaky|jake)\s+(je|m[aá]m)\s+/i,
+      /** P1 note_retrieval_fail: „Jaká adresa je u zubaře v poznámkách?“ — scaffold + modulový tail; raw má diakritiku (ASCII-only „jaka“ nechytí). */
+      /^\s*(jak[aá]|jakou)\s+adres\w*\s+(je|jsou)\s+u\s+/i,
+      /^\s*(jak[aá]|jakou)\s+adres\w*\s+(je|jsou)\s+/i,
+      /\s+v\s+pozn[aá]mk[^\s]*\s*[?.!:;,]*$/i,
       /^\s*kde\s+(je|jsou|m[aá]m|m[eě]la|m[eě]l)\s+/i,
       /^\s*kde\s+m[aá]m\s+(ulozen\w*|poznamenan\w*)\s+/i,
       /^\s*(jakou|jaka)\s+barvu\s+m[eě]lo\s+/i,
