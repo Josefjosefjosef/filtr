@@ -210,10 +210,12 @@ function evaluateVagueTimePolicy(c, turn, prior) {
   if (c.product_cluster !== "vague_time_policy") return prior;
   const eng = turn.normalizedIntent;
   const ps = turn.processingState;
-  if (ps === "READY_TO_SAVE" && (eng === "calendar.create" || eng === "tasks.create")) {
-    return { pass: false, cat: "vague_time_overcommit", auditIntent: String(eng), raw: prior.raw };
-  }
-  return prior;
+  if (ps !== "READY_TO_SAVE" || (eng !== "calendar.create" && eng !== "tasks.create")) return prior;
+  const fin = foldCs(String(c.input || ""));
+  /** P1: jen skutečný overcommit — „někdy“ + denní část; ne bezpečné okno „po obědě“ / „kolem sedmé“. */
+  const vagueNekdyDayPart = /\bnekdy\b/.test(fin) && /\b(vecer|rano|dopoledne|odpoledne|noc)\b/.test(fin);
+  if (!vagueNekdyDayPart) return prior;
+  return { pass: false, cat: "vague_time_overcommit", auditIntent: String(eng), raw: prior.raw };
 }
 
 function buildScreenshotCases() {
