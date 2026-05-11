@@ -1,24 +1,51 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-11T10:14:19.319373Z",
+  "ingestedAt": "2026-05-11T10:54:42.815073Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Policie zahájila trestní řízení s chuligány z derby, další aktéry vyzývá k přiznání",
+      "title": "Krok do neznáma. Tak se předveďte! Mladí test zvládli, teď se ale očekávají výsledky",
+      "url": "https://www.idnes.cz/hokej/ms-2026/mladi-hokejiste-na-ms-priprava-nominace.A260511_102228_ms-hokej-2026_mama",
+      "dt": "2026-05-11T10:17:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "ale",
+        "krok",
+        "mladí",
+        "neznáma",
+        "očekávají",
+        "předveďte",
+        "tak",
+        "test",
+        "výsledky",
+        "zvládli"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Přihlaste se, vyzývá policie fanoušky, kteří\nvtrhli na hřiště. Už zahájila trestní řízení",
       "url": "https://www.idnes.cz/fotbal/prvni-liga/policie-zahajila-trestni-rizeni-s-chuligany-z-derby-dalsi-aktery-vyzyva-k-priznani.A260511_115313_fotbal_kazdt",
       "dt": "2026-05-11T09:59:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "aktéry",
-        "chuligány",
-        "další",
-        "derby",
+        "fanoušky",
+        "hřiště",
+        "kteří",
         "policie",
-        "přiznání",
+        "přihlaste",
         "trestní",
+        "vtrhli",
         "vyzývá",
         "zahájila",
         "řízení"
@@ -761,31 +788,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bartůňková v Římě způsobila senzaci, v osmifinále je i Plíšková. Lehečka končí",
-      "url": "https://www.idnes.cz/sport/tenis/rim-antuka-masters-souhrn-vysledky.A260510_071722_tenis_ipet",
-      "dt": "2026-05-10T19:54:56Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bartůňková",
-        "končí",
-        "lehečka",
-        "osmifinále",
-        "plíšková",
-        "senzaci",
-        "způsobila",
-        "římě"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48045,
+      "bytes": 47978,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,7 +835,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-11T09:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T10:17:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -849,7 +851,11 @@
         },
         "sample_titles": [
           {
-            "title": "Policie zahájila trestní řízení s chuligány z derby, další aktéry vyzývá k přiznání",
+            "title": "Krok do neznáma. Tak se předveďte! Mladí test zvládli, teď se ale očekávají výsledky",
+            "publishedAt": "2026-05-11T10:17:00Z"
+          },
+          {
+            "title": "Přihlaste se, vyzývá policie fanoušky, kteří\nvtrhli na hřiště. Už zahájila trestní řízení",
             "publishedAt": "2026-05-11T09:59:00Z"
           },
           {
@@ -875,10 +881,6 @@
           {
             "title": "Je nutné rozhodnout do úterý, říká šéf disciplinárky. Jak je to s odečtem bodů?",
             "publishedAt": "2026-05-11T08:31:00Z"
-          },
-          {
-            "title": "Česká kolová po letech opět na nejvyšším stupni. Adam a Horák vyhráli turnaj SP",
-            "publishedAt": "2026-05-11T08:14:00Z"
           }
         ]
       }

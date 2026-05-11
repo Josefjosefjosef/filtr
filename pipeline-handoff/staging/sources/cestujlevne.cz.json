@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-05-11T10:14:19.319373Z",
+  "ingestedAt": "2026-05-11T10:54:42.815073Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Severní Makedonie z Prahy v červnu i v červenci. Letenky od 978 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/severni-makedonie-z-prahy-v-cervnu-i-v-cervenci",
+      "dt": "2026-05-11T10:14:44Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "978",
+        "letenky",
+        "makedonie",
+        "prahy",
+        "severní",
+        "červenci",
+        "červnu"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -481,31 +505,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Gran Canaria na týden z Prahy s all-inclusive. Zájezd od 13 490 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/gran-canaria-na-tyden-z-prahy-s-all-inclusive",
-      "dt": "2026-04-30T08:35:33Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "490",
-        "all",
-        "canaria",
-        "gran",
-        "inclusive",
-        "prahy",
-        "týden",
-        "zájezd"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -516,7 +515,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 47403,
+      "bytes": 46648,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -553,7 +552,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-11T08:43:30Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T10:14:44Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -568,6 +567,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Severní Makedonie z Prahy v červnu i v červenci. Letenky od 978 Kč",
+            "publishedAt": "2026-05-11T10:14:44Z"
+          },
           {
             "title": "Marsa Matrouh z Brna do 4* hotelu s all inclusive soft. Zájezd od 8 990 Kč",
             "publishedAt": "2026-05-11T08:43:30Z"
@@ -595,10 +598,6 @@
           {
             "title": "Madeira na týden se snídaní z Prahy. Zájezd od 7 990 Kč",
             "publishedAt": "2026-05-06T17:38:18Z"
-          },
-          {
-            "title": "Jarní Mallorca s all-inclusive z Prahy v květnu. Zájezd od 8 990 Kč",
-            "publishedAt": "2026-05-06T13:49:30Z"
           }
         ]
       }
