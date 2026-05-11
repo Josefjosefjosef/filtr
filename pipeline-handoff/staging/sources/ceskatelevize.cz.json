@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-11T20:04:17.013459Z",
+  "ingestedAt": "2026-05-11T20:44:07.983289Z",
   "items": [
     {
       "section": "aktualne",
@@ -372,20 +372,20 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Policie po derby vyšetřuje i napadení v sektoru hostí či poničení sedaček",
+      "title": "Slavia zakáže pyrotechniku i kukly, prohlásil šéf klubu Tvrdík",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/stastny-chce-kvuli-vytrznostem-na-derby-vytvorit-pracovni-skupinu-373292",
       "dt": "2026-05-11T10:02:47Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "derby",
-        "hostí",
-        "napadení",
-        "policie",
-        "poničení",
-        "sedaček",
-        "sektoru",
-        "vyšetřuje"
+        "klubu",
+        "kukly",
+        "prohlásil",
+        "pyrotechniku",
+        "slavia",
+        "tvrdík",
+        "zakáže",
+        "šéf"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -748,6 +748,30 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Brno doplnilo semifinálové složení play-off NBL",
+      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/brno-doplnilo-semifinalove-slozeni-play-off-nbl-156728",
+      "dt": "2026-05-11T20:37:21Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "brno",
+        "doplnilo",
+        "nbl",
+        "off",
+        "play",
+        "semifinálové",
+        "složení"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Artis zvítězil v Opavě a sebral Slezanům poslední naději na baráž",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/druha-fotbalova-liga-opava-artis-brno-156725",
       "dt": "2026-05-11T14:50:00Z",
@@ -991,7 +1015,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Nosková v Římě na Cirsteaovou nestačila, vypadla také Bartůňková",
+      "title": "Nosková v Římě na Cirsteaovou nestačila, vypadly také Bartůňková a Plíěková",
       "url": "https://sport.ceskatelevize.cz/clanek/tenis/noskova-v-rime-na-cirsteaovou-nestacila-156716",
       "dt": "2026-05-11T11:14:19Z",
       "media_raw": "ČT sport",
@@ -1001,8 +1025,9 @@
         "cirsteaovou",
         "nestačila",
         "nosková",
+        "plíěková",
         "také",
-        "vypadla",
+        "vypadly",
         "římě"
       ],
       "feedCategory": "sport",
@@ -1466,32 +1491,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Chorý a Douděra byli vyřazeni z kádru Slavie a dostali svolení k přestupu",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/chory-a-doudera-byli-vyrazeni-z-kadru-slavie-a-dostali-svoleni-k-prestupu-156696",
-      "dt": "2026-05-10T12:37:59Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "byli",
-        "chorý",
-        "dostali",
-        "douděra",
-        "kádru",
-        "přestupu",
-        "slavie",
-        "svolení",
-        "vyřazeni"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1502,7 +1501,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43008,
+      "bytes": 43004,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1621,7 +1620,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38517,
+      "bytes": 38571,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1658,7 +1657,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-11T14:50:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T20:37:21Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1673,6 +1672,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Brno doplnilo semifinálové složení play-off NBL",
+            "publishedAt": "2026-05-11T20:37:21Z"
+          },
           {
             "title": "Artis zvítězil v Opavě a sebral Slezanům poslední naději na baráž",
             "publishedAt": "2026-05-11T14:50:00Z"
@@ -1700,10 +1703,6 @@
           {
             "title": "Pavlát se vrací z Finska, posílí Rytíře",
             "publishedAt": "2026-05-11T12:15:40Z"
-          },
-          {
-            "title": "Češi si letos ve Spenglerově poháru nezahrají",
-            "publishedAt": "2026-05-11T12:00:10Z"
           }
         ]
       }
@@ -1715,7 +1714,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78216,
+      "bytes": 78232,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-11T20:04:17.013459Z",
+  "ingestedAt": "2026-05-11T20:44:07.983289Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Brněnští basketbalisté dokonali velký obrat a jsou v semifinále",
+      "url": "https://www.sport.cz/clanek/basketbal-brnensti-basketbaliste-dokonali-velky-obrat-a-jsou-v-semifinale-5452925",
+      "dt": "2026-05-11T20:24:26Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "basketbalisté",
+        "brněnští",
+        "dokonali",
+        "obrat",
+        "semifinále",
+        "velký"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -720,31 +743,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "„Do nominace se nevešel.“ Rulík si měl rozebírané škrty obhájit i veřejně",
-      "url": "https://www.sport.cz/clanek/podcasty-za-mantinelem-do-nominace-se-nevesel-rulik-si-mel-rozebirane-skrty-obhajit-i-verejne-5452635",
-      "dt": "2026-05-11T12:10:30Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "měl",
-        "nevešel",
-        "nominace",
-        "obhájit",
-        "rozebírané",
-        "rulík",
-        "veřejně",
-        "škrty"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -755,7 +753,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44789,
+      "bytes": 44558,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -792,7 +790,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-11T19:45:02Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T20:24:26Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -807,6 +805,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Brněnští basketbalisté dokonali velký obrat a jsou v semifinále",
+            "publishedAt": "2026-05-11T20:24:26Z"
+          },
           {
             "title": "Černý den pro české tenistky. Plíšková, Bartůňková i Nosková končí",
             "publishedAt": "2026-05-11T05:49:48Z"
@@ -834,10 +836,6 @@
           {
             "title": "PŘÍMÁK: Tohle je konec! Šéf Slavie se drsně vymezil vůči reakci Tribuny Sever",
             "publishedAt": "2026-05-11T13:33:08Z"
-          },
-          {
-            "title": "Všichni v kabině věděli, že tolerance končí. Nešlo o populistické gesto, říká Tvrdík o vyřazení Chorého a Douděry",
-            "publishedAt": "2026-05-11T18:11:21Z"
           }
         ]
       }
