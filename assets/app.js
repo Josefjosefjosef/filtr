@@ -37779,6 +37779,83 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P1 silver_explicit_module_disambiguation: explicit cross-module switch via negation.
+   * Detects "(ne|nedávej|nedáv|nechci|místo) do kalendáře … do úkolů" or symmetric variant
+   * where the negation of one module precedes the positive cue of the other module
+   * (i.e. user is switching modules mid-utterance: e.g. „vlastně to nedávej do kalendáře ale do úkolů“).
+   * Returns true only when there is no positive cue of the negated module before the negation
+   * (i.e. „uloz do kalendáře … ne do úkolů“ stays untouched — positive comes first → write proceeds).
+   * Used to surface a safe clarification(unknown) instead of routing to the negated module.
+   */
+  function iuSilverExplicitModuleSwitchAmbiguityFolded(folded) {
+    const x = String(folded || "").trim();
+    if (!x) return false;
+    if (!/\bdo\s+kalendar/.test(x) || !/\bdo\s+ukol/.test(x)) return false;
+
+    const NEG_PRE = "(?:ne|nedavej|nedav|nechci|nechte|misto|nejak)\\s+(?:to\\s+)?";
+    const negCalRe = new RegExp("\\b" + NEG_PRE + "(?:do|v)\\s+(?:toho\\s+)?kalendar\\w*", "g");
+    const negTaskRe = new RegExp("\\b" + NEG_PRE + "(?:do|v)\\s+(?:tom\\s+|toho\\s+)?ukol\\w*", "g");
+    const allCalRe = /\bdo\s+kalendar\w*/g;
+    const allTaskRe = /\bdo\s+ukol\w*/g;
+
+    function collectRanges(re) {
+      const arr = [];
+      re.lastIndex = 0;
+      let m;
+      while ((m = re.exec(x)) !== null) {
+        arr.push([m.index, m.index + m[0].length]);
+      }
+      re.lastIndex = 0;
+      return arr;
+    }
+    const negCalRanges = collectRanges(negCalRe);
+    const negTaskRanges = collectRanges(negTaskRe);
+
+    function firstIdxOutsideRanges(re, ranges) {
+      re.lastIndex = 0;
+      let m;
+      while ((m = re.exec(x)) !== null) {
+        let inside = false;
+        for (let ri = 0; ri < ranges.length; ri++) {
+          const r = ranges[ri];
+          if (r[0] <= m.index && m.index < r[1]) {
+            inside = true;
+            break;
+          }
+        }
+        if (!inside) {
+          re.lastIndex = 0;
+          return m.index;
+        }
+      }
+      re.lastIndex = 0;
+      return -1;
+    }
+
+    const negCalIdx = negCalRanges.length > 0 ? negCalRanges[0][0] : -1;
+    const negTaskIdx = negTaskRanges.length > 0 ? negTaskRanges[0][0] : -1;
+    const posCalIdx = firstIdxOutsideRanges(allCalRe, negCalRanges);
+    const posTaskIdx = firstIdxOutsideRanges(allTaskRe, negTaskRanges);
+
+    const explicitCalWriteRe = /\b(?:uloz|dej|nahod|napis|zapis|pridej|vytvor|hod|naplanuj|zaloz|zanes|pripis|poznamenej)\w*\s+(?:mi\s+|to\s+|si\s+|tam\s+)?(?:do|v)\s+(?:toho\s+)?kalendar/;
+    const explicitTaskWriteRe = /\b(?:uloz|dej|nahod|napis|zapis|pridej|vytvor|hod|naplanuj|zaloz|zanes|pripis|poznamenej)\w*\s+(?:mi\s+|to\s+|si\s+|tam\s+)?(?:do|v)\s+(?:tom\s+|toho\s+)?ukol/;
+    const hasExplicitCalWrite = explicitCalWriteRe.test(x);
+    const hasExplicitTaskWrite = explicitTaskWriteRe.test(x);
+
+    if (negCalIdx >= 0 && posTaskIdx >= 0 && negCalIdx < posTaskIdx) {
+      if (posCalIdx < 0 || negCalIdx <= posCalIdx) {
+        if (!hasExplicitTaskWrite && !hasExplicitCalWrite) return true;
+      }
+    }
+    if (negTaskIdx >= 0 && posCalIdx >= 0 && negTaskIdx < posCalIdx) {
+      if (posTaskIdx < 0 || negTaskIdx <= posTaskIdx) {
+        if (!hasExplicitTaskWrite && !hasExplicitCalWrite) return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * P0 task_write_06007: read-only lead („jen zjisti“, „jen čti“, …) před prvním „do úkolů“
    * + explicitní cíl úkolů → konflikt; žádný task.create (ambiguous_write / unknown).
    */
@@ -38218,6 +38295,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       };
     }
     if (iuSilverGlobalWriteNegationConflictsExplicitModuleWriteFolded(raw, folded)) {
+      return {
+        intent: "unknown",
+        confidence: 0.92,
+        route: "fallback",
+        reason: "ambiguous_write",
+        kind: "AMBIGUOUS_WRITE",
+        calendarFallbackWanted: false
+      };
+    }
+    if (iuSilverExplicitModuleSwitchAmbiguityFolded(folded)) {
       return {
         intent: "unknown",
         confidence: 0.92,
@@ -46212,6 +46299,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
 
     if (iuSilverGlobalWriteNegationConflictsExplicitModuleWriteFolded(raw, folded)) {
+      return baseClarification("ambiguous_write", "unknown");
+    }
+
+    if (iuSilverExplicitModuleSwitchAmbiguityFolded(folded)) {
       return baseClarification("ambiguous_write", "unknown");
     }
 
