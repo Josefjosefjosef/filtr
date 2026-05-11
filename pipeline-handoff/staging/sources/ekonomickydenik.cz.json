@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-11T12:14:30.714357Z",
+  "ingestedAt": "2026-05-11T12:55:40.916982Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Krizový manuál pro aerolinky. Zdražování letenek zpětně je nepřípustné",
+      "url": "https://ekonomickydenik.cz/krizovy-manual-pro-aerolinky-zdrazovani-letenek-zpetne-je-nepripustne/",
+      "dt": "2026-05-11T12:40:15Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "aerolinky",
+        "krizový",
+        "letenek",
+        "manuál",
+        "nepřípustné",
+        "zdražování",
+        "zpětně"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Pražské letiště změní navigační systém. Současný vizuál je starý 20 let",
+      "url": "https://ekonomickydenik.cz/prazske-letiste-navigace-cestujici/",
+      "dt": "2026-05-11T12:30:33Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "let",
+        "letiště",
+        "navigační",
+        "pražské",
+        "současný",
+        "starý",
+        "systém",
+        "vizuál",
+        "změní"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -735,57 +785,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Odklon letadla a zpoždění. Policie zasahovala kvůli dronu na pražském letišti",
-      "url": "https://ekonomickydenik.cz/odklon-letadla-zpozdeni-policie-dron-letiste/",
-      "dt": "2026-05-08T15:42:34Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "dronu",
-        "kvůli",
-        "letadla",
-        "letišti",
-        "odklon",
-        "policie",
-        "pražském",
-        "zasahovala",
-        "zpoždění"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "„Tak mi to nevyšlo, no.“ Prezident by mohl být velkorysý, říká Babiš o zpoždění",
-      "url": "https://ekonomickydenik.cz/prezident-velkorysy-babis-zpozdeni/",
-      "dt": "2026-05-08T13:38:32Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "babiš",
-        "být",
-        "nevyšlo",
-        "prezident",
-        "tak",
-        "velkorysý",
-        "zpoždění",
-        "říká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 68821,
+      "bytes": 67945,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,12 +832,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-11T11:45:47Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T12:40:15Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 26,
-          "zdravi": 1,
-          "zpravy": 3
+          "zpravy": 3,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -850,6 +849,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Krizový manuál pro aerolinky. Zdražování letenek zpětně je nepřípustné",
+            "publishedAt": "2026-05-11T12:40:15Z"
+          },
+          {
+            "title": "Pražské letiště změní navigační systém. Současný vizuál je starý 20 let",
+            "publishedAt": "2026-05-11T12:30:33Z"
+          },
           {
             "title": "Babiš plní slib: Rozšíří úlevy podnikům od drahých povolenek. Kolik to bude stát?",
             "publishedAt": "2026-05-11T11:45:47Z"
@@ -873,14 +880,6 @@
           {
             "title": "Íránský návrh na mír narazil: Trump jej označil za nepřijatelný",
             "publishedAt": "2026-05-11T05:27:42Z"
-          },
-          {
-            "title": "Evropskou politiku ovládá čínská lobby, tvrdí Světlík. Přežijí poslední zbytky jeho impéria?",
-            "publishedAt": "2026-05-11T04:05:00Z"
-          },
-          {
-            "title": "Sázka na slunce může zachránit klimatické cíle Evropy a šetří peníze za ropu",
-            "publishedAt": "2026-05-10T17:15:00Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-05-11T12:14:30.714357Z",
+  "ingestedAt": "2026-05-11T12:55:40.916982Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "GTA 6 má stát přes miliardu dolarů. Šlo by o zdaleka nejdražší hru v historii - INDIAN",
+      "url": "https://indian-tv.cz/clanek/gta-6-ma-stat-pres-miliardu-dolaru-jx9ira",
+      "dt": "2026-05-11T12:20:03Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "dolarů",
+        "gta",
+        "historii",
+        "hru",
+        "indian",
+        "miliardu",
+        "nejdražší",
+        "stát",
+        "zdaleka",
+        "šlo"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1030,32 +1057,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Tahle hlína potřebovala ještě chvíli v peci - recenze Kiln - INDIAN",
-      "url": "https://indian-tv.cz/recenze/kiln-evyneq",
-      "dt": "2026-05-06T15:24:15Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "chvíli",
-        "hlína",
-        "indian",
-        "ještě",
-        "kiln",
-        "peci",
-        "potřebovala",
-        "recenze",
-        "tahle"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1066,7 +1067,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 236696,
+      "bytes": 237055,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1103,7 +1104,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-11T11:47:07Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T12:20:03Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1118,6 +1119,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "GTA 6 má stát přes miliardu dolarů. Šlo by o zdaleka nejdražší hru v historii - INDIAN",
+            "publishedAt": "2026-05-11T12:20:03Z"
+          },
           {
             "title": "Hudební adventura Mixtape rozděluje kritiky a hráče na dva tábory - INDIAN",
             "publishedAt": "2026-05-11T11:47:07Z"
@@ -1145,10 +1150,6 @@
           {
             "title": "Hunting Simulator 3 láká na realistický lov, dynamické ekosystémy i věrného psa po boku - INDIAN",
             "publishedAt": "2026-05-11T05:32:58Z"
-          },
-          {
-            "title": "Peter Molyneux: Slibotechna, nebo vizionář? - INDIAN",
-            "publishedAt": "2026-05-10T10:26:40Z"
           }
         ]
       }

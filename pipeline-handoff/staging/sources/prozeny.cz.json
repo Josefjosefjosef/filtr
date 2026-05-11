@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-05-11T12:14:30.714357Z",
+  "ingestedAt": "2026-05-11T12:55:40.916982Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Většina Čechů nepozná příznaky mozkové mrtvice, přitom jde o minuty! Jak (si) zachránit život?",
+      "url": "https://www.prozeny.cz/clanek/zdravi-priznaky-mozkove-mrtvice-94808",
+      "dt": "2026-05-11T12:50:49Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "jde",
+        "minuty",
+        "mozkové",
+        "mrtvice",
+        "nepozná",
+        "přitom",
+        "příznaky",
+        "většina",
+        "zachránit",
+        "čechů",
+        "život"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -800,34 +828,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Velký úklid kuchyňské linky. Postup, jak se zbavit mastné špíny, fleků i vodního kamene",
-      "url": "https://www.prozeny.cz/clanek/bydleni-kuchyne-velky-uklid-kuchynske-linky-postup-jak-se-zbavit-mastne-spiny-fleku-i-vodniho-kamene-103389",
-      "dt": "2026-05-09T03:00:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "fleků",
-        "kamene",
-        "kuchyňské",
-        "linky",
-        "mastné",
-        "postup",
-        "velký",
-        "vodního",
-        "zbavit",
-        "úklid",
-        "špíny"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -838,7 +838,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 38807,
+      "bytes": 38806,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -875,7 +875,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-11T09:53:57Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T12:50:49Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 29,
@@ -891,6 +891,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Většina Čechů nepozná příznaky mozkové mrtvice, přitom jde o minuty! Jak (si) zachránit život?",
+            "publishedAt": "2026-05-11T12:50:49Z"
+          },
           {
             "title": "Patricie Solaříková se na rozlučce se svobodou pořádně odvázala: Sexy kovbojka v růžové!",
             "publishedAt": "2026-05-11T09:53:57Z"
@@ -917,10 +921,6 @@
           },
           {
             "title": "Konec oranžové éry a žádné fleky! Moderní samoopalováky zařídí přirozený odstín bez stresu",
-            "publishedAt": "2026-05-11T03:00:00Z"
-          },
-          {
-            "title": "Byt, nebo fond? Při investování do nemovitostí dnes hraje roli i to, kolik starostí unesete",
             "publishedAt": "2026-05-11T03:00:00Z"
           }
         ]

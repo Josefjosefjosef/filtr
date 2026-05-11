@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-11T12:14:30.714357Z",
+  "ingestedAt": "2026-05-11T12:55:40.916982Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Utáhněte si opasky a rok nekupujte zlato. Nejlidnatější země začíná přenášet válečnou zátěž na obyvatele",
+      "url": "https://www.e15.cz/zahranicni/geopolitika/utahnete-si-opasky-a-rok-nekupujte-zlato-nejlidnatejsi-zeme-zacina-prenaset-valecnou-zatez-na-obyvatele-1432718",
+      "dt": "2026-05-11T12:40:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "nejlidnatější",
+        "nekupujte",
+        "obyvatele",
+        "opasky",
+        "přenášet",
+        "rok",
+        "utáhněte",
+        "válečnou",
+        "začíná",
+        "země",
+        "zlato",
+        "zátěž"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Stop palivovým příplatkům. EU zakázala aerolinkám dodatečně zdražovat letenky",
+      "url": "https://www.e15.cz/finexpert/servis/stop-palivovym-priplatkum-eu-zakazala-aerolinkam-dodatecne-zdrazovat-letenky-1432719",
+      "dt": "2026-05-11T12:26:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "aerolinkám",
+        "dodatečně",
+        "letenky",
+        "palivovým",
+        "příplatkům",
+        "stop",
+        "zakázala",
+        "zdražovat"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1037,62 +1091,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Spor o české křeslo na summitu NATO pokračuje. Pavel s Babišem se znovu nedohodli",
-      "url": "https://www.e15.cz/domaci/politika/spor-o-ceske-kreslo-na-summitu-nato-pokracuje-pavel-s-babisem-se-znovu-nedohodli-1432693",
-      "dt": "2026-05-08T08:40:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "babišem",
-        "křeslo",
-        "nato",
-        "nedohodli",
-        "pavel",
-        "pokračuje",
-        "spor",
-        "summitu",
-        "znovu",
-        "české"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "USA zaútočily na Írán, Trump ale mluví o platném příměří. Zároveň pohrozil tvrdšími údery",
-      "url": "https://www.e15.cz/zahranicni/geopolitika/usa-zautocily-na-iran-trump-ale-mluvi-o-platnem-primeri-zaroven-pohrozil-tvrdsimi-udery-1432690",
-      "dt": "2026-05-08T06:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "ale",
-        "mluví",
-        "platném",
-        "pohrozil",
-        "příměří",
-        "trump",
-        "tvrdšími",
-        "usa",
-        "zaútočily",
-        "zároveň",
-        "írán",
-        "údery"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1103,11 +1101,11 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 50594,
+      "bytes": 51935,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 45,
+      "itemsParsed": 46,
       "itemsKept": 40,
       "accepted": 40,
       "status": "OK",
@@ -1140,10 +1138,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-11T11:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T12:40:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 35,
+          "finance": 34,
+          "cestovani": 1,
           "zpravy": 5
         },
         "drop_counts": {
@@ -1156,6 +1155,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Utáhněte si opasky a rok nekupujte zlato. Nejlidnatější země začíná přenášet válečnou zátěž na obyvatele",
+            "publishedAt": "2026-05-11T12:40:00Z"
+          },
+          {
+            "title": "Stop palivovým příplatkům. EU zakázala aerolinkám dodatečně zdražovat letenky",
+            "publishedAt": "2026-05-11T12:26:00Z"
+          },
           {
             "title": "Co je hantavirus a jaké má příznaky? Vše o přenosu, léčbě a o rizicích v roce 2026",
             "publishedAt": "2026-05-11T11:30:00Z"
@@ -1179,14 +1186,6 @@
           {
             "title": "INVESTIČNÍ ONLINE: ČNB čeká horší výsledek schodku letošního rozpočtu",
             "publishedAt": "2026-05-11T07:52:00Z"
-          },
-          {
-            "title": "Expartner přestal platit hypotéku? Ústní dohoda se nepočítá, banka může chtít peníze po vás",
-            "publishedAt": "2026-05-11T07:45:00Z"
-          },
-          {
-            "title": "ČNB zhoršila výhled veřejných financí. Schodek má letos stoupnout na 2,7 procenta HDP",
-            "publishedAt": "2026-05-11T07:44:00Z"
           }
         ]
       }

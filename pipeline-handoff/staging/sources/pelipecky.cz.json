@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "pelipecky.cz",
-  "ingestedAt": "2026-05-11T12:14:30.714357Z",
+  "ingestedAt": "2026-05-11T12:55:40.916982Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "POBYT DNE: 4* Bulharsko S All Inclusive a odletem z Prahy za 13 490 Kč",
+      "url": "https://pelipecky.cz/pobyt-letenky-kaliakra-mare-bulharsko/",
+      "dt": "2026-05-11T12:44:32Z",
+      "media_raw": "Pelipecky",
+      "media_norm": "Pelipecky",
+      "tokens": [
+        "490",
+        "all",
+        "bulharsko",
+        "dne",
+        "inclusive",
+        "odletem",
+        "pobyt",
+        "prahy"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_pelipecky",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "pelipecky.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -222,30 +247,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "pelipecky.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "POBYT DNE: Mallorca z Prahy ve 4* hotelu s polopenzí od 13 690 Kč",
-      "url": "https://pelipecky.cz/pobyt-dne-mallorca-dovolena/",
-      "dt": "2026-05-03T07:22:44Z",
-      "media_raw": "Pelipecky",
-      "media_norm": "Pelipecky",
-      "tokens": [
-        "690",
-        "dne",
-        "hotelu",
-        "mallorca",
-        "pobyt",
-        "polopenzí",
-        "prahy"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_pelipecky",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "pelipecky.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -256,7 +257,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://pelipecky.cz/feed/",
-      "bytes": 121096,
+      "bytes": 120638,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -293,7 +294,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-11T08:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T12:44:32Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "cestovani": 10
@@ -308,6 +309,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "POBYT DNE: 4* Bulharsko S All Inclusive a odletem z Prahy za 13 490 Kč",
+            "publishedAt": "2026-05-11T12:44:32Z"
+          },
           {
             "title": "Kolumbie – nejpřitažlivější země Jižní Ameriky. Letenky od 12 690 Kč",
             "publishedAt": "2026-05-11T08:30:00Z"
@@ -335,10 +340,6 @@
           {
             "title": "Blízký východ: letecká doprava v Emirátech se už vrátila do normálu.",
             "publishedAt": "2026-05-04T17:08:21Z"
-          },
-          {
-            "title": "Lufthansa zrušila příruční zavazadlo u nejlevnějších letenek",
-            "publishedAt": "2026-05-04T10:30:00Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-05-11T12:14:30.714357Z",
+  "ingestedAt": "2026-05-11T12:55:40.916982Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Thassos z Prahy s all-inclusive v hotelu u pláže. Zájezd od 8 990 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/thassos-z-prahy-s-all-inclusive-v-hotelu-u-plaze",
+      "dt": "2026-05-11T12:32:03Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "990",
+        "all",
+        "hotelu",
+        "inclusive",
+        "pláže",
+        "prahy",
+        "thassos",
+        "zájezd"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -482,29 +507,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Švédský Göteborg z Prahy v květnu. Letenky od 978 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/svedsky-g-teborg-z-prahy-v-kvetnu",
-      "dt": "2026-04-30T09:44:16Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "978",
-        "göteborg",
-        "květnu",
-        "letenky",
-        "prahy",
-        "švédský"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -515,7 +517,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 46648,
+      "bytes": 47136,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -552,7 +554,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-11T10:14:44Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T12:32:03Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -567,6 +569,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Thassos z Prahy s all-inclusive v hotelu u pláže. Zájezd od 8 990 Kč",
+            "publishedAt": "2026-05-11T12:32:03Z"
+          },
           {
             "title": "Severní Makedonie z Prahy v červnu i v červenci. Letenky od 978 Kč",
             "publishedAt": "2026-05-11T10:14:44Z"
@@ -594,10 +600,6 @@
           {
             "title": "Bangkok z Vídně nebo open-jaw Bangkok / Phuket se Saudia. Letenky od 12 483 Kč",
             "publishedAt": "2026-05-07T09:19:53Z"
-          },
-          {
-            "title": "Madeira na týden se snídaní z Prahy. Zájezd od 7 990 Kč",
-            "publishedAt": "2026-05-06T17:38:18Z"
           }
         ]
       }

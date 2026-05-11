@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-11T12:14:30.714357Z",
+  "ingestedAt": "2026-05-11T12:55:40.916982Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Hantavirus u českých hranic? Němci vezou lidi z „lodi smrti“ do Bavorska a Saska",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/hantavirus-nemecko-lod/",
+      "dt": "2026-05-11T12:30:19Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "bavorska",
+        "hantavirus",
+        "hranic",
+        "lidi",
+        "lodi",
+        "němci",
+        "saska",
+        "smrti",
+        "vezou",
+        "českých"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -248,35 +275,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Výsadek na konci světa: Britští vojenští zdravotníci seskočili na odlehlý ostrov kvůli muži s hantavirem",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/britsti-zdravotnici-seskocili-na-odlehly-ostrov-kvuli-muzi-s-hantavirem/",
-      "dt": "2026-05-10T11:17:58Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "britští",
-        "hantavirem",
-        "konci",
-        "kvůli",
-        "muži",
-        "odlehlý",
-        "ostrov",
-        "seskočili",
-        "světa",
-        "vojenští",
-        "výsadek",
-        "zdravotníci"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -287,7 +285,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 100013,
+      "bytes": 100260,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -324,7 +322,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-11T11:27:02Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T12:30:19Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -339,6 +337,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hantavirus u českých hranic? Němci vezou lidi z „lodi smrti“ do Bavorska a Saska",
+            "publishedAt": "2026-05-11T12:30:19Z"
+          },
           {
             "title": "Revoluce v léčbě alergií: 82 % dětí se díky burákům zbavily doživotní hrozby",
             "publishedAt": "2026-05-11T11:27:02Z"
@@ -366,10 +368,6 @@
           {
             "title": "Bitva o léky na hubnutí: Eli Lilly oslnila zisky, Novo Nordisk má ale v rukávu „tabletové“ eso",
             "publishedAt": "2026-05-11T05:00:00Z"
-          },
-          {
-            "title": "Politik se obával plavajících krys s hantavirem, opíral se o rešerši od umělé inteligence",
-            "publishedAt": "2026-05-10T16:09:22Z"
           }
         ]
       }
