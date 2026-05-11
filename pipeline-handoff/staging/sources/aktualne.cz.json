@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-11T04:39:47.084595Z",
+  "ingestedAt": "2026-05-11T05:20:10.043643Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Dobeš opět sklidil bouřlivý aplaus. Při vysoké výhře Montrealu byl hvězdou zápasu",
+      "url": "https://sport.aktualne.cz/hokej/dobes-opet-sklidil-bourlivy-aplaus-pri-vysoke-vyhre-montrealu-byl-hvezdou-zapasu/r~aaa29d462b1e6dda9d3bb38d0c94c034/",
+      "dt": "2026-05-11T04:54:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "aplaus",
+        "bouřlivý",
+        "dobeš",
+        "hvězdou",
+        "montrealu",
+        "opět",
+        "při",
+        "sklidil",
+        "vysoké",
+        "výhře",
+        "zápasu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -144,21 +172,20 @@
     {
       "section": "zdravi",
       "contentType": "article",
-      "title": "Bude se na Labi pálit infekční odpad? Záhadná loď rozděluje Mělník, odpovědi chybí",
+      "title": "Utrpí voda i vzduch. Záhadná loď na Labi rozděluje, odpovědi chybí",
       "url": "https://zpravy.aktualne.cz/domaci/zdravotnictvi-22850dba-908b-4192-badc-0e7f1c003a00/bude-se-na-labi-palit-infekcni-odpad-zahadna-lod-rozdeluje-melnik-odpovedi-chybi/r~aaa29c3e2a52402ff8ee3b3f6ffc36d0/",
       "dt": "2026-05-11T03:30:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
         "chybí",
-        "infekční",
         "labi",
         "loď",
-        "mělník",
-        "odpad",
         "odpovědi",
-        "pálit",
         "rozděluje",
+        "utrpí",
+        "voda",
+        "vzduch",
         "záhadná"
       ],
       "feedCategory": "zpravy",
@@ -497,34 +524,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Umí krysa doplavat na ostrov a šířit hantavirus? Vylekaného šéfa vlády museli uklidňovat",
-      "url": "https://zpravy.aktualne.cz/zahranici/umi-krysa-doplavat-na-ostrov-a-sirit-hantavirus-vylekaneho-sefa-vlady-museli-uklidnovat/r~aaa291a5a05f09d6801dead95d8eac23/",
-      "dt": "2026-05-10T13:53:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "doplavat",
-        "hantavirus",
-        "krysa",
-        "museli",
-        "ostrov",
-        "uklidňovat",
-        "umí",
-        "vlády",
-        "vylekaného",
-        "šéfa",
-        "šířit"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -535,7 +534,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22517,
+      "bytes": 22520,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -572,13 +571,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-11T04:21:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T04:54:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 8,
+          "sport": 9,
           "other": 1,
           "finance": 1,
-          "zpravy": 9,
+          "zpravy": 8,
           "zdravi": 1
         },
         "drop_counts": {
@@ -591,6 +590,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dobeš opět sklidil bouřlivý aplaus. Při vysoké výhře Montrealu byl hvězdou zápasu",
+            "publishedAt": "2026-05-11T04:54:00Z"
+          },
           {
             "title": "Průšvih v Edenu mají na triku Tvrdík a spol. V Premier League by fotbal dělat nemohli",
             "publishedAt": "2026-05-11T04:21:00Z"
@@ -612,16 +615,12 @@
             "publishedAt": "2026-05-11T03:30:00Z"
           },
           {
-            "title": "Bude se na Labi pálit infekční odpad? Záhadná loď rozděluje Mělník, odpovědi chybí",
+            "title": "Utrpí voda i vzduch. Záhadná loď na Labi rozděluje, odpovědi chybí",
             "publishedAt": "2026-05-11T03:30:00Z"
           },
           {
             "title": "Absolutně nepřijatelné, reagoval Trump na mírovou žádost Íránu",
             "publishedAt": "2026-02-28T14:04:00Z"
-          },
-          {
-            "title": "Jablonec udržel náskok před Hradcem",
-            "publishedAt": "2026-05-10T21:19:00Z"
           }
         ]
       }

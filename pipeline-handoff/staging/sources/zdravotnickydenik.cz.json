@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-11T04:39:47.084595Z",
+  "ingestedAt": "2026-05-11T05:20:10.043643Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Bitva o léky na hubnutí: Eli Lilly oslnila zisky, Novo Nordisk má ale v rukávu „tabletové“ eso",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/bitva-o-leky-na-hubnuti/",
+      "dt": "2026-05-11T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "ale",
+        "bitva",
+        "eli",
+        "eso",
+        "hubnutí",
+        "lilly",
+        "léky",
+        "nordisk",
+        "novo",
+        "oslnila",
+        "rukávu",
+        "tabletové",
+        "zisky"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -238,34 +268,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Paliativní pavilon na jihu Čech a operace bez řezu v Praze. Souhrn novinek z českého zdravotnictví",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/paliativni-pavilon-operace-bez-rezu-souhrn-zdravotnictvi/",
-      "dt": "2026-05-08T14:30:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "jihu",
-        "novinek",
-        "operace",
-        "paliativní",
-        "pavilon",
-        "praze",
-        "souhrn",
-        "zdravotnictví",
-        "čech",
-        "českého",
-        "řezu"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -276,7 +278,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 113491,
+      "bytes": 99807,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,7 +315,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-10T16:09:22Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -328,6 +330,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bitva o léky na hubnutí: Eli Lilly oslnila zisky, Novo Nordisk má ale v rukávu „tabletové“ eso",
+            "publishedAt": "2026-05-11T05:00:00Z"
+          },
           {
             "title": "Politik se obával plavajících krys s hantavirem, opíral se o rešerši od umělé inteligence",
             "publishedAt": "2026-05-10T16:09:22Z"
@@ -355,10 +361,6 @@
           {
             "title": "Steroidy lákají stále mladší sportovce. Lékaři varují před fatálními následky",
             "publishedAt": "2026-05-09T12:00:00Z"
-          },
-          {
-            "title": "„Peklo na zemi.“ Přeživší hantaviru popsali boj o život po vzácné nákaze",
-            "publishedAt": "2026-05-09T10:30:00Z"
           }
         ]
       }

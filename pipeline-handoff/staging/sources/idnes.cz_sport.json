@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-11T04:39:47.084595Z",
+  "ingestedAt": "2026-05-11T05:20:10.043643Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kučeřík je zpátky v Brně. Ve Finsku mu chyběla atmosféra: Hrajeme i pro lidi",
+      "url": "https://www.idnes.cz/hokej/extraliga/radek-kucerik-kometa-brno-navrat.A260510_932188_hokej_ipet",
+      "dt": "2026-05-11T05:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "atmosféra",
+        "brně",
+        "chyběla",
+        "finsku",
+        "hrajeme",
+        "kučeřík",
+        "lidi",
+        "zpátky"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Zázrak házenkářek Slavie a finálový sen žije. Jsem na hráčky hrdý, zářil Čurda",
+      "url": "https://www.idnes.cz/sport/ostatni/hazena-semifinale-interligy-zen-slavia-most.A260510_222108_sporty_pbi",
+      "dt": "2026-05-11T04:30:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "finálový",
+        "hrdý",
+        "hráčky",
+        "házenkářek",
+        "jsem",
+        "sen",
+        "slavie",
+        "zázrak",
+        "zářil",
+        "čurda",
+        "žije"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -727,58 +780,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Okolnosti policejního zásahu: Slavia o něj nežádala, i když už fanoušci vtrhli na hřiště",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/okolnosti-zasahu-na-slavii-klub-policii-nezadal-i-kdyz-uz-fanousci-vtrhli-na-hriste.A260510_151649_fotbal_jic",
-      "dt": "2026-05-10T13:58:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "fanoušci",
-        "hřiště",
-        "když",
-        "nežádala",
-        "něj",
-        "okolnosti",
-        "policejního",
-        "slavia",
-        "vtrhli",
-        "zásahu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Co je nové, to je hezké. Rob se těší do Třebíče, konec ve Vsetíně ho zaskočil",
-      "url": "https://www.idnes.cz/hokej/hokejova-1-liga/lubos-rob-mladsi-maxa-liga-vsetin-trebic.A260510_932183_hok_1liga_ipet",
-      "dt": "2026-05-10T13:46:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "hezké",
-        "konec",
-        "nové",
-        "rob",
-        "těší",
-        "třebíče",
-        "vsetíně",
-        "zaskočil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47071,
+      "bytes": 46637,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-10T22:12:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T05:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -841,6 +842,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kučeřík je zpátky v Brně. Ve Finsku mu chyběla atmosféra: Hrajeme i pro lidi",
+            "publishedAt": "2026-05-11T05:00:00Z"
+          },
+          {
+            "title": "Zázrak házenkářek Slavie a finálový sen žije. Jsem na hráčky hrdý, zářil Čurda",
+            "publishedAt": "2026-05-11T04:30:00Z"
+          },
           {
             "title": "Giro d’Italia 2026: program, přehled a výsledky etap, favorité, Češi na startu",
             "publishedAt": "2026-05-10T22:12:00Z"
@@ -864,14 +873,6 @@
           {
             "title": "Euro Hockey Tour 2026: přehled a výsledky turnajů",
             "publishedAt": "2026-05-10T21:42:12Z"
-          },
-          {
-            "title": "Výhra v El Clásicu začala oslavy. Barcelona porazila Real a má 29. mistrovský titul",
-            "publishedAt": "2026-05-10T21:26:00Z"
-          },
-          {
-            "title": "USA na MS v hokeji 2026: program, výsledky, soupiska, bilance s Čechy",
-            "publishedAt": "2026-05-10T20:43:00Z"
           }
         ]
       }
