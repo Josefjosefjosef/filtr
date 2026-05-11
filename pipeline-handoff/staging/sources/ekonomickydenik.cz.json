@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-11T16:06:02.837642Z",
+  "ingestedAt": "2026-05-11T16:44:20.491211Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Politické zemětřesení v Británii. Londýn se vrací do války s Bruselem",
+      "url": "https://ekonomickydenik.cz/politicke-zemetreseni-britanie-londyn-valka-s-brusel/",
+      "dt": "2026-05-11T16:25:01Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "británii",
+        "bruselem",
+        "londýn",
+        "politické",
+        "vrací",
+        "války",
+        "zemětřesení"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -754,33 +778,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Bezpečnost v ohrožení? Jen 17 procent Čechů chce škrty, většina chce silnější armádu",
-      "url": "https://ekonomickydenik.cz/17-procent-cechu-chce-skrty-vetsina-chce-silnejsi-armadu/",
-      "dt": "2026-05-09T12:31:57Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "armádu",
-        "bezpečnost",
-        "chce",
-        "jen",
-        "ohrožení",
-        "procent",
-        "silnější",
-        "většina",
-        "čechů",
-        "škrty"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +788,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 67448,
+      "bytes": 67559,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,7 +825,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-11T14:13:49Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T16:25:01Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -845,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Politické zemětřesení v Británii. Londýn se vrací do války s Bruselem",
+            "publishedAt": "2026-05-11T16:25:01Z"
+          },
           {
             "title": "Výrazně zlevní nafta. Maximální ceny se budou přepisovat",
             "publishedAt": "2026-05-11T14:13:49Z"
@@ -872,10 +873,6 @@
           {
             "title": "Pražské letiště změní navigační systém. Současný vizuál je starý 20 let",
             "publishedAt": "2026-05-11T12:30:33Z"
-          },
-          {
-            "title": "Babiš plní slib: Rozšíří úlevy podnikům od drahých povolenek. Kolik to bude stát?",
-            "publishedAt": "2026-05-11T11:45:47Z"
           }
         ]
       }
