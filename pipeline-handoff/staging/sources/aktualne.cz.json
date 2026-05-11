@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-11T21:24:12.529838Z",
+  "ingestedAt": "2026-05-11T22:04:49.360115Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kinský hrdinou Tottenhamu. Předvedl famózní zákroky, zachránil alespoň bod",
+      "url": "https://sport.aktualne.cz/fotbal/kinsky-hrdinou-tottenhamu-predvedl-famozni-zakroky-zachranil-alespon-bod/r~aaa290ea196944a29ccaa11dfa60e2c2/",
+      "dt": "2026-05-11T21:32:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "alespoň",
+        "bod",
+        "famózní",
+        "hrdinou",
+        "kinský",
+        "předvedl",
+        "tottenhamu",
+        "zachránil",
+        "zákroky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -506,34 +532,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Střely na ruské cíle trestuhodně prolétly do země NATO. Ministr obrany ihned skončil",
-      "url": "https://zpravy.aktualne.cz/zahranici/ukrajinske-drony-pronikly-z-ruska-do-zeme-nato-ministr-obrany-okamzite-skoncil/r~aaa29fde0cb6e1e6830561847d78e2ce/",
-      "dt": "2026-05-11T13:24:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "cíle",
-        "ihned",
-        "ministr",
-        "nato",
-        "obrany",
-        "prolétly",
-        "ruské",
-        "skončil",
-        "střely",
-        "trestuhodně",
-        "země"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -544,7 +542,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21875,
+      "bytes": 21683,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -581,11 +579,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-11T20:37:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T21:32:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 15,
-          "sport": 4,
+          "sport": 5,
+          "zpravy": 14,
           "finance": 1
         },
         "drop_counts": {
@@ -598,6 +596,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinský hrdinou Tottenhamu. Předvedl famózní zákroky, zachránil alespoň bod",
+            "publishedAt": "2026-05-11T21:32:00Z"
+          },
           {
             "title": "Část Česka zasáhlo krupobití, blesk udeřil do vlaku. Hasiči měli napilno",
             "publishedAt": "2026-05-11T19:30:00Z"
@@ -625,10 +627,6 @@
           {
             "title": "Riziko hantaviru v Česku je nízké, stát situaci sleduje, říká ministr Vojtěch",
             "publishedAt": "2026-05-11T19:02:00Z"
-          },
-          {
-            "title": "Plíšková - Rybakinová 0:6, 2:6. Češka neměla proti světové dvojce nárok",
-            "publishedAt": "2026-05-11T18:58:00Z"
           }
         ]
       }
