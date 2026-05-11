@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-11T22:44:15.161731Z",
+  "ingestedAt": "2026-05-11T23:24:47.282450Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "„Schytám za svou zemi kulku“: Trump přišel mluvit o zdraví matek. Mluvil ale hlavně o sobě",
+      "url": "https://www.epenize.eu/schytam-za-svou-zemi-kulku-trump-prisel-mluvit-o-zdravi-matek-mluvil-ale-hlavne-o-sobe/",
+      "dt": "2026-05-11T23:00:24Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "ale",
+        "hlavně",
+        "kulku",
+        "matek",
+        "mluvil",
+        "mluvit",
+        "přišel",
+        "schytám",
+        "sobě",
+        "svou",
+        "trump",
+        "zdraví",
+        "zemi"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -488,31 +518,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Množitel národa? Babiš dnešní mladé ženy asi nerozrodí",
-      "url": "https://www.epenize.eu/mnozitel-naroda-babis-dnesni-mlade-zeny-asi-nerozrodi/",
-      "dt": "2026-05-02T10:49:39Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "asi",
-        "babiš",
-        "dnešní",
-        "mladé",
-        "množitel",
-        "nerozrodí",
-        "národa",
-        "ženy"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -523,7 +528,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 108732,
+      "bytes": 109154,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -560,10 +565,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-11T06:06:36Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T23:00:24Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 18,
+          "zdravi": 1,
+          "finance": 17,
           "zpravy": 1,
           "sport": 1
         },
@@ -577,6 +583,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Schytám za svou zemi kulku“: Trump přišel mluvit o zdraví matek. Mluvil ale hlavně o sobě",
+            "publishedAt": "2026-05-11T23:00:24Z"
+          },
           {
             "title": "Obhajuje Novotný bezmozky? Klesneme na úroveň nemyté, sparťanské lůzy",
             "publishedAt": "2026-05-11T06:06:36Z"
@@ -604,10 +614,6 @@
           {
             "title": "UFO složky jako kouřová clona: Trump odtajnil mimozemšťany, ale Epsteinovy spisy stále tají",
             "publishedAt": "2026-05-08T23:00:38Z"
-          },
-          {
-            "title": "Dlužena von Bankrot: Kupka to za svou kritiku schytává",
-            "publishedAt": "2026-05-08T08:12:13Z"
           }
         ]
       }
