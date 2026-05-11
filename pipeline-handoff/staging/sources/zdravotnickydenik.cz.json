@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-11T07:24:05.285334Z",
+  "ingestedAt": "2026-05-11T08:08:59.454790Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nákaza z „lodi smrti“ už je ve Francii. Stav pacientky s hantavirem se v noci prudce zhoršil",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/hantavirus-francie-pacientka/",
+      "dt": "2026-05-11T07:36:15Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "francii",
+        "hantavirem",
+        "lodi",
+        "noci",
+        "nákaza",
+        "pacientky",
+        "prudce",
+        "smrti",
+        "stav",
+        "zhoršil"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -246,32 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Steroidy lákají stále mladší sportovce. Lékaři varují před fatálními následky",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/steroidy-mladi-lide-fatalni-nasledky/",
-      "dt": "2026-05-09T12:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "fatálními",
-        "lákají",
-        "lékaři",
-        "mladší",
-        "následky",
-        "sportovce",
-        "steroidy",
-        "stále",
-        "varují"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 104585,
+      "bytes": 103848,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +320,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-11T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T07:36:15Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -334,6 +335,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nákaza z „lodi smrti“ už je ve Francii. Stav pacientky s hantavirem se v noci prudce zhoršil",
+            "publishedAt": "2026-05-11T07:36:15Z"
+          },
           {
             "title": "Gamechanger ve screeningových programech: Jaké změny chystá Vojtěch od příštího roku?",
             "publishedAt": "2026-05-11T07:00:00Z"
@@ -361,10 +366,6 @@
           {
             "title": "Průlom v boji s rakovinou slinivky? Nový model zachytil nemoc s velkým předstihem",
             "publishedAt": "2026-05-10T10:00:00Z"
-          },
-          {
-            "title": "Matky spí málo a doplácí na to zdravím. Pomoci mohou 4 kroky",
-            "publishedAt": "2026-05-10T05:00:00Z"
           }
         ]
       }

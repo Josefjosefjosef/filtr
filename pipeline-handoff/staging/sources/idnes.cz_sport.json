@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-11T07:24:05.285334Z",
+  "ingestedAt": "2026-05-11T08:08:59.454790Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Historický výsledek českého golfu! Hrubý v Myrtle Beach skvěle zvládl i poslední kolo",
+      "url": "https://www.idnes.cz/sport/ostatni/petr-hruby-myrtle-beach-golf.A260511_081628_sporty_kazdt",
+      "dt": "2026-05-11T07:51:10Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "beach",
+        "golfu",
+        "historický",
+        "hrubý",
+        "kolo",
+        "myrtle",
+        "poslední",
+        "skvěle",
+        "výsledek",
+        "zvládl",
+        "českého"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -98,34 +126,6 @@
         "rulíkův",
         "vyrážejí",
         "výběr"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Historický výsledek českého golfu! Hrubý v Myrtle Beach skvěle zvládl i poslední kolo",
-      "url": "https://www.idnes.cz/sport/ostatni/petr-hruby-myrtle-beach-golf.A260511_081628_sporty_kazdt",
-      "dt": "2026-05-11T06:26:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "beach",
-        "golfu",
-        "historický",
-        "hrubý",
-        "kolo",
-        "myrtle",
-        "poslední",
-        "skvěle",
-        "výsledek",
-        "zvládl",
-        "českého"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -791,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46790,
+      "bytes": 46787,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,7 +828,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-11T07:03:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T07:51:10Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -844,6 +844,10 @@
         },
         "sample_titles": [
           {
+            "title": "Historický výsledek českého golfu! Hrubý v Myrtle Beach skvěle zvládl i poslední kolo",
+            "publishedAt": "2026-05-11T07:51:10Z"
+          },
+          {
             "title": "NEJ Z LIGY: Chorý, pořadatel číslo patnáct, dvakrát Douděra. Bizarnosti 317. derby",
             "publishedAt": "2026-05-11T07:03:00Z"
           },
@@ -858,10 +862,6 @@
           {
             "title": "PŘEHLEDNĚ: Rulíkův poslední výběr. Poznejte hokejisty, kteří vyrážejí na MS",
             "publishedAt": "2026-05-11T06:30:00Z"
-          },
-          {
-            "title": "Historický výsledek českého golfu! Hrubý v Myrtle Beach skvěle zvládl i poslední kolo",
-            "publishedAt": "2026-05-11T06:26:00Z"
           },
           {
             "title": "Knicks rekordní palbou ukončili další tým. Wembanyama loktem uzemnil soupeře",

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-11T07:24:05.285334Z",
+  "ingestedAt": "2026-05-11T08:08:59.454790Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Podvodníci cílí na lidi hledající brigády, nebo přivýdělek",
+      "url": "https://tydenikpolicie.cz/podvodnici-cili-na-lidi-hledajici-brigady-nebo-privydelek/",
+      "dt": "2026-05-11T07:30:23Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "brigády",
+        "cílí",
+        "hledající",
+        "lidi",
+        "nebo",
+        "podvodníci",
+        "přivýdělek"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -233,35 +257,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Podezřelého z vloupání do sklepa v Ostravě prozradily divné zvuky. Strážníkům tvrdil, že přišel uklidit babičce",
-      "url": "https://tydenikpolicie.cz/podezreleho-z-vloupani-do-sklepa-v-ostrave-prozradily-divne-zvuky-straznikum-tvrdil-ze-prisel-uklidit-babicce/",
-      "dt": "2026-05-10T20:37:06Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "babičce",
-        "divné",
-        "ostravě",
-        "podezřelého",
-        "prozradily",
-        "přišel",
-        "sklepa",
-        "strážníkům",
-        "tvrdil",
-        "uklidit",
-        "vloupání",
-        "zvuky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -272,7 +267,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16070,
+      "bytes": 15813,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -309,7 +304,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-11T06:34:36Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T07:30:23Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -324,6 +319,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Podvodníci cílí na lidi hledající brigády, nebo přivýdělek",
+            "publishedAt": "2026-05-11T07:30:23Z"
+          },
           {
             "title": "Řidič Citroenu jel po dálnici D3 v protisměru",
             "publishedAt": "2026-05-11T06:34:36Z"
@@ -351,10 +350,6 @@
           {
             "title": "Kriminalisté hledají důležitého svědka loupeže, ke které došlo v Liberci",
             "publishedAt": "2026-05-10T20:47:48Z"
-          },
-          {
-            "title": "Po ulici ve Svitavách si vykračoval bobr. Strážníky pěkně prohnal",
-            "publishedAt": "2026-05-10T20:44:31Z"
           }
         ]
       }
