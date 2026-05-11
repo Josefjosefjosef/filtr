@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-11T20:44:07.983289Z",
+  "ingestedAt": "2026-05-11T21:24:12.529838Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Část Česka zasáhlo krupobití, blesk udeřil do vlaku. Hasiči měli napilno",
+      "url": "https://zpravy.aktualne.cz/domaci/cast-ceska-zasahlo-krupobiti-hasici-meli-napilno-zvlaste-na-vysocine/r~aaa298abb9039b303e2c7a68ca9938d7/",
+      "dt": "2026-05-11T19:30:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "blesk",
+        "hasiči",
+        "krupobití",
+        "měli",
+        "napilno",
+        "udeřil",
+        "vlaku",
+        "zasáhlo",
+        "česka",
+        "část"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -103,32 +130,6 @@
         "zelenského",
         "čelí",
         "šéf"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Část Česka zasáhlo krupobití, hasiči měli napilno zvláště na Vysočině",
-      "url": "https://zpravy.aktualne.cz/domaci/cast-ceska-zasahlo-krupobiti-hasici-meli-napilno-zvlaste-na-vysocine/r~aaa298abb9039b303e2c7a68ca9938d7/",
-      "dt": "2026-05-11T19:30:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "hasiči",
-        "krupobití",
-        "měli",
-        "napilno",
-        "vysočině",
-        "zasáhlo",
-        "zvláště",
-        "česka",
-        "část"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -543,7 +544,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21740,
+      "bytes": 21875,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -583,8 +584,8 @@
         "raw_feed_latest_publishedAt": "2026-05-11T20:37:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 4,
           "zpravy": 15,
+          "sport": 4,
           "finance": 1
         },
         "drop_counts": {
@@ -597,6 +598,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Část Česka zasáhlo krupobití, blesk udeřil do vlaku. Hasiči měli napilno",
+            "publishedAt": "2026-05-11T19:30:00Z"
+          },
           {
             "title": "Tři zápasy, tři drsné prohry. České naděje prožily v Římě černý den",
             "publishedAt": "2026-05-11T20:37:00Z"
@@ -612,10 +617,6 @@
           {
             "title": "Hrozí mu 12 let. Kdysi mocný šéf Zelenského kanceláře čelí obvinění z praní peněz",
             "publishedAt": "2026-05-11T19:46:00Z"
-          },
-          {
-            "title": "Část Česka zasáhlo krupobití, hasiči měli napilno zvláště na Vysočině",
-            "publishedAt": "2026-05-11T19:30:00Z"
           },
           {
             "title": "Pistorius přijel do Kyjeva, jednal o společném vývoji a výrobě dronů",
