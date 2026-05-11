@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-11T15:22:49.919006Z",
+  "ingestedAt": "2026-05-11T16:06:02.837642Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Jásání dětí nebralo konce. Kouzelný svět mašinek u Olomouce znovu otevřel",
+      "url": "https://www.denik.cz/regiony/drahanovice-strizov-zahradni-zeleznice-otevrela-sve-brany.html",
+      "dt": "2026-05-11T15:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dětí",
+        "jásání",
+        "konce",
+        "kouzelný",
+        "mašinek",
+        "nebralo",
+        "olomouce",
+        "otevřel",
+        "svět",
+        "znovu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -623,33 +650,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Dua Lipa žaluje Samsung o 15 milionů dolarů kvůli použití její fotografie",
-      "url": "https://www.denik.cz/ze_sveta/dua-lipa-zaluje-samsung-o-15-milionu-dolaru-kvuli-pouziti-jeji-fotografie.html",
-      "dt": "2026-05-11T07:23:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dolarů",
-        "dua",
-        "fotografie",
-        "její",
-        "kvůli",
-        "lipa",
-        "milionů",
-        "použití",
-        "samsung",
-        "žaluje"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -660,7 +660,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29535,
+      "bytes": 29432,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -697,7 +697,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-11T14:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T15:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -713,6 +713,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jásání dětí nebralo konce. Kouzelný svět mašinek u Olomouce znovu otevřel",
+            "publishedAt": "2026-05-11T15:30:00Z"
+          },
           {
             "title": "VÝSTRAHA: Do ČR míří bouřky s přívalovým deštěm. Sledujte, kde hrozí nebezpečí",
             "publishedAt": "2026-05-11T14:45:00Z"
@@ -740,10 +744,6 @@
           {
             "title": "Brněnská Bába pod kořenem: Senior šel na fotbal, uvěznily ho stromy",
             "publishedAt": "2026-05-11T12:20:00Z"
-          },
-          {
-            "title": "Může pohyb soukromých letadel odhalit jadernou hrozbu? Vzniká odvážný projekt",
-            "publishedAt": "2026-05-11T12:14:00Z"
           }
         ]
       }
