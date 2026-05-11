@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-11T16:44:20.491211Z",
+  "ingestedAt": "2026-05-11T17:24:15.700377Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "TV tipy: Nekorektní Invalida, Občanská válka i legendární Šílený Max",
+      "url": "https://www.kinobox.cz/clanky/tema/53656-tv-tipy-nekorektni-invalida-obcanska-valka-i-legendarni-sileny-max",
+      "dt": "2026-05-11T17:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "invalida",
+        "legendární",
+        "max",
+        "nekorektní",
+        "občanská",
+        "tipy",
+        "válka",
+        "šílený"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -511,32 +536,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "VOD tipy: Nový Běžící muž, česká kriminálka i druhý Kaštánek",
-      "url": "https://www.kinobox.cz/clanky/vod/53528-vod-tipy-novy-bezici-muz-ceska-kriminalka-i-druhy-kastanek",
-      "dt": "2026-05-08T17:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "běžící",
-        "druhý",
-        "kaštánek",
-        "kriminálka",
-        "muž",
-        "nový",
-        "tipy",
-        "vod",
-        "česká"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -547,7 +546,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 27797,
+      "bytes": 27684,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -584,7 +583,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-11T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T17:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -599,6 +598,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "TV tipy: Nekorektní Invalida, Občanská válka i legendární Šílený Max",
+            "publishedAt": "2026-05-11T17:00:00Z"
+          },
           {
             "title": "Kriminální hit Odznak Vysočina končí. Nova ho nahradí oblíbeným seriálem",
             "publishedAt": "2026-05-11T15:00:00Z"
@@ -626,10 +629,6 @@
           {
             "title": "Do Ulice se vrací neoblíbená postava. „Je to mrcha,“ říká i její představitelka",
             "publishedAt": "2026-05-11T06:00:00Z"
-          },
-          {
-            "title": "10 filmů, které v kinech vydělaly nejvíc peněz za celou dobu kinematografie",
-            "publishedAt": "2026-05-10T17:00:00Z"
           }
         ]
       }
