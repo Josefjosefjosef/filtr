@@ -37167,6 +37167,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bv\s*\d{1,2}\s*[:.]\s*\d{1,2}\b/.test(f) || /\bve\s+\d{1,2}\s*[:.]\s*\d{1,2}\b/.test(f)) return true;
     if (/\bschuz|schůz|porad|zubar|zub|kontrola|ud[aá]lost/i.test(f)) return true;
     if (/\bservis\b/i.test(f) && (/\bzitra\b|\bdnes\b|\bpristi\b|\b\d{1,2}\s*[:.]\s*\d{1,2}\b|\bschuz|porad|ud[aá]lost/i.test(f))) return true;
+    if (/\bpo\s+obede\b/.test(f)) return true;
+    if (/\bkolem\s+sedm/.test(f) || /\bkolem\s+sest/.test(f)) return true;
     return false;
   }
 
@@ -37347,7 +37349,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       scratchParsed.confidence.title === "certain" &&
       String(scratchParsed.values.title || "").trim() &&
       scratchParsed.confidence.time !== "certain" &&
-      iuSilverHasCalendarEventKeywordFolded(titleHintFold);
+      (iuSilverHasCalendarEventKeywordFolded(titleHintFold) ||
+        iuSilverImplicitCalendarOnlyWriteEntityLocationSignalFolded(titleHintFold));
     /** v1.3: „Zítra v 18“ — datum + čas jisté, název chybí → kalendář + chytré doptání na název. */
     const parsedCalendarZitraTimeOnlyHint =
       !!scratchParsed &&
@@ -39222,8 +39225,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     draft.note = "";
     draft.meta.note = "optional";
 
-    const processingState = "READY_TO_SAVE";
+    const vagueTaskTimeNekdyP1 = iuSilverVagueNekdyDayPartBlocksCertainTimeFolded(foldedFull);
+    const processingState = vagueTaskTimeNekdyP1 ? "NEEDS_CLARIFICATION" : "READY_TO_SAVE";
     const ap = buildAssistantParts(draft, processingState);
+    let assistantLead = ap.assistantLead;
+    let clarificationText = ap.clarification;
+    if (vagueTaskTimeNekdyP1) {
+      assistantLead = "Čas jako „někdy večer“ je příliš volný na uložení konkrétního termínu.";
+      clarificationText = "Upřesni prosím hodinu nebo např. „zítra v 18:00“.";
+    }
     return {
       normalizedIntent: "tasks.create",
       targetContainer: "tasks",
@@ -39236,8 +39246,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       missingFields: [],
       ambiguousFields: [],
       userFacingSummary: "",
-      assistantLead: ap.assistantLead,
-      clarificationText: ap.clarification,
+      assistantLead: assistantLead,
+      clarificationText: clarificationText,
       draft: draft
     };
   }
@@ -43271,6 +43281,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P1 vague_time_policy: „někdy“ + denní část (ráno/odpoledne/večer/…) → nesmí vzniknout jistý wall-clock z těchto slotů.
+   * foldCs vstup.
+   */
+  function iuSilverVagueNekdyDayPartBlocksCertainTimeFolded(f) {
+    const x = String(f || "");
+    if (!/\bnekdy\b/.test(x)) return false;
+    return /\b(vecer|rano|dopoledne|odpoledne|noc)\b/.test(x);
+  }
+
+  /**
    * Wall-clock time from work string. Optional `now` enables v1.3: „za hodinu“, „za 30 minut“, …
    * Optional `contextRawOpt` (v1.6) — celá věta pro večerní vs. ranní bias u „v šest“, „půl sedmé“, …
    * Returns { time, work, timeLabel?, dateISOHint? } — dateISOHint when „za …“ crosses midnight (calendar date).
@@ -43355,16 +43375,18 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     }
     if (!time) {
+      if (!iuSilverVagueNekdyDayPartBlocksCertainTimeFolded(fullCtxFold)) {
       const hasMorningCue =
         /\brano\b|\bdopoledne\b|\bsnid|\branych\b|\bjitro\b|\bv\s+ranych\b|\bv\s+sest\s+rano\b|\bpo\s+ranych\b/.test(
           fullCtxFold
         );
       const eveningBias =
         !hasMorningCue &&
-        (/\b(schuz|porad|meeting|zubar|doktor|navstev|vecern|vecer|pozdni|zaloz|vytvor|udalost|koncert|divadl|odpoledne|noc)\b/.test(
+        (/\b(schuz|porad|meeting|zubar|doktor|navstev|vecern|vecer|pozdni|zaloz|vytvor|udalost|koncert|divadl|odpoledne|noc|kuryr)\b/.test(
           fullCtxFold
         ) ||
-          (/\bzitra\b|\bzittra\b/.test(fullCtxFold) && !/\bzitra\s+rano\b/.test(fullCtxFold)));
+          (/\bzitra\b|\bzittra\b/.test(fullCtxFold) && !/\bzitra\s+rano\b/.test(fullCtxFold)) ||
+          /\bdnes\b/.test(fullCtxFold));
       const WH = {
         jedna: 1,
         jednu: 1,
@@ -43463,7 +43485,21 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           }
         }
       }
+      if (!time) {
+        const mKol = w.match(/\bkolem\s+([a-záéíóúůěščřžýÁÉÍÓÚŮĚŠČŘŽÝ]+)\b/i);
+        if (mKol) {
+          const kwK = foldTok(mKol[1]);
+          if (Object.prototype.hasOwnProperty.call(WH, kwK)) {
+            let h = WH[kwK];
+            if (eveningBias && h >= 1 && h <= 11) h += 12;
+            time = pad(Math.min(23, Math.max(0, h))) + ":00";
+            timeLabel = "kolem " + String(mKol[1] || "").trim();
+            w = w.replace(mKol[0], " ");
+          }
+        }
+      }
       w = w.replace(/\s+/g, " ").trim();
+      }
     }
     if (!time && nowOpt) {
       const n0 = nowOpt instanceof Date ? nowOpt : new Date(nowOpt);
@@ -43506,21 +43542,29 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     if (!time) {
       const fo = foldCs(String(w || ""));
-      const dayParts = [
-        { reF: /\brano\b/, reW: /\br[aá]no\b/gi, hhmm: "09:00", lab: "ráno" },
-        { reF: /\bdopoledne\b/, reW: /\bdopoledne\b/gi, hhmm: "10:00", lab: "dopoledne" },
-        { reF: /\bpoledne\b/, reW: /\bpoledne\b/gi, hhmm: "12:00", lab: "poledne" },
-        { reF: /\bodpoledne\b/, reW: /\bodpoledne\b/gi, hhmm: "15:00", lab: "odpoledne" },
-        { reF: /\bvecer\b/, reW: /\bve[cč]er\b/gi, hhmm: "18:00", lab: "večer" },
-        { reF: /\bnoc\b/, reW: /\bnoc\b/gi, hhmm: "21:00", lab: "noc" }
-      ];
-      for (let di = 0; di < dayParts.length; di++) {
-        const row = dayParts[di];
-        if (row.reF.test(fo)) {
-          time = row.hhmm;
-          timeLabel = row.lab;
-          w = w.replace(row.reW, " ");
-          break;
+      if (!iuSilverVagueNekdyDayPartBlocksCertainTimeFolded(fullCtxFold)) {
+        if (/\bpo\s+obede\b/.test(fo)) {
+          time = "14:00";
+          timeLabel = "po obědě";
+          w = w.replace(/\bpo\s+ob[eě]d[eě]\b/gi, " ");
+        } else {
+          const dayParts = [
+            { reF: /\brano\b/, reW: /\br[aá]no\b/gi, hhmm: "09:00", lab: "ráno" },
+            { reF: /\bdopoledne\b/, reW: /\bdopoledne\b/gi, hhmm: "10:00", lab: "dopoledne" },
+            { reF: /\bpoledne\b/, reW: /\bpoledne\b/gi, hhmm: "12:00", lab: "poledne" },
+            { reF: /\bodpoledne\b/, reW: /\bodpoledne\b/gi, hhmm: "15:00", lab: "odpoledne" },
+            { reF: /\bvecer\b/, reW: /\bve[cč]er\b/gi, hhmm: "18:00", lab: "večer" },
+            { reF: /\bnoc\b/, reW: /\bnoc\b/gi, hhmm: "21:00", lab: "noc" }
+          ];
+          for (let di = 0; di < dayParts.length; di++) {
+            const row = dayParts[di];
+            if (row.reF.test(fo)) {
+              time = row.hhmm;
+              timeLabel = row.lab;
+              w = w.replace(row.reW, " ");
+              break;
+            }
+          }
         }
       }
       w = w.replace(/\s+/g, " ").trim();
