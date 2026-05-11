@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-11T14:35:37.687047Z",
+  "ingestedAt": "2026-05-11T15:22:49.919006Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "KSW 118: Dva titulové zápasy a dva Češi na zápasové kartě",
+      "url": "https://www.mmamag.cz/ksw-118-kuberski-vs-michalski-karta-a-prenos/",
+      "dt": "2026-05-11T15:00:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "118",
+        "dva",
+        "kartě",
+        "ksw",
+        "titulové",
+        "zápasové",
+        "zápasy",
+        "češi"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1058,30 +1083,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "video",
-      "title": "Odvázala se až moc. Polonahá boxerka po vážení vyjela po soupeřce",
-      "url": "https://www.mmamag.cz/zupan-sel-dolu-boxerka-polibila-souperku-primo-na-vazeni/",
-      "dt": "2026-05-09T18:45:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "boxerka",
-        "moc",
-        "odvázala",
-        "polonahá",
-        "soupeřce",
-        "vyjela",
-        "vážení"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1092,7 +1093,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 79844,
+      "bytes": 79739,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1129,7 +1130,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-11T14:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T15:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1144,6 +1145,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "KSW 118: Dva titulové zápasy a dva Češi na zápasové kartě",
+            "publishedAt": "2026-05-11T15:00:00Z"
+          },
           {
             "title": "Přes 2 miliardy korun za jediný zápas? Mega bitva Furyho s Joshuou dostává jasné obrysy",
             "publishedAt": "2026-05-11T14:15:00Z"
@@ -1171,10 +1176,6 @@
           {
             "title": "OKTAGON 88 v Hannoveru: Machaev brání pás proti Palokajovi, do akce jde i Max Holzer",
             "publishedAt": "2026-05-11T09:45:00Z"
-          },
-          {
-            "title": "V pondělí mu zemřelo nenarozené dítě, v sobotu uškrtil soupeře. Zápasník UFC po výhře neudržel slzy",
-            "publishedAt": "2026-05-11T09:00:00Z"
           }
         ]
       }
