@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kverulant.org",
-  "ingestedAt": "2026-05-11T22:04:49.360115Z",
+  "ingestedAt": "2026-05-11T22:44:15.161731Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ke stovkám českých generálů zase přibyli další, včetně bývalého estébáka",
+      "url": "https://www.kverulant.org/article/ke-stovkam-ceskych-generalu-zase-pribyli-dalsi-vcetne-byvaleho-estebaka/",
+      "dt": "2026-05-11T22:07:00Z",
+      "media_raw": "Kverulant",
+      "media_norm": "Kverulant",
+      "tokens": [
+        "bývalého",
+        "další",
+        "estébáka",
+        "generálů",
+        "přibyli",
+        "stovkám",
+        "včetně",
+        "zase",
+        "českých"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_kverulant",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "kverulant.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -220,29 +246,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "kverulant.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Podnikání s bombou: komu vlastně slouží VTÚ, s.p.",
-      "url": "https://www.kverulant.org/article/podnikani-s-bombou-komu-vlastne-slouzi-vtu-s-p/",
-      "dt": "2026-04-26T22:07:00Z",
-      "media_raw": "Kverulant",
-      "media_norm": "Kverulant",
-      "tokens": [
-        "bombou",
-        "komu",
-        "podnikání",
-        "slouží",
-        "vlastně",
-        "vtú"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_kverulant",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "kverulant.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -253,7 +256,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.kverulant.org/feed/",
-      "bytes": 126151,
+      "bytes": 143013,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -290,7 +293,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-10T22:07:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T22:07:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -305,6 +308,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ke stovkám českých generálů zase přibyli další, včetně bývalého estébáka",
+            "publishedAt": "2026-05-11T22:07:00Z"
+          },
           {
             "title": "Kverulant prověřil hospodaření sněmovny za rok 2025 i poslanecké cesty",
             "publishedAt": "2026-05-10T22:07:00Z"
@@ -332,10 +339,6 @@
           {
             "title": "Klempířův mediální zákon může změnit ČT v polostátní komerční televizi",
             "publishedAt": "2026-04-29T22:07:00Z"
-          },
-          {
-            "title": "Stát jako špatný majitel státních firem",
-            "publishedAt": "2026-04-28T22:07:00Z"
           }
         ]
       }

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-05-11T22:04:49.360115Z",
+  "ingestedAt": "2026-05-11T22:44:15.161731Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Bizarní dopravní prostředky, které předběhly dobu či zabloudily v čase",
+      "url": "https://www.idnes.cz/technet/technika/bizarni-dopravni-prostredky.A260511_100526_tec_technika_alv",
+      "dt": "2026-05-11T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "bizarní",
+        "dobu",
+        "dopravní",
+        "prostředky",
+        "předběhly",
+        "zabloudily",
+        "čase"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -734,31 +758,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Před 25 lety začal vesmírný turismus. První soukromník letěl sojuzem",
-      "url": "https://www.idnes.cz/technet/vesmir/vesmir-iss-turista-taxi-dennis-tito-soukroma-cesta-sojuz.A260427_151417_tec_vesmir_vse",
-      "dt": "2026-04-28T05:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "lety",
-        "letěl",
-        "první",
-        "sojuzem",
-        "soukromník",
-        "turismus",
-        "vesmírný",
-        "začal"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -769,7 +768,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 45723,
+      "bytes": 46035,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -806,11 +805,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-10T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 15,
-          "zpravy": 15
+          "other": 16,
+          "zpravy": 14
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -822,6 +821,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bizarní dopravní prostředky, které předběhly dobu či zabloudily v čase",
+            "publishedAt": "2026-05-11T22:00:00Z"
+          },
           {
             "title": "Co když mocným rupne v hlavě? Jak zachránit svá data z cloudových úložišť",
             "publishedAt": "2026-05-10T22:00:00Z"
@@ -849,10 +852,6 @@
           {
             "title": "Poznáte lokomotivy ČSD a ČD na modelovém kolejišti?",
             "publishedAt": "2026-05-08T22:00:00Z"
-          },
-          {
-            "title": "Jupiter je placatější, než jsme mysleli. Měření mu ubralo dvanáct kilometrů",
-            "publishedAt": "2026-05-08T08:02:00Z"
           }
         ]
       }
