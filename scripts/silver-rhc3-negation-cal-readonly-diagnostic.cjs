@@ -10,7 +10,7 @@ const { execSync } = require("child_process");
 const REPO = path.resolve(__dirname, "..");
 const REPORT_JSON = path.join(__dirname, "silver-rhc3-negation-cal-readonly-diagnostic-report.json");
 
-const PINNED_MAIN_COMMIT = "bff646c9cbc3a9d28173d475644d874f88d44d54";
+const PINNED_MAIN_COMMIT = "76ab766d516c2d9e41ff1884681ff800f2a4e231";
 const TARGET_CLUSTER = "rhc3_negation_cal_readonly";
 const RANDOM_SAMPLE_SEED = 0x4e656761;
 const STRATA = 8;
@@ -22,7 +22,7 @@ const TOTAL_CASES = (() => {
 
 const core = require("./rhc-v3-deterministic-core.cjs");
 const rhc3 = require("./silver-real-human-chaos-v3.cjs");
-const { computeGoldLabels, finalizeModuleSwitchHarnessEval } = rhc3;
+const { computeGoldLabels, finalizeModuleSwitchHarnessEval, finalizeNegationNoWriteHarnessEval } = rhc3;
 const harness = require("./audit_silver_realistic_mobile_corpus.cjs");
 
 const { loadEngine, evaluateOne, applyHarnessExpectationHarmonization, ctxForCase, foldCs, rawUserMessage } = harness;
@@ -238,7 +238,9 @@ function gitAllowListClean() {
     const tracked = lines.filter((l) => !l.startsWith("??"));
     const allow = [
       "scripts/silver-rhc3-negation-cal-readonly-diagnostic.cjs",
-      "scripts/silver-rhc3-negation-cal-readonly-diagnostic-report.json"
+      "scripts/silver-rhc3-negation-cal-readonly-diagnostic-report.json",
+      "scripts/silver-real-human-chaos-v3.cjs",
+      "scripts/silver-real-human-chaos-v3-report.json"
     ];
     const bad = tracked.filter((l) => {
       const pathPart = (l.length >= 4 ? l.slice(3) : l).trim().replace(/\\/g, "/");
@@ -368,6 +370,7 @@ function main() {
       turn = eng.processUserTurn(c.input, empty, ctxForCase(c.group));
       ev = evaluateOne(c, turn);
       ev = finalizeModuleSwitchHarnessEval(c, turn, ev);
+      ev = finalizeNegationNoWriteHarnessEval(c, turn, ev);
     } catch (e) {
       clusterFail++;
       turn = { normalizedIntent: "", processingState: "", draft: {} };
@@ -429,6 +432,7 @@ function main() {
       contains_filler: g.contains_filler,
       contains_no_diacritics: g.contains_no_diacritics,
       risk_level: g.risk_level,
+      negation_readonly_clarity_input: g.negation_readonly_clarity_input || "",
       actual_intent: turn.normalizedIntent,
       actual_module: actualModuleFromTurn(turn),
       actual_mode: actualModeFromTurn(turn),
@@ -450,6 +454,36 @@ function main() {
   const wm = fullBuckets.WRONG_MODULE_READ;
   const ot = fullBuckets.OTHER;
   const fullFailSum = te + sr + sc + gl + tp + wm + ot;
+
+  const negationReadonlyClarityCounts = {};
+  let safeClarificationAcceptedCount = 0;
+  let hardNoWriteFailNegationCount = 0;
+  for (let ni = 0; ni < clusterCases.length; ni++) {
+    const cn = clusterCases[ni];
+    const hitN = byId.get(cn.id);
+    if (!hitN) continue;
+    const gN = cn.gold || {};
+    const clarityKey = hitN.ev.pass && hitN.ev.cat === "negation_readonly_clarification_ok"
+      ? "clarification_ok"
+      : String(gN.negation_readonly_clarity_input || "");
+    negationReadonlyClarityCounts[clarityKey] = (negationReadonlyClarityCounts[clarityKey] || 0) + 1;
+    if (hitN.ev.pass && hitN.ev.cat === "negation_readonly_clarification_ok") {
+      safeClarificationAcceptedCount++;
+    }
+    const foldN = foldCs(cn.input);
+    const draftyN = createLikeTurn(hitN.turn);
+    const snw =
+      /\bnic\s+neuklad\w*\b/i.test(foldN) ||
+      /\bnevytvarej\b/i.test(foldN) ||
+      /\bnevytvářej\b/i.test(foldN) ||
+      /\bpouze\s+cti\b/i.test(foldN) ||
+      /\bpouze\s+čti\b/i.test(foldN) ||
+      /\bjen\s+se\s+podivej\b/i.test(foldN) ||
+      /\bjen\s+se\s+podívej\b/i.test(foldN) ||
+      /\bneukladat\b/i.test(foldN) ||
+      /\bneukládat\b/i.test(foldN);
+    if (snw && draftyN) hardNoWriteFailNegationCount++;
+  }
 
   const ranked = Object.entries(fullBuckets).sort((a, b) => b[1] - a[1]);
   const dominant_root_cause = fullFailSum ? ranked[0][0] : "NONE";
@@ -519,6 +553,10 @@ function main() {
     "wrong_module_read_count=" + wm,
     "other_count=" + ot,
     "",
+    "negation_readonly_clarity_counts=" + JSON.stringify(negationReadonlyClarityCounts),
+    "safe_clarification_accepted_count=" + safeClarificationAcceptedCount,
+    "hard_no_write_fail_count=" + hardNoWriteFailNegationCount,
+    "",
     "dominant_root_cause=" + dominant_root_cause,
     "",
     "representative_true_engine_fail_examples=" + repTrue.join(" || "),
@@ -552,6 +590,9 @@ function main() {
     ready_for_engine_fix,
     recommended_next_action,
     recommended_batch_family,
+    negation_readonly_clarity_counts: negationReadonlyClarityCounts,
+    safe_clarification_accepted_count: safeClarificationAcceptedCount,
+    hard_no_write_fail_count: hardNoWriteFailNegationCount,
     representative: {
       true_engine_fail_negation: repTrue,
       safe_read_ok_but_harness_fail: repSafeRead,
