@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-11T09:33:57.430824Z",
+  "ingestedAt": "2026-05-11T10:14:19.319373Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Odvolání z postu šéfa ČT mě profesně poškodilo, tvrdí Souček. S žalobou neuspěl",
+      "url": "https://www.idnes.cz/zpravy/domaci/soud-zamitl-zalobu-byvaleho-sefa-ct-soucka-kvuli-jeho-odvolani-z-funkce.A260511_111803_domaci_aoc",
+      "dt": "2026-05-11T09:33:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "neuspěl",
+        "odvolání",
+        "postu",
+        "poškodilo",
+        "profesně",
+        "souček",
+        "tvrdí",
+        "šéfa",
+        "žalobou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -736,33 +762,6 @@
         "přinesou",
         "ráno",
         "sněžit"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Írán v protinávrhu žádá konec bojů a zrušení sankcí. Nepřijatelné, míní Trump",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/iran-v-navrhu-na-konec-konfliktu-zada-konec-boju-a-zruseni-sankci.A260510_222735_zahranicni_air",
-      "dt": "2026-05-11T04:37:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bojů",
-        "konec",
-        "míní",
-        "nepřijatelné",
-        "protinávrhu",
-        "sankcí",
-        "trump",
-        "zrušení",
-        "írán",
-        "žádá"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1564,7 +1563,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 46153,
+      "bytes": 46406,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1601,7 +1600,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-11T09:26:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T09:33:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1618,6 +1617,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Odvolání z postu šéfa ČT mě profesně poškodilo, tvrdí Souček. S žalobou neuspěl",
+            "publishedAt": "2026-05-11T09:33:00Z"
+          },
           {
             "title": "Polovinu Česka zasáhnou silné bouře. Hrozí přívalové deště i rozvodnění řek",
             "publishedAt": "2026-05-11T09:26:00Z"
@@ -1644,10 +1647,6 @@
           },
           {
             "title": "Prodat nemovitost v Karlových Varech? Tady rozhodují zkušenosti, ne náhoda",
-            "publishedAt": "2026-05-11T09:00:00Z"
-          },
-          {
-            "title": "Jak poznat, že je čas zpomalit, dříve než vyhoříte?",
             "publishedAt": "2026-05-11T09:00:00Z"
           }
         ]

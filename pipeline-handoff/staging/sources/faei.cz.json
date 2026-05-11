@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-11T09:33:57.430824Z",
+  "ingestedAt": "2026-05-11T10:14:19.319373Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Poslanci „zakážou“ sjezd sudetských Němců. A co koncert náckovského rappera?",
+      "url": "https://profitonline.cz/poslanci-zakazou-sjezd-sudetskych-nemcu-a-co-koncert-nackovskeho-rappera/",
+      "dt": "2026-05-11T10:00:52Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "koncert",
+        "náckovského",
+        "němců",
+        "poslanci",
+        "rappera",
+        "sjezd",
+        "sudetských",
+        "zakážou"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -269,32 +294,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Petr Chalupný propojí oborová řešení napříč segmenty Dachser v Česku",
-      "url": "https://profitonline.cz/petr-chalupny-propoji-oborova-reseni-napric-segmenty-dachser-v-cesku/",
-      "dt": "2026-05-09T06:00:08Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "chalupný",
-        "dachser",
-        "napříč",
-        "oborová",
-        "petr",
-        "propojí",
-        "segmenty",
-        "česku",
-        "řešení"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -305,7 +304,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18849,
+      "bytes": 19071,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -342,7 +341,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-11T08:00:16Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T10:00:52Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -359,6 +358,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Poslanci „zakážou“ sjezd sudetských Němců. A co koncert náckovského rappera?",
+            "publishedAt": "2026-05-11T10:00:52Z"
+          },
           {
             "title": "Intel se vrací do centra pozornosti v oblasti umělé inteligence",
             "publishedAt": "2026-05-11T08:00:16Z"
@@ -386,10 +389,6 @@
           {
             "title": "Návrat do práce zůstává pro české matky luxusem",
             "publishedAt": "2026-05-10T06:00:52Z"
-          },
-          {
-            "title": "Zloději kol si vybírají čím dál dražší modely. Škoda přesáhla 100 milionů",
-            "publishedAt": "2026-05-10T04:00:36Z"
           }
         ]
       }

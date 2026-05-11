@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-05-11T09:33:57.430824Z",
+  "ingestedAt": "2026-05-11T10:14:19.319373Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Dvě třetiny žen si namlouvají, že vyvrcholení v posteli nepotřebují. Může za to nevědomá ochrana mysli",
+      "url": "https://www.betterlife.cz/dve-tretiny-zen-si-namlouvaji-ze-vyvrcholeni-v-posteli-nepotrebuji-muze-za-to-nevedoma-ochrana-mysli/",
+      "dt": "2026-05-11T09:50:19Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "dvě",
+        "mysli",
+        "namlouvají",
+        "nepotřebují",
+        "nevědomá",
+        "ochrana",
+        "posteli",
+        "třetiny",
+        "vyvrcholení",
+        "žen"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -251,32 +278,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Světový den těhotenství každoročně připomíná důležitost pečlivé péče o matky",
-      "url": "https://www.betterlife.cz/svetovy-den-tehotenstvi-kazdorocne-pripomina-dulezitost-peclive-pece-o-matky/",
-      "dt": "2026-05-07T12:11:03Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "den",
-        "důležitost",
-        "každoročně",
-        "matky",
-        "pečlivé",
-        "péče",
-        "připomíná",
-        "světový",
-        "těhotenství"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -287,7 +288,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 64205,
+      "bytes": 64983,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -347,13 +348,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-11T06:44:43Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T09:50:19Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 7,
+          "zdravi": 8,
           "zpravy": 1,
-          "sport": 1,
-          "finance": 1
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -365,6 +365,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dvě třetiny žen si namlouvají, že vyvrcholení v posteli nepotřebují. Může za to nevědomá ochrana mysli",
+            "publishedAt": "2026-05-11T09:50:19Z"
+          },
           {
             "title": "Svlékli se donaha v Naked Attraction a našli skutečnou lásku. Došlo i na první zásnuby",
             "publishedAt": "2026-05-11T06:44:43Z"
@@ -392,10 +396,6 @@
           {
             "title": "Natáčení filmu Postřižiny provázely zdravotní problémy i nečekané herecké změny",
             "publishedAt": "2026-05-08T15:32:48Z"
-          },
-          {
-            "title": "Vzácný objev v Praze. Sběratel našel při ražbě metra půl miliardy let starou fosilii",
-            "publishedAt": "2026-05-08T06:28:52Z"
           }
         ]
       }

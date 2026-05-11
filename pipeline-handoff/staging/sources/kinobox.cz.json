@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-11T09:33:57.430824Z",
+  "ingestedAt": "2026-05-11T10:14:19.319373Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kinobox Daily: Neonacista a farář bojují o víru v černočerné komedii Adamova jablka",
+      "url": "https://www.kinobox.cz/clanky/daily/53621-kinobox-daily-neonacista-a-farar-bojuji-o-viru-v-cernocerne-komedii-adamova-jablka",
+      "dt": "2026-05-11T10:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "adamova",
+        "bojují",
+        "daily",
+        "farář",
+        "jablka",
+        "kinobox",
+        "komedii",
+        "neonacista",
+        "víru",
+        "černočerné"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -514,34 +541,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "David Attenborough dál zprostředkovává kontakt se ztraceným světem. Televizní legenda slaví 100. narozeniny",
-      "url": "https://www.kinobox.cz/clanky/tema/53560-david-attenborough-dal-zprostredkovava-kontakt-se-ztracenym-svetem-televizni-legenda-slavi-100-narozeniny",
-      "dt": "2026-05-08T09:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "100",
-        "attenborough",
-        "david",
-        "kontakt",
-        "legenda",
-        "narozeniny",
-        "slaví",
-        "světem",
-        "televizní",
-        "zprostředkovává",
-        "ztraceným"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -552,7 +551,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28962,
+      "bytes": 28521,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -589,7 +588,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-11T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T10:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -604,6 +603,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinobox Daily: Neonacista a farář bojují o víru v černočerné komedii Adamova jablka",
+            "publishedAt": "2026-05-11T10:00:00Z"
+          },
           {
             "title": "Kdo je nový Albus Brumbál? John Lithgow roli definuje jako poslední etapu svého života",
             "publishedAt": "2026-05-11T09:00:00Z"
@@ -631,10 +634,6 @@
           {
             "title": "Hvězdná dámská jízda plná sexistických vtipů. Bardotky představují oddychový trailer",
             "publishedAt": "2026-05-10T09:00:00Z"
-          },
-          {
-            "title": "Ranč Duttonových bude plný přestřelek a mrtvol. Nástupce Yellowstonu ukazuje všechny trumfy",
-            "publishedAt": "2026-05-10T07:00:00Z"
           }
         ]
       }

@@ -1,28 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-11T09:33:57.430824Z",
+  "ingestedAt": "2026-05-11T10:14:19.319373Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Některé voliče frustruju, ale ukážu jim, že se mýlí, řekl Starmer po propadu labouristů",
+      "title": "Šťastný chce kvůli výtržnostem na derby vytvořit pracovní skupinu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/stastny-chce-kvuli-vytrznostem-na-derby-vytvorit-pracovni-skupinu-373292",
+      "dt": "2026-05-11T10:02:47Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "chce",
+        "derby",
+        "kvůli",
+        "pracovní",
+        "skupinu",
+        "vytvořit",
+        "výtržnostem",
+        "šťastný"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Některé voliče frustruju, ale neuvrhnu zemi v chaos, odmítl Starmer rezignaci",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/projev-premiera-starmera-po-propadu-labouristu-v-mistnich-volbach-373291",
       "dt": "2026-05-11T09:09:40Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
         "ale",
+        "chaos",
         "frustruju",
-        "jim",
-        "labouristů",
-        "mýlí",
+        "neuvrhnu",
         "některé",
-        "propadu",
+        "odmítl",
+        "rezignaci",
         "starmer",
-        "ukážu",
         "voliče",
-        "řekl"
+        "zemi"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -723,32 +747,6 @@
         "svými",
         "třemi",
         "vyrážel"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Příliv zahraničních investic zpomaluje. Podle experta Česko usnulo na vavřínech",
-      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/priliv-zahranicnich-investic-zpomaluje-podle-experta-cesko-usnulo-na-vavrinech-373262",
-      "dt": "2026-05-10T06:30:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "experta",
-        "investic",
-        "podle",
-        "příliv",
-        "usnulo",
-        "vavřínech",
-        "zahraničních",
-        "zpomaluje",
-        "česko"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1527,7 +1525,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 45585,
+      "bytes": 44793,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1587,12 +1585,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-11T09:09:40Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T10:02:47Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 24,
+          "zpravy": 25,
           "other": 2,
-          "finance": 4
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1605,7 +1603,11 @@
         },
         "sample_titles": [
           {
-            "title": "Některé voliče frustruju, ale ukážu jim, že se mýlí, řekl Starmer po propadu labouristů",
+            "title": "Šťastný chce kvůli výtržnostem na derby vytvořit pracovní skupinu",
+            "publishedAt": "2026-05-11T10:02:47Z"
+          },
+          {
+            "title": "Některé voliče frustruju, ale neuvrhnu zemi v chaos, odmítl Starmer rezignaci",
             "publishedAt": "2026-05-11T09:09:40Z"
           },
           {
@@ -1631,10 +1633,6 @@
           {
             "title": "Východní část Česka zasáhnou odpoledne a v noci silné bouře, varuje ČHMÚ",
             "publishedAt": "2026-05-11T06:31:42Z"
-          },
-          {
-            "title": "Ropa zdražuje po Trumpově odmítnutí íránské odpovědi na mírový návrh",
-            "publishedAt": "2026-05-11T06:29:29Z"
           }
         ]
       }
@@ -1740,7 +1738,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78152,
+      "bytes": 78258,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-11T09:33:57.430824Z",
+  "ingestedAt": "2026-05-11T10:14:19.319373Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "8 dětí za rok zemřelo po krutém zacházení. Nový úřad má zajistit včasnou pomoc všem",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/tyrani-deti-novy-urad/",
+      "dt": "2026-05-11T09:36:52Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dětí",
+        "krutém",
+        "nový",
+        "pomoc",
+        "rok",
+        "včasnou",
+        "všem",
+        "zacházení",
+        "zajistit",
+        "zemřelo",
+        "úřad"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -250,30 +278,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Matky spí málo a doplácí na to zdravím. Pomoci mohou 4 kroky",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/matky-spi-malo-doplaci-na-to-zdravim-4-kroky/",
-      "dt": "2026-05-10T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "doplácí",
-        "kroky",
-        "matky",
-        "málo",
-        "pomoci",
-        "spí",
-        "zdravím"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -284,7 +288,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 103078,
+      "bytes": 100252,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -321,7 +325,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-11T09:15:22Z",
+        "raw_feed_latest_publishedAt": "2026-05-11T09:36:52Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -336,6 +340,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "8 dětí za rok zemřelo po krutém zacházení. Nový úřad má zajistit včasnou pomoc všem",
+            "publishedAt": "2026-05-11T09:36:52Z"
+          },
           {
             "title": "Co teď čeká pasažéry lodi s hantavirem? Rozdílný přístup jednotlivých států budí pozornost",
             "publishedAt": "2026-05-11T09:15:22Z"
@@ -363,10 +371,6 @@
           {
             "title": "SÚKL si může polepšit o 7 milionů ročně. Vláda projedná i postoj k pandemické dohodě",
             "publishedAt": "2026-05-10T11:42:53Z"
-          },
-          {
-            "title": "Výsadek na konci světa: Britští vojenští zdravotníci seskočili na odlehlý ostrov kvůli muži s hantavirem",
-            "publishedAt": "2026-05-10T11:17:58Z"
           }
         ]
       }
