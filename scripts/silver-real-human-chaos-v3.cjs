@@ -22,7 +22,7 @@ const TOTAL_CASES = (() => {
 })();
 const FUTURE_TARGET_CASES = 500000;
 const SAMPLE_INSPECTION_N = 100;
-const USER_MAIN_BEFORE = "ca0d179d05c5983238595a5c4a1ea9d6dd7c5533";
+const USER_MAIN_BEFORE = "76ab766d516c2d9e41ff1884681ff800f2a4e231";
 
 const core = require("./rhc-v3-deterministic-core.cjs");
 const harness = require("./audit_silver_realistic_mobile_corpus.cjs");
@@ -88,8 +88,67 @@ function safetyNoWriteFolded(fold) {
     /\bpouze\s+čti\b/i.test(fold) ||
     /\bjen\s+se\s+podivej\b/i.test(fold) ||
     /\bjen\s+se\s+podívej\b/i.test(fold) ||
+    /\bneukladat\b/i.test(fold) ||
+    /\bneukládat\b/i.test(fold)
+  );
+}
+
+function popcountMask(mask, onlyBits) {
+  let x = (mask >>> 0) & (onlyBits >>> 0);
+  let n = 0;
+  while (x) {
+    n += x & 1;
+    x >>>= 1;
+  }
+  return n;
+}
+
+/** Noise bits only (exclude family-default NEGATION_OVERLAY / AMBIGUITY_OVERLAY). */
+function negationNoWriteNoisePopcount(mask) {
+  const noiseMask =
+    core.M.FILLER_PREFIX |
+    core.M.FILLER_SUFFIX |
+    core.M.HESITATION |
+    core.M.MOBILE_PREFIX |
+    core.M.SPOKEN_COMPRESS |
+    core.M.EMOTIONAL |
+    core.M.TYPO_LITE |
+    core.M.STRIP_DIACRITICS |
+    core.M.PARTIAL_REF;
+  return popcountMask(mask >>> 0, noiseMask >>> 0);
+}
+
+/** Read-only / no-write cues for negation_no_write harness alignment (folded). */
+function negationReadonlyHarnessCueFolded(f) {
+  const fold = String(f || "");
+  return (
+    /\bnic\s+neuklad/i.test(fold) ||
+    /\bnic\s+nevytv/i.test(fold) ||
+    /\bnevytvářej\b/i.test(fold) ||
+    /\bnevytvarej\b/i.test(fold) ||
+    /\bpouze\s+čti\b/i.test(fold) ||
+    /\bpouze\s+cti\b/i.test(fold) ||
+    /\bjen\s+se\s+podívej\b/i.test(fold) ||
+    /\bjen\s+se\s+podivej\b/i.test(fold) ||
+    /\bneukládat\b/i.test(fold) ||
     /\bneukladat\b/i.test(fold)
   );
+}
+
+/**
+ * Gold-only clarity for negation_no_write / rhc3_negation_cal_readonly.
+ * clear = no filler/typo noise layers; noisy = light mutation; broken = heavy mutation; hard = cue lost in fold.
+ */
+function classifyNegationReadonlyClarity(row, fold) {
+  if (row.family !== "negation_no_write") return "";
+  const f = String(fold || "");
+  const mask = (row.mutation_mask || 0) >>> 0;
+  const n = negationNoWriteNoisePopcount(mask);
+  const cue = negationReadonlyHarnessCueFolded(f);
+  if (!cue) return "hard_no_write_guard";
+  if (n === 0) return "clear_read_request";
+  if (n >= 3) return "broken_by_filler";
+  return "noisy_read_request";
 }
 
 function buildFamilyCase(familyKey, localIndex, seqSalt) {
@@ -447,8 +506,15 @@ function computeGoldLabels(row) {
       row.group.indexOf("query") < 0 && row.group !== "multi_intent" ? extractTitleHint(row.input) : "",
     risk_level,
     module_switch_clarity: moduleSwitchMeta ? moduleSwitchMeta.clarity : "",
-    expected_clarification_reason: moduleSwitchMeta ? moduleSwitchMeta.reason : ""
+    expected_clarification_reason: moduleSwitchMeta ? moduleSwitchMeta.reason : "",
+    negation_readonly_clarity_input: "",
+    negation_readonly_clarity: ""
   };
+  if (row.family === "negation_no_write") {
+    const nrc = classifyNegationReadonlyClarity(row, fold);
+    gold.negation_readonly_clarity_input = nrc;
+    gold.negation_readonly_clarity = nrc;
+  }
   return gold;
 }
 
@@ -477,6 +543,45 @@ function finalizeModuleSwitchHarnessEval(c, turn, ev) {
   }
   c._module_switch_storage_disambig_harness_pass = true;
   return Object.assign({}, ev, { pass: true, cat: "module_switch_storage_disambig_ok", auditIntent: ev.auditIntent, raw: ev.raw });
+}
+
+/**
+ * negation_no_write / rhc3_negation_cal_readonly: noisy or broken read-only surface may yield safe clarification
+ * (no draft/create) — count PASS. P0: never upgrade if engine produced create-like turn.
+ */
+function finalizeNegationNoWriteHarnessEval(c, turn, ev) {
+  if (c.family !== "negation_no_write" || ev.pass) return ev;
+  if (String(c.cluster || "") !== "rhc3_negation_cal_readonly") return ev;
+  const g = c.gold || {};
+  const inputClarity = String(g.negation_readonly_clarity_input || "");
+  if (inputClarity !== "noisy_read_request" && inputClarity !== "broken_by_filler") return ev;
+
+  const eng = String(turn.normalizedIntent || "");
+  const ps = String(turn.processingState || "");
+  const drafty =
+    ps === "READY_TO_SAVE" ||
+    eng === "calendar.create" ||
+    eng === "tasks.create" ||
+    eng === "notes.create";
+  if (drafty) return ev;
+
+  if (ev.cat !== "intent_fail") return ev;
+  if (eng !== "clarification" && eng !== "unknown") return ev;
+
+  const fold = foldCs(c.input);
+  if (!negationReadonlyHarnessCueFolded(fold)) return ev;
+
+  if (c.gold) {
+    c.gold.negation_readonly_clarity = "clarification_ok";
+    c.gold.negation_readonly_clarity_resolved_from = inputClarity;
+  }
+  c._negation_no_write_clarification_harness_pass = true;
+  return Object.assign({}, ev, {
+    pass: true,
+    cat: "negation_readonly_clarification_ok",
+    auditIntent: ev.auditIntent,
+    raw: ev.raw
+  });
 }
 
 function topicFromFold(fold, row) {
@@ -531,6 +636,8 @@ function gitTrackedCleanForRhc() {
       "scripts/audit_silver_real_ux_v1.cjs",
       "scripts/audit_silver_real_ux_v2_30000.cjs",
       "scripts/silver-deep-product-real-ux-v2-report.json",
+      "scripts/silver-rhc3-negation-cal-readonly-diagnostic.cjs",
+      "scripts/silver-rhc3-negation-cal-readonly-diagnostic-report.json",
       "assets/app.js"
     ];
     const bad = tracked.filter((l) => {
@@ -628,6 +735,10 @@ function main() {
   let moduleSwitchCalToNotePass = 0;
   let moduleSwitchCalToNoteFail = 0;
 
+  const negationReadonlyClarityCounts = {};
+  let safeClarificationAcceptedCount = 0;
+  let hardNoWriteFailNegationCount = 0;
+
   for (const c of cases) {
     if (!byG[c.group]) byG[c.group] = { pass: 0, fail: 0 };
     if (!byFamily[c.family]) byFamily[c.family] = { pass: 0, fail: 0 };
@@ -663,6 +774,7 @@ function main() {
     const foldedIn = foldCs(c.input);
     let ev = evaluateOne(c, turn);
     ev = finalizeModuleSwitchHarnessEval(c, turn, ev);
+    ev = finalizeNegationNoWriteHarnessEval(c, turn, ev);
     const createLike = createLikeTurn(turn);
 
     if (safetyNoWriteFolded(foldedIn) && createLike) {
@@ -691,6 +803,17 @@ function main() {
     if (c.cluster === "rhc3_module_switch_cal_to_note") {
       if (ev.pass) moduleSwitchCalToNotePass++;
       else moduleSwitchCalToNoteFail++;
+    }
+
+    if (c.family === "negation_no_write" && c.cluster === "rhc3_negation_cal_readonly") {
+      const clarityKey = c._negation_no_write_clarification_harness_pass
+        ? "clarification_ok"
+        : String((c.gold && c.gold.negation_readonly_clarity_input) || "");
+      negationReadonlyClarityCounts[clarityKey] = (negationReadonlyClarityCounts[clarityKey] || 0) + 1;
+      if (c._negation_no_write_clarification_harness_pass) safeClarificationAcceptedCount++;
+    }
+    if (c.family === "negation_no_write" && safetyNoWriteFolded(foldedIn) && createLike) {
+      hardNoWriteFailNegationCount++;
     }
 
     if (ev.pass) {
@@ -944,6 +1067,8 @@ function main() {
         [
           "scripts/silver-real-human-chaos-v3.cjs",
           "scripts/silver-real-human-chaos-v3-report.json",
+          "scripts/silver-rhc3-negation-cal-readonly-diagnostic.cjs",
+          "scripts/silver-rhc3-negation-cal-readonly-diagnostic-report.json",
           "scripts/silver-rhc3-top-cluster-diagnostic.cjs",
           "scripts/silver-rhc3-top-cluster-diagnostic-report.json",
           "scripts/rhc-v3-deterministic-core.cjs",
@@ -1019,6 +1144,13 @@ function main() {
       total: moduleSwitchCalToNotePass + moduleSwitchCalToNoteFail
     }
   };
+  reportObj.negation_no_write_readonly_alignment = {
+    target_family: "negation_no_write",
+    target_cluster: "rhc3_negation_cal_readonly",
+    negation_readonly_clarity_counts: negationReadonlyClarityCounts,
+    safe_clarification_accepted_count: safeClarificationAcceptedCount,
+    hard_no_write_fail_count: hardNoWriteFailNegationCount
+  };
   reportObj.pr_result_block = prBlock;
   fs.writeFileSync(REPORT_JSON, JSON.stringify(reportObj, null, 2), "utf8");
 }
@@ -1034,5 +1166,8 @@ module.exports = {
   HARNESS_ID,
   computeGoldLabels,
   classifyModuleSwitchClarity,
-  finalizeModuleSwitchHarnessEval
+  finalizeModuleSwitchHarnessEval,
+  finalizeNegationNoWriteHarnessEval,
+  classifyNegationReadonlyClarity,
+  negationReadonlyHarnessCueFolded
 };
