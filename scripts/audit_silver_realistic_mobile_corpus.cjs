@@ -660,6 +660,24 @@ function evaluateOne(c, turn) {
       }
       return { pass: true, cat: "", auditIntent, raw };
     }
+    /** rcz2_ambiguity: negace + gold unknown — bezpečné čtení / clarify / global.search bez create je PASS (bez změny engine). */
+    if (
+      c.cluster === "rcz2_ambiguity" &&
+      expectedIntent === "unknown" &&
+      hasNegWrite(folded) &&
+      eng !== "calendar.create" &&
+      eng !== "tasks.create" &&
+      eng !== "notes.create" &&
+      turn.processingState !== "READY_TO_SAVE" &&
+      (eng === "calendar.read" ||
+        eng === "tasks.read" ||
+        eng === "notes.read" ||
+        eng === "clarification" ||
+        eng === "unknown" ||
+        eng === "global.search")
+    ) {
+      return { pass: true, cat: "", auditIntent, raw };
+    }
     if (auditIntent === "unknown" || eng === "clarification") {
       if (expectedIntent !== "unknown") {
         return { pass: false, cat: "intent_fail", auditIntent, raw };

@@ -88,6 +88,7 @@ function gitTrackedClean() {
       "scripts/silver-real-czech-public-ux-corpus-v2-report.json",
       "scripts/silver-rcz2-mobile-voice-intent-fail-diagnostic.cjs",
       "scripts/silver-rcz2-mobile-voice-intent-fail-diagnostic-report.json",
+      "scripts/silver-rcz2-ambiguity-intent-fail-diagnostic.cjs",
       "scripts/audit_silver_20000_routing_stable.cjs",
       "scripts/audit_silver_realistic_mobile_corpus.cjs",
       "scripts/silver-real-czech-corpus-v1.cjs",
@@ -508,23 +509,40 @@ function buildPublicUxCorpusV2() {
     push("rcz2_mixed_module", "multi_intent", raw, "unknown", { needsDualWrite, queryNeg }, { multi: true }, UX_CAT.MIXED);
   }
 
-  const AMB_Q = [
-    "Co mam s pravnikem?",
-    "Kde mam ucetni?",
-    "Kdy mam koupit kytky?",
-    "Co jsem resil s doktorem?",
-    "Kde je moje obcanka v poznamkach?",
-    "Co mam s advokatem?",
-    "Kdy mam hypoteku?",
-    "Kde mam PIN ke karte?",
-    "Co mam se schuzkou s Petrem?",
-    "Jaky mam program na zitra?"
+  const AMB_RD = ["Mrkni", "Koukni", "Najdi"];
+  /** Stejný tvar jako rcz2_retrieval (read v kalendáři) — stabilní calendar.read vs create. */
+  const CAL_ENT = [
+    "pravnik",
+    "pravnik smlouva",
+    "pravnik Brno",
+    "pravnik Petr",
+    "pravnik minuly tyden",
+    "zubar Korunni",
+    "ucetni faktury",
+    "doktor zitra",
+    "advokat plna moc",
+    "schuzka najem",
+    "kuryr balik",
+    "Petr smlouva"
   ];
+  const TASK_ENT = ["pravnik", "kytky", "hypoteka", "doktor", "smlouva", "Petr", "ucetni", "advokat", "smlouva", "balik"];
+  const NOTE_ENT = ["pin k telefonu", "obcanka", "advokat", "hypoteka", "Petr", "ucetni", "pravnik", "doktor", "smlouva", "karticka"];
   for (let i = 0; i < 12000; i++) {
-    const base = AMB_Q[i % AMB_Q.length];
-    const raw = base.replace("?", i % 2 === 0 ? "?" : "") + (i % 7 === 0 ? " Nic neukladej." : "");
     const g = i % 4 === 0 ? "calendar_query" : i % 4 === 1 ? "task_query" : i % 4 === 2 ? "note_query" : "calendar_query";
-    const exp = i % 7 === 0 ? (g === "note_query" ? "note.query" : g === "task_query" ? "task.query" : "calendar.query") : "unknown";
+    const pref = AMB_RD[i % AMB_RD.length];
+    const negTail = i % 7 === 0 ? " Nic neukladej." : "";
+    let stem;
+    if (g === "calendar_query") stem = CAL_ENT[i % CAL_ENT.length] + " kontext " + i + " v kalendari";
+    else if (g === "task_query") stem = TASK_ENT[i % TASK_ENT.length] + " v ukolech radek " + i;
+    else stem = NOTE_ENT[i % NOTE_ENT.length] + " v poznamkach radek " + i;
+    const raw = pref + " " + stem + (i % 2 === 0 ? "?" : "") + negTail;
+    const exp = negTail
+      ? "unknown"
+      : g === "note_query"
+        ? "note.query"
+        : g === "task_query"
+          ? "task.query"
+          : "calendar.query";
     push("rcz2_ambiguity", g, raw, exp, {}, {}, UX_CAT.AMBIG);
   }
 

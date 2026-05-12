@@ -1,385 +1,380 @@
 {
   "harness_id": "silver_real_czech_public_ux_corpus_v2",
   "fixed_now": "2026-05-04T12:00:00",
-  "main_commit": "de9cdadfeaa319ce56ab4db96df5000cde583aa4",
-  "branch": "fix/silver-rcz2-unnecessary-disambiguation-corpus-p1",
+  "main_commit": "2932a4ff0a9a82d036fee7d09027de6f4ba54e59",
+  "branch": "main",
   "engine_changed": "NO",
   "assets_app_changed": "NO",
-  "changed_files": "scripts/silver-real-czech-public-ux-corpus-v2-report.json;scripts/silver-real-czech-public-ux-corpus-v2.cjs",
+  "changed_files": "scripts/audit_silver_realistic_mobile_corpus.cjs;scripts/silver-real-czech-public-ux-corpus-v2-report.json;scripts/silver-real-czech-public-ux-corpus-v2.cjs",
   "total_cases": 108000,
-  "pass": 90173,
-  "fail": 17827,
-  "accuracy": "83.49",
+  "pass": 101738,
+  "fail": 6262,
+  "accuracy": "94.20",
   "top_clusters": [
-    "rcz2_ambiguity||intent_fail:3427",
-    "rcz2_mobile_voice||intent_fail:3036",
-    "rcz2_ambiguity||calendar_vs_task_confusion:2400",
-    "rcz2_ambiguity||wrong_collection:2400",
-    "rcz2_mobile_voice||unnecessary_disambiguation:1964",
-    "rcz2_ambiguity||note_vs_task_confusion:1200",
+    "rcz2_mobile_voice||intent_fail:2434",
     "rcz2_retrieval||intent_fail:1000",
-    "rcz2_ultra_short_chaos||calendar_vs_task_confusion:800",
-    "rcz2_ultra_short_chaos||intent_fail:800",
-    "rcz2_ultra_short_chaos||wrong_collection:800"
+    "rcz2_ultra_short_chaos||intent_fail:944",
+    "rcz2_ultra_short_chaos||calendar_vs_task_confusion:942",
+    "rcz2_ultra_short_chaos||wrong_collection:942"
   ],
   "top_fail_examples": [
     {
-      "id": "rcz2_0066001",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000008",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s pravnikem? Nic neukladej.",
-      "ux_category": "ambiguity"
+      "input": "petr odpoledne",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066002",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000023",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Kde mam ucetni",
-      "ux_category": "ambiguity"
+      "input": "mamka vecer prosim",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066006",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000035",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s advokatem",
-      "ux_category": "ambiguity"
+      "input": "stavba rano no",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066010",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000047",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Jaky mam program na zitra",
-      "ux_category": "ambiguity"
+      "input": "doktor rano fakt",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066021",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000068",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s pravnikem?",
-      "ux_category": "ambiguity"
+      "input": "petr odpoledne??",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066022",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000083",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Kde mam ucetni Nic neukladej.",
-      "ux_category": "ambiguity"
+      "input": "mamka vecer tyjo",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066026",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000095",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s advokatem",
-      "ux_category": "ambiguity"
+      "input": "stavba rano no",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066030",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000107",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Jaky mam program na zitra",
-      "ux_category": "ambiguity"
+      "input": "doktor rano rychle",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066041",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000128",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s pravnikem?",
-      "ux_category": "ambiguity"
+      "input": "petr odpoledne??",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066042",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000131",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Kde mam ucetni",
-      "ux_category": "ambiguity"
+      "input": "smlouva zitra prosim?",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066046",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000143",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s advokatem",
-      "ux_category": "ambiguity"
+      "input": "mamka vecer tyjo",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066050",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000155",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Jaky mam program na zitra Nic neukladej.",
-      "ux_category": "ambiguity"
+      "input": "stavba rano fakt",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066061",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000167",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s pravnikem?",
-      "ux_category": "ambiguity"
+      "input": "doktor rano rychle",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066062",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000188",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Kde mam ucetni",
-      "ux_category": "ambiguity"
+      "input": "petr odpoledne prosim",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066066",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000191",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s advokatem",
-      "ux_category": "ambiguity"
+      "input": "smlouva zitra prosim?",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066070",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000203",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Jaky mam program na zitra",
-      "ux_category": "ambiguity"
+      "input": "mamka vecer no",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066081",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000215",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s pravnikem?",
-      "ux_category": "ambiguity"
+      "input": "stavba rano fakt",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066082",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000227",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Kde mam ucetni",
-      "ux_category": "ambiguity"
+      "input": "doktor rano",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066086",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000248",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s advokatem",
-      "ux_category": "ambiguity"
+      "input": "petr odpoledne prosim",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066090",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000251",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Jaky mam program na zitra",
-      "ux_category": "ambiguity"
+      "input": "smlouva zitra tyjo?",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066101",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000263",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s pravnikem?",
-      "ux_category": "ambiguity"
+      "input": "mamka vecer no",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066102",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000275",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Kde mam ucetni",
-      "ux_category": "ambiguity"
+      "input": "stavba rano rychle",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066106",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000287",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s advokatem Nic neukladej.",
-      "ux_category": "ambiguity"
+      "input": "doktor rano",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066110",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000308",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Jaky mam program na zitra",
-      "ux_category": "ambiguity"
+      "input": "petr odpoledne tyjo",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066121",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000311",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s pravnikem?",
-      "ux_category": "ambiguity"
+      "input": "smlouva zitra tyjo?",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066122",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000323",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Kde mam ucetni",
-      "ux_category": "ambiguity"
+      "input": "mamka vecer fakt",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066126",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000335",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s advokatem",
-      "ux_category": "ambiguity"
+      "input": "stavba rano rychle",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066130",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000347",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Jaky mam program na zitra",
-      "ux_category": "ambiguity"
+      "input": "doktor rano??",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066141",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000368",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s pravnikem? Nic neukladej.",
-      "ux_category": "ambiguity"
+      "input": "petr odpoledne tyjo",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066142",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000371",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Kde mam ucetni",
-      "ux_category": "ambiguity"
+      "input": "smlouva zitra no?",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066146",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000383",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s advokatem",
-      "ux_category": "ambiguity"
+      "input": "mamka vecer fakt",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066150",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000395",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Jaky mam program na zitra",
-      "ux_category": "ambiguity"
+      "input": "stavba rano",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066161",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000407",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s pravnikem?",
-      "ux_category": "ambiguity"
+      "input": "doktor rano??",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066162",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000428",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Kde mam ucetni Nic neukladej.",
-      "ux_category": "ambiguity"
+      "input": "petr odpoledne no",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066166",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000431",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s advokatem",
-      "ux_category": "ambiguity"
+      "input": "smlouva zitra no?",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066170",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000443",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Jaky mam program na zitra",
-      "ux_category": "ambiguity"
+      "input": "mamka vecer rychle",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066181",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000455",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s pravnikem?",
-      "ux_category": "ambiguity"
+      "input": "stavba rano",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066182",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000467",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Kde mam ucetni",
-      "ux_category": "ambiguity"
+      "input": "doktor rano prosim",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066186",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000488",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s advokatem",
-      "ux_category": "ambiguity"
+      "input": "petr odpoledne no",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066190",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000491",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Jaky mam program na zitra Nic neukladej.",
-      "ux_category": "ambiguity"
+      "input": "smlouva zitra fakt?",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066201",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000503",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s pravnikem?",
-      "ux_category": "ambiguity"
+      "input": "mamka vecer rychle",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066202",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000515",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Kde mam ucetni",
-      "ux_category": "ambiguity"
+      "input": "stavba rano??",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066206",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000527",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s advokatem",
-      "ux_category": "ambiguity"
+      "input": "doktor rano prosim",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066210",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000548",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Jaky mam program na zitra",
-      "ux_category": "ambiguity"
+      "input": "petr odpoledne fakt",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066221",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000551",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s pravnikem?",
-      "ux_category": "ambiguity"
+      "input": "smlouva zitra fakt?",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066222",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000563",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Kde mam ucetni",
-      "ux_category": "ambiguity"
+      "input": "mamka vecer",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066226",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000575",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s advokatem",
-      "ux_category": "ambiguity"
+      "input": "stavba rano??",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066230",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000587",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Jaky mam program na zitra",
-      "ux_category": "ambiguity"
+      "input": "doktor rano tyjo",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066241",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000608",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Co mam s pravnikem?",
-      "ux_category": "ambiguity"
+      "input": "petr odpoledne fakt",
+      "ux_category": "ultra_short_chaos"
     },
     {
-      "id": "rcz2_0066242",
-      "cluster": "rcz2_ambiguity",
+      "id": "rcz2_0000611",
+      "cluster": "rcz2_ultra_short_chaos",
       "cat": "calendar_vs_task_confusion",
-      "input": "Kde mam ucetni",
-      "ux_category": "ambiguity"
+      "input": "smlouva zitra rychle?",
+      "ux_category": "ultra_short_chaos"
     }
   ],
   "category_accuracy": {
-    "ultra_short_chaos": "80.00",
+    "ultra_short_chaos": "76.43",
     "dirty_czech_no_diacritics": "100.00",
-    "mobile_voice_chaos": "77.27",
+    "mobile_voice_chaos": "88.94",
     "mixed_module_chaos": "100.00",
-    "ambiguity": "21.44",
+    "ambiguity": "100.00",
     "retrieval_relevance": "91.67",
     "emotional_human_speech": "100.00",
     "long_chaotic_prompts": "100.00"
@@ -410,10 +405,10 @@
     "quality_accuracy": "100.00%",
     "realistic_overall_accuracy": "100.00%",
     "real_czech_corpus_accuracy": "100.00%",
-    "deep_product_real_ux_v2_accuracy": "91.00%"
+    "deep_product_real_ux_v2_accuracy": "92.00%"
   },
-  "recommended_next_cluster": "rcz2_ambiguity / intent_fail",
-  "recommended_next_fix_scope": "Impact leader «rcz2_ambiguity» / «intent_fail»: Silver routing thresholds + Czech paraphrase templates",
+  "recommended_next_cluster": "rcz2_mobile_voice / intent_fail",
+  "recommended_next_fix_scope": "Impact leader «rcz2_mobile_voice» / «intent_fail»: Silver routing thresholds + Czech paraphrase templates",
   "recommended_reason": "Top failing cluster indicates highest routing/semantic drift.",
   "risk_level": "P2",
   "ready_for_next_fix_task": "YES",
