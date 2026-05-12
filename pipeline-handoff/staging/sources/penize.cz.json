@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-12T13:49:08.306105Z",
+  "ingestedAt": "2026-05-12T14:29:05.999052Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Na účtence chyběla diakritika. Slovenský stánek s langoši dostal pokutu 1500 eur",
+      "url": "https://www.penize.cz/nakupy/489592-slovensky-urad-ulozil-stanku-s-langosi-pokutu-1500-eur-na-uctence-chybel-hacek-nad-pismenem",
+      "dt": "2026-05-12T15:49:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "1500",
+        "chyběla",
+        "diakritika",
+        "dostal",
+        "eur",
+        "langoši",
+        "pokutu",
+        "slovenský",
+        "stánek",
+        "účtence"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -491,31 +518,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Čekání pokračuje. ČNB ponechala úrokové sazby beze změny",
-      "url": "https://www.penize.cz/urokove-sazby/489374-cekani-pokracuje-cnb-ponechala-urokove-sazby-beze-zmeny",
-      "dt": "2026-05-07T14:30:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "beze",
-        "pokračuje",
-        "ponechala",
-        "sazby",
-        "změny",
-        "úrokové",
-        "čekání",
-        "čnb"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -526,7 +528,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18797,
+      "bytes": 18858,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -563,12 +565,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-12T14:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T15:49:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "finance": 17,
           "zpravy": 2,
-          "zdravi": 1,
-          "finance": 17
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -580,6 +582,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na účtence chyběla diakritika. Slovenský stánek s langoši dostal pokutu 1500 eur",
+            "publishedAt": "2026-05-12T15:49:00Z"
+          },
           {
             "title": "Další zlevnění. Maximální ceny benzinu a nafty na středu 13. května",
             "publishedAt": "2026-05-12T14:05:00Z"
@@ -607,10 +613,6 @@
           {
             "title": "Boj katastru proti robotům baví uživatele. Se skládačkou si lámou hlavu a selhávají",
             "publishedAt": "2026-05-11T10:52:00Z"
-          },
-          {
-            "title": "Po několikadenní odstávce přichází další. Jenda bude nedostupný i část dneška",
-            "publishedAt": "2026-05-11T10:20:00Z"
           }
         ]
       }

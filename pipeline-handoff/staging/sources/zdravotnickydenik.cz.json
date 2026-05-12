@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-12T13:49:08.306105Z",
+  "ingestedAt": "2026-05-12T14:29:05.999052Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Konec chybějících antibiotik a sirupů? EU schválila revoluční plán na lékovou soběstačnost",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/eu-lekova-sobestacnost/",
+      "dt": "2026-05-12T14:20:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "antibiotik",
+        "chybějících",
+        "konec",
+        "lékovou",
+        "plán",
+        "revoluční",
+        "schválila",
+        "sirupů",
+        "soběstačnost"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -248,34 +274,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Česko přichází o nejmodernější léčbu. Globální gigant a český startup ukazují cestu ven",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/nejmodernejsi-lecba-jak-prilakat-miliardove-investice/",
-      "dt": "2026-05-12T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "cestu",
-        "gigant",
-        "globální",
-        "léčbu",
-        "nejmodernější",
-        "přichází",
-        "startup",
-        "ukazují",
-        "ven",
-        "česko",
-        "český"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -286,7 +284,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 94516,
+      "bytes": 90814,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -323,7 +321,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-12T12:57:27Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T14:20:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -338,6 +336,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec chybějících antibiotik a sirupů? EU schválila revoluční plán na lékovou soběstačnost",
+            "publishedAt": "2026-05-12T14:20:00Z"
+          },
           {
             "title": "Posun v případu zbraně u pacienta v Motole: Výroky lékaře byly neetické, zní z nemocnice",
             "publishedAt": "2026-05-12T12:57:27Z"
@@ -365,10 +367,6 @@
           {
             "title": "Ztrácíte se v nemocnici? Česko má nový lék na bloudění v nekonečných chodbách",
             "publishedAt": "2026-05-12T08:00:00Z"
-          },
-          {
-            "title": "Chyba při odběru krve i likvidaci moči. 12 zdravotníků skončilo kvůli hantaviru v izolaci",
-            "publishedAt": "2026-05-12T07:00:53Z"
           }
         ]
       }

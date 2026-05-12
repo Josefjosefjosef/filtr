@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-12T13:49:08.306105Z",
+  "ingestedAt": "2026-05-12T14:29:05.999052Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Trump má velký problém: Inflace je nejvyšší za tři roky a volby se blíží",
+      "url": "https://ekonomickydenik.cz/trump-velky-problem-inflace-nejvyssi/",
+      "dt": "2026-05-12T14:05:11Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "blíží",
+        "inflace",
+        "nejvyšší",
+        "problém",
+        "roky",
+        "trump",
+        "tři",
+        "velký",
+        "volby"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -743,30 +769,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Írán poslal USA odpověď na návrh na ukončení války",
-      "url": "https://ekonomickydenik.cz/iran-poslal-usa-odpoved-na-navrh-na-ukonceni-valky/",
-      "dt": "2026-05-10T16:24:57Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "návrh",
-        "odpověď",
-        "poslal",
-        "ukončení",
-        "usa",
-        "války",
-        "írán"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -777,7 +779,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71229,
+      "bytes": 71575,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -814,11 +816,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T13:45:41Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T14:05:11Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 4,
-          "finance": 26
+          "finance": 26,
+          "zpravy": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -830,6 +832,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump má velký problém: Inflace je nejvyšší za tři roky a volby se blíží",
+            "publishedAt": "2026-05-12T14:05:11Z"
+          },
           {
             "title": "Revoluce v placení: Bič na podvodníky a návrat hotovosti do vesnických prodejen",
             "publishedAt": "2026-05-12T13:45:41Z"
@@ -857,10 +863,6 @@
           {
             "title": "Každý druhý řeší problém: Češi si hlasitě stěžují kvůli balíkům a mění trendy",
             "publishedAt": "2026-05-12T09:45:53Z"
-          },
-          {
-            "title": "Definitivní konec příměří: Rusko v noci útočilo stovkami dronů, Ukrajina odpoví",
-            "publishedAt": "2026-05-12T07:49:42Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-12T13:49:08.306105Z",
+  "ingestedAt": "2026-05-12T14:29:05.999052Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Série Devil May Cry se má dočkat remaku prvního dílu",
+      "url": "https://zing.cz/article/serie-devil-may-cry-se-ma-dockat-remaku-prvniho-dilu",
+      "dt": "2026-05-12T13:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "cry",
+        "devil",
+        "dočkat",
+        "dílu",
+        "may",
+        "prvního",
+        "remaku",
+        "série"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -942,32 +967,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Čekání končí: Mina the Hollower má konečně skutečné datum vydání",
-      "url": "https://zing.cz/article/cekani-konci-mina-the-hollower-ma-konecne-skutecne-datum-vydani",
-      "dt": "2026-05-08T06:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "datum",
-        "hollower",
-        "konečně",
-        "končí",
-        "mina",
-        "skutečné",
-        "the",
-        "vydání",
-        "čekání"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -978,7 +977,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125439,
+      "bytes": 125347,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1015,7 +1014,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-12T11:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T13:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1031,6 +1030,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Série Devil May Cry se má dočkat remaku prvního dílu",
+            "publishedAt": "2026-05-12T13:00:00Z"
+          },
           {
             "title": "MOUSE: P.I. For Hire si na sebe vydělalo za měsíc, vede si nad očekávání",
             "publishedAt": "2026-05-12T11:00:00Z"
@@ -1058,10 +1061,6 @@
           {
             "title": "Autor Gears of War naznačuje, jakou hru by rád udělal příště",
             "publishedAt": "2026-05-12T05:00:00Z"
-          },
-          {
-            "title": "Seriál Fallout odhalil známou hereckou posilu pro třetí sezónu",
-            "publishedAt": "2026-05-12T04:00:00Z"
           }
         ]
       }

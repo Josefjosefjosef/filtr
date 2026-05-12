@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-12T13:49:08.306105Z",
+  "ingestedAt": "2026-05-12T14:29:05.999052Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Na festivalu v Cannes chybí Hollywood, hvězdy ale ne",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/na-festivalu-v-cannes-chybi-hollywood-hvezdy-ale-ne-373345",
+      "dt": "2026-05-12T14:04:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "ale",
+        "cannes",
+        "chybí",
+        "festivalu",
+        "hollywood",
+        "hvězdy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -733,33 +756,6 @@
         "pochybili",
         "při",
         "zdravotníci"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Obchodníci a potravináři chtějí odklad nařízení o obalech. Resort chystá „non-paper“",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/obchodnici-a-potravinari-chteji-odklad-narizeni-o-obalech-resort-chysta-non-paper-373083",
-      "dt": "2026-05-12T05:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "chtějí",
-        "chystá",
-        "nařízení",
-        "non",
-        "obalech",
-        "obchodníci",
-        "odklad",
-        "paper",
-        "potravináři",
-        "resort"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1507,7 +1503,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43625,
+      "bytes": 43292,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1567,11 +1563,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T13:42:43Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T14:04:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "other": 6,
+          "other": 7,
+          "zpravy": 22,
           "finance": 1
         },
         "drop_counts": {
@@ -1584,6 +1580,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na festivalu v Cannes chybí Hollywood, hvězdy ale ne",
+            "publishedAt": "2026-05-12T14:04:00Z"
+          },
           {
             "title": "Ve Švýcarsku sílí klimatický fatalismus",
             "publishedAt": "2026-05-12T13:42:43Z"
@@ -1611,10 +1611,6 @@
           {
             "title": "Festival Pražské jaro začíná. Slyšet ho je možné na ČT i v parku",
             "publishedAt": "2026-05-12T12:54:40Z"
-          },
-          {
-            "title": "Soud uložil starostce Dobříkova pokutu 150 tisíc a zákaz veřejné funkce",
-            "publishedAt": "2026-05-12T12:47:35Z"
           }
         ]
       }
@@ -1720,7 +1716,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77611,
+      "bytes": 78330,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

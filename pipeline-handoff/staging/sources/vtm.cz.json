@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-12T13:49:08.306105Z",
+  "ingestedAt": "2026-05-12T14:29:05.999052Z",
   "items": [
     {
       "section": "veda",
@@ -21,6 +21,34 @@
         "telefonech",
         "všechno",
         "změní"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Garmin Forerunner 70 a 170 jsou levné hodinky pro začínající běžce. Liší se hudbou a platbami Garmin Pay",
+      "url": "https://mobilmania.zive.cz/clanky/garmin-forerunner-70-a-170-jsou-levne-hodinky-pro-zacinajici-bezce-lisi-se-hudbou-a-platbami-garmin-pay/sc-3-a-1364710/default.aspx",
+      "dt": "2026-05-12T13:15:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "170",
+        "běžce",
+        "forerunner",
+        "garmin",
+        "hodinky",
+        "hudbou",
+        "levné",
+        "liší",
+        "pay",
+        "platbami",
+        "začínající"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -959,34 +987,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Fitbit Air je minimalistický náramek bez displeje. S pomocí Gemini potichu hlídá vaše zdraví",
-      "url": "https://mobilmania.zive.cz/clanky/fitbit-air-je-minimalisticky-naramek-bez-displeje-s-pomoci-gemini-potichu-hlida-vase-zdravi/sc-3-a-1364698/default.aspx",
-      "dt": "2026-05-07T18:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "air",
-        "displeje",
-        "fitbit",
-        "gemini",
-        "hlídá",
-        "minimalistický",
-        "náramek",
-        "pomocí",
-        "potichu",
-        "vaše",
-        "zdraví"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -997,7 +997,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23243,
+      "bytes": 23270,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1034,7 +1034,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-12T12:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T13:15:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 34,
@@ -1053,6 +1053,10 @@
           {
             "title": "Díky nařízení EU padají bariéry mezi iPhonem a Androidem. Co všechno se v telefonech změní",
             "publishedAt": "2026-05-12T07:45:00Z"
+          },
+          {
+            "title": "Garmin Forerunner 70 a 170 jsou levné hodinky pro začínající běžce. Liší se hudbou a platbami Garmin Pay",
+            "publishedAt": "2026-05-12T13:15:00Z"
           },
           {
             "title": "Stahujte aktualizaci pro iPhone. iOS 26.5 přináší nové tapety a emotikony, RCS zprávy zatím jen v zámoří",
@@ -1077,10 +1081,6 @@
           {
             "title": "Alza už má i vlastní baterku. Svítilna Campgo září až na 240 m a nabíjí se pomocí USB-C",
             "publishedAt": "2026-05-11T15:45:00Z"
-          },
-          {
-            "title": "Logitech chystá novou cestovní myš. Má trackpad a zlomí se v pase",
-            "publishedAt": "2026-05-12T08:45:00Z"
           }
         ]
       }

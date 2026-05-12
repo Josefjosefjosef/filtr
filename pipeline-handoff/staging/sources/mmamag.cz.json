@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-12T13:49:08.306105Z",
+  "ingestedAt": "2026-05-12T14:29:05.999052Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "video",
+      "title": "Rozhodčí Chimaeva okradli, shodují se Usman i Cejudo. Strickland prý jen couval a kontroval",
+      "url": "https://www.mmamag.cz/usman-a-cejudo-zpochybnili-vyhru-stricklanda/",
+      "dt": "2026-05-12T14:15:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "cejudo",
+        "chimaeva",
+        "couval",
+        "jen",
+        "kontroval",
+        "okradli",
+        "prý",
+        "rozhodčí",
+        "shodují",
+        "strickland",
+        "usman"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1097,34 +1125,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Svět kulturistiky jde ke dnu. Pódia dobývají muži, kteří vypadají jako ženy",
-      "url": "https://www.mmamag.cz/kulturisticka-podia-dobyvaji-muzi-kteri-vypadaji-jako-zeny/",
-      "dt": "2026-05-10T20:15:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "dnu",
-        "dobývají",
-        "jako",
-        "jde",
-        "kteří",
-        "kulturistiky",
-        "muži",
-        "pódia",
-        "svět",
-        "vypadají",
-        "ženy"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1135,7 +1135,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 77576,
+      "bytes": 78204,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1172,7 +1172,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-12T13:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T14:15:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1187,6 +1187,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rozhodčí Chimaeva okradli, shodují se Usman i Cejudo. Strickland prý jen couval a kontroval",
+            "publishedAt": "2026-05-12T14:15:00Z"
+          },
           {
             "title": "Nejsilnější muž světa skončil na vrcholu. Lékař Eddiemu Hallovi řekl, že mu hrozí infarkt i mrtvice",
             "publishedAt": "2026-05-12T13:30:00Z"
@@ -1214,10 +1218,6 @@
           {
             "title": "Poznáte slavného boxera podle popisu jeho nejslavnějšího zápasu. Skuteční znalci ringu si vybaví správnou odpověď okamžitě",
             "publishedAt": "2026-05-12T09:55:52Z"
-          },
-          {
-            "title": "Jake Paul připustil konec kariéry. Doktor mu řekl, ať už neleze do ringu",
-            "publishedAt": "2026-05-12T09:45:00Z"
           }
         ]
       }
