@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-12T15:54:40.736709Z",
+  "ingestedAt": "2026-05-12T16:34:05.822657Z",
   "items": [
     {
       "section": "veda",
@@ -21,6 +21,34 @@
         "telefonech",
         "všechno",
         "změní"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "O2 nabízí akční tarif s 10 GB a 150 minutami za 349 Kč měsíčně. Cenu garantuje pouze na rok",
+      "url": "https://mobilmania.zive.cz/clanky/o2-nabizi-akcni-tarif-s-10-gb-a-150-minutami-za-349-kc-mesicne-cenu-garantuje-pouze-na-rok/sc-3-a-1364711/default.aspx",
+      "dt": "2026-05-12T15:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "150",
+        "349",
+        "akční",
+        "cenu",
+        "garantuje",
+        "minutami",
+        "měsíčně",
+        "nabízí",
+        "pouze",
+        "rok",
+        "tarif"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -955,33 +983,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Tohle je 10 nejprodávanějších telefonů současnosti. Oblíbené jsou špičkové modely i lowendy za pár tisíc",
-      "url": "https://mobilmania.zive.cz/clanky/nejprodavanejsi-telefony-soucasnosti-202605/sc-3-a-1364674/default.aspx",
-      "dt": "2026-05-07T17:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "lowendy",
-        "modely",
-        "nejprodávanějších",
-        "oblíbené",
-        "pár",
-        "současnosti",
-        "telefonů",
-        "tisíc",
-        "tohle",
-        "špičkové"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -992,7 +993,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23154,
+      "bytes": 23025,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1029,7 +1030,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-12T14:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T15:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 34,
@@ -1048,6 +1049,10 @@
           {
             "title": "Díky nařízení EU padají bariéry mezi iPhonem a Androidem. Co všechno se v telefonech změní",
             "publishedAt": "2026-05-12T07:45:00Z"
+          },
+          {
+            "title": "O2 nabízí akční tarif s 10 GB a 150 minutami za 349 Kč měsíčně. Cenu garantuje pouze na rok",
+            "publishedAt": "2026-05-12T15:45:00Z"
           },
           {
             "title": "Nejlevnější 32\" QD OLED se skvělým zvukem. Test monitoru Dell S3225QC",
@@ -1072,10 +1077,6 @@
           {
             "title": "Alza už má i vlastní baterku. Svítilna Campgo září až na 240 m a nabíjí se pomocí USB-C",
             "publishedAt": "2026-05-11T15:45:00Z"
-          },
-          {
-            "title": "Proč výrobci raději prodají levný televizor než drahý „hloupý“ panel. TV bez tuneru totiž moc nedává smysl",
-            "publishedAt": "2026-05-11T11:45:00Z"
           }
         ]
       }

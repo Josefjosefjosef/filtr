@@ -1,8 +1,40 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-12T15:54:40.736709Z",
+  "ingestedAt": "2026-05-12T16:34:05.822657Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Na zahraničí míří lidé z Klausova institutu. Macinka z nich staví tým nejbližších, povýšit má i jeho &bdquo;ideolog&ldquo;",
+      "url": "https://domaci.hn.cz/c1-67876110-na-zahranici-miri-lide-z-klausova-institutu-macinka-z-nich-stavi-tym-nejblizsich-povysit-ma-i-jeho-bdquo-ideolog-ldquo",
+      "dt": "2026-05-12T16:27:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bdquo",
+        "ideolog",
+        "institutu",
+        "jeho",
+        "klausova",
+        "ldquo",
+        "lidé",
+        "macinka",
+        "míří",
+        "nejbližších",
+        "nich",
+        "povýšit",
+        "staví",
+        "tým",
+        "zahraničí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1131,36 +1163,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Chystá se průvan v podpoře výzkumu, některé programy zmizí,  ostatní budou muset resorty a agentury tvrdě obhajovat",
-      "url": "https://archiv.hn.cz/c1-67875620-chysta-se-pruvan-v-podpore-vyzkumu-nektere-programy-zmizi-ostatni-budou-muset-resorty-a-agentury-tvrde-obhajovat",
-      "dt": "2026-05-11T13:11:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "agentury",
-        "chystá",
-        "muset",
-        "některé",
-        "obhajovat",
-        "ostatní",
-        "podpoře",
-        "programy",
-        "průvan",
-        "resorty",
-        "tvrdě",
-        "výzkumu",
-        "zmizí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1171,7 +1173,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184779,
+      "bytes": 185077,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1208,7 +1210,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-12T14:27:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T16:27:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 37,
@@ -1225,6 +1227,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na zahraničí míří lidé z Klausova institutu. Macinka z nich staví tým nejbližších, povýšit má i jeho &bdquo;ideolog&ldquo;",
+            "publishedAt": "2026-05-12T16:27:00Z"
+          },
           {
             "title": "S korunou na věčné časy. Vláda ruší poslední rituály spojené s &bdquo;příjímáním&ldquo; eura, skutečná šance zmizela před 20 lety",
             "publishedAt": "2026-05-12T14:27:00Z"
@@ -1252,10 +1258,6 @@
           {
             "title": "Tolik nenávisti kolem sněmu sudetských Němců jsem nečekal, říká David Macek z Meetingu Brno",
             "publishedAt": "2026-05-12T12:50:00Z"
-          },
-          {
-            "title": "Zastaralé brownfieldy mění Logport v atraktivní místa pro podnikání. Za zády má nově kapitál investiční skupiny J&amp;T&nbsp;",
-            "publishedAt": "2026-05-12T12:25:00Z"
           }
         ]
       }

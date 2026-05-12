@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-12T15:54:40.736709Z",
+  "ingestedAt": "2026-05-12T16:34:05.822657Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zpět k ropě a zlatu. Evropa obnovila pakt se Sýrií z roku 1977",
+      "url": "https://ekonomickydenik.cz/ropa-zlato-evropa-pakt-syrie-1977/",
+      "dt": "2026-05-12T16:20:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "1977",
+        "evropa",
+        "obnovila",
+        "pakt",
+        "roku",
+        "ropě",
+        "sýrií",
+        "zlatu",
+        "zpět"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Meta dostala u soudu tvrdý direkt. Musí platit za úryvky z novin",
+      "url": "https://ekonomickydenik.cz/meta-tvrdy-direkt-platit-uryvky-novin/",
+      "dt": "2026-05-12T16:02:16Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "direkt",
+        "dostala",
+        "meta",
+        "musí",
+        "novin",
+        "platit",
+        "soudu",
+        "tvrdý",
+        "úryvky"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -715,58 +767,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Z brigádníka kriminálníkem: Za „testování“ bankovních aplikací hrozí rok vězení",
-      "url": "https://ekonomickydenik.cz/z-brigadnika-kriminalnikem-za-testovani-bankovnich-aplikaci-hrozi-rok-vezeni/",
-      "dt": "2026-05-11T08:20:05Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "aplikací",
-        "bankovních",
-        "brigádníka",
-        "hrozí",
-        "kriminálníkem",
-        "rok",
-        "testování",
-        "vězení"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ministr řeší odvoz suchého dřeva z národních parků. Ekologové varují před těžbou",
-      "url": "https://ekonomickydenik.cz/drevo-narodni-parky-tezba-ekologove/",
-      "dt": "2026-05-11T06:15:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "dřeva",
-        "ekologové",
-        "ministr",
-        "národních",
-        "odvoz",
-        "parků",
-        "suchého",
-        "těžbou",
-        "varují",
-        "řeší"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -777,7 +777,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71981,
+      "bytes": 71761,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -814,12 +814,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T15:37:45Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T16:20:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 1,
-          "finance": 25,
-          "zpravy": 4
+          "finance": 24,
+          "zpravy": 5,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -831,6 +831,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zpět k ropě a zlatu. Evropa obnovila pakt se Sýrií z roku 1977",
+            "publishedAt": "2026-05-12T16:20:00Z"
+          },
+          {
+            "title": "Meta dostala u soudu tvrdý direkt. Musí platit za úryvky z novin",
+            "publishedAt": "2026-05-12T16:02:16Z"
+          },
           {
             "title": "Primáře odvedli během služby. Policie prověřuje posudky z psychiatrie",
             "publishedAt": "2026-05-12T15:37:45Z"
@@ -854,14 +862,6 @@
           {
             "title": "Dozvuky hanebného derby: Slavii vyjde na desítky milionů",
             "publishedAt": "2026-05-12T13:31:45Z"
-          },
-          {
-            "title": "EU hledá 660 miliard eur ročně na čistou energii. Česko varuje před realitou",
-            "publishedAt": "2026-05-12T13:22:11Z"
-          },
-          {
-            "title": "Půlka úrody ovoce je pryč. Škody po mrazech půjdou do stovek milionů",
-            "publishedAt": "2026-05-12T12:57:26Z"
           }
         ]
       }

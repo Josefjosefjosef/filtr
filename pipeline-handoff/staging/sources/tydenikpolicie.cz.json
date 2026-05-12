@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-12T15:54:40.736709Z",
+  "ingestedAt": "2026-05-12T16:34:05.822657Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Řidič dacie nepřežil u Drahova náraz svého vozu do stromu",
+      "url": "https://tydenikpolicie.cz/ridic-dacie-neprezil-u-drahova-naraz-sveho-vozu-do-stromu/",
+      "dt": "2026-05-12T16:22:32Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "dacie",
+        "drahova",
+        "nepřežil",
+        "náraz",
+        "stromu",
+        "svého",
+        "vozu",
+        "řidič"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -233,31 +258,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Věžovému jeřábu v Brně prasklo rameno, policisté evakuovali okolí",
-      "url": "https://tydenikpolicie.cz/vezovemu-jerabu-na-stavbe-v-brne-prasklo-rameno/",
-      "dt": "2026-05-12T08:13:54Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "brně",
-        "evakuovali",
-        "jeřábu",
-        "okolí",
-        "policisté",
-        "prasklo",
-        "rameno",
-        "věžovému"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -268,7 +268,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16570,
+      "bytes": 16898,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -305,7 +305,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-12T12:42:59Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T16:22:32Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -320,6 +320,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Řidič dacie nepřežil u Drahova náraz svého vozu do stromu",
+            "publishedAt": "2026-05-12T16:22:32Z"
+          },
           {
             "title": "Muž v Jablonci nad Nisou nepřežil pád z elektrokoloběžky",
             "publishedAt": "2026-05-12T12:42:59Z"
@@ -347,10 +351,6 @@
           {
             "title": "Policisté hledají svědky riskantní jízdy řidiče volkswagenu na Hodonínsku",
             "publishedAt": "2026-05-12T08:38:55Z"
-          },
-          {
-            "title": "Řidič tatry přejel na Karlovarsku do protisměru, kde sešrotoval protijedoucí seat. Jeho řidička na místě zemřela",
-            "publishedAt": "2026-05-12T08:27:50Z"
           }
         ]
       }
