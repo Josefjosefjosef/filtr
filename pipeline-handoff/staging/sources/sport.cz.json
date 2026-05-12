@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-12T04:09:31.673888Z",
+  "ingestedAt": "2026-05-12T04:50:14.564079Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Moje odpovědnost se nedá zastřít! Tvrdík promluvil o rezignaci",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-moje-odpovednost-se-neda-zastrit-tvrdik-promluvil-o-rezignaci-5452924",
+      "dt": "2026-05-12T04:30:42Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "moje",
+        "nedá",
+        "odpovědnost",
+        "promluvil",
+        "rezignaci",
+        "tvrdík",
+        "zastřít"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -299,7 +323,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Všichni v kabině věděli, že tolerance končí. Nešlo o populistické gesto, říká Tvrdík o vyřazení Chorého a Douděry",
+      "title": "Všichni v kabině věděli, že tolerance končí. Nešlo o populistické gesto, říká šéf Slavie o vyřazení Chorého a Douděry",
       "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-vsichni-vedeli-ze-tolerance-konci-neslo-o-populisticke-gesto-rika-tvrdik-o-vyrazeni-choreho-a-doudery-5452809",
       "dt": "2026-05-11T18:11:21Z",
       "media_raw": "Sport.cz",
@@ -312,12 +336,13 @@
         "končí",
         "nešlo",
         "populistické",
+        "slavie",
         "tolerance",
-        "tvrdík",
         "vyřazení",
         "věděli",
         "všichni",
-        "říká"
+        "říká",
+        "šéf"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -711,32 +736,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Běžci na lyžích mají nového šéftrenéra, Husáka nahradil Němec Göpfert",
-      "url": "https://www.sport.cz/clanek/zimni-sporty-lyzovani-bezci-na-lyzich-maji-noveho-seftrenera-husaka-nahradil-nemec-gopfert-5452667",
-      "dt": "2026-05-11T14:00:00Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "běžci",
-        "göpfert",
-        "husáka",
-        "lyžích",
-        "mají",
-        "nahradil",
-        "nového",
-        "němec",
-        "šéftrenéra"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -747,7 +746,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43000,
+      "bytes": 43067,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -784,7 +783,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T04:00:51Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T04:30:42Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -799,6 +798,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Moje odpovědnost se nedá zastřít! Tvrdík promluvil o rezignaci",
+            "publishedAt": "2026-05-12T04:30:42Z"
+          },
           {
             "title": "Nečas pomohl Coloradu dvěma asistencemi k vytvoření mečbolu",
             "publishedAt": "2026-05-12T04:00:51Z"
@@ -826,10 +829,6 @@
           {
             "title": "Čupr ze Sparty se pustil do Tvrdíka: Komunikace Slavie vedla k válce",
             "publishedAt": "2026-05-11T19:45:02Z"
-          },
-          {
-            "title": "Seppälä bude dál hrát za Spartu. Finský obránce o rok prodloužil smlouvu",
-            "publishedAt": "2026-05-11T19:22:21Z"
           }
         ]
       }

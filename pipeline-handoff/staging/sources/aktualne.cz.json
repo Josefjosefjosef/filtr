@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-12T04:09:31.673888Z",
+  "ingestedAt": "2026-05-12T04:50:14.564079Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Íránský mírový návrh byl velkorysý, americké požadavky byly přehnané, zní z Teheránu",
+      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
+      "dt": "2026-02-28T14:04:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "americké",
+        "byly",
+        "mírový",
+        "návrh",
+        "požadavky",
+        "přehnané",
+        "teheránu",
+        "velkorysý",
+        "zní",
+        "íránský"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pistorius přijel do Kyjeva, jednal o společném vývoji a výrobě dronů",
+      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
+      "dt": "2026-01-21T06:45:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dronů",
+        "jednal",
+        "kyjeva",
+        "pistorius",
+        "přijel",
+        "společném",
+        "výrobě",
+        "vývoji"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -350,31 +402,6 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Pistorius přijel do Kyjeva, jednal o společném vývoji a výrobě dronů",
-      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
-      "dt": "2026-01-21T06:45:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dronů",
-        "jednal",
-        "kyjeva",
-        "pistorius",
-        "přijel",
-        "společném",
-        "výrobě",
-        "vývoji"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
       "title": "Riziko hantaviru v Česku je nízké, stát situaci sleduje, říká ministr Vojtěch",
       "url": "https://zpravy.aktualne.cz/domaci/riziko-hantaviru-v-cesku-je-nizke-stat-situaci-sleduje-rika-vojtech/r~aaa295b4727e0ee284720463f68a455d/",
       "dt": "2026-05-11T19:02:00Z",
@@ -501,34 +528,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Zlomový moment války.“ Ukrajinci začínají diktovat tempo, Rusko marně hledá odpověď",
-      "url": "https://zpravy.aktualne.cz/zahranici/zlomovy-moment-valky-ukrajinci-zacinaji-diktovat-tempo-rusko-marne-hleda-odpoved/r~aaa29ebf78282a76d4eac8935b75a995/",
-      "dt": "2026-05-11T17:22:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "diktovat",
-        "hledá",
-        "marně",
-        "moment",
-        "odpověď",
-        "rusko",
-        "tempo",
-        "ukrajinci",
-        "války",
-        "začínají",
-        "zlomový"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -539,7 +538,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21742,
+      "bytes": 21789,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -579,10 +578,10 @@
         "raw_feed_latest_publishedAt": "2026-05-12T04:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 13,
           "other": 1,
           "sport": 5,
-          "finance": 1,
-          "zpravy": 13
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -594,6 +593,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Íránský mírový návrh byl velkorysý, americké požadavky byly přehnané, zní z Teheránu",
+            "publishedAt": "2026-02-28T14:04:00Z"
+          },
+          {
+            "title": "Pistorius přijel do Kyjeva, jednal o společném vývoji a výrobě dronů",
+            "publishedAt": "2026-01-21T06:45:00Z"
+          },
           {
             "title": "Myslela si, že je to láska. Nová série Monyová je drsným ponorem do toxického vztahu",
             "publishedAt": "2026-05-12T04:00:00Z"
@@ -617,14 +624,6 @@
           {
             "title": "Frontman známé kapely přišel o přídavky na děti. Juchelka mu poslal jasný vzkaz",
             "publishedAt": "2026-05-12T03:30:00Z"
-          },
-          {
-            "title": "„Evropě dochází čas.“ Politici by neměli lidem lhát, varuje exministr",
-            "publishedAt": "2026-05-12T03:30:00Z"
-          },
-          {
-            "title": "Kinský hrdinou Tottenhamu. Předvedl famózní zákroky, zachránil alespoň bod",
-            "publishedAt": "2026-05-11T21:32:00Z"
           }
         ]
       }
