@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-12T21:40:40.091104Z",
+  "ingestedAt": "2026-05-12T22:19:58.601822Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Se stříbrem nikdy spokojený nebudu, odsekl Priske. Zelený mluvil o horské dráze",
+      "url": "https://sport.aktualne.cz/se-stribrem-nikdy-spokojeny-nebudu-odsekl-priske-zeleny-mluvil-o-horske-draze/r~aaa2996396a863367307c9a773a70162/",
+      "dt": "2026-05-12T21:50:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dráze",
+        "horské",
+        "mluvil",
+        "nebudu",
+        "nikdy",
+        "odsekl",
+        "priske",
+        "spokojený",
+        "stříbrem",
+        "zelený"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -508,34 +535,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vídeň hostí eurovizní spektákl: Čech zatím mimo reflektory, protesty proti Izraeli",
-      "url": "https://zpravy.aktualne.cz/galerie-a-videa/viden-hosti-eurovizni-spektakl-cech-zatim-mimo-reflektory-protesty-proti-izraeli/r~aaa2947bbc2436945f11d5b53648007c/",
-      "dt": "2026-05-12T13:52:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "eurovizní",
-        "hostí",
-        "izraeli",
-        "mimo",
-        "protesty",
-        "proti",
-        "reflektory",
-        "spektákl",
-        "vídeň",
-        "zatím",
-        "čech"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -546,7 +545,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22320,
+      "bytes": 22212,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -583,11 +582,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-12T20:11:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T21:50:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 13,
-          "sport": 6,
+          "sport": 7,
+          "zpravy": 12,
           "cestovani": 1
         },
         "drop_counts": {
@@ -600,6 +599,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Se stříbrem nikdy spokojený nebudu, odsekl Priske. Zelený mluvil o horské dráze",
+            "publishedAt": "2026-05-12T21:50:00Z"
+          },
           {
             "title": "Zloděj ukradl z baziliky lebku svaté Zdislavy, její hodnota je nevyčíslitelná",
             "publishedAt": "2026-05-12T20:11:00Z"
@@ -627,10 +630,6 @@
           {
             "title": "Do řeky Moravy unikla ropná látka, hasiči se snaží zabránit jejímu šíření",
             "publishedAt": "2026-05-12T18:54:00Z"
-          },
-          {
-            "title": "V Norsku zahynuli dva Češi, lov ryb skončil tragicky",
-            "publishedAt": "2026-05-12T16:37:00Z"
           }
         ]
       }
