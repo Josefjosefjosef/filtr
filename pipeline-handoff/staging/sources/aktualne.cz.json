@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-12T06:49:45.540970Z",
+  "ingestedAt": "2026-05-12T07:29:47.443128Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Hamás páchal systematické sexuální násilí na rukojmích, uvedla izraelská komise",
+      "url": "https://zpravy.aktualne.cz/zahranici/hamas-pachal-systematicke-sexualni-nasili-na-rukojmich-uvedla-izraelska-komise/r~aaa299d4fc4d970a99e77606eeb2112d/",
+      "dt": "2026-05-12T06:52:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "hamás",
+        "izraelská",
+        "komise",
+        "násilí",
+        "páchal",
+        "rukojmích",
+        "sexuální",
+        "systematické",
+        "uvedla"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -506,31 +532,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Plíšková - Rybakinová 0:6, 2:6. Češka neměla proti světové dvojce nárok",
-      "url": "https://sport.aktualne.cz/tenis/pliskova-rybakinova-obrozena-ceska-hraje-se-svetovou-dvojkou/r~aaa299fca2d7defa77f96e2121f5c06c/",
-      "dt": "2026-05-11T18:58:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dvojce",
-        "neměla",
-        "nárok",
-        "plíšková",
-        "proti",
-        "rybakinová",
-        "světové",
-        "češka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -541,7 +542,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21942,
+      "bytes": 22094,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -578,11 +579,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-12T05:29:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T06:52:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 12,
-          "sport": 6,
+          "zpravy": 13,
+          "sport": 5,
           "other": 1,
           "finance": 1
         },
@@ -596,6 +597,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hamás páchal systematické sexuální násilí na rukojmích, uvedla izraelská komise",
+            "publishedAt": "2026-05-12T06:52:00Z"
+          },
           {
             "title": "Na horách v Česku může v úterý napadnout sníh, přijdou i přízemní mrazíky",
             "publishedAt": "2026-05-12T05:12:00Z"
@@ -623,10 +628,6 @@
           {
             "title": "Zaskočený byl i sám trenér. Český soupeř ukázal nevídanou nominaci na MS",
             "publishedAt": "2026-05-12T03:56:00Z"
-          },
-          {
-            "title": "Tuhle ladu byste doma mít nechtěli. Rusové ujeli s Iskrou 2000 km a spočítali závady",
-            "publishedAt": "2026-05-12T03:40:00Z"
           }
         ]
       }

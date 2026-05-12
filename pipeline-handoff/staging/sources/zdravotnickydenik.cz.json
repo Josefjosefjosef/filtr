@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-12T06:49:45.540970Z",
+  "ingestedAt": "2026-05-12T07:29:47.443128Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Chyba při odběru krve i likvidaci moči. 12 zdravotníků skončilo kvůli hantaviru v izolaci",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/chyba-12-zdravotniku-hantavirus-izolace/",
+      "dt": "2026-05-12T07:00:53Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "chyba",
+        "hantaviru",
+        "izolaci",
+        "krve",
+        "kvůli",
+        "likvidaci",
+        "moči",
+        "odběru",
+        "při",
+        "skončilo",
+        "zdravotníků"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -248,34 +276,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "8 dětí za rok zemřelo po krutém zacházení. Nový úřad má zajistit včasnou pomoc všem",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/tyrani-deti-novy-urad/",
-      "dt": "2026-05-11T09:36:52Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "dětí",
-        "krutém",
-        "nový",
-        "pomoc",
-        "rok",
-        "včasnou",
-        "všem",
-        "zacházení",
-        "zajistit",
-        "zemřelo",
-        "úřad"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -286,7 +286,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 84324,
+      "bytes": 83256,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -323,7 +323,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-12T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T07:00:53Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -338,6 +338,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chyba při odběru krve i likvidaci moči. 12 zdravotníků skončilo kvůli hantaviru v izolaci",
+            "publishedAt": "2026-05-12T07:00:53Z"
+          },
           {
             "title": "Raketový vzestup syfilidy a kapavky: Evropa hlásí nejhorší čísla za 10 let. Infekce se nedaří zastavit",
             "publishedAt": "2026-05-12T06:00:00Z"
@@ -365,10 +369,6 @@
           {
             "title": "Tetování má i v obličeji. Policie hledá pacienta, který zmizel z psychiatrické nemocnice",
             "publishedAt": "2026-05-11T13:15:51Z"
-          },
-          {
-            "title": "Hantavirus u českých hranic? Němci vezou lidi z „lodi smrti“ do Bavorska a Saska",
-            "publishedAt": "2026-05-11T12:30:19Z"
           }
         ]
       }

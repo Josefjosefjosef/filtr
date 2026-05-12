@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-12T06:49:45.540970Z",
+  "ingestedAt": "2026-05-12T07:29:47.443128Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Letní sezona v ohrožení. Aerolinky ruší lety a omezují kapacity",
+      "url": "https://ekonomickydenik.cz/letni-sezona-ohrozeni-aerolinky-rusi-lety/",
+      "dt": "2026-05-12T06:58:04Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "aerolinky",
+        "kapacity",
+        "letní",
+        "lety",
+        "ohrožení",
+        "omezují",
+        "ruší",
+        "sezona"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -749,31 +774,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Úleva pro pendlery. Blíží se řešení zmatků pro výplatu sociálních dávek",
-      "url": "https://ekonomickydenik.cz/uleva-pro-pendlery-blizi-se-reseni-zmatku-pro-vyplatu-socialnich-davek/",
-      "dt": "2026-05-09T17:14:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "blíží",
-        "dávek",
-        "pendlery",
-        "sociálních",
-        "výplatu",
-        "zmatků",
-        "úleva",
-        "řešení"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -784,7 +784,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 68165,
+      "bytes": 68567,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -821,11 +821,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T06:25:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T06:58:04Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 3,
           "finance": 26,
+          "zpravy": 3,
           "zdravi": 1
         },
         "drop_counts": {
@@ -838,6 +838,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Letní sezona v ohrožení. Aerolinky ruší lety a omezují kapacity",
+            "publishedAt": "2026-05-12T06:58:04Z"
+          },
           {
             "title": "Podvodníci s ojetinami si mnou ruce. Nedotažené změny jim nahrávají",
             "publishedAt": "2026-05-12T06:25:00Z"
@@ -865,10 +869,6 @@
           {
             "title": "Miliardy na obranu musí počkat: Babiš nečekaně stopl projednávání obří půjčky",
             "publishedAt": "2026-05-11T13:30:05Z"
-          },
-          {
-            "title": "Landovský nastupuje jako zmocněnec pro NATO. Trafika, zlobí se Černochová",
-            "publishedAt": "2026-05-11T13:14:03Z"
           }
         ]
       }

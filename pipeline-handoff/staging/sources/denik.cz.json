@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-12T06:49:45.540970Z",
+  "ingestedAt": "2026-05-12T07:29:47.443128Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Průtrž mračen spláchla trasu D35. Bahno zalilo silnici, valilo se kolem domů",
+      "url": "https://www.denik.cz/regiony/prutrz-mracen-splachla-trasu-d35-bahno-se-valilo-po-silnici-i-kolem-domu-2026051.html",
+      "dt": "2026-05-12T07:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bahno",
+        "d35",
+        "domů",
+        "kolem",
+        "mračen",
+        "průtrž",
+        "silnici",
+        "spláchla",
+        "trasu",
+        "valilo",
+        "zalilo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -613,32 +641,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Krysy skvěle plavou, zdůvodňoval kanárský premiér odmítnutí lodi s hantavirem",
-      "url": "https://www.denik.cz/staty-eu/lod-mv-hondius-hantavirus-nakaza-evakuakce-spor-odmitnuti-kanarske-ostrovy.html",
-      "dt": "2026-05-11T10:20:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "hantavirem",
-        "kanárský",
-        "krysy",
-        "lodi",
-        "odmítnutí",
-        "plavou",
-        "premiér",
-        "skvěle",
-        "zdůvodňoval"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -649,7 +651,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28961,
+      "bytes": 28813,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -686,7 +688,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-12T06:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T07:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -702,6 +704,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Průtrž mračen spláchla trasu D35. Bahno zalilo silnici, valilo se kolem domů",
+            "publishedAt": "2026-05-12T07:00:00Z"
+          },
           {
             "title": "Rys rekordman došel ze Šumavy do Krušných hor. Urazil přes 160 kilometrů",
             "publishedAt": "2026-05-12T06:20:00Z"
@@ -729,10 +735,6 @@
           {
             "title": "Proměny školek: Místo drilování barev se děti učí chápat emoce či spolupracovat",
             "publishedAt": "2026-05-12T02:00:00Z"
-          },
-          {
-            "title": "Trump vážně zvažuje, že by z Venezuely udělal 51. americký stát, píší média",
-            "publishedAt": "2026-05-11T19:11:00Z"
           }
         ]
       }

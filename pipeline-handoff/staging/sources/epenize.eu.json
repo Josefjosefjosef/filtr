@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-12T06:49:45.540970Z",
+  "ingestedAt": "2026-05-12T07:29:47.443128Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nepřipravený premiér se ztrapnil. V debatě o haldě se lidé neměli ptát na haldu",
+      "url": "https://www.epenize.eu/nepripraveny-premier-se-ztrapnil-v-debate-o-halde-se-lide-nemeli-ptat-na-haldu/",
+      "dt": "2026-05-12T07:02:03Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "debatě",
+        "haldu",
+        "haldě",
+        "lidé",
+        "neměli",
+        "nepřipravený",
+        "premiér",
+        "ptát",
+        "ztrapnil"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -493,31 +519,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Newsom se snaží porazit Trumpa tím, že ho kopíruje. Průzkumy mu tleskají",
-      "url": "https://www.epenize.eu/newsom-se-snazi-porazit-trumpa-tim-ze-ho-kopiruje-pruzkumy-mu-tleskaji/",
-      "dt": "2026-05-02T23:00:00Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "kopíruje",
-        "newsom",
-        "porazit",
-        "průzkumy",
-        "snaží",
-        "tleskají",
-        "trumpa",
-        "tím"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -528,7 +529,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 109154,
+      "bytes": 110358,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -565,11 +566,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-11T23:00:24Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T07:02:03Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zdravi": 1,
           "finance": 17,
+          "zdravi": 1,
           "zpravy": 1,
           "sport": 1
         },
@@ -583,6 +584,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nepřipravený premiér se ztrapnil. V debatě o haldě se lidé neměli ptát na haldu",
+            "publishedAt": "2026-05-12T07:02:03Z"
+          },
           {
             "title": "„Schytám za svou zemi kulku“: Trump přišel mluvit o zdraví matek. Mluvil ale hlavně o sobě",
             "publishedAt": "2026-05-11T23:00:24Z"
@@ -610,10 +615,6 @@
           {
             "title": "Helikoptérový rodič: Noční můra každého učitele",
             "publishedAt": "2026-05-09T07:00:56Z"
-          },
-          {
-            "title": "UFO složky jako kouřová clona: Trump odtajnil mimozemšťany, ale Epsteinovy spisy stále tají",
-            "publishedAt": "2026-05-08T23:00:38Z"
           }
         ]
       }

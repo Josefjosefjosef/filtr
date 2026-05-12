@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-12T06:49:45.540970Z",
+  "ingestedAt": "2026-05-12T07:29:47.443128Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zdeněk Rapant nastoupil do Raben Logistics Czech",
+      "url": "https://profitonline.cz/zdenek-rapant-nastoupil-do-raben-logistics-czech/",
+      "dt": "2026-05-12T07:00:06Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "czech",
+        "logistics",
+        "nastoupil",
+        "raben",
+        "rapant",
+        "zdeněk"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -272,29 +295,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Okamžiky historie: Den, kdy se otevřelo pražské metro",
-      "url": "https://profitonline.cz/okamziky-historie-den-kdy-se-otevrelo-prazske-metro/",
-      "dt": "2026-05-09T10:00:33Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "den",
-        "historie",
-        "metro",
-        "okamžiky",
-        "otevřelo",
-        "pražské"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -305,7 +305,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19060,
+      "bytes": 18998,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -342,11 +342,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-12T06:00:49Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T07:00:06Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 11,
-          "zpravy": 1
+          "finance": 12
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -358,6 +357,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zdeněk Rapant nastoupil do Raben Logistics Czech",
+            "publishedAt": "2026-05-12T07:00:06Z"
+          },
           {
             "title": "Naobědvat se v restauraci pod 200 korun je už skoro malý zázrak",
             "publishedAt": "2026-05-12T06:00:49Z"
@@ -385,10 +388,6 @@
           {
             "title": "Novinky v osobních financích: Banky sázejí na fanoušky, ať už jde o Spartu, nebo Hvězdné války",
             "publishedAt": "2026-05-10T10:00:38Z"
-          },
-          {
-            "title": "Czechoslovak Group: Přehnaná panika, nebo prozření trhu?",
-            "publishedAt": "2026-05-10T08:00:36Z"
           }
         ]
       }

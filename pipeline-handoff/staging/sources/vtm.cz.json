@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-12T06:49:45.540970Z",
+  "ingestedAt": "2026-05-12T07:29:47.443128Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "macOS 26.5 především opravuje chyby. Některé z nich pomohla odhalit AI",
+      "url": "https://www.zive.cz/clanky/macos-265-tahoe-novinky/sc-3-a-241121/default.aspx",
+      "dt": "2026-05-12T06:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "chyby",
+        "macos",
+        "nich",
+        "některé",
+        "odhalit",
+        "opravuje",
+        "pomohla",
+        "především"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -962,32 +987,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "35 vězeňských filmů, které by vám neměly uniknout. Většinu si můžete pustit online",
-      "url": "https://avmania.zive.cz/nejlepsi-vezenske-filmy-filmy-z-vezeni",
-      "dt": "2026-05-07T15:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "filmů",
-        "můžete",
-        "neměly",
-        "online",
-        "pustit",
-        "uniknout",
-        "vám",
-        "většinu",
-        "vězeňských"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -998,7 +997,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23206,
+      "bytes": 23208,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1035,7 +1034,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-11T16:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T06:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 34,
@@ -1051,6 +1050,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "macOS 26.5 především opravuje chyby. Některé z nich pomohla odhalit AI",
+            "publishedAt": "2026-05-12T06:45:00Z"
+          },
           {
             "title": "Alza už má i vlastní baterku. Svítilna Campgo září až na 240 m a nabíjí se pomocí USB-C",
             "publishedAt": "2026-05-11T15:45:00Z"
@@ -1078,10 +1081,6 @@
           {
             "title": "Proč výrobci raději prodají levný televizor než drahý „hloupý“ panel. TV bez tuneru totiž moc nedává smysl",
             "publishedAt": "2026-05-11T11:45:00Z"
-          },
-          {
-            "title": "Vyleštěný Liquid Glass, delší výdrž a vyšší výkon. Apple v macOS 27 bude hlavně ladit",
-            "publishedAt": "2026-05-11T10:45:00Z"
           }
         ]
       }

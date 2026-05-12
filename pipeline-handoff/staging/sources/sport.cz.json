@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-12T06:49:45.540970Z",
+  "ingestedAt": "2026-05-12T07:29:47.443128Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Oklahoma vyřadila Lakers v čele s Jamesem z play off NBA",
+      "url": "https://www.sport.cz/clanek/basketbal-oklahoma-vyradila-lakers-v-cele-s-jamesem-z-play-off-nba-5452936",
+      "dt": "2026-05-12T07:10:32Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "jamesem",
+        "lakers",
+        "nba",
+        "off",
+        "oklahoma",
+        "play",
+        "vyřadila",
+        "čele"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nečas pomohl Coloradu dvěma asistencemi k vytvoření mečbolu",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-necas-pomohl-coloradu-dvema-asistencemi-k-vytvoreni-mecbolu-5452931",
+      "dt": "2026-05-12T04:00:51Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "asistencemi",
+        "coloradu",
+        "dvěma",
+        "mečbolu",
+        "nečas",
+        "pomohl",
+        "vytvoření"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -128,30 +177,6 @@
         "slavii",
         "spartu",
         "tresty"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nečas pomohl Coloradu dvěma asistencemi k vytvoření mečbolu",
-      "url": "https://www.sport.cz/clanek/hokej-nhl-necas-pomohl-coloradu-dvema-asistencemi-k-vytvoreni-mecbolu-5452931",
-      "dt": "2026-05-12T04:00:51Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "asistencemi",
-        "coloradu",
-        "dvěma",
-        "mečbolu",
-        "nečas",
-        "pomohl",
-        "vytvoření"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -722,30 +747,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "ECHO BUNDESLIGY: Leverkusen v problémech. Musí spoléhat na soupeře",
-      "url": "https://www.sport.cz/clanek/nazory-komentare-echo-bundesligy-leverkusen-v-problemech-musi-spolehat-na-soupere-5452637",
-      "dt": "2026-05-11T15:28:17Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bundesligy",
-        "echo",
-        "leverkusen",
-        "musí",
-        "problémech",
-        "soupeře",
-        "spoléhat"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -756,7 +757,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45303,
+      "bytes": 45254,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -793,11 +794,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T06:30:46Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T07:10:32Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 1,
-          "sport": 29
+          "sport": 29,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -809,6 +810,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Oklahoma vyřadila Lakers v čele s Jamesem z play off NBA",
+            "publishedAt": "2026-05-12T07:10:32Z"
+          },
+          {
+            "title": "Nečas pomohl Coloradu dvěma asistencemi k vytvoření mečbolu",
+            "publishedAt": "2026-05-12T04:00:51Z"
+          },
           {
             "title": "Těžké pády, kritický stav. Brácho, ukaž sílu šampiona, prosím, stojí v dojemném vzkazu do nemocnice",
             "publishedAt": "2026-05-12T06:30:46Z"
@@ -830,16 +839,8 @@
             "publishedAt": "2026-05-12T05:31:25Z"
           },
           {
-            "title": "Nečas pomohl Coloradu dvěma asistencemi k vytvoření mečbolu",
-            "publishedAt": "2026-05-12T04:00:51Z"
-          },
-          {
             "title": "Dohra derby také pro Spartu. Ani ji nemine trest, na Plzeň vyrukuje bez velké části kádru",
             "publishedAt": "2026-05-12T05:01:47Z"
-          },
-          {
-            "title": "Moje odpovědnost se nedá zastřít! Tvrdík promluvil o rezignaci",
-            "publishedAt": "2026-05-12T04:30:42Z"
           }
         ]
       }
