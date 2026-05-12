@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-12T23:00:47.312255Z",
+  "ingestedAt": "2026-05-12T23:40:07.727273Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Surovčík promluvil o napadení v derby. Děkuje masérovi Slavie: Ukázal, že je skvělý člověk!",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-surovcik-dekuje-maserovi-slavie-ukazal-ze-je-skvely-clovek-5453394",
+      "dt": "2026-05-12T23:12:26Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "derby",
+        "děkuje",
+        "masérovi",
+        "napadení",
+        "promluvil",
+        "skvělý",
+        "slavie",
+        "surovčík",
+        "ukázal",
+        "člověk"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -724,30 +751,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kontroverzní boxer Paul smutní. Hrozí mu konec kariéry",
-      "url": "https://www.sport.cz/clanek/bojove-sporty-kontroverzni-boxer-paul-smutni-hrozi-mu-konec-kariery-5452945",
-      "dt": "2026-05-12T16:15:55Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "boxer",
-        "hrozí",
-        "kariéry",
-        "konec",
-        "kontroverzní",
-        "paul",
-        "smutní"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -758,7 +761,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 46815,
+      "bytes": 47483,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -795,7 +798,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T21:46:16Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T23:12:26Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -811,6 +814,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Surovčík promluvil o napadení v derby. Děkuje masérovi Slavie: Ukázal, že je skvělý člověk!",
+            "publishedAt": "2026-05-12T23:12:26Z"
+          },
           {
             "title": "Nevídaná situace! Jsme jak na vesnici, přiznává lídr Sparty",
             "publishedAt": "2026-05-12T18:09:14Z"
@@ -838,10 +845,6 @@
           {
             "title": "Největší hvězdu na hokejové MS přiveze Kanada",
             "publishedAt": "2026-05-12T20:30:06Z"
-          },
-          {
-            "title": "Sparta s Plzní jen remizovala. Baník se potápí, přestřelka ve Zlíně",
-            "publishedAt": "2026-05-12T06:03:02Z"
           }
         ]
       }
