@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-12T04:50:14.564079Z",
+  "ingestedAt": "2026-05-12T05:29:33.908876Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Obchodníci a potravináři chtějí odklad nařízení o obalech. Resort chystá „non-paper“",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/obchodnici-a-potravinari-chteji-odklad-narizeni-o-obalech-resort-chysta-non-paper-373083",
+      "dt": "2026-05-12T05:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "chtějí",
+        "chystá",
+        "nařízení",
+        "non",
+        "obalech",
+        "obchodníci",
+        "odklad",
+        "paper",
+        "potravináři",
+        "resort"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -717,27 +744,25 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Počet stížností na školách roste. Konfliktům lze ale často předejít",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/pocet-stiznosti-na-skolach-roste-konfliktum-lze-ale-casto-predejit-372592",
-      "dt": "2026-05-11T05:03:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Hokej bez červené: Jak složitý byl letošní výběr kádru pro MS ve Švýcarsku?",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/hokej-bez-cervene-jak-slozity-byl-letosni-vyber-kadru-pro-ms-ve-svycarsku-156727",
+      "dt": "2026-05-12T05:00:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "ale",
-        "konfliktům",
-        "lze",
-        "počet",
-        "předejít",
-        "roste",
-        "stížností",
-        "často",
-        "školách"
+        "hokej",
+        "kádru",
+        "letošní",
+        "složitý",
+        "výběr",
+        "červené",
+        "švýcarsku"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1456,34 +1481,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Salač obsadil ve zkráceném závodě Moto2 v Le Mans deváté místo, v MotoGP se radoval Martín",
-      "url": "https://sport.ceskatelevize.cz/clanek/motorsport/salac-obsadil-ve-zkracenem-zavode-moto2-v-le-mans-devate-misto-v-motogp-se-radoval-martin-156698",
-      "dt": "2026-05-10T13:02:21Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "deváté",
-        "mans",
-        "martín",
-        "moto2",
-        "motogp",
-        "místo",
-        "obsadil",
-        "radoval",
-        "salač",
-        "zkráceném",
-        "závodě"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1494,7 +1491,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42399,
+      "bytes": 42470,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1554,7 +1551,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T04:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T05:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1571,6 +1568,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Obchodníci a potravináři chtějí odklad nařízení o obalech. Resort chystá „non-paper“",
+            "publishedAt": "2026-05-12T05:00:00Z"
+          },
           {
             "title": "Írán může v Hormuzu „zlomit páteř“ globální komunikace",
             "publishedAt": "2026-05-12T04:30:00Z"
@@ -1598,10 +1599,6 @@
           {
             "title": "Zametání kauz, sledování konkurentů. Na Slovensku začal mimořádný proces",
             "publishedAt": "2026-05-11T19:10:47Z"
-          },
-          {
-            "title": "Tripartita se neshodla na zastropování věku odchodu do důchodu",
-            "publishedAt": "2026-05-11T18:55:11Z"
           }
         ]
       }
@@ -1613,7 +1610,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38276,
+      "bytes": 38341,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1650,7 +1647,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T05:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1665,6 +1662,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hokej bez červené: Jak složitý byl letošní výběr kádru pro MS ve Švýcarsku?",
+            "publishedAt": "2026-05-12T05:00:00Z"
+          },
           {
             "title": "Taekwondisté vstoupí do ME. Soutěžit budou i olympioničky Štolbová a Hronová",
             "publishedAt": "2026-05-12T04:00:00Z"
@@ -1692,10 +1693,6 @@
           {
             "title": "Slavii se odečítat body nebudou, potvrdila disciplinárka",
             "publishedAt": "2026-05-11T13:09:35Z"
-          },
-          {
-            "title": "Basketbal fokus podcast: „Prostředí je to nekompromisní.“ Hamzová a Čechová o WNBA",
-            "publishedAt": "2026-05-11T12:30:00Z"
           }
         ]
       }
@@ -1707,7 +1704,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78282,
+      "bytes": 78240,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

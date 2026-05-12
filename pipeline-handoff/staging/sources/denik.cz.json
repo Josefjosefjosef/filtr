@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-12T04:50:14.564079Z",
+  "ingestedAt": "2026-05-12T05:29:33.908876Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nizozemská nemocnice dala kvůli hantaviru do karantény 12 zaměstnanců",
+      "url": "https://www.denik.cz/staty-eu/hantavirus-nizozemsko-karantena-zdravotnici.html",
+      "dt": "2026-05-12T05:02:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dala",
+        "hantaviru",
+        "karantény",
+        "kvůli",
+        "nemocnice",
+        "nizozemská",
+        "zaměstnanců"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -617,35 +641,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Lidé nevědomky pili vodu z hrobu. Prý je to menší zlo než jít k Želivce s prutem",
-      "url": "https://prazsky.denik.cz/krimi/vrazda-praha-vila-zelivka-voda-hrob.html",
-      "dt": "2026-05-11T09:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "hrobu",
-        "jít",
-        "lidé",
-        "menší",
-        "nevědomky",
-        "než",
-        "pili",
-        "prutem",
-        "prý",
-        "vodu",
-        "zlo",
-        "želivce"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -656,7 +651,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29479,
+      "bytes": 29342,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -693,7 +688,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-12T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T05:02:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -709,6 +704,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nizozemská nemocnice dala kvůli hantaviru do karantény 12 zaměstnanců",
+            "publishedAt": "2026-05-12T05:02:00Z"
+          },
           {
             "title": "Kde hrozí setkání s medvědem? Situaci na Slovensku ukazuje nová mapa",
             "publishedAt": "2026-05-12T03:30:00Z"
@@ -736,10 +735,6 @@
           {
             "title": "Jásání dětí nebralo konce. Kouzelný svět mašinek u Olomouce znovu otevřel",
             "publishedAt": "2026-05-11T15:30:00Z"
-          },
-          {
-            "title": "VÝSTRAHA: Do Česka dorazily bouřky s krupobitím. Sledujte, kde hrozí nebezpečí",
-            "publishedAt": "2026-05-11T14:45:00Z"
           }
         ]
       }

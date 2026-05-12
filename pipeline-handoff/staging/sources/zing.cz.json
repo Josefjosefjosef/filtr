@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-12T04:50:14.564079Z",
+  "ingestedAt": "2026-05-12T05:29:33.908876Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Autor Gears of War naznačuje, jakou hru by rád udělal příště",
+      "url": "https://zing.cz/article/autor-gears-of-war-naznacuje-jakou-hru-by-rad-udelal-priste",
+      "dt": "2026-05-12T05:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "autor",
+        "gears",
+        "hru",
+        "jakou",
+        "naznačuje",
+        "příště",
+        "rád",
+        "udělal",
+        "war"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -939,31 +965,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Přípravy fantasy RPG od tvůrců Hitmana a chystané bondovky pokračují",
-      "url": "https://zing.cz/article/vyvoj-fantasy-rpg-od-tvurcu-hitmana-a-chystane-bondovky-nadale-pokracuje",
-      "dt": "2026-05-07T08:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "bondovky",
-        "chystané",
-        "fantasy",
-        "hitmana",
-        "pokračují",
-        "přípravy",
-        "rpg",
-        "tvůrců"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -974,7 +975,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125011,
+      "bytes": 125103,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1011,7 +1012,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-12T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T05:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1027,6 +1028,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Autor Gears of War naznačuje, jakou hru by rád udělal příště",
+            "publishedAt": "2026-05-12T05:00:00Z"
+          },
           {
             "title": "Seriál Fallout odhalil známou hereckou posilu pro třetí sezónu",
             "publishedAt": "2026-05-12T04:00:00Z"
@@ -1054,10 +1059,6 @@
           {
             "title": "Podívejte se na finální ukázky z nové Forzy Horizon a návratu značky Lego Batman",
             "publishedAt": "2026-05-11T10:00:00Z"
-          },
-          {
-            "title": "Dostupný chladič s parádním výkonem - FSP MP7 v testu",
-            "publishedAt": "2026-05-11T08:30:00Z"
           }
         ]
       }
