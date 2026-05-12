@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-12T20:19:43.128328Z",
+  "ingestedAt": "2026-05-12T20:59:34.234017Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Neznámý pachatel odcizil v Jablonném v Podještědí lebku svaté Zdislavy",
+      "url": "https://tydenikpolicie.cz/neznamy-pachatel-odcizil-v-jablonnem-v-podjestedi-lebku-svate-zdislavy/",
+      "dt": "2026-05-12T20:35:22Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "jablonném",
+        "lebku",
+        "neznámý",
+        "odcizil",
+        "pachatel",
+        "podještědí",
+        "svaté",
+        "zdislavy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -232,31 +257,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Policisté hledají svědky riskantní jízdy řidiče volkswagenu na Hodonínsku",
-      "url": "https://tydenikpolicie.cz/policiste-hledaji-svedky-nebezpecne-jizdy-ridice-volkswagenu-na-hodoninsku/",
-      "dt": "2026-05-12T08:38:55Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "hledají",
-        "hodonínsku",
-        "jízdy",
-        "policisté",
-        "riskantní",
-        "svědky",
-        "volkswagenu",
-        "řidiče"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -267,7 +267,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16577,
+      "bytes": 16262,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -304,7 +304,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-12T16:48:30Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T20:35:22Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -319,6 +319,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Neznámý pachatel odcizil v Jablonném v Podještědí lebku svaté Zdislavy",
+            "publishedAt": "2026-05-12T20:35:22Z"
+          },
           {
             "title": "Strážníkům v Plzni někdo posprejoval auto. Policisté zveřejnili fotografii člověka důležitého pro trestní řízení",
             "publishedAt": "2026-05-12T16:48:30Z"
@@ -346,10 +350,6 @@
           {
             "title": "Od mobilheimu na Písecku vzplála dřevostavba. Hasiči během zásahu našli lidské tělo",
             "publishedAt": "2026-05-12T12:30:10Z"
-          },
-          {
-            "title": "Opilý muž spadl v Českých Budějovicích ze svahu do řeky. Zachránili ho svědci společně s policisty",
-            "publishedAt": "2026-05-12T12:24:41Z"
           }
         ]
       }

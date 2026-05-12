@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-12T20:19:43.128328Z",
+  "ingestedAt": "2026-05-12T20:59:34.234017Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Posily z NHL na MS: za Kanadu i Crosby, Američané berou mladíky a Tkachuka",
+      "url": "https://www.idnes.cz/hokej/ms-2026/posily-z-nhl-finsko-kanada-usa-barkov.A260417_090517_nhl_ivt",
+      "dt": "2026-05-12T20:26:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "američané",
+        "berou",
+        "crosby",
+        "kanadu",
+        "mladíky",
+        "nhl",
+        "posily",
+        "tkachuka"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Velký návrat do národního týmu? Neymar je v nominaci Brazílie na mistrovství světa",
+      "url": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/velky-navrat-neymar-je-v-nominaci-brazilie-na-mistrovstvi-sveta.A260512_214536_fot_zahranici_mrg",
+      "dt": "2026-05-12T20:15:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "brazílie",
+        "mistrovství",
+        "neymar",
+        "nominaci",
+        "národního",
+        "návrat",
+        "světa",
+        "týmu",
+        "velký"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -740,56 +791,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Tvrdík vzkázal fanouškům, ať se přihlásí na policii. Slušným chce tresty zmírnit",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/tvrdik-vzkazal-fanouskum-at-se-prihlasi-na-policii-slusnym-chce-tresty-zmirnit.A260512_130524_fotbal_jic",
-      "dt": "2026-05-12T11:19:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "chce",
-        "fanouškům",
-        "policii",
-        "přihlásí",
-        "slušným",
-        "tresty",
-        "tvrdík",
-        "vzkázal",
-        "zmírnit"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Siniaková s Townsendovou navazují i v Římě. Zapsaly 16. výhru v řadě",
-      "url": "https://www.idnes.cz/sport/tenis/siniakova-townsendova-rim-debly-wta-1000-vyhra-tenis.A260512_125841_tenis_kazdt",
-      "dt": "2026-05-12T11:05:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "navazují",
-        "siniaková",
-        "townsendovou",
-        "výhru",
-        "zapsaly",
-        "řadě",
-        "římě"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48368,
+      "bytes": 48807,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T19:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T20:26:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -852,6 +853,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Posily z NHL na MS: za Kanadu i Crosby, Američané berou mladíky a Tkachuka",
+            "publishedAt": "2026-05-12T20:26:00Z"
+          },
+          {
+            "title": "Velký návrat do národního týmu? Neymar je v nominaci Brazílie na mistrovství světa",
+            "publishedAt": "2026-05-12T20:15:00Z"
+          },
           {
             "title": "Zemřel Brandon Clarke. Hráči NBA bylo teprve 29 let, píše se o možné roli drog",
             "publishedAt": "2026-05-12T19:55:00Z"
@@ -875,14 +884,6 @@
           {
             "title": "Boleslav - Dukla 1:2, důležitá výhra. Pražané odskakují od posledního místa",
             "publishedAt": "2026-05-12T17:52:09Z"
-          },
-          {
-            "title": "Příbrami se vzdálila baráž, Chrudim si výhrou pomohla v boji o udržení",
-            "publishedAt": "2026-05-12T17:50:00Z"
-          },
-          {
-            "title": "Hokejisté poprvé trénovali. Duo z Pardubic zná parťáka, Vladař nedorazí kvůli zranění",
-            "publishedAt": "2026-05-12T17:42:00Z"
           }
         ]
       }

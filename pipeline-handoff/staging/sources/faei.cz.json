@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-12T20:19:43.128328Z",
+  "ingestedAt": "2026-05-12T20:59:34.234017Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Hypotéky zůstávají nad pěti procenty, splátky výrazně rostou",
+      "url": "https://profitonline.cz/hypoteky-zustavaji-nad-peti-procenty-splatky-vyrazne-rostou/",
+      "dt": "2026-05-12T20:30:42Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "hypotéky",
+        "procenty",
+        "pěti",
+        "rostou",
+        "splátky",
+        "výrazně",
+        "zůstávají"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -263,34 +287,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Novinky v osobních financích: Banky sázejí na fanoušky, ať už jde o Spartu, nebo Hvězdné války",
-      "url": "https://profitonline.cz/novinky-v-osobnich-financich-banky-sazeji-na-fanousky-at-uz-jde-o-spartu-nebo-hvezdne-valky/",
-      "dt": "2026-05-10T10:00:38Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "banky",
-        "fanoušky",
-        "financích",
-        "hvězdné",
-        "jde",
-        "nebo",
-        "novinky",
-        "osobních",
-        "spartu",
-        "sázejí",
-        "války"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -301,7 +297,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19096,
+      "bytes": 18900,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -338,7 +334,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-12T19:30:07Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T20:30:42Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -354,6 +350,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hypotéky zůstávají nad pěti procenty, splátky výrazně rostou",
+            "publishedAt": "2026-05-12T20:30:42Z"
+          },
           {
             "title": "USA se potýkají se silnými inflačními tlaky",
             "publishedAt": "2026-05-12T19:30:07Z"
@@ -381,10 +381,6 @@
           {
             "title": "Poslanci „zakážou“ sjezd sudetských Němců. A co koncert náckovského rappera?",
             "publishedAt": "2026-05-11T10:00:52Z"
-          },
-          {
-            "title": "Intel se vrací do centra pozornosti v oblasti umělé inteligence",
-            "publishedAt": "2026-05-11T08:00:16Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-12T20:19:43.128328Z",
+  "ingestedAt": "2026-05-12T20:59:34.234017Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Neznámý zloděj v černém ukradl v Jablonném lebku svaté Zdislavy",
+      "url": "https://ceskolipsky.denik.cz/zpravy_region/neznamy-zlodej-v-cernem-ukradl-v-jablonnem-lebku-svate-zdislavy-20260512.html",
+      "dt": "2026-05-12T20:14:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "jablonném",
+        "lebku",
+        "neznámý",
+        "svaté",
+        "ukradl",
+        "zdislavy",
+        "zloděj",
+        "černém"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -620,33 +645,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Skandál v Thajsku: Osm opilých Rusů souložilo v moři, svědci hříšníky natočili",
-      "url": "https://www.denik.cz/ze_sveta/thajsko-pattaya-skandal-opili-rusove-soulozili-v-mori-video.html",
-      "dt": "2026-05-12T08:20:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "hříšníky",
-        "moři",
-        "natočili",
-        "opilých",
-        "osm",
-        "rusů",
-        "skandál",
-        "souložilo",
-        "svědci",
-        "thajsku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -657,7 +655,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29715,
+      "bytes": 29637,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -694,7 +692,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-12T18:49:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T20:14:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -711,6 +709,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Neznámý zloděj v černém ukradl v Jablonném lebku svaté Zdislavy",
+            "publishedAt": "2026-05-12T20:14:00Z"
+          },
           {
             "title": "Měsíce na lůžku. Po požáru v Crans-Montaně je v nemocnicích stále 38 lidí",
             "publishedAt": "2026-05-12T18:49:00Z"
@@ -738,10 +740,6 @@
           {
             "title": "Pět nezletilých Čechů se ztratilo v Bosně. Noční záchrana trvala hodiny",
             "publishedAt": "2026-05-12T14:02:00Z"
-          },
-          {
-            "title": "Muž v brněnské zoo šťouchal klackem do takina. Po zveřejnění videa se omluvil",
-            "publishedAt": "2026-05-12T13:55:00Z"
           }
         ]
       }
