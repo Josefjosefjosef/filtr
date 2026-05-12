@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-12T05:29:33.908876Z",
+  "ingestedAt": "2026-05-12T06:09:42.982153Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Raketový vzestup syfilidy a kapavky: Evropa hlásí nejhorší čísla za 10 let. Infekce se nedaří zastavit",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/infekce-evropa-zprava/",
+      "dt": "2026-05-12T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "evropa",
+        "hlásí",
+        "infekce",
+        "kapavky",
+        "let",
+        "nedaří",
+        "nejhorší",
+        "raketový",
+        "syfilidy",
+        "vzestup",
+        "zastavit",
+        "čísla"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -247,33 +276,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Co teď čeká pasažéry lodi s hantavirem? Rozdílný přístup jednotlivých států budí pozornost",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/co-ceka-pasazery-lodi-s-hantavirem/",
-      "dt": "2026-05-11T09:15:22Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "budí",
-        "hantavirem",
-        "jednotlivých",
-        "lodi",
-        "pasažéry",
-        "pozornost",
-        "přístup",
-        "rozdílný",
-        "států",
-        "čeká"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -284,7 +286,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 80722,
+      "bytes": 84324,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -321,7 +323,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-12T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -336,6 +338,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Raketový vzestup syfilidy a kapavky: Evropa hlásí nejhorší čísla za 10 let. Infekce se nedaří zastavit",
+            "publishedAt": "2026-05-12T06:00:00Z"
+          },
           {
             "title": "Česko přichází o nejmodernější léčbu. Globální gigant a český startup ukazují cestu ven",
             "publishedAt": "2026-05-12T05:00:00Z"
@@ -363,10 +369,6 @@
           {
             "title": "Hantavirus u českých hranic? Němci vezou lidi z „lodi smrti“ do Bavorska a Saska",
             "publishedAt": "2026-05-11T12:30:19Z"
-          },
-          {
-            "title": "Revoluce v léčbě alergií: 82 % dětí se díky burákům zbavily doživotní hrozby",
-            "publishedAt": "2026-05-11T11:27:02Z"
           }
         ]
       }

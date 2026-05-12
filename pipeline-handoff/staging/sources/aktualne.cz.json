@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-12T05:29:33.908876Z",
+  "ingestedAt": "2026-05-12T06:09:42.982153Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nečas pomohl v play off NHL dvěma přihrávkami k výhře Colorada",
+      "url": "https://sport.aktualne.cz/necas-pomohl-v-play-off-nhl-dvema-prihravkami-k-vyhre-colorada/r~aaa296bc2a1f940da1d2483bb856be06/",
+      "dt": "2026-05-12T05:29:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "colorada",
+        "dvěma",
+        "nečas",
+        "nhl",
+        "off",
+        "play",
+        "pomohl",
+        "přihrávkami",
+        "výhře"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -502,32 +528,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trump zvažuje vznik 51. amerického státu. Už to není Kanada, ale jiná země",
-      "url": "https://zpravy.aktualne.cz/zahranici/uz-ne-kanada-ale-venezuela-trump-zvazuje-vznik-51-americkeho-statu/r~aaa29fc41f0b4ada2b2c73b05c58c93d/",
-      "dt": "2026-05-11T17:52:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "ale",
-        "amerického",
-        "jiná",
-        "kanada",
-        "státu",
-        "trump",
-        "vznik",
-        "země",
-        "zvažuje"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -538,7 +538,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22038,
+      "bytes": 21909,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -575,12 +575,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-12T05:12:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T05:29:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 13,
+          "sport": 6,
+          "zpravy": 12,
           "other": 1,
-          "sport": 5,
           "finance": 1
         },
         "drop_counts": {
@@ -593,6 +593,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nečas pomohl v play off NHL dvěma přihrávkami k výhře Colorada",
+            "publishedAt": "2026-05-12T05:29:00Z"
+          },
           {
             "title": "Na horách v Česku může v úterý napadnout sníh",
             "publishedAt": "2026-05-12T05:12:00Z"
@@ -620,10 +624,6 @@
           {
             "title": "Tuhle ladu byste doma mít nechtěli. Rusové ujeli s Iskrou 2000 km a spočítali závady",
             "publishedAt": "2026-05-12T03:40:00Z"
-          },
-          {
-            "title": "Byli blízko dopadení. Vrah z fakulty vyrazil, co říkala policie na uzavřeném kanále",
-            "publishedAt": "2026-05-12T03:30:00Z"
           }
         ]
       }

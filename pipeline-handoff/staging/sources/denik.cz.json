@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-12T05:29:33.908876Z",
+  "ingestedAt": "2026-05-12T06:09:42.982153Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Inspekce zasáhla. Kvůli špíně uzavřela část restaurace v Karlštejně",
+      "url": "https://www.denik.cz/regiony/spina-a-zanedbany-uklid-inspekce-uzavrela-cast-restaurace-v-karlstejne-20260511.html",
+      "dt": "2026-05-12T05:40:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "inspekce",
+        "karlštejně",
+        "kvůli",
+        "restaurace",
+        "uzavřela",
+        "zasáhla",
+        "část",
+        "špíně"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -615,32 +640,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nebezpečný objev v dovolenkovém ráji: Řecko pátrá, kde se vzal dron s bombami",
-      "url": "https://www.denik.cz/ze_sveta/guardian-recko-se-snazi-zjistit-jak-se-do-jeho-vod-dostal-dron-s-vybusninami.html",
-      "dt": "2026-05-11T09:14:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bombami",
-        "dovolenkovém",
-        "dron",
-        "nebezpečný",
-        "objev",
-        "pátrá",
-        "ráji",
-        "vzal",
-        "řecko"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -651,7 +650,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29342,
+      "bytes": 29196,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -688,7 +687,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-12T05:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T05:40:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -704,6 +703,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Inspekce zasáhla. Kvůli špíně uzavřela část restaurace v Karlštejně",
+            "publishedAt": "2026-05-12T05:40:00Z"
+          },
           {
             "title": "Nizozemská nemocnice dala kvůli hantaviru do karantény 12 zaměstnanců",
             "publishedAt": "2026-05-12T05:02:00Z"
@@ -731,10 +734,6 @@
           {
             "title": "Při přestřelce v Nice zemřeli dva lidé. Tři jsou těžce zranění",
             "publishedAt": "2026-05-11T16:53:00Z"
-          },
-          {
-            "title": "Jásání dětí nebralo konce. Kouzelný svět mašinek u Olomouce znovu otevřel",
-            "publishedAt": "2026-05-11T15:30:00Z"
           }
         ]
       }

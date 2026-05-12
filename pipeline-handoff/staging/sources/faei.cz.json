@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-12T05:29:33.908876Z",
+  "ingestedAt": "2026-05-12T06:09:42.982153Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Naobědvat se v restauraci pod 200 korun je už skoro malý zázrak",
+      "url": "https://profitonline.cz/naobedvat-se-v-restauraci-pod-200-korun-je-uz-skoro-maly-zazrak/",
+      "dt": "2026-05-12T06:00:49Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "200",
+        "korun",
+        "malý",
+        "naobědvat",
+        "restauraci",
+        "skoro",
+        "zázrak"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -271,29 +295,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Elektřina Čechům ukusuje z peněženky skoro nejvíce v EU",
-      "url": "https://profitonline.cz/elektrina-cechum-ukusuje-z-penezenky-skoro-nejvice-v-eu/",
-      "dt": "2026-05-09T08:15:16Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "elektřina",
-        "nejvíce",
-        "peněženky",
-        "skoro",
-        "ukusuje",
-        "čechům"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -304,7 +305,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19071,
+      "bytes": 19060,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -341,12 +342,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-11T10:00:52Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T06:00:49Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 10,
-          "zpravy": 1,
-          "zdravi": 1
+          "finance": 11,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -358,6 +358,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Naobědvat se v restauraci pod 200 korun je už skoro malý zázrak",
+            "publishedAt": "2026-05-12T06:00:49Z"
+          },
           {
             "title": "Poslanci „zakážou“ sjezd sudetských Němců. A co koncert náckovského rappera?",
             "publishedAt": "2026-05-11T10:00:52Z"
@@ -385,10 +389,6 @@
           {
             "title": "Czechoslovak Group: Přehnaná panika, nebo prozření trhu?",
             "publishedAt": "2026-05-10T08:00:36Z"
-          },
-          {
-            "title": "Návrat do práce zůstává pro české matky luxusem",
-            "publishedAt": "2026-05-10T06:00:52Z"
           }
         ]
       }
