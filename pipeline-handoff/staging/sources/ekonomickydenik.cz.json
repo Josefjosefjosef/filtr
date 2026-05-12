@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-12T12:24:17.226894Z",
+  "ingestedAt": "2026-05-12T13:05:35.449595Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Půlka úrody ovoce je pryč. Škody po mrazech půjdou do stovek milionů",
+      "url": "https://ekonomickydenik.cz/pulka-urody-ovoce-pryc-skody-mrazy/",
+      "dt": "2026-05-12T12:57:26Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "milionů",
+        "mrazech",
+        "ovoce",
+        "pryč",
+        "půjdou",
+        "půlka",
+        "stovek",
+        "úrody",
+        "škody"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -746,32 +772,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Konec přešlapování u dvou procent? Vláda jmenuje Landovského zmocněncem pro NATO",
-      "url": "https://ekonomickydenik.cz/vlada-jmenuje-landovskeho-zmocnencem-pro-nato/",
-      "dt": "2026-05-10T12:34:33Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "dvou",
-        "jmenuje",
-        "konec",
-        "landovského",
-        "nato",
-        "procent",
-        "přešlapování",
-        "vláda",
-        "zmocněncem"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -782,7 +782,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70306,
+      "bytes": 70509,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -819,7 +819,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T11:52:02Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T12:57:26Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 26,
@@ -836,6 +836,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Půlka úrody ovoce je pryč. Škody po mrazech půjdou do stovek milionů",
+            "publishedAt": "2026-05-12T12:57:26Z"
+          },
           {
             "title": "Nejvyšší nezaměstnanost za 10 let. Míst přibývá málo a jen někde",
             "publishedAt": "2026-05-12T11:52:02Z"
@@ -863,10 +867,6 @@
           {
             "title": "Podvodníci s ojetinami si mnou ruce. Nedotažené změny jim nahrávají",
             "publishedAt": "2026-05-12T06:25:00Z"
-          },
-          {
-            "title": "MOL po Orbánovi: Nákup ropy z Ruska omezí, zastavit ho ale nemůže",
-            "publishedAt": "2026-05-12T05:10:00Z"
           }
         ]
       }

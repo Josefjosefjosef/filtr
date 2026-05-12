@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-12T12:24:17.226894Z",
+  "ingestedAt": "2026-05-12T13:05:35.449595Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Posun v případu zbraně u pacienta v Motole: Výroky lékaře byly neetické, zní z nemocnice",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/motol-zbran-u-pacienta-vyroky-lekare/",
+      "dt": "2026-05-12T12:57:27Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "byly",
+        "lékaře",
+        "motole",
+        "neetické",
+        "nemocnice",
+        "pacienta",
+        "posun",
+        "případu",
+        "výroky",
+        "zbraně",
+        "zní"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -248,31 +276,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Hantavirus Andes v Česku? Ministr Vojtěch sdělil, co stát udělá",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/vojtech-hantavirus-andes-opatreni/",
-      "dt": "2026-05-11T20:00:08Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "andes",
-        "hantavirus",
-        "ministr",
-        "sdělil",
-        "stát",
-        "udělá",
-        "vojtěch",
-        "česku"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -283,7 +286,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 93437,
+      "bytes": 93748,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -320,7 +323,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-12T12:14:10Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T12:57:27Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -335,6 +338,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Posun v případu zbraně u pacienta v Motole: Výroky lékaře byly neetické, zní z nemocnice",
+            "publishedAt": "2026-05-12T12:57:27Z"
+          },
           {
             "title": "Sestry z Filipín a Uzbekistánu i virtuální realita. Politici podepsali plán na záchranu zdravotnictví",
             "publishedAt": "2026-05-12T12:14:10Z"
@@ -362,10 +369,6 @@
           {
             "title": "Chyba při odběru krve i likvidaci moči. 12 zdravotníků skončilo kvůli hantaviru v izolaci",
             "publishedAt": "2026-05-12T07:00:53Z"
-          },
-          {
-            "title": "Raketový vzestup syfilidy a kapavky: Evropa hlásí nejhorší čísla za 10 let. Infekce se nedaří zastavit",
-            "publishedAt": "2026-05-12T06:00:00Z"
           }
         ]
       }
