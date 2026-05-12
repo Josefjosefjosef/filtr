@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-12T01:24:11.003871Z",
+  "ingestedAt": "2026-05-12T02:49:51.011089Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Mladý muž chtěl v Brně skočit z mostu, strážníky na něj upozornil pozorný svědek",
+      "url": "https://tydenikpolicie.cz/mlady-muz-chtel-v-brne-skocit-z-mostu-strazniky-na-nej-upozornil-pozorny-svedek/",
+      "dt": "2026-05-12T02:02:39Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "brně",
+        "chtěl",
+        "mladý",
+        "mostu",
+        "muž",
+        "něj",
+        "pozorný",
+        "skočit",
+        "strážníky",
+        "svědek",
+        "upozornil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -235,32 +263,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Jihočeští kriminalisté dopadli falešného bankéře. Zadrženi byli tři lidé",
-      "url": "https://tydenikpolicie.cz/jihocesti-kriminaliste-dopadli-falesneho-bankere-zadrzeni-byli-tri-lide/",
-      "dt": "2026-05-11T12:52:00Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "bankéře",
-        "byli",
-        "dopadli",
-        "falešného",
-        "jihočeští",
-        "kriminalisté",
-        "lidé",
-        "tři",
-        "zadrženi"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -271,7 +273,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16808,
+      "bytes": 16954,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -308,7 +310,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-11T22:02:31Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T02:02:39Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -323,6 +325,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mladý muž chtěl v Brně skočit z mostu, strážníky na něj upozornil pozorný svědek",
+            "publishedAt": "2026-05-12T02:02:39Z"
+          },
           {
             "title": "Dvojice se v Podbořanech pokoušela šroubovákem dostat do bankomatu",
             "publishedAt": "2026-05-11T22:02:31Z"
@@ -350,10 +356,6 @@
           {
             "title": "Tři gentlemani silnic zachránili po nehodě na Ústecku lidi z hořících aut",
             "publishedAt": "2026-05-11T13:11:17Z"
-          },
-          {
-            "title": "Ministerstvo vnitra zahájí kvůli řádění fanoušků na sobotním derby se Slavií Praha správní řízení",
-            "publishedAt": "2026-05-11T13:08:57Z"
           }
         ]
       }

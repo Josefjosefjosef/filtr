@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-12T01:24:11.003871Z",
+  "ingestedAt": "2026-05-12T02:49:51.011089Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Proměny školek: Místo drilování barev se děti učí chápat emoce či spolupracovat",
+      "url": "https://www.denik.cz/skolstvi-a-vzdelavani/materska-skola-socialni-a-emocni-uceni-omezeni-odkladu-skola-deti.html",
+      "dt": "2026-05-12T02:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "barev",
+        "chápat",
+        "drilování",
+        "děti",
+        "emoce",
+        "místo",
+        "proměny",
+        "spolupracovat",
+        "učí",
+        "školek"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -623,34 +650,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Turistu v USA zabil medvěd. Muž rodině krátce před smrtí ještě poslal zprávu",
-      "url": "https://www.denik.cz/ze_sveta/turistu-v-usa-zabil-medved-rodine-kratce-pred-smrti-poslal-zpravu.html",
-      "dt": "2026-05-11T08:17:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ještě",
-        "krátce",
-        "medvěd",
-        "muž",
-        "poslal",
-        "rodině",
-        "smrtí",
-        "turistu",
-        "usa",
-        "zabil",
-        "zprávu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -661,7 +660,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29160,
+      "bytes": 29372,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -698,7 +697,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-11T19:11:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T02:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -714,6 +713,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Proměny školek: Místo drilování barev se děti učí chápat emoce či spolupracovat",
+            "publishedAt": "2026-05-12T02:00:00Z"
+          },
           {
             "title": "Trump vážně zvažuje, že by z Venezuely udělal 51. americký stát, píší média",
             "publishedAt": "2026-05-11T19:11:00Z"
@@ -741,10 +744,6 @@
           {
             "title": "Co čeká lidi z lodi s hantavirem: Testy, speciální lety i karanténa až 45 dní",
             "publishedAt": "2026-05-11T14:31:00Z"
-          },
-          {
-            "title": "Nevšední záběry. Paraglidista zachytil zámky na Blanensku z nebe",
-            "publishedAt": "2026-05-11T13:50:00Z"
           }
         ]
       }
