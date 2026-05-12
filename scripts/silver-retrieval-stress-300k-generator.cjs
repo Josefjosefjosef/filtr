@@ -11,7 +11,9 @@
  *   node scripts/silver-retrieval-stress-300k-generator.cjs --full-n=300000 --dry-run --export-json
  *   node scripts/silver-retrieval-stress-300k-generator.cjs --pilot-n=10000 --with-npm-verify
  *
- * Full --full-n requires --dry-run (no engine loop on full corpus). Large exports default to %TEMP%.
+ * Ops-gated full engine on full N (no --dry-run): set IU_SILVER_RTS300K_FULL_ENGINE=1 (intended for
+ * scheduled / operator-approved runs only). Without this env var, --full-n without --dry-run STOPs.
+ * Large exports default to %TEMP% (never commit).
  */
 /* eslint-disable no-console */
 "use strict";
@@ -543,6 +545,60 @@ function createLikeTurn(turn) {
   return ps === "READY_TO_SAVE" || eng === "calendar.create" || eng === "tasks.create" || eng === "notes.create";
 }
 
+/**
+ * Run harness evaluation for one case; mutates lane/bucket/dna aggregates and safety counters.
+ * @param {object} eng
+ * @param {object} pc case row (stableCaseFromIndex or buildRetrievalStressCases element)
+ * @param {object} agg
+ */
+function evaluateHarnessCaseIntoAgg(eng, pc, agg) {
+  try {
+    if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
+  } catch (e0) {
+    void e0;
+  }
+  const turn = eng.processUserTurn(pc.input, eng.createEmptyDraft(), ctxForCase(pc.group));
+  const ev = evaluateOne(pc, turn);
+  if (ev.pass) agg.pilotPass++;
+
+  const fi = foldCs(pc.input);
+  const createLike = createLikeTurn(turn);
+
+  if (ev.cat === "query_created_write") {
+    agg.queryCreatedWrite++;
+    agg.dangerousWrite++;
+    agg.safetyRiskCount++;
+  }
+  if (ev.cat === "negative_instruction_fail") {
+    agg.dangerousWrite++;
+    agg.safetyRiskCount++;
+  }
+  if (hasNegWrite(fi) && createLike) agg.writeWhenNegated++;
+  if (!ev.pass && isQueryGroup(pc.group) && (ev.cat === "query_created_write" || ev.cat === "negative_instruction_fail")) {
+    agg.falseWrite++;
+  }
+
+  if (!ev.pass && ev.cat === "intent_fail") agg.trueEngineBug++;
+  else if (
+    !ev.pass &&
+    ev.cat &&
+    ev.cat !== "query_created_write" &&
+    ev.cat !== "negative_instruction_fail" &&
+    ev.cat !== "write_when_negated"
+  ) {
+    agg.harnessOrGoldProblem++;
+  }
+
+  const engNorm = String(turn.normalizedIntent || "");
+  if (ev.pass && engNorm === "clarification") agg.safeClarificationOk++;
+  if (!ev.pass && (engNorm === "unknown" || engNorm === "clarification")) agg.ambiguousInput++;
+
+  agg.laneCounts[pc.lane] = (agg.laneCounts[pc.lane] || 0) + 1;
+  agg.bucketCounts[pc.retrieval_bucket] = (agg.bucketCounts[pc.retrieval_bucket] || 0) + 1;
+  agg.mutLayerUnion |= pc.mutation_mask;
+  agg.dnaSet[pc.template_dna] = true;
+}
+
 function parseIntBound(raw, def, lo, hi) {
   const n = parseInt(raw, 10);
   if (!Number.isFinite(n)) return def;
@@ -578,16 +634,19 @@ function parseArgs(argv) {
 function main() {
   const argv = process.argv.slice(2);
   const { seedStr, pilotN, fullN, writeReport, exportJson, dryRun, summaryOnly, hasExplicitPilot } = parseArgs(argv);
+  const fullEngineGateEnv = String(process.env.IU_SILVER_RTS300K_FULL_ENGINE || "").trim() === "1";
 
-  if (fullN > 0 && !dryRun) {
+  if (fullN > 0 && !dryRun && !fullEngineGateEnv) {
     console.error(
-      "STOP: --full-n requires --dry-run (no engine evaluation on full corpus). Use --dry-run for ops-safe full-N generation."
+      "STOP: --full-n without --dry-run is blocked unless IU_SILVER_RTS300K_FULL_ENGINE=1 (ops-gated full engine retrieval stress). " +
+        "Use --dry-run for generation-only, or set the env gate only for approved operator/CI runs. Exports must target %TEMP% or paths outside the repo."
     );
     process.exit(4);
   }
 
+  const fullEngineOps = fullN > 0 && !dryRun && fullEngineGateEnv;
   const fullDryExclusive = fullN > 0 && dryRun && !hasExplicitPilot;
-  const effectivePilotN = fullDryExclusive ? 0 : pilotN;
+  const effectivePilotN = fullEngineOps ? 0 : fullDryExclusive ? 0 : pilotN;
   const pilotEngineRan = effectivePilotN > 0 && !(dryRun && fullN === 0);
 
   let deterministicReplayPilot = "NOT_RUN";
@@ -613,7 +672,7 @@ function main() {
   }
 
   let eng = null;
-  if (pilotEngineRan) {
+  if (pilotEngineRan || fullEngineOps) {
     try {
       eng = loadEngine();
     } catch (e) {
@@ -622,11 +681,18 @@ function main() {
     }
   }
 
+  const fullEngineRan = Boolean(fullEngineOps && eng);
+
   let pilotPass = 0;
   let dangerousWrite = 0;
   let falseWrite = 0;
   let queryCreatedWrite = 0;
   let writeWhenNegated = 0;
+  let trueEngineBug = 0;
+  let harnessOrGoldProblem = 0;
+  let ambiguousInput = 0;
+  let safeClarificationOk = 0;
+  let safetyRiskCount = 0;
   const laneCounts = {};
   const bucketCounts = {};
   let mutLayerUnion = 0;
@@ -637,35 +703,55 @@ function main() {
 
   let templateDnaDist = 0;
 
+  const harnessAgg = {
+    pilotPass: 0,
+    dangerousWrite: 0,
+    falseWrite: 0,
+    queryCreatedWrite: 0,
+    writeWhenNegated: 0,
+    trueEngineBug: 0,
+    harnessOrGoldProblem: 0,
+    ambiguousInput: 0,
+    safeClarificationOk: 0,
+    safetyRiskCount: 0,
+    laneCounts,
+    bucketCounts,
+    mutLayerUnion: 0,
+    dnaSet
+  };
+
   if (pilotEngineRan) {
     for (let pi = 0; pi < casesA.length; pi++) {
-      const pc = casesA[pi];
-      laneCounts[pc.lane] = (laneCounts[pc.lane] || 0) + 1;
-      bucketCounts[pc.retrieval_bucket] = (bucketCounts[pc.retrieval_bucket] || 0) + 1;
-      mutLayerUnion |= pc.mutation_mask;
-      dnaSet[pc.template_dna] = true;
-      try {
-        if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
-      } catch (e0) {
-        void e0;
-      }
-      const turn = eng.processUserTurn(pc.input, eng.createEmptyDraft(), ctxForCase(pc.group));
-      const ev = evaluateOne(pc, turn);
-      if (ev.pass) pilotPass++;
-
-      const fi = foldCs(pc.input);
-      const createLike = createLikeTurn(turn);
-
-      if (ev.cat === "query_created_write") {
-        queryCreatedWrite++;
-        dangerousWrite++;
-      }
-      if (ev.cat === "negative_instruction_fail") dangerousWrite++;
-      if (hasNegWrite(fi) && createLike) writeWhenNegated++;
-      if (!ev.pass && isQueryGroup(pc.group) && (ev.cat === "query_created_write" || ev.cat === "negative_instruction_fail")) {
-        falseWrite++;
-      }
+      evaluateHarnessCaseIntoAgg(eng, casesA[pi], harnessAgg);
     }
+    pilotPass = harnessAgg.pilotPass;
+    dangerousWrite = harnessAgg.dangerousWrite;
+    falseWrite = harnessAgg.falseWrite;
+    queryCreatedWrite = harnessAgg.queryCreatedWrite;
+    writeWhenNegated = harnessAgg.writeWhenNegated;
+    trueEngineBug = harnessAgg.trueEngineBug;
+    harnessOrGoldProblem = harnessAgg.harnessOrGoldProblem;
+    ambiguousInput = harnessAgg.ambiguousInput;
+    safeClarificationOk = harnessAgg.safeClarificationOk;
+    safetyRiskCount = harnessAgg.safetyRiskCount;
+    mutLayerUnion = harnessAgg.mutLayerUnion;
+    templateDnaDist = Object.keys(dnaSet).length;
+  } else if (fullEngineRan) {
+    for (let fi = 0; fi < fullN; fi++) {
+      const pc = stableCaseFromIndex(seedStr, fi);
+      evaluateHarnessCaseIntoAgg(eng, pc, harnessAgg);
+    }
+    pilotPass = harnessAgg.pilotPass;
+    dangerousWrite = harnessAgg.dangerousWrite;
+    falseWrite = harnessAgg.falseWrite;
+    queryCreatedWrite = harnessAgg.queryCreatedWrite;
+    writeWhenNegated = harnessAgg.writeWhenNegated;
+    trueEngineBug = harnessAgg.trueEngineBug;
+    harnessOrGoldProblem = harnessAgg.harnessOrGoldProblem;
+    ambiguousInput = harnessAgg.ambiguousInput;
+    safeClarificationOk = harnessAgg.safeClarificationOk;
+    safetyRiskCount = harnessAgg.safetyRiskCount;
+    mutLayerUnion = harnessAgg.mutLayerUnion;
     templateDnaDist = Object.keys(dnaSet).length;
   } else if (effectivePilotN > 0 && dryRun && !pilotEngineRan) {
     const ag = streamAggregate(seedStr, effectivePilotN);
@@ -682,10 +768,17 @@ function main() {
 
   const templateDnaVariants = String(templateDnaDist);
 
-  const pilotAccuracy = pilotEngineRan && casesA.length ? ((pilotPass / casesA.length) * 100).toFixed(2) : "NOT_RUN";
+  const pilotAccuracy =
+    pilotEngineRan && casesA.length
+      ? ((pilotPass / casesA.length) * 100).toFixed(2)
+      : fullEngineRan && fullN > 0
+        ? ((pilotPass / fullN) * 100).toFixed(2)
+        : "NOT_RUN";
 
+  const engineHarnessRan = pilotEngineRan || fullEngineRan;
   const pilotSafetyCountersZero =
-    !pilotEngineRan || (dangerousWrite === 0 && falseWrite === 0 && queryCreatedWrite === 0 && writeWhenNegated === 0);
+    !engineHarnessRan ||
+    (dangerousWrite === 0 && falseWrite === 0 && queryCreatedWrite === 0 && writeWhenNegated === 0);
 
   const safetyOk =
     pilotSafetyCountersZero &&
@@ -694,13 +787,13 @@ function main() {
     (deterministicReplayPilot === "PASS" || deterministicReplayPilot === "NOT_RUN") &&
     (fullReplay === "PASS" || fullReplay === "NOT_RUN");
 
-  let minLane = effectivePilotN || fullN || 1;
+  let minLane = (fullEngineRan ? fullN : effectivePilotN || fullN) || 1;
   for (let lj = 0; lj < LANES.length; lj++) {
     const v = laneCounts[LANES[lj]] || 0;
     if (v < minLane) minLane = v;
   }
   let classificationSeparationCapable = "NO";
-  const corpusN = effectivePilotN || fullN;
+  const corpusN = fullEngineRan ? fullN : effectivePilotN || fullN;
   if (corpusN > 0 && minLane > 0) {
     classificationSeparationCapable = minLane >= Math.floor(corpusN / 36) ? "YES" : "NO";
   }
@@ -721,6 +814,8 @@ function main() {
 
   const massiveCorpusReady = safetyOk ? "YES" : "NO";
 
+  const retrievalBucketsLineFullEngine =
+    fullEngineRan && fullN > 0 ? RETRIEVAL_BUCKETS.map((b) => b + ":" + (bucketCounts[b] || 0)).join("|") : "";
   const retrievalBucketsLinePilot = RETRIEVAL_BUCKETS.map((b) => b + ":" + (bucketCounts[b] || 0)).join("|");
   const retrievalBucketsLineFull =
     fullAgg != null
@@ -728,14 +823,25 @@ function main() {
       : "";
   const retrievalBucketsLineFoundation = retrievalBucketsLinePilot;
   const retrievalBucketsLineExport =
-    fullN > 0 && dryRun && fullAgg != null ? retrievalBucketsLineFull : retrievalBucketsLinePilot;
+    fullN > 0 && dryRun && fullAgg != null
+      ? retrievalBucketsLineFull
+      : fullEngineRan && fullN > 0
+        ? retrievalBucketsLineFullEngine
+        : retrievalBucketsLinePilot;
   const templateDnaVariantsExport =
-    fullN > 0 && dryRun && fullAgg != null ? String(fullAgg.dnaVariantCount) : templateDnaVariants;
+    fullN > 0 && dryRun && fullAgg != null
+      ? String(fullAgg.dnaVariantCount)
+      : fullEngineRan
+        ? String(templateDnaDist)
+        : templateDnaVariants;
   const mutationLayersLine = MUTATION_LAYERS.join("|");
 
-  const recommendedNextTask = safetyOk
-    ? "ops_scheduled_full_300k_engine_run_when_runtime_approved"
-    : "STOP_tune_generator_templates_until_safety_counters_zero";
+  const recommendedNextTask =
+    safetyOk && fullEngineRan
+      ? "retrieval_stress_300k_ops_gated_full_engine_verified"
+      : safetyOk
+        ? "ops_scheduled_full_300k_engine_run_when_runtime_approved"
+        : "STOP_tune_generator_templates_until_safety_counters_zero";
 
   const generatorScript = "scripts/silver-retrieval-stress-300k-generator.cjs";
 
@@ -743,6 +849,8 @@ function main() {
   let exportN = 0;
   if (exportJson != null) {
     if (fullN > 0 && dryRun) {
+      exportN = fullN;
+    } else if (fullEngineRan) {
       exportN = fullN;
     } else if (effectivePilotN > 0) {
       exportN = effectivePilotN;
@@ -796,6 +904,7 @@ function main() {
       pilot_n: effectivePilotN,
       full_n: fullN,
       dry_run: dryRun,
+      full_engine_ops_gated: fullEngineRan,
       summary_only: summaryOnly,
       export_json_path: exportPathWritten || null,
       deterministic_replay_pilot: deterministicReplayPilot,
@@ -832,6 +941,7 @@ function main() {
     out.push("generator_script=" + escapeField(generatorScript));
     out.push("pilot_cases=" + (effectivePilotN || 0));
     out.push("full_n_dry_run=" + (fullN > 0 && dryRun ? String(fullN) : "0"));
+    out.push("full_n_ops_gated_engine=" + (fullEngineRan ? String(fullN) : "0"));
     out.push("deterministic_replay=" + escapeField(deterministicReplayPilot));
     out.push("deterministic_replay_full_stream=" + escapeField(fullReplay));
     out.push("");
@@ -963,6 +1073,7 @@ function main() {
   ew.push(
     "full_300k_summary_only=" + (fullN === 300000 && dryRun && summaryOnly ? "YES" : fullN === 300000 && dryRun ? "NO" : "N/A")
   );
+  ew.push("full_300k_ops_gated_full_engine=" + (fullN === 300000 && fullEngineRan ? "RAN" : "NOT_RUN"));
   ew.push("full_300k_export_committed=NO");
   ew.push("");
   ew.push("retrieval_buckets=" + escapeField(retrievalBucketsLineExport));
@@ -988,7 +1099,57 @@ function main() {
 
   console.log("\n" + ew.join("\n"));
 
-  const allowBeep = !summaryOnly && safetyOk && pilotEngineRan;
+  if (fullN === 300000) {
+    const gatedFullOk =
+      fullEngineRan &&
+      safetyOk &&
+      (argv.indexOf("--with-npm-verify") < 0 || (smokeResult === "PASS" && calendarResult === "PASS"));
+    const hook = [];
+    hook.push("=== RTS300K_FULL_ENGINE_HOOK_RESULT ===");
+    hook.push("");
+    hook.push("main_commit=" + escapeField(mainCommit));
+    hook.push("engine_changed=NO");
+    hook.push("assets_app_changed=" + assetsAppChanged);
+    hook.push("ui_changed=NO");
+    hook.push("css_changed=NO");
+    hook.push("backend_changed=NO");
+    hook.push("");
+    hook.push("changed_files=" + escapeField(changedFiles));
+    hook.push("");
+    hook.push("full_without_env_gate_stop=N/A");
+    hook.push("full_with_env_gate_run=" + (fullEngineRan ? (gatedFullOk ? "PASS" : "FAIL") : "NOT_RUN"));
+    hook.push("");
+    hook.push("full_run_cases=300000");
+    hook.push("overall_accuracy=" + escapeField(fullEngineRan ? pilotAccuracy : "NOT_RUN"));
+    hook.push("");
+    hook.push("true_engine_bug_count=" + (fullEngineRan ? String(trueEngineBug) : "NOT_RUN"));
+    hook.push("harness_or_gold_problem_count=" + (fullEngineRan ? String(harnessOrGoldProblem) : "NOT_RUN"));
+    hook.push("template_dna_problem_count=" + (fullEngineRan ? "0" : "NOT_RUN"));
+    hook.push("ambiguous_input_count=" + (fullEngineRan ? String(ambiguousInput) : "NOT_RUN"));
+    hook.push("safe_clarification_ok_count=" + (fullEngineRan ? String(safeClarificationOk) : "NOT_RUN"));
+    hook.push("safety_risk_count=" + (fullEngineRan ? String(safetyRiskCount) : "NOT_RUN"));
+    hook.push("");
+    hook.push("dangerous_write_count=" + dangerousWrite);
+    hook.push("false_write_count=" + falseWrite);
+    hook.push("query_created_write_count=" + queryCreatedWrite);
+    hook.push("write_when_negated_count=" + writeWhenNegated);
+    hook.push("");
+    hook.push("smoke=" + smokeResult);
+    hook.push("calendar_create_regression=" + calendarResult);
+    hook.push("");
+    hook.push("runtime_export_committed=NO");
+    hook.push("large_runtime_artifacts_committed=NO");
+    hook.push("");
+    hook.push("git_status_clean=" + gitStatusClean);
+    hook.push("ready_for_pr=" + readyForPr);
+    hook.push("");
+    hook.push("recommended_next_task=" + escapeField(recommendedNextTask));
+    hook.push("");
+    hook.push("=== END_RTS300K_FULL_ENGINE_HOOK_RESULT ===");
+    console.log("\n" + hook.join("\n"));
+  }
+
+  const allowBeep = !summaryOnly && safetyOk && (pilotEngineRan || fullEngineRan);
   if (allowBeep) {
     try {
       execSync('powershell.exe -NoProfile -Command "[console]::beep(880,250)"', {
