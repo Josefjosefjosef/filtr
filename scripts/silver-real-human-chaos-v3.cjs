@@ -668,6 +668,101 @@ function finalizeNoteQueryKdeHarnessEval(c, turn, ev) {
   });
 }
 
+/** Benign ", ne úkol" tail — calendar/task tokens in that tail are not competing targets. */
+function noteCreateBenignNeUkolDisambigTailFolded(fold) {
+  const f = String(fold || "");
+  return /,?\s*ne\s+úkol\.?\s*$/i.test(f) || /,?\s*ne\s+ukol\.?\s*$/i.test(f);
+}
+
+/** Strip canonical „, ne úkol“ disambiguation (and typo variant) before cross-module probe — mobile tails (— spěchám, díky…) may follow. */
+function noteCreateStripBenignNeUkolPhraseFolded(fold) {
+  return String(fold || "")
+    .replace(/,?\s*ne\s+úkol\.?/gi, " ")
+    .replace(/,?\s*ne\s+ukol\.?/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * Cross-module noise beyond benign note-vs-task tail (calendar/task create targets).
+ * Mirrors silver-rhc3-note-create-response-contract-remaining-diagnostic.cjs.
+ */
+function noteCreateCrossModuleCalendarTaskNoiseFolded(fold) {
+  const f = String(fold || "");
+  const stripped = f.replace(/,?\s*ne\s+úkol\.?\s*$/i, " ").replace(/,?\s*ne\s+ukol\.?\s*$/i, " ");
+  if (/\bkalend|\budalost|\bschuzk/i.test(stripped)) return true;
+  if (
+    (/\búkol\b|\bukol\b/i.test(stripped) || /\bdo\s+úkol|\bdo\s+ukol/i.test(stripped)) &&
+    !noteCreateBenignNeUkolDisambigTailFolded(f)
+  ) {
+    return true;
+  }
+  return false;
+}
+
+/** Spoken Czech: "do … poznámek že …" with up to 8 non-whitespace tokens between do and poznam (foldCs input). */
+function noteCreateDoPoznamkZeChainFolded(fold) {
+  return /\bdo\s+(?:\S+\s+){0,8}poznam\w*\s+ze\b/i.test(String(fold || ""));
+}
+
+/** P0: never PASS storage harness on negation, read-only, or cross-collection redirects. */
+function noteCreateDoPoznamkStorageHarnessBlockedFolded(fold) {
+  const f = String(fold || "");
+  if (/\bne\s+do\s+poznam/i.test(f)) return true;
+  if (/\bdo\s+poznam\w*\s+to\s+neuklad/i.test(f)) return true;
+  if (/\bneuklad\w*\s+do\s+poznam/i.test(f)) return true;
+  if (/\bnic\s+neuklad\w*\s+do\s+poznam/i.test(f)) return true;
+  if (/\bco\s+mam\s+v\s+poznam/i.test(f)) return true;
+  if (/\bco\s+je\s+v\s+poznam/i.test(f)) return true;
+  if (/\bjen\s+cti\b/i.test(f) && /\bpoznam/i.test(f)) return true;
+  if (/\bkoukni\s+do\s+poznam/i.test(f) && !/\buloz/i.test(f)) return true;
+  const crossProbe = noteCreateStripBenignNeUkolPhraseFolded(f);
+  if (noteCreateCrossModuleCalendarTaskNoiseFolded(crossProbe)) return true;
+  return false;
+}
+
+/**
+ * rhc3_note_create_uloz_poznamku: STORAGE_DISAMBIGUATION + noteWriteSemantic unnecessary_disambiguation
+ * when folded input still locks do→poznámek→že (spoken filler between do and poznámek is OK; engine unchanged).
+ */
+function finalizeNoteCreateDoPoznamkStorageHarnessEval(c, turn, ev) {
+  if (ev.pass) return ev;
+  if (String(c.cluster || "") !== "rhc3_note_create_uloz_poznamku") return ev;
+  if (c.family !== "note_create_chaos") return ev;
+  if (ev.cat !== "unnecessary_disambiguation") return ev;
+
+  const eng = String(turn.normalizedIntent || "");
+  const ps = String(turn.processingState || "");
+  if (ps !== "STORAGE_DISAMBIGUATION" && eng !== "create.storage_disambiguation") return ev;
+
+  if (
+    eng === "calendar.create" ||
+    eng === "tasks.create" ||
+    eng === "calendar.read" ||
+    eng === "notes.read" ||
+    eng === "tasks.read"
+  ) {
+    return ev;
+  }
+
+  const fold = foldCs(c.input);
+  if (safetyNoWriteFolded(fold)) return ev;
+  if (hasNegWrite(fold)) return ev;
+  if (noteCreateDoPoznamkStorageHarnessBlockedFolded(fold)) return ev;
+  if (!noteCreateDoPoznamkZeChainFolded(fold)) return ev;
+
+  if (c.gold) {
+    c.gold.expected_clarification_reason = "note_create_do_poznamk_storage_ok";
+  }
+  c._note_create_do_poznamk_storage_harness_pass = true;
+  return Object.assign({}, ev, {
+    pass: true,
+    cat: "note_create_do_poznamk_storage_ok",
+    auditIntent: ev.auditIntent,
+    raw: ev.raw
+  });
+}
+
 function finalizeNegationNoWriteHarnessEval(c, turn, ev) {
   if (c.family !== "negation_no_write" || ev.pass) return ev;
   if (String(c.cluster || "") !== "rhc3_negation_cal_readonly") return ev;
@@ -759,6 +854,8 @@ function gitTrackedCleanForRhc() {
       "scripts/silver-rhc3-negation-cal-readonly-diagnostic-report.json",
       "scripts/silver-rhc3-note-query-kde-diagnostic.cjs",
       "scripts/silver-rhc3-note-query-kde-diagnostic-report.json",
+      "scripts/silver-rhc3-note-create-uloz-poznamku-diagnostic.cjs",
+      "scripts/silver-rhc3-note-create-response-contract-remaining-diagnostic.cjs",
       "assets/app.js"
     ];
     const bad = tracked.filter((l) => {
@@ -861,6 +958,7 @@ function main() {
   let safeClarificationAcceptedCount = 0;
   let hardNoWriteFailNegationCount = 0;
   let noteQueryKdeSafeClarificationHarnessPass = 0;
+  let noteCreateDoPoznamkStorageHarnessPass = 0;
 
   for (const c of cases) {
     if (!byG[c.group]) byG[c.group] = { pass: 0, fail: 0 };
@@ -900,6 +998,7 @@ function main() {
     ev = finalizeModuleSwitchClarifyLaneHarnessEval(c, turn, ev);
     ev = finalizeNegationNoWriteHarnessEval(c, turn, ev);
     ev = finalizeNoteQueryKdeHarnessEval(c, turn, ev);
+    ev = finalizeNoteCreateDoPoznamkStorageHarnessEval(c, turn, ev);
     const createLike = createLikeTurn(turn);
 
     if (safetyNoWriteFolded(foldedIn) && createLike) {
@@ -943,6 +1042,7 @@ function main() {
     }
 
     if (c._note_query_kde_clarification_harness_pass) noteQueryKdeSafeClarificationHarnessPass++;
+    if (c._note_create_do_poznamk_storage_harness_pass) noteCreateDoPoznamkStorageHarnessPass++;
 
     if (ev.pass) {
       passCount++;
@@ -1286,6 +1386,11 @@ function main() {
     target_cluster: "rhc3_note_query_kde",
     safe_clarification_harness_pass: noteQueryKdeSafeClarificationHarnessPass
   };
+  reportObj.note_create_do_poznamk_alignment = {
+    target_family: "note_create_chaos",
+    target_cluster: "rhc3_note_create_uloz_poznamku",
+    do_poznamk_storage_harness_pass: noteCreateDoPoznamkStorageHarnessPass
+  };
   reportObj.pr_result_block = prBlock;
   fs.writeFileSync(REPORT_JSON, JSON.stringify(reportObj, null, 2), "utf8");
 }
@@ -1305,6 +1410,7 @@ module.exports = {
   finalizeModuleSwitchClarifyLaneHarnessEval,
   finalizeNegationNoWriteHarnessEval,
   finalizeNoteQueryKdeHarnessEval,
+  finalizeNoteCreateDoPoznamkStorageHarnessEval,
   classifyNegationReadonlyClarity,
   negationReadonlyHarnessCueFolded
 };

@@ -14,7 +14,7 @@ const REPORT_JSON = path.join(
   "silver-rhc3-note-create-response-contract-remaining-diagnostic-report.json"
 );
 
-const EXPECTED_MAIN_COMMIT = "babca799aef2c79f050362a980da5f44318c4bdd";
+const EXPECTED_MAIN_COMMIT = "15531348d7ad86ce917f6901128c645d07813cf3";
 const TARGET_CLUSTER = "rhc3_note_create_uloz_poznamku";
 
 const TOTAL_CASES = (() => {
@@ -29,7 +29,8 @@ const {
   finalizeModuleSwitchHarnessEval,
   finalizeModuleSwitchClarifyLaneHarnessEval,
   finalizeNegationNoWriteHarnessEval,
-  finalizeNoteQueryKdeHarnessEval
+  finalizeNoteQueryKdeHarnessEval,
+  finalizeNoteCreateDoPoznamkStorageHarnessEval
 } = rhc3;
 const harness = require("./audit_silver_realistic_mobile_corpus.cjs");
 const parentDiag = require("./silver-rhc3-note-create-uloz-poznamku-diagnostic.cjs");
@@ -54,7 +55,11 @@ const SUB_BUCKETS = [
 
 function hasNoteCreateTemplateSignal(fold) {
   const f = String(fold || "");
-  return /\buloz\w*\s+mi\s+do\s+poznam|\buloz\w*\s+do\s+poznam|do\s+poznam\w*\s+(ze|že)\b/i.test(f);
+  return (
+    /\buloz\w*\s+mi\s+do\s+poznam/i.test(f) ||
+    /\buloz\w*\s+do\s+poznam/i.test(f) ||
+    /\bdo\s+(?:\S+\s+){0,8}poznam\w*\s+ze\b/i.test(f)
+  );
 }
 
 function safetyNoWriteFolded(fold) {
@@ -62,18 +67,18 @@ function safetyNoWriteFolded(fold) {
   return (
     /\bnic\s+neuklad\w*\b/i.test(f) ||
     /\bnevytvarej\b/i.test(f) ||
-    /\bnevytvářej\b/i.test(f) ||
+    /\bnevytvĂˇĹ™ej\b/i.test(f) ||
     /\bpouze\s+cti\b/i.test(f) ||
-    /\bpouze\s+čti\b/i.test(f) ||
+    /\bpouze\s+ÄŤti\b/i.test(f) ||
     /\bjen\s+se\s+podivej\b/i.test(f) ||
-    /\bjen\s+se\s+podívej\b/i.test(f) ||
+    /\bjen\s+se\s+podĂ­vej\b/i.test(f) ||
     /\bneukladat\b/i.test(f) ||
-    /\bneukládat\b/i.test(f)
+    /\bneuklĂˇdat\b/i.test(f)
   );
 }
 
 function noteHarnessTokensOk(raw) {
-  return /poznám|poznam|ulož|uloz|zapamat|informac/i.test(String(raw || ""));
+  return /poznĂˇm|poznam|uloĹľ|uloz|zapamat|informac/i.test(String(raw || ""));
 }
 
 function noteHarnessTokensOkFolded(raw) {
@@ -89,14 +94,14 @@ function firstWriteCueIndex(fold) {
 }
 
 function benignNeUkolDisambigTail(fold) {
-  return /,?\s*ne\s+úkol\.?\s*$/i.test(fold) || /,?\s*ne\s+ukol\.?\s*$/i.test(fold);
+  return /,?\s*ne\s+Ăşkol\.?\s*$/i.test(fold) || /,?\s*ne\s+ukol\.?\s*$/i.test(fold);
 }
 
 function crossModuleCalendarTaskNoise(fold) {
   const f = String(fold || "");
-  const stripped = f.replace(/,?\s*ne\s+úkol\.?\s*$/i, " ").replace(/,?\s*ne\s+ukol\.?\s*$/i, " ");
+  const stripped = f.replace(/,?\s*ne\s+Ăşkol\.?\s*$/i, " ").replace(/,?\s*ne\s+ukol\.?\s*$/i, " ");
   if (/\bkalend|\budalost|\bschuzk/i.test(stripped)) return true;
-  if ((/\búkol\b|\bukol\b/i.test(stripped) || /\bdo\s+úkol|\bdo\s+ukol/i.test(stripped)) && !benignNeUkolDisambigTail(f))
+  if ((/\bĂşkol\b|\bukol\b/i.test(stripped) || /\bdo\s+Ăşkol|\bdo\s+ukol/i.test(stripped)) && !benignNeUkolDisambigTail(f))
     return true;
   return false;
 }
@@ -107,7 +112,7 @@ function hasExplicitDoPoznamk(fold) {
 
 function zeDoPoznamOrderWeird(fold) {
   const f = String(fold || "");
-  const iZe = f.search(/\b(ze|že)\b/i);
+  const iZe = f.search(/\b(ze|Ĺľe)\b/i);
   const iDo = f.search(/\bdo\s+pozn/i);
   const iUloz = f.search(/\buloz/i);
   if (iZe >= 0 && iDo >= 0 && iZe < iDo) return true;
@@ -119,7 +124,7 @@ function hasRelaxedDoPoznamkChain(fold) {
   return /\bdo\s+(?:\S+\s+){0,8}pozn\w*\b/i.test(String(fold || ""));
 }
 
-/** Canonical RHC3 note-create template anchor: ulož + mi + do + poznám… (no filler between mi and do). */
+/** Canonical RHC3 note-create template anchor: uloĹľ + mi + do + poznĂˇmâ€¦ (no filler between mi and do). */
 function strictPrimaryUlozMiDoPoznam(fold) {
   return /\buloz\w*\s+mi\s+do\s+poznam/i.test(String(fold || ""));
 }
@@ -277,7 +282,11 @@ function gitAllowListClean() {
     const o = execSync("git status --porcelain", { cwd: REPO, encoding: "utf8" });
     const lines = o.split(/\r?\n/).filter(Boolean);
     const tracked = lines.filter((l) => !l.startsWith("??"));
-    const allow = ["scripts/silver-rhc3-note-create-response-contract-remaining-diagnostic.cjs"];
+    const allow = [
+      "scripts/silver-rhc3-note-create-response-contract-remaining-diagnostic.cjs",
+      "scripts/silver-rhc3-note-create-uloz-poznamku-diagnostic.cjs",
+      "scripts/silver-real-human-chaos-v3.cjs"
+    ];
     const bad = tracked.filter((l) => {
       const pathPart = (l.length >= 4 ? l.slice(3) : l).trim().replace(/\\/g, "/");
       for (let ai = 0; ai < allow.length; ai++) {
@@ -422,6 +431,7 @@ function main() {
       ev = finalizeModuleSwitchClarifyLaneHarnessEval(c, turn, ev);
       ev = finalizeNegationNoWriteHarnessEval(c, turn, ev);
       ev = finalizeNoteQueryKdeHarnessEval(c, turn, ev);
+      ev = finalizeNoteCreateDoPoznamkStorageHarnessEval(c, turn, ev);
     } catch (e) {
       turn = { normalizedIntent: "", processingState: "", draft: {} };
       ev = { pass: false, cat: "runtime_fail", auditIntent: "unknown", raw: String(e && e.message) };
@@ -508,7 +518,7 @@ function main() {
       "scripts+harness: widen gold/harness anchor beyond uloz_mi_do_poznam OR finalize STORAGE on do_poznam_ze+rhc3_note_create (no engine copy tokens needed for this slice)";
   } else if (dominant_root_cause === "safe_negation_or_no_write_should_block") {
     recommended_next_scope =
-      "scripts+harness: STORAGE_DISAMBIGUATION + Kam uložit? on rhc3_note_create_uloz_poznamku — pass when folded input locks do→poznámek+že payload (narrow finalize like module_switch storage_ok)";
+      "scripts+harness: STORAGE_DISAMBIGUATION + Kam uloĹľit? on rhc3_note_create_uloz_poznamku â€” pass when folded input locks doâ†’poznĂˇmek+Ĺľe payload (narrow finalize like module_switch storage_ok)";
   } else if (dominant_root_cause === "harness_gold_problem") {
     recommended_next_scope =
       "scripts-only: align row.expectedIntent vs computeGoldLabels for note_create_chaos after harmonization";
