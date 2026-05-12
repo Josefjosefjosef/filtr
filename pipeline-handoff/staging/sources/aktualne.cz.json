@@ -1,32 +1,8 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-12T08:50:33.463776Z",
+  "ingestedAt": "2026-05-12T09:29:09.070890Z",
   "items": [
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Čechů bez práce ubývá, nezaměstnanost klesla pod pět procent",
-      "url": "https://zpravy.aktualne.cz/ekonomika/cechu-bez-prace-ubyva-nezamestnanost-klesla-pod-pet-procent/r~aaa294ded5c555f0cd2d337af47d89c5/",
-      "dt": "2026-05-12T08:32:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "klesla",
-        "nezaměstnanost",
-        "procent",
-        "práce",
-        "pět",
-        "ubývá",
-        "čechů"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -46,6 +22,55 @@
         "uvedl",
         "zaútočilo",
         "zelenskyj"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Putinův lobbista nikdy! Kontroverzní německý exkancléř tvrdě narazil",
+      "url": "https://zpravy.aktualne.cz/zahranici/putinuv-lobbista-nikdy-kontroverzni-nemecky-exkancler-tvrde-narazil/r~aaa2932d20c7c8e10035bd24f0e8f49c/",
+      "dt": "2026-05-12T08:59:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "exkancléř",
+        "kontroverzní",
+        "lobbista",
+        "narazil",
+        "nikdy",
+        "německý",
+        "putinův",
+        "tvrdě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Čechů bez práce ubývá, nezaměstnanost klesla pod pět procent",
+      "url": "https://zpravy.aktualne.cz/ekonomika/cechu-bez-prace-ubyva-nezamestnanost-klesla-pod-pet-procent/r~aaa294ded5c555f0cd2d337af47d89c5/",
+      "dt": "2026-05-12T08:32:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "klesla",
+        "nezaměstnanost",
+        "procent",
+        "práce",
+        "pět",
+        "ubývá",
+        "čechů"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -506,33 +531,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Frontman známé kapely přišel o přídavky na děti. Juchelka mu poslal jasný vzkaz",
-      "url": "https://zpravy.aktualne.cz/domaci/frontman-zname-kapely-prisel-o-pridavky-na-deti-juchelka-mu-poslal-jasny-vzkaz/r~aaa29faf149ae3c810b304c32eb2a150/",
-      "dt": "2026-05-12T03:30:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "děti",
-        "frontman",
-        "jasný",
-        "juchelka",
-        "kapely",
-        "poslal",
-        "přišel",
-        "přídavky",
-        "vzkaz",
-        "známé"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -543,7 +541,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22218,
+      "bytes": 22222,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -580,11 +578,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-12T08:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T08:59:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 3,
           "zpravy": 11,
+          "finance": 3,
           "other": 2,
           "sport": 4
         },
@@ -599,12 +597,16 @@
         },
         "sample_titles": [
           {
-            "title": "Čechů bez práce ubývá, nezaměstnanost klesla pod pět procent",
-            "publishedAt": "2026-05-12T08:32:00Z"
-          },
-          {
             "title": "Rusko ukončilo příměří, v noci zaútočilo více než 200 drony, uvedl Zelenskyj",
             "publishedAt": "2026-01-21T06:45:00Z"
+          },
+          {
+            "title": "Putinův lobbista nikdy! Kontroverzní německý exkancléř tvrdě narazil",
+            "publishedAt": "2026-05-12T08:59:00Z"
+          },
+          {
+            "title": "Čechů bez práce ubývá, nezaměstnanost klesla pod pět procent",
+            "publishedAt": "2026-05-12T08:32:00Z"
           },
           {
             "title": "Národní muzeum vystavuje výběr 800 snímků z Czech Press Photo 2025",
@@ -625,10 +627,6 @@
           {
             "title": "Když tě ohrožují, zkopíruj jejich tempo. Nová Škoda Karoq prý jede „čínskou rychlostí“",
             "publishedAt": "2026-05-12T07:57:00Z"
-          },
-          {
-            "title": "Lepší než Pogačar? Ten si dával pivo a pizzu. Klíčí nová rivalita, Francie u vytržení",
-            "publishedAt": "2026-05-12T07:42:00Z"
           }
         ]
       }

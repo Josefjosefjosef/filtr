@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-12T08:50:33.463776Z",
+  "ingestedAt": "2026-05-12T09:29:09.070890Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Logitech chystá novou cestovní myš. Má trackpad a zlomí se v pase",
+      "url": "https://www.zive.cz/clanky/logitech-chysta-novou-cestovni-mys-ma-trackpad-a-zlomi-se-v-pase/sc-3-a-241123/default.aspx",
+      "dt": "2026-05-12T08:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "cestovní",
+        "chystá",
+        "logitech",
+        "myš",
+        "novou",
+        "pase",
+        "trackpad",
+        "zlomí"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -958,34 +983,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Chrome na počítačích spolkl 4 GB místa navíc, Google potají stahuje AI model. Jak jej smazat?",
-      "url": "https://www.zive.cz/clanky/chrome-na-pocitacich-spolkl-4-gb-mista-navic-google-potaji-stahuje-ai-model-jak-jej-smazat/sc-3-a-241069/default.aspx",
-      "dt": "2026-05-07T14:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "chrome",
-        "google",
-        "jej",
-        "model",
-        "místa",
-        "navíc",
-        "potají",
-        "počítačích",
-        "smazat",
-        "spolkl",
-        "stahuje"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -996,7 +993,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23226,
+      "bytes": 23197,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1033,7 +1030,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-12T07:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T08:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 34,
@@ -1049,6 +1046,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Logitech chystá novou cestovní myš. Má trackpad a zlomí se v pase",
+            "publishedAt": "2026-05-12T08:45:00Z"
+          },
           {
             "title": "Díky nařízení EU padají bariéry mezi iPhonem a Androidem. Co všechno se v telefonech změní",
             "publishedAt": "2026-05-12T07:45:00Z"
@@ -1076,10 +1077,6 @@
           {
             "title": "MacBook Neo dostal výprask. Jenže Microsoft si k tomu vybral hřiště, míč i rozhodčího",
             "publishedAt": "2026-05-11T08:45:00Z"
-          },
-          {
-            "title": "DJI Neo zlevnil na 3590 Kč. Tenhle dron točí ve 4K a bude vás sledovat při běhu i na kole",
-            "publishedAt": "2026-05-11T06:45:00Z"
           }
         ]
       }

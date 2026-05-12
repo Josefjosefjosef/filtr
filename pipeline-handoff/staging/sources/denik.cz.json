@@ -1,26 +1,78 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-12T08:50:33.463776Z",
+  "ingestedAt": "2026-05-12T09:29:09.070890Z",
   "items": [
     {
       "section": "krimi",
       "contentType": "article",
-      "title": "Brutalita v Zábřeze. Zloděj stanu dupal prodavačce na hlavu, skončil ve vazbě",
+      "title": "Zloděj ukradl z obchodu v Šumperku stan. Prodavačce následně dupal na hlavu",
       "url": "https://www.denik.cz/krimi/zabreh-brutalni-napadeni-prodavacky-zlodej-kradez-stanu-zraneni-soud-vazba.html",
-      "dt": "2026-05-12T08:10:00Z",
+      "dt": "2026-05-12T08:21:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
-        "brutalita",
         "dupal",
         "hlavu",
+        "následně",
+        "obchodu",
         "prodavačce",
-        "skončil",
-        "stanu",
-        "vazbě",
+        "stan",
+        "ukradl",
         "zloděj",
-        "zábřeze"
+        "šumperku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Skandál v Thajsku: Osm opilých Rusů souložilo v moři, svědci hříšníky natočili",
+      "url": "https://www.denik.cz/ze_sveta/thajsko-pattaya-skandal-opili-rusove-soulozili-v-mori-video.html",
+      "dt": "2026-05-12T08:20:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "hříšníky",
+        "moři",
+        "natočili",
+        "opilých",
+        "osm",
+        "rusů",
+        "skandál",
+        "souložilo",
+        "svědci",
+        "thajsku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Evakuace lidí v Brně. Prasklé rameno jeřábu ohrožuje okolí",
+      "url": "https://www.denik.cz/regiony/brno-vodarska-ulice-evakuace-lide-praskle-rameno-jerab-policie.html",
+      "dt": "2026-05-12T08:18:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "brně",
+        "evakuace",
+        "jeřábu",
+        "lidí",
+        "ohrožuje",
+        "okolí",
+        "prasklé",
+        "rameno"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -595,57 +647,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Brněnská Bába pod kořenem: Senior šel na fotbal, uvěznily ho stromy",
-      "url": "https://www.denik.cz/regiony/brno-muz-uvezneni-zaklineny-mezi-stromy-fotbal-jako-baba-pod-korenem.html",
-      "dt": "2026-05-11T12:20:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "brněnská",
-        "bába",
-        "fotbal",
-        "kořenem",
-        "senior",
-        "stromy",
-        "uvěznily",
-        "šel"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Může pohyb soukromých letadel odhalit jadernou hrozbu? Vzniká odvážný projekt",
-      "url": "https://www.denik.cz/ze_sveta/mapa-sledovani-letu-soukromych-letadel-muze-odhalit-blizici-se-krizi-konec-sveta.html",
-      "dt": "2026-05-11T12:14:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "hrozbu",
-        "jadernou",
-        "letadel",
-        "odhalit",
-        "odvážný",
-        "pohyb",
-        "projekt",
-        "soukromých",
-        "vzniká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -656,7 +657,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28246,
+      "bytes": 28124,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -693,7 +694,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-12T08:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T08:21:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -711,8 +712,16 @@
         },
         "sample_titles": [
           {
-            "title": "Brutalita v Zábřeze. Zloděj stanu dupal prodavačce na hlavu, skončil ve vazbě",
-            "publishedAt": "2026-05-12T08:10:00Z"
+            "title": "Zloděj ukradl z obchodu v Šumperku stan. Prodavačce následně dupal na hlavu",
+            "publishedAt": "2026-05-12T08:21:00Z"
+          },
+          {
+            "title": "Skandál v Thajsku: Osm opilých Rusů souložilo v moři, svědci hříšníky natočili",
+            "publishedAt": "2026-05-12T08:20:00Z"
+          },
+          {
+            "title": "Evakuace lidí v Brně. Prasklé rameno jeřábu ohrožuje okolí",
+            "publishedAt": "2026-05-12T08:18:00Z"
           },
           {
             "title": "Nymburskem se možná toulá vlk. Buďte opatrní a mějte psy na vodítku, varují obce",
@@ -733,14 +742,6 @@
           {
             "title": "Průtrž mračen spláchla trasu D35. Bahno zalilo silnici a valilo se kolem domů",
             "publishedAt": "2026-05-12T07:00:00Z"
-          },
-          {
-            "title": "Rys rekordman došel ze Šumavy do Krušných hor. Urazil přes 160 kilometrů",
-            "publishedAt": "2026-05-12T06:20:00Z"
-          },
-          {
-            "title": "Pražské jaro: Smetanova Má vlast zazní ve čtyřiadvaceti zemích světa",
-            "publishedAt": "2026-05-12T06:00:00Z"
           }
         ]
       }

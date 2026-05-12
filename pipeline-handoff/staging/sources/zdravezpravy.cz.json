@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-12T08:50:33.463776Z",
+  "ingestedAt": "2026-05-12T09:29:09.070890Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Hovory s AI chaty o zdraví mají být rozhodně anonymní",
+      "url": "https://www.zdravezpravy.cz/2026/05/12/hovory-s-ai-chaty-o-zdravi-maji-byt-rozhodne-anonymni/",
+      "dt": "2026-05-12T08:34:14Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "anonymní",
+        "být",
+        "chaty",
+        "hovory",
+        "mají",
+        "rozhodně",
+        "zdraví"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -460,31 +484,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Český národní zdravotnický tým CZERT získal certifikaci EMT 1",
-      "url": "https://www.zdravezpravy.cz/2026/05/02/cesky-narodni-zdravotnicky-tym-czert-ziskal-certifikaci-emt/",
-      "dt": "2026-05-02T07:30:54Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "certifikaci",
-        "czert",
-        "emt",
-        "národní",
-        "tým",
-        "zdravotnický",
-        "získal",
-        "český"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -495,7 +494,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 199564,
+      "bytes": 201364,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -532,7 +531,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-11T13:21:39Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T08:34:14Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -548,6 +547,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hovory s AI chaty o zdraví mají být rozhodně anonymní",
+            "publishedAt": "2026-05-12T08:34:14Z"
+          },
           {
             "title": "Ministerstvo zdravotnictví se otevře veřejnosti. A na místě bude i ministr",
             "publishedAt": "2026-05-11T13:21:39Z"
@@ -575,10 +578,6 @@
           {
             "title": "Sociální sítě fungují stejně jako hazardní automaty, říká adiktolog",
             "publishedAt": "2026-05-07T12:27:01Z"
-          },
-          {
-            "title": "Senát vetoval nižší odvody OSVČ. Převod miliard z VZP ČR přijal",
-            "publishedAt": "2026-05-07T08:34:28Z"
           }
         ]
       }

@@ -1,24 +1,74 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-12T08:50:33.463776Z",
+  "ingestedAt": "2026-05-12T09:29:09.070890Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "54 jmen pro fotbalové MS. V předběžné nominaci jsou i slávisté Douděra a Chorý",
+      "title": "54 jmen pro fotbalové MS. V předběžné nominaci je i Chorý, Černý šanci nedostal",
       "url": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/ceska-reprezentace-ms-chory-doudera-slavia.A260512_100920_ms-fotbal_kazdt",
-      "dt": "2026-05-12T08:39:28Z",
+      "dt": "2026-05-12T09:09:42Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
         "chorý",
-        "douděra",
         "fotbalové",
         "jmen",
+        "nedostal",
         "nominaci",
         "předběžné",
-        "slávisté"
+        "černý",
+        "šanci"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "MS ve fotbale 2026: program, výsledky, skupiny, s kým hrají Češi",
+      "url": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/ms-ve-fotbale-2026-program-vysledky-s-kym-hraji-cesi.A260228_211333_ms-fotbal_ald",
+      "dt": "2026-05-12T08:54:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "2026",
+        "fotbale",
+        "hrají",
+        "kým",
+        "program",
+        "skupiny",
+        "výsledky",
+        "češi"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kysela: Chceme vrátit litvínovský charakter. Kämpf? Oťukáváme se",
+      "url": "https://www.idnes.cz/hokej/extraliga/litvinov-robert-kysela-rozhovor.A260510_932196_hokej_ipet",
+      "dt": "2026-05-12T08:53:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "charakter",
+        "chceme",
+        "kysela",
+        "kämpf",
+        "litvínovský",
+        "oťukáváme",
+        "vrátit"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -738,59 +788,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Klíma je zpět v házenkářské reprezentaci. Česku bude v play off o MS chybět Solák",
-      "url": "https://www.idnes.cz/sport/ostatni/klima-cesko-hazenkarstvi-reprezentace-play-off-francie-brno.A260511_140756_sporty_kazdt",
-      "dt": "2026-05-11T12:17:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "chybět",
-        "házenkářské",
-        "klíma",
-        "off",
-        "play",
-        "reprezentaci",
-        "solák",
-        "zpět",
-        "česku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hrdina? Ne, jsem jen potrhlý brankář, dušoval se Dobeš. Před davy zadržoval slzy",
-      "url": "https://www.idnes.cz/hokej/nhl/hokej-nhl-play-off-montreal-brankar-jakub-dobes.A260511_091506_nhl_luji",
-      "dt": "2026-05-11T12:07:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "brankář",
-        "davy",
-        "dobeš",
-        "dušoval",
-        "hrdina",
-        "jen",
-        "jsem",
-        "potrhlý",
-        "slzy",
-        "zadržoval"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47385,
+      "bytes": 47468,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,7 +835,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T08:39:28Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T09:09:42Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -854,8 +851,16 @@
         },
         "sample_titles": [
           {
-            "title": "54 jmen pro fotbalové MS. V předběžné nominaci jsou i slávisté Douděra a Chorý",
-            "publishedAt": "2026-05-12T08:39:28Z"
+            "title": "54 jmen pro fotbalové MS. V předběžné nominaci je i Chorý, Černý šanci nedostal",
+            "publishedAt": "2026-05-12T09:09:42Z"
+          },
+          {
+            "title": "MS ve fotbale 2026: program, výsledky, skupiny, s kým hrají Češi",
+            "publishedAt": "2026-05-12T08:54:00Z"
+          },
+          {
+            "title": "Kysela: Chceme vrátit litvínovský charakter. Kämpf? Oťukáváme se",
+            "publishedAt": "2026-05-12T08:53:00Z"
           },
           {
             "title": "Nový sportovní pár? Lindsey Vonnová prý randí s o jedenáct let mladší lyžařem",
@@ -876,14 +881,6 @@
           {
             "title": "Utekl k fotbalu, zdolal krizi. A teď vládne Giru. Silva píše uruguayskou historii",
             "publishedAt": "2026-05-12T07:00:00Z"
-          },
-          {
-            "title": "Radim Rulík: kariéra a největší úspěchy reprezentačního kouče",
-            "publishedAt": "2026-05-12T06:59:00Z"
-          },
-          {
-            "title": "Kubáň o baráži: Vždy děláme maximum možného. A liga? Nejchudší bychom nebyli",
-            "publishedAt": "2026-05-12T06:00:00Z"
           }
         ]
       }

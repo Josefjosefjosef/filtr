@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-12T08:50:33.463776Z",
+  "ingestedAt": "2026-05-12T09:29:09.070890Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Agresivní opilci ničí pražské nemocnice. Záchytka nestíhá, pacienti končí na akutních lůžkách",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/protialkoholni-zachytna-stanice-nemocnice-praha/",
+      "dt": "2026-05-12T09:11:43Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "agresivní",
+        "akutních",
+        "končí",
+        "lůžkách",
+        "nemocnice",
+        "nestíhá",
+        "ničí",
+        "opilci",
+        "pacienti",
+        "pražské",
+        "záchytka"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -248,33 +276,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Hantavirus u českých hranic? Němci vezou lidi z „lodi smrti“ do Bavorska a Saska",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/hantavirus-nemecko-lod/",
-      "dt": "2026-05-11T12:30:19Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "bavorska",
-        "hantavirus",
-        "hranic",
-        "lidi",
-        "lodi",
-        "němci",
-        "saska",
-        "smrti",
-        "vezou",
-        "českých"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -285,7 +286,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 91649,
+      "bytes": 92026,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -322,7 +323,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-12T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T09:11:43Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -337,6 +338,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Agresivní opilci ničí pražské nemocnice. Záchytka nestíhá, pacienti končí na akutních lůžkách",
+            "publishedAt": "2026-05-12T09:11:43Z"
+          },
           {
             "title": "Ztrácíte se v nemocnici? Česko má nový lék na bloudění v nekonečných chodbách",
             "publishedAt": "2026-05-12T08:00:00Z"
@@ -364,10 +369,6 @@
           {
             "title": "Umíte správně brát antibiotika? Otestujte se v novém kvízu SZÚ, Češi dělají fatální chyby",
             "publishedAt": "2026-05-11T15:04:48Z"
-          },
-          {
-            "title": "SÚKL přitvrdí: Nekvalitní data od výrobců léků se prodraží, vláda schválila nové poplatky",
-            "publishedAt": "2026-05-11T14:07:24Z"
           }
         ]
       }

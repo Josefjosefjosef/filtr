@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-12T08:50:33.463776Z",
+  "ingestedAt": "2026-05-12T09:29:09.070890Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "V dubnu nezaměstnanost nepatrně klesla",
+      "url": "https://profitonline.cz/v-dubnu-nezamestnanost-nepatrne-klesla/",
+      "dt": "2026-05-12T09:00:46Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dubnu",
+        "klesla",
+        "nepatrně",
+        "nezaměstnanost"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -272,33 +293,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zloději kol si vybírají čím dál dražší modely. Škoda přesáhla 100 milionů",
-      "url": "https://profitonline.cz/zlodeji-kol-si-vybiraji-cim-dal-drazsi-modely-skoda-presahla-100-milionu/",
-      "dt": "2026-05-10T04:00:36Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "100",
-        "dražší",
-        "kol",
-        "milionů",
-        "modely",
-        "přesáhla",
-        "vybírají",
-        "zloději",
-        "čím",
-        "škoda"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -309,7 +303,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19212,
+      "bytes": 19109,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -346,7 +340,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-12T08:00:24Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T09:00:46Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -361,6 +355,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V dubnu nezaměstnanost nepatrně klesla",
+            "publishedAt": "2026-05-12T09:00:46Z"
+          },
           {
             "title": "Proč guvernér ČNB Michl odmítá přepnout na „jestřábí“ režim?",
             "publishedAt": "2026-05-12T08:00:24Z"
@@ -388,10 +386,6 @@
           {
             "title": "The Economist: Inflace v Argentině už zase zrychluje. Přestaly Mileiovy radikální reformy fungovat?",
             "publishedAt": "2026-05-11T04:00:01Z"
-          },
-          {
-            "title": "Derby hanby v Edenu. Slavia může začít sčítat škody",
-            "publishedAt": "2026-05-10T15:20:42Z"
           }
         ]
       }

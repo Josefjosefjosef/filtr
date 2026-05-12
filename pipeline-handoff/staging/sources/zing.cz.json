@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-12T08:50:33.463776Z",
+  "ingestedAt": "2026-05-12T09:29:09.070890Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Nintendo tvrdí, že navýšení cen nepokryje ztráty, věří v úspěšné tituly",
+      "url": "https://zing.cz/article/nintendo-tvrdi-ze-navyseni-cen-nepokryje-ztraty-veri-v-uspesne-tituly",
+      "dt": "2026-05-12T09:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "cen",
+        "navýšení",
+        "nepokryje",
+        "nintendo",
+        "tituly",
+        "tvrdí",
+        "věří",
+        "ztráty",
+        "úspěšné"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -943,32 +969,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Aliens: Fireteam Elite 2 bylo oficiálně představeno, známe přibližné datum vydání",
-      "url": "https://zing.cz/article/aliens-fireteam-elite-2-bylo-oficialne-predstaveno",
-      "dt": "2026-05-07T15:45:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "aliens",
-        "datum",
-        "elite",
-        "fireteam",
-        "oficiálně",
-        "představeno",
-        "přibližné",
-        "vydání",
-        "známe"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -979,7 +979,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125215,
+      "bytes": 125392,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1016,7 +1016,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-12T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T09:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1032,6 +1032,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nintendo tvrdí, že navýšení cen nepokryje ztráty, věří v úspěšné tituly",
+            "publishedAt": "2026-05-12T09:00:00Z"
+          },
           {
             "title": "Akce 007 First Light ukázala nové gameplay záběry z PS5 Pro verze",
             "publishedAt": "2026-05-12T08:00:00Z"
@@ -1059,10 +1063,6 @@
           {
             "title": "Epic vysvětluje, jak bude v rámci vývoje využívat AI",
             "publishedAt": "2026-05-11T17:30:00Z"
-          },
-          {
-            "title": "Forza Horizon 6 unikla na internet, Microsoft rozdává celoživotní bany",
-            "publishedAt": "2026-05-11T16:00:00Z"
           }
         ]
       }
