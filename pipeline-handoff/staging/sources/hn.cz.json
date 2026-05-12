@@ -1,8 +1,42 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-12T13:05:35.449595Z",
+  "ingestedAt": "2026-05-12T13:49:08.306105Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Neškrtá jen Volkswagen, šetří také Mercedes a BMW. Německému triu na domácím hřišti čím dál více zákazníků bere dravá Škoda Auto",
+      "url": "https://archiv.hn.cz/c1-67875900-neskrta-jen-volkswagen-setri-take-mercedes-a-bmw-nemeckemu-triu-na-domacim-hristi-cim-dal-vice-zakazniku-bere-drava-skoda-auto",
+      "dt": "2026-05-12T13:42:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "auto",
+        "bere",
+        "bmw",
+        "domácím",
+        "dravá",
+        "hřišti",
+        "jen",
+        "mercedes",
+        "neškrtá",
+        "německému",
+        "také",
+        "triu",
+        "volkswagen",
+        "zákazníků",
+        "čím",
+        "šetří",
+        "škoda"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -267,21 +301,24 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Nezaměstnanost v Česku klesla v dubnu na 4,9 procenta, volných míst mírně přibylo",
+      "title": "Dubnová nezaměstnanost byla nejvyšší za deset let. Pokles vlivem sezonních prací byl slabší než obvykle",
       "url": "https://domaci.hn.cz/c1-67875860-nezamestnanost-v-cesku-klesla-v-dubnu-na-4-9-procenta-volnych-mist-mirne-pribylo",
       "dt": "2026-05-12T08:45:00Z",
       "media_raw": "HN / Ekonomika",
       "media_norm": "HN / Ekonomika",
       "tokens": [
-        "dubnu",
-        "klesla",
-        "mírně",
-        "míst",
+        "deset",
+        "dubnová",
+        "let",
+        "nejvyšší",
         "nezaměstnanost",
-        "procenta",
-        "přibylo",
-        "volných",
-        "česku"
+        "než",
+        "obvykle",
+        "pokles",
+        "prací",
+        "sezonních",
+        "slabší",
+        "vlivem"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1122,36 +1159,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nová éra pro Fed aneb Proč by české investory mělo zajímat, kolik stojí v Americe benzin",
-      "url": "https://byznys.hn.cz/c1-67874850-nova-era-pro-fed-aneb-proc-by-ceske-investory-melo-zajimat-kolik-stoji-v-americe-benzin",
-      "dt": "2026-05-11T07:54:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "americe",
-        "aneb",
-        "benzin",
-        "fed",
-        "investory",
-        "kolik",
-        "mělo",
-        "nová",
-        "proč",
-        "stojí",
-        "zajímat",
-        "éra",
-        "české"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1162,7 +1169,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184599,
+      "bytes": 184514,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1199,7 +1206,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-12T12:50:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T13:42:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 36,
@@ -1216,6 +1223,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Neškrtá jen Volkswagen, šetří také Mercedes a BMW. Německému triu na domácím hřišti čím dál více zákazníků bere dravá Škoda Auto",
+            "publishedAt": "2026-05-12T13:42:00Z"
+          },
           {
             "title": "Tolik nenávisti kolem sněmu sudetských Němců jsem nečekal, říká David Macek z Meetingu Brno",
             "publishedAt": "2026-05-12T12:50:00Z"
@@ -1243,10 +1254,6 @@
           {
             "title": "Práce do 70 a více let, nebo podpora migrace? Penzijní systém nemá na výběr, roboti nás nenahradí",
             "publishedAt": "2026-05-12T10:52:00Z"
-          },
-          {
-            "title": "Policie zasahovala v Ústřední vojenské nemocnici. Zadržela několik lidí kvůli podezření z korupce, podvodu či maření spravedlnosti",
-            "publishedAt": "2026-05-12T10:28:00Z"
           }
         ]
       }

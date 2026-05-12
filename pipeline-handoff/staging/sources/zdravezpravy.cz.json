@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-12T13:05:35.449595Z",
+  "ingestedAt": "2026-05-12T13:49:08.306105Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Komentář: Proč tolik řidičů jezdí na červenou? Protože mohou!",
+      "url": "https://www.zdravezpravy.cz/2026/05/12/komentar-proc-tolik-ridicu-jezdi-na-cervenou-protoze-mohou/",
+      "dt": "2026-05-12T13:30:11Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "jezdí",
+        "komentář",
+        "protože",
+        "proč",
+        "tolik",
+        "červenou",
+        "řidičů"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -458,32 +482,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Od 80 let dostanou lidé k důchodu po pěti letech vždy 500 korun",
-      "url": "https://www.zdravezpravy.cz/2026/05/04/od-80-let-dostanou-lide-k-duchodu-po-peti-letech-vzdy-500-kc/",
-      "dt": "2026-05-04T06:27:24Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "500",
-        "dostanou",
-        "důchodu",
-        "korun",
-        "let",
-        "letech",
-        "lidé",
-        "pěti",
-        "vždy"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -494,7 +492,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 204260,
+      "bytes": 205242,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -531,10 +529,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-12T11:15:43Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T13:30:11Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zdravi": 19,
+          "zpravy": 1,
+          "zdravi": 18,
           "finance": 1
         },
         "drop_counts": {
@@ -547,6 +546,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Komentář: Proč tolik řidičů jezdí na červenou? Protože mohou!",
+            "publishedAt": "2026-05-12T13:30:11Z"
+          },
           {
             "title": "V pražské ÚVN zasahovala policie! I kvůli falšování lékařských zpráv",
             "publishedAt": "2026-05-12T11:15:43Z"
@@ -574,10 +577,6 @@
           {
             "title": "FutureLife Group premiéra Babiše zavádí AI do umělého oplodnění",
             "publishedAt": "2026-05-08T06:30:12Z"
-          },
-          {
-            "title": "Na epilepsii teď předepíší i lékaři FN Ostrava moderní léky",
-            "publishedAt": "2026-05-07T14:52:02Z"
           }
         ]
       }
