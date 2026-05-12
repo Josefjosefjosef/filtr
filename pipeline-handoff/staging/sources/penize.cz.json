@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-12T11:35:41.301049Z",
+  "ingestedAt": "2026-05-12T12:24:17.226894Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Další zlevnění. Maximální ceny benzinu a nafty na středu 13. května",
+      "url": "https://www.penize.cz/doprava/489585-dalsi-zlevneni-maximalni-ceny-benzinu-a-nafty-na-stredu-13-kvetna",
+      "dt": "2026-05-12T14:05:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "benzinu",
+        "ceny",
+        "další",
+        "května",
+        "maximální",
+        "nafty",
+        "středu",
+        "zlevnění"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -491,31 +516,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Natankovat ještě před volnem? Nové maximální ceny benzinu a nafty",
-      "url": "https://www.penize.cz/doprava/489376-natankovat-jeste-pred-volnem-nove-maximalni-ceny-benzinu-a-nafty",
-      "dt": "2026-05-07T13:59:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "benzinu",
-        "ceny",
-        "ještě",
-        "maximální",
-        "nafty",
-        "natankovat",
-        "nové",
-        "volnem"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -526,7 +526,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18798,
+      "bytes": 18797,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -563,12 +563,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-12T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T14:05:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 2,
           "zdravi": 1,
-          "finance": 17,
-          "zpravy": 2
+          "finance": 17
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -580,6 +580,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Další zlevnění. Maximální ceny benzinu a nafty na středu 13. května",
+            "publishedAt": "2026-05-12T14:05:00Z"
+          },
           {
             "title": "Žlutý kvítek proti rakovině si poprvé můžete koupit i kartou. Ale jen v Praze",
             "publishedAt": "2026-05-12T10:00:00Z"
@@ -607,10 +611,6 @@
           {
             "title": "Po několikadenní odstávce přichází další. Jenda bude nedostupný i část dneška",
             "publishedAt": "2026-05-11T10:20:00Z"
-          },
-          {
-            "title": "Kupujete si cestovní pojištění? Deset případů, kdy vám nepomůže",
-            "publishedAt": "2026-05-11T05:05:00Z"
           }
         ]
       }

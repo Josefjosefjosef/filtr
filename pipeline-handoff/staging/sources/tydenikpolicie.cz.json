@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-12T11:35:41.301049Z",
+  "ingestedAt": "2026-05-12T12:24:17.226894Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Řidička se v Olomouci rozjela s nasazenou botičkou",
+      "url": "https://tydenikpolicie.cz/ridicka-se-v-olomouci-rozjela-s-nasazenou-botickou/",
+      "dt": "2026-05-12T11:31:50Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "botičkou",
+        "nasazenou",
+        "olomouci",
+        "rozjela",
+        "řidička"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -253,33 +275,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Žena si myslela, že si přes Telegram píše se známým zpěvákem. Zamilovala se do něj a poslala mu peníze",
-      "url": "https://tydenikpolicie.cz/zena-si-myslela-ze-si-pres-telegram-pise-se-znamym-zpevakem-zamilovala-se-do-nej-a-poslala-mu-penize/",
-      "dt": "2026-05-12T07:17:20Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "myslela",
-        "něj",
-        "peníze",
-        "poslala",
-        "píše",
-        "telegram",
-        "zamilovala",
-        "známým",
-        "zpěvákem",
-        "žena"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -290,7 +285,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16821,
+      "bytes": 16511,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -327,7 +322,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-12T08:38:55Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T11:31:50Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -342,6 +337,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Řidička se v Olomouci rozjela s nasazenou botičkou",
+            "publishedAt": "2026-05-12T11:31:50Z"
+          },
           {
             "title": "Policisté hledají svědky riskantní jízdy řidiče volkswagenu na Hodonínsku",
             "publishedAt": "2026-05-12T08:38:55Z"
@@ -369,10 +368,6 @@
           {
             "title": "Hasiči v lanovém centru ve zlínské zoo zachraňovali zraněnou ženu",
             "publishedAt": "2026-05-12T07:31:31Z"
-          },
-          {
-            "title": "Nepomáhejte podvodníkům legalizovat výnosy z jejich trestné činnosti. Za snadným výdělkem se často skrývá pořádný problém",
-            "publishedAt": "2026-05-12T07:23:39Z"
           }
         ]
       }

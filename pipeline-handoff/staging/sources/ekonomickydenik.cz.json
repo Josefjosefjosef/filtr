@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-12T11:35:41.301049Z",
+  "ingestedAt": "2026-05-12T12:24:17.226894Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nejvyšší nezaměstnanost za 10 let. Míst přibývá málo a jen někde",
+      "url": "https://ekonomickydenik.cz/nejvyssi-nezamestnanost-10-let/",
+      "dt": "2026-05-12T11:52:02Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "jen",
+        "let",
+        "málo",
+        "míst",
+        "nejvyšší",
+        "nezaměstnanost",
+        "někde",
+        "přibývá"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -747,32 +772,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Babiš: „Proč by měli mít výhodu?“ Vláda zpřísní Lex Ukrajina",
-      "url": "https://ekonomickydenik.cz/babis-proc-by-meli-mit-vyhodu-vlada-zprisni-lex-ukrajina/",
-      "dt": "2026-05-10T12:12:12Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "babiš",
-        "lex",
-        "mít",
-        "měli",
-        "proč",
-        "ukrajina",
-        "vláda",
-        "výhodu",
-        "zpřísní"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -783,7 +782,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 69661,
+      "bytes": 70306,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -820,11 +819,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T10:32:57Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T11:52:02Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 3,
           "finance": 26,
+          "zpravy": 3,
           "zdravi": 1
         },
         "drop_counts": {
@@ -837,6 +836,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejvyšší nezaměstnanost za 10 let. Míst přibývá málo a jen někde",
+            "publishedAt": "2026-05-12T11:52:02Z"
+          },
           {
             "title": "„Dvacet prázdných škol“. Roste tlak na ruské architekty únosů dětí",
             "publishedAt": "2026-05-12T10:32:57Z"
@@ -864,10 +867,6 @@
           {
             "title": "MOL po Orbánovi: Nákup ropy z Ruska omezí, zastavit ho ale nemůže",
             "publishedAt": "2026-05-12T05:10:00Z"
-          },
-          {
-            "title": "Dostřelí ukrajinské kanóny dál? Kyjev odtajnil ambiciózní plán",
-            "publishedAt": "2026-05-12T04:15:00Z"
           }
         ]
       }

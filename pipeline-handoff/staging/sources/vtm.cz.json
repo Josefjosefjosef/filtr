@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-12T11:35:41.301049Z",
+  "ingestedAt": "2026-05-12T12:24:17.226894Z",
   "items": [
     {
       "section": "veda",
@@ -21,6 +21,34 @@
         "telefonech",
         "všechno",
         "změní"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "HBO Max a 30 nejoblíbenějších filmů a seriálů v květnu 2026. Tohle Češi na HBO nejvíc sledují",
+      "url": "https://avmania.zive.cz/nejoblibenejsi-filmy-a-serialy-na-hbo-max",
+      "dt": "2026-05-12T11:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "2026",
+        "filmů",
+        "hbo",
+        "květnu",
+        "max",
+        "nejoblíbenějších",
+        "nejvíc",
+        "seriálů",
+        "sledují",
+        "tohle",
+        "češi"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -954,35 +982,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Vše, co víme o skládacím iPhonu. Bude menší než konkurenční Foldy a nechá zmizet rýhu v displeji",
-      "url": "https://mobilmania.zive.cz/clanky/vse-co-vime-o-skladacim-iphonu-rozlozeny-bude-jako-ipad-zobrazi-dve-aplikace-vedle-sebe-202605/sc-3-a-1364687/default.aspx",
-      "dt": "2026-05-08T06:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "displeji",
-        "foldy",
-        "iphonu",
-        "konkurenční",
-        "menší",
-        "nechá",
-        "než",
-        "rýhu",
-        "skládacím",
-        "víme",
-        "vše",
-        "zmizet"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -993,7 +992,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23242,
+      "bytes": 23369,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1030,7 +1029,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-12T10:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T11:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 34,
@@ -1049,6 +1048,10 @@
           {
             "title": "Díky nařízení EU padají bariéry mezi iPhonem a Androidem. Co všechno se v telefonech změní",
             "publishedAt": "2026-05-12T07:45:00Z"
+          },
+          {
+            "title": "HBO Max a 30 nejoblíbenějších filmů a seriálů v květnu 2026. Tohle Češi na HBO nejvíc sledují",
+            "publishedAt": "2026-05-12T11:45:00Z"
           },
           {
             "title": "Chytrá čistička vzduchu Philips zlevnila na minimum. Je tichá, výkonná a uživatelé jsou z ní nadšení",
@@ -1073,10 +1076,6 @@
           {
             "title": "Co rozhodně musíte zapnout, když si pořídíte nový iPhone. Hlavně kvůli bezpečí a přehlednosti",
             "publishedAt": "2026-05-11T16:45:00Z"
-          },
-          {
-            "title": "Vyměnil rychlou nabíječku za extrémně pomalou. Zázračného prodloužení životnosti baterie se nedočkal",
-            "publishedAt": "2026-05-11T14:45:00Z"
           }
         ]
       }
