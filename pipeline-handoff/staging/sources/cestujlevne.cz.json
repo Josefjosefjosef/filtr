@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-05-12T17:14:37.607784Z",
+  "ingestedAt": "2026-05-12T20:19:43.128328Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Z Prahy do Lucemburska: na prodloužené víkendy i letní dovolenou. Letenky od 3 678 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/z-prahy-do-lucemburska-na-prodlouzene-vikendy-i-letni-dovolenou",
+      "dt": "2026-05-12T18:03:15Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "678",
+        "dovolenou",
+        "letenky",
+        "letní",
+        "lucemburska",
+        "prahy",
+        "prodloužené",
+        "víkendy"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -483,34 +508,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Bitva o Palermo? Z Prahy bude létat kromě Wizz Airu také Ryanair. Letenky od 1 388 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/bitva-o-palermo-z-prahy-bude-letat-wizz-air-a-nove-take-ryanair",
-      "dt": "2026-05-04T07:04:53Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "388",
-        "airu",
-        "bitva",
-        "kromě",
-        "letenky",
-        "létat",
-        "palermo",
-        "prahy",
-        "ryanair",
-        "také",
-        "wizz"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -521,7 +518,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 47860,
+      "bytes": 47567,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -558,7 +555,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-12T13:27:27Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T18:03:15Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -573,6 +570,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Z Prahy do Lucemburska: na prodloužené víkendy i letní dovolenou. Letenky od 3 678 Kč",
+            "publishedAt": "2026-05-12T18:03:15Z"
+          },
           {
             "title": "Týden na Santorini s odletem z Prahy na přelomu května a června. Zájezd od 9 990 Kč",
             "publishedAt": "2026-05-12T13:27:27Z"
@@ -600,10 +601,6 @@
           {
             "title": "Severní Makedonie z Prahy v červnu i v červenci. Letenky od 978 Kč",
             "publishedAt": "2026-05-11T10:14:44Z"
-          },
-          {
-            "title": "Marsa Matrouh z Brna do 4* hotelu s all inclusive soft. Zájezd od 8 990 Kč",
-            "publishedAt": "2026-05-11T08:43:30Z"
           }
         ]
       }

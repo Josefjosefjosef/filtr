@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-12T17:14:37.607784Z",
+  "ingestedAt": "2026-05-12T20:19:43.128328Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "USA se potýkají se silnými inflačními tlaky",
+      "url": "https://profitonline.cz/usa-se-potykaji-se-silnymi-inflacnimi-tlaky/",
+      "dt": "2026-05-12T19:30:07Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "inflačními",
+        "potýkají",
+        "silnými",
+        "tlaky",
+        "usa"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -269,30 +291,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Czechoslovak Group: Přehnaná panika, nebo prozření trhu?",
-      "url": "https://profitonline.cz/czechoslovak-group-prehnana-panika-nebo-prozreni-trhu/",
-      "dt": "2026-05-10T08:00:36Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "czechoslovak",
-        "group",
-        "nebo",
-        "panika",
-        "prozření",
-        "přehnaná",
-        "trhu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -303,7 +301,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19062,
+      "bytes": 19096,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -340,11 +338,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-12T10:00:56Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T19:30:07Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "sport": 1,
-          "finance": 11
+          "finance": 11,
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -356,6 +354,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "USA se potýkají se silnými inflačními tlaky",
+            "publishedAt": "2026-05-12T19:30:07Z"
+          },
           {
             "title": "Vymáhání práva je na katastrofální úrovni, fotbal je mementem",
             "publishedAt": "2026-05-12T10:00:56Z"
@@ -383,10 +385,6 @@
           {
             "title": "Intel se vrací do centra pozornosti v oblasti umělé inteligence",
             "publishedAt": "2026-05-11T08:00:16Z"
-          },
-          {
-            "title": "Kryštof Touška členem představenstva Uniqa",
-            "publishedAt": "2026-05-11T06:00:43Z"
           }
         ]
       }
