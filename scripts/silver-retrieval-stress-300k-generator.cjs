@@ -588,19 +588,20 @@ function main() {
 
   const fullDryExclusive = fullN > 0 && dryRun && !hasExplicitPilot;
   const effectivePilotN = fullDryExclusive ? 0 : pilotN;
+  const pilotEngineRan = effectivePilotN > 0 && !(dryRun && fullN === 0);
 
   let deterministicReplayPilot = "NOT_RUN";
   let casesA = [];
   let casesB = [];
   if (effectivePilotN > 0) {
-    if (dryRun) {
-      deterministicReplayPilot = streamDeterministicReplay(seedStr, effectivePilotN);
-    } else {
+    if (pilotEngineRan) {
       casesA = buildRetrievalStressCases(seedStr, effectivePilotN);
       casesB = buildRetrievalStressCases(seedStr, effectivePilotN);
       const serA = stableSerializeCases(casesA);
       const serB = stableSerializeCases(casesB);
       deterministicReplayPilot = serA === serB ? "PASS" : "FAIL";
+    } else if (dryRun) {
+      deterministicReplayPilot = streamDeterministicReplay(seedStr, effectivePilotN);
     }
   }
 
@@ -612,7 +613,7 @@ function main() {
   }
 
   let eng = null;
-  if (effectivePilotN > 0 && !dryRun) {
+  if (pilotEngineRan) {
     try {
       eng = loadEngine();
     } catch (e) {
@@ -636,7 +637,7 @@ function main() {
 
   let templateDnaDist = 0;
 
-  if (effectivePilotN > 0 && !dryRun) {
+  if (pilotEngineRan) {
     for (let pi = 0; pi < casesA.length; pi++) {
       const pc = casesA[pi];
       laneCounts[pc.lane] = (laneCounts[pc.lane] || 0) + 1;
@@ -666,7 +667,7 @@ function main() {
       }
     }
     templateDnaDist = Object.keys(dnaSet).length;
-  } else if (effectivePilotN > 0 && dryRun) {
+  } else if (effectivePilotN > 0 && dryRun && !pilotEngineRan) {
     const ag = streamAggregate(seedStr, effectivePilotN);
     Object.assign(laneCounts, ag.laneCounts);
     Object.assign(bucketCounts, ag.bucketCounts);
@@ -681,7 +682,6 @@ function main() {
 
   const templateDnaVariants = String(templateDnaDist);
 
-  const pilotEngineRan = effectivePilotN > 0 && !dryRun;
   const pilotAccuracy = pilotEngineRan && casesA.length ? ((pilotPass / casesA.length) * 100).toFixed(2) : "NOT_RUN";
 
   const pilotSafetyCountersZero =
@@ -721,7 +721,16 @@ function main() {
 
   const massiveCorpusReady = safetyOk ? "YES" : "NO";
 
-  const retrievalBucketsLine = RETRIEVAL_BUCKETS.map((b) => b + ":" + (bucketCounts[b] || 0)).join("|");
+  const retrievalBucketsLinePilot = RETRIEVAL_BUCKETS.map((b) => b + ":" + (bucketCounts[b] || 0)).join("|");
+  const retrievalBucketsLineFull =
+    fullAgg != null
+      ? RETRIEVAL_BUCKETS.map((b) => b + ":" + (fullAgg.bucketCounts[b] || 0)).join("|")
+      : "";
+  const retrievalBucketsLineFoundation = retrievalBucketsLinePilot;
+  const retrievalBucketsLineExport =
+    fullN > 0 && dryRun && fullAgg != null ? retrievalBucketsLineFull : retrievalBucketsLinePilot;
+  const templateDnaVariantsExport =
+    fullN > 0 && dryRun && fullAgg != null ? String(fullAgg.dnaVariantCount) : templateDnaVariants;
   const mutationLayersLine = MUTATION_LAYERS.join("|");
 
   const recommendedNextTask = safetyOk
@@ -804,7 +813,7 @@ function main() {
         write_when_negated_count: writeWhenNegated
       },
       sample_cases: sample,
-      retrieval_buckets_line: retrievalBucketsLine
+      retrieval_buckets_line: retrievalBucketsLineExport
     };
     fs.writeFileSync(REPORT_JSON, JSON.stringify(reportObj, null, 2), "utf8");
   }
@@ -826,7 +835,7 @@ function main() {
     out.push("deterministic_replay=" + escapeField(deterministicReplayPilot));
     out.push("deterministic_replay_full_stream=" + escapeField(fullReplay));
     out.push("");
-    out.push("retrieval_buckets=" + escapeField(retrievalBucketsLine));
+    out.push("retrieval_buckets=" + escapeField(retrievalBucketsLineFoundation));
     out.push("mutation_layers=" + escapeField(mutationLayersLine));
     out.push("template_dna_variants=" + templateDnaVariants);
     out.push("");
@@ -956,9 +965,9 @@ function main() {
   );
   ew.push("full_300k_export_committed=NO");
   ew.push("");
-  ew.push("retrieval_buckets=" + escapeField(retrievalBucketsLine));
+  ew.push("retrieval_buckets=" + escapeField(retrievalBucketsLineExport));
   ew.push("mutation_layers=" + escapeField(mutationLayersLine));
-  ew.push("template_dna_variants=" + templateDnaVariants);
+  ew.push("template_dna_variants=" + templateDnaVariantsExport);
   ew.push("");
   ew.push("dangerous_write_count=" + dangerousWrite);
   ew.push("false_write_count=" + falseWrite);
@@ -979,7 +988,7 @@ function main() {
 
   console.log("\n" + ew.join("\n"));
 
-  const allowBeep = !summaryOnly && !dryRun && safetyOk && pilotEngineRan;
+  const allowBeep = !summaryOnly && safetyOk && pilotEngineRan;
   if (allowBeep) {
     try {
       execSync('powershell.exe -NoProfile -Command "[console]::beep(880,250)"', {
