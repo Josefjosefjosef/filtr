@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-12T20:59:34.234017Z",
+  "ingestedAt": "2026-05-12T21:40:40.091104Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Sean Strickland po zisku pásu tlačí na UFC. Chce bojovat už za měsíc na galavečeru v Bílém domě",
+      "url": "https://www.mmamag.cz/strickland-chce-po-titulu-na-ufc-v-bilem-dome/",
+      "dt": "2026-05-12T21:00:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "bojovat",
+        "bílém",
+        "chce",
+        "domě",
+        "galavečeru",
+        "měsíc",
+        "pásu",
+        "sean",
+        "strickland",
+        "tlačí",
+        "ufc",
+        "zisku"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1080,34 +1109,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "OKTAGON 88 v Hannoveru: Machaev brání pás proti Palokajovi, do akce jde i Max Holzer",
-      "url": "https://www.mmamag.cz/oktagon-88-program-cas-a-kde-sledovat/",
-      "dt": "2026-05-11T09:45:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "akce",
-        "brání",
-        "hannoveru",
-        "holzer",
-        "jde",
-        "machaev",
-        "max",
-        "oktagon",
-        "palokajovi",
-        "proti",
-        "pás"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1118,7 +1119,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 78887,
+      "bytes": 78833,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1155,7 +1156,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-12T20:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T21:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1170,6 +1171,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sean Strickland po zisku pásu tlačí na UFC. Chce bojovat už za měsíc na galavečeru v Bílém domě",
+            "publishedAt": "2026-05-12T21:00:00Z"
+          },
           {
             "title": "Francouz machroval a za 10 vteřin padl. Soupeř ho potrestal bleskovým knokautem",
             "publishedAt": "2026-05-12T20:15:00Z"
@@ -1197,10 +1202,6 @@
           {
             "title": "Výplata snů v UFC. Čtyři bojovníci dostali za jediný zápas v bonusech přes 9 milionů Kč",
             "publishedAt": "2026-05-12T15:45:00Z"
-          },
-          {
-            "title": "UFC v Bílém domě odhalilo speciální dresy. Bojovníci si obléknou hvězdy a pruhy",
-            "publishedAt": "2026-05-12T15:00:00Z"
           }
         ]
       }
