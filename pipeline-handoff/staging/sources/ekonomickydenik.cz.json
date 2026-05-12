@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-12T15:15:27.222471Z",
+  "ingestedAt": "2026-05-12T15:54:40.736709Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Primáře odvedli během služby. Policie prověřuje posudky z psychiatrie",
+      "url": "https://ekonomickydenik.cz/razie-uvn-posudky-primar-znalec/",
+      "dt": "2026-05-12T15:37:45Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "během",
+        "odvedli",
+        "policie",
+        "posudky",
+        "primáře",
+        "prověřuje",
+        "psychiatrie",
+        "služby"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Česko loni vydalo na obranu přes 2 procenta HDP. Babiš si ale přál konec klíčového experta",
+      "url": "https://ekonomickydenik.cz/cesko-obrana-2-procenta-babis-expert/",
+      "dt": "2026-05-12T15:29:54Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "ale",
+        "babiš",
+        "experta",
+        "hdp",
+        "klíčového",
+        "konec",
+        "loni",
+        "obranu",
+        "procenta",
+        "přál",
+        "vydalo",
+        "česko"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -713,60 +767,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Íránský návrh na mír narazil: Trump jej označil za nepřijatelný",
-      "url": "https://ekonomickydenik.cz/iransky-navrh-na-mir-narazil-trump-jej-oznacil-za-neprijatelny/",
-      "dt": "2026-05-11T05:27:42Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "jej",
-        "mír",
-        "narazil",
-        "nepřijatelný",
-        "návrh",
-        "označil",
-        "trump",
-        "íránský"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Evropskou politiku ovládá čínská lobby, tvrdí Světlík. Přežijí poslední zbytky jeho impéria?",
-      "url": "https://ekonomickydenik.cz/evropskou-politiku-ovlada-cinska-lobby-svetlik/",
-      "dt": "2026-05-11T04:05:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "evropskou",
-        "impéria",
-        "jeho",
-        "lobby",
-        "ovládá",
-        "politiku",
-        "poslední",
-        "přežijí",
-        "světlík",
-        "tvrdí",
-        "zbytky",
-        "čínská"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -777,7 +777,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71825,
+      "bytes": 71981,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -814,10 +814,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T14:39:24Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T15:37:45Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 26,
+          "zdravi": 1,
+          "finance": 25,
           "zpravy": 4
         },
         "drop_counts": {
@@ -830,6 +831,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Primáře odvedli během služby. Policie prověřuje posudky z psychiatrie",
+            "publishedAt": "2026-05-12T15:37:45Z"
+          },
+          {
+            "title": "Česko loni vydalo na obranu přes 2 procenta HDP. Babiš si ale přál konec klíčového experta",
+            "publishedAt": "2026-05-12T15:29:54Z"
+          },
           {
             "title": "Odstraňování škod po povodních vázne. Chybí dalších 7,5 miliardy",
             "publishedAt": "2026-05-12T14:39:24Z"
@@ -853,14 +862,6 @@
           {
             "title": "Půlka úrody ovoce je pryč. Škody po mrazech půjdou do stovek milionů",
             "publishedAt": "2026-05-12T12:57:26Z"
-          },
-          {
-            "title": "Nejvyšší nezaměstnanost za 10 let. Míst přibývá málo a jen někde",
-            "publishedAt": "2026-05-12T11:52:02Z"
-          },
-          {
-            "title": "„Dvacet prázdných škol“. Roste tlak na ruské architekty únosů dětí",
-            "publishedAt": "2026-05-12T10:32:57Z"
           }
         ]
       }
