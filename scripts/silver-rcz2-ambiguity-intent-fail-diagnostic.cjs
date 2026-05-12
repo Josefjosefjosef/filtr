@@ -306,7 +306,6 @@ function main() {
   }
 
   const report = readJsonSafe(REPORT_JSON);
-  const reportClusterHint = reportJsonClusterTotal(report);
 
   const cases = buildPublicUxCorpusV2();
   const rows = [];
@@ -366,6 +365,9 @@ function main() {
   }
 
   const clusterTotal = rows.length;
+  let reportClusterHint = reportJsonClusterTotal(report);
+  if (!reportClusterHint && clusterTotal === 0) reportClusterHint = "0";
+
   const bucketCounts = {};
   for (let bj = 0; bj < BUCKETS.length; bj++) bucketCounts[BUCKETS[bj]] = byBucket[BUCKETS[bj]].length;
 
@@ -380,6 +382,7 @@ function main() {
       dominantRoot = k;
     }
   }
+  if (clusterTotal === 0) dominantRoot = "NONE";
 
   const engineBug = clsHist.ENGINE_BUG || 0;
   const ambOk = clsHist.AMBIGUOUS_OK || 0;
@@ -390,11 +393,21 @@ function main() {
   const safetyOk = clsHist.SAFETY_OK || 0;
 
   const engineFixRecommended =
-    engineBug > 0 && engineBug > Math.max(ambOk, goldP + harnessB + templateP) ? "YES" : "NO";
+    clusterTotal === 0
+      ? "NO"
+      : engineBug > 0 && engineBug > Math.max(ambOk, goldP + harnessB + templateP)
+        ? "YES"
+        : "NO";
   const scriptsAlignmentRecommended =
-    ambOk + harnessB + templateP + goldP + respP > engineBug || dominantRoot !== "ENGINE_BUG" ? "YES" : "NO";
-  const templateAlignmentRecommended = templateP > goldP && templateP > harnessB ? "YES" : "NO";
-  const goldAlignmentRecommended = goldP >= harnessB && goldP > templateP ? "YES" : "NO";
+    clusterTotal === 0
+      ? "NO"
+      : ambOk + harnessB + templateP + goldP + respP > engineBug || dominantRoot !== "ENGINE_BUG"
+        ? "YES"
+        : "NO";
+  const templateAlignmentRecommended =
+    clusterTotal === 0 ? "NO" : templateP > goldP && templateP > harnessB ? "YES" : "NO";
+  const goldAlignmentRecommended =
+    clusterTotal === 0 ? "NO" : goldP >= harnessB && goldP > templateP ? "YES" : "NO";
 
   let recommendedNextScope = "scripts/* diagnostics; align harness expectations and corpus JSON for rcz2_ambiguity slice";
   if (engineFixRecommended === "YES") {
