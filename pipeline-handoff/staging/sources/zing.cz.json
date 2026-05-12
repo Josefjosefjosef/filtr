@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-12T10:54:09.987558Z",
+  "ingestedAt": "2026-05-12T11:35:41.301049Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "MOUSE: P.I. For Hire si na sebe vydělalo za měsíc, vede si nad očekávání",
+      "url": "https://zing.cz/article/mouse-p-i-for-hire-si-na-sebe-vydelalo-za-mesic-vede-si-nad-ocekavani",
+      "dt": "2026-05-12T11:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "for",
+        "hire",
+        "mouse",
+        "měsíc",
+        "očekávání",
+        "sebe",
+        "vede",
+        "vydělalo"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -943,30 +968,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Ženské zbroje v Lords of the Fallen 2 budí emoce",
-      "url": "https://zing.cz/article/zenske-zbroje-v-lords-of-the-fallen-2-budi-emoce",
-      "dt": "2026-05-08T04:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "budí",
-        "emoce",
-        "fallen",
-        "lords",
-        "the",
-        "zbroje",
-        "ženské"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -977,7 +978,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125367,
+      "bytes": 125439,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1014,7 +1015,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-12T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T11:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1030,6 +1031,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "MOUSE: P.I. For Hire si na sebe vydělalo za měsíc, vede si nad očekávání",
+            "publishedAt": "2026-05-12T11:00:00Z"
+          },
           {
             "title": "Závodní série WRC se vrátí pod hlavičkou nového studia",
             "publishedAt": "2026-05-12T10:00:00Z"
@@ -1057,10 +1062,6 @@
           {
             "title": "Seriál Fallout odhalil známou hereckou posilu pro třetí sezónu",
             "publishedAt": "2026-05-12T04:00:00Z"
-          },
-          {
-            "title": "Pokračování úspěšného Stellar Blade bude představeno již letos",
-            "publishedAt": "2026-05-11T18:00:00Z"
           }
         ]
       }
