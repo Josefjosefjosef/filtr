@@ -36090,7 +36090,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   function iuSilverHasExplicitNotesTarget(f) {
-    if (/\bdo\s+poznam(?:ek|ky|ce|kach)\b/.test(f) && !/\bne\s+do\s+poznam/.test(f)) return true;
+    if (/\bdo\s+poznam(?:ek|ky|ce|kach|ka)\b/.test(f) && !/\bne\s+do\s+poznam/.test(f)) return true;
     if (/\bv\s+poznamkach\b/.test(f)) return true;
     if (/\bdo\s+notes?\b/.test(f) || /\bdo\s+note\b/.test(f)) return true;
     if (/\bdo\s+mema\b/.test(f) || /\bdo\s+memo\b/.test(f)) return true;
@@ -39893,6 +39893,76 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     }
     return null;
+  }
+
+  /**
+   * P1: first write-cue index for explicit-note recovery (fold-safe tokens; avoids matching inside unrelated words).
+   */
+  function iuSilverWriteSchedProbeCollectExplicitNoteWriteCueIndexesP1(rawLine) {
+    const r = String(rawLine || "");
+    const re =
+      /\b(?:ul[oó][zž]\w*|uloz\w*|zapi[sš]\w*|zapis\w*|zapamatuj\w*|poznamenej\w*|poznamenat|napi[sš]\s+si)\b/gi;
+    const seen = {};
+    const out = [];
+    let m;
+    while ((m = re.exec(r)) !== null) {
+      const idx = m.index;
+      const key = String(idx);
+      if (seen[key]) continue;
+      seen[key] = 1;
+      out.push(idx);
+    }
+    return out;
+  }
+
+  /**
+   * P1: WRITE_SCHED_PROBE → STORAGE_DISAMBIGUATION — recover notes.create when explicit note target is present
+   * but leading filler/mutations prevent `^…` anchors in iuSilverTryParseExplicitNoteCreate from matching.
+   * Tries write-cue slices from last to first so a trailing „ulož do poznámek …“ wins over an earlier task/calendar verb.
+   */
+  function iuSilverWriteSchedProbeRecoverExplicitNoteBodyP1(rawLine, foldedOpt) {
+    const rawFull = String(rawLine || "").trim();
+    if (!rawFull) return "";
+    const foldFull = String(foldedOpt != null ? foldedOpt : foldCs(rawFull));
+    if (!iuSilverHasExplicitNotesTarget(foldFull)) return "";
+    if (iuSilverExplicitNoteQueryAnchorP1Folded(foldFull)) return "";
+    if (iuSilverRczNoteQueryAnchorVerbP1Folded(foldFull)) return "";
+    if (iuSilverP0NoWriteNegationBeatsWriteLikeCueFolded(foldFull)) return "";
+    if (iuSilverGlobalWriteNegationConflictsExplicitModuleWriteFolded(rawFull, foldFull)) return "";
+    if (iuSilverExplicitModuleSwitchAmbiguityFolded(foldFull)) return "";
+    if (!iuSilverMultiIntentSplitOnConnectorP0(rawFull) && iuSilverP0ReadOnlyLeadBlocksWriteIntentFolded(foldFull)) return "";
+    if (iuSilverTaskWriteReadOnlyLeadBeforeExplicitDoUkolConflictFolded(foldFull)) return "";
+    if (iuSilverReadOnlyTailBlocksNoteCreateFolded(foldFull)) return "";
+    if (iuSilverMobileNoteOnlyExplicitCueReadOnlyOrNoWriteBlocksP1Folded(foldFull)) return "";
+    if (iuSilverNegativeCreateGuardFolded(foldFull)) {
+      if (!/\bneukladej\s+do\s+kalendar/i.test(foldFull)) return "";
+    }
+    const idxs = iuSilverWriteSchedProbeCollectExplicitNoteWriteCueIndexesP1(rawFull);
+    for (let ii = idxs.length - 1; ii >= 0; ii--) {
+      const ix = idxs[ii];
+      if (typeof ix !== "number" || ix < 0) continue;
+      const tailRaw = rawFull.slice(ix).trim();
+      if (!tailRaw) continue;
+      const candidates = [
+        tailRaw,
+        iuSilverStripRcz2MobVoiceNoteParseLeadP1(tailRaw),
+        iuSilverScopedTaskNegationStripPrefixFromRawForNoteParseP0(tailRaw)
+      ];
+      for (let ci = 0; ci < candidates.length; ci++) {
+        const cand = String(candidates[ci] || "").trim();
+        if (!cand) continue;
+        const fc = foldCs(cand);
+        if (iuSilverShouldForceCalendarOverCompositeNote(cand, fc)) continue;
+        if (iuSilverExplicitCalendarCreateAnchorP1Folded(fc)) continue;
+        if (iuSilverHasExplicitTasksTarget(fc) && !iuSilverHasExplicitNotesTarget(fc)) continue;
+        const hit = iuSilverTryParseExplicitNoteCreate(cand);
+        if (hit && hit.kind === "body") {
+          const b0 = String(hit.body || "").trim();
+          if (b0) return b0;
+        }
+      }
+    }
+    return "";
   }
 
   /**
@@ -46902,6 +46972,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
             };
           }
           return baseClarification("calendar_read_scope_no_storage", "clarification");
+        }
+        {
+          const recBody = iuSilverWriteSchedProbeRecoverExplicitNoteBodyP1(raw, folded);
+          if (recBody) {
+            return iuSilverBuildNoteCreateTurn(recBody, now);
+          }
         }
         const prahaLead = iuSilverPrahaZitraDisambigLead(raw, now);
         return {
