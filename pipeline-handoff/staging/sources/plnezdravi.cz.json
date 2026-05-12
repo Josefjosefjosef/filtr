@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "plnezdravi.cz",
-  "ingestedAt": "2026-05-12T09:29:09.070890Z",
+  "ingestedAt": "2026-05-12T10:15:38.273017Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "V Česku vyrůstá nemocnější generace  Hypertenze už není jen chorobou seniorů",
+      "url": "https://www.plnezdravi.cz/v-cesku-vyrusta-nemocnejsi-generace-hypertenze-uz-neni-jen-chorobou-senioru/",
+      "dt": "2026-05-12T10:05:58Z",
+      "media_raw": "Plné zdraví",
+      "media_norm": "Plné zdraví",
+      "tokens": [
+        "chorobou",
+        "generace",
+        "hypertenze",
+        "jen",
+        "nemocnější",
+        "seniorů",
+        "vyrůstá",
+        "česku"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_plnezdravi",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "plnezdravi.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -468,30 +493,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "plnezdravi.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Alkohol u mladých ustupuje, nahrazují ho však jiné látky",
-      "url": "https://www.plnezdravi.cz/alkohol-u-mladych-ustupuje-nahrazuji-ho-vsak-jine-latky/",
-      "dt": "2026-04-29T07:00:07Z",
-      "media_raw": "Plné zdraví",
-      "media_norm": "Plné zdraví",
-      "tokens": [
-        "alkohol",
-        "jiné",
-        "látky",
-        "mladých",
-        "nahrazují",
-        "ustupuje",
-        "však"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_plnezdravi",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "plnezdravi.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -502,7 +503,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.plnezdravi.cz/feed/",
-      "bytes": 159686,
+      "bytes": 159364,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -539,7 +540,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-12T07:00:02Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T10:05:58Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -554,6 +555,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Česku vyrůstá nemocnější generace  Hypertenze už není jen chorobou seniorů",
+            "publishedAt": "2026-05-12T10:05:58Z"
+          },
           {
             "title": "Artróza kolene: Jak zastavit opotřebení kloubů",
             "publishedAt": "2026-05-12T07:00:02Z"
@@ -581,10 +586,6 @@
           {
             "title": "Chvění a třes těla: Od nervozity po vážné varování organismu",
             "publishedAt": "2026-05-08T07:00:18Z"
-          },
-          {
-            "title": "Honba za dokonalou pletí: základem je pravidelná péče. Doplňky stravy ani červené světlo nejsou zázračné",
-            "publishedAt": "2026-05-07T07:42:01Z"
           }
         ]
       }

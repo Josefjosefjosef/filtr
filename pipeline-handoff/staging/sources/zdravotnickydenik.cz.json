@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-12T09:29:09.070890Z",
+  "ingestedAt": "2026-05-12T10:15:38.273017Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Razie v Ústřední vojenské nemocnici: Policie zadržela 11 lidí. Měli padělat lékařské zprávy",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/zasah-policie-ustredni-vojenska-nemocnice/",
+      "dt": "2026-05-12T09:30:35Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "lidí",
+        "lékařské",
+        "měli",
+        "nemocnici",
+        "padělat",
+        "policie",
+        "razie",
+        "vojenské",
+        "zadržela",
+        "zprávy",
+        "ústřední"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -251,31 +279,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Tetování má i v obličeji. Policie hledá pacienta, který zmizel z psychiatrické nemocnice",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/pacient-psychiatricka-nemocnice-patrani/",
-      "dt": "2026-05-11T13:15:51Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "hledá",
-        "nemocnice",
-        "obličeji",
-        "pacienta",
-        "policie",
-        "psychiatrické",
-        "tetování",
-        "zmizel"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -286,7 +289,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 92026,
+      "bytes": 91025,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -323,7 +326,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-12T09:11:43Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T09:30:35Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -338,6 +341,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Razie v Ústřední vojenské nemocnici: Policie zadržela 11 lidí. Měli padělat lékařské zprávy",
+            "publishedAt": "2026-05-12T09:30:35Z"
+          },
           {
             "title": "Agresivní opilci ničí pražské nemocnice. Záchytka nestíhá, pacienti končí na akutních lůžkách",
             "publishedAt": "2026-05-12T09:11:43Z"
@@ -365,10 +372,6 @@
           {
             "title": "„Měl zjevně plán B.“ Lékař z Motola našel u mrtvého pacienta střelnou zbraň, nemocnice mlčí",
             "publishedAt": "2026-05-11T15:32:47Z"
-          },
-          {
-            "title": "Umíte správně brát antibiotika? Otestujte se v novém kvízu SZÚ, Češi dělají fatální chyby",
-            "publishedAt": "2026-05-11T15:04:48Z"
           }
         ]
       }

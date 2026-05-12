@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-12T09:29:09.070890Z",
+  "ingestedAt": "2026-05-12T10:15:38.273017Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Daňová echa fungují. V rámci prvních pokusů byly dobrovolně přiznány desítky milionů korun",
+      "url": "https://www.epenize.eu/danova-echa-funguji-v-ramci-prvnich-pokusu-byly-dobrovolne-priznany-desitky-milionu-korun/",
+      "dt": "2026-05-12T10:11:55Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "byly",
+        "daňová",
+        "desítky",
+        "dobrovolně",
+        "echa",
+        "fungují",
+        "korun",
+        "milionů",
+        "pokusů",
+        "prvních",
+        "přiznány",
+        "rámci"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -497,28 +526,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Czexit. Mudrování Vondráčka o vystoupení z EU je trapné",
-      "url": "https://www.epenize.eu/czexit-mudrovani-vondracka-o-vystoupeni-z-eu-je-trapne/",
-      "dt": "2026-05-03T12:46:11Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "czexit",
-        "mudrování",
-        "trapné",
-        "vondráčka",
-        "vystoupení"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -529,7 +536,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 110343,
+      "bytes": 110131,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -566,7 +573,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-12T07:02:03Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T10:11:55Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 17,
@@ -584,6 +591,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Daňová echa fungují. V rámci prvních pokusů byly dobrovolně přiznány desítky milionů korun",
+            "publishedAt": "2026-05-12T10:11:55Z"
+          },
           {
             "title": "Nepřipravený premiér se ztrapnil. V debatě o haldě se lidé neměli ptát na haldu",
             "publishedAt": "2026-05-12T07:02:03Z"
@@ -611,10 +622,6 @@
           {
             "title": "Stará data a nová bída: Trumpův pokus se skvělým průzkumem skončil fiaskem",
             "publishedAt": "2026-05-09T23:00:50Z"
-          },
-          {
-            "title": "Helikoptérový rodič: Noční můra každého učitele",
-            "publishedAt": "2026-05-09T07:00:56Z"
           }
         ]
       }

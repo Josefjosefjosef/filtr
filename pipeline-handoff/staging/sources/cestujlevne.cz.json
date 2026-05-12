@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-05-12T09:29:09.070890Z",
+  "ingestedAt": "2026-05-12T10:15:38.273017Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Z Prahy do Sevilly na jeden květnový termín. Letenky od 1 604 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/z-prahy-do-sevilly-na-jeden-kvetnovy-termin",
+      "dt": "2026-05-12T09:30:55Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "604",
+        "jeden",
+        "květnový",
+        "letenky",
+        "prahy",
+        "sevilly",
+        "termín"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -487,28 +511,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Málaga z Pardubic v červnu. Letenky od 1 308 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/malaga-z-pardubic-v-cervnu",
-      "dt": "2026-05-01T06:00:37Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "308",
-        "letenky",
-        "málaga",
-        "pardubic",
-        "červnu"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -519,7 +521,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 47025,
+      "bytes": 47134,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -556,7 +558,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-12T07:29:14Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T09:30:55Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -571,6 +573,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Z Prahy do Sevilly na jeden květnový termín. Letenky od 1 604 Kč",
+            "publishedAt": "2026-05-12T09:30:55Z"
+          },
           {
             "title": "Týdenní zájezdy na Zakynthos z Prahy do 5* hotelů s all-inclusive. Zájezd od 9 990 Kč",
             "publishedAt": "2026-05-12T07:29:14Z"
@@ -598,10 +604,6 @@
           {
             "title": "Z Prahy na Sardinii přímým letem do 4* hotelů vč. all-inclusive na přelomu května a června. Zájezd od 14 890 Kč",
             "publishedAt": "2026-05-09T11:32:34Z"
-          },
-          {
-            "title": "Z Bratislavy do Černé Hory i během letních prázdnin. Letenky od 895 Kč",
-            "publishedAt": "2026-05-07T15:19:59Z"
           }
         ]
       }

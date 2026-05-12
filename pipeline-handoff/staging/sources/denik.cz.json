@@ -1,12 +1,64 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-12T09:29:09.070890Z",
+  "ingestedAt": "2026-05-12T10:15:38.273017Z",
   "items": [
     {
       "section": "krimi",
       "contentType": "article",
-      "title": "Zloděj ukradl z obchodu v Šumperku stan. Prodavačce následně dupal na hlavu",
+      "title": "Policie zasahuje v Ústřední vojenské nemocnici. Zadržela jednoho z primářů",
+      "url": "https://www.denik.cz/krimi/vojenska-policie-a-ncoz-dnes-vysetruji-falsovani-posudku-v-prazske-nemocnici-202.html",
+      "dt": "2026-05-12T09:28:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "jednoho",
+        "nemocnici",
+        "policie",
+        "primářů",
+        "vojenské",
+        "zadržela",
+        "zasahuje",
+        "ústřední"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Bouřky v Česku: Protržená hráz rybníka, zaplavené sklepy i ulice, evakuace vlaku",
+      "url": "https://www.denik.cz/regiony/bourky-v-cesku-protrzena-hraz-rybnika-zaplavene-sklepy-i-ulice-evakuace-vlaku.html",
+      "dt": "2026-05-12T09:22:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bouřky",
+        "evakuace",
+        "hráz",
+        "protržená",
+        "rybníka",
+        "sklepy",
+        "ulice",
+        "vlaku",
+        "zaplavené",
+        "česku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Zloděj ukradl z obchodu v Zábřehu stan. Prodavačce následně dupal na hlavu",
       "url": "https://www.denik.cz/krimi/zabreh-brutalni-napadeni-prodavacky-zlodej-kradez-stanu-zraneni-soud-vazba.html",
       "dt": "2026-05-12T08:21:00Z",
       "media_raw": "Deník",
@@ -20,7 +72,7 @@
         "stan",
         "ukradl",
         "zloděj",
-        "šumperku"
+        "zábřehu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -596,57 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Valorizace ano, strop ne. Novela důchodů budí rozpaky odborů",
-      "url": "https://www.denik.cz/ekonomika/duchody-valorizace-zamestnavani-senioru-zakon-vlada-odbory.html",
-      "dt": "2026-05-11T13:18:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ano",
-        "budí",
-        "důchodů",
-        "novela",
-        "odborů",
-        "rozpaky",
-        "strop",
-        "valorizace"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ozdoba přírody nebo pochoutka? Plané rostliny lze využít v kuchyni",
-      "url": "https://olomoucky.denik.cz/ctenar-reporter/vareni-bylinky-jaro.html",
-      "dt": "2026-05-11T13:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "kuchyni",
-        "lze",
-        "nebo",
-        "ozdoba",
-        "plané",
-        "pochoutka",
-        "přírody",
-        "rostliny",
-        "využít"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -657,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28124,
+      "bytes": 28208,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -694,12 +695,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-12T08:21:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T09:28:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "zdravi": 1,
-          "finance": 1
+          "zpravy": 24,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -712,7 +712,15 @@
         },
         "sample_titles": [
           {
-            "title": "Zloděj ukradl z obchodu v Šumperku stan. Prodavačce následně dupal na hlavu",
+            "title": "Policie zasahuje v Ústřední vojenské nemocnici. Zadržela jednoho z primářů",
+            "publishedAt": "2026-05-12T09:28:00Z"
+          },
+          {
+            "title": "Bouřky v Česku: Protržená hráz rybníka, zaplavené sklepy i ulice, evakuace vlaku",
+            "publishedAt": "2026-05-12T09:22:00Z"
+          },
+          {
+            "title": "Zloděj ukradl z obchodu v Zábřehu stan. Prodavačce následně dupal na hlavu",
             "publishedAt": "2026-05-12T08:21:00Z"
           },
           {
@@ -734,14 +742,6 @@
           {
             "title": "Ve Žďáru se po bouřce protrhla hráz rybníka. Voda zalila kurty, valila se městem",
             "publishedAt": "2026-05-12T07:40:00Z"
-          },
-          {
-            "title": "Z lékáren zmizel oblíbený lék proti nevolnosti. Češi ho neseženou do roku 2027",
-            "publishedAt": "2026-05-12T07:30:00Z"
-          },
-          {
-            "title": "Průtrž mračen spláchla trasu D35. Bahno zalilo silnici a valilo se kolem domů",
-            "publishedAt": "2026-05-12T07:00:00Z"
           }
         ]
       }

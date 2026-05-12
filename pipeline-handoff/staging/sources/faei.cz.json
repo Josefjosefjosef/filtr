@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-12T09:29:09.070890Z",
+  "ingestedAt": "2026-05-12T10:15:38.273017Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vymáhání práva je na katastrofální úrovni, fotbal je mementem",
+      "url": "https://profitonline.cz/vymahani-prava-je-na-katastrofalni-urovni-fotbal-je-mementem/",
+      "dt": "2026-05-12T10:00:56Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "fotbal",
+        "katastrofální",
+        "mementem",
+        "práva",
+        "vymáhání",
+        "úrovni"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -270,29 +293,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Návrat do práce zůstává pro české matky luxusem",
-      "url": "https://profitonline.cz/navrat-do-prace-zustava-pro-ceske-matky-luxusem/",
-      "dt": "2026-05-10T06:00:52Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "luxusem",
-        "matky",
-        "návrat",
-        "práce",
-        "zůstává",
-        "české"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -303,7 +303,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19109,
+      "bytes": 19062,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -340,10 +340,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-12T09:00:46Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T10:00:56Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 12
+          "sport": 1,
+          "finance": 11
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -355,6 +356,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vymáhání práva je na katastrofální úrovni, fotbal je mementem",
+            "publishedAt": "2026-05-12T10:00:56Z"
+          },
           {
             "title": "V dubnu nezaměstnanost nepatrně klesla",
             "publishedAt": "2026-05-12T09:00:46Z"
@@ -382,10 +387,6 @@
           {
             "title": "Kryštof Touška členem představenstva Uniqa",
             "publishedAt": "2026-05-11T06:00:43Z"
-          },
-          {
-            "title": "The Economist: Inflace v Argentině už zase zrychluje. Přestaly Mileiovy radikální reformy fungovat?",
-            "publishedAt": "2026-05-11T04:00:01Z"
           }
         ]
       }
