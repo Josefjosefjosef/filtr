@@ -78,6 +78,9 @@ projects/data/feed_snapshots/
 projects/data/feed_transport_state.json
 projects/data/section_release_state.json
 
+# Silver retrieval stress 300k local JSON exports (runtime; never commit large artifacts)
+scripts/silver-retrieval-stress-300k-export*.json
+
 # Node (vendor libs in assets/vendor; do not track node_modules)
 node_modules/
 
