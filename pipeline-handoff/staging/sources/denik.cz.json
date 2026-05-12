@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-12T16:34:05.822657Z",
+  "ingestedAt": "2026-05-12T17:14:37.607784Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Tragédie v Norsku: Čeští rybáři zahynuli na moři, převrácený člun našel vrtulník",
+      "url": "https://www.denik.cz/staty-mimo-eu/norsko-rybari-smola-rybari-smrt-cesi.html",
+      "dt": "2026-05-12T16:47:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "moři",
+        "našel",
+        "norsku",
+        "převrácený",
+        "rybáři",
+        "tragédie",
+        "vrtulník",
+        "zahynuli",
+        "čeští",
+        "člun"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -625,33 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ve Žďáru protekla po bouřce voda hrází rybníka. Zalila kurty, valila se městem",
-      "url": "https://www.denik.cz/regiony/ve-zdare-se-protrhla-hraz-rybnika-voda-zalila-tenisove-kurty-valila-se-mestem-20.html",
-      "dt": "2026-05-12T07:40:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bouřce",
-        "hrází",
-        "kurty",
-        "městem",
-        "protekla",
-        "rybníka",
-        "valila",
-        "voda",
-        "zalila",
-        "žďáru"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29134,
+      "bytes": 28945,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,7 +699,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-12T15:36:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T16:47:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -715,6 +715,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tragédie v Norsku: Čeští rybáři zahynuli na moři, převrácený člun našel vrtulník",
+            "publishedAt": "2026-05-12T16:47:00Z"
+          },
           {
             "title": "Muž v Chorvatsku chladnokrevně zabil šéfa kriminálky. Zrovna si objednával kávu",
             "publishedAt": "2026-05-12T15:36:00Z"
@@ -742,10 +746,6 @@
           {
             "title": "Syn Simony Monyové: Nevěděl jsem, co se doma děje. Seriál beru za psychoterapii",
             "publishedAt": "2026-05-12T13:20:00Z"
-          },
-          {
-            "title": "To byla podívaná. Sekery létaly zámeckým parketem v Boru",
-            "publishedAt": "2026-05-12T13:00:00Z"
           }
         ]
       }

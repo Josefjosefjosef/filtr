@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-05-12T16:34:05.822657Z",
+  "ingestedAt": "2026-05-12T17:14:37.607784Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Smrt si vybírá: Jana Šulcová ve filmu nezpívá a v záběru se objevila deska, kterou nikdo neměl vidět",
+      "url": "https://www.vtelce.cz/smrt-si-vybira-jana-sulcova-ve-filmu-nezpiva-a-v-zaberu-se-objevila-deska-kterou-nikdo-nemel-videt/",
+      "dt": "2026-05-12T16:55:25Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "deska",
+        "filmu",
+        "jana",
+        "neměl",
+        "nezpívá",
+        "nikdo",
+        "objevila",
+        "smrt",
+        "vidět",
+        "vybírá",
+        "záběru",
+        "šulcová"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -261,34 +290,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Pořad Jáma lvová se vrací s druhou řadou, která představí odvážné podnikatele a jejich projekty",
-      "url": "https://www.vtelce.cz/porad-jama-lvova-se-vraci-s-druhou-radou-ktera-predstavi-odvazne-podnikatele-a-jejich-projekty/",
-      "dt": "2026-05-11T08:44:58Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "druhou",
-        "jejich",
-        "jáma",
-        "lvová",
-        "odvážné",
-        "podnikatele",
-        "pořad",
-        "projekty",
-        "představí",
-        "vrací",
-        "řadou"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -299,8 +300,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 81802,
-      "reason": "",
+      "bytes": 84103,
+      "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -336,7 +337,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-12T16:14:32Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T16:55:25Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "other": 10
@@ -351,6 +352,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Smrt si vybírá: Jana Šulcová ve filmu nezpívá a v záběru se objevila deska, kterou nikdo neměl vidět",
+            "publishedAt": "2026-05-12T16:55:25Z"
+          },
           {
             "title": "Ulice: Adriana je strachy bez sebe a bojí se nejhoršího, Klárka totiž zmizela",
             "publishedAt": "2026-05-12T16:14:32Z"
@@ -378,10 +383,6 @@
           {
             "title": "Sestra v akci 2: Astronomický honorář za návrat, vážné obvinění z napadení a protekční dcera na place",
             "publishedAt": "2026-05-11T16:55:52Z"
-          },
-          {
-            "title": "Bažanti jedou do Španělska: Porážka krále de Funèse, válka bratrů v zákulisí a polibek za špinavou práci",
-            "publishedAt": "2026-05-11T16:44:24Z"
           }
         ]
       }
