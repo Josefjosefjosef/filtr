@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-12T07:29:47.443128Z",
+  "ingestedAt": "2026-05-12T08:08:58.331523Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Ztrácíte se v nemocnici? Česko má nový lék na bloudění v nekonečných chodbách",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/orientace-v-nemocnicich-czechdesign-spravnym-smerem/",
+      "dt": "2026-05-12T08:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "bloudění",
+        "chodbách",
+        "lék",
+        "nekonečných",
+        "nemocnici",
+        "nový",
+        "ztrácíte",
+        "česko"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -250,32 +275,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Revoluce v léčbě alergií: 82 % dětí se díky burákům zbavilo doživotní hrozby",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/alergie-na-arasidy-lecba/",
-      "dt": "2026-05-11T11:27:02Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "alergií",
-        "burákům",
-        "doživotní",
-        "díky",
-        "dětí",
-        "hrozby",
-        "léčbě",
-        "revoluce",
-        "zbavilo"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -286,7 +285,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 83256,
+      "bytes": 91649,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -323,7 +322,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-12T07:00:53Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T08:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -338,6 +337,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ztrácíte se v nemocnici? Česko má nový lék na bloudění v nekonečných chodbách",
+            "publishedAt": "2026-05-12T08:00:00Z"
+          },
           {
             "title": "Chyba při odběru krve i likvidaci moči. 12 zdravotníků skončilo kvůli hantaviru v izolaci",
             "publishedAt": "2026-05-12T07:00:53Z"
@@ -365,10 +368,6 @@
           {
             "title": "SÚKL přitvrdí: Nekvalitní data od výrobců léků se prodraží, vláda schválila nové poplatky",
             "publishedAt": "2026-05-11T14:07:24Z"
-          },
-          {
-            "title": "Tetování má i v obličeji. Policie hledá pacienta, který zmizel z psychiatrické nemocnice",
-            "publishedAt": "2026-05-11T13:15:51Z"
           }
         ]
       }
