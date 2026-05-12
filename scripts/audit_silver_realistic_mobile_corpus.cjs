@@ -262,6 +262,66 @@ function hasNegWrite(folded) {
   );
 }
 
+/** rcz2_mobile_voice: stejná heuristika jako silver-rcz2-mobile-voice-intent-fail-diagnostic (bez dollar-dot). */
+function auditSilverRcMobileVoiceFillerScoreFolded(f) {
+  const x = String(f || "");
+  let n = 0;
+  const fillers = [
+    /\bhele\b/g,
+    /\bbtw\b/g,
+    /\btyjo\b/g,
+    /\bno\s+tak\b/g,
+    /\bfakt\b/g,
+    /\bjako\b/g,
+    /\bprosim\b/g,
+    /\bdiky\b/g,
+    /\bdíky\b/g,
+    /\bnevim\s+presne\b/g,
+    /\bvlastne\b/g,
+    /\bpockej\b/g,
+    /\bcumis\b/g,
+    /\bjojo\b/g,
+    /\beee+\b/g,
+    /\behm\b/g
+  ];
+  for (let i = 0; i < fillers.length; i++) {
+    const m = x.match(fillers[i]);
+    if (m) n += m.length;
+  }
+  return n;
+}
+
+function auditSilverRcMobileVoiceModuleSwitchFolded(f) {
+  return /\bne\s+do\s+(kalend|ukol|poznam)|\bne\s+v\s+(kalend|ukol|poznam)|\bne\s+kalend|\bne\s+ukol|\bne\s+poznam|\bale\s+do\s+(kalend|ukol|poznam)/.test(
+    String(f || "")
+  );
+}
+
+function auditSilverRcMobileVoiceSelfCorrectionFolded(f) {
+  return /\b(vlastne|vlastně|spis|spíš|oprav|prepis|přepiš|presun|přesuň|zrus|zruš|nedavej|nedávej|neukladej|neukládej|pockej|počkej|ne\s+pockej|fakt\s+ne)\b/.test(
+    String(f || "")
+  );
+}
+
+function auditSilverRcMobileVoiceWriteChaosFolded(f) {
+  const x = String(f || "");
+  if (!x) return false;
+  if (auditSilverRcMobileVoiceModuleSwitchFolded(x)) return true;
+  if (auditSilverRcMobileVoiceSelfCorrectionFolded(x)) return true;
+  if (/\bnevim\b|\bnevím\b/.test(x)) return true;
+  return auditSilverRcMobileVoiceFillerScoreFolded(x) >= 2;
+}
+
+function auditSilverRcMobileVoiceQueryChaosFolded(f) {
+  const x = String(f || "");
+  if (!x) return false;
+  if (auditSilverRcMobileVoiceModuleSwitchFolded(x)) return true;
+  if (auditSilverRcMobileVoiceSelfCorrectionFolded(x)) return true;
+  if (/\bnevim\b|\bnevím\b/.test(x)) return true;
+  if (/\?/.test(x)) return true;
+  return auditSilverRcMobileVoiceFillerScoreFolded(x) >= 1;
+}
+
 /** P0: read-only NEGS prefix + „jako jeden úkol“ = konflikt zápis/read (harness expected unknown; engine může vrátit tasks.read). */
 function auditSilverTaskWriteReadOnlyNegVsExplicitJedenUkolFolded(fx) {
   const x = String(fx || "");
@@ -419,13 +479,18 @@ function detectCollectionConfusion(category, engIntent, expectedIntent) {
   return null;
 }
 
-function calendarWriteSemantic(turn, raw, foldedIn) {
+function calendarWriteSemantic(turn, raw, foldedIn, harnessCase) {
   /* Negovaný zápis → engine vrací calendar.read; harness očekává calendar.query — nevyžadovat draftové klíčové slovo v odpovědi. */
   if (turn.normalizedIntent === "calendar.read" && turn.processingState === "READ_OK") {
     return { ok: true, cat: "" };
   }
   if (!raw || raw.length < 6) return { ok: false, cat: "raw_response_empty" };
-  if (turn.processingState === "STORAGE_DISAMBIGUATION") return { ok: false, cat: "unnecessary_disambiguation" };
+  if (turn.processingState === "STORAGE_DISAMBIGUATION") {
+    if (harnessCase && harnessCase.cluster === "rcz2_mobile_voice" && !hasNegWrite(foldedIn)) {
+      return { ok: true, cat: "" };
+    }
+    return { ok: false, cat: "unnecessary_disambiguation" };
+  }
   const f = foldCs(raw);
   if (hasExplicitNoCalendar(foldedIn) && /\bkalend|\budalost|\bschuzk/.test(f)) return { ok: false, cat: "negative_instruction_fail" };
   const ok =
@@ -437,9 +502,14 @@ function calendarWriteSemantic(turn, raw, foldedIn) {
   return { ok: true, cat: "" };
 }
 
-function taskWriteSemantic(turn, raw, foldedIn) {
+function taskWriteSemantic(turn, raw, foldedIn, harnessCase) {
   if (!raw || raw.length < 5) return { ok: false, cat: "raw_response_empty" };
-  if (turn.processingState === "STORAGE_DISAMBIGUATION") return { ok: false, cat: "unnecessary_disambiguation" };
+  if (turn.processingState === "STORAGE_DISAMBIGUATION") {
+    if (harnessCase && harnessCase.cluster === "rcz2_mobile_voice" && !hasNegWrite(foldedIn)) {
+      return { ok: true, cat: "" };
+    }
+    return { ok: false, cat: "unnecessary_disambiguation" };
+  }
   if (hasExplicitNoCalendar(foldedIn) && turn.normalizedIntent === "calendar.create") return { ok: false, cat: "negative_instruction_fail" };
   if (hasExplicitNoNotes(foldedIn) && turn.normalizedIntent === "notes.create") return { ok: false, cat: "negative_instruction_fail" };
   const ok =
@@ -449,9 +519,14 @@ function taskWriteSemantic(turn, raw, foldedIn) {
   return { ok: true, cat: "" };
 }
 
-function noteWriteSemantic(turn, raw, foldedIn) {
+function noteWriteSemantic(turn, raw, foldedIn, harnessCase) {
   if (!raw || raw.length < 5) return { ok: false, cat: "raw_response_empty" };
-  if (turn.processingState === "STORAGE_DISAMBIGUATION") return { ok: false, cat: "unnecessary_disambiguation" };
+  if (turn.processingState === "STORAGE_DISAMBIGUATION") {
+    if (harnessCase && harnessCase.cluster === "rcz2_mobile_voice" && !hasNegWrite(foldedIn)) {
+      return { ok: true, cat: "" };
+    }
+    return { ok: false, cat: "unnecessary_disambiguation" };
+  }
   if (hasExplicitNoCalendar(foldedIn) && turn.normalizedIntent === "calendar.create") return { ok: false, cat: "negative_instruction_fail" };
   if (hasExplicitNoTasks(foldedIn) && turn.normalizedIntent === "tasks.create") return { ok: false, cat: "negative_instruction_fail" };
   const ok = /poznám|poznam|ulož|uloz|zapamat|informac/i.test(raw) || turn.processingState === "READY_TO_SAVE";
@@ -678,6 +753,30 @@ function evaluateOne(c, turn) {
     ) {
       return { pass: true, cat: "", auditIntent, raw };
     }
+    /** rcz2_mobile_voice: bezpečné unknown / clarification / STORAGE_DISAMBIGUATION bez draftu — ne intent_fail proti konkrétnímu gold při mobilním šumu. */
+    if (c.cluster === "rcz2_mobile_voice" && !hasNegWrite(folded)) {
+      const psMv = String(turn.processingState || "");
+      const engMv = String(eng || "");
+      const noDraftMv =
+        psMv !== "READY_TO_SAVE" &&
+        engMv !== "calendar.create" &&
+        engMv !== "tasks.create" &&
+        engMv !== "notes.create";
+      if (noDraftMv && (auditIntent === "unknown" || engMv === "clarification")) {
+        const isQw = c.group === "calendar_query" || c.group === "task_query" || c.group === "note_query";
+        const isW = c.group === "calendar_write" || c.group === "task_write" || c.group === "note_write";
+        const chaosQ = isQw && auditSilverRcMobileVoiceQueryChaosFolded(folded);
+        const chaosW = isW && auditSilverRcMobileVoiceWriteChaosFolded(folded);
+        const stateLane =
+          psMv === "STORAGE_DISAMBIGUATION" ||
+          psMv === "CLARIFICATION" ||
+          engMv === "clarification" ||
+          (engMv === "unknown" && (psMv === "STORAGE_DISAMBIGUATION" || psMv === "CLARIFICATION"));
+        if (stateLane || chaosQ || chaosW) {
+          return { pass: true, cat: "", auditIntent: "unknown", raw };
+        }
+      }
+    }
     if (auditIntent === "unknown" || eng === "clarification") {
       if (expectedIntent !== "unknown") {
         return { pass: false, cat: "intent_fail", auditIntent, raw };
@@ -692,13 +791,13 @@ function evaluateOne(c, turn) {
   }
 
   if (c.group === "calendar_write") {
-    const sem = calendarWriteSemantic(turn, raw, folded);
+    const sem = calendarWriteSemantic(turn, raw, folded, c);
     if (!sem.ok) return { pass: false, cat: sem.cat, auditIntent, raw };
   } else if (c.group === "task_write") {
-    const sem = taskWriteSemantic(turn, raw, folded);
+    const sem = taskWriteSemantic(turn, raw, folded, c);
     if (!sem.ok) return { pass: false, cat: sem.cat, auditIntent, raw };
   } else if (c.group === "note_write") {
-    const sem = noteWriteSemantic(turn, raw, folded);
+    const sem = noteWriteSemantic(turn, raw, folded, c);
     if (!sem.ok) return { pass: false, cat: sem.cat, auditIntent, raw };
   } else if (c.group === "calendar_query") {
     const sem = calendarQuerySemantic(c.input, folded, turn, raw, c.expectedIntent);

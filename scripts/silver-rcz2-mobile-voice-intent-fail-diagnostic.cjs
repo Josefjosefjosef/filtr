@@ -48,6 +48,7 @@ const BUCKETS = [
   "explicit_module_signal_missed_task",
   "explicit_module_signal_missed_note",
   "module_switching_conflict",
+  "single_target_storage_exclusion_ok",
   "negation_no_write_safety_ok",
   "missing_or_corrupt_payload",
   "speech_to_text_noise_too_high",
@@ -116,6 +117,19 @@ function hasSelfCorrection(f) {
 
 function hasModuleSwitch(f) {
   return /\bne\s+do\s+(kalend|ukol|poznam)|\bne\s+v\s+(kalend|ukol|poznam)|\bne\s+kalend|\bne\s+ukol|\bne\s+poznam|\bale\s+do\s+(kalend|ukol|poznam)/.test(f);
+}
+
+/** Kalendářový zápis s „ne do úkolů“ / úkolový zápis s „ne do kalendáře“ = záměrná DNA, ne cross-module chaos. */
+function isSingleTargetStorageExclusionAlignedWithGold(f, g) {
+  const x = String(f || "");
+  const grp = String(g || "");
+  const negUkol = /\bne\s+do\s+ukol/.test(x) || /\bne\s+v\s+ukol/.test(x);
+  const negKal = /\bne\s+do\s+kalend/.test(x) || /\bne\s+v\s+kalend/.test(x) || /\bne\s+kalend\b/.test(x);
+  const negPoz = /\bne\s+do\s+poznam/.test(x) || /\bne\s+v\s+poznam/.test(x);
+  if (grp.indexOf("calendar") === 0 && negUkol && !negKal && !negPoz) return true;
+  if (grp.indexOf("task") === 0 && negKal && !negUkol && !negPoz) return true;
+  if (grp.indexOf("note") === 0 && (negKal || negUkol) && !(negKal && negUkol)) return true;
+  return false;
 }
 
 function mobileFillerCount(f) {
@@ -230,6 +244,14 @@ function assignBucket(row) {
       bucket: "negation_no_write_safety_ok",
       cls: "SAFETY_OK",
       why: "negated_no_write_intent_engine_kept_safe_path_no_create"
+    };
+  }
+
+  if (hasModuleSwitch(f) && isSingleTargetStorageExclusionAlignedWithGold(f, g)) {
+    return {
+      bucket: "single_target_storage_exclusion_ok",
+      cls: "AMBIGUOUS_OK",
+      why: "voice_write_single_target_with_excluded_wrong_storage_not_cross_module_conflict"
     };
   }
 
