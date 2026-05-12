@@ -1,0 +1,122 @@
+{
+  "harness_id": "retrieval_stress_300k_foundation_diagnostic",
+  "expected_main_commit": "07ad94fb1c4b4896f9879d125c6a35a9096531a6",
+  "actual_main_commit": "07ad94fb1c4b4896f9879d125c6a35a9096531a6",
+  "target_cluster": "rcz2_retrieval",
+  "total_rcz2_retrieval_cases": 12000,
+  "retrieval_pass_count": 12000,
+  "retrieval_accuracy_percent": "100.00",
+  "intent_fail_count": 0,
+  "bucket_rank": [
+    {
+      "b": "missing_entity_match",
+      "n": 0
+    },
+    {
+      "b": "weak_entity_anchor",
+      "n": 0
+    },
+    {
+      "b": "temporal_anchor_missing",
+      "n": 0
+    },
+    {
+      "b": "wrong_module_retrieval",
+      "n": 0
+    },
+    {
+      "b": "calendar_vs_note_retrieval_confusion",
+      "n": 0
+    },
+    {
+      "b": "task_vs_calendar_retrieval_confusion",
+      "n": 0
+    },
+    {
+      "b": "personal_fact_query_fail",
+      "n": 0
+    },
+    {
+      "b": "note_relevance_fail",
+      "n": 0
+    },
+    {
+      "b": "partial_reference_fail",
+      "n": 0
+    },
+    {
+      "b": "fuzzy_reference_fail",
+      "n": 0
+    },
+    {
+      "b": "query_too_short_or_dirty",
+      "n": 0
+    },
+    {
+      "b": "response_contract_safe_unknown_ok",
+      "n": 0
+    },
+    {
+      "b": "gold_too_strict_expected_retrieval",
+      "n": 0
+    },
+    {
+      "b": "template_dna_retrieval_noise",
+      "n": 0
+    },
+    {
+      "b": "true_engine_retrieval_bug",
+      "n": 0
+    },
+    {
+      "b": "other",
+      "n": 0
+    }
+  ],
+  "classification_counts": {
+    "ENGINE_BUG": 0,
+    "HARNESS_BUG": 0,
+    "GOLD_PROBLEM": 0,
+    "TEMPLATE_DNA_PROBLEM": 0,
+    "RETRIEVAL_PROBLEM": 0,
+    "RESPONSE_CONTRACT_PROBLEM": 0,
+    "AMBIGUOUS_OK": 0
+  },
+  "safety_full_cluster": {
+    "dangerous_write_count": 0,
+    "false_write_count": 0,
+    "query_created_write_count": 0,
+    "write_when_negated_count": 0,
+    "negative_instruction_fail_count": 0
+  },
+  "safety_pilot": {
+    "pilot_cases": 600,
+    "pilot_accuracy_percent": "100.00",
+    "dangerous_write_count": 0,
+    "false_write_count": 0,
+    "query_created_write_count": 0,
+    "write_when_negated_count": 0
+  },
+  "separation_capable": "YES",
+  "top_clusters": [
+    {
+      "name": "rcz2_retrieval||zero_intent_fail_in_live_slice",
+      "count": 12000,
+      "classification": "PASS_CLEAN",
+      "rec": "proceed_to_300k_retrieval_stress_generator_scripts_only_monitor_calendar_task_note_cross_module"
+    },
+    {
+      "name": "NONE",
+      "count": 0,
+      "classification": "N_A",
+      "rec": "no_intent_fail_bucket_mass_at_this_rank"
+    },
+    {
+      "name": "NONE",
+      "count": 0,
+      "classification": "N_A",
+      "rec": "no_intent_fail_bucket_mass_at_this_rank"
+    }
+  ],
+  "recommended_next_task": "proceed_to_300k_retrieval_stress_generator_scripts_only_monitor_calendar_task_note_cross_module"
+}
