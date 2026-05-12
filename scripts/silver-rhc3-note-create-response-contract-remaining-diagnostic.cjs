@@ -311,16 +311,22 @@ function buildDetailRecord(c, turn, ev, gold, parentCls, sub) {
   const eng = String(turn.normalizedIntent || "");
   const fold = foldCs(c.input);
   const draft = turn.draft || {};
-  const actualClarify =
+  const ps = String(turn.processingState || "");
+  const clarifyOrUnknown =
+    eng === "clarification" ||
+    eng === "unknown" ||
+    ps === "CLARIFICATION" ||
+    ps === "NEEDS_CLARIFICATION";
+  const actualClarify = {
     id: c.id,
     sub_bucket: sub.sub,
     classification: sub.classification,
     input: c.input,
     expected_intent: g.expected_intent || "",
     actual_intent: eng,
-    actual_state: String(turn.processingState || ""),
+    actual_state: ps,
     expected_should_clarify: !!g.expected_should_clarify,
-    actual_should_clarify_or_processing: actualClarify ? "yes_clarify_or_unknown" : String(turn.processingState || ""),
+    actual_should_clarify_or_processing: clarifyOrUnknown ? "yes_clarify_or_unknown" : ps,
     detected_note_target: detectNoteTarget(fold),
     detected_write_cue_in_input: detectWriteCueInInput(fold),
     detected_negation_or_no_write: detectNegationNoWrite(fold),
@@ -334,6 +340,7 @@ function buildDetailRecord(c, turn, ev, gold, parentCls, sub) {
     why_fail: sub.why_fail,
     response_excerpt: String(raw || "").slice(0, 320)
   };
+  return actualClarify;
 }
 
 function main() {
