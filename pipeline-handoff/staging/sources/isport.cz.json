@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "isport.cz",
-  "ingestedAt": "2026-05-12T22:19:58.601822Z",
+  "ingestedAt": "2026-05-12T23:00:47.312255Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Surovčíkova první slova po derby. Psali mu i „normální“ slávisté, děkoval Černému",
+      "url": "https://isport.blesk.cz/clanek/fotbal-chance-liga/475427/surovcikova-prvni-slova-po-derby-psali-mu-i-normalni-slaviste-dekoval-cernemu.html",
+      "dt": "2026-05-12T22:15:00Z",
+      "media_raw": "iSport",
+      "media_norm": "iSport",
+      "tokens": [
+        "derby",
+        "děkoval",
+        "normální",
+        "první",
+        "psali",
+        "slova",
+        "slávisté",
+        "surovčíkova",
+        "černému"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_isport",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "isport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1045,33 +1071,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "isport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pravděpodobné sestavy: Sparta řeší absence, mimo až 17 hráčů?! Šance pro Chytila a Isifeho",
-      "url": "https://isport.blesk.cz/clanek/fotbal-chance-liga/475382/pravdepodobne-sestavy-sparta-resi-absence-mimo-az-17-hracu-sance-pro-chytila-a-isifeho.html",
-      "dt": "2026-05-12T03:00:00Z",
-      "media_raw": "iSport",
-      "media_norm": "iSport",
-      "tokens": [
-        "absence",
-        "chytila",
-        "hráčů",
-        "isifeho",
-        "mimo",
-        "pravděpodobné",
-        "sestavy",
-        "sparta",
-        "řeší",
-        "šance"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_isport",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "isport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1082,7 +1081,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://isport.blesk.cz/rss",
-      "bytes": 56663,
+      "bytes": 56784,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1119,7 +1118,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-12T21:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T22:15:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1134,6 +1133,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Surovčíkova první slova po derby. Psali mu i „normální“ slávisté, děkoval Černému",
+            "publishedAt": "2026-05-12T22:15:00Z"
+          },
           {
             "title": "Priske o derby: Už to nechci zažít. Surovčík má můj respekt. Kuol? Už končí doba, kdy…",
             "publishedAt": "2026-05-12T21:40:00Z"
@@ -1161,10 +1164,6 @@
           {
             "title": "Dukla je v boji s Baníkem ve výhodě. Klidný Šustr ale varuje: To není nic, pokud…",
             "publishedAt": "2026-05-12T19:30:00Z"
-          },
-          {
-            "title": "Zemřel basketbalista z NBA (†29). Hrál za Memphis, byl zadržen a propuštěn na kauci",
-            "publishedAt": "2026-05-12T19:05:00Z"
           }
         ]
       }
