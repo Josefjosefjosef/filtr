@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-12T14:29:05.999052Z",
+  "ingestedAt": "2026-05-12T15:15:27.222471Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Kauza Motol se rozrůstá: Policie obvinila další firmu, stíhá už 19 lidí",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/motol-policie-stiha-dalsi-firmu/",
+      "dt": "2026-05-12T15:08:10Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "další",
+        "firmu",
+        "kauza",
+        "lidí",
+        "motol",
+        "obvinila",
+        "policie",
+        "rozrůstá",
+        "stíhá"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Hantavirus dorazil do Itálie? Lékaři testují mladého muže, který cestoval v letadle s nakaženou",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/hantavirus-italie-mlady-muz-ktery-letadlo/",
+      "dt": "2026-05-12T14:38:06Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "cestoval",
+        "dorazil",
+        "hantavirus",
+        "itálie",
+        "letadle",
+        "lékaři",
+        "mladého",
+        "muže",
+        "nakaženou",
+        "testují"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -217,63 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Chyba při odběru krve i likvidaci moči. 12 zdravotníků skončilo kvůli hantaviru v izolaci",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/chyba-12-zdravotniku-hantavirus-izolace/",
-      "dt": "2026-05-12T07:00:53Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "chyba",
-        "hantaviru",
-        "izolaci",
-        "krve",
-        "kvůli",
-        "likvidaci",
-        "moči",
-        "odběru",
-        "při",
-        "skončilo",
-        "zdravotníků"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Raketový vzestup syfilidy a kapavky: Evropa hlásí nejhorší čísla za 10 let. Infekce se nedaří zastavit",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/infekce-evropa-zprava/",
-      "dt": "2026-05-12T06:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "evropa",
-        "hlásí",
-        "infekce",
-        "kapavky",
-        "let",
-        "nedaří",
-        "nejhorší",
-        "raketový",
-        "syfilidy",
-        "vzestup",
-        "zastavit",
-        "čísla"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -284,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 90814,
+      "bytes": 81268,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -321,10 +317,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-12T14:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T15:08:10Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 10
+          "zpravy": 1,
+          "zdravi": 9
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -336,6 +333,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kauza Motol se rozrůstá: Policie obvinila další firmu, stíhá už 19 lidí",
+            "publishedAt": "2026-05-12T15:08:10Z"
+          },
+          {
+            "title": "Hantavirus dorazil do Itálie? Lékaři testují mladého muže, který cestoval v letadle s nakaženou",
+            "publishedAt": "2026-05-12T14:38:06Z"
+          },
           {
             "title": "Konec chybějících antibiotik a sirupů? EU schválila revoluční plán na lékovou soběstačnost",
             "publishedAt": "2026-05-12T14:20:00Z"
@@ -359,14 +364,6 @@
           {
             "title": "Razie v Ústřední vojenské nemocnici: Policie zadržela 11 lidí. Měli padělat lékařské zprávy",
             "publishedAt": "2026-05-12T09:30:35Z"
-          },
-          {
-            "title": "Agresivní opilci ničí pražské nemocnice. Záchytka nestíhá, pacienti končí na akutních lůžkách",
-            "publishedAt": "2026-05-12T09:11:43Z"
-          },
-          {
-            "title": "Ztrácíte se v nemocnici? Česko má nový lék na bloudění v nekonečných chodbách",
-            "publishedAt": "2026-05-12T08:00:00Z"
           }
         ]
       }

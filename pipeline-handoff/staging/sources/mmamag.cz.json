@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-12T14:29:05.999052Z",
+  "ingestedAt": "2026-05-12T15:15:27.222471Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "UFC v Bílém domě odhalilo speciální dresy. Bojovníci si obléknou hvězdy a pruhy",
+      "url": "https://www.mmamag.cz/ufc-v-bilem-dome-odhalilo-specialni-dresy-bojovnici-si-obleknou-hvezdy-a-pruhy/",
+      "dt": "2026-05-12T15:00:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "bojovníci",
+        "bílém",
+        "domě",
+        "dresy",
+        "hvězdy",
+        "obléknou",
+        "odhalilo",
+        "pruhy",
+        "speciální",
+        "ufc"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "video",
@@ -1097,34 +1124,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Jiří Procházka po souboji Chimaeva se Stricklandem nešetřil kritikou. Zmínil nenávist i falešný úsměv",
-      "url": "https://www.mmamag.cz/prochazka-kritizoval-chimaeva-se-stricklandem/",
-      "dt": "2026-05-10T21:00:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "chimaeva",
-        "falešný",
-        "jiří",
-        "kritikou",
-        "nenávist",
-        "nešetřil",
-        "procházka",
-        "souboji",
-        "stricklandem",
-        "zmínil",
-        "úsměv"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1135,7 +1134,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 78204,
+      "bytes": 78282,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1172,7 +1171,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-12T14:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T15:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1187,6 +1186,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "UFC v Bílém domě odhalilo speciální dresy. Bojovníci si obléknou hvězdy a pruhy",
+            "publishedAt": "2026-05-12T15:00:00Z"
+          },
           {
             "title": "Rozhodčí Chimaeva okradli, shodují se Usman i Cejudo. Strickland prý jen couval a kontroval",
             "publishedAt": "2026-05-12T14:15:00Z"
@@ -1214,10 +1217,6 @@
           {
             "title": "Hvězdy MMA jsou známé svými přezdívkami, ale správně si je vybaví jen málokdo. Pokud dáte 10 z 10, MMA skutečně žijete",
             "publishedAt": "2026-05-12T09:59:20Z"
-          },
-          {
-            "title": "Poznáte slavného boxera podle popisu jeho nejslavnějšího zápasu. Skuteční znalci ringu si vybaví správnou odpověď okamžitě",
-            "publishedAt": "2026-05-12T09:55:52Z"
           }
         ]
       }

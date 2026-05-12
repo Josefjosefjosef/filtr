@@ -1,24 +1,51 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-12T14:29:05.999052Z",
+  "ingestedAt": "2026-05-12T15:15:27.222471Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Čeští mladíci se ztratii v Bosně. Zachránila je horská služba",
+      "title": "Mladý Ital má příznaky hantaviru. Cestoval letadlem s jednou z obětí",
+      "url": "https://www.denik.cz/staty-eu/mlady-ital-ma-priznaky-hantaviru-cestoval-letadlem-s-jednou-z-obeti-20260512.html",
+      "dt": "2026-05-12T14:45:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "cestoval",
+        "hantaviru",
+        "ital",
+        "jednou",
+        "letadlem",
+        "mladý",
+        "obětí",
+        "příznaky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pět nezletilých Čechů se ztratilo v Bosně. Noční záchrana trvala hodiny",
       "url": "https://www.denik.cz/staty-mimo-eu/bosna-nezletili-cesi-horska-sluzba-pomoc.html",
       "dt": "2026-05-12T14:02:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
         "bosně",
-        "horská",
-        "mladíci",
-        "služba",
-        "zachránila",
-        "ztratii",
-        "čeští"
+        "hodiny",
+        "nezletilých",
+        "noční",
+        "pět",
+        "trvala",
+        "ztratilo",
+        "záchrana",
+        "čechů"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -392,7 +419,7 @@
     {
       "section": "krimi",
       "contentType": "article",
-      "title": "Policie zasahuje v Ústřední vojenské nemocnici. Zadržela 11 lidí",
+      "title": "Policie zasahovala v Ústřední vojenské nemocnici. Zadržela 11 lidí",
       "url": "https://www.denik.cz/krimi/vojenska-policie-a-ncoz-dnes-vysetruji-falsovani-posudku-v-prazske-nemocnici-202.html",
       "dt": "2026-05-12T09:28:00Z",
       "media_raw": "Deník",
@@ -403,7 +430,7 @@
         "policie",
         "vojenské",
         "zadržela",
-        "zasahuje",
+        "zasahovala",
         "ústřední"
       ],
       "feedCategory": "zpravy",
@@ -626,34 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Průtrž mračen spláchla trasu D35. Bahno zalilo silnici a valilo se kolem domů",
-      "url": "https://www.denik.cz/regiony/prutrz-mracen-splachla-trasu-d35-bahno-se-valilo-po-silnici-i-kolem-domu-2026051.html",
-      "dt": "2026-05-12T07:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bahno",
-        "d35",
-        "domů",
-        "kolem",
-        "mračen",
-        "průtrž",
-        "silnici",
-        "spláchla",
-        "trasu",
-        "valilo",
-        "zalilo"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -664,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28817,
+      "bytes": 29091,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -701,7 +700,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-12T14:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T14:45:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -718,7 +717,11 @@
         },
         "sample_titles": [
           {
-            "title": "Čeští mladíci se ztratii v Bosně. Zachránila je horská služba",
+            "title": "Mladý Ital má příznaky hantaviru. Cestoval letadlem s jednou z obětí",
+            "publishedAt": "2026-05-12T14:45:00Z"
+          },
+          {
+            "title": "Pět nezletilých Čechů se ztratilo v Bosně. Noční záchrana trvala hodiny",
             "publishedAt": "2026-05-12T14:02:00Z"
           },
           {
@@ -744,10 +747,6 @@
           {
             "title": "Video šílené jízdy na Hodonínsku: Auto předjíždí před zatáčkou, sotva mine jiné",
             "publishedAt": "2026-05-12T12:50:00Z"
-          },
-          {
-            "title": "Palivové stropy znovu klesly. Více ve středu zlevní nafta",
-            "publishedAt": "2026-05-12T12:36:00Z"
           }
         ]
       }

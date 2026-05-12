@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-12T14:29:05.999052Z",
+  "ingestedAt": "2026-05-12T15:15:27.222471Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Odstraňování škod po povodních vázne. Chybí dalších 7,5 miliardy",
+      "url": "https://ekonomickydenik.cz/povodne-skody-povodi-ministerstvo/",
+      "dt": "2026-05-12T14:39:24Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "chybí",
+        "dalších",
+        "miliardy",
+        "odstraňování",
+        "povodních",
+        "vázne",
+        "škod"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -743,32 +767,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Sázka na slunce může zachránit klimatické cíle Evropy a šetří peníze za ropu",
-      "url": "https://ekonomickydenik.cz/sazka-na-slunce-muze-zachranit-klimaticke-cile-evropy/",
-      "dt": "2026-05-10T17:15:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "cíle",
-        "evropy",
-        "klimatické",
-        "peníze",
-        "ropu",
-        "slunce",
-        "sázka",
-        "zachránit",
-        "šetří"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -779,7 +777,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71575,
+      "bytes": 71825,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -816,7 +814,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T14:05:11Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T14:39:24Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 26,
@@ -832,6 +830,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Odstraňování škod po povodních vázne. Chybí dalších 7,5 miliardy",
+            "publishedAt": "2026-05-12T14:39:24Z"
+          },
           {
             "title": "Trump má velký problém: Inflace je nejvyšší za tři roky a volby se blíží",
             "publishedAt": "2026-05-12T14:05:11Z"
@@ -859,10 +861,6 @@
           {
             "title": "„Dvacet prázdných škol“. Roste tlak na ruské architekty únosů dětí",
             "publishedAt": "2026-05-12T10:32:57Z"
-          },
-          {
-            "title": "Každý druhý řeší problém: Češi si hlasitě stěžují kvůli balíkům a mění trendy",
-            "publishedAt": "2026-05-12T09:45:53Z"
           }
         ]
       }

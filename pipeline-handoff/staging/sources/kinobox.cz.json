@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-12T14:29:05.999052Z",
+  "ingestedAt": "2026-05-12T15:15:27.222471Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Homer Simpson slaví 70. narozeniny. Věk největšího Američana naší doby skutečně dávno určili",
+      "url": "https://www.kinobox.cz/clanky/serialy/53563-homer-simpson-slavi-70-narozeniny-vek-nejvetsiho-americana-nasi-doby-skutecne-davno-urcili",
+      "dt": "2026-05-12T15:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "američana",
+        "doby",
+        "dávno",
+        "homer",
+        "narozeniny",
+        "naší",
+        "největšího",
+        "simpson",
+        "skutečně",
+        "slaví",
+        "určili",
+        "věk"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -506,35 +535,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "29 seriálových tipů na SkyShowtime v květnu 2026. Spin-off Yellowstonu, hvězdný Madison i temná kriminálka",
-      "url": "https://www.kinobox.cz/clanky/serialy/48359-nejlepsi-serialy-na-skyshowtime-prave-ted",
-      "dt": "2026-05-10T06:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "2026",
-        "hvězdný",
-        "kriminálka",
-        "květnu",
-        "madison",
-        "off",
-        "seriálových",
-        "skyshowtime",
-        "spin",
-        "temná",
-        "tipů",
-        "yellowstonu"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -545,7 +545,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 27360,
+      "bytes": 27902,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -582,7 +582,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-12T13:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T15:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -597,6 +597,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Homer Simpson slaví 70. narozeniny. Věk největšího Američana naší doby skutečně dávno určili",
+            "publishedAt": "2026-05-12T15:00:00Z"
+          },
           {
             "title": "Planeta opic se dočká nového restartu. Na poslední film se už navazovat nebude",
             "publishedAt": "2026-05-12T13:00:00Z"
@@ -624,10 +628,6 @@
           {
             "title": "Kriminální hit Odznak Vysočina končí. Nova ho nahradí oblíbeným seriálem",
             "publishedAt": "2026-05-11T15:00:00Z"
-          },
-          {
-            "title": "Nová Narnie bude nejdražším filmem Netflixu. Tvůrci chtějí přepsat historii",
-            "publishedAt": "2026-05-11T13:00:00Z"
           }
         ]
       }
