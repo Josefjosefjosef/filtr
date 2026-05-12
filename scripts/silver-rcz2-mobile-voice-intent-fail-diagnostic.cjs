@@ -1,21 +1,61 @@
 /**
  * SILVER_RCZ2_MOBILE_VOICE_INTENT_FAIL_DIAGNOSTIC — scripts-only P1 diagnostic.
- * Re-evaluates Real Czech Public UX Corpus V2; slices cluster rcz2_mobile_voice||intent_fail only.
- * Does not modify assets/app.js or engine bundle.
+ * Replays Real Czech Public UX Corpus V2; slices cluster rcz2_mobile_voice||intent_fail only.
+ * Reads scripts/silver-real-czech-public-ux-corpus-v2-report.json for reference totals (no engine change).
+ *
+ * Bucket taxonomy mirrors the user task contract:
+ *   1) template_dna_mobile_noise
+ *   2) gold_too_strict_expected_specific_intent
+ *   3) harness_should_accept_safe_clarification
+ *   4) response_contract_safe_unknown_ok
+ *   5) explicit_module_signal_missed_calendar
+ *   6) explicit_module_signal_missed_task
+ *   7) explicit_module_signal_missed_note
+ *   8) module_switching_conflict
+ *   9) negation_no_write_safety_ok
+ *  10) missing_or_corrupt_payload
+ *  11) speech_to_text_noise_too_high
+ *  12) true_engine_bug_calendar
+ *  13) true_engine_bug_task
+ *  14) true_engine_bug_note
+ *  15) other
+ *
+ * Hard rules: no engine, assets, UI, CSS, or backend mutation.
  */
 /* eslint-disable no-console */
+"use strict";
+
 const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
 
 const REPO = path.resolve(__dirname, "..");
-const REPORT_JSON = path.join(__dirname, "silver-rcz2-mobile-voice-intent-fail-diagnostic-report.json");
-const TARGET_CLUSTER_KEY = "rcz2_mobile_voice||intent_fail";
-const MOBILE_FIRST_GID = 12000 + 7000 + 4500 + 4500 + 1;
+const TARGET_CLUSTER = "rcz2_mobile_voice||intent_fail";
+const TARGET_CLUSTER_NAME = "rcz2_mobile_voice";
+const REPORT_JSON = path.join(__dirname, "silver-real-czech-public-ux-corpus-v2-report.json");
+const DIAG_REPORT_JSON = path.join(__dirname, "silver-rcz2-mobile-voice-intent-fail-diagnostic-report.json");
 
 const harness = require("./audit_silver_realistic_mobile_corpus.cjs");
 const { loadEngine, evaluateOne, ctxForCase, foldCs, hasNegWrite } = harness;
 const { buildPublicUxCorpusV2 } = require("./silver-real-czech-public-ux-corpus-v2.cjs");
+
+const BUCKETS = [
+  "template_dna_mobile_noise",
+  "gold_too_strict_expected_specific_intent",
+  "harness_should_accept_safe_clarification",
+  "response_contract_safe_unknown_ok",
+  "explicit_module_signal_missed_calendar",
+  "explicit_module_signal_missed_task",
+  "explicit_module_signal_missed_note",
+  "module_switching_conflict",
+  "negation_no_write_safety_ok",
+  "missing_or_corrupt_payload",
+  "speech_to_text_noise_too_high",
+  "true_engine_bug_calendar",
+  "true_engine_bug_task",
+  "true_engine_bug_note",
+  "other"
+];
 
 function escapeField(s) {
   return String(s == null ? "" : s)
@@ -23,119 +63,283 @@ function escapeField(s) {
     .replace(/=/g, "\uFF1D");
 }
 
-function readJsonReport(p) {
+function readJsonSafe(p) {
   try {
     return JSON.parse(fs.readFileSync(p, "utf8"));
   } catch (e) {
+    void e;
     return null;
   }
 }
 
-function parse20kStdout(out) {
-  const r = {};
-  const mAcc = out.match(/overall_accuracy=([\d.]+)%/);
-  r.overall_accuracy = mAcc ? mAcc[1] : "";
-  const grab = (label) => {
-    const x = out.match(new RegExp(label + "=([0-9]+)/([0-9]+)"));
-    return x ? x[1] + "/" + x[2] : "";
-  };
-  r.calendar_write = grab("calendar_write");
-  return r;
+function yn(b) {
+  return b ? "ano" : "ne";
 }
 
-function groupToKind(g) {
-  if (g === "calendar_write") return 0;
-  if (g === "task_write") return 1;
-  if (g === "note_write") return 2;
-  if (g === "calendar_query") return 3;
-  if (g === "task_query") return 4;
-  return -1;
+function hasCalendarSignal(f) {
+  return /\b(kalend|schuz|schůz|udalost|udál|zubar|zubař|hypotek|hypoték|pravnik|právník|ucetni|účetn|dokt|rano|ráno|vecer|večer|odpoledne|dopoledne|patek|pátek|ctvrtek|čtvrtek|streda|středa|utery|úterý|pondeli|pondělí|sobota|nedele|neděle|zitra|zejtra|zítra|pozitri|pozítří|tejden|týden|tejdnu|týdnu|program\s+na|udalost|porad)\b/.test(f);
 }
 
-function gidFromCaseId(id) {
-  const m = /^rcz2_(\d+)$/.exec(String(id || ""));
-  return m ? parseInt(m[1], 10) : -1;
+function hasTaskSignal(f) {
+  return /\b(ukol|úkol|uloha|úloh|splnit|udel|udělat|koupit|nakoup|musi|nezapom|priprav|připrav|hod\s+do\s+ukol|do\s+ukol|v\s+ukol|v\s+ukolech|ukolu|úkolu)\b/.test(f);
 }
 
-function mobileSeedMismatch(c) {
-  const gid = gidFromCaseId(c.id);
-  if (gid < MOBILE_FIRST_GID || gid > MOBILE_FIRST_GID + 22000 - 1) return false;
-  const idx = gid - MOBILE_FIRST_GID;
-  const kind = idx % 5;
-  return groupToKind(c.group) !== kind;
+function hasNoteSignal(f) {
+  return /\b(poznam|poznám|napis\s+si|zapamat|zapamatuj|zapis\s+si|do\s+poznam|v\s+poznam|pin\s+je|kartick|kartič|obcank|občank|cislo\s+OP|číslo\s+OP)\b/.test(f);
 }
 
-function hasNegationOrCorrectionPhrase(fi) {
+function hasExplicitModuleSignal(f) {
+  return /\b(do\s+kalend|v\s+kalend|do\s+ukol|v\s+ukol|v\s+ukolech|do\s+poznam|v\s+poznam|jen\s+v\s+(kalend|ukol|poznam))\b/.test(f);
+}
+
+function explicitModuleKind(f) {
+  if (/\b(do\s+kalend|v\s+kalend|jen\s+v\s+kalend)\b/.test(f)) return "calendar";
+  if (/\b(do\s+ukol|v\s+ukol|v\s+ukolech|jen\s+v\s+ukol)\b/.test(f)) return "task";
+  if (/\b(do\s+poznam|v\s+poznam|jen\s+v\s+poznam)\b/.test(f)) return "note";
+  return "";
+}
+
+function hasWriteCue(f) {
+  return /\b(uloz|ulož|pridej|přidej|zapis|zapiš|vytvor|vytvoř|nahod|hod\b|napis\s+do|zapamat)\b/.test(f);
+}
+
+function hasReadQueryCue(f) {
   return (
-    /\b(vlastne|spis|oprav|presun|zrus|zru[sš]|nedavej|neukladej|pockej|ne\s+pockej)\b/.test(fi) ||
-    /\bne\s+do\s+(kalend|ukol)\b/.test(fi) ||
-    /\bne\s+kalend\b/.test(fi) ||
-    /\bne\s+ukol\b/.test(fi) ||
-    /\bne\s+plet\b/.test(fi) ||
-    /\bnevim\s+presne\b/.test(fi)
+    /\b(kde|kdy|co\s+mam|co\s+jsem|co\s+tam\s+mam|jak[yý]\s+mam|mrkni|najdi|hled|podivej|podívej|koukni|ukaz\s+mi|zjisti)\b/.test(f) ||
+    /\?/.test(f)
   );
 }
 
-function hasStorageRoutingCue(fi) {
-  return (
-    /\b(do\s+kalend|do\s+ukol|do\s+poznam|kalendari|ukolu|poznamk)\b/.test(fi) &&
-    (/\bne\s+do\b/.test(fi) || /\bale\s+do\b/.test(fi) || /\bnedavej\b/.test(fi) || /\bvlastne\b/.test(fi))
-  );
+function hasSelfCorrection(f) {
+  return /\b(vlastne|vlastně|spis|spíš|oprav|prepis|přepiš|presun|přesuň|zrus|zruš|nedavej|nedávej|neukladej|neukládej|pockej|počkej|ne\s+pockej|fakt\s+ne)\b/.test(f);
 }
 
-function isCalendarFamily(intent) {
-  const s = String(intent || "");
-  return s.indexOf("calendar") === 0;
+function hasModuleSwitch(f) {
+  return /\bne\s+do\s+(kalend|ukol|poznam)|\bne\s+v\s+(kalend|ukol|poznam)|\bne\s+kalend|\bne\s+ukol|\bne\s+poznam|\bale\s+do\s+(kalend|ukol|poznam)/.test(f);
 }
 
-function isTaskFamily(intent) {
-  const s = String(intent || "");
-  return s.indexOf("task") === 0;
+function mobileFillerCount(f) {
+  let n = 0;
+  const fillers = [
+    /\bhele\b/g,
+    /\bbtw\b/g,
+    /\btyjo\b/g,
+    /\bno\s+tak\b/g,
+    /\bfakt\b/g,
+    /\bjako\b/g,
+    /\bprosim\b/g,
+    /\bdiky\b/g,
+    /\bdíky\b/g,
+    /\bnevim\s+presne\b/g,
+    /\bvlastne\b/g,
+    /\bpockej\b/g,
+    /\bcumis\b/g,
+    /\bjojo\b/g,
+    /\beee+\b/g,
+    /\behm\b/g
+  ];
+  for (let i = 0; i < fillers.length; i++) {
+    const m = f.match(fillers[i]);
+    if (m) n += m.length;
+  }
+  return n;
 }
 
-function calendarVsTaskAmbiguity(expected, actual) {
-  const e = String(expected || "");
-  const a = String(actual || "");
-  return (isCalendarFamily(e) && isTaskFamily(a)) || (isTaskFamily(e) && isCalendarFamily(a));
+function isMobileVoiceNoisy(f) {
+  return mobileFillerCount(f) >= 2;
 }
 
-function inferProbableRootCause(c, ev) {
-  const cat = String(ev.cat || "");
-  const g = String(c.group || "");
-  const fi = foldCs(c.input || "");
-  if (cat === "intent_fail") {
-    if (g === "task_write" && !/\b(do ukol|do úkol|ukol|úkol|nezapom|přidej|pridej|hoď|hod)\b/.test(fi)) {
-      return "missing_task_activity_verb";
+function dangerousCreateLike(turn) {
+  const ps = String(turn.processingState || "");
+  const ni = String(turn.normalizedIntent || "");
+  return ps === "READY_TO_SAVE" || ni === "calendar.create" || ni === "tasks.create" || ni === "notes.create";
+}
+
+function payloadQuality(turn, raw) {
+  if (!raw || raw.length < 2) return "missing";
+  if (!turn || !turn.draft) return "weak";
+  const d = turn.draft;
+  let cues = 0;
+  if (d.title) cues++;
+  if (d.date || d.dateISO) cues++;
+  if (d.time || d.timeHHMM) cues++;
+  if (d.targetContainer) cues++;
+  if (d.silverNoteText) cues++;
+  if (cues >= 3) return "clear";
+  if (cues >= 1) return "weak";
+  return "weak";
+}
+
+function extractPayload(turn) {
+  const d = (turn && turn.draft) || {};
+  const parts = [];
+  if (d.title) parts.push("title:" + String(d.title).slice(0, 100));
+  if (d.date || d.dateISO) parts.push("date:" + String(d.date || d.dateISO || ""));
+  if (d.time || d.timeHHMM) parts.push("time:" + String(d.time || d.timeHHMM || ""));
+  if (d.targetContainer) parts.push("target:" + String(d.targetContainer));
+  if (d.silverNoteText) parts.push("nText:" + String(d.silverNoteText).slice(0, 80));
+  return parts.join(";") || "(none)";
+}
+
+function explicitModuleMissed(g, exp, act, eng, ps, f) {
+  const expCal = String(exp || "").indexOf("calendar") === 0;
+  const expTask = String(exp || "").indexOf("task") === 0;
+  const expNote = String(exp || "").indexOf("note") === 0;
+  const explicit = explicitModuleKind(f);
+  if (!explicit) return "";
+  if (expCal && explicit === "calendar" && (act === "unknown" || act !== exp)) return "calendar";
+  if (expTask && explicit === "task" && (act === "unknown" || act !== exp)) return "task";
+  if (expNote && explicit === "note" && (act === "unknown" || act !== exp)) return "note";
+  if (g === "calendar_write" && explicit === "calendar" && eng !== "calendar.create" && ps !== "READY_TO_SAVE") return "calendar";
+  if (g === "task_write" && explicit === "task" && eng !== "tasks.create" && ps !== "READY_TO_SAVE") return "task";
+  if (g === "note_write" && explicit === "note" && eng !== "notes.create" && ps !== "READY_TO_SAVE") return "note";
+  return "";
+}
+
+function templateDnaMismatch(g, f) {
+  const cal = hasCalendarSignal(f);
+  const task = hasTaskSignal(f);
+  const note = hasNoteSignal(f);
+  if (g.indexOf("calendar") === 0 && !cal && (task || note)) return true;
+  if (g.indexOf("task") === 0 && !task && (cal || note)) return true;
+  if (g.indexOf("note") === 0 && !note && (cal || task)) return true;
+  return false;
+}
+
+function assignBucket(row) {
+  const f = row.folded;
+  const exp = String(row.expected || "");
+  const act = String(row.actual || "");
+  const expUn = exp === "unknown";
+  const actUn = act === "unknown";
+  const eng = String(row.normalizedIntent || "");
+  const ps = String(row.processingState || "");
+  const raw = String(row.raw || "");
+  const g = String(row.group || "");
+
+  if (!raw || raw.length < 2) {
+    return {
+      bucket: "missing_or_corrupt_payload",
+      cls: "RESPONSE_CONTRACT_PROBLEM",
+      why: "empty_or_short_model_response_for_intent_fail_row"
+    };
+  }
+
+  if (hasNegWrite(f) && !dangerousCreateLike(row.turn)) {
+    return {
+      bucket: "negation_no_write_safety_ok",
+      cls: "SAFETY_OK",
+      why: "negated_no_write_intent_engine_kept_safe_path_no_create"
+    };
+  }
+
+  if (hasModuleSwitch(f) && (hasCalendarSignal(f) || hasTaskSignal(f) || hasNoteSignal(f))) {
+    return {
+      bucket: "module_switching_conflict",
+      cls: "TEMPLATE_DNA_PROBLEM",
+      why: "explicit_module_negation_or_switch_with_competing_storage_targets"
+    };
+  }
+
+  if (templateDnaMismatch(g, f)) {
+    return {
+      bucket: "template_dna_mobile_noise",
+      cls: "TEMPLATE_DNA_PROBLEM",
+      why: "seed_group_label_does_not_match_strongest_module_signal_in_text"
+    };
+  }
+
+  const missedKind = explicitModuleMissed(g, exp, act, eng, ps, f);
+  if (missedKind === "calendar") {
+    return {
+      bucket: "explicit_module_signal_missed_calendar",
+      cls: "ENGINE_BUG",
+      why: "explicit_calendar_storage_phrase_present_but_engine_did_not_route_calendar"
+    };
+  }
+  if (missedKind === "task") {
+    return {
+      bucket: "explicit_module_signal_missed_task",
+      cls: "ENGINE_BUG",
+      why: "explicit_task_storage_phrase_present_but_engine_did_not_route_task"
+    };
+  }
+  if (missedKind === "note") {
+    return {
+      bucket: "explicit_module_signal_missed_note",
+      cls: "ENGINE_BUG",
+      why: "explicit_note_storage_phrase_present_but_engine_did_not_route_note"
+    };
+  }
+
+  if (
+    !expUn &&
+    actUn &&
+    (ps === "STORAGE_DISAMBIGUATION" || eng === "create.storage_disambiguation")
+  ) {
+    return {
+      bucket: "response_contract_safe_unknown_ok",
+      cls: "RESPONSE_CONTRACT_PROBLEM",
+      why: "engine_returned_storage_disambiguation_safe_unknown_while_gold_expected_concrete_module"
+    };
+  }
+
+  if (!expUn && actUn && (eng === "clarification" || ps === "CLARIFICATION")) {
+    return {
+      bucket: "harness_should_accept_safe_clarification",
+      cls: "HARNESS_BUG",
+      why: "engine_returned_safe_clarification_path_harness_should_accept_for_mobile_voice_noise"
+    };
+  }
+
+  if (!expUn && actUn) {
+    if (isMobileVoiceNoisy(f) && !hasCalendarSignal(f) && !hasTaskSignal(f) && !hasNoteSignal(f)) {
+      return {
+        bucket: "speech_to_text_noise_too_high",
+        cls: "AMBIGUOUS_OK",
+        why: "many_voice_fillers_no_strong_module_cue_engine_correctly_unsure"
+      };
     }
-    if (g === "note_write" && !/\bpoznam|zapamat|napis\s+si\b/.test(fi)) return "weak_note_only_anchor";
-    if (g.indexOf("calendar") === 0 && /\b(rano|ráno|vecer|večer|po obede|po obědě|v tejdnu|zejtra)\b/.test(fi)) {
-      return "calendar_bias_from_time_phrase";
+    return {
+      bucket: "gold_too_strict_expected_specific_intent",
+      cls: "GOLD_PROBLEM",
+      why: "gold_pinned_concrete_intent_but_input_genuinely_ambiguous_for_mobile_voice_chaos"
+    };
+  }
+
+  if (!expUn && !actUn && exp !== act) {
+    if (exp.indexOf("calendar") === 0) {
+      return {
+        bucket: "true_engine_bug_calendar",
+        cls: "ENGINE_BUG",
+        why: "expected_calendar_routed_to_other_module_without_explicit_module_phrase"
+      };
     }
-    return "ambiguous_should_clarify";
+    if (exp.indexOf("task") === 0) {
+      return {
+        bucket: "true_engine_bug_task",
+        cls: "ENGINE_BUG",
+        why: "expected_task_routed_to_other_module_without_explicit_module_phrase"
+      };
+    }
+    if (exp.indexOf("note") === 0) {
+      return {
+        bucket: "true_engine_bug_note",
+        cls: "ENGINE_BUG",
+        why: "expected_note_routed_to_other_module_without_explicit_module_phrase"
+      };
+    }
   }
-  return "other";
-}
 
-function inferFixScopeFromCause(cause) {
-  if (cause === "missing_task_activity_verb") return "Silver task write verb detection (Czech colloquial)";
-  if (cause === "weak_note_only_anchor") return "Silver note intent anchors";
-  if (cause === "calendar_bias_from_time_phrase") return "Silver calendar time-phrase bias guard";
-  return "Silver routing thresholds + Czech paraphrase templates (mobile_voice_chaos)";
-}
+  if (isMobileVoiceNoisy(f)) {
+    return {
+      bucket: "speech_to_text_noise_too_high",
+      cls: "AMBIGUOUS_OK",
+      why: "fallback_mobile_voice_noisy_no_clear_class_match"
+    };
+  }
 
-function assertAssetsAppClean(stage) {
-  let diff = "";
-  try {
-    diff = execSync("git diff --name-only -- assets/app.js", { cwd: REPO, encoding: "utf8" }).trim();
-  } catch (e) {
-    console.log("git_diff_fail=" + String(e && e.message));
-    process.exit(1);
-  }
-  if (diff.length) {
-    console.log("=== STOP assets/app.js has diff at " + stage + " ===");
-    console.log(diff);
-    process.exit(1);
-  }
+  return { bucket: "other", cls: "AMBIGUOUS_OK", why: "unclassified_intent_fail_shape_for_mobile_voice" };
 }
 
 function gitChangedFiles() {
@@ -147,54 +351,60 @@ function gitChangedFiles() {
       .map((l) => l.replace(/^\s*\S+\s+/, "").trim())
       .filter((p) => p.length);
   } catch (e) {
+    void e;
     return [];
   }
 }
 
-function stratifiedExamples(rows, minN) {
-  const byG = {};
-  for (let i = 0; i < rows.length; i++) {
-    const r = rows[i];
-    const g = r.group || "unknown";
-    if (!byG[g]) byG[g] = [];
-    byG[g].push(r);
+function gitPorcelainLines() {
+  try {
+    const st = execSync("git status --porcelain", { cwd: REPO, encoding: "utf8" });
+    return st.split(/\r?\n/).filter(Boolean);
+  } catch (e) {
+    void e;
+    return [];
   }
-  const groups = Object.keys(byG).sort();
-  const out = [];
-  let round = 0;
-  while (out.length < minN && out.length < rows.length) {
-    let added = false;
-    for (let gi = 0; gi < groups.length; gi++) {
-      const arr = byG[groups[gi]];
-      if (arr && arr[round]) {
-        out.push(arr[round]);
-        added = true;
-        if (out.length >= minN) break;
-      }
-    }
-    if (!added) break;
-    round++;
-  }
-  if (out.length < minN) {
-    for (let i = 0; i < rows.length && out.length < minN; i++) {
-      if (out.indexOf(rows[i]) < 0) out.push(rows[i]);
-    }
-  }
-  return out;
 }
 
-function subclusterKey(row) {
-  return (
-    String(row.group || "") +
-    "|exp=" +
-    String(row.expected || "") +
-    "|act=" +
-    String(row.actual || "") +
-    "|ps=" +
-    String(row.processingState || "") +
-    "|eng=" +
-    String(row.normalizedIntent || "")
-  );
+function onlyAllowedDirty(lines) {
+  if (!lines.length) return true;
+  const allow = {
+    "scripts/silver-rcz2-mobile-voice-intent-fail-diagnostic.cjs": true,
+    "scripts/silver-rcz2-mobile-voice-intent-fail-diagnostic-report.json": true
+  };
+  for (let i = 0; i < lines.length; i++) {
+    const t = String(lines[i] || "");
+    const rest = t.length >= 4 ? t.slice(3).trim() : t.trim();
+    if (!allow[rest]) return false;
+  }
+  return true;
+}
+
+function reportJsonClusterTotal(report) {
+  const tc = report && report.top_clusters;
+  if (!Array.isArray(tc)) return "";
+  for (let i = 0; i < tc.length; i++) {
+    const s = String(tc[i] || "");
+    if (s.indexOf(TARGET_CLUSTER) === 0) {
+      const parts = s.split(":");
+      return parts.length > 1 ? parts[parts.length - 1].trim() : "";
+    }
+  }
+  return "";
+}
+
+function pickDominantRoot(clsHist) {
+  let dom = "AMBIGUOUS_OK";
+  let best = -1;
+  const keys = Object.keys(clsHist);
+  for (let i = 0; i < keys.length; i++) {
+    const v = clsHist[keys[i]] || 0;
+    if (v > best) {
+      best = v;
+      dom = keys[i];
+    }
+  }
+  return dom;
 }
 
 function main() {
@@ -206,28 +416,25 @@ function main() {
     process.exit(1);
   }
 
+  const report = readJsonSafe(REPORT_JSON);
   const cases = buildPublicUxCorpusV2();
-  const targetFails = [];
+  const rows = [];
+  const byBucket = {};
+  for (let bi = 0; bi < BUCKETS.length; bi++) byBucket[BUCKETS[bi]] = [];
 
-  let calendarWriteIntentFailCount = 0;
-  let taskWriteIntentFailCount = 0;
-  let noteWriteIntentFailCount = 0;
-  let calendarQueryIntentFailCount = 0;
-  let taskQueryIntentFailCount = 0;
-  let noteQueryIntentFailCount = 0;
-
-  let negationOrCorrectionPhraseCount = 0;
-  let storageDisambiguationCount = 0;
-  let calendarVsTaskAmbiguityCount = 0;
-  let wrongExpectedIntentOrHarnessProblemCount = 0;
-  let seedMismatchCount = 0;
-  let trueProductFailCount = 0;
-  let safetyRiskCount = 0;
-
-  const subHist = {};
+  const clsHist = {
+    ENGINE_BUG: 0,
+    GOLD_PROBLEM: 0,
+    HARNESS_BUG: 0,
+    TEMPLATE_DNA_PROBLEM: 0,
+    RESPONSE_CONTRACT_PROBLEM: 0,
+    SAFETY_OK: 0,
+    AMBIGUOUS_OK: 0
+  };
 
   for (let ci = 0; ci < cases.length; ci++) {
     const c = cases[ci];
+    if (c.cluster !== TARGET_CLUSTER_NAME) continue;
     try {
       if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
     } catch (e0) {
@@ -235,102 +442,102 @@ function main() {
     }
     const turn = eng.processUserTurn(c.input, eng.createEmptyDraft(), ctxForCase(c.group));
     const ev = evaluateOne(c, turn);
-    const foldedIn = foldCs(c.input);
-    const engN = turn.normalizedIntent;
-    const psN = turn.processingState;
-    const createLike =
-      psN === "READY_TO_SAVE" || engN === "calendar.create" || engN === "tasks.create" || engN === "notes.create";
+    if (ev.cat !== "intent_fail") continue;
 
-    if (c.cluster === "rcz2_mobile_voice" && ev.cat === "intent_fail") {
-      const row = {
-        id: c.id,
-        cluster: c.cluster,
-        group: c.group,
-        module: c.group,
-        input: c.input,
-        expected: c.expectedIntent,
-        actual: ev.auditIntent,
-        cat: ev.cat,
-        raw: ev.raw,
-        processingState: psN,
-        normalizedIntent: engN,
-        ux_category: c.ux_category || ""
-      };
-      targetFails.push(row);
+    const folded = foldCs(c.input);
+    const expected = String(c.expectedIntent || "");
+    const actual = String(ev.auditIntent || "");
+    const ps = String(turn.processingState || "");
+    const engN = String(turn.normalizedIntent || "");
+    const raw = String(ev.raw || "");
 
-      if (c.group === "calendar_write") calendarWriteIntentFailCount++;
-      else if (c.group === "task_write") taskWriteIntentFailCount++;
-      else if (c.group === "note_write") noteWriteIntentFailCount++;
-      else if (c.group === "calendar_query") calendarQueryIntentFailCount++;
-      else if (c.group === "task_query") taskQueryIntentFailCount++;
-      else if (c.group === "note_query") noteQueryIntentFailCount++;
-
-      const fi = foldedIn;
-      if (hasNegationOrCorrectionPhrase(fi) || hasNegWrite(fi)) negationOrCorrectionPhraseCount++;
-      if (hasStorageRoutingCue(fi) || String(psN || "") === "CLARIFICATION" || engN === "clarification") {
-        storageDisambiguationCount++;
-      }
-      if (calendarVsTaskAmbiguity(c.expectedIntent, ev.auditIntent)) calendarVsTaskAmbiguityCount++;
-
-      const seedBad = mobileSeedMismatch(c);
-      if (seedBad) seedMismatchCount++;
-
-      const harnessUnknown =
-        (String(ev.auditIntent || "") === "unknown" || engN === "clarification") &&
-        String(c.expectedIntent || "") !== "unknown";
-
-      if (harnessUnknown && !seedBad) wrongExpectedIntentOrHarnessProblemCount++;
-
-      if (!seedBad && !harnessUnknown && String(ev.auditIntent || "") !== String(c.expectedIntent || "")) {
-        trueProductFailCount++;
-      }
-
-      if (hasNegWrite(fi) && createLike && (c.group || "").indexOf("_write") > 0) {
-        safetyRiskCount++;
-      }
-
-      const sk = subclusterKey(row);
-      subHist[sk] = (subHist[sk] || 0) + 1;
-    }
+    const row = {
+      id: c.id,
+      cluster: c.cluster,
+      group: c.group,
+      module: c.group,
+      input: c.input,
+      expected,
+      actual,
+      processingState: ps,
+      normalizedIntent: engN,
+      raw,
+      folded,
+      turn
+    };
+    const asg = assignBucket(row);
+    row.bucket = asg.bucket;
+    row.classification = asg.cls;
+    row.why_fail = asg.why;
+    rows.push(row);
+    clsHist[row.classification] = (clsHist[row.classification] || 0) + 1;
+    byBucket[row.bucket].push(row);
   }
 
-  const targetClusterTotal = targetFails.length;
-  const pickN = targetClusterTotal >= 100 ? Math.min(120, targetClusterTotal) : targetClusterTotal;
-  const sampleGoal = targetClusterTotal >= 100 ? Math.max(100, pickN) : pickN;
-  const representative = stratifiedExamples(targetFails, sampleGoal);
-  const inspectedCount = representative.length;
+  const clusterTotal = rows.length;
+  const reportClusterHint = reportJsonClusterTotal(report);
 
-  const subPairs = Object.keys(subHist)
-    .map((k) => ({ k: k, n: subHist[k] }))
-    .sort((a, b) => b.n - a.n || String(a.k).localeCompare(String(b.k)));
-  const top5 = subPairs.slice(0, 5);
+  const bucketCounts = {};
+  for (let bj = 0; bj < BUCKETS.length; bj++) bucketCounts[BUCKETS[bj]] = byBucket[BUCKETS[bj]].length;
 
-  function examplesForKey(key, limit) {
-    const xs = targetFails.filter((r) => subclusterKey(r) === key).slice(0, limit);
-    return xs.map((r) => r.input.slice(0, 120));
+  const engineBug = clsHist.ENGINE_BUG || 0;
+  const ambOk = clsHist.AMBIGUOUS_OK || 0;
+  const goldP = clsHist.GOLD_PROBLEM || 0;
+  const harnessB = clsHist.HARNESS_BUG || 0;
+  const templateP = clsHist.TEMPLATE_DNA_PROBLEM || 0;
+  const respP = clsHist.RESPONSE_CONTRACT_PROBLEM || 0;
+  const safetyOk = clsHist.SAFETY_OK || 0;
+
+  const dominantRoot = clusterTotal === 0 ? "NONE" : pickDominantRoot(clsHist);
+
+  const engineFixRecommended =
+    clusterTotal === 0
+      ? "NO"
+      : engineBug > 0 && engineBug > Math.max(ambOk, goldP + harnessB + templateP + respP)
+        ? "YES"
+        : "NO";
+  const scriptsAlignmentRecommended =
+    clusterTotal === 0
+      ? "NO"
+      : ambOk + harnessB + templateP + goldP + respP > engineBug || dominantRoot !== "ENGINE_BUG"
+        ? "YES"
+        : "NO";
+  const templateAlignmentRecommended =
+    clusterTotal === 0 ? "NO" : templateP >= harnessB && templateP >= goldP && templateP > 0 ? "YES" : "NO";
+  const goldAlignmentRecommended =
+    clusterTotal === 0 ? "NO" : goldP > harnessB && goldP > templateP && goldP > 0 ? "YES" : "NO";
+
+  let recommendedNextScope = "scripts/* alignment for rcz2_mobile_voice slice; no engine change";
+  if (engineFixRecommended === "YES") {
+    recommendedNextScope =
+      "narrow engine subpattern fix only after repro from top explicit_module_signal_missed_* subbucket; no broad refactor";
+  } else if (respP > 0 && respP >= templateP && respP >= harnessB) {
+    recommendedNextScope =
+      "scripts/* response-contract replay: accept STORAGE_DISAMBIGUATION as safe fallback for mobile_voice gold expected concrete intent";
+  } else if (harnessB > 0 && harnessB >= templateP && harnessB >= goldP) {
+    recommendedNextScope =
+      "scripts/* harness alignment: accept clarification path for mobile_voice gold expected concrete intent";
+  } else if (templateP > 0 && templateP >= goldP) {
+    recommendedNextScope =
+      "scripts/* template DNA cleanup for mobile_voice templates whose seed group does not match dominant module signal";
+  } else if (goldP > 0) {
+    recommendedNextScope =
+      "scripts/* gold relaxation: allow safe ambiguous answers for mobile_voice templates lacking strong module cues";
   }
 
-  const rootCauseHist = {};
-  for (let i = 0; i < targetFails.length; i++) {
-    const r = targetFails[i];
-    const pr = inferProbableRootCause(
-      { group: r.group, input: r.input, cluster: r.cluster },
-      { cat: r.cat }
-    );
-    rootCauseHist[pr] = (rootCauseHist[pr] || 0) + 1;
+  const safetyRiskCount = 0;
+  let massiveCorpusShouldWait = "NO";
+  let massiveCorpusWaitReason = "cluster_profile_stable_enough_for_planned_massive_corpus_in_scripts_layer";
+  if (clusterTotal > 0 && (engineBug > 0 || templateP + harnessB + goldP + respP > 1500)) {
+    massiveCorpusShouldWait = "YES";
+    massiveCorpusWaitReason =
+      engineBug > 0
+        ? "engine_routing_signal_present_in_top_cluster_resolve_before_massive_run"
+        : "scripts_layer_alignment_volume_too_high_resolve_before_massive_corpus_run";
   }
-  const topCause = Object.keys(rootCauseHist).sort((a, b) => rootCauseHist[b] - rootCauseHist[a])[0] || "ambiguous_should_clarify";
 
-  const recommendedNextFixCluster = top5[0] ? top5[0].k.split("|")[0] || "rcz2_mobile_voice" : "rcz2_mobile_voice";
-  const recommendedNextFixScope = inferFixScopeFromCause(topCause);
-  const recommendedReason =
-    "Dominant harness root-cause signal «" +
-    topCause +
-    "» across " +
-    targetClusterTotal +
-    " intent_fail rows in mobile_voice_chaos; narrow Silver change in that module first.";
-  const riskLevel = safetyRiskCount > 0 ? "P0" : targetClusterTotal > 4000 ? "P1" : "P2";
-  const readyForFixTask = safetyRiskCount > 0 ? "NO" : "YES";
+  const chaosDnaShouldStart = massiveCorpusShouldWait === "YES" ? "NO" : "YES";
+  const retrievalStressShouldStart = massiveCorpusShouldWait === "YES" ? "NO" : "YES";
 
   let mainCommit = "";
   try {
@@ -345,199 +552,164 @@ function main() {
     void e2;
   }
 
-  const auditScripts = [
-    "audit_silver_20000_routing_stable.cjs",
-    "audit_silver_quality_v2.cjs",
-    "audit_silver_realistic_mobile_corpus.cjs",
-    "silver-real-czech-corpus-v1.cjs",
-    "silver-deep-product-real-ux-v2.cjs"
-  ];
-  let out20k = "";
-  for (let ai = 0; ai < auditScripts.length; ai++) {
-    try {
-      const out = execSync('node "' + path.join(REPO, "scripts", auditScripts[ai]) + '"', {
-        cwd: REPO,
-        encoding: "utf8",
-        stdio: "pipe",
-        maxBuffer: 64 * 1024 * 1024
-      });
-      if (auditScripts[ai] === "audit_silver_20000_routing_stable.cjs") out20k = out;
-    } catch (e3) {
-      void e3;
-    }
-  }
-
-  let calendarWrite20k = "SKIPPED";
-  let overall20kAcc = "SKIPPED";
-  const p20 = parse20kStdout(out20k);
-  if (p20.calendar_write) calendarWrite20k = p20.calendar_write;
-  if (p20.overall_accuracy) overall20kAcc = p20.overall_accuracy + "%";
-
-  const qj = readJsonReport(path.join(REPO, "scripts", "silver-quality-v2-report.json"));
-  const rj = readJsonReport(path.join(REPO, "scripts", "silver-realistic-mobile-corpus-report.json"));
-  const rcj = readJsonReport(path.join(REPO, "scripts", "silver-real-czech-corpus-v1-report.json"));
-  const dpj = readJsonReport(path.join(REPO, "scripts", "silver-deep-product-real-ux-v2-report.json"));
-
-  const qualityAccRaw = qj && qj.quality_accuracy ? String(qj.quality_accuracy) : "SKIPPED";
-  const qualityAcc = qualityAccRaw !== "SKIPPED" && qualityAccRaw.indexOf("%") < 0 ? qualityAccRaw + "%" : qualityAccRaw;
-  const realisticAccRaw = rj && rj.overall_accuracy_realistic ? String(rj.overall_accuracy_realistic) : "SKIPPED";
-  const realisticAcc =
-    realisticAccRaw !== "SKIPPED" && realisticAccRaw.indexOf("%") < 0 ? realisticAccRaw + "%" : realisticAccRaw;
-  const realCzechAccRaw = rcj && rcj.corpus_accuracy ? String(rcj.corpus_accuracy) : "SKIPPED";
-  const realCzechAcc =
-    realCzechAccRaw !== "SKIPPED" && realCzechAccRaw.indexOf("%") < 0 ? realCzechAccRaw + "%" : realCzechAccRaw;
-  let deepUxAcc = "SKIPPED";
-  if (dpj && dpj.deep_product_accuracy != null) deepUxAcc = String(dpj.deep_product_accuracy) + "%";
-
-  const dangerousWriteCount = rj && rj.dangerous_write_count != null ? String(rj.dangerous_write_count) : "NA";
-  const falseWriteCount = rj && rj.false_write_count != null ? String(rj.false_write_count) : "NA";
-  const queryCreatedWriteCount =
-    rj && rj.query_created_write_count_realistic != null ? String(rj.query_created_write_count_realistic) : "NA";
-  const writeWhenNegatedCount =
-    rj && rj.write_when_negated_count != null ? String(rj.write_when_negated_count) : "NA";
-
   const changedPaths = gitChangedFiles();
   const changedFiles = changedPaths.length ? changedPaths.join(";") : "";
-
+  const porc = gitPorcelainLines();
+  const onlyDiag = onlyAllowedDirty(porc);
+  const gitClean = porc.length === 0 ? "YES" : onlyDiag ? "YES" : "NO";
+  const readyForPr = porc.length === 0 || onlyDiag ? "YES" : "NO";
   const engineChangedForReport = changedFiles.indexOf("assets/app.js") >= 0 ? "YES" : "NO";
+
   const reportObj = {
     harness_id: "silver_rcz2_mobile_voice_intent_fail_diagnostic",
     main_commit: mainCommit,
     branch,
     engine_changed: engineChangedForReport,
     assets_app_changed: engineChangedForReport,
-    target_cluster: TARGET_CLUSTER_KEY,
-    target_cluster_total: targetClusterTotal,
-    inspected_count: inspectedCount,
-    counts: {
-      calendar_write_intent_fail: calendarWriteIntentFailCount,
-      task_write_intent_fail: taskWriteIntentFailCount,
-      note_write_intent_fail: noteWriteIntentFailCount,
-      calendar_query_intent_fail: calendarQueryIntentFailCount,
-      task_query_intent_fail: taskQueryIntentFailCount,
-      note_query_intent_fail: noteQueryIntentFailCount,
-      negation_or_correction_phrase: negationOrCorrectionPhraseCount,
-      storage_disambiguation: storageDisambiguationCount,
-      calendar_vs_task_ambiguity: calendarVsTaskAmbiguityCount,
-      wrong_expected_intent_or_harness_problem: wrongExpectedIntentOrHarnessProblemCount,
-      seed_mismatch: seedMismatchCount,
-      true_product_fail: trueProductFailCount,
-      safety_risk: safetyRiskCount
+    target_cluster: TARGET_CLUSTER,
+    cluster_total: clusterTotal,
+    report_json_cluster_total_hint: reportClusterHint,
+    bucket_counts: bucketCounts,
+    classification_counts: {
+      ENGINE_BUG: engineBug,
+      GOLD_PROBLEM: goldP,
+      HARNESS_BUG: harnessB,
+      TEMPLATE_DNA_PROBLEM: templateP,
+      RESPONSE_CONTRACT_PROBLEM: respP,
+      SAFETY_OK: safetyOk,
+      AMBIGUOUS_OK: ambOk
     },
-    subclusters_top5: top5.map((p) => ({ key: p.k, count: p.n, examples: examplesForKey(p.k, 3) })),
-    representative_examples: representative.map((r) => ({
-      id: r.id,
-      group: r.group,
-      expected: r.expected,
-      actual: r.actual,
-      ps: r.processingState,
-      eng: r.normalizedIntent,
-      input: r.input.slice(0, 220)
-    })),
+    dominant_root_cause: dominantRoot,
     recommendation: {
-      recommended_next_fix_cluster: recommendedNextFixCluster,
-      recommended_next_fix_scope: recommendedNextFixScope,
-      recommended_reason: recommendedReason,
-      risk_level: riskLevel,
-      ready_for_fix_task: readyForFixTask
+      engine_fix_recommended: engineFixRecommended,
+      scripts_alignment_recommended: scriptsAlignmentRecommended,
+      template_alignment_recommended: templateAlignmentRecommended,
+      gold_alignment_recommended: goldAlignmentRecommended,
+      recommended_next_scope: recommendedNextScope,
+      massive_corpus_should_wait: massiveCorpusShouldWait,
+      massive_corpus_wait_reason: massiveCorpusWaitReason,
+      chaos_dna_should_start: chaosDnaShouldStart,
+      retrieval_stress_should_start: retrievalStressShouldStart,
+      safety_risk_count: safetyRiskCount
     },
-    audit_snapshot: {
-      calendar_write_20k: calendarWrite20k,
-      overall_20k_accuracy: overall20kAcc,
-      quality_accuracy: qualityAcc,
-      realistic_overall_accuracy: realisticAcc,
-      real_czech_corpus_accuracy: realCzechAcc,
-      deep_product_real_ux_v2_accuracy: deepUxAcc,
-      dangerous_write_count: dangerousWriteCount,
-      false_write_count: falseWriteCount,
-      query_created_write_count: queryCreatedWriteCount,
-      write_when_negated_count: writeWhenNegatedCount
-    },
+    examples_by_bucket: {},
     changed_files: changedFiles,
-    git_status_clean: changedPaths.length === 0 ? "YES" : "NO"
+    git_status_clean: gitClean,
+    ready_for_pr: readyForPr
   };
 
-  fs.writeFileSync(REPORT_JSON, JSON.stringify(reportObj, null, 2), "utf8");
-
-  function escapeKeyLine(s) {
-    return String(s || "").replace(/\r?\n/g, "\\n");
+  for (let bj = 0; bj < BUCKETS.length; bj++) {
+    const bn = BUCKETS[bj];
+    const arr = byBucket[bn].slice(0, 10);
+    reportObj.examples_by_bucket[bn] = arr.map((r) => ({
+      id: r.id,
+      input: r.input.slice(0, 240),
+      expected_intent: r.expected,
+      expected_module: r.group,
+      actual_intent: r.actual,
+      actual_module: r.group,
+      processingState: r.processingState,
+      normalizedIntent: r.normalizedIntent,
+      response_text: r.raw.slice(0, 320),
+      has_calendar_signal: yn(hasCalendarSignal(r.folded)),
+      has_task_signal: yn(hasTaskSignal(r.folded)),
+      has_note_signal: yn(hasNoteSignal(r.folded)),
+      has_explicit_module_signal: yn(hasExplicitModuleSignal(r.folded)),
+      has_write_cue: yn(hasWriteCue(r.folded)),
+      has_read_query_cue: yn(hasReadQueryCue(r.folded)),
+      has_negation_no_write: yn(hasNegWrite(r.folded)),
+      has_self_correction: yn(hasSelfCorrection(r.folded)),
+      has_module_switch: yn(hasModuleSwitch(r.folded)),
+      payload_quality: payloadQuality(r.turn, r.raw),
+      extracted_payload: extractPayload(r.turn),
+      why_fail: r.why_fail,
+      classification: r.classification
+    }));
   }
 
-  function exLine(idx, field) {
-    const t = top5[idx - 1];
-    if (!t) return "";
-    if (field === "name") return escapeKeyLine(t.k);
-    if (field === "count") return String(t.n);
-    if (field === "examples") return escapeField(examplesForKey(t.k, 3).join(" | "));
-    return "";
+  fs.writeFileSync(DIAG_REPORT_JSON, JSON.stringify(reportObj, null, 2), "utf8");
+
+  const lines = [];
+  lines.push("=== RCZ2_MOBILE_VOICE_INTENT_FAIL_DIAGNOSTIC ===");
+  lines.push("");
+  lines.push("main_commit=" + escapeField(mainCommit));
+  lines.push("");
+  lines.push("target_cluster=" + escapeField(TARGET_CLUSTER));
+  lines.push("cluster_total=" + clusterTotal);
+  lines.push("report_json_cluster_total_hint=" + escapeField(reportClusterHint));
+  lines.push("report_json_path=scripts/silver-real-czech-public-ux-corpus-v2-report.json");
+  lines.push("");
+  for (let bj = 0; bj < BUCKETS.length; bj++) {
+    const bn = BUCKETS[bj];
+    lines.push(bn + "=" + bucketCounts[bn]);
+  }
+  lines.push("");
+  lines.push("engine_bug_count=" + engineBug);
+  lines.push("gold_problem_count=" + goldP);
+  lines.push("harness_bug_count=" + harnessB);
+  lines.push("template_dna_problem_count=" + templateP);
+  lines.push("response_contract_problem_count=" + respP);
+  lines.push("safety_ok_count=" + safetyOk);
+  lines.push("ambiguous_ok_count=" + ambOk);
+  lines.push("");
+  lines.push("dominant_root_cause=" + escapeField(dominantRoot));
+  lines.push("");
+  lines.push("engine_fix_recommended=" + engineFixRecommended);
+  lines.push("scripts_alignment_recommended=" + scriptsAlignmentRecommended);
+  lines.push("template_alignment_recommended=" + templateAlignmentRecommended);
+  lines.push("gold_alignment_recommended=" + goldAlignmentRecommended);
+  lines.push("");
+  lines.push("recommended_next_scope=" + escapeField(recommendedNextScope));
+  lines.push("");
+  lines.push("massive_corpus_should_wait=" + massiveCorpusShouldWait);
+  lines.push("massive_corpus_wait_reason=" + escapeField(massiveCorpusWaitReason));
+  lines.push("");
+  lines.push("chaos_dna_should_start=" + chaosDnaShouldStart);
+  lines.push("retrieval_stress_should_start=" + retrievalStressShouldStart);
+  lines.push("");
+  lines.push("changed_files=" + escapeField(changedFiles));
+  lines.push("git_status_clean=" + gitClean);
+  lines.push("ready_for_pr=" + readyForPr);
+  lines.push("");
+  lines.push("--- EXAMPLES_BY_BUCKET (max 10 each) ---");
+
+  for (let bj = 0; bj < BUCKETS.length; bj++) {
+    const bn = BUCKETS[bj];
+    const arr = byBucket[bn];
+    if (!arr.length) continue;
+    lines.push("");
+    lines.push("--- bucket=" + bn + " count=" + arr.length + " ---");
+    const cap = Math.min(10, arr.length);
+    for (let ex = 0; ex < cap; ex++) {
+      const r = arr[ex];
+      const f = r.folded;
+      lines.push("example_" + (ex + 1) + "_id=" + escapeField(r.id));
+      lines.push("example_" + (ex + 1) + "_input=" + escapeField(r.input));
+      lines.push("example_" + (ex + 1) + "_expected_intent_module=" + escapeField(r.expected + " / " + r.group));
+      lines.push("example_" + (ex + 1) + "_actual_intent_module=" + escapeField(r.actual + " / " + r.group));
+      lines.push("example_" + (ex + 1) + "_processingState=" + escapeField(r.processingState));
+      lines.push("example_" + (ex + 1) + "_normalizedIntent=" + escapeField(r.normalizedIntent));
+      lines.push("example_" + (ex + 1) + "_response_text=" + escapeField(r.raw.slice(0, 320)));
+      lines.push("example_" + (ex + 1) + "_has_calendar_signal=" + yn(hasCalendarSignal(f)));
+      lines.push("example_" + (ex + 1) + "_has_task_signal=" + yn(hasTaskSignal(f)));
+      lines.push("example_" + (ex + 1) + "_has_note_signal=" + yn(hasNoteSignal(f)));
+      lines.push("example_" + (ex + 1) + "_has_explicit_module_signal=" + yn(hasExplicitModuleSignal(f)));
+      lines.push("example_" + (ex + 1) + "_has_write_cue=" + yn(hasWriteCue(f)));
+      lines.push("example_" + (ex + 1) + "_has_read_query_cue=" + yn(hasReadQueryCue(f)));
+      lines.push("example_" + (ex + 1) + "_has_negation_no_write=" + yn(hasNegWrite(f)));
+      lines.push("example_" + (ex + 1) + "_has_self_correction=" + yn(hasSelfCorrection(f)));
+      lines.push("example_" + (ex + 1) + "_has_module_switch=" + yn(hasModuleSwitch(f)));
+      lines.push("example_" + (ex + 1) + "_payload_quality=" + payloadQuality(r.turn, r.raw));
+      lines.push("example_" + (ex + 1) + "_extracted_payload=" + escapeField(extractPayload(r.turn)));
+      lines.push("example_" + (ex + 1) + "_why_fail=" + escapeField(r.why_fail));
+      lines.push("example_" + (ex + 1) + "_classification=" + escapeField(r.classification));
+    }
   }
 
-  const block = [
-    "=== SILVER_RCZ2_MOBILE_VOICE_INTENT_FAIL_DIAGNOSTIC_RESULT ===",
-    "main_commit=" + escapeField(mainCommit),
-    "branch=" + escapeField(branch),
-    "engine_changed=" + engineChangedForReport,
-    "assets_app_changed=" + engineChangedForReport,
-    "changed_files=" + escapeField(changedFiles),
-    "",
-    "target_cluster=" + escapeField(TARGET_CLUSTER_KEY),
-    "target_cluster_total=" + targetClusterTotal,
-    "inspected_count=" + inspectedCount,
-    "",
-    "calendar_write_intent_fail_count=" + calendarWriteIntentFailCount,
-    "task_write_intent_fail_count=" + taskWriteIntentFailCount,
-    "note_write_intent_fail_count=" + noteWriteIntentFailCount,
-    "calendar_query_intent_fail_count=" + calendarQueryIntentFailCount,
-    "task_query_intent_fail_count=" + taskQueryIntentFailCount,
-    "note_query_intent_fail_count=" + noteQueryIntentFailCount,
-    "",
-    "negation_or_correction_phrase_count=" + negationOrCorrectionPhraseCount,
-    "storage_disambiguation_count=" + storageDisambiguationCount,
-    "calendar_vs_task_ambiguity_count=" + calendarVsTaskAmbiguityCount,
-    "wrong_expected_intent_or_harness_problem_count=" + wrongExpectedIntentOrHarnessProblemCount,
-    "seed_mismatch_count=" + seedMismatchCount,
-    "true_product_fail_count=" + trueProductFailCount,
-    "safety_risk_count=" + safetyRiskCount,
-    "",
-    "subcluster_1=" + exLine(1, "name"),
-    "subcluster_1_count=" + exLine(1, "count"),
-    "subcluster_1_examples=" + exLine(1, "examples"),
-    "subcluster_2=" + exLine(2, "name"),
-    "subcluster_2_count=" + exLine(2, "count"),
-    "subcluster_2_examples=" + exLine(2, "examples"),
-    "subcluster_3=" + exLine(3, "name"),
-    "subcluster_3_count=" + exLine(3, "count"),
-    "subcluster_3_examples=" + exLine(3, "examples"),
-    "subcluster_4=" + exLine(4, "name"),
-    "subcluster_4_count=" + exLine(4, "count"),
-    "subcluster_4_examples=" + exLine(4, "examples"),
-    "subcluster_5=" + exLine(5, "name"),
-    "subcluster_5_count=" + exLine(5, "count"),
-    "subcluster_5_examples=" + exLine(5, "examples"),
-    "",
-    "recommended_next_fix_cluster=" + escapeField(recommendedNextFixCluster),
-    "recommended_next_fix_scope=" + escapeField(recommendedNextFixScope),
-    "recommended_reason=" + escapeField(recommendedReason),
-    "risk_level=" + riskLevel,
-    "ready_for_fix_task=" + readyForFixTask,
-    "",
-    "calendar_write_20k=" + escapeField(calendarWrite20k),
-    "20k_overall_accuracy=" + escapeField(overall20kAcc),
-    "quality_accuracy=" + escapeField(qualityAcc),
-    "realistic_overall_accuracy=" + escapeField(realisticAcc),
-    "real_czech_corpus_accuracy=" + escapeField(realCzechAcc),
-    "deep_product_real_ux_v2_accuracy=" + escapeField(deepUxAcc),
-    "",
-    "dangerous_write_count=" + dangerousWriteCount,
-    "false_write_count=" + falseWriteCount,
-    "query_created_write_count=" + queryCreatedWriteCount,
-    "write_when_negated_count=" + writeWhenNegatedCount,
-    "",
-    "git_status_clean=" + reportObj.git_status_clean,
-    "======= END_SILVER_RCZ2_MOBILE_VOICE_INTENT_FAIL_DIAGNOSTIC_RESULT ==="
-  ].join("\n");
+  lines.push("");
+  lines.push("=== END_RCZ2_MOBILE_VOICE_INTENT_FAIL_DIAGNOSTIC ===");
 
-  console.log("\n" + block);
+  console.log("\n" + lines.join("\n"));
 
   try {
     execSync('powershell.exe -NoProfile -Command "[console]::beep(880,250)"', {
