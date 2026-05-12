@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-12T08:08:58.331523Z",
+  "ingestedAt": "2026-05-12T08:50:33.463776Z",
   "items": [
     {
       "section": "sport",
@@ -32,7 +32,31 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Pardubice opouští další dvě jména. Za vytížením míří k extraligové konkurenci",
+      "title": "Zákrok sezony, světový výkon! Experti chválí Kinského",
+      "url": "https://www.sport.cz/clanek/fotbal-premier-league-zakrok-sezony-svetovy-vykon-experti-chvali-kinskeho-5452942",
+      "dt": "2026-05-12T08:35:05Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "chválí",
+        "experti",
+        "kinského",
+        "sezony",
+        "světový",
+        "výkon",
+        "zákrok"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pardubice opouští další dvě jména. Za větším vytížením míří k extraligové konkurenci",
       "url": "https://www.sport.cz/clanek/hokej-extraliga-hokejovy-brankar-vomacka-se-po-deseti-letech-vraci-do-hradce-kralove-5452938",
       "dt": "2026-05-12T07:46:55Z",
       "media_raw": "Sport.cz",
@@ -46,7 +70,8 @@
         "míří",
         "opouští",
         "pardubice",
-        "vytížením"
+        "vytížením",
+        "větším"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -729,28 +754,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Švédové budou na MS spoléhat na deset hráčů z NHL",
-      "url": "https://www.sport.cz/clanek/hokej-ms-svedove-budou-na-ms-spolehat-na-deset-hracu-z-nhl-5452799",
-      "dt": "2026-05-11T16:20:04Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "deset",
-        "hráčů",
-        "nhl",
-        "spoléhat",
-        "švédové"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -761,7 +764,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45998,
+      "bytes": 46217,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -798,7 +801,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T07:48:08Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T08:35:05Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -819,7 +822,11 @@
             "publishedAt": "2026-05-12T07:48:08Z"
           },
           {
-            "title": "Pardubice opouští další dvě jména. Za vytížením míří k extraligové konkurenci",
+            "title": "Zákrok sezony, světový výkon! Experti chválí Kinského",
+            "publishedAt": "2026-05-12T08:35:05Z"
+          },
+          {
+            "title": "Pardubice opouští další dvě jména. Za větším vytížením míří k extraligové konkurenci",
             "publishedAt": "2026-05-12T07:46:55Z"
           },
           {
@@ -841,10 +848,6 @@
           {
             "title": "PWHL: Semifinálový zápas byl odložen, podezření na hantavirus se nepotvrdilo",
             "publishedAt": "2026-05-12T05:49:20Z"
-          },
-          {
-            "title": "Ochutnávka: Rande je u nás výjimečná záležitost, říkají manželé Sasínkovi",
-            "publishedAt": "2026-05-11T07:20:10Z"
           }
         ]
       }

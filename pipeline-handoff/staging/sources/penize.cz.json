@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-12T08:08:58.331523Z",
+  "ingestedAt": "2026-05-12T08:50:33.463776Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Žlutý kvítek proti rakovině si poprvé můžete koupit i kartou. Ale jen v Praze",
+      "url": "https://www.penize.cz/zdravotnictvi/489551-zluty-kvitek-proti-rakovine-si-poprve-muzete-koupit-i-kartou-ale-jen-v-praze",
+      "dt": "2026-05-12T10:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "ale",
+        "jen",
+        "kartou",
+        "koupit",
+        "kvítek",
+        "můžete",
+        "poprvé",
+        "praze",
+        "proti",
+        "rakovině",
+        "žlutý"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -488,32 +516,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Hypotéky zdražily, potvrzují nová čísla z bank. Rozdíly mezi fixacemi rostou",
-      "url": "https://www.penize.cz/hypoteky/485184-hypoteky-zdrazily-potvrzuji-nova-cisla-z-bank-rozdily-mezi-fixacemi-rostou",
-      "dt": "2026-05-07T05:05:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "bank",
-        "fixacemi",
-        "hypotéky",
-        "nová",
-        "potvrzují",
-        "rostou",
-        "rozdíly",
-        "zdražily",
-        "čísla"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -524,7 +526,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18772,
+      "bytes": 18798,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -561,10 +563,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-12T05:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T10:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 18,
+          "zdravi": 1,
+          "finance": 17,
           "zpravy": 2
         },
         "drop_counts": {
@@ -577,6 +580,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Žlutý kvítek proti rakovině si poprvé můžete koupit i kartou. Ale jen v Praze",
+            "publishedAt": "2026-05-12T10:00:00Z"
+          },
           {
             "title": "Banky zvyšují úroky na termínovaných vkladech. Kde teď dostanete víc?",
             "publishedAt": "2026-05-12T05:05:00Z"
@@ -604,10 +611,6 @@
           {
             "title": "Kupujete si cestovní pojištění? Deset případů, kdy vám nepomůže",
             "publishedAt": "2026-05-11T05:05:00Z"
-          },
-          {
-            "title": "Let byl zrušen, zájezd zdražil? Vaše práva, která mohou ušetřit tisíce",
-            "publishedAt": "2026-05-11T05:00:00Z"
           }
         ]
       }
