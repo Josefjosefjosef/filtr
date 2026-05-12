@@ -14,7 +14,7 @@ const REPORT_JSON = path.join(
   "silver-rhc3-note-create-ambiguous-clarify-diagnostic-report.json"
 );
 
-const EXPECTED_MAIN_COMMIT = "7701d544270ae51709ed5f7d644ea24f70397d16";
+const EXPECTED_MAIN_COMMIT = "a3948f3bb55e12f57500c43a3cad5c854e8a0732";
 const TARGET_CLUSTER = "rhc3_note_create_uloz_poznamku";
 
 const TOTAL_CASES = (() => {
@@ -30,7 +30,8 @@ const {
   finalizeModuleSwitchClarifyLaneHarnessEval,
   finalizeNegationNoWriteHarnessEval,
   finalizeNoteQueryKdeHarnessEval,
-  finalizeNoteCreateDoPoznamkStorageHarnessEval
+  finalizeNoteCreateDoPoznamkStorageHarnessEval,
+  finalizeNoteCreateDoPoznamkAmbiguousClarifyLaneHarnessEval
 } = rhc3;
 const harness = require("./audit_silver_realistic_mobile_corpus.cjs");
 const parentDiag = require("./silver-rhc3-note-create-uloz-poznamku-diagnostic.cjs");
@@ -343,7 +344,9 @@ function gitAllowListClean() {
     const allow = [
       "scripts/silver-rhc3-note-create-ambiguous-clarify-diagnostic.cjs",
       "scripts/silver-rhc3-note-create-uloz-poznamku-diagnostic.cjs",
-      "scripts/silver-real-human-chaos-v3.cjs"
+      "scripts/silver-rhc3-note-create-response-contract-remaining-diagnostic.cjs",
+      "scripts/silver-real-human-chaos-v3.cjs",
+      "scripts/silver-real-human-chaos-v3-report.json"
     ];
     const bad = tracked.filter((l) => {
       const pathPart = (l.length >= 4 ? l.slice(3) : l).trim().replace(/\\/g, "/");
@@ -476,6 +479,7 @@ function main() {
       ev = finalizeNegationNoWriteHarnessEval(c, turn, ev);
       ev = finalizeNoteQueryKdeHarnessEval(c, turn, ev);
       ev = finalizeNoteCreateDoPoznamkStorageHarnessEval(c, turn, ev);
+      ev = finalizeNoteCreateDoPoznamkAmbiguousClarifyLaneHarnessEval(c, turn, ev);
     } catch (e) {
       turn = { normalizedIntent: "", processingState: "", draft: {} };
       ev = { pass: false, cat: "runtime_fail", auditIntent: "unknown", raw: String(e && e.message) };
@@ -501,12 +505,16 @@ function main() {
 
   let dominant_root_cause = SUB_BUCKETS[0];
   let best = -1;
-  for (let bi = 0; bi < SUB_BUCKETS.length; bi++) {
-    const k = SUB_BUCKETS[bi];
-    const v = subCounts[k] || 0;
-    if (v > best) {
-      best = v;
-      dominant_root_cause = k;
+  if (ambiguous_should_clarify_total === 0) {
+    dominant_root_cause = "(none)";
+  } else {
+    for (let bi = 0; bi < SUB_BUCKETS.length; bi++) {
+      const k = SUB_BUCKETS[bi];
+      const v = subCounts[k] || 0;
+      if (v > best) {
+        best = v;
+        dominant_root_cause = k;
+      }
     }
   }
 
@@ -518,21 +526,19 @@ function main() {
   const ambiguous_ok_count = classTotals.AMBIGUOUS_OK;
 
   const scriptStopShipDominant =
-    dominant_root_cause === "valid_ambiguity_should_clarify" ||
-    dominant_root_cause === "gold_too_strict_should_allow_clarify" ||
-    dominant_root_cause === "harness_finalize_should_pass_clarify" ||
-    dominant_root_cause === "template_dna_ambiguous_noise" ||
-    dominant_root_cause === "response_contract_clarify_ok" ||
-    dominant_root_cause === "conflicting_module_target_task_calendar" ||
-    dominant_root_cause === "safety_negation_or_no_write_ok" ||
-    dominant_root_cause === "missing_note_content_or_empty_payload";
+    ambiguous_should_clarify_total > 0 &&
+    (dominant_root_cause === "valid_ambiguity_should_clarify" ||
+      dominant_root_cause === "gold_too_strict_should_allow_clarify" ||
+      dominant_root_cause === "harness_finalize_should_pass_clarify" ||
+      dominant_root_cause === "template_dna_ambiguous_noise" ||
+      dominant_root_cause === "response_contract_clarify_ok" ||
+      dominant_root_cause === "conflicting_module_target_task_calendar" ||
+      dominant_root_cause === "safety_negation_or_no_write_ok" ||
+      dominant_root_cause === "missing_note_content_or_empty_payload");
 
   let engine_fix_recommended = "NO";
   if (!scriptStopShipDominant && ambiguous_should_clarify_total > 0 && engine_bug_count > 0) {
-    if (
-      dominant_root_cause === "engine_should_create_despite_clarify" ||
-      dominant_root_cause === "missing_note_content_or_empty_payload"
-    ) {
+    if (dominant_root_cause === "engine_should_create_despite_clarify") {
       engine_fix_recommended = "YES";
     }
   }
@@ -555,13 +561,16 @@ function main() {
     dominant_root_cause === "gold_too_strict_should_allow_clarify" ||
     dominant_root_cause === "harness_finalize_should_pass_clarify" ||
     dominant_root_cause === "template_dna_ambiguous_noise" ||
-    dominant_root_cause === "response_contract_clarify_ok"
+    dominant_root_cause === "response_contract_clarify_ok" ||
+    dominant_root_cause === "missing_note_content_or_empty_payload"
   ) {
     engine_fix_recommended = "NO";
   }
 
   let recommended_next_scope = "";
-  if (dominant_root_cause === "harness_finalize_should_pass_clarify") {
+  if (dominant_root_cause === "(none)") {
+    recommended_next_scope = "no ambiguous_should_clarify residual in cluster " + TARGET_CLUSTER;
+  } else if (dominant_root_cause === "harness_finalize_should_pass_clarify") {
     recommended_next_scope =
       "scripts+harness: add note_create clarify-lane finalize (intent_fail+do_poznam_ze+not_blocked) mirroring finalizeNoteQueryKdeHarnessEval";
   } else if (dominant_root_cause === "gold_too_strict_should_allow_clarify") {

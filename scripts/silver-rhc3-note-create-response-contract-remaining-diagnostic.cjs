@@ -30,7 +30,8 @@ const {
   finalizeModuleSwitchClarifyLaneHarnessEval,
   finalizeNegationNoWriteHarnessEval,
   finalizeNoteQueryKdeHarnessEval,
-  finalizeNoteCreateDoPoznamkStorageHarnessEval
+  finalizeNoteCreateDoPoznamkStorageHarnessEval,
+  finalizeNoteCreateDoPoznamkAmbiguousClarifyLaneHarnessEval
 } = rhc3;
 const harness = require("./audit_silver_realistic_mobile_corpus.cjs");
 const parentDiag = require("./silver-rhc3-note-create-uloz-poznamku-diagnostic.cjs");
@@ -285,6 +286,7 @@ function gitAllowListClean() {
     const allow = [
       "scripts/silver-rhc3-note-create-response-contract-remaining-diagnostic.cjs",
       "scripts/silver-rhc3-note-create-uloz-poznamku-diagnostic.cjs",
+      "scripts/silver-rhc3-note-create-ambiguous-clarify-diagnostic.cjs",
       "scripts/silver-real-human-chaos-v3.cjs"
     ];
     const bad = tracked.filter((l) => {
@@ -432,6 +434,7 @@ function main() {
       ev = finalizeNegationNoWriteHarnessEval(c, turn, ev);
       ev = finalizeNoteQueryKdeHarnessEval(c, turn, ev);
       ev = finalizeNoteCreateDoPoznamkStorageHarnessEval(c, turn, ev);
+      ev = finalizeNoteCreateDoPoznamkAmbiguousClarifyLaneHarnessEval(c, turn, ev);
     } catch (e) {
       turn = { normalizedIntent: "", processingState: "", draft: {} };
       ev = { pass: false, cat: "runtime_fail", auditIntent: "unknown", raw: String(e && e.message) };
