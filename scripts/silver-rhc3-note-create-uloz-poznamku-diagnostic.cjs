@@ -11,7 +11,7 @@ const { execSync } = require("child_process");
 const REPO = path.resolve(__dirname, "..");
 const REPORT_JSON = path.join(os.tmpdir(), "silver-rhc3-note-create-uloz-poznamku-diagnostic-report.json");
 
-const EXPECTED_MAIN_COMMIT = "25956906b9a95e86c2ef5f768d127c573db137b1";
+const EXPECTED_MAIN_COMMIT = "15531348d7ad86ce917f6901128c645d07813cf3";
 const TARGET_CLUSTER = "rhc3_note_create_uloz_poznamku";
 const RANDOM_SAMPLE_SEED = 0x4e6f7465;
 const STRATA = 8;
@@ -28,7 +28,8 @@ const {
   finalizeModuleSwitchHarnessEval,
   finalizeModuleSwitchClarifyLaneHarnessEval,
   finalizeNegationNoWriteHarnessEval,
-  finalizeNoteQueryKdeHarnessEval
+  finalizeNoteQueryKdeHarnessEval,
+  finalizeNoteCreateDoPoznamkStorageHarnessEval
 } = rhc3;
 const harness = require("./audit_silver_realistic_mobile_corpus.cjs");
 
@@ -64,13 +65,13 @@ function safetyNoWriteFolded(fold) {
   return (
     /\bnic\s+neuklad\w*\b/i.test(f) ||
     /\bnevytvarej\b/i.test(f) ||
-    /\bnevytvářej\b/i.test(f) ||
+    /\bnevytvĂˇĹ™ej\b/i.test(f) ||
     /\bpouze\s+cti\b/i.test(f) ||
-    /\bpouze\s+čti\b/i.test(f) ||
+    /\bpouze\s+ÄŤti\b/i.test(f) ||
     /\bjen\s+se\s+podivej\b/i.test(f) ||
-    /\bjen\s+se\s+podívej\b/i.test(f) ||
+    /\bjen\s+se\s+podĂ­vej\b/i.test(f) ||
     /\bneukladat\b/i.test(f) ||
-    /\bneukládat\b/i.test(f)
+    /\bneuklĂˇdat\b/i.test(f)
   );
 }
 
@@ -104,7 +105,11 @@ function isChaoticMutationSurface(c) {
 
 function hasNoteCreateTemplateSignal(fold) {
   const f = String(fold || "");
-  return /\buloz\w*\s+mi\s+do\s+poznam|\buloz\w*\s+do\s+poznam|do\s+poznam\w*\s+(ze|že)\b/i.test(f);
+  return (
+    /\buloz\w*\s+mi\s+do\s+poznam/i.test(f) ||
+    /\buloz\w*\s+do\s+poznam/i.test(f) ||
+    /\bdo\s+(?:\S+\s+){0,8}poznam\w*\s+ze\b/i.test(f)
+  );
 }
 
 function noiseOnlyPopcount(mask) {
@@ -132,7 +137,7 @@ function isQueryLikeRouting(eng, auditIntent) {
 
 function extractPayloadAfterZe(input) {
   const s = String(input || "");
-  const m = s.match(/do\s+pozn[aá]mk[aá]ch\s+(?:ze|že)\s+(.+?)(?:,\s*ne\s+úkol|,?\s*ne\s+ukol|$)/i);
+  const m = s.match(/do\s+pozn[aĂˇ]mk[aĂˇ]ch\s+(?:ze|Ĺľe)\s+(.+?)(?:,\s*ne\s+Ăşkol|,?\s*ne\s+ukol|$)/i);
   if (m) return m[1].trim().slice(0, 200);
   return "";
 }
@@ -238,7 +243,7 @@ function classifyNoteCreateUloz(c, turn, ev, gold) {
   }
 
   const pristine = noiseOnlyPopcount(c.mutation_mask) === 0 && !isChaoticMutationSurface(c);
-  const neUkolTail = /\bne\s+ukol|\bne\s+úkol/i.test(fold);
+  const neUkolTail = /\bne\s+ukol|\bne\s+Ăşkol/i.test(fold);
   if (pristine && neUkolTail && (eng === "unknown" || eng === "clarification") && cat === "intent_fail") {
     return {
       bucket: "gold_label_problem",
@@ -326,7 +331,11 @@ function gitAllowListClean() {
     const o = execSync("git status --porcelain", { cwd: REPO, encoding: "utf8" });
     const lines = o.split(/\r?\n/).filter(Boolean);
     const tracked = lines.filter((l) => !l.startsWith("??"));
-    const allow = ["scripts/silver-rhc3-note-create-uloz-poznamku-diagnostic.cjs"];
+    const allow = [
+      "scripts/silver-rhc3-note-create-uloz-poznamku-diagnostic.cjs",
+      "scripts/silver-rhc3-note-create-response-contract-remaining-diagnostic.cjs",
+      "scripts/silver-real-human-chaos-v3.cjs"
+    ];
     const bad = tracked.filter((l) => {
       const pathPart = (l.length >= 4 ? l.slice(3) : l).trim().replace(/\\/g, "/");
       for (let ai = 0; ai < allow.length; ai++) {
@@ -482,6 +491,7 @@ function main() {
       ev = finalizeModuleSwitchClarifyLaneHarnessEval(c, turn, ev);
       ev = finalizeNegationNoWriteHarnessEval(c, turn, ev);
       ev = finalizeNoteQueryKdeHarnessEval(c, turn, ev);
+      ev = finalizeNoteCreateDoPoznamkStorageHarnessEval(c, turn, ev);
     } catch (e) {
       fail_total++;
       turn = { normalizedIntent: "", processingState: "", draft: {} };
@@ -594,9 +604,9 @@ function main() {
     recommended_next_scope =
       "scripts-only: add harness clarify lane for noisy note_create (mirror note_query_kde pattern)";
   } else if (dominant_root_cause === "note_create_wrong_module_calendar") {
-    recommended_next_scope = "narrow engine: calendar.create/read leakage on explicit do poznamkách paths";
+    recommended_next_scope = "narrow engine: calendar.create/read leakage on explicit do poznamkĂˇch paths";
   } else if (dominant_root_cause === "note_create_wrong_module_task") {
-    recommended_next_scope = "narrow engine: tasks.create/read vs note.create on ne úkol disambiguation";
+    recommended_next_scope = "narrow engine: tasks.create/read vs note.create on ne Ăşkol disambiguation";
   } else if (dominant_root_cause === "note_create_routed_as_query_read") {
     recommended_next_scope = "narrow engine: notes.read / global.search vs notes.create for uloz imperative";
   } else if (dominant_root_cause === "note_create_response_contract_fail") {
