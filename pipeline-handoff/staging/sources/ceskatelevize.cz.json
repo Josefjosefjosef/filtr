@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-12T10:15:38.273017Z",
+  "ingestedAt": "2026-05-12T10:54:09.987558Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Disciplinární komise rozhoduje o trestu pro Slavii za nedohrané derby",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/disciplinarni-komise-rozhoduje-o-trestu-pro-slavii-za-nedohrane-derby-373331",
+      "dt": "2026-05-12T10:39:50Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "derby",
+        "disciplinární",
+        "komise",
+        "nedohrané",
+        "rozhoduje",
+        "slavii",
+        "trestu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -732,26 +756,25 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Estonsko žádá po incidentech v Pobaltí lepší kontrolu ukrajinských dronů",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/estonsko-zada-po-incidentech-v-pobalti-lepsi-kontrolu-ukrajinskych-dronu-373302",
-      "dt": "2026-05-11T15:03:25Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Český tým v čele s kapitánem Červenkou odletěli do Bernu",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/cesky-tym-v-cele-s-kapitanem-cervenkou-odleteli-do-bernu-156734",
+      "dt": "2026-05-12T10:50:30Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "dronů",
-        "estonsko",
-        "incidentech",
-        "kontrolu",
-        "lepší",
-        "pobaltí",
-        "ukrajinských",
-        "žádá"
+        "bernu",
+        "kapitánem",
+        "odletěli",
+        "tým",
+        "čele",
+        "červenkou",
+        "český"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1474,31 +1497,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Finové v derby deklasovali Švédy a ovládli poslední turnaj EHT",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/finove-v-derby-deklasovali-svedy-a-ovladli-posledni-turnaj-eht-156705",
-      "dt": "2026-05-10T16:17:11Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "deklasovali",
-        "derby",
-        "eht",
-        "finové",
-        "ovládli",
-        "poslední",
-        "turnaj",
-        "švédy"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1509,7 +1507,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42822,
+      "bytes": 42951,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1569,7 +1567,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T09:32:35Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T10:39:50Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1586,6 +1584,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Disciplinární komise rozhoduje o trestu pro Slavii za nedohrané derby",
+            "publishedAt": "2026-05-12T10:39:50Z"
+          },
           {
             "title": "Policie zasahovala v Ústřední vojenské nemocnici i jinde. Zadržela jedenáct lidí",
             "publishedAt": "2026-05-12T09:32:35Z"
@@ -1613,10 +1615,6 @@
           {
             "title": "Ceny Apollo získali rappeři James Cole & Idea a skupina Ida The Young",
             "publishedAt": "2026-05-12T08:34:39Z"
-          },
-          {
-            "title": "Nezaměstnanost v dubnu mírně klesla, volných míst přibylo",
-            "publishedAt": "2026-05-12T08:15:53Z"
           }
         ]
       }
@@ -1628,7 +1626,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38060,
+      "bytes": 38054,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1665,7 +1663,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T08:54:30Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T10:50:30Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1680,6 +1678,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Český tým v čele s kapitánem Červenkou odletěli do Bernu",
+            "publishedAt": "2026-05-12T10:50:30Z"
+          },
           {
             "title": "Brankář Vomáčka se po zisku titulu vrací do Hradce, mistry opouští i útočník Herčík",
             "publishedAt": "2026-05-12T08:54:30Z"
@@ -1707,10 +1709,6 @@
           {
             "title": "Brno obrátilo sérii s Děčínem a doplnilo semifinálové složení NBL",
             "publishedAt": "2026-05-11T20:37:21Z"
-          },
-          {
-            "title": "Artis zvítězil v Opavě a sebral Slezanům poslední naději na baráž",
-            "publishedAt": "2026-05-11T14:50:00Z"
           }
         ]
       }
@@ -1722,7 +1720,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78033,
+      "bytes": 78037,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

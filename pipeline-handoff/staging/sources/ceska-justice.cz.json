@@ -1,26 +1,51 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-05-12T10:15:38.273017Z",
+  "ingestedAt": "2026-05-12T10:54:09.987558Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Změna kvůli dezinformacím: Policie bude moci zveřejnit, zda je podezřelý Čech, nebo cizinec",
+      "title": "Padl trest pro řidiče tramvaje za konflikt s Ukrajinci. Výtržnictví si odpracuje",
+      "url": "https://www.ceska-justice.cz/2026/05/trest-ridic-tramvaje-ukrajinci-vytrznictvi-odpracuje/",
+      "dt": "2026-05-12T10:16:52Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "konflikt",
+        "odpracuje",
+        "padl",
+        "tramvaje",
+        "trest",
+        "ukrajinci",
+        "výtržnictví",
+        "řidiče"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Boj proti dezinformacím: Policie bude moci zveřejnit, zda je podezřelý Čech nebo cizinec",
       "url": "https://www.ceska-justice.cz/2026/05/zmena-kvuli-dezinformacim-policie-cizinci/",
       "dt": "2026-05-12T10:10:00Z",
       "media_raw": "Česká justice",
       "media_norm": "Česká justice",
       "tokens": [
+        "boj",
         "cizinec",
         "dezinformacím",
-        "kvůli",
         "moci",
         "nebo",
         "podezřelý",
         "policie",
+        "proti",
         "zda",
-        "změna",
         "zveřejnit",
         "čech"
       ],
@@ -238,32 +263,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vynášení z policejních spisů v hospodě. Bývalý hejtman se brání v kauze Vidkun",
-      "url": "https://www.ceska-justice.cz/2026/05/vynaseni-policejnich-spisu-rozboril-vidkun/",
-      "dt": "2026-05-11T11:07:57Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "brání",
-        "bývalý",
-        "hejtman",
-        "hospodě",
-        "kauze",
-        "policejních",
-        "spisů",
-        "vidkun",
-        "vynášení"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,7 +273,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 92453,
+      "bytes": 91450,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -311,7 +310,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-12T10:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T10:16:52Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -327,7 +326,11 @@
         },
         "sample_titles": [
           {
-            "title": "Změna kvůli dezinformacím: Policie bude moci zveřejnit, zda je podezřelý Čech, nebo cizinec",
+            "title": "Padl trest pro řidiče tramvaje za konflikt s Ukrajinci. Výtržnictví si odpracuje",
+            "publishedAt": "2026-05-12T10:16:52Z"
+          },
+          {
+            "title": "Boj proti dezinformacím: Policie bude moci zveřejnit, zda je podezřelý Čech nebo cizinec",
             "publishedAt": "2026-05-12T10:10:00Z"
           },
           {
@@ -353,10 +356,6 @@
           {
             "title": "Právní dohra fotbalového derby. Vnitro zahájí správní řízení se Slavií",
             "publishedAt": "2026-05-11T14:51:10Z"
-          },
-          {
-            "title": "K volbám už v 16 letech? TOP 09 chce změny v komunální politice",
-            "publishedAt": "2026-05-11T13:04:58Z"
           }
         ]
       }

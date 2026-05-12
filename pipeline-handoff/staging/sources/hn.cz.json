@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-12T10:15:38.273017Z",
+  "ingestedAt": "2026-05-12T10:54:09.987558Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Policie zasahovala v Ústřední vojenské nemocnici. Zadržela několik lidí kvůli podezření z korupce, podvodu či maření spravedlnosti",
+      "url": "https://domaci.hn.cz/c1-67875940-policie-zasahovala-v-ustredni-vojenske-nemocnici-zadrzela-nekolik-lidi-kvuli-podezreni-z-korupce-podvodu-ci-mareni-spravedlnosti",
+      "dt": "2026-05-12T10:28:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "korupce",
+        "kvůli",
+        "lidí",
+        "maření",
+        "nemocnici",
+        "několik",
+        "podezření",
+        "podvodu",
+        "policie",
+        "spravedlnosti",
+        "vojenské",
+        "zadržela",
+        "zasahovala",
+        "ústřední"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1130,29 +1161,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Tradiční strany propadly v místních volbách v Anglii",
-      "url": "https://archiv.hn.cz/c1-67875380-tradicni-strany-propadly-v-mistnich-volbach-v-anglii",
-      "dt": "2026-05-10T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "anglii",
-        "místních",
-        "propadly",
-        "strany",
-        "tradiční",
-        "volbách"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1163,7 +1171,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184922,
+      "bytes": 184845,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1200,11 +1208,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-12T09:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T10:28:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 35,
-          "zdravi": 1,
+          "zdravi": 2,
+          "finance": 34,
           "zpravy": 4
         },
         "drop_counts": {
@@ -1217,6 +1225,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policie zasahovala v Ústřední vojenské nemocnici. Zadržela několik lidí kvůli podezření z korupce, podvodu či maření spravedlnosti",
+            "publishedAt": "2026-05-12T10:28:00Z"
+          },
           {
             "title": "Průlom? Itálie má právo nařídit Metě odškodnit média za používání jejich obsahu, rozhodl Soudní dvůr Evropské unie",
             "publishedAt": "2026-05-12T09:31:00Z"
@@ -1244,10 +1256,6 @@
           {
             "title": "Na golfu a obědě s Trumpem. Muž, který s ním má blízkou zkušenost, vysvětluje, jak může Západ přežít",
             "publishedAt": "2026-05-12T04:58:00Z"
-          },
-          {
-            "title": "Know-how a spirit běhu Vltava Run se stěhuje do Španělska. Byznys kolem štafetových běhů roste",
-            "publishedAt": "2026-05-12T04:46:00Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-12T10:15:38.273017Z",
+  "ingestedAt": "2026-05-12T10:54:09.987558Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Razie v Ústřední vojenské nemocnici. Policie zadržela 11 lidí včetně primáře",
+      "url": "https://www.e15.cz/domaci/razie-v-ustredni-vojenske-nemocnici-policie-zadrzela-11-lidi-vcetne-primare-1432739",
+      "dt": "2026-05-12T09:56:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "lidí",
+        "nemocnici",
+        "policie",
+        "primáře",
+        "razie",
+        "vojenské",
+        "včetně",
+        "zadržela",
+        "ústřední"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1061,30 +1087,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kryptotrh v Česku ochladl, objemy spadly o dvě pětiny",
-      "url": "https://www.e15.cz/kryptomeny/kryptotrh-v-cesku-ochladl-objemy-spadly-o-dve-petiny-1432630",
-      "dt": "2026-05-09T14:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "dvě",
-        "kryptotrh",
-        "objemy",
-        "ochladl",
-        "pětiny",
-        "spadly",
-        "česku"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1095,7 +1097,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 52710,
+      "bytes": 52706,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1132,10 +1134,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-12T09:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T09:56:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 36,
+          "zdravi": 1,
+          "finance": 35,
           "cestovani": 1,
           "zpravy": 3
         },
@@ -1149,6 +1152,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Razie v Ústřední vojenské nemocnici. Policie zadržela 11 lidí včetně primáře",
+            "publishedAt": "2026-05-12T09:56:00Z"
+          },
           {
             "title": "Banky vám z účtu nenápadně ukrajují peníze. Zkontrolujte si výpis, jestli neplatíte tyto zbytečné poplatky",
             "publishedAt": "2026-05-12T09:30:00Z"
@@ -1176,10 +1183,6 @@
           {
             "title": "Český TON dodává nábytek pro Starbucks v USA, řetězec převzal český design",
             "publishedAt": "2026-05-12T04:00:00Z"
-          },
-          {
-            "title": "Blíží se kolaps pravidel světové námořní dopravy. Může nás všechny přijít hodně draho",
-            "publishedAt": "2026-05-12T03:30:00Z"
           }
         ]
       }

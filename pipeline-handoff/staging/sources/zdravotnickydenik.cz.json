@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-12T10:15:38.273017Z",
+  "ingestedAt": "2026-05-12T10:54:09.987558Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Hantavirus má osmitýdenní inkubační dobu. WHO očekává další případy",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/hantavirus-inkubacni-doba-who/",
+      "dt": "2026-05-12T10:18:22Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "další",
+        "dobu",
+        "hantavirus",
+        "inkubační",
+        "osmitýdenní",
+        "očekává",
+        "případy",
+        "who"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -251,34 +276,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "SÚKL přitvrdí: Nekvalitní data od výrobců léků se prodraží, vláda schválila nové poplatky",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/sukl-data-vyrobcy-leku-vlada-poplatky/",
-      "dt": "2026-05-11T14:07:24Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "data",
-        "léků",
-        "nekvalitní",
-        "nové",
-        "poplatky",
-        "prodraží",
-        "přitvrdí",
-        "schválila",
-        "súkl",
-        "vláda",
-        "výrobců"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -289,7 +286,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 91025,
+      "bytes": 95052,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -326,7 +323,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-12T09:30:35Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T10:18:22Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -341,6 +338,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hantavirus má osmitýdenní inkubační dobu. WHO očekává další případy",
+            "publishedAt": "2026-05-12T10:18:22Z"
+          },
           {
             "title": "Razie v Ústřední vojenské nemocnici: Policie zadržela 11 lidí. Měli padělat lékařské zprávy",
             "publishedAt": "2026-05-12T09:30:35Z"
@@ -368,10 +369,6 @@
           {
             "title": "Hantavirus Andes v Česku? Ministr Vojtěch sdělil, co stát udělá",
             "publishedAt": "2026-05-11T20:00:08Z"
-          },
-          {
-            "title": "„Měl zjevně plán B.“ Lékař z Motola našel u mrtvého pacienta střelnou zbraň, nemocnice mlčí",
-            "publishedAt": "2026-05-11T15:32:47Z"
           }
         ]
       }

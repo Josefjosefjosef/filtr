@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-12T10:15:38.273017Z",
+  "ingestedAt": "2026-05-12T10:54:09.987558Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "„Dvacet prázdných škol“. Roste tlak na ruské architekty únosů dětí",
+      "url": "https://ekonomickydenik.cz/dvacet-prazdnych-skol-ruske-unosy-deti/",
+      "dt": "2026-05-12T10:32:57Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "architekty",
+        "dvacet",
+        "dětí",
+        "prázdných",
+        "roste",
+        "ruské",
+        "tlak",
+        "únosů",
+        "škol"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -747,31 +773,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Český investor postavil zatím největší výrobnu biometanu na Slovensku",
-      "url": "https://ekonomickydenik.cz/cesky-investor-postavil-nejvetsi-vyrobnu-biometanu/",
-      "dt": "2026-05-10T10:05:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "biometanu",
-        "investor",
-        "největší",
-        "postavil",
-        "slovensku",
-        "výrobnu",
-        "zatím",
-        "český"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -782,7 +783,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 69643,
+      "bytes": 69661,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -819,11 +820,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T09:45:53Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T10:32:57Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 27,
-          "zpravy": 2,
+          "zpravy": 3,
+          "finance": 26,
           "zdravi": 1
         },
         "drop_counts": {
@@ -836,6 +837,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Dvacet prázdných škol“. Roste tlak na ruské architekty únosů dětí",
+            "publishedAt": "2026-05-12T10:32:57Z"
+          },
           {
             "title": "Každý druhý řeší problém: Češi si hlasitě stěžují kvůli balíkům a mění trendy",
             "publishedAt": "2026-05-12T09:45:53Z"
@@ -863,10 +868,6 @@
           {
             "title": "Dostřelí ukrajinské kanóny dál? Kyjev odtajnil ambiciózní plán",
             "publishedAt": "2026-05-12T04:15:00Z"
-          },
-          {
-            "title": "Politické zemětřesení v Británii. Londýn se vrací do války s Bruselem",
-            "publishedAt": "2026-05-11T16:25:01Z"
           }
         ]
       }
