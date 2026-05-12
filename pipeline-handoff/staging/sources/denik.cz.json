@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-12T03:29:24.541567Z",
+  "ingestedAt": "2026-05-12T04:09:31.673888Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kde hrozí setkání s medvědem? Situaci na Slovensku ukazuje nová mapa",
+      "url": "https://www.denik.cz/staty-eu/slovensko-medved-mapa-vyskytu-medvedu.html",
+      "dt": "2026-05-12T03:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "hrozí",
+        "mapa",
+        "medvědem",
+        "nová",
+        "setkání",
+        "situaci",
+        "slovensku",
+        "ukazuje"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -621,31 +646,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Šest mrtvých nalezli v nákladním vlaku v Texasu u hranice s Mexikem",
-      "url": "https://www.denik.cz/ze_sveta/sest-mrtvych-nalezli-v-nakladnim-vlaku-v-texasu-u-hranice-s-mexikem.html",
-      "dt": "2026-05-11T08:57:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "hranice",
-        "mexikem",
-        "mrtvých",
-        "nalezli",
-        "nákladním",
-        "texasu",
-        "vlaku",
-        "šest"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -656,7 +656,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29519,
+      "bytes": 29479,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -693,7 +693,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-12T02:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T03:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -709,6 +709,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kde hrozí setkání s medvědem? Situaci na Slovensku ukazuje nová mapa",
+            "publishedAt": "2026-05-12T03:30:00Z"
+          },
           {
             "title": "VIDEO: Hudební festival Music of Mikulov 2026",
             "publishedAt": "2026-05-12T02:40:00Z"
@@ -736,10 +740,6 @@
           {
             "title": "VÝSTRAHA: Do Česka dorazily bouřky s krupobitím. Sledujte, kde hrozí nebezpečí",
             "publishedAt": "2026-05-11T14:45:00Z"
-          },
-          {
-            "title": "Muž obviněný z pokusu o atentát na Trumpa u soudu odmítl vinu",
-            "publishedAt": "2026-05-11T14:37:00Z"
           }
         ]
       }

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-12T03:29:24.541567Z",
+  "ingestedAt": "2026-05-12T04:09:31.673888Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nečas pomohl Coloradu dvěma asistencemi k vytvoření mečbolu",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-necas-pomohl-coloradu-dvema-asistencemi-k-vytvoreni-mecbolu-5452931",
+      "dt": "2026-05-12T04:00:51Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "asistencemi",
+        "coloradu",
+        "dvěma",
+        "mečbolu",
+        "nečas",
+        "pomohl",
+        "vytvoření"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -713,32 +737,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Odečet bodů Slavii za nedohrané derby nehrozí, potvrdila disciplinární komise",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-odecet-bodu-slavii-za-nedohrane-derby-nehrozi-potvrdila-disciplinarni-komise-5452642",
-      "dt": "2026-05-11T13:15:32Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bodů",
-        "derby",
-        "disciplinární",
-        "komise",
-        "nedohrané",
-        "nehrozí",
-        "odečet",
-        "potvrdila",
-        "slavii"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -749,7 +747,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43695,
+      "bytes": 43000,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -786,7 +784,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-11T21:28:48Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T04:00:51Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -801,6 +799,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nečas pomohl Coloradu dvěma asistencemi k vytvoření mečbolu",
+            "publishedAt": "2026-05-12T04:00:51Z"
+          },
           {
             "title": "Černý den pro české tenistky. Plíšková, Bartůňková i Nosková končí",
             "publishedAt": "2026-05-11T05:49:48Z"
@@ -828,10 +830,6 @@
           {
             "title": "Seppälä bude dál hrát za Spartu. Finský obránce o rok prodloužil smlouvu",
             "publishedAt": "2026-05-11T19:22:21Z"
-          },
-          {
-            "title": "Američan Cardoso z Atlética zmešká fotbalové MS",
-            "publishedAt": "2026-05-11T19:07:23Z"
           }
         ]
       }

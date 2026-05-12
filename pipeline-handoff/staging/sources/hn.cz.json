@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-12T03:29:24.541567Z",
+  "ingestedAt": "2026-05-12T04:09:31.673888Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Asfalt posílá nebezpečné látky do vzduchu, zjistili vědci. Co by mohlo pomoci a pro jaká města hlavně je to varování",
+      "url": "https://vikend.hn.cz/c1-67874540-asfalt-posila-nebezpecne-latky-do-vzduchu-zjistili-vedci-co-by-mohlo-pomoci-a-pro-jaka-mesta-hlavne-je-to-varovani",
+      "dt": "2026-05-12T04:00:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "asfalt",
+        "hlavně",
+        "jaká",
+        "látky",
+        "města",
+        "nebezpečné",
+        "pomoci",
+        "posílá",
+        "varování",
+        "vzduchu",
+        "vědci",
+        "zjistili"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1120,36 +1149,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Celý hi-fi systém v malém balení: KEF Coda W je lepší než soundbary, nepotřebuje zesilovač a poradí si i s gramofony",
-      "url": "https://tech.hn.cz/c1-67875180-cely-hi-fi-system-v-malem-baleni-kef-coda-w-je-lepsi-nez-soundbary-nepotrebuje-zesilovac-a-poradi-si-i-s-gramofony",
-      "dt": "2026-05-09T01:19:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "balení",
-        "celý",
-        "coda",
-        "gramofony",
-        "kef",
-        "lepší",
-        "malém",
-        "nepotřebuje",
-        "než",
-        "poradí",
-        "soundbary",
-        "systém",
-        "zesilovač"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1160,7 +1159,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185000,
+      "bytes": 184930,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1197,11 +1196,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-11T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T04:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 33,
-          "zpravy": 6,
+          "finance": 34,
+          "zpravy": 5,
           "sport": 1
         },
         "drop_counts": {
@@ -1214,6 +1213,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Asfalt posílá nebezpečné látky do vzduchu, zjistili vědci. Co by mohlo pomoci a pro jaká města hlavně je to varování",
+            "publishedAt": "2026-05-12T04:00:00Z"
+          },
           {
             "title": "Šéf hasičů Vlček v létě skončí, funkci obhajovat nechce",
             "publishedAt": "2026-05-11T22:00:00Z"
@@ -1241,10 +1244,6 @@
           {
             "title": "Ve starém penzijku &bdquo;na zrušení&ldquo; zůstávají statisíce Husákových dětí. Co mají stihnout ještě před důchodem?",
             "publishedAt": "2026-05-11T17:55:00Z"
-          },
-          {
-            "title": "Stát chce víc odpovědnosti pro advokáty nebo notáře za boj proti praní peněz. Komory se bouří",
-            "publishedAt": "2026-05-11T17:35:00Z"
           }
         ]
       }

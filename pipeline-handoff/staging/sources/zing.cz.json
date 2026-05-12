@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-12T03:29:24.541567Z",
+  "ingestedAt": "2026-05-12T04:09:31.673888Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Seriál Fallout odhalil známou hereckou posilu pro třetí sezónu",
+      "url": "https://zing.cz/article/serial-fallout-odhalil-znamou-hereckou-posilu-pro-treti-sezonu",
+      "dt": "2026-05-12T04:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "fallout",
+        "hereckou",
+        "odhalil",
+        "posilu",
+        "seriál",
+        "sezónu",
+        "třetí",
+        "známou"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -939,31 +964,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Vývoj BioShocku 4 je velkým zklamáním, prozradil šéf Take-Two",
-      "url": "https://zing.cz/article/vyvoj-bioshocku-4-je-velkym-zklamanim-prozradil-sef-take-two",
-      "dt": "2026-05-07T06:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "bioshocku",
-        "prozradil",
-        "take",
-        "two",
-        "velkým",
-        "vývoj",
-        "zklamáním",
-        "šéf"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -974,7 +974,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 124975,
+      "bytes": 125011,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1011,7 +1011,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-11T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T04:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1027,6 +1027,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Seriál Fallout odhalil známou hereckou posilu pro třetí sezónu",
+            "publishedAt": "2026-05-12T04:00:00Z"
+          },
           {
             "title": "Pokračování úspěšného Stellar Blade bude představeno již letos",
             "publishedAt": "2026-05-11T18:00:00Z"
@@ -1054,10 +1058,6 @@
           {
             "title": "Dostupný chladič s parádním výkonem - FSP MP7 v testu",
             "publishedAt": "2026-05-11T08:30:00Z"
-          },
-          {
-            "title": "Očekávané tituly 007 First Light a Directive 8020 odhalily detailní HW nároky",
-            "publishedAt": "2026-05-11T08:00:00Z"
           }
         ]
       }
