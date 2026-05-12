@@ -38046,6 +38046,30 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P1 rhc3_partial_cal_ref loose: „co [0–4 noise slov] jsem [0–3 noise slov] (měl|měla|řešil|bylo|byl) … kolem|okolo|poblíž … v kalendáři“
+   * (např. „co nějak jsem měl kolem právníka v kalendáři“). foldCs vstup; bez holých create kotev.
+   */
+  function iuSilverP1LooseCoNoiseJsemRecallKolemVKalendariReadCueFolded(x) {
+    const f = String(x || "");
+    if (!f) return false;
+    if (!/\bv\s+kalend/i.test(f)) return false;
+    if (!/\b(?:kolem|okolo|pobliz)\b/.test(f)) return false;
+    if (
+      /\bpridej\b/.test(f) ||
+      /\bpridat\b/.test(f) ||
+      /\bzapis\b/.test(f) ||
+      /\bzapisi\b/.test(f) ||
+      /\bvytvor\b/.test(f) ||
+      /\bvytvori\b/.test(f) ||
+      /\bdej\s+do\s+kalend/i.test(f) ||
+      /\buloz\s+do\s+kalend/i.test(f)
+    ) {
+      return false;
+    }
+    return /\bco\s+(?:\S+\s+){0,4}(?:jsem|sem)\s+(?:\S+\s+){0,3}(?:mel|mela|eli|resil|resila|resili|bylo|byl)\b/.test(f);
+  }
+
+  /**
    * P1 rhc3_partial_cal_ref: úzký read/query signál — `v kalendáři` + částečná časová kotva (týden / kolem / okolo …)
    * + dotazové znění bez zápisového slovesa. foldCs vstup.
    * Cíl: calendar.read před false calendar.create (implicitní write cluster / explicitní create anchor).
@@ -38054,7 +38078,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const x = String(f || "");
     if (!x) return false;
     if (iuSilverHasWriteVerb(x)) return false;
-    if (/\bpridat\b/.test(x) || /\bpripomen\w*\s+mi\b/.test(x) || /\bnaplanuj\b/.test(x)) return false;
+    if (/\bpridej\w*\b/.test(x) || /\bpripomen\w*\s+mi\b/.test(x) || /\bnaplanuj\b/.test(x)) return false;
     if (!/\bv\s+kalend/i.test(x)) return false;
     const partialTemporal =
       /\bv\s+tom\s+tydnu\b/.test(x) ||
@@ -38069,7 +38093,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!partialTemporal) return false;
     const coJsemMelLoose =
       /\bco\s+(?:jsem|sem)\s+m(?:el|ela|eli)\b/.test(x) ||
-      /\bco\s+(?:jsem|sem)\s+(?:nejak|fakt|jak|no|trochu|jako|vazne|vlastne)\s+m(?:el|ela|eli)\b/.test(x);
+      /\bco\s+(?:jsem|sem)\s+(?:nejak|fakt|jak|no|trochu|jako|vazne|vlastne)\s+m(?:el|ela|eli)\b/.test(x) ||
+      iuSilverP1LooseCoNoiseJsemRecallKolemVKalendariReadCueFolded(x);
     const readish =
       coJsemMelLoose ||
       /\bco\s+(?:jsem|sem)\s+r(?:esil|esila|esili)\b/.test(x) ||
@@ -40412,6 +40437,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         /\bco\s+(?:jsem|sem)\s+m(?:el|ela|eli)\b/.test(f) ||
         /\bco\s+(?:jsem|sem)\s+(?:nejak|fakt|jak|no|trochu|jako|vazne|vlastne)\s+m(?:el|ela|eli)\b/.test(f) ||
         /\bco\s+(?:jsem|sem)\s+r(?:esil|esila|esili)\b/.test(f) ||
+        iuSilverP1LooseCoNoiseJsemRecallKolemVKalendariReadCueFolded(f) ||
         /\bco\s+m(?:am|ame|as)\b/.test(f) ||
         /\bco\s+(?:bylo|byla)\b/.test(f) ||
         /\bco\s+je\b/.test(f) ||
@@ -40436,7 +40462,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
                 /\bco\s+(?:jsem|sem)\s+m(?:el|ela|eli)\b/.test(f) ||
                 /\bco\s+(?:jsem|sem)\s+(?:nejak|fakt|jak|no|trochu|jako|vazne|vlastne)\s+m(?:el|ela|eli)\b/.test(f) ||
                 /\bco\s+(?:jsem|sem)\s+r(?:esil|esila|esili)\b/.test(f) ||
-                /\bco\s+(?:bylo|byla)\b/.test(f);
+                /\bco\s+(?:bylo|byla)\b/.test(f) ||
+                iuSilverP1LooseCoNoiseJsemRecallKolemVKalendariReadCueFolded(f);
               return {
                 intent: "find_by_title",
                 query: canKc.query,
