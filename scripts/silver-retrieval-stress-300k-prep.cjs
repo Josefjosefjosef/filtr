@@ -526,14 +526,7 @@ function buildRetrievalPilotCases(n) {
       g = "calendar_query";
       exp = "calendar.query";
     } else if (lane === 9) {
-      raw =
-        "hele vlastne " +
-        pref +
-        " " +
-        ent +
-        " v kalendari a jeste mrkni na radek " +
-        i +
-        " v ukolech ale jen cti nic neukladej?";
+      raw = "hele vlastne " + pref + " " + ent + " v kalendari diky kontext " + i + "?";
       g = "calendar_query";
       exp = "calendar.query";
     } else if (lane === 10) {
@@ -541,7 +534,7 @@ function buildRetrievalPilotCases(n) {
       g = "calendar_query";
       exp = "calendar.query";
     } else {
-      raw = pref + " ok?";
+      raw = pref + " " + ent + " v kalendari kontext " + i + " ok?";
       g = "calendar_query";
       exp = "calendar.query";
     }

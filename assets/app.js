@@ -36164,6 +36164,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const x = String(f || "");
     return (
       /\b(podivej\s+se|podivejte\s+se)\b/.test(x) ||
+      iuSilverRcz2NarrowContainerReadRetrievalCueFolded(x) ||
       /\b(mrkni|mrknete)\s+do\s+kalend/.test(x) ||
       /\b(koukni|kouknete)\s+do\s+kalend/.test(x) ||
       /\bjen\s+se\s+podivej\b/.test(x) ||
@@ -42648,6 +42649,36 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return true;
   }
 
+  /**
+   * P1 rcz2_retrieval: úzký read/query cue + explicitní kontejner kalendář nebo úkoly (foldCs).
+   * Doplňuje ReadSearchShouldRun pro „Mrkni … v kalendáři / v úkolech“ kde chybí globální read signál;
+   * nesmí aktivovat zápis (HasWriteVerb / připomenutí / dej|ulož do …).
+   */
+  function iuSilverRcz2NarrowContainerReadRetrievalCueFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (iuSilverHasWriteVerb(x)) return false;
+    if (/\bpripomen\w*/.test(x)) return false;
+    if (/\bnaplanuj\w*/.test(x)) return false;
+    if (/\bvytvor\w*\s+ukol/.test(x)) return false;
+    if (/\bdej\s+do\s+kalend/.test(x) || /\buloz\s+do\s+kalend/.test(x) || /\bpridej\s+do\s+kalend/.test(x)) return false;
+    if (/\bdej\s+do\s+ukol/.test(x) || /\buloz\s+do\s+ukol/.test(x)) return false;
+    const calPeekDo = /\b(mrkni|mrknete|koukni|kouknete)\s+do\s+kalend/i.test(x);
+    const calIn =
+      /\bv\s+kalendari\b/.test(x) || /\bv\s+kalendaru\b/.test(x) || /\bv\s+kalendare\b/.test(x);
+    const calContainer = calIn || calPeekDo;
+    const taskContainer = /\bv\s+ukolech\b/.test(x);
+    if (!calContainer && !taskContainer) return false;
+    const readCue =
+      /\b(mrkni|mrknete|koukni|kouknete)\b/.test(x) ||
+      /\b(najdi|vyhledej|vyhledejte|hledej|ukaz|ukaž|zobraz|vypis|vypiš)\b/.test(x) ||
+      /\bco\s+m(am|ame|as)\s+v\s+/.test(x) ||
+      /\bpodivej\s+se\b/.test(x) ||
+      (/\bjen\s+se\s+podivej\b/.test(x) && (/\bv\s+kalend/.test(x) || /\bv\s+ukolech/.test(x) || /\bdo\s+kalend/.test(x)));
+    if (!readCue) return false;
+    return true;
+  }
+
   function iuSilverReadSearchSignalFolded(f) {
     const x = String(f || "");
     /** P0 real mobile: záruka / lhůta / TV v poznámkách — „kdy mi končí …“ je note read, ne kalendářní doptávka. */
@@ -42684,7 +42715,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bjaky\s+je\s+pin\b/.test(x) ||
       /\bpodivej\s+se\s+do\s+poznam/.test(x) ||
       (/\bzjist(i|it)\b/.test(x) && /\bpoznam/.test(x)) ||
-      (iuSilverCalendarQuerySignalFolded(x) && iuSilverHasExplicitNotesTarget(x))
+      (iuSilverCalendarQuerySignalFolded(x) && iuSilverHasExplicitNotesTarget(x)) ||
+      iuSilverRcz2NarrowContainerReadRetrievalCueFolded(x)
     );
   }
 
@@ -42733,6 +42765,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function iuSilverReadSearchGateCalendarCreate(raw, folded, now) {
     const f = String(folded || "");
+    if (iuSilverRcz2NarrowContainerReadRetrievalCueFolded(f)) return false;
     if (iuSilverNotesScopeBlocksCalendarWriteRouteFolded(f)) return false;
     if (iuSilverHasExplicitNotesTarget(f) && iuSilverCalendarQuerySignalFolded(f)) return false;
     if (iuSilverNegativeCreateGuardFolded(f)) return false;
@@ -42808,6 +42841,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     t = t.replace(/[\u200b-\u200d\ufeff\u00ad]/g, "");
     t = t.replace(/^prosim,?\s+/i, "");
     const strips = [
+      /^\s*(mrkni|mrknete|koukni|kouknete)\s+/i,
       /^\s*najdi\s+v\s+kalend[aá]ři\s+/i,
       /^\s*vyhledej\s+v\s+kalend[aá]ři\s+/i,
       /^\s*najdi\s+ukol\s+/i,
@@ -42842,6 +42876,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /^\s*co\s+jsem\s+si\s+ulo[zž]il\s+(ke|k)\s+/i,
       /^\s*pod[ií]vej\s+(?:se\s+)?(?:do\s+)?pozn[aá]mk[^\s]*\s+/i,
       /^\s*(najdi|vyhledej|hledej|ukaž|ukaz|zobraz|vypiš|vypis)\s+(mi\s+)?/i,
+      /\s+v\s+kalend[aá]ř[^\s]*\s*[?.!…,:;]*$/iu,
+      /\s+v\s+kalendari\s*[?.!…,:;]*$/iu,
+      /\s+v\s+ukolech[^\s]*\s*[?.!…,:;]*$/iu,
+      /\s+radek\s+\d+\s*[?.!…,:;]*$/iu,
       /^\s*najdi\s+(muj|moje|mi\s+)?ukol/i,
       /^\s*co\s+mám\s+k\s+/i,
       /^\s*co\s+mam\s+k\s+/i,
