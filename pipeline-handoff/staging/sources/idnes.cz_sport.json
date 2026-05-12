@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-12T06:09:42.982153Z",
+  "ingestedAt": "2026-05-12T06:49:45.540970Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Šampion dál nahání strach. Oklahoma City se s Lakers nezdržovala, slavil i Cleveland",
+      "url": "https://www.idnes.cz/sport/basket/oklahoma-nba-lakers-cleveland-detroit-playoff-postup.A260512_080145_sport-basket_kazdt",
+      "dt": "2026-05-12T06:10:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "city",
+        "cleveland",
+        "lakers",
+        "nahání",
+        "nezdržovala",
+        "oklahoma",
+        "slavil",
+        "strach",
+        "šampion"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -764,33 +790,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Krok do neznáma. Tak se předveďte! Mladí test zvládli, teď se ale očekávají výsledky",
-      "url": "https://www.idnes.cz/hokej/ms-2026/mladi-hokejiste-na-ms-priprava-nominace.A260511_102228_ms-hokej-2026_mama",
-      "dt": "2026-05-11T10:17:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "ale",
-        "krok",
-        "mladí",
-        "neznáma",
-        "očekávají",
-        "předveďte",
-        "tak",
-        "test",
-        "výsledky",
-        "zvládli"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48331,
+      "bytes": 48176,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,7 +837,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T06:10:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -853,6 +852,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šampion dál nahání strach. Oklahoma City se s Lakers nezdržovala, slavil i Cleveland",
+            "publishedAt": "2026-05-12T06:10:00Z"
+          },
           {
             "title": "Kubáň o baráži: Vždy děláme maximum možného. A liga? Nejchudší bychom nebyli",
             "publishedAt": "2026-05-12T06:00:00Z"
@@ -880,10 +883,6 @@
           {
             "title": "Plíšková nestačila na Rybakinovou, v Římě končí také Nosková a Bartůňková",
             "publishedAt": "2026-05-11T20:28:00Z"
-          },
-          {
-            "title": "Obhájci stříbra dotáhli čtvrtfinálový obrat. Brňané v sedmém zápase přehráli Děčín",
-            "publishedAt": "2026-05-11T19:55:00Z"
           }
         ]
       }

@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-12T06:09:42.982153Z",
+  "ingestedAt": "2026-05-12T06:49:45.540970Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Těžké pády, kritický stav. Brácho, ukaž sílu šampiona, prosím, stojí v dojemném vzkazu do nemocnice",
+      "url": "https://www.sport.cz/clanek/moto-motocykly-tezke-pady-kriticky-stav-bracho-ukaz-silu-sampiona-prosim-stoji-v-dojemnem-vzkazu-do-nemocnice-5452818",
+      "dt": "2026-05-12T06:30:46Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "brácho",
+        "dojemném",
+        "kritický",
+        "nemocnice",
+        "prosím",
+        "pády",
+        "stav",
+        "stojí",
+        "sílu",
+        "těžké",
+        "ukaž",
+        "vzkazu",
+        "šampiona"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -82,7 +112,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Ve hře kontumace a tresty pro Slavii i Spartu. Disciplinárka dohraje ostudné derby",
+      "title": "Ve hře kontumace a tresty pro Slavii i Spartu. Disciplinárka po ostudném derby rozdá flastry",
       "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-ve-hre-kontumace-a-tresty-pro-slavii-i-spartu-disciplinarka-dohraje-ostudne-derby-5452929",
       "dt": "2026-05-12T05:31:25Z",
       "media_raw": "Sport.cz",
@@ -90,10 +120,11 @@
       "tokens": [
         "derby",
         "disciplinárka",
-        "dohraje",
+        "flastry",
         "hře",
         "kontumace",
-        "ostudné",
+        "ostudném",
+        "rozdá",
         "slavii",
         "spartu",
         "tresty"
@@ -715,32 +746,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Němci na MS jedou se třemi hráči z NHL. Největší hvězda ale chybí",
-      "url": "https://www.sport.cz/clanek/hokej-ms-nemci-na-ms-jedou-se-tremi-hraci-z-nhl-5452791",
-      "dt": "2026-05-11T15:10:39Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "ale",
-        "chybí",
-        "hráči",
-        "hvězda",
-        "jedou",
-        "největší",
-        "nhl",
-        "němci",
-        "třemi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -751,7 +756,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45260,
+      "bytes": 45303,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -788,10 +793,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T06:03:02Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T06:30:46Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 30
+          "zdravi": 1,
+          "sport": 29
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -803,6 +809,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Těžké pády, kritický stav. Brácho, ukaž sílu šampiona, prosím, stojí v dojemném vzkazu do nemocnice",
+            "publishedAt": "2026-05-12T06:30:46Z"
+          },
           {
             "title": "Absencemi zdecimovaná Sparta hostí Plzeň, může se přiblížit Slavii. Baník hraje o přežití",
             "publishedAt": "2026-05-12T06:03:02Z"
@@ -816,7 +826,7 @@
             "publishedAt": "2026-05-11T07:20:10Z"
           },
           {
-            "title": "Ve hře kontumace a tresty pro Slavii i Spartu. Disciplinárka dohraje ostudné derby",
+            "title": "Ve hře kontumace a tresty pro Slavii i Spartu. Disciplinárka po ostudném derby rozdá flastry",
             "publishedAt": "2026-05-12T05:31:25Z"
           },
           {
@@ -830,10 +840,6 @@
           {
             "title": "Moje odpovědnost se nedá zastřít! Tvrdík promluvil o rezignaci",
             "publishedAt": "2026-05-12T04:30:42Z"
-          },
-          {
-            "title": "Černý den pro české tenistky. Plíšková, Bartůňková i Nosková končí",
-            "publishedAt": "2026-05-11T05:49:48Z"
           }
         ]
       }

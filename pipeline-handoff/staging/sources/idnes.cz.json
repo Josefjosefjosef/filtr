@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-12T06:09:42.982153Z",
+  "ingestedAt": "2026-05-12T06:49:45.540970Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Vídeň se proměnila v metropoli Eurovize. Chystá koncerty zdarma i obří afterparty",
+      "url": "https://www.idnes.cz/kultura/hudba/viden-se-promenila-v-metropoli-eurovize-chysta-koncerty-zdarma-i-obri-afterparty.A260506_134007_hudba_hrat",
+      "dt": "2026-05-12T06:09:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "afterparty",
+        "chystá",
+        "eurovize",
+        "koncerty",
+        "metropoli",
+        "obří",
+        "proměnila",
+        "vídeň",
+        "zdarma"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -751,32 +777,6 @@
         "smrt",
         "útočí",
         "česku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Shoda na důchodech stále v nedohlednu. Odbory odmítají odsunout dřívější penze",
-      "url": "https://www.idnes.cz/zpravy/domaci/stredula-cmkos-juchelka-duchod-reforma-tripartita-vlada.A260511_111203_domaci_sahu",
-      "dt": "2026-05-11T18:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "dřívější",
-        "důchodech",
-        "nedohlednu",
-        "odbory",
-        "odmítají",
-        "odsunout",
-        "penze",
-        "shoda",
-        "stále"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1575,7 +1575,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48055,
+      "bytes": 47934,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1612,10 +1612,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T05:54:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T06:09:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
+          "other": 1,
+          "zpravy": 26,
           "sport": 1,
           "finance": 2
         },
@@ -1629,6 +1630,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vídeň se proměnila v metropoli Eurovize. Chystá koncerty zdarma i obří afterparty",
+            "publishedAt": "2026-05-12T06:09:00Z"
+          },
           {
             "title": "Cizinec v roli kurýra převzal půl milionu od podvedené ženy, skončil ve vazbě",
             "publishedAt": "2026-05-12T05:54:00Z"
@@ -1656,10 +1661,6 @@
           {
             "title": "Trump vybral velvyslance pro Slovensko. Má jím být kontroverzní senátor",
             "publishedAt": "2026-05-12T04:48:00Z"
-          },
-          {
-            "title": "Hantavirus na výletní lodi: pochybení poslalo 12 zdravotníků do karantény",
-            "publishedAt": "2026-05-12T04:40:00Z"
           }
         ]
       }

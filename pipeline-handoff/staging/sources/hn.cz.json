@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-12T06:09:42.982153Z",
+  "ingestedAt": "2026-05-12T06:49:45.540970Z",
   "items": [
     {
       "section": "finance",
@@ -81,6 +81,38 @@
         "vzduchu",
         "vědci",
         "zjistili"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Trumpův telefon sliboval v Americe vyrobený zázrak, zákazníci ale přístroj možná nikdy neuvidí. Firma změnila podmínky",
+      "url": "https://byznys.hn.cz/c1-67875810-trumpuv-telefon-sliboval-v-americe-vyrobeny-zazrak-zakaznici-ale-pristroj-mozna-nikdy-neuvidi-firma-zmenila-podminky",
+      "dt": "2026-05-11T23:06:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "ale",
+        "americe",
+        "firma",
+        "možná",
+        "neuvidí",
+        "nikdy",
+        "podmínky",
+        "přístroj",
+        "sliboval",
+        "telefon",
+        "trumpův",
+        "vyrobený",
+        "změnila",
+        "zákazníci",
+        "zázrak"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1113,36 +1145,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Slavii hrozí vysoká pokuta i zavření stadionu, Tvrdík se omlouvá. Policie vyšetřuje napadení hráčů a výtržnictví",
-      "url": "https://archiv.hn.cz/c1-67875340-skandalni-derby-slavii-hrozi-vysoka-pokuta-i-zavreni-stadionu-tvrdik-se-omlouva-a-ozval-se-i-sponzor-ligy",
-      "dt": "2026-05-10T12:42:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "hrozí",
-        "hráčů",
-        "napadení",
-        "omlouvá",
-        "pokuta",
-        "policie",
-        "slavii",
-        "stadionu",
-        "tvrdík",
-        "vysoká",
-        "vyšetřuje",
-        "výtržnictví",
-        "zavření"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1153,7 +1155,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184965,
+      "bytes": 184996,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1193,8 +1195,8 @@
         "raw_feed_latest_publishedAt": "2026-05-12T04:58:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 35,
-          "zpravy": 5
+          "finance": 36,
+          "zpravy": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1219,6 +1221,10 @@
             "publishedAt": "2026-05-12T04:00:00Z"
           },
           {
+            "title": "Trumpův telefon sliboval v Americe vyrobený zázrak, zákazníci ale přístroj možná nikdy neuvidí. Firma změnila podmínky",
+            "publishedAt": "2026-05-11T23:06:00Z"
+          },
+          {
             "title": "Šéf hasičů Vlček v létě skončí, funkci obhajovat nechce",
             "publishedAt": "2026-05-11T22:00:00Z"
           },
@@ -1232,10 +1238,6 @@
           },
           {
             "title": "Americké akcie opět dominují. Index S&P 500 vyletěl v posledních týdnech o 16 procent. Co ho pohání a kam až letos může růst?",
-            "publishedAt": "2026-05-11T22:00:00Z"
-          },
-          {
-            "title": "Finanční trhy (12. 5. 2026)",
             "publishedAt": "2026-05-11T22:00:00Z"
           }
         ]

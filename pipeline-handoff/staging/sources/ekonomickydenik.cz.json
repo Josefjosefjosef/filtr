@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-12T06:09:42.982153Z",
+  "ingestedAt": "2026-05-12T06:49:45.540970Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Podvodníci s ojetinami si mnou ruce. Nedotažené změny jim nahrávají",
+      "url": "https://ekonomickydenik.cz/podvodnici-ojetiny-nedotazene-zmeny-nahravaji/",
+      "dt": "2026-05-12T06:25:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "jim",
+        "mnou",
+        "nahrávají",
+        "nedotažené",
+        "ojetinami",
+        "podvodníci",
+        "ruce",
+        "změny"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -749,33 +774,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Větrníky bez souhlasu obcí? Starostové chystají proti vládním zónám masivní odpor",
-      "url": "https://ekonomickydenik.cz/starostove-chystaji-proti-akceleracnim-zonam-odpor/",
-      "dt": "2026-05-09T16:04:42Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "chystají",
-        "masivní",
-        "obcí",
-        "odpor",
-        "proti",
-        "souhlasu",
-        "starostové",
-        "vládním",
-        "větrníky",
-        "zónám"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -786,7 +784,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 68089,
+      "bytes": 68165,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -823,11 +821,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T05:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-12T06:25:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 27,
-          "zpravy": 2,
+          "zpravy": 3,
+          "finance": 26,
           "zdravi": 1
         },
         "drop_counts": {
@@ -840,6 +838,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Podvodníci s ojetinami si mnou ruce. Nedotažené změny jim nahrávají",
+            "publishedAt": "2026-05-12T06:25:00Z"
+          },
           {
             "title": "MOL po Orbánovi: Nákup ropy z Ruska omezí, zastavit ho ale nemůže",
             "publishedAt": "2026-05-12T05:10:00Z"
@@ -867,10 +869,6 @@
           {
             "title": "Landovský nastupuje jako zmocněnec pro NATO. Trafika, zlobí se Černochová",
             "publishedAt": "2026-05-11T13:14:03Z"
-          },
-          {
-            "title": "Babiš: „Euro nechceme“. Končí zprávy k přijetí evropské měny",
-            "publishedAt": "2026-05-11T13:00:33Z"
           }
         ]
       }
