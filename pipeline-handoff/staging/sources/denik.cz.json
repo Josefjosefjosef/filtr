@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-13T15:10:25.804259Z",
+  "ingestedAt": "2026-05-13T15:49:43.422031Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Slovensko uzavřelo hranice s Ukrajinou. Reaguje na masivní ruský útok",
+      "url": "https://www.denik.cz/staty-eu/slovensko-uzavrelo-hranice-s-ukrajinou-reaguje-na-masivni-rusky-utok.html",
+      "dt": "2026-05-13T15:20:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "hranice",
+        "masivní",
+        "reaguje",
+        "ruský",
+        "slovensko",
+        "ukrajinou",
+        "uzavřelo",
+        "útok"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -622,32 +647,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Strnadova CSG oznámila spolupráci s Turky. Chystají nový bojový tank",
-      "url": "https://www.denik.cz/ekonomika/czechoslovak-group-csg-michal-strnad-turecko-tanky.html",
-      "dt": "2026-05-13T08:15:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bojový",
-        "chystají",
-        "csg",
-        "nový",
-        "oznámila",
-        "spolupráci",
-        "strnadova",
-        "tank",
-        "turky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -658,7 +657,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29466,
+      "bytes": 29517,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -695,11 +694,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-13T14:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T15:20:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 2
+          "zpravy": 24,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -711,6 +710,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Slovensko uzavřelo hranice s Ukrajinou. Reaguje na masivní ruský útok",
+            "publishedAt": "2026-05-13T15:20:00Z"
+          },
           {
             "title": "Potopení ruské lodi provází záhada. Na dně moře možná skončily reaktory pro KLDR",
             "publishedAt": "2026-05-13T14:02:00Z"
@@ -738,10 +741,6 @@
           {
             "title": "Ve službách Habsburků: Odhalení tajemství jednoho z nejdůležitějších rodů",
             "publishedAt": "2026-05-13T13:00:00Z"
-          },
-          {
-            "title": "Střelba ve filipínském Senátu: Do budovy vstoupili vojáci",
-            "publishedAt": "2026-05-13T12:42:00Z"
           }
         ]
       }
