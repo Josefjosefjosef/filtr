@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-13T11:09:59.469908Z",
+  "ingestedAt": "2026-05-13T11:50:29.028532Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Tři úmrtí a otázky bez odpovědí: Experti pátrají, jak se hantavirus dostal na loď Hondius",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/hantavirus-patrani-argentina/",
+      "dt": "2026-05-13T11:27:03Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dostal",
+        "experti",
+        "hantavirus",
+        "hondius",
+        "loď",
+        "odpovědí",
+        "otázky",
+        "pátrají",
+        "tři",
+        "úmrtí"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -245,34 +272,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Dorazil hantavirus do Itálie? Nemám příznaky, jen se nudím, řekl mladý muž v karanténě",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/hantavirus-italie-mlady-muz-ktery-letadlo/",
-      "dt": "2026-05-12T14:38:06Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "dorazil",
-        "hantavirus",
-        "itálie",
-        "jen",
-        "karanténě",
-        "mladý",
-        "muž",
-        "nemám",
-        "nudím",
-        "příznaky",
-        "řekl"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -283,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 81247,
+      "bytes": 83680,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -320,7 +319,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-13T09:46:38Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T11:27:03Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 8,
@@ -337,6 +336,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tři úmrtí a otázky bez odpovědí: Experti pátrají, jak se hantavirus dostal na loď Hondius",
+            "publishedAt": "2026-05-13T11:27:03Z"
+          },
           {
             "title": "Skandál v ÚVN: Policie obvinila 10 lidí z falšování lékařských posudků, dalšího zadržela v noci",
             "publishedAt": "2026-05-13T09:46:38Z"
@@ -364,10 +367,6 @@
           {
             "title": "Češi narážejí na limity „projektu dítě“. Jejich plány drtí biologická realita",
             "publishedAt": "2026-05-13T06:00:00Z"
-          },
-          {
-            "title": "Miliardové sekery: Malé nemocnice prodělávají na lůžkách, která jednou budeme potřebovat",
-            "publishedAt": "2026-05-13T05:00:00Z"
           }
         ]
       }
