@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-13T13:50:04.295217Z",
+  "ingestedAt": "2026-05-13T14:29:42.158172Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Smrt a karanténa na luxusní lodi: Přes 1700 lidí nesmí z paluby kvůli neznámému viru",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/1700-lidi-nesmi-z-paluby-kvuli-neznamemu-viru/",
+      "dt": "2026-05-13T13:53:04Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "1700",
+        "karanténa",
+        "kvůli",
+        "lidí",
+        "lodi",
+        "luxusní",
+        "nesmí",
+        "neznámému",
+        "paluby",
+        "smrt",
+        "viru"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -246,33 +274,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Češi narážejí na limity „projektu dítě“. Jejich plány drtí biologická realita",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/cesi-narazeji-na-limity-projektu-dite-biologicka-realita/",
-      "dt": "2026-05-13T06:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "biologická",
-        "drtí",
-        "dítě",
-        "jejich",
-        "limity",
-        "narážejí",
-        "plány",
-        "projektu",
-        "realita",
-        "češi"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -283,7 +284,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 79509,
+      "bytes": 75614,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -320,7 +321,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-13T13:20:27Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T13:53:04Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -336,6 +337,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Smrt a karanténa na luxusní lodi: Přes 1700 lidí nesmí z paluby kvůli neznámému viru",
+            "publishedAt": "2026-05-13T13:53:04Z"
+          },
           {
             "title": "Nenápadné příznaky, které nesmíte přehlížet: Rakovina hlavy a krku se týká tisíců Čechů",
             "publishedAt": "2026-05-13T13:20:27Z"
@@ -363,10 +368,6 @@
           {
             "title": "Finsko zařadilo hantavirus Andes mezi nebezpečné nákazy. Nařídilo 42denní karanténu",
             "publishedAt": "2026-05-13T08:30:47Z"
-          },
-          {
-            "title": "Tvrdá hra, tvrdé následky. Téměř každý profesionální hokejista vykazuje poškození mozku",
-            "publishedAt": "2026-05-13T08:00:00Z"
           }
         ]
       }

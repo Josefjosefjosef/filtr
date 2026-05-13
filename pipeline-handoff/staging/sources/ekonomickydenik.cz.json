@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-13T13:50:04.295217Z",
+  "ingestedAt": "2026-05-13T14:29:42.158172Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Systém, jak porazit Putina. Na speciální platformě se podílejí i Češi",
+      "url": "https://ekonomickydenik.cz/system-porazit-putina-podileji-cesi/",
+      "dt": "2026-05-13T14:05:58Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "platformě",
+        "podílejí",
+        "porazit",
+        "putina",
+        "speciální",
+        "systém",
+        "češi"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Převod auta kompletně online a SPZ do boxů. Proč návrh posbíral kritiku?",
+      "url": "https://ekonomickydenik.cz/prevod-auta-online-spz-boxy/",
+      "dt": "2026-05-13T13:55:02Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "auta",
+        "boxů",
+        "kompletně",
+        "kritiku",
+        "návrh",
+        "online",
+        "posbíral",
+        "proč",
+        "převod",
+        "spz"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -732,56 +783,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Letní sezona v ohrožení. Aerolinky ruší lety a omezují kapacity",
-      "url": "https://ekonomickydenik.cz/letni-sezona-ohrozeni-aerolinky-rusi-lety/",
-      "dt": "2026-05-12T06:58:04Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "aerolinky",
-        "kapacity",
-        "letní",
-        "lety",
-        "ohrožení",
-        "omezují",
-        "ruší",
-        "sezona"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Podvodníci s ojetinami si mnou ruce. Nedotažené změny jim nahrávají",
-      "url": "https://ekonomickydenik.cz/podvodnici-ojetiny-nedotazene-zmeny-nahravaji/",
-      "dt": "2026-05-12T06:25:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "jim",
-        "mnou",
-        "nahrávají",
-        "nedotažené",
-        "ojetinami",
-        "podvodníci",
-        "ruce",
-        "změny"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72810,
+      "bytes": 72347,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,11 +830,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T13:09:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T14:05:58Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
-          "zpravy": 5,
+          "sport": 1,
+          "zpravy": 4,
           "zdravi": 1
         },
         "drop_counts": {
@@ -846,6 +848,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Systém, jak porazit Putina. Na speciální platformě se podílejí i Češi",
+            "publishedAt": "2026-05-13T14:05:58Z"
+          },
+          {
+            "title": "Převod auta kompletně online a SPZ do boxů. Proč návrh posbíral kritiku?",
+            "publishedAt": "2026-05-13T13:55:02Z"
+          },
           {
             "title": "Cirkus Václava Klause. Zdechovský zesměšňuje tým poradců ministra Macinky",
             "publishedAt": "2026-05-13T13:09:00Z"
@@ -869,14 +879,6 @@
           {
             "title": "„Sdílím vaši frustraci.“ Komisařka naříká nad přístupem části zemí zrychlit zbrojení",
             "publishedAt": "2026-05-13T11:00:28Z"
-          },
-          {
-            "title": "Šéf Klausova institutu nebo ceremoniář. Macinka představil tým poradců",
-            "publishedAt": "2026-05-13T10:39:02Z"
-          },
-          {
-            "title": "Konec papírování při hodnocení vojáků: Záložáci se dočkají radikálního zjednodušení",
-            "publishedAt": "2026-05-13T09:55:08Z"
           }
         ]
       }

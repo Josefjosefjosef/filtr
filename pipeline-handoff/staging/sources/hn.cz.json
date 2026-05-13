@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-13T13:50:04.295217Z",
+  "ingestedAt": "2026-05-13T14:29:42.158172Z",
   "items": [
     {
       "section": "finance",
@@ -84,6 +84,32 @@
         "proti",
         "půjdou",
         "vlivem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Eurovize byla a je politická. Zůstává jevištěm propagandy i protestů, letos se řeší Izrael",
+      "url": "https://archiv.hn.cz/c1-67876590-eurovize-byla-a-je-politicka-zustava-jevistem-propagandy-i-protestu-letos-se-resi-izrael",
+      "dt": "2026-05-13T12:29:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "eurovize",
+        "izrael",
+        "jevištěm",
+        "letos",
+        "politická",
+        "propagandy",
+        "protestů",
+        "zůstává",
+        "řeší"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1090,33 +1116,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Už jen 42 let života. Jak jsem si spočítal číslo, které mě donutilo začít něco dělat",
-      "url": "https://domaci.hn.cz/c1-67875760-uz-jen-40-let-zivota-jak-jsem-si-spocital-cislo-ktere-me-donutilo-zacit-neco-delat",
-      "dt": "2026-05-12T12:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "donutilo",
-        "dělat",
-        "jen",
-        "jsem",
-        "let",
-        "něco",
-        "spočítal",
-        "začít",
-        "číslo",
-        "života"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1127,7 +1126,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184440,
+      "bytes": 184388,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1193,6 +1192,10 @@
             "publishedAt": "2026-05-13T12:45:00Z"
           },
           {
+            "title": "Eurovize byla a je politická. Zůstává jevištěm propagandy i protestů, letos se řeší Izrael",
+            "publishedAt": "2026-05-13T12:29:00Z"
+          },
+          {
             "title": "Inflace zrychluje. Po zbytek roku by se měla pohybovat mezi dvěma až třemi procenty, odhaduje ČNB",
             "publishedAt": "2026-05-13T12:05:00Z"
           },
@@ -1207,10 +1210,6 @@
           {
             "title": "Trump bere do Pekingu kapitány průmyslu a chce řešit hlavně byznys. Číňanům ale sám dal do ruky nejméně tři trumfy",
             "publishedAt": "2026-05-13T10:31:00Z"
-          },
-          {
-            "title": "Inflace v eurozóně stále není na vrcholu. A ECB na to bude reagovat",
-            "publishedAt": "2026-05-13T09:09:00Z"
           }
         ]
       }

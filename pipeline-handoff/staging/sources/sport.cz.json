@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-13T13:50:04.295217Z",
+  "ingestedAt": "2026-05-13T14:29:42.158172Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "RAJNOCHŮV GLOSÁŘ: Nechutné scény v derby jsou pouze špičkou ledovce, problém je daleko větší",
+      "url": "https://www.sport.cz/clanek/nazory-komentare-rajnochuv-glosar-nechutne-sceny-v-derby-jsou-pouze-spickou-ledovce-problem-je-daleko-vetsi-5453440",
+      "dt": "2026-05-13T14:13:37Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "daleko",
+        "derby",
+        "glosář",
+        "ledovce",
+        "nechutné",
+        "pouze",
+        "problém",
+        "rajnochův",
+        "scény",
+        "větší",
+        "špičkou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Comeback po tvrdé lekci. Českého obra čeká těžká šichta",
+      "url": "https://www.sport.cz/clanek/bojove-sporty-mma-comeback-ceskeho-obra-tvrda-lekce-ho-posunula-5453263",
+      "dt": "2026-05-13T14:01:09Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "comeback",
+        "lekci",
+        "obra",
+        "tvrdé",
+        "těžká",
+        "čeká",
+        "českého",
+        "šichta"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -718,53 +771,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zemřel basketbalista Collins, který se jako první přihlásil ke své homosexualitě",
-      "url": "https://www.sport.cz/clanek/basketbal-zemrel-basketbalista-collins-ktery-se-jako-prvni-priznal-k-homosexualite-5453405",
-      "dt": "2026-05-13T06:32:28Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "basketbalista",
-        "collins",
-        "homosexualitě",
-        "jako",
-        "první",
-        "přihlásil",
-        "své",
-        "zemřel"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Slavia může získat titul před prázdným Edenem",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-slavia-muze-ziskat-titul-pred-prazdnym-edenem-5453412",
-      "dt": "2026-05-13T08:13:36Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "edenem",
-        "prázdným",
-        "slavia",
-        "titul",
-        "získat"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -775,7 +781,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 46211,
+      "bytes": 45894,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -812,10 +818,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T13:31:06Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T14:13:37Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 29,
+          "zdravi": 2,
+          "sport": 27,
           "zpravy": 1
         },
         "drop_counts": {
@@ -828,6 +835,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "RAJNOCHŮV GLOSÁŘ: Nechutné scény v derby jsou pouze špičkou ledovce, problém je daleko větší",
+            "publishedAt": "2026-05-13T14:13:37Z"
+          },
+          {
+            "title": "Comeback po tvrdé lekci. Českého obra čeká těžká šichta",
+            "publishedAt": "2026-05-13T14:01:09Z"
+          },
           {
             "title": "Tři metry od ultras. Šmicer líčí peklo v Edenu",
             "publishedAt": "2026-05-13T13:31:06Z"
@@ -851,14 +866,6 @@
           {
             "title": "Lingr vydělává v Americe pořádný balík, suverénně nejlépe placeným hráčem MLS je Messi",
             "publishedAt": "2026-05-13T12:12:16Z"
-          },
-          {
-            "title": "McGregorův soupeř odhalen, UFC chystá trhák",
-            "publishedAt": "2026-05-13T12:00:00Z"
-          },
-          {
-            "title": "Ministr zvažuje vznik rejstříku ke sdílení dat klubů o problémových fanoušcích",
-            "publishedAt": "2026-05-13T11:56:51Z"
           }
         ]
       }

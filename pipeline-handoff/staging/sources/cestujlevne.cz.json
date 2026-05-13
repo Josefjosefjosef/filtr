@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-05-13T13:50:04.295217Z",
+  "ingestedAt": "2026-05-13T14:29:42.158172Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Květnové Katalánsko z Ostravy přímým letem do Girony. Letenky od 973 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/kvetnove-katalansko-z-prahy-primym-letem-do-girony",
+      "dt": "2026-05-13T14:26:44Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "973",
+        "girony",
+        "katalánsko",
+        "květnové",
+        "letem",
+        "letenky",
+        "ostravy",
+        "přímým"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -484,31 +509,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Jarní Mallorca s all-inclusive z Prahy v květnu. Zájezd od 8 990 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/jarni-mallorca-s-all-inclusive-z-prahy-v-kvetnu",
-      "dt": "2026-05-06T13:49:30Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "990",
-        "all",
-        "inclusive",
-        "jarní",
-        "květnu",
-        "mallorca",
-        "prahy",
-        "zájezd"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -519,7 +519,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 47612,
+      "bytes": 46867,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -556,7 +556,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-13T11:46:18Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T14:26:44Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -571,6 +571,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Květnové Katalánsko z Ostravy přímým letem do Girony. Letenky od 973 Kč",
+            "publishedAt": "2026-05-13T14:26:44Z"
+          },
           {
             "title": "Nejlevnější Porto Santo s all-inclusive v 5* hotelech z Prahy. Zájezd od 12 990 Kč",
             "publishedAt": "2026-05-13T11:46:18Z"
@@ -598,10 +602,6 @@
           {
             "title": "Albánská Vlora s all-inclusive z Brna, Ostravy i Prahy. Zájezd od 13 990 Kč",
             "publishedAt": "2026-05-12T11:55:36Z"
-          },
-          {
-            "title": "Z Prahy do Sevilly na jeden květnový termín. Letenky od 1 604 Kč",
-            "publishedAt": "2026-05-12T09:30:55Z"
           }
         ]
       }
