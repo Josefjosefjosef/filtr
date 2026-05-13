@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "plnezdravi.cz",
-  "ingestedAt": "2026-05-13T14:29:42.158172Z",
+  "ingestedAt": "2026-05-13T15:10:25.804259Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Méně stresu, více energie. Češi objevují kouzlo venkovního cvičení",
+      "url": "https://www.plnezdravi.cz/mene-stresu-vice-energie-cesi-objevuji-kouzlo-venkovniho-cviceni/",
+      "dt": "2026-05-13T14:39:43Z",
+      "media_raw": "Plné zdraví",
+      "media_norm": "Plné zdraví",
+      "tokens": [
+        "cvičení",
+        "energie",
+        "kouzlo",
+        "objevují",
+        "stresu",
+        "venkovního",
+        "češi"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_plnezdravi",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "plnezdravi.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -466,31 +490,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "plnezdravi.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Když tělo tvoří krystaly: Příčiny vzniku ledvinových kamenů",
-      "url": "https://www.plnezdravi.cz/kdyz-telo-tvori-krystaly-priciny-vzniku-ledvinovych-kamenu/",
-      "dt": "2026-05-02T07:00:38Z",
-      "media_raw": "Plné zdraví",
-      "media_norm": "Plné zdraví",
-      "tokens": [
-        "kamenů",
-        "když",
-        "krystaly",
-        "ledvinových",
-        "příčiny",
-        "tvoří",
-        "tělo",
-        "vzniku"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_plnezdravi",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "plnezdravi.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -501,7 +500,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.plnezdravi.cz/feed/",
-      "bytes": 158894,
+      "bytes": 158156,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -538,7 +537,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-13T07:00:58Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T14:39:43Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -553,6 +552,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Méně stresu, více energie. Češi objevují kouzlo venkovního cvičení",
+            "publishedAt": "2026-05-13T14:39:43Z"
+          },
           {
             "title": "Vysoký krevní tlak: Tichý zabiják pod kontrolou",
             "publishedAt": "2026-05-13T07:00:58Z"
@@ -580,10 +583,6 @@
           {
             "title": "Chodím, abych mohl chodit, říká rekordman pochodu Praha-Prčice",
             "publishedAt": "2026-05-11T15:25:59Z"
-          },
-          {
-            "title": "Proč je spánek ve stáří klíčem k vitalitě",
-            "publishedAt": "2026-05-11T07:00:41Z"
           }
         ]
       }

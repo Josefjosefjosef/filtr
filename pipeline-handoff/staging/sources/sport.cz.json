@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-13T14:29:42.158172Z",
+  "ingestedAt": "2026-05-13T15:10:25.804259Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Spíkr Tribuny Sever se omluvil, že vyzval fanoušky k přípravě na oslavy moc brzy. Také se opřel do Tvrdíka",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-spikr-tribuny-sever-se-omluvil-ze-vyzval-fanousky-k-priprave-na-oslavy-moc-brzy-take-se-oprel-do-tvrdika-5453449",
+      "dt": "2026-05-13T14:44:24Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "brzy",
+        "fanoušky",
+        "moc",
+        "omluvil",
+        "opřel",
+        "oslavy",
+        "přípravě",
+        "sever",
+        "spíkr",
+        "také",
+        "tribuny",
+        "tvrdíka",
+        "vyzval"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -745,32 +775,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Priske apeluje na svého svěřence: Máš obří potenciál, tak se ukaž!",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-priske-apeluje-na-sveho-sverence-mas-obri-potencial-tak-se-ukaz-5453414",
-      "dt": "2026-05-13T08:28:38Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "apeluje",
-        "máš",
-        "obří",
-        "potenciál",
-        "priske",
-        "svého",
-        "svěřence",
-        "tak",
-        "ukaž"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -781,7 +785,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45894,
+      "bytes": 45762,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -818,11 +822,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T14:13:37Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T14:44:24Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 2,
           "sport": 27,
+          "zdravi": 2,
           "zpravy": 1
         },
         "drop_counts": {
@@ -835,6 +839,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Spíkr Tribuny Sever se omluvil, že vyzval fanoušky k přípravě na oslavy moc brzy. Také se opřel do Tvrdíka",
+            "publishedAt": "2026-05-13T14:44:24Z"
+          },
           {
             "title": "RAJNOCHŮV GLOSÁŘ: Nechutné scény v derby jsou pouze špičkou ledovce, problém je daleko větší",
             "publishedAt": "2026-05-13T14:13:37Z"
@@ -862,10 +870,6 @@
           {
             "title": "Legenda možná už letos šéfem světového biatlonu! Je náš, jásají v Rusku",
             "publishedAt": "2026-05-13T12:17:10Z"
-          },
-          {
-            "title": "Lingr vydělává v Americe pořádný balík, suverénně nejlépe placeným hráčem MLS je Messi",
-            "publishedAt": "2026-05-13T12:12:16Z"
           }
         ]
       }
