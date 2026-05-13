@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-13T17:10:18.484238Z",
+  "ingestedAt": "2026-05-13T17:50:05.335380Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Manažeři kvality jsou nepostradatelní. Teď jim firmy rekordně přidaly",
+      "url": "https://profitonline.cz/manazeri-kvality-jsou-nepostradatelni-ted-jim-firmy-rekordne-pridaly/",
+      "dt": "2026-05-13T17:30:00Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "firmy",
+        "jim",
+        "kvality",
+        "manažeři",
+        "nepostradatelní",
+        "přidaly",
+        "rekordně"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -256,31 +280,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Poslanci „zakážou“ sjezd sudetských Němců. A co koncert náckovského rappera?",
-      "url": "https://profitonline.cz/poslanci-zakazou-sjezd-sudetskych-nemcu-a-co-koncert-nackovskeho-rappera/",
-      "dt": "2026-05-11T10:00:52Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "koncert",
-        "náckovského",
-        "němců",
-        "poslanci",
-        "rappera",
-        "sjezd",
-        "sudetských",
-        "zakážou"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -291,7 +290,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18995,
+      "bytes": 18833,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -328,7 +327,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-13T10:00:15Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T17:30:00Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -345,6 +344,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Manažeři kvality jsou nepostradatelní. Teď jim firmy rekordně přidaly",
+            "publishedAt": "2026-05-13T17:30:00Z"
+          },
           {
             "title": "Zaostává EU za USA? Landovský se v zásadě trefil do černého",
             "publishedAt": "2026-05-13T10:00:15Z"
@@ -372,10 +375,6 @@
           {
             "title": "Vymáhání práva je na katastrofální úrovni, fotbal je mementem",
             "publishedAt": "2026-05-12T10:00:56Z"
-          },
-          {
-            "title": "V dubnu nezaměstnanost nepatrně klesla",
-            "publishedAt": "2026-05-12T09:00:46Z"
           }
         ]
       }
