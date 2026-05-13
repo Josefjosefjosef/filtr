@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-13T05:05:27.781298Z",
+  "ingestedAt": "2026-05-13T05:44:54.784258Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Neznámý pachatel ukradl z baziliky v Jablonném lebku svaté Zdislavy. Její historická hodnota je nevyčíslitelná",
+      "url": "https://domaci.hn.cz/c1-67876320-neznamy-pachatel-ukradl-z-baziliky-v-jablonnem-lebku-svate-zdislavy-jeji-historicka-hodnota-je-nevycislitelna",
+      "dt": "2026-05-13T05:27:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "baziliky",
+        "historická",
+        "hodnota",
+        "jablonném",
+        "její",
+        "lebku",
+        "nevyčíslitelná",
+        "neznámý",
+        "pachatel",
+        "svaté",
+        "ukradl",
+        "zdislavy"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1094,35 +1123,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Asfalt posílá nebezpečné látky do vzduchu, zjistili vědci. Co by mohlo pomoci a pro jaká města hlavně je to varování",
-      "url": "https://vikend.hn.cz/c1-67874540-asfalt-posila-nebezpecne-latky-do-vzduchu-zjistili-vedci-co-by-mohlo-pomoci-a-pro-jaka-mesta-hlavne-je-to-varovani",
-      "dt": "2026-05-12T04:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "asfalt",
-        "hlavně",
-        "jaká",
-        "látky",
-        "města",
-        "nebezpečné",
-        "pomoci",
-        "posílá",
-        "varování",
-        "vzduchu",
-        "vědci",
-        "zjistili"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1133,7 +1133,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184528,
+      "bytes": 184565,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1170,11 +1170,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-13T04:47:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T05:27:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 35,
-          "zpravy": 3,
+          "zpravy": 4,
+          "finance": 34,
           "zdravi": 2
         },
         "drop_counts": {
@@ -1187,6 +1187,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Neznámý pachatel ukradl z baziliky v Jablonném lebku svaté Zdislavy. Její historická hodnota je nevyčíslitelná",
+            "publishedAt": "2026-05-13T05:27:00Z"
+          },
           {
             "title": "Jak investovat v době AI mánie: Vyplatí se ještě sázka na technologické nebo čipové firmy?",
             "publishedAt": "2026-05-13T04:47:00Z"
@@ -1213,10 +1217,6 @@
           },
           {
             "title": "Vybrat hotovost a nastavit krizový plán",
-            "publishedAt": "2026-05-12T22:00:00Z"
-          },
-          {
-            "title": "V krizi nám přibývají zakázky",
             "publishedAt": "2026-05-12T22:00:00Z"
           }
         ]

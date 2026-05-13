@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-13T05:05:27.781298Z",
+  "ingestedAt": "2026-05-13T05:44:54.784258Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Víno se pije nejméně za šest desetiletí. Na vině jsou Trumpova cla i změna vkusu",
+      "url": "https://www.idnes.cz/ekonomika/zahranicni/globalni-obchod-s-vinem-spotreba-pokles.A260513_071333_eko-zahranicni_mikp",
+      "dt": "2026-05-13T05:33:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "cla",
+        "desetiletí",
+        "nejméně",
+        "pije",
+        "trumpova",
+        "vině",
+        "vkusu",
+        "víno",
+        "změna",
+        "šest"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -760,35 +787,6 @@
         "šlo",
         "šéf",
         "žalobce"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Toužil jsem být hrdina IS, přiznal muž, jenž chtěl útočit na koncertě Taylor Swift",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/rakousko-viden-taylor-swift-koncerty-utok-beran-a-soud-hrdina.A260512_181847_zahranicni_kha",
-      "dt": "2026-05-12T16:40:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "být",
-        "chtěl",
-        "hrdina",
-        "jenž",
-        "jsem",
-        "koncertě",
-        "muž",
-        "přiznal",
-        "swift",
-        "taylor",
-        "toužil",
-        "útočit"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1585,7 +1583,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50583,
+      "bytes": 50154,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1622,12 +1620,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T04:56:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T05:33:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "other": 5,
-          "finance": 3
+          "finance": 4,
+          "zpravy": 21,
+          "other": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1639,6 +1637,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Víno se pije nejméně za šest desetiletí. Na vině jsou Trumpova cla i změna vkusu",
+            "publishedAt": "2026-05-13T05:33:00Z"
+          },
           {
             "title": "Naše schopnost rozdrtit nezávislost Tchaj-wanu je neotřesitelná, vzkázala Čína",
             "publishedAt": "2026-05-13T04:56:00Z"
@@ -1666,10 +1668,6 @@
           {
             "title": "Pokračuje mimořádná schůze Sněmovny. Koalice chce prosadit novelu k rozpočtům",
             "publishedAt": "2026-05-13T04:00:00Z"
-          },
-          {
-            "title": "Z Prahy do Brandýsa za 17 minut. Správa železnic řeší pět tras z metropole",
-            "publishedAt": "2026-05-12T22:00:00Z"
           }
         ]
       }

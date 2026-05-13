@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-13T05:05:27.781298Z",
+  "ingestedAt": "2026-05-13T05:44:54.784258Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Členství v EU bude pro Čechy výhodné, i když víc zaplatí, říká Ladmanová",
+      "url": "https://www.denik.cz/cesko-a-eu/clenstvi-v-eu-bude-pro-cechy-vyhodne-i-kdyz-vic-zaplati-rika-ladmanova-20260512.html",
+      "dt": "2026-05-13T05:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "když",
+        "ladmanová",
+        "víc",
+        "výhodné",
+        "zaplatí",
+        "čechy",
+        "členství",
+        "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -623,32 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Drama v reality show Survivor. Soutěžící přišel o nohu, srazila ho loď",
-      "url": "https://www.denik.cz/ze_sveta/survivor-tezke-zraneni-nohy-dominikanska-republika.html",
-      "dt": "2026-05-12T11:49:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "drama",
-        "loď",
-        "nohu",
-        "přišel",
-        "reality",
-        "show",
-        "soutěžící",
-        "srazila",
-        "survivor"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30190,
+      "bytes": 30106,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,7 +695,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-13T04:29:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T05:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -713,6 +712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Členství v EU bude pro Čechy výhodné, i když víc zaplatí, říká Ladmanová",
+            "publishedAt": "2026-05-13T05:00:00Z"
+          },
           {
             "title": "Trump zveřejnil příspěvek, v němž označil Venezuelu za 51. stát USA",
             "publishedAt": "2026-05-13T04:29:00Z"
@@ -740,10 +743,6 @@
           {
             "title": "Barvám neutečeš! Běh olomouckými parky se objektivem Antonína Gerži",
             "publishedAt": "2026-05-13T02:07:00Z"
-          },
-          {
-            "title": "Časová osa lodi s hantavirem: Kdo a kdy zemřel, do jakých zemí lidé odletěli",
-            "publishedAt": "2026-05-13T02:00:00Z"
           }
         ]
       }
