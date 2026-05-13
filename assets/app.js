@@ -35582,6 +35582,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (iuSilverExplicitTaskListQuerySignalP1Folded(x)) return true;
     if (iuSilverRelationshipCoMamSPravnikTaskQueryTieBreakFolded(x)) return true;
     if (iuSilverMobileVoiceTaskQueryAnchorP1Folded(x)) return true;
+    if (iuSilverRhc3TaskQueryReadVsCreateP1Folded(x)) return true;
     return false;
   }
 
@@ -35797,6 +35798,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverTaskReadContextFolded(f, rawOpt) {
     if (iuSilverExplicitNotesPositiveReadScopeFolded(f) && !iuSilverExplicitTaskReadScopeFolded(f, rawOpt)) return false;
     if (iuSilverExplicitTaskReadScopeFolded(f, rawOpt)) return true;
+    if (iuSilverRhc3TaskQueryReadVsCreateP1Folded(f)) return true;
     if (iuSilverCalendarReadWinsOverTaskReadFolded(f)) return false;
     if (iuSilverTaskQueryHardSignalFolded(f)) return true;
     if (iuSilverP1ReadOnlyTaskQueryUnderNegationP1Folded(f)) return true;
@@ -36534,6 +36536,50 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P1 narrow RHC3 (cluster rhc3_task_query_slice): task_query chaos (v úkolech / list DNA + entita právník …)
+   * nesmí prohrát calendar.read přes CalendarQuerySignal + CalendarEntityContext ani spadnout do tasks.create
+   * přes task_action_verb + chaos tail. foldCs vstup; žádný fuzzy routing.
+   */
+  function iuSilverRhc3TaskQueryReadVsCreateP1Folded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (/\bdej\s+do\s+ukol/i.test(x)) return false;
+    if (/\bhod\s+do\s+ukol/i.test(x)) return false;
+    if (/\bdo\s+ukol\w*\s+vyzvednout\b/i.test(x)) return false;
+    if (/\bpridej\s+ukol/i.test(x)) return false;
+    if (/\buloz\s+mi\s+ukol/i.test(x)) return false;
+    if (/\bvytvor\w*\s+ukol/i.test(x)) return false;
+    if (/\buloz\s+do\s+ukol/i.test(x) && !/\bco\s+jsem\b/.test(x)) return false;
+    if (/\b(poznamenej|zaloz|zapis)\s+ukol/i.test(x)) return false;
+    if (/\bmam\s+udelat\s+ukol/i.test(x)) return false;
+    if (/\bco\s+m(am|ame)\s+v\s+poznam/i.test(x)) return false;
+    if (/\bco\s+m(am|ame)\s+v\s+kalend/i.test(x) && !/\bukol/i.test(x)) return false;
+
+    if (/\b(jen|pouze)\s+cti\s+ukol/i.test(x)) return true;
+    if (/\bnic\s+neukladej/i.test(x) && /\b(do\s+ukol|v\s+ukolech)\b/i.test(x)) return true;
+
+    if (/\bco\s+m(am|ame)\s+v\s+ukol/i.test(x)) return true;
+    if (/\bjake\s+m(am|ame)\s+ukol/i.test(x)) return true;
+    if (/\bco\s+m(am|ame)\s+dnes(?:ka)?\s+za\s+ukol/i.test(x)) return true;
+    if (/\bmam\s+neco\s+v\s+ukol/i.test(x)) return true;
+    if (/\b(uka[zž]|ukaz)\s+(mi\s+)?(moje\s+)?ukol/i.test(x)) return true;
+    if (
+      (/\bnajdi\s+ukol/i.test(x) || /\bhledej\s+ukol/i.test(x) || /\bvyhledej\s+ukol/i.test(x)) &&
+      !/\b(v\s+kalend|do\s+kalend)/i.test(x)
+    ) {
+      return true;
+    }
+    if (/\bukol\w*\s+ohledn/i.test(x) || /\bohledn\w*\s+ukol/i.test(x)) return true;
+    if (
+      (/\bukol\w*\s+kolem\b/i.test(x) || (/\bkolem\b/.test(x) && /\bukol/i.test(x))) &&
+      /\b(najdi|hledej|vyhledej|co\s+mam|jake\s+mam|ukaz|uka|mam\s+neco|v\s+ukolech)\b/i.test(x)
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * P0 (20k audit): kalendářní dotaz s negací úkolů nesmí prohrát proti tasks.read / storage disambiguation.
    * Neplatí pro explicitní zápis do úkolů (HasExplicitTasksTarget + zápis).
    */
@@ -36541,6 +36587,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const x = String(f || "");
     if (!x) return false;
     if (iuSilverRelationshipCoMamSPravnikTaskQueryTieBreakFolded(x)) return false;
+    if (iuSilverRhc3TaskQueryReadVsCreateP1Folded(x)) return false;
     if (iuSilverExplicitTaskListQuerySignalP1Folded(x)) return false;
     if (iuSilverTaskStatusReadQuerySignalFolded(x)) return false;
     if (iuSilverTaskReadNegatedCalendarModuleFolded(x)) return false;
@@ -38705,7 +38752,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       iuSilverHasTaskActionVerb(folded) &&
       !calendarOverridesTask &&
       !iuSilverHasExplicitCalendarTarget(folded) &&
-      !(trCtxRoute && !explicitTaskWriteRoute)
+      !(trCtxRoute && !explicitTaskWriteRoute) &&
+      !iuSilverRhc3TaskQueryReadVsCreateP1Folded(folded)
     ) {
       return {
         intent: "task.create",
