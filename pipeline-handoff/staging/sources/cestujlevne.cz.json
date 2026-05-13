@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-05-13T09:50:34.523475Z",
+  "ingestedAt": "2026-05-13T10:30:17.034233Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Z Prahy i Ostravy do Kalifornie s LOTem. Letenky od 11 790 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/z-prahy-i-ostravy-do-kalifornie-s-lotem",
+      "dt": "2026-05-13T10:18:20Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "790",
+        "kalifornie",
+        "letenky",
+        "lotem",
+        "ostravy",
+        "prahy"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -483,33 +506,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Týden na Kypru s polopenzí jen kousek od pláže Nissi Beach. Zájezd od 12 990 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/tyden-na-kypru-s-polopenzi-jen-kousek-od-plaze-nissi-beach",
-      "dt": "2026-05-05T18:10:06Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "990",
-        "beach",
-        "jen",
-        "kousek",
-        "kypru",
-        "nissi",
-        "pláže",
-        "polopenzí",
-        "týden",
-        "zájezd"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -520,7 +516,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 46643,
+      "bytes": 46232,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -557,7 +553,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-13T09:08:01Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T10:18:20Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -572,6 +568,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Z Prahy i Ostravy do Kalifornie s LOTem. Letenky od 11 790 Kč",
+            "publishedAt": "2026-05-13T10:18:20Z"
+          },
           {
             "title": "Z Prahy do švédského Göteborgu na jednu noc nebo pár dní. Letenky od 978 Kč",
             "publishedAt": "2026-05-13T09:08:01Z"
@@ -599,10 +599,6 @@
           {
             "title": "Týdenní zájezdy na Zakynthos z Prahy do 5* hotelů s all-inclusive. Zájezd od 9 990 Kč",
             "publishedAt": "2026-05-12T07:29:14Z"
-          },
-          {
-            "title": "Chorvatsko z Prahy během léta i na prodloužené víkendy s Croatia Airlines. Letenky od 3 603 Kč",
-            "publishedAt": "2026-05-11T17:13:42Z"
           }
         ]
       }

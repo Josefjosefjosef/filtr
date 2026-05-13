@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-13T09:50:34.523475Z",
+  "ingestedAt": "2026-05-13T10:30:17.034233Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Policie obvinila po zásahu v ÚVN deset lidí. Kauza se týká falešných posudků",
+      "url": "https://www.denik.cz/krimi/policie-obvinila-v-kauze-posudku-stresovicke-nemocnice-zatim-deset-lidi-20260513.html",
+      "dt": "2026-05-13T09:25:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "deset",
+        "falešných",
+        "kauza",
+        "lidí",
+        "obvinila",
+        "policie",
+        "posudků",
+        "týká",
+        "zásahu",
+        "úvn"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -548,7 +575,7 @@
     {
       "section": "krimi",
       "contentType": "article",
-      "title": "Neznámý zloděj v černém ukradl z baziliky v Jablonném lebku svaté Zdislavy",
+      "title": "Šokující krádež. Z baziliky v Jablonném někdo ukradl lebku svaté Zdislavy",
       "url": "https://www.denik.cz/krimi/neznamy-zlodej-v-cernem-ukradl-v-jablonnem-lebku-svate-zdislavy-20260512.html",
       "dt": "2026-05-12T20:14:00Z",
       "media_raw": "Deník",
@@ -556,13 +583,13 @@
       "tokens": [
         "baziliky",
         "jablonném",
+        "krádež",
         "lebku",
-        "neznámý",
+        "někdo",
         "svaté",
         "ukradl",
         "zdislavy",
-        "zloděj",
-        "černém"
+        "šokující"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -620,32 +647,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kolaudace zrychlí a sousedské spory dostanou pevnější pravidla, říká zmocněnkyně",
-      "url": "https://www.denik.cz/ekonomika/hana-landova-kolaudace-zrychli-i-sousedske-spory-dostanou-pevnejsi-pravidla.html",
-      "dt": "2026-05-12T17:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dostanou",
-        "kolaudace",
-        "pevnější",
-        "pravidla",
-        "sousedské",
-        "spory",
-        "zmocněnkyně",
-        "zrychlí",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -656,7 +657,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29501,
+      "bytes": 29120,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -693,11 +694,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-13T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T09:25:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 21,
-          "finance": 4
+          "zpravy": 22,
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -709,6 +710,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policie obvinila po zásahu v ÚVN deset lidí. Kauza se týká falešných posudků",
+            "publishedAt": "2026-05-13T09:25:00Z"
+          },
           {
             "title": "Krádež lebky Zdislavy otřásla Jablonným. Zloděj využil situace, říká starosta",
             "publishedAt": "2026-05-13T09:00:00Z"
@@ -736,10 +741,6 @@
           {
             "title": "Prahu čeká velká výluka. V Holešovicích nepojedou takřka celý den tramvaje",
             "publishedAt": "2026-05-13T08:10:00Z"
-          },
-          {
-            "title": "Návrat zimy? Na hřebenech Krkonoš napadl sníh, bílá zahalila i Krušné hory",
-            "publishedAt": "2026-05-13T07:20:00Z"
           }
         ]
       }

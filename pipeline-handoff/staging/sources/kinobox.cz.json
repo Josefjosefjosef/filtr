@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-13T09:50:34.523475Z",
+  "ingestedAt": "2026-05-13T10:30:17.034233Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kinobox Daily: Amerika v plamenech skrze hledáček fotoaparátu. Kdo přežije Občanskou válku?",
+      "url": "https://www.kinobox.cz/clanky/daily/53719-kinobox-daily-amerika-v-plamenech-skrze-hledacek-fotoaparatu-kdo-prezije-obcanskou-valku",
+      "dt": "2026-05-13T10:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "amerika",
+        "daily",
+        "fotoaparátu",
+        "hledáček",
+        "kinobox",
+        "občanskou",
+        "plamenech",
+        "přežije",
+        "skrze",
+        "válku"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -507,34 +534,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "„Nikdo si o sobě nemyslí, že je zlý.\" Igor Orozovič hraje násilnického vraha v seriálu Monyová",
-      "url": "https://www.kinobox.cz/clanky/rozhovory/53562-nikdo-si-o-sobe-nemysli-ze-je-zly-igor-orozovic-hraje-nasilnickeho-vraha-v-serialu-monyova",
-      "dt": "2026-05-10T12:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "hraje",
-        "igor",
-        "monyová",
-        "nemyslí",
-        "nikdo",
-        "násilnického",
-        "orozovič",
-        "seriálu",
-        "sobě",
-        "vraha",
-        "zlý"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -545,7 +544,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 27441,
+      "bytes": 27352,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -582,7 +581,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-13T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T10:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -597,6 +596,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinobox Daily: Amerika v plamenech skrze hledáček fotoaparátu. Kdo přežije Občanskou válku?",
+            "publishedAt": "2026-05-13T10:00:00Z"
+          },
           {
             "title": "Nový Batman se konečně blíží. První záběry lákají na atmosférický zážitek",
             "publishedAt": "2026-05-13T09:00:00Z"
@@ -624,10 +627,6 @@
           {
             "title": "Kinobox Daily: I tuzemská detektivka může vypadat světově, jak dokazuje Rudý kapitán",
             "publishedAt": "2026-05-12T10:00:00Z"
-          },
-          {
-            "title": "Nástupce Arnolda bez slitování. Hvězda Reachera mlátí gangstery v traileru na stylový akčňák",
-            "publishedAt": "2026-05-12T09:00:00Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-13T09:50:34.523475Z",
+  "ingestedAt": "2026-05-13T10:30:17.034233Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Očekávané novinky ovládly žebříček prodejů na Steamu ještě před svým vydáním",
+      "url": "https://zing.cz/article/ocekavane-novinky-ovladly-zebricek-prodeju-na-steamu-jeste-pred-svym-vydanim",
+      "dt": "2026-05-13T10:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "ještě",
+        "novinky",
+        "ovládly",
+        "očekávané",
+        "prodejů",
+        "steamu",
+        "svým",
+        "vydáním",
+        "žebříček"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -969,32 +995,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Nový Vampire: The Masquerade láká na temný příběh plný politiky",
-      "url": "https://zing.cz/article/novy-vampire-the-masquerade-laka-na-temny-pribeh-plny-politiky",
-      "dt": "2026-05-09T12:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "láká",
-        "masquerade",
-        "nový",
-        "plný",
-        "politiky",
-        "příběh",
-        "temný",
-        "the",
-        "vampire"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1005,7 +1005,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125844,
+      "bytes": 125846,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1042,7 +1042,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-13T08:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1058,6 +1058,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Očekávané novinky ovládly žebříček prodejů na Steamu ještě před svým vydáním",
+            "publishedAt": "2026-05-13T10:00:00Z"
+          },
           {
             "title": "Společnost XPG uvádí na trh Novakey RGB DDR5 jako první paměť na světě s designem nekonečného zrcadla",
             "publishedAt": "2026-05-13T08:30:00Z"
@@ -1085,10 +1089,6 @@
           {
             "title": "Sony patentuje novou AI, umožní sdílet vaše hraní na sociálních sítích",
             "publishedAt": "2026-05-12T17:00:00Z"
-          },
-          {
-            "title": "Mistrovství světa se přesouvá i na virtuální led. Startují Fortuna Grunex Games v NHL 26",
-            "publishedAt": "2026-05-12T16:00:00Z"
           }
         ]
       }

@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-13T09:50:34.523475Z",
+  "ingestedAt": "2026-05-13T10:30:17.034233Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zaostává EU za USA? Landovský se v zásadě trefil do černého",
+      "url": "https://profitonline.cz/zaostava-eu-za-usa-landovsky-se-v-zasade-trefil-do-cerneho/",
+      "dt": "2026-05-13T10:00:15Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "landovský",
+        "trefil",
+        "usa",
+        "zaostává",
+        "zásadě",
+        "černého"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -258,30 +281,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Intel se vrací do centra pozornosti v oblasti umělé inteligence",
-      "url": "https://profitonline.cz/intel-se-vraci-do-centra-pozornosti-v-oblasti-umele-inteligence/",
-      "dt": "2026-05-11T08:00:16Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "centra",
-        "intel",
-        "inteligence",
-        "oblasti",
-        "pozornosti",
-        "umělé",
-        "vrací"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -292,7 +291,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18886,
+      "bytes": 18994,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -329,7 +328,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-13T08:10:13Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T10:00:15Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -346,6 +345,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zaostává EU za USA? Landovský se v zásadě trefil do černého",
+            "publishedAt": "2026-05-13T10:00:15Z"
+          },
           {
             "title": "Co přinese setkání amerického a čínského prezidenta?",
             "publishedAt": "2026-05-13T08:10:13Z"
@@ -373,10 +376,6 @@
           {
             "title": "V dubnu nezaměstnanost nepatrně klesla",
             "publishedAt": "2026-05-12T09:00:46Z"
-          },
-          {
-            "title": "Proč guvernér ČNB Michl odmítá přepnout na „jestřábí“ režim?",
-            "publishedAt": "2026-05-12T08:00:24Z"
           }
         ]
       }

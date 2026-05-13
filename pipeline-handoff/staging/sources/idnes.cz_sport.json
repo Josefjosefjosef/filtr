@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-13T09:50:34.523475Z",
+  "ingestedAt": "2026-05-13T10:30:17.034233Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nedat vzorek je nejhorší. Šéf antidopingu o pravidlech, která porušila Vondroušová",
+      "url": "https://www.idnes.cz/sport/tenis/sef-antidopingu-martin-cizek-pravidla-poruseni-marketa-vondrousova.A260512_161831_tenis_ten",
+      "dt": "2026-05-13T10:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "antidopingu",
+        "nedat",
+        "nejhorší",
+        "porušila",
+        "pravidlech",
+        "vondroušová",
+        "vzorek",
+        "šéf"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Radost i smutek na Slovácku. Přímo už sestoupit nemůže, ale ani se zachránit",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/slovacko-fotbalova-chance-liga-roman-skuhravy-michal-travnik-baraz.A260513_110747_fotbal_epfoj",
+      "dt": "2026-05-13T09:50:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "ale",
+        "nemůže",
+        "přímo",
+        "radost",
+        "sestoupit",
+        "slovácku",
+        "smutek",
+        "zachránit"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -732,58 +782,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zlín - Teplice 2:4, hosté prohrávali o dvě branky. V závěru otočili duel i s červenou",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-nadstavba-skupina-o-udrzeni-zlin-teplice.A260512_165856_fotbal_tals",
-      "dt": "2026-05-12T18:06:15Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "branky",
-        "duel",
-        "dvě",
-        "hosté",
-        "otočili",
-        "prohrávali",
-        "teplice",
-        "zlín",
-        "závěru",
-        "červenou"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Boleslav - Dukla 1:2, důležitá výhra. Pražané odskakují od posledního místa",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-skupina-o-zachranu-mlada-boleslav-dukla-praha-online-vysledek.A260512_151230_fotbal_duff",
-      "dt": "2026-05-12T17:52:09Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "boleslav",
-        "dukla",
-        "důležitá",
-        "místa",
-        "odskakují",
-        "posledního",
-        "pražané",
-        "výhra"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48073,
+      "bytes": 48067,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +829,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T09:38:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T10:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -846,6 +844,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nedat vzorek je nejhorší. Šéf antidopingu o pravidlech, která porušila Vondroušová",
+            "publishedAt": "2026-05-13T10:00:00Z"
+          },
+          {
+            "title": "Radost i smutek na Slovácku. Přímo už sestoupit nemůže, ale ani se zachránit",
+            "publishedAt": "2026-05-13T09:50:00Z"
+          },
           {
             "title": "Basketbalistky USK opouští opora. Ayayiová oznámila, že se do Prahy nevrátí",
             "publishedAt": "2026-05-13T09:38:00Z"
@@ -869,14 +875,6 @@
           {
             "title": "Švýcarsko na MS v hokeji 2026: program, výsledky, soupiska, bilance s Čechy",
             "publishedAt": "2026-05-13T08:00:00Z"
-          },
-          {
-            "title": "Priske: S druhým místem nebudu nikdy spokojený. Derby? To se nemělo stát",
-            "publishedAt": "2026-05-13T07:58:00Z"
-          },
-          {
-            "title": "MS v hokeji 2026: Program, složení skupin, kde a s kým budou hrát Češi?",
-            "publishedAt": "2026-05-13T07:51:00Z"
           }
         ]
       }
