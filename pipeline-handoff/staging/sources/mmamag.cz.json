@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-13T05:44:54.784258Z",
+  "ingestedAt": "2026-05-13T06:25:12.940148Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "V kleci se jí nedaří, na sítích ale boduje. Bojovnice UFC Amanda Ribas provokovala pozadím v titěrných bikinách",
+      "url": "https://www.mmamag.cz/bojovnice-ufc-provokovala-pozadim-v-titernych-bikinach/",
+      "dt": "2026-05-13T06:00:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "ale",
+        "amanda",
+        "bikinách",
+        "boduje",
+        "bojovnice",
+        "kleci",
+        "nedaří",
+        "pozadím",
+        "provokovala",
+        "ribas",
+        "sítích",
+        "titěrných",
+        "ufc"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1085,31 +1115,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "video",
-      "title": "UFC čelila ruské mafii. Dana White se třásl strachy",
-      "url": "https://www.mmamag.cz/ufc-celila-ruske-mafii-dana-white-se-trasl-strachy/",
-      "dt": "2026-05-11T12:00:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "dana",
-        "mafii",
-        "ruské",
-        "strachy",
-        "třásl",
-        "ufc",
-        "white",
-        "čelila"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1120,7 +1125,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 78745,
+      "bytes": 78712,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1157,7 +1162,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-13T05:23:55Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T06:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1172,6 +1177,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V kleci se jí nedaří, na sítích ale boduje. Bojovnice UFC Amanda Ribas provokovala pozadím v titěrných bikinách",
+            "publishedAt": "2026-05-13T06:00:00Z"
+          },
           {
             "title": "Strickland ho urážel měsíce. Po zápase sklonil hlavu a prosil o odpuštění, říká Chimaev po ztrátě pásu UFC",
             "publishedAt": "2026-05-13T05:23:55Z"
@@ -1199,10 +1208,6 @@
           {
             "title": "Hollywoodská hvězda se proměnila v MMA zápasníka. McGregor mu při natáčení naložil",
             "publishedAt": "2026-05-12T18:00:00Z"
-          },
-          {
-            "title": "Strickland nazval slavného novináře parazitem. Bránil se nařčení, že rivalita s Chimaevem byla od začátku divadlem",
-            "publishedAt": "2026-05-12T17:15:00Z"
           }
         ]
       }

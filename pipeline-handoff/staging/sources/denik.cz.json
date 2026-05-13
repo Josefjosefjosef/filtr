@@ -1,8 +1,56 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-13T05:44:54.784258Z",
+  "ingestedAt": "2026-05-13T06:25:12.940148Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Metalová senzace. Kytarista z Hodonínska hraje s americkou legendou",
+      "url": "https://www.denik.cz/regiony/svatoborice-martin-bilek-metalova-senzace.html",
+      "dt": "2026-05-13T06:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "americkou",
+        "hodonínska",
+        "hraje",
+        "kytarista",
+        "legendou",
+        "metalová",
+        "senzace"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Smrt muže na letišti v Denveru: Úřady ji označily za sebevraždu",
+      "url": "https://www.denik.cz/ze_sveta/smrt-muze-letiste-denver-sebevrazda.html",
+      "dt": "2026-05-13T05:37:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "denveru",
+        "letišti",
+        "muže",
+        "označily",
+        "sebevraždu",
+        "smrt",
+        "úřady"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -597,57 +645,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Palivové stropy znovu klesly. Více ve středu zlevní nafta",
-      "url": "https://www.denik.cz/z_domova/ceny-paliva-strop-streda-levnejsi-nafta.html",
-      "dt": "2026-05-12T12:36:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "klesly",
-        "nafta",
-        "palivové",
-        "stropy",
-        "středu",
-        "zlevní",
-        "znovu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Podle mnohých se na onkologii jen umírá. Tak to ale není, říká vrchní sestra",
-      "url": "https://www.denik.cz/zdravotnictvi/podle-mnohych-se-na-onkologii-jen-umira-tak-to-ale-neni-rika-vrchni-sestra.html",
-      "dt": "2026-05-12T12:31:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ale",
-        "jen",
-        "mnohých",
-        "onkologii",
-        "podle",
-        "sestra",
-        "tak",
-        "umírá",
-        "vrchní",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -658,7 +655,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30106,
+      "bytes": 29386,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -695,12 +692,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-13T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T06:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "finance": 2,
-          "zdravi": 1
+          "zpravy": 23,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -712,6 +708,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Metalová senzace. Kytarista z Hodonínska hraje s americkou legendou",
+            "publishedAt": "2026-05-13T06:00:00Z"
+          },
+          {
+            "title": "Smrt muže na letišti v Denveru: Úřady ji označily za sebevraždu",
+            "publishedAt": "2026-05-13T05:37:00Z"
+          },
           {
             "title": "Členství v EU bude pro Čechy výhodné, i když víc zaplatí, říká Ladmanová",
             "publishedAt": "2026-05-13T05:00:00Z"
@@ -735,14 +739,6 @@
           {
             "title": "Extrémní proměny: Tomáš neodolal svodům Prahy, narostl do váhy 185 kilo",
             "publishedAt": "2026-05-13T02:30:00Z"
-          },
-          {
-            "title": "Konec ropy je neděsí. Norsko 30 let investuje s cílem vlastnit část celého světa",
-            "publishedAt": "2026-05-13T02:20:00Z"
-          },
-          {
-            "title": "Barvám neutečeš! Běh olomouckými parky se objektivem Antonína Gerži",
-            "publishedAt": "2026-05-13T02:07:00Z"
           }
         ]
       }

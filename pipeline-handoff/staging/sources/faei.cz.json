@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-13T05:44:54.784258Z",
+  "ingestedAt": "2026-05-13T06:25:12.940148Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nicolas Eich novým generálním ředitelem Bezvavlasy",
+      "url": "https://profitonline.cz/nicolas-eich-novym-generalnim-reditelem-bezvavlasy/",
+      "dt": "2026-05-13T06:00:56Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "bezvavlasy",
+        "eich",
+        "generálním",
+        "nicolas",
+        "novým",
+        "ředitelem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -259,34 +282,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "The Economist: Inflace v Argentině už zase zrychluje. Přestaly Mileiovy radikální reformy fungovat?",
-      "url": "https://profitonline.cz/the-economist-inflace-v-argentine-uz-zase-zrychluje-prestaly-mileiovy-radikalni-reformy-fungovat/",
-      "dt": "2026-05-11T04:00:01Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "argentině",
-        "economist",
-        "fungovat",
-        "inflace",
-        "mileiovy",
-        "přestaly",
-        "radikální",
-        "reformy",
-        "the",
-        "zase",
-        "zrychluje"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -297,7 +292,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19047,
+      "bytes": 18756,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -334,11 +329,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-13T04:00:14Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T06:00:56Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "zdravi": 1,
           "finance": 10,
+          "zdravi": 1,
           "sport": 1
         },
         "drop_counts": {
@@ -351,6 +346,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nicolas Eich novým generálním ředitelem Bezvavlasy",
+            "publishedAt": "2026-05-13T06:00:56Z"
+          },
           {
             "title": "Největší baterie připomíná Lego. Ochrání před solárními elektrárnami",
             "publishedAt": "2026-05-13T04:00:14Z"
@@ -378,10 +377,6 @@
           {
             "title": "Zdeněk Rapant nastoupil do Raben Logistics Czech",
             "publishedAt": "2026-05-12T07:00:06Z"
-          },
-          {
-            "title": "Naobědvat se v restauraci pod 200 korun je už skoro malý zázrak",
-            "publishedAt": "2026-05-12T06:00:49Z"
           }
         ]
       }

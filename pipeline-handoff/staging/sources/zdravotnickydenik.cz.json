@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-13T05:44:54.784258Z",
+  "ingestedAt": "2026-05-13T06:25:12.940148Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Češi narážejí na limity „projektu dítě“. Jejich plány drtí biologická realita",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/cesi-narazeji-na-limity-projektu-dite-biologicka-realita/",
+      "dt": "2026-05-13T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "biologická",
+        "drtí",
+        "dítě",
+        "jejich",
+        "limity",
+        "narážejí",
+        "plány",
+        "projektu",
+        "realita",
+        "češi"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -244,34 +271,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Agresivní opilci ničí pražské nemocnice. Záchytka nestíhá, pacienti končí na akutních lůžkách",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/protialkoholni-zachytna-stanice-nemocnice-praha/",
-      "dt": "2026-05-12T09:11:43Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "agresivní",
-        "akutních",
-        "končí",
-        "lůžkách",
-        "nemocnice",
-        "nestíhá",
-        "ničí",
-        "opilci",
-        "pacienti",
-        "pražské",
-        "záchytka"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +281,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 79522,
+      "bytes": 82454,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +318,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-13T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -335,6 +334,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Češi narážejí na limity „projektu dítě“. Jejich plány drtí biologická realita",
+            "publishedAt": "2026-05-13T06:00:00Z"
+          },
           {
             "title": "Miliardové sekery: Malé nemocnice prodělávají na lůžkách, která jednou budeme potřebovat",
             "publishedAt": "2026-05-13T05:00:00Z"
@@ -362,10 +365,6 @@
           {
             "title": "Babiš ostře o ÚVN: Je v propadu, může za to špatný výběr ředitele. Zůna musí okamžitě jednat",
             "publishedAt": "2026-05-12T11:38:18Z"
-          },
-          {
-            "title": "Hantavirus má osmitýdenní inkubační dobu. WHO očekává další případy",
-            "publishedAt": "2026-05-12T10:18:22Z"
           }
         ]
       }

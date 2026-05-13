@@ -1,14 +1,42 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-13T05:44:54.784258Z",
+  "ingestedAt": "2026-05-13T06:25:12.940148Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hamzová zapsala první body, Čechová je sbírá ve velkém. Češky v WNBA slaví výhru",
+      "url": "https://www.idnes.cz/sport/basket/basketbalistky-cechova-s-hamzovou-slavi-ve-wnba-s-minnesotou-prvni-vyhru.A260513_074923_sport-basket_kazdt",
+      "dt": "2026-05-13T06:10:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "body",
+        "hamzová",
+        "první",
+        "sbírá",
+        "slaví",
+        "velkém",
+        "výhru",
+        "wnba",
+        "zapsala",
+        "čechová",
+        "češky"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
       "title": "Hertl byl u dvou gólů v síti Dostála, Buffalo srovnalo sérii s Montrealem",
       "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-dobes-hertl-dostal.A260513_071701_nhl_mkr",
-      "dt": "2026-05-13T05:39:03Z",
+      "dt": "2026-05-13T06:07:14Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
@@ -21,6 +49,33 @@
         "srovnalo",
         "sérii",
         "síti"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Spurs jsou blízko finále konference, zářil Wembanyama. Hraje dospěle, chválil kouč",
+      "url": "https://www.idnes.cz/sport/basket/nba-vysledky-play-off.A260513_072537_sport-basket_kazdt",
+      "dt": "2026-05-13T05:45:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "blízko",
+        "chválil",
+        "dospěle",
+        "finále",
+        "hraje",
+        "konference",
+        "kouč",
+        "spurs",
+        "wembanyama",
+        "zářil"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -738,59 +793,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Z Prahy na školu s americkým fotbalem. Chci ukázat cestu, říká hvězda Lions",
-      "url": "https://www.idnes.cz/sport/ostatni/prvni-cech-americky-fotbal-ncaa-matyas-bily-minot-state-university.A260512_081331_sporty_ten",
-      "dt": "2026-05-12T13:55:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "americkým",
-        "cestu",
-        "chci",
-        "fotbalem",
-        "hvězda",
-        "lions",
-        "prahy",
-        "ukázat",
-        "říká",
-        "školu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Barcelonou to končí, Veselý uzavře kariéru. NBA mu nesedla, v Eurolize je legendou",
-      "url": "https://www.idnes.cz/sport/basket/jan-vesely-konec-kariery.A260512_141008_sport-basket_kazdt",
-      "dt": "2026-05-12T13:37:35Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "barcelonou",
-        "eurolize",
-        "kariéru",
-        "končí",
-        "legendou",
-        "nba",
-        "nesedla",
-        "uzavře",
-        "veselý"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +803,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48135,
+      "bytes": 47699,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,7 +840,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T05:39:03Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T06:10:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -854,8 +856,16 @@
         },
         "sample_titles": [
           {
+            "title": "Hamzová zapsala první body, Čechová je sbírá ve velkém. Češky v WNBA slaví výhru",
+            "publishedAt": "2026-05-13T06:10:00Z"
+          },
+          {
             "title": "Hertl byl u dvou gólů v síti Dostála, Buffalo srovnalo sérii s Montrealem",
-            "publishedAt": "2026-05-13T05:39:03Z"
+            "publishedAt": "2026-05-13T06:07:14Z"
+          },
+          {
+            "title": "Spurs jsou blízko finále konference, zářil Wembanyama. Hraje dospěle, chválil kouč",
+            "publishedAt": "2026-05-13T05:45:00Z"
           },
           {
             "title": "Spasitel Narváez vyvedl UAE z mizérie a smolař Ciccone zářil: Už jsem ani nedoufal",
@@ -876,14 +886,6 @@
           {
             "title": "I trénink zažívacího ústrojí. Co všechno pomohlo Sawemu k milníku v maratonu",
             "publishedAt": "2026-05-12T22:00:00Z"
-          },
-          {
-            "title": "Po derby dostal volno, pak opět vynuloval Plzeň. Surovčík má můj respekt, řekl kouč",
-            "publishedAt": "2026-05-12T21:48:00Z"
-          },
-          {
-            "title": "Nadstavba fotbalové ligy 2026, skupiny o umístění a záchranu: program, zápasy",
-            "publishedAt": "2026-05-12T20:50:14Z"
           }
         ]
       }

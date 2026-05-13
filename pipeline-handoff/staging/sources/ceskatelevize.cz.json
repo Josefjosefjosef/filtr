@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-13T05:44:54.784258Z",
+  "ingestedAt": "2026-05-13T06:25:12.940148Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trump označil Venezuelu za 51. stát USA",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/trump-oznacil-venezuelu-za-51-stat-usa-373366",
+      "dt": "2026-05-13T05:53:33Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "označil",
+        "stát",
+        "trump",
+        "usa",
+        "venezuelu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -131,13 +153,12 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Šéf Úřadu pro kontrolu potravin a léčiv končí ve funkci, oznámil Trump",
+      "title": "Šéf Úřadu pro kontrolu potravin a léčiv končí, oznámil Trump",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/sef-uradu-pro-kontrolu-potravin-a-leciv-konci-ve-funkci-oznamil-trump-373363",
       "dt": "2026-05-12T22:09:21Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "funkci",
         "kontrolu",
         "končí",
         "léčiv",
@@ -724,30 +745,6 @@
         "zneužití",
         "časopisů",
         "žaluje"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Festival Pražské jaro začíná. Slyšet ho je možné na ČT i v parku",
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/festival-prazske-jaro-zacina-slyset-ho-je-mozne-na-ct-i-v-parku-373336",
-      "dt": "2026-05-12T12:54:40Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "festival",
-        "jaro",
-        "možné",
-        "parku",
-        "pražské",
-        "slyšet",
-        "začíná"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1497,7 +1494,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41784,
+      "bytes": 41729,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1557,11 +1554,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T05:03:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T05:53:33Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 6,
-          "zpravy": 24
+          "zpravy": 25,
+          "other": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1573,6 +1570,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump označil Venezuelu za 51. stát USA",
+            "publishedAt": "2026-05-13T05:53:33Z"
+          },
           {
             "title": "Kresba, koláže i 3D mloci. Čeští tvůrci představili vznikající filmy",
             "publishedAt": "2026-05-13T05:03:00Z"
@@ -1594,16 +1595,12 @@
             "publishedAt": "2026-05-13T00:31:55Z"
           },
           {
-            "title": "Šéf Úřadu pro kontrolu potravin a léčiv končí ve funkci, oznámil Trump",
+            "title": "Šéf Úřadu pro kontrolu potravin a léčiv končí, oznámil Trump",
             "publishedAt": "2026-05-12T22:09:21Z"
           },
           {
             "title": "Neznámý pachatel odcizil z baziliky na Liberecku lebku svaté Zdislavy",
             "publishedAt": "2026-05-12T20:00:19Z"
-          },
-          {
-            "title": "Mezi USA a Kremlem není shoda, že by Rusko mělo získat celý Donbas, řekl Trump",
-            "publishedAt": "2026-05-12T19:53:29Z"
           }
         ]
       }
@@ -1709,7 +1706,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77526,
+      "bytes": 77565,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
