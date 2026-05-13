@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-13T13:10:00.998446Z",
+  "ingestedAt": "2026-05-13T13:50:04.295217Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nenápadné příznaky, které nesmíte přehlížet: Rakovina hlavy a krku se týká tisíců Čechů",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/nenapadne-priznaky-ktere-nesmite-prehlizet-rakovina-hlavy-a-krku-se-tyka-tisicu-cechu/",
+      "dt": "2026-05-13T13:20:27Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "hlavy",
+        "krku",
+        "nenápadné",
+        "nesmíte",
+        "přehlížet",
+        "příznaky",
+        "rakovina",
+        "tisíců",
+        "týká",
+        "čechů"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -246,32 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Miliardové sekery: Malé nemocnice prodělávají na lůžkách, která jednou budeme potřebovat",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/miliardove-sekery-male-nemocnice-luzka/",
-      "dt": "2026-05-13T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "budeme",
-        "jednou",
-        "lůžkách",
-        "malé",
-        "miliardové",
-        "nemocnice",
-        "potřebovat",
-        "prodělávají",
-        "sekery"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 85237,
+      "bytes": 79509,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +320,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-13T12:09:52Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T13:20:27Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -335,6 +336,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nenápadné příznaky, které nesmíte přehlížet: Rakovina hlavy a krku se týká tisíců Čechů",
+            "publishedAt": "2026-05-13T13:20:27Z"
+          },
           {
             "title": "Eurokomisař Síkela odhalil miliardový plán: Jak EU reaguje na dezinformace a nové nemoci?",
             "publishedAt": "2026-05-13T12:09:52Z"
@@ -362,10 +367,6 @@
           {
             "title": "Tvrdá hra, tvrdé následky. Téměř každý profesionální hokejista vykazuje poškození mozku",
             "publishedAt": "2026-05-13T08:00:00Z"
-          },
-          {
-            "title": "Zásah v dceřiné společnosti VZP: Duškov odvolal vedení a nařídil forenzní audit",
-            "publishedAt": "2026-05-13T06:53:30Z"
           }
         ]
       }

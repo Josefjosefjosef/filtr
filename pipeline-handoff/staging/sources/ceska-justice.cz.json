@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-05-13T13:10:00.998446Z",
+  "ingestedAt": "2026-05-13T13:50:04.295217Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Vrchní soud zveřejnil 18 tisíc rozhodnutí. S nespravedlností poradí chatbot",
+      "url": "https://www.ceska-justice.cz/2026/05/vrchni-soud-18-tisic-rozhodnuti-chatbot/",
+      "dt": "2026-05-13T13:40:34Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "chatbot",
+        "nespravedlností",
+        "poradí",
+        "rozhodnutí",
+        "soud",
+        "tisíc",
+        "vrchní",
+        "zveřejnil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -240,31 +265,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Padl trest pro řidiče tramvaje za konflikt s Ukrajinci. Výtržnictví si odpracuje",
-      "url": "https://www.ceska-justice.cz/2026/05/trest-ridic-tramvaje-ukrajinci-vytrznictvi-odpracuje/",
-      "dt": "2026-05-12T10:16:52Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "konflikt",
-        "odpracuje",
-        "padl",
-        "tramvaje",
-        "trest",
-        "ukrajinci",
-        "výtržnictví",
-        "řidiče"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -275,7 +275,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 89029,
+      "bytes": 92101,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -312,7 +312,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-13T09:40:36Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T13:40:34Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -327,6 +327,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vrchní soud zveřejnil 18 tisíc rozhodnutí. S nespravedlností poradí chatbot",
+            "publishedAt": "2026-05-13T13:40:34Z"
+          },
           {
             "title": "Spor o výtku v bitcoinové kauze se stěhuje: Námitku Lastovecké bude řešit soud v Praze",
             "publishedAt": "2026-05-13T09:40:36Z"
@@ -354,10 +358,6 @@
           {
             "title": "Maximální trest pro Slavii. Nic horšího se podle šéfa disciplinární komise už nemohlo stát",
             "publishedAt": "2026-05-12T12:32:11Z"
-          },
-          {
-            "title": "Solení namrzlých silnic není unikátní služba, vzkázal soud odpadové firmě AVE",
-            "publishedAt": "2026-05-12T11:53:52Z"
           }
         ]
       }

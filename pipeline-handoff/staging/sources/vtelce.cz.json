@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-05-13T13:10:00.998446Z",
+  "ingestedAt": "2026-05-13T13:50:04.295217Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Sherlock Holmes: Podvody s kostýmem, tvrdá rána do obličeje a bezvědomí na place",
+      "url": "https://www.vtelce.cz/sherlock-holmes-podvody-s-kostymem-tvrda-rana-do-obliceje-a-bezvedomi-na-place/",
+      "dt": "2026-05-13T13:13:29Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "bezvědomí",
+        "holmes",
+        "kostýmem",
+        "obličeje",
+        "place",
+        "podvody",
+        "rána",
+        "sherlock",
+        "tvrdá"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -258,34 +284,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Železná lady: Utajená špionáž v parlamentu, odmítnuté miliony a hluboké rozhořčení premiéra Camerona",
-      "url": "https://www.vtelce.cz/zelezna-lady-utajena-spionaz-v-parlamentu-odmitnute-miliony-a-hluboke-rozhorceni-premiera-camerona/",
-      "dt": "2026-05-11T17:14:15Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "camerona",
-        "hluboké",
-        "lady",
-        "miliony",
-        "odmítnuté",
-        "parlamentu",
-        "premiéra",
-        "rozhořčení",
-        "utajená",
-        "špionáž",
-        "železná"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -296,7 +294,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 70084,
+      "bytes": 63176,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -333,7 +331,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-13T09:38:16Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T13:13:29Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "other": 10
@@ -348,6 +346,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sherlock Holmes: Podvody s kostýmem, tvrdá rána do obličeje a bezvědomí na place",
+            "publishedAt": "2026-05-13T13:13:29Z"
+          },
           {
             "title": "Tajuplné Věřte nevěřte ukázalo děsivou předpověď zkázy Titanicu i pád vzducholodi Hindenburg",
             "publishedAt": "2026-05-13T09:38:16Z"
@@ -375,10 +377,6 @@
           {
             "title": "7 pádů Honzy Dědka: Drsný humor Kozuba a Ferra, David Prachař v kostýmu růžového žraloka a imitace Miloše Zemana",
             "publishedAt": "2026-05-12T09:40:12Z"
-          },
-          {
-            "title": "Lukáš z Ulice bere zpátečku, jen neví, jak to Heleně říct",
-            "publishedAt": "2026-05-12T08:44:24Z"
           }
         ]
       }

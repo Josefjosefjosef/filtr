@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-13T13:10:00.998446Z",
+  "ingestedAt": "2026-05-13T13:50:04.295217Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Tři metry od ultras. Šmicer líčí peklo v Edenu",
+      "url": "https://www.sport.cz/clanek/podcasty-smica-z-voleje-tri-metry-od-ultras-smicer-lici-peklo-v-edenu-5453439",
+      "dt": "2026-05-13T13:31:06Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "edenu",
+        "líčí",
+        "metry",
+        "peklo",
+        "tři",
+        "ultras",
+        "šmicer"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -741,32 +765,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hertl se znovu trefil a Vegas má mečbol. Dobeš inkasoval kuriozní gól",
-      "url": "https://www.sport.cz/clanek/hokej-nhl-hertl-se-trefil-dobes-montreal-k-vyhre-nedotahl-serie-je-srovnana-5453396",
-      "dt": "2026-05-13T04:00:00Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dobeš",
-        "gól",
-        "hertl",
-        "inkasoval",
-        "kuriozní",
-        "mečbol",
-        "trefil",
-        "vegas",
-        "znovu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -777,7 +775,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 46037,
+      "bytes": 46211,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -814,7 +812,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T12:58:13Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T13:31:06Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -830,6 +828,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tři metry od ultras. Šmicer líčí peklo v Edenu",
+            "publishedAt": "2026-05-13T13:31:06Z"
+          },
           {
             "title": "Dubový se stal mistrem Evropy v neolympijské velkorážní pistoli",
             "publishedAt": "2026-05-13T12:58:13Z"
@@ -857,10 +859,6 @@
           {
             "title": "Ministr zvažuje vznik rejstříku ke sdílení dat klubů o problémových fanoušcích",
             "publishedAt": "2026-05-13T11:56:51Z"
-          },
-          {
-            "title": "V Brně se při Velké ceně představí kromě Salače i další tři Češi",
-            "publishedAt": "2026-05-13T11:47:13Z"
           }
         ]
       }

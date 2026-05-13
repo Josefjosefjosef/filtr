@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-13T13:10:00.998446Z",
+  "ingestedAt": "2026-05-13T13:50:04.295217Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "video",
+      "title": "Z akční hvězdy je pupkatý stařec. Steven Seagal už dávno nevypadá jako dřív",
+      "url": "https://www.mmamag.cz/z-akcni-hvezdy-je-pupkaty-starec-seagal-nam-trochu-pribral/",
+      "dt": "2026-05-13T13:30:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "akční",
+        "dávno",
+        "dřív",
+        "hvězdy",
+        "jako",
+        "nevypadá",
+        "pupkatý",
+        "seagal",
+        "stařec",
+        "steven"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1095,34 +1122,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Khabib varoval Chimaeva už před měsíci. Přesně popsal chybu, která ho stála pás na UFC 328",
-      "url": "https://www.mmamag.cz/khabib-uz-driv-varoval-kde-chimaev-v-zapasech-ztraci/",
-      "dt": "2026-05-11T21:00:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "328",
-        "chimaeva",
-        "chybu",
-        "khabib",
-        "měsíci",
-        "popsal",
-        "pás",
-        "přesně",
-        "stála",
-        "ufc",
-        "varoval"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1133,7 +1132,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 79072,
+      "bytes": 79836,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1170,7 +1169,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-13T12:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T13:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1185,6 +1184,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Z akční hvězdy je pupkatý stařec. Steven Seagal už dávno nevypadá jako dřív",
+            "publishedAt": "2026-05-13T13:30:00Z"
+          },
           {
             "title": "Végh po těsné výhře překvapil upřímností. Mohla to být remíza, řekl a Hutníkovi nabídl odvetu",
             "publishedAt": "2026-05-13T12:45:00Z"
@@ -1212,10 +1215,6 @@
           {
             "title": "Nejvýznamnější turnaje v historii bojových sportů znají jen skuteční znalci. Kdo zvládne plný počet, má znalosti hodné šampiona",
             "publishedAt": "2026-05-13T09:00:43Z"
-          },
-          {
-            "title": "Chimaevův černý víkend: První prohra, ztráta pásu a obrovský propad v žebříčku UFC",
-            "publishedAt": "2026-05-13T09:00:00Z"
           }
         ]
       }
