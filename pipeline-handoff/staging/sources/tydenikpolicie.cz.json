@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-13T01:40:50.343333Z",
+  "ingestedAt": "2026-05-13T02:19:42.751537Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Policisté na Karvinsku hledají svědky srážky motorky se škodovkou",
+      "url": "https://tydenikpolicie.cz/policiste-na-karvinsku-hledaji-svedky-srazky-motorky-se-skodovkou/",
+      "dt": "2026-05-13T02:02:51Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "hledají",
+        "karvinsku",
+        "motorky",
+        "policisté",
+        "srážky",
+        "svědky",
+        "škodovkou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -235,34 +259,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Opilý muž spadl v Českých Budějovicích ze svahu do řeky. Zachránili ho svědci společně s policisty",
-      "url": "https://tydenikpolicie.cz/opily-muz-spadl-v-ceskych-budejovicich-ze-svahu-do-reky-zachranili-ho-svedci-spolecne-s-policisty/",
-      "dt": "2026-05-12T12:24:41Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "budějovicích",
-        "muž",
-        "opilý",
-        "policisty",
-        "spadl",
-        "společně",
-        "svahu",
-        "svědci",
-        "zachránili",
-        "českých",
-        "řeky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -273,7 +269,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16495,
+      "bytes": 16338,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -310,7 +306,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-12T22:02:04Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T02:02:51Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -325,6 +321,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policisté na Karvinsku hledají svědky srážky motorky se škodovkou",
+            "publishedAt": "2026-05-13T02:02:51Z"
+          },
           {
             "title": "Zlínští kriminalisté dopadli podezřelého, který měl jako kurýr převzít peníze od podvedené ženy",
             "publishedAt": "2026-05-12T22:02:04Z"
@@ -352,10 +352,6 @@
           {
             "title": "Žena z Jesenicka si myslela, že si píše s americkým vojákem na misi",
             "publishedAt": "2026-05-12T12:33:57Z"
-          },
-          {
-            "title": "Policisté hledají svědky tragické nehody, při které na Olomoucku zemřel motorkář",
-            "publishedAt": "2026-05-12T12:32:28Z"
           }
         ]
       }
