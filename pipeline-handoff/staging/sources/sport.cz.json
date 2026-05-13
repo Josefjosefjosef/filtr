@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-13T12:30:32.426878Z",
+  "ingestedAt": "2026-05-13T13:10:00.998446Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Dubový se stal mistrem Evropy v neolympijské velkorážní pistoli",
+      "url": "https://www.sport.cz/clanek/ostatni-dubovy-se-stal-mistrem-evropy-v-neolympijske-velkorazni-pistoli-5453438",
+      "dt": "2026-05-13T12:58:13Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "dubový",
+        "evropy",
+        "mistrem",
+        "neolympijské",
+        "pistoli",
+        "stal",
+        "velkorážní"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -20,6 +44,31 @@
         "velké",
         "vstoupí",
         "změny"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Česká kometa i exhibiční repríza finále. Prostějov pokukuje po Paříži",
+      "url": "https://www.sport.cz/clanek/tenis-ceska-kometa-i-exhibicni-repriza-finale-prostejov-pokukuje-po-parizi-5453435",
+      "dt": "2026-05-13T12:30:00Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "exhibiční",
+        "finále",
+        "kometa",
+        "paříži",
+        "pokukuje",
+        "prostějov",
+        "repríza",
+        "česká"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -57,21 +106,23 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Messi je suverénně nejlépe placeným hráčem MLS, pořádný balík i pro Lingra",
+      "title": "Lingr vydělává v Americe pořádný balík, suverénně nejlépe placeným hráčem MLS je Messi",
       "url": "https://www.sport.cz/clanek/fotbal-messi-je-suverenne-nejlepe-placenym-hracem-mls-poradny-balik-i-pro-lingra-5453432",
       "dt": "2026-05-13T12:12:16Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
+        "americe",
         "balík",
         "hráčem",
-        "lingra",
+        "lingr",
         "messi",
         "mls",
         "nejlépe",
         "placeným",
         "pořádný",
-        "suverénně"
+        "suverénně",
+        "vydělává"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -716,61 +767,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Ohledně smrti basketbalisty Clarkea pracuje policie s verzí o předávkování",
-      "url": "https://www.sport.cz/clanek/basketbal-ohledne-smrti-basketbalisty-clarkea-pracuje-policie-s-verzi-o-predavkovani-5453413",
-      "dt": "2026-05-13T07:59:54Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "basketbalisty",
-        "clarkea",
-        "ohledně",
-        "policie",
-        "pracuje",
-        "předávkování",
-        "smrti",
-        "verzí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "JEDEN TÝM: Syn českých atletů ve šlépějích rodičů nejde. Radši si lehne a opaluje se, smějí se běžci",
-      "url": "https://www.sport.cz/clanek/podcasty-jeden-tym-jeden-tym-jen-kdyz-se-hraje-hokej-tak-se-na-fandeni-neshodneme-rikaji-atleticti-manzele-5453297",
-      "dt": "2026-05-13T07:15:52Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "atletů",
-        "běžci",
-        "jeden",
-        "lehne",
-        "nejde",
-        "opaluje",
-        "radši",
-        "rodičů",
-        "smějí",
-        "syn",
-        "tým",
-        "českých",
-        "šlépějích"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -781,7 +777,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 46893,
+      "bytes": 46037,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -818,11 +814,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T12:18:22Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T12:58:13Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 28,
-          "zpravy": 2
+          "sport": 29,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -835,15 +831,23 @@
         },
         "sample_titles": [
           {
+            "title": "Dubový se stal mistrem Evropy v neolympijské velkorážní pistoli",
+            "publishedAt": "2026-05-13T12:58:13Z"
+          },
+          {
             "title": "Velké změny v mistrovských Pardubicích. Do sezony vstoupí s novým vedením",
             "publishedAt": "2026-05-13T12:18:22Z"
+          },
+          {
+            "title": "Česká kometa i exhibiční repríza finále. Prostějov pokukuje po Paříži",
+            "publishedAt": "2026-05-13T12:30:00Z"
           },
           {
             "title": "Legenda možná už letos šéfem světového biatlonu! Je náš, jásají v Rusku",
             "publishedAt": "2026-05-13T12:17:10Z"
           },
           {
-            "title": "Messi je suverénně nejlépe placeným hráčem MLS, pořádný balík i pro Lingra",
+            "title": "Lingr vydělává v Americe pořádný balík, suverénně nejlépe placeným hráčem MLS je Messi",
             "publishedAt": "2026-05-13T12:12:16Z"
           },
           {
@@ -857,14 +861,6 @@
           {
             "title": "V Brně se při Velké ceně představí kromě Salače i další tři Češi",
             "publishedAt": "2026-05-13T11:47:13Z"
-          },
-          {
-            "title": "Hertl se z nejhlubších temnot vyhrabal zase na světlo",
-            "publishedAt": "2026-05-13T11:26:35Z"
-          },
-          {
-            "title": "Ohně i diváci na dráze a tři čeští rekordmani. Praha uvidí výjimečný běžecký závod",
-            "publishedAt": "2026-05-13T10:44:37Z"
           }
         ]
       }

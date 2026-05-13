@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-05-13T12:30:32.426878Z",
+  "ingestedAt": "2026-05-13T13:10:00.998446Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Do Česka dorazila funkce „Sluchadlo“. Zhoršenému sluchu pomůže i bez lékaře",
+      "url": "https://www.idnes.cz/technet/audio-foto-video/apple-airpods-pro-sluchadlo-hearing-aid.A260513_120243_audio-foto-video_nyv",
+      "dt": "2026-05-13T12:30:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "dorazila",
+        "funkce",
+        "lékaře",
+        "pomůže",
+        "sluchadlo",
+        "sluchu",
+        "zhoršenému",
+        "česka"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -738,31 +763,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Obří chobotnice z období křídy mohla měřit až devatenáct metrů. Byla pravák",
-      "url": "https://www.lidovky.cz/orientace/obri-chobotnice-z-obdobi-kridy-mohla-merit-az-devatenact-metru-byla-pravak.A260428_123947_ln-orientace_lrj",
-      "dt": "2026-05-01T08:32:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "chobotnice",
-        "devatenáct",
-        "křídy",
-        "metrů",
-        "měřit",
-        "období",
-        "obří",
-        "pravák"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -773,7 +773,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 46083,
+      "bytes": 46221,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -810,11 +810,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T10:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T12:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 20,
-          "zpravy": 10
+          "other": 21,
+          "zpravy": 9
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -826,6 +826,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Do Česka dorazila funkce „Sluchadlo“. Zhoršenému sluchu pomůže i bez lékaře",
+            "publishedAt": "2026-05-13T12:30:00Z"
+          },
           {
             "title": "Google nečekaně představil nový notebook. Chce konkurovat MacBooku Neo?",
             "publishedAt": "2026-05-13T10:10:00Z"
@@ -853,10 +857,6 @@
           {
             "title": "Objevila štěpení atomu, Nobelovku nemá. Meitnerová čelila nacistům i zneuznání",
             "publishedAt": "2026-05-12T14:00:00Z"
-          },
-          {
-            "title": "V Praze přistál bývalý speciál maršála Tita. Letoun málem shnil v Africe",
-            "publishedAt": "2026-05-12T04:30:00Z"
           }
         ]
       }

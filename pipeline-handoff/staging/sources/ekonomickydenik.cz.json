@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-13T12:30:32.426878Z",
+  "ingestedAt": "2026-05-13T13:10:00.998446Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Dreamlinerem přímo z Prahy: Do USA startuje nová dálková linka, létat se bude denně",
+      "url": "https://ekonomickydenik.cz/dalkove-spojeni-filadelfie/",
+      "dt": "2026-05-13T12:30:27Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "denně",
+        "dreamlinerem",
+        "dálková",
+        "linka",
+        "létat",
+        "nová",
+        "prahy",
+        "přímo",
+        "startuje",
+        "usa"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -755,30 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Dostřelí ukrajinské kanóny dál? Kyjev odtajnil ambiciózní plán",
-      "url": "https://ekonomickydenik.cz/dostreli-ukrajinske-dela-dal-norsko/",
-      "dt": "2026-05-12T04:15:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "ambiciózní",
-        "dostřelí",
-        "kanóny",
-        "kyjev",
-        "odtajnil",
-        "plán",
-        "ukrajinské"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72510,
+      "bytes": 72213,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +829,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T11:38:52Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T12:30:27Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -843,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dreamlinerem přímo z Prahy: Do USA startuje nová dálková linka, létat se bude denně",
+            "publishedAt": "2026-05-13T12:30:27Z"
+          },
           {
             "title": "Jedna jízdenka přes celý kontinent na jedno kliknutí. Evropa zjednoduší cestování",
             "publishedAt": "2026-05-13T11:38:52Z"
@@ -870,10 +877,6 @@
           {
             "title": "Prioritní zóny pro větrníky: Některé kraje je odmítají úplně, jiné jsou vstřícnější",
             "publishedAt": "2026-05-13T09:23:06Z"
-          },
-          {
-            "title": "Obrana potvrdila konec klíčového experta: Upozorňoval na vážný problém",
-            "publishedAt": "2026-05-13T08:54:14Z"
           }
         ]
       }
