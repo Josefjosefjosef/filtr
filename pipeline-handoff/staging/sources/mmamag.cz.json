@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-13T18:29:55.840877Z",
+  "ingestedAt": "2026-05-13T19:09:39.765991Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Ukradené výhry, nebo jen těsné zápasy? Verdikty v MMA, které fanoušci nevydýchali",
+      "url": "https://www.mmamag.cz/nejkontroverznejsi-verdikty-v-mma/",
+      "dt": "2026-05-13T18:45:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "fanoušci",
+        "jen",
+        "mma",
+        "nebo",
+        "nevydýchali",
+        "těsné",
+        "ukradené",
+        "verdikty",
+        "výhry",
+        "zápasy"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "video",
@@ -1096,37 +1123,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Chimaevův bratr popsal drama před UFC 328. Khamzat při shazování 21 kilo kolaboval, tělo vypovědělo službu",
-      "url": "https://www.mmamag.cz/khamzat-pri-shazovani-21-kilo-malem-ztratil-vedomi/",
-      "dt": "2026-05-12T09:00:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "328",
-        "bratr",
-        "chimaevův",
-        "drama",
-        "khamzat",
-        "kilo",
-        "kolaboval",
-        "popsal",
-        "při",
-        "shazování",
-        "službu",
-        "tělo",
-        "ufc",
-        "vypovědělo"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1137,7 +1133,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 80275,
+      "bytes": 80210,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1174,7 +1170,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-13T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T18:45:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1189,6 +1185,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ukradené výhry, nebo jen těsné zápasy? Verdikty v MMA, které fanoušci nevydýchali",
+            "publishedAt": "2026-05-13T18:45:00Z"
+          },
           {
             "title": "Nate Diaz se vysmál Stricklandovi a Chimaevovi. Jejich nenávist byla jen divadlem pro peníze",
             "publishedAt": "2026-05-13T18:00:00Z"
@@ -1216,10 +1216,6 @@
           {
             "title": "Z akční hvězdy je pupkatý stařec. Steven Seagal už dávno nevypadá jako dřív",
             "publishedAt": "2026-05-13T13:30:00Z"
-          },
-          {
-            "title": "Végh po těsné výhře překvapil upřímností. Mohla to být remíza, řekl a Hutníkovi nabídl odvetu",
-            "publishedAt": "2026-05-13T12:45:00Z"
           }
         ]
       }

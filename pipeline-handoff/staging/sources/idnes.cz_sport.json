@@ -1,25 +1,27 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-13T18:29:55.840877Z",
+  "ingestedAt": "2026-05-13T19:09:39.765991Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Slavia  - Jablonec 1:0, Chaloupek otevřel skóre, VAR odvolal vyrovnání",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/slavia-jablonec-3-kolo-nadstavby-chance-liga-titul.A260513_164511_fotbal_min",
-      "dt": "2026-05-13T18:22:07Z",
+      "title": "ONLINE: City hostí Crystal Palace, domácí stále živí naději na mistrovský titul",
+      "url": "https://www.idnes.cz/fotbal/zahranici/online-city-hosti-crystal-palace-domaci-stale-zivi-nadeji-na-mistrovsky-titul.A260513_204501_fot_zahranici_tit",
+      "dt": "2026-05-13T18:49:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "chaloupek",
-        "jablonec",
-        "odvolal",
-        "otevřel",
-        "skóre",
-        "slavia",
-        "var",
-        "vyrovnání"
+        "city",
+        "crystal",
+        "domácí",
+        "hostí",
+        "mistrovský",
+        "naději",
+        "palace",
+        "stále",
+        "titul",
+        "živí"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -31,17 +33,43 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Most nezvládl sedmimetrové hody, o český titul překvapivě zabojuje Slavia s Mostem",
+      "title": "ONLINE: Slavia  - Jablonec 3:0, domácí míří za titulem, Chytil zvyšuje na rozdíl tří gólů",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/slavia-jablonec-3-kolo-nadstavby-chance-liga-titul.A260513_164511_fotbal_min",
+      "dt": "2026-05-13T18:46:51Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "chytil",
+        "domácí",
+        "gólů",
+        "jablonec",
+        "míří",
+        "rozdíl",
+        "slavia",
+        "titulem",
+        "tří",
+        "zvyšuje"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Most nezvládl sedmimetrové hody, o český titul zabojuje Slavia s Kynžvartem",
       "url": "https://www.idnes.cz/sport/ostatni/hazenkarky-kynzvartu-si-podruhe-zahraji-o-cesky-titul-most-bojuje-se-slavii.A260513_190159_sporty_tit",
-      "dt": "2026-05-13T17:58:00Z",
+      "dt": "2026-05-13T18:32:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
         "hody",
+        "kynžvartem",
         "most",
-        "mostem",
         "nezvládl",
-        "překvapivě",
         "sedmimetrové",
         "slavia",
         "titul",
@@ -774,35 +802,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dva měsíce bez gólu. Ale už jsou pryč! Snad nic takového znovu nezažiju, ulevil si Hertl",
-      "url": "https://www.idnes.cz/hokej/nhl/tomas-hertl-vegas-golden-knights-ohlas-gol-cekani-uleva.A260513_092642_nhl_huda",
-      "dt": "2026-05-13T10:45:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "ale",
-        "dva",
-        "gólu",
-        "hertl",
-        "měsíce",
-        "nezažiju",
-        "nic",
-        "pryč",
-        "snad",
-        "takového",
-        "ulevil",
-        "znovu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -813,7 +812,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47594,
+      "bytes": 47576,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -850,7 +849,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T18:22:07Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T18:49:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -867,12 +866,16 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Slavia  - Jablonec 1:0, Chaloupek otevřel skóre, VAR odvolal vyrovnání",
-            "publishedAt": "2026-05-13T18:22:07Z"
+            "title": "ONLINE: City hostí Crystal Palace, domácí stále živí naději na mistrovský titul",
+            "publishedAt": "2026-05-13T18:49:00Z"
           },
           {
-            "title": "Most nezvládl sedmimetrové hody, o český titul překvapivě zabojuje Slavia s Mostem",
-            "publishedAt": "2026-05-13T17:58:00Z"
+            "title": "ONLINE: Slavia  - Jablonec 3:0, domácí míří za titulem, Chytil zvyšuje na rozdíl tří gólů",
+            "publishedAt": "2026-05-13T18:46:51Z"
+          },
+          {
+            "title": "Most nezvládl sedmimetrové hody, o český titul zabojuje Slavia s Kynžvartem",
+            "publishedAt": "2026-05-13T18:32:00Z"
           },
           {
             "title": "Hr. Králové - Liberec 1:0. Gól zadnicí přiblížil domácí pohárové Evropě",
@@ -893,10 +896,6 @@
           {
             "title": "Déšť, pády a drama v závěru. Ciccone na Giru přišel o růžový dres, jde do něj Eulálio",
             "publishedAt": "2026-05-13T16:18:00Z"
-          },
-          {
-            "title": "Francouzské biatlonistky předvedly nové kombinézy. Přecházejí k Adidasu",
-            "publishedAt": "2026-05-13T16:10:00Z"
           }
         ]
       }
