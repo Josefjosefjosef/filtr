@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-13T15:49:43.422031Z",
+  "ingestedAt": "2026-05-13T16:30:12.450429Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Trumpova drahá ropa",
+      "url": "https://ekonom.cz/c1-67876040-trumpova-draha-ropa",
+      "dt": "2026-05-13T16:00:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "drahá",
+        "ropa",
+        "trumpova"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1085,32 +1105,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Od IT přes rychlé motorky a víno až k baterkám. Kdo je záhadná Opuncie, která překvapila tuzemskou energetiku?",
-      "url": "https://archiv.hn.cz/c1-67875710-od-it-pres-rychle-motorky-a-vino-az-k-baterkam-kdo-je-zahadna-opuncie-ktera-prekvapila-tuzemskou-energetiku",
-      "dt": "2026-05-12T14:03:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "baterkám",
-        "energetiku",
-        "motorky",
-        "opuncie",
-        "překvapila",
-        "rychlé",
-        "tuzemskou",
-        "víno",
-        "záhadná"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1121,7 +1115,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184330,
+      "bytes": 184013,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1158,7 +1152,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-13T15:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T16:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 36,
@@ -1175,6 +1169,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trumpova drahá ropa",
+            "publishedAt": "2026-05-13T16:00:00Z"
+          },
           {
             "title": "Komu pomůže předkupní právo na zemědělskou půdu a co udělá s cenami? Menší farmáři tvrdí, že nahrává velkým agropodnikům",
             "publishedAt": "2026-05-13T15:31:00Z"
@@ -1202,10 +1200,6 @@
           {
             "title": "Vláda si otevírá dveře k vysokým schodkům, není ovšem jediná, kdo utrácí víc, než může",
             "publishedAt": "2026-05-13T13:20:00Z"
-          },
-          {
-            "title": "Fiasko RegioJetu v Polsku předznamenalo další turbulence uvnitř firmy. Skončili dva klíčoví manažeři",
-            "publishedAt": "2026-05-13T12:59:00Z"
           }
         ]
       }

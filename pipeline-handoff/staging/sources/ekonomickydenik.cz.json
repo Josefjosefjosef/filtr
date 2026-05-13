@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-13T15:49:43.422031Z",
+  "ingestedAt": "2026-05-13T16:30:12.450429Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Slovensko uzavřelo přechody s Ukrajinou. Nedaleko udeřily ruské drony",
+      "url": "https://ekonomickydenik.cz/slovensko-uzavira-prechody-ukrajina-drony/",
+      "dt": "2026-05-13T15:55:01Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "drony",
+        "nedaleko",
+        "přechody",
+        "ruské",
+        "slovensko",
+        "udeřily",
+        "ukrajinou",
+        "uzavřelo"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -757,33 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Definitivní konec příměří: Rusko v noci útočilo stovkami dronů, Ukrajina odpoví",
-      "url": "https://ekonomickydenik.cz/definitivni-konec-primeri-rusko-utocilo-drony/",
-      "dt": "2026-05-12T07:49:42Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "definitivní",
-        "dronů",
-        "konec",
-        "noci",
-        "odpoví",
-        "příměří",
-        "rusko",
-        "stovkami",
-        "ukrajina",
-        "útočilo"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72961,
+      "bytes": 72315,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,13 +829,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T15:21:51Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T15:55:01Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 24,
+          "zdravi": 2,
+          "finance": 23,
           "sport": 1,
-          "zpravy": 4,
-          "zdravi": 1
+          "zpravy": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -849,6 +847,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Slovensko uzavřelo přechody s Ukrajinou. Nedaleko udeřily ruské drony",
+            "publishedAt": "2026-05-13T15:55:01Z"
+          },
           {
             "title": "Hluk, horší vzduch i voda. Prověří se rizika vysokorychlostní trati na Brno",
             "publishedAt": "2026-05-13T15:21:51Z"
@@ -876,10 +878,6 @@
           {
             "title": "Další reforma zbraňové legislativy? Stát přebírá totální kontrolu nad trhem",
             "publishedAt": "2026-05-13T11:32:25Z"
-          },
-          {
-            "title": "Británie v klíčovém okamžiku. Premiér Starmer varuje před chaosem, kdyby skončil",
-            "publishedAt": "2026-05-13T11:25:56Z"
           }
         ]
       }
