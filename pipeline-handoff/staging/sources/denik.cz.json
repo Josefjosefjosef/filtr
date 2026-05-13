@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-13T09:05:14.287925Z",
+  "ingestedAt": "2026-05-13T09:50:34.523475Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Krádež lebky Zdislavy otřásla Jablonným. Zloděj využil situace, říká starosta",
+      "url": "https://www.denik.cz/regiony/kradez-ostatky-svate-zdislavy-jablonne-liberecko.html",
+      "dt": "2026-05-13T09:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "jablonným",
+        "krádež",
+        "lebky",
+        "otřásla",
+        "situace",
+        "starosta",
+        "využil",
+        "zdislavy",
+        "zloděj",
+        "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Při pokusu v Hradci se zranily dívky. Žalobce nyní stíhání učitelky zastavil",
+      "url": "https://www.denik.cz/krimi/popaleni-pokus-stihani-ucitelky-zalobce-podminene-zastavil-20260513.html",
+      "dt": "2026-05-13T08:42:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dívky",
+        "hradci",
+        "nyní",
+        "pokusu",
+        "při",
+        "stíhání",
+        "učitelky",
+        "zastavil",
+        "zranily",
+        "žalobce"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -592,59 +646,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Tragédie v Norsku: Čeští rybáři zahynuli na moři, převrácený člun našel vrtulník",
-      "url": "https://www.denik.cz/staty-mimo-eu/norsko-rybari-smola-rybari-smrt-cesi.html",
-      "dt": "2026-05-12T16:47:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "moři",
-        "našel",
-        "norsku",
-        "převrácený",
-        "rybáři",
-        "tragédie",
-        "vrtulník",
-        "zahynuli",
-        "čeští",
-        "člun"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Muž v Chorvatsku chladnokrevně zabil šéfa kriminálky. Zrovna si objednával kávu",
-      "url": "https://www.denik.cz/staty-eu/chorvatsko-vrazda-sef-kriminalky-kavarna-svedci-policie-vysetrovani-strelba.html",
-      "dt": "2026-05-12T15:36:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "chladnokrevně",
-        "chorvatsku",
-        "kriminálky",
-        "kávu",
-        "muž",
-        "objednával",
-        "zabil",
-        "zrovna",
-        "šéfa"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -655,7 +656,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29320,
+      "bytes": 29501,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -692,11 +693,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-13T08:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T09:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 4,
-          "zpravy": 21
+          "zpravy": 21,
+          "finance": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -708,6 +709,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Krádež lebky Zdislavy otřásla Jablonným. Zloděj využil situace, říká starosta",
+            "publishedAt": "2026-05-13T09:00:00Z"
+          },
+          {
+            "title": "Při pokusu v Hradci se zranily dívky. Žalobce nyní stíhání učitelky zastavil",
+            "publishedAt": "2026-05-13T08:42:00Z"
+          },
           {
             "title": "Rodičovský příspěvek už před porodem: Co se má změnit, kdo bude mít nárok",
             "publishedAt": "2026-05-13T08:35:00Z"
@@ -731,14 +740,6 @@
           {
             "title": "Návrat zimy? Na hřebenech Krkonoš napadl sníh, bílá zahalila i Krušné hory",
             "publishedAt": "2026-05-13T07:20:00Z"
-          },
-          {
-            "title": "Na hladině Moravy u Otrokovic se objevily ropné skvrny. U řeky zasahují hasiči",
-            "publishedAt": "2026-05-13T06:50:00Z"
-          },
-          {
-            "title": "Svět knihy Praha 2026: Program, největší hvězdy a tipy, co nepropásnout",
-            "publishedAt": "2026-05-13T06:30:00Z"
           }
         ]
       }

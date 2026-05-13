@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-13T09:05:14.287925Z",
+  "ingestedAt": "2026-05-13T09:50:34.523475Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Rekordman Sawe bude obhajovat prvenství i v Berlínském maratonu",
+      "url": "https://www.sport.cz/clanek/atletika-rekordman-sawe-bude-obhajovat-prvenstvi-i-v-berlinskem-maratonu-5453419",
+      "dt": "2026-05-13T09:27:03Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "berlínském",
+        "maratonu",
+        "obhajovat",
+        "prvenství",
+        "rekordman",
+        "sawe"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -750,28 +773,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Největší hvězdu na hokejové MS přiveze Kanada",
-      "url": "https://www.sport.cz/clanek/hokej-ms-kanada-ziskala-do-sestavy-pro-ms-velkou-hvezdu-5453381",
-      "dt": "2026-05-12T20:30:06Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "hokejové",
-        "hvězdu",
-        "kanada",
-        "největší",
-        "přiveze"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -782,7 +783,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 49552,
+      "bytes": 49917,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -819,7 +820,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T08:56:51Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T09:27:03Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -835,6 +836,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rekordman Sawe bude obhajovat prvenství i v Berlínském maratonu",
+            "publishedAt": "2026-05-13T09:27:03Z"
+          },
           {
             "title": "Opora Ayayiová už od příští sezony nebude hrát za basketbalistky USK",
             "publishedAt": "2026-05-13T08:56:51Z"
@@ -862,10 +867,6 @@
           {
             "title": "Zemřel basketbalista Collins, který se jako první přihlásil ke své homosexualitě",
             "publishedAt": "2026-05-13T06:32:28Z"
-          },
-          {
-            "title": "Slavia může získat titul před prázdným Edenem",
-            "publishedAt": "2026-05-13T08:13:36Z"
           }
         ]
       }

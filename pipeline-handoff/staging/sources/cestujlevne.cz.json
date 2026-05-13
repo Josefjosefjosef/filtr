@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-05-13T09:05:14.287925Z",
+  "ingestedAt": "2026-05-13T09:50:34.523475Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Z Prahy do švédského Göteborgu na jednu noc nebo pár dní. Letenky od 978 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/z-prahy-do-svedskeho-g-teborgu-na-jednu-noc-nebo-par-dni",
+      "dt": "2026-05-13T09:08:01Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "978",
+        "dní",
+        "göteborgu",
+        "jednu",
+        "letenky",
+        "nebo",
+        "noc",
+        "prahy",
+        "pár",
+        "švédského"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -483,30 +510,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Řecká Parga na týden s odletem z Prahy. Zájezd od 8 990 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/recka-parga-na-tyden-s-odletem-z-prahy",
-      "dt": "2026-05-05T06:45:01Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "990",
-        "odletem",
-        "parga",
-        "prahy",
-        "týden",
-        "zájezd",
-        "řecká"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -517,7 +520,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 49537,
+      "bytes": 46643,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -554,7 +557,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-13T07:54:35Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T09:08:01Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -569,6 +572,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Z Prahy do švédského Göteborgu na jednu noc nebo pár dní. Letenky od 978 Kč",
+            "publishedAt": "2026-05-13T09:08:01Z"
+          },
           {
             "title": "Týden na Krétě s all-inclusive z Brna. Zájezd od 6 990 Kč",
             "publishedAt": "2026-05-13T07:54:35Z"
@@ -596,10 +603,6 @@
           {
             "title": "Chorvatsko z Prahy během léta i na prodloužené víkendy s Croatia Airlines. Letenky od 3 603 Kč",
             "publishedAt": "2026-05-11T17:13:42Z"
-          },
-          {
-            "title": "Thassos z Prahy s all-inclusive v hotelu u pláže. Zájezd od 8 990 Kč",
-            "publishedAt": "2026-05-11T12:32:03Z"
           }
         ]
       }

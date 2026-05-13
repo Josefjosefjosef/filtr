@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-13T09:05:14.287925Z",
+  "ingestedAt": "2026-05-13T09:50:34.523475Z",
   "items": [
     {
       "section": "finance",
@@ -75,6 +75,35 @@
         "světové",
         "tak",
         "zásoby"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ruská agrese skončí vítězstvím Ruska, nebo Ukrajiny. Možnost, že by se podařilo vyjednat příměří, je nepravděpodobná",
+      "url": "https://archiv.hn.cz/c1-67875410-ruska-agrese-skonci-vitezstvim-ruska-nebo-ukrajiny-moznost-ze-by-se-podarilo-vyjednat-primeri-je-nepravdepodobna",
+      "dt": "2026-05-13T06:21:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "agrese",
+        "možnost",
+        "nebo",
+        "nepravděpodobná",
+        "podařilo",
+        "příměří",
+        "ruska",
+        "ruská",
+        "skončí",
+        "ukrajiny",
+        "vyjednat",
+        "vítězstvím"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1080,36 +1109,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Lijeme do zdravotnictví půl bilionu korun ročně. Ale trénink mladých lékařů správně nastavit neumíme",
-      "url": "https://archiv.hn.cz/c1-67874950-lijeme-do-zdravotnictvi-pul-bilionu-korun-rocne-ale-trenink-mladych-lekaru-spravne-nastavit-neumime",
-      "dt": "2026-05-12T07:28:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "ale",
-        "bilionu",
-        "korun",
-        "lijeme",
-        "lékařů",
-        "mladých",
-        "nastavit",
-        "neumíme",
-        "půl",
-        "ročně",
-        "správně",
-        "trénink",
-        "zdravotnictví"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1120,7 +1119,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184524,
+      "bytes": 184584,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1160,9 +1159,9 @@
         "raw_feed_latest_publishedAt": "2026-05-13T06:45:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 34,
+          "finance": 35,
           "zpravy": 4,
-          "zdravi": 2
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1187,6 +1186,10 @@
             "publishedAt": "2026-05-13T06:36:00Z"
           },
           {
+            "title": "Ruská agrese skončí vítězstvím Ruska, nebo Ukrajiny. Možnost, že by se podařilo vyjednat příměří, je nepravděpodobná",
+            "publishedAt": "2026-05-13T06:21:00Z"
+          },
+          {
             "title": "Pravda o finanční nezávislosti. Vypátrali jsme Čechy, kteří se na cestu vydali a zjistili, co to obnáší",
             "publishedAt": "2026-05-13T06:15:00Z"
           },
@@ -1200,10 +1203,6 @@
           },
           {
             "title": "Finanční trhy (13. 5. 2026)",
-            "publishedAt": "2026-05-12T22:00:00Z"
-          },
-          {
-            "title": "Putin si zase hraje s Trumpem. Ten se chlubil dohodou o výměně zajatců, Rusové ale nikoho nepropustili",
             "publishedAt": "2026-05-12T22:00:00Z"
           }
         ]

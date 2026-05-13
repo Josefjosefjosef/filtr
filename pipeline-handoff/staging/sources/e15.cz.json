@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-13T09:05:14.287925Z",
+  "ingestedAt": "2026-05-13T09:50:34.523475Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Peking to přehnal s výrobou solárů a brzdí. Brusel nechce čínské střídače, pro Česko to může být problém",
+      "url": "https://www.e15.cz/zahranicni/geopolitika/peking-to-prehnal-s-vyrobou-solaru-a-brzdi-brusel-nechce-cinske-stridace-pro-cesko-to-muze-byt-problem-1432749",
+      "dt": "2026-05-13T09:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "brusel",
+        "brzdí",
+        "být",
+        "nechce",
+        "peking",
+        "problém",
+        "přehnal",
+        "solárů",
+        "střídače",
+        "výrobou",
+        "česko",
+        "čínské"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1072,31 +1101,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Stop palivovým příplatkům. EU zakázala aerolinkám dodatečně zdražovat letenky",
-      "url": "https://www.e15.cz/finexpert/servis/stop-palivovym-priplatkum-eu-zakazala-aerolinkam-dodatecne-zdrazovat-letenky-1432719",
-      "dt": "2026-05-11T12:26:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "aerolinkám",
-        "dodatečně",
-        "letenky",
-        "palivovým",
-        "příplatkům",
-        "stop",
-        "zakázala",
-        "zdražovat"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1107,7 +1111,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 55268,
+      "bytes": 55538,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1144,13 +1148,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-13T07:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T09:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 37,
+          "finance": 38,
           "sport": 1,
-          "zdravi": 1,
-          "cestovani": 1
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1162,6 +1165,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Peking to přehnal s výrobou solárů a brzdí. Brusel nechce čínské střídače, pro Česko to může být problém",
+            "publishedAt": "2026-05-13T09:00:00Z"
+          },
           {
             "title": "Lapčík dál zvyšuje kontrolu nad Trinity Bank, získal většinu z nových akcií ústavu",
             "publishedAt": "2026-05-13T07:55:00Z"
@@ -1189,10 +1196,6 @@
           {
             "title": "Sbohem, pracovní sílo. Umělá inteligence nastupuje, ale k 15procentnímu růstu má zatím daleko",
             "publishedAt": "2026-05-13T04:00:00Z"
-          },
-          {
-            "title": "Placení čínští influenceři ve vlacích Českých drah zůstanou. Jsou výhodní, tvrdí státní agentura",
-            "publishedAt": "2026-05-13T03:30:00Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-13T09:05:14.287925Z",
+  "ingestedAt": "2026-05-13T09:50:34.523475Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Přiznal Šťastný koryta? Hlídání Babiše skončilo podpisem koaliční smlouvy",
+      "url": "https://www.epenize.eu/priznal-stastny-koryta-hlidani-babise-skoncilo-podpisem-koalicni-smlouvy/",
+      "dt": "2026-05-13T08:32:32Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "babiše",
+        "hlídání",
+        "koaliční",
+        "koryta",
+        "podpisem",
+        "přiznal",
+        "skončilo",
+        "smlouvy",
+        "šťastný"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -503,31 +529,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Komentář: Tak jsem asi méněcenný. Macinka mi jde na nervy",
-      "url": "https://www.epenize.eu/komentar-tak-jsem-asi-menecenny-macinka-mi-jde-na-nervy/",
-      "dt": "2026-05-04T07:00:46Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "asi",
-        "jde",
-        "jsem",
-        "komentář",
-        "macinka",
-        "méněcenný",
-        "nervy",
-        "tak"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -538,7 +539,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 109558,
+      "bytes": 110837,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -575,7 +576,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-12T23:00:47Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T08:32:32Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 17,
@@ -593,6 +594,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Přiznal Šťastný koryta? Hlídání Babiše skončilo podpisem koaliční smlouvy",
+            "publishedAt": "2026-05-13T08:32:32Z"
+          },
           {
             "title": "„Volil jste Harrisovou?“: Tak vypadá nová prověrka pro vedení FBI",
             "publishedAt": "2026-05-12T23:00:47Z"
@@ -620,10 +625,6 @@
           {
             "title": "Fotbal jako obraz dnešní společnosti. Je mi líto slušných fanoušků Slavie",
             "publishedAt": "2026-05-10T12:20:01Z"
-          },
-          {
-            "title": "Omluva za nedochvilnost. Obyčejná slušnost, pane Babiši",
-            "publishedAt": "2026-05-10T08:59:13Z"
           }
         ]
       }

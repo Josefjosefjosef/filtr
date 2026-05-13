@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-05-13T09:05:14.287925Z",
+  "ingestedAt": "2026-05-13T09:50:34.523475Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zloději objevili nový trik s účtenkami. Obchody kvůli nim zpřísňují pravidla reklamací",
+      "url": "https://www.betterlife.cz/zlodeji-objevili-novy-trik-s-uctenkami-obchody-kvuli-nim-zprisnuji-pravidla-reklamaci/",
+      "dt": "2026-05-13T09:17:23Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "kvůli",
+        "nim",
+        "nový",
+        "obchody",
+        "objevili",
+        "pravidla",
+        "reklamací",
+        "trik",
+        "zloději",
+        "zpřísňují",
+        "účtenkami"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -262,35 +290,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Velká fotbalová utkání míří do českých kin. Diváci zažijí atmosféru jako na skutečném stadionu",
-      "url": "https://www.betterlife.cz/velka-fotbalova-utkani-miri-do-ceskych-kin-divaci-zaziji-atmosferu-jako-na-skutecnem-stadionu/",
-      "dt": "2026-05-09T08:22:37Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "atmosféru",
-        "diváci",
-        "fotbalová",
-        "jako",
-        "kin",
-        "míří",
-        "skutečném",
-        "stadionu",
-        "utkání",
-        "velká",
-        "zažijí",
-        "českých"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -301,7 +300,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 59940,
+      "bytes": 60271,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -361,12 +360,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-12T16:40:19Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T09:17:23Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 8,
-          "zpravy": 1,
-          "sport": 1
+          "zdravi": 9,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -378,6 +376,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zloději objevili nový trik s účtenkami. Obchody kvůli nim zpřísňují pravidla reklamací",
+            "publishedAt": "2026-05-13T09:17:23Z"
+          },
           {
             "title": "Představitelky Heleny z Ulice je pravnučkou Ilji Prachaře. Alžběta Malá promluvila o ztrátě otce a psychoterapii",
             "publishedAt": "2026-05-12T16:40:19Z"
@@ -405,10 +407,6 @@
           {
             "title": "Příští týden v seriálu Ulice: Krutý útok stalkera, Vandino nečekané řešení milenky a pochybnosti ve vztahu",
             "publishedAt": "2026-05-10T15:59:14Z"
-          },
-          {
-            "title": "Andrea Čunderlíková alias krásná sestřička Ina oslavila 74. Její začátky s manželem provázela žárlivost Pavla Bobka",
-            "publishedAt": "2026-05-10T14:59:42Z"
           }
         ]
       }

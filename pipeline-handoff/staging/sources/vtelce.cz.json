@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-05-13T09:05:14.287925Z",
+  "ingestedAt": "2026-05-13T09:50:34.523475Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Tajuplné Věřte nevěřte ukázalo děsivou předpověď zkázy Titanicu i pád vzducholodi Hindenburg",
+      "url": "https://www.vtelce.cz/tajuplne-verte-neverte-ukazalo-desivou-predpoved-zkazy-titanicu-i-pad-vzducholodi-hindenburg/",
+      "dt": "2026-05-13T09:38:16Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "děsivou",
+        "hindenburg",
+        "nevěřte",
+        "pád",
+        "předpověď",
+        "tajuplné",
+        "titanicu",
+        "ukázalo",
+        "vzducholodi",
+        "věřte",
+        "zkázy"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -258,34 +286,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Sestra v akci 2: Astronomický honorář za návrat, vážné obvinění z napadení a protekční dcera na place",
-      "url": "https://www.vtelce.cz/sestra-v-akci-2-astronomicky-honorar-za-navrat-vazne-obvineni-z-napadeni-a-protekcni-dcera-na-place/",
-      "dt": "2026-05-11T16:55:52Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "akci",
-        "astronomický",
-        "dcera",
-        "honorář",
-        "napadení",
-        "návrat",
-        "obvinění",
-        "place",
-        "protekční",
-        "sestra",
-        "vážné"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -296,7 +296,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 76655,
+      "bytes": 70084,
       "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
@@ -333,7 +333,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-13T06:44:03Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T09:38:16Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "other": 10
@@ -348,6 +348,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tajuplné Věřte nevěřte ukázalo děsivou předpověď zkázy Titanicu i pád vzducholodi Hindenburg",
+            "publishedAt": "2026-05-13T09:38:16Z"
+          },
           {
             "title": "Farma Česko II: Nové prostředí, drsné podmínky a tvrdý boj o milion",
             "publishedAt": "2026-05-13T06:44:03Z"
@@ -375,10 +379,6 @@
           {
             "title": "Lukáš z Ulice bere zpátečku, jen neví, jak to Heleně říct",
             "publishedAt": "2026-05-12T08:44:24Z"
-          },
-          {
-            "title": "Show Jana Krause: Daniel Stach popíše zkreslenou realitu map a dorazí fenka Fuji, která zazářila po boku Leonarda DiCapria",
-            "publishedAt": "2026-05-12T07:21:20Z"
           }
         ]
       }
