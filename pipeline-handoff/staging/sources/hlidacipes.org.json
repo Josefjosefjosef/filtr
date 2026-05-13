@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hlidacipes.org",
-  "ingestedAt": "2026-05-13T10:30:17.034233Z",
+  "ingestedAt": "2026-05-13T11:09:59.469908Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Jan Urban: Pro a proti konání Sudetoněmeckých dnů v Brně",
+      "url": "https://hlidacipes.org/jan-urban-pro-a-proti-konani-sudetonemeckych-dnu-v-brne/",
+      "dt": "2026-05-13T10:30:05Z",
+      "media_raw": "HlídacíPes",
+      "media_norm": "HlídacíPes",
+      "tokens": [
+        "brně",
+        "dnů",
+        "jan",
+        "konání",
+        "proti",
+        "sudetoněmeckých",
+        "urban"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_hlidacipes",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "hlidacipes.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -238,32 +262,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "hlidacipes.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Proč každý pátý mladý Němec zvažuje, že opustí svou zemi",
-      "url": "https://hlidacipes.org/proc-kazdy-paty-mlady-nemec-zvazuje-ze-opusti-svou-zemi/",
-      "dt": "2026-05-08T09:40:36Z",
-      "media_raw": "HlídacíPes",
-      "media_norm": "HlídacíPes",
-      "tokens": [
-        "každý",
-        "mladý",
-        "němec",
-        "opustí",
-        "proč",
-        "pátý",
-        "svou",
-        "zemi",
-        "zvažuje"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_hlidacipes",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "hlidacipes.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,7 +272,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://hlidacipes.org/feed/",
-      "bytes": 17269,
+      "bytes": 17292,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -311,7 +309,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-13T04:30:30Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T10:30:05Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -326,6 +324,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jan Urban: Pro a proti konání Sudetoněmeckých dnů v Brně",
+            "publishedAt": "2026-05-13T10:30:05Z"
+          },
           {
             "title": "Poprask ve městě čarodějnic: radní opustil AfD, kolegy nařkl z flirtování s nacismem",
             "publishedAt": "2026-05-13T04:30:30Z"
@@ -353,10 +355,6 @@
           {
             "title": "Kdo dozoruje nezkušené lékaře? A kdo nese odpovědnost, když se něco pokazí",
             "publishedAt": "2026-05-10T06:00:16Z"
-          },
-          {
-            "title": "Kdo udal odbojáře ze Želivce? Pátrání po příběhu Františka Šimka",
-            "publishedAt": "2026-05-09T06:00:54Z"
           }
         ]
       }

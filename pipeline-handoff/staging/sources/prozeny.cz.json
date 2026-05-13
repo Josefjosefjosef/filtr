@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-05-13T10:30:17.034233Z",
+  "ingestedAt": "2026-05-13T11:09:59.469908Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nejkrásnější róby z prvního večera v Cannes. Kdo všechno ohromil a kdo měl radši zůstat doma?",
+      "url": "https://www.prozeny.cz/clanek/zdravi-a-zivotni-styl-zaujalo-nas-nejkrasnejsi-roby-z-prvniho-vecera-v-cannes-kdo-vsechno-ohromil-a-kdo-mel-radsi-zustat-doma-103472",
+      "dt": "2026-05-13T11:01:27Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "cannes",
+        "doma",
+        "měl",
+        "nejkrásnější",
+        "ohromil",
+        "prvního",
+        "radši",
+        "róby",
+        "večera",
+        "všechno",
+        "zůstat"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -808,32 +836,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Patricie Solaříková se na rozlučce se svobodou pořádně odvázala: Sexy kovbojka v růžové!",
-      "url": "https://www.prozeny.cz/clanek/zdravi-a-zivotni-styl-zaujalo-nas-patricie-solarikova-se-na-rozlucce-se-svobodou-poradne-odvazala-sexy-kovbojka-v-ruzove-103435",
-      "dt": "2026-05-11T09:53:57Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "kovbojka",
-        "odvázala",
-        "patricie",
-        "pořádně",
-        "rozlučce",
-        "růžové",
-        "sexy",
-        "solaříková",
-        "svobodou"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -844,7 +846,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 39888,
+      "bytes": 39904,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -881,11 +883,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T08:09:46Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T11:01:27Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 1,
-          "zdravi": 29
+          "zdravi": 29,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -897,6 +899,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejkrásnější róby z prvního večera v Cannes. Kdo všechno ohromil a kdo měl radši zůstat doma?",
+            "publishedAt": "2026-05-13T11:01:27Z"
+          },
           {
             "title": "Devadesátka – žádný věk! Jane Fonda a Joan Collins oslnily v Cannes. Komu to sluší víc?",
             "publishedAt": "2026-05-13T08:09:46Z"
@@ -923,10 +929,6 @@
           },
           {
             "title": "Recepční Pavlína: Nevěřím na důchod, tak spoříme sami. Ale kam máme investovat, abychom se neudřeli?",
-            "publishedAt": "2026-05-13T03:00:00Z"
-          },
-          {
-            "title": "Nejnovější trendy v randění: Nejlepší je to v přírodě, platit má chlap a na sex je času dost",
             "publishedAt": "2026-05-13T03:00:00Z"
           }
         ]

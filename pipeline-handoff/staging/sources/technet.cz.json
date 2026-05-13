@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-05-13T10:30:17.034233Z",
+  "ingestedAt": "2026-05-13T11:09:59.469908Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Google nečekaně představil nový notebook. Chce konkurovat MacBooku Neo?",
+      "url": "https://www.idnes.cz/technet/pc-mac/google-notebook-android-chromeos-gemini-book.A260513_080935_hardware_vse/foto",
+      "dt": "2026-05-13T10:10:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "chce",
+        "google",
+        "konkurovat",
+        "macbooku",
+        "neo",
+        "nečekaně",
+        "notebook",
+        "nový",
+        "představil"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -737,30 +763,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Celebrity a láska k létání: 21 příběhů, které vás možná překvapí",
-      "url": "https://www.idnes.cz/technet/celebrity-a-laska-k-letani-21-pribehu-ktere-vas-mozna-prekvapi.Q260427_225802_technet_alv",
-      "dt": "2026-04-30T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "celebrity",
-        "láska",
-        "létání",
-        "možná",
-        "překvapí",
-        "příběhů",
-        "vás"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -771,7 +773,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 45776,
+      "bytes": 46083,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -808,11 +810,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T08:02:04Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T10:10:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 19,
-          "zpravy": 11
+          "other": 20,
+          "zpravy": 10
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -824,6 +826,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Google nečekaně představil nový notebook. Chce konkurovat MacBooku Neo?",
+            "publishedAt": "2026-05-13T10:10:00Z"
+          },
           {
             "title": "Případ růžové kobylky. Tropický hmyz volí barvu Barbie. Má z ní prospěch",
             "publishedAt": "2026-05-13T08:02:04Z"
@@ -851,10 +857,6 @@
           {
             "title": "V Praze přistál bývalý speciál maršála Tita. Letoun málem shnil v Africe",
             "publishedAt": "2026-05-12T04:30:00Z"
-          },
-          {
-            "title": "Bizarní dopravní prostředky, které předběhly dobu či zabloudily v čase",
-            "publishedAt": "2026-05-11T22:00:00Z"
           }
         ]
       }

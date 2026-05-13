@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-13T10:30:17.034233Z",
+  "ingestedAt": "2026-05-13T11:09:59.469908Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Nejbizarnější česká show překonala očekávání. Kolik párů z nahé seznamky je stále spolu?",
+      "url": "https://www.kinobox.cz/clanky/tema/53721-nejbizarnejsi-ceska-show-prekonala-ocekavani-kolik-paru-z-nahe-seznamky-je-stale-spolu",
+      "dt": "2026-05-13T11:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "kolik",
+        "nahé",
+        "nejbizarnější",
+        "očekávání",
+        "párů",
+        "překonala",
+        "seznamky",
+        "show",
+        "spolu",
+        "stále",
+        "česká"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -506,34 +534,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "10 pecek, které v květnu opustí Netflix: Nolanův Dunkerk, vojín Ryan i sexy Sydney Sweeney",
-      "url": "https://www.kinobox.cz/clanky/vod/53529-10-pecek-ktere-v-kvetnu-opusti-netflix-nolanuv-dunkerk-vojin-ryan-i-sexy-sydney-sweeney",
-      "dt": "2026-05-10T14:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "dunkerk",
-        "květnu",
-        "netflix",
-        "nolanův",
-        "opustí",
-        "pecek",
-        "ryan",
-        "sexy",
-        "sweeney",
-        "sydney",
-        "vojín"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -544,7 +544,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 27352,
+      "bytes": 27242,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -581,7 +581,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-13T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T11:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -596,6 +596,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejbizarnější česká show překonala očekávání. Kolik párů z nahé seznamky je stále spolu?",
+            "publishedAt": "2026-05-13T11:00:00Z"
+          },
           {
             "title": "Kinobox Daily: Amerika v plamenech skrze hledáček fotoaparátu. Kdo přežije Občanskou válku?",
             "publishedAt": "2026-05-13T10:00:00Z"
@@ -623,10 +627,6 @@
           {
             "title": "Češi nejsou připraveni na opravdové padouchy v Survivoru. Tvrdá hra se netoleruje",
             "publishedAt": "2026-05-12T11:00:00Z"
-          },
-          {
-            "title": "Kinobox Daily: I tuzemská detektivka může vypadat světově, jak dokazuje Rudý kapitán",
-            "publishedAt": "2026-05-12T10:00:00Z"
           }
         ]
       }
