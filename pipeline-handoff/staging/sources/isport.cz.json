@@ -1,25 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "isport.cz",
-  "ingestedAt": "2026-05-13T23:10:17.825213Z",
+  "ingestedAt": "2026-05-13T23:50:06.584302Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Slavia má titul, fanoušci vyvolávali Chorého. Oslavy budou, zaplatí je Tykač",
-      "url": "https://isport.blesk.cz/clanek/fotbal-chance-liga/475279/online-slavia-ma-titul-fanousci-vyvolavali-choreho-oslavy-budou-zaplati-je-tykac.html",
-      "dt": "2026-05-13T22:50:00Z",
+      "title": "ONLINE: Slavia má titul, slaví se i v centru Prahy. Oslavy budou, zaplatí je Tykač",
+      "url": "https://isport.blesk.cz/clanek/fotbal-chance-liga/475279/online-slavia-ma-titul-slavi-se-i-v-centru-prahy-oslavy-budou-zaplati-je-tykac.html",
+      "dt": "2026-05-13T23:10:00Z",
       "media_raw": "iSport",
       "media_norm": "iSport",
       "tokens": [
-        "chorého",
-        "fanoušci",
+        "centru",
         "oslavy",
+        "prahy",
         "slavia",
+        "slaví",
         "titul",
         "tykač",
-        "vyvolávali",
         "zaplatí"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_isport",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "isport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "NHL ONLINE: Colorado - Minnesota. Nečas a spol. mohou jít do finále Západní konference",
+      "url": "https://isport.blesk.cz/clanek/hokej-nhl/475434/nhl-online-colorado-minnesota-necas-a-spol-mohou-jit-do-finale-zapadni-konference.html",
+      "dt": "2026-05-13T23:00:00Z",
+      "media_raw": "iSport",
+      "media_norm": "iSport",
+      "tokens": [
+        "colorado",
+        "finále",
+        "jít",
+        "konference",
+        "minnesota",
+        "nečas",
+        "nhl",
+        "online",
+        "spol",
+        "západní"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -208,33 +235,6 @@
         "panují",
         "posilu",
         "přijede"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_isport",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "isport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "NHL ONLINE: Colorado - Minnesota. Nečas a spol. mohou jít do finále Západní konference",
-      "url": "https://isport.blesk.cz/clanek/hokej-nhl/475434/nhl-online-colorado-minnesota-necas-a-spol-mohou-jit-do-finale-zapadni-konference.html",
-      "dt": "2026-05-13T18:00:00Z",
-      "media_raw": "iSport",
-      "media_norm": "iSport",
-      "tokens": [
-        "colorado",
-        "finále",
-        "jít",
-        "konference",
-        "minnesota",
-        "nečas",
-        "nhl",
-        "online",
-        "spol",
-        "západní"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1072,7 +1072,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://isport.blesk.cz/rss",
-      "bytes": 57135,
+      "bytes": 57121,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1109,7 +1109,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-13T22:50:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T23:10:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1125,8 +1125,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Slavia má titul, fanoušci vyvolávali Chorého. Oslavy budou, zaplatí je Tykač",
-            "publishedAt": "2026-05-13T22:50:00Z"
+            "title": "ONLINE: Slavia má titul, slaví se i v centru Prahy. Oslavy budou, zaplatí je Tykač",
+            "publishedAt": "2026-05-13T23:10:00Z"
+          },
+          {
+            "title": "NHL ONLINE: Colorado - Minnesota. Nečas a spol. mohou jít do finále Západní konference",
+            "publishedAt": "2026-05-13T23:00:00Z"
           },
           {
             "title": "Trpišovský: Dva dny jsem byl z fotbalu zdevastovaný. Chorý a Douděra? Každý máme svého šéfa",
@@ -1151,10 +1155,6 @@
           {
             "title": "Vaclík začal opět trénovat: Měl jsem nabídky. Při MS bude jako expert na Nově",
             "publishedAt": "2026-05-13T18:35:00Z"
-          },
-          {
-            "title": "Kanada má elitní posilu, přijede Crosby. Bude ale kapitán? Panují názory, že ne",
-            "publishedAt": "2026-05-13T18:20:00Z"
           }
         ]
       }
