@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-13T11:50:29.028532Z",
+  "ingestedAt": "2026-05-13T12:30:32.426878Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Největší český film léta se blíží. Bojovník ukazuje v drsném traileru všechny trumfy",
+      "url": "https://www.kinobox.cz/clanky/filmy/53687-nejvetsi-cesky-film-leta-se-blizi-bojovnik-ukazuje-v-drsnem-traileru-vsechny-trumfy",
+      "dt": "2026-05-13T12:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "blíží",
+        "bojovník",
+        "drsném",
+        "film",
+        "léta",
+        "největší",
+        "traileru",
+        "trumfy",
+        "ukazuje",
+        "všechny",
+        "český"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -509,31 +537,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "10 filmů, které v kinech vydělaly nejvíc peněz za celou dobu kinematografie",
-      "url": "https://www.kinobox.cz/clanky/tema/53491-deset-filmu-ktere-v-kinech-vydelaly-nejvic-penez-za-celou-dobu-kinematografie",
-      "dt": "2026-05-10T17:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "celou",
-        "dobu",
-        "filmů",
-        "kinech",
-        "kinematografie",
-        "nejvíc",
-        "peněz",
-        "vydělaly"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -544,7 +547,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 27242,
+      "bytes": 26904,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -581,7 +584,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-13T11:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T12:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -596,6 +599,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Největší český film léta se blíží. Bojovník ukazuje v drsném traileru všechny trumfy",
+            "publishedAt": "2026-05-13T12:00:00Z"
+          },
           {
             "title": "Nejbizarnější česká show překonala očekávání. Kolik párů z nahé seznamky je stále spolu?",
             "publishedAt": "2026-05-13T11:00:00Z"
@@ -623,10 +630,6 @@
           {
             "title": "Planeta opic se dočká nového restartu. Na poslední film se už navazovat nebude",
             "publishedAt": "2026-05-12T13:00:00Z"
-          },
-          {
-            "title": "Češi nejsou připraveni na opravdové padouchy v Survivoru. Tvrdá hra se netoleruje",
-            "publishedAt": "2026-05-12T11:00:00Z"
           }
         ]
       }
