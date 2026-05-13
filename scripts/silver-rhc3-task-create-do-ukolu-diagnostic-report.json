@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-05-13T02:32:52.204Z",
+  "generated_at": "2026-05-13T02:41:57.924Z",
   "expected_main_commit": "5b21d9c9cffa6261abccd7a87899e812da61b467",
-  "diag_runner_head": "5b21d9c9cffa6261abccd7a87899e812da61b467",
+  "diag_runner_head": "d3b59353e88f4ad089977554b0a1cbd178b3e6ae",
   "target_cluster": "rhc3_task_create_do_ukolu",
   "total_cases": 120000,
   "total_cluster_cases": 7059,
@@ -42,14 +42,14 @@
     "write_when_negated_count": 0
   },
   "gates": {
-    "smoke": "SKIPPED",
-    "calendar_regression": "SKIPPED",
-    "routing_20k": "SKIPPED",
-    "quality": "SKIPPED",
-    "realistic_mobile": "SKIPPED",
-    "proof_mode": "hydrate_or_skip"
+    "smoke": "PASS",
+    "calendar_regression": "PASS",
+    "routing_20k": "PASS",
+    "quality": "PASS",
+    "realistic_mobile": "PASS",
+    "proof_mode": "live"
   },
-  "git_status_clean": "NO",
+  "git_status_clean": "YES",
   "recommended_next_task": "corpus+harness: chaotic mobile/spoken_compress lanes — document acceptable clarify PASS scope",
   "sample_fail_examples": [
     {
@@ -317,5 +317,5 @@
       "title": ""
     }
   ],
-  "text_block": "=== RHC3_TASK_CREATE_DO_UKOLU_DIAGNOSTIC_RESULT ===\nmain_commit=5b21d9c9cffa6261abccd7a87899e812da61b467\nengine_changed=NO\nassets_app_changed=NO\ntotal_cluster_cases=7059\ncluster_fail_count=405\ntrue_engine_fail_count=0\ntitle_pollution_count=0\nwrong_module_count=0\nharness_problem_count=0\nambiguous_input_count=403\nsafe_clarification_ok_count=0\nreal_world_acceptable_count=2\nmust_fix_engine_count=0\nshould_fix_harness_count=403\ntop_subcluster_1=task_create_clarify_chaos\ntop_subcluster_1_count=399\ntop_subcluster_2=lost_task_markers\ntop_subcluster_2_count=4\ndangerous_write_count=0\nfalse_write_count=0\nquery_created_write_count=0\nwrite_when_negated_count=0\nsmoke=SKIPPED\ncalendar_regression=SKIPPED\nrouting_20k=SKIPPED\nquality=SKIPPED\nrealistic_mobile=SKIPPED\ngit_status_clean=NO\nrecommended_next_task=corpus+harness: chaotic mobile/spoken_compress lanes — document acceptable clarify PASS scope\n=== END_RHC3_TASK_CREATE_DO_UKOLU_DIAGNOSTIC_RESULT ==="
+  "text_block": "=== RHC3_TASK_CREATE_DO_UKOLU_DIAGNOSTIC_RESULT ===\nmain_commit=d3b59353e88f4ad089977554b0a1cbd178b3e6ae\nengine_changed=NO\nassets_app_changed=NO\ntotal_cluster_cases=7059\ncluster_fail_count=405\ntrue_engine_fail_count=0\ntitle_pollution_count=0\nwrong_module_count=0\nharness_problem_count=0\nambiguous_input_count=403\nsafe_clarification_ok_count=0\nreal_world_acceptable_count=2\nmust_fix_engine_count=0\nshould_fix_harness_count=403\ntop_subcluster_1=task_create_clarify_chaos\ntop_subcluster_1_count=399\ntop_subcluster_2=lost_task_markers\ntop_subcluster_2_count=4\ndangerous_write_count=0\nfalse_write_count=0\nquery_created_write_count=0\nwrite_when_negated_count=0\nsmoke=PASS\ncalendar_regression=PASS\nrouting_20k=PASS\nquality=PASS\nrealistic_mobile=PASS\ngit_status_clean=YES\nrecommended_next_task=corpus+harness: chaotic mobile/spoken_compress lanes — document acceptable clarify PASS scope\n=== END_RHC3_TASK_CREATE_DO_UKOLU_DIAGNOSTIC_RESULT ==="
 }
