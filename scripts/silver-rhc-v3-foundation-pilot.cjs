@@ -111,9 +111,26 @@ function runNode(scriptRel, extraEnv) {
   return { status: r.status === 0 ? 0 : r.status || 1, stdout: r.stdout || "", stderr: r.stderr || "" };
 }
 
-function runNpm(scriptName) {
-  const npmCmd = process.platform === "win32" ? "npm.cmd" : "npm";
-  const r = spawnSync(npmCmd, ["run", scriptName, "--silent"], { cwd: REPO, encoding: "utf8" });
+/**
+ * Run package.json scripts that are plain `node scripts/...` without spawning npm.
+ * On Windows, spawnSync("npm.cmd", ...) can fail with EINVAL when shell is false.
+ */
+function runNpmScript(scriptName) {
+  const relByName = {
+    smoke: "scripts/smoke.mjs",
+    "silver-regression": "scripts/silver-calendar-create-regression.mjs",
+    "silver-read-regression": "scripts/silver-calendar-read-regression.mjs"
+  };
+  const rel = relByName[scriptName];
+  if (!rel) {
+    return { status: 1, stdout: "", stderr: "unknown npm script for pilot proof: " + scriptName };
+  }
+  const scriptPath = path.join(REPO, rel);
+  const r = spawnSync(process.execPath, [scriptPath], {
+    cwd: REPO,
+    encoding: "utf8",
+    stdio: "inherit"
+  });
   return { status: r.status === 0 ? 0 : r.status || 1, stdout: r.stdout || "", stderr: r.stderr || "" };
 }
 
@@ -224,13 +241,13 @@ function main() {
       process.exit(1);
     }
 
-    const s1 = runNpm("smoke");
+    const s1 = runNpmScript("smoke");
     proof.smoke = s1.status === 0 ? "PASS" : "FAIL";
 
-    const s2 = runNpm("silver-regression");
+    const s2 = runNpmScript("silver-regression");
     proof.silver_calendar_create_regression = s2.status === 0 ? "PASS" : "FAIL";
 
-    const s3 = runNpm("silver-read-regression");
+    const s3 = runNpmScript("silver-read-regression");
     proof.silver_calendar_read_regression = s3.status === 0 ? "PASS" : "FAIL";
 
     const s4 = runNode("scripts/audit_silver_20000_routing_stable.cjs");
