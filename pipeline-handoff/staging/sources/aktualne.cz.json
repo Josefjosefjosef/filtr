@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-13T17:50:05.335380Z",
+  "ingestedAt": "2026-05-13T18:29:55.840877Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Trumpův efekt“. Kanaďané se hrnou do zbraně, armáda nestíhá vyřizovat přihlášky",
+      "url": "https://zpravy.aktualne.cz/zahranici/trumpuv-efekt-kanadane-se-hrnou-do-zbrane-armada-nestiha-vyrizovat-prihlasky/r~aaa29864e37e433ea0aeff6764204543/",
+      "dt": "2026-05-13T18:14:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "armáda",
+        "efekt",
+        "hrnou",
+        "kanaďané",
+        "nestíhá",
+        "přihlášky",
+        "trumpův",
+        "vyřizovat",
+        "zbraně"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -114,23 +140,20 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Slavia - Jablonec. Čtyři dny po ostudě při derby hraje Slavia v Edenu proti Jablonci",
+      "title": "Slavia - Jablonec 1:0. Jablonci rozhodčí neuznal vyrovnání kvůli ruce",
       "url": "https://sport.aktualne.cz/fotbal/ceska-liga/slavia-jablonec-ctyri-dny-po-ostude-pri-derby-hraje-slavia-v-edenu-proti-jablonci/r~aaa29791dc71d56b2030f6ac579ffbaf/",
       "dt": "2026-05-13T17:29:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "derby",
-        "dny",
-        "edenu",
-        "hraje",
         "jablonci",
         "jablonec",
-        "ostudě",
-        "proti",
-        "při",
+        "kvůli",
+        "neuznal",
+        "rozhodčí",
+        "ruce",
         "slavia",
-        "čtyři"
+        "vyrovnání"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -519,33 +542,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Muž, který se živí tím, že je k lidem „nestoudně hrubý“. Gerald Scarfe karikuje mocné",
-      "url": "https://magazin.aktualne.cz/kultura/umeni/muz-ktery-se-zivi-tim-ze-je-k-lidem-nestoudne-hruby-gerald-scarfe-karikuje-mocne/r~aaa29a8a18b9e0ee2120b43e406484ae/",
-      "dt": "2026-05-13T13:24:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "gerald",
-        "hrubý",
-        "karikuje",
-        "lidem",
-        "mocné",
-        "muž",
-        "nestoudně",
-        "scarfe",
-        "tím",
-        "živí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -593,13 +589,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-13T17:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T18:14:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 11,
+          "zpravy": 12,
           "sport": 5,
-          "finance": 3,
-          "other": 1
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -611,6 +606,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Trumpův efekt“. Kanaďané se hrnou do zbraně, armáda nestíhá vyřizovat přihlášky",
+            "publishedAt": "2026-05-13T18:14:00Z"
+          },
           {
             "title": "Dům na Sicílii koupili za cenu garáže v Česku. „Byl levnější než dům za euro,“ říká majitelka",
             "publishedAt": "2026-05-13T17:45:00Z"
@@ -628,7 +627,7 @@
             "publishedAt": "2026-05-13T14:15:00Z"
           },
           {
-            "title": "Slavia - Jablonec. Čtyři dny po ostudě při derby hraje Slavia v Edenu proti Jablonci",
+            "title": "Slavia - Jablonec 1:0. Jablonci rozhodčí neuznal vyrovnání kvůli ruce",
             "publishedAt": "2026-05-13T17:29:00Z"
           },
           {
@@ -638,10 +637,6 @@
           {
             "title": "Bude vyjednávat s Putinem? Jedná se o návratu těžké váhy evropské politiky",
             "publishedAt": "2026-05-13T17:12:00Z"
-          },
-          {
-            "title": "Východní křídlo NATO musí posílit protivzdušnou obranu, shodli se evropští lídři",
-            "publishedAt": "2026-01-21T06:45:00Z"
           }
         ]
       }

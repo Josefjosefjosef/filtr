@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-13T17:50:05.335380Z",
+  "ingestedAt": "2026-05-13T18:29:55.840877Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Česko v emisích zelenější než většina Evropy. Klesaly jen ve třech zemích",
+      "url": "https://ekonomickydenik.cz/cesko-emise-zelenejsi-klesaly/",
+      "dt": "2026-05-13T18:05:27Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "emisích",
+        "evropy",
+        "jen",
+        "klesaly",
+        "než",
+        "třech",
+        "většina",
+        "zelenější",
+        "zemích",
+        "česko"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -756,32 +783,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "„Dvacet prázdných škol“. Roste tlak na ruské architekty únosů dětí",
-      "url": "https://ekonomickydenik.cz/dvacet-prazdnych-skol-ruske-unosy-deti/",
-      "dt": "2026-05-12T10:32:57Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "architekty",
-        "dvacet",
-        "dětí",
-        "prázdných",
-        "roste",
-        "ruské",
-        "tlak",
-        "únosů",
-        "škol"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72570,
+      "bytes": 72402,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,13 +830,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T16:33:04Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T18:05:27Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 23,
+          "finance": 24,
           "zdravi": 2,
           "sport": 1,
-          "zpravy": 4
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -847,6 +848,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česko v emisích zelenější než většina Evropy. Klesaly jen ve třech zemích",
+            "publishedAt": "2026-05-13T18:05:27Z"
+          },
           {
             "title": "Evropa vyráží do Perského zálivu. Británie a Francie tvoří námořní koalici proti Teheránu",
             "publishedAt": "2026-05-13T16:33:04Z"
@@ -874,10 +879,6 @@
           {
             "title": "Dreamlinerem přímo z Prahy: Do USA startuje nová dálková linka, létat se bude denně",
             "publishedAt": "2026-05-13T12:30:27Z"
-          },
-          {
-            "title": "Jedna jízdenka přes celý kontinent na jedno kliknutí. Evropa zjednoduší cestování",
-            "publishedAt": "2026-05-13T11:38:52Z"
           }
         ]
       }
