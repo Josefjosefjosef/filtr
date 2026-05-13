@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-13T06:25:12.940148Z",
+  "ingestedAt": "2026-05-13T07:04:27.595947Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hertl hvězdou. Dostálovi dal gól, na další nahrál a postrčil Vegas k mečbolu",
+      "url": "https://sport.aktualne.cz/hokej/hertl-hvezdou-dostalovi-dal-gol-na-dalsi-nahral-a-postrcil-vegas-k-mecbolu/r~aaa29dfa741345dafa9cae12e65a9d0b/",
+      "dt": "2026-05-13T06:28:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dal",
+        "další",
+        "dostálovi",
+        "gól",
+        "hertl",
+        "hvězdou",
+        "mečbolu",
+        "nahrál",
+        "postrčil",
+        "vegas"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -499,32 +526,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zdecimovaná Sparta překonat Plzeň nedokázala. Slavia má znovu nabito na titul",
-      "url": "https://sport.aktualne.cz/fotbal/zdecimovana-sparta-prekonat-plzen-nedokazala-slavia-ma-znovu-nabito-na-titul/r~aaa292940f9d45c49971f4f96efcac93/",
-      "dt": "2026-05-12T19:57:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "nabito",
-        "nedokázala",
-        "plzeň",
-        "překonat",
-        "slavia",
-        "sparta",
-        "titul",
-        "zdecimovaná",
-        "znovu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -535,7 +536,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21440,
+      "bytes": 21273,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -572,12 +573,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-13T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T06:28:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 4,
           "zpravy": 13,
           "finance": 2,
-          "sport": 4,
           "other": 1
         },
         "drop_counts": {
@@ -590,6 +591,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hertl hvězdou. Dostálovi dal gól, na další nahrál a postrčil Vegas k mečbolu",
+            "publishedAt": "2026-05-13T06:28:00Z"
+          },
           {
             "title": "Odbojář, který děsil gestapo. „Byl jako Bond,“ připomíná jeho příběh badatel",
             "publishedAt": "2026-05-13T06:00:00Z"
@@ -617,10 +622,6 @@
           {
             "title": "Do finále Eurovize se probojoval Izrael, několik zemí kvůli němu soutěž bojkotuje",
             "publishedAt": "2026-05-13T04:59:00Z"
-          },
-          {
-            "title": "Psali mi i fanoušci Slavie, řekl napadený Surovčík. Poděkoval svému zachránci",
-            "publishedAt": "2026-05-13T04:47:00Z"
           }
         ]
       }

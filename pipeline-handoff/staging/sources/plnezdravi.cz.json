@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "plnezdravi.cz",
-  "ingestedAt": "2026-05-13T06:25:12.940148Z",
+  "ingestedAt": "2026-05-13T07:04:27.595947Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Vysoký krevní tlak: Tichý zabiják pod kontrolou",
+      "url": "https://www.plnezdravi.cz/vysoky-krevni-tlak-tichy-zabijak-pod-kontrolou/",
+      "dt": "2026-05-13T07:00:58Z",
+      "media_raw": "Plné zdraví",
+      "media_norm": "Plné zdraví",
+      "tokens": [
+        "kontrolou",
+        "krevní",
+        "tichý",
+        "tlak",
+        "vysoký",
+        "zabiják"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_plnezdravi",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "plnezdravi.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -468,29 +491,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "plnezdravi.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Zimní deprese pod lupou: Jak se nenechat pohltit tmou",
-      "url": "https://www.plnezdravi.cz/zimni-deprese-pod-lupou-jak-se-nenechat-pohltit-tmou/",
-      "dt": "2026-05-01T07:00:01Z",
-      "media_raw": "Plné zdraví",
-      "media_norm": "Plné zdraví",
-      "tokens": [
-        "deprese",
-        "lupou",
-        "nenechat",
-        "pohltit",
-        "tmou",
-        "zimní"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_plnezdravi",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "plnezdravi.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -501,7 +501,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.plnezdravi.cz/feed/",
-      "bytes": 159516,
+      "bytes": 158894,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -538,7 +538,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-12T16:31:43Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T07:00:58Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -553,6 +553,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vysoký krevní tlak: Tichý zabiják pod kontrolou",
+            "publishedAt": "2026-05-13T07:00:58Z"
+          },
           {
             "title": "Jak přežít digitální detox a zachránit si nervy?",
             "publishedAt": "2026-05-12T16:31:43Z"
@@ -580,10 +584,6 @@
           {
             "title": "Proč je spánek ve stáří klíčem k vitalitě",
             "publishedAt": "2026-05-11T07:00:41Z"
-          },
-          {
-            "title": "Je klasický rohlík skutečným nepřítelem zdraví?",
-            "publishedAt": "2026-05-10T07:00:15Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-13T06:25:12.940148Z",
+  "ingestedAt": "2026-05-13T07:04:27.595947Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zásah v dceřiné společnosti VZP: Duškov odvolal vedení a nařídil forenzní audit",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/pvzp-odvolani-kares-kurka/",
+      "dt": "2026-05-13T06:53:30Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "audit",
+        "dceřiné",
+        "duškov",
+        "forenzní",
+        "nařídil",
+        "odvolal",
+        "společnosti",
+        "vedení",
+        "vzp",
+        "zásah"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -243,34 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Razie v Ústřední vojenské nemocnici: Policie zadržela 11 lidí. Měli padělat lékařské zprávy",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/zasah-policie-ustredni-vojenska-nemocnice/",
-      "dt": "2026-05-12T09:30:35Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "lidí",
-        "lékařské",
-        "měli",
-        "nemocnici",
-        "padělat",
-        "policie",
-        "razie",
-        "vojenské",
-        "zadržela",
-        "zprávy",
-        "ústřední"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 82454,
+      "bytes": 79659,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-13T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T06:53:30Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -334,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zásah v dceřiné společnosti VZP: Duškov odvolal vedení a nařídil forenzní audit",
+            "publishedAt": "2026-05-13T06:53:30Z"
+          },
           {
             "title": "Češi narážejí na limity „projektu dítě“. Jejich plány drtí biologická realita",
             "publishedAt": "2026-05-13T06:00:00Z"
@@ -361,10 +364,6 @@
           {
             "title": "Sestry z Filipín a Uzbekistánu i virtuální realita. Politici podepsali plán na záchranu zdravotnictví",
             "publishedAt": "2026-05-12T12:14:10Z"
-          },
-          {
-            "title": "Babiš ostře o ÚVN: Je v propadu, může za to špatný výběr ředitele. Zůna musí okamžitě jednat",
-            "publishedAt": "2026-05-12T11:38:18Z"
           }
         ]
       }

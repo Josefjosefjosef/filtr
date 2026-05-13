@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-13T06:25:12.940148Z",
+  "ingestedAt": "2026-05-13T07:04:27.595947Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
       "title": "Pokračuje mimořádná schůze Sněmovny. Kupka hrozí stížností k Ústavnímu soudu",
       "url": "https://www.idnes.cz/zpravy/domaci/pokracuje-mimoradna-schuze-snemovny-koalice-chce-prosadit-novelu-k-rozpoctum.A260512_162638_domaci_mul",
-      "dt": "2026-05-13T06:18:33Z",
+      "dt": "2026-05-13T06:46:10Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
@@ -21,6 +21,33 @@
         "soudu",
         "stížností",
         "ústavnímu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zapomeňte na únavu. Objevte trik pro denní rutinu, který po třicítce nakopne mozek i svaly",
+      "url": "https://www.idnes.cz/spotrebitel/test/zapomente-na-unavu-objevte-trik-pro-denni-rutinu-ktery-po-tricitce-nakopne-mozek-i-svaly.A260430_180844_test_matt",
+      "dt": "2026-05-13T06:30:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "denní",
+        "mozek",
+        "nakopne",
+        "objevte",
+        "rutinu",
+        "svaly",
+        "trik",
+        "třicítce",
+        "zapomeňte",
+        "únavu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -759,34 +786,6 @@
         "situací",
         "tisících",
         "záchranka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Affleck a Damon čelí žalobě za pomluvu. Film Rána příliš připomíná skutečný případ",
-      "url": "https://www.idnes.cz/kultura/film-televize/matt-damon-ben-affleck-zaloba-za-pomluvu-rana.A260512_182707_filmvideo_ikul",
-      "dt": "2026-05-12T17:05:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "affleck",
-        "damon",
-        "film",
-        "pomluvu",
-        "připomíná",
-        "příliš",
-        "případ",
-        "rána",
-        "skutečný",
-        "čelí",
-        "žalobě"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1583,7 +1582,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50229,
+      "bytes": 49954,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1620,11 +1619,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T06:18:33Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T06:46:10Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 20,
-          "other": 6,
+          "zpravy": 21,
+          "other": 5,
           "finance": 4
         },
         "drop_counts": {
@@ -1639,7 +1638,11 @@
         "sample_titles": [
           {
             "title": "Pokračuje mimořádná schůze Sněmovny. Kupka hrozí stížností k Ústavnímu soudu",
-            "publishedAt": "2026-05-13T06:18:33Z"
+            "publishedAt": "2026-05-13T06:46:10Z"
+          },
+          {
+            "title": "Zapomeňte na únavu. Objevte trik pro denní rutinu, který po třicítce nakopne mozek i svaly",
+            "publishedAt": "2026-05-13T06:30:00Z"
           },
           {
             "title": "Na první český ročník fantasy festivalu míří John Cleese a rodiče Harryho Pottera",
@@ -1664,10 +1667,6 @@
           {
             "title": "Měsíční prognóza je příznivá, radují se meteorologové z předpovědi na červen",
             "publishedAt": "2026-05-13T04:35:00Z"
-          },
-          {
-            "title": "Do finále Eurovize se probojoval Izrael i Chorvatsko. Česko se představí ve čtvrtek",
-            "publishedAt": "2026-05-13T04:21:00Z"
           }
         ]
       }
