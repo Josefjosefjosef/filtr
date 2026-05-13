@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-05-13T07:04:27.595947Z",
+  "ingestedAt": "2026-05-13T07:44:32.436119Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "CD Projekt RED získal další posilu z českých Warhorse Studios - INDIAN",
+      "url": "https://indian-tv.cz/clanek/cd-projekt-red-ziskal-dalsi-posilu-z-ceskych-warhorse-op3ms8",
+      "dt": "2026-05-13T07:10:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "další",
+        "indian",
+        "posilu",
+        "projekt",
+        "red",
+        "studios",
+        "warhorse",
+        "získal",
+        "českých"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1053,32 +1079,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Nintendo zdražuje Switch 2, ale ne tak drasticky jako konkurence - INDIAN",
-      "url": "https://indian-tv.cz/clanek/nintendo-zdrazuje-switch-2-ale-ne-tak-drasticky-a92qvp",
-      "dt": "2026-05-08T10:20:46Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "ale",
-        "drasticky",
-        "indian",
-        "jako",
-        "konkurence",
-        "nintendo",
-        "switch",
-        "tak",
-        "zdražuje"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1089,7 +1089,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 232553,
+      "bytes": 232598,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1126,7 +1126,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-13T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T07:10:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1141,6 +1141,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "CD Projekt RED získal další posilu z českých Warhorse Studios - INDIAN",
+            "publishedAt": "2026-05-13T07:10:00Z"
+          },
           {
             "title": "Nový LEGO Batman láká na dražší Deluxe edici s bonusy i předčasným přístupem - INDIAN",
             "publishedAt": "2026-05-13T07:00:00Z"
@@ -1168,10 +1172,6 @@
           {
             "title": "Temné akční soulslike RPG Lies of P 2 přechází do plnohodnotného vývoje - INDIAN",
             "publishedAt": "2026-05-12T13:46:53Z"
-          },
-          {
-            "title": "Nailcrown je brutální retro střílečka od tvůrců Hatred. Hru vydá Bohemia Interactive - INDIAN",
-            "publishedAt": "2026-05-12T13:00:00Z"
           }
         ]
       }
