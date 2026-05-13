@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-13T08:24:49.550581Z",
+  "ingestedAt": "2026-05-13T09:05:14.287925Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Obrana potvrdila konec klíčového experta: Upozorňoval na vážný problém",
+      "url": "https://ekonomickydenik.cz/obrana-potvrdila-konec-klicoveho-experta/",
+      "dt": "2026-05-13T08:54:14Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "experta",
+        "klíčového",
+        "konec",
+        "obrana",
+        "potvrdila",
+        "problém",
+        "upozorňoval",
+        "vážný"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -743,32 +768,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Pražské letiště změní navigační systém. Současný vizuál je starý 20 let",
-      "url": "https://ekonomickydenik.cz/prazske-letiste-navigace-cestujici/",
-      "dt": "2026-05-11T12:30:33Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "let",
-        "letiště",
-        "navigační",
-        "pražské",
-        "současný",
-        "starý",
-        "systém",
-        "vizuál",
-        "změní"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -779,7 +778,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72438,
+      "bytes": 71532,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -816,11 +815,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T07:49:34Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T08:54:14Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 6,
-          "finance": 23,
+          "finance": 24,
+          "zpravy": 5,
           "zdravi": 1
         },
         "drop_counts": {
@@ -833,6 +832,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Obrana potvrdila konec klíčového experta: Upozorňoval na vážný problém",
+            "publishedAt": "2026-05-13T08:54:14Z"
+          },
           {
             "title": "Kolony nebo zkratka přes Prahu? Nová autobusová linka přes Blanku budí emoce",
             "publishedAt": "2026-05-13T07:49:34Z"
@@ -860,10 +863,6 @@
           {
             "title": "Česko loni vydalo na obranu přes 2 procenta HDP. Babiš si ale přál konec klíčového experta",
             "publishedAt": "2026-05-12T15:29:54Z"
-          },
-          {
-            "title": "Odstraňování škod po povodních vázne. Chybí dalších 7,5 miliardy",
-            "publishedAt": "2026-05-12T14:39:24Z"
           }
         ]
       }

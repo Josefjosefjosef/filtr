@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-13T08:24:49.550581Z",
+  "ingestedAt": "2026-05-13T09:05:14.287925Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Město Bruntál se brzy dočká nového domova Senevida",
+      "url": "https://www.zdravezpravy.cz/2026/05/13/v-bruntale-se-uz-v-zari-zacne-stavet-novy-domov-senevida/",
+      "dt": "2026-05-13T08:25:46Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "bruntál",
+        "brzy",
+        "domova",
+        "dočká",
+        "město",
+        "nového",
+        "senevida"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -460,31 +484,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Zdravotní benefity na kardio a onko prevenci nebudou daňově omezené",
-      "url": "https://www.zdravezpravy.cz/2026/05/04/zdravotni-benefity-na-kardio-a-onko-prevenci-nebudou-danove-omezene/",
-      "dt": "2026-05-04T16:13:17Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "benefity",
-        "daňově",
-        "kardio",
-        "nebudou",
-        "omezené",
-        "onko",
-        "prevenci",
-        "zdravotní"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -495,7 +494,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 203152,
+      "bytes": 206056,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -532,7 +531,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-13T07:37:48Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T08:25:46Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 18,
@@ -549,6 +548,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Město Bruntál se brzy dočká nového domova Senevida",
+            "publishedAt": "2026-05-13T08:25:46Z"
+          },
           {
             "title": "Marty Makary skončil jako šéf FDA. Rezignoval po tlaku Bílého domu",
             "publishedAt": "2026-05-13T07:37:48Z"
@@ -576,10 +579,6 @@
           {
             "title": "Do diskuze se opět vrací pandemická dohoda WHO",
             "publishedAt": "2026-05-11T06:21:05Z"
-          },
-          {
-            "title": "Farmaceutické firmy se na celkovém českém exportu podílejí 1,85 %",
-            "publishedAt": "2026-05-10T04:17:19Z"
           }
         ]
       }
