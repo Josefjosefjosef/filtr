@@ -112,7 +112,8 @@ function runNode(scriptRel, extraEnv) {
 }
 
 function runNpm(scriptName) {
-  const r = spawnSync("npm", ["run", scriptName, "--silent"], { cwd: REPO, encoding: "utf8", shell: true });
+  const npmCmd = process.platform === "win32" ? "npm.cmd" : "npm";
+  const r = spawnSync(npmCmd, ["run", scriptName, "--silent"], { cwd: REPO, encoding: "utf8" });
   return { status: r.status === 0 ? 0 : r.status || 1, stdout: r.stdout || "", stderr: r.stderr || "" };
 }
 
