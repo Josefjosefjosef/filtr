@@ -13,7 +13,10 @@ const { execSync } = require("child_process");
 const REPO = path.resolve(__dirname, "..");
 const HARNESS_ID = "silver_real_human_chaos_v3_foundation";
 const FIXED_NOW_ISO = "2026-05-04T12:00:00";
-const REPORT_JSON = path.join(__dirname, "silver-real-human-chaos-v3-report.json");
+const REPORT_JSON =
+  process.env.RHC_V3_REPORT_JSON && String(process.env.RHC_V3_REPORT_JSON).trim()
+    ? path.resolve(String(process.env.RHC_V3_REPORT_JSON).trim())
+    : path.join(__dirname, "silver-real-human-chaos-v3-report.json");
 const REPORT_20K_TXT = path.join(os.tmpdir(), "silver_20000_stable_routing_audit_report.txt");
 
 const TOTAL_CASES = (() => {
@@ -983,6 +986,8 @@ function gitTrackedCleanForRhc() {
       "scripts/silver-rhc3-note-create-uloz-poznamku-diagnostic.cjs",
       "scripts/silver-rhc3-note-create-response-contract-remaining-diagnostic.cjs",
       "scripts/silver-rhc3-note-create-ambiguous-clarify-diagnostic.cjs",
+      "scripts/silver-rhc-v3-foundation-pilot.cjs",
+      "scripts/silver-rhc-v3-foundation-pilot-report.json",
       "assets/app.js"
     ];
     const bad = tracked.filter((l) => {
