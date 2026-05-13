@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "pelipecky.cz",
-  "ingestedAt": "2026-05-13T07:44:32.436119Z",
+  "ingestedAt": "2026-05-13T08:24:49.550581Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Výprodej letenek s LOT: Z Ostravy a Prahy do celého světa od 1 790 Kč",
+      "url": "https://pelipecky.cz/lot-vyprodej-letenek/",
+      "dt": "2026-05-13T08:00:00Z",
+      "media_raw": "Pelipecky",
+      "media_norm": "Pelipecky",
+      "tokens": [
+        "790",
+        "celého",
+        "letenek",
+        "lot",
+        "ostravy",
+        "prahy",
+        "světa",
+        "výprodej"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_pelipecky",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "pelipecky.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -220,30 +245,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "pelipecky.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Blízký východ: letecká doprava v Emirátech se už vrátila do normálu.",
-      "url": "https://pelipecky.cz/aktualni-situace-blizky-vychod-vzdusny-prostor/",
-      "dt": "2026-05-04T17:08:21Z",
-      "media_raw": "Pelipecky",
-      "media_norm": "Pelipecky",
-      "tokens": [
-        "blízký",
-        "doprava",
-        "emirátech",
-        "letecká",
-        "normálu",
-        "vrátila",
-        "východ"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_pelipecky",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "pelipecky.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -254,7 +255,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://pelipecky.cz/feed/",
-      "bytes": 121726,
+      "bytes": 128599,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -291,7 +292,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-12T16:16:38Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T08:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "cestovani": 10
@@ -306,6 +307,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Výprodej letenek s LOT: Z Ostravy a Prahy do celého světa od 1 790 Kč",
+            "publishedAt": "2026-05-13T08:00:00Z"
+          },
           {
             "title": "POBYT DNE: Kanárská Fuerteventura ve 4* resortu s polopenzí za 10 490 Kč",
             "publishedAt": "2026-05-12T16:16:38Z"
@@ -333,10 +338,6 @@
           {
             "title": "Za zážitky do Chile! Letenky za 12 490 Kč",
             "publishedAt": "2026-05-09T13:55:00Z"
-          },
-          {
-            "title": "POBYT DNE: Mallorca ve 4* hotelu se snídaní a odletem z Prahy od 11 990 Kč",
-            "publishedAt": "2026-05-09T07:27:34Z"
           }
         ]
       }

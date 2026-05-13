@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-05-13T07:44:32.436119Z",
+  "ingestedAt": "2026-05-13T08:24:49.550581Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Devadesátka – žádný věk! Jane Fonda a Joan Collins oslnily v Cannes. Komu to sluší víc?",
+      "url": "https://www.prozeny.cz/clanek/krasa-a-moda-modni-hvezdy-devadesatka-zadny-vek-jane-fonda-a-joan-collins-oslnily-v-cannes-komu-to-slusi-vic-103470",
+      "dt": "2026-05-13T08:09:46Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "cannes",
+        "collins",
+        "devadesátka",
+        "fonda",
+        "jane",
+        "joan",
+        "komu",
+        "oslnily",
+        "sluší",
+        "víc",
+        "věk",
+        "žádný"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -805,34 +834,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nejvíc sexy máma showbyznysu? Dara Rolins v červených minišatech ukázala dokonalou postavu",
-      "url": "https://www.prozeny.cz/clanek/zdravi-a-zivotni-styl-zaujalo-nas-nejvic-sexy-mama-showbyznysu-dara-rolins-v-cervenych-minisatech-ukazala-dokonalou-postavu-103433",
-      "dt": "2026-05-11T07:29:59Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "dara",
-        "dokonalou",
-        "minišatech",
-        "máma",
-        "nejvíc",
-        "postavu",
-        "rolins",
-        "sexy",
-        "showbyznysu",
-        "ukázala",
-        "červených"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -843,7 +844,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 40044,
+      "bytes": 39888,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -880,10 +881,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T08:09:46Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 30
+          "finance": 1,
+          "zdravi": 29
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -895,6 +897,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Devadesátka – žádný věk! Jane Fonda a Joan Collins oslnily v Cannes. Komu to sluší víc?",
+            "publishedAt": "2026-05-13T08:09:46Z"
+          },
           {
             "title": "Sting má jasno: Žádné z jeho šesti dětí po něm nezdědí ani dolar. Kteří slavní to mají stejně?",
             "publishedAt": "2026-05-13T03:00:00Z"
@@ -921,10 +927,6 @@
           },
           {
             "title": "Nejnovější trendy v randění: Nejlepší je to v přírodě, platit má chlap a na sex je času dost",
-            "publishedAt": "2026-05-13T03:00:00Z"
-          },
-          {
-            "title": "Šaty, které s postavou udělají zázraky? Pořiďte si trendy kousek s chytrým řasením",
             "publishedAt": "2026-05-13T03:00:00Z"
           }
         ]

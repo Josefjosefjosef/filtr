@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-13T07:44:32.436119Z",
+  "ingestedAt": "2026-05-13T08:24:49.550581Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Lapčík dál zvyšuje kontrolu nad Trinity Bank, získal většinu z nových akcií ústavu",
+      "url": "https://www.e15.cz/byznys/finance-a-bankovnictvi/lapcik-dal-zvysuje-kontrolu-nad-trinity-bank-ziskal-vetsinu-z-novych-akcii-ustavu-1432772",
+      "dt": "2026-05-13T07:55:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "akcií",
+        "bank",
+        "kontrolu",
+        "lapčík",
+        "nových",
+        "trinity",
+        "většinu",
+        "zvyšuje",
+        "získal",
+        "ústavu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Inflace v Česku zrychlila, je nejvýše od loňského podzimu",
+      "url": "https://www.e15.cz/ekonomika/inflace-v-cesku-zrychlila-je-nejvyse-od-lonskeho-podzimu-1432775",
+      "dt": "2026-05-13T07:45:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "inflace",
+        "loňského",
+        "nejvýše",
+        "podzimu",
+        "zrychlila",
+        "česku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1047,57 +1097,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Co je hantavirus a jaké má příznaky? Vše o přenosu, léčbě a o rizicích v roce 2026",
-      "url": "https://www.e15.cz/zahranicni/co-je-hantavirus-a-jake-ma-priznaky-vse-o-prenosu-lecbe-a-o-rizicich-v-roce-2026-1432685",
-      "dt": "2026-05-11T11:30:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "2026",
-        "hantavirus",
-        "jaké",
-        "léčbě",
-        "přenosu",
-        "příznaky",
-        "rizicích",
-        "roce",
-        "vše"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "Do Česka se vrátí mráz. Jeden den bude pro zahrádkáře a zemědělce kritický",
-      "url": "https://www.e15.cz/domaci/do-ceska-se-vrati-mraz-jeden-den-bude-pro-zahradkare-a-zemedelce-kriticky-1432715",
-      "dt": "2026-05-11T11:17:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "den",
-        "jeden",
-        "kritický",
-        "mráz",
-        "vrátí",
-        "zahrádkáře",
-        "zemědělce",
-        "česka"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1108,7 +1107,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 55429,
+      "bytes": 55263,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1145,14 +1144,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-13T07:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T07:55:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 36,
+          "finance": 37,
           "sport": 1,
           "zdravi": 1,
-          "cestovani": 1,
-          "zpravy": 1
+          "cestovani": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1164,6 +1162,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lapčík dál zvyšuje kontrolu nad Trinity Bank, získal většinu z nových akcií ústavu",
+            "publishedAt": "2026-05-13T07:55:00Z"
+          },
+          {
+            "title": "Inflace v Česku zrychlila, je nejvýše od loňského podzimu",
+            "publishedAt": "2026-05-13T07:45:00Z"
+          },
           {
             "title": "Změny v superdávce: MPSV upraví podporu samoživitelů i posuzování majetku",
             "publishedAt": "2026-05-13T07:15:00Z"
@@ -1187,14 +1193,6 @@
           {
             "title": "Placení čínští influenceři ve vlacích Českých drah zůstanou. Jsou výhodní, tvrdí státní agentura",
             "publishedAt": "2026-05-13T03:30:00Z"
-          },
-          {
-            "title": "V chytré domácnosti může být chytrá i koupelna. Které technologie mají nejrychlejší návratnost?",
-            "publishedAt": "2026-05-12T22:00:00Z"
-          },
-          {
-            "title": "České zemědělství 2026: Jak čelit nákladovým tlakům prostřednictvím zvyšování efektivity",
-            "publishedAt": "2026-05-12T22:00:00Z"
           }
         ]
       }

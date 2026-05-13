@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-13T07:44:32.436119Z",
+  "ingestedAt": "2026-05-13T08:24:49.550581Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Tvrdá hra, tvrdé následky. Téměř každý profesionální hokejista vykazuje poškození mozku",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/profesionalni-hokejiste-a-poskozeni-mozku/",
+      "dt": "2026-05-13T08:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "hokejista",
+        "hra",
+        "každý",
+        "mozku",
+        "následky",
+        "poškození",
+        "profesionální",
+        "tvrdá",
+        "tvrdé",
+        "téměř",
+        "vykazuje"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -245,31 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Hantavirus má osmitýdenní inkubační dobu. WHO očekává další případy",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/hantavirus-inkubacni-doba-who/",
-      "dt": "2026-05-12T10:18:22Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "další",
-        "dobu",
-        "hantavirus",
-        "inkubační",
-        "osmitýdenní",
-        "očekává",
-        "případy",
-        "who"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 79659,
+      "bytes": 83409,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,10 +320,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-13T06:53:30Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T08:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 9,
+          "sport": 1,
+          "zdravi": 8,
           "zpravy": 1
         },
         "drop_counts": {
@@ -333,6 +337,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tvrdá hra, tvrdé následky. Téměř každý profesionální hokejista vykazuje poškození mozku",
+            "publishedAt": "2026-05-13T08:00:00Z"
+          },
           {
             "title": "Zásah v dceřiné společnosti VZP: Duškov odvolal vedení a nařídil forenzní audit",
             "publishedAt": "2026-05-13T06:53:30Z"
@@ -360,10 +368,6 @@
           {
             "title": "Posun v případu zbraně u pacienta v Motole: Výroky lékaře byly neetické, zní z nemocnice",
             "publishedAt": "2026-05-12T12:57:27Z"
-          },
-          {
-            "title": "Sestry z Filipín a Uzbekistánu i virtuální realita. Politici podepsali plán na záchranu zdravotnictví",
-            "publishedAt": "2026-05-12T12:14:10Z"
           }
         ]
       }

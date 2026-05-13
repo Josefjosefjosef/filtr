@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-13T07:44:32.436119Z",
+  "ingestedAt": "2026-05-13T08:24:49.550581Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Co přinese setkání amerického a čínského prezidenta?",
+      "url": "https://profitonline.cz/co-prinese-setkani-americkeho-a-cinskeho-prezidenta/",
+      "dt": "2026-05-13T08:10:13Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "amerického",
+        "prezidenta",
+        "přinese",
+        "setkání",
+        "čínského"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -260,28 +282,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kryštof Touška členem představenstva Uniqa",
-      "url": "https://profitonline.cz/krystof-touska-clenem-predstavenstva-uniqa/",
-      "dt": "2026-05-11T06:00:43Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "kryštof",
-        "představenstva",
-        "touška",
-        "uniqa",
-        "členem"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -292,7 +292,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18756,
+      "bytes": 18886,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -329,7 +329,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-13T06:00:56Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T08:10:13Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -346,6 +346,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Co přinese setkání amerického a čínského prezidenta?",
+            "publishedAt": "2026-05-13T08:10:13Z"
+          },
           {
             "title": "Nicolas Eich novým generálním ředitelem Bezvavlasy",
             "publishedAt": "2026-05-13T06:00:56Z"
@@ -373,10 +377,6 @@
           {
             "title": "Proč guvernér ČNB Michl odmítá přepnout na „jestřábí“ režim?",
             "publishedAt": "2026-05-12T08:00:24Z"
-          },
-          {
-            "title": "Zdeněk Rapant nastoupil do Raben Logistics Czech",
-            "publishedAt": "2026-05-12T07:00:06Z"
           }
         ]
       }

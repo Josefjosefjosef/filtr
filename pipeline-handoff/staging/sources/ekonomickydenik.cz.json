@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-13T07:44:32.436119Z",
+  "ingestedAt": "2026-05-13T08:24:49.550581Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Kolony nebo zkratka přes Prahu? Nová autobusová linka přes Blanku budí emoce",
+      "url": "https://ekonomickydenik.cz/tunely-autobusy-zkratka/",
+      "dt": "2026-05-13T07:49:34Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "autobusová",
+        "blanku",
+        "budí",
+        "emoce",
+        "kolony",
+        "linka",
+        "nebo",
+        "nová",
+        "prahu",
+        "zkratka"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -742,33 +769,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Babiš plní slib: Rozšíří úlevy podnikům od drahých povolenek. Kolik to bude stát?",
-      "url": "https://ekonomickydenik.cz/babis-rozsiri-ulevy-podnikum-povolenky/",
-      "dt": "2026-05-11T11:45:47Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "babiš",
-        "drahých",
-        "kolik",
-        "plní",
-        "podnikům",
-        "povolenek",
-        "rozšíří",
-        "slib",
-        "stát",
-        "úlevy"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -779,7 +779,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72471,
+      "bytes": 72438,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -816,11 +816,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T07:08:37Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T07:49:34Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 24,
-          "zpravy": 5,
+          "zpravy": 6,
+          "finance": 23,
           "zdravi": 1
         },
         "drop_counts": {
@@ -833,6 +833,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kolony nebo zkratka přes Prahu? Nová autobusová linka přes Blanku budí emoce",
+            "publishedAt": "2026-05-13T07:49:34Z"
+          },
           {
             "title": "Juchelka mění superdávku: Výpadek příjmů má krýt mimořádná pomoc",
             "publishedAt": "2026-05-13T07:08:37Z"
@@ -860,10 +864,6 @@
           {
             "title": "Odstraňování škod po povodních vázne. Chybí dalších 7,5 miliardy",
             "publishedAt": "2026-05-12T14:39:24Z"
-          },
-          {
-            "title": "Trump má velký problém: Inflace je nejvyšší za tři roky a volby se blíží",
-            "publishedAt": "2026-05-12T14:05:11Z"
           }
         ]
       }
