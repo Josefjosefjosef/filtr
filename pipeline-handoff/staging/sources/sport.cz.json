@@ -1,25 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-13T04:20:07.805964Z",
+  "ingestedAt": "2026-05-13T05:05:27.781298Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Hertl se trefil. Dobeš Montreal k výhře nedotáhl, série je srovnaná",
+      "title": "Hertl se znovu trefil a Vegas má mečbol. Dobeš inkasoval kuriozní gól",
       "url": "https://www.sport.cz/clanek/hokej-nhl-hertl-se-trefil-dobes-montreal-k-vyhre-nedotahl-serie-je-srovnana-5453396",
       "dt": "2026-05-13T04:00:00Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
         "dobeš",
+        "gól",
         "hertl",
-        "montreal",
-        "nedotáhl",
-        "srovnaná",
-        "série",
+        "inkasoval",
+        "kuriozní",
+        "mečbol",
         "trefil",
-        "výhře"
+        "vegas",
+        "znovu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Zelený o výpadcích Sparty: Jednou výbuch, podruhé jsme hráli na prd",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-zeleny-o-vypadcich-sparty-jednou-vybuch-podruhe-jsme-hrali-na-prd-5453387",
+      "dt": "2026-05-13T04:53:24Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "hráli",
+        "jednou",
+        "jsme",
+        "podruhé",
+        "prd",
+        "sparty",
+        "výbuch",
+        "výpadcích",
+        "zelený"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -727,29 +754,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "K fotbalistům Curacaa se měsíc před MS vrátil trenér Advocaat",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-k-fotbalistum-curacaa-se-mesic-pred-ms-vratil-trener-advocaat-5453182",
-      "dt": "2026-05-12T16:59:49Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "advocaat",
-        "curacaa",
-        "fotbalistům",
-        "měsíc",
-        "trenér",
-        "vrátil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -760,7 +764,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 47354,
+      "bytes": 48059,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -797,7 +801,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T04:53:24Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -814,8 +818,12 @@
         },
         "sample_titles": [
           {
-            "title": "Hertl se trefil. Dobeš Montreal k výhře nedotáhl, série je srovnaná",
+            "title": "Hertl se znovu trefil a Vegas má mečbol. Dobeš inkasoval kuriozní gól",
             "publishedAt": "2026-05-13T04:00:00Z"
+          },
+          {
+            "title": "Zelený o výpadcích Sparty: Jednou výbuch, podruhé jsme hráli na prd",
+            "publishedAt": "2026-05-13T04:53:24Z"
           },
           {
             "title": "Priske poprvé o šíleném derby: Nevěřil jsem, že se tohle může stát",
@@ -840,10 +848,6 @@
           {
             "title": "Kdyby tam byl o dva měsíce dřív, bylo by to jiné, myslí si Skuhravý o kolegovi Dvorníkovi",
             "publishedAt": "2026-05-12T21:28:16Z"
-          },
-          {
-            "title": "Ronaldo si musí na premiérový titul v Saúdské Arábii ještě počkat",
-            "publishedAt": "2026-05-12T21:18:09Z"
           }
         ]
       }

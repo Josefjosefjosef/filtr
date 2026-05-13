@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-13T04:20:07.805964Z",
+  "ingestedAt": "2026-05-13T05:05:27.781298Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Miliardové sekery: Malé nemocnice prodělávají na lůžkách, která jednou budeme potřebovat",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/miliardove-sekery-male-nemocnice-luzka/",
+      "dt": "2026-05-13T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "budeme",
+        "jednou",
+        "lůžkách",
+        "malé",
+        "miliardové",
+        "nemocnice",
+        "potřebovat",
+        "prodělávají",
+        "sekery"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -246,31 +272,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Ztrácíte se v nemocnici? Česko má nový lék na bloudění v nekonečných chodbách",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/orientace-v-nemocnicich-czechdesign-spravnym-smerem/",
-      "dt": "2026-05-12T08:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "bloudění",
-        "chodbách",
-        "lék",
-        "nekonečných",
-        "nemocnici",
-        "nový",
-        "ztrácíte",
-        "česko"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 82214,
+      "bytes": 79522,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,11 +319,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-12T15:08:10Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "zdravi": 9
+          "zdravi": 9,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -334,6 +335,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Miliardové sekery: Malé nemocnice prodělávají na lůžkách, která jednou budeme potřebovat",
+            "publishedAt": "2026-05-13T05:00:00Z"
+          },
           {
             "title": "Kauza Motol se rozrůstá: Policie obvinila další firmu, stíhá už 19 lidí",
             "publishedAt": "2026-05-12T15:08:10Z"
@@ -361,10 +366,6 @@
           {
             "title": "Hantavirus má osmitýdenní inkubační dobu. WHO očekává další případy",
             "publishedAt": "2026-05-12T10:18:22Z"
-          },
-          {
-            "title": "Razie v Ústřední vojenské nemocnici: Policie zadržela 11 lidí. Měli padělat lékařské zprávy",
-            "publishedAt": "2026-05-12T09:30:35Z"
           }
         ]
       }

@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-13T04:20:07.805964Z",
+  "ingestedAt": "2026-05-13T05:05:27.781298Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trump zveřejnil příspěvek, v němž označil Venezuelu za 51. stát USA",
+      "url": "https://www.denik.cz/ze_sveta/donald-trump-venezuela-stat-usa.html",
+      "dt": "2026-05-13T04:29:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "němž",
+        "označil",
+        "příspěvek",
+        "stát",
+        "trump",
+        "usa",
+        "venezuelu",
+        "zveřejnil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Plitvická jezera: Skvost, kde točili Vinnetoua a kde je lepší přijet mimo sezonu",
+      "url": "https://www.denik.cz/staty-eu/chorvatska-cina-plitvicka-jezera-jsou-jen-jedna-ale-bez-vinnetoua-20270512.html",
+      "dt": "2026-05-13T04:05:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "jezera",
+        "lepší",
+        "mimo",
+        "plitvická",
+        "přijet",
+        "sezonu",
+        "skvost",
+        "točili",
+        "vinnetoua"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -598,60 +649,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Netradiční dopoledne. Děti z mateřské školky skončily kvůli jeřábu v restauraci",
-      "url": "https://www.denik.cz/regiony/brno-vodarska-materska-skola-skolka-evakuace-jerab-deti-nadseni-policie-hasici.html",
-      "dt": "2026-05-12T11:40:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dopoledne",
-        "děti",
-        "jeřábu",
-        "kvůli",
-        "mateřské",
-        "netradiční",
-        "restauraci",
-        "skončily",
-        "školky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Viděl, jak balvan rozdrtil dva turisty vedle něj. Sopka vybuchla nečekaně, řekl",
-      "url": "https://www.denik.cz/ze_sveta/sopka-dukono-indonesie-pruvodce-tri-mrtvi-na-hore-v-indonesii-kamen-prach-vulkan.html",
-      "dt": "2026-05-12T11:19:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "balvan",
-        "dva",
-        "nečekaně",
-        "něj",
-        "rozdrtil",
-        "sopka",
-        "turisty",
-        "vedle",
-        "viděl",
-        "vybuchla",
-        "řekl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +659,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30261,
+      "bytes": 30190,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,11 +696,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-13T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T04:29:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 2,
           "zpravy": 22,
+          "finance": 2,
           "zdravi": 1
         },
         "drop_counts": {
@@ -716,6 +713,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump zveřejnil příspěvek, v němž označil Venezuelu za 51. stát USA",
+            "publishedAt": "2026-05-13T04:29:00Z"
+          },
+          {
+            "title": "Plitvická jezera: Skvost, kde točili Vinnetoua a kde je lepší přijet mimo sezonu",
+            "publishedAt": "2026-05-13T04:05:00Z"
+          },
           {
             "title": "Daň z nemovitosti: Jak ji zaplatit, kdy dorazí složenka, pozor na podvodníky",
             "publishedAt": "2026-05-13T03:30:00Z"
@@ -739,14 +744,6 @@
           {
             "title": "Časová osa lodi s hantavirem: Kdo a kdy zemřel, do jakých zemí lidé odletěli",
             "publishedAt": "2026-05-13T02:00:00Z"
-          },
-          {
-            "title": "Neznámý zloděj v černém ukradl z baziliky v Jablonném lebku svaté Zdislavy",
-            "publishedAt": "2026-05-12T20:14:00Z"
-          },
-          {
-            "title": "Měsíce na lůžku. Po požáru v Crans-Montaně je v nemocnicích stále 38 lidí",
-            "publishedAt": "2026-05-12T18:49:00Z"
           }
         ]
       }
