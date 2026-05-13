@@ -38293,6 +38293,57 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P1 silver_rhc3_negated_calendar_note_target: explicitní negace kalendáře + explicitní cíl poznámky
+   * pod RHC3 module-switch chaosem. Cluster: rhc3_module_switch_cal_to_note.
+   * Invariant: pokud uživatel výslovně říká „ne do kalendáře" a zároveň jasně míří na poznámku,
+   * NESMÍ vzniknout calendar.create. Výsledek smí být notes.create (když lze tělo bezpečně vytáhnout)
+   * nebo safe clarification(unknown).
+   *
+   * Aktivní jen pokud:
+   *  - explicit note target (do poznámek/poznámky/poznamka:/ulož poznámku/zapiš si do poznámek …)
+   *    nebo úzký RHC3 cue „, poznámka že …" / „… : poznámka že …"
+   *  - explicit calendar negation surface (ne do kalend, ne v kalend, ne kalend, kalend… ne,
+   *    mimo kalend, nedávej do/v kalend, nechci to v/do kalend) — vč. chaos filleru mezi „ne" a „kalend"
+   *  - NENÍ globální no-write negace („nic neukládej", „pouze čti", „jen čti", „nevytvářej") —
+   *    ty už short-circuitují dřív v processUserTurn / brainRoute
+   *  - NENÍ explicit task target — task routing si toho rezervuje
+   *  - NENÍ calendar query/read signal — calendar.read má přednost
+   */
+  function iuSilverRhc3NegCalNoteTargetCueFolded(x) {
+    if (iuSilverHasExplicitNotesTarget(x)) return true;
+    if (/[,.;:]\s*poznamk\w*\s+ze\b/.test(x)) return true;
+    if (/^\s*poznamk\w*\s+ze\b/.test(x)) return true;
+    if (/\bjen\s+poznamk\w*\b/.test(x)) return true;
+    return false;
+  }
+
+  function iuSilverRhc3NegatedCalendarSurfaceFolded(x) {
+    if (/\bne\s+do\s+kalend/.test(x)) return true;
+    if (/\bne\s+v\s+kalend/.test(x)) return true;
+    if (/\bne\s+\S+\s+do\s+kalend/.test(x)) return true;
+    if (/\bne\s+\S+\s+v\s+kalend/.test(x)) return true;
+    if (/\bne\s+\S+\s+\S+\s+do\s+kalend/.test(x)) return true;
+    if (/\bne\s+\S+\s+\S+\s+v\s+kalend/.test(x)) return true;
+    if (/\bne\s+kalend/.test(x)) return true;
+    if (/\bkalend\w*\s+ne\b/.test(x)) return true;
+    if (/\bmimo\s+kalend/.test(x)) return true;
+    if (/\bnedavej(?:te)?\s+(?:to\s+|si\s+|mi\s+)?(?:do|v)\s+kalend/.test(x)) return true;
+    if (/\bnechci\s+(?:to\s+)?(?:do|v)\s+kalend/.test(x)) return true;
+    return false;
+  }
+
+  function iuSilverRhc3NegatedCalendarNoteTargetP1Folded(folded) {
+    const x = String(folded || "");
+    if (!x) return false;
+    if (iuSilverP0NoWriteNegationBeatsWriteLikeCueFolded(x)) return false;
+    if (iuSilverHasExplicitTasksTarget(x)) return false;
+    if (iuSilverCalendarQuerySignalFolded(x)) return false;
+    if (!iuSilverRhc3NegCalNoteTargetCueFolded(x)) return false;
+    if (!iuSilverRhc3NegatedCalendarSurfaceFolded(x)) return false;
+    return true;
+  }
+
+  /**
    * P1 narrow: explicitní task token (EN „task“ / ulož mi task / dej mi task / leading task …) bez update sloves.
    */
   function iuSilverExplicitTaskCreateAnchorP1Folded(f) {
@@ -46924,6 +46975,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           }
         }
       }
+    }
+
+    /**
+     * P1 silver_rhc3_negated_calendar_note_target: explicit calendar negation + explicit note target —
+     * never produce calendar.create. Try to recover note body via existing P1 recovery helper; if body
+     * cannot be safely extracted, return safe clarification(unknown). Cluster: rhc3_module_switch_cal_to_note.
+     */
+    if (iuSilverRhc3NegatedCalendarNoteTargetP1Folded(folded)) {
+      const rhc3NoteBody = iuSilverWriteSchedProbeRecoverExplicitNoteBodyP1(raw, folded);
+      if (rhc3NoteBody) {
+        return iuSilverBuildNoteCreateTurn(rhc3NoteBody, now);
+      }
+      return baseClarification("ambiguous_write", "unknown");
     }
 
     const route = iuSilverBrainRoute(raw, now, prev);
