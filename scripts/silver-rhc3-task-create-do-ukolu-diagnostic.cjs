@@ -14,9 +14,17 @@ const { execSync, spawnSync } = require("child_process");
 const REPO = path.resolve(__dirname, "..");
 const APP_JS = path.join(REPO, "assets", "app.js");
 const REPORT_JSON = path.join(__dirname, "silver-rhc3-task-create-do-ukolu-diagnostic-report.json");
+const ALIGNMENT_REPORT_JSON = path.join(__dirname, "silver-rhc3-task-create-do-ukolu-harness-alignment-report.json");
 const FOUNDATION_REPORT = path.join(__dirname, "silver-rhc-v3-foundation-pilot-report.json");
 
-const EXPECTED_MAIN_COMMIT = "5b21d9c9cffa6261abccd7a87899e812da61b467";
+const EXPECTED_MAIN_COMMIT = "2a76b8037d5147054b12b96cd3110007b96a3bcd";
+
+/** Pre-alignment story baseline (PR #4322 merged diagnostic snapshot). */
+const HARNESS_ALIGN_STORY_BASELINE = {
+  cluster_fail_count: 405,
+  task_create_clarify_chaos: 399,
+  should_fix_harness_count: 403
+};
 const TARGET_CLUSTER = "rhc3_task_create_do_ukolu";
 const RANDOM_SAMPLE_SEED = 0x7461736b;
 
@@ -34,7 +42,8 @@ const {
   finalizeNegationNoWriteHarnessEval,
   finalizeNoteQueryKdeHarnessEval,
   finalizeNoteCreateDoPoznamkStorageHarnessEval,
-  finalizeNoteCreateDoPoznamkAmbiguousClarifyLaneHarnessEval
+  finalizeNoteCreateDoPoznamkAmbiguousClarifyLaneHarnessEval,
+  finalizeTaskCreateDoUkoluAmbiguousClarifyLaneHarnessEval
 } = rhc3;
 const harness = require("./audit_silver_realistic_mobile_corpus.cjs");
 const {
@@ -198,6 +207,7 @@ function gitAllowListClean() {
     const allow = [
       "scripts/silver-rhc3-task-create-do-ukolu-diagnostic.cjs",
       "scripts/silver-rhc3-task-create-do-ukolu-diagnostic-report.json",
+      "scripts/silver-rhc3-task-create-do-ukolu-harness-alignment-report.json",
       "scripts/silver-real-human-chaos-v3.cjs",
       "scripts/silver-real-human-chaos-v3-report.json"
     ];
@@ -234,13 +244,25 @@ function runNpmBackedScript(rel) {
   return r.status === 0;
 }
 
+function parse20kCalendarRouting(out) {
+  const s = String(out || "");
+  const cw = /calendar_write=(\d+)\/3000/.exec(s);
+  const cq = /calendar_query=(\d+)\/3000/.exec(s);
+  return {
+    calendar_write_20k: cw ? cw[1] + "/3000" : "UNKNOWN",
+    calendar_query_20k: cq ? cq[1] + "/3000" : "UNKNOWN"
+  };
+}
+
 function runProofBundle() {
   const out = {
     smoke: "FAIL",
     calendar_regression: "FAIL",
     routing_20k: "FAIL",
     quality: "FAIL",
-    realistic_mobile: "FAIL"
+    realistic_mobile: "FAIL",
+    calendar_write_20k: "SKIPPED",
+    calendar_query_20k: "SKIPPED"
   };
   const s1 = runNpmBackedScript("scripts/smoke.mjs");
   out.smoke = s1 ? "PASS" : "FAIL";
@@ -249,6 +271,9 @@ function runProofBundle() {
   out.calendar_regression = s2 && s3 ? "PASS" : "FAIL";
   const s4 = runNode("scripts/audit_silver_20000_routing_stable.cjs");
   out.routing_20k = s4.ok ? "PASS" : "FAIL";
+  const cal20 = parse20kCalendarRouting(s4.out);
+  out.calendar_write_20k = cal20.calendar_write_20k;
+  out.calendar_query_20k = cal20.calendar_query_20k;
   const s5 = runNode("scripts/audit_silver_quality_v2.cjs");
   out.quality = s5.ok ? "PASS" : "FAIL";
   const s6 = runNode("scripts/audit_silver_realistic_mobile_corpus.cjs");
@@ -434,6 +459,7 @@ function main() {
       ev = finalizeNoteQueryKdeHarnessEval(c, turn, ev);
       ev = finalizeNoteCreateDoPoznamkStorageHarnessEval(c, turn, ev);
       ev = finalizeNoteCreateDoPoznamkAmbiguousClarifyLaneHarnessEval(c, turn, ev);
+      ev = finalizeTaskCreateDoUkoluAmbiguousClarifyLaneHarnessEval(c, turn, ev);
     } catch (e) {
       turn = { normalizedIntent: "", processingState: "", draft: {} };
       ev = { pass: false, cat: "runtime_fail", auditIntent: "unknown", raw: String(e && e.message) };
@@ -496,6 +522,8 @@ function main() {
   let routing_20k = "SKIPPED";
   let quality = "SKIPPED";
   let realistic_mobile = "SKIPPED";
+  let calendar_write_20k = "SKIPPED";
+  let calendar_query_20k = "SKIPPED";
 
   if (wantProof) {
     const gitPre = gitStatusShortClean();
@@ -510,6 +538,8 @@ function main() {
     routing_20k = pb.routing_20k;
     quality = pb.quality;
     realistic_mobile = pb.realistic_mobile;
+    calendar_write_20k = pb.calendar_write_20k;
+    calendar_query_20k = pb.calendar_query_20k;
     try {
       execSync("git checkout -- scripts/silver-quality-v2-report.json scripts/silver-realistic-mobile-corpus-report.json", {
         cwd: REPO,
@@ -543,8 +573,10 @@ function main() {
     recommendedNextTask = "engine_or_copy: strip spoken fillers from task draft title (hoď mi tam / prosím / že tail)";
   } else if (harnessProblemCount > ambiguousInputCount) {
     recommendedNextTask = "scripts-only: relax taskWriteSemantic or gold_unknown vs engine create alignment";
-  } else if (ambiguousInputCount > trueEngineFailCount) {
+  } else if (ambiguousInputCount > trueEngineFailCount && clusterFailCount > 0) {
     recommendedNextTask = "corpus+harness: chaotic mobile/spoken_compress lanes — document acceptable clarify PASS scope";
+  } else if (clusterFailCount === 0 && mustFixEngineCount === 0) {
+    recommendedNextTask = "none: rhc3_task_create_do_ukolu cluster green under harness + engine baseline";
   }
 
   const gitCleanAll = gitStatusShortClean();
@@ -651,7 +683,16 @@ function main() {
       query_created_write_count: queryCreatedWriteCount,
       write_when_negated_count: writeWhenNegatedCount
     },
-    gates: { smoke, calendar_regression, routing_20k, quality, realistic_mobile, proof_mode: wantProof ? "live" : "hydrate_or_skip" },
+    gates: {
+      smoke,
+      calendar_regression,
+      routing_20k,
+      quality,
+      realistic_mobile,
+      calendar_write_20k,
+      calendar_query_20k,
+      proof_mode: wantProof ? "live" : "hydrate_or_skip"
+    },
     git_status_clean: gitCleanAll,
     recommended_next_task: recommendedNextTask,
     sample_fail_examples: examples,
@@ -659,13 +700,148 @@ function main() {
   };
   fs.writeFileSync(REPORT_JSON, JSON.stringify(reportObj, null, 2), "utf8");
 
+  let mainBefore = "UNKNOWN";
+  let branchName = "UNKNOWN";
+  let changedFiles = "";
+  try {
+    branchName = execSync("git rev-parse --abbrev-ref HEAD", { cwd: REPO, encoding: "utf8" }).trim();
+  } catch {}
+  try {
+    mainBefore = execSync("git rev-parse origin/main", { cwd: REPO, encoding: "utf8" }).trim();
+  } catch {
+    try {
+      mainBefore = execSync("git rev-parse main", { cwd: REPO, encoding: "utf8" }).trim();
+    } catch {}
+  }
+  try {
+    changedFiles = execSync("git diff --name-only origin/main...HEAD", { cwd: REPO, encoding: "utf8" })
+      .trim()
+      .replace(/\r?\n/g, ";");
+  } catch {}
+
+  const pilotSnap = readJsonSafe(FOUNDATION_REPORT);
+  const rhc3FoundationPilot =
+    pilotSnap &&
+    pilotSnap.proof_bundle &&
+    pilotSnap.proof_bundle.gates_pass === "YES" &&
+    (pilotSnap.chaos_child_exit_code === 0 || pilotSnap.chaos_child_exit_code === undefined)
+      ? "PASS"
+      : "SKIPPED";
+
+  const afterClarifyChaos = subclusterCounts["task_create_clarify_chaos"] || 0;
+  const readyForPr =
+    clusterFailCount === 0 &&
+    mustFixEngineCount === 0 &&
+    wrongModuleCount === 0 &&
+    titlePollutionCount === 0 &&
+    dangerousWriteCount === 0 &&
+    falseWriteCount === 0 &&
+    queryCreatedWriteCount === 0 &&
+    writeWhenNegatedCount === 0 &&
+    gitCleanAll === "YES"
+      ? "YES"
+      : "NO";
+
+  const alignLines = [
+    "=== RHC3_TASK_CREATE_DO_UKOLU_HARNESS_ALIGNMENT_RESULT ===",
+    "main_before=" + mainBefore,
+    "branch=" + branchName,
+    "commit=" + runnerHead,
+    "changed_files=" + changedFiles,
+    "engine_changed=NO",
+    "assets_app_changed=" + assetsAppChanged,
+    "ui_changed=NO",
+    "css_changed=NO",
+    "backend_changed=NO",
+    "total_cluster_cases=" + totalClusterCases,
+    "before_cluster_fail_count=" + HARNESS_ALIGN_STORY_BASELINE.cluster_fail_count,
+    "after_cluster_fail_count=" + clusterFailCount,
+    "before_task_create_clarify_chaos=" + HARNESS_ALIGN_STORY_BASELINE.task_create_clarify_chaos,
+    "after_task_create_clarify_chaos=" + afterClarifyChaos,
+    "before_should_fix_harness_count=" + HARNESS_ALIGN_STORY_BASELINE.should_fix_harness_count,
+    "after_should_fix_harness_count=" + shouldFixHarnessCount,
+    "must_fix_engine_count=" + mustFixEngineCount,
+    "true_engine_fail_count=" + trueEngineFailCount,
+    "wrong_module_count=" + wrongModuleCount,
+    "title_pollution_count=" + titlePollutionCount,
+    "ambiguous_input_count=" + ambiguousInputCount,
+    "real_world_acceptable_count=" + realWorldAcceptableCount,
+    "dangerous_write_count=" + dangerousWriteCount,
+    "false_write_count=" + falseWriteCount,
+    "query_created_write_count=" + queryCreatedWriteCount,
+    "write_when_negated_count=" + writeWhenNegatedCount,
+    "calendar_write_20k=" + calendar_write_20k,
+    "calendar_query_20k=" + calendar_query_20k,
+    "routing_20k=" + routing_20k,
+    "quality=" + quality,
+    "realistic_mobile=" + realistic_mobile,
+    "rhc3_foundation_pilot=" + rhc3FoundationPilot,
+    "calendar_regression=" + calendar_regression,
+    "git_status_clean=" + gitCleanAll,
+    "ready_for_pr=" + readyForPr,
+    "recommended_next_task=" + recommendedNextTask,
+    "=== END_RHC3_TASK_CREATE_DO_UKOLU_HARNESS_ALIGNMENT_RESULT ==="
+  ];
+  const alignText = alignLines.join("\n");
+  console.log("\n" + alignText + "\n");
+
+  const alignObj = {
+    generated_at: new Date().toISOString(),
+    baseline_label: "PR4322_diagnostic_story_pre_harness_align",
+    baseline: HARNESS_ALIGN_STORY_BASELINE,
+    main_before: mainBefore,
+    branch: branchName,
+    commit: runnerHead,
+    changed_files: changedFiles,
+    engine_changed: "NO",
+    assets_app_changed: assetsAppChanged,
+    ui_changed: "NO",
+    css_changed: "NO",
+    backend_changed: "NO",
+    after: {
+      total_cluster_cases: totalClusterCases,
+      cluster_fail_count: clusterFailCount,
+      task_create_clarify_chaos: afterClarifyChaos,
+      should_fix_harness_count: shouldFixHarnessCount,
+      must_fix_engine_count: mustFixEngineCount,
+      true_engine_fail_count: trueEngineFailCount,
+      wrong_module_count: wrongModuleCount,
+      title_pollution_count: titlePollutionCount,
+      ambiguous_input_count: ambiguousInputCount,
+      real_world_acceptable_count: realWorldAcceptableCount,
+      safety: {
+        dangerous_write_count: dangerousWriteCount,
+        false_write_count: falseWriteCount,
+        query_created_write_count: queryCreatedWriteCount,
+        write_when_negated_count: writeWhenNegatedCount
+      },
+      gates: {
+        smoke,
+        calendar_regression,
+        routing_20k,
+        quality,
+        realistic_mobile,
+        calendar_write_20k,
+        calendar_query_20k,
+        rhc3_foundation_pilot: rhc3FoundationPilot
+      },
+      git_status_clean: gitCleanAll,
+      ready_for_pr: readyForPr,
+      recommended_next_task: recommendedNextTask
+    },
+    text_block: alignText
+  };
+  fs.writeFileSync(ALIGNMENT_REPORT_JSON, JSON.stringify(alignObj, null, 2), "utf8");
+
   const proofFail =
     wantProof &&
     (smoke !== "PASS" ||
       calendar_regression !== "PASS" ||
       routing_20k !== "PASS" ||
       quality !== "PASS" ||
-      realistic_mobile !== "PASS");
+      realistic_mobile !== "PASS" ||
+      calendar_write_20k !== "3000/3000" ||
+      calendar_query_20k !== "3000/3000");
   if (proofFail) {
     console.log("=== RHC3_TASK_CREATE_DO_UKOLU_DIAGNOSTIC_ABORT ===");
     console.log("reason=proof_gate_failed");

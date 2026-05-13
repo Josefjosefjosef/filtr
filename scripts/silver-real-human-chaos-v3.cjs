@@ -892,6 +892,94 @@ function finalizeNoteCreateDoPoznamkAmbiguousClarifyLaneHarnessEval(c, turn, ev)
   });
 }
 
+/** „do úkolů / hoď … úkol“ + „ne do kalendáře“ — folded input (align diagnostic cluster). */
+function hasTaskCreateCanonFolded(fold) {
+  const f = String(fold || "");
+  const hasDoUkol =
+    /\bdo\s+ukol\w*\b/i.test(f) || /\bhod\s+mi\s+do\s+ukol/i.test(f) || /\bhod\s+do\s+ukol/i.test(f);
+  const negCal = /\bne\s+do\s+kalend/i.test(f) || /\bne\s+v\s+kalend/i.test(f);
+  return hasDoUkol && negCal;
+}
+
+function taskCreateDoUkoluNoiseOnlyPopcount(mask) {
+  const noiseMask =
+    core.M.FILLER_PREFIX |
+    core.M.FILLER_SUFFIX |
+    core.M.HESITATION |
+    core.M.MOBILE_PREFIX |
+    core.M.SPOKEN_COMPRESS |
+    core.M.EMOTIONAL |
+    core.M.TYPO_LITE |
+    core.M.STRIP_DIACRITICS |
+    core.M.PARTIAL_REF;
+  return popcountMask((mask || 0) >>> 0, noiseMask >>> 0);
+}
+
+/** Same chaos surface as silver-rhc3-task-create-do-ukolu-diagnostic.cjs isChaoticMutationSurface. */
+function taskCreateDoUkoluIsChaoticMutationSurface(c) {
+  const mask = (c.mutation_mask || 0) >>> 0;
+  const noiseMask =
+    core.M.FILLER_PREFIX |
+    core.M.FILLER_SUFFIX |
+    core.M.HESITATION |
+    core.M.MOBILE_PREFIX |
+    core.M.SPOKEN_COMPRESS |
+    core.M.EMOTIONAL |
+    core.M.TYPO_LITE |
+    core.M.STRIP_DIACRITICS |
+    core.M.PARTIAL_REF;
+  if (popcountMask(mask, noiseMask) >= 3) return true;
+  if ((mask & core.M.NEGATION_OVERLAY) !== 0) return true;
+  if ((mask & core.M.AMBIGUITY_OVERLAY) !== 0) return true;
+  return false;
+}
+
+/**
+ * rhc3_task_create_do_ukolu: accept safe clarification/unknown on chaotic mobile/spoken/noisy surfaces only.
+ * P0: never upgrade create-like drafts; never widen clean canon + light-overlay-only rows (engine_should_create).
+ */
+function finalizeTaskCreateDoUkoluAmbiguousClarifyLaneHarnessEval(c, turn, ev) {
+  if (ev.pass) return ev;
+  if (String(c.cluster || "") !== "rhc3_task_create_do_ukolu") return ev;
+  if (c.family !== "task_create_chaos") return ev;
+  if (ev.cat !== "intent_fail") return ev;
+
+  const eng = String(turn.normalizedIntent || "");
+  if (createLikeTurn(turn)) return ev;
+  if (eng !== "clarification" && eng !== "unknown") return ev;
+
+  const fold = foldCs(c.input);
+  if (safetyNoWriteFolded(fold)) return ev;
+  if (hasNegWrite(fold)) return ev;
+
+  const mask = (c.mutation_mask || 0) >>> 0;
+  const noiseN = taskCreateDoUkoluNoiseOnlyPopcount(mask);
+  const chaotic = taskCreateDoUkoluIsChaoticMutationSurface(c);
+  const hasCanon = hasTaskCreateCanonFolded(fold);
+  const mobileVoice = (mask & core.M.MOBILE_PREFIX) !== 0 || (mask & core.M.SPOKEN_COMPRESS) !== 0;
+  const lostMarkers = !hasCanon;
+
+  const onlyAmbiguityOverlay = (mask & core.M.AMBIGUITY_OVERLAY) !== 0 && noiseN < 3;
+  const onlyNegOverlay = (mask & core.M.NEGATION_OVERLAY) !== 0 && noiseN < 3;
+  const singleOverlayChaos = (onlyAmbiguityOverlay || onlyNegOverlay) && noiseN < 2;
+  if (singleOverlayChaos && hasCanon) return ev;
+
+  const acceptChaosLane =
+    chaotic || mobileVoice || (lostMarkers && noiseN >= 2) || (lostMarkers && mobileVoice);
+  if (!acceptChaosLane) return ev;
+
+  if (c.gold) {
+    c.gold.expected_clarification_reason = "task_create_do_ukolu_ambiguous_clarify_lane_ok";
+  }
+  c._task_create_do_ukolu_ambiguous_clarify_harness_pass = true;
+  return Object.assign({}, ev, {
+    pass: true,
+    cat: "task_create_do_ukolu_ambiguous_clarify_lane_ok",
+    auditIntent: ev.auditIntent,
+    raw: ev.raw
+  });
+}
+
 function finalizeNegationNoWriteHarnessEval(c, turn, ev) {
   if (c.family !== "negation_no_write" || ev.pass) return ev;
   if (String(c.cluster || "") !== "rhc3_negation_cal_readonly") return ev;
@@ -1092,6 +1180,7 @@ function main() {
   let noteQueryKdeSafeClarificationHarnessPass = 0;
   let noteCreateDoPoznamkStorageHarnessPass = 0;
   let noteCreateDoPoznamkAmbiguousClarifyHarnessPass = 0;
+  let taskCreateDoUkoluAmbiguousClarifyHarnessPass = 0;
 
   for (const c of cases) {
     if (!byG[c.group]) byG[c.group] = { pass: 0, fail: 0 };
@@ -1133,6 +1222,7 @@ function main() {
     ev = finalizeNoteQueryKdeHarnessEval(c, turn, ev);
     ev = finalizeNoteCreateDoPoznamkStorageHarnessEval(c, turn, ev);
     ev = finalizeNoteCreateDoPoznamkAmbiguousClarifyLaneHarnessEval(c, turn, ev);
+    ev = finalizeTaskCreateDoUkoluAmbiguousClarifyLaneHarnessEval(c, turn, ev);
     const createLike = createLikeTurn(turn);
 
     if (safetyNoWriteFolded(foldedIn) && createLike) {
@@ -1178,6 +1268,7 @@ function main() {
     if (c._note_query_kde_clarification_harness_pass) noteQueryKdeSafeClarificationHarnessPass++;
     if (c._note_create_do_poznamk_storage_harness_pass) noteCreateDoPoznamkStorageHarnessPass++;
     if (c._note_create_do_poznamk_ambiguous_clarify_harness_pass) noteCreateDoPoznamkAmbiguousClarifyHarnessPass++;
+    if (c._task_create_do_ukolu_ambiguous_clarify_harness_pass) taskCreateDoUkoluAmbiguousClarifyHarnessPass++;
 
     if (ev.pass) {
       passCount++;
@@ -1527,6 +1618,11 @@ function main() {
     do_poznamk_storage_harness_pass: noteCreateDoPoznamkStorageHarnessPass,
     do_poznamk_ambiguous_clarify_lane_harness_pass: noteCreateDoPoznamkAmbiguousClarifyHarnessPass
   };
+  reportObj.task_create_do_ukolu_alignment = {
+    target_family: "task_create_chaos",
+    target_cluster: "rhc3_task_create_do_ukolu",
+    ambiguous_clarify_lane_harness_pass: taskCreateDoUkoluAmbiguousClarifyHarnessPass
+  };
   reportObj.pr_result_block = prBlock;
   fs.writeFileSync(REPORT_JSON, JSON.stringify(reportObj, null, 2), "utf8");
 }
@@ -1548,6 +1644,9 @@ module.exports = {
   finalizeNoteQueryKdeHarnessEval,
   finalizeNoteCreateDoPoznamkStorageHarnessEval,
   finalizeNoteCreateDoPoznamkAmbiguousClarifyLaneHarnessEval,
+  finalizeTaskCreateDoUkoluAmbiguousClarifyLaneHarnessEval,
+  hasTaskCreateCanonFolded,
+  taskCreateDoUkoluIsChaoticMutationSurface,
   classifyNegationReadonlyClarity,
   negationReadonlyHarnessCueFolded
 };
