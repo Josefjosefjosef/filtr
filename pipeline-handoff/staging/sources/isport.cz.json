@@ -1,25 +1,53 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "isport.cz",
-  "ingestedAt": "2026-05-13T19:50:09.006797Z",
+  "ingestedAt": "2026-05-13T20:30:08.071038Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Slavia - Jablonec 5:1. Kanonáda! Sešívání míří v prázdném Edenu za titulem",
-      "url": "https://isport.blesk.cz/clanek/fotbal-chance-liga/475430/online-slavia-jablonec-5-1-kanonada-sesivani-miri-v-prazdnem-edenu-za-titulem.html",
-      "dt": "2026-05-13T19:20:00Z",
+      "title": "ONLINE: Slavia slaví titul v prázdném Edenu. Hráči už jsou v šatně, Tvrdík mluvil o oslavách",
+      "url": "https://isport.blesk.cz/clanek/fotbal-chance-liga/475279/online-slavia-slavi-titul-v-prazdnem-edenu-hraci-uz-jsou-v-satne-tvrdik-mluvil-o-oslavach.html",
+      "dt": "2026-05-13T20:10:00Z",
       "media_raw": "iSport",
       "media_norm": "iSport",
       "tokens": [
         "edenu",
+        "hráči",
+        "mluvil",
+        "oslavách",
+        "prázdném",
+        "slavia",
+        "slaví",
+        "titul",
+        "tvrdík",
+        "šatně"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_isport",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "isport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Slavia - Jablonec 5:1. Domácí kanonáda bez diváků, sešívání získali 23. titul v tichu",
+      "url": "https://isport.blesk.cz/clanek/fotbal-chance-liga/475430/slavia-jablonec-5-1-domaci-kanonada-bez-divaku-sesivani-ziskali-23-titul-v-tichu.html",
+      "dt": "2026-05-13T20:00:00Z",
+      "media_raw": "iSport",
+      "media_norm": "iSport",
+      "tokens": [
+        "diváků",
+        "domácí",
         "jablonec",
         "kanonáda",
-        "míří",
-        "prázdném",
         "sešívání",
         "slavia",
-        "titulem"
+        "tichu",
+        "titul",
+        "získali"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -74,32 +102,6 @@
         "panují",
         "posilu",
         "přijede"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_isport",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "isport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "ONLINE po skandálním derby: Chorý s Douděrou na tribuně sledují zápas s Jabloncem",
-      "url": "https://isport.blesk.cz/clanek/fotbal-chance-liga/475279/online-po-skandalnim-derby-chory-s-douderou-na-tribune-sleduji-zapas-s-jabloncem.html",
-      "dt": "2026-05-13T18:15:00Z",
-      "media_raw": "iSport",
-      "media_norm": "iSport",
-      "tokens": [
-        "chorý",
-        "derby",
-        "douděrou",
-        "jabloncem",
-        "online",
-        "skandálním",
-        "sledují",
-        "tribuně",
-        "zápas"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1067,7 +1069,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://isport.blesk.cz/rss",
-      "bytes": 58512,
+      "bytes": 58694,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1104,7 +1106,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-13T19:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T20:10:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1120,8 +1122,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Slavia - Jablonec 5:1. Kanonáda! Sešívání míří v prázdném Edenu za titulem",
-            "publishedAt": "2026-05-13T19:20:00Z"
+            "title": "ONLINE: Slavia slaví titul v prázdném Edenu. Hráči už jsou v šatně, Tvrdík mluvil o oslavách",
+            "publishedAt": "2026-05-13T20:10:00Z"
+          },
+          {
+            "title": "Slavia - Jablonec 5:1. Domácí kanonáda bez diváků, sešívání získali 23. titul v tichu",
+            "publishedAt": "2026-05-13T20:00:00Z"
           },
           {
             "title": "Vaclík začal opět trénovat: Měl jsem nabídky. Při MS bude jako expert na Nově",
@@ -1130,10 +1136,6 @@
           {
             "title": "Kanada má elitní posilu, přijede Crosby. Bude ale kapitán? Panují názory, že ne",
             "publishedAt": "2026-05-13T18:20:00Z"
-          },
-          {
-            "title": "ONLINE po skandálním derby: Chorý s Douděrou na tribuně sledují zápas s Jabloncem",
-            "publishedAt": "2026-05-13T18:15:00Z"
           },
           {
             "title": "NHL ONLINE: Colorado - Minnesota. Nečas a spol. mohou jít do finále Západní konference",
