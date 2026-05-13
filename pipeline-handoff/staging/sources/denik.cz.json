@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-13T03:00:17.455124Z",
+  "ingestedAt": "2026-05-13T03:39:45.331190Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Atentát na Jana Pavla II.: Papež přišel o část střeva, záhada kolem střelce trvá",
+      "url": "https://www.denik.cz/historie/pokus-o-atentat-papez-jan-pavel-ii-svatopetrske-namesti-1981-ali-agca.html",
+      "dt": "2026-05-13T03:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "atentát",
+        "jana",
+        "kolem",
+        "papež",
+        "pavla",
+        "přišel",
+        "střelce",
+        "střeva",
+        "trvá",
+        "záhada",
+        "část"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -626,31 +654,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Počasí v Evropě šílí: Chorvatsko zasypaly kroupy, hrozí i sněžení",
-      "url": "https://www.denik.cz/staty-eu/chorvatsko-extremni-pocasi-kroupy-dest-bourky-snih.html",
-      "dt": "2026-05-12T10:31:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "chorvatsko",
-        "evropě",
-        "hrozí",
-        "kroupy",
-        "počasí",
-        "sněžení",
-        "zasypaly",
-        "šílí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -661,7 +664,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29729,
+      "bytes": 30004,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -698,7 +701,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-13T02:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T03:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -715,6 +718,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Atentát na Jana Pavla II.: Papež přišel o část střeva, záhada kolem střelce trvá",
+            "publishedAt": "2026-05-13T03:00:00Z"
+          },
           {
             "title": "Extrémní proměny: Tomáš neodolal svodům Prahy, narostl do váhy 185 kilo",
             "publishedAt": "2026-05-13T02:30:00Z"
@@ -742,10 +749,6 @@
           {
             "title": "Putin s učitelkou. Kreml ukázal video ruského prezidenta v ulicích",
             "publishedAt": "2026-05-12T17:40:00Z"
-          },
-          {
-            "title": "Kolaudace zrychlí a sousedské spory dostanou pevnější pravidla, říká zmocněnkyně",
-            "publishedAt": "2026-05-12T17:00:00Z"
           }
         ]
       }
