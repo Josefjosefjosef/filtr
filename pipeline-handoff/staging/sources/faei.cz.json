@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-13T21:09:50.761236Z",
+  "ingestedAt": "2026-05-13T21:49:39.582342Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Inflace v Česku pokračuje v růstu",
+      "url": "https://profitonline.cz/inflace-v-cesku-pokracuje-v-rustu/",
+      "dt": "2026-05-13T21:15:47Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "inflace",
+        "pokračuje",
+        "růstu",
+        "česku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -256,30 +277,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Naobědvat se v restauraci pod 200 korun je už skoro malý zázrak",
-      "url": "https://profitonline.cz/naobedvat-se-v-restauraci-pod-200-korun-je-uz-skoro-maly-zazrak/",
-      "dt": "2026-05-12T06:00:49Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "200",
-        "korun",
-        "malý",
-        "naobědvat",
-        "restauraci",
-        "skoro",
-        "zázrak"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -290,7 +287,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18834,
+      "bytes": 18733,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -327,7 +324,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-13T17:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T21:15:47Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -344,6 +341,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Inflace v Česku pokračuje v růstu",
+            "publishedAt": "2026-05-13T21:15:47Z"
+          },
           {
             "title": "Manažeři kvality jsou nepostradatelní. Teď jim firmy rekordně přidaly",
             "publishedAt": "2026-05-13T17:30:00Z"
@@ -371,10 +372,6 @@
           {
             "title": "USA se potýkají se silnými inflačními tlaky",
             "publishedAt": "2026-05-12T19:30:07Z"
-          },
-          {
-            "title": "Vymáhání práva je na katastrofální úrovni, fotbal je mementem",
-            "publishedAt": "2026-05-12T10:00:56Z"
           }
         ]
       }
