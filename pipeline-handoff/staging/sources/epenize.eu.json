@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-13T22:31:07.484722Z",
+  "ingestedAt": "2026-05-13T23:10:17.825213Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Trump chce novináře v celách s násilníky? První dodatek ústavy zatím odolává",
+      "url": "https://www.epenize.eu/trump-chce-novinare-v-celach-s-nasilniky-prvni-dodatek-ustavy-zatim-odolav/",
+      "dt": "2026-05-13T23:00:52Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "celách",
+        "chce",
+        "dodatek",
+        "novináře",
+        "násilníky",
+        "odolává",
+        "první",
+        "trump",
+        "zatím",
+        "ústavy"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -500,35 +527,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Trumpův seznam: Itálie s ničím nepomohla, Španělsko je hrozné, Británie zbabělá a Francie blokuje přelety",
-      "url": "https://www.epenize.eu/trumpuv-seznam-italie-s-nicim-nepomohla-spanelsko-je-hrozne-britanie-zbabela-a-francie-blokuje-prelety/",
-      "dt": "2026-05-04T23:00:41Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "blokuje",
-        "británie",
-        "francie",
-        "hrozné",
-        "itálie",
-        "nepomohla",
-        "ničím",
-        "přelety",
-        "seznam",
-        "trumpův",
-        "zbabělá",
-        "španělsko"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -539,7 +537,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 110837,
+      "bytes": 110433,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -576,7 +574,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-13T08:32:32Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T23:00:52Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 17,
@@ -594,6 +592,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump chce novináře v celách s násilníky? První dodatek ústavy zatím odolává",
+            "publishedAt": "2026-05-13T23:00:52Z"
+          },
           {
             "title": "Přiznal Šťastný koryta? Hlídání Babiše skončilo podpisem koaliční smlouvy",
             "publishedAt": "2026-05-13T08:32:32Z"
@@ -621,10 +623,6 @@
           {
             "title": "Sedmimetrová zlatá socha Trumpa v Miami: Pastor Burns říká „zázrak od Boha“",
             "publishedAt": "2026-05-10T23:00:47Z"
-          },
-          {
-            "title": "Fotbal jako obraz dnešní společnosti. Je mi líto slušných fanoušků Slavie",
-            "publishedAt": "2026-05-10T12:20:01Z"
           }
         ]
       }
