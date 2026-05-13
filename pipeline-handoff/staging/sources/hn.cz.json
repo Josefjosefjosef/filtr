@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-13T16:30:12.450429Z",
+  "ingestedAt": "2026-05-13T17:10:18.484238Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Výchova dívek v Gileádu. Seriál Svědectví sleduje osudy nové generace zotročených žen",
+      "url": "https://vikend.hn.cz/c1-67875670-vychova-divek-v-gileadu-serial-svedectvi-sleduje-osudy-nove-generace-zotrocenych-zen",
+      "dt": "2026-05-13T17:00:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "dívek",
+        "generace",
+        "gileádu",
+        "nové",
+        "osudy",
+        "seriál",
+        "sleduje",
+        "svědectví",
+        "výchova",
+        "zotročených",
+        "žen"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1072,39 +1100,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "S korunou na věčné časy. Vláda ruší poslední rituály spojené s &bdquo;příjímáním&ldquo; eura, skutečná šance zmizela před 20 lety",
-      "url": "https://archiv.hn.cz/c1-67876210-s-korunou-na-vecne-casy-vlada-rusi-posledni-ritualy-spojene-s-bdquo-prijimanim-ldquo-eura-skutecna-sance-zmizela-pred-20-lety",
-      "dt": "2026-05-12T14:27:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bdquo",
-        "eura",
-        "korunou",
-        "ldquo",
-        "lety",
-        "poslední",
-        "příjímáním",
-        "rituály",
-        "ruší",
-        "skutečná",
-        "spojené",
-        "vláda",
-        "věčné",
-        "zmizela",
-        "časy",
-        "šance"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1115,7 +1110,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184013,
+      "bytes": 183988,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1152,7 +1147,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-13T16:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T17:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 36,
@@ -1169,6 +1164,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Výchova dívek v Gileádu. Seriál Svědectví sleduje osudy nové generace zotročených žen",
+            "publishedAt": "2026-05-13T17:00:00Z"
+          },
           {
             "title": "Trumpova drahá ropa",
             "publishedAt": "2026-05-13T16:00:00Z"
@@ -1196,10 +1195,6 @@
           {
             "title": "Milionářem ještě před IPO: Silicon Valley plodí další generaci boháčů",
             "publishedAt": "2026-05-13T14:06:00Z"
-          },
-          {
-            "title": "Vláda si otevírá dveře k vysokým schodkům, není ovšem jediná, kdo utrácí víc, než může",
-            "publishedAt": "2026-05-13T13:20:00Z"
           }
         ]
       }

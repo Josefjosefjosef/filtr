@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-13T16:30:12.450429Z",
+  "ingestedAt": "2026-05-13T17:10:18.484238Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Evropa vyráží do Perského zálivu. Británie a Francie tvoří námořní koalici proti Teheránu",
+      "url": "https://ekonomickydenik.cz/evropa-persky-zaliv-britanie-francie-koalice/",
+      "dt": "2026-05-13T16:33:04Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "británie",
+        "evropa",
+        "francie",
+        "koalici",
+        "námořní",
+        "perského",
+        "proti",
+        "teheránu",
+        "tvoří",
+        "vyráží",
+        "zálivu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -754,34 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Každý druhý řeší problém: Češi si hlasitě stěžují kvůli balíkům a mění trendy",
-      "url": "https://ekonomickydenik.cz/kazdy-druhy-problem-cesi-stezuji-baliky/",
-      "dt": "2026-05-12T09:45:53Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "balíkům",
-        "druhý",
-        "hlasitě",
-        "každý",
-        "kvůli",
-        "mění",
-        "problém",
-        "stěžují",
-        "trendy",
-        "češi",
-        "řeší"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72315,
+      "bytes": 72570,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,11 +829,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T15:55:01Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T16:33:04Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 2,
           "finance": 23,
+          "zdravi": 2,
           "sport": 1,
           "zpravy": 4
         },
@@ -847,6 +847,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Evropa vyráží do Perského zálivu. Británie a Francie tvoří námořní koalici proti Teheránu",
+            "publishedAt": "2026-05-13T16:33:04Z"
+          },
           {
             "title": "Slovensko uzavřelo přechody s Ukrajinou. Nedaleko udeřily ruské drony",
             "publishedAt": "2026-05-13T15:55:01Z"
@@ -874,10 +878,6 @@
           {
             "title": "Jedna jízdenka přes celý kontinent na jedno kliknutí. Evropa zjednoduší cestování",
             "publishedAt": "2026-05-13T11:38:52Z"
-          },
-          {
-            "title": "Další reforma zbraňové legislativy? Stát přebírá totální kontrolu nad trhem",
-            "publishedAt": "2026-05-13T11:32:25Z"
           }
         ]
       }
