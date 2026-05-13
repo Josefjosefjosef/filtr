@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-13T03:39:45.331190Z",
+  "ingestedAt": "2026-05-13T04:20:07.805964Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nejlepší spořicí účet, víc salonků, konec kiosků. Co dalšího chystá mBank?",
+      "url": "https://www.penize.cz/osobni-ucty/479832-plany-mbank-nejlepsi-sporici-ucet-dalsi-salonky-investice",
+      "dt": "2026-05-13T05:10:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "chystá",
+        "dalšího",
+        "kiosků",
+        "konec",
+        "mbank",
+        "nejlepší",
+        "salonků",
+        "spořicí",
+        "víc",
+        "účet"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -487,33 +514,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Lidl konečně testuje online prodej potravin. Od konkurence se ale dost liší",
-      "url": "https://www.penize.cz/nakupy/489422-lidl-testuje-online-prodej-potravin-po-letech-vahani-zacal-prodavat-pres-aplikaci",
-      "dt": "2026-05-08T08:31:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "ale",
-        "dost",
-        "konečně",
-        "konkurence",
-        "lidl",
-        "liší",
-        "online",
-        "potravin",
-        "prodej",
-        "testuje"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -524,7 +524,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18815,
+      "bytes": 18871,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -561,7 +561,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-13T05:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T05:10:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 17,
@@ -578,6 +578,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejlepší spořicí účet, víc salonků, konec kiosků. Co dalšího chystá mBank?",
+            "publishedAt": "2026-05-13T05:10:00Z"
+          },
           {
             "title": "Výše důchodů se může zdvojnásobit. Experti mají recept pro vládu",
             "publishedAt": "2026-05-13T05:05:00Z"
@@ -605,10 +609,6 @@
           {
             "title": "Raiffeisenbank vylepšila směnárnu. Dobrý kurz můžete mít i na kartě",
             "publishedAt": "2026-05-12T05:00:00Z"
-          },
-          {
-            "title": "Průměrnému Čechovi klesne příjem v důchodu o víc než 17 tisíc",
-            "publishedAt": "2026-05-11T16:10:00Z"
           }
         ]
       }

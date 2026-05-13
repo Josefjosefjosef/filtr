@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-13T03:39:45.331190Z",
+  "ingestedAt": "2026-05-13T04:20:07.805964Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hertl se trefil. Dobeš Montreal k výhře nedotáhl, série je srovnaná",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-hertl-se-trefil-dobes-montreal-k-vyhre-nedotahl-serie-je-srovnana-5453396",
+      "dt": "2026-05-13T04:00:00Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "dobeš",
+        "hertl",
+        "montreal",
+        "nedotáhl",
+        "srovnaná",
+        "série",
+        "trefil",
+        "výhře"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -725,32 +750,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hokejisté Norska mají v kádru na MS dvě posily z AHL a exkarlovarského Salstena",
-      "url": "https://www.sport.cz/clanek/hokej-ms-hokejiste-norska-maji-v-kadru-na-ms-dve-posily-z-ahl-a-exkarlovarskeho-salstena-5453142",
-      "dt": "2026-05-12T16:52:22Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "ahl",
-        "dvě",
-        "exkarlovarského",
-        "hokejisté",
-        "kádru",
-        "mají",
-        "norska",
-        "posily",
-        "salstena"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -761,7 +760,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 47514,
+      "bytes": 47354,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -798,7 +797,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-12T23:12:26Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T04:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -814,6 +813,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hertl se trefil. Dobeš Montreal k výhře nedotáhl, série je srovnaná",
+            "publishedAt": "2026-05-13T04:00:00Z"
+          },
           {
             "title": "Priske poprvé o šíleném derby: Nevěřil jsem, že se tohle může stát",
             "publishedAt": "2026-05-12T21:46:16Z"
@@ -841,10 +844,6 @@
           {
             "title": "Ronaldo si musí na premiérový titul v Saúdské Arábii ještě počkat",
             "publishedAt": "2026-05-12T21:18:09Z"
-          },
-          {
-            "title": "Největší hvězdu na hokejové MS přiveze Kanada",
-            "publishedAt": "2026-05-12T20:30:06Z"
           }
         ]
       }

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-13T03:39:45.331190Z",
+  "ingestedAt": "2026-05-13T04:20:07.805964Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Daň z nemovitosti: Jak ji zaplatit, kdy dorazí složenka, pozor na podvodníky",
+      "url": "https://www.denik.cz/ekonomika/dan-z-nemovitosti-jak-ji-zaplatit-kdy-dorazi-slozenka-pozor-na-podvodniky.html",
+      "dt": "2026-05-13T03:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "daň",
+        "dorazí",
+        "nemovitosti",
+        "podvodníky",
+        "pozor",
+        "složenka",
+        "zaplatit"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -628,32 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Proč teď Putin začal mluvit o konci války? Šest důvodů, které mohou rozhodovat",
-      "url": "https://www.denik.cz/staty-mimo-eu/valka-na-ukrajine-vladimir-putin-konec-konfliktu.html",
-      "dt": "2026-05-12T11:05:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "důvodů",
-        "konci",
-        "mluvit",
-        "proč",
-        "putin",
-        "rozhodovat",
-        "války",
-        "začal",
-        "šest"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -664,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30004,
+      "bytes": 30261,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -701,11 +699,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-13T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T03:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 1,
+          "finance": 2,
+          "zpravy": 22,
           "zdravi": 1
         },
         "drop_counts": {
@@ -718,6 +716,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Daň z nemovitosti: Jak ji zaplatit, kdy dorazí složenka, pozor na podvodníky",
+            "publishedAt": "2026-05-13T03:30:00Z"
+          },
           {
             "title": "Atentát na Jana Pavla II.: Papež přišel o část střeva, záhada kolem střelce trvá",
             "publishedAt": "2026-05-13T03:00:00Z"
@@ -745,10 +747,6 @@
           {
             "title": "Měsíce na lůžku. Po požáru v Crans-Montaně je v nemocnicích stále 38 lidí",
             "publishedAt": "2026-05-12T18:49:00Z"
-          },
-          {
-            "title": "Putin s učitelkou. Kreml ukázal video ruského prezidenta v ulicích",
-            "publishedAt": "2026-05-12T17:40:00Z"
           }
         ]
       }

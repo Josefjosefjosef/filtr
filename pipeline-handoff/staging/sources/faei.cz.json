@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-13T03:39:45.331190Z",
+  "ingestedAt": "2026-05-13T04:20:07.805964Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Největší baterie připomíná Lego. Ochrání před solárními elektrárnami",
+      "url": "https://profitonline.cz/nejvetsi-baterie-pripomina-lego-ochrani-pred-solarnimi-elektrarnami/",
+      "dt": "2026-05-13T04:00:14Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "baterie",
+        "elektrárnami",
+        "lego",
+        "největší",
+        "ochrání",
+        "připomíná",
+        "solárními"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -263,30 +287,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Derby hanby v Edenu. Slavia může začít sčítat škody",
-      "url": "https://profitonline.cz/derby-hanby-v-edenu-slavia-muze-zacit-scitat-skody/",
-      "dt": "2026-05-10T15:20:42Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "derby",
-        "edenu",
-        "hanby",
-        "slavia",
-        "sčítat",
-        "začít",
-        "škody"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -297,7 +297,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18900,
+      "bytes": 19047,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -334,10 +334,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-12T20:30:42Z",
+        "raw_feed_latest_publishedAt": "2026-05-13T04:00:14Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 11,
+          "zdravi": 1,
+          "finance": 10,
           "sport": 1
         },
         "drop_counts": {
@@ -350,6 +351,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Největší baterie připomíná Lego. Ochrání před solárními elektrárnami",
+            "publishedAt": "2026-05-13T04:00:14Z"
+          },
           {
             "title": "Hypotéky zůstávají nad pěti procenty, splátky výrazně rostou",
             "publishedAt": "2026-05-12T20:30:42Z"
@@ -377,10 +382,6 @@
           {
             "title": "Naobědvat se v restauraci pod 200 korun je už skoro malý zázrak",
             "publishedAt": "2026-05-12T06:00:49Z"
-          },
-          {
-            "title": "Poslanci „zakážou“ sjezd sudetských Němců. A co koncert náckovského rappera?",
-            "publishedAt": "2026-05-11T10:00:52Z"
           }
         ]
       }
