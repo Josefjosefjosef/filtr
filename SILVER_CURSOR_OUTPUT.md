@@ -19,7 +19,7 @@ adapter_subcommand_used=wsl_agent
 adapter_stdout_marker_exact=YES
 adapter_probe_pass=YES
 wsl_distro=Ubuntu
-timestamp_local=2026-05-14T09:23:49.4290789+02:00
+timestamp_local=2026-05-14T09:29:31.5211655+02:00
 can_run_full_auto_loop_maxcycles_1=YES
 
 # stdout
