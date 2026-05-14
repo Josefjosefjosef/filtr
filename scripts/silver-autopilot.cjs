@@ -588,6 +588,41 @@ function printProofGateConsistencyResult(ctx) {
   console.log("=== END_SILVER_AUTOPILOT_PROOF_GATE_CONSISTENCY_RESULT ===");
 }
 
+function postMergeStepLabel(step) {
+  if (!step || typeof step !== "object") return "";
+  if (step.kind === "npm") return "npm:" + (Array.isArray(step.args) ? step.args.join(" ") : "");
+  if (step.kind === "node") return "node:" + String(step.file || "");
+  return JSON.stringify(step);
+}
+
+function printPostMergeProofStrictFailResult(ctx) {
+  console.log("=== SILVER_AUTOPILOT_POST_MERGE_PROOF_STRICT_FAIL_RESULT ===");
+  console.log("main_commit=" + String(ctx.main_commit || ""));
+  console.log("branch=" + String(ctx.branch || ""));
+  console.log("pr_url=" + String(ctx.pr_url || ""));
+  console.log("engine_changed=" + String(ctx.engine_changed || "NO"));
+  console.log("assets_app_changed=" + String(ctx.assets_app_changed || "NO"));
+  console.log("changed_files=" + String(ctx.changed_files || ""));
+  console.log("status_exit=" + String(ctx.status_exit != null && ctx.status_exit !== "" ? ctx.status_exit : ""));
+  console.log("post_merge_proof_exit=" + String(ctx.post_merge_proof_exit != null ? ctx.post_merge_proof_exit : ""));
+  console.log("post_merge_proof_logical_status=" + String(ctx.post_merge_proof_logical_status || ""));
+  console.log("tracked_report_restore_before_realistic_mobile=" + String(ctx.tracked_report_restore_before_realistic_mobile || ""));
+  console.log("failed_step=" + String(ctx.failed_step || ""));
+  console.log("failed_reason=" + String(ctx.failed_reason || ""));
+  console.log("forced_fail_test_exit=" + String(ctx.forced_fail_test_exit != null ? ctx.forced_fail_test_exit : ""));
+  console.log("forced_fail_test_pass=" + String(ctx.forced_fail_test_pass || ""));
+  console.log("dangerous_write_count=" + String(ctx.dangerous_write_count != null ? ctx.dangerous_write_count : ""));
+  console.log("false_write_count=" + String(ctx.false_write_count != null ? ctx.false_write_count : ""));
+  console.log("query_created_write_count=" + String(ctx.query_created_write_count != null ? ctx.query_created_write_count : ""));
+  console.log("write_when_negated_count=" + String(ctx.write_when_negated_count != null ? ctx.write_when_negated_count : ""));
+  console.log("calendar_write_20k=" + String(ctx.calendar_write_20k || ""));
+  console.log("calendar_query_20k=" + String(ctx.calendar_query_20k || ""));
+  console.log("git_status_clean=" + String(ctx.git_status_clean || ""));
+  console.log("pr_ready=" + String(ctx.pr_ready || ""));
+  console.log("recommended_next_task=" + String(ctx.recommended_next_task || ""));
+  console.log("=== END_SILVER_AUTOPILOT_POST_MERGE_PROOF_STRICT_FAIL_RESULT ===");
+}
+
 function writeRunReport(payload) {
   const lines = [
     "# SILVER_RUN_REPORT",
@@ -615,6 +650,11 @@ function writeRunReport(payload) {
     "proof_gate_consistency_reason=" + String(payload.proof_gate_consistency_reason || ""),
     "proof_summary_consistent=" + String(payload.proof_summary_consistent || ""),
     "post_merge_proof_exit_code=" + String(payload.post_merge_proof_exit_code != null ? payload.post_merge_proof_exit_code : ""),
+    "post_merge_proof_logical_status=" + String(payload.post_merge_proof_logical_status || ""),
+    "post_merge_proof_process_exit=" + String(payload.post_merge_proof_process_exit != null ? payload.post_merge_proof_process_exit : ""),
+    "tracked_report_restore_before_realistic_mobile=" + String(payload.tracked_report_restore_before_realistic_mobile || ""),
+    "failed_step=" + String(payload.failed_step || ""),
+    "failed_reason=" + String(payload.failed_reason || ""),
     "next_recommended_command=" + String(payload.next_recommended_command || ""),
     "reason_for_stop=" + String(payload.reason_for_stop || ""),
     "",
@@ -941,12 +981,166 @@ function cmdMergePr(prNumber) {
 }
 
 function cmdPostMergeProof() {
+  const forceFailRequested = String(process.env.IU_SILVER_AUTOPILOT_FORCE_PROOF_FAIL || "").trim() === "1";
+  const prOpen = openPrForCurrentBranch();
+  let trackedReportRestoreBeforeRealisticMobile = "NO";
+
+  function emitStrictResult(p) {
+    const safety = p.safety != null ? p.safety : aggregateSafetyFromReports();
+    const cal = p.cal != null ? p.cal : aggregateCalendar20kFromReports();
+    const branch = runGit(["rev-parse", "--abbrev-ref", "HEAD"]);
+    const commit = runGit(["rev-parse", "HEAD"]);
+    const clean = gitClean();
+    const changed = gitChangedFilesList().join(";");
+    const logical = String(p.logicalStatus || "");
+    const procEx = p.processExit != null ? p.processExit : 1;
+    const prReady =
+      clean &&
+      logical === "PASS" &&
+      safety.dangerous_write_count === 0 &&
+      safety.false_write_count === 0 &&
+      safety.query_created_write_count === 0 &&
+      safety.write_when_negated_count === 0
+        ? "YES"
+        : "NO";
+    let forcedExit = "";
+    let forcedPass = "N/A";
+    if (forceFailRequested) {
+      if (p.syntheticForce) {
+        forcedExit = 1;
+        forcedPass = "YES";
+      } else {
+        forcedExit = "";
+        forcedPass = "NO";
+      }
+    }
+    printPostMergeProofStrictFailResult({
+      main_commit: commit,
+      branch,
+      pr_url: String(prOpen.url || ""),
+      engine_changed: "NO",
+      assets_app_changed: "NO",
+      changed_files: changed,
+      status_exit: "",
+      post_merge_proof_exit: procEx,
+      post_merge_proof_logical_status: logical,
+      tracked_report_restore_before_realistic_mobile: String(p.trackedRestore || "NO"),
+      failed_step: String(p.failedStep || ""),
+      failed_reason: String(p.failedReason || ""),
+      forced_fail_test_exit: forcedExit,
+      forced_fail_test_pass: forcedPass,
+      dangerous_write_count: safety.dangerous_write_count,
+      false_write_count: safety.false_write_count,
+      query_created_write_count: safety.query_created_write_count,
+      write_when_negated_count: safety.write_when_negated_count,
+      calendar_write_20k: cal.calendar_write_20k,
+      calendar_query_20k: cal.calendar_query_20k,
+      git_status_clean: clean ? "YES" : "NO",
+      pr_ready: prReady,
+      recommended_next_task: String(p.recommended_next_task || ""),
+    });
+  }
+
   if (!gitClean()) {
     console.log("STOP: dirty git before post-merge-proof");
-    return;
+    const branch = runGit(["rev-parse", "--abbrev-ref", "HEAD"]);
+    const commit = runGit(["rev-parse", "HEAD"]);
+    const safety = aggregateSafetyFromReports();
+    const cal = aggregateCalendar20kFromReports();
+    writeRunReport({
+      timestamp: nowIso(),
+      command: "--post-merge-proof",
+      status: "STOP",
+      branch,
+      commit,
+      git_status_clean: "NO",
+      changed_files: gitChangedFilesList().join(";"),
+      pr_info: prOpen.summary,
+      engine_changed: "NO",
+      assets_app_changed: "NO",
+      ui_changed: "NO",
+      css_changed: "NO",
+      backend_changed: "NO",
+      safety_counters: JSON.stringify(safety),
+      calendar_write_20k: cal.calendar_write_20k,
+      calendar_query_20k: cal.calendar_query_20k,
+      post_merge_proof_exit_code: 1,
+      post_merge_proof_logical_status: "FAIL",
+      post_merge_proof_process_exit: 1,
+      tracked_report_restore_before_realistic_mobile: "NO",
+      failed_step: "preflight.git_clean",
+      failed_reason: "dirty_git_before_post_merge_proof",
+      next_recommended_command: "git status; resolve dirty tree before post-merge-proof",
+      reason_for_stop: "dirty_git_before_post_merge_proof",
+    });
+    emitStrictResult({
+      logicalStatus: "FAIL",
+      processExit: 1,
+      trackedRestore: "NO",
+      failedStep: "preflight.git_clean",
+      failedReason: "dirty_git_before_post_merge_proof",
+      safety,
+      cal,
+      syntheticForce: false,
+      recommended_next_task: "git status; resolve dirty tree before post-merge-proof",
+    });
+    return 1;
   }
+
+  if (forceFailRequested) {
+    const safety = aggregateSafetyFromReports();
+    const cal = aggregateCalendar20kFromReports();
+    const branch = runGit(["rev-parse", "--abbrev-ref", "HEAD"]);
+    const commit = runGit(["rev-parse", "HEAD"]);
+    console.log(
+      "STOP: step failed " + JSON.stringify({ kind: "synthetic", reason: "IU_SILVER_AUTOPILOT_FORCE_PROOF_FAIL" }),
+    );
+    writeRunReport({
+      timestamp: nowIso(),
+      command: "--post-merge-proof",
+      status: "STOP",
+      branch,
+      commit,
+      git_status_clean: "YES",
+      changed_files: "",
+      pr_info: prOpen.summary,
+      engine_changed: "NO",
+      assets_app_changed: "NO",
+      ui_changed: "NO",
+      css_changed: "NO",
+      backend_changed: "NO",
+      safety_counters: JSON.stringify(safety),
+      calendar_write_20k: cal.calendar_write_20k,
+      calendar_query_20k: cal.calendar_query_20k,
+      post_merge_proof_exit_code: 1,
+      post_merge_proof_logical_status: "FAIL",
+      post_merge_proof_process_exit: 1,
+      tracked_report_restore_before_realistic_mobile: "NO",
+      failed_step: "env:IU_SILVER_AUTOPILOT_FORCE_PROOF_FAIL",
+      failed_reason: "forced_proof_fail_self_test",
+      next_recommended_command: "Remove-Item Env:\\IU_SILVER_AUTOPILOT_FORCE_PROOF_FAIL; re-run --post-merge-proof",
+      reason_for_stop: "forced_proof_fail_self_test",
+    });
+    emitStrictResult({
+      logicalStatus: "FAIL",
+      processExit: 1,
+      trackedRestore: "NO",
+      failedStep: "env:IU_SILVER_AUTOPILOT_FORCE_PROOF_FAIL",
+      failedReason: "forced_proof_fail_self_test",
+      safety,
+      cal,
+      syntheticForce: true,
+      recommended_next_task: "Unset IU_SILVER_AUTOPILOT_FORCE_PROOF_FAIL and re-run proof",
+    });
+    return 1;
+  }
+
   let realisticMobileStandaloneStepPass = false;
   for (const step of POST_MERGE_STEPS) {
+    if (step.kind === "node" && step.file === "audit_silver_realistic_mobile_corpus.cjs") {
+      restoreTrackedReportJsons();
+      trackedReportRestoreBeforeRealisticMobile = "YES";
+    }
     let code = 1;
     if (step.kind === "npm") {
       let r;
@@ -964,27 +1158,48 @@ function cmdPostMergeProof() {
     }
     if (code !== 0) {
       console.log("STOP: step failed " + JSON.stringify(step));
+      const safety = aggregateSafetyFromReports();
+      const cal = aggregateCalendar20kFromReports();
+      const branch = runGit(["rev-parse", "--abbrev-ref", "HEAD"]);
+      const commit = runGit(["rev-parse", "HEAD"]);
       writeRunReport({
         timestamp: nowIso(),
         command: "--post-merge-proof",
         status: "STOP",
-        branch: runGit(["rev-parse", "--abbrev-ref", "HEAD"]),
-        commit: runGit(["rev-parse", "HEAD"]),
-        git_status_clean: "YES",
-        changed_files: "",
-        pr_info: "",
+        branch,
+        commit,
+        git_status_clean: gitClean() ? "YES" : "NO",
+        changed_files: gitChangedFilesList().join(";"),
+        pr_info: prOpen.summary,
         engine_changed: "NO",
         assets_app_changed: "NO",
         ui_changed: "NO",
         css_changed: "NO",
         backend_changed: "NO",
-        safety_counters: JSON.stringify(aggregateSafetyFromReports()),
-        calendar_write_20k: "",
-        calendar_query_20k: "",
+        safety_counters: JSON.stringify(safety),
+        calendar_write_20k: cal.calendar_write_20k,
+        calendar_query_20k: cal.calendar_query_20k,
+        post_merge_proof_exit_code: 1,
+        post_merge_proof_logical_status: "FAIL",
+        post_merge_proof_process_exit: 1,
+        tracked_report_restore_before_realistic_mobile: trackedReportRestoreBeforeRealisticMobile,
+        failed_step: postMergeStepLabel(step),
+        failed_reason: "audit_step_nonzero_exit",
         next_recommended_command: "fix failing audit then re-run",
         reason_for_stop: "audit_step_failed:" + JSON.stringify(step),
       });
-      return;
+      emitStrictResult({
+        logicalStatus: "FAIL",
+        processExit: 1,
+        trackedRestore: trackedReportRestoreBeforeRealisticMobile,
+        failedStep: postMergeStepLabel(step),
+        failedReason: "audit_step_nonzero_exit",
+        safety,
+        cal,
+        syntheticForce: false,
+        recommended_next_task: "fix failing audit then re-run --post-merge-proof",
+      });
+      return 1;
     }
     if (code === 0 && step.kind === "node" && step.file === "audit_silver_realistic_mobile_corpus.cjs") {
       realisticMobileStandaloneStepPass = true;
@@ -1000,15 +1215,17 @@ function cmdPostMergeProof() {
     safety.write_when_negated_count > 0
   ) {
     console.log("STOP: safety counters nonzero");
+    const branch = runGit(["rev-parse", "--abbrev-ref", "HEAD"]);
+    const commit = runGit(["rev-parse", "HEAD"]);
     writeRunReport({
       timestamp: nowIso(),
       command: "--post-merge-proof",
       status: "STOP",
-      branch: runGit(["rev-parse", "--abbrev-ref", "HEAD"]),
-      commit: runGit(["rev-parse", "HEAD"]),
-      git_status_clean: "YES",
-      changed_files: "",
-      pr_info: "",
+      branch,
+      commit,
+      git_status_clean: gitClean() ? "YES" : "NO",
+      changed_files: gitChangedFilesList().join(";"),
+      pr_info: prOpen.summary,
       engine_changed: "NO",
       assets_app_changed: "NO",
       ui_changed: "NO",
@@ -1017,22 +1234,41 @@ function cmdPostMergeProof() {
       safety_counters: JSON.stringify(safety),
       calendar_write_20k: cal.calendar_write_20k,
       calendar_query_20k: cal.calendar_query_20k,
+      post_merge_proof_exit_code: 1,
+      post_merge_proof_logical_status: "FAIL",
+      post_merge_proof_process_exit: 1,
+      tracked_report_restore_before_realistic_mobile: trackedReportRestoreBeforeRealisticMobile,
+      failed_step: "post_chain.safety_counters",
+      failed_reason: "safety_counters_nonzero",
       next_recommended_command: "triage safety harness",
       reason_for_stop: "safety_counters_nonzero",
     });
-    return;
+    emitStrictResult({
+      logicalStatus: "FAIL",
+      processExit: 1,
+      trackedRestore: trackedReportRestoreBeforeRealisticMobile,
+      failedStep: "post_chain.safety_counters",
+      failedReason: "safety_counters_nonzero",
+      safety,
+      cal,
+      syntheticForce: false,
+      recommended_next_task: "triage safety harness",
+    });
+    return 1;
   }
   if (!cal.calendar_write_ok || !cal.calendar_query_ok) {
     console.log("STOP: calendar 20k metrics not 3000/3000 when strict");
+    const branch = runGit(["rev-parse", "--abbrev-ref", "HEAD"]);
+    const commit = runGit(["rev-parse", "HEAD"]);
     writeRunReport({
       timestamp: nowIso(),
       command: "--post-merge-proof",
       status: "STOP",
-      branch: runGit(["rev-parse", "--abbrev-ref", "HEAD"]),
-      commit: runGit(["rev-parse", "HEAD"]),
-      git_status_clean: "YES",
-      changed_files: "",
-      pr_info: "",
+      branch,
+      commit,
+      git_status_clean: gitClean() ? "YES" : "NO",
+      changed_files: gitChangedFilesList().join(";"),
+      pr_info: prOpen.summary,
       engine_changed: "NO",
       assets_app_changed: "NO",
       ui_changed: "NO",
@@ -1041,10 +1277,27 @@ function cmdPostMergeProof() {
       safety_counters: JSON.stringify(safety),
       calendar_write_20k: cal.calendar_write_20k,
       calendar_query_20k: cal.calendar_query_20k,
+      post_merge_proof_exit_code: 1,
+      post_merge_proof_logical_status: "FAIL",
+      post_merge_proof_process_exit: 1,
+      tracked_report_restore_before_realistic_mobile: trackedReportRestoreBeforeRealisticMobile,
+      failed_step: "post_chain.calendar_20k",
+      failed_reason: "calendar_20k_not_3000",
       next_recommended_command: "inspect calendar harness reports",
       reason_for_stop: "calendar_20k_not_3000",
     });
-    return;
+    emitStrictResult({
+      logicalStatus: "FAIL",
+      processExit: 1,
+      trackedRestore: trackedReportRestoreBeforeRealisticMobile,
+      failedStep: "post_chain.calendar_20k",
+      failedReason: "calendar_20k_not_3000",
+      safety,
+      cal,
+      syntheticForce: false,
+      recommended_next_task: "inspect calendar harness reports",
+    });
+    return 1;
   }
 
   const corpusPath = path.join(SCRIPTS, REALISTIC_MOBILE_CORPUS_REPORT);
@@ -1091,7 +1344,7 @@ function cmdPostMergeProof() {
       commit: commitEarly,
       git_status_clean: "YES",
       changed_files: "",
-      pr_info: "",
+      pr_info: prOpen.summary,
       engine_changed: "NO",
       assets_app_changed: "NO",
       ui_changed: "NO",
@@ -1107,11 +1360,27 @@ function cmdPostMergeProof() {
       proof_gate_consistency_reason: reasonEarly,
       proof_summary_consistent: summaryEarly,
       post_merge_proof_exit_code: 1,
+      post_merge_proof_logical_status: "FAIL",
+      post_merge_proof_process_exit: 1,
+      tracked_report_restore_before_realistic_mobile: trackedReportRestoreBeforeRealisticMobile,
+      failed_step: "proof_gate.standalone_realistic_mobile",
+      failed_reason: "proof_gate_missing_standalone_realistic_mobile_step",
       next_recommended_command: "node scripts/silver-autopilot.cjs --post-merge-proof",
       reason_for_stop: "proof_gate_missing_standalone_realistic_mobile_step",
     });
     restoreTrackedReportJsons();
-    return;
+    emitStrictResult({
+      logicalStatus: "FAIL",
+      processExit: 1,
+      trackedRestore: trackedReportRestoreBeforeRealisticMobile,
+      failedStep: "proof_gate.standalone_realistic_mobile",
+      failedReason: "proof_gate_missing_standalone_realistic_mobile_step",
+      safety,
+      cal,
+      syntheticForce: false,
+      recommended_next_task: "proof_gate_missing_standalone_realistic_mobile_step",
+    });
+    return 1;
   }
 
   const authoritativeGate = authJson.gate === "FAIL" ? "FAIL" : "PASS";
@@ -1155,7 +1424,7 @@ function cmdPostMergeProof() {
       commit,
       git_status_clean: "YES",
       changed_files: "",
-      pr_info: "",
+      pr_info: prOpen.summary,
       engine_changed: "NO",
       assets_app_changed: "NO",
       ui_changed: "NO",
@@ -1171,11 +1440,26 @@ function cmdPostMergeProof() {
       proof_gate_consistency_reason: reasonStr,
       proof_summary_consistent: summaryOk,
       post_merge_proof_exit_code: 1,
+      post_merge_proof_logical_status: "FAIL",
+      post_merge_proof_process_exit: 1,
+      tracked_report_restore_before_realistic_mobile: trackedReportRestoreBeforeRealisticMobile,
+      failed_step: "proof_gate.authoritative_realistic_mobile",
+      failed_reason: stopKey,
       next_recommended_command: "node scripts/silver-autopilot.cjs --post-merge-proof",
       reason_for_stop: stopKey,
     });
     restoreTrackedReportJsons();
-    return;
+    emitStrictResult({
+      logicalStatus: "FAIL",
+      processExit: 1,
+      trackedRestore: trackedReportRestoreBeforeRealisticMobile,
+      failedStep: "proof_gate.authoritative_realistic_mobile",
+      failedReason: stopKey,
+      safety,
+      cal,
+      syntheticForce: false,
+      recommended_next_task: stopKey,
+    });
   }
 
   if (authoritativeGate === "FAIL") {
@@ -1183,7 +1467,7 @@ function cmdPostMergeProof() {
       "proof gate: authoritative realistic_mobile not PASS (corpus JSON real_mobile_cases or derived fails after standalone audit exit 0)",
       "proof_gate_authoritative_realistic_mobile_not_PASS",
     );
-    return;
+    return 1;
   }
 
   restoreTrackedReportJsons();
@@ -1235,7 +1519,7 @@ function cmdPostMergeProof() {
     commit,
     git_status_clean: gitClean() ? "YES" : "NO",
     changed_files: gitChangedFilesList().join(";"),
-    pr_info: "",
+    pr_info: prOpen.summary,
     engine_changed: "NO",
     assets_app_changed: "NO",
     ui_changed: "NO",
@@ -1251,9 +1535,26 @@ function cmdPostMergeProof() {
     proof_gate_consistency_reason: reasonFinal,
     proof_summary_consistent: summaryFinal,
     post_merge_proof_exit_code: 0,
+    post_merge_proof_logical_status: "PASS",
+    post_merge_proof_process_exit: 0,
+    tracked_report_restore_before_realistic_mobile: trackedReportRestoreBeforeRealisticMobile,
+    failed_step: "",
+    failed_reason: "",
     next_recommended_command: "node scripts/silver-autopilot.cjs --status",
     reason_for_stop: "",
   });
+  emitStrictResult({
+    logicalStatus: "PASS",
+    processExit: 0,
+    trackedRestore: trackedReportRestoreBeforeRealisticMobile,
+    failedStep: "",
+    failedReason: "",
+    safety,
+    cal,
+    syntheticForce: false,
+    recommended_next_task: summaryFinal === "NO" ? "investigate_proof_gate_consistency" : "node scripts/silver-autopilot.cjs --status",
+  });
+  return 0;
 }
 
 function harnessSafeExclude(clusterName) {
@@ -1742,7 +2043,7 @@ function parseArgs(argv) {
   if (p.cmd === "status") cmdStatus("--status");
   else if (p.cmd === "verify-pr") verifyPr(p.pr);
   else if (p.cmd === "merge-pr") cmdMergePr(p.pr);
-  else if (p.cmd === "post-merge-proof") cmdPostMergeProof();
+  else if (p.cmd === "post-merge-proof") exitCode = cmdPostMergeProof();
   else if (p.cmd === "refresh-rhc3") cmdRefreshRhc3();
   else if (p.cmd === "ask-model") await cmdAskModel();
   else if (p.cmd === "auto") cmdAuto(p.maxSteps);
