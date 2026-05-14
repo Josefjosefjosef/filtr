@@ -16,10 +16,10 @@
   Max wait for the Cursor/WSL process (default 600). Must be positive.
 
 .PARAMETER Probe
-  Harmless test (no TaskFile). Exits 0 if stdout contains CURSOR_AGENT_STDIN_OK, else 1. Bypasses adapter_ready JSON gate for execution, but can_run metadata requires adapter_ready=YES (Windows) or wsl_cursor_agent_print_ask_trust.adapter_ready=YES (WSL).
+  Harmless test. Without -TaskFile: stdin marker probe (stdout contains CURSOR_AGENT_STDIN_OK). With -WslUbuntuAgent and -TaskFile: WSL stdin regression probe (markdown-safe; stderr shell-leak gate). Exits 0 on pass, else 1. Bypasses adapter_ready JSON gate for execution, but can_run metadata requires adapter_ready=YES (Windows) or wsl_cursor_agent_print_ask_trust.adapter_ready=YES (WSL).
 
 .PARAMETER WslUbuntuAgent
-  Use verified non-interactive WSL path: wsl.exe -d <WslDistro> -- <WslAgentLinuxPath> --print --mode ask --trust --workspace <WslWorkspaceLinuxPath> "<prompt>". No bash -lc, no PATH export from PowerShell, no `cursor chat`. Absolute agent path inside WSL.
+  Use verified non-interactive WSL path: write the task to a UTF-8 temp file under Windows, then run `wsl.exe -d <WslDistro> -- /bin/bash -c 'exec <WslAgentLinuxPath> --print --mode ask --trust --workspace <WslWorkspaceLinuxPath> < <temp-path-in-wsl>'` so the **shell one-liner contains only paths**, never raw markdown/task text. No `bash -lc` (non-login `-c` only). No PowerShell `PATH` export for the agent. Absolute agent path inside WSL.
 
 .PARAMETER WslDistro
   WSL distribution name (default Ubuntu).
@@ -32,7 +32,7 @@
 
 .NOTES
   Windows: Resolves **cursor.cmd** / **bin\\cursor** for `agent` (matches diagnostic); install-root **Cursor.exe** for `--version`.
-  WSL: Direct **wsl.exe** process (no cmd.exe `bash -lc` wrapper). Preferred when `-WslUbuntuAgent` is set; diagnostic JSON key **wsl_cursor_agent_print_ask_trust.adapter_ready** gates non-probe runs.
+  WSL: **wsl.exe** runs **`/bin/bash -c`** with a one-liner that **only** contains `exec <agent> … < /mnt/c/…/temp.md` (task never embedded in argv or shell string). Diagnostic JSON key **wsl_cursor_agent_print_ask_trust.adapter_ready** gates non-probe runs.
 #>
 param(
   [Parameter(Mandatory = $false)]
@@ -57,9 +57,17 @@ $DiagReport = Join-Path $RepoRoot "scripts\silver-cursor-agent-adapter-diagnosti
 $ProbeText = "Print exactly: CURSOR_AGENT_STDIN_OK`r`nDo not modify files.`r`n"
 $ProbeOneLine = "Print exactly: CURSOR_AGENT_STDIN_OK. Do not modify files."
 $Marker = "CURSOR_AGENT_STDIN_OK"
+$WslTaskfileStdinProbeSentinel = "SILVER_WSL_STDIN_PROBE_SENTINEL_9f2b"
+$WslTaskfileStdinProbeOkToken = "SILVER_WSL_TASKFILE_STDIN_PROBE_OK"
 
-# WSL path passes the full task as the final argv token; logs must never echo that payload in command_executed.
+# WSL: task body is never passed as wsl argv; a UTF-8 temp file is opened via /bin/bash -c exec … <path (path only, no task text in the shell string).
 $SilverWslTaskArgvSafeCharLimit = 8192
+$SilverUtf8NoBom = New-Object System.Text.UTF8Encoding $false
+
+function Read-TextFileUtf8NoBom {
+  param([string]$Path)
+  return [System.IO.File]::ReadAllText($Path, $SilverUtf8NoBom)
+}
 
 function Get-TaskTextLineCount {
   param([string]$Text)
@@ -76,17 +84,34 @@ function Get-PromptPreviewLimited {
 }
 
 function Build-WslSanitizedCommandExecuted {
-  param(
-    [string]$Distro,
-    [string]$AgentPath,
-    [string]$WorkspacePath
-  )
+  param([string]$Distro)
   return (
     "wsl.exe -d " + $Distro +
-    " -- " + $AgentPath +
-    " --print --mode ask --trust --workspace " + $WorkspacePath +
-    " <TASK_PROMPT_OMITTED_FROM_LOG:final_argv_is_full_task_text>"
+    " -- /bin/bash -c <TASK_OMITTED:exec_agent_stdin_from_temp_file_path_only_no_task_text_in_shell_string>"
   )
+}
+
+function Convert-WindowsPathToWslPath {
+  param([string]$WindowsPath)
+  $full = [System.IO.Path]::GetFullPath($WindowsPath)
+  if ($full.Length -lt 3) {
+    return $full.Replace('\', '/')
+  }
+  if ($full.Substring(1, 2) -ne ':\') {
+    return $full.Replace('\', '/')
+  }
+  $dl = $full.Substring(0, 1).ToLowerInvariant()
+  return '/mnt/' + $dl + $full.Substring(2).Replace('\', '/')
+}
+
+function Build-WslBashCExecRedirectScript {
+  param(
+    [string]$AgentPath,
+    [string]$WorkspacePath,
+    [string]$TaskPathWsl
+  )
+  $tq = '"' + ($TaskPathWsl.Replace('"', '\"')) + '"'
+  return 'exec ' + $AgentPath + ' --print --mode ask --trust --workspace ' + $WorkspacePath + ' <' + $tq
 }
 
 function Resolve-RepoPath {
@@ -102,7 +127,8 @@ function Invoke-WslAgentCapture {
     [string]$Distro,
     [string[]]$LinuxArgvAfterDoubleDash,
     [string]$WorkDirWindows,
-    [int]$TimeoutMs
+    [int]$TimeoutMs,
+    [string]$StdinPayload = ""
   )
   $argList = New-Object System.Collections.Generic.List[string]
   [void]$argList.Add("-d")
@@ -120,6 +146,10 @@ function Invoke-WslAgentCapture {
   $psi.RedirectStandardError = $true
   $psi.StandardOutputEncoding = [System.Text.Encoding]::UTF8
   $psi.StandardErrorEncoding = [System.Text.Encoding]::UTF8
+  $useStdin = (-not [string]::IsNullOrEmpty($StdinPayload))
+  if ($useStdin) {
+    $psi.RedirectStandardInput = $true
+  }
   $argLine = ""
   foreach ($a in $argList) {
     if ($argLine.Length -gt 0) { $argLine += " " }
@@ -139,6 +169,14 @@ function Invoke-WslAgentCapture {
   $se = ""
   try {
     [void]$p.Start()
+    if ($useStdin) {
+      $utf8NoBom = New-Object System.Text.UTF8Encoding $false
+      $bytes = $utf8NoBom.GetBytes($StdinPayload)
+      $bs = $p.StandardInput.BaseStream
+      $bs.Write($bytes, 0, $bytes.Length)
+      $bs.Flush()
+      $p.StandardInput.Close()
+    }
     if (-not $p.WaitForExit($TimeoutMs)) {
       try { $p.Kill() } catch { }
       $timedOut = $true
@@ -637,6 +675,33 @@ function Test-StdoutMarkerExact {
   return "NO"
 }
 
+function Test-WslTaskfileProbeStderrShellLeak {
+  param([string]$Stderr)
+  if ($null -eq $Stderr) { return $false }
+  $lower = $Stderr.ToLowerInvariant()
+  $patterns = @(
+    "command substitution",
+    "syntax error near unexpected token",
+    "set-location: command not found",
+    "get-content: command not found",
+    "powershell: command not found",
+    "-maxcycles: command not found"
+  )
+  foreach ($pat in $patterns) {
+    if ($lower.Contains($pat)) {
+      return $true
+    }
+  }
+  return $false
+}
+
+if ($Probe -and -not [string]::IsNullOrWhiteSpace($TaskFile)) {
+  if (-not $WslUbuntuAgent) {
+    Write-Error "-TaskFile with -Probe requires -WslUbuntuAgent (WSL stdin regression probe only)."
+    exit 6
+  }
+}
+
 if (-not $Probe) {
   if ([string]::IsNullOrWhiteSpace($TaskFile)) {
     if (-not ($WslUbuntuAgent -and $DryRun)) {
@@ -661,8 +726,28 @@ if ($WslUbuntuAgent) {
   $taskAbs = ""
   $taskLen = 0
   $text = ""
-  if ($Probe) {
+  $wslStdinTaskfileProbe = $false
+  if ($Probe -and -not [string]::IsNullOrWhiteSpace($TaskFile)) {
+    $wslStdinTaskfileProbe = $true
+    $taskAbs = Resolve-RepoPath -P $TaskFile
+    if (-not (Test-Path -LiteralPath $taskAbs)) {
+      Write-Error ("TaskFile not found: " + $taskAbs)
+      exit 3
+    }
+    $text = Read-TextFileUtf8NoBom -Path $taskAbs
+    $taskLen = ([System.Text.Encoding]::UTF8.GetByteCount($text))
+  }
+  elseif ($Probe) {
     $text = $ProbeOneLine
+    $taskLen = ([System.Text.Encoding]::UTF8.GetByteCount($text))
+  }
+  elseif ($DryRun -and -not [string]::IsNullOrWhiteSpace($TaskFile)) {
+    $taskAbs = Resolve-RepoPath -P $TaskFile
+    if (-not (Test-Path -LiteralPath $taskAbs)) {
+      Write-Error ("TaskFile not found: " + $taskAbs)
+      exit 3
+    }
+    $text = Read-TextFileUtf8NoBom -Path $taskAbs
     $taskLen = ([System.Text.Encoding]::UTF8.GetByteCount($text))
   }
   elseif ($DryRun) {
@@ -675,27 +760,20 @@ if ($WslUbuntuAgent) {
       Write-Error ("TaskFile not found: " + $taskAbs)
       exit 3
     }
-    $text = [System.IO.File]::ReadAllText($taskAbs)
+    $text = Read-TextFileUtf8NoBom -Path $taskAbs
     $taskLen = ([System.Text.Encoding]::UTF8.GetByteCount($text))
   }
 
-  $linuxArgv = @(
-    $WslAgentLinuxPath,
-    "--print",
-    "--mode", "ask",
-    "--trust",
-    "--workspace", $WslWorkspaceLinuxPath,
-    $text
-  )
   $taskChars = $text.Length
   $taskLines = Get-TaskTextLineCount -Text $text
   $promptPreview = Get-PromptPreviewLimited -Text $text -MaxLen 300
-  $taskTooLargeForArgv = ($taskChars -gt $SilverWslTaskArgvSafeCharLimit)
-  $taskTooLargeStr = $(if ($taskTooLargeForArgv) { "YES" } else { "NO" })
-  $commandExecutedSanitized = Build-WslSanitizedCommandExecuted -Distro $WslDistro -AgentPath $WslAgentLinuxPath -WorkspacePath $WslWorkspaceLinuxPath
-  $longTaskRec = ""
-  if ($taskTooLargeForArgv) {
-    $longTaskRec = "Shorten the task file or split work: very large prompts as the final WSL argv risk argv limits, slow spawn, and timeouts (see task_argv_safe_char_limit)."
+  $taskTooLargeForArgv = $false
+  $taskTooLargeStr = "NO"
+  $commandExecutedSanitized = Build-WslSanitizedCommandExecuted -Distro $WslDistro
+  $longTaskRec = "(none)"
+  $taskFileUsedStr = "NO"
+  if ((-not $Probe) -or $wslStdinTaskfileProbe) {
+    $taskFileUsedStr = "YES"
   }
 
   if ($DryRun) {
@@ -707,11 +785,13 @@ if ($WslUbuntuAgent) {
     Write-Host ("wsl_distro=" + $WslDistro)
     Write-Host ("wsl_agent_path=" + $WslAgentLinuxPath)
     Write-Host ("wsl_workspace=" + $WslWorkspaceLinuxPath)
-    Write-Host ("invocation_mode=wsl_direct_argv")
-    Write-Host ("argv_mode=wsl_direct_argv")
+    Write-Host ("invocation_mode=wsl_bash_c_file_redirect")
+    Write-Host ("argv_mode=wsl_bash_c_exec_redirect")
+    Write-Host ("wsl_prompt_delivery=bash_file_redirect")
+    Write-Host ("task_file_used=" + $taskFileUsedStr)
     Write-Host ("diagnostic_wsl_adapter_ready=" + $wslAdapterReadyDisk)
     Write-Host ("command_plan_sanitized=" + $commandExecutedSanitized)
-    Write-Host ("task_file=" + $(if ($Probe) { "(probe_inline)" } elseif (-not [string]::IsNullOrWhiteSpace($taskAbs)) { $taskAbs } else { "(dryrun_preview)" }))
+    Write-Host ("task_file=" + $(if ($wslStdinTaskfileProbe) { $taskAbs } elseif ($Probe) { "(probe_inline)" } elseif (-not [string]::IsNullOrWhiteSpace($taskAbs)) { $taskAbs } else { "(dryrun_preview)" }))
     Write-Host ("output_file=" + $outAbs)
     Write-Host ("task_chars=" + [string]$taskChars)
     Write-Host ("task_lines=" + [string]$taskLines)
@@ -719,9 +799,6 @@ if ($WslUbuntuAgent) {
     Write-Host ("prompt_preview=" + $promptPreview)
     Write-Host ("task_argv_safe_char_limit=" + [string]$SilverWslTaskArgvSafeCharLimit)
     Write-Host ("task_too_large_for_argv=" + $taskTooLargeStr)
-    if ($taskTooLargeForArgv) {
-      Write-Host ("long_task_argv_recommendation=" + $longTaskRec)
-    }
     Write-Host ("timeout_seconds=" + [string]$TimeoutSeconds)
     Write-Host ("probe=" + $(if ($Probe) { "YES" } else { "NO" }))
     Write-Host "=== END_SILVER_CURSOR_AGENT_ADAPTER_DRY_RUN ==="
@@ -735,10 +812,23 @@ if ($WslUbuntuAgent) {
     }
   }
 
-  $verR = Invoke-WslAgentCapture -Distro $WslDistro -LinuxArgvAfterDoubleDash @($WslAgentLinuxPath, "--version") -WorkDirWindows $RepoRoot -TimeoutMs 60000
-  $verLine = ($verR.stdout + $verR.stderr).Trim()
+  $tempPayloadWindows = Join-Path $env:TEMP ("silver-wsl-agent-payload-" + [guid]::NewGuid().ToString() + ".md")
+  [System.IO.File]::WriteAllText($tempPayloadWindows, $text, $SilverUtf8NoBom)
+  $wslTaskUnix = Convert-WindowsPathToWslPath -WindowsPath $tempPayloadWindows
+  $bashScript = Build-WslBashCExecRedirectScript -AgentPath $WslAgentLinuxPath -WorkspacePath $WslWorkspaceLinuxPath -TaskPathWsl $wslTaskUnix
+  $linuxArgv = @("/bin/bash", "-c", $bashScript)
+  $r = @{ exit = 255; timedOut = $false; stdout = ""; stderr = "" }
+  try {
+    $verR = Invoke-WslAgentCapture -Distro $WslDistro -LinuxArgvAfterDoubleDash @($WslAgentLinuxPath, "--version") -WorkDirWindows $RepoRoot -TimeoutMs 60000
+    $verLine = ($verR.stdout + $verR.stderr).Trim()
 
-  $r = Invoke-WslAgentCapture -Distro $WslDistro -LinuxArgvAfterDoubleDash $linuxArgv -WorkDirWindows $RepoRoot -TimeoutMs $ms
+    $r = Invoke-WslAgentCapture -Distro $WslDistro -LinuxArgvAfterDoubleDash $linuxArgv -WorkDirWindows $RepoRoot -TimeoutMs $ms
+  }
+  finally {
+    if (Test-Path -LiteralPath $tempPayloadWindows) {
+      Remove-Item -LiteralPath $tempPayloadWindows -Force -ErrorAction SilentlyContinue
+    }
+  }
   $so = $r.stdout
   if ($null -eq $so) { $so = "" }
   $se = $r.stderr
@@ -746,15 +836,39 @@ if ($WslUbuntuAgent) {
   $exitCode = $r.exit
   $toFlag = $r.timedOut
 
+  $stderrShellLeak = (Test-WslTaskfileProbeStderrShellLeak -Stderr $se)
+  $sentinelInCmd = $false
+  if ($commandExecutedSanitized.Contains($WslTaskfileStdinProbeSentinel)) {
+    $sentinelInCmd = $true
+  }
+
   $probePass = "N/A"
-  $stdoutExact = Test-StdoutMarkerExact -Stdout $so -MarkerText $Marker
+  $stdoutExact = "N/A"
+  $czechProbe = "N/A"
   if ($Probe) {
-    if ($so.Contains($Marker)) {
-      $probePass = "YES"
+    if ($wslStdinTaskfileProbe) {
+      $stdoutExact = $(if ($so.Contains($WslTaskfileStdinProbeOkToken)) { "YES" } else { "NO" })
+      $czechProbe = "NO"
+      if ((-not $stderrShellLeak) -and (-not $sentinelInCmd) -and ($so.Contains($WslTaskfileStdinProbeOkToken)) -and ($exitCode -eq 0) -and (-not $toFlag)) {
+        $czechProbe = "YES"
+        $probePass = "YES"
+      }
+      else {
+        $probePass = "NO"
+      }
     }
     else {
-      $probePass = "NO"
+      $stdoutExact = Test-StdoutMarkerExact -Stdout $so -MarkerText $Marker
+      if ($so.Contains($Marker)) {
+        $probePass = "YES"
+      }
+      else {
+        $probePass = "NO"
+      }
     }
+  }
+  else {
+    $stdoutExact = Test-StdoutMarkerExact -Stdout $so -MarkerText $Marker
   }
 
   $canLoop = "UNKNOWN"
@@ -776,13 +890,13 @@ if ($WslUbuntuAgent) {
   }
 
   $extraWsl = ""
-  if ($taskTooLargeForArgv) {
+  if ($wslStdinTaskfileProbe -and ($stderrShellLeak -or $sentinelInCmd -or ($probePass -eq "NO"))) {
     $extraWsl = @"
-SILVER_WSL_TASK_ARGV_SIZE_WARNING
-task_too_large_for_argv=YES
-task_chars=$taskChars
-task_argv_safe_char_limit=$SilverWslTaskArgvSafeCharLimit
-recommendation=Shorten SILVER_NEXT_ACTION / task file, split into smaller runs, or trim pasted logs. Large final-argv payloads risk OS/WSL argv limits, slow process creation, and $($TimeoutSeconds)s timeouts.
+SILVER_WSL_STDIN_PROBE_FAILURE_DETAIL
+stderr_shell_leak_pattern=$(if ($stderrShellLeak) { "YES" } else { "NO" })
+sentinel_present_in_command_executed=$(if ($sentinelInCmd) { "YES" } else { "NO" })
+adapter_probe_pass=$probePass
+czech_backtick_parentheses_probe_pass=$czechProbe
 "@
   }
   if ($toFlag) {
@@ -790,7 +904,7 @@ recommendation=Shorten SILVER_NEXT_ACTION / task file, split into smaller runs, 
 SILVER_WSL_ADAPTER_TIMEOUT_NOTE
 timed_out=YES
 timeout_seconds=$TimeoutSeconds
-recommendation=Increase -TimeoutSeconds if the task is legitimately long-running; otherwise investigate agent hang, auth, or oversized argv (see task_too_large_for_argv).
+recommendation=Increase -TimeoutSeconds if the task is legitimately long-running; otherwise investigate agent hang or auth (prompt is delivered via bash file redirect, not argv).
 "@
     if ([string]::IsNullOrWhiteSpace($extraWsl)) {
       $extraWsl = $timeoutNote
@@ -812,10 +926,12 @@ recommendation=Increase -TimeoutSeconds if the task is legitimately long-running
     cursor_version_exe = $WslAgentLinuxPath
     cursor_version = $verLine
     command_executed = $commandExecutedSanitized
-    invocation_mode = "wsl_direct_argv"
-    argv_mode = "wsl_direct_argv"
+    invocation_mode = "wsl_bash_c_file_redirect"
+    argv_mode = "wsl_bash_c_exec_redirect"
+    wsl_prompt_delivery = "bash_file_redirect"
+    task_file_used = $taskFileUsedStr
     diagnostic_wsl_adapter_ready = $wslAdapterReadyDisk
-    task_file = $(if ($Probe) { "(probe_inline)" } else { $taskAbs })
+    task_file = $(if ($wslStdinTaskfileProbe) { $taskAbs } elseif ($Probe) { "(probe_inline)" } else { $taskAbs })
     output_file = $outAbs
     task_chars = [string]$taskChars
     task_lines = [string]$taskLines
@@ -828,8 +944,11 @@ recommendation=Increase -TimeoutSeconds if the task is legitimately long-running
     timed_out = $(if ($toFlag) { "YES" } else { "NO" })
     adapter_probe_pass = $probePass
     adapter_stdout_marker_exact = $stdoutExact
+    stderr_shell_leak_probe_pattern = $(if ($stderrShellLeak) { "YES" } else { "NO" })
+    sentinel_present_in_command_executed = $(if ($sentinelInCmd) { "YES" } else { "NO" })
+    czech_backtick_parentheses_probe_pass = $czechProbe
     adapter_subcommand_used = "wsl_agent"
-    long_task_argv_recommendation = $(if ($taskTooLargeForArgv) { $longTaskRec } else { "(none)" })
+    long_task_argv_recommendation = $longTaskRec
     can_run_full_auto_loop_maxcycles_1 = $canLoop
   }
 
@@ -886,7 +1005,7 @@ else {
     Write-Error ("TaskFile not found: " + $taskAbs)
     exit 3
   }
-  $text = [System.IO.File]::ReadAllText($taskAbs)
+  $text = Read-TextFileUtf8NoBom -Path $taskAbs
   $taskLen = ([System.Text.Encoding]::UTF8.GetByteCount($text))
 }
 

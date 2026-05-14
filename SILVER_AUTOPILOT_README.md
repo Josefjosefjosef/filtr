@@ -52,7 +52,9 @@ node scripts/silver-autopilot.cjs --loop-once
 | `scripts/silver-autopilot-loop.ps1` | **FULL AUTO LOOP TRIGGER V1** — Windows orchestrator: validates repo path, guards `SILVER_NEXT_ACTION.md`, optional Cursor CLI (`-CursorCommand` with `{TASK_FILE}` / `{OUTPUT_FILE}`), then `node scripts/silver-autopilot.cjs --full-auto-loop --max-steps=1`, then `--status`, colored console summary, beeps, and `SILVER_PROGRESS_LOG.md`. |
 | `scripts/silver-autonomous-loop-safety-diagnostic.ps1` | Read-only: prints MaxCycles **0** / autonomous safety policy hints and relevant **environment** variable names (does **not** run an infinite loop). |
 | `scripts/silver-cursor-agent-adapter-diagnostic.ps1` | Probes `where.exe cursor`, `cursor --version`, help text, **eight** `cursor agent` headless-style argv variants (`-p` / `--print` / `--output-format` / `--yolo` / `--yes`, 120s each, harmless one-line prompt), plus **stdin marker probes** (`cursor -`, then `cursor agent` with optional tail flags). **First** runs a **WSL Ubuntu** non-interactive pack: `wsl.exe -d Ubuntu -- /home/spedk/.local/bin/agent --version`, `test -x` / `test -d` on the Linux agent path and `/mnt/c/projects/filtr`, then `--print --mode ask --trust --workspace /mnt/c/projects/filtr` with the one-line marker prompt (timeout from `headless_probe_timeout_ms`), git dirtiness allowlist, and writes **`wsl_cursor_agent_print_ask_trust`** into `scripts/silver-cursor-agent-adapter-diagnostic-report.json` (schema **v2**). Prints `=== SILVER_WSL_CURSOR_AGENT_ADAPTER_WIRING_RESULT ===` and exits **1** if that pack’s `adapter_ready` is **NO** (Windows probes still run for context). Ends with `[console]::beep(880, 200)`. |
-| `scripts/silver-cursor-agent-adapter.ps1` | Wrapper: reads **v2** diagnostic JSON and prefers **`preferred_headless_argv`** (`cmd.exe` redirect, last argv token = task/prompt text) when that probe returned exit **0** and **stdout** contained `CURSOR_AGENT_STDIN_OK`. Otherwise uses **`preferred_stdin_argv`** when `preferred_invocation_kind=stdin_pipe` (e.g. `type` pipe to `cursor -` or `cursor agent …`). Fallback: `type "<temp>" | "<cursor.cmd>" agent` with optional retry to **`cursor -`**. **`-WslUbuntuAgent`** uses direct **`wsl.exe`** (no `bash -lc`, no PowerShell `PATH` export for the agent): the real process still receives the full task as the **final argv** token (`"<prompt>"` in raw `wsl.exe` terms), but **`SILVER_CURSOR_OUTPUT.md` must not paste that payload into logs**: `command_executed` is a **sanitized summary** (placeholder instead of the full prompt), with **`prompt_preview`** (≤300 chars), **`task_chars`**, **`task_lines`**, **`task_bytes_utf8`**, **`argv_mode`**, **`timeout_seconds`**, **`task_argv_safe_char_limit`**, **`task_too_large_for_argv`**, and **`long_task_argv_recommendation`** when over limit; optional **`SILVER_WSL_TASK_ARGV_SIZE_WARNING`** / **`SILVER_WSL_ADAPTER_TIMEOUT_NOTE`** blocks for argv size and timeouts. Non-`-Probe` runs require **`wsl_cursor_agent_print_ask_trust.adapter_ready=YES`** in the diagnostic JSON. `-DryRun` / `-Probe` / `-TimeoutSeconds` supported. |
+| `scripts/silver-cursor-agent-adapter.ps1` | Wrapper: reads **v2** diagnostic JSON and prefers **`preferred_headless_argv`** (`cmd.exe` redirect, last argv token = task/prompt text) when that probe returned exit **0** and **stdout** contained `CURSOR_AGENT_STDIN_OK`. Otherwise uses **`preferred_stdin_argv`** when `preferred_invocation_kind=stdin_pipe` (e.g. `type` pipe to `cursor -` or `cursor agent …`). Fallback: `type "<temp>" | "<cursor.cmd>" agent` with optional retry to **`cursor -`**. **`-WslUbuntuAgent`** uses direct **`wsl.exe`**: the task body is written to a **UTF-8 temp file**, then Linux **`/bin/bash -c 'exec …agent… < /mnt/…/payload.md'`** (non-login `-c` only) so **argv and the bash snippet never embed the markdown** (no backtick/`$(…)` expansion of the task). **`SILVER_CURSOR_OUTPUT.md` must not paste the full prompt into logs**: `command_executed` stays a **sanitized summary**, with **`prompt_preview`** (≤300 chars), **`task_chars`**, **`task_lines`**, **`task_bytes_utf8`**, **`task_file_used`**, **`wsl_prompt_delivery`**, **`argv_mode`**, **`timeout_seconds`**, and **`task_too_large_for_argv=NO`**. **`-WslUbuntuAgent -Probe -TaskFile scripts/silver-wsl-taskfile-stdin-probe-task.md`** runs the markdown/Czech/backtick regression gate (`czech_backtick_parentheses_probe_pass`). Non-`-Probe` runs require **`wsl_cursor_agent_print_ask_trust.adapter_ready=YES`** in the diagnostic JSON. `-DryRun` / `-Probe` / `-TimeoutSeconds` supported. |
+| `scripts/silver-wsl-taskfile-stdin-probe.ps1` | Runs **`silver-cursor-agent-adapter.ps1 -WslUbuntuAgent -Probe -TaskFile scripts/silver-wsl-taskfile-stdin-probe-task.md`** with capture under **`%TEMP%`**, prints `=== SILVER_WSL_TASKFILE_STDIN_PROBE_RESULT ===`, and exits **0** only when adapter + aggregate gates pass (no stderr shell-leak patterns, sentinel absent from `command_executed`). |
+| `scripts/silver-wsl-taskfile-stdin-probe-task.md` | Fixture markdown for the WSL taskfile regression probe (diacritics, parentheses, bullets, inline PowerShell-looking lines, backticks). |
 
 ## Full auto loop trigger (PowerShell V1)
 
@@ -81,19 +83,25 @@ powershell -ExecutionPolicy Bypass -File scripts/silver-autopilot-loop.ps1 -MaxC
 powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -Probe -OutputFile SILVER_CURSOR_OUTPUT.md -TimeoutSeconds 120
 ```
 
-**WSL Ubuntu Cursor Agent (non-interactive, verified argv):**
+**WSL Ubuntu Cursor Agent (non-interactive; task via UTF-8 temp file + bash redirect):**
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -WslUbuntuAgent -Probe -OutputFile SILVER_CURSOR_OUTPUT.md -TimeoutSeconds 120
 ```
 
-Equivalent raw probe (no `bash -lc`; absolute agent path inside WSL):
+Sanitized plan (real run writes `%TEMP%\…payload.md` and passes only its `/mnt/c/…` path inside a short `bash -c` one-liner — **never** the markdown body):
 
 ```text
-wsl.exe -d Ubuntu -- /home/spedk/.local/bin/agent --print --mode ask --trust --workspace /mnt/c/projects/filtr "Print exactly: CURSOR_AGENT_STDIN_OK. Do not modify files."
+wsl.exe -d Ubuntu -- /bin/bash -c 'exec /home/spedk/.local/bin/agent --print --mode ask --trust --workspace /mnt/c/projects/filtr <"/mnt/c/Users/…/AppData/Local/Temp/silver-wsl-agent-payload-….md"'
 ```
 
 Expect `adapter_probe_pass=YES` in the output header when **stdout** contains `CURSOR_AGENT_STDIN_OK`. Expect `can_run_full_auto_loop_maxcycles_1=YES` only when **both** the probe passes **and** the matching diagnostic gate is **YES** (`adapter_ready` for Windows path, or `wsl_cursor_agent_print_ask_trust.adapter_ready` for `-WslUbuntuAgent`).
+
+**WSL taskfile markdown regression (Czech / backticks / parentheses fixture, capture under `%TEMP%`):**
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/silver-wsl-taskfile-stdin-probe.ps1
+```
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter-diagnostic.ps1
