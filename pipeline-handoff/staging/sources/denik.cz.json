@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-14T17:19:56.647556Z",
+  "ingestedAt": "2026-05-14T17:59:24.725198Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Čtyři oběti. V Novém Mexiku havarovalo malé zdravotnické letadlo",
+      "url": "https://www.denik.cz/ze_sveta/nove-mexiko-zdravotnicke-letadlo-havarie.html",
+      "dt": "2026-05-14T17:21:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "havarovalo",
+        "letadlo",
+        "malé",
+        "mexiku",
+        "novém",
+        "oběti",
+        "zdravotnické",
+        "čtyři"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -617,32 +642,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zuzana s vážnou nemocí o Extrémních proměnách: Největším limitem byla moje hlava",
-      "url": "https://www.denik.cz/regiony/nejvetsim-limitem-byla-moje-hlava-rika-ucastnice-extremnich-promen-z-pardubic-20.html",
-      "dt": "2026-05-14T08:48:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "extrémních",
-        "hlava",
-        "limitem",
-        "moje",
-        "největším",
-        "nemocí",
-        "proměnách",
-        "vážnou",
-        "zuzana"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -653,7 +652,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29426,
+      "bytes": 29252,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -690,11 +689,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-14T17:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T17:21:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zdravi": 1,
           "zpravy": 21,
+          "zdravi": 1,
           "finance": 3
         },
         "drop_counts": {
@@ -707,6 +706,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Čtyři oběti. V Novém Mexiku havarovalo malé zdravotnické letadlo",
+            "publishedAt": "2026-05-14T17:21:00Z"
+          },
           {
             "title": "Hrazené návštěvy asistentek po porodu se krátit nebudou. Zpřesní se jejich náplň",
             "publishedAt": "2026-05-14T17:00:00Z"
@@ -734,10 +737,6 @@
           {
             "title": "Kancléř Merz zrušil cestu na Slovensko, tvrdí opozice. Ukázala na Fica v Moskvě",
             "publishedAt": "2026-05-14T14:23:00Z"
-          },
-          {
-            "title": "Policie zveřejnila video z krádeže lebky Zdislavy. Po pachateli stále pátrá",
-            "publishedAt": "2026-05-14T14:08:00Z"
           }
         ]
       }
