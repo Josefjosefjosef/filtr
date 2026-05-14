@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-14T18:40:05.476316Z",
+  "ingestedAt": "2026-05-14T19:19:29.997637Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Po domácím MS výrazně roste zájem dívek o hokej. Motivací je i účast na olympiádě",
+      "url": "https://www.idnes.cz/hokej/reprezentace/zaame-divek-o-hokej-roste.A260514_200203_reprezentace_kazdt",
+      "dt": "2026-05-14T18:24:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "domácím",
+        "dívek",
+        "hokej",
+        "motivací",
+        "olympiádě",
+        "roste",
+        "výrazně",
+        "zájem",
+        "účast"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -753,33 +779,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dány nechceme podcenit, hlásí Kalous. Hokejisté poprvé trénovali v hlavní hale",
-      "url": "https://www.idnes.cz/hokej/ms-2026/cesko-fribourg-trenink-bcf-arena.A260514_102543_ms-hokej-2026_ivt",
-      "dt": "2026-05-14T09:57:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dány",
-        "hale",
-        "hlavní",
-        "hlásí",
-        "hokejisté",
-        "kalous",
-        "nechceme",
-        "podcenit",
-        "poprvé",
-        "trénovali"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 44929,
+      "bytes": 44777,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T18:24:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -842,6 +841,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Po domácím MS výrazně roste zájem dívek o hokej. Motivací je i účast na olympiádě",
+            "publishedAt": "2026-05-14T18:24:00Z"
+          },
           {
             "title": "Žádné bajky a pohádky. Komentátoři o MS, přenosech i Jágrově slavném „po zápase“",
             "publishedAt": "2026-05-14T18:00:00Z"
@@ -869,10 +872,6 @@
           {
             "title": "Slovan neuspěl a opět bude bez Evropy. Nejlepší šestka je úspěch, říká Kováč",
             "publishedAt": "2026-05-14T15:58:00Z"
-          },
-          {
-            "title": "Bartoň o končícím Veselém: Každý tým ho chtěl. Láká ho na rozlučku v reprezentaci",
-            "publishedAt": "2026-05-14T15:40:00Z"
           }
         ]
       }

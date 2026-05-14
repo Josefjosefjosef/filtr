@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-14T18:40:05.476316Z",
+  "ingestedAt": "2026-05-14T19:19:29.997637Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Boxer zmizel po první porážce. Jeho tělo našli v řece",
+      "url": "https://www.mmamag.cz/boxer-zmizel-po-porazce-telo-nasli-v-rece/",
+      "dt": "2026-05-14T18:45:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "boxer",
+        "jeho",
+        "našli",
+        "porážce",
+        "první",
+        "tělo",
+        "zmizel",
+        "řece"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1090,34 +1115,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Chimaevův černý víkend: První prohra, ztráta pásu a obrovský propad v žebříčku UFC",
-      "url": "https://www.mmamag.cz/chimaev-klesl-v-zebricku-ufc-strickland-je-v-top-10/",
-      "dt": "2026-05-13T09:00:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "chimaevův",
-        "obrovský",
-        "prohra",
-        "propad",
-        "první",
-        "pásu",
-        "ufc",
-        "víkend",
-        "ztráta",
-        "černý",
-        "žebříčku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1128,7 +1125,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 78773,
+      "bytes": 78696,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1165,7 +1162,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-14T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T18:45:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1180,6 +1177,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Boxer zmizel po první porážce. Jeho tělo našli v řece",
+            "publishedAt": "2026-05-14T18:45:00Z"
+          },
           {
             "title": "Cage girl z UFC pózovala nahá. Odvážné fotky rozpálily Instagram",
             "publishedAt": "2026-05-14T18:00:00Z"
@@ -1207,10 +1208,6 @@
           {
             "title": "Hvězda UFC je proti souboji Procházky s Chimaevem",
             "publishedAt": "2026-05-14T13:29:00Z"
-          },
-          {
-            "title": "Český obr jde znovu do boje. Michal Martínek chce v KSW odčinit vlastní selhání",
-            "publishedAt": "2026-05-14T12:45:00Z"
           }
         ]
       }

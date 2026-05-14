@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-14T18:40:05.476316Z",
+  "ingestedAt": "2026-05-14T19:19:29.997637Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hrát za Kanadu nikdy neomrzí, líčí Crosby. Mladíkovi možná štípne céčko",
+      "url": "https://www.sport.cz/clanek/hokej-ms-hrat-za-kanadu-nikdy-neomrzi-lici-crosby-mladikovi-mozna-stipne-cecko-5454061",
+      "dt": "2026-05-14T19:08:15Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "crosby",
+        "céčko",
+        "hrát",
+        "kanadu",
+        "líčí",
+        "mladíkovi",
+        "možná",
+        "neomrzí",
+        "nikdy",
+        "štípne"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -741,33 +768,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Další změny u českých hokejových reprezentací. Nové trenéry mají dvacítka a osmnáctka",
-      "url": "https://www.sport.cz/clanek/hokej-reprezentace-motakem-skatulata-nekonci-nove-trenery-maji-i-reprezentacni-dvacitka-a-osmnactka-5454014",
-      "dt": "2026-05-14T11:15:50Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "další",
-        "dvacítka",
-        "hokejových",
-        "mají",
-        "nové",
-        "osmnáctka",
-        "reprezentací",
-        "trenéry",
-        "změny",
-        "českých"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -778,7 +778,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43040,
+      "bytes": 43017,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -815,7 +815,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T18:25:13Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T19:08:15Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -830,6 +830,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hrát za Kanadu nikdy neomrzí, líčí Crosby. Mladíkovi možná štípne céčko",
+            "publishedAt": "2026-05-14T19:08:15Z"
+          },
           {
             "title": "Bývalý hráč Arsenalu dostal místo focení pěstí. Za vším stála žárlivost",
             "publishedAt": "2026-05-14T18:25:13Z"
@@ -857,10 +861,6 @@
           {
             "title": "Trenér ve studiu, Holoubka čeká při MS nová role. Česká síla tkví v kolektivu, říká",
             "publishedAt": "2026-05-14T17:07:57Z"
-          },
-          {
-            "title": "Kempný chválil Galvase a vyzdvihuje soudržnost. Můžeme dokázat divy, říká",
-            "publishedAt": "2026-05-14T17:01:24Z"
           }
         ]
       }
