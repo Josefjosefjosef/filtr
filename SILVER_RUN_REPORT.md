@@ -43,8 +43,9 @@ adapter_ready=YES
 adapter_ready_reason=agent_stdin_probe_completed_without_timeout
 adapter_script=scripts/silver-cursor-agent-adapter.ps1
 recommended_cursor_command=powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE}
+wsl_ubuntu_agent_adapter=-WslUbuntuAgent uses wsl.exe -d Ubuntu -- /home/spedk/.local/bin/agent --print --mode ask --trust --workspace /mnt/c/projects/filtr (see diagnostic JSON wsl_cursor_agent_print_ask_trust)
 diagnostic_report=scripts/silver-cursor-agent-adapter-diagnostic-report.json
-notes=Global `cursor --help` documents pipe-to-dash for `cursor.exe -`; `cursor agent --help` shows the same text (no `--input`/`--output`). Probes used one harmless stdin line only; `cursor --chat` UI was not launched (only `--chat --help`). Re-run diagnostic after Cursor upgrades.
+notes=Global `cursor --help` documents pipe-to-dash for `cursor.exe -`; `cursor agent --help` shows the same text (no `--input`/`--output`). Probes used one harmless stdin line only; `cursor --chat` UI was not launched (only `--chat --help`). WSL adapter wiring is probe-only in diagnostic (no autopilot loop). Re-run diagnostic after Cursor upgrades. WSL diagnostic allowlist: `git status --short` paths parsed after the two status columns (`Substring(2).TrimStart()`), fixing false `repo_dirty_unexpected` and truncated `changed_files` output under Set-StrictMode.
 
 ## Notes
 
