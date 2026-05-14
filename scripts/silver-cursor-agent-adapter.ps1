@@ -13,7 +13,7 @@
   Print resolved paths and invocation plan only; do not run Cursor/WSL agent.
 
 .PARAMETER TimeoutSeconds
-  Max wait for the Cursor/WSL process (default 300). Must be positive.
+  Max wait for the Cursor/WSL process (default 600). Must be positive.
 
 .PARAMETER Probe
   Harmless test (no TaskFile). Exits 0 if stdout contains CURSOR_AGENT_STDIN_OK, else 1. Bypasses adapter_ready JSON gate for execution, but can_run metadata requires adapter_ready=YES (Windows) or wsl_cursor_agent_print_ask_trust.adapter_ready=YES (WSL).
@@ -40,7 +40,7 @@ param(
   [Parameter(Mandatory = $true)]
   [string]$OutputFile,
   [switch]$DryRun,
-  [int]$TimeoutSeconds = 300,
+  [int]$TimeoutSeconds = 600,
   [switch]$Probe,
   [switch]$WslUbuntuAgent,
   [string]$WslDistro = "Ubuntu",
