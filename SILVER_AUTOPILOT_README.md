@@ -119,7 +119,7 @@ Parameters:
 | `-AllowInfinite` / `-AutonomousMode` | Required together with `-MaxCycles 0` to opt in to autonomous orchestration (same safety stack for both switches). |
 | `-MaxAutonomousHardCycles` | Override hard iteration ceiling ( **0** = use env `SILVER_AUTONOMOUS_HARD_MAX_CYCLES` or default **512**). |
 | `-SameNextActionStopAfter` | Streak limit for identical `SILVER_NEXT_ACTION.md` body (default **5**). |
-| `-NoProgressStopAfter` | Streak limit for unchanged `core_engine_progress` in `SILVER_RUN_REPORT.md` (default **8**). |
+| `-NoProgressStopAfter` | Streak limit for unchanged **real** `core_engine_progress` (from `SILVER_RUN_REPORT.md` when present, else loop baselines). Values containing **`baseline_pending_precise_measurement`** are **not** a dynamic heartbeat: the autonomous no-progress streak **does not advance** (console: `SILVER_NO_PROGRESS_CHECK_SKIPPED …`). `SILVER_RUN_REPORT.md` gets a `core_engine_progress=` line from `writeRunReport` **only** when a non-placeholder measured value is supplied (never a fake static bump). Regression probe (read-only): `powershell -ExecutionPolicy Bypass -File scripts/silver-autonomous-no-progress-baseline-probe.ps1`. |
 | `-RepeatedFailureStopAfter` | Consecutive non-zero `node … --status` exits (default **3**). |
 | `-PrLoopStopAfter` | Consecutive cycles with the same detected PR id in next-action text (default **4**). |
 | `-MaxCycleWallSeconds` | Per-cycle wall budget in autonomous mode (**0** = env `SILVER_AUTONOMOUS_MAX_CYCLE_WALL_SECONDS` or **7200**; **-1** disables). |

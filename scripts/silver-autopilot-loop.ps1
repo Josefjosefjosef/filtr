@@ -31,7 +31,7 @@
   Consecutive identical normalized next-action bodies before autonomous stop (default 5).
 
 .PARAMETER NoProgressStopAfter
-  Consecutive cycles with unchanged core_engine_progress before autonomous stop (default 8).
+  Consecutive cycles with unchanged real (non-baseline) core_engine_progress before autonomous stop (default 8). Values containing baseline_pending_precise_measurement are not treated as a progress heartbeat (streak does not advance; see SILVER_AUTOPILOT_README.md).
 
 .PARAMETER RepeatedFailureStopAfter
   Consecutive non-zero autopilot --status exits before autonomous stop (default 3).
@@ -262,6 +262,12 @@ function Get-NextActionHeadline {
   $flat = ($Text -replace "`r?`n", " ").Trim()
   if ($flat.Length -gt 120) { return $flat.Substring(0, 120) }
   return $flat
+}
+
+function Test-SilverCoreEngineProgressIsBaselinePlaceholderOnly {
+  param([string]$Value)
+  if (-not $Value) { return $false }
+  return ($Value.IndexOf("baseline_pending_precise_measurement", [System.StringComparison]::Ordinal) -ge 0)
 }
 
 function Get-BaselineProgressMetrics {
@@ -1069,12 +1075,17 @@ while ($true) {
         -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep -LastTaskExitCode 1 `
         -StopReason ("streak=" + [string]$script:AutonomousSameNextStreak)
     }
-    if ($script:LastCoreProgress -ne "" -and $coreEngineProgress -eq $script:LastCoreProgress -and ($coreEngineProgress.Trim())) {
-      $script:AutonomousNoProgStreak++
+    $coreNpBaselineOnly = Test-SilverCoreEngineProgressIsBaselinePlaceholderOnly -Value $coreEngineProgress
+    if ($coreNpBaselineOnly) {
+      Write-Host ("SILVER_NO_PROGRESS_CHECK_SKIPPED reason=baseline_only_metric_not_dynamic_heartbeat token=baseline_pending_precise_measurement autonomous_no_progress_streak_unchanged=YES") -ForegroundColor DarkYellow
     } else {
-      if ($coreEngineProgress.Trim()) { $script:AutonomousNoProgStreak = 0 }
+      if ($script:LastCoreProgress -ne "" -and $coreEngineProgress -eq $script:LastCoreProgress -and ($coreEngineProgress.Trim())) {
+        $script:AutonomousNoProgStreak++
+      } else {
+        if ($coreEngineProgress.Trim()) { $script:AutonomousNoProgStreak = 0 }
+      }
+      $script:LastCoreProgress = $coreEngineProgress
     }
-    $script:LastCoreProgress = $coreEngineProgress
     if ($script:AutonomousNoProgStreak -ge $NoProgressStopAfter) {
       Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
         -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit ([string]$se) `
