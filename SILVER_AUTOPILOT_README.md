@@ -11,7 +11,7 @@ Silver Autopilot V1 is a **local development orchestration layer**. It is **not*
 
 - **No engine merges** without manual policy: verify blocks engine / `assets/app.js` unless you set explicit environment overrides (`SILVER_AUTOPILOT_ALLOW_ASSETS_APP`, `SILVER_AUTOPILOT_ALLOW_ENGINE`) — use only when you intentionally accept that risk.
 - **`--auto --max-steps=1`**: at most **one** safe step (status refresh); no merge, no RHC3 refresh, no proof chain.
-- **OpenAI**: only with `--ask-model`, only if `OPENAI_API_KEY` is set in your **environment** (never committed; do not add `.env` to the repo). If the key is missing, the command prints `OPENAI_API_KEY_MISSING` and exits without throwing.
+- **OpenAI**: only with `--ask-model` or **`--full-auto-loop`**, only if `OPENAI_API_KEY` is set in your **environment** (never committed; do not add `.env` to the repo). If the key is missing, those commands print `OPENAI_API_KEY_MISSING`, write a safe fallback into `SILVER_NEXT_ACTION.md`, and **do not throw**.
 - **No infinite loops**: each command runs once and exits.
 
 ## Commands
@@ -24,6 +24,8 @@ node scripts/silver-autopilot.cjs --post-merge-proof
 node scripts/silver-autopilot.cjs --refresh-rhc3
 node scripts/silver-autopilot.cjs --ask-model
 node scripts/silver-autopilot.cjs --auto --max-steps=1
+node scripts/silver-autopilot.cjs --full-auto-loop --max-steps=1
+node scripts/silver-autopilot.cjs --loop-once
 ```
 
 - **`--status`**: prints status and updates `SILVER_RUN_REPORT.md`.
@@ -33,6 +35,7 @@ node scripts/silver-autopilot.cjs --auto --max-steps=1
 - **Proof gate consistency (`realistic_mobile`)**: **`--post-merge-proof`** treats **`audit_silver_realistic_mobile_corpus.cjs` exiting 0 inside the chain** as the primary signal that the standalone realistic-mobile audit passed, cross-checked with `scripts/silver-realistic-mobile-corpus-report.json` (`real_mobile_cases` / derived fail counts). A later script (notably `silver-deep-product-real-ux-v2.cjs`) may **re-run** sibling audits and print `realistic_mobile=FAIL` in its text block or embed `gates.realistic_mobile` from that re-run; that is **not** authoritative for autopilot’s post-merge verdict when the standalone step and corpus JSON agree on PASS. Other JSON reports may still contain **`FAIL` after `git restore`** on tracked `*report.json`. Autopilot prints `=== SILVER_AUTOPILOT_PROOF_GATE_CONSISTENCY_RESULT ===` after `--post-merge-proof` and `--status`. **`--status`** only sees on-disk JSON (no step exit context) and uses the corpus report as a best-effort hint.
 - **`--refresh-rhc3`**: runs `silver-real-human-chaos-v3.cjs`, prints top fail clusters, and suggests the next cluster candidate (auto-skipping known harness-heavy clusters when their diagnostic JSON shows harness-only signals).
 - **`--ask-model`**: reads `SILVER_STRATEGY.md`, `SILVER_RUN_REPORT.md`, and `git status`; calls OpenAI if the key exists; writes `SILVER_NEXT_ACTION.md`.
+- **`--full-auto-loop` / `--loop-once`**: FULL AUTO LOOP V1 — refreshes `--status`, enforces guards (unexpected dirty paths, `assets/app.js`, nonzero safety counters parsed from `SILVER_RUN_REPORT.md`), picks input from **`SILVER_CURSOR_OUTPUT.md`** (preferred, ≥20 chars) else **`SILVER_RUN_REPORT.md`**, builds a ChatGPT prompt (strategy + input + status + hard rules), calls OpenAI when `OPENAI_API_KEY` is set, and always targets **`SILVER_NEXT_ACTION.md`** as copy-paste **ÚKOL PRO CURSOR**. Without an API key: writes `OPENAI_API_KEY_MISSING` and a STOP fallback (no crash). Prints `=== SILVER_AUTOPILOT_FULL_AUTO_LOOP_RESULT ===` and `=== SILVER_AUTOPILOT_FULL_AUTO_LOOP_V1_RESULT ===`. V1 clamps to **`--max-steps=1`**.
 
 ## Files
 
@@ -41,5 +44,6 @@ node scripts/silver-autopilot.cjs --auto --max-steps=1
 | `SILVER_STRATEGY.md` | Non-negotiable engineering principles. |
 | `SILVER_RUN_REPORT.md` | Last autopilot status snapshot. |
 | `SILVER_NEXT_ACTION.md` | Copy-paste next instructions (from model or template). |
+| `SILVER_CURSOR_OUTPUT.md` | Optional: paste latest Cursor chat output for `--full-auto-loop` input (preferred over run report). |
 | `SILVER_AUTOPILOT_README.md` | This document. |
 | `scripts/silver-autopilot.cjs` | Implementation. |

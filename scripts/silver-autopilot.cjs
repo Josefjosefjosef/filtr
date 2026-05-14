@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Silver Autopilot V1 — local orchestration only (no runtime Silver changes).
- * Commands: --status | --verify-pr= | --merge-pr= | --post-merge-proof | --refresh-rhc3 | --ask-model | --auto
+ * Commands: --status | --verify-pr= | --merge-pr= | --post-merge-proof | --refresh-rhc3 | --ask-model | --auto | --full-auto-loop | --loop-once
  */
 /* eslint-disable no-console */
 "use strict";
@@ -17,6 +17,19 @@ const STRATEGY = path.join(REPO, "SILVER_STRATEGY.md");
 const NEXT_ACTION = path.join(REPO, "SILVER_NEXT_ACTION.md");
 const RUN_REPORT = path.join(REPO, "SILVER_RUN_REPORT.md");
 const README = path.join(REPO, "SILVER_AUTOPILOT_README.md");
+const CURSOR_OUTPUT = path.join(REPO, "SILVER_CURSOR_OUTPUT.md");
+
+const FULL_AUTO_LOOP_ALLOWED_DIRTY = new Set(
+  [
+    "SILVER_STRATEGY.md",
+    "SILVER_NEXT_ACTION.md",
+    "SILVER_RUN_REPORT.md",
+    "SILVER_AUTOPILOT_README.md",
+    "SILVER_CURSOR_OUTPUT.md",
+    "scripts/silver-autopilot.cjs",
+    "scripts/silver-autopilot-loop.cjs",
+  ].map((s) => s.replace(/\\/g, "/")),
+);
 
 const RHC3_MAIN = path.join(SCRIPTS, "silver-real-human-chaos-v3.cjs");
 const RHC3_REPORT_JSON = path.join(SCRIPTS, "silver-real-human-chaos-v3-report.json");
@@ -85,6 +98,13 @@ function gitStatusPorcelain() {
   } catch {
     return "DIRTY_UNKNOWN";
   }
+}
+
+function normalizeRepoRel(rel) {
+  return String(rel || "")
+    .replace(/\\/g, "/")
+    .replace(/^\.\//, "")
+    .trim();
 }
 
 function gitChangedFilesList() {
@@ -167,7 +187,7 @@ function ghLines(args) {
     .filter(Boolean);
 }
 
-const ROOT_SILVER_MD = /^SILVER_(STRATEGY|NEXT_ACTION|RUN_REPORT|AUTOPILOT_README)\.md$/;
+const ROOT_SILVER_MD = /^SILVER_(STRATEGY|NEXT_ACTION|RUN_REPORT|AUTOPILOT_README|CURSOR_OUTPUT)\.md$/;
 
 function isAllowedVerifyPath(rel) {
   const n = String(rel || "").replace(/\\/g, "/").trim();
@@ -252,6 +272,144 @@ function aggregateSafetyFromReports() {
     agg = maxSafety(agg, extractSafetyFromJson(data));
   }
   return agg;
+}
+
+function parseSafetyCountersLineFromRunReportMd(text) {
+  const lines = String(text || "").split(/\r?\n/);
+  for (const line of lines) {
+    const t = line.trim();
+    if (!/^safety_counters=/i.test(t)) continue;
+    const raw = t.replace(/^safety_counters=/i, "").trim();
+    if (!raw || raw === "(none)") {
+      return { dangerous_write_count: 0, false_write_count: 0, query_created_write_count: 0, write_when_negated_count: 0 };
+    }
+    try {
+      const obj = JSON.parse(raw);
+      return extractSafetyFromJson(obj);
+    } catch {
+      /* key=value;key=value */
+    }
+    const out = {
+      dangerous_write_count: 0,
+      false_write_count: 0,
+      query_created_write_count: 0,
+      write_when_negated_count: 0,
+    };
+    const parts = raw.split(";");
+    for (const p of parts) {
+      const kv = p.split("=");
+      if (kv.length < 2) continue;
+      const k = kv[0].trim();
+      const v = parseInt(kv.slice(1).join("=").trim(), 10);
+      if (!Number.isFinite(v)) continue;
+      if (k in out) out[k] = v;
+    }
+    return out;
+  }
+  return null;
+}
+
+function safetyBlockFromRunReportMd(text) {
+  const parsed = parseSafetyCountersLineFromRunReportMd(text);
+  if (!parsed) return { blocked: false, counters: null };
+  const blocked =
+    parsed.dangerous_write_count > 0 ||
+    parsed.false_write_count > 0 ||
+    parsed.query_created_write_count > 0 ||
+    parsed.write_when_negated_count > 0;
+  return { blocked, counters: parsed };
+}
+
+function dirtyGitUnexpectedForFullAutoLoop(changedList) {
+  const list = Array.isArray(changedList) ? changedList : [];
+  for (const rel of list) {
+    const n = normalizeRepoRel(rel);
+    if (!n) continue;
+    if (FULL_AUTO_LOOP_ALLOWED_DIRTY.has(n)) continue;
+    return { pass: false, firstUnexpected: n };
+  }
+  return { pass: true, firstUnexpected: "" };
+}
+
+function assetsAppJsDirty(changedList) {
+  const list = Array.isArray(changedList) ? changedList : [];
+  return list.some((rel) => normalizeRepoRel(rel) === "assets/app.js");
+}
+
+function pickFullAutoLoopInput() {
+  const cursorText = readTextSafe(CURSOR_OUTPUT).trim();
+  const reportText = readTextSafe(RUN_REPORT).trim();
+  if (cursorText.length >= 20) {
+    return { source: "SILVER_CURSOR_OUTPUT.md", body: cursorText.slice(0, 24000) };
+  }
+  if (reportText.length >= 10) {
+    return { source: "SILVER_RUN_REPORT.md", body: reportText.slice(0, 24000) };
+  }
+  return { source: "(none)", body: "" };
+}
+
+function violatesEngineTaskWithoutDiagnosticPolicy(text) {
+  const t = String(text || "");
+  if (!t.trim()) return false;
+  const engineish =
+    /\bassets\/app\.js\b/i.test(t) ||
+    /\bengine\b.*\b(edit|chang|patch|refactor|rewrite)\b/i.test(t) ||
+    /\brouting\b.*\b(edit|chang|patch|refactor|rewrite)\b/i.test(t) ||
+    /\bnormalizer\b.*\b(edit|chang|patch|refactor|rewrite)\b/i.test(t);
+  const diagnosticish =
+    /\bdiagnostic\b/i.test(t) ||
+    /\bscripts-only\b/i.test(t) ||
+    /\bnode\s+scripts\/silver-/i.test(t) ||
+    /\baudit_/i.test(t) ||
+    /\bharness\b/i.test(t);
+  return engineish && !diagnosticish;
+}
+
+function wrapNextActionDoc(inner, tag) {
+  const header =
+    "<!-- SILVER_NEXT_ACTION: " +
+    String(tag || "silver-autopilot") +
+    "; copy-paste for Cursor; not auto-applied -->\n\n" +
+    "ÚKOL PRO CURSOR — infoUzel.cz / Silver\n\n";
+  return header + String(inner || "").trim() + "\n";
+}
+
+function printFullAutoLoopResult(ctx) {
+  console.log("=== SILVER_AUTOPILOT_FULL_AUTO_LOOP_RESULT ===");
+  console.log("main_commit=" + String(ctx.main_commit || ""));
+  console.log("mode=" + String(ctx.mode || ""));
+  console.log("input_source=" + String(ctx.input_source || ""));
+  console.log("openai_api=" + String(ctx.openai_api || ""));
+  console.log("next_action_written=" + String(ctx.next_action_written || "NO"));
+  console.log("next_action_file=SILVER_NEXT_ACTION.md");
+  console.log("engine_changed=" + String(ctx.engine_changed || "NO"));
+  console.log("assets_app_changed=" + String(ctx.assets_app_changed || "NO"));
+  console.log("git_status_clean=" + String(ctx.git_status_clean || "NO"));
+  console.log("safety_block_detected=" + String(ctx.safety_block_detected || "NO"));
+  console.log("recommended_next_task=" + String(ctx.recommended_next_task || ""));
+  console.log("=== END_SILVER_AUTOPILOT_FULL_AUTO_LOOP_RESULT ===");
+}
+
+function printFullAutoLoopV1Result(ctx) {
+  console.log("=== SILVER_AUTOPILOT_FULL_AUTO_LOOP_V1_RESULT ===");
+  console.log("main_commit=" + String(ctx.main_commit || ""));
+  console.log("branch=" + String(ctx.branch || ""));
+  console.log("engine_changed=" + String(ctx.engine_changed || "NO"));
+  console.log("assets_app_changed=" + String(ctx.assets_app_changed || "NO"));
+  console.log("changed_files=" + String(ctx.changed_files || ""));
+  console.log("status_exit=" + String(ctx.status_exit != null ? ctx.status_exit : ""));
+  console.log("full_auto_loop_exit=" + String(ctx.full_auto_loop_exit != null ? ctx.full_auto_loop_exit : ""));
+  console.log("openai_api_used=" + String(ctx.openai_api_used || "NO"));
+  console.log("next_action_written=" + String(ctx.next_action_written || "NO"));
+  console.log("next_action_file=SILVER_NEXT_ACTION.md");
+  console.log("dirty_git_guard=" + String(ctx.dirty_git_guard || "FAIL"));
+  console.log("assets_app_guard=" + String(ctx.assets_app_guard || "FAIL"));
+  console.log("safety_guard=" + String(ctx.safety_guard || "FAIL"));
+  console.log("fallback_without_api=" + String(ctx.fallback_without_api || "N/A"));
+  console.log("git_status_clean=" + String(ctx.git_status_clean || "NO"));
+  console.log("pr_ready=" + String(ctx.pr_ready || "NO"));
+  console.log("recommended_next_task=" + String(ctx.recommended_next_task || ""));
+  console.log("=== END_SILVER_AUTOPILOT_FULL_AUTO_LOOP_V1_RESULT ===");
 }
 
 function parseCalendar20k(value) {
@@ -1311,6 +1469,244 @@ function cmdAuto(maxSteps) {
   console.log("PASS: auto executed one safe step (status refresh)");
 }
 
+async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
+  const ms = parseInt(String(maxStepsArg || "1"), 10) || 1;
+  if (ms !== 1) {
+    console.log("NOTE: full-auto-loop V1 clamps to --max-steps=1 (requested " + ms + ")");
+  }
+  const mode = (argvSlice || []).indexOf("--loop-once") >= 0 ? "loop-once" : "full-auto-loop";
+
+  let statusExit = 0;
+  try {
+    cmdStatus("--full-auto-loop (pre-status)");
+  } catch {
+    statusExit = 1;
+  }
+
+  const commit = runGit(["rev-parse", "HEAD"]);
+  const branch = runGit(["rev-parse", "--abbrev-ref", "HEAD"]);
+  const changed = gitChangedFilesList().map(normalizeRepoRel).filter(Boolean);
+  const changedJoined = changed.join(";");
+  const dirtyD = dirtyGitUnexpectedForFullAutoLoop(changed);
+  const dirtyGitGuard = dirtyD.pass ? "PASS" : "FAIL";
+  const assetsAppGuard = assetsAppJsDirty(changed) ? "FAIL" : "PASS";
+  const assetsAppChangedFlag = assetsAppGuard === "FAIL" ? "YES" : "NO";
+
+  const runReportText = readTextSafe(RUN_REPORT);
+  const safetyInfo = safetyBlockFromRunReportMd(runReportText);
+  const safetyGuard = safetyInfo.blocked ? "FAIL" : "PASS";
+
+  const inputPick = pickFullAutoLoopInput();
+
+  let openaiApiUsed = "NO";
+  let fallbackWithoutApi = "N/A";
+  let nextActionWritten = "NO";
+  let openaiApiLine = "SKIP";
+  let recommended = "";
+  let loopExit = 0;
+  let innerNext = "";
+
+  function writeGuardedNext(inner, tag) {
+    innerNext = inner;
+    fs.writeFileSync(NEXT_ACTION, wrapNextActionDoc(inner, tag), "utf8");
+    nextActionWritten = "YES";
+  }
+
+  const guardBlocked = !dirtyD.pass || assetsAppGuard === "FAIL" || safetyGuard === "FAIL";
+
+  if (guardBlocked) {
+    const parts = [];
+    if (!dirtyD.pass) parts.push("unexpected_dirty:" + dirtyD.firstUnexpected);
+    if (assetsAppGuard === "FAIL") parts.push("assets_app_js_dirty");
+    if (safetyGuard === "FAIL") parts.push("safety_counters_nonzero_in_SILVER_RUN_REPORT");
+    recommended = "Fix guard failures (clean tree, revert assets/app.js, resolve safety counters), then re-run.";
+    writeGuardedNext(
+      [
+        "STOP — Autopilot full-auto-loop blocked by guard.",
+        "",
+        "- Reasons: " + parts.join("; "),
+        "",
+        "Run `node scripts/silver-autopilot.cjs --status`, fix the working tree, then:",
+        "`node scripts/silver-autopilot.cjs --full-auto-loop --max-steps=1`",
+      ].join("\n"),
+      "full-auto-loop-guard",
+    );
+    loopExit = 1;
+  } else if (!inputPick.body || inputPick.source === "(none)") {
+    recommended =
+      "Add >=20 chars to SILVER_CURSOR_OUTPUT.md or ensure SILVER_RUN_REPORT.md has >=10 chars; run --status; re-loop.";
+    writeGuardedNext(
+      [
+        "Diagnostic-only: autopilot input state is unclear.",
+        "",
+        "- No usable input: SILVER_CURSOR_OUTPUT.md needs >= 20 non-whitespace chars, else SILVER_RUN_REPORT.md >= 10.",
+        "",
+        "1) Paste the latest Cursor output into `SILVER_CURSOR_OUTPUT.md`, **or** run `node scripts/silver-autopilot.cjs --status`.",
+        "2) Re-run `node scripts/silver-autopilot.cjs --full-auto-loop --max-steps=1`.",
+        "",
+        "Rules: diagnostic-first, cluster-driven, scripts-only dominance, safety-first, zero-regression, no broad refactor.",
+      ].join("\n"),
+      "full-auto-loop-unclear-input",
+    );
+    loopExit = 0;
+  } else {
+    const strat = readTextSafe(STRATEGY).slice(0, 12000);
+    const autoStatus = [
+      "branch=" + branch,
+      "commit=" + commit,
+      "git_clean=" + (gitClean() ? "YES" : "NO"),
+      "changed_files=" + changedJoined,
+      "safety_block_from_SILVER_RUN_REPORT=" + (safetyInfo.blocked ? "YES" : "NO"),
+      "input_source=" + inputPick.source,
+    ].join("\n");
+
+    const key = String(process.env.OPENAI_API_KEY || "").trim();
+    if (!key) {
+      console.log("OPENAI_API_KEY_MISSING");
+      openaiApiLine = "MISSING";
+      fallbackWithoutApi = "PASS";
+      recommended = "STOP — OPENAI_API_KEY missing. Add key or run manual ChatGPT review.";
+      writeGuardedNext(
+        "OPENAI_API_KEY_MISSING\n\n" +
+          "STOP — OPENAI_API_KEY missing. Add key or run manual ChatGPT review.\n\n" +
+          "Set the key in your environment (never commit). Then re-run:\n" +
+          "`node scripts/silver-autopilot.cjs --full-auto-loop --max-steps=1`\n",
+        "full-auto-loop-no-api",
+      );
+      loopExit = 0;
+    } else {
+      openaiApiLine = "CALLED";
+      fallbackWithoutApi = "N/A";
+      const model = String(process.env.SILVER_AUTOPILOT_OPENAI_MODEL || "gpt-4o-mini").trim();
+      const systemContent =
+        "You are a Silver (infoUzel.cz) development copilot. Output a single copy-paste task for Cursor. " +
+        "Do not repeat the line \"ÚKOL PRO CURSOR\" (the file template adds it). Start with numbered steps. " +
+        "Hard rules: diagnostic-first; cluster-driven; scripts-only dominance; safety-first; zero-regression; " +
+        "no broad refactor; engine only after proven TRUE_ENGINE_FAIL and surgically; assets/app.js only after explicit human permission; " +
+        "no routing or normalizer refactors unless explicitly scoped; never paste secrets. " +
+        "If state is ambiguous, output diagnostic-only steps (node scripts/silver-…, audits). " +
+        "Never instruct a direct engine or assets/app.js edit without explicit diagnostics-first framing.";
+
+      const userContent =
+        "### SILVER_STRATEGY.md (excerpt)\n" +
+        strat +
+        "\n\n### Autopilot status snapshot\n" +
+        autoStatus +
+        "\n\n### Last Cursor output / report (from " +
+        inputPick.source +
+        ")\n" +
+        inputPick.body +
+        "\n\n### Deliverable\n" +
+        "Produce ONE next task: concise numbered steps and exact `node scripts/...` commands where applicable; scripts-only unless engine failure is proven.";
+
+      let text = "";
+      try {
+        const res = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + key,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model,
+            temperature: 0.2,
+            max_tokens: 2200,
+            messages: [
+              { role: "system", content: systemContent },
+              { role: "user", content: userContent },
+            ],
+          }),
+        });
+        const raw = await res.text();
+        if (!res.ok) {
+          console.log("STOP: OpenAI HTTP " + res.status);
+          openaiApiUsed = "YES";
+          writeGuardedNext(
+            "STOP — OpenAI API HTTP " +
+              res.status +
+              ". Fix credentials or quota; or run manual ChatGPT review.\n\nTruncated response:\n" +
+              raw.slice(0, 1200),
+            "full-auto-loop-api-http",
+          );
+          recommended = "Resolve OpenAI API error; re-run full-auto-loop.";
+          loopExit = 1;
+        } else {
+          const json = JSON.parse(raw);
+          text = String((((json.choices || [])[0] || {}).message || {}).content || "").trim();
+          openaiApiUsed = "YES";
+          if (violatesEngineTaskWithoutDiagnosticPolicy(text)) {
+            writeGuardedNext(
+              "STOP — proposed engine/routing/assets/app.js style work without diagnostic-first framing. Re-run with clearer cluster context.\n\n" +
+                "--- reference (blocked model text, truncated) ---\n" +
+                text.slice(0, 2500),
+              "full-auto-loop-engine-policy",
+            );
+            recommended = "Re-run after `node scripts/silver-autopilot.cjs --refresh-rhc3` or enrich SILVER_CURSOR_OUTPUT.md.";
+            loopExit = 1;
+          } else {
+            let body = text;
+            body = body.replace(/^\s*ÚKOL\s+PRO\s+CURSOR[^\n]*\n+/i, "").trim();
+            writeGuardedNext(body, "full-auto-loop-openai");
+            recommended = "Execute steps in SILVER_NEXT_ACTION.md in Cursor.";
+            loopExit = 0;
+          }
+        }
+      } catch {
+        console.log("STOP: OpenAI request error");
+        openaiApiUsed = "YES";
+        writeGuardedNext(
+          "STOP — OpenAI request failed (network/parse). Retry or run manual ChatGPT review.\n",
+          "full-auto-loop-network",
+        );
+        recommended = "Check network and OPENAI_API_KEY; re-run.";
+        loopExit = 1;
+      }
+    }
+  }
+
+  const cleanAfter = gitClean();
+  const gitStatusClean = cleanAfter ? "YES" : "NO";
+  const changedFinal = gitChangedFilesList().map(normalizeRepoRel).filter(Boolean).join(";");
+  const prReady =
+    cleanAfter && dirtyGitGuard === "PASS" && assetsAppGuard === "PASS" && safetyGuard === "PASS" && loopExit === 0
+      ? "YES"
+      : "NO";
+
+  printFullAutoLoopResult({
+    main_commit: commit,
+    mode,
+    input_source: inputPick.source,
+    openai_api: openaiApiLine,
+    next_action_written: nextActionWritten,
+    engine_changed: "NO",
+    assets_app_changed: assetsAppChangedFlag,
+    git_status_clean: gitStatusClean,
+    safety_block_detected: safetyGuard === "FAIL" ? "YES" : "NO",
+    recommended_next_task: recommended,
+  });
+
+  printFullAutoLoopV1Result({
+    main_commit: commit,
+    branch,
+    engine_changed: "NO",
+    assets_app_changed: assetsAppChangedFlag,
+    changed_files: changedFinal,
+    status_exit: statusExit,
+    full_auto_loop_exit: loopExit,
+    openai_api_used: openaiApiUsed,
+    next_action_written: nextActionWritten,
+    dirty_git_guard: dirtyGitGuard,
+    assets_app_guard: assetsAppGuard,
+    safety_guard: safetyGuard,
+    fallback_without_api: fallbackWithoutApi,
+    git_status_clean: gitStatusClean,
+    pr_ready: prReady,
+    recommended_next_task: recommended,
+  });
+
+  return loopExit;
+}
+
 function parseArgs(argv) {
   const out = { cmd: null, pr: "", maxSteps: "1" };
   for (const a of argv) {
@@ -1325,6 +1721,7 @@ function parseArgs(argv) {
     else if (a === "--refresh-rhc3") out.cmd = "refresh-rhc3";
     else if (a === "--ask-model") out.cmd = "ask-model";
     else if (a === "--auto") out.cmd = "auto";
+    else if (a === "--full-auto-loop" || a === "--loop-once") out.cmd = "full-auto-loop";
     else if (a.startsWith("--max-steps=")) out.maxSteps = a.slice("--max-steps=".length);
   }
   return out;
@@ -1333,7 +1730,7 @@ function parseArgs(argv) {
 (async function main() {
   const argv = process.argv.slice(2);
   if (argv.length === 0) {
-    console.log("Usage: node scripts/silver-autopilot.cjs --status | --verify-pr=NNNN | ...");
+    console.log("Usage: node scripts/silver-autopilot.cjs --status | --verify-pr=NNNN | --full-auto-loop | ...");
     process.exit(1);
   }
   const p = parseArgs(argv);
@@ -1341,6 +1738,7 @@ function parseArgs(argv) {
     console.log("STOP: no command");
     process.exit(1);
   }
+  let exitCode = 0;
   if (p.cmd === "status") cmdStatus("--status");
   else if (p.cmd === "verify-pr") verifyPr(p.pr);
   else if (p.cmd === "merge-pr") cmdMergePr(p.pr);
@@ -1348,6 +1746,8 @@ function parseArgs(argv) {
   else if (p.cmd === "refresh-rhc3") cmdRefreshRhc3();
   else if (p.cmd === "ask-model") await cmdAskModel();
   else if (p.cmd === "auto") cmdAuto(p.maxSteps);
+  else if (p.cmd === "full-auto-loop") exitCode = await cmdFullAutoLoop(argv, p.maxSteps);
+  if (exitCode) process.exit(exitCode);
 })().catch((e) => {
   console.error(e);
   process.exit(1);
