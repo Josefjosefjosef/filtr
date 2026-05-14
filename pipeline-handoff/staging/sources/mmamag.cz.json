@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-14T13:20:04.353473Z",
+  "ingestedAt": "2026-05-14T14:00:36.473370Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hvězda UFC je proti souboji Procházky s Chimaevem",
+      "url": "https://www.mmamag.cz/hvezda-ufc-je-proti-souboji-prochazky-s-chimaevem/",
+      "dt": "2026-05-14T13:29:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "chimaevem",
+        "hvězda",
+        "procházky",
+        "proti",
+        "souboji",
+        "ufc"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1111,35 +1134,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sean Strickland po zisku pásu tlačí na UFC. Chce bojovat už za měsíc na galavečeru v Bílém domě",
-      "url": "https://www.mmamag.cz/strickland-chce-po-titulu-na-ufc-v-bilem-dome/",
-      "dt": "2026-05-12T21:00:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "bojovat",
-        "bílém",
-        "chce",
-        "domě",
-        "galavečeru",
-        "měsíc",
-        "pásu",
-        "sean",
-        "strickland",
-        "tlačí",
-        "ufc",
-        "zisku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1150,7 +1144,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 79613,
+      "bytes": 79554,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1187,7 +1181,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-14T12:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T13:29:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1202,6 +1196,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hvězda UFC je proti souboji Procházky s Chimaevem",
+            "publishedAt": "2026-05-14T13:29:00Z"
+          },
           {
             "title": "Český obr jde znovu do boje. Michal Martínek chce v KSW odčinit vlastní selhání",
             "publishedAt": "2026-05-14T12:45:00Z"
@@ -1229,10 +1227,6 @@
           {
             "title": "Šampioni UFC, kteří přišli o pás po pár týdnech. Víc než 6 z 10 správně nedá ani skalní fanoušci MMA",
             "publishedAt": "2026-05-14T08:50:37Z"
-          },
-          {
-            "title": "Strickland porazil Chimaeva se zničeným ramenem. Nyní zveřejnil diagnózu a naznačil delší pauzu",
-            "publishedAt": "2026-05-14T08:00:00Z"
           }
         ]
       }
