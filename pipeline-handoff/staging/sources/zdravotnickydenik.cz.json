@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-14T14:39:57.693666Z",
+  "ingestedAt": "2026-05-14T15:19:52.236618Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Tichý zabiják útočí na stále mladší Čechy. Za vysoký krevní tlak může hlavně jedna věc",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/hypertenze-pribyva-u-deti-a-mladych-lidi/",
+      "dt": "2026-05-14T15:04:01Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "hlavně",
+        "jedna",
+        "krevní",
+        "mladší",
+        "stále",
+        "tichý",
+        "tlak",
+        "vysoký",
+        "věc",
+        "zabiják",
+        "útočí",
+        "čechy"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -241,33 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Lekce pro Česko? Německo chystá drsnou reformu dlouhodobé péče, dopadne na nejzranitelnější",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/nemecko-chysta-reformu-pece/",
-      "dt": "2026-05-14T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "chystá",
-        "dlouhodobé",
-        "dopadne",
-        "drsnou",
-        "lekce",
-        "nejzranitelnější",
-        "německo",
-        "péče",
-        "reformu",
-        "česko"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 83327,
+      "bytes": 83441,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-14T13:53:42Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T15:04:01Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -330,6 +332,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tichý zabiják útočí na stále mladší Čechy. Za vysoký krevní tlak může hlavně jedna věc",
+            "publishedAt": "2026-05-14T15:04:01Z"
+          },
           {
             "title": "Svěřujete se ChatGPT se svým zdravím? Vaše nejcitlivější data končí v USA, varuje Brusel",
             "publishedAt": "2026-05-14T13:53:42Z"
@@ -357,10 +363,6 @@
           {
             "title": "Klíšťata ve městech jsou dvakrát nebezpečnější než v lese. Experti varují před vysokou infekčností",
             "publishedAt": "2026-05-14T08:11:11Z"
-          },
-          {
-            "title": "Jednodenní péče má růst. Soukromí poskytovatelé ale varují před slovenským scénářem",
-            "publishedAt": "2026-05-14T07:00:00Z"
           }
         ]
       }

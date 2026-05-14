@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-05-14T14:39:57.693666Z",
+  "ingestedAt": "2026-05-14T15:19:52.236618Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Konec anonymity na fotbale? Bez nového zákona a záruk neprojde",
+      "url": "https://www.ceska-justice.cz/2026/05/konec-anonymity-na-fotbale-bez-noveho-zakona-a-zaruk-neprojde/",
+      "dt": "2026-05-14T15:14:03Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "anonymity",
+        "fotbale",
+        "konec",
+        "neprojde",
+        "nového",
+        "zákona",
+        "záruk"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -234,31 +258,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vrchní soud zveřejnil 18 tisíc rozhodnutí. S nespravedlností poradí chatbot",
-      "url": "https://www.ceska-justice.cz/2026/05/vrchni-soud-18-tisic-rozhodnuti-chatbot/",
-      "dt": "2026-05-13T13:40:34Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "chatbot",
-        "nespravedlností",
-        "poradí",
-        "rozhodnutí",
-        "soud",
-        "tisíc",
-        "vrchní",
-        "zveřejnil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -269,7 +268,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 107746,
+      "bytes": 107072,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -306,7 +305,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-14T14:02:26Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T15:14:03Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -321,6 +320,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec anonymity na fotbale? Bez nového zákona a záruk neprojde",
+            "publishedAt": "2026-05-14T15:14:03Z"
+          },
           {
             "title": "Soudní ping pong kvůli odškodnění Parkanové. Městský soud vidí stíhání jinak než Nejvyšší soud",
             "publishedAt": "2026-05-14T14:02:26Z"
@@ -348,10 +351,6 @@
           {
             "title": "Spor o hry Járy Cimrmana: Nejvyšší soud se zastal Smoljaka",
             "publishedAt": "2026-05-14T07:14:53Z"
-          },
-          {
-            "title": "Stát chce silnější dohled nad advokáty. Nepřijatelné, varují právníci i politici",
-            "publishedAt": "2026-05-14T04:30:00Z"
           }
         ]
       }

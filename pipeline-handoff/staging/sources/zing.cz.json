@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-14T14:39:57.693666Z",
+  "ingestedAt": "2026-05-14T15:19:52.236618Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Epic nabízí zdarma dvě hodnotné hry",
+      "url": "https://zing.cz/article/epic-nabizi-zdarma-dalsi-dve-hry",
+      "dt": "2026-05-14T15:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "dvě",
+        "epic",
+        "hodnotné",
+        "hry",
+        "nabízí",
+        "zdarma"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -997,30 +1020,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Dostupný chladič s parádním výkonem - FSP MP7 v testu",
-      "url": "https://zing.cz/article/dostupny-chladic-s-paradnim-vykonem-na-pctuningu-otestovali-fsp-mp7",
-      "dt": "2026-05-11T08:30:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "chladič",
-        "dostupný",
-        "fsp",
-        "mp7",
-        "parádním",
-        "testu",
-        "výkonem"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1031,7 +1030,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126441,
+      "bytes": 126439,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1068,7 +1067,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-14T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T15:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1084,6 +1083,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Epic nabízí zdarma dvě hodnotné hry",
+            "publishedAt": "2026-05-14T15:00:00Z"
+          },
           {
             "title": "Recenze Forza Horizon 6 - nezapomenutelný výlet do země vycházejícího slunce",
             "publishedAt": "2026-05-14T12:00:00Z"
@@ -1111,10 +1114,6 @@
           {
             "title": "Star Wars: Fate of the Old Republic nebude zbytečně zdlouhavé",
             "publishedAt": "2026-05-14T05:00:00Z"
-          },
-          {
-            "title": "Forza Horizon 6 odhaluje přesný čas vydání",
-            "publishedAt": "2026-05-14T04:00:00Z"
           }
         ]
       }

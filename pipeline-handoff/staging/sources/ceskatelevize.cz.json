@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-14T14:39:57.693666Z",
+  "ingestedAt": "2026-05-14T15:19:52.236618Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na D1 stojí kolona kamionů dlouhá přes padesát kilometrů",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/na-d1-stoji-kolona-kamionu-dlouha-pres-padesat-kilometru-373445",
+      "dt": "2026-05-14T14:56:42Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dlouhá",
+        "kamionů",
+        "kilometrů",
+        "kolona",
+        "padesát",
+        "stojí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -741,25 +764,27 @@
       "_dt_serialized": true
     },
     {
-      "section": "pocasi",
+      "section": "sport",
       "contentType": "article",
-      "title": "Víkend bude chladný. Hodně pršet má hlavně na východě Česka",
-      "url": "https://ct24.ceskatelevize.cz/clanek/pocasi/vikend-bude-chladny-hodne-prset-ma-hlavne-na-vychode-ceska-373414",
-      "dt": "2026-05-14T06:17:45Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Střídání nadmořských výšek a vedra dají fotbalové reprezentaci pořádně zabrat",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/stridani-nadmorskych-vysek-a-vedra-daji-fotbalove-reprezentaci-poradne-zabrat-156792",
+      "dt": "2026-05-14T14:44:37Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "chladný",
-        "hlavně",
-        "hodně",
-        "pršet",
-        "víkend",
-        "východě",
-        "česka"
+        "dají",
+        "fotbalové",
+        "nadmořských",
+        "pořádně",
+        "reprezentaci",
+        "střídání",
+        "vedra",
+        "výšek",
+        "zabrat"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1481,34 +1506,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kapitán Kanady, ale i Tkachuk, Barkov nebo Raymond. Ani ve Švýcarsku nebudou chybět hvězdy",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/kapitan-kanady-ale-i-tkachuk-barkov-nebo-raymond-ani-ve-svycarsku-nebudou-chybet-hvezdy-nhl-156747",
-      "dt": "2026-05-13T04:00:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "ale",
-        "barkov",
-        "chybět",
-        "hvězdy",
-        "kanady",
-        "kapitán",
-        "nebo",
-        "nebudou",
-        "raymond",
-        "tkachuk",
-        "švýcarsku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1519,7 +1516,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41824,
+      "bytes": 41771,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1579,7 +1576,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T14:34:36Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T14:56:42Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -1596,6 +1593,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na D1 stojí kolona kamionů dlouhá přes padesát kilometrů",
+            "publishedAt": "2026-05-14T14:56:42Z"
+          },
           {
             "title": "Policie ukázala záznam útěku zloděje lebky svaté Zdislavy",
             "publishedAt": "2026-05-14T14:34:36Z"
@@ -1623,10 +1624,6 @@
           {
             "title": "Britský ministr Streeting rezignuje. Dle médií chce nahradit Starmera",
             "publishedAt": "2026-05-14T12:24:25Z"
-          },
-          {
-            "title": "Neznámí lidé obsadili loď v Ománském zálivu a míří s ní k Íránu",
-            "publishedAt": "2026-05-14T12:03:03Z"
           }
         ]
       }
@@ -1638,7 +1635,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37863,
+      "bytes": 38123,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1675,7 +1672,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T14:21:45Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T14:44:37Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1690,6 +1687,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Střídání nadmořských výšek a vedra dají fotbalové reprezentaci pořádně zabrat",
+            "publishedAt": "2026-05-14T14:44:37Z"
+          },
           {
             "title": "Disciplinárka trestá: Chorý má stopku na šest zápasů, Douděra na tři",
             "publishedAt": "2026-05-14T14:21:45Z"
@@ -1717,10 +1718,6 @@
           {
             "title": "Hokejovou dvacítku přebírá Tomajko, Nedvěd povede osmnáctku",
             "publishedAt": "2026-05-14T11:45:23Z"
-          },
-          {
-            "title": "Koubek se neztotožňuje s vyřazením Chorého a Douděry z kádru Slavie",
-            "publishedAt": "2026-05-14T10:30:46Z"
           }
         ]
       }
@@ -1732,7 +1729,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77999,
+      "bytes": 78022,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
