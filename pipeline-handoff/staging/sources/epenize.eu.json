@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-14T07:10:01.996057Z",
+  "ingestedAt": "2026-05-14T07:56:13.850433Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Klasická politická obrátka. Tvrdík oslavy zakázal a nyní je povolil",
+      "url": "https://www.epenize.eu/klasicka-politicka-obratka-tvrdik-oslavy-zakazal-a-nyni-je-povolil/",
+      "dt": "2026-05-14T07:13:48Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "klasická",
+        "nyní",
+        "obrátka",
+        "oslavy",
+        "politická",
+        "povolil",
+        "tvrdík",
+        "zakázal"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -505,28 +530,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Gentleman Babiš? Schovat se za ženu je zbabělé",
-      "url": "https://www.epenize.eu/gentleman-babis-schovat-se-za-zenu-je-zbabele/",
-      "dt": "2026-05-05T07:00:41Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "babiš",
-        "gentleman",
-        "schovat",
-        "zbabělé",
-        "ženu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -537,7 +540,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 110433,
+      "bytes": 111998,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -574,7 +577,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-13T23:00:52Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T07:13:48Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 17,
@@ -592,6 +595,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Klasická politická obrátka. Tvrdík oslavy zakázal a nyní je povolil",
+            "publishedAt": "2026-05-14T07:13:48Z"
+          },
           {
             "title": "Trump chce novináře v celách s násilníky? První dodatek ústavy zatím odolává",
             "publishedAt": "2026-05-13T23:00:52Z"
@@ -619,10 +626,6 @@
           {
             "title": "Obhajuje Novotný bezmozky? Klesneme na úroveň nemyté, sparťanské lůzy",
             "publishedAt": "2026-05-11T06:06:36Z"
-          },
-          {
-            "title": "Sedmimetrová zlatá socha Trumpa v Miami: Pastor Burns říká „zázrak od Boha“",
-            "publishedAt": "2026-05-10T23:00:47Z"
           }
         ]
       }

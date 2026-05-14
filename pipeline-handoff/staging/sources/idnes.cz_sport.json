@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-14T07:10:01.996057Z",
+  "ingestedAt": "2026-05-14T07:56:13.850433Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Výlet? Kdepak, rázný útok na zlato. Kanada jede na MS s pomocí hvězd zabránit fiasku",
+      "url": "https://www.idnes.cz/hokej/ms-2026/kanada-sidney-crosby-hvezdy-posily-fribourg-nominace-ohlasy.A260513_132207_ms-hokej-2026_huda",
+      "dt": "2026-05-14T07:18:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "fiasku",
+        "hvězd",
+        "jede",
+        "kanada",
+        "kdepak",
+        "pomocí",
+        "rázný",
+        "výlet",
+        "zabránit",
+        "zlato",
+        "útok"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -766,33 +794,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Slováci berou na MS devět hokejistů z české extraligy, dvě posily mají z NHL",
-      "url": "https://www.idnes.cz/hokej/ms-2026/slovaci-berou-na-ms-devet-hokejistu-z-ceske-extraligy-dve-posily-maji-z-nhl.A260513_174443_ms-hokej-2026_tit",
-      "dt": "2026-05-13T15:52:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "berou",
-        "devět",
-        "dvě",
-        "extraligy",
-        "hokejistů",
-        "mají",
-        "nhl",
-        "posily",
-        "slováci",
-        "české"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -803,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47458,
+      "bytes": 47516,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -840,7 +841,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T06:29:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T07:18:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -856,6 +857,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Výlet? Kdepak, rázný útok na zlato. Kanada jede na MS s pomocí hvězd zabránit fiasku",
+            "publishedAt": "2026-05-14T07:18:00Z"
+          },
           {
             "title": "Česko - Dánsko v TV: kde sledovat zápas MS v hokeji 2026 živě",
             "publishedAt": "2026-05-14T06:29:00Z"
@@ -883,10 +888,6 @@
           {
             "title": "MS v hokeji 2026 ONLINE: Češi už trénují na místě, v pátek je čeká první zápas",
             "publishedAt": "2026-05-14T05:00:00Z"
-          },
-          {
-            "title": "Růžička hrozil, Jágr nadával. A také letošní šampionát zůstává v olympijském stínu",
-            "publishedAt": "2026-05-13T22:00:00Z"
           }
         ]
       }

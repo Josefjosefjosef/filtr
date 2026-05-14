@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-14T07:10:01.996057Z",
+  "ingestedAt": "2026-05-14T07:56:13.850433Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Pravá ruka Zelenského ve vazbě. Přes luxusní byty měl prát špinavé peníze",
+      "url": "https://ekonomickydenik.cz/prava-ruka-zelenskeho-vazba/",
+      "dt": "2026-05-14T07:28:04Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "byty",
+        "luxusní",
+        "měl",
+        "peníze",
+        "pravá",
+        "prát",
+        "ruka",
+        "vazbě",
+        "zelenského",
+        "špinavé"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -757,31 +784,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Revoluce v placení: Bič na podvodníky a návrat hotovosti do vesnických prodejen",
-      "url": "https://ekonomickydenik.cz/revoluce-placeni-bic-podvodniky-navrat-hotovosti/",
-      "dt": "2026-05-12T13:45:41Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "bič",
-        "hotovosti",
-        "návrat",
-        "placení",
-        "podvodníky",
-        "prodejen",
-        "revoluce",
-        "vesnických"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72766,
+      "bytes": 73216,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,13 +831,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T06:52:56Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T07:28:04Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 24,
+          "finance": 25,
           "zdravi": 2,
           "sport": 1,
-          "zpravy": 3
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -847,6 +849,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pravá ruka Zelenského ve vazbě. Přes luxusní byty měl prát špinavé peníze",
+            "publishedAt": "2026-05-14T07:28:04Z"
+          },
           {
             "title": "Stovky dronů nad Kyjevem. Rusko využilo příměří a masivně útočí",
             "publishedAt": "2026-05-14T06:52:56Z"
@@ -874,10 +880,6 @@
           {
             "title": "Slovensko uzavřelo přechody s Ukrajinou. Nedaleko udeřily ruské drony",
             "publishedAt": "2026-05-13T15:55:01Z"
-          },
-          {
-            "title": "Hluk, horší vzduch i voda. Prověří se rizika vysokorychlostní trati na Brno",
-            "publishedAt": "2026-05-13T15:21:51Z"
           }
         ]
       }

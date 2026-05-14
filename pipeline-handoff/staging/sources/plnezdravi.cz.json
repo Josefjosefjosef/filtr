@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "plnezdravi.cz",
-  "ingestedAt": "2026-05-14T07:10:01.996057Z",
+  "ingestedAt": "2026-05-14T07:56:13.850433Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Šedý zákal: Jak vrátit očím jas a ostrost?",
+      "url": "https://www.plnezdravi.cz/sedy-zakal-jak-vratit-ocim-jas-a-ostrost/",
+      "dt": "2026-05-14T07:00:55Z",
+      "media_raw": "Plné zdraví",
+      "media_norm": "Plné zdraví",
+      "tokens": [
+        "jas",
+        "ostrost",
+        "očím",
+        "vrátit",
+        "zákal",
+        "šedý"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_plnezdravi",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "plnezdravi.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -468,28 +491,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "plnezdravi.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Tajemství nafouklého břicha: Co za tím vězí",
-      "url": "https://www.plnezdravi.cz/tajemstvi-nafoukleho-bricha-co-za-tim-vezi/",
-      "dt": "2026-05-03T07:00:22Z",
-      "media_raw": "Plné zdraví",
-      "media_norm": "Plné zdraví",
-      "tokens": [
-        "břicha",
-        "nafouklého",
-        "tajemství",
-        "tím",
-        "vězí"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_plnezdravi",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "plnezdravi.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -500,7 +501,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.plnezdravi.cz/feed/",
-      "bytes": 158156,
+      "bytes": 159432,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -537,7 +538,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-13T14:39:43Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T07:00:55Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -552,6 +553,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šedý zákal: Jak vrátit očím jas a ostrost?",
+            "publishedAt": "2026-05-14T07:00:55Z"
+          },
           {
             "title": "Méně stresu, více energie. Češi objevují kouzlo venkovního cvičení",
             "publishedAt": "2026-05-13T14:39:43Z"
@@ -579,10 +584,6 @@
           {
             "title": "Připravte zrak na léto: ochrana očí je stejně důležitá jako péče o pokožku",
             "publishedAt": "2026-05-11T23:00:42Z"
-          },
-          {
-            "title": "Chodím, abych mohl chodit, říká rekordman pochodu Praha-Prčice",
-            "publishedAt": "2026-05-11T15:25:59Z"
           }
         ]
       }
