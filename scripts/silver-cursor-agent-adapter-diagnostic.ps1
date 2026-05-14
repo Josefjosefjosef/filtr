@@ -12,7 +12,7 @@ $ErrorActionPreference = "Stop"
 
 $RepoRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot ".."))
 $ReportPath = Join-Path $RepoRoot "scripts\silver-cursor-agent-adapter-diagnostic-report.json"
-$HarmlessProbe = "Print version/help only. Do not modify files."
+$HarmlessProbe = "Print exactly: CURSOR_AGENT_STDIN_OK`r`nDo not modify files.`r`n"
 
 function Invoke-ExternalCapture {
   param(
@@ -311,10 +311,12 @@ if (-not $adapterOk) {
 $report.adapter_ready = if ($adapterOk) { "YES" } else { "NO" }
 
 if ($adapterOk) {
-  $report.recommended_cursor_command = 'powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE}'
+  $report.recommended_cursor_command = 'powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -Probe -OutputFile SILVER_CURSOR_OUTPUT.md -TimeoutSeconds 120'
+  $report.recommended_cursor_command_full_loop = 'powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE} -TimeoutSeconds 120'
 }
 else {
-  $report.recommended_cursor_command = ""
+  $report.recommended_cursor_command = 'powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -Probe -OutputFile SILVER_CURSOR_OUTPUT.md -TimeoutSeconds 120'
+  $report.recommended_cursor_command_full_loop = ""
 }
 
 $sl = [ordered]@{
