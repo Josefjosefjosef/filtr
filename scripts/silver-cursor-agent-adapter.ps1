@@ -1,7 +1,7 @@
 #requires -Version 5.1
 <#
 .SYNOPSIS
-  Silver V1 — run `cursor agent` headless (preferred argv from diagnostic JSON) or stdin fallback, capture stdout/stderr, write structured log to OutputFile.
+  Silver V1 — run `cursor agent` headless (Windows, preferred argv from diagnostic JSON) or WSL Ubuntu `agent` non-interactive (--print --mode ask --trust --workspace), capture stdout/stderr, write structured log to OutputFile.
 
 .PARAMETER TaskFile
   Path to the markdown/text task (relative to repo root or absolute). Not used with -Probe.
@@ -10,18 +10,29 @@
   Path to write capture + adapter metadata (relative to repo root or absolute).
 
 .PARAMETER DryRun
-  Print resolved paths and invocation plan only; do not run Cursor.
+  Print resolved paths and invocation plan only; do not run Cursor/WSL agent.
 
 .PARAMETER TimeoutSeconds
-  Max wait for the Cursor process (default 120). Must be positive.
+  Max wait for the Cursor/WSL process (default 120). Must be positive.
 
 .PARAMETER Probe
-  Harmless test (no TaskFile). Exits 0 if stdout contains CURSOR_AGENT_STDIN_OK, else 1. Bypasses adapter_ready JSON gate for execution, but can_run metadata requires adapter_ready=YES.
+  Harmless test (no TaskFile). Exits 0 if stdout contains CURSOR_AGENT_STDIN_OK, else 1. Bypasses adapter_ready JSON gate for execution, but can_run metadata requires adapter_ready=YES (Windows) or wsl_cursor_agent_print_ask_trust.adapter_ready=YES (WSL).
+
+.PARAMETER WslUbuntuAgent
+  Use verified non-interactive WSL path: wsl.exe -d <WslDistro> -- <WslAgentLinuxPath> --print --mode ask --trust --workspace <WslWorkspaceLinuxPath> "<prompt>". No bash -lc, no PATH export from PowerShell, no `cursor chat`. Absolute agent path inside WSL.
+
+.PARAMETER WslDistro
+  WSL distribution name (default Ubuntu).
+
+.PARAMETER WslAgentLinuxPath
+  Absolute path to the Cursor agent binary inside WSL (default /home/spedk/.local/bin/agent).
+
+.PARAMETER WslWorkspaceLinuxPath
+  Absolute workspace path inside WSL (default /mnt/c/projects/filtr).
 
 .NOTES
-  Resolves **cursor.cmd** / **bin\\cursor** for `agent` (matches diagnostic); install-root **Cursor.exe** for `--version`.
-  Preferred invocation: **scripts/silver-cursor-agent-adapter-diagnostic-report.json** `preferred_headless_argv` (from diagnostic v2 headless probes).
-  Fallback: **cmd.exe** `type "<task>" | "<launcher>" agent` (and `agent -` if stderr suggests pipe-dash).
+  Windows: Resolves **cursor.cmd** / **bin\\cursor** for `agent` (matches diagnostic); install-root **Cursor.exe** for `--version`.
+  WSL: Direct **wsl.exe** process (no cmd.exe `bash -lc` wrapper). Preferred when `-WslUbuntuAgent` is set; diagnostic JSON key **wsl_cursor_agent_print_ask_trust.adapter_ready** gates non-probe runs.
 #>
 param(
   [Parameter(Mandatory = $false)]
@@ -30,7 +41,11 @@ param(
   [string]$OutputFile,
   [switch]$DryRun,
   [int]$TimeoutSeconds = 120,
-  [switch]$Probe
+  [switch]$Probe,
+  [switch]$WslUbuntuAgent,
+  [string]$WslDistro = "Ubuntu",
+  [string]$WslAgentLinuxPath = "/home/spedk/.local/bin/agent",
+  [string]$WslWorkspaceLinuxPath = "/mnt/c/projects/filtr"
 )
 
 Set-StrictMode -Version 2
@@ -41,6 +56,7 @@ $DiagReport = Join-Path $RepoRoot "scripts\silver-cursor-agent-adapter-diagnosti
 
 $ProbeText = "Print exactly: CURSOR_AGENT_STDIN_OK`r`nDo not modify files.`r`n"
 $ProbeOneLine = "Print exactly: CURSOR_AGENT_STDIN_OK. Do not modify files."
+$Marker = "CURSOR_AGENT_STDIN_OK"
 
 function Resolve-RepoPath {
   param([string]$P)
@@ -48,6 +64,96 @@ function Resolve-RepoPath {
     return [System.IO.Path]::GetFullPath($P)
   }
   return [System.IO.Path]::GetFullPath((Join-Path $RepoRoot $P))
+}
+
+function Invoke-WslAgentCapture {
+  param(
+    [string]$Distro,
+    [string[]]$LinuxArgvAfterDoubleDash,
+    [string]$WorkDirWindows,
+    [int]$TimeoutMs
+  )
+  $argList = New-Object System.Collections.Generic.List[string]
+  [void]$argList.Add("-d")
+  [void]$argList.Add($Distro)
+  [void]$argList.Add("--")
+  foreach ($x in $LinuxArgvAfterDoubleDash) {
+    [void]$argList.Add([string]$x)
+  }
+  $psi = New-Object System.Diagnostics.ProcessStartInfo
+  $psi.FileName = "wsl.exe"
+  $psi.UseShellExecute = $false
+  $psi.CreateNoWindow = $true
+  $psi.WorkingDirectory = $WorkDirWindows
+  $psi.RedirectStandardOutput = $true
+  $psi.RedirectStandardError = $true
+  $psi.StandardOutputEncoding = [System.Text.Encoding]::UTF8
+  $psi.StandardErrorEncoding = [System.Text.Encoding]::UTF8
+  $argLine = ""
+  foreach ($a in $argList) {
+    if ($argLine.Length -gt 0) { $argLine += " " }
+    if ($a -match '[\s"]') {
+      $argLine += '"' + ($a.Replace('"', '\"')) + '"'
+    }
+    else {
+      $argLine += $a
+    }
+  }
+  $psi.Arguments = $argLine
+  $p = New-Object System.Diagnostics.Process
+  $p.StartInfo = $psi
+  $timedOut = $false
+  $code = 0
+  $so = ""
+  $se = ""
+  try {
+    [void]$p.Start()
+    if (-not $p.WaitForExit($TimeoutMs)) {
+      try { $p.Kill() } catch { }
+      $timedOut = $true
+      $code = 124
+    }
+    else {
+      $code = [int]$p.ExitCode
+    }
+    $so = $p.StandardOutput.ReadToEnd()
+    $se = $p.StandardError.ReadToEnd()
+  }
+  catch {
+    $se = "WSL_ADAPTER_EXCEPTION: " + $_.Exception.Message
+    $code = 255
+  }
+  finally {
+    try { $p.Dispose() } catch { }
+  }
+  if ([string]::IsNullOrEmpty($so)) { $so = "" }
+  if ([string]::IsNullOrEmpty($se)) { $se = "" }
+  return @{ exit = $code; timedOut = $timedOut; stdout = $so; stderr = $se }
+}
+
+function Read-WslAdapterReadyFromDisk {
+  if (-not (Test-Path -LiteralPath $DiagReport)) {
+    return "UNKNOWN"
+  }
+  try {
+    $raw = [System.IO.File]::ReadAllText($DiagReport)
+    $j = $raw | ConvertFrom-Json
+    if ($null -eq $j.wsl_cursor_agent_print_ask_trust) { return "UNKNOWN" }
+    $w = $j.wsl_cursor_agent_print_ask_trust
+    if ($null -eq $w.adapter_ready) { return "UNKNOWN" }
+    return [string]$w.adapter_ready
+  }
+  catch {
+    return "UNKNOWN"
+  }
+}
+
+function Test-WslDiagnosticAdapterReady {
+  $s = Read-WslAdapterReadyFromDisk
+  if ($s -eq "UNKNOWN") {
+    return $true
+  }
+  return ($s -eq "YES")
 }
 
 function Get-CursorPathsFromWhere {
@@ -489,10 +595,23 @@ function Write-AdapterOutputFile {
   [System.IO.File]::WriteAllText($Path, $sb.ToString(), (New-Object System.Text.UTF8Encoding $false))
 }
 
+function Test-StdoutMarkerExact {
+  param([string]$Stdout, [string]$MarkerText)
+  if ($null -eq $Stdout) { return "NO" }
+  $t = $Stdout.Trim()
+  if ($t -eq $MarkerText) { return "YES" }
+  $norm = ($t -replace "`r`n", "`n").Trim()
+  $lines = $norm -split "`n" | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | ForEach-Object { $_.Trim() }
+  if ($lines.Count -eq 1 -and $lines[0] -eq $MarkerText) { return "YES" }
+  return "NO"
+}
+
 if (-not $Probe) {
   if ([string]::IsNullOrWhiteSpace($TaskFile)) {
-    Write-Error "TaskFile is required unless -Probe is set."
-    exit 6
+    if (-not ($WslUbuntuAgent -and $DryRun)) {
+      Write-Error "TaskFile is required unless -Probe is set."
+      exit 6
+    }
   }
 }
 
@@ -502,6 +621,147 @@ if ($TimeoutSeconds -lt 1) {
 }
 
 $outAbs = Resolve-RepoPath -P $OutputFile
+$cwdActual = [System.IO.Directory]::GetCurrentDirectory()
+$tsLocal = (Get-Date).ToString("o")
+$ms = $TimeoutSeconds * 1000
+
+if ($WslUbuntuAgent) {
+  $wslAdapterReadyDisk = Read-WslAdapterReadyFromDisk
+  $taskAbs = ""
+  $taskLen = 0
+  $text = ""
+  if ($Probe) {
+    $text = $ProbeOneLine
+    $taskLen = ([System.Text.Encoding]::UTF8.GetByteCount($text))
+  }
+  elseif ($DryRun) {
+    $text = $ProbeOneLine
+    $taskLen = ([System.Text.Encoding]::UTF8.GetByteCount($text))
+  }
+  else {
+    $taskAbs = Resolve-RepoPath -P $TaskFile
+    if (-not (Test-Path -LiteralPath $taskAbs)) {
+      Write-Error ("TaskFile not found: " + $taskAbs)
+      exit 3
+    }
+    $text = [System.IO.File]::ReadAllText($taskAbs)
+    $taskLen = ([System.Text.Encoding]::UTF8.GetByteCount($text))
+  }
+
+  $linuxArgv = @(
+    $WslAgentLinuxPath,
+    "--print",
+    "--mode", "ask",
+    "--trust",
+    "--workspace", $WslWorkspaceLinuxPath,
+    $text
+  )
+  $planEcho = "wsl.exe -d " + $WslDistro + " -- " + ($linuxArgv -join " ")
+
+  if ($DryRun) {
+    Write-Host "=== SILVER_CURSOR_AGENT_ADAPTER_DRY_RUN ==="
+    Write-Host ("timestamp=" + $tsLocal)
+    Write-Host ("adapter_mode=wsl_agent_print_ask_trust_workspace")
+    Write-Host ("cwd_powershell=" + $cwdActual)
+    Write-Host ("repo_root=" + $RepoRoot)
+    Write-Host ("wsl_distro=" + $WslDistro)
+    Write-Host ("wsl_agent_path=" + $WslAgentLinuxPath)
+    Write-Host ("wsl_workspace=" + $WslWorkspaceLinuxPath)
+    Write-Host ("invocation_mode=wsl_direct_argv")
+    Write-Host ("diagnostic_wsl_adapter_ready=" + $wslAdapterReadyDisk)
+    Write-Host ("command_plan=" + $planEcho)
+    Write-Host ("task_file=" + $(if ($Probe) { "(probe_inline)" } elseif (-not [string]::IsNullOrWhiteSpace($taskAbs)) { $taskAbs } else { "(dryrun_preview)" }))
+    Write-Host ("output_file=" + $outAbs)
+    Write-Host ("task_bytes_utf8=" + [string]$taskLen)
+    Write-Host ("timeout_seconds=" + [string]$TimeoutSeconds)
+    Write-Host ("probe=" + $(if ($Probe) { "YES" } else { "NO" }))
+    Write-Host "=== END_SILVER_CURSOR_AGENT_ADAPTER_DRY_RUN ==="
+    exit 0
+  }
+
+  if (-not $Probe) {
+    if (-not (Test-WslDiagnosticAdapterReady)) {
+      Write-Error "STOP: scripts/silver-cursor-agent-adapter-diagnostic-report.json reports wsl_cursor_agent_print_ask_trust.adapter_ready=NO. Run scripts/silver-cursor-agent-adapter-diagnostic.ps1 or use -Probe."
+      exit 2
+    }
+  }
+
+  $verR = Invoke-WslAgentCapture -Distro $WslDistro -LinuxArgvAfterDoubleDash @($WslAgentLinuxPath, "--version") -WorkDirWindows $RepoRoot -TimeoutMs 60000
+  $verLine = ($verR.stdout + $verR.stderr).Trim()
+
+  $r = Invoke-WslAgentCapture -Distro $WslDistro -LinuxArgvAfterDoubleDash $linuxArgv -WorkDirWindows $RepoRoot -TimeoutMs $ms
+  $so = $r.stdout
+  if ($null -eq $so) { $so = "" }
+  $se = $r.stderr
+  if ($null -eq $se) { $se = "" }
+  $exitCode = $r.exit
+  $toFlag = $r.timedOut
+
+  $probePass = "N/A"
+  $stdoutExact = Test-StdoutMarkerExact -Stdout $so -MarkerText $Marker
+  if ($Probe) {
+    if ($so.Contains($Marker)) {
+      $probePass = "YES"
+    }
+    else {
+      $probePass = "NO"
+    }
+  }
+
+  $canLoop = "UNKNOWN"
+  if ($Probe) {
+    if (($probePass -eq "YES") -and ($wslAdapterReadyDisk -eq "YES")) {
+      $canLoop = "YES"
+    }
+    else {
+      $canLoop = "NO"
+    }
+  }
+  else {
+    if (($wslAdapterReadyDisk -eq "YES") -and ($exitCode -eq 0) -and (-not $toFlag)) {
+      $canLoop = "YES"
+    }
+    else {
+      $canLoop = "NO"
+    }
+  }
+
+  $meta = [ordered]@{
+    timestamp_local = $tsLocal
+    cwd_powershell = $cwdActual
+    repo_root = $RepoRoot
+    adapter_mode = "wsl_agent_print_ask_trust_workspace"
+    wsl_distro = $WslDistro
+    wsl_agent_linux_path = $WslAgentLinuxPath
+    wsl_workspace_linux_path = $WslWorkspaceLinuxPath
+    cursor_agent_exe = "wsl.exe"
+    cursor_version_exe = $WslAgentLinuxPath
+    cursor_version = $verLine
+    command_executed = $planEcho
+    invocation_mode = "wsl_direct_argv"
+    diagnostic_wsl_adapter_ready = $wslAdapterReadyDisk
+    task_file = $(if ($Probe) { "(probe_inline)" } else { $taskAbs })
+    output_file = $outAbs
+    task_bytes_utf8 = [string]$taskLen
+    exit_code = [string]$exitCode
+    timed_out = $(if ($toFlag) { "YES" } else { "NO" })
+    adapter_probe_pass = $probePass
+    adapter_stdout_marker_exact = $stdoutExact
+    adapter_subcommand_used = "wsl_agent"
+    can_run_full_auto_loop_maxcycles_1 = $canLoop
+  }
+
+  Write-AdapterOutputFile -Path $outAbs -Meta $meta -Stdout $so -Stderr $se -ExtraBlock ""
+
+  if ($Probe) {
+    if ($probePass -eq "YES") {
+      exit 0
+    }
+    exit 1
+  }
+  exit $exitCode
+}
+
 $whereInfo = Get-CursorPathsFromWhere
 if ($whereInfo.exit -ne 0) {
   Write-Error ("where.exe cursor failed exit=" + [string]$whereInfo.exit)
@@ -518,8 +778,6 @@ if ($null -eq $cursorAgentExe) {
   exit 5
 }
 
-$cwdActual = [System.IO.Directory]::GetCurrentDirectory()
-$tsLocal = (Get-Date).ToString("o")
 $verLine = Get-CursorVersionLine -CursorExe $cursorAgentExe -WorkDir $RepoRoot
 
 $preferredArgvTemplate = Read-PreferredHeadlessArgvFromDisk
@@ -626,7 +884,6 @@ if (-not $Probe) {
 
 [System.IO.File]::WriteAllText($taskTmp, $text, (New-Object System.Text.UTF8Encoding $false))
 try {
-  $ms = $TimeoutSeconds * 1000
   $toFlag = $false
   $so = ""
   $se = ""

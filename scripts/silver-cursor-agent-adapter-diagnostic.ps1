@@ -1,12 +1,12 @@
 #requires -Version 5.1
 <#
 .SYNOPSIS
-  Silver — diagnose Cursor CLI / `cursor agent` for FULL AUTO LOOP adapter (Windows, scripts-only).
+  Silver — diagnose Cursor CLI / `cursor agent` for FULL AUTO LOOP adapter (Windows, scripts-only), plus WSL Ubuntu `agent` non-interactive wiring (`--print --mode ask --trust --workspace`).
 
 .NOTES
   Does not run autopilot loops. Does not pass real development tasks — only a harmless probe line.
   Writes scripts/silver-cursor-agent-adapter-diagnostic-report.json next to repo root.
-  Runs eight `cursor agent` headless-flag variants (120s each) and records stdout/stderr, marker, git diff.
+  Runs a WSL Ubuntu agent pack first (existence, --version, marker stdout, git dirtiness allowlist, timeout guard), then eight `cursor agent` headless-flag variants (120s each) and stdin marker probes, recording stdout/stderr, marker, git diff.
 #>
 Set-StrictMode -Version 2
 $ErrorActionPreference = "Stop"
@@ -229,6 +229,256 @@ function Test-RequiresInteractionHeuristic {
   return "NO"
 }
 
+function Invoke-WslDiagCapture {
+  param(
+    [string]$Distro,
+    [string[]]$LinuxArgvAfterDoubleDash,
+    [string]$WorkDirWindows,
+    [int]$TimeoutMs
+  )
+  $argList = New-Object System.Collections.Generic.List[string]
+  [void]$argList.Add("-d")
+  [void]$argList.Add($Distro)
+  [void]$argList.Add("--")
+  foreach ($x in $LinuxArgvAfterDoubleDash) {
+    [void]$argList.Add([string]$x)
+  }
+  $psi = New-Object System.Diagnostics.ProcessStartInfo
+  $psi.FileName = "wsl.exe"
+  $psi.UseShellExecute = $false
+  $psi.CreateNoWindow = $true
+  $psi.WorkingDirectory = $WorkDirWindows
+  $psi.RedirectStandardOutput = $true
+  $psi.RedirectStandardError = $true
+  $psi.StandardOutputEncoding = [System.Text.Encoding]::UTF8
+  $psi.StandardErrorEncoding = [System.Text.Encoding]::UTF8
+  $argLine = ""
+  foreach ($a in $argList) {
+    if ($argLine.Length -gt 0) { $argLine += " " }
+    if ($a -match '[\s"]') {
+      $argLine += '"' + ($a.Replace('"', '\"')) + '"'
+    }
+    else {
+      $argLine += $a
+    }
+  }
+  $psi.Arguments = $argLine
+  $p = New-Object System.Diagnostics.Process
+  $p.StartInfo = $psi
+  $timedOut = $false
+  $code = 0
+  $so = ""
+  $se = ""
+  try {
+    [void]$p.Start()
+    if (-not $p.WaitForExit($TimeoutMs)) {
+      try { $p.Kill() } catch { }
+      $timedOut = $true
+      $code = 124
+    }
+    else {
+      $code = [int]$p.ExitCode
+    }
+    $so = $p.StandardOutput.ReadToEnd()
+    $se = $p.StandardError.ReadToEnd()
+  }
+  catch {
+    $se = "WSL_DIAG_EXCEPTION: " + $_.Exception.Message
+    $code = 255
+  }
+  finally {
+    try { $p.Dispose() } catch { }
+  }
+  if ([string]::IsNullOrEmpty($so)) { $so = "" }
+  if ([string]::IsNullOrEmpty($se)) { $se = "" }
+  return @{ exit = $code; timedOut = $timedOut; stdout = $so; stderr = $se }
+}
+
+function Get-GitStatusShortText {
+  param([string]$Root)
+  $psi = New-Object System.Diagnostics.ProcessStartInfo
+  $psi.FileName = "git.exe"
+  $psi.Arguments = "status --short"
+  $psi.WorkingDirectory = $Root
+  $psi.RedirectStandardOutput = $true
+  $psi.RedirectStandardError = $true
+  $psi.UseShellExecute = $false
+  $psi.CreateNoWindow = $true
+  $p = [System.Diagnostics.Process]::Start($psi)
+  $o = $p.StandardOutput.ReadToEnd()
+  $null = $p.StandardError.ReadToEnd()
+  $p.WaitForExit()
+  return $o
+}
+
+function Test-WslStdoutMarkerExact {
+  param([string]$Stdout, [string]$MarkerText)
+  if ($null -eq $Stdout) { return "NO" }
+  $t = $Stdout.Trim()
+  if ($t -eq $MarkerText) { return "YES" }
+  $norm = ($t -replace "`r`n", "`n").Trim()
+  $lines = $norm -split "`n" | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | ForEach-Object { $_.Trim() }
+  if ($lines.Count -eq 1 -and $lines[0] -eq $MarkerText) { return "YES" }
+  return "NO"
+}
+
+function Test-GitStatusAllowedOnly {
+  param([string]$StatusText)
+  $allowedExact = New-Object "System.Collections.Generic.HashSet[string]"
+  [void]$allowedExact.Add("scripts/silver-cursor-agent-adapter.ps1")
+  [void]$allowedExact.Add("scripts/silver-cursor-agent-adapter-diagnostic.ps1")
+  [void]$allowedExact.Add("scripts/silver-cursor-agent-adapter-diagnostic-report.json")
+  [void]$allowedExact.Add("SILVER_AUTOPILOT_README.md")
+  [void]$allowedExact.Add("SILVER_NEXT_ACTION.md")
+  [void]$allowedExact.Add("SILVER_RUN_REPORT.md")
+  [void]$allowedExact.Add("SILVER_PROGRESS_LOG.md")
+  [void]$allowedExact.Add("SILVER_STRATEGY.md")
+  $bad = New-Object System.Collections.Generic.List[string]
+  foreach ($line in ($StatusText -split "`r?`n")) {
+    $t = $line.Trim()
+    if ([string]::IsNullOrWhiteSpace($t)) { continue }
+    # Porcelain: two status columns (index + worktree), then whitespace, then path.
+    # Do not use Substring(3): for lines like "M path" the path begins at index 2.
+    if ($t.Length -lt 3) { continue }
+    $pathPart = $t.Substring(2).TrimStart()
+    if ([string]::IsNullOrWhiteSpace($pathPart)) { continue }
+    if ($allowedExact.Contains($pathPart)) { continue }
+    if ($pathPart.StartsWith("scripts/")) { continue }
+    if ($pathPart -match '^SILVER_.+\.md$') { continue }
+    [void]$bad.Add($pathPart)
+  }
+  return $bad.ToArray()
+}
+
+function Invoke-WslPrintAskTrustProbePack {
+  param(
+    [string]$RepoRoot,
+    [string]$Distro,
+    [string]$AgentPath,
+    [string]$WorkspacePath,
+    [string]$ProbeOneLine,
+    [string]$Marker,
+    [int]$TimeoutMs
+  )
+  $pack = [ordered]@{
+    adapter_mode = "wsl_agent_print_ask_trust_workspace"
+    wsl_distro = $Distro
+    agent_path = $AgentPath
+    workspace = $WorkspacePath
+    agent_exists_executable = "NO"
+    agent_exists_exit_code = $null
+    agent_version = ""
+    agent_version_exit_code = $null
+    workspace_mount_ok = "NO"
+    workspace_check_exit_code = $null
+    marker_probe_exit_code = $null
+    marker_probe_timed_out = "NO"
+    marker_probe_stdout_contains_marker = "NO"
+    marker_probe_stdout_marker_exact = "NO"
+    marker_probe_requires_interaction = "UNKNOWN"
+    marker_probe_modifies_tracked_files = "NO"
+    marker_probe_stdout_sample = ""
+    marker_probe_stderr_sample = ""
+    timeout_guard_ms = $TimeoutMs
+    timeout_guard = "NO"
+    repo_git_status_after_probe = ""
+    repo_dirty_unexpected_paths = @()
+    repo_dirty_unexpected = "YES"
+    adapter_ready = "NO"
+    safe_for_maxcycles_1 = "NO"
+    safe_for_maxcycles_0 = "NO"
+    recommended_wsl_adapter_probe = ""
+  }
+  $pack.recommended_wsl_adapter_probe = 'powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -WslUbuntuAgent -Probe -OutputFile SILVER_CURSOR_OUTPUT.md -TimeoutSeconds 120'
+
+  $ex = Invoke-WslDiagCapture -Distro $Distro -LinuxArgvAfterDoubleDash @("test", "-x", $AgentPath) -WorkDirWindows $RepoRoot -TimeoutMs 30000
+  $pack.agent_exists_exit_code = $ex.exit
+  if ($ex.exit -eq 0) {
+    $pack.agent_exists_executable = "YES"
+  }
+
+  $ws = Invoke-WslDiagCapture -Distro $Distro -LinuxArgvAfterDoubleDash @("test", "-d", $WorkspacePath) -WorkDirWindows $RepoRoot -TimeoutMs 30000
+  $pack.workspace_check_exit_code = $ws.exit
+  if ($ws.exit -eq 0) {
+    $pack.workspace_mount_ok = "YES"
+  }
+
+  $ver = Invoke-WslDiagCapture -Distro $Distro -LinuxArgvAfterDoubleDash @($AgentPath, "--version") -WorkDirWindows $RepoRoot -TimeoutMs 60000
+  $pack.agent_version_exit_code = $ver.exit
+  $pack.agent_version = ($ver.stdout + $ver.stderr).Trim()
+
+  $diffBefore = Get-GitDiffSnapshot -Root $RepoRoot
+  $statusBefore = (Get-GitStatusShortText -Root $RepoRoot).TrimEnd()
+
+  $linuxFull = @(
+    $AgentPath,
+    "--print",
+    "--mode", "ask",
+    "--trust",
+    "--workspace", $WorkspacePath,
+    $ProbeOneLine
+  )
+  $pr = Invoke-WslDiagCapture -Distro $Distro -LinuxArgvAfterDoubleDash $linuxFull -WorkDirWindows $RepoRoot -TimeoutMs $TimeoutMs
+  $pack.marker_probe_exit_code = $pr.exit
+  if ($pr.timedOut) {
+    $pack.marker_probe_timed_out = "YES"
+  }
+  $so = $pr.stdout
+  if ($null -eq $so) { $so = "" }
+  $se = $pr.stderr
+  if ($null -eq $se) { $se = "" }
+  $combined = $so + "`n" + $se
+  if ($so.Contains($Marker)) {
+    $pack.marker_probe_stdout_contains_marker = "YES"
+  }
+  $pack.marker_probe_stdout_marker_exact = (Test-WslStdoutMarkerExact -Stdout $so -MarkerText $Marker)
+  $pack.marker_probe_requires_interaction = (Test-RequiresInteractionHeuristic -Combined $combined -TimedOut $pr.timedOut)
+  $soT = Truncate-ForJson -S $so -Max $MaxStreamCharsInJson
+  $seT = Truncate-ForJson -S $se -Max 8192
+  $pack.marker_probe_stdout_sample = $soT.text
+  $pack.marker_probe_stderr_sample = $seT.text
+
+  $diffAfter = Get-GitDiffSnapshot -Root $RepoRoot
+  if ($diffBefore -ne $diffAfter) {
+    $pack.marker_probe_modifies_tracked_files = "YES"
+    Restore-GitWorktreeDiff -Root $RepoRoot
+  }
+
+  $statusAfter = (Get-GitStatusShortText -Root $RepoRoot).TrimEnd()
+  $pack.repo_git_status_after_probe = $statusAfter
+  $unexpected = Test-GitStatusAllowedOnly -StatusText $statusAfter
+  $pack.repo_dirty_unexpected_paths = @($unexpected)
+  if (@($unexpected).Count -eq 0) {
+    $pack.repo_dirty_unexpected = "NO"
+  }
+
+  $ok = $true
+  if ($pack.agent_exists_executable -ne "YES") { $ok = $false }
+  if ($pack.workspace_mount_ok -ne "YES") { $ok = $false }
+  if ($pack.marker_probe_stdout_contains_marker -ne "YES") { $ok = $false }
+  if ($pack.marker_probe_exit_code -ne 0) { $ok = $false }
+  if ($pr.timedOut) { $ok = $false }
+  if ($pack.marker_probe_modifies_tracked_files -eq "YES") { $ok = $false }
+  if ($pack.marker_probe_requires_interaction -eq "YES") { $ok = $false }
+  if ($pack.repo_dirty_unexpected -ne "NO") { $ok = $false }
+
+  if ($ok) {
+    $pack.adapter_ready = "YES"
+    $pack.safe_for_maxcycles_1 = "YES"
+  }
+  else {
+    $pack.adapter_ready = "NO"
+    $pack.safe_for_maxcycles_1 = "NO"
+  }
+  $pack.safe_for_maxcycles_0 = "NO"
+
+  $pack["marker_probe_pass"] = if ($pack.marker_probe_stdout_contains_marker -eq "YES") { "YES" } else { "NO" }
+  $pack["exit_code_zero"] = if (($null -ne $pack.marker_probe_exit_code) -and ($pack.marker_probe_exit_code -eq 0)) { "YES" } else { "NO" }
+  $pack["timeout_guard"] = if ($pack.marker_probe_timed_out -eq "NO") { "YES" } else { "NO" }
+
+  return $pack
+}
+
 $report = [ordered]@{
   schema = "silver-cursor-agent-adapter-diagnostic-v2"
   timestamp_utc = (Get-Date).ToUniversalTime().ToString("o")
@@ -277,6 +527,15 @@ $report = [ordered]@{
   recommended_cursor_command = ""
   recommended_cursor_command_full_loop = ""
   diagnostic_exit = 0
+}
+
+$WslDistroProbe = "Ubuntu"
+$WslAgentProbePath = "/home/spedk/.local/bin/agent"
+$WslWorkspaceProbePath = "/mnt/c/projects/filtr"
+$wslPrintAskTrustPack = Invoke-WslPrintAskTrustProbePack -RepoRoot $RepoRoot -Distro $WslDistroProbe -AgentPath $WslAgentProbePath -WorkspacePath $WslWorkspaceProbePath -ProbeOneLine $ProbeOneLine -Marker $Marker -TimeoutMs $HeadlessProbeMs
+$report["wsl_cursor_agent_print_ask_trust"] = $wslPrintAskTrustPack
+if ($wslPrintAskTrustPack.adapter_ready -ne "YES") {
+  $report.diagnostic_exit = 1
 }
 
 $w = Get-WhereCursorLines
@@ -643,4 +902,56 @@ Write-Host ("preferred_headless_variant_id=" + $(if ($null -eq $preferredId -and
 Write-Host ("preferred_invocation_kind=" + $report.preferred_invocation_kind)
 Write-Host "=== END_SILVER_CURSOR_AGENT_ADAPTER_DIAGNOSTIC ==="
 
-exit 0
+$wp = $report.wsl_cursor_agent_print_ask_trust
+$changedJoin = ""
+if ($null -ne $wp.repo_dirty_unexpected_paths -and $wp.repo_dirty_unexpected_paths.Length -gt 0) {
+  $changedJoin = [string]::Join(",", @($wp.repo_dirty_unexpected_paths))
+}
+Write-Host "=== SILVER_WSL_CURSOR_AGENT_ADAPTER_WIRING_RESULT ==="
+Write-Host ("agent_version=" + $wp.agent_version)
+Write-Host "adapter_mode=wsl_agent_print_ask_trust_workspace"
+Write-Host ("agent_path=" + $wp.agent_path)
+Write-Host ("workspace=" + $wp.workspace)
+Write-Host ("marker_probe_pass=" + $wp.marker_probe_pass)
+Write-Host ("stdout_marker_exact=" + $wp.marker_probe_stdout_marker_exact)
+Write-Host ("exit_code_zero=" + $wp.exit_code_zero)
+Write-Host ("timeout_guard=" + $wp.timeout_guard)
+Write-Host ("repo_dirty_unexpected=" + $wp.repo_dirty_unexpected)
+Write-Host ("adapter_ready=" + $wp.adapter_ready)
+Write-Host ("safe_for_maxcycles_1=" + $wp.safe_for_maxcycles_1)
+Write-Host ("safe_for_maxcycles_0=" + $wp.safe_for_maxcycles_0)
+Write-Host ("changed_files=" + $changedJoin)
+Write-Host ("next_recommended_command=" + $wp.recommended_wsl_adapter_probe)
+Write-Host "=== END_SILVER_WSL_CURSOR_AGENT_ADAPTER_WIRING_RESULT ==="
+
+$changedFilesOutputFixed = "YES"
+if ($null -ne $wp.repo_dirty_unexpected_paths) {
+  foreach ($ux in @($wp.repo_dirty_unexpected_paths)) {
+    if ([string]::IsNullOrEmpty($ux)) { continue }
+    if ($ux -match '^(ILVER_|cripts/)') {
+      $changedFilesOutputFixed = "NO"
+      break
+    }
+  }
+}
+
+Write-Host "=== SILVER_WSL_ADAPTER_ALLOWLIST_FIX_RESULT ==="
+Write-Host ("marker_probe_pass=" + $wp.marker_probe_pass)
+Write-Host ("stdout_marker_exact=" + $wp.marker_probe_stdout_marker_exact)
+Write-Host ("exit_code_zero=" + $wp.exit_code_zero)
+Write-Host ("timeout_guard=" + $wp.timeout_guard)
+Write-Host ("repo_dirty_unexpected=" + $wp.repo_dirty_unexpected)
+Write-Host ("changed_files_output_fixed=" + $changedFilesOutputFixed)
+Write-Host ("adapter_ready=" + $wp.adapter_ready)
+Write-Host ("safe_for_maxcycles_1=" + $wp.safe_for_maxcycles_1)
+Write-Host ("safe_for_maxcycles_0=" + $wp.safe_for_maxcycles_0)
+Write-Host ("changed_files=" + $changedJoin)
+Write-Host ("next_recommended_command=" + $wp.recommended_wsl_adapter_probe)
+Write-Host "=== END_SILVER_WSL_ADAPTER_ALLOWLIST_FIX_RESULT ==="
+
+try {
+  [console]::beep(880, 200)
+}
+catch { }
+
+exit $report.diagnostic_exit
