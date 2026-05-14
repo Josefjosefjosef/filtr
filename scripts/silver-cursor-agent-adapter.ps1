@@ -75,6 +75,26 @@ function Get-TaskTextLineCount {
   return @(($Text -split "`r?`n", [StringSplitOptions]::None)).Count
 }
 
+function Get-TaskUtf8Sha256HexPrefix {
+  param(
+    [string]$Text,
+    [int]$HexChars = 16
+  )
+  if ($null -eq $Text) { $Text = "" }
+  $enc = New-Object System.Text.UTF8Encoding $false
+  $bytes = $enc.GetBytes($Text)
+  $sha = [System.Security.Cryptography.SHA256]::Create()
+  try {
+    $hash = $sha.ComputeHash($bytes)
+  }
+  finally {
+    if ($null -ne $sha) { $sha.Dispose() }
+  }
+  $hex = [System.BitConverter]::ToString($hash).Replace("-", "").ToLowerInvariant()
+  if ($hex.Length -le $HexChars) { return $hex }
+  return $hex.Substring(0, $HexChars)
+}
+
 function Get-PromptPreviewLimited {
   param([string]$Text, [int]$MaxLen = 300)
   if ([string]::IsNullOrEmpty($Text)) { return "" }
@@ -818,11 +838,20 @@ if ($WslUbuntuAgent) {
   $bashScript = Build-WslBashCExecRedirectScript -AgentPath $WslAgentLinuxPath -WorkspacePath $WslWorkspaceLinuxPath -TaskPathWsl $wslTaskUnix
   $linuxArgv = @("/bin/bash", "-c", $bashScript)
   $r = @{ exit = 255; timedOut = $false; stdout = ""; stderr = "" }
+  $verLine = ""
+  $processStartUtc = ""
+  $processEndUtc = ""
+  $elapsedMs = 0
   try {
     $verR = Invoke-WslAgentCapture -Distro $WslDistro -LinuxArgvAfterDoubleDash @($WslAgentLinuxPath, "--version") -WorkDirWindows $RepoRoot -TimeoutMs 60000
     $verLine = ($verR.stdout + $verR.stderr).Trim()
 
+    $processStartUtc = (Get-Date).ToUniversalTime().ToString("o")
+    $wallSw = [System.Diagnostics.Stopwatch]::StartNew()
     $r = Invoke-WslAgentCapture -Distro $WslDistro -LinuxArgvAfterDoubleDash $linuxArgv -WorkDirWindows $RepoRoot -TimeoutMs $ms
+    $wallSw.Stop()
+    $processEndUtc = (Get-Date).ToUniversalTime().ToString("o")
+    $elapsedMs = [int64]$wallSw.ElapsedMilliseconds
   }
   finally {
     if (Test-Path -LiteralPath $tempPayloadWindows) {
@@ -835,6 +864,33 @@ if ($WslUbuntuAgent) {
   if ($null -eq $se) { $se = "" }
   $exitCode = $r.exit
   $toFlag = $r.timedOut
+
+  $stdoutBytes = $SilverUtf8NoBom.GetByteCount($so)
+  $stderrBytes = $SilverUtf8NoBom.GetByteCount($se)
+  $stdoutNonempty = $(if ($stdoutBytes -gt 0) { "YES" } else { "NO" })
+  $stderrNonempty = $(if ($stderrBytes -gt 0) { "YES" } else { "NO" })
+  $taskDigestHex = Get-TaskUtf8Sha256HexPrefix -Text $text -HexChars 16
+  $outputTotalBytes = $stdoutBytes + $stderrBytes
+  $stallHint = "UNKNOWN"
+  if ($toFlag) {
+    if ($outputTotalBytes -eq 0) {
+      $stallHint = "timed_out_zero_output_bytes_suspect_hard_stall_or_auth_prompt_stuck"
+    }
+    elseif ($outputTotalBytes -lt 256) {
+      $stallHint = "timed_out_minimal_output_suspect_slow_or_near_stall"
+    }
+    else {
+      $stallHint = "timed_out_with_substantial_output_possible_legit_long_work_or_truncated_streams"
+    }
+  }
+  else {
+    if ($outputTotalBytes -eq 0) {
+      $stallHint = "exit_without_stream_bytes_check_invoke_stderr_and_exit_code"
+    }
+    else {
+      $stallHint = "completed_with_stream_bytes_present"
+    }
+  }
 
   $stderrShellLeak = (Test-WslTaskfileProbeStderrShellLeak -Stderr $se)
   $sentinelInCmd = $false
@@ -914,6 +970,22 @@ recommendation=Increase -TimeoutSeconds if the task is legitimately long-running
     }
   }
 
+  $streamDiag = @"
+SILVER_WSL_ADAPTER_STREAMING_AND_HEARTBEAT
+streaming_output_supported=NO
+last_output_utc=UNAVAILABLE
+last_stdout_bytes=UNAVAILABLE
+last_stderr_bytes=UNAVAILABLE
+adapter_wall_clock_note=WaitForExit blocks until exit or timeout; stdout/stderr are read only after the child process ends (no incremental reads), so there is no live streaming progress signal during the run.
+timeout_semantics=wall_clock_only
+"@
+  if ([string]::IsNullOrWhiteSpace($extraWsl)) {
+    $extraWsl = $streamDiag
+  }
+  else {
+    $extraWsl = $extraWsl.TrimEnd() + "`r`n`r`n" + $streamDiag
+  }
+
   $meta = [ordered]@{
     timestamp_local = $tsLocal
     cwd_powershell = $cwdActual
@@ -936,12 +1008,26 @@ recommendation=Increase -TimeoutSeconds if the task is legitimately long-running
     task_chars = [string]$taskChars
     task_lines = [string]$taskLines
     task_bytes_utf8 = [string]$taskLen
+    task_digest = $taskDigestHex
+    task_sha256_prefix = $taskDigestHex
     task_argv_safe_char_limit = [string]$SilverWslTaskArgvSafeCharLimit
     task_too_large_for_argv = $taskTooLargeStr
     prompt_preview = $promptPreview
+    process_start_utc = $processStartUtc
+    process_end_utc = $processEndUtc
+    elapsed_ms = [string]$elapsedMs
     timeout_seconds = [string]$TimeoutSeconds
     exit_code = [string]$exitCode
     timed_out = $(if ($toFlag) { "YES" } else { "NO" })
+    stdout_bytes = [string]$stdoutBytes
+    stderr_bytes = [string]$stderrBytes
+    stdout_nonempty = $stdoutNonempty
+    stderr_nonempty = $stderrNonempty
+    streaming_output_supported = "NO"
+    last_output_utc = "UNAVAILABLE"
+    last_stdout_bytes = "UNAVAILABLE"
+    last_stderr_bytes = "UNAVAILABLE"
+    post_timeout_output_interpretation = $stallHint
     adapter_probe_pass = $probePass
     adapter_stdout_marker_exact = $stdoutExact
     stderr_shell_leak_probe_pattern = $(if ($stderrShellLeak) { "YES" } else { "NO" })

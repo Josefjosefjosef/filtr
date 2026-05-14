@@ -264,6 +264,94 @@ function Get-NextActionHeadline {
   return $flat
 }
 
+function Get-SilverAdapterMetaKeyValuesFromMarkdown {
+  param([string]$Path)
+  $out = @{}
+  if (-not (Test-Path -LiteralPath $Path)) {
+    return $out
+  }
+  $utf8 = New-Object System.Text.UTF8Encoding $false
+  $full = [System.IO.File]::ReadAllText($Path, $utf8)
+  if ($full.IndexOf("# silver-cursor-agent-adapter", [System.StringComparison]::Ordinal) -lt 0) {
+    return $out
+  }
+  $marker = "# stdout"
+  $idx = $full.IndexOf($marker, [System.StringComparison]::Ordinal)
+  $head = if ($idx -ge 0) { $full.Substring(0, $idx) } else { $full }
+  foreach ($raw in $head -split "`r?`n") {
+    $line = $raw.Trim()
+    if ($line.Length -eq 0) { continue }
+    if (-not $line.Contains("=")) { continue }
+    $eq = $line.IndexOf("=")
+    if ($eq -le 0) { continue }
+    $k = $line.Substring(0, $eq).Trim()
+    $v = $line.Substring($eq + 1)
+    if ($k -match '^[a-zA-Z0-9_]+$') {
+      $out[$k] = $v
+    }
+  }
+  return $out
+}
+
+function Add-SilverCycleFieldsFromAdapterOutput {
+  param(
+    [hashtable]$Fields,
+    [string]$AdapterOutputPath
+  )
+  $meta = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $AdapterOutputPath
+  if ($meta.Count -eq 0) { return }
+  function Take([string]$adapterKey) {
+    if (-not $meta.ContainsKey($adapterKey)) { return "" }
+    return [string]$meta[$adapterKey]
+  }
+  function SetIf([string]$fieldKey, [string]$val) {
+    if (-not $val) { return }
+    if ($val.Trim().Length -eq 0) { return }
+    $Fields[$fieldKey] = $val
+  }
+  SetIf "silver_cycle_task_file" (Take "task_file")
+  SetIf "silver_cycle_task_chars" (Take "task_chars")
+  SetIf "silver_cycle_task_lines" (Take "task_lines")
+  SetIf "silver_cycle_task_bytes_utf8" (Take "task_bytes_utf8")
+  $digest = Take "task_digest"
+  if (-not $digest) { $digest = Take "task_sha256_prefix" }
+  SetIf "silver_cycle_task_digest" $digest
+  SetIf "silver_cycle_timed_out" (Take "timed_out")
+  SetIf "silver_cycle_elapsed_ms" (Take "elapsed_ms")
+  SetIf "silver_cycle_timeout_seconds" (Take "timeout_seconds")
+  SetIf "silver_cycle_adapter_exit_code" (Take "exit_code")
+  $soB = Take "stdout_bytes"
+  $seB = Take "stderr_bytes"
+  $son = Take "stdout_nonempty"
+  $sen = Take "stderr_nonempty"
+  SetIf "silver_cycle_stdout_bytes" $soB
+  SetIf "silver_cycle_stderr_bytes" $seB
+  $sum = "stdout_bytes=" + $soB + ";stderr_bytes=" + $seB + ";stdout_nonempty=" + $son + ";stderr_nonempty=" + $sen
+  if ($sum.Replace("=", "").Trim(";").Length -gt 0) {
+    $Fields["silver_cycle_output_bytes_summary"] = $sum
+  }
+  SetIf "silver_cycle_streaming_output_supported" (Take "streaming_output_supported")
+  SetIf "silver_cycle_last_output_utc" (Take "last_output_utc")
+  SetIf "silver_cycle_post_timeout_output_interpretation" (Take "post_timeout_output_interpretation")
+  if ($meta.Count -gt 0) {
+    $to = Take "timed_out"
+    $ex = Take "exit_code"
+    if ($to -eq "YES") {
+      $Fields["silver_cycle_stop_reason"] = "adapter_wall_clock_timeout"
+    }
+    elseif ($ex -ne "" -and $ex -ne "0") {
+      if (-not ($Fields.ContainsKey("silver_cycle_stop_reason"))) {
+        $Fields["silver_cycle_stop_reason"] = "adapter_exit_nonzero"
+      }
+    }
+    else {
+      if (-not ($Fields.ContainsKey("silver_cycle_stop_reason"))) {
+        $Fields["silver_cycle_stop_reason"] = "adapter_completed"
+      }
+    }
+  }
+}
+
 function Test-SilverCoreEngineProgressIsBaselinePlaceholderOnly {
   param([string]$Value)
   if (-not $Value) { return $false }
@@ -302,6 +390,32 @@ function Write-SilverProgressLogBlock {
   [void]$sb.AppendLine(("main_commit=" + $Fields["main_commit"]))
   [void]$sb.AppendLine(("last_task_exit=" + $Fields["last_task_exit"]))
   [void]$sb.AppendLine(("cursor_exit=" + $Fields["cursor_exit"]))
+  $cycleExtraKeys = @(
+    "silver_cycle_task_file",
+    "silver_cycle_task_chars",
+    "silver_cycle_task_lines",
+    "silver_cycle_task_bytes_utf8",
+    "silver_cycle_task_digest",
+    "silver_cycle_timed_out",
+    "silver_cycle_elapsed_ms",
+    "silver_cycle_timeout_seconds",
+    "silver_cycle_adapter_exit_code",
+    "silver_cycle_stdout_bytes",
+    "silver_cycle_stderr_bytes",
+    "silver_cycle_output_bytes_summary",
+    "silver_cycle_streaming_output_supported",
+    "silver_cycle_last_output_utc",
+    "silver_cycle_post_timeout_output_interpretation",
+    "silver_cycle_stop_reason"
+  )
+  foreach ($ck in $cycleExtraKeys) {
+    if ($Fields.ContainsKey($ck)) {
+      $vv = [string]$Fields[$ck]
+      if ($vv.Trim().Length -gt 0) {
+        [void]$sb.AppendLine(($ck + "=" + $vv))
+      }
+    }
+  }
   [void]$sb.AppendLine(("autopilot_exit=" + $Fields["autopilot_exit"]))
   [void]$sb.AppendLine(("autopilot_status_exit=" + $Fields["autopilot_status_exit"]))
   [void]$sb.AppendLine(("git_status_clean=" + $Fields["git_status_clean"]))
@@ -446,6 +560,8 @@ function Stop-LoopWithFail {
     dry_run = $DryRunText
     stop_reason = $(if ($StopReason) { $StopReason } else { $Focus })
   }
+  $adapterOutForCycle = Join-Path $RepoRoot "SILVER_CURSOR_OUTPUT.md"
+  Add-SilverCycleFieldsFromAdapterOutput -Fields $fields -AdapterOutputPath $adapterOutForCycle
   Write-SilverProgressLogBlock -ProgressLogPath $ProgressLogPath -Outcome "FAIL" -Fields $fields
   Write-SilverColoredCycleSummary -Outcome "FAIL" -Fields $fields
   Invoke-SilverBeepFail -NoBeep:$NoBeep
@@ -904,6 +1020,12 @@ while ($true) {
       $stdoutTmp = Join-Path $env:TEMP ("silver-loop-cursor-out-" + $cycle + ".txt")
       $stderrTmp = Join-Path $env:TEMP ("silver-loop-cursor-err-" + $cycle + ".txt")
 
+      $utf8Log = [System.Text.UTF8Encoding]::new($false)
+      $preCursorBody = ""
+      if (Test-Path -LiteralPath $CursorOutputPath) {
+        $preCursorBody = [System.IO.File]::ReadAllText($CursorOutputPath, $utf8Log)
+      }
+
       $psi = New-Object System.Diagnostics.ProcessStartInfo
       $psi.FileName = "cmd.exe"
       $psi.Arguments = "/c " + $resolvedCmd + " 1> """ + $stdoutTmp + """ 2> """ + $stderrTmp + """"
@@ -922,14 +1044,27 @@ while ($true) {
         if (Test-Path -LiteralPath $stderrTmp) { $se = [System.IO.File]::ReadAllText($stderrTmp) }
         $soTrim = $so.Trim()
         $seTrim = $se.Trim()
+        $adapterHeaderPresent = ($preCursorBody.IndexOf("# silver-cursor-agent-adapter", [System.StringComparison]::Ordinal) -ge 0)
         if (($soTrim.Length -gt 0) -or ($seTrim.Length -gt 0)) {
-          $merged = "# silver-autopilot-loop: captured Cursor CLI output`n# stdout`n" + $so + "`n# stderr`n" + $se + "`n"
-          [System.IO.File]::WriteAllText($CursorOutputPath, $merged, [System.Text.UTF8Encoding]::new($false))
+          if (($ce -eq 124) -and $adapterHeaderPresent) {
+            $merged = $preCursorBody.TrimEnd() + "`n`n# silver-autopilot-loop: outer cmd.exe wrapper (exit 124; adapter body preserved above)" + "`n# stdout`n" + $so + "`n# stderr`n" + $se + "`n"
+            [System.IO.File]::WriteAllText($CursorOutputPath, $merged, $utf8Log)
+          }
+          else {
+            $merged = "# silver-autopilot-loop: captured Cursor CLI output`n# stdout`n" + $so + "`n# stderr`n" + $se + "`n"
+            [System.IO.File]::WriteAllText($CursorOutputPath, $merged, $utf8Log)
+          }
         }
         else {
           if (-not (Test-Path -LiteralPath $CursorOutputPath)) {
             $stub = "# silver-autopilot-loop: no outer stdout/stderr; child wrote only to OutputFile or produced no file.`n"
-            [System.IO.File]::WriteAllText($CursorOutputPath, $stub, [System.Text.UTF8Encoding]::new($false))
+            [System.IO.File]::WriteAllText($CursorOutputPath, $stub, $utf8Log)
+          }
+        }
+        if ($ce -eq 124) {
+          $closeBlk = "`n`nSILVER_TIMEOUT_CLOSEOUT_REMINDER`nread_before_git_restore_or_clean=YES`npreserve_paths_first=SILVER_NEXT_ACTION.md;SILVER_CURSOR_OUTPUT.md`nnote=Wall-clock timeout (exit 124). Read SILVER_NEXT_ACTION.md and SILVER_CURSOR_OUTPUT.md before discard, git restore, or clean.`n"
+          if (Test-Path -LiteralPath $CursorOutputPath) {
+            [System.IO.File]::AppendAllText($CursorOutputPath, $closeBlk, $utf8Log)
           }
         }
       } finally {
@@ -944,7 +1079,8 @@ while ($true) {
           -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
           -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
           -Headline (Get-NextActionHeadline -Text $nextText) -Focus "cursor_exit_nonzero" `
-          -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1
+          -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
+          -StopReason $(if ($ce -eq 124) { "cursor_outer_or_adapter_timeout_exit_124" } else { "" })
       }
     } else {
       $cursorExitStr = "SKIPPED_DRY_RUN"
@@ -1157,7 +1293,9 @@ while ($true) {
     current_focus = "silver_full_auto_loop_trigger_v1"
     next_action_headline = (Get-NextActionHeadline -Text $nextAfter)
     dry_run = ($(if ($DryRun) { "YES" } else { "NO" }))
+    stop_reason = "silver_full_auto_cycle_pass"
   }
+  Add-SilverCycleFieldsFromAdapterOutput -Fields $fieldsPass -AdapterOutputPath $CursorOutputPath
   Write-SilverProgressLogBlock -ProgressLogPath $ProgressLogPath -Outcome "PASS" -Fields $fieldsPass
   Write-SilverColoredCycleSummary -Outcome "PASS" -Fields $fieldsPass
   Invoke-SilverBeepPass -NoBeep:$NoBeep
