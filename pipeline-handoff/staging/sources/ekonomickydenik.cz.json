@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-14T09:54:56.758230Z",
+  "ingestedAt": "2026-05-14T11:20:59.273937Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Podmínka přežití: levná obrana proti dronům. Řešení ukazuje český fond napojený na CSG",
+      "url": "https://ekonomickydenik.cz/proti-dronum-cesky-fond-csg/",
+      "dt": "2026-05-14T10:55:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "csg",
+        "dronům",
+        "fond",
+        "levná",
+        "napojený",
+        "obrana",
+        "podmínka",
+        "proti",
+        "přežití",
+        "ukazuje",
+        "český",
+        "řešení"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "150 na dálnici. Na testování se podepsala zima, jak to bude dál?",
+      "url": "https://ekonomickydenik.cz/150-dalnice-d3-zima/",
+      "dt": "2026-05-14T10:37:20Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "150",
+        "dálnici",
+        "podepsala",
+        "testování",
+        "zima"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -731,58 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zpět k ropě a zlatu. Evropa obnovila pakt se Sýrií z roku 1977",
-      "url": "https://ekonomickydenik.cz/ropa-zlato-evropa-pakt-syrie-1977/",
-      "dt": "2026-05-12T16:20:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "1977",
-        "evropa",
-        "obnovila",
-        "pakt",
-        "roku",
-        "ropě",
-        "sýrií",
-        "zlatu",
-        "zpět"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Meta dostala u soudu tvrdý direkt. Musí platit za úryvky z novin",
-      "url": "https://ekonomickydenik.cz/meta-tvrdy-direkt-platit-uryvky-novin/",
-      "dt": "2026-05-12T16:02:16Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "direkt",
-        "dostala",
-        "meta",
-        "musí",
-        "novin",
-        "platit",
-        "soudu",
-        "tvrdý",
-        "úryvky"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73272,
+      "bytes": 73591,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,13 +829,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T09:45:31Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T10:55:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 26,
+          "zpravy": 2,
           "zdravi": 1,
-          "sport": 1,
-          "zpravy": 2
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -848,6 +847,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Podmínka přežití: levná obrana proti dronům. Řešení ukazuje český fond napojený na CSG",
+            "publishedAt": "2026-05-14T10:55:00Z"
+          },
+          {
+            "title": "150 na dálnici. Na testování se podepsala zima, jak to bude dál?",
+            "publishedAt": "2026-05-14T10:37:20Z"
+          },
           {
             "title": "Babišova vláda sabotuje investice do renovace veřejných budov, varují firmy z oboru",
             "publishedAt": "2026-05-14T09:45:31Z"
@@ -871,14 +878,6 @@
           {
             "title": "Stovky dronů nad Kyjevem. Rusko využilo příměří a masivně útočí",
             "publishedAt": "2026-05-14T06:52:56Z"
-          },
-          {
-            "title": "Varování Trumpovi v Číně. Lepší vztahy ho budou něco stát",
-            "publishedAt": "2026-05-14T06:17:38Z"
-          },
-          {
-            "title": "ČEZ zvyšuje zisk. Pomohl hlavně konec mimořádné daně",
-            "publishedAt": "2026-05-14T05:31:48Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-14T09:54:56.758230Z",
+  "ingestedAt": "2026-05-14T11:20:59.273937Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Chataři a chalupáři si připlatí. Obce jim zvyšují daň z nemovitosti",
+      "url": "https://profitonline.cz/chatari-a-chalupari-si-priplati-obce-jim-zvysuji-dan-z-nemovitosti/",
+      "dt": "2026-05-14T10:00:47Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "chalupáři",
+        "chataři",
+        "daň",
+        "jim",
+        "nemovitosti",
+        "obce",
+        "připlatí",
+        "zvyšují"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -257,29 +282,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vymáhání práva je na katastrofální úrovni, fotbal je mementem",
-      "url": "https://profitonline.cz/vymahani-prava-je-na-katastrofalni-urovni-fotbal-je-mementem/",
-      "dt": "2026-05-12T10:00:56Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "fotbal",
-        "katastrofální",
-        "mementem",
-        "práva",
-        "vymáhání",
-        "úrovni"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -290,7 +292,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18668,
+      "bytes": 18635,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -327,12 +329,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-14T08:00:03Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T10:00:47Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 9,
-          "zdravi": 2,
-          "sport": 1
+          "finance": 10,
+          "zdravi": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -344,6 +345,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chataři a chalupáři si připlatí. Obce jim zvyšují daň z nemovitosti",
+            "publishedAt": "2026-05-14T10:00:47Z"
+          },
           {
             "title": "Pohonné hmoty ženou inflaci vzhůru. Kdy zdraží potraviny?",
             "publishedAt": "2026-05-14T08:00:03Z"
@@ -371,10 +376,6 @@
           {
             "title": "Co přinese setkání amerického a čínského prezidenta?",
             "publishedAt": "2026-05-13T08:10:13Z"
-          },
-          {
-            "title": "Nicolas Eich novým generálním ředitelem Bezvavlasy",
-            "publishedAt": "2026-05-13T06:00:56Z"
           }
         ]
       }

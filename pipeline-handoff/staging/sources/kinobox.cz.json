@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-14T09:54:56.758230Z",
+  "ingestedAt": "2026-05-14T11:20:59.273937Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kinobox Daily: Tohle není balet, to je válka. Neuvěřitelný příběh zapomenuté ikony Belle Époque",
+      "url": "https://www.kinobox.cz/clanky/daily/53753-kinobox-daily-tohle-neni-balet-to-je-valka-neuveritelny-pribeh-zapomenute-ikony-belle-epoque",
+      "dt": "2026-05-14T10:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "balet",
+        "belle",
+        "daily",
+        "ikony",
+        "kinobox",
+        "neuvěřitelný",
+        "příběh",
+        "tohle",
+        "válka",
+        "zapomenuté",
+        "époque"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -515,32 +543,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Kriminální hit Odznak Vysočina končí. Nova ho nahradí oblíbeným seriálem",
-      "url": "https://www.kinobox.cz/clanky/serialy/53655-kriminalni-hit-odznak-vysocina-konci-nova-ho-nahradi-oblibenym-hitem",
-      "dt": "2026-05-11T15:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "hit",
-        "končí",
-        "kriminální",
-        "nahradí",
-        "nova",
-        "oblíbeným",
-        "odznak",
-        "seriálem",
-        "vysočina"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -551,7 +553,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 27590,
+      "bytes": 27795,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -588,7 +590,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-14T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T10:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -603,6 +605,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinobox Daily: Tohle není balet, to je válka. Neuvěřitelný příběh zapomenuté ikony Belle Époque",
+            "publishedAt": "2026-05-14T10:00:00Z"
+          },
           {
             "title": "Vin Diesel to s Rychle a zběsile nevzdává. Kromě epického finále dorazí i čtyři seriály",
             "publishedAt": "2026-05-14T09:00:00Z"
@@ -630,10 +636,6 @@
           {
             "title": "Kinobox Daily: Amerika v plamenech skrze hledáček fotoaparátu. Kdo přežije Občanskou válku?",
             "publishedAt": "2026-05-13T10:00:00Z"
-          },
-          {
-            "title": "Nový Batman se konečně blíží. První záběry lákají na atmosférický zážitek",
-            "publishedAt": "2026-05-13T09:00:00Z"
           }
         ]
       }
