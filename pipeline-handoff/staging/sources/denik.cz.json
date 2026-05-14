@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-14T03:50:22.875978Z",
+  "ingestedAt": "2026-05-14T04:30:14.347644Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Sovětská invaze do Polska neměla za cíl bránit Československo, jde o manipulaci",
+      "url": "https://www.denik.cz/z_domova/sovetska-invaze-do-polska-zari-1939.html",
+      "dt": "2026-05-14T04:05:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bránit",
+        "cíl",
+        "invaze",
+        "jde",
+        "manipulaci",
+        "neměla",
+        "polska",
+        "sovětská",
+        "československo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -113,21 +139,20 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Češi mění pohled na drogy: Vznikl žebříček nejnebezpečnějších návykových látek",
+      "title": "Češi mění pohled na drogy: Co považují za nejnebezpečnější návykové látky",
       "url": "https://www.denik.cz/cesi-v-cislech/cesi-meni-pohled-na-drogy-marihuana-uz-neni-tabu-alkohol-lide-dal-podcenuji.html",
       "dt": "2026-05-14T02:00:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
         "drogy",
-        "látek",
+        "látky",
         "mění",
-        "nejnebezpečnějších",
-        "návykových",
+        "nejnebezpečnější",
+        "návykové",
         "pohled",
-        "vznikl",
-        "češi",
-        "žebříček"
+        "považují",
+        "češi"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -626,32 +651,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Prodejce langošů ze Slovenska dostal obří pokutu, na účtence chyběla diakritika",
-      "url": "https://www.denik.cz/staty-eu/slovensko-pokuta-prodejce-langosu.html",
-      "dt": "2026-05-13T11:34:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "chyběla",
-        "diakritika",
-        "dostal",
-        "langošů",
-        "obří",
-        "pokutu",
-        "prodejce",
-        "slovenska",
-        "účtence"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +661,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29799,
+      "bytes": 29952,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,7 +698,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-14T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T04:05:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -714,6 +713,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sovětská invaze do Polska neměla za cíl bránit Československo, jde o manipulaci",
+            "publishedAt": "2026-05-14T04:05:00Z"
+          },
           {
             "title": "Přijímačky 2026: Žáci už teď zjistí, kolik mají bodů. O přijetí se dozví v pátek",
             "publishedAt": "2026-05-14T03:30:00Z"
@@ -731,7 +734,7 @@
             "publishedAt": "2026-05-14T02:25:00Z"
           },
           {
-            "title": "Češi mění pohled na drogy: Vznikl žebříček nejnebezpečnějších návykových látek",
+            "title": "Češi mění pohled na drogy: Co považují za nejnebezpečnější návykové látky",
             "publishedAt": "2026-05-14T02:00:00Z"
           },
           {
@@ -741,10 +744,6 @@
           {
             "title": "Maďarská vláda začíná úřadovat. Premiér Magyar slíbil dvě zasedání týdně",
             "publishedAt": "2026-05-13T18:01:00Z"
-          },
-          {
-            "title": "Dvanáct let zneužívání. Německý dětský lékař čelí obžalově ze sexuálních útoků",
-            "publishedAt": "2026-05-13T17:23:00Z"
           }
         ]
       }

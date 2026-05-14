@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-14T03:50:22.875978Z",
+  "ingestedAt": "2026-05-14T04:30:14.347644Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Kolik Rusko vydělává na zablokovaném Hormuzu? Tučné sumy tečou za ropu a plyn",
+      "url": "https://ekonomickydenik.cz/kolik-rusko-vydelava-zablokovany-hormuz/",
+      "dt": "2026-05-14T04:15:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "hormuzu",
+        "kolik",
+        "plyn",
+        "ropu",
+        "rusko",
+        "sumy",
+        "tečou",
+        "tučné",
+        "vydělává",
+        "zablokovaném"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -758,31 +785,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nejvyšší nezaměstnanost za 10 let. Míst přibývá málo a jen někde",
-      "url": "https://ekonomickydenik.cz/nejvyssi-nezamestnanost-10-let/",
-      "dt": "2026-05-12T11:52:02Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "jen",
-        "let",
-        "málo",
-        "míst",
-        "nejvyšší",
-        "nezaměstnanost",
-        "někde",
-        "přibývá"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72402,
+      "bytes": 72218,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T18:05:27Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T04:15:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -848,6 +850,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kolik Rusko vydělává na zablokovaném Hormuzu? Tučné sumy tečou za ropu a plyn",
+            "publishedAt": "2026-05-14T04:15:00Z"
+          },
           {
             "title": "Česko v emisích zelenější než většina Evropy. Klesaly jen ve třech zemích",
             "publishedAt": "2026-05-13T18:05:27Z"
@@ -875,10 +881,6 @@
           {
             "title": "Cirkus Václava Klause. Zdechovský zesměšňuje tým poradců ministra Macinky",
             "publishedAt": "2026-05-13T13:09:00Z"
-          },
-          {
-            "title": "Dreamlinerem přímo z Prahy: Do USA startuje nová dálková linka, létat se bude denně",
-            "publishedAt": "2026-05-13T12:30:27Z"
           }
         ]
       }

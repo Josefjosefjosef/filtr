@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-14T03:50:22.875978Z",
+  "ingestedAt": "2026-05-14T04:30:14.347644Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nové léky na hubnutí významně snižují riziko infarktu či mrtvice",
+      "url": "https://profitonline.cz/nove-leky-na-hubnuti-vyznamne-snizuji-riziko-infarktu-ci-mrtvice/",
+      "dt": "2026-05-14T04:00:14Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "hubnutí",
+        "infarktu",
+        "léky",
+        "mrtvice",
+        "nové",
+        "riziko",
+        "snižují",
+        "významně"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -254,29 +279,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zdeněk Rapant nastoupil do Raben Logistics Czech",
-      "url": "https://profitonline.cz/zdenek-rapant-nastoupil-do-raben-logistics-czech/",
-      "dt": "2026-05-12T07:00:06Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "czech",
-        "logistics",
-        "nastoupil",
-        "raben",
-        "rapant",
-        "zdeněk"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -287,7 +289,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18733,
+      "bytes": 18747,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -324,11 +326,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-13T21:15:47Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T04:00:14Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 10,
-          "zdravi": 1,
+          "zdravi": 2,
+          "finance": 9,
           "sport": 1
         },
         "drop_counts": {
@@ -341,6 +343,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nové léky na hubnutí významně snižují riziko infarktu či mrtvice",
+            "publishedAt": "2026-05-14T04:00:14Z"
+          },
           {
             "title": "Inflace v Česku pokračuje v růstu",
             "publishedAt": "2026-05-13T21:15:47Z"
@@ -368,10 +374,6 @@
           {
             "title": "Hypotéky zůstávají nad pěti procenty, splátky výrazně rostou",
             "publishedAt": "2026-05-12T20:30:42Z"
-          },
-          {
-            "title": "USA se potýkají se silnými inflačními tlaky",
-            "publishedAt": "2026-05-12T19:30:07Z"
           }
         ]
       }

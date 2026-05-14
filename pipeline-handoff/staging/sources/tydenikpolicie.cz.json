@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-14T03:50:22.875978Z",
+  "ingestedAt": "2026-05-14T04:30:14.347644Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Chtěla si přivydělat na mateřské. Přišla o 130 tisíc korun",
+      "url": "https://tydenikpolicie.cz/chtela-si-privydelat-na-materske-prisla-o-130-tisic-korun/",
+      "dt": "2026-05-14T04:02:31Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "130",
+        "chtěla",
+        "korun",
+        "mateřské",
+        "přivydělat",
+        "přišla",
+        "tisíc"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -233,31 +257,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Plzeňští strážníci si převzali nové služební vozidlo Škoda Kodiaq",
-      "url": "https://tydenikpolicie.cz/plzensti-straznici-si-prevzali-nove-sluzebni-vozidlo-skoda-kodiaq/",
-      "dt": "2026-05-13T11:28:00Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "kodiaq",
-        "nové",
-        "plzeňští",
-        "převzali",
-        "služební",
-        "strážníci",
-        "vozidlo",
-        "škoda"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -268,7 +267,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15782,
+      "bytes": 15710,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -305,7 +304,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-14T02:02:30Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T04:02:31Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -320,6 +319,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chtěla si přivydělat na mateřské. Přišla o 130 tisíc korun",
+            "publishedAt": "2026-05-14T04:02:31Z"
+          },
           {
             "title": "Stavař z Litoměřicka měl klientům způsobit milionové škody. Propadl hazardu",
             "publishedAt": "2026-05-14T02:02:30Z"
@@ -347,10 +350,6 @@
           {
             "title": "V rámci zbraňové amnestie donesl muž na policejní služebnu v Jihlavě více než kilogram semtexu",
             "publishedAt": "2026-05-13T12:02:48Z"
-          },
-          {
-            "title": "Na pražském Žižkově někdo naházel na hromadu sdílená elektrokola a zapálil je",
-            "publishedAt": "2026-05-13T11:51:03Z"
           }
         ]
       }
