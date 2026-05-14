@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-14T11:20:59.273937Z",
+  "ingestedAt": "2026-05-14T12:00:06.258371Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Schillerová představila nové Dluhopisy Republiky. Protiinflační jsou s háčkem",
+      "url": "https://www.penize.cz/dluhopisy/489665-schillerova-predstavila-dluhopisy-republiky-vrceji-se-i-protiinflacni-ale-s-hackem",
+      "dt": "2026-05-14T13:15:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "dluhopisy",
+        "háčkem",
+        "nové",
+        "protiinflační",
+        "představila",
+        "republiky",
+        "schillerová"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -486,31 +510,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Po několikadenní odstávce přichází další. Jenda bude nedostupný i část dneška",
-      "url": "https://www.penize.cz/socialni-davky/489471-po-nekolikadenni-odstavce-prichazi-dalsi-jenda-bude-nedostupny-i-cast-dneska",
-      "dt": "2026-05-11T10:20:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "další",
-        "dneška",
-        "jenda",
-        "nedostupný",
-        "několikadenní",
-        "odstávce",
-        "přichází",
-        "část"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -521,7 +520,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18605,
+      "bytes": 18714,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -558,7 +557,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-14T10:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T13:15:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 15,
@@ -575,6 +574,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Schillerová představila nové Dluhopisy Republiky. Protiinflační jsou s háčkem",
+            "publishedAt": "2026-05-14T13:15:00Z"
+          },
           {
             "title": "mBank přidala do aplikace nouzové tlačítko, má chránit peníze. Kde ho najdete?",
             "publishedAt": "2026-05-14T10:33:00Z"
@@ -602,10 +605,6 @@
           {
             "title": "Nafta dál zlevňuje. Maximální ceny benzinu a nafty na čtvrtek 14. května",
             "publishedAt": "2026-05-13T13:57:00Z"
-          },
-          {
-            "title": "Nejlepší spořicí účet, víc salonků, konec kiosků. Co dalšího chystá mBank?",
-            "publishedAt": "2026-05-13T05:10:00Z"
           }
         ]
       }

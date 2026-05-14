@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-14T11:20:59.273937Z",
+  "ingestedAt": "2026-05-14T12:00:06.258371Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "EK doporučí unijním zemím zakázat léčbu homosexuality",
+      "url": "https://www.zdravezpravy.cz/2026/05/14/ek-doporuci-unijnim-zemim-zakazat-lecbu-homosexuality/",
+      "dt": "2026-05-14T11:00:50Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "doporučí",
+        "homosexuality",
+        "léčbu",
+        "unijním",
+        "zakázat",
+        "zemím"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -464,30 +487,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Na práva dětí a dospělých na MPSV dohlédne zpěvačka Nosková",
-      "url": "https://www.zdravezpravy.cz/2026/05/05/na-prava-deti-a-dospelych-na-mpsv-dohledne-muzikalova-zpevacka-noskova/",
-      "dt": "2026-05-05T12:27:51Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "dohlédne",
-        "dospělých",
-        "dětí",
-        "mpsv",
-        "nosková",
-        "práva",
-        "zpěvačka"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -498,7 +497,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 206395,
+      "bytes": 205947,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -535,7 +534,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-14T08:54:30Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T11:00:50Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -551,6 +550,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "EK doporučí unijním zemím zakázat léčbu homosexuality",
+            "publishedAt": "2026-05-14T11:00:50Z"
+          },
           {
             "title": "Do zdravotnictví má jít příští rok už přes 600 mld. Kč. Chystají se změny",
             "publishedAt": "2026-05-14T08:54:30Z"
@@ -578,10 +581,6 @@
           {
             "title": "Hovory s AI chaty o zdraví mají být rozhodně anonymní",
             "publishedAt": "2026-05-12T08:34:14Z"
-          },
-          {
-            "title": "Ministerstvo zdravotnictví se otevře veřejnosti. A na místě bude i ministr",
-            "publishedAt": "2026-05-11T13:21:39Z"
           }
         ]
       }

@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-14T11:20:59.273937Z",
+  "ingestedAt": "2026-05-14T12:00:06.258371Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ministerstvo financí ode dneška nabízí lidem možnost nakoupit státní dluhopisy",
+      "url": "https://www.denik.cz/ekonomika/statni-dluhopisy-ministerstvo-financi.html",
+      "dt": "2026-05-14T11:34:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dluhopisy",
+        "dneška",
+        "financí",
+        "lidem",
+        "ministerstvo",
+        "možnost",
+        "nabízí",
+        "nakoupit",
+        "ode",
+        "státní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Provokace Kremlu? Polská stíhačka zachytila nad Baltem ruský průzkumný letoun",
+      "url": "https://www.denik.cz/staty-eu/rusky-letoun-nad-baltem-stihacka-polsko-varuje-pred-agresi-kremlu.html",
+      "dt": "2026-05-14T11:04:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "baltem",
+        "kremlu",
+        "letoun",
+        "polská",
+        "provokace",
+        "průzkumný",
+        "ruský",
+        "stíhačka",
+        "zachytila"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -602,60 +655,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Maďarská vláda začíná úřadovat. Premiér Magyar slíbil dvě zasedání týdně",
-      "url": "https://www.denik.cz/staty-eu/magyar-vlada-madarsko-zasedani-dvakrat-tynde.html",
-      "dt": "2026-05-13T18:01:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dvě",
-        "magyar",
-        "maďarská",
-        "premiér",
-        "slíbil",
-        "týdně",
-        "vláda",
-        "zasedání",
-        "začíná",
-        "úřadovat"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Dvanáct let zneužívání. Německý dětský lékař čelí obžalově ze sexuálních útoků",
-      "url": "https://www.denik.cz/staty-eu/nemecko-lekar-sexualni-zlociny-obzaloba.html",
-      "dt": "2026-05-13T17:23:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dvanáct",
-        "dětský",
-        "let",
-        "lékař",
-        "německý",
-        "obžalově",
-        "sexuálních",
-        "zneužívání",
-        "útoků",
-        "čelí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -666,7 +665,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30108,
+      "bytes": 30065,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -703,12 +702,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-14T10:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T11:34:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "sport": 1,
-          "finance": 1
+          "finance": 2,
+          "zpravy": 22,
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -720,6 +719,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ministerstvo financí ode dneška nabízí lidem možnost nakoupit státní dluhopisy",
+            "publishedAt": "2026-05-14T11:34:00Z"
+          },
+          {
+            "title": "Provokace Kremlu? Polská stíhačka zachytila nad Baltem ruský průzkumný letoun",
+            "publishedAt": "2026-05-14T11:04:00Z"
+          },
           {
             "title": "Dodávku na silnici na Šumpersku zachvátily plameny. Řidič z ní stihl utéct",
             "publishedAt": "2026-05-14T10:40:00Z"
@@ -743,14 +750,6 @@
           {
             "title": "Záhada facky Macronovi od manželky odhalena. Důvodem měla být pikantní SMS",
             "publishedAt": "2026-05-14T09:01:00Z"
-          },
-          {
-            "title": "Zuzana s vážnou nemocí o Extrémních proměnách: Největším limitem byla moje hlava",
-            "publishedAt": "2026-05-14T08:48:00Z"
-          },
-          {
-            "title": "Chytré kamery na fotbale? Klíčové, řekl po Slavii Šťastný. Plán ale může narazit",
-            "publishedAt": "2026-05-14T08:00:00Z"
           }
         ]
       }

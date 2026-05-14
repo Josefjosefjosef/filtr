@@ -1,25 +1,49 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-14T11:20:59.273937Z",
+  "ingestedAt": "2026-05-14T12:00:06.258371Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Politická provokace, hodnotí landsmanšaft Šťastný. Opozice ve Sněmovně chybí",
+      "url": "https://www.idnes.cz/zpravy/domaci/landsmansaft-snemovna-mimoradna-schuze.A260514_111230_domaci_mul",
+      "dt": "2026-05-14T11:51:56Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "chybí",
+        "hodnotí",
+        "landsmanšaft",
+        "opozice",
+        "politická",
+        "provokace",
+        "sněmovně",
+        "šťastný"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Ministerstvo představí nové Dluhopisy republiky. Sledujte přímý přenos",
+      "title": "Schillerová představila nové Dluhopisy republiky. Budou ve třech verzích",
       "url": "https://www.idnes.cz/ekonomika/domaci/dluhopisy-republiky.A260514_111251_ekonomika_base",
-      "dt": "2026-05-14T11:04:56Z",
+      "dt": "2026-05-14T11:39:03Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
         "dluhopisy",
-        "ministerstvo",
         "nové",
-        "představí",
-        "přenos",
-        "přímý",
+        "představila",
         "republiky",
-        "sledujte"
+        "schillerová",
+        "třech",
+        "verzích"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -333,29 +357,6 @@
         "večer",
         "vystoupí",
         "žižka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Sněmovna se vrátí k setkání landsmanšaftu, opozice se nezúčastní",
-      "url": "https://www.idnes.cz/zpravy/domaci/landsmansaft-snemovna-mimoradna-schuze.A260514_111230_domaci_mul",
-      "dt": "2026-05-14T09:53:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "landsmanšaftu",
-        "nezúčastní",
-        "opozice",
-        "setkání",
-        "sněmovna",
-        "vrátí"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -783,18 +784,19 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Ministerstvo financí představuje nové Dluhopisy republiky",
+      "title": "Schillerová představila nové Dluhopisy republiky. Budou ve třech verzích",
       "url": "https://www.idnes.cz/ekonomika/domaci/dluhopisy-republiky.A260514_111251_ekonomika_base",
-      "dt": "2026-05-14T11:04:56Z",
+      "dt": "2026-05-14T11:39:03Z",
       "media_raw": "iDNES / Ekonomika",
       "media_norm": "iDNES / Ekonomika",
       "tokens": [
         "dluhopisy",
-        "financí",
-        "ministerstvo",
         "nové",
-        "představuje",
-        "republiky"
+        "představila",
+        "republiky",
+        "schillerová",
+        "třech",
+        "verzích"
       ],
       "feedCategory": "finance",
       "feedType": "rubric",
@@ -1562,7 +1564,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 46934,
+      "bytes": 47070,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1599,12 +1601,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T11:04:56Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T11:51:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "zpravy": 23,
           "finance": 3,
-          "other": 4,
-          "zpravy": 23
+          "other": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1617,8 +1619,12 @@
         },
         "sample_titles": [
           {
-            "title": "Ministerstvo představí nové Dluhopisy republiky. Sledujte přímý přenos",
-            "publishedAt": "2026-05-14T11:04:56Z"
+            "title": "Politická provokace, hodnotí landsmanšaft Šťastný. Opozice ve Sněmovně chybí",
+            "publishedAt": "2026-05-14T11:51:56Z"
+          },
+          {
+            "title": "Schillerová představila nové Dluhopisy republiky. Budou ve třech verzích",
+            "publishedAt": "2026-05-14T11:39:03Z"
           },
           {
             "title": "RECENZE: Fanouškovské uspokojení. Dokument o Iron Maiden se vyhýbá temným chvílím",
@@ -1643,10 +1649,6 @@
           {
             "title": "Kamion překážel autobusu v křižovatce, řidiči se porvali přes stažené okénko",
             "publishedAt": "2026-05-14T10:37:00Z"
-          },
-          {
-            "title": "Drama při pátrání po lupiči. Na policejního psa v akci zaútočilo divoké prase",
-            "publishedAt": "2026-05-14T10:28:00Z"
           }
         ]
       }
@@ -1658,7 +1660,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=ekonomika",
-      "bytes": 45400,
+      "bytes": 45524,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1695,7 +1697,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T11:04:56Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T11:39:03Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 29,
@@ -1712,8 +1714,8 @@
         },
         "sample_titles": [
           {
-            "title": "Ministerstvo financí představuje nové Dluhopisy republiky",
-            "publishedAt": "2026-05-14T11:04:56Z"
+            "title": "Schillerová představila nové Dluhopisy republiky. Budou ve třech verzích",
+            "publishedAt": "2026-05-14T11:39:03Z"
           },
           {
             "title": "Trh kryptoměn je bezpečnější než dřív a láká drobné investory",
