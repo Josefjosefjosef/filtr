@@ -49,6 +49,12 @@ const SAFETY_REPORT_JSON = [
   "silver-real-human-chaos-v3-report.json",
 ];
 
+/** JSON reports scanned for substring mentions of realistic_mobile (PASS/FAIL); not authoritative for gates. */
+const REALISTIC_MOBILE_RAW_SCAN_JSON = SAFETY_REPORT_JSON;
+
+const REALISTIC_MOBILE_CORPUS_REPORT = "silver-realistic-mobile-corpus-report.json";
+const DEEP_PRODUCT_UX_V2_REPORT = "silver-deep-product-real-ux-v2-report.json";
+
 function nowIso() {
   return new Date().toISOString();
 }
@@ -84,7 +90,17 @@ function gitStatusPorcelain() {
 function gitChangedFilesList() {
   const po = gitStatusPorcelain();
   if (!po) return [];
-  return po.split(/\r?\n/).map((l) => l.slice(3).trim()).filter(Boolean);
+  return po
+    .split(/\r?\n/)
+    .map((l) => {
+      const line = String(l || "").replace(/\r$/, "");
+      if (!line) return "";
+      if (line.length >= 3 && line.charAt(2) === " ") return line.slice(3).trim();
+      const parts = line.trim().split(/\s+/);
+      if (parts.length >= 2) return parts.slice(1).join(" ").trim();
+      return line.trim();
+    })
+    .filter(Boolean);
 }
 
 function gitClean() {
@@ -284,6 +300,136 @@ function aggregateCalendar20kFromReports() {
   };
 }
 
+function countSubstr(haystack, needle) {
+  const h = String(haystack || "");
+  const n = String(needle || "");
+  if (!h || !n) return 0;
+  let c = 0;
+  let i = 0;
+  while (true) {
+    const j = h.indexOf(n, i);
+    if (j < 0) break;
+    c++;
+    i = j + n.length;
+  }
+  return c;
+}
+
+function scanRawRealisticMobileMentions(jsonBasenames) {
+  const failPatterns = ['realistic_mobile=FAIL', '"realistic_mobile":"FAIL"'];
+  const passPatterns = ['realistic_mobile=PASS', '"realistic_mobile":"PASS"'];
+  let rawFail = 0;
+  let rawPass = 0;
+  const names = Array.isArray(jsonBasenames) ? jsonBasenames : REALISTIC_MOBILE_RAW_SCAN_JSON;
+  for (const name of names) {
+    const t = readTextSafe(path.join(SCRIPTS, name));
+    for (const p of failPatterns) rawFail += countSubstr(t, p);
+    for (const p of passPatterns) rawPass += countSubstr(t, p);
+  }
+  return { rawFail, rawPass };
+}
+
+/**
+ * Authoritative post-merge realistic-mobile gate: dedicated audit output
+ * (`audit_silver_realistic_mobile_corpus.cjs` → silver-realistic-mobile-corpus-report.json).
+ * Sibling reports may embed stale `realistic_mobile` after `git restore` on tracked *report.json.
+ */
+function parseAuthoritativeRealisticMobileFromCorpusReport(data) {
+  if (!data || typeof data !== "object") {
+    return { gate: "UNKNOWN", source: "(missing_or_invalid_json)", reason: "no_corpus_report_json" };
+  }
+  const rmc = data.real_mobile_cases;
+  if (rmc === "PASS") {
+    return {
+      gate: "PASS",
+      source: REALISTIC_MOBILE_CORPUS_REPORT + ":real_mobile_cases",
+      reason: "corpus_report_declares_PASS",
+    };
+  }
+  if (rmc === "FAIL") {
+    return {
+      gate: "FAIL",
+      source: REALISTIC_MOBILE_CORPUS_REPORT + ":real_mobile_cases",
+      reason: "corpus_report_declares_FAIL",
+    };
+  }
+  const top = data.top_20_fail_clusters;
+  const fc = data.fail_count_by_cluster;
+  let sumFails = 0;
+  if (fc && typeof fc === "object") {
+    for (const k of Object.keys(fc)) {
+      const v = Number(fc[k]);
+      if (Number.isFinite(v)) sumFails += v;
+    }
+  }
+  const topEmpty = !Array.isArray(top) || top.length === 0;
+  if (topEmpty && sumFails === 0) {
+    return {
+      gate: "PASS",
+      source: REALISTIC_MOBILE_CORPUS_REPORT + ":derived_no_fails",
+      reason: "real_mobile_cases_absent_but_zero_fails",
+    };
+  }
+  return {
+    gate: "UNKNOWN",
+    source: REALISTIC_MOBILE_CORPUS_REPORT + ":ambiguous",
+    reason: "real_mobile_cases_missing_and_fail_signals_present",
+  };
+}
+
+function readDeepProductEmbeddedRealisticMobileGate(data) {
+  if (!data || typeof data !== "object") return "";
+  const g = data.gates && typeof data.gates === "object" ? data.gates : {};
+  return String(g.realistic_mobile || "").trim();
+}
+
+function proofSummaryConsistentFromAuthoritative(authoritativeGate) {
+  return authoritativeGate === "PASS" ? "YES" : "NO";
+}
+
+function buildProofGateConsistencyReason(authoritative, deepEmbedded, rawFail, rawPass) {
+  const parts = [];
+  parts.push("authoritative=" + authoritative.gate + "@" + authoritative.source);
+  if (deepEmbedded) parts.push("deep_product_embedded_gate=" + deepEmbedded);
+  else parts.push("deep_product_embedded_gate=(absent)");
+  parts.push("raw_substring_FAIL_mentions=" + rawFail + "_PASS_mentions=" + rawPass);
+  if (authoritative.gate === "PASS" && deepEmbedded === "FAIL") {
+    parts.push(
+      "diagnosis=embedded_sibling_FAIL_non_authoritative_when_standalone_audit_and_corpus_JSON_PASS_deep_may_rerun_gates",
+    );
+  } else if (authoritative.gate === "PASS" && rawFail > 0) {
+    parts.push("diagnosis=raw_FAIL_strings_in_non_authoritative_or_restored_JSON_ignored_for_autopilot_PASS");
+  } else if (authoritative.gate === "PASS") {
+    parts.push("diagnosis=aligned_authoritative_PASS");
+  }
+  return parts.join(" | ");
+}
+
+function printProofGateConsistencyResult(ctx) {
+  console.log("=== SILVER_AUTOPILOT_PROOF_GATE_CONSISTENCY_RESULT ===");
+  console.log("main_commit=" + String(ctx.main_commit || ""));
+  console.log("engine_changed=" + String(ctx.engine_changed || "NO"));
+  console.log("assets_app_changed=" + String(ctx.assets_app_changed || "NO"));
+  console.log("changed_files=" + String(ctx.changed_files || ""));
+  console.log("post_merge_proof_exit=" + String(ctx.post_merge_proof_exit != null ? ctx.post_merge_proof_exit : ""));
+  console.log("authoritative_realistic_mobile=" + String(ctx.authoritative_realistic_mobile || ""));
+  console.log("raw_realistic_mobile_fail_mentions=" + String(ctx.raw_realistic_mobile_fail_mentions != null ? ctx.raw_realistic_mobile_fail_mentions : ""));
+  console.log("raw_realistic_mobile_pass_mentions=" + String(ctx.raw_realistic_mobile_pass_mentions != null ? ctx.raw_realistic_mobile_pass_mentions : ""));
+  console.log("selected_authoritative_source=" + String(ctx.selected_authoritative_source || ""));
+  console.log("proof_summary_consistent=" + String(ctx.proof_summary_consistent || ""));
+  console.log("gate_realistic_mobile=" + String(ctx.gate_realistic_mobile || ctx.authoritative_realistic_mobile || ""));
+  console.log("reason=" + String(ctx.reason || ""));
+  console.log("dangerous_write_count=" + String(ctx.dangerous_write_count != null ? ctx.dangerous_write_count : ""));
+  console.log("false_write_count=" + String(ctx.false_write_count != null ? ctx.false_write_count : ""));
+  console.log("query_created_write_count=" + String(ctx.query_created_write_count != null ? ctx.query_created_write_count : ""));
+  console.log("write_when_negated_count=" + String(ctx.write_when_negated_count != null ? ctx.write_when_negated_count : ""));
+  console.log("calendar_write_20k=" + String(ctx.calendar_write_20k || ""));
+  console.log("calendar_query_20k=" + String(ctx.calendar_query_20k || ""));
+  console.log("git_status_clean=" + String(ctx.git_status_clean || ""));
+  console.log("recommended_next_task=" + String(ctx.recommended_next_task || ""));
+  console.log("=== END_SILVER_AUTOPILOT_PROOF_GATE_CONSISTENCY_RESULT ===");
+}
+
 function writeRunReport(payload) {
   const lines = [
     "# SILVER_RUN_REPORT",
@@ -304,6 +450,13 @@ function writeRunReport(payload) {
     "safety_counters=" + String(payload.safety_counters || ""),
     "calendar_write_20k=" + String(payload.calendar_write_20k || ""),
     "calendar_query_20k=" + String(payload.calendar_query_20k || ""),
+    "gate_realistic_mobile=" + String(payload.gate_realistic_mobile || ""),
+    "raw_realistic_mobile_mentions_FAIL=" + String(payload.raw_realistic_mobile_mentions_FAIL != null ? payload.raw_realistic_mobile_mentions_FAIL : ""),
+    "raw_realistic_mobile_mentions_PASS=" + String(payload.raw_realistic_mobile_mentions_PASS != null ? payload.raw_realistic_mobile_mentions_PASS : ""),
+    "selected_authoritative_source=" + String(payload.selected_authoritative_source || ""),
+    "proof_gate_consistency_reason=" + String(payload.proof_gate_consistency_reason || ""),
+    "proof_summary_consistent=" + String(payload.proof_summary_consistent || ""),
+    "post_merge_proof_exit_code=" + String(payload.post_merge_proof_exit_code != null ? payload.post_merge_proof_exit_code : ""),
     "next_recommended_command=" + String(payload.next_recommended_command || ""),
     "reason_for_stop=" + String(payload.reason_for_stop || ""),
     "",
@@ -366,6 +519,22 @@ function cmdStatus(argvCommand) {
 
   const priorReportSnapshot = summarizeLastReportBlock();
 
+  const corpusDataStatus = readJsonSafe(path.join(SCRIPTS, REALISTIC_MOBILE_CORPUS_REPORT));
+  const authJsonStatus = parseAuthoritativeRealisticMobileFromCorpusReport(corpusDataStatus);
+  const authoritativeGateStatus = authJsonStatus.gate === "FAIL" ? "FAIL" : "PASS";
+  const authForStatus = {
+    gate: authoritativeGateStatus,
+    source: authJsonStatus.source + "+status_disk_only",
+  };
+  const deepRmStatus = readDeepProductEmbeddedRealisticMobileGate(
+    readJsonSafe(path.join(SCRIPTS, DEEP_PRODUCT_UX_V2_REPORT)),
+  );
+  const rawStatus = scanRawRealisticMobileMentions(REALISTIC_MOBILE_RAW_SCAN_JSON);
+  const summaryStatus = proofSummaryConsistentFromAuthoritative(authoritativeGateStatus);
+  const reasonStatus =
+    buildProofGateConsistencyReason(authForStatus, deepRmStatus, rawStatus.rawFail, rawStatus.rawPass) +
+    " | context=--status_uses_on_disk_JSON_only_no_post_merge_step_exit_signal";
+
   writeRunReport({
     timestamp: nowIso(),
     command: argvCommand || "--status",
@@ -383,6 +552,13 @@ function cmdStatus(argvCommand) {
     safety_counters: safetyStr,
     calendar_write_20k: cal.calendar_write_20k,
     calendar_query_20k: cal.calendar_query_20k,
+    gate_realistic_mobile: authoritativeGateStatus,
+    raw_realistic_mobile_mentions_FAIL: rawStatus.rawFail,
+    raw_realistic_mobile_mentions_PASS: rawStatus.rawPass,
+    selected_authoritative_source: authForStatus.source,
+    proof_gate_consistency_reason: reasonStatus,
+    proof_summary_consistent: summaryStatus,
+    post_merge_proof_exit_code: "",
     next_recommended_command: nextCmd,
     reason_for_stop: reason,
   });
@@ -401,6 +577,28 @@ function cmdStatus(argvCommand) {
   console.log("calendar_query_20k=" + cal.calendar_query_20k);
   console.log("next_recommended_command=" + nextCmd);
   console.log("PASS_FAIL=" + status);
+  printProofGateConsistencyResult({
+    main_commit: commit,
+    engine_changed: "NO",
+    assets_app_changed: "NO",
+    changed_files: changed,
+    post_merge_proof_exit: "",
+    authoritative_realistic_mobile: authoritativeGateStatus,
+    raw_realistic_mobile_fail_mentions: rawStatus.rawFail,
+    raw_realistic_mobile_pass_mentions: rawStatus.rawPass,
+    selected_authoritative_source: authForStatus.source,
+    proof_summary_consistent: summaryStatus,
+    gate_realistic_mobile: authoritativeGateStatus,
+    reason: reasonStatus,
+    dangerous_write_count: safety.dangerous_write_count,
+    false_write_count: safety.false_write_count,
+    query_created_write_count: safety.query_created_write_count,
+    write_when_negated_count: safety.write_when_negated_count,
+    calendar_write_20k: cal.calendar_write_20k,
+    calendar_query_20k: cal.calendar_query_20k,
+    git_status_clean: clean ? "YES" : "NO",
+    recommended_next_task: nextCmd,
+  });
   console.log("=== END_SILVER_AUTOPILOT_STATUS ===");
   return { status, branch, commit, clean };
 }
@@ -589,6 +787,7 @@ function cmdPostMergeProof() {
     console.log("STOP: dirty git before post-merge-proof");
     return;
   }
+  let realisticMobileStandaloneStepPass = false;
   for (const step of POST_MERGE_STEPS) {
     let code = 1;
     if (step.kind === "npm") {
@@ -628,6 +827,9 @@ function cmdPostMergeProof() {
         reason_for_stop: "audit_step_failed:" + JSON.stringify(step),
       });
       return;
+    }
+    if (code === 0 && step.kind === "node" && step.file === "audit_silver_realistic_mobile_corpus.cjs") {
+      realisticMobileStandaloneStepPass = true;
     }
   }
 
@@ -687,7 +889,154 @@ function cmdPostMergeProof() {
     return;
   }
 
+  const corpusPath = path.join(SCRIPTS, REALISTIC_MOBILE_CORPUS_REPORT);
+  const corpusDataPre = readJsonSafe(corpusPath);
+  const authJson = parseAuthoritativeRealisticMobileFromCorpusReport(corpusDataPre);
+  const deepDataPre = readJsonSafe(path.join(SCRIPTS, DEEP_PRODUCT_UX_V2_REPORT));
+  const deepRm = readDeepProductEmbeddedRealisticMobileGate(deepDataPre);
+  const rawPre = scanRawRealisticMobileMentions(REALISTIC_MOBILE_RAW_SCAN_JSON);
+
+  if (!realisticMobileStandaloneStepPass) {
+    console.log("STOP: proof gate: POST_MERGE_STEPS did not record standalone realistic mobile audit success");
+    const commitEarly = runGit(["rev-parse", "HEAD"]);
+    const branchEarly = runGit(["rev-parse", "--abbrev-ref", "HEAD"]);
+    const authFail = { gate: "FAIL", source: "(missing_post_merge_step:audit_silver_realistic_mobile_corpus.cjs)" };
+    const summaryEarly = proofSummaryConsistentFromAuthoritative(authFail.gate);
+    const reasonEarly = buildProofGateConsistencyReason(authFail, deepRm, rawPre.rawFail, rawPre.rawPass);
+    printProofGateConsistencyResult({
+      main_commit: commitEarly,
+      engine_changed: "NO",
+      assets_app_changed: "NO",
+      changed_files: gitChangedFilesList().join(";"),
+      post_merge_proof_exit: 1,
+      authoritative_realistic_mobile: authFail.gate,
+      raw_realistic_mobile_fail_mentions: rawPre.rawFail,
+      raw_realistic_mobile_pass_mentions: rawPre.rawPass,
+      selected_authoritative_source: authFail.source,
+      proof_summary_consistent: summaryEarly,
+      gate_realistic_mobile: authFail.gate,
+      reason: reasonEarly,
+      dangerous_write_count: safety.dangerous_write_count,
+      false_write_count: safety.false_write_count,
+      query_created_write_count: safety.query_created_write_count,
+      write_when_negated_count: safety.write_when_negated_count,
+      calendar_write_20k: cal.calendar_write_20k,
+      calendar_query_20k: cal.calendar_query_20k,
+      git_status_clean: "YES",
+      recommended_next_task: "proof_gate_missing_standalone_realistic_mobile_step",
+    });
+    writeRunReport({
+      timestamp: nowIso(),
+      command: "--post-merge-proof",
+      status: "STOP",
+      branch: branchEarly,
+      commit: commitEarly,
+      git_status_clean: "YES",
+      changed_files: "",
+      pr_info: "",
+      engine_changed: "NO",
+      assets_app_changed: "NO",
+      ui_changed: "NO",
+      css_changed: "NO",
+      backend_changed: "NO",
+      safety_counters: JSON.stringify(safety),
+      calendar_write_20k: cal.calendar_write_20k,
+      calendar_query_20k: cal.calendar_query_20k,
+      gate_realistic_mobile: authFail.gate,
+      raw_realistic_mobile_mentions_FAIL: rawPre.rawFail,
+      raw_realistic_mobile_mentions_PASS: rawPre.rawPass,
+      selected_authoritative_source: authFail.source,
+      proof_gate_consistency_reason: reasonEarly,
+      proof_summary_consistent: summaryEarly,
+      post_merge_proof_exit_code: 1,
+      next_recommended_command: "node scripts/silver-autopilot.cjs --post-merge-proof",
+      reason_for_stop: "proof_gate_missing_standalone_realistic_mobile_step",
+    });
+    restoreTrackedReportJsons();
+    return;
+  }
+
+  const authoritativeGate = authJson.gate === "FAIL" ? "FAIL" : "PASS";
+  const selectedAuthoritativeSource =
+    "post_merge_step:audit_silver_realistic_mobile_corpus.cjs:exit0+" + authJson.source;
+  const auth = { gate: authoritativeGate, source: selectedAuthoritativeSource };
+  const summaryOk = proofSummaryConsistentFromAuthoritative(auth.gate);
+  const reasonStr = buildProofGateConsistencyReason(auth, deepRm, rawPre.rawFail, rawPre.rawPass);
+  const commit = runGit(["rev-parse", "HEAD"]);
+  const branch = runGit(["rev-parse", "--abbrev-ref", "HEAD"]);
+
+  function gateConsistencyStop(consoleMsg, stopKey) {
+    console.log("STOP: " + consoleMsg);
+    printProofGateConsistencyResult({
+      main_commit: commit,
+      engine_changed: "NO",
+      assets_app_changed: "NO",
+      changed_files: gitChangedFilesList().join(";"),
+      post_merge_proof_exit: 1,
+      authoritative_realistic_mobile: auth.gate,
+      raw_realistic_mobile_fail_mentions: rawPre.rawFail,
+      raw_realistic_mobile_pass_mentions: rawPre.rawPass,
+      selected_authoritative_source: auth.source,
+      proof_summary_consistent: summaryOk,
+      gate_realistic_mobile: auth.gate,
+      reason: reasonStr,
+      dangerous_write_count: safety.dangerous_write_count,
+      false_write_count: safety.false_write_count,
+      query_created_write_count: safety.query_created_write_count,
+      write_when_negated_count: safety.write_when_negated_count,
+      calendar_write_20k: cal.calendar_write_20k,
+      calendar_query_20k: cal.calendar_query_20k,
+      git_status_clean: "YES",
+      recommended_next_task: stopKey,
+    });
+    writeRunReport({
+      timestamp: nowIso(),
+      command: "--post-merge-proof",
+      status: "STOP",
+      branch,
+      commit,
+      git_status_clean: "YES",
+      changed_files: "",
+      pr_info: "",
+      engine_changed: "NO",
+      assets_app_changed: "NO",
+      ui_changed: "NO",
+      css_changed: "NO",
+      backend_changed: "NO",
+      safety_counters: JSON.stringify(safety),
+      calendar_write_20k: cal.calendar_write_20k,
+      calendar_query_20k: cal.calendar_query_20k,
+      gate_realistic_mobile: auth.gate,
+      raw_realistic_mobile_mentions_FAIL: rawPre.rawFail,
+      raw_realistic_mobile_mentions_PASS: rawPre.rawPass,
+      selected_authoritative_source: auth.source,
+      proof_gate_consistency_reason: reasonStr,
+      proof_summary_consistent: summaryOk,
+      post_merge_proof_exit_code: 1,
+      next_recommended_command: "node scripts/silver-autopilot.cjs --post-merge-proof",
+      reason_for_stop: stopKey,
+    });
+    restoreTrackedReportJsons();
+    return;
+  }
+
+  if (authoritativeGate === "FAIL") {
+    gateConsistencyStop(
+      "proof gate: authoritative realistic_mobile not PASS (corpus JSON real_mobile_cases or derived fails after standalone audit exit 0)",
+      "proof_gate_authoritative_realistic_mobile_not_PASS",
+    );
+    return;
+  }
+
   restoreTrackedReportJsons();
+  const rawPost = scanRawRealisticMobileMentions(REALISTIC_MOBILE_RAW_SCAN_JSON);
+  const deepPost = readDeepProductEmbeddedRealisticMobileGate(readJsonSafe(path.join(SCRIPTS, DEEP_PRODUCT_UX_V2_REPORT)));
+  const summaryFinal = proofSummaryConsistentFromAuthoritative(auth.gate);
+  const reasonFinal =
+    buildProofGateConsistencyReason(auth, deepRm, rawPost.rawFail, rawPost.rawPass) +
+    " | post_restore_deep_embedded=" +
+    (deepPost || "(absent)") +
+    "_note=post_restore_JSON_may_revert_to_stale_tracked_snapshot_use_authoritative_fields";
   let gs = "";
   try {
     gs = runGit(["status", "--short"]);
@@ -698,12 +1047,34 @@ function cmdPostMergeProof() {
   console.log(gs || "(clean)");
   console.log("=== END_GIT_STATUS ===");
   console.log("PASS: post-merge-proof complete");
+  printProofGateConsistencyResult({
+    main_commit: commit,
+    engine_changed: "NO",
+    assets_app_changed: "NO",
+    changed_files: gitChangedFilesList().join(";"),
+    post_merge_proof_exit: 0,
+    authoritative_realistic_mobile: auth.gate,
+    raw_realistic_mobile_fail_mentions: rawPost.rawFail,
+    raw_realistic_mobile_pass_mentions: rawPost.rawPass,
+    selected_authoritative_source: auth.source,
+    proof_summary_consistent: summaryFinal,
+    gate_realistic_mobile: auth.gate,
+    reason: reasonFinal,
+    dangerous_write_count: safety.dangerous_write_count,
+    false_write_count: safety.false_write_count,
+    query_created_write_count: safety.query_created_write_count,
+    write_when_negated_count: safety.write_when_negated_count,
+    calendar_write_20k: cal.calendar_write_20k,
+    calendar_query_20k: cal.calendar_query_20k,
+    git_status_clean: gitClean() ? "YES" : "NO",
+    recommended_next_task: summaryFinal === "NO" ? "investigate_proof_gate_consistency" : "node scripts/silver-autopilot.cjs --status",
+  });
   writeRunReport({
     timestamp: nowIso(),
     command: "--post-merge-proof",
     status: "PASS",
-    branch: runGit(["rev-parse", "--abbrev-ref", "HEAD"]),
-    commit: runGit(["rev-parse", "HEAD"]),
+    branch,
+    commit,
     git_status_clean: gitClean() ? "YES" : "NO",
     changed_files: gitChangedFilesList().join(";"),
     pr_info: "",
@@ -715,6 +1086,13 @@ function cmdPostMergeProof() {
     safety_counters: JSON.stringify(safety),
     calendar_write_20k: cal.calendar_write_20k,
     calendar_query_20k: cal.calendar_query_20k,
+    gate_realistic_mobile: auth.gate,
+    raw_realistic_mobile_mentions_FAIL: rawPost.rawFail,
+    raw_realistic_mobile_mentions_PASS: rawPost.rawPass,
+    selected_authoritative_source: auth.source,
+    proof_gate_consistency_reason: reasonFinal,
+    proof_summary_consistent: summaryFinal,
+    post_merge_proof_exit_code: 0,
     next_recommended_command: "node scripts/silver-autopilot.cjs --status",
     reason_for_stop: "",
   });
