@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-14T17:59:24.725198Z",
+  "ingestedAt": "2026-05-14T18:40:05.476316Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Kreml využívá falešné rybáře k průniku do norských přístavů. Problém pro celé NATO",
+      "url": "https://ekonomickydenik.cz/kreml-vyuziva-falesne-rybare-k-pruniku-do-norskych-pristavu-nato/",
+      "dt": "2026-05-14T18:08:57Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "celé",
+        "falešné",
+        "kreml",
+        "nato",
+        "norských",
+        "problém",
+        "průniku",
+        "přístavů",
+        "rybáře",
+        "využívá"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -757,33 +784,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "„Sdílím vaši frustraci.“ Komisařka naříká nad přístupem části zemí zrychlit zbrojení",
-      "url": "https://ekonomickydenik.cz/sdilim-vasi-frustraci-komisarka-narika-nad-pristupem-casti-zemi-zrychlit-zbrojeni/",
-      "dt": "2026-05-13T11:00:28Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "frustraci",
-        "komisařka",
-        "naříká",
-        "přístupem",
-        "sdílím",
-        "vaši",
-        "zbrojení",
-        "zemí",
-        "zrychlit",
-        "části"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74024,
+      "bytes": 74103,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T17:47:04Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T18:08:57Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -849,6 +849,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kreml využívá falešné rybáře k průniku do norských přístavů. Problém pro celé NATO",
+            "publishedAt": "2026-05-14T18:08:57Z"
+          },
           {
             "title": "Spor o sudetoněmecký sjezd: Sněmovna žádá zrušení, opozice i církev trvají na dialogu",
             "publishedAt": "2026-05-14T17:47:04Z"
@@ -876,10 +880,6 @@
           {
             "title": "Vlastní armáda EU? USA stahují vojáky, španělský plán přesto pohořel",
             "publishedAt": "2026-05-14T11:26:00Z"
-          },
-          {
-            "title": "Podmínka přežití: levná obrana proti dronům. Řešení ukazuje český fond napojený na CSG",
-            "publishedAt": "2026-05-14T10:55:00Z"
           }
         ]
       }
