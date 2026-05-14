@@ -58,6 +58,37 @@ $ProbeText = "Print exactly: CURSOR_AGENT_STDIN_OK`r`nDo not modify files.`r`n"
 $ProbeOneLine = "Print exactly: CURSOR_AGENT_STDIN_OK. Do not modify files."
 $Marker = "CURSOR_AGENT_STDIN_OK"
 
+# WSL path passes the full task as the final argv token; logs must never echo that payload in command_executed.
+$SilverWslTaskArgvSafeCharLimit = 8192
+
+function Get-TaskTextLineCount {
+  param([string]$Text)
+  if ([string]::IsNullOrEmpty($Text)) { return 0 }
+  return @(($Text -split "`r?`n", [StringSplitOptions]::None)).Count
+}
+
+function Get-PromptPreviewLimited {
+  param([string]$Text, [int]$MaxLen = 300)
+  if ([string]::IsNullOrEmpty($Text)) { return "" }
+  $oneLine = ($Text -replace "`r?`n", " ").Trim()
+  if ($oneLine.Length -le $MaxLen) { return $oneLine }
+  return ($oneLine.Substring(0, $MaxLen) + "...")
+}
+
+function Build-WslSanitizedCommandExecuted {
+  param(
+    [string]$Distro,
+    [string]$AgentPath,
+    [string]$WorkspacePath
+  )
+  return (
+    "wsl.exe -d " + $Distro +
+    " -- " + $AgentPath +
+    " --print --mode ask --trust --workspace " + $WorkspacePath +
+    " <TASK_PROMPT_OMITTED_FROM_LOG:final_argv_is_full_task_text>"
+  )
+}
+
 function Resolve-RepoPath {
   param([string]$P)
   if ([System.IO.Path]::IsPathRooted($P)) {
@@ -656,7 +687,16 @@ if ($WslUbuntuAgent) {
     "--workspace", $WslWorkspaceLinuxPath,
     $text
   )
-  $planEcho = "wsl.exe -d " + $WslDistro + " -- " + ($linuxArgv -join " ")
+  $taskChars = $text.Length
+  $taskLines = Get-TaskTextLineCount -Text $text
+  $promptPreview = Get-PromptPreviewLimited -Text $text -MaxLen 300
+  $taskTooLargeForArgv = ($taskChars -gt $SilverWslTaskArgvSafeCharLimit)
+  $taskTooLargeStr = $(if ($taskTooLargeForArgv) { "YES" } else { "NO" })
+  $commandExecutedSanitized = Build-WslSanitizedCommandExecuted -Distro $WslDistro -AgentPath $WslAgentLinuxPath -WorkspacePath $WslWorkspaceLinuxPath
+  $longTaskRec = ""
+  if ($taskTooLargeForArgv) {
+    $longTaskRec = "Shorten the task file or split work: very large prompts as the final WSL argv risk argv limits, slow spawn, and timeouts (see task_argv_safe_char_limit)."
+  }
 
   if ($DryRun) {
     Write-Host "=== SILVER_CURSOR_AGENT_ADAPTER_DRY_RUN ==="
@@ -668,11 +708,20 @@ if ($WslUbuntuAgent) {
     Write-Host ("wsl_agent_path=" + $WslAgentLinuxPath)
     Write-Host ("wsl_workspace=" + $WslWorkspaceLinuxPath)
     Write-Host ("invocation_mode=wsl_direct_argv")
+    Write-Host ("argv_mode=wsl_direct_argv")
     Write-Host ("diagnostic_wsl_adapter_ready=" + $wslAdapterReadyDisk)
-    Write-Host ("command_plan=" + $planEcho)
+    Write-Host ("command_plan_sanitized=" + $commandExecutedSanitized)
     Write-Host ("task_file=" + $(if ($Probe) { "(probe_inline)" } elseif (-not [string]::IsNullOrWhiteSpace($taskAbs)) { $taskAbs } else { "(dryrun_preview)" }))
     Write-Host ("output_file=" + $outAbs)
+    Write-Host ("task_chars=" + [string]$taskChars)
+    Write-Host ("task_lines=" + [string]$taskLines)
     Write-Host ("task_bytes_utf8=" + [string]$taskLen)
+    Write-Host ("prompt_preview=" + $promptPreview)
+    Write-Host ("task_argv_safe_char_limit=" + [string]$SilverWslTaskArgvSafeCharLimit)
+    Write-Host ("task_too_large_for_argv=" + $taskTooLargeStr)
+    if ($taskTooLargeForArgv) {
+      Write-Host ("long_task_argv_recommendation=" + $longTaskRec)
+    }
     Write-Host ("timeout_seconds=" + [string]$TimeoutSeconds)
     Write-Host ("probe=" + $(if ($Probe) { "YES" } else { "NO" }))
     Write-Host "=== END_SILVER_CURSOR_AGENT_ADAPTER_DRY_RUN ==="
@@ -726,6 +775,31 @@ if ($WslUbuntuAgent) {
     }
   }
 
+  $extraWsl = ""
+  if ($taskTooLargeForArgv) {
+    $extraWsl = @"
+SILVER_WSL_TASK_ARGV_SIZE_WARNING
+task_too_large_for_argv=YES
+task_chars=$taskChars
+task_argv_safe_char_limit=$SilverWslTaskArgvSafeCharLimit
+recommendation=Shorten SILVER_NEXT_ACTION / task file, split into smaller runs, or trim pasted logs. Large final-argv payloads risk OS/WSL argv limits, slow process creation, and $($TimeoutSeconds)s timeouts.
+"@
+  }
+  if ($toFlag) {
+    $timeoutNote = @"
+SILVER_WSL_ADAPTER_TIMEOUT_NOTE
+timed_out=YES
+timeout_seconds=$TimeoutSeconds
+recommendation=Increase -TimeoutSeconds if the task is legitimately long-running; otherwise investigate agent hang, auth, or oversized argv (see task_too_large_for_argv).
+"@
+    if ([string]::IsNullOrWhiteSpace($extraWsl)) {
+      $extraWsl = $timeoutNote
+    }
+    else {
+      $extraWsl = $extraWsl.TrimEnd() + "`r`n`r`n" + $timeoutNote
+    }
+  }
+
   $meta = [ordered]@{
     timestamp_local = $tsLocal
     cwd_powershell = $cwdActual
@@ -737,21 +811,29 @@ if ($WslUbuntuAgent) {
     cursor_agent_exe = "wsl.exe"
     cursor_version_exe = $WslAgentLinuxPath
     cursor_version = $verLine
-    command_executed = $planEcho
+    command_executed = $commandExecutedSanitized
     invocation_mode = "wsl_direct_argv"
+    argv_mode = "wsl_direct_argv"
     diagnostic_wsl_adapter_ready = $wslAdapterReadyDisk
     task_file = $(if ($Probe) { "(probe_inline)" } else { $taskAbs })
     output_file = $outAbs
+    task_chars = [string]$taskChars
+    task_lines = [string]$taskLines
     task_bytes_utf8 = [string]$taskLen
+    task_argv_safe_char_limit = [string]$SilverWslTaskArgvSafeCharLimit
+    task_too_large_for_argv = $taskTooLargeStr
+    prompt_preview = $promptPreview
+    timeout_seconds = [string]$TimeoutSeconds
     exit_code = [string]$exitCode
     timed_out = $(if ($toFlag) { "YES" } else { "NO" })
     adapter_probe_pass = $probePass
     adapter_stdout_marker_exact = $stdoutExact
     adapter_subcommand_used = "wsl_agent"
+    long_task_argv_recommendation = $(if ($taskTooLargeForArgv) { $longTaskRec } else { "(none)" })
     can_run_full_auto_loop_maxcycles_1 = $canLoop
   }
 
-  Write-AdapterOutputFile -Path $outAbs -Meta $meta -Stdout $so -Stderr $se -ExtraBlock ""
+  Write-AdapterOutputFile -Path $outAbs -Meta $meta -Stdout $so -Stderr $se -ExtraBlock $extraWsl
 
   if ($Probe) {
     if ($probePass -eq "YES") {
