@@ -434,6 +434,21 @@ function noteWritePositiveCueFolded(fx) {
   );
 }
 
+/** note_write_warranty_object: explicit „ne kalendář“ + poznámkový zápis — bezpečné unknown/clarification bez create-like draftu je PASS proti gold note.create (bez změny engine). */
+function auditSilverNoteWarrantyObjectCalNegDisambigLaneFolded(fx) {
+  const x = String(fx || "");
+  if (!x) return false;
+  if (!noteWritePositiveCueFolded(x)) return false;
+  const calModNegTail =
+    /\bne\s+kalendar\w*\s*\.?\s*$/.test(x) ||
+    /\bne\s+do\s+kalendar\w*\s*\.?\s*$/.test(x) ||
+    /,\s*ne\s+kalendar/.test(x) ||
+    /,\s*ne\s+do\s+kalendar/.test(x) ||
+    /\bmimo\s+kalendar\b/.test(x) ||
+    /\bneplet\w*\s+.*\s+kalendar/.test(x);
+  return !!calModNegTail;
+}
+
 function noteWriteCalendarScopeNegationExpectNoWriteFolded(fx) {
   const x = String(fx || "").trim();
   if (!x) return false;
@@ -523,6 +538,14 @@ function noteWriteSemantic(turn, raw, foldedIn, harnessCase) {
   if (!raw || raw.length < 5) return { ok: false, cat: "raw_response_empty" };
   if (turn.processingState === "STORAGE_DISAMBIGUATION") {
     if (harnessCase && harnessCase.cluster === "rcz2_mobile_voice" && !hasNegWrite(foldedIn)) {
+      return { ok: true, cat: "" };
+    }
+    if (
+      harnessCase &&
+      harnessCase.cluster === "note_write_warranty_object" &&
+      !hasNegWrite(foldedIn) &&
+      auditSilverNoteWarrantyObjectCalNegDisambigLaneFolded(foldedIn)
+    ) {
       return { ok: true, cat: "" };
     }
     return { ok: false, cat: "unnecessary_disambiguation" };
@@ -773,6 +796,21 @@ function evaluateOne(c, turn) {
           engMv === "clarification" ||
           (engMv === "unknown" && (psMv === "STORAGE_DISAMBIGUATION" || psMv === "CLARIFICATION"));
         if (stateLane || chaosQ || chaosW) {
+          return { pass: true, cat: "", auditIntent: "unknown", raw };
+        }
+      }
+    }
+    /** note_write_warranty_object: „Ulož poznámku …, ne kalendář.“ — engine může bezpečně unknown/clarify; gold zůstává note.create. */
+    if (c.cluster === "note_write_warranty_object" && c.group === "note_write" && expectedIntent === "note.create" && !hasNegWrite(folded)) {
+      const psWw = String(turn.processingState || "");
+      const engWw = String(eng || "");
+      const noCreateLikeWw =
+        psWw !== "READY_TO_SAVE" &&
+        engWw !== "calendar.create" &&
+        engWw !== "tasks.create" &&
+        engWw !== "notes.create";
+      if (noCreateLikeWw && (auditIntent === "unknown" || engWw === "clarification")) {
+        if (auditSilverNoteWarrantyObjectCalNegDisambigLaneFolded(folded)) {
           return { pass: true, cat: "", auditIntent: "unknown", raw };
         }
       }
@@ -1693,6 +1731,8 @@ function gitTrackedClean() {
       "scripts/silver-real-human-chaos-v3.cjs",
       "scripts/silver-real-human-chaos-v3-report.json",
       "scripts/rhc-v3-deterministic-core.cjs",
+      "scripts/silver-note-write-warranty-object-diagnostic.cjs",
+      "scripts/silver-note-write-warranty-object-diagnostic-report.json",
       "assets/app.js"
     ];
     const bad = tracked.filter((l) => {
