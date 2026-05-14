@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-14T08:35:05.398287Z",
+  "ingestedAt": "2026-05-14T09:15:39.967128Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ruské rakety v ohrožení: Ukrajina udeřila na tajné dodavatele Kremlu",
+      "url": "https://ekonomickydenik.cz/ruske-rakety-v-ohrozeni-ukrajina-sankce/",
+      "dt": "2026-05-14T08:40:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dodavatele",
+        "kremlu",
+        "ohrožení",
+        "rakety",
+        "ruské",
+        "tajné",
+        "udeřila",
+        "ukrajina"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -759,30 +784,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Odstraňování škod po povodních vázne. Chybí dalších 7,5 miliardy",
-      "url": "https://ekonomickydenik.cz/povodne-skody-povodi-ministerstvo/",
-      "dt": "2026-05-12T14:39:24Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "chybí",
-        "dalších",
-        "miliardy",
-        "odstraňování",
-        "povodních",
-        "vázne",
-        "škod"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73342,
+      "bytes": 73252,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T08:25:55Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T08:40:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 25,
@@ -848,6 +849,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ruské rakety v ohrožení: Ukrajina udeřila na tajné dodavatele Kremlu",
+            "publishedAt": "2026-05-14T08:40:00Z"
+          },
           {
             "title": "ČEZ přiznal, kolik přesně zaplatil za jihočeskou síť plynovodů",
             "publishedAt": "2026-05-14T08:25:55Z"
@@ -875,10 +880,6 @@
           {
             "title": "Česko v emisích zelenější než většina Evropy. Klesaly jen ve třech zemích",
             "publishedAt": "2026-05-13T18:05:27Z"
-          },
-          {
-            "title": "Evropa vyráží do Perského zálivu. Británie a Francie tvoří námořní koalici proti Teheránu",
-            "publishedAt": "2026-05-13T16:33:04Z"
           }
         ]
       }

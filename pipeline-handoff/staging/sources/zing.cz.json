@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-14T08:35:05.398287Z",
+  "ingestedAt": "2026-05-14T09:15:39.967128Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Assassin's Creed spouští hon za pokladem v hodnotě půl milionu dolarů",
+      "url": "https://zing.cz/article/assassins-creed-spousti-hon-za-pokladem-v-hodnote-pul-milionu-dolaru",
+      "dt": "2026-05-14T09:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "assassin",
+        "creed",
+        "dolarů",
+        "hodnotě",
+        "hon",
+        "milionu",
+        "pokladem",
+        "půl",
+        "spouští"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -994,30 +1020,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Subnautica 2 obdržela premiérové záběry z hraní a odhalila cenu",
-      "url": "https://zing.cz/article/subnautica-2-obdrzela-premierove-zabery-z-hrani",
-      "dt": "2026-05-11T04:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "cenu",
-        "hraní",
-        "obdržela",
-        "odhalila",
-        "premiérové",
-        "subnautica",
-        "záběry"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1028,7 +1030,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126243,
+      "bytes": 126376,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1065,11 +1067,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-14T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T09:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "other": 38,
-          "zpravy": 2
+          "other": 39,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1081,6 +1083,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Assassin's Creed spouští hon za pokladem v hodnotě půl milionu dolarů",
+            "publishedAt": "2026-05-14T09:00:00Z"
+          },
           {
             "title": "Nová hra z univerza Warhammeru 40,000 obdržela překvapivě blízké datum vydání",
             "publishedAt": "2026-05-14T08:00:00Z"
@@ -1108,10 +1114,6 @@
           {
             "title": "Nové informace o Assassin's Creed Hexe naznačují návrat Ezia",
             "publishedAt": "2026-05-13T17:00:00Z"
-          },
-          {
-            "title": "Nová hra s Jamesem Bondem je hotová, akce 007 First Light dosáhla Gold fáze",
-            "publishedAt": "2026-05-13T16:00:00Z"
           }
         ]
       }
