@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-05-14T06:30:13.622314Z",
+  "ingestedAt": "2026-05-14T07:10:01.996057Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Letošní Survivor hlasí velkou změnu: Truhla s hlasy dorazila do Prahy. Jméno vítěze zazní v přímém přenosu",
+      "url": "https://www.vtelce.cz/letosni-survivor-hlasi-velkou-zmenu-truhla-s-hlasy-dorazila-do-prahy-jmeno-viteze-zazni-v-primem-prenosu/",
+      "dt": "2026-05-14T06:56:50Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "dorazila",
+        "hlasy",
+        "hlasí",
+        "jméno",
+        "letošní",
+        "prahy",
+        "přenosu",
+        "přímém",
+        "survivor",
+        "truhla",
+        "velkou",
+        "vítěze",
+        "zazní",
+        "změnu"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -259,35 +290,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Smrt si vybírá: Jana Šulcová ve filmu nezpívá a v záběru se objevila deska, kterou nikdo neměl vidět",
-      "url": "https://www.vtelce.cz/smrt-si-vybira-jana-sulcova-ve-filmu-nezpiva-a-v-zaberu-se-objevila-deska-kterou-nikdo-nemel-videt/",
-      "dt": "2026-05-12T16:55:25Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "deska",
-        "filmu",
-        "jana",
-        "neměl",
-        "nezpívá",
-        "nikdo",
-        "objevila",
-        "smrt",
-        "vidět",
-        "vybírá",
-        "záběru",
-        "šulcová"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -298,7 +300,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 65586,
+      "bytes": 63811,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -335,11 +337,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-14T05:58:25Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T06:56:50Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "other": 9
+          "other": 9,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -351,6 +353,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Letošní Survivor hlasí velkou změnu: Truhla s hlasy dorazila do Prahy. Jméno vítěze zazní v přímém přenosu",
+            "publishedAt": "2026-05-14T06:56:50Z"
+          },
           {
             "title": "Česká televize odvysílá všechny zápasy MS v hokeji. Do komentátorských křesel usednou známé tváře",
             "publishedAt": "2026-05-14T05:58:25Z"
@@ -378,10 +384,6 @@
           {
             "title": "Tajuplné Věřte nevěřte ukázalo děsivou předpověď zkázy Titanicu i pád vzducholodi Hindenburg",
             "publishedAt": "2026-05-13T09:38:16Z"
-          },
-          {
-            "title": "Farma Česko II: Nové prostředí, drsné podmínky a tvrdý boj o milion",
-            "publishedAt": "2026-05-13T06:44:03Z"
           }
         ]
       }

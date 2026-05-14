@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-14T06:30:13.622314Z",
+  "ingestedAt": "2026-05-14T07:10:01.996057Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Na internet unikly nové informace o Far Cry 7",
+      "url": "https://zing.cz/article/na-internet-unikly-informace-o-far-cry-7",
+      "dt": "2026-05-14T07:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "cry",
+        "far",
+        "informace",
+        "internet",
+        "nové",
+        "unikly"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -989,28 +1012,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Battlefield 6 odhalil nadupaný plán 3. sezóny",
-      "url": "https://zing.cz/article/battlefield-6-odhalil-nadupany-plan-3-serie",
-      "dt": "2026-05-10T16:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "battlefield",
-        "nadupaný",
-        "odhalil",
-        "plán",
-        "sezóny"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1021,7 +1022,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126089,
+      "bytes": 126168,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1058,11 +1059,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-14T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T07:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 2,
-          "other": 38
+          "other": 38,
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1074,6 +1075,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na internet unikly nové informace o Far Cry 7",
+            "publishedAt": "2026-05-14T07:00:00Z"
+          },
           {
             "title": "The Talos Principle 3 oficiálně představeno, k dispozici je premiérová ukázka",
             "publishedAt": "2026-05-14T06:00:00Z"
@@ -1101,10 +1106,6 @@
           {
             "title": "Dvě čerstvé novinky potěší fanoušky strategií a odpočinkových titulů",
             "publishedAt": "2026-05-13T14:00:00Z"
-          },
-          {
-            "title": "Saros mělo z hlediska prodejů zklamat a prodat zatím pouze 300 tisíc kopií",
-            "publishedAt": "2026-05-13T12:00:00Z"
           }
         ]
       }

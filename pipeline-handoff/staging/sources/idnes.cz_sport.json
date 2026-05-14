@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-14T06:30:13.622314Z",
+  "ingestedAt": "2026-05-14T07:10:01.996057Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Česko - Dánsko v TV: kde sledovat zápas MS v hokeji 2026 živě",
+      "url": "https://www.idnes.cz/hokej/ms-2026/hokej-cesko-dansko-v-tv.A260513_134219_ms-hokej-2026_ald",
+      "dt": "2026-05-14T06:29:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "2026",
+        "dánsko",
+        "hokeji",
+        "sledovat",
+        "zápas",
+        "česko",
+        "živě"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hráči viděli něco, co v české lize nikdy nezažijí. Kouč po prohře velebil Francii",
+      "url": "https://www.idnes.cz/sport/ostatni/kvalifikace-ms-v-hazene-2027-reprezentace-matej-klima-ceska-hazena.A260513_210648_hazena_icer",
+      "dt": "2026-05-14T06:13:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "francii",
+        "hráči",
+        "kouč",
+        "lize",
+        "nezažijí",
+        "nikdy",
+        "něco",
+        "prohře",
+        "velebil",
+        "viděli",
+        "české"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -741,59 +793,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Repríza 25 let starého finále, Ulihrach znovu vyzve Nováka: Hecovačky nejsou",
-      "url": "https://www.idnes.cz/sport/tenis/challenger-prostejov-pozvanka.A260513_130843_tenis_ikuc",
-      "dt": "2026-05-13T15:49:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "finále",
-        "hecovačky",
-        "let",
-        "nejsou",
-        "nováka",
-        "repríza",
-        "starého",
-        "ulihrach",
-        "vyzve",
-        "znovu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ženská PWHL se rozrůstá, nově ji doplní týmy z Las Vegas a Hamiltonu. A kdo dál?",
-      "url": "https://www.idnes.cz/hokej/nhl/zenska-pwhl-se-rozrusta-nove-ji-doplni-tymy-z-las-vegas-a-hamiltonu-a-kdo-dal.A260513_170441_nhl_tit",
-      "dt": "2026-05-13T15:10:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "doplní",
-        "hamiltonu",
-        "las",
-        "nově",
-        "pwhl",
-        "rozrůstá",
-        "týmy",
-        "vegas",
-        "ženská"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +803,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47087,
+      "bytes": 47458,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,7 +840,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T06:11:25Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T06:29:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -857,6 +856,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česko - Dánsko v TV: kde sledovat zápas MS v hokeji 2026 živě",
+            "publishedAt": "2026-05-14T06:29:00Z"
+          },
+          {
+            "title": "Hráči viděli něco, co v české lize nikdy nezažijí. Kouč po prohře velebil Francii",
+            "publishedAt": "2026-05-14T06:13:00Z"
+          },
           {
             "title": "Detroit znovu hledí do propasti, ve druhém kole play off prohrál potřetí v řadě",
             "publishedAt": "2026-05-14T06:11:25Z"
@@ -880,14 +887,6 @@
           {
             "title": "Růžička hrozil, Jágr nadával. A také letošní šampionát zůstává v olympijském stínu",
             "publishedAt": "2026-05-13T22:00:00Z"
-          },
-          {
-            "title": "OBRAZEM: Uvnitř prázdné sedačky, venku velká party. Jak vypadaly slávistické oslavy",
-            "publishedAt": "2026-05-13T21:54:00Z"
-          },
-          {
-            "title": "City i bez Haalanda zdolali Crystal Palace a dál myslí na titul. Ztrácejí dva body",
-            "publishedAt": "2026-05-13T21:52:00Z"
           }
         ]
       }

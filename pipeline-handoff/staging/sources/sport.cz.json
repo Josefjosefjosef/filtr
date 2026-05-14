@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-14T06:30:13.622314Z",
+  "ingestedAt": "2026-05-14T07:10:01.996057Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Bucha se trefil v MLS. Trumfl ho Messi, který nakonec slavil výhru",
+      "url": "https://www.sport.cz/clanek/fotbal-bucha-se-trefil-v-mls-trumfl-ho-messi-ktery-nakonec-slavil-vyhru-5453868",
+      "dt": "2026-05-14T06:57:15Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bucha",
+        "messi",
+        "mls",
+        "nakonec",
+        "slavil",
+        "trefil",
+        "trumfl",
+        "výhru"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -771,34 +796,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Slováci mají v nominaci na MS hned devět hráčů z extraligy. Z NHL berou dva hokejisty",
-      "url": "https://www.sport.cz/clanek/hokej-ms-slovaci-maji-v-nominaci-na-ms-hned-devet-hracu-z-extraligy-z-nhl-berou-dva-hokejisty-5453481",
-      "dt": "2026-05-13T15:47:42Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "berou",
-        "devět",
-        "dva",
-        "extraligy",
-        "hned",
-        "hokejisty",
-        "hráčů",
-        "mají",
-        "nhl",
-        "nominaci",
-        "slováci"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -809,7 +806,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 47552,
+      "bytes": 47485,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -846,7 +843,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T06:17:37Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T06:57:15Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 28,
@@ -863,6 +860,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bucha se trefil v MLS. Trumfl ho Messi, který nakonec slavil výhru",
+            "publishedAt": "2026-05-14T06:57:15Z"
+          },
           {
             "title": "Skončil u Ledecké, teď už má Bank novou práci. Trénovat nebude",
             "publishedAt": "2026-05-14T06:17:37Z"
@@ -890,10 +891,6 @@
           {
             "title": "Jsou to naši kamarádi. Uvidíme, co bude dál, reaguje kabina Slavie na vyřazení Chorého s Douděrou",
             "publishedAt": "2026-05-14T04:13:06Z"
-          },
-          {
-            "title": "Potřetí jsem už s Priskem prohrát nechtěl. Trpišovský o obhajobě i očekávané obměně kádru Slavie",
-            "publishedAt": "2026-05-13T22:18:55Z"
           }
         ]
       }

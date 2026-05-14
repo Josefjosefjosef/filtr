@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-14T06:30:13.622314Z",
+  "ingestedAt": "2026-05-14T07:10:01.996057Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Jednodenní péče má růst. Soukromí poskytovatelé ale varují před slovenským scénářem",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/jednodenni-pece-soukromi-poskytovatele-slovensky-scenar/",
+      "dt": "2026-05-14T07:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "ale",
+        "jednodenní",
+        "poskytovatelé",
+        "péče",
+        "růst",
+        "scénářem",
+        "slovenským",
+        "soukromí",
+        "varují"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -246,33 +272,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Hantavirus Andes: Ministr Vojtěch oznámil, zda Česku hrozí nebezpečí a omezení",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/hantavirus-andes-ministr-vojtech-opatreni/",
-      "dt": "2026-05-13T09:34:36Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "andes",
-        "hantavirus",
-        "hrozí",
-        "ministr",
-        "nebezpečí",
-        "omezení",
-        "oznámil",
-        "vojtěch",
-        "zda",
-        "česku"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -283,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 87169,
+      "bytes": 87527,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -320,7 +319,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-14T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T07:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -335,6 +334,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jednodenní péče má růst. Soukromí poskytovatelé ale varují před slovenským scénářem",
+            "publishedAt": "2026-05-14T07:00:00Z"
+          },
           {
             "title": "Dostanete přidáno? O platech zdravotníků by se mělo rozhodovat u jednoho stolu s pojišťovnami",
             "publishedAt": "2026-05-14T06:00:00Z"
@@ -362,10 +365,6 @@
           {
             "title": "Eurokomisař Síkela odhalil miliardový plán: Jak EU reaguje na dezinformace a nové nemoci?",
             "publishedAt": "2026-05-13T12:09:52Z"
-          },
-          {
-            "title": "Tři úmrtí a otázky bez odpovědí: Experti pátrají, jak se hantavirus dostal na loď Hondius",
-            "publishedAt": "2026-05-13T11:27:03Z"
           }
         ]
       }
