@@ -27,8 +27,10 @@ const FULL_AUTO_LOOP_ALLOWED_DIRTY = new Set(
     "SILVER_PROGRESS_LOG.md",
     "SILVER_AUTOPILOT_README.md",
     "SILVER_CURSOR_OUTPUT.md",
+    "SILVER_STOP_AUTOPILOT",
     "scripts/silver-autopilot.cjs",
     "scripts/silver-autopilot-loop.ps1",
+    "scripts/silver-autonomous-loop-safety-diagnostic.ps1",
   ].map((s) => s.replace(/\\/g, "/")),
 );
 
@@ -445,7 +447,7 @@ function buildFullAutoQualityFallbackBody(ctx) {
     "- Zakázáno: úpravy `assets/app.js`, engine core, routing, retrieval refaktory bez výslovného scope, deploy, **vymýšlení** nových cest `scripts/*.js`, které v repu nejsou.",
     "",
     "### STOP podmínky",
-    "- **MaxCycles 0** a nekonečná smyčka autopilota jsou **zakázány**, dokud to výslovně nepovolí strategie — v rámci tohoto úkolu je neuváděj ani nespouštěj.",
+    "- **MaxCycles 0 (PowerShell outer loop)**: raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode` je **zakázáno**; řízený autonomous mode existuje jen s těmito přepínači a stále má **tvrdý strop cyklů** + emergency stop — v rámci úkolu **nespouštěj** reálný nekonečný běh ani neobcházej tyto pojistky.",
     "- Nepoužívej `cat C:\\...` na Windows; použij `Get-Content -LiteralPath`.",
     "- Neexistují soubory `scripts/silver-diagnostic.js` ani `scripts/silver-smoke-test-maxcycles-1.js` — neuváděj je.",
     "",
@@ -1799,7 +1801,7 @@ async function cmdAskModel() {
           "Windows PowerShell first: use Get-Content, Set-Location, Join-Path; never suggest `cat C:\\...` or POSIX cat with Windows drive letters. " +
           "Never invent script paths: only node scripts/<file> that appear in the USER manifest list; if unsure use only `node scripts/silver-autopilot.cjs --status`. " +
           "Never request engine edits, assets/app.js edits, routing/normalizer refactors, merges, or secret pastes. " +
-          "Prefer scripts-only diagnostics. Forbid MaxCycles 0 / infinite autopilot unless strategy explicitly allows (default forbid). " +
+          "Prefer scripts-only diagnostics. Do not instruct raw PowerShell `-MaxCycles 0` without `-AllowInfinite`/`-AutonomousMode`; controlled autonomous mode still has hard caps and `SILVER_STOP_AUTOPILOT` per SILVER_AUTOPILOT_README.md — never advise bypassing those gates. " +
           "Use concise markdown with one primary NEXT block.",
       },
       {
@@ -2012,7 +2014,7 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
         "no broad refactor; engine only after proven TRUE_ENGINE_FAIL and surgically; assets/app.js only after explicit human permission; " +
         "no routing or normalizer refactors unless explicitly scoped; never paste secrets. " +
         "If git is dirty only with Silver runtime markdown (SILVER_*.md and similar), instruct: read files first, summarize, then optionally git restore those paths — never blind restore of engine files. " +
-        "Explicitly forbid MaxCycles 0 / infinite autopilot loops unless strategy explicitly allows (default: forbid and state it in STOP podmínky). " +
+        "State in STOP podmínky: raw `-MaxCycles 0` without `-AllowInfinite`/`-AutonomousMode` is forbidden; controlled autonomous mode requires those switches plus built-in caps (see SILVER_AUTOPILOT_README.md). Never advise bypassing orchestrator safety gates. " +
         "Always include sections ### Scope guard, ### STOP podmínky, and ### Povinný výsledek with a fenced block using === line markers the operator pastes back. " +
         "If state is ambiguous, output diagnostic-only steps (node scripts/silver-…, audits from manifest). " +
         "Never instruct a direct engine or assets/app.js edit without explicit diagnostics-first framing.";
