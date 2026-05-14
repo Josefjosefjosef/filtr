@@ -1859,6 +1859,8 @@ function gitTrackedClean() {
       "scripts/silver-real-human-chaos-v3.cjs",
       "scripts/silver-real-human-chaos-v3-report.json",
       "scripts/rhc-v3-deterministic-core.cjs",
+      "scripts/silver-note-write-warranty-object-diagnostic.cjs",
+      "scripts/silver-note-write-warranty-object-diagnostic-report.json",
       "assets/app.js"
     ];
     const bad = tracked.filter((l) => {

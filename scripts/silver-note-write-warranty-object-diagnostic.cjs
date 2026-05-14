@@ -281,7 +281,7 @@ function buildWarrantyClusterCases() {
     {
       group: "note_write",
       input: "nic neukládej, jen si poznamenej že TV má záruku do 2029",
-      expectedIntent: "unknown",
+      expectedIntent: "note.create",
       subcluster: "probe_neg_then_write_conflict"
     }
   ];
