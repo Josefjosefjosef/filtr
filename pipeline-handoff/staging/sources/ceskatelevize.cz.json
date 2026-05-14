@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-14T05:50:09.434063Z",
+  "ingestedAt": "2026-05-14T06:30:13.622314Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "Víkend bude chladný. Hodně pršet má hlavně na východě Česka",
+      "url": "https://ct24.ceskatelevize.cz/clanek/pocasi/vikend-bude-chladny-hodne-prset-ma-hlavne-na-vychode-ceska-373414",
+      "dt": "2026-05-14T06:17:45Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "chladný",
+        "hlavně",
+        "hodně",
+        "pršet",
+        "víkend",
+        "východě",
+        "česka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -104,18 +128,20 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Masivní ruský útok na Kyjev má oběti, terčem byla i Oděsa",
+      "title": "Masivní ruský útok na Kyjev má oběť a desítky zraněných, terčem byla i Oděsa",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/kyjev-celi-masivnimu-utoku-ruskych-dronu-a-strel-uvadi-cinitele-373412",
       "dt": "2026-05-14T02:56:14Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
+        "desítky",
         "kyjev",
         "masivní",
-        "oběti",
+        "oběť",
         "oděsa",
         "ruský",
         "terčem",
+        "zraněných",
         "útok"
       ],
       "feedCategory": "zpravy",
@@ -729,28 +755,25 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Policie vyšetřuje výrobce kojeneckého mléka Nestlé a Danone, píší Seznam Zprávy",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/policie-vysetruje-vyrobce-kojeneckeho-mleka-nestle-a-danone-pisi-seznam-zpravy-373379",
-      "dt": "2026-05-13T10:23:17Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Colorado je v konferenčním finále, Nečas přispěl dvěma přihrávkami",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/colorado-je-v-konferencnim-finale-necas-prispel-dvema-prihravkami-156779",
+      "dt": "2026-05-14T06:02:58Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "danone",
-        "kojeneckého",
-        "mléka",
-        "nestlé",
-        "policie",
-        "píší",
-        "seznam",
-        "vyšetřuje",
-        "výrobce",
-        "zprávy"
+        "colorado",
+        "dvěma",
+        "finále",
+        "konferenčním",
+        "nečas",
+        "přihrávkami",
+        "přispěl"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1476,28 +1499,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Siniaková s Townsendovou vyhrály pošestnácté v řadě",
-      "url": "https://sport.ceskatelevize.cz/clanek/tenis/siniakova-s-townsendovou-vyhraly-posestnacte-v-rade-156735",
-      "dt": "2026-05-12T11:02:07Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "pošestnácté",
-        "siniaková",
-        "townsendovou",
-        "vyhrály",
-        "řadě"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1508,7 +1509,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42990,
+      "bytes": 42961,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1568,11 +1569,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T05:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T06:17:45Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 1,
           "zpravy": 24,
+          "zdravi": 1,
           "finance": 2,
           "other": 3
         },
@@ -1586,6 +1587,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Víkend bude chladný. Hodně pršet má hlavně na východě Česka",
+            "publishedAt": "2026-05-14T06:17:45Z"
+          },
           {
             "title": "Zdravotnické rukavice či kondomy mohutně zdražují. I kvůli situaci s Íránem",
             "publishedAt": "2026-05-14T05:30:00Z"
@@ -1603,7 +1608,7 @@
             "publishedAt": "2026-05-14T04:03:00Z"
           },
           {
-            "title": "Masivní ruský útok na Kyjev má oběti, terčem byla i Oděsa",
+            "title": "Masivní ruský útok na Kyjev má oběť a desítky zraněných, terčem byla i Oděsa",
             "publishedAt": "2026-05-14T02:56:14Z"
           },
           {
@@ -1613,10 +1618,6 @@
           {
             "title": "Izrael asi čekají předčasné volby, koalice chce hlasovat o rozpuštění parlamentu",
             "publishedAt": "2026-05-13T20:26:28Z"
-          },
-          {
-            "title": "Padesát let po operaci v Entebbe o ní vychází česky kniha Ida Netanjahua",
-            "publishedAt": "2026-05-13T20:16:12Z"
           }
         ]
       }
@@ -1628,7 +1629,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38483,
+      "bytes": 38201,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1665,7 +1666,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-13T22:15:48Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T06:02:58Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1680,6 +1681,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Colorado je v konferenčním finále, Nečas přispěl dvěma přihrávkami",
+            "publishedAt": "2026-05-14T06:02:58Z"
+          },
           {
             "title": "Trpišovský po titulu okomentoval události z derby. Byl jsem z toho zdevastovaný, řekl",
             "publishedAt": "2026-05-13T22:15:48Z"
@@ -1707,10 +1712,6 @@
           {
             "title": "Házenkářky Slavie vyřadily obhájkyně z Mostu, ve finále vyzvou Kynžvart",
             "publishedAt": "2026-05-13T17:05:13Z"
-          },
-          {
-            "title": "Hronová ani Juhászová další českou medaili z ME v taekwondu nepřidaly",
-            "publishedAt": "2026-05-13T16:38:47Z"
           }
         ]
       }
@@ -1722,7 +1723,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77381,
+      "bytes": 77347,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

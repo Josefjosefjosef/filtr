@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-14T05:50:09.434063Z",
+  "ingestedAt": "2026-05-14T06:30:13.622314Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Maxipes Fík slaví 50 let. Tvůrci se báli cenzorů i kvůli policejním autům",
+      "url": "https://www.denik.cz/film-a-televize/maxipes-fik-slavi-50-let-tvurci-se-bali-cenzoru-i-kvuli-policejnim-autum.html",
+      "dt": "2026-05-14T06:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "autům",
+        "báli",
+        "cenzorů",
+        "fík",
+        "kvůli",
+        "let",
+        "maxipes",
+        "policejním",
+        "slaví",
+        "tvůrci"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Westův syndrom převrátil dívce život naruby. Rodina hledá zázrak na Slovensku",
+      "url": "https://www.denik.cz/regiony/plzen-eliska-westuv-syndrom-encefalopatie-nemoc-rehabilitace-sbirka-donio.html",
+      "dt": "2026-05-14T05:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dívce",
+        "hledá",
+        "naruby",
+        "převrátil",
+        "rodina",
+        "slovensku",
+        "syndrom",
+        "westův",
+        "zázrak",
+        "život"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -98,33 +152,6 @@
         "polska",
         "sovětská",
         "československo"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Westův syndrom převrátil Elišce život naruby, rodina hledá zázrak na Slovensku",
-      "url": "https://www.denik.cz/regiony/plzen-eliska-westuv-syndrom-encefalopatie-nemoc-rehabilitace-sbirka-donio.html",
-      "dt": "2026-05-14T03:53:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "elišce",
-        "hledá",
-        "naruby",
-        "převrátil",
-        "rodina",
-        "slovensku",
-        "syndrom",
-        "westův",
-        "zázrak",
-        "život"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -630,33 +657,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Argentina pátrá po původu hantaviru. Zdroj mohl být jinde než v Ohňové zemi",
-      "url": "https://www.denik.cz/ze_sveta/argentina-hantavirus-ushuaia-hondius-hledani-zdroje-nakazy.html",
-      "dt": "2026-05-13T13:12:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "argentina",
-        "být",
-        "hantaviru",
-        "jinde",
-        "než",
-        "ohňové",
-        "pátrá",
-        "původu",
-        "zdroj",
-        "zemi"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -667,7 +667,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30702,
+      "bytes": 30568,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -704,11 +704,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-14T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T06:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 1,
-          "zpravy": 24
+          "zpravy": 24,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -720,6 +720,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Maxipes Fík slaví 50 let. Tvůrci se báli cenzorů i kvůli policejním autům",
+            "publishedAt": "2026-05-14T06:00:00Z"
+          },
+          {
+            "title": "Westův syndrom převrátil dívce život naruby. Rodina hledá zázrak na Slovensku",
+            "publishedAt": "2026-05-14T05:30:00Z"
+          },
           {
             "title": "Konec dvanáctek? Brusel chystá pravidla, která změní označení piv",
             "publishedAt": "2026-05-14T05:00:00Z"
@@ -737,20 +745,12 @@
             "publishedAt": "2026-05-14T04:05:00Z"
           },
           {
-            "title": "Westův syndrom převrátil Elišce život naruby, rodina hledá zázrak na Slovensku",
-            "publishedAt": "2026-05-14T03:53:00Z"
-          },
-          {
             "title": "Přijímačky 2026: Žáci už teď zjistí, kolik mají bodů. O přijetí se dozví v pátek",
             "publishedAt": "2026-05-14T03:30:00Z"
           },
           {
             "title": "Měl připravenou zbraň, Hitlera nezabil jen shodou okolností. Studenta popravili",
             "publishedAt": "2026-05-14T03:00:00Z"
-          },
-          {
-            "title": "Extrémní proměny: Tomáš zhubl osmdesát kilo. Chce být lepší manžel i táta",
-            "publishedAt": "2026-05-14T02:30:00Z"
           }
         ]
       }

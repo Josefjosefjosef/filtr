@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-14T05:50:09.434063Z",
+  "ingestedAt": "2026-05-14T06:30:13.622314Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "„Ukažte mi občanku.“ Kdy musíte průkaz totožnosti skutečně předložit a komu",
+      "url": "https://www.penize.cz/spotrebitel/489666-ukazte-mi-obcanku-kdy-musite-prukaz-totoznosti-skutecne-ukazat-a-komu",
+      "dt": "2026-05-14T07:49:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "komu",
+        "musíte",
+        "občanku",
+        "průkaz",
+        "předložit",
+        "skutečně",
+        "totožnosti",
+        "ukažte"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -484,30 +509,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Pojištění vkladů v bance čekají změny. Komu pomohou?",
-      "url": "https://www.penize.cz/osobni-ucty/489458-pojisteni-vkladu-v-bance-cekaji-zmeny-komu-pomohou",
-      "dt": "2026-05-10T18:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "bance",
-        "komu",
-        "pojištění",
-        "pomohou",
-        "vkladů",
-        "změny",
-        "čekají"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -518,7 +519,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18564,
+      "bytes": 18766,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -555,7 +556,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-14T05:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T07:49:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 16,
@@ -572,6 +573,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Ukažte mi občanku.“ Kdy musíte průkaz totožnosti skutečně předložit a komu",
+            "publishedAt": "2026-05-14T07:49:00Z"
+          },
           {
             "title": "Půjčky dostanou přísnější pravidla. Jak je vidí experti a co by ještě změnili?",
             "publishedAt": "2026-05-14T05:05:00Z"
@@ -599,10 +604,6 @@
           {
             "title": "Ženy investují líp než muži. Pokud investují. Začněte takhle",
             "publishedAt": "2026-05-13T05:00:00Z"
-          },
-          {
-            "title": "Na účtence chyběla diakritika. Slovenský stánek s langoši dostal pokutu 1500 eur",
-            "publishedAt": "2026-05-12T15:49:00Z"
           }
         ]
       }

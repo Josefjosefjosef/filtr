@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-05-14T05:50:09.434063Z",
+  "ingestedAt": "2026-05-14T06:30:13.622314Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Děti bez svalů s vysokým tlakem. Z pohodlného životního stylu si neseme následky",
+      "url": "https://www.betterlife.cz/deti-bez-svalu-s-vysokym-tlakem-z-pohodlneho-zivotniho-stylu-si-neseme-nasledky/",
+      "dt": "2026-05-14T05:58:44Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "děti",
+        "neseme",
+        "následky",
+        "pohodlného",
+        "stylu",
+        "svalů",
+        "tlakem",
+        "vysokým",
+        "životního"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -258,36 +284,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Příští týden v seriálu Ulice: Krutý útok stalkera, Vandino nečekané řešení milenky a pochybnosti ve vztahu",
-      "url": "https://www.betterlife.cz/pristi-tyden-v-serialu-ulice-kruty-utok-stalkera-vandino-necekane-reseni-milenky-a-pochybnosti-ve-vztahu/",
-      "dt": "2026-05-10T15:59:14Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "krutý",
-        "milenky",
-        "nečekané",
-        "pochybnosti",
-        "příští",
-        "seriálu",
-        "stalkera",
-        "týden",
-        "ulice",
-        "vandino",
-        "vztahu",
-        "útok",
-        "řešení"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -298,7 +294,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 60271,
+      "bytes": 55926,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -358,11 +354,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-13T17:30:39Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T05:58:44Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 9,
-          "zpravy": 1
+          "zdravi": 10
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -374,6 +369,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Děti bez svalů s vysokým tlakem. Z pohodlného životního stylu si neseme následky",
+            "publishedAt": "2026-05-14T05:58:44Z"
+          },
           {
             "title": "Česká televize se ohradila proti výši odměny Karla Šípa za Všechnopárty",
             "publishedAt": "2026-05-13T17:30:39Z"
@@ -401,10 +400,6 @@
           {
             "title": "Dvě třetiny žen si namlouvají, že vyvrcholení v posteli nepotřebují. Může za to nevědomá ochrana mysli",
             "publishedAt": "2026-05-11T09:50:19Z"
-          },
-          {
-            "title": "Svlékli se donaha v Naked Attraction a našli skutečnou lásku. Došlo i na první zásnuby",
-            "publishedAt": "2026-05-11T06:44:43Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-14T05:50:09.434063Z",
+  "ingestedAt": "2026-05-14T06:30:13.622314Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "The Talos Principle 3 oficiálně představeno, k dispozici je premiérová ukázka",
+      "url": "https://zing.cz/article/the-talos-principle-3-oficialne-predstaveno-k-dispozici-je-premierova-ukazka",
+      "dt": "2026-05-14T06:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "dispozici",
+        "oficiálně",
+        "premiérová",
+        "principle",
+        "představeno",
+        "talos",
+        "the",
+        "ukázka"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -986,30 +1011,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Šikovný modder rozjel Morrowind přímo uvnitř Falloutu 4",
-      "url": "https://zing.cz/article/sikovny-modder-rozjel-morrowind-primo-uvnitr-falloutu-4",
-      "dt": "2026-05-10T15:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "falloutu",
-        "modder",
-        "morrowind",
-        "přímo",
-        "rozjel",
-        "uvnitř",
-        "šikovný"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1020,7 +1021,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126040,
+      "bytes": 126089,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1057,11 +1058,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-14T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T06:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "other": 39,
-          "zpravy": 1
+          "zpravy": 2,
+          "other": 38
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1073,6 +1074,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "The Talos Principle 3 oficiálně představeno, k dispozici je premiérová ukázka",
+            "publishedAt": "2026-05-14T06:00:00Z"
+          },
           {
             "title": "Star Wars: Fate of the Old Republic nebude zbytečně zdlouhavé",
             "publishedAt": "2026-05-14T05:00:00Z"
@@ -1100,10 +1105,6 @@
           {
             "title": "Saros mělo z hlediska prodejů zklamat a prodat zatím pouze 300 tisíc kopií",
             "publishedAt": "2026-05-13T12:00:00Z"
-          },
-          {
-            "title": "Očekávané novinky ovládly žebříček prodejů na Steamu ještě před svým vydáním",
-            "publishedAt": "2026-05-13T10:00:00Z"
           }
         ]
       }

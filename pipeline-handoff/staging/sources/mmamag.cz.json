@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-14T05:50:09.434063Z",
+  "ingestedAt": "2026-05-14T06:30:13.622314Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Siváka vyzvala zahraniční hvězda. Šampion Enfusion mu vzkázal: Nechci opasek, chci tebe",
+      "url": "https://www.mmamag.cz/sivak-dostal-ostrou-vyzvu-od-sampiona-enfusion/",
+      "dt": "2026-05-14T06:00:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "chci",
+        "enfusion",
+        "hvězda",
+        "nechci",
+        "opasek",
+        "siváka",
+        "tebe",
+        "vyzvala",
+        "vzkázal",
+        "zahraniční",
+        "šampion"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -150,7 +178,7 @@
     },
     {
       "section": "sport",
-      "contentType": "video",
+      "contentType": "article",
       "title": "Dva dny po první výhře v UFC mu shořel dům. Wese Schultze zachránila přítelkyně",
       "url": "https://www.mmamag.cz/bojovnikovi-po-prvni-vyhre-v-ufc-shorel-dum/",
       "dt": "2026-05-13T19:30:00Z",
@@ -1093,35 +1121,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Monika Chochlíková doma nedala Thajce šanci. Před fanoušky v Trenčíně znovu obhájila světový titul",
-      "url": "https://www.mmamag.cz/chochlikova-obhajila-titul-wmc-v-trencine/",
-      "dt": "2026-05-12T12:45:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "chochlíková",
-        "doma",
-        "fanoušky",
-        "monika",
-        "nedala",
-        "obhájila",
-        "světový",
-        "thajce",
-        "titul",
-        "trenčíně",
-        "znovu",
-        "šanci"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1132,7 +1131,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 80278,
+      "bytes": 79641,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1169,7 +1168,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-14T05:39:49Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T06:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1184,6 +1183,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Siváka vyzvala zahraniční hvězda. Šampion Enfusion mu vzkázal: Nechci opasek, chci tebe",
+            "publishedAt": "2026-05-14T06:00:00Z"
+          },
           {
             "title": "Provokující hvězda fitness vytáhla odvážné plavky. Lidé řeší, jestli je na sobě vůbec měla",
             "publishedAt": "2026-05-14T05:39:49Z"
@@ -1211,10 +1214,6 @@
           {
             "title": "Ukradené výhry, nebo jen těsné zápasy? Verdikty v MMA, které fanoušci nevydýchali",
             "publishedAt": "2026-05-13T18:45:00Z"
-          },
-          {
-            "title": "Nate Diaz se vysmál Stricklandovi a Chimaevovi. Jejich nenávist byla jen divadlem pro peníze",
-            "publishedAt": "2026-05-13T18:00:00Z"
           }
         ]
       }

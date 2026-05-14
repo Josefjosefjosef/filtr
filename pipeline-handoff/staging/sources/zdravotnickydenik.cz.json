@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-14T05:50:09.434063Z",
+  "ingestedAt": "2026-05-14T06:30:13.622314Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Dostanete přidáno? O platech zdravotníků by se mělo rozhodovat u jednoho stolu s pojišťovnami",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/o-platech-zdravotniku-by-se-melo-rozhodovat-u-jednoho-stolu-s-pojistovnami/",
+      "dt": "2026-05-14T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dostanete",
+        "jednoho",
+        "mělo",
+        "platech",
+        "pojišťovnami",
+        "přidáno",
+        "rozhodovat",
+        "stolu",
+        "zdravotníků"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -247,34 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Kauza kontaminovaných mlék graduje: Policie prověřuje postup známých výrobců i reakci státu",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/policie-kojenecka-vyziva-vyrobci-stat/",
-      "dt": "2026-05-13T08:44:48Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "graduje",
-        "kauza",
-        "kontaminovaných",
-        "mlék",
-        "policie",
-        "postup",
-        "prověřuje",
-        "reakci",
-        "státu",
-        "výrobců",
-        "známých"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -285,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 81736,
+      "bytes": 87169,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -322,7 +320,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-14T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -337,6 +335,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dostanete přidáno? O platech zdravotníků by se mělo rozhodovat u jednoho stolu s pojišťovnami",
+            "publishedAt": "2026-05-14T06:00:00Z"
+          },
           {
             "title": "Lekce pro Česko? Německo chystá drsnou reformu dlouhodobé péče, dopadne na nejzranitelnější",
             "publishedAt": "2026-05-14T05:00:00Z"
@@ -364,10 +366,6 @@
           {
             "title": "Tři úmrtí a otázky bez odpovědí: Experti pátrají, jak se hantavirus dostal na loď Hondius",
             "publishedAt": "2026-05-13T11:27:03Z"
-          },
-          {
-            "title": "Skandál v ÚVN: Policie obvinila 10 lidí z falšování lékařských posudků, dalšího zadržela v noci",
-            "publishedAt": "2026-05-13T09:46:38Z"
           }
         ]
       }

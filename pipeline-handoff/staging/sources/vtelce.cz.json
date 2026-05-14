@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-05-14T05:50:09.434063Z",
+  "ingestedAt": "2026-05-14T06:30:13.622314Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Česká televize odvysílá všechny zápasy MS v hokeji. Do komentátorských křesel usednou známé tváře",
+      "url": "https://www.vtelce.cz/ceska-televize-odvysila-vsechny-zapasy-ms-v-hokeji-do-komentatorskych-kresel-usednou-zname-tvare/",
+      "dt": "2026-05-14T05:58:25Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "hokeji",
+        "komentátorských",
+        "křesel",
+        "odvysílá",
+        "televize",
+        "tváře",
+        "usednou",
+        "všechny",
+        "známé",
+        "zápasy",
+        "česká"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -260,32 +288,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Ulice: Adriana je strachy bez sebe a bojí se nejhoršího, Klárka totiž zmizela",
-      "url": "https://www.vtelce.cz/ulice-adriana-je-strachy-bez-sebe-a-boji-se-nejhorsiho-klarka-totiz-zmizela/",
-      "dt": "2026-05-12T16:14:32Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "adriana",
-        "bojí",
-        "klárka",
-        "nejhoršího",
-        "sebe",
-        "strachy",
-        "totiž",
-        "ulice",
-        "zmizela"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -296,7 +298,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 65059,
+      "bytes": 65586,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -333,10 +335,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-13T18:28:58Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T05:58:25Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "other": 10
+          "zpravy": 1,
+          "other": 9
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -348,6 +351,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česká televize odvysílá všechny zápasy MS v hokeji. Do komentátorských křesel usednou známé tváře",
+            "publishedAt": "2026-05-14T05:58:25Z"
+          },
           {
             "title": "To: Psychické potíže po skončení natáčení, vyděšení dětští herci a rada „nevěřte klaunům“ jako konkurenční boj",
             "publishedAt": "2026-05-13T18:28:58Z"
@@ -375,10 +382,6 @@
           {
             "title": "Farma Česko II: Nové prostředí, drsné podmínky a tvrdý boj o milion",
             "publishedAt": "2026-05-13T06:44:03Z"
-          },
-          {
-            "title": "Smrtonosná past 2: Žaloba kvůli obyčejné vrtačce, vymyšlená porcelánová pistole a alternativní scénář",
-            "publishedAt": "2026-05-12T17:12:46Z"
           }
         ]
       }
