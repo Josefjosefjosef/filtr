@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-14T03:10:23.004008Z",
+  "ingestedAt": "2026-05-14T03:50:22.875978Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Přijímačky 2026: Žáci už teď zjistí, kolik mají bodů. O přijetí se dozví v pátek",
+      "url": "https://www.denik.cz/skolstvi-a-vzdelavani/prijimacky-na-stredni-skoly-2026-kde-najit-vysledky-body-prijeti.html",
+      "dt": "2026-05-14T03:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "2026",
+        "bodů",
+        "dozví",
+        "kolik",
+        "mají",
+        "pátek",
+        "přijetí",
+        "přijímačky",
+        "zjistí",
+        "žáci"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -625,34 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Syn v Šumperku po hádce bodl nožem otce do zad. Potom sám přivolal policii",
-      "url": "https://www.denik.cz/krimi/sumperk-utok-otec-syn-napadeni-lovecky-nuz-zraneni-policie-zasah.html",
-      "dt": "2026-05-13T11:10:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bodl",
-        "hádce",
-        "nožem",
-        "otce",
-        "policii",
-        "potom",
-        "přivolal",
-        "syn",
-        "sám",
-        "zad",
-        "šumperku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -663,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29460,
+      "bytes": 29799,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -700,7 +699,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-14T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T03:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -715,6 +714,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Přijímačky 2026: Žáci už teď zjistí, kolik mají bodů. O přijetí se dozví v pátek",
+            "publishedAt": "2026-05-14T03:30:00Z"
+          },
           {
             "title": "Měl připravenou zbraň, Hitlera nezabil jen shodou okolností. Studenta popravili",
             "publishedAt": "2026-05-14T03:00:00Z"
@@ -742,10 +745,6 @@
           {
             "title": "Dvanáct let zneužívání. Německý dětský lékař čelí obžalově ze sexuálních útoků",
             "publishedAt": "2026-05-13T17:23:00Z"
-          },
-          {
-            "title": "V Macinkovi je zlo, říká spisovatel Martin Vopěnka. Chce kandidovat do Senátu",
-            "publishedAt": "2026-05-13T17:00:00Z"
           }
         ]
       }
