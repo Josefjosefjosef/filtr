@@ -31,4 +31,6 @@ Write-Host ("env_SILVER_AUTONOMOUS_MAX_TOTAL_WALL_SECONDS=" + (Get-SilverEnvIntO
 Write-Host "default_hard_cap_cycles=512 (if env unset and -MaxAutonomousHardCycles 0)"
 Write-Host "default_cycle_wall_sec=7200 (if -MaxCycleWallSeconds 0 and env unset; -1 disables)"
 Write-Host "default_total_wall_sec=86400 (if -TotalWallSeconds 0 and env unset; -1 disables)"
+Write-Host "no_progress_baseline_policy=If core_engine_progress contains baseline_pending_precise_measurement, autonomous no-progress streak does not advance (SILVER_NO_PROGRESS_CHECK_SKIPPED); other breakers unchanged."
+Write-Host "no_progress_baseline_probe=powershell -ExecutionPolicy Bypass -File scripts/silver-autonomous-no-progress-baseline-probe.ps1"
 Write-Host "=== END_SILVER_AUTONOMOUS_LOOP_SAFETY_DIAGNOSTIC ==="

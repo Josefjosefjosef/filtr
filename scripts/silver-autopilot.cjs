@@ -764,11 +764,18 @@ function writeRunReport(payload) {
     "failed_reason=" + String(payload.failed_reason || ""),
     "next_recommended_command=" + String(payload.next_recommended_command || ""),
     "reason_for_stop=" + String(payload.reason_for_stop || ""),
+  ];
+  const cepRaw = payload.core_engine_progress;
+  const cep = cepRaw == null ? "" : String(cepRaw).trim();
+  if (cep && !cep.includes("baseline_pending_precise_measurement")) {
+    lines.push("core_engine_progress=" + cep);
+  }
+  lines.push(
     "",
     "## Notes",
     "- Autopilot V1 never commits secrets. Do not paste `OPENAI_API_KEY` into this file.",
     "",
-  ];
+  );
   fs.writeFileSync(RUN_REPORT, lines.join("\n"), "utf8");
 }
 
