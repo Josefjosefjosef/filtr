@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-14T07:56:13.850433Z",
+  "ingestedAt": "2026-05-14T08:35:05.398287Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Klíšťata ve městech jsou dvakrát nebezpečnější než v lese. Experti varují před vysokou infekčností",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/klistata-mesta-nebezpeci-les-infekce/",
+      "dt": "2026-05-14T08:11:11Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dvakrát",
+        "experti",
+        "infekčností",
+        "klíšťata",
+        "lese",
+        "městech",
+        "nebezpečnější",
+        "než",
+        "varují",
+        "vysokou"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -244,34 +271,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Skandál v ÚVN: Policie obvinila 10 lidí z falšování lékařských posudků, dalšího zadržela v noci",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/uvn-10-obvinenych-posudky/",
-      "dt": "2026-05-13T09:46:38Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "dalšího",
-        "falšování",
-        "lidí",
-        "lékařských",
-        "noci",
-        "obvinila",
-        "policie",
-        "posudků",
-        "skandál",
-        "zadržela",
-        "úvn"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +281,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 87527,
+      "bytes": 86640,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +318,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-14T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T08:11:11Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -334,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Klíšťata ve městech jsou dvakrát nebezpečnější než v lese. Experti varují před vysokou infekčností",
+            "publishedAt": "2026-05-14T08:11:11Z"
+          },
           {
             "title": "Jednodenní péče má růst. Soukromí poskytovatelé ale varují před slovenským scénářem",
             "publishedAt": "2026-05-14T07:00:00Z"
@@ -361,10 +364,6 @@
           {
             "title": "Nenápadné příznaky, které nesmíte přehlížet: Rakovina hlavy a krku se týká tisíců Čechů",
             "publishedAt": "2026-05-13T13:20:27Z"
-          },
-          {
-            "title": "Eurokomisař Síkela odhalil miliardový plán: Jak EU reaguje na dezinformace a nové nemoci?",
-            "publishedAt": "2026-05-13T12:09:52Z"
           }
         ]
       }

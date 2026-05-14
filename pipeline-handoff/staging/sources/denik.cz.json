@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-14T07:56:13.850433Z",
+  "ingestedAt": "2026-05-14T08:35:05.398287Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Chytré kamery na fotbale? Klíčové, řekl po Slavii Šťastný. Plán ale může narazit",
+      "url": "https://www.denik.cz/z_domova/fotbal-pokrocile-kamery-jsou-klicove-pro-bezpecnost-rekl-ministr-boris-stastny.html",
+      "dt": "2026-05-14T08:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ale",
+        "chytré",
+        "fotbale",
+        "kamery",
+        "klíčové",
+        "narazit",
+        "plán",
+        "slavii",
+        "řekl",
+        "šťastný"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -634,31 +661,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pán prstenů byl velký hazard, připomněl v Cannes Peter Jackson",
-      "url": "https://www.denik.cz/film-a-televize/cannes-peter-jackson-pan-prstenu-king-kong.html",
-      "dt": "2026-05-13T13:57:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "cannes",
-        "hazard",
-        "jackson",
-        "peter",
-        "prstenů",
-        "pán",
-        "připomněl",
-        "velký"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -669,7 +671,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30221,
+      "bytes": 30374,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -706,10 +708,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-14T07:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T08:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 24,
+          "sport": 1,
+          "zpravy": 23,
           "finance": 1
         },
         "drop_counts": {
@@ -722,6 +725,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chytré kamery na fotbale? Klíčové, řekl po Slavii Šťastný. Plán ale může narazit",
+            "publishedAt": "2026-05-14T08:00:00Z"
+          },
           {
             "title": "Muž odevzdal policistům kilogram starého semtexu. Trhavina již krystalizovala",
             "publishedAt": "2026-05-14T07:40:00Z"
@@ -749,10 +756,6 @@
           {
             "title": "Čína a USA se mohou kvůli Tchaj-wanu dostat do střetu, varoval Si Trumpa",
             "publishedAt": "2026-05-14T04:49:00Z"
-          },
-          {
-            "title": "Nejmenší ostrovní stát světa chce změnit název. Má to praktické důvody",
-            "publishedAt": "2026-05-14T04:36:00Z"
           }
         ]
       }
