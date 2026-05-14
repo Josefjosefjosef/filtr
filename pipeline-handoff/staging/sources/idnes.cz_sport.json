@@ -1,27 +1,53 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-14T20:00:03.349482Z",
+  "ingestedAt": "2026-05-14T20:39:27.114351Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Nečas v NCAA přestoupil do prestižní USC, v minulosti tam hrály hvězdy i Bronny",
-      "url": "https://www.idnes.cz/sport/basket/basketbalista-necas-prestoupil-v-ncaa-do-tymu-university-of-south-carolina.A260514_202943_sport-basket_kazdt",
-      "dt": "2026-05-14T18:57:00Z",
+      "title": "Trenéři zapsali na soupisku dvacet dva jmen. Chybí Mandát, Ščotka a Kváča",
+      "url": "https://www.idnes.cz/hokej/ms-2026/soupiska-ceska-reprezentace-treneri.A260514_220209_ms-hokej-2026_hrj",
+      "dt": "2026-05-14T20:20:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "bronny",
-        "hrály",
-        "hvězdy",
-        "minulosti",
-        "ncaa",
+        "chybí",
+        "dva",
+        "dvacet",
+        "jmen",
+        "kváča",
+        "mandát",
+        "soupisku",
+        "trenéři",
+        "zapsali",
+        "ščotka"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nečas přestoupil na prestižní South Carolinu, jde do boje s Kentucky i Floridou",
+      "url": "https://www.idnes.cz/sport/basket/basketbalista-necas-prestoupil-v-ncaa-do-tymu-university-of-south-carolina.A260514_202943_sport-basket_kazdt",
+      "dt": "2026-05-14T19:57:40Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "boje",
+        "carolinu",
+        "floridou",
+        "jde",
+        "kentucky",
         "nečas",
         "prestižní",
         "přestoupil",
-        "tam",
-        "usc"
+        "south"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -754,31 +780,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Schweiner s Trousilem zahájili na písku v Číně obnovenou spolupráci výhrou",
-      "url": "https://www.idnes.cz/sport/ostatni/turnaj-pro-tour-kategorie-challenge-plazovy-volejbal-sia-men.A260514_122721_sporty_ten",
-      "dt": "2026-05-14T10:30:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "obnovenou",
-        "písku",
-        "schweiner",
-        "spolupráci",
-        "trousilem",
-        "výhrou",
-        "zahájili",
-        "číně"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 44731,
+      "bytes": 44869,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T18:57:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T20:20:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -842,8 +843,12 @@
         },
         "sample_titles": [
           {
-            "title": "Nečas v NCAA přestoupil do prestižní USC, v minulosti tam hrály hvězdy i Bronny",
-            "publishedAt": "2026-05-14T18:57:00Z"
+            "title": "Trenéři zapsali na soupisku dvacet dva jmen. Chybí Mandát, Ščotka a Kváča",
+            "publishedAt": "2026-05-14T20:20:00Z"
+          },
+          {
+            "title": "Nečas přestoupil na prestižní South Carolinu, jde do boje s Kentucky i Floridou",
+            "publishedAt": "2026-05-14T19:57:40Z"
           },
           {
             "title": "Po domácím MS výrazně roste zájem dívek o hokej. Motivací je i účast na olympiádě",
@@ -868,10 +873,6 @@
           {
             "title": "Pád v posledních metrech a konec šancí sprinterských hvězd. Na Giru slaví Ballerini",
             "publishedAt": "2026-05-14T16:02:39Z"
-          },
-          {
-            "title": "Průvodce MS v hokeji 2026: Vše podstatné o šampionátu ve Švýcarsku",
-            "publishedAt": "2026-05-14T16:00:00Z"
           }
         ]
       }

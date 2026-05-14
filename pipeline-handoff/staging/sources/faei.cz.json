@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-14T20:00:03.349482Z",
+  "ingestedAt": "2026-05-14T20:39:27.114351Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Vláda si otevírá dveře k dluhovému eldorádu",
+      "url": "https://profitonline.cz/vlada-si-otevira-dvere-k-dluhovemu-eldoradu/",
+      "dt": "2026-05-14T20:15:41Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dluhovému",
+        "dveře",
+        "eldorádu",
+        "otevírá",
+        "vláda"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -260,30 +282,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Hypotéky zůstávají nad pěti procenty, splátky výrazně rostou",
-      "url": "https://profitonline.cz/hypoteky-zustavaji-nad-peti-procenty-splatky-vyrazne-rostou/",
-      "dt": "2026-05-12T20:30:42Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "hypotéky",
-        "procenty",
-        "pěti",
-        "rostou",
-        "splátky",
-        "výrazně",
-        "zůstávají"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -294,7 +292,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18796,
+      "bytes": 18613,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -331,7 +329,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-14T19:50:57Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T20:15:41Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -347,6 +345,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vláda si otevírá dveře k dluhovému eldorádu",
+            "publishedAt": "2026-05-14T20:15:41Z"
+          },
           {
             "title": "Dluhopisy Republiky se vrací. Vláda si bude opět půjčovat od domácností",
             "publishedAt": "2026-05-14T19:50:57Z"
@@ -374,10 +376,6 @@
           {
             "title": "Manažeři kvality jsou nepostradatelní. Teď jim firmy rekordně přidaly",
             "publishedAt": "2026-05-13T17:30:00Z"
-          },
-          {
-            "title": "Zaostává EU za USA? Landovský se v zásadě trefil do černého",
-            "publishedAt": "2026-05-13T10:00:15Z"
           }
         ]
       }
