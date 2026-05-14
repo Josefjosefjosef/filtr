@@ -1,44 +1,51 @@
 # SILVER_RUN_REPORT
 
-timestamp=2026-05-14 (note_write_warranty_object diagnostic)
-command=node scripts/silver-note-write-warranty-object-diagnostic.cjs
+timestamp=2026-05-14T03:31:49.088Z
+command=--status
 status=PASS
-branch=fix/silver-note-write-warranty-object-diagnostic
-base_main_commit=763e659c6e16bec9bc55ddd09ace2487db3502f7
+branch=fix/silver-cursor-agent-adapter-v1
+commit=c62957bd8dc719c6f1b53bf899afd9b12ae62ad7
 git_status_clean=YES
-changed_files=scripts/silver-note-write-warranty-object-diagnostic.cjs;scripts/silver-note-write-warranty-object-diagnostic-report.json;SILVER_RUN_REPORT.md;SILVER_NEXT_ACTION.md
-pr_info=create via GitHub Desktop Preview PR or gh pr create --fill
+changed_files=
+pr_info=(none)
 engine_changed=NO
 assets_app_changed=NO
 ui_changed=NO
 css_changed=NO
 backend_changed=NO
-safety_counters=0
-calendar_write_20k=
-calendar_query_20k=
-next_recommended_command=node scripts/silver-autopilot.cjs --status
-reason_for_stop=
+safety_counters=dangerous_write_count=0;false_write_count=0;query_created_write_count=0;write_when_negated_count=0
+calendar_write_20k=SKIPPED
+calendar_query_20k=SKIPPED
+gate_realistic_mobile=PASS
+raw_realistic_mobile_mentions_FAIL=0
+raw_realistic_mobile_mentions_PASS=0
+selected_authoritative_source=silver-realistic-mobile-corpus-report.json:real_mobile_cases+status_disk_only
+proof_gate_consistency_reason=authoritative=PASS@silver-realistic-mobile-corpus-report.json:real_mobile_cases+status_disk_only | deep_product_embedded_gate=FAIL | raw_substring_FAIL_mentions=0_PASS_mentions=0 | diagnosis=embedded_sibling_FAIL_non_authoritative_when_standalone_audit_and_corpus_JSON_PASS_deep_may_rerun_gates | context=--status_uses_on_disk_JSON_only_no_post_merge_step_exit_signal
+proof_summary_consistent=YES
 post_merge_proof_exit_code=
 post_merge_proof_logical_status=
 post_merge_proof_process_exit=
 tracked_report_restore_before_realistic_mobile=
 failed_step=
 failed_reason=
+next_recommended_command=node scripts/silver-autopilot.cjs --verify-pr=<NUMBER>
+reason_for_stop=
 
-## NOTE_WRITE_WARRANTY_OBJECT_DIAGNOSTIC (scripts-only)
+## SILVER_CURSOR_AGENT_ADAPTER_V1 (scripts-only)
 
-target_cluster=realistic_mobile||note_write_warranty_object||intent_fail
-total_cluster_cases=460
-fail_count=222
-true_engine_fail_count=0
-harness_gold_problem_count=221
-safe_clarification_ok_count=0
-dominant_subcluster=harness_concrete_gold_vs_engine_clarification (221)
-query_became_create_count=1
-ready_for_engine_fix=NO
-interpretation=Current failures are dominated by harness/gold expecting concrete note.create while the engine returns a safe clarification/unknown path; not classified as TRUE_ENGINE_FAIL. No engine or assets change in this PR.
+cursor_cli_found=YES
+cursor_agent_help_exit=0
+cursor_agent_supports_input_output=NO
+cursor_agent_supports_stdin=YES
+cursor_agent_supports_headless=NO
+cursor_agent_interactive_only=NO
+adapter_ready=YES
+adapter_ready_reason=agent_stdin_probe_completed_without_timeout
+adapter_script=scripts/silver-cursor-agent-adapter.ps1
+recommended_cursor_command=powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE}
+diagnostic_report=scripts/silver-cursor-agent-adapter-diagnostic-report.json
+notes=Global `cursor --help` documents pipe-to-dash for `cursor.exe -`; `cursor agent --help` shows the same text (no `--input`/`--output`). Probes used one harmless stdin line only; `cursor --chat` UI was not launched (only `--chat --help`). Re-run diagnostic after Cursor upgrades.
 
 ## Notes
 
 - Autopilot V1 never commits secrets. Do not paste `OPENAI_API_KEY` into this file.
-- Stale `scripts/silver-realistic-mobile-corpus-report.json` may show 100% for this cluster; live `node scripts/audit_silver_realistic_mobile_corpus.cjs` reports `note_write_warranty_object||intent_fail` mass consistent with this diagnostic (~220 on the 450 canonical seeds).

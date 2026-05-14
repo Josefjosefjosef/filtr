@@ -50,6 +50,8 @@ node scripts/silver-autopilot.cjs --loop-once
 | `SILVER_PROGRESS_LOG.md` | Append-only cycle log from `scripts/silver-autopilot-loop.ps1` (timestamps, exits, baselines; no secrets). |
 | `scripts/silver-autopilot.cjs` | Implementation. |
 | `scripts/silver-autopilot-loop.ps1` | **FULL AUTO LOOP TRIGGER V1** — Windows orchestrator: validates repo path, guards `SILVER_NEXT_ACTION.md`, optional Cursor CLI (`-CursorCommand` with `{TASK_FILE}` / `{OUTPUT_FILE}`), then `node scripts/silver-autopilot.cjs --full-auto-loop --max-steps=1`, then `--status`, colored console summary, beeps, and `SILVER_PROGRESS_LOG.md`. |
+| `scripts/silver-cursor-agent-adapter-diagnostic.ps1` | Probes `where.exe cursor`, `cursor --version`, help text, and short stdin probes (harmless prompt only); writes `scripts/silver-cursor-agent-adapter-diagnostic-report.json`. |
+| `scripts/silver-cursor-agent-adapter.ps1` | Optional wrapper: pipe task file into `cursor … agent`, capture output to `SILVER_CURSOR_OUTPUT.md` path; `-DryRun` prints the planned `cmd.exe` line. |
 
 ## Full auto loop trigger (PowerShell V1)
 
@@ -61,8 +63,19 @@ powershell -ExecutionPolicy Bypass -File scripts/silver-autopilot-loop.ps1 -DryR
 
 # Example real cycle (requires OPENAI_API_KEY in environment for autonomous next-task generation)
 powershell -ExecutionPolicy Bypass -File scripts/silver-autopilot-loop.ps1 -MaxCycles 1 -SleepSeconds 5 `
-  -CursorCommand "cursor-agent --input {TASK_FILE} --output {OUTPUT_FILE}"
+  -CursorCommand "powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE}"
 ```
+
+### Cursor agent adapter V1 (Windows)
+
+`cursor agent` does **not** document `--input` / `--output` in current CLI help; automation uses a **cmd.exe** pipe from a temp task file into `cursor.cmd agent`, with stdout/stderr redirected to files (see `scripts/silver-cursor-agent-adapter-diagnostic.ps1` JSON report).
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter-diagnostic.ps1
+powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -DryRun -TaskFile SILVER_NEXT_ACTION.md -OutputFile SILVER_CURSOR_OUTPUT.md
+```
+
+If `adapter_ready` in `scripts/silver-cursor-agent-adapter-diagnostic-report.json` is **NO**, the wrapper exits **2** with a clear STOP message (no fake automation).
 
 Parameters:
 

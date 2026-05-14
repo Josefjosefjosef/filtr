@@ -1,0 +1,65 @@
+{
+    "schema":  "silver-cursor-agent-adapter-diagnostic-v1",
+    "timestamp_utc":  "2026-05-14T03:30:20.8091143Z",
+    "repo_root":  "C:\\projects\\filtr",
+    "cursor_where_exit":  0,
+    "cursor_where_text":  "C:\\Users\\spedk\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin\\cursor\r\nC:\\Users\\spedk\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin\\cursor.cmd",
+    "cursor_exe_path":  "C:\\Users\\spedk\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin\\cursor.cmd",
+    "cursor_cli_found":  "YES",
+    "cursor_version":  "2.5.22\n0eda506a36f70f8dc866c1ea642fcaf620090080\nx64",
+    "cursor_version_exit":  0,
+    "cursor_help_exit":  0,
+    "cursor_help_bytes":  8593,
+    "cursor_agent_argv_help_exit":  0,
+    "cursor_agent_argv_help_stdout_sample":  "Cursor 2.5.22\n\nUsage: cursor.exe [options][paths...]\n\nTo read output from another program, append \u0027-\u0027 (e.g. \u0027echo Hello World | cursor.exe -\u0027)\n\nOptions\n  -d --diff \u003cfile\u003e \u003cfile\u003e                    Compare two files with each\n                                             other.\n  -m --merge \u003cpath1\u003e \u003cpath2\u003e \u003cbase\u003e \u003cresult\u003e Perform a three-way merge by\n                                             providing paths for two modified\n                                             versions of a file, the common\n                                             origin of both modified versions\n                                             and the output file to save merge\n                                             results.\n  -a --add \u003cfolder\u003e                          Add folder(s) to the last active\n                                             window.\n  --remove \u003cfolder\u003e                          Remove folder(s) from the last\n                                             active window.\n  -g --goto \u003cfile:line[:character]\u003e          Open a file at the path on the\n                                             specified line and character\n                                             position.\n  -n --new-window                            Force to open a new window.\n  -r --reuse-window                          Force to open a file or folder in\n                                             an already opened window.\n  --suppress-popups-on-startup               Suppress notification popups on\n                                             startup.\n  --glass                                    Enable the multi-workbench\n                                             architecture (dev-only).\n  -w --wait                                  Wait for the files to be closed\n                                             before returning.\n  --locale \u003clocale\u003e                          The locale to use (e.g. en-US or\n                                             zh-TW).\n  --user-data-dir \u003cdir\u003e                      ",
+    "cursor_agent_help_exit":  0,
+    "cursor_agent_help_stdout_sample":  "Cursor 2.5.22\n\nUsage: cursor.exe [options][paths...]\n\nTo read output from another program, append \u0027-\u0027 (e.g. \u0027echo Hello World | cursor.exe -\u0027)\n\nOptions\n  -d --diff \u003cfile\u003e \u003cfile\u003e                    Compare two files with each\n                                             other.\n  -m --merge \u003cpath1\u003e \u003cpath2\u003e \u003cbase\u003e \u003cresult\u003e Perform a three-way merge by\n                                             providing paths for two modified\n                                             versions of a file, the common\n                                             origin of both modified versions\n                                             and the output file to save merge\n                                             results.\n  -a --add \u003cfolder\u003e                          Add folder(s) to the last active\n                                             window.\n  --remove \u003cfolder\u003e                          Remove folder(s) from the last\n                                             active window.\n  -g --goto \u003cfile:line[:character]\u003e          Open a file at the path on the\n                                             specified line and character\n                                             position.\n  -n --new-window                            Force to open a new window.\n  -r --reuse-window                          Force to open a file or folder in\n                                             an already opened window.\n  --suppress-popups-on-startup               Suppress notification popups on\n                                             startup.\n  --glass                                    Enable the multi-workbench\n                                             architecture (dev-only).\n  -w --wait                                  Wait for the files to be closed\n                                             before returning.\n  --locale \u003clocale\u003e                          The locale to use (e.g. en-US or\n                                             zh-TW).\n  --user-data-dir \u003cdir\u003e                      ",
+    "cursor_help_subcommand_agent_exit":  0,
+    "cursor_help_subcommand_agent_stdout_sample":  "",
+    "cursor_agent_supports_input_output":  "NO",
+    "flag_mentions":  {
+                          "print":  "NO",
+                          "prompt":  "NO",
+                          "input":  "NO",
+                          "output":  "NO",
+                          "headless":  "NO",
+                          "non-interactive":  "NO",
+                          "yes":  "NO",
+                          "force":  "YES",
+                          "cwd":  "NO",
+                          "workspace":  "NO"
+                      },
+    "main_help_pipe_dash_mentioned":  "YES",
+    "safe_probe":  {
+                       "cursor_agent_stdin_5s":  {
+                                                     "exit":  0,
+                                                     "timedOut":  false,
+                                                     "stdout_len":  94,
+                                                     "stderr_len":  0
+                                                 },
+                       "cursor_chat_help":  {
+                                                "exit":  0,
+                                                "timedOut":  false
+                                            },
+                       "cursor_dash_stdin_5s":  {
+                                                    "exit":  0,
+                                                    "timedOut":  false,
+                                                    "stdout_len":  73,
+                                                    "stderr_len":  0
+                                                }
+                   },
+    "adapter_ready":  "YES",
+    "adapter_ready_reason":  "agent_stdin_probe_completed_without_timeout",
+    "recommended_cursor_command":  "powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE}",
+    "diagnostic_exit":  0,
+    "cursor_agent_supports_stdin":  "YES",
+    "cursor_agent_supports_headless":  "NO",
+    "cursor_agent_interactive_only":  "NO",
+    "safe_launch_assessment":  {
+                                   "note":  "No real development tasks; harmless probe line only for stdin probes.",
+                                   "cursor_agent":  "stdin_probe_5s_harmless_prompt_only",
+                                   "cursor_minus":  "stdin_probe_5s_harmless_prompt_only",
+                                   "cursor_chat":  "help_only_cursor_--chat_--help_full_window_chat_skipped_intentionally",
+                                   "repo_safe_unattended_cursor_agent":  "UNKNOWN_exit_with_output_automation_not_verified"
+                               }
+}

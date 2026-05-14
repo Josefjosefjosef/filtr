@@ -2,10 +2,11 @@
 
 # Next action
 
-1. Merge or review PR `fix/silver-note-write-warranty-object-diagnostic` (scripts-only diagnostic + report JSON).
-2. `node scripts/silver-autopilot.cjs --status`
-3. For `note_write_warranty_object||intent_fail`: prefer **harness / gold relaxation** (accept safe clarification vs strict `note.create` gold for the canonical “Ulož poznámku: …” warranty family) before any engine routing work — `ready_for_engine_fix=NO` from `node scripts/silver-note-write-warranty-object-diagnostic.cjs`.
-4. Re-run full mobile audit when ready: `node scripts/audit_silver_realistic_mobile_corpus.cjs` (restores live `scripts/silver-realistic-mobile-corpus-report.json` metrics).
+1. Review or merge PR https://github.com/Josefjosefjosef/filtr/pull/4349 (`fix/silver-cursor-agent-adapter-v1` — Cursor agent adapter diagnostic + Windows wrapper; scripts/docs only).
+2. After any Cursor IDE upgrade, re-run `powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter-diagnostic.ps1` and confirm `adapter_ready` in `scripts/silver-cursor-agent-adapter-diagnostic-report.json`.
+3. For FULL AUTO LOOP with Cursor CLI: `-CursorCommand "powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE}"` (do **not** use `--input` / `--output` on `cursor agent`; they are absent from current help).
+4. `node scripts/silver-autopilot.cjs --status`
+5. For `note_write_warranty_object||intent_fail`: prefer harness / gold relaxation before engine routing when diagnostics say `ready_for_engine_fix=NO`.
 
 ## Template (generic)
 
