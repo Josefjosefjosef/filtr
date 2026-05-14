@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-14T01:51:45.592341Z",
+  "ingestedAt": "2026-05-14T02:31:26.478848Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Stavař z Litoměřicka měl klientům způsobit milionové škody. Propadl hazardu",
+      "url": "https://tydenikpolicie.cz/stavar-z-litomericka-mel-klientum-zpusobit-milionove-skody-propadl-hazardu/",
+      "dt": "2026-05-14T02:02:30Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "hazardu",
+        "klientům",
+        "litoměřicka",
+        "milionové",
+        "měl",
+        "propadl",
+        "stavař",
+        "způsobit",
+        "škody"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -232,34 +258,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Agresivní vandal v centru Plzně demoloval zaparkovaná auta, výlohy prodejen i dopravní značení",
-      "url": "https://tydenikpolicie.cz/agresivni-vandal-v-centru-plzne-demoloval-zaparkovana-auta-vylohy-prodejen-i-dopravni-znaceni/",
-      "dt": "2026-05-13T10:23:04Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "agresivní",
-        "auta",
-        "centru",
-        "demoloval",
-        "dopravní",
-        "plzně",
-        "prodejen",
-        "vandal",
-        "výlohy",
-        "zaparkovaná",
-        "značení"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -270,7 +268,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15908,
+      "bytes": 15782,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -307,7 +305,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-13T22:02:12Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T02:02:30Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -322,6 +320,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Stavař z Litoměřicka měl klientům způsobit milionové škody. Propadl hazardu",
+            "publishedAt": "2026-05-14T02:02:30Z"
+          },
           {
             "title": "Muž chtěl ve Zlíně zapálit čerpací stanici",
             "publishedAt": "2026-05-13T22:02:12Z"
@@ -349,10 +351,6 @@
           {
             "title": "Na pražském Žižkově někdo naházel na hromadu sdílená elektrokola a zapálil je",
             "publishedAt": "2026-05-13T11:51:03Z"
-          },
-          {
-            "title": "Ukradenou škodovku v hodnotě 300 tisíc korun chtěl prodat za 15 tisíc",
-            "publishedAt": "2026-05-13T11:43:36Z"
           }
         ]
       }
