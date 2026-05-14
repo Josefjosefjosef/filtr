@@ -1,22 +1,49 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-14T02:31:26.478848Z",
+  "ingestedAt": "2026-05-14T03:10:23.004008Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Trump oficiálně zahájil návštěvu Číny",
+      "title": "Kyjev čelí masivnímu útoku ruských dronů a střel, uvádí činitelé",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/kyjev-celi-masivnimu-utoku-ruskych-dronu-a-strel-uvadi-cinitele-373412",
+      "dt": "2026-05-14T02:56:14Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dronů",
+        "kyjev",
+        "masivnímu",
+        "ruských",
+        "střel",
+        "uvádí",
+        "útoku",
+        "čelí",
+        "činitelé"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Si se v Pekingu sešel s Trumpem, mluvit budou hlavně o obchodu",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/trump-oficialne-zahaji-navstevu-ciny-v-planu-ma-jednat-zejmena-o-obchodu-373411",
       "dt": "2026-05-14T01:34:18Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "návštěvu",
-        "oficiálně",
-        "trump",
-        "zahájil",
-        "číny"
+        "hlavně",
+        "mluvit",
+        "obchodu",
+        "pekingu",
+        "sešel",
+        "trumpem"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -720,29 +747,6 @@
         "pávi",
         "ravenny",
         "zaplavili"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Mrkání černých děr popsal brněnský student",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/mrkani-cernych-der-popsal-brnensky-student-373369",
-      "dt": "2026-05-13T08:56:16Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "brněnský",
-        "děr",
-        "mrkání",
-        "popsal",
-        "student",
-        "černých"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1504,7 +1508,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43120,
+      "bytes": 43311,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1564,12 +1568,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T01:34:18Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T02:56:14Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 24,
+          "zpravy": 25,
           "finance": 2,
-          "other": 4
+          "other": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1582,7 +1586,11 @@
         },
         "sample_titles": [
           {
-            "title": "Trump oficiálně zahájil návštěvu Číny",
+            "title": "Kyjev čelí masivnímu útoku ruských dronů a střel, uvádí činitelé",
+            "publishedAt": "2026-05-14T02:56:14Z"
+          },
+          {
+            "title": "Si se v Pekingu sešel s Trumpem, mluvit budou hlavně o obchodu",
             "publishedAt": "2026-05-14T01:34:18Z"
           },
           {
@@ -1608,10 +1616,6 @@
           {
             "title": "Případů kladení kamení či jiných předmětů do kolejiště v Česku stále přibývá",
             "publishedAt": "2026-05-13T18:10:41Z"
-          },
-          {
-            "title": "SOUHRN: Zásadní události středy 13. května",
-            "publishedAt": "2026-05-13T16:29:00Z"
           }
         ]
       }
@@ -1717,7 +1721,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77332,
+      "bytes": 77417,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
