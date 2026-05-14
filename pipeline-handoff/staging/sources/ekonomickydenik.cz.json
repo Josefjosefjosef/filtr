@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-14T05:10:28.692968Z",
+  "ingestedAt": "2026-05-14T05:50:09.434063Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "ČEZ zvyšuje zisk. Pomohl hlavně konec mimořádné daně",
+      "url": "https://ekonomickydenik.cz/cez-zvysuje-zisk-konec-mimoradne-dane/",
+      "dt": "2026-05-14T05:31:48Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "daně",
+        "hlavně",
+        "konec",
+        "mimořádné",
+        "pomohl",
+        "zisk",
+        "zvyšuje",
+        "čez"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -759,32 +784,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Půlka úrody ovoce je pryč. Škody po mrazech půjdou do stovek milionů",
-      "url": "https://ekonomickydenik.cz/pulka-urody-ovoce-pryc-skody-mrazy/",
-      "dt": "2026-05-12T12:57:26Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "milionů",
-        "mrazech",
-        "ovoce",
-        "pryč",
-        "půjdou",
-        "půlka",
-        "stovek",
-        "úrody",
-        "škody"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72218,
+      "bytes": 72208,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T04:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T05:31:48Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -850,6 +849,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "ČEZ zvyšuje zisk. Pomohl hlavně konec mimořádné daně",
+            "publishedAt": "2026-05-14T05:31:48Z"
+          },
           {
             "title": "Kolik Rusko vydělává na zablokovaném Hormuzu? Tučné sumy tečou za ropu a plyn",
             "publishedAt": "2026-05-14T04:15:00Z"
@@ -877,10 +880,6 @@
           {
             "title": "Převod auta kompletně online a SPZ do boxů. Proč návrh posbíral kritiku?",
             "publishedAt": "2026-05-13T13:55:02Z"
-          },
-          {
-            "title": "Cirkus Václava Klause. Zdechovský zesměšňuje tým poradců ministra Macinky",
-            "publishedAt": "2026-05-13T13:09:00Z"
           }
         ]
       }

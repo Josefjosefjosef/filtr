@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vlasta.cz",
-  "ingestedAt": "2026-05-14T05:10:28.692968Z",
+  "ingestedAt": "2026-05-14T05:50:09.434063Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Konec tvrdým, nesavým a zatuchlým ručníkům. Přestaňte dělat tyto banální chyby a budou jako obláček",
+      "url": "https://www.vlasta.cz/inspirace/co-se-zatuchlymi-nesavymi-a-tvrdymi-rucniky/",
+      "dt": "2026-05-14T05:25:00Z",
+      "media_raw": "Vlasta",
+      "media_norm": "Vlasta",
+      "tokens": [
+        "banální",
+        "chyby",
+        "dělat",
+        "jako",
+        "konec",
+        "nesavým",
+        "obláček",
+        "přestaňte",
+        "ručníkům",
+        "tvrdým",
+        "tyto",
+        "zatuchlým"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vlasta",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "vlasta.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -1107,35 +1136,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "vlasta.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Anna Plechatá Krausová: Studenti by se měli umět rozhodnout a postavit za sebe. To český systém neučí",
-      "url": "https://www.vlasta.cz/osobnosti/anna-plechata-krausova-rektorka-newton-university-rozhovor-ceske-a-britske-skolstvi-rozdily/",
-      "dt": "2026-05-09T05:04:00Z",
-      "media_raw": "Vlasta",
-      "media_norm": "Vlasta",
-      "tokens": [
-        "anna",
-        "krausová",
-        "měli",
-        "neučí",
-        "plechatá",
-        "postavit",
-        "rozhodnout",
-        "sebe",
-        "studenti",
-        "systém",
-        "umět",
-        "český"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vlasta",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "vlasta.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1146,11 +1146,11 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.vlasta.cz/rss/vse.xml",
-      "bytes": 61493,
+      "bytes": 62706,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 49,
+      "itemsParsed": 50,
       "itemsKept": 40,
       "accepted": 40,
       "status": "OK",
@@ -1183,11 +1183,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-14T05:04:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T05:25:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "other": 39
+          "other": 39,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1199,6 +1199,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec tvrdým, nesavým a zatuchlým ručníkům. Přestaňte dělat tyto banální chyby a budou jako obláček",
+            "publishedAt": "2026-05-14T05:25:00Z"
+          },
           {
             "title": "Martina Dejdara mrzí, že nemá syna hokejistu. Matěj ale nestrádá, má milionový byznys a doma modelku",
             "publishedAt": "2026-05-14T05:04:00Z"
@@ -1226,10 +1230,6 @@
           {
             "title": "Jiřina Bohdalová míří do Guinnessovy knihy rekordů. Chybí jí k tomu jedna jediná role",
             "publishedAt": "2026-05-13T06:02:00Z"
-          },
-          {
-            "title": "Konec octomilek v kuchyni. Vyrobte vražednou past z odpadků, které byste jinak vyhodili",
-            "publishedAt": "2026-05-13T05:32:00Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-14T05:10:28.692968Z",
+  "ingestedAt": "2026-05-14T05:50:09.434063Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zdravotnické rukavice či kondomy mohutně zdražují. I kvůli situaci s Íránem",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/zdravotnicke-rukavice-ci-kondomy-mohutne-zdrazuji-i-kvuli-situaci-s-iranem-373404",
+      "dt": "2026-05-14T05:30:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "kondomy",
+        "kvůli",
+        "mohutně",
+        "rukavice",
+        "situaci",
+        "zdravotnické",
+        "zdražují",
+        "íránem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -79,21 +104,19 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Kyjev čelí masivnímu útoku ruských dronů a střel, uvádí činitelé",
+      "title": "Masivní ruský útok na Kyjev má oběti, terčem byla i Oděsa",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/kyjev-celi-masivnimu-utoku-ruskych-dronu-a-strel-uvadi-cinitele-373412",
       "dt": "2026-05-14T02:56:14Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "dronů",
         "kyjev",
-        "masivnímu",
-        "ruských",
-        "střel",
-        "uvádí",
-        "útoku",
-        "čelí",
-        "činitelé"
+        "masivní",
+        "oběti",
+        "oděsa",
+        "ruský",
+        "terčem",
+        "útok"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -724,33 +747,6 @@
         "vyšetřuje",
         "výrobce",
         "zprávy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Soud poslal Benešovou kvůli restituci Bečvářova statku na pět let do vězení",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/soud-poslal-benesovou-kvuli-restituci-becvarova-statku-na-pet-let-do-vezeni-373376",
-      "dt": "2026-05-13T10:14:41Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "benešovou",
-        "bečvářova",
-        "kvůli",
-        "let",
-        "poslal",
-        "pět",
-        "restituci",
-        "soud",
-        "statku",
-        "vězení"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1512,7 +1508,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43229,
+      "bytes": 42990,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1572,10 +1568,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T05:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T05:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
+          "zdravi": 1,
+          "zpravy": 24,
           "finance": 2,
           "other": 3
         },
@@ -1590,6 +1587,10 @@
         },
         "sample_titles": [
           {
+            "title": "Zdravotnické rukavice či kondomy mohutně zdražují. I kvůli situaci s Íránem",
+            "publishedAt": "2026-05-14T05:30:00Z"
+          },
+          {
             "title": "Sudetoněmecké sdružení se během let proměnilo, usiluje o smíření",
             "publishedAt": "2026-05-14T05:02:00Z"
           },
@@ -1602,7 +1603,7 @@
             "publishedAt": "2026-05-14T04:03:00Z"
           },
           {
-            "title": "Kyjev čelí masivnímu útoku ruských dronů a střel, uvádí činitelé",
+            "title": "Masivní ruský útok na Kyjev má oběti, terčem byla i Oděsa",
             "publishedAt": "2026-05-14T02:56:14Z"
           },
           {
@@ -1616,10 +1617,6 @@
           {
             "title": "Padesát let po operaci v Entebbe o ní vychází česky kniha Ida Netanjahua",
             "publishedAt": "2026-05-13T20:16:12Z"
-          },
-          {
-            "title": "Stomatová a Schürger z ČT mají cenu za reportáž z Ukrajiny, ocenění jsou novináři mnoha médií",
-            "publishedAt": "2026-05-13T19:42:20Z"
           }
         ]
       }
@@ -1725,7 +1722,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77379,
+      "bytes": 77381,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
