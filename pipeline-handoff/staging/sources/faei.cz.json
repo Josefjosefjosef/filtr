@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-14T19:19:29.997637Z",
+  "ingestedAt": "2026-05-14T20:00:03.349482Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Dluhopisy Republiky se vrací. Vláda si bude opět půjčovat od domácností",
+      "url": "https://profitonline.cz/dluhopisy-republiky-se-vraci-vlada-si-bude-opet-pujcovat-od-domacnosti/",
+      "dt": "2026-05-14T19:50:57Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dluhopisy",
+        "domácností",
+        "opět",
+        "půjčovat",
+        "republiky",
+        "vláda",
+        "vrací"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -260,28 +284,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "USA se potýkají se silnými inflačními tlaky",
-      "url": "https://profitonline.cz/usa-se-potykaji-se-silnymi-inflacnimi-tlaky/",
-      "dt": "2026-05-12T19:30:07Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "inflačními",
-        "potýkají",
-        "silnými",
-        "tlaky",
-        "usa"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -292,7 +294,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18635,
+      "bytes": 18796,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -329,7 +331,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-14T10:00:47Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T19:50:57Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -345,6 +347,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dluhopisy Republiky se vrací. Vláda si bude opět půjčovat od domácností",
+            "publishedAt": "2026-05-14T19:50:57Z"
+          },
           {
             "title": "Chataři a chalupáři si připlatí. Obce jim zvyšují daň z nemovitosti",
             "publishedAt": "2026-05-14T10:00:47Z"
@@ -372,10 +378,6 @@
           {
             "title": "Zaostává EU za USA? Landovský se v zásadě trefil do černého",
             "publishedAt": "2026-05-13T10:00:15Z"
-          },
-          {
-            "title": "Co přinese setkání amerického a čínského prezidenta?",
-            "publishedAt": "2026-05-13T08:10:13Z"
           }
         ]
       }
