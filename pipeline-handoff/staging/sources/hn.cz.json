@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-14T09:15:39.967128Z",
+  "ingestedAt": "2026-05-14T09:54:56.758230Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Fotovoltaika na úřadě není nic zvláštního, zelená témata už jsou zcela běžná, říká Ján Lučan",
+      "url": "https://podcasty.hn.cz/c1-67875880-fotovoltaika-na-urade-neni-nic-zvlastniho-zelena-temata-uz-jsou-zcela-bezna-rika-jan-lucan",
+      "dt": "2026-05-14T09:00:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "běžná",
+        "fotovoltaika",
+        "ján",
+        "lučan",
+        "nic",
+        "témata",
+        "zcela",
+        "zelená",
+        "zvláštního",
+        "úřadě",
+        "říká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1090,31 +1118,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Skvělí experti jsou často bídní šéfové. Jak správně rozvíjet zaměstnance?",
-      "url": "https://byznys.hn.cz/c1-67873550-skveli-experti-jsou-casto-bidni-sefove-jak-spravne-rozvijet-zamestnance",
-      "dt": "2026-05-13T06:41:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bídní",
-        "experti",
-        "rozvíjet",
-        "skvělí",
-        "správně",
-        "zaměstnance",
-        "často",
-        "šéfové"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1125,7 +1128,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183887,
+      "bytes": 183913,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1162,7 +1165,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-14T08:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T09:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 36,
@@ -1179,6 +1182,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fotovoltaika na úřadě není nic zvláštního, zelená témata už jsou zcela běžná, říká Ján Lučan",
+            "publishedAt": "2026-05-14T09:00:00Z"
+          },
           {
             "title": "Nemohli bychom ho vyměnit třeba za 10 našich? Aneb když do Česka přijede politik, kterého byste chtěli mít doma",
             "publishedAt": "2026-05-14T08:59:00Z"
@@ -1206,10 +1213,6 @@
           {
             "title": "Strnadův fond investuje v Kanadě. Sází na obranu proti dronům, která nevyčerpá armádní rozpočty",
             "publishedAt": "2026-05-14T07:00:00Z"
-          },
-          {
-            "title": "Kdo bude pracovat? Španělsko sází na imigraci, Čína na Afriku",
-            "publishedAt": "2026-05-14T06:30:00Z"
           }
         ]
       }

@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-14T09:15:39.967128Z",
+  "ingestedAt": "2026-05-14T09:54:56.758230Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Lékař obžalovaný ze zneužití dětí se hájí: Chtěl jsem zlepšit kvalitu jejich života",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/lekar-soud-zneuziti-deti/",
+      "dt": "2026-05-14T09:30:51Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "chtěl",
+        "dětí",
+        "hájí",
+        "jejich",
+        "jsem",
+        "kvalitu",
+        "lékař",
+        "obžalovaný",
+        "zlepšit",
+        "zneužití",
+        "života"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,32 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Eurokomisař Síkela odhalil miliardový plán: Jak EU reaguje na dezinformace a nové nemoci?",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/eurokomisar-sikela-eu-dezinformace-nove-nemoci/",
-      "dt": "2026-05-13T12:09:52Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "dezinformace",
-        "eurokomisař",
-        "miliardový",
-        "nemoci",
-        "nové",
-        "odhalil",
-        "plán",
-        "reaguje",
-        "síkela"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 83157,
+      "bytes": 83222,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-14T08:48:29Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T09:30:51Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -330,6 +332,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lékař obžalovaný ze zneužití dětí se hájí: Chtěl jsem zlepšit kvalitu jejich života",
+            "publishedAt": "2026-05-14T09:30:51Z"
+          },
           {
             "title": "Hantavirus Andes: EU aktivovala krizový mechanismus. Co to znamená pro Česko?",
             "publishedAt": "2026-05-14T08:48:29Z"
@@ -357,10 +363,6 @@
           {
             "title": "Na mamograf nebo kolonoskopii bez čekání na telefonu? Stát spustí on-line rezervace",
             "publishedAt": "2026-05-13T14:29:31Z"
-          },
-          {
-            "title": "Smrt a karanténa na luxusní lodi: Přes 1700 lidí nesmí z paluby kvůli neznámému viru",
-            "publishedAt": "2026-05-13T13:53:04Z"
           }
         ]
       }

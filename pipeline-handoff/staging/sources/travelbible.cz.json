@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "travelbible.cz",
-  "ingestedAt": "2026-05-14T09:15:39.967128Z",
+  "ingestedAt": "2026-05-14T09:54:56.758230Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Ibiza: praktický průvodce, co vidět, kde se ubytovat a kdy jet",
+      "url": "https://travelbible.cz/ibiza-pruvodce/",
+      "dt": "2026-05-14T09:52:57Z",
+      "media_raw": "TravelBible",
+      "media_norm": "TravelBible",
+      "tokens": [
+        "ibiza",
+        "jet",
+        "praktický",
+        "průvodce",
+        "ubytovat",
+        "vidět"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_travelbible",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "travelbible.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -225,29 +248,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "travelbible.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "La Palma, Kanárské ostrovy: 32+ tipů, co vidět a zažít",
-      "url": "https://travelbible.cz/pruvodce-la-palma/",
-      "dt": "2026-04-06T08:54:55Z",
-      "media_raw": "TravelBible",
-      "media_norm": "TravelBible",
-      "tokens": [
-        "kanárské",
-        "ostrovy",
-        "palma",
-        "tipů",
-        "vidět",
-        "zažít"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_travelbible",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "travelbible.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -258,7 +258,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://travelbible.cz/feed/",
-      "bytes": 13813,
+      "bytes": 13773,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -295,11 +295,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-10T08:43:56Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T09:52:57Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "cestovani": 9,
-          "zpravy": 1
+          "cestovani": 10
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -311,6 +310,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ibiza: praktický průvodce, co vidět, kde se ubytovat a kdy jet",
+            "publishedAt": "2026-05-14T09:52:57Z"
+          },
           {
             "title": "Průvodce Děčín: co vidět, zažít a ochutnat + praktické tipy",
             "publishedAt": "2026-05-10T08:43:56Z"
@@ -338,10 +341,6 @@
           {
             "title": "Průvodce San Gimignano 2026: co vidět, ubytování a praktické tipy",
             "publishedAt": "2026-04-23T11:31:00Z"
-          },
-          {
-            "title": "Španělsko: podrobný praktický průvodce pro každou dovolenou",
-            "publishedAt": "2026-04-21T07:25:00Z"
           }
         ]
       }
