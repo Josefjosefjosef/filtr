@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kverulant.org",
-  "ingestedAt": "2026-05-14T22:39:35.611339Z",
+  "ingestedAt": "2026-05-14T23:20:20.515773Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kdo je Radomír Daňhel obviněný v bitcoinové kauze",
+      "url": "https://www.kverulant.org/article/kdo-je-radomir-danhel-obvineny-v-bitcoinove-kauze/",
+      "dt": "2026-05-14T22:41:00Z",
+      "media_raw": "Kverulant",
+      "media_norm": "Kverulant",
+      "tokens": [
+        "bitcoinové",
+        "daňhel",
+        "kauze",
+        "obviněný",
+        "radomír"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_kverulant",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "kverulant.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -225,30 +247,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "kverulant.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Klempířův mediální zákon může změnit ČT v polostátní komerční televizi",
-      "url": "https://www.kverulant.org/article/klempiruv-medialni-zakon-muze-zmeni-ct-v-polostatni-komercni-televizi/",
-      "dt": "2026-04-29T22:07:00Z",
-      "media_raw": "Kverulant",
-      "media_norm": "Kverulant",
-      "tokens": [
-        "klempířův",
-        "komerční",
-        "mediální",
-        "polostátní",
-        "televizi",
-        "změnit",
-        "zákon"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_kverulant",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "kverulant.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -259,7 +257,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.kverulant.org/feed/",
-      "bytes": 136417,
+      "bytes": 132737,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -296,7 +294,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-13T22:07:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T22:41:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -311,6 +309,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kdo je Radomír Daňhel obviněný v bitcoinové kauze",
+            "publishedAt": "2026-05-14T22:41:00Z"
+          },
           {
             "title": "Nový náčelník generálního štábu a starý dobrý raut pro zbrojaře",
             "publishedAt": "2026-05-13T22:07:00Z"
@@ -338,10 +340,6 @@
           {
             "title": "Ústavní soud odmítl Kostelecké uzeniny, důvodem byl Babišův střet zájmů",
             "publishedAt": "2026-05-04T22:07:00Z"
-          },
-          {
-            "title": "Ministerstvo obrany nehlídá samo sebe. Počty finančních kontrol klesly, když to bylo nejméně vhodné",
-            "publishedAt": "2026-05-03T22:07:00Z"
           }
         ]
       }
