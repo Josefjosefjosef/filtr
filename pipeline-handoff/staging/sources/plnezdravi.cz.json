@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "plnezdravi.cz",
-  "ingestedAt": "2026-05-14T14:00:36.473370Z",
+  "ingestedAt": "2026-05-14T14:39:57.693666Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Perfekcionismus pod palbou – Když „dobře“ nestačí",
+      "url": "https://www.plnezdravi.cz/perfekcionismus-pod-palbou-kdyz-dobre-nestaci/",
+      "dt": "2026-05-14T14:00:45Z",
+      "media_raw": "Plné zdraví",
+      "media_norm": "Plné zdraví",
+      "tokens": [
+        "dobře",
+        "když",
+        "nestačí",
+        "palbou",
+        "perfekcionismus"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_plnezdravi",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "plnezdravi.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -465,32 +487,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "plnezdravi.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Past při léčbě beder: Proč vás záda bolí a jak to změnit",
-      "url": "https://www.plnezdravi.cz/past-pri-lecbe-beder-proc-vas-zada-boli-a-jak-to-zmenit/",
-      "dt": "2026-05-04T07:00:10Z",
-      "media_raw": "Plné zdraví",
-      "media_norm": "Plné zdraví",
-      "tokens": [
-        "beder",
-        "bolí",
-        "léčbě",
-        "past",
-        "proč",
-        "při",
-        "vás",
-        "změnit",
-        "záda"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_plnezdravi",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "plnezdravi.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -501,7 +497,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.plnezdravi.cz/feed/",
-      "bytes": 159432,
+      "bytes": 157601,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -538,7 +534,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-14T07:00:55Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T14:00:45Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -553,6 +549,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Perfekcionismus pod palbou – Když „dobře“ nestačí",
+            "publishedAt": "2026-05-14T14:00:45Z"
+          },
           {
             "title": "Šedý zákal: Jak vrátit očím jas a ostrost?",
             "publishedAt": "2026-05-14T07:00:55Z"
@@ -580,10 +580,6 @@
           {
             "title": "Artróza kolene: Jak zastavit opotřebení kloubů",
             "publishedAt": "2026-05-12T07:00:02Z"
-          },
-          {
-            "title": "Připravte zrak na léto: ochrana očí je stejně důležitá jako péče o pokožku",
-            "publishedAt": "2026-05-11T23:00:42Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-14T14:00:36.473370Z",
+  "ingestedAt": "2026-05-14T14:39:57.693666Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Interny jsou v minusu a lékaři se jim vyhýbají. Bez nich to ale nepůjde",
+      "url": "https://www.zdravezpravy.cz/2026/05/14/interny-jsou-v-minusu-a-lekari-se-jim-vyhybaji-bez-nich-to-ale-nepujde/",
+      "dt": "2026-05-14T13:52:03Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "ale",
+        "interny",
+        "jim",
+        "lékaři",
+        "minusu",
+        "nepůjde",
+        "nich",
+        "vyhýbají"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -464,29 +489,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Pesticidy škodí zdraví. Přesto je obsahuje 40 % potravin",
-      "url": "https://www.zdravezpravy.cz/2026/05/06/pesticidy-skodi-zdravi-presto-je-obsahuje-40-potravin/",
-      "dt": "2026-05-06T08:30:00Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "obsahuje",
-        "pesticidy",
-        "potravin",
-        "přesto",
-        "zdraví",
-        "škodí"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -497,7 +499,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 205947,
+      "bytes": 202681,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -534,7 +536,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-14T11:00:50Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T13:52:03Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -550,6 +552,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Interny jsou v minusu a lékaři se jim vyhýbají. Bez nich to ale nepůjde",
+            "publishedAt": "2026-05-14T13:52:03Z"
+          },
           {
             "title": "EK doporučí unijním zemím zakázat léčbu homosexuality",
             "publishedAt": "2026-05-14T11:00:50Z"
@@ -577,10 +583,6 @@
           {
             "title": "V pražské ÚVN zasahovala policie! I kvůli falšování lékařských zpráv",
             "publishedAt": "2026-05-12T11:15:43Z"
-          },
-          {
-            "title": "Hovory s AI chaty o zdraví mají být rozhodně anonymní",
-            "publishedAt": "2026-05-12T08:34:14Z"
           }
         ]
       }
