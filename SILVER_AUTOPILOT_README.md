@@ -51,7 +51,7 @@ node scripts/silver-autopilot.cjs --loop-once
 | `scripts/silver-autopilot.cjs` | Implementation. |
 | `scripts/silver-autopilot-loop.ps1` | **FULL AUTO LOOP TRIGGER V1** — Windows orchestrator: validates repo path, guards `SILVER_NEXT_ACTION.md`, optional Cursor CLI (`-CursorCommand` with `{TASK_FILE}` / `{OUTPUT_FILE}`), then `node scripts/silver-autopilot.cjs --full-auto-loop --max-steps=1`, then `--status`, colored console summary, beeps, and `SILVER_PROGRESS_LOG.md`. |
 | `scripts/silver-cursor-agent-adapter-diagnostic.ps1` | Probes `where.exe cursor`, `cursor --version`, help text, and short stdin probes (harmless prompt only); writes `scripts/silver-cursor-agent-adapter-diagnostic-report.json`. |
-| `scripts/silver-cursor-agent-adapter.ps1` | Optional wrapper: pipe task file into `cursor … agent`, capture output to `SILVER_CURSOR_OUTPUT.md` path; `-DryRun` prints the planned `cmd.exe` line. |
+| `scripts/silver-cursor-agent-adapter.ps1` | Wrapper: stdin from task file (or `-Probe`) into `cursor.exe agent` via `Start-Process` file redirects (prefers `.exe` over `.cmd`); writes structured log + raw stdout/stderr to `SILVER_CURSOR_OUTPUT.md` path; `-DryRun` prints the plan; default `-TimeoutSeconds` **120**. |
 
 ## Full auto loop trigger (PowerShell V1)
 
@@ -63,19 +63,27 @@ powershell -ExecutionPolicy Bypass -File scripts/silver-autopilot-loop.ps1 -DryR
 
 # Example real cycle (requires OPENAI_API_KEY in environment for autonomous next-task generation)
 powershell -ExecutionPolicy Bypass -File scripts/silver-autopilot-loop.ps1 -MaxCycles 1 -SleepSeconds 5 `
-  -CursorCommand "powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE}"
+  -CursorCommand "powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE} -TimeoutSeconds 120"
 ```
 
 ### Cursor agent adapter V1 (Windows)
 
-`cursor agent` does **not** document `--input` / `--output` in current CLI help; automation uses a **cmd.exe** pipe from a temp task file into `cursor.cmd agent`, with stdout/stderr redirected to files (see `scripts/silver-cursor-agent-adapter-diagnostic.ps1` JSON report).
+`cursor agent` does **not** document `--input` / `--output` in current CLI help. The adapter resolves the **install-root `Cursor.exe`** (not only `resources\app\bin\cursor*`) and runs **`cmd.exe /c type "<temp-task>" | "<Cursor.exe>" agent 1> stdout 2> stderr"`**, then merges streams into the output file (same pattern as `silver-cursor-agent-adapter-diagnostic.ps1` stdin probes, with explicit `1>` / `2>` so stderr is captured). Diagnostics may still use shorter probes; see `scripts/silver-cursor-agent-adapter-diagnostic-report.json`.
+
+**First safe check (harmless probe, no task file):**
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -Probe -OutputFile SILVER_CURSOR_OUTPUT.md -TimeoutSeconds 120
+```
+
+Expect `adapter_probe_pass=YES` in the output header when stdout contains `CURSOR_AGENT_STDIN_OK`.
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter-diagnostic.ps1
 powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -DryRun -TaskFile SILVER_NEXT_ACTION.md -OutputFile SILVER_CURSOR_OUTPUT.md
 ```
 
-If `adapter_ready` in `scripts/silver-cursor-agent-adapter-diagnostic-report.json` is **NO**, the wrapper exits **2** with a clear STOP message (no fake automation).
+If `adapter_ready` in `scripts/silver-cursor-agent-adapter-diagnostic-report.json` is **NO**, the normal (non-`-Probe`) wrapper exits **2** with a clear STOP message (no fake automation). **`-Probe` bypasses that gate** so you can capture errors even when the JSON says NO.
 
 Parameters:
 
