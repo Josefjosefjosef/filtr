@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-14T21:20:04.331191Z",
+  "ingestedAt": "2026-05-14T21:59:47.154812Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Real Madrid si poradil v dohrávce s posledním Oviedem",
+      "url": "https://www.sport.cz/clanek/fotbal-la-liga-real-madrid-si-poradil-v-dohravce-s-oviedem-5454076",
+      "dt": "2026-05-14T21:23:03Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "dohrávce",
+        "madrid",
+        "oviedem",
+        "poradil",
+        "posledním",
+        "real"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -741,32 +764,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Perušič se vrátí na písek s novým parťákem. Zahrát si v Ostravě se neodmítá, uvedl",
-      "url": "https://www.sport.cz/clanek/volejbal-perusic-se-vrati-na-pisek-s-novym-partakem-zahrat-si-v-ostrave-se-neodmita-uvedl-5454015",
-      "dt": "2026-05-14T12:20:04Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "neodmítá",
-        "novým",
-        "ostravě",
-        "parťákem",
-        "perušič",
-        "písek",
-        "uvedl",
-        "vrátí",
-        "zahrát"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -777,7 +774,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42088,
+      "bytes": 41752,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -814,7 +811,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T20:15:56Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T21:23:03Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -829,6 +826,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Real Madrid si poradil v dohrávce s posledním Oviedem",
+            "publishedAt": "2026-05-14T21:23:03Z"
+          },
           {
             "title": "Nominaci Francouzů na MS vévodí Mbappé či Dembélé, překvapením je brankář Risser",
             "publishedAt": "2026-05-14T19:45:51Z"
@@ -856,10 +857,6 @@
           {
             "title": "V nominaci hokejistů Itálie na MS nechybí obránce Pietroniro z Kladna",
             "publishedAt": "2026-05-14T19:52:15Z"
-          },
-          {
-            "title": "Kvůli ženě dostal bývalý hráč Arsenalu pěstí",
-            "publishedAt": "2026-05-14T18:25:13Z"
           }
         ]
       }
