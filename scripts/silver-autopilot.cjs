@@ -592,7 +592,13 @@ function cmdPostMergeProof() {
   for (const step of POST_MERGE_STEPS) {
     let code = 1;
     if (step.kind === "npm") {
-      const r = spawnRepo(process.platform === "win32" ? "npm.cmd" : "npm", step.args, true);
+      let r;
+      if (process.platform === "win32") {
+        const joined = ["npm", ...step.args].map((a) => String(a)).join(" ");
+        r = spawnRepo("cmd.exe", ["/d", "/s", "/c", joined], true);
+      } else {
+        r = spawnRepo("npm", step.args, true);
+      }
       code = r.code;
     } else {
       const scriptPath = path.join(SCRIPTS, step.file);
