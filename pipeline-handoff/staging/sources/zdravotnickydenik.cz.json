@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-14T04:30:14.347644Z",
+  "ingestedAt": "2026-05-14T05:10:28.692968Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Lekce pro Česko? Německo chystá drsnou reformu dlouhodobé péče, dopadne na nejzranitelnější",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/nemecko-chysta-reformu-pece/",
+      "dt": "2026-05-14T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "chystá",
+        "dlouhodobé",
+        "dopadne",
+        "drsnou",
+        "lekce",
+        "nejzranitelnější",
+        "německo",
+        "péče",
+        "reformu",
+        "česko"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -248,32 +275,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Finsko zařadilo hantavirus Andes mezi nebezpečné nákazy. Nařídilo 42denní karanténu",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/finsko-hantavirus-andes-nakaza-karantena/",
-      "dt": "2026-05-13T08:30:47Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "42denní",
-        "andes",
-        "finsko",
-        "hantavirus",
-        "karanténu",
-        "nařídilo",
-        "nebezpečné",
-        "nákazy",
-        "zařadilo"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -284,7 +285,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 78564,
+      "bytes": 81736,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -321,7 +322,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-13T14:57:58Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -336,6 +337,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lekce pro Česko? Německo chystá drsnou reformu dlouhodobé péče, dopadne na nejzranitelnější",
+            "publishedAt": "2026-05-14T05:00:00Z"
+          },
           {
             "title": "Strčte si virtuální realitu někam. Lidi rozzuřil plán odborů, jak posílit duševní zdraví zdravotníků",
             "publishedAt": "2026-05-13T14:57:58Z"
@@ -363,10 +368,6 @@
           {
             "title": "Skandál v ÚVN: Policie obvinila 10 lidí z falšování lékařských posudků, dalšího zadržela v noci",
             "publishedAt": "2026-05-13T09:46:38Z"
-          },
-          {
-            "title": "Hantavirus Andes: Ministr Vojtěch oznámil, zda Česku hrozí nebezpečí a omezení",
-            "publishedAt": "2026-05-13T09:34:36Z"
           }
         ]
       }
