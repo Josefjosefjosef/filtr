@@ -59,7 +59,8 @@ param(
   [int]$RepeatedFailureStopAfter = 3,
   [int]$PrLoopStopAfter = 4,
   [int]$MaxCycleWallSeconds = 0,
-  [int]$TotalWallSeconds = 0
+  [int]$TotalWallSeconds = 0,
+  [switch]$TimeoutArchiveSelfTest
 )
 
 Set-StrictMode -Version 2
@@ -167,6 +168,92 @@ function Restore-SilverProgressLogForAutopilotGuard {
   } finally {
     $ErrorActionPreference = $prev
   }
+}
+
+function Get-GitRevParseHead {
+  param([string]$Cwd)
+  $prev = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try {
+    $psi = New-Object System.Diagnostics.ProcessStartInfo
+    $psi.FileName = "git"
+    $psi.Arguments = "rev-parse HEAD"
+    $psi.WorkingDirectory = $Cwd
+    $psi.RedirectStandardOutput = $true
+    $psi.RedirectStandardError = $true
+    $psi.UseShellExecute = $false
+    $psi.CreateNoWindow = $true
+    $p = [System.Diagnostics.Process]::Start($psi)
+    $out = $p.StandardOutput.ReadToEnd()
+    $null = $p.StandardError.ReadToEnd()
+    $p.WaitForExit()
+    return $out.Trim()
+  } catch {
+    return ""
+  } finally {
+    $ErrorActionPreference = $prev
+  }
+}
+
+function Archive-SilverTimeoutRuntimeArtifacts {
+  param(
+    [string]$RepoRoot,
+    [string]$Reason,
+    [string]$CursorExit = "",
+    [string]$TimedOut = ""
+  )
+  $archived = "NO"
+  $relOut = ""
+  $fullDir = ""
+  try {
+    $stamp = (Get-Date).ToUniversalTime().ToString("yyyyMMdd-HHmmss") + "Z"
+    $baseDir = Join-Path $RepoRoot ".silver-runtime"
+    $timeoutsRoot = Join-Path $baseDir "timeouts"
+    $destDir = Join-Path $timeoutsRoot $stamp
+    New-Item -ItemType Directory -Force -Path $destDir | Out-Null
+    $names = @(
+      "SILVER_CURSOR_OUTPUT.md",
+      "SILVER_NEXT_ACTION.md",
+      "SILVER_PROGRESS_LOG.md",
+      "SILVER_RUN_REPORT.md"
+    )
+    $copied = New-Object System.Collections.Generic.List[string]
+    $missing = New-Object System.Collections.Generic.List[string]
+    foreach ($name in $names) {
+      $src = Join-Path $RepoRoot $name
+      if (Test-Path -LiteralPath $src) {
+        Copy-Item -LiteralPath $src -Destination (Join-Path $destDir $name) -Force
+        [void]$copied.Add($name)
+      }
+      else {
+        [void]$missing.Add($name)
+      }
+    }
+    $head = Get-GitRevParseHead -Cwd $RepoRoot
+    $relSlash = ".silver-runtime/timeouts/" + $stamp
+    $manifest = [ordered]@{
+      utc_timestamp = $stamp
+      main_commit_head = $head
+      reason_timeout = $Reason
+      cursor_exit = $CursorExit
+      timed_out = $TimedOut
+      copied_files = $copied.ToArray()
+      missing_files = $missing.ToArray()
+      archive_path = $relSlash
+    }
+    $json = $manifest | ConvertTo-Json -Depth 8
+    $manifestPath = Join-Path $destDir "manifest.json"
+    [System.IO.File]::WriteAllText($manifestPath, $json, [System.Text.UTF8Encoding]::new($false))
+    $archived = "YES"
+    $relOut = $relSlash
+    $fullDir = $destDir
+  }
+  catch {
+    $archived = "NO"
+    $relOut = ""
+    $fullDir = ""
+  }
+  return @{ RelativePath = $relOut; Archived = $archived; FullPath = $fullDir }
 }
 
 function Test-GitStatusClean {
@@ -406,7 +493,9 @@ function Write-SilverProgressLogBlock {
     "silver_cycle_streaming_output_supported",
     "silver_cycle_last_output_utc",
     "silver_cycle_post_timeout_output_interpretation",
-    "silver_cycle_stop_reason"
+    "silver_cycle_stop_reason",
+    "timeout_archive_path",
+    "timeout_artifacts_archived"
   )
   foreach ($ck in $cycleExtraKeys) {
     if ($Fields.ContainsKey($ck)) {
@@ -469,6 +558,15 @@ function Write-SilverColoredCycleSummary {
     Write-Host ("STATUS: " + $Outcome) -ForegroundColor Yellow
   }
   Write-Host ("next_action_headline=" + $Fields["next_action_headline"]) -ForegroundColor Cyan
+  if ($Fields.ContainsKey("timeout_artifacts_archived")) {
+    Write-Host ("timeout_artifacts_archived=" + [string]$Fields["timeout_artifacts_archived"]) -ForegroundColor Cyan
+  }
+  if ($Fields.ContainsKey("timeout_archive_path")) {
+    $tap = [string]$Fields["timeout_archive_path"]
+    if ($tap.Trim().Length -gt 0) {
+      Write-Host ("timeout_archive_path=" + $tap) -ForegroundColor Cyan
+    }
+  }
   Write-Host "------------------------------------" -ForegroundColor Cyan
   Write-Host ""
 }
@@ -532,6 +630,24 @@ function Stop-LoopWithFail {
   if ($StopReason -and $StopReason.Trim()) {
     $reasonLine = $Focus + "|stop_reason=" + $StopReason.Trim()
   }
+  $adapterEarly = Join-Path $RepoRoot "SILVER_CURSOR_OUTPUT.md"
+  $metaTimed = ""
+  $metaEarly = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $adapterEarly
+  if ($metaEarly.ContainsKey("timed_out")) {
+    $metaTimed = [string]$metaEarly["timed_out"]
+  }
+  $isTimeoutStop = ($CursorExit -eq "124") -or ($metaTimed -eq "YES")
+  $timeoutArchiveRel = ""
+  $timeoutArchivedFlag = "NO"
+  if ($isTimeoutStop) {
+    $archOut = Archive-SilverTimeoutRuntimeArtifacts -RepoRoot $RepoRoot -Reason $reasonLine -CursorExit $CursorExit -TimedOut $metaTimed
+    $timeoutArchiveRel = [string]$archOut.RelativePath
+    $timeoutArchivedFlag = [string]$archOut.Archived
+    if ($timeoutArchiveRel -and $timeoutArchiveRel.Trim().Length -gt 0) {
+      $env:SILVER_TIMEOUT_ARCHIVE_PATH = ($timeoutArchiveRel -replace "\\", "/")
+      $env:SILVER_TIMEOUT_ARTIFACTS_ARCHIVED = $timeoutArchivedFlag
+    }
+  }
   Write-Host ("SILVER_LOOP_SAFETY_STOP reason=" + $reasonLine) -ForegroundColor Red
   $baselines = Get-BaselineProgressMetrics
   $fields = @{
@@ -559,6 +675,8 @@ function Stop-LoopWithFail {
     next_action_headline = $Headline
     dry_run = $DryRunText
     stop_reason = $(if ($StopReason) { $StopReason } else { $Focus })
+    timeout_archive_path = $timeoutArchiveRel
+    timeout_artifacts_archived = $timeoutArchivedFlag
   }
   $adapterOutForCycle = Join-Path $RepoRoot "SILVER_CURSOR_OUTPUT.md"
   Add-SilverCycleFieldsFromAdapterOutput -Fields $fields -AdapterOutputPath $adapterOutForCycle
@@ -828,6 +946,26 @@ $script:LastNextNormalized = ""
 $script:LastCoreProgress = ""
 $script:LastSafetyMap = $null
 
+if ($TimeoutArchiveSelfTest) {
+  $td = Join-Path $env:TEMP ("silver-timeout-selftest-" + [guid]::NewGuid().ToString("N"))
+  New-Item -ItemType Directory -Path $td -Force | Out-Null
+  $utfSe = New-Object System.Text.UTF8Encoding $false
+  [System.IO.File]::WriteAllText((Join-Path $td "SILVER_CURSOR_OUTPUT.md"), "# silver-cursor-agent-adapter`r`ntimed_out=YES`r`n", $utfSe)
+  [System.IO.File]::WriteAllText((Join-Path $td "SILVER_NEXT_ACTION.md"), "# t`r`n", $utfSe)
+  $ar = Archive-SilverTimeoutRuntimeArtifacts -RepoRoot $td -Reason "selftest" -CursorExit "124" -TimedOut "YES"
+  $ok = $false
+  if ($ar.Archived -eq "YES" -and $ar.FullPath -and (Test-Path -LiteralPath (Join-Path $ar.FullPath "manifest.json"))) {
+    $ok = $true
+  }
+  Remove-Item -LiteralPath $td -Recurse -Force -ErrorAction SilentlyContinue
+  if (-not $ok) {
+    Write-Host "SILVER_TIMEOUT_ARCHIVE_SELFTEST=FAIL" -ForegroundColor Red
+    exit 1
+  }
+  Write-Host "SILVER_TIMEOUT_ARCHIVE_SELFTEST=PASS"
+  exit 0
+}
+
 $cycle = 0
 while ($true) {
   $cycle++
@@ -836,6 +974,8 @@ while ($true) {
   $script:LastAutopilotExit = "N/A"
   $script:LastStatusExit = "N/A"
   $script:LastTaskExit = 0
+  Remove-Item Env:\SILVER_TIMEOUT_ARCHIVE_PATH -ErrorAction SilentlyContinue
+  Remove-Item Env:\SILVER_TIMEOUT_ARTIFACTS_ARCHIVED -ErrorAction SilentlyContinue
 
   if (-not $infinite -and $cycle -gt $MaxCycles) { break }
 
@@ -1109,6 +1249,19 @@ while ($true) {
 
   $autoExitStr = "SKIPPED_DRY_RUN"
   if (-not $DryRun) {
+    $metaForRestore = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $CursorOutputPath
+    $timedForRestore = ""
+    if ($metaForRestore.ContainsKey("timed_out")) {
+      $timedForRestore = [string]$metaForRestore["timed_out"]
+    }
+    if ($timedForRestore -eq "YES") {
+      $archR = Archive-SilverTimeoutRuntimeArtifacts -RepoRoot $RepoRoot -Reason "adapter_timed_out_before_progress_git_restore" -CursorExit $cursorExitStr -TimedOut $timedForRestore
+      $tr = [string]$archR.RelativePath
+      if ($tr -and $tr.Trim().Length -gt 0) {
+        $env:SILVER_TIMEOUT_ARCHIVE_PATH = ($tr -replace "\\", "/")
+        $env:SILVER_TIMEOUT_ARTIFACTS_ARCHIVED = [string]$archR.Archived
+      }
+    }
     Restore-SilverProgressLogForAutopilotGuard -RepoRoot $RepoRoot -ProgressRel "SILVER_PROGRESS_LOG.md"
     $auto = Invoke-NodeScript -WorkingDirectory $RepoRoot -Arguments @($AutopilotScript, "--full-auto-loop", "--max-steps=1") -PassThruExit $false
     $ae = $auto.ExitCode

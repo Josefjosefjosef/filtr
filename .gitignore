@@ -69,6 +69,9 @@ artifacts/
 # infoUzel: article pipeline staging (ephemeral; never commit)
 projects/data/staging/
 
+# Silver autopilot: local timeout artifact archives (never commit)
+.silver-runtime/
+
 # Pipeline handoff checkout (local; never commit on main — CI uses git add -f on handoff branch)
 /pipeline-handoff/
 
