@@ -7,7 +7,7 @@
   Skips Cursor and node --full-auto-loop; still runs guards, --status, progress log, colored summary (exit 0 if guards pass).
 
 .PARAMETER MaxCycles
-  Default 1. Use 0 for infinite loop (explicit only).
+  Default 1. Value 0 is **blocked** unless `-AllowInfinite` or `-AutonomousMode` enables controlled autonomous mode (hard caps + breakers still apply).
 
 .PARAMETER SleepSeconds
   Pause between cycles (default 5).
@@ -17,13 +17,49 @@
 
 .PARAMETER NoBeep
   Disable console beeps.
+
+.PARAMETER AllowInfinite
+  With -MaxCycles 0, opts into controlled autonomous mode (still capped by hard max + other breakers).
+
+.PARAMETER AutonomousMode
+  Alias intent for -MaxCycles 0 (same as -AllowInfinite; both enable controlled autonomous mode).
+
+.PARAMETER MaxAutonomousHardCycles
+  Hard ceiling for autonomous iterations when -MaxCycles 0 (0 = use env SILVER_AUTONOMOUS_HARD_MAX_CYCLES or default 512).
+
+.PARAMETER SameNextActionStopAfter
+  Consecutive identical normalized next-action bodies before autonomous stop (default 5).
+
+.PARAMETER NoProgressStopAfter
+  Consecutive cycles with unchanged core_engine_progress before autonomous stop (default 8).
+
+.PARAMETER RepeatedFailureStopAfter
+  Consecutive non-zero autopilot --status exits before autonomous stop (default 3).
+
+.PARAMETER PrLoopStopAfter
+  Consecutive cycles referencing the same PR number before autonomous stop (default 4).
+
+.PARAMETER MaxCycleWallSeconds
+  Per-cycle wall budget in autonomous mode (0 = use env SILVER_AUTONOMOUS_MAX_CYCLE_WALL_SECONDS or default 7200; set -1 to disable).
+
+.PARAMETER TotalWallSeconds
+  Total wall budget for autonomous run (0 = use env SILVER_AUTONOMOUS_MAX_TOTAL_WALL_SECONDS or default 86400; set -1 to disable).
 #>
 param(
   [switch]$DryRun,
   [int]$MaxCycles = 1,
   [int]$SleepSeconds = 5,
   [string]$CursorCommand = "",
-  [switch]$NoBeep
+  [switch]$NoBeep,
+  [switch]$AllowInfinite,
+  [switch]$AutonomousMode,
+  [int]$MaxAutonomousHardCycles = 0,
+  [int]$SameNextActionStopAfter = 5,
+  [int]$NoProgressStopAfter = 8,
+  [int]$RepeatedFailureStopAfter = 3,
+  [int]$PrLoopStopAfter = 4,
+  [int]$MaxCycleWallSeconds = 0,
+  [int]$TotalWallSeconds = 0
 )
 
 Set-StrictMode -Version 2
@@ -39,6 +75,7 @@ $RunReportPath = Join-Path $RepoRoot "SILVER_RUN_REPORT.md"
 $ProgressLogPath = Join-Path $RepoRoot "SILVER_PROGRESS_LOG.md"
 $CursorOutputPath = Join-Path $RepoRoot "SILVER_CURSOR_OUTPUT.md"
 $AutopilotScript = Join-Path $RepoRoot "scripts\silver-autopilot.cjs"
+$EmergencyStopPath = Join-Path $RepoRoot "SILVER_STOP_AUTOPILOT"
 
 $script:CycleIndex = 0
 $script:LastCursorExit = "N/A"
@@ -253,6 +290,9 @@ function Write-SilverProgressLogBlock {
   [void]$sb.AppendLine(("timestamp=" + $Fields["timestamp"]))
   [void]$sb.AppendLine(("cycle=" + $Fields["cycle"]))
   [void]$sb.AppendLine(("outcome=" + $Outcome))
+  if ($Fields.ContainsKey("stop_reason") -and $Fields["stop_reason"]) {
+    [void]$sb.AppendLine(("stop_reason=" + $Fields["stop_reason"]))
+  }
   [void]$sb.AppendLine(("main_commit=" + $Fields["main_commit"]))
   [void]$sb.AppendLine(("last_task_exit=" + $Fields["last_task_exit"]))
   [void]$sb.AppendLine(("cursor_exit=" + $Fields["cursor_exit"]))
@@ -365,8 +405,14 @@ function Stop-LoopWithFail {
     [string]$Focus,
     [string]$DryRunText,
     [switch]$NoBeep,
-    [int]$LastTaskExitCode
+    [int]$LastTaskExitCode,
+    [string]$StopReason = ""
   )
+  $reasonLine = $Focus
+  if ($StopReason -and $StopReason.Trim()) {
+    $reasonLine = $Focus + "|stop_reason=" + $StopReason.Trim()
+  }
+  Write-Host ("SILVER_LOOP_SAFETY_STOP reason=" + $reasonLine) -ForegroundColor Red
   $baselines = Get-BaselineProgressMetrics
   $fields = @{
     timestamp = (Get-Date).ToString("s")
@@ -392,11 +438,204 @@ function Stop-LoopWithFail {
     current_focus = $Focus
     next_action_headline = $Headline
     dry_run = $DryRunText
+    stop_reason = $(if ($StopReason) { $StopReason } else { $Focus })
   }
   Write-SilverProgressLogBlock -ProgressLogPath $ProgressLogPath -Outcome "FAIL" -Fields $fields
   Write-SilverColoredCycleSummary -Outcome "FAIL" -Fields $fields
   Invoke-SilverBeepFail -NoBeep:$NoBeep
   exit 1
+}
+
+function Write-SilverSafetyConsoleStop {
+  param([string]$Reason)
+  Write-Host ("SILVER_LOOP_SAFETY_STOP reason=" + $Reason) -ForegroundColor Yellow
+}
+
+function Get-SilverEnvIntOrEmpty {
+  param([string]$Name)
+  $raw = [Environment]::GetEnvironmentVariable($Name, "Process")
+  if ([string]::IsNullOrWhiteSpace($raw)) { $raw = [Environment]::GetEnvironmentVariable($Name, "User") }
+  if ([string]::IsNullOrWhiteSpace($raw)) { $raw = [Environment]::GetEnvironmentVariable($Name, "Machine") }
+  if ([string]::IsNullOrWhiteSpace($raw)) { return $null }
+  $n = 0
+  if (-not [int]::TryParse($raw.Trim(), [ref]$n)) { return $null }
+  return $n
+}
+
+function Get-SilverAutonomousHardMax {
+  param([int]$ParamMax)
+  if ($ParamMax -gt 0) { return $ParamMax }
+  $fromEnv = Get-SilverEnvIntOrEmpty -Name "SILVER_AUTONOMOUS_HARD_MAX_CYCLES"
+  if ($null -ne $fromEnv -and $fromEnv -gt 0) { return $fromEnv }
+  return 512
+}
+
+function Get-SilverAutonomousCycleWallCap {
+  param([int]$ParamWall)
+  if ($ParamWall -eq -1) { return 0 }
+  if ($ParamWall -gt 0) { return $ParamWall }
+  $fromEnv = Get-SilverEnvIntOrEmpty -Name "SILVER_AUTONOMOUS_MAX_CYCLE_WALL_SECONDS"
+  if ($null -ne $fromEnv -and $fromEnv -gt 0) { return $fromEnv }
+  return 7200
+}
+
+function Get-SilverAutonomousTotalWallCap {
+  param([int]$ParamWall)
+  if ($ParamWall -eq -1) { return 0 }
+  if ($ParamWall -gt 0) { return $ParamWall }
+  $fromEnv = Get-SilverEnvIntOrEmpty -Name "SILVER_AUTONOMOUS_MAX_TOTAL_WALL_SECONDS"
+  if ($null -ne $fromEnv -and $fromEnv -gt 0) { return $fromEnv }
+  return 86400
+}
+
+function Test-SilverEmergencyStopFilePresent {
+  param([string]$Path)
+  return (Test-Path -LiteralPath $Path)
+}
+
+function Get-GitStatusShortPaths {
+  param([string]$Cwd)
+  $txt = (Get-GitStatusShortText -Cwd $Cwd)
+  if (-not $txt) { return @() }
+  $out = New-Object System.Collections.Generic.List[string]
+  foreach ($raw in $txt -split "`r?`n") {
+    $line = $raw.Trim()
+    if (-not $line) { continue }
+    $rel = ""
+    if ($line.Length -ge 3 -and $line.Substring(2, 1) -eq " ") {
+      $rel = $line.Substring(3).Trim()
+    } else {
+      $parts = $line -split "\s+", 2
+      if ($parts.Count -ge 2) { $rel = $parts[1].Trim() } else { $rel = $line }
+    }
+    $rel = $rel -replace "\\", "/"
+    if ($rel) { $out.Add($rel) }
+  }
+  return $out.ToArray()
+}
+
+function Test-AutonomousUnexpectedDirtyTree {
+  param([string]$Cwd)
+  $allowed = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+  foreach ($p in @(
+      "SILVER_STRATEGY.md",
+      "SILVER_NEXT_ACTION.md",
+      "SILVER_RUN_REPORT.md",
+      "SILVER_PROGRESS_LOG.md",
+      "SILVER_AUTOPILOT_README.md",
+      "SILVER_CURSOR_OUTPUT.md",
+      "SILVER_STOP_AUTOPILOT",
+      "scripts/silver-autopilot.cjs",
+      "scripts/silver-autopilot-loop.ps1",
+      "scripts/silver-autonomous-loop-safety-diagnostic.ps1"
+    )) {
+    [void]$allowed.Add($p)
+  }
+  $paths = Get-GitStatusShortPaths -Cwd $Cwd
+  foreach ($rel in $paths) {
+    $n = ($rel -replace "\\", "/").Trim()
+    if (-not $n) { continue }
+    if ($allowed.Contains($n)) { continue }
+    return @{ pass = $false; firstUnexpected = $n }
+  }
+  return @{ pass = $true; firstUnexpected = "" }
+}
+
+function Get-SafetyCounterTotalsFromLine {
+  param([string]$SafetyCountersLine)
+  $out = @{
+    dangerous_write_count = 0
+    false_write_count = 0
+    query_created_write_count = 0
+    write_when_negated_count = 0
+  }
+  if (-not $SafetyCountersLine) { return $out }
+  $pairs = $SafetyCountersLine -split ";"
+  foreach ($pair in $pairs) {
+    $kv = $pair -split "=", 2
+    if ($kv.Count -lt 2) { continue }
+    $k = $kv[0].Trim()
+    $vNum = 0
+    if (-not [int]::TryParse($kv[1].Trim(), [ref]$vNum)) { continue }
+    if ($out.ContainsKey($k)) { $out[$k] = $vNum }
+  }
+  return $out
+}
+
+function Test-SafetyCountersRegression {
+  param([hashtable]$Prev, [hashtable]$Curr)
+  if (-not $Prev -or -not $Curr) { return @{ regress = $false; detail = "" } }
+  foreach ($k in @("dangerous_write_count", "false_write_count", "query_created_write_count", "write_when_negated_count")) {
+    $p = 0
+    $c = 0
+    try { $p = [int]$Prev[$k] } catch { $p = 0 }
+    try { $c = [int]$Curr[$k] } catch { $c = 0 }
+    if ($c -gt $p) {
+      return @{ regress = $true; detail = ($k + ":" + [string]$p + "->" + [string]$c) }
+    }
+  }
+  return @{ regress = $false; detail = "" }
+}
+
+function Get-FirstPrNumberToken {
+  param([string]$Text)
+  if (-not $Text) { return "" }
+  $m = [regex]::Match($Text, '(?i)(?:--verify-pr=|--merge-pr=|verify-pr\s*=\s*|merge-pr\s*=\s*|\bPR\s*#)\s*(\d{2,7})\b')
+  if ($m.Success) { return $m.Groups[1].Value }
+  return ""
+}
+
+function Normalize-SilverNextBodyForStreak {
+  param([string]$Text)
+  if (-not $Text) { return "" }
+  $t = $Text -replace "`r`n", "`n"
+  $t = $t.Trim()
+  return $t
+}
+
+function Write-SilverAutonomousBudgetExit {
+  param(
+    [string]$ProgressLogPath,
+    [string]$RepoRoot,
+    [int]$Cycle,
+    [string]$MainCommit,
+    [string]$Reason,
+    [string]$DryRunText,
+    [switch]$NoBeep
+  )
+  $baselines = Get-BaselineProgressMetrics
+  $gitCleanFinal = if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" }
+  $fields = @{
+    timestamp = (Get-Date).ToString("s")
+    cycle = [string]$Cycle
+    main_commit = $MainCommit
+    last_task_exit = "0"
+    cursor_exit = "N/A"
+    autopilot_exit = "N/A"
+    autopilot_status_exit = "N/A"
+    git_status_clean = $gitCleanFinal
+    safety_counters = ""
+    calendar_write_20k = ""
+    calendar_query_20k = ""
+    core_engine_progress = $baselines.core_engine_progress
+    safety_progress = $baselines.safety_progress
+    routing_progress = $baselines.routing_progress
+    retrieval_progress = $baselines.retrieval_progress
+    real_human_chaos_progress = $baselines.real_human_chaos_progress
+    multi_intent_orchestration_progress = $baselines.multi_intent_orchestration_progress
+    long_session_memory_progress = $baselines.long_session_memory_progress
+    public_ready_progress = $baselines.public_ready_progress
+    source = $baselines.source
+    current_focus = "autonomous_safety_budget_exit"
+    next_action_headline = (Get-NextActionHeadline -Text (Read-TextFileOrEmpty -Path (Join-Path $RepoRoot "SILVER_NEXT_ACTION.md")))
+    dry_run = $DryRunText
+    stop_reason = $Reason
+  }
+  Write-SilverSafetyConsoleStop -Reason $Reason
+  Write-SilverProgressLogBlock -ProgressLogPath $ProgressLogPath -Outcome "SAFETY_STOP" -Fields $fields
+  Write-Host ("STATUS: SAFETY_STOP (" + $Reason + ")") -ForegroundColor Yellow
+  Invoke-SilverBeepComplete -NoBeep:$NoBeep
+  exit 0
 }
 
 # --- entry validation ---
@@ -443,11 +682,29 @@ if (-not (Test-Path -LiteralPath $NextActionPath)) {
   exit 1
 }
 
-$infinite = ($MaxCycles -eq 0)
+$autonomousOptIn = ($AllowInfinite -or $AutonomousMode)
 if ($MaxCycles -lt 0) {
-  Write-Host "STOP: MaxCycles must be >= 0 (0 = infinite)." -ForegroundColor Red
+  Write-Host "STOP: MaxCycles must be >= 0." -ForegroundColor Red
   exit 1
 }
+if ($MaxCycles -eq 0 -and -not $autonomousOptIn) {
+  Write-SilverSafetyConsoleStop -Reason "maxcycles_zero_requires_allowinfinite_or_autonomousmode"
+  exit 1
+}
+$controlledInfinite = ($MaxCycles -eq 0 -and $autonomousOptIn)
+$infinite = $controlledInfinite
+$hardCap = if ($controlledInfinite) { Get-SilverAutonomousHardMax -ParamMax $MaxAutonomousHardCycles } else { [int32]::MaxValue }
+$cycleWallCapAuto = if ($controlledInfinite) { Get-SilverAutonomousCycleWallCap -ParamWall $MaxCycleWallSeconds } else { 0 }
+$totalWallCapAuto = if ($controlledInfinite) { Get-SilverAutonomousTotalWallCap -ParamWall $TotalWallSeconds } else { 0 }
+$autonomousRunStart = if ($controlledInfinite) { Get-Date } else { $null }
+$script:AutonomousStatusFailStreak = 0
+$script:AutonomousSameNextStreak = 0
+$script:AutonomousNoProgStreak = 0
+$script:AutonomousPrKey = ""
+$script:AutonomousPrStreak = 0
+$script:LastNextNormalized = ""
+$script:LastCoreProgress = ""
+$script:LastSafetyMap = $null
 
 $cycle = 0
 while ($true) {
@@ -459,6 +716,66 @@ while ($true) {
   $script:LastTaskExit = 0
 
   if (-not $infinite -and $cycle -gt $MaxCycles) { break }
+
+  if ($null -ne $autonomousRunStart -and $totalWallCapAuto -gt 0) {
+    $elapsedTotal = ((Get-Date) - $autonomousRunStart).TotalSeconds
+    if ($elapsedTotal -gt $totalWallCapAuto) {
+      Write-SilverAutonomousBudgetExit -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit "" `
+        -Reason "total_wall_seconds_exhausted" -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep
+    }
+  }
+
+  if ($controlledInfinite -and $cycle -gt $hardCap) {
+    $mcEarly = ""
+    try {
+      $prevEaMc = $ErrorActionPreference
+      $ErrorActionPreference = "Continue"
+      $mcEarly = (& git -C $RepoRoot rev-parse HEAD 2>$null).Trim()
+      $ErrorActionPreference = $prevEaMc
+    } catch {
+      $mcEarly = ""
+    }
+    Write-SilverAutonomousBudgetExit -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mcEarly `
+      -Reason "hard_cycle_budget_exhausted" -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep
+  }
+
+  if (Test-SilverEmergencyStopFilePresent -Path $EmergencyStopPath) {
+    $mcStop = ""
+    try {
+      $prevEaSt = $ErrorActionPreference
+      $ErrorActionPreference = "Continue"
+      $mcStop = (& git -C $RepoRoot rev-parse HEAD 2>$null).Trim()
+      $ErrorActionPreference = $prevEaSt
+    } catch {
+      $mcStop = ""
+    }
+    Write-SilverAutonomousBudgetExit -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mcStop `
+      -Reason "emergency_stop_file_present" -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep
+  }
+
+  if ($controlledInfinite) {
+    $dirtyGuardAuto = Test-AutonomousUnexpectedDirtyTree -Cwd $RepoRoot
+    if (-not $dirtyGuardAuto.pass) {
+      $mcDirty = ""
+      try {
+        $prevEaDi = $ErrorActionPreference
+        $ErrorActionPreference = "Continue"
+        $mcDirty = (& git -C $RepoRoot rev-parse HEAD 2>$null).Trim()
+        $ErrorActionPreference = $prevEaDi
+      } catch {
+        $mcDirty = ""
+      }
+      $nextPeek = Read-TextFileOrEmpty -Path $NextActionPath
+      Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mcDirty `
+        -CursorExit "N/A" -AutopilotExit "N/A" -StatusExit "N/A" `
+        -GitClean "NO" -SafetyLine "" -CalW "" -CalQ "" `
+        -Headline (Get-NextActionHeadline -Text $nextPeek) -Focus "autonomous_unexpected_dirty_tree" `
+        -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep -LastTaskExitCode 1 `
+        -StopReason ("unexpected_path=" + $dirtyGuardAuto.firstUnexpected)
+    }
+  }
+
+  $cycleT0 = Get-Date
 
   $mainCommit = ""
   try {
@@ -534,6 +851,15 @@ while ($true) {
       -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine "" -CalW "" -CalQ "" `
       -Headline (Get-NextActionHeadline -Text $nextText) -Focus "guard_engine_task_policy" `
       -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep -LastTaskExitCode 1
+  }
+
+  if ($controlledInfinite -and -not (Test-SilverNextActionOutputQuality -Text $nextText)) {
+    Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+      -CursorExit "N/A" -AutopilotExit "N/A" -StatusExit "N/A" `
+      -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine "" -CalW "" -CalQ "" `
+      -Headline (Get-NextActionHeadline -Text $nextText) -Focus "autonomous_bad_next_action_quality_precycle" `
+      -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep -LastTaskExitCode 1 `
+      -StopReason "SILVER_NEXT_ACTION.md failed UTF-8/hallucination/cat-windows quality gate"
   }
 
   $reportPre = Read-TextFileOrEmpty -Path $RunReportPath
@@ -694,6 +1020,108 @@ while ($true) {
   }
 
   $nextAfter = Read-TextFileOrEmpty -Path $NextActionPath
+
+  if ($controlledInfinite) {
+    if ($cycleWallCapAuto -gt 0) {
+      $elapsedCycleSec = ((Get-Date) - $cycleT0).TotalSeconds
+      if ($elapsedCycleSec -gt $cycleWallCapAuto) {
+        Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+          -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit ([string]$se) `
+          -GitClean $gitCleanFinal -SafetyLine $safetyPost `
+          -CalW (Get-RunReportLineValue -ReportText $reportPost -Key "calendar_write_20k") `
+          -CalQ (Get-RunReportLineValue -ReportText $reportPost -Key "calendar_query_20k") `
+          -Headline (Get-NextActionHeadline -Text $nextAfter) -Focus "autonomous_cycle_wall_timeout" `
+          -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep -LastTaskExitCode 1 `
+          -StopReason ("elapsed_sec=" + [string][math]::Round($elapsedCycleSec, 1) + ";cap=" + [string]$cycleWallCapAuto)
+      }
+    }
+    if ($se -ne 0) {
+      $script:AutonomousStatusFailStreak++
+    } else {
+      $script:AutonomousStatusFailStreak = 0
+    }
+    if ($script:AutonomousStatusFailStreak -ge $RepeatedFailureStopAfter) {
+      Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+        -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit ([string]$se) `
+        -GitClean $gitCleanFinal -SafetyLine $safetyPost `
+        -CalW (Get-RunReportLineValue -ReportText $reportPost -Key "calendar_write_20k") `
+        -CalQ (Get-RunReportLineValue -ReportText $reportPost -Key "calendar_query_20k") `
+        -Headline (Get-NextActionHeadline -Text $nextAfter) -Focus "autonomous_repeated_status_nonzero" `
+        -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep -LastTaskExitCode 1 `
+        -StopReason ("streak=" + [string]$script:AutonomousStatusFailStreak)
+    }
+    $normAfter = Normalize-SilverNextBodyForStreak -Text $nextAfter
+    if ($normAfter -eq "" -or -not $normAfter) {
+      $script:AutonomousSameNextStreak = 0
+    } elseif ($normAfter -eq $script:LastNextNormalized) {
+      $script:AutonomousSameNextStreak++
+    } else {
+      $script:AutonomousSameNextStreak = 1
+    }
+    $script:LastNextNormalized = $normAfter
+    if ($script:AutonomousSameNextStreak -ge $SameNextActionStopAfter) {
+      Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+        -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit ([string]$se) `
+        -GitClean $gitCleanFinal -SafetyLine $safetyPost `
+        -CalW (Get-RunReportLineValue -ReportText $reportPost -Key "calendar_write_20k") `
+        -CalQ (Get-RunReportLineValue -ReportText $reportPost -Key "calendar_query_20k") `
+        -Headline (Get-NextActionHeadline -Text $nextAfter) -Focus "autonomous_same_next_action_streak" `
+        -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep -LastTaskExitCode 1 `
+        -StopReason ("streak=" + [string]$script:AutonomousSameNextStreak)
+    }
+    if ($script:LastCoreProgress -ne "" -and $coreEngineProgress -eq $script:LastCoreProgress -and ($coreEngineProgress.Trim())) {
+      $script:AutonomousNoProgStreak++
+    } else {
+      if ($coreEngineProgress.Trim()) { $script:AutonomousNoProgStreak = 0 }
+    }
+    $script:LastCoreProgress = $coreEngineProgress
+    if ($script:AutonomousNoProgStreak -ge $NoProgressStopAfter) {
+      Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+        -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit ([string]$se) `
+        -GitClean $gitCleanFinal -SafetyLine $safetyPost `
+        -CalW (Get-RunReportLineValue -ReportText $reportPost -Key "calendar_write_20k") `
+        -CalQ (Get-RunReportLineValue -ReportText $reportPost -Key "calendar_query_20k") `
+        -Headline (Get-NextActionHeadline -Text $nextAfter) -Focus "autonomous_no_progress_streak" `
+        -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep -LastTaskExitCode 1 `
+        -StopReason ("core_engine_progress=" + $coreEngineProgress + ";streak=" + [string]$script:AutonomousNoProgStreak)
+    }
+    $prTok2 = Get-FirstPrNumberToken -Text $nextAfter
+    if ($prTok2 -and $prTok2 -eq $script:AutonomousPrKey) {
+      $script:AutonomousPrStreak++
+    } elseif ($prTok2) {
+      $script:AutonomousPrKey = $prTok2
+      $script:AutonomousPrStreak = 1
+    } else {
+      $script:AutonomousPrKey = ""
+      $script:AutonomousPrStreak = 0
+    }
+    if ($script:AutonomousPrStreak -ge $PrLoopStopAfter) {
+      Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+        -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit ([string]$se) `
+        -GitClean $gitCleanFinal -SafetyLine $safetyPost `
+        -CalW (Get-RunReportLineValue -ReportText $reportPost -Key "calendar_write_20k") `
+        -CalQ (Get-RunReportLineValue -ReportText $reportPost -Key "calendar_query_20k") `
+        -Headline (Get-NextActionHeadline -Text $nextAfter) -Focus "autonomous_pr_instruction_loop" `
+        -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep -LastTaskExitCode 1 `
+        -StopReason ("pr=" + $script:AutonomousPrKey + ";streak=" + [string]$script:AutonomousPrStreak)
+    }
+    $currMap = Get-SafetyCounterTotalsFromLine -SafetyCountersLine $safetyPost
+    if ($null -ne $script:LastSafetyMap) {
+      $reg = Test-SafetyCountersRegression -Prev $script:LastSafetyMap -Curr $currMap
+      if ($reg.regress) {
+        Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+          -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit ([string]$se) `
+          -GitClean $gitCleanFinal -SafetyLine $safetyPost `
+          -CalW (Get-RunReportLineValue -ReportText $reportPost -Key "calendar_write_20k") `
+          -CalQ (Get-RunReportLineValue -ReportText $reportPost -Key "calendar_query_20k") `
+          -Headline (Get-NextActionHeadline -Text $nextAfter) -Focus "autonomous_safety_counters_regression" `
+          -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep -LastTaskExitCode 1 `
+          -StopReason $reg.detail
+      }
+    }
+    $script:LastSafetyMap = $currMap
+  }
+
   $fieldsPass = @{
     timestamp = (Get-Date).ToString("s")
     cycle = [string]$cycle

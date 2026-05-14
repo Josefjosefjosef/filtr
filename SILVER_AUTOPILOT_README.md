@@ -12,7 +12,7 @@ Silver Autopilot V1 is a **local development orchestration layer**. It is **not*
 - **No engine merges** without manual policy: verify blocks engine / `assets/app.js` unless you set explicit environment overrides (`SILVER_AUTOPILOT_ALLOW_ASSETS_APP`, `SILVER_AUTOPILOT_ALLOW_ENGINE`) — use only when you intentionally accept that risk.
 - **`--auto --max-steps=1`**: at most **one** safe step (status refresh); no merge, no RHC3 refresh, no proof chain.
 - **OpenAI**: only with `--ask-model` or **`--full-auto-loop`**, only if `OPENAI_API_KEY` is set in your **environment** (never committed; do not add `.env` to the repo). If the key is missing, those commands print `OPENAI_API_KEY_MISSING`, write a safe fallback into `SILVER_NEXT_ACTION.md`, and **do not throw**.
-- **No infinite loops**: each command runs once and exits.
+- **No raw `MaxCycles 0` outer loop**: `-MaxCycles 0` alone **exits immediately** (exit code **1**) with `SILVER_LOOP_SAFETY_STOP reason=maxcycles_zero_requires_allowinfinite_or_autonomousmode`. Add **`-AllowInfinite`** or **`-AutonomousMode`** to enter **controlled autonomous mode**: hard cycle budget (default **512**), optional wall-clock caps, emergency stop file **`SILVER_STOP_AUTOPILOT`**, unexpected dirty-tree guard, repeated `--status` failure / no-progress / same next-action / same-PR-instruction streak breakers, safety-counter regression breaker, and `SILVER_LOOP_SAFETY_STOP` / progress-log `stop_reason` on breaker trips. See `scripts/silver-autonomous-loop-safety-diagnostic.ps1` for env variable names. Each **Node** autopilot command still runs once per invocation.
 
 ## Commands
 
@@ -50,12 +50,13 @@ node scripts/silver-autopilot.cjs --loop-once
 | `SILVER_PROGRESS_LOG.md` | Append-only cycle log from `scripts/silver-autopilot-loop.ps1` (timestamps, exits, baselines; no secrets). |
 | `scripts/silver-autopilot.cjs` | Implementation. |
 | `scripts/silver-autopilot-loop.ps1` | **FULL AUTO LOOP TRIGGER V1** — Windows orchestrator: validates repo path, guards `SILVER_NEXT_ACTION.md`, optional Cursor CLI (`-CursorCommand` with `{TASK_FILE}` / `{OUTPUT_FILE}`), then `node scripts/silver-autopilot.cjs --full-auto-loop --max-steps=1`, then `--status`, colored console summary, beeps, and `SILVER_PROGRESS_LOG.md`. |
+| `scripts/silver-autonomous-loop-safety-diagnostic.ps1` | Read-only: prints MaxCycles **0** / autonomous safety policy hints and relevant **environment** variable names (does **not** run an infinite loop). |
 | `scripts/silver-cursor-agent-adapter-diagnostic.ps1` | Probes `where.exe cursor`, `cursor --version`, help text, **eight** `cursor agent` headless-style argv variants (`-p` / `--print` / `--output-format` / `--yolo` / `--yes`, 120s each, harmless one-line prompt), plus **stdin marker probes** (`cursor -`, then `cursor agent` with optional tail flags). **First** runs a **WSL Ubuntu** non-interactive pack: `wsl.exe -d Ubuntu -- /home/spedk/.local/bin/agent --version`, `test -x` / `test -d` on the Linux agent path and `/mnt/c/projects/filtr`, then `--print --mode ask --trust --workspace /mnt/c/projects/filtr` with the one-line marker prompt (timeout from `headless_probe_timeout_ms`), git dirtiness allowlist, and writes **`wsl_cursor_agent_print_ask_trust`** into `scripts/silver-cursor-agent-adapter-diagnostic-report.json` (schema **v2**). Prints `=== SILVER_WSL_CURSOR_AGENT_ADAPTER_WIRING_RESULT ===` and exits **1** if that pack’s `adapter_ready` is **NO** (Windows probes still run for context). Ends with `[console]::beep(880, 200)`. |
 | `scripts/silver-cursor-agent-adapter.ps1` | Wrapper: reads **v2** diagnostic JSON and prefers **`preferred_headless_argv`** (`cmd.exe` redirect, last argv token = task/prompt text) when that probe returned exit **0** and **stdout** contained `CURSOR_AGENT_STDIN_OK`. Otherwise uses **`preferred_stdin_argv`** when `preferred_invocation_kind=stdin_pipe` (e.g. `type` pipe to `cursor -` or `cursor agent …`). Fallback: `type "<temp>" | "<cursor.cmd>" agent` with optional retry to **`cursor -`**. **`-WslUbuntuAgent`** uses direct **`wsl.exe`** (no `bash -lc`, no PowerShell `PATH` export for the agent): `wsl.exe -d Ubuntu -- /home/spedk/.local/bin/agent --print --mode ask --trust --workspace /mnt/c/projects/filtr "<prompt>"`; non-`-Probe` runs require **`wsl_cursor_agent_print_ask_trust.adapter_ready=YES`** in the diagnostic JSON. `-DryRun` / `-Probe` / `-TimeoutSeconds` supported. |
 
 ## Full auto loop trigger (PowerShell V1)
 
-Local **outer** loop only (not browser Silver). Default **one** cycle; infinite loop requires **explicit** `-MaxCycles 0`.
+Local **outer** loop only (not browser Silver). Default **one** cycle. **`-MaxCycles 0` is blocked** unless you also pass **`-AllowInfinite`** or **`-AutonomousMode`** (controlled autonomous mode with hard caps and breakers — see Security limits).
 
 ```powershell
 # Safe dry run (no Cursor, no full-auto-loop; runs `--status`, updates progress log)
@@ -106,9 +107,17 @@ Parameters:
 | Flag | Meaning |
 |------|--------|
 | `-DryRun` | Skips Cursor and `node … --full-auto-loop`; still runs guards and `--status`. |
-| `-MaxCycles` | Default **1**. Use **0** for infinite (only when you intend a long run). |
+| `-MaxCycles` | Default **1**. Value **0** alone **STOP** (exit **1**). With **`-AllowInfinite`** or **`-AutonomousMode`**, **0** enables **controlled autonomous mode** (hard cycle cap, wall clocks, dirty/stop/streak breakers). |
+| `-AllowInfinite` / `-AutonomousMode` | Required together with `-MaxCycles 0` to opt in to autonomous orchestration (same safety stack for both switches). |
+| `-MaxAutonomousHardCycles` | Override hard iteration ceiling ( **0** = use env `SILVER_AUTONOMOUS_HARD_MAX_CYCLES` or default **512**). |
+| `-SameNextActionStopAfter` | Streak limit for identical `SILVER_NEXT_ACTION.md` body (default **5**). |
+| `-NoProgressStopAfter` | Streak limit for unchanged `core_engine_progress` in `SILVER_RUN_REPORT.md` (default **8**). |
+| `-RepeatedFailureStopAfter` | Consecutive non-zero `node … --status` exits (default **3**). |
+| `-PrLoopStopAfter` | Consecutive cycles with the same detected PR id in next-action text (default **4**). |
+| `-MaxCycleWallSeconds` | Per-cycle wall budget in autonomous mode (**0** = env `SILVER_AUTONOMOUS_MAX_CYCLE_WALL_SECONDS` or **7200**; **-1** disables). |
+| `-TotalWallSeconds` | Total autonomous wall budget (**0** = env `SILVER_AUTONOMOUS_MAX_TOTAL_WALL_SECONDS` or **86400**; **-1** disables). |
 | `-SleepSeconds` | Pause between cycles (default **5**). |
 | `-CursorCommand` | Template; `{TASK_FILE}` → `SILVER_NEXT_ACTION.md`, `{OUTPUT_FILE}` → `SILVER_CURSOR_OUTPUT.md`. If omitted: **DryRun** continues with a warning; **non–DryRun** **STOP** (exit 1). |
 | `-NoBeep` | Disable `[console]::beep` PASS/FAIL/COMPLETE signals. |
 
-Guards (non-exhaustive): repo root must be `C:\projects\filtr`; empty `SILVER_NEXT_ACTION.md` **STOP**; substring **`SILVER_DEVELOPMENT_COMPLETE`** ends the loop (exit 0, COMPLETE beep); `assets/app.js` dirty without **`ENGINE_ALLOWED`** in the next-action text **STOP**; engine-style tasks without diagnostics / **`ENGINE_ALLOWED`** **STOP**; nonzero safety counters in `SILVER_RUN_REPORT.md` **STOP**; non–DryRun without **`OPENAI_API_KEY`** **STOP** before `--full-auto-loop` (no fake autonomous run). Cursor non-zero exit or Autopilot non-zero exit **STOP**. After a successful `--full-auto-loop` write, **`SILVER_NEXT_ACTION.md` is scanned** for mojibake / banned hallucinated script paths / unsafe `cat C:\` command patterns — mismatch **STOP** (`next_action_quality_post_guard`).
+Guards (non-exhaustive): repo root must be `C:\projects\filtr`; empty `SILVER_NEXT_ACTION.md` **STOP**; substring **`SILVER_DEVELOPMENT_COMPLETE`** ends the loop (exit 0, COMPLETE beep); `assets/app.js` dirty without **`ENGINE_ALLOWED`** in the next-action text **STOP**; engine-style tasks without diagnostics / **`ENGINE_ALLOWED`** **STOP**; nonzero safety counters in `SILVER_RUN_REPORT.md` **STOP**; non–DryRun without **`OPENAI_API_KEY`** **STOP** before `--full-auto-loop` (no fake autonomous run). Cursor non-zero exit or Autopilot non-zero exit **STOP**. After a successful `--full-auto-loop` write, **`SILVER_NEXT_ACTION.md` is scanned** for mojibake / banned hallucinated script paths / unsafe `cat C:\` command patterns — mismatch **STOP** (`next_action_quality_post_guard`). **Autonomous mode** (`-MaxCycles 0` + `-AllowInfinite` / `-AutonomousMode`) additionally enforces **hard cycle budget**, **`SILVER_STOP_AUTOPILOT`**, **unexpected dirty paths** (aligned with `--full-auto-loop` allowlist), **stuck/time** caps, **streak** and **safety regression** breakers; every autonomous breaker prints **`SILVER_LOOP_SAFETY_STOP reason=…`**.
