@@ -97,7 +97,11 @@ function gitTrackedClean() {
       "scripts/silver-calendar-query-storage-disambiguation-diagnostic-report.json",
       "scripts/silver-real-human-chaos-v3.cjs",
       "scripts/silver-real-human-chaos-v3-report.json",
-      "scripts/rhc-v3-deterministic-core.cjs"
+      "scripts/rhc-v3-deterministic-core.cjs",
+      "scripts/silver-quality-v2-report.json",
+      "scripts/silver-realistic-mobile-corpus-report.json",
+      "scripts/silver-real-czech-corpus-v1-report.json",
+      "scripts/silver-real-czech-corpus-v1-30k-report.json"
     ];
     const bad = tracked.filter((l) => {
       const t = l.replace(/^\s+/, "").trim();
