@@ -1,12 +1,12 @@
 # SILVER_RUN_REPORT
 
-timestamp=2026-05-14T03:31:49.088Z
+timestamp=2026-05-14T07:23:20.544Z
 command=--status
 status=PASS
-branch=fix/silver-cursor-agent-adapter-v1
-commit=c62957bd8dc719c6f1b53bf899afd9b12ae62ad7
-git_status_clean=YES
-changed_files=
+branch=fix/silver-maxcycles-1-timeout-output-capture
+commit=86db1eab4233d6641251cdba85a5653d49f513fc
+git_status_clean=NO
+changed_files=SILVER_NEXT_ACTION.md;SILVER_RUN_REPORT.md;SILVER_CURSOR_OUTPUT.md
 pr_info=(none)
 engine_changed=NO
 assets_app_changed=NO
@@ -28,25 +28,8 @@ post_merge_proof_process_exit=
 tracked_report_restore_before_realistic_mobile=
 failed_step=
 failed_reason=
-next_recommended_command=node scripts/silver-autopilot.cjs --verify-pr=<NUMBER>
+next_recommended_command=git status; resolve dirty tree before verify/merge/auto
 reason_for_stop=
 
-## SILVER_CURSOR_AGENT_ADAPTER_V1 (scripts-only)
-
-cursor_cli_found=YES
-cursor_agent_help_exit=0
-cursor_agent_supports_input_output=NO
-cursor_agent_supports_stdin=YES
-cursor_agent_supports_headless=NO
-cursor_agent_interactive_only=NO
-adapter_ready=YES
-adapter_ready_reason=agent_stdin_probe_completed_without_timeout
-adapter_script=scripts/silver-cursor-agent-adapter.ps1
-recommended_cursor_command=powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE}
-wsl_ubuntu_agent_adapter=-WslUbuntuAgent uses wsl.exe -d Ubuntu -- /home/spedk/.local/bin/agent --print --mode ask --trust --workspace /mnt/c/projects/filtr (see diagnostic JSON wsl_cursor_agent_print_ask_trust)
-diagnostic_report=scripts/silver-cursor-agent-adapter-diagnostic-report.json
-notes=Global `cursor --help` documents pipe-to-dash for `cursor.exe -`; `cursor agent --help` shows the same text (no `--input`/`--output`). Probes used one harmless stdin line only; `cursor --chat` UI was not launched (only `--chat --help`). WSL adapter wiring is probe-only in diagnostic (no autopilot loop). Re-run diagnostic after Cursor upgrades. WSL diagnostic allowlist: `git status --short` paths parsed after the two status columns (`Substring(2).TrimStart()`), fixing false `repo_dirty_unexpected` and truncated `changed_files` output under Set-StrictMode.
-
 ## Notes
-
 - Autopilot V1 never commits secrets. Do not paste `OPENAI_API_KEY` into this file.

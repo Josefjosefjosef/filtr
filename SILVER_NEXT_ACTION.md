@@ -1,18 +1,19 @@
-<!-- SILVER_NEXT_ACTION: maintained by Silver Autopilot --ask-model or by hand; never auto-applied -->
+<!-- SILVER_NEXT_ACTION: full-auto-loop-openai; copy-paste for Cursor; not auto-applied -->
 
-# Next action
+ÚKOL PRO CURSOR — infoUzel.cz / Silver
 
-1. Run `powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter-diagnostic.ps1` (schema **v2**: WSL `wsl_cursor_agent_print_ask_trust` pack first, then eight headless argv probes + stdin marker probes). Confirm `wsl_cursor_agent_print_ask_trust.adapter_ready` (Ubuntu agent at `/home/spedk/.local/bin/agent`, workspace `/mnt/c/projects/filtr`) and the Windows-side `adapter_ready` / `preferred_invocation_kind` / `preferred_headless_argv` / `preferred_stdin_argv` in `scripts/silver-cursor-agent-adapter-diagnostic-report.json`. Review `=== SILVER_WSL_CURSOR_AGENT_ADAPTER_WIRING_RESULT ===` in the console; expect `adapter_ready=YES` when the WSL marker probe is clean.
-2. Run a **harmless probe** once (Windows `cursor` path): `powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -Probe -OutputFile SILVER_CURSOR_OUTPUT.md -TimeoutSeconds 120` — confirm `adapter_probe_pass=YES` and `can_run_full_auto_loop_maxcycles_1=YES` in `SILVER_CURSOR_OUTPUT.md` only when the diagnostic JSON already has `adapter_ready=YES` and stdout contains `CURSOR_AGENT_STDIN_OK`.
-2b. Optional **WSL** probe (no `bash -lc`): `powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -WslUbuntuAgent -Probe -OutputFile SILVER_CURSOR_OUTPUT.md -TimeoutSeconds 120` — same marker rules; gate on `wsl_cursor_agent_print_ask_trust.adapter_ready=YES` for non-`-Probe` runs.
-3. After any Cursor IDE upgrade, re-run the diagnostic script and re-check the JSON report.
-4. For FULL AUTO LOOP with Cursor CLI (first safe loop command): `-CursorCommand "powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE} -TimeoutSeconds 120"` (do **not** use `--input` / `--output` on `cursor agent`; they are absent from current help).
-5. `node scripts/silver-autopilot.cjs --status`
-6. For `note_write_warranty_object||intent_fail`: prefer harness / gold relaxation before engine routing when diagnostics say `ready_for_engine_fix=NO`.
+1. Verify the output of the last Cursor execution by checking the contents of `SILVER_CURSOR_OUTPUT.md` for any anomalies or errors.
+   - Command: `cat C:\projects\filtr\SILVER_CURSOR_OUTPUT.md`
 
-## Template (generic)
+2. Run the diagnostic script to assess the current state of the Silver engine and identify any potential issues.
+   - Command: `node scripts/silver-diagnostic.js`
 
-1. Ensure a clean git tree for merge-sensitive commands (`git status`).
-2. Run `node scripts/silver-autopilot.cjs --status`.
-3. For an open PR: `node scripts/silver-autopilot.cjs --verify-pr=<NUMBER>` until you see `READY_TO_MERGE`.
-4. Optional planning: `node scripts/silver-autopilot.cjs --ask-model` (requires `OPENAI_API_KEY` in the environment only — never commit keys or add `.env` to the repo).
+3. Review the results of the diagnostic script for any indications of engine failure or misalignment.
+   - Command: `cat C:\projects\filtr\SILVER_RUN_REPORT.md`
+
+4. If the diagnostic indicates a `TRUE_ENGINE_FAIL`, document the findings and prepare for a focused fix. If no issues are found, proceed to the next step.
+
+5. If applicable, run the smoke test for MaxCycles 1 again to confirm the previous results.
+   - Command: `node scripts/silver-smoke-test-maxcycles-1.js` 
+
+6. Document the results of the smoke test and ensure all outputs are captured in the appropriate report files.
