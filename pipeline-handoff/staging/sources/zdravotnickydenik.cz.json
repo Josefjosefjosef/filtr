@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-14T16:00:40.114984Z",
+  "ingestedAt": "2026-05-14T16:39:46.096388Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Robotická chirurgie v každé okresní nemocnici? Ministerstvo připravuje nová pravidla",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/roboticka-chirurgie-nemocnice-ministerstvo-pravidla/",
+      "dt": "2026-05-14T16:00:59Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "chirurgie",
+        "každé",
+        "ministerstvo",
+        "nemocnici",
+        "nová",
+        "okresní",
+        "pravidla",
+        "připravuje",
+        "robotická"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -244,32 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Dostanete přidáno? O platech zdravotníků by se mělo rozhodovat u jednoho stolu s pojišťovnami",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/o-platech-zdravotniku-by-se-melo-rozhodovat-u-jednoho-stolu-s-pojistovnami/",
-      "dt": "2026-05-14T06:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "dostanete",
-        "jednoho",
-        "mělo",
-        "platech",
-        "pojišťovnami",
-        "přidáno",
-        "rozhodovat",
-        "stolu",
-        "zdravotníků"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 83441,
+      "bytes": 77678,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-14T15:04:01Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T16:00:59Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -332,6 +332,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Robotická chirurgie v každé okresní nemocnici? Ministerstvo připravuje nová pravidla",
+            "publishedAt": "2026-05-14T16:00:59Z"
+          },
           {
             "title": "Tichý zabiják útočí na stále mladší Čechy. Za vysoký krevní tlak může hlavně jedna věc",
             "publishedAt": "2026-05-14T15:04:01Z"
@@ -359,10 +363,6 @@
           {
             "title": "Hantavirus Andes: EU aktivovala krizový mechanismus. Co to znamená pro Česko?",
             "publishedAt": "2026-05-14T08:48:29Z"
-          },
-          {
-            "title": "Klíšťata ve městech jsou dvakrát nebezpečnější než v lese. Experti varují před vysokou infekčností",
-            "publishedAt": "2026-05-14T08:11:11Z"
           }
         ]
       }

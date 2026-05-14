@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-14T16:00:40.114984Z",
+  "ingestedAt": "2026-05-14T16:39:46.096388Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "SOUHRN: Zásadní události čtvrtka 14. května",
+      "url": "https://ct24.ceskatelevize.cz/clanek/media/souhrn-zasadni-udalosti-ctvrtka-14-kvetna-373443",
+      "dt": "2026-05-14T16:29:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "května",
+        "souhrn",
+        "události",
+        "zásadní",
+        "čtvrtka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -737,28 +759,24 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "sport",
       "contentType": "article",
-      "title": "Výhody života ve skupině oslabují při klimatických extrémech, ukázal výzkum u opic",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/vyhody-zivota-ve-skupine-oslabuji-pri-klimatickych-extremech-ukazal-vyzkum-u-opic-373392",
-      "dt": "2026-05-14T06:34:05Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "V Neapoli se po nervózním finiši raduje domácí Ballerini",
+      "url": "https://sport.ceskatelevize.cz/clanek/cyklistika/v-neapoli-se-po-nervoznim-finisi-raduje-domaci-ballerini-156794",
+      "dt": "2026-05-14T16:12:13Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "extrémech",
-        "klimatických",
-        "opic",
-        "oslabují",
-        "při",
-        "skupině",
-        "ukázal",
-        "výhody",
-        "výzkum",
-        "života"
+        "ballerini",
+        "domácí",
+        "finiši",
+        "neapoli",
+        "nervózním",
+        "raduje"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1480,32 +1498,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hertl dvěma body dotáhl Vegas k mečbolu, Buffalo vyrovnalo sérii",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/hertl-dvema-body-dotahl-vegas-k-mecbolu-buffalo-vyrovnalo-serii-156763",
-      "dt": "2026-05-13T06:24:40Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "body",
-        "buffalo",
-        "dotáhl",
-        "dvěma",
-        "hertl",
-        "mečbolu",
-        "sérii",
-        "vegas",
-        "vyrovnalo"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1516,7 +1508,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41900,
+      "bytes": 41675,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1576,11 +1568,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T14:56:42Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T16:29:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "other": 7,
+          "zpravy": 23,
+          "other": 6,
           "finance": 1
         },
         "drop_counts": {
@@ -1593,6 +1585,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "SOUHRN: Zásadní události čtvrtka 14. května",
+            "publishedAt": "2026-05-14T16:29:00Z"
+          },
           {
             "title": "Na D1 stojí kolona kamionů dlouhá přes padesát kilometrů",
             "publishedAt": "2026-05-14T14:56:42Z"
@@ -1620,10 +1616,6 @@
           {
             "title": "KRNAP rozšiřuje kamerový systém. Cílem je omezení dopravy a klid pro ohrožené druhy",
             "publishedAt": "2026-05-14T13:12:48Z"
-          },
-          {
-            "title": "Britský ministr Streeting rezignuje. Dle médií chce nahradit Starmera",
-            "publishedAt": "2026-05-14T12:24:25Z"
           }
         ]
       }
@@ -1635,7 +1627,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38123,
+      "bytes": 38026,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1672,7 +1664,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T14:44:37Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T16:12:13Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1687,6 +1679,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Neapoli se po nervózním finiši raduje domácí Ballerini",
+            "publishedAt": "2026-05-14T16:12:13Z"
+          },
           {
             "title": "Střídání nadmořských výšek a vedra dají fotbalové reprezentaci pořádně zabrat",
             "publishedAt": "2026-05-14T14:44:37Z"
@@ -1714,10 +1710,6 @@
           {
             "title": "Závěrečná nominace pro MS bude odhalena po utkání s Kosovem",
             "publishedAt": "2026-05-14T12:41:32Z"
-          },
-          {
-            "title": "Hokejovou dvacítku přebírá Tomajko, Nedvěd povede osmnáctku",
-            "publishedAt": "2026-05-14T11:45:23Z"
           }
         ]
       }
@@ -1729,7 +1721,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78018,
+      "bytes": 77983,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

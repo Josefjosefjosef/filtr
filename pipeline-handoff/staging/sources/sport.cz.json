@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-14T16:00:40.114984Z",
+  "ingestedAt": "2026-05-14T16:39:46.096388Z",
   "items": [
     {
       "section": "sport",
@@ -20,6 +20,33 @@
         "vede",
         "vyhrál",
         "šestou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Basketbalista Nečas mění v NCAA dres, chce se tak přiblížit angažmá v NBA",
+      "url": "https://www.sport.cz/clanek/basketbal-basketbalista-necas-meni-v-ncaa-dres-chce-se-tak-priblizit-angazma-v-nba-5454048",
+      "dt": "2026-05-14T16:07:53Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "angažmá",
+        "basketbalista",
+        "chce",
+        "dres",
+        "mění",
+        "nba",
+        "ncaa",
+        "nečas",
+        "přiblížit",
+        "tak"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -742,30 +769,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Írán se velkolepě loučil s fotbalisty před odjezdem na mistrovství světa",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-iran-se-velkolepe-loucil-s-fotbalisty-pred-odjezdem-na-mistrovstvi-sveta-5453873",
-      "dt": "2026-05-14T08:20:24Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "fotbalisty",
-        "loučil",
-        "mistrovství",
-        "odjezdem",
-        "světa",
-        "velkolepě",
-        "írán"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -776,7 +779,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43870,
+      "bytes": 44194,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -813,7 +816,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T15:49:23Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T16:07:53Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -831,6 +834,10 @@
           {
             "title": "Domácí Ballerini vyhrál šestou etapu Gira, dál vede Eulálio",
             "publishedAt": "2026-05-14T15:49:23Z"
+          },
+          {
+            "title": "Basketbalista Nečas mění v NCAA dres, chce se tak přiblížit angažmá v NBA",
+            "publishedAt": "2026-05-14T16:07:53Z"
           },
           {
             "title": "Šéf disciplinárky: Moses dostal minimum, Chorý odmítá úmysl, trest by se mu počítal i v cizině",
@@ -855,10 +862,6 @@
           {
             "title": "Bohemians jsou na prodej! Netajíme se tím, přiznal šéf klubu",
             "publishedAt": "2026-05-14T14:47:04Z"
-          },
-          {
-            "title": "Sinner ve čtyřiadvaceti letech překonal Djokovičův rekord",
-            "publishedAt": "2026-05-14T13:06:13Z"
           }
         ]
       }

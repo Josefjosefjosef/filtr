@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-05-14T16:00:40.114984Z",
+  "ingestedAt": "2026-05-14T16:39:46.096388Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "The Sinking City 2 se snaží přiblížit úspěšné sérii Resident Evil - INDIAN",
+      "url": "https://indian-tv.cz/clanek/the-sinking-city-2-se-snazi-priblizit-serii-resident-evil-m6xsi0",
+      "dt": "2026-05-14T16:38:05Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "city",
+        "evil",
+        "indian",
+        "přiblížit",
+        "resident",
+        "sinking",
+        "snaží",
+        "sérii",
+        "the",
+        "úspěšné"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1067,32 +1094,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Hudební adventura Mixtape rozděluje kritiky a hráče na dva tábory - INDIAN",
-      "url": "https://indian-tv.cz/clanek/hudebni-adventura-mixtape-rozdeluje-kritiky-a4ziy0",
-      "dt": "2026-05-11T11:47:07Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "adventura",
-        "dva",
-        "hráče",
-        "hudební",
-        "indian",
-        "kritiky",
-        "mixtape",
-        "rozděluje",
-        "tábory"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1103,7 +1104,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 229744,
+      "bytes": 230547,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1140,7 +1141,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-14T14:38:50Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T16:38:05Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1155,6 +1156,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "The Sinking City 2 se snaží přiblížit úspěšné sérii Resident Evil - INDIAN",
+            "publishedAt": "2026-05-14T16:38:05Z"
+          },
           {
             "title": "Xbox v Česku chystá velkou fanouškovskou akci k vydání Forza Horizon 6 - INDIAN",
             "publishedAt": "2026-05-14T14:38:50Z"
@@ -1182,10 +1187,6 @@
           {
             "title": "007: First Light dokončen. Nový James Bond je gold - INDIAN",
             "publishedAt": "2026-05-14T09:17:56Z"
-          },
-          {
-            "title": "Assassin’s Creed Hexe na prvním obrázku. V nejtemnějším díle série se prý vrátí Ezio - INDIAN",
-            "publishedAt": "2026-05-13T21:41:00Z"
           }
         ]
       }
