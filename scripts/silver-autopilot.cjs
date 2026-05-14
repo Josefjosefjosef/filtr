@@ -731,6 +731,17 @@ function printPostMergeProofStrictFailResult(ctx) {
 }
 
 function writeRunReport(payload) {
+  const envTapP = String(process.env.SILVER_TIMEOUT_ARCHIVE_PATH || "").trim();
+  const envTapA0 = String(process.env.SILVER_TIMEOUT_ARTIFACTS_ARCHIVED || "").trim();
+  const envTapA = envTapA0 || (envTapP ? "YES" : "NO");
+  const timeoutArchivePathLine =
+    payload.timeout_archive_path != null && String(payload.timeout_archive_path).trim() !== ""
+      ? String(payload.timeout_archive_path).trim()
+      : envTapP;
+  const timeoutArtifactsArchivedLine =
+    payload.timeout_artifacts_archived != null && String(payload.timeout_artifacts_archived).trim() !== ""
+      ? String(payload.timeout_artifacts_archived).trim()
+      : envTapA;
   const lines = [
     "# SILVER_RUN_REPORT",
     "",
@@ -764,6 +775,8 @@ function writeRunReport(payload) {
     "failed_reason=" + String(payload.failed_reason || ""),
     "next_recommended_command=" + String(payload.next_recommended_command || ""),
     "reason_for_stop=" + String(payload.reason_for_stop || ""),
+    "timeout_archive_path=" + timeoutArchivePathLine,
+    "timeout_artifacts_archived=" + timeoutArtifactsArchivedLine,
   ];
   const cepRaw = payload.core_engine_progress;
   const cep = cepRaw == null ? "" : String(cepRaw).trim();
@@ -889,6 +902,14 @@ function cmdStatus(argvCommand) {
   console.log("calendar_query_20k=" + cal.calendar_query_20k);
   console.log("next_recommended_command=" + nextCmd);
   console.log("PASS_FAIL=" + status);
+  const statusTimeoutPath = String(process.env.SILVER_TIMEOUT_ARCHIVE_PATH || "").trim();
+  if (statusTimeoutPath) {
+    console.log("timeout_archive_path=" + statusTimeoutPath);
+    console.log(
+      "timeout_artifacts_archived=" +
+        (String(process.env.SILVER_TIMEOUT_ARTIFACTS_ARCHIVED || "").trim() || "YES"),
+    );
+  }
   printProofGateConsistencyResult({
     main_commit: commit,
     engine_changed: "NO",
