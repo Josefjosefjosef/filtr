@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-14T12:39:58.957279Z",
+  "ingestedAt": "2026-05-14T13:20:04.353473Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Další porážka evropských automobilek. Číňané otevřeně říkají, na koho mají spadeno",
+      "url": "https://zpravy.aktualne.cz/ekonomika/auto/nove-automobily/dalsi-porazka-evropskych-automobilek-cinane-otevrene-rikaji-na-koho-maji-spadeno/r~aaa294b02c4a97656c409d2ca8411f49/",
+      "dt": "2026-05-14T12:41:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "automobilek",
+        "další",
+        "evropských",
+        "koho",
+        "mají",
+        "otevřeně",
+        "porážka",
+        "spadeno",
+        "číňané",
+        "říkají"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -440,20 +467,19 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Ukrajinské drony spadly na území NATO. Shodily vládu ohrožené země",
+      "title": "Ukrajinští „zabijáci“ nečekaně pronikli na území NATO. Pro vládu to bylo fatální",
       "url": "https://zpravy.aktualne.cz/zahranici/ukrajinske-drony-spadly-na-uzemi-nato-shodily-vladu-ohrozene-zeme/r~aaa297dcd0e0b1996dbb18e86a9058d4/",
       "dt": "2026-05-14T09:47:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "drony",
+        "fatální",
         "nato",
-        "ohrožené",
-        "shodily",
-        "spadly",
-        "ukrajinské",
+        "nečekaně",
+        "pronikli",
+        "ukrajinští",
         "vládu",
-        "země",
+        "zabijáci",
         "území"
       ],
       "feedCategory": "zpravy",
@@ -515,33 +541,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "USA a Čína by se mohly dostat do střetu kvůli Tchaj-wanu, varoval Trumpa Si",
-      "url": "https://zpravy.aktualne.cz/zahranici/si-v-pekingu-prijal-trumpa-oba-mluvili-o-lepsich-vztazich-ciny-a-usa/r~aaa2956929cc5333e2146ccb1540a06c/",
-      "dt": "2026-05-14T04:38:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dostat",
-        "kvůli",
-        "mohly",
-        "střetu",
-        "tchaj",
-        "trumpa",
-        "usa",
-        "varoval",
-        "wanu",
-        "čína"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -552,7 +551,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21205,
+      "bytes": 21284,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -589,12 +588,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-14T12:13:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T12:41:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "finance": 2,
           "sport": 3,
-          "zpravy": 16,
-          "finance": 1
+          "zpravy": 15
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -606,6 +605,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Další porážka evropských automobilek. Číňané otevřeně říkají, na koho mají spadeno",
+            "publishedAt": "2026-05-14T12:41:00Z"
+          },
           {
             "title": "Nejlepší gólman Evropy zůstal doma. Expert uvažuje proč a říká, koho by do brány dal",
             "publishedAt": "2026-05-14T12:13:00Z"
@@ -633,10 +636,6 @@
           {
             "title": "Číňané v New Yorku provozovali tajnou policejní stanici, šmírovala čínské disidenty",
             "publishedAt": "2026-05-14T11:33:00Z"
-          },
-          {
-            "title": "V Havaně lidé protestují kvůli výpadkům elektřiny, podle vlády došlo palivo",
-            "publishedAt": "2026-05-14T11:26:00Z"
           }
         ]
       }

@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-14T12:39:58.957279Z",
+  "ingestedAt": "2026-05-14T13:20:04.353473Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kinovýhled: Legendární Top Gun se vrací do kin, zatímco se otvírá nová Farma zvířat",
+      "url": "https://www.kinobox.cz/clanky/filmy/53723-kinovyhled-top-gun-se-vraci-do-kin-zatimco-hlynur-palmason-se-pta-co-nam-zbylo-z-lasky",
+      "dt": "2026-05-14T13:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "farma",
+        "gun",
+        "kin",
+        "kinovýhled",
+        "legendární",
+        "nová",
+        "otvírá",
+        "top",
+        "vrací",
+        "zatímco",
+        "zvířat"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -519,34 +547,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Top kina ČR: Ďábel nosí Pradu 2 je megahit. Po Jacksonovi slaví úspěch i Billie Eilish",
-      "url": "https://www.kinobox.cz/clanky/tema/53657-top-kina-cr-dabel-nosi-pradu-2-je-v-cesku-megahitem-po-jacksonovi-slavi-uspech-i-billie-eilish",
-      "dt": "2026-05-12T07:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "billie",
-        "eilish",
-        "jacksonovi",
-        "kina",
-        "megahit",
-        "nosí",
-        "pradu",
-        "slaví",
-        "top",
-        "úspěch",
-        "ďábel"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -557,7 +557,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 27863,
+      "bytes": 27850,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -594,7 +594,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-14T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T13:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -609,6 +609,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinovýhled: Legendární Top Gun se vrací do kin, zatímco se otvírá nová Farma zvířat",
+            "publishedAt": "2026-05-14T13:00:00Z"
+          },
           {
             "title": "Matthew McConaughey v nejlepší herecké formě. Jeho novinka láká v traileru na silný moderní western",
             "publishedAt": "2026-05-14T12:00:00Z"
@@ -636,10 +640,6 @@
           {
             "title": "Český komediální hit dorazil na stream. Když se zhasne nabízí absurdní i smyslnou podívanou",
             "publishedAt": "2026-05-13T14:00:00Z"
-          },
-          {
-            "title": "Největší český film léta se blíží. Bojovník ukazuje v drsném traileru všechny trumfy",
-            "publishedAt": "2026-05-13T12:00:00Z"
           }
         ]
       }

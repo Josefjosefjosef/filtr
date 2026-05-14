@@ -1,27 +1,56 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-14T12:39:58.957279Z",
+  "ingestedAt": "2026-05-14T13:20:04.353473Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Giro ONLINE: Do Neapole. Sprinteři vyhlížejí své šance. Ale nezasáhne déšť?",
+      "title": "Giro ONLINE: Do Neapole. Sprinteři vyhlížejí své šance, jejich týmy hlídají únik",
       "url": "https://www.idnes.cz/sport/cyklistika/giro-d-italia-6-etapa-online-vysledky.A260514_092635_cyklistika_mkou",
-      "dt": "2026-05-14T12:05:00Z",
+      "dt": "2026-05-14T12:58:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "ale",
-        "déšť",
         "giro",
+        "hlídají",
+        "jejich",
         "neapole",
-        "nezasáhne",
         "online",
         "sprinteři",
         "své",
+        "týmy",
         "vyhlížejí",
+        "únik",
         "šance"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hustý, to je Crosby! Melovský potkal svůj vzor: Dělal jsem, že se mi tohle děje běžně",
+      "url": "https://www.idnes.cz/hokej/ms-2026/matyas-melovsky-trenink-cesko-sidney-crosby-setkani.A260514_122907_ms-hokej-2026_ivt",
+      "dt": "2026-05-14T12:35:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "běžně",
+        "crosby",
+        "děje",
+        "dělal",
+        "hustý",
+        "jsem",
+        "melovský",
+        "potkal",
+        "svůj",
+        "tohle",
+        "vzor"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -759,33 +788,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "MS v hokeji 2026 ONLINE: Češi už trénují na místě, v pátek je čeká první zápas",
-      "url": "https://www.idnes.cz/hokej/ms-2026/ms-v-hokeji-2026-online-reportaz.A260513_124432_ms-hokej-2026_czo",
-      "dt": "2026-05-14T05:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "2026",
-        "hokeji",
-        "místě",
-        "online",
-        "první",
-        "pátek",
-        "trénují",
-        "zápas",
-        "čeká",
-        "češi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45477,
+      "bytes": 45706,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,7 +835,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T12:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T12:58:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -849,8 +851,12 @@
         },
         "sample_titles": [
           {
-            "title": "Giro ONLINE: Do Neapole. Sprinteři vyhlížejí své šance. Ale nezasáhne déšť?",
-            "publishedAt": "2026-05-14T12:05:00Z"
+            "title": "Giro ONLINE: Do Neapole. Sprinteři vyhlížejí své šance, jejich týmy hlídají únik",
+            "publishedAt": "2026-05-14T12:58:00Z"
+          },
+          {
+            "title": "Hustý, to je Crosby! Melovský potkal svůj vzor: Dělal jsem, že se mi tohle děje běžně",
+            "publishedAt": "2026-05-14T12:35:00Z"
           },
           {
             "title": "Augusta s Divíškem: Hráči na sebe upletli bič. Sparta posílí a omladí. S kým jedná?",
@@ -875,10 +881,6 @@
           {
             "title": "Musák se sžívá s Baníkem v jeho těžkém období: Víme, že naše situace je kritická",
             "publishedAt": "2026-05-14T10:46:00Z"
-          },
-          {
-            "title": "Světový šampionát superbiků v Mostě: na startu fenomén Bulega i čtyři Češi",
-            "publishedAt": "2026-05-14T10:38:00Z"
           }
         ]
       }
