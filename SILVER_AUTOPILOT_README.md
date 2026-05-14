@@ -47,4 +47,31 @@ node scripts/silver-autopilot.cjs --loop-once
 | `SILVER_NEXT_ACTION.md` | Copy-paste next instructions (from model or template). |
 | `SILVER_CURSOR_OUTPUT.md` | Optional: paste latest Cursor chat output for `--full-auto-loop` input (preferred over run report). |
 | `SILVER_AUTOPILOT_README.md` | This document. |
+| `SILVER_PROGRESS_LOG.md` | Append-only cycle log from `scripts/silver-autopilot-loop.ps1` (timestamps, exits, baselines; no secrets). |
 | `scripts/silver-autopilot.cjs` | Implementation. |
+| `scripts/silver-autopilot-loop.ps1` | **FULL AUTO LOOP TRIGGER V1** — Windows orchestrator: validates repo path, guards `SILVER_NEXT_ACTION.md`, optional Cursor CLI (`-CursorCommand` with `{TASK_FILE}` / `{OUTPUT_FILE}`), then `node scripts/silver-autopilot.cjs --full-auto-loop --max-steps=1`, then `--status`, colored console summary, beeps, and `SILVER_PROGRESS_LOG.md`. |
+
+## Full auto loop trigger (PowerShell V1)
+
+Local **outer** loop only (not browser Silver). Default **one** cycle; infinite loop requires **explicit** `-MaxCycles 0`.
+
+```powershell
+# Safe dry run (no Cursor, no full-auto-loop; runs `--status`, updates progress log)
+powershell -ExecutionPolicy Bypass -File scripts/silver-autopilot-loop.ps1 -DryRun -MaxCycles 1 -NoBeep
+
+# Example real cycle (requires OPENAI_API_KEY in environment for autonomous next-task generation)
+powershell -ExecutionPolicy Bypass -File scripts/silver-autopilot-loop.ps1 -MaxCycles 1 -SleepSeconds 5 `
+  -CursorCommand "cursor-agent --input {TASK_FILE} --output {OUTPUT_FILE}"
+```
+
+Parameters:
+
+| Flag | Meaning |
+|------|--------|
+| `-DryRun` | Skips Cursor and `node … --full-auto-loop`; still runs guards and `--status`. |
+| `-MaxCycles` | Default **1**. Use **0** for infinite (only when you intend a long run). |
+| `-SleepSeconds` | Pause between cycles (default **5**). |
+| `-CursorCommand` | Template; `{TASK_FILE}` → `SILVER_NEXT_ACTION.md`, `{OUTPUT_FILE}` → `SILVER_CURSOR_OUTPUT.md`. If omitted: **DryRun** continues with a warning; **non–DryRun** **STOP** (exit 1). |
+| `-NoBeep` | Disable `[console]::beep` PASS/FAIL/COMPLETE signals. |
+
+Guards (non-exhaustive): repo root must be `C:\projects\filtr`; empty `SILVER_NEXT_ACTION.md` **STOP**; substring **`SILVER_DEVELOPMENT_COMPLETE`** ends the loop (exit 0, COMPLETE beep); `assets/app.js` dirty without **`ENGINE_ALLOWED`** in the next-action text **STOP**; engine-style tasks without diagnostics / **`ENGINE_ALLOWED`** **STOP**; nonzero safety counters in `SILVER_RUN_REPORT.md` **STOP**; non–DryRun without **`OPENAI_API_KEY`** **STOP** before `--full-auto-loop` (no fake autonomous run). Cursor non-zero exit or Autopilot non-zero exit **STOP**.
