@@ -109,6 +109,29 @@ function Get-GitStatusShortText {
   }
 }
 
+function Restore-SilverProgressLogForAutopilotGuard {
+  param([string]$RepoRoot, [string]$ProgressRel)
+  $prev = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try {
+    $psi = New-Object System.Diagnostics.ProcessStartInfo
+    $psi.FileName = "git"
+    $psi.Arguments = "restore --worktree -- " + $ProgressRel
+    $psi.WorkingDirectory = $RepoRoot
+    $psi.RedirectStandardOutput = $true
+    $psi.RedirectStandardError = $true
+    $psi.UseShellExecute = $false
+    $psi.CreateNoWindow = $true
+    $p = [System.Diagnostics.Process]::Start($psi)
+    $null = $p.StandardOutput.ReadToEnd()
+    $null = $p.StandardError.ReadToEnd()
+    $p.WaitForExit()
+  } catch {
+  } finally {
+    $ErrorActionPreference = $prev
+  }
+}
+
 function Test-GitStatusClean {
   param([string]$Cwd)
   $t = (Get-GitStatusShortText -Cwd $Cwd).Trim()
@@ -605,6 +628,7 @@ while ($true) {
 
   $autoExitStr = "SKIPPED_DRY_RUN"
   if (-not $DryRun) {
+    Restore-SilverProgressLogForAutopilotGuard -RepoRoot $RepoRoot -ProgressRel "SILVER_PROGRESS_LOG.md"
     $auto = Invoke-NodeScript -WorkingDirectory $RepoRoot -Arguments @($AutopilotScript, "--full-auto-loop", "--max-steps=1") -PassThruExit $false
     $ae = $auto.ExitCode
     $script:LastAutopilotExit = [string]$ae
