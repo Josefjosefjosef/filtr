@@ -197,6 +197,19 @@ function Test-EngineTaskPolicyViolation {
   return ($engineish -and -not $diagnosticish)
 }
 
+function Test-SilverNextActionOutputQuality {
+  param([string]$Text)
+  if (-not $Text) { return $true }
+  if ($Text -match "Ă") { return $false }
+  if ($Text -match "â€") { return $false }
+  if ($Text -match '(?i)\bnode\s+scripts/silver-diagnostic\.js\b') { return $false }
+  if ($Text -match '(?i)\bnode\s+scripts/silver-smoke-test-maxcycles-1\.js\b') { return $false }
+  if ($Text -match '(?i)`cat\s+C:\\') { return $false }
+  if ($Text -match '(?i)Command:\s*`?cat\s+C:\\') { return $false }
+  if ($Text -match '(?im)^\s*cat\s+C:\\') { return $false }
+  return $true
+}
+
 function Get-NextActionHeadline {
   param([string]$Text)
   foreach ($raw in $Text -split "`r?`n") {
@@ -640,6 +653,16 @@ while ($true) {
         -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
         -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
         -Headline (Get-NextActionHeadline -Text $nextText) -Focus "autopilot_exit_nonzero" `
+        -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1
+    }
+    $nextAfterAuto = Read-TextFileOrEmpty -Path $NextActionPath
+    if (-not (Test-SilverNextActionOutputQuality -Text $nextAfterAuto)) {
+      Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+        -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit "N/A" `
+        -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine $safetyPre `
+        -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
+        -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
+        -Headline (Get-NextActionHeadline -Text $nextAfterAuto) -Focus "next_action_quality_post_guard" `
         -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1
     }
   }
