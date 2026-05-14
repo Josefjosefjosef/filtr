@@ -24,10 +24,11 @@ const FULL_AUTO_LOOP_ALLOWED_DIRTY = new Set(
     "SILVER_STRATEGY.md",
     "SILVER_NEXT_ACTION.md",
     "SILVER_RUN_REPORT.md",
+    "SILVER_PROGRESS_LOG.md",
     "SILVER_AUTOPILOT_README.md",
     "SILVER_CURSOR_OUTPUT.md",
     "scripts/silver-autopilot.cjs",
-    "scripts/silver-autopilot-loop.cjs",
+    "scripts/silver-autopilot-loop.ps1",
   ].map((s) => s.replace(/\\/g, "/")),
 );
 
@@ -363,6 +364,110 @@ function violatesEngineTaskWithoutDiagnosticPolicy(text) {
     /\baudit_/i.test(t) ||
     /\bharness\b/i.test(t);
   return engineish && !diagnosticish;
+}
+
+/** Files under scripts/ that may be referenced in prompts (existence-checked at runtime). */
+function buildRepoScriptsManifestForPrompt() {
+  try {
+    const names = fs.readdirSync(SCRIPTS);
+    const lines = [];
+    for (const name of names) {
+      if (!/^silver-/i.test(name) && !/^audit_silver/i.test(name)) continue;
+      let st;
+      try {
+        st = fs.statSync(path.join(SCRIPTS, name));
+      } catch {
+        continue;
+      }
+      if (!st.isFile()) continue;
+      lines.push("scripts/" + String(name).replace(/\\/g, "/"));
+    }
+    lines.sort();
+    const max = 200;
+    if (lines.length > max) {
+      return lines.slice(0, max).join("\n") + "\n… (" + lines.length + " total, showing " + max + ")";
+    }
+    return lines.join("\n");
+  } catch {
+    return "(unable to list scripts/)";
+  }
+}
+
+const NEXT_ACTION_BANNED_HALLUCINATION_RUNS = [
+  /\bnode\s+scripts\/silver-diagnostic\.js\b/i,
+  /\bnode\s+scripts\/silver-smoke-test-maxcycles-1\.js\b/i,
+];
+
+function nextActionInnerQualityViolations(inner) {
+  const t = String(inner || "");
+  const violations = [];
+  if (/Ă/.test(t)) violations.push("mojibake_C3");
+  if (/â€/.test(t)) violations.push("mojibake_em_dash");
+  for (const re of NEXT_ACTION_BANNED_HALLUCINATION_RUNS) {
+    if (re.test(t)) violations.push("banned_node_invocation:" + String(re));
+  }
+  if (/`cat\s+C:\\/i.test(t) || /\bCommand:\s*`?cat\s+C:\\/i.test(t) || /^\s*cat\s+C:\\/im.test(t)) {
+    violations.push("cat_windows_path");
+  }
+  return violations;
+}
+
+function buildFullAutoQualityFallbackBody(ctx) {
+  const src = String((ctx && ctx.inputSource) || "SILVER_RUN_REPORT.md");
+  const changed = String((ctx && ctx.changedFilesJoined) || "").trim();
+  return [
+    "### Vyhodnocení vstupů (povinné jako první)",
+    "",
+    "1) V PowerShell z kořene repa `C:\\projects\\filtr` spusť:",
+    "",
+    "```",
+    "Set-Location C:\\projects\\filtr",
+    "Get-Content -LiteralPath .\\SILVER_CURSOR_OUTPUT.md -Raw",
+    "Get-Content -LiteralPath .\\SILVER_RUN_REPORT.md -Raw",
+    "```",
+    "",
+    "2) **Git dirty jen runtime:** Pokud `git status --short` ukazuje výhradně soubory `SILVER_*.md` (případně další výslovně povolené reporting soubory), **nejprve** shrň obsah a důsledek pro další krok, teprve poté zvaž `git restore --worktree -- <cesta>`. Nikdy neobnovuj engine soubory „naslepo“.",
+    "",
+    "3) Stav autopilota (existující skript — vždy dostupný):",
+    "",
+    "```",
+    "node scripts/silver-autopilot.cjs --status",
+    "```",
+    "",
+    "4) Diagnostika Cursor / WSL adaptéru (existující):",
+    "",
+    "```",
+    "powershell -ExecutionPolicy Bypass -File scripts\\silver-cursor-agent-adapter-diagnostic.ps1",
+    "```",
+    "",
+    "### Scope guard (tvrdý limit)",
+    "- Povoleno: diagnostika, skripty pod `scripts/` z manifestu v promptu autopilota / existující `silver-*` a `audit_silver*`, root reporty `SILVER_*.md`, úpravy `scripts/silver-autopilot.cjs` dle procesu.",
+    "- Zakázáno: úpravy `assets/app.js`, engine core, routing, retrieval refaktory bez výslovného scope, deploy, **vymýšlení** nových cest `scripts/*.js`, které v repu nejsou.",
+    "",
+    "### STOP podmínky",
+    "- **MaxCycles 0** a nekonečná smyčka autopilota jsou **zakázány**, dokud to výslovně nepovolí strategie — v rámci tohoto úkolu je neuváděj ani nespouštěj.",
+    "- Nepoužívej `cat C:\\...` na Windows; použij `Get-Content -LiteralPath`.",
+    "- Neexistují soubory `scripts/silver-diagnostic.js` ani `scripts/silver-smoke-test-maxcycles-1.js` — neuváděj je.",
+    "",
+    "### Kontext (autopilot)",
+    "- Poslední zdroj vstupu pro full-auto loop byl: **" + src + "**.",
+    "- Poslední známý seznam změn z autopilota: `" + (changed || "(prázdné — ověř git status)") + "`.",
+    "",
+    "### Povinný výsledek (vlož do chatu po provedení)",
+    "",
+    "```",
+    "=== SILVER_CURSOR_MANUAL_VERIFY_RESULT ===",
+    "input_files_read=YES/NO",
+    "git_runtime_only_dirty=YES/NO/NA",
+    "autopilot_status_ran=YES/NO",
+    "adapter_diagnostic_ran=YES/NO/NA",
+    "engine_or_assets_touch_planned=NO",
+    "max_cycles_zero_attempted=NO",
+    "=== END_SILVER_CURSOR_MANUAL_VERIFY_RESULT ===",
+    "```",
+    "",
+    "_Automaticky vložená náhrada: výstup modelu neprošel kontrolou kvality (UTF-8 / PowerShell / zakázané řetězce)._",
+  ].join("\n");
 }
 
 function wrapNextActionDoc(inner, tag) {
@@ -1680,6 +1785,7 @@ async function cmdAskModel() {
   }
 
   const model = String(process.env.SILVER_AUTOPILOT_OPENAI_MODEL || "gpt-4o-mini").trim();
+  const manifestAsk = buildRepoScriptsManifestForPrompt();
   const body = {
     model,
     temperature: 0.2,
@@ -1689,8 +1795,12 @@ async function cmdAskModel() {
         role: "system",
         content:
           "You are a Silver (infoUzel.cz) development copilot. Output ONLY copy-paste instructions for a human or Cursor. " +
+          "Write in Czech (cs) with correct diacritics and real Unicode (Ú, ř, š, em dash —). Never emit UTF-8 mis-decoded mojibake (e.g. Ă or â€). " +
+          "Windows PowerShell first: use Get-Content, Set-Location, Join-Path; never suggest `cat C:\\...` or POSIX cat with Windows drive letters. " +
+          "Never invent script paths: only node scripts/<file> that appear in the USER manifest list; if unsure use only `node scripts/silver-autopilot.cjs --status`. " +
           "Never request engine edits, assets/app.js edits, routing/normalizer refactors, merges, or secret pastes. " +
-          "Prefer scripts-only diagnostics and proof commands. Use concise markdown with one primary NEXT block.",
+          "Prefer scripts-only diagnostics. Forbid MaxCycles 0 / infinite autopilot unless strategy explicitly allows (default forbid). " +
+          "Use concise markdown with one primary NEXT block.",
       },
       {
         role: "user",
@@ -1701,7 +1811,9 @@ async function cmdAskModel() {
           report +
           "\n\ngit status --short:\n" +
           gs +
-          "\n\nWrite SILVER_NEXT_ACTION.md content: short title, bullets, exact shell commands using node scripts/...",
+          "\n\n### Existující skripty v repu (manifest — používej jen tyto nebo podmnožinu)\n" +
+          manifestAsk +
+          "\n\nWrite SILVER_NEXT_ACTION.md content: short title in Czech, bullets, exact commands from manifest or `node scripts/silver-autopilot.cjs --status`; include ### Scope guard, ### STOP podmínky, and a ### Povinný výsledek block with === lines.",
       },
     ],
   };
@@ -1723,7 +1835,17 @@ async function cmdAskModel() {
       return;
     }
     const json = JSON.parse(raw);
-    text = (((json.choices || [])[0] || {}).message || {}).content || "";
+    const rawAsk = String((((json.choices || [])[0] || {}).message || {}).content || "").trim();
+    const qAsk = nextActionInnerQualityViolations(rawAsk);
+    if (qAsk.length) {
+      console.log("SILVER_NEXT_ACTION_QUALITY_GATE=REJECT ask-model " + qAsk.join("; "));
+      text = buildFullAutoQualityFallbackBody({
+        inputSource: "SILVER_STRATEGY+RUN_REPORT+git",
+        changedFilesJoined: gs,
+      });
+    } else {
+      text = rawAsk;
+    }
   } catch (e) {
     console.log("STOP: OpenAI request error");
     return;
@@ -1879,13 +2001,20 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
       openaiApiLine = "CALLED";
       fallbackWithoutApi = "N/A";
       const model = String(process.env.SILVER_AUTOPILOT_OPENAI_MODEL || "gpt-4o-mini").trim();
+      const manifestLoop = buildRepoScriptsManifestForPrompt();
       const systemContent =
         "You are a Silver (infoUzel.cz) development copilot. Output a single copy-paste task for Cursor. " +
-        "Do not repeat the line \"ÚKOL PRO CURSOR\" (the file template adds it). Start with numbered steps. " +
+        "Language: Czech (cs) with correct diacritics and real Unicode (Ú, ř, š, em dash —). Never emit UTF-8 mis-decoded mojibake (e.g. Ă or â€). " +
+        "Do not repeat the line starting with ÚKOL PRO CURSOR (the file template adds it). Start with numbered steps or ### headings. " +
+        "Windows PowerShell first: use Get-Content -LiteralPath, Set-Location, Join-Path; never suggest `cat C:\\...` or POSIX cat with Windows drive letters. " +
+        "NEVER invent script paths. Only reference files under scripts/ that appear in the USER manifest list; if unsure use only `node scripts/silver-autopilot.cjs --status`. " +
         "Hard rules: diagnostic-first; cluster-driven; scripts-only dominance; safety-first; zero-regression; " +
         "no broad refactor; engine only after proven TRUE_ENGINE_FAIL and surgically; assets/app.js only after explicit human permission; " +
         "no routing or normalizer refactors unless explicitly scoped; never paste secrets. " +
-        "If state is ambiguous, output diagnostic-only steps (node scripts/silver-…, audits). " +
+        "If git is dirty only with Silver runtime markdown (SILVER_*.md and similar), instruct: read files first, summarize, then optionally git restore those paths — never blind restore of engine files. " +
+        "Explicitly forbid MaxCycles 0 / infinite autopilot loops unless strategy explicitly allows (default: forbid and state it in STOP podmínky). " +
+        "Always include sections ### Scope guard, ### STOP podmínky, and ### Povinný výsledek with a fenced block using === line markers the operator pastes back. " +
+        "If state is ambiguous, output diagnostic-only steps (node scripts/silver-…, audits from manifest). " +
         "Never instruct a direct engine or assets/app.js edit without explicit diagnostics-first framing.";
 
       const userContent =
@@ -1897,8 +2026,10 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
         inputPick.source +
         ")\n" +
         inputPick.body +
+        "\n\n### Existující skripty v repu (manifest — používej POUZE tyto nebo podmnožinu)\n" +
+        manifestLoop +
         "\n\n### Deliverable\n" +
-        "Produce ONE next task: concise numbered steps and exact `node scripts/...` commands where applicable; scripts-only unless engine failure is proven.";
+        "Produce ONE next task in Czech: concise numbered steps; exact commands only from manifest above or `node scripts/silver-autopilot.cjs --status`; scripts-only unless engine failure is proven; never hallucinate scripts/*.js paths.";
 
       let text = "";
       try {
@@ -1947,9 +2078,22 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
           } else {
             let body = text;
             body = body.replace(/^\s*ÚKOL\s+PRO\s+CURSOR[^\n]*\n+/i, "").trim();
-            writeGuardedNext(body, "full-auto-loop-openai");
-            recommended = "Execute steps in SILVER_NEXT_ACTION.md in Cursor.";
-            loopExit = 0;
+            const qLoop = nextActionInnerQualityViolations(body);
+            if (qLoop.length) {
+              console.log("SILVER_NEXT_ACTION_QUALITY_GATE=REJECT full-auto-loop " + qLoop.join("; "));
+              const fb = buildFullAutoQualityFallbackBody({
+                inputSource: inputPick.source,
+                changedFilesJoined: changedJoined,
+              });
+              writeGuardedNext(fb, "full-auto-loop-quality-fallback");
+              recommended =
+                "Model output failed UTF-8/PowerShell/hallucination quality gate; deterministic SILVER_NEXT_ACTION.md written; see console SILVER_NEXT_ACTION_QUALITY_GATE.";
+              loopExit = 0;
+            } else {
+              writeGuardedNext(body, "full-auto-loop-openai");
+              recommended = "Execute steps in SILVER_NEXT_ACTION.md in Cursor.";
+              loopExit = 0;
+            }
           }
         }
       } catch {
