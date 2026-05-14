@@ -50,8 +50,8 @@ node scripts/silver-autopilot.cjs --loop-once
 | `SILVER_PROGRESS_LOG.md` | Append-only cycle log from `scripts/silver-autopilot-loop.ps1` (timestamps, exits, baselines; no secrets). |
 | `scripts/silver-autopilot.cjs` | Implementation. |
 | `scripts/silver-autopilot-loop.ps1` | **FULL AUTO LOOP TRIGGER V1** — Windows orchestrator: validates repo path, guards `SILVER_NEXT_ACTION.md`, optional Cursor CLI (`-CursorCommand` with `{TASK_FILE}` / `{OUTPUT_FILE}`), then `node scripts/silver-autopilot.cjs --full-auto-loop --max-steps=1`, then `--status`, colored console summary, beeps, and `SILVER_PROGRESS_LOG.md`. |
-| `scripts/silver-cursor-agent-adapter-diagnostic.ps1` | Probes `where.exe cursor`, `cursor --version`, help text, and short stdin probes (harmless prompt only); writes `scripts/silver-cursor-agent-adapter-diagnostic-report.json`. |
-| `scripts/silver-cursor-agent-adapter.ps1` | Wrapper: stdin from task file (or `-Probe`) into `cursor.exe agent` via `Start-Process` file redirects (prefers `.exe` over `.cmd`); writes structured log + raw stdout/stderr to `SILVER_CURSOR_OUTPUT.md` path; `-DryRun` prints the plan; default `-TimeoutSeconds` **120**. |
+| `scripts/silver-cursor-agent-adapter-diagnostic.ps1` | Probes `where.exe cursor`, `cursor --version`, help text, **eight** `cursor agent` headless-style argv variants (`-p` / `--print` / `--output-format` / `--yolo` / `--yes`, 120s each, harmless one-line prompt), plus **stdin marker probes** (`cursor -`, then `cursor agent` with optional tail flags). Writes `scripts/silver-cursor-agent-adapter-diagnostic-report.json` (schema **v2**). |
+| `scripts/silver-cursor-agent-adapter.ps1` | Wrapper: reads **v2** diagnostic JSON and prefers **`preferred_headless_argv`** (`cmd.exe` redirect, last argv token = task/prompt text) when that probe returned exit **0** and **stdout** contained `CURSOR_AGENT_STDIN_OK`. Otherwise uses **`preferred_stdin_argv`** when `preferred_invocation_kind=stdin_pipe` (e.g. `type` pipe to `cursor -` or `cursor agent …`). Fallback: `type "<temp>" | "<cursor.cmd>" agent` with optional retry to **`cursor -`**. `-DryRun` / `-Probe` / `-TimeoutSeconds` supported. |
 
 ## Full auto loop trigger (PowerShell V1)
 
@@ -68,7 +68,7 @@ powershell -ExecutionPolicy Bypass -File scripts/silver-autopilot-loop.ps1 -MaxC
 
 ### Cursor agent adapter V1 (Windows)
 
-`cursor agent` does **not** document `--input` / `--output` in current CLI help. The adapter resolves the **install-root `Cursor.exe`** (not only `resources\app\bin\cursor*`) and runs **`cmd.exe /c type "<temp-task>" | "<Cursor.exe>" agent 1> stdout 2> stderr"`**, then merges streams into the output file (same pattern as `silver-cursor-agent-adapter-diagnostic.ps1` stdin probes, with explicit `1>` / `2>` so stderr is captured). Diagnostics may still use shorter probes; see `scripts/silver-cursor-agent-adapter-diagnostic-report.json`.
+`cursor agent` does **not** document `--input` / `--output` in current CLI help. On Windows, **`cursor.cmd`** runs `Cursor.exe` with `out/cli.js`; unknown flags may be forwarded to Electron (see diagnostic stderr). **Headless argv** invocations use the same **`cmd.exe /c ""…\cursor.cmd"" agent … 1>stdout 2>stderr`** pattern as diagnostics. **Stdin** invocations use **`cmd.exe /c type "<temp-task>" | "<cursor.cmd>" <argv>…`** (argv from diagnostic, often `agent` with optional flags, or `-` when the CLI requires the pipe-dash entry point). See `scripts/silver-cursor-agent-adapter-diagnostic-report.json` for `preferred_invocation_kind`, `headless_probe_variants`, and `stdin_marker_probe_variants`.
 
 **First safe check (harmless probe, no task file):**
 
@@ -76,7 +76,7 @@ powershell -ExecutionPolicy Bypass -File scripts/silver-autopilot-loop.ps1 -MaxC
 powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -Probe -OutputFile SILVER_CURSOR_OUTPUT.md -TimeoutSeconds 120
 ```
 
-Expect `adapter_probe_pass=YES` in the output header when stdout contains `CURSOR_AGENT_STDIN_OK`.
+Expect `adapter_probe_pass=YES` in the output header when **stdout** contains `CURSOR_AGENT_STDIN_OK`. Expect `can_run_full_auto_loop_maxcycles_1=YES` only when **both** the probe passes **and** `adapter_ready=YES` in the diagnostic JSON (no fake automation).
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter-diagnostic.ps1
