@@ -1,13 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-14T12:00:06.258371Z",
+  "ingestedAt": "2026-05-14T12:39:58.957279Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Maximální ceny benzinu a nafty na pátek 15. května",
+      "url": "https://www.penize.cz/doprava/489706-maximalni-ceny-benzinu-a-nafty-na-patek-15-kvetna",
+      "dt": "2026-05-14T13:58:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "benzinu",
+        "ceny",
+        "května",
+        "maximální",
+        "nafty",
+        "pátek"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
       "title": "Schillerová představila nové Dluhopisy Republiky. Protiinflační jsou s háčkem",
-      "url": "https://www.penize.cz/dluhopisy/489665-schillerova-predstavila-dluhopisy-republiky-vrceji-se-i-protiinflacni-ale-s-hackem",
+      "url": "https://www.penize.cz/dluhopisy/489665-schillerova-predstavila-dluhopisy-republiky-budou-i-protiinflacni-ale-s-hackem",
       "dt": "2026-05-14T13:15:00Z",
       "media_raw": "Peníze.cz",
       "media_norm": "Peníze.cz",
@@ -483,33 +506,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Boj katastru proti robotům baví uživatele. Se skládačkou si lámou hlavu a selhávají",
-      "url": "https://www.penize.cz/nemovitosti/489473-boj-katastru-proti-robotum-bavi-verejnost-lide-skladaji-mapu-jak-puzzle-a-selhavaji",
-      "dt": "2026-05-11T10:52:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "baví",
-        "boj",
-        "hlavu",
-        "katastru",
-        "lámou",
-        "proti",
-        "robotům",
-        "selhávají",
-        "skládačkou",
-        "uživatele"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -520,7 +516,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18714,
+      "bytes": 18652,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -557,11 +553,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-14T13:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T13:58:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 15,
-          "zpravy": 4,
+          "zpravy": 5,
+          "finance": 14,
           "zdravi": 1
         },
         "drop_counts": {
@@ -574,6 +570,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Maximální ceny benzinu a nafty na pátek 15. května",
+            "publishedAt": "2026-05-14T13:58:00Z"
+          },
           {
             "title": "Schillerová představila nové Dluhopisy Republiky. Protiinflační jsou s háčkem",
             "publishedAt": "2026-05-14T13:15:00Z"
@@ -601,10 +601,6 @@
           {
             "title": "Prémiové bankovnictví UniCredit má novou tvář a je dostupnější",
             "publishedAt": "2026-05-13T18:30:00Z"
-          },
-          {
-            "title": "Nafta dál zlevňuje. Maximální ceny benzinu a nafty na čtvrtek 14. května",
-            "publishedAt": "2026-05-13T13:57:00Z"
           }
         ]
       }

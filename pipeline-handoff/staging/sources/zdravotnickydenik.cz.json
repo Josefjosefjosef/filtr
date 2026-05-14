@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-14T12:00:06.258371Z",
+  "ingestedAt": "2026-05-14T12:39:58.957279Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Ochranné limity na léky v roce 2026: Kolik zaplatíte a kdy už v lékárně nenecháte ani korunu?",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/ochranne-limity-na-leky-kolik-zaplatite/",
+      "dt": "2026-05-14T11:59:32Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "2026",
+        "kolik",
+        "korunu",
+        "limity",
+        "léky",
+        "lékárně",
+        "nenecháte",
+        "ochranné",
+        "roce",
+        "zaplatíte"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,32 +269,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Na mamograf nebo kolonoskopii bez čekání na telefonu? Stát spustí on-line rezervace",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/screeningove-programy-objednani-on-line/",
-      "dt": "2026-05-13T14:29:31Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "kolonoskopii",
-        "line",
-        "mamograf",
-        "nebo",
-        "rezervace",
-        "spustí",
-        "stát",
-        "telefonu",
-        "čekání"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 80943,
+      "bytes": 82251,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-14T10:44:44Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T11:59:32Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -330,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ochranné limity na léky v roce 2026: Kolik zaplatíte a kdy už v lékárně nenecháte ani korunu?",
+            "publishedAt": "2026-05-14T11:59:32Z"
+          },
           {
             "title": "Kauza defibrilátorů se rozrůstá: VZP prověřuje stovky operací, policie zasahovala i v Ústí",
             "publishedAt": "2026-05-14T10:44:44Z"
@@ -357,10 +362,6 @@
           {
             "title": "Dostanete přidáno? O platech zdravotníků by se mělo rozhodovat u jednoho stolu s pojišťovnami",
             "publishedAt": "2026-05-14T06:00:00Z"
-          },
-          {
-            "title": "Lekce pro Česko? Německo chystá drsnou reformu dlouhodobé péče, dopadne na nejzranitelnější",
-            "publishedAt": "2026-05-14T05:00:00Z"
           }
         ]
       }

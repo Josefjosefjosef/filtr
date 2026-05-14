@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-14T12:00:06.258371Z",
+  "ingestedAt": "2026-05-14T12:39:58.957279Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Lékař odmítl, že by znásilnil chlapce. Chtěl prý zlepšit kvalitu jejich života",
+      "url": "https://www.denik.cz/krimi/lekar-odmitl-obzalobu-ze-znasilneni-chlapcu-chtel-zlepsit-kvalitu-jejich-zivota.html",
+      "dt": "2026-05-14T12:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "chlapce",
+        "chtěl",
+        "jejich",
+        "kvalitu",
+        "lékař",
+        "odmítl",
+        "prý",
+        "zlepšit",
+        "znásilnil",
+        "života"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Situace na D1 se zhoršuje, kolona kamionů je od Jihlavy až do Brna",
+      "url": "https://www.denik.cz/regiony/dalnice-d1-kolona-kamion-zdrzeni-smer-brno-stavebni-prace-komplikace.html",
+      "dt": "2026-05-14T11:43:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "brna",
+        "jihlavy",
+        "kamionů",
+        "kolona",
+        "situace",
+        "zhoršuje"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -603,58 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Češi mění pohled na drogy: Co považují za nejnebezpečnější návykové látky",
-      "url": "https://www.denik.cz/cesi-v-cislech/cesi-meni-pohled-na-drogy-marihuana-uz-neni-tabu-alkohol-lide-dal-podcenuji.html",
-      "dt": "2026-05-14T02:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "drogy",
-        "látky",
-        "mění",
-        "nejnebezpečnější",
-        "návykové",
-        "pohled",
-        "považují",
-        "češi"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Plameny jim vzaly domov. Vlna solidarity v obci na Semilsku majitelku rozplakala",
-      "url": "https://jablonecky.denik.cz/zpravy_region/pozar-kvitkovice-mirova-pod-kozakovem-semilsko-solidarita-plameny-domov-sbirka.html",
-      "dt": "2026-05-13T18:04:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "domov",
-        "jim",
-        "majitelku",
-        "obci",
-        "plameny",
-        "rozplakala",
-        "semilsku",
-        "solidarity",
-        "vlna",
-        "vzaly"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -665,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30065,
+      "bytes": 29744,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -702,11 +700,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-14T11:34:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T12:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 2,
           "zpravy": 22,
+          "finance": 2,
           "sport": 1
         },
         "drop_counts": {
@@ -719,6 +717,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lékař odmítl, že by znásilnil chlapce. Chtěl prý zlepšit kvalitu jejich života",
+            "publishedAt": "2026-05-14T12:00:00Z"
+          },
+          {
+            "title": "Situace na D1 se zhoršuje, kolona kamionů je od Jihlavy až do Brna",
+            "publishedAt": "2026-05-14T11:43:00Z"
+          },
           {
             "title": "Ministerstvo financí ode dneška nabízí lidem možnost nakoupit státní dluhopisy",
             "publishedAt": "2026-05-14T11:34:00Z"
@@ -742,14 +748,6 @@
           {
             "title": "Hnízdění sokolů v Teplických skalách znovu nevyšlo. Mláďata náhle zmizela",
             "publishedAt": "2026-05-14T09:12:00Z"
-          },
-          {
-            "title": "Lotyšská premiérka Siliňová rezignovala. Její vláda ztratila většinu",
-            "publishedAt": "2026-05-14T09:08:00Z"
-          },
-          {
-            "title": "Záhada facky Macronovi od manželky odhalena. Důvodem měla být pikantní SMS",
-            "publishedAt": "2026-05-14T09:01:00Z"
           }
         ]
       }

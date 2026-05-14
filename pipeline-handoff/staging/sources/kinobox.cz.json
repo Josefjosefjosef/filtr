@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-14T12:00:06.258371Z",
+  "ingestedAt": "2026-05-14T12:39:58.957279Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Matthew McConaughey v nejlepší herecké formě. Jeho novinka láká v traileru na silný moderní western",
+      "url": "https://www.kinobox.cz/clanky/filmy/53690-matthew-mcconaughey-v-nejlepsi-herecke-forme-jeho-novinka-laka-na-silny-moderni-western",
+      "dt": "2026-05-14T12:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "formě",
+        "herecké",
+        "jeho",
+        "láká",
+        "matthew",
+        "mcconaughey",
+        "moderní",
+        "nejlepší",
+        "novinka",
+        "silný",
+        "traileru",
+        "western"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -518,31 +547,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "TV tipy: Nekorektní Invalida, Občanská válka i legendární Šílený Max",
-      "url": "https://www.kinobox.cz/clanky/tema/53656-tv-tipy-nekorektni-invalida-obcanska-valka-i-legendarni-sileny-max",
-      "dt": "2026-05-11T17:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "invalida",
-        "legendární",
-        "max",
-        "nekorektní",
-        "občanská",
-        "tipy",
-        "válka",
-        "šílený"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -553,7 +557,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 27795,
+      "bytes": 27863,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -590,7 +594,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-14T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T12:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -605,6 +609,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Matthew McConaughey v nejlepší herecké formě. Jeho novinka láká v traileru na silný moderní western",
+            "publishedAt": "2026-05-14T12:00:00Z"
+          },
           {
             "title": "Kinobox Daily: Tohle není balet, to je válka. Neuvěřitelný příběh zapomenuté ikony Belle Époque",
             "publishedAt": "2026-05-14T10:00:00Z"
@@ -632,10 +640,6 @@
           {
             "title": "Největší český film léta se blíží. Bojovník ukazuje v drsném traileru všechny trumfy",
             "publishedAt": "2026-05-13T12:00:00Z"
-          },
-          {
-            "title": "Kinobox Daily: Amerika v plamenech skrze hledáček fotoaparátu. Kdo přežije Občanskou válku?",
-            "publishedAt": "2026-05-13T10:00:00Z"
           }
         ]
       }
