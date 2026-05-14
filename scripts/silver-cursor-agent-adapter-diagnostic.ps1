@@ -6,6 +6,7 @@
 .NOTES
   Does not run autopilot loops. Does not pass real development tasks — only a harmless probe line.
   Writes scripts/silver-cursor-agent-adapter-diagnostic-report.json next to repo root.
+  Runs eight `cursor agent` headless-flag variants (120s each) and records stdout/stderr, marker, git diff.
 #>
 Set-StrictMode -Version 2
 $ErrorActionPreference = "Stop"
@@ -13,6 +14,10 @@ $ErrorActionPreference = "Stop"
 $RepoRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot ".."))
 $ReportPath = Join-Path $RepoRoot "scripts\silver-cursor-agent-adapter-diagnostic-report.json"
 $HarmlessProbe = "Print exactly: CURSOR_AGENT_STDIN_OK`r`nDo not modify files.`r`n"
+$ProbeOneLine = "Print exactly: CURSOR_AGENT_STDIN_OK. Do not modify files."
+$Marker = "CURSOR_AGENT_STDIN_OK"
+$HeadlessProbeMs = 120000
+$MaxStreamCharsInJson = 65536
 
 function Invoke-ExternalCapture {
   param(
@@ -49,19 +54,21 @@ function Invoke-ExternalCapture {
   $so = ""
   $se = ""
   $code = 0
+  $timedOut = $false
   try {
     [void]$p.Start()
     if (-not $p.WaitForExit($TimeoutMs)) {
       try { $p.Kill() } catch { }
-      $code = -1
+      $timedOut = $true
+      $code = 124
       if (Test-Path -LiteralPath $outF) { $so = [System.IO.File]::ReadAllText($outF) }
       if (Test-Path -LiteralPath $errF) { $se = [System.IO.File]::ReadAllText($errF) }
-      return @{ exit = $code; timedOut = $true; stdout = $so; stderr = $se }
+      return @{ exit = $code; timedOut = $timedOut; stdout = $so; stderr = $se }
     }
     $code = $p.ExitCode
     if (Test-Path -LiteralPath $outF) { $so = [System.IO.File]::ReadAllText($outF) }
     if (Test-Path -LiteralPath $errF) { $se = [System.IO.File]::ReadAllText($errF) }
-    return @{ exit = $code; timedOut = $false; stdout = $so; stderr = $se }
+    return @{ exit = $code; timedOut = $timedOut; stdout = $so; stderr = $se }
   }
   finally {
     if (Test-Path -LiteralPath $outF) { Remove-Item -LiteralPath $outF -Force -ErrorAction SilentlyContinue }
@@ -107,19 +114,21 @@ function Invoke-ExternalWithStdin {
   $so = ""
   $se = ""
   $code = 0
+  $timedOut = $false
   try {
     [void]$p.Start()
     if (-not $p.WaitForExit($TimeoutMs)) {
       try { $p.Kill() } catch { }
-      $code = -1
+      $timedOut = $true
+      $code = 124
       if (Test-Path -LiteralPath $outF) { $so = [System.IO.File]::ReadAllText($outF) }
       if (Test-Path -LiteralPath $errF) { $se = [System.IO.File]::ReadAllText($errF) }
-      return @{ exit = $code; timedOut = $true; stdout = $so; stderr = $se }
+      return @{ exit = $code; timedOut = $timedOut; stdout = $so; stderr = $se }
     }
     $code = $p.ExitCode
     if (Test-Path -LiteralPath $outF) { $so = [System.IO.File]::ReadAllText($outF) }
     if (Test-Path -LiteralPath $errF) { $se = [System.IO.File]::ReadAllText($errF) }
-    return @{ exit = $code; timedOut = $false; stdout = $so; stderr = $se }
+    return @{ exit = $code; timedOut = $timedOut; stdout = $so; stderr = $se }
   }
   finally {
     if (Test-Path -LiteralPath $inF) { Remove-Item -LiteralPath $inF -Force -ErrorAction SilentlyContinue }
@@ -149,8 +158,79 @@ function Get-WhereCursorLines {
   return @{ exit = $p.ExitCode; text = $o }
 }
 
+function Get-GitDiffSnapshot {
+  param([string]$Root)
+  $psi = New-Object System.Diagnostics.ProcessStartInfo
+  $psi.FileName = "git.exe"
+  $psi.Arguments = "diff --no-ext-diff"
+  $psi.WorkingDirectory = $Root
+  $psi.RedirectStandardOutput = $true
+  $psi.RedirectStandardError = $true
+  $psi.UseShellExecute = $false
+  $psi.CreateNoWindow = $true
+  $p = [System.Diagnostics.Process]::Start($psi)
+  $o = $p.StandardOutput.ReadToEnd()
+  $null = $p.StandardError.ReadToEnd()
+  $p.WaitForExit()
+  return $o
+}
+
+function Restore-GitWorktreeDiff {
+  param([string]$Root)
+  $psi = New-Object System.Diagnostics.ProcessStartInfo
+  $psi.FileName = "git.exe"
+  $psi.Arguments = "diff --name-only"
+  $psi.WorkingDirectory = $Root
+  $psi.RedirectStandardOutput = $true
+  $psi.RedirectStandardError = $true
+  $psi.UseShellExecute = $false
+  $psi.CreateNoWindow = $true
+  $p = [System.Diagnostics.Process]::Start($psi)
+  $names = $p.StandardOutput.ReadToEnd()
+  $null = $p.StandardError.ReadToEnd()
+  $p.WaitForExit()
+  foreach ($line in ($names -split "`r?`n")) {
+    $t = $line.Trim()
+    if ([string]::IsNullOrWhiteSpace($t)) { continue }
+    $psi2 = New-Object System.Diagnostics.ProcessStartInfo
+    $psi2.FileName = "git.exe"
+    $psi2.Arguments = "restore --worktree -- " + $t
+    $psi2.WorkingDirectory = $Root
+    $psi2.RedirectStandardOutput = $true
+    $psi2.RedirectStandardError = $true
+    $psi2.UseShellExecute = $false
+    $psi2.CreateNoWindow = $true
+    $p2 = [System.Diagnostics.Process]::Start($psi2)
+    $null = $p2.StandardOutput.ReadToEnd()
+    $null = $p2.StandardError.ReadToEnd()
+    $p2.WaitForExit()
+  }
+}
+
+function Truncate-ForJson {
+  param([string]$S, [int]$Max)
+  if ($null -eq $S) { return @{ text = ""; truncated = $false } }
+  if ($S.Length -le $Max) { return @{ text = $S; truncated = $false } }
+  return @{ text = $S.Substring(0, $Max); truncated = $true }
+}
+
+function Test-RequiresInteractionHeuristic {
+  param([string]$Combined, [bool]$TimedOut)
+  if ($TimedOut) { return "YES" }
+  if ([string]::IsNullOrWhiteSpace($Combined)) { return "UNKNOWN" }
+  $lower = $Combined.ToLowerInvariant()
+  $patterns = @(
+    "password:", "sign in", "authentication", "open your browser",
+    "press any key", "waiting for", "log in", "login to"
+  )
+  foreach ($pat in $patterns) {
+    if ($lower.Contains($pat)) { return "YES" }
+  }
+  return "NO"
+}
+
 $report = [ordered]@{
-  schema = "silver-cursor-agent-adapter-diagnostic-v1"
+  schema = "silver-cursor-agent-adapter-diagnostic-v2"
   timestamp_utc = (Get-Date).ToUniversalTime().ToString("o")
   repo_root = $RepoRoot
   cursor_where_exit = $null
@@ -171,9 +251,31 @@ $report = [ordered]@{
   flag_mentions = [ordered]@{}
   main_help_pipe_dash_mentioned = "NO"
   safe_probe = [ordered]@{}
+  headless_probe_timeout_ms = $HeadlessProbeMs
+  headless_probe_variants = @()
+  tested_headless_variant_count = 8
+  tested_stdin_marker_variant_count = 5
+  tested_variant_count_total = 13
+  preferred_headless_variant_id = $null
+  preferred_headless_argv = $null
+  preferred_headless_command = ""
+  preferred_output_format = ""
+  preferred_exit = $null
+  preferred_contains_marker = "NO"
+  preferred_timeout = "NO"
+  preferred_invocation_kind = ""
+  preferred_stdin_argv = $null
+  stdin_marker_probe_variants = @()
+  supports_print_flag = "NO"
+  supports_dash_p_flag = "NO"
+  supports_yolo_flag = "NO"
+  supports_yes_flag = "NO"
+  supports_output_format_text = "NO"
+  supports_output_format_json = "NO"
   adapter_ready = "NO"
   adapter_ready_reason = ""
   recommended_cursor_command = ""
+  recommended_cursor_command_full_loop = ""
   diagnostic_exit = 0
 }
 
@@ -190,9 +292,17 @@ if ($w.exit -eq 0) {
   $lines = $w.text -split "`r?`n" | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | ForEach-Object { $_.Trim() }
   $picked = $null
   foreach ($ln in $lines) {
-    if ($ln.EndsWith(".cmd", [System.StringComparison]::OrdinalIgnoreCase)) {
+    if ($ln.EndsWith("cursor.cmd", [System.StringComparison]::OrdinalIgnoreCase)) {
       $picked = $ln
       break
+    }
+  }
+  if ($null -eq $picked) {
+    foreach ($ln in $lines) {
+      if ($ln -match '(?i)[\\/]resources[\\/]app[\\/]bin[\\/]cursor$') {
+        $picked = $ln
+        break
+      }
     }
   }
   if ($null -eq $picked) {
@@ -239,12 +349,12 @@ $report.cursor_help_subcommand_agent_stdout_sample = $samp2
 
 $combinedHelp = $helpMain + "`n" + ($ah.stdout + $ah.stderr) + "`n" + ($ah2.stdout + $ah2.stderr)
 $flags = @(
-  "--print", "--prompt", "--input", "--output", "--headless",
-  "--non-interactive", "--yes", "--force", "--cwd", "--workspace"
+  "-p", "--print", "--prompt", "--input", "--output", "--headless",
+  "--non-interactive", "--yes", "--yolo", "--output-format", "--cwd", "--workspace"
 )
 $report.flag_mentions = [ordered]@{}
 foreach ($f in $flags) {
-  $key = $f.TrimStart("-")
+  $key = $f.TrimStart("-").Replace("-", "_")
   if (Test-HelpFlagMention -Haystack $combinedHelp -FlagToken $f) {
     $report.flag_mentions[$key] = "YES"
   }
@@ -256,7 +366,6 @@ foreach ($f in $flags) {
 $ioYes = ((Test-HelpFlagMention -Haystack $combinedHelp -FlagToken "--input") -and (Test-HelpFlagMention -Haystack $combinedHelp -FlagToken "--output"))
 if ($ioYes) { $report.cursor_agent_supports_input_output = "YES" }
 
-# Safe probes: short timeout, harmless stdin line only where stdin is used.
 $probeMs = 5000
 $report.safe_probe = [ordered]@{}
 
@@ -275,7 +384,6 @@ $report.safe_probe["cursor_dash_stdin_5s"] = [ordered]@{
 
 $interactiveAgent = [bool]$pa.timedOut
 $totalAgentOut = ($pa.stdout).Length + ($pa.stderr).Length
-$stdinWorkedAgent = (-not $pa.timedOut) -and ($totalAgentOut -gt 0)
 
 $report.cursor_agent_supports_stdin = "UNKNOWN"
 if ($pa.timedOut) { $report.cursor_agent_supports_stdin = "NO" }
@@ -287,24 +395,206 @@ $report.cursor_agent_supports_headless = if ($headlessMention) { "YES" } else { 
 
 $report.cursor_agent_interactive_only = if ($interactiveAgent) { "YES" } else { "NO" }
 
-# Adapter: require documented --input/--output OR proven non-interactive stdin capture with exit (not timeout).
+$variantDefs = @(
+  @{ id = 1; label = "agent -p"; args = @("agent", "-p", $ProbeOneLine) }
+  @{ id = 2; label = "agent --print"; args = @("agent", "--print", $ProbeOneLine) }
+  @{ id = 3; label = "agent --output-format text -p"; args = @("agent", "--output-format", "text", "-p", $ProbeOneLine) }
+  @{ id = 4; label = "agent --output-format json -p"; args = @("agent", "--output-format", "json", "-p", $ProbeOneLine) }
+  @{ id = 5; label = "agent --yolo --output-format text -p"; args = @("agent", "--yolo", "--output-format", "text", "-p", $ProbeOneLine) }
+  @{ id = 6; label = "agent --yes --output-format text -p"; args = @("agent", "--yes", "--output-format", "text", "-p", $ProbeOneLine) }
+  @{ id = 7; label = "agent --yolo --output-format json -p"; args = @("agent", "--yolo", "--output-format", "json", "-p", $ProbeOneLine) }
+  @{ id = 8; label = "agent --yes --output-format json -p"; args = @("agent", "--yes", "--output-format", "json", "-p", $ProbeOneLine) }
+)
+
+$variantResults = New-Object System.Collections.ArrayList
+$preferredArgs = $null
+$preferredId = $null
+$preferredLabel = ""
+
+foreach ($vd in $variantDefs) {
+  $diffBefore = Get-GitDiffSnapshot -Root $RepoRoot
+  $r = Invoke-ExternalCapture -FileName $cursorExe -Arguments $vd.args -WorkingDirectory $RepoRoot -TimeoutMs $HeadlessProbeMs
+  $diffAfter = Get-GitDiffSnapshot -Root $RepoRoot
+  $combined = ($r.stdout + "`n" + $r.stderr)
+  $markerStdout = $false
+  if ($null -ne $r.stdout) { $markerStdout = $r.stdout.Contains($Marker) }
+  $markerCombined = $combined.Contains($Marker)
+  $modifies = "NO"
+  if ($diffBefore -ne $diffAfter) {
+    $modifies = "YES"
+    Restore-GitWorktreeDiff -Root $RepoRoot
+  }
+  $req = Test-RequiresInteractionHeuristic -Combined $combined -TimedOut $r.timedOut
+  $to = if ($r.timedOut) { "YES" } else { "NO" }
+  $soT = Truncate-ForJson -S $r.stdout -Max $MaxStreamCharsInJson
+  $seT = Truncate-ForJson -S $r.stderr -Max $MaxStreamCharsInJson
+  $entry = [ordered]@{
+    variant_id = $vd.id
+    variant_label = $vd.label
+    argv = $vd.args
+    exit_code = $r.exit
+    timed_out = $to
+    timeout_ms = $HeadlessProbeMs
+    stdout = $soT.text
+    stdout_truncated = if ($soT.truncated) { "YES" } else { "NO" }
+    stderr = $seT.text
+    stderr_truncated = if ($seT.truncated) { "YES" } else { "NO" }
+    contains_marker_stdout = if ($markerStdout) { "YES" } else { "NO" }
+    contains_marker_combined = if ($markerCombined) { "YES" } else { "NO" }
+    requires_interaction = $req
+    modifies_files = $modifies
+  }
+  [void]$variantResults.Add($entry)
+
+  $win = (-not $r.timedOut) -and ($r.exit -eq 0) -and $markerStdout
+  if ($win -and ($null -eq $preferredArgs)) {
+    $preferredArgs = @()
+    foreach ($a in $vd.args) { $preferredArgs += [string]$a }
+    $preferredId = $vd.id
+    $preferredLabel = $vd.label
+  }
+}
+
+$stdinProbeDefs = @(
+  @{ id = "S0"; label = "stdin_pipe - (cli stdin)"; args = @("-") }
+  @{ id = "S1"; label = "stdin_pipe agent"; args = @("agent") }
+  @{ id = "S2"; label = "stdin_pipe agent --output-format text"; args = @("agent", "--output-format", "text") }
+  @{ id = "S3"; label = "stdin_pipe agent --yolo --output-format text"; args = @("agent", "--yolo", "--output-format", "text") }
+  @{ id = "S4"; label = "stdin_pipe agent --yes --output-format text"; args = @("agent", "--yes", "--output-format", "text") }
+)
+$stdinResults = New-Object System.Collections.ArrayList
+$preferredStdinArgs = $null
+$preferredStdinRowId = ""
+
+foreach ($sd in $stdinProbeDefs) {
+  $diffBefore = Get-GitDiffSnapshot -Root $RepoRoot
+  $r = Invoke-ExternalWithStdin -FileName $cursorExe -Arguments $sd.args -StdinText $HarmlessProbe -WorkingDirectory $RepoRoot -TimeoutMs $HeadlessProbeMs
+  $diffAfter = Get-GitDiffSnapshot -Root $RepoRoot
+  $combined = ($r.stdout + "`n" + $r.stderr)
+  $markerStdout = $false
+  if ($null -ne $r.stdout) { $markerStdout = $r.stdout.Contains($Marker) }
+  $markerCombined = $combined.Contains($Marker)
+  $modifies = "NO"
+  if ($diffBefore -ne $diffAfter) {
+    $modifies = "YES"
+    Restore-GitWorktreeDiff -Root $RepoRoot
+  }
+  $req = Test-RequiresInteractionHeuristic -Combined $combined -TimedOut $r.timedOut
+  $to = if ($r.timedOut) { "YES" } else { "NO" }
+  $soT = Truncate-ForJson -S $r.stdout -Max $MaxStreamCharsInJson
+  $seT = Truncate-ForJson -S $r.stderr -Max $MaxStreamCharsInJson
+  $sEntry = [ordered]@{
+    variant_id = $sd.id
+    variant_label = $sd.label
+    argv = $sd.args
+    exit_code = $r.exit
+    timed_out = $to
+    timeout_ms = $HeadlessProbeMs
+    stdout = $soT.text
+    stdout_truncated = if ($soT.truncated) { "YES" } else { "NO" }
+    stderr = $seT.text
+    stderr_truncated = if ($seT.truncated) { "YES" } else { "NO" }
+    contains_marker_stdout = if ($markerStdout) { "YES" } else { "NO" }
+    contains_marker_combined = if ($markerCombined) { "YES" } else { "NO" }
+    requires_interaction = $req
+    modifies_files = $modifies
+  }
+  [void]$stdinResults.Add($sEntry)
+  $winS = (-not $r.timedOut) -and ($r.exit -eq 0) -and $markerStdout
+  if ($winS -and ($null -eq $preferredStdinArgs)) {
+    $preferredStdinArgs = @()
+    foreach ($a in $sd.args) { $preferredStdinArgs += [string]$a }
+    $preferredStdinRowId = [string]$sd.id
+  }
+}
+
+$report.headless_probe_variants = $variantResults.ToArray()
+$report.stdin_marker_probe_variants = $stdinResults.ToArray()
+
+if ($null -ne $preferredArgs) {
+  $report.preferred_invocation_kind = "headless_argv"
+  $report.preferred_headless_variant_id = $preferredId
+  $report.preferred_headless_argv = $preferredArgs
+  $report.preferred_headless_command = ($cursorExe + " " + ($preferredArgs -join " "))
+  $report.preferred_contains_marker = "YES"
+  $report.preferred_exit = 0
+  $report.preferred_timeout = "NO"
+  $paStr = $preferredArgs -join " "
+  if ($paStr.Contains("--output-format json")) { $report.preferred_output_format = "json" }
+  elseif ($paStr.Contains("--output-format text")) { $report.preferred_output_format = "text" }
+  else { $report.preferred_output_format = "" }
+}
+elseif ($null -ne $preferredStdinArgs) {
+  $report.preferred_invocation_kind = "stdin_pipe"
+  $report.preferred_headless_variant_id = $preferredStdinRowId
+  $report.preferred_stdin_argv = $preferredStdinArgs
+  $report.preferred_headless_argv = $null
+  $report.preferred_headless_command = ('type "<TASKFILE>" | "' + $cursorExe + '" ' + ($preferredStdinArgs -join " "))
+  $report.preferred_contains_marker = "YES"
+  $report.preferred_exit = 0
+  $report.preferred_timeout = "NO"
+  $paStr = $preferredStdinArgs -join " "
+  if ($paStr.Contains("--output-format json")) { $report.preferred_output_format = "json" }
+  elseif ($paStr.Contains("--output-format text")) { $report.preferred_output_format = "text" }
+  else { $report.preferred_output_format = "" }
+}
+
+function Variant-Passed {
+  param($List, [int]$Id)
+  foreach ($x in $List) {
+    $vid = [int]$x['variant_id']
+    if ($vid -ne $Id) { continue }
+    return (($x['exit_code'] -eq 0) -and ($x['timed_out'] -eq "NO") -and ($x['contains_marker_stdout'] -eq "YES"))
+  }
+  return $false
+}
+
+if (Variant-Passed -List $variantResults -Id 1) { $report.supports_dash_p_flag = "YES" }
+if (Variant-Passed -List $variantResults -Id 2) { $report.supports_print_flag = "YES" }
+if ((Variant-Passed -List $variantResults -Id 5) -or (Variant-Passed -List $variantResults -Id 7)) { $report.supports_yolo_flag = "YES" }
+if ((Variant-Passed -List $variantResults -Id 6) -or (Variant-Passed -List $variantResults -Id 8)) { $report.supports_yes_flag = "YES" }
+if ((Variant-Passed -List $variantResults -Id 3) -or (Variant-Passed -List $variantResults -Id 5) -or (Variant-Passed -List $variantResults -Id 6)) {
+  $report.supports_output_format_text = "YES"
+}
+if ((Variant-Passed -List $variantResults -Id 4) -or (Variant-Passed -List $variantResults -Id 7) -or (Variant-Passed -List $variantResults -Id 8)) {
+  $report.supports_output_format_json = "YES"
+}
+
+foreach ($row in $stdinResults) {
+  if (($row['exit_code'] -ne 0) -or ($row['timed_out'] -ne "NO") -or ($row['contains_marker_stdout'] -ne "YES")) { continue }
+  $aj = ""
+  foreach ($p in $row['argv']) {
+    $aj = $aj + " " + [string]$p
+  }
+  $aj = $aj.Trim()
+  if ($aj.Contains("--yolo")) { $report.supports_yolo_flag = "YES" }
+  if ($aj.Contains("--yes")) { $report.supports_yes_flag = "YES" }
+  if ($aj.Contains("--output-format text")) { $report.supports_output_format_text = "YES" }
+  if ($aj.Contains("--output-format json")) { $report.supports_output_format_json = "YES" }
+}
+
+$headlessChannelOk = ($null -ne $preferredArgs)
+$stdinChannelOk = ($null -ne $preferredStdinArgs)
 $adapterOk = $false
 if ($report.cursor_agent_supports_input_output -eq "YES") {
   $adapterOk = $true
   $report.adapter_ready_reason = "help_lists_input_output"
 }
-elseif ($stdinWorkedAgent -and -not $interactiveAgent) {
+elseif ($headlessChannelOk) {
   $adapterOk = $true
-  $report.adapter_ready_reason = "agent_stdin_probe_completed_without_timeout"
+  $report.adapter_ready_reason = "headless_probe_marker_exit0_stdout"
+}
+elseif ($stdinChannelOk) {
+  $adapterOk = $true
+  $report.adapter_ready_reason = "stdin_pipe_marker_exit0_stdout"
 }
 
 if (-not $adapterOk) {
   if ($interactiveAgent) {
-    $report.adapter_ready_reason = "interactive_only_no_input_output"
+    $report.adapter_ready_reason = "interactive_only_no_input_output_no_headless_marker"
   }
-  elseif (-not [string]::IsNullOrWhiteSpace($report.adapter_ready_reason)) { }
   else {
-    $report.adapter_ready_reason = "no_noninteractive_channel_detected"
+    $report.adapter_ready_reason = "no_headless_marker_stdout_exit0_and_no_input_output"
   }
 }
 
@@ -325,24 +615,32 @@ $sl = [ordered]@{
   cursor_minus = "stdin_probe_5s_harmless_prompt_only"
   cursor_chat = "help_only_cursor_--chat_--help_full_window_chat_skipped_intentionally"
 }
-if ($interactiveAgent) {
+if ($headlessChannelOk) {
+  $sl["repo_safe_unattended_cursor_agent"] = "YES_headless_marker_probe"
+}
+elseif ($stdinChannelOk) {
+  $sl["repo_safe_unattended_cursor_agent"] = "YES_stdin_pipe_marker_probe"
+}
+elseif ($interactiveAgent) {
   $sl["repo_safe_unattended_cursor_agent"] = "NO_probe_timed_out_interactive_or_blocked"
 }
 elseif ($totalAgentOut -gt 0) {
-  $sl["repo_safe_unattended_cursor_agent"] = "UNKNOWN_exit_with_output_automation_not_verified"
+  $sl["repo_safe_unattended_cursor_agent"] = "UNKNOWN_no_headless_marker"
 }
 else {
   $sl["repo_safe_unattended_cursor_agent"] = "UNKNOWN_no_cli_output_under_probe_window"
 }
 $report["safe_launch_assessment"] = $sl
 
-$json = $report | ConvertTo-Json -Depth 12
+$json = $report | ConvertTo-Json -Depth 20
 [System.IO.File]::WriteAllText($ReportPath, $json, (New-Object System.Text.UTF8Encoding $false))
 
 Write-Host "=== SILVER_CURSOR_AGENT_ADAPTER_DIAGNOSTIC ==="
 Write-Host ("report_path=" + $ReportPath)
 Write-Host ("adapter_ready=" + $report.adapter_ready)
 Write-Host ("adapter_ready_reason=" + $report.adapter_ready_reason)
+Write-Host ("preferred_headless_variant_id=" + $(if ($null -eq $preferredId -and $null -eq $preferredStdinRowId) { "" } elseif ($null -ne $preferredId) { [string]$preferredId } else { $preferredStdinRowId }))
+Write-Host ("preferred_invocation_kind=" + $report.preferred_invocation_kind)
 Write-Host "=== END_SILVER_CURSOR_AGENT_ADAPTER_DIAGNOSTIC ==="
 
 exit 0
