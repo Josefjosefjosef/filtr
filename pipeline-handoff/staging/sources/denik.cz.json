@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-14T16:39:46.096388Z",
+  "ingestedAt": "2026-05-14T17:19:56.647556Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Hrazené návštěvy asistentek po porodu se krátit nebudou. Zpřesní se jejich náplň",
+      "url": "https://www.denik.cz/zdravotnictvi/navstevy-asistentek-po-porodu-nebudou-zkraceny-zpresni-se-ale-jejich-napln.html",
+      "dt": "2026-05-14T17:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "asistentek",
+        "hrazené",
+        "jejich",
+        "krátit",
+        "nebudou",
+        "náplň",
+        "návštěvy",
+        "porodu",
+        "zpřesní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Italští potápěči zahynuli na Maledivách. Zkoumali podvodní jeskyně",
+      "url": "https://www.denik.cz/ze_sveta/italie-potapeci-maledivy-umrti.html",
+      "dt": "2026-05-14T16:08:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "italští",
+        "jeskyně",
+        "maledivách",
+        "podvodní",
+        "potápěči",
+        "zahynuli",
+        "zkoumali"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -593,59 +643,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Chytré kamery na fotbale? Klíčové, řekl po Slavii Šťastný. Plán ale může narazit",
-      "url": "https://www.denik.cz/z_domova/fotbal-pokrocile-kamery-jsou-klicove-pro-bezpecnost-rekl-ministr-boris-stastny.html",
-      "dt": "2026-05-14T08:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ale",
-        "chytré",
-        "fotbale",
-        "kamery",
-        "klíčové",
-        "narazit",
-        "plán",
-        "slavii",
-        "řekl",
-        "šťastný"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Muž odevzdal policistům kilogram starého semtexu. Trhavina již krystalizovala",
-      "url": "https://www.denik.cz/regiony/nebezpecna-trhavina-igelitka-jihlava-cas-pyrotechnik-odstrel.html",
-      "dt": "2026-05-14T07:40:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "již",
-        "kilogram",
-        "krystalizovala",
-        "muž",
-        "odevzdal",
-        "policistům",
-        "semtexu",
-        "starého",
-        "trhavina"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -656,7 +653,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29638,
+      "bytes": 29426,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -693,12 +690,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-14T15:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-14T17:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
+          "zdravi": 1,
           "zpravy": 21,
-          "finance": 3,
-          "sport": 1
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -710,6 +707,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hrazené návštěvy asistentek po porodu se krátit nebudou. Zpřesní se jejich náplň",
+            "publishedAt": "2026-05-14T17:00:00Z"
+          },
+          {
+            "title": "Italští potápěči zahynuli na Maledivách. Zkoumali podvodní jeskyně",
+            "publishedAt": "2026-05-14T16:08:00Z"
+          },
           {
             "title": "Na Plzeňsku vyrostlo obří dřevěné srdce. Ohromuje i při pohledu z nebe",
             "publishedAt": "2026-05-14T15:40:00Z"
@@ -733,14 +738,6 @@
           {
             "title": "Policie zveřejnila video z krádeže lebky Zdislavy. Po pachateli stále pátrá",
             "publishedAt": "2026-05-14T14:08:00Z"
-          },
-          {
-            "title": "Sněmovna bez opozice se postavila proti sjezdu sudetských Němců v Česku",
-            "publishedAt": "2026-05-14T13:59:00Z"
-          },
-          {
-            "title": "Zkontrolujte si mrazák. V Albertu našli nebezpečné maso, obsahovalo salmonelu",
-            "publishedAt": "2026-05-14T13:53:00Z"
           }
         ]
       }
