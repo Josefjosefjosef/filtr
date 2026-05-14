@@ -552,8 +552,18 @@ while ($true) {
         $se = ""
         if (Test-Path -LiteralPath $stdoutTmp) { $so = [System.IO.File]::ReadAllText($stdoutTmp) }
         if (Test-Path -LiteralPath $stderrTmp) { $se = [System.IO.File]::ReadAllText($stderrTmp) }
-        $merged = "# silver-autopilot-loop: captured Cursor CLI output`n# stdout`n" + $so + "`n# stderr`n" + $se + "`n"
-        [System.IO.File]::WriteAllText($CursorOutputPath, $merged, [System.Text.UTF8Encoding]::new($false))
+        $soTrim = $so.Trim()
+        $seTrim = $se.Trim()
+        if (($soTrim.Length -gt 0) -or ($seTrim.Length -gt 0)) {
+          $merged = "# silver-autopilot-loop: captured Cursor CLI output`n# stdout`n" + $so + "`n# stderr`n" + $se + "`n"
+          [System.IO.File]::WriteAllText($CursorOutputPath, $merged, [System.Text.UTF8Encoding]::new($false))
+        }
+        else {
+          if (-not (Test-Path -LiteralPath $CursorOutputPath)) {
+            $stub = "# silver-autopilot-loop: no outer stdout/stderr; child wrote only to OutputFile or produced no file.`n"
+            [System.IO.File]::WriteAllText($CursorOutputPath, $stub, [System.Text.UTF8Encoding]::new($false))
+          }
+        }
       } finally {
         if (Test-Path -LiteralPath $stdoutTmp) { Remove-Item -LiteralPath $stdoutTmp -Force -ErrorAction SilentlyContinue }
         if (Test-Path -LiteralPath $stderrTmp) { Remove-Item -LiteralPath $stderrTmp -Force -ErrorAction SilentlyContinue }
