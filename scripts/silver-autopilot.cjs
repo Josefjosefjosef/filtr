@@ -190,7 +190,7 @@ function ghLines(args) {
     .filter(Boolean);
 }
 
-const ROOT_SILVER_MD = /^SILVER_(STRATEGY|NEXT_ACTION|RUN_REPORT|AUTOPILOT_README|CURSOR_OUTPUT)\.md$/;
+const ROOT_SILVER_MD = /^SILVER_(STRATEGY|NEXT_ACTION|RUN_REPORT|AUTOPILOT_README|CURSOR_OUTPUT|PR_ORCHESTRATOR_README)\.md$/;
 
 function isAllowedVerifyPath(rel) {
   const n = String(rel || "").replace(/\\/g, "/").trim();
