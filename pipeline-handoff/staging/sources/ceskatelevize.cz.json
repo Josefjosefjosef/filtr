@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-15T21:44:49.023596Z",
+  "ingestedAt": "2026-05-15T22:24:36.966877Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Izrael při útoku v Libanonu zabil šest lidí a dalších 22 zranil, uvedla média",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/izrael-pri-utoku-v-libanonu-zabil-sest-lidi-a-dalsich-22-zranil-uvedla-media-373499",
+      "dt": "2026-05-15T22:14:39Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dalších",
+        "izrael",
+        "libanonu",
+        "lidí",
+        "média",
+        "při",
+        "uvedla",
+        "zabil",
+        "zranil",
+        "útoku",
+        "šest"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -730,28 +758,21 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "V prvním kole přijímacích zkoušek na střední školy uspělo více zájemců než vloni",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/v-prvnim-kole-prijimacich-zkousek-na-stredni-skoly-uspelo-vic-zajemcu-nez-vloni-373461",
-      "dt": "2026-05-15T07:04:45Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Soutěž k MS v hokeji – 16. května",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/soutez-k-ms-v-hokeji-16-kvetna-156737",
+      "dt": "2026-05-15T22:00:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "kole",
-        "než",
-        "prvním",
-        "přijímacích",
-        "střední",
-        "uspělo",
-        "vloni",
-        "zkoušek",
-        "zájemců",
-        "školy"
+        "hokeji",
+        "května",
+        "soutěž"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1471,31 +1492,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Darderi a Svitolinová jsou v Římě v semifinále, noční zápas narušily ohňostroje",
-      "url": "https://sport.ceskatelevize.cz/clanek/tenis/darderi-a-svitolinova-jsou-v-rime-v-semifinale-nocni-zapas-narusily-ohnostroje-156782",
-      "dt": "2026-05-14T08:12:50Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "darderi",
-        "narušily",
-        "noční",
-        "ohňostroje",
-        "semifinále",
-        "svitolinová",
-        "zápas",
-        "římě"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1506,7 +1502,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41115,
+      "bytes": 41126,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1566,7 +1562,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T19:53:43Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T22:14:39Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1583,6 +1579,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Izrael při útoku v Libanonu zabil šest lidí a dalších 22 zranil, uvedla média",
+            "publishedAt": "2026-05-15T22:14:39Z"
+          },
           {
             "title": "Izrael udeřil v Gaze. Tvrdí, že na šéfa ozbrojeného křídla Hamásu",
             "publishedAt": "2026-05-15T19:53:43Z"
@@ -1610,10 +1610,6 @@
           {
             "title": "Rusko chystá útok na prezidentskou kancelář v Kyjevě, tvrdí Zelenskyj",
             "publishedAt": "2026-05-15T16:35:11Z"
-          },
-          {
-            "title": "SOUHRN: Zásadní události pátku 15. května",
-            "publishedAt": "2026-05-15T16:29:00Z"
           }
         ]
       }
@@ -1625,7 +1621,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38300,
+      "bytes": 38038,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1662,7 +1658,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T17:36:55Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1677,6 +1673,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Soutěž k MS v hokeji – 16. května",
+            "publishedAt": "2026-05-15T22:00:00Z"
+          },
           {
             "title": "Basketbalisté Opavy dráždili Nymburk bosou nohou",
             "publishedAt": "2026-05-15T17:36:55Z"
@@ -1704,10 +1704,6 @@
           {
             "title": "Jsem srdcař, ve svém věku už ale do některých sjezdů nejdu, říká trenér Suchomel",
             "publishedAt": "2026-05-15T12:05:02Z"
-          },
-          {
-            "title": "Na třetím ročníku Noci rekordů padla maxima mítinku",
-            "publishedAt": "2026-05-15T11:40:39Z"
           }
         ]
       }
@@ -1719,7 +1715,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77016,
+      "bytes": 77180,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
