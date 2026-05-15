@@ -1,8 +1,51 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-15T16:25:00.934229Z",
+  "ingestedAt": "2026-05-15T17:04:49.014283Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Inflace? Centrální bankéři vyčkávají",
+      "url": "https://profitonline.cz/inflace-centralni-bankeri-vyckavaji/",
+      "dt": "2026-05-15T17:00:17Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "bankéři",
+        "centrální",
+        "inflace",
+        "vyčkávají"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Týden na akciových trzích: Mezi rekordy a korekcí",
+      "url": "https://profitonline.cz/tyden-na-akciovych-trzich-mezi-rekordy-a-korekci/",
+      "dt": "2026-05-15T16:30:14Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "akciových",
+        "korekcí",
+        "rekordy",
+        "trzích",
+        "týden"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -250,54 +293,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "David Tajzich vede fúze a akvizice v RSM",
-      "url": "https://profitonline.cz/david-tajzich-vede-fuze-a-akvizice-v-rsm/",
-      "dt": "2026-05-14T06:00:45Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "akvizice",
-        "david",
-        "fúze",
-        "rsm",
-        "tajzich",
-        "vede"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nové léky na hubnutí významně snižují riziko infarktu či mrtvice",
-      "url": "https://profitonline.cz/nove-leky-na-hubnuti-vyznamne-snizuji-riziko-infarktu-ci-mrtvice/",
-      "dt": "2026-05-14T04:00:14Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "hubnutí",
-        "infarktu",
-        "léky",
-        "mrtvice",
-        "nové",
-        "riziko",
-        "snižují",
-        "významně"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -308,7 +303,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18901,
+      "bytes": 19113,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -345,11 +340,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-15T14:20:30Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T17:00:17Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 11,
-          "zdravi": 1
+          "finance": 12
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -361,6 +355,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Inflace? Centrální bankéři vyčkávají",
+            "publishedAt": "2026-05-15T17:00:17Z"
+          },
+          {
+            "title": "Týden na akciových trzích: Mezi rekordy a korekcí",
+            "publishedAt": "2026-05-15T16:30:14Z"
+          },
           {
             "title": "Summitu v Pekingu dominovaly čipy, Tchaj-wan a boj o globální dominanci",
             "publishedAt": "2026-05-15T14:20:30Z"
@@ -384,14 +386,6 @@
           {
             "title": "Mobil na dovolené v zahraničí. Kdy se z pohodlí stává drahá chyba?",
             "publishedAt": "2026-05-15T04:00:16Z"
-          },
-          {
-            "title": "Vláda si otevírá dveře k dluhovému eldorádu",
-            "publishedAt": "2026-05-14T20:15:41Z"
-          },
-          {
-            "title": "Dluhopisy Republiky se vrací. Vláda si bude opět půjčovat od domácností",
-            "publishedAt": "2026-05-14T19:50:57Z"
           }
         ]
       }
