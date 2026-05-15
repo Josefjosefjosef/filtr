@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-15T02:00:13.588186Z",
+  "ingestedAt": "2026-05-15T02:40:10.082216Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "S dřevěnou tyčí v ruce měl zdrogovaný muž v Olomouci poškodit zaparkovaná auta i tramvajovou zastávku",
+      "url": "https://tydenikpolicie.cz/s-drevenou-tyci-v-ruce-mel-zdrogovany-muz-v-olomouci-poskodit-zaparkovana-auta-i-tramvajovou-zastavku/",
+      "dt": "2026-05-15T02:02:41Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "auta",
+        "dřevěnou",
+        "muž",
+        "měl",
+        "olomouci",
+        "poškodit",
+        "ruce",
+        "tramvajovou",
+        "tyčí",
+        "zaparkovaná",
+        "zastávku",
+        "zdrogovaný"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -232,37 +261,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Řidiči škodovky naměřili policisté na devadesátce na Jablonecku rychlost 153 km/hod. Místo zastavení jim začal ujíždět",
-      "url": "https://tydenikpolicie.cz/ridici-skodovky-namerili-policiste-na-devadesatce-na-jablonecku-rychlost-153-km-hod-misto-zastaveni-jim-zacal-ujizdet/",
-      "dt": "2026-05-14T09:04:46Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "153",
-        "devadesátce",
-        "hod",
-        "jablonecku",
-        "jim",
-        "místo",
-        "naměřili",
-        "policisté",
-        "rychlost",
-        "ujíždět",
-        "zastavení",
-        "začal",
-        "řidiči",
-        "škodovky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -273,7 +271,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16659,
+      "bytes": 16376,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -310,7 +308,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-14T22:02:53Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T02:02:41Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -325,6 +323,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "S dřevěnou tyčí v ruce měl zdrogovaný muž v Olomouci poškodit zaparkovaná auta i tramvajovou zastávku",
+            "publishedAt": "2026-05-15T02:02:41Z"
+          },
           {
             "title": "Podnapilý senior se ve Starém Městě převrátil se svou škodovkou na bok",
             "publishedAt": "2026-05-14T22:02:53Z"
@@ -352,10 +354,6 @@
           {
             "title": "Služebního psa Maca napadlo při ohledání místa činu divoké prase",
             "publishedAt": "2026-05-14T09:53:28Z"
-          },
-          {
-            "title": "Řidič dodávky srazil při couvání v Přerově podnapilou seniorku",
-            "publishedAt": "2026-05-14T09:14:12Z"
           }
         ]
       }
