@@ -135,6 +135,8 @@ function baseReport() {
     triage_loaded: false,
     governance_total_open_prs: null,
     candidate_pr: null,
+    candidate_state: "",
+    apply_candidate_state: null,
     candidate_title: null,
     candidate_url: null,
     candidate_head_ref: null,
@@ -304,6 +306,17 @@ function yn(b) {
   return b ? "YES" : "NO";
 }
 
+/** GitHub `gh pr view` JSON: state is OPEN | CLOSED | MERGED (case varies). */
+function isPrViewOpen(prView) {
+  if (!prView) return false;
+  const st = String(prView.state || "").toUpperCase();
+  return st === "OPEN";
+}
+
+function prViewStateString(prView) {
+  return String((prView && prView.state) || "");
+}
+
 function evaluateCandidate(prView, changedPaths, hints) {
   const h = hints && typeof hints === "object" ? hints : {};
   const governanceCategoryHint = String(h.governanceCategory || "");
@@ -334,6 +347,18 @@ function evaluateCandidate(prView, changedPaths, hints) {
       risk_level: "UNKNOWN",
       allowed_action: "STOP_UNKNOWN",
       blocked_reason: "draft_pr",
+      recommended_next_command: `gh pr view ${prView.number} --web`,
+    };
+  }
+
+  if (!isPrViewOpen(prView)) {
+    return {
+      ...base,
+      risk_level: "BLOCKED",
+      allowed_action: "STOP_CLOSED_OR_MERGED",
+      blocked_reason: "pr_not_open",
+      would_merge: "NO",
+      would_push: "NO",
       recommended_next_command: `gh pr view ${prView.number} --web`,
     };
   }
@@ -531,6 +556,7 @@ function safeToEnableApply(evalResult, gitCleanAfterOk) {
   if (a === "STOP_HIGH_RISK" || a === "STOP_CONFLICTING" || a === "STOP_PENDING" || a === "STOP_FAIL") {
     return "NO";
   }
+  if (a === "STOP_CLOSED_OR_MERGED") return "NO";
   if (a === "STOP_UNKNOWN") return "NO";
   if (a === "SYNC_ONLY" || a === "VERIFY_AND_MERGE_IF_CLEAN") {
     return evalResult.risk_level === "LOW" ? "YES" : "NO";
@@ -547,7 +573,8 @@ function finalizeDryRunReport(report) {
   report.dry_run_no_push_merge = "YES";
 }
 
-function applyUltraSafeGates(evalResult) {
+function applyUltraSafeGates(evalResult, prView) {
+  if (prView && !isPrViewOpen(prView)) return { ok: false, reason: "pr_not_open" };
   if (evalResult.risk_level !== "LOW") return { ok: false, reason: "risk_not_low" };
   const paths = evalResult.candidate_files || [];
   if (!isLowRiskDocsOrScriptsOnly(paths)) return { ok: false, reason: "paths_not_docs_or_scripts_only" };
@@ -577,12 +604,15 @@ function waitForPrChecksIdle(prNumber, maxWaitMs, pollMs) {
       "view",
       String(prNumber),
       "--json",
-      "number,title,url,headRefName,baseRefName,mergeStateStatus,mergeable,statusCheckRollup,isDraft",
+      "number,title,url,headRefName,baseRefName,mergeStateStatus,mergeable,statusCheckRollup,isDraft,state",
     ]);
     if (!prJson.ok) {
       return { ok: false, prView: null, message: prJson.message || "gh_poll_failed", summary: lastSummary };
     }
     const prView = prJson.data;
+    if (!isPrViewOpen(prView)) {
+      return { ok: false, prView, message: "pr_not_open", summary: lastSummary };
+    }
     const summary = summarizeChecks(prView.statusCheckRollup);
     lastSummary = summary;
     if (summary.pending === 0) {
@@ -595,6 +625,7 @@ function waitForPrChecksIdle(prNumber, maxWaitMs, pollMs) {
 
 function reverifyMergeReady(prView, paths, evalResult) {
   if (!prView || prView.isDraft) return { ok: false, reason: "draft_or_missing_pr" };
+  if (!isPrViewOpen(prView)) return { ok: false, reason: "pr_not_open" };
   const diffOk = isLowRiskDocsOrScriptsOnly(paths);
   if (!diffOk) return { ok: false, reason: "paths_changed" };
   if (hasAssetsAppJs(paths) || hasAssetsAppCss(paths) || hasGithubWorkflow(paths)) {
@@ -641,6 +672,8 @@ function buildReportSkeleton(ctx, mainCommit, governance, triage, prView, triage
     triage_loaded: true,
     governance_total_open_prs: governance.total_open_prs,
     candidate_pr: prView.number,
+    candidate_state: prViewStateString(prView),
+    apply_candidate_state: null,
     candidate_title: prView.title,
     candidate_url: prView.url,
     candidate_head_ref: prView.headRefName,
@@ -773,11 +806,12 @@ function runApplyOneSafePrMain(ctx, mainCommit, governance, triage, prNumber, tr
     triageCategory,
   });
 
-  const gates = applyUltraSafeGates(evalResult);
+  const gates = applyUltraSafeGates(evalResult, curPrView);
   const report = buildReportSkeleton(ctx, mainCommit, governance, triage, curPrView, triageCategory, governanceCategory, evalResult);
   report.mode = "APPLY_ONE_SAFE_PR";
   report.apply_mode = "YES";
   report.apply_candidate_pr = gates.ok ? prNumber : null;
+  report.apply_candidate_state = gates.ok ? prViewStateString(curPrView) : null;
   report.dry_run_no_push_merge = "NO";
   report.branch_isolation_gh_only = "NO";
   report.apply_sync_attempted = "NO";
@@ -791,6 +825,7 @@ function runApplyOneSafePrMain(ctx, mainCommit, governance, triage, prNumber, tr
   if (!gates.ok) {
     report.apply_stopped_reason = "no_safe_candidate";
     report.apply_candidate_pr = null;
+    report.apply_candidate_state = null;
     report.apply_merge_attempted = "NO";
     report.safe_to_continue = "YES";
     report.recommended_next_command = "node scripts/silver-pr-orchestrator-v1.cjs --dry-run";
@@ -798,9 +833,33 @@ function runApplyOneSafePrMain(ctx, mainCommit, governance, triage, prNumber, tr
     return;
   }
 
-  report.apply_candidate_pr = prNumber;
-
   if (evalResult.allowed_action === "SYNC_ONLY") {
+    const preSyncOpen = runGhJsonWithRetry([
+      "pr",
+      "view",
+      String(prNumber),
+      "--json",
+      "number,state,title,url,headRefName,baseRefName,mergeStateStatus,mergeable,statusCheckRollup,isDraft",
+    ]);
+    if (!preSyncOpen.ok || !preSyncOpen.data) {
+      report.apply_sync_attempted = "NO";
+      report.apply_merge_attempted = "NO";
+      report.apply_stopped_reason = "pre_sync_gh_pr_view_failed";
+      report.safe_to_continue = "NO";
+      exitApplyZero(report);
+      return;
+    }
+    if (!isPrViewOpen(preSyncOpen.data)) {
+      report.apply_sync_attempted = "NO";
+      report.apply_merge_attempted = "NO";
+      report.apply_stopped_reason = "pr_not_open";
+      report.candidate_state = prViewStateString(preSyncOpen.data);
+      report.apply_candidate_state = prViewStateString(preSyncOpen.data);
+      report.safe_to_continue = "YES";
+      exitApplyZero(report);
+      return;
+    }
+    curPrView = preSyncOpen.data;
     report.apply_sync_attempted = "YES";
     const syncR = runCommand("gh", ["pr", "update-branch", String(prNumber)]);
     if (!syncR.ok) {
@@ -815,8 +874,16 @@ function runApplyOneSafePrMain(ctx, mainCommit, governance, triage, prNumber, tr
     const waitR = waitForPrChecksIdle(prNumber, 50 * 60 * 1000, 15000);
     if (!waitR.ok || !waitR.prView) {
       report.apply_sync_result = "FAIL";
-      report.apply_stopped_reason = waitR.message === "ci_wait_timeout" ? "ci_wait_timeout" : "ci_poll_failed";
-      report.safe_to_continue = "NO";
+      if (waitR.message === "pr_not_open") {
+        report.apply_stopped_reason = "pr_not_open";
+        report.apply_sync_attempted = "YES";
+        report.candidate_state = waitR.prView ? prViewStateString(waitR.prView) : report.candidate_state;
+        report.apply_candidate_state = waitR.prView ? prViewStateString(waitR.prView) : report.apply_candidate_state;
+        report.safe_to_continue = "YES";
+      } else {
+        report.apply_stopped_reason = waitR.message === "ci_wait_timeout" ? "ci_wait_timeout" : "ci_poll_failed";
+        report.safe_to_continue = "NO";
+      }
       exitApplyZero(report);
       return;
     }
@@ -846,9 +913,10 @@ function runApplyOneSafePrMain(ctx, mainCommit, governance, triage, prNumber, tr
       engine_changed: evalResult.engine_changed,
       assets_app_changed: evalResult.assets_app_changed,
       recommended_next_command: evalResult.recommended_next_command,
+      candidate_state: prViewStateString(curPrView),
     });
 
-    const postSyncGates = applyUltraSafeGates(evalResult);
+    const postSyncGates = applyUltraSafeGates(evalResult, curPrView);
     if (!postSyncGates.ok || evalResult.allowed_action !== "VERIFY_AND_MERGE_IF_CLEAN") {
       report.apply_merge_attempted = "NO";
       report.apply_stopped_reason = "post_sync_not_merge_ready";
@@ -861,11 +929,44 @@ function runApplyOneSafePrMain(ctx, mainCommit, governance, triage, prNumber, tr
   const mergeGates = reverifyMergeReady(curPrView, curPaths, evalResult);
   if (!mergeGates.ok) {
     report.apply_merge_attempted = "NO";
-    report.apply_stopped_reason = `pre_merge_reverify_failed:${mergeGates.reason}`;
+    if (mergeGates.reason === "pr_not_open") {
+      report.apply_stopped_reason = "pr_not_open";
+      report.safe_to_continue = "YES";
+    } else {
+      report.apply_stopped_reason = `pre_merge_reverify_failed:${mergeGates.reason}`;
+      report.safe_to_continue = "NO";
+    }
+    exitApplyZero(report);
+    return;
+  }
+
+  const preMergeOpen = runGhJsonWithRetry([
+    "pr",
+    "view",
+    String(prNumber),
+    "--json",
+    "number,state,title,url,headRefName,baseRefName,mergeStateStatus,mergeable,statusCheckRollup,isDraft",
+  ]);
+  if (!preMergeOpen.ok || !preMergeOpen.data) {
+    report.apply_merge_attempted = "NO";
+    report.apply_stopped_reason = "pre_merge_gh_pr_view_failed";
     report.safe_to_continue = "NO";
     exitApplyZero(report);
     return;
   }
+  if (!isPrViewOpen(preMergeOpen.data)) {
+    report.apply_merge_attempted = "NO";
+    report.apply_stopped_reason = "pr_not_open";
+    report.candidate_state = prViewStateString(preMergeOpen.data);
+    report.apply_candidate_state = prViewStateString(preMergeOpen.data);
+    curPrView = preMergeOpen.data;
+    report.safe_to_continue = "YES";
+    exitApplyZero(report);
+    return;
+  }
+  curPrView = preMergeOpen.data;
+  report.candidate_state = prViewStateString(curPrView);
+  report.apply_candidate_state = prViewStateString(curPrView);
 
   report.apply_merge_attempted = "YES";
   const mergeR = runCommand("gh", ["pr", "merge", String(prNumber), "--squash", "--delete-branch"]);
@@ -1103,7 +1204,7 @@ function main() {
     "view",
     String(prNumber),
     "--json",
-    "number,title,url,headRefName,baseRefName,mergeStateStatus,mergeable,statusCheckRollup,isDraft",
+    "number,title,url,headRefName,baseRefName,mergeStateStatus,mergeable,statusCheckRollup,isDraft,state",
   ]);
   if (!prJson.ok) {
     exitWithErrorReport(
