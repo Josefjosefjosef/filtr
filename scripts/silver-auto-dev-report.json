@@ -1,8 +1,17 @@
 {
-  "generatedAt": "",
+  "cursor_adapter_mode": "RUN_CURSOR_V1",
+  "cursor_adapter_available": "NO",
+  "cursor_adapter_executed": "NO",
+  "cursor_exit_code": "",
+  "cursor_output_file": "SILVER_CURSOR_OUTPUT.md",
+  "max_cycles": "1",
+  "loop_mode": "NO",
+  "generatedAt": "2026-05-15T21:31:13.284Z",
   "mode": "SILVER_AUTO_DEV",
-  "main_commit": "",
-  "git_status_clean": "",
+  "main_commit": "f0a98874be6d082e93b632df17aac8756330294c",
+  "git_status_clean": "NO",
+  "branch_name": "fix/silver-auto-dev-run-cursor-v1",
+  "preflight_stop": "MAX_CYCLES_V1_ONLY_1",
   "queue_executed": "NO",
   "queue_cycles_completed": "",
   "queue_stop_reason": "",
@@ -11,5 +20,7 @@
   "next_action_written": "NO",
   "next_action_file": "SILVER_NEXT_ACTION.md",
   "safe_to_continue": "NO",
-  "recommended_next_command": "npm run silver-auto"
+  "recommended_next_command": "Use: npm run silver-auto -- --run-cursor --max-cycles=1 (V1 allows only max_cycles=1)",
+  "report_fields_added": "YES",
+  "max_cycles_arg": "2"
 }

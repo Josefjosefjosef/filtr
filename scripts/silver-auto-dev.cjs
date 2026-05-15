@@ -2,7 +2,8 @@
 /**
  * Silver Auto-Dev V1 — single-pass entrypoint: bounded safe PR queue, then deterministic
  * SILVER_NEXT_ACTION.md handoff when no ultra-safe PR candidate remains.
- * Does not call Cursor API. Does not modify assets/app.js or Silver engine.
+ * Optional `--run-cursor` (V1): after handoff, invokes `scripts/silver-cursor-agent-adapter.ps1`
+ * once (max_cycles=1 only) — no outer loop. Does not modify assets/app.js or Silver engine.
  */
 /* eslint-disable no-console */
 "use strict";
@@ -16,6 +17,7 @@ const ORCHESTRATOR_SCRIPT = path.join(__dirname, "silver-pr-orchestrator-v1.cjs"
 const ORCHESTRATOR_REPORT = path.join(__dirname, "silver-pr-orchestrator-v1-report.json");
 const DEV_REPORT = path.join(__dirname, "silver-auto-dev-report.json");
 const NEXT_ACTION_FILE = path.join(REPO, "SILVER_NEXT_ACTION.md");
+const ADAPTER_PS1 = path.join(__dirname, "silver-cursor-agent-adapter.ps1");
 const RHC3_REPORT = path.join(__dirname, "silver-real-human-chaos-v3-report.json");
 const REALISTIC_MOBILE_REPORT = path.join(__dirname, "silver-realistic-mobile-corpus-report.json");
 
@@ -166,6 +168,94 @@ function yn(b) {
   return b ? "YES" : "NO";
 }
 
+/**
+ * @returns {{ runCursor: boolean, maxCycles: string, maxCyclesError: string, maxCyclesRaw: string|null }}
+ */
+function parseSilverAutoCli(argv) {
+  const runCursor = argv.includes("--run-cursor");
+  let maxCyclesRaw = null;
+  for (const a of argv) {
+    if (a.startsWith("--max-cycles=")) {
+      maxCyclesRaw = a.slice("--max-cycles=".length);
+      break;
+    }
+  }
+  let maxCyclesError = "";
+  let maxCycles = "";
+  if (runCursor) {
+    if (maxCyclesRaw == null || maxCyclesRaw === "") {
+      maxCycles = "1";
+    } else {
+      const trimmed = String(maxCyclesRaw).trim();
+      const n = parseInt(trimmed, 10);
+      if (!Number.isFinite(n) || String(n) !== trimmed) {
+        maxCyclesError = "INVALID_MAX_CYCLES";
+      } else if (n !== 1) {
+        maxCyclesError = "MAX_CYCLES_V1_ONLY_1";
+      } else {
+        maxCycles = "1";
+      }
+    }
+  }
+  return { runCursor, maxCycles, maxCyclesError, maxCyclesRaw };
+}
+
+function cursorSchemaDefaults(cli) {
+  return {
+    cursor_adapter_mode: cli.runCursor ? "RUN_CURSOR_V1" : "OFF",
+    cursor_adapter_available: "NO",
+    cursor_adapter_executed: "NO",
+    cursor_exit_code: "",
+    cursor_output_file: "SILVER_CURSOR_OUTPUT.md",
+    max_cycles: cli.runCursor ? "1" : "",
+    loop_mode: "NO",
+  };
+}
+
+function withCursorSchema(repOut, cli) {
+  return { ...cursorSchemaDefaults(cli), ...repOut };
+}
+
+/**
+ * @returns {{ ok: boolean, reason: string, shell: string, fileArgs: string[] }}
+ */
+function discoverCursorAdapter() {
+  if (!fs.existsSync(ADAPTER_PS1)) {
+    return { ok: false, reason: "adapter_script_missing", shell: "", fileArgs: [] };
+  }
+  if (process.platform === "win32") {
+    return {
+      ok: true,
+      reason: "",
+      shell: "powershell.exe",
+      fileArgs: ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", ADAPTER_PS1],
+    };
+  }
+  const pw = runCommand("pwsh", ["-NoLogo", "-NoProfile", "-Command", "exit 0"]);
+  if (pw.ok) {
+    return {
+      ok: true,
+      reason: "",
+      shell: "pwsh",
+      fileArgs: ["-NoLogo", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", ADAPTER_PS1],
+    };
+  }
+  return { ok: false, reason: "pwsh_not_found_non_windows", shell: "", fileArgs: [] };
+}
+
+function runSilverCursorAdapter(adapter) {
+  const args = [
+    ...adapter.fileArgs,
+    "-TaskFile",
+    "SILVER_NEXT_ACTION.md",
+    "-OutputFile",
+    "SILVER_CURSOR_OUTPUT.md",
+    "-TimeoutSeconds",
+    "600",
+  ];
+  return runCommand(adapter.shell, args);
+}
+
 function safePrAvailableFromQueue(rep) {
   if (!rep || typeof rep !== "object") return "NO";
   const n = Number(rep.safe_open_candidates);
@@ -291,8 +381,55 @@ function buildRunAgainSummary(ctx) {
   return lines.join("\n");
 }
 
+function printRunCursorSummary(rep) {
+  console.log("=== SILVER_AUTO_CURSOR_ADAPTER_V1_RUN_SUMMARY ===");
+  console.log(`cursor_adapter_mode=${String(rep.cursor_adapter_mode || "")}`);
+  console.log(`cursor_adapter_available=${String(rep.cursor_adapter_available || "")}`);
+  console.log(`cursor_adapter_executed=${String(rep.cursor_adapter_executed || "")}`);
+  console.log(`cursor_exit_code=${String(rep.cursor_exit_code || "")}`);
+  console.log(`cursor_output_file=${String(rep.cursor_output_file || "")}`);
+  console.log(`max_cycles=${String(rep.max_cycles || "")}`);
+  console.log(`loop_mode=${String(rep.loop_mode || "")}`);
+  console.log(`safe_to_continue=${String(rep.safe_to_continue || "")}`);
+  console.log(`next_action_written=${String(rep.next_action_written || "")}`);
+  if (rep.cursor_adapter_stop_reason) {
+    console.log(`cursor_adapter_stop_reason=${String(rep.cursor_adapter_stop_reason)}`);
+  }
+  console.log("=== END_SILVER_AUTO_CURSOR_ADAPTER_V1_RUN_SUMMARY ===");
+}
+
 function main() {
+  const cli = parseSilverAutoCli(process.argv.slice(2));
   const startedAt = new Date().toISOString();
+
+  if (cli.runCursor && cli.maxCyclesError) {
+    const repOut = withCursorSchema(
+      {
+        generatedAt: startedAt,
+        mode: "SILVER_AUTO_DEV",
+        main_commit: gitHead(),
+        git_status_clean: "NO",
+        branch_name: gitBranch(),
+        preflight_stop: cli.maxCyclesError,
+        queue_executed: "NO",
+        queue_cycles_completed: "",
+        queue_stop_reason: "",
+        queue_safe_to_continue: "",
+        safe_pr_available: "NO",
+        next_action_written: "NO",
+        next_action_file: "SILVER_NEXT_ACTION.md",
+        safe_to_continue: "NO",
+        recommended_next_command: "Use: npm run silver-auto -- --run-cursor --max-cycles=1 (V1 allows only max_cycles=1)",
+        report_fields_added: "YES",
+        max_cycles_arg: cli.maxCyclesRaw == null || cli.maxCyclesRaw === "" ? "default_implicit_1" : String(cli.maxCyclesRaw).trim(),
+      },
+      cli,
+    );
+    writeDevReport(repOut);
+    console.error(`SILVER_AUTO_DEV_CLI_STOP: ${cli.maxCyclesError}`);
+    process.exit(1);
+  }
+
   let mainCommit = "";
   let gitCleanBefore = "NO";
   let gitCleanAfter = "NO";
@@ -337,23 +474,27 @@ function main() {
   mainCommit = gitHead();
 
   if (preflightFail) {
-    const repOut = {
-      generatedAt: startedAt,
-      mode: "SILVER_AUTO_DEV",
-      main_commit: mainCommit,
-      git_status_clean: "NO",
-      branch_name: branch,
-      preflight_stop: preflightFail,
-      queue_executed: "NO",
-      queue_cycles_completed: "",
-      queue_stop_reason: "",
-      queue_safe_to_continue: "",
-      safe_pr_available: "NO",
-      next_action_written: "NO",
-      next_action_file: "SILVER_NEXT_ACTION.md",
-      safe_to_continue: "NO",
-      recommended_next_command: "Fix preflight (clean main, npm/node, assets/app.js clean), then: npm run silver-auto",
-    };
+    const repOut = withCursorSchema(
+      {
+        generatedAt: startedAt,
+        mode: "SILVER_AUTO_DEV",
+        main_commit: mainCommit,
+        git_status_clean: "NO",
+        branch_name: branch,
+        preflight_stop: preflightFail,
+        queue_executed: "NO",
+        queue_cycles_completed: "",
+        queue_stop_reason: "",
+        queue_safe_to_continue: "",
+        safe_pr_available: "NO",
+        next_action_written: "NO",
+        next_action_file: "SILVER_NEXT_ACTION.md",
+        safe_to_continue: "NO",
+        recommended_next_command: "Fix preflight (clean main, npm/node, assets/app.js clean), then: npm run silver-auto",
+        report_fields_added: "YES",
+      },
+      cli,
+    );
     writeDevReport(repOut);
     console.error(`SILVER_AUTO_DEV_PREFLIGHT_STOP: ${preflightFail}`);
     process.exit(1);
@@ -365,25 +506,29 @@ function main() {
   const parsed = readJsonFile(ORCHESTRATOR_REPORT);
   let qrep = parsed.ok ? parsed.data : null;
   if (!parsed.ok) {
-    const repOut = {
-      generatedAt: new Date().toISOString(),
-      mode: "SILVER_AUTO_DEV",
-      main_commit: gitHead() || mainCommit,
-      git_status_clean: isStrictCleanPorcelain(gitPorcelain().text || "") ? "YES" : "NO",
-      branch_name: gitBranch(),
-      queue_executed: queueExecuted,
-      queue_cycles_completed: "",
-      queue_stop_reason: "orchestrator_report_missing",
-      queue_safe_to_continue: "NO",
-      safe_pr_available: "NO",
-      next_action_written: "NO",
-      next_action_file: "SILVER_NEXT_ACTION.md",
-      safe_to_continue: "NO",
-      recommended_next_command: "node scripts/silver-pr-orchestrator-v1.cjs --dry-run",
-      orchestrator_exit_code: orch.exitCode,
-      orchestrator_ok: yn(orch.ok),
-      orchestrator_report_error: parsed.message,
-    };
+    const repOut = withCursorSchema(
+      {
+        generatedAt: new Date().toISOString(),
+        mode: "SILVER_AUTO_DEV",
+        main_commit: gitHead() || mainCommit,
+        git_status_clean: isStrictCleanPorcelain(gitPorcelain().text || "") ? "YES" : "NO",
+        branch_name: gitBranch(),
+        queue_executed: queueExecuted,
+        queue_cycles_completed: "",
+        queue_stop_reason: "orchestrator_report_missing",
+        queue_safe_to_continue: "NO",
+        safe_pr_available: "NO",
+        next_action_written: "NO",
+        next_action_file: "SILVER_NEXT_ACTION.md",
+        safe_to_continue: "NO",
+        recommended_next_command: "node scripts/silver-pr-orchestrator-v1.cjs --dry-run",
+        orchestrator_exit_code: orch.exitCode,
+        orchestrator_ok: yn(orch.ok),
+        orchestrator_report_error: parsed.message,
+        report_fields_added: "YES",
+      },
+      cli,
+    );
     writeDevReport(repOut);
     console.error(parsed.message || "orchestrator_report_read_failed");
     process.exit(1);
@@ -442,13 +587,63 @@ function main() {
     orchestrator_ok: yn(orch.ok),
     queue_did_merge_or_sync: yn(didWork),
     handoff_mode: handoff ? "PRODUCT_CLUSTER_DIAGNOSTIC" : didWork ? "RUN_AGAIN" : "NO_HANDOFF",
+    report_fields_added: "YES",
   };
 
-  writeDevReport(repOut);
+  if (cli.runCursor) {
+    repOut.max_cycles_arg =
+      cli.maxCyclesRaw == null || cli.maxCyclesRaw === ""
+        ? "default_implicit_1"
+        : String(cli.maxCyclesRaw).trim();
+  }
+
+  const needCursorHandoff = nextWritten === "YES" && fs.existsSync(NEXT_ACTION_FILE);
+
+  if (cli.runCursor && orch.ok) {
+    const adapter = discoverCursorAdapter();
+    repOut.cursor_adapter_available = yn(adapter.ok);
+    if (!adapter.ok) {
+      repOut.cursor_adapter_stop_reason = adapter.reason;
+    }
+    if (needCursorHandoff) {
+      if (!adapter.ok) {
+        repOut.safe_to_continue = "NO";
+        repOut.recommended_next_command =
+          "STOP: cursor adapter unavailable (" +
+          String(adapter.reason || "unknown") +
+          "). Fix scripts/silver-cursor-agent-adapter.ps1 / pwsh (non-Windows), then run scripts/silver-cursor-agent-adapter-diagnostic.ps1 until adapter_ready=YES.";
+      } else {
+        const ar = runSilverCursorAdapter(adapter);
+        repOut.cursor_adapter_executed = "YES";
+        repOut.cursor_exit_code = String(ar.exitCode);
+        if (!ar.ok || ar.exitCode !== 0) {
+          repOut.safe_to_continue = "NO";
+          repOut.recommended_next_command =
+            "Review SILVER_CURSOR_OUTPUT.md and scripts/silver-cursor-agent-adapter-diagnostic-report.json; fix adapter/Cursor CLI; then: npm run silver-auto -- --run-cursor --max-cycles=1";
+        }
+      }
+    } else {
+      repOut.cursor_adapter_executed = "NO";
+      repOut.cursor_exit_code = "";
+    }
+  }
+
+  writeDevReport(withCursorSchema(repOut, cli));
 
   if (!orch.ok) {
     console.error(orch.message || `orchestrator_exit_${orch.exitCode}`);
     process.exit(1);
+  }
+
+  if (cli.runCursor) {
+    printRunCursorSummary(withCursorSchema(repOut, cli));
+    let exitCode = 0;
+    if (needCursorHandoff && repOut.cursor_adapter_available === "NO") {
+      exitCode = 1;
+    } else if (repOut.cursor_adapter_executed === "YES" && String(repOut.cursor_exit_code) !== "0") {
+      exitCode = 1;
+    }
+    process.exit(exitCode);
   }
 
   process.exit(0);
@@ -457,22 +652,29 @@ function main() {
 try {
   main();
 } catch (e) {
+  const cli = parseSilverAutoCli(process.argv.slice(2));
   const msg = String((e && e.message) || e || "unexpected_error");
-  writeDevReport({
-    generatedAt: new Date().toISOString(),
-    mode: "SILVER_AUTO_DEV",
-    main_commit: gitHead(),
-    git_status_clean: "NO",
-    queue_executed: "NO",
-    queue_cycles_completed: "",
-    queue_stop_reason: "silver_auto_dev_exception",
-    safe_pr_available: "NO",
-    next_action_written: "NO",
-    next_action_file: "SILVER_NEXT_ACTION.md",
-    safe_to_continue: "NO",
-    recommended_next_command: "npm run silver-auto",
-    error_message: msg,
-  });
+  writeDevReport(
+    withCursorSchema(
+      {
+        generatedAt: new Date().toISOString(),
+        mode: "SILVER_AUTO_DEV",
+        main_commit: gitHead(),
+        git_status_clean: "NO",
+        queue_executed: "NO",
+        queue_cycles_completed: "",
+        queue_stop_reason: "silver_auto_dev_exception",
+        safe_pr_available: "NO",
+        next_action_written: "NO",
+        next_action_file: "SILVER_NEXT_ACTION.md",
+        safe_to_continue: "NO",
+        recommended_next_command: "npm run silver-auto",
+        error_message: msg,
+        report_fields_added: "YES",
+      },
+      cli,
+    ),
+  );
   console.error(msg);
   process.exit(1);
 }
