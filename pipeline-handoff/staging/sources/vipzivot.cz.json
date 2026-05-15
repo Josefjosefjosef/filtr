@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vipzivot.cz",
-  "ingestedAt": "2026-05-15T17:04:49.014283Z",
+  "ingestedAt": "2026-05-15T17:45:02.378234Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Bydlení je hotové: Krainová dokončila vilu v Karibiku, krása střídá nádheru",
+      "url": "https://vipzivot.cz/p/simona-krainova-karibik-vila-luxusni-bydleni/",
+      "dt": "2026-05-15T17:38:00Z",
+      "media_raw": "VIPživot",
+      "media_norm": "VIPživot",
+      "tokens": [
+        "bydlení",
+        "dokončila",
+        "hotové",
+        "karibiku",
+        "krainová",
+        "krása",
+        "nádheru",
+        "střídá",
+        "vilu"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vipzivot",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "vipzivot.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -272,33 +298,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "vipzivot.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Ondřej Hejma po debatě v ČT vybuchl. Kvůli Řezníčkovi rozpoutal válku, která rozdělila diváky ČT",
-      "url": "https://vipzivot.cz/p/ondrej-hejma-debata-reznicek-moravec-macinka/",
-      "dt": "2026-05-15T04:25:00Z",
-      "media_raw": "VIPživot",
-      "media_norm": "VIPživot",
-      "tokens": [
-        "debatě",
-        "diváky",
-        "hejma",
-        "kvůli",
-        "ondřej",
-        "rozdělila",
-        "rozpoutal",
-        "vybuchl",
-        "válku",
-        "řezníčkovi"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vipzivot",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "vipzivot.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -309,7 +308,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://vipzivot.cz/feed/",
-      "bytes": 137135,
+      "bytes": 142927,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -346,11 +345,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-15T16:23:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T17:38:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zpravy": 2,
-          "other": 8
+          "other": 8,
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -362,6 +361,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bydlení je hotové: Krainová dokončila vilu v Karibiku, krása střídá nádheru",
+            "publishedAt": "2026-05-15T17:38:00Z"
+          },
           {
             "title": "Uváděl Snídani s Novou, pak ho obvinili z pašování drog. Boura dnes učí děti mluvit a běhá po soudech",
             "publishedAt": "2026-05-15T16:23:00Z"
@@ -389,10 +392,6 @@
           {
             "title": "Jak bydlí Ondřej Sokol: Život na kraji Prahy, sbírka kytar na zdi a doplněk, který by u něj nečekal nikdo",
             "publishedAt": "2026-05-15T04:34:00Z"
-          },
-          {
-            "title": "Pfauserová pobavila fanoušky. Přiznala, že nemá kalhotky, o pár vteřin později ležela hlavou v písku",
-            "publishedAt": "2026-05-15T04:29:00Z"
           }
         ]
       }

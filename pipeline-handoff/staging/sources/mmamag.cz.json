@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-15T17:04:49.014283Z",
+  "ingestedAt": "2026-05-15T17:45:02.378234Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Rousey, nebo Carano? Hvězdy MMA nevidí jasného favorita",
+      "url": "https://www.mmamag.cz/rousey-vs-carano-hvezdy-mma-tipuji-vitezku/",
+      "dt": "2026-05-15T17:15:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "carano",
+        "favorita",
+        "hvězdy",
+        "jasného",
+        "mma",
+        "nebo",
+        "nevidí",
+        "rousey"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1085,34 +1110,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Chimaev žadoní o odvetu. Strickland ho uzemnil: Nejdřív pár výher, pak se můžeme bavit",
-      "url": "https://www.mmamag.cz/strickland-odmita-rychlou-odvetu-s-chimaevem/",
-      "dt": "2026-05-14T07:00:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "bavit",
-        "chimaev",
-        "můžeme",
-        "nejdřív",
-        "odvetu",
-        "pak",
-        "pár",
-        "strickland",
-        "uzemnil",
-        "výher",
-        "žadoní"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1123,7 +1120,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 80588,
+      "bytes": 80642,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1160,7 +1157,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-15T16:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T17:15:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1175,6 +1172,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rousey, nebo Carano? Hvězdy MMA nevidí jasného favorita",
+            "publishedAt": "2026-05-15T17:15:00Z"
+          },
           {
             "title": "Boxer přežil v Osvětimi 76 zápasů smrti. Poražený šel rovnou do plynové komory",
             "publishedAt": "2026-05-15T16:30:00Z"
@@ -1202,10 +1203,6 @@
           {
             "title": "Legenda UFC seděla ve vězení za střelbu na pedofila. Teď se vrací do světa MMA",
             "publishedAt": "2026-05-15T13:27:41Z"
-          },
-          {
-            "title": "V Česku vyprodáváme haly, na Slovensku zájem o MMA upadá. Budayovi chybí charisma i X faktor, říká Pavol Neruda",
-            "publishedAt": "2026-05-15T13:19:12Z"
           }
         ]
       }

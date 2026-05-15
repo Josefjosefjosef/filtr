@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-15T17:04:49.014283Z",
+  "ingestedAt": "2026-05-15T17:45:02.378234Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "„Zásoby plynu máme.“ Část Evropy chce víc těžit, kvůli závislosti na dovozu LNG",
+      "url": "https://ekonomickydenik.cz/zasoby-plynu-mame-tezit-zavislost-lng/",
+      "dt": "2026-05-15T17:35:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "chce",
+        "dovozu",
+        "evropy",
+        "kvůli",
+        "lng",
+        "máme",
+        "plynu",
+        "těžit",
+        "víc",
+        "zásoby",
+        "závislosti",
+        "část"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -765,31 +794,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "ČEZ přiznal, kolik přesně zaplatil za jihočeskou síť plynovodů",
-      "url": "https://ekonomickydenik.cz/cez-priznal-8-miliard-sit-plynovodu/",
-      "dt": "2026-05-14T08:25:55Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "jihočeskou",
-        "kolik",
-        "plynovodů",
-        "přesně",
-        "přiznal",
-        "síť",
-        "zaplatil",
-        "čez"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73046,
+      "bytes": 72901,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,11 +841,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T15:13:27Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T17:35:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 4,
           "finance": 24,
+          "zpravy": 4,
           "zdravi": 2
         },
         "drop_counts": {
@@ -854,6 +858,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Zásoby plynu máme.“ Část Evropy chce víc těžit, kvůli závislosti na dovozu LNG",
+            "publishedAt": "2026-05-15T17:35:00Z"
+          },
           {
             "title": "Nechtělo se jim na frontu, platili šíbrům. Teď jim hrozí vězení",
             "publishedAt": "2026-05-15T15:13:27Z"
@@ -881,10 +889,6 @@
           {
             "title": "Ukrajina a USA ladí právní detaily: Memorandum připravuje cestu pro budoucí obchod s drony",
             "publishedAt": "2026-05-15T10:31:54Z"
-          },
-          {
-            "title": "Zlá zpráva pro Evropany: Sblížení USA s Čínou mění pravidla hry, vliv Unie padá",
-            "publishedAt": "2026-05-15T09:57:54Z"
           }
         ]
       }
