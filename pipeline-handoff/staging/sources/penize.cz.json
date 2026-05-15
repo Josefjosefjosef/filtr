@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-15T11:39:38.784755Z",
+  "ingestedAt": "2026-05-15T12:20:23.348996Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Maximální ceny benzinu a nafty na víkend a pondělí",
+      "url": "https://www.penize.cz/doprava/489769-maximalni-ceny-benzinu-a-nafty-na-vikend-a-pondeli",
+      "dt": "2026-05-15T14:01:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "benzinu",
+        "ceny",
+        "maximální",
+        "nafty",
+        "pondělí",
+        "víkend"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -483,33 +506,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Na účtence chyběla diakritika. Slovenský stánek s langoši dostal pokutu 1500 eur",
-      "url": "https://www.penize.cz/nakupy/489592-slovensky-urad-ulozil-stanku-s-langosi-pokutu-1500-eur-na-uctence-chybel-hacek-nad-pismenem",
-      "dt": "2026-05-12T15:49:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "1500",
-        "chyběla",
-        "diakritika",
-        "dostal",
-        "eur",
-        "langoši",
-        "pokutu",
-        "slovenský",
-        "stánek",
-        "účtence"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -520,7 +516,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18946,
+      "bytes": 19032,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -557,11 +553,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-15T13:34:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T14:01:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 4,
-          "finance": 16
+          "zpravy": 5,
+          "finance": 15
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -573,6 +569,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Maximální ceny benzinu a nafty na víkend a pondělí",
+            "publishedAt": "2026-05-15T14:01:00Z"
+          },
           {
             "title": "Vlakem z Česka až k Jadranu. Termín, kdy vyjede první Adriatic Express",
             "publishedAt": "2026-05-15T13:34:00Z"
@@ -600,10 +600,6 @@
           {
             "title": "Vyděláváme na lidech, kteří půjčky splácejí, jinak je to prohra pro obě strany",
             "publishedAt": "2026-05-15T02:00:00Z"
-          },
-          {
-            "title": "Maximální ceny benzinu a nafty na pátek 15. května",
-            "publishedAt": "2026-05-14T13:58:00Z"
           }
         ]
       }

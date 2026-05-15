@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-15T11:39:38.784755Z",
+  "ingestedAt": "2026-05-15T12:20:23.348996Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Skandál s posudky zasáhl po ÚVN i další elitní nemocnici. V policejní síti uvízl známý docent",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/posudky-uvn-dalsi-nemocnice-policie/",
+      "dt": "2026-05-15T12:04:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "další",
+        "docent",
+        "elitní",
+        "nemocnici",
+        "policejní",
+        "posudky",
+        "skandál",
+        "síti",
+        "uvízl",
+        "zasáhl",
+        "známý",
+        "úvn"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -252,34 +281,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Svěřujete se ChatGPT se svým zdravím? Vaše nejcitlivější data končí v USA, varuje Brusel",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/sverujete-se-chatgpt-se-svym-zdravim-vase-nejcitlivejsi-data-konci-v-usa-varuje-brusel/",
-      "dt": "2026-05-14T13:53:42Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "brusel",
-        "chatgpt",
-        "data",
-        "končí",
-        "nejcitlivější",
-        "svým",
-        "svěřujete",
-        "usa",
-        "varuje",
-        "vaše",
-        "zdravím"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -290,7 +291,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 102985,
+      "bytes": 105164,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -327,7 +328,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-15T10:12:26Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T12:04:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -342,6 +343,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Skandál s posudky zasáhl po ÚVN i další elitní nemocnici. V policejní síti uvízl známý docent",
+            "publishedAt": "2026-05-15T12:04:00Z"
+          },
           {
             "title": "O návratu po mrtvici nerozhodují jen léky. Nový projekt v Česku odhalil nečekaný klíč k uzdravení",
             "publishedAt": "2026-05-15T10:12:26Z"
@@ -369,10 +374,6 @@
           {
             "title": "Konec diskriminace nezadaných? Vojtěch chce povolit umělé oplodnění i single ženám",
             "publishedAt": "2026-05-15T05:00:00Z"
-          },
-          {
-            "title": "Robotická chirurgie v každé okresní nemocnici? Ministerstvo připravuje nová pravidla",
-            "publishedAt": "2026-05-14T16:00:59Z"
           }
         ]
       }

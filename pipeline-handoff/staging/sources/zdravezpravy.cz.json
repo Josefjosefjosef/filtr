@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-15T11:39:38.784755Z",
+  "ingestedAt": "2026-05-15T12:20:23.348996Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Na severu Konga hasí epidemii eboly, zemřelo minimálně 65 lidí",
+      "url": "https://www.zdravezpravy.cz/2026/05/15/na-severu-konga-hasi-epidemii-eboly-zemrelo-minimalne-65-lidi/",
+      "dt": "2026-05-15T11:10:12Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "eboly",
+        "epidemii",
+        "hasí",
+        "konga",
+        "lidí",
+        "minimálně",
+        "severu",
+        "zemřelo"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -468,30 +493,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Loď, kde se prokázal hantavirus, míří na Kanáry, tam se vylodí",
-      "url": "https://www.zdravezpravy.cz/2026/05/06/lod-kde-se-prokazal-hantavirus-miri-na-kanary-tam-se-vylodi/",
-      "dt": "2026-05-06T12:49:11Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "hantavirus",
-        "kanáry",
-        "loď",
-        "míří",
-        "prokázal",
-        "tam",
-        "vylodí"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -502,7 +503,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 202496,
+      "bytes": 201919,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -539,7 +540,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-15T09:12:06Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T11:10:12Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -555,6 +556,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na severu Konga hasí epidemii eboly, zemřelo minimálně 65 lidí",
+            "publishedAt": "2026-05-15T11:10:12Z"
+          },
           {
             "title": "S nádorem mozku žijí pacienti i 15 let, ale nesmí jít o glioblastom",
             "publishedAt": "2026-05-15T09:12:06Z"
@@ -582,10 +587,6 @@
           {
             "title": "Marty Makary skončil jako šéf FDA. Rezignoval po tlaku Bílého domu",
             "publishedAt": "2026-05-13T07:37:48Z"
-          },
-          {
-            "title": "Komentář: Proč tolik řidičů jezdí na červenou? Protože mohou!",
-            "publishedAt": "2026-05-12T13:30:11Z"
           }
         ]
       }
