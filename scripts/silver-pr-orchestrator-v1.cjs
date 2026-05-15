@@ -3,7 +3,7 @@
  * Silver PR Orchestrator V1 — DRY-RUN by default; optional `--apply-one-safe-pr`
  * for a single gated ultra-safe PR (docs/** or scripts/** only, LOW risk).
  * Uses frozen backlog JSON + GitHub CLI (gh pr view, gh pr diff --name-only).
- * DRY-RUN never merges, pushes, syncs, or updates branches.
+ * DRY-RUN never merges, pushes, or updates PR branches locally or via gh.
  */
 /* eslint-disable no-console */
 "use strict";
@@ -406,7 +406,7 @@ function evaluateCandidate(prView, changedPaths, hints) {
       blocked_reason: "branch_behind_base_sync_first",
       would_merge: "NO",
       would_push: "YES",
-      recommended_next_command: `gh pr sync ${prView.number}`,
+      recommended_next_command: `gh pr update-branch ${prView.number}`,
     };
   }
 
@@ -431,7 +431,7 @@ function evaluateCandidate(prView, changedPaths, hints) {
       blocked_reason: "merge_state_unknown_sync_first",
       would_merge: "NO",
       would_push: "YES",
-      recommended_next_command: `gh pr sync ${prView.number}`,
+      recommended_next_command: `gh pr update-branch ${prView.number}`,
     };
   }
 
@@ -454,7 +454,7 @@ function evaluateCandidate(prView, changedPaths, hints) {
       blocked_reason: "branch_behind_base_sync_first",
       would_merge: "NO",
       would_push: "NO",
-      recommended_next_command: `gh pr sync ${prView.number}`,
+      recommended_next_command: `gh pr update-branch ${prView.number}`,
     };
   }
 
@@ -927,7 +927,7 @@ function main() {
 
   const ctx = { git_status_clean_before: "NO" };
 
-  const gsBefore = gitPorcelain();
+  let gsBefore = gitPorcelain();
   if (!gsBefore.ok) {
     exitWithErrorReport(
       ctx,
@@ -938,6 +938,51 @@ function main() {
       false,
     );
   }
+
+  if (applyOne && !isStrictCleanPorcelain(gsBefore.text)) {
+    if (!isCleanAfterOrchestratorRun(gsBefore.text)) {
+      exitWithErrorReport(
+        ctx,
+        "precheck",
+        "WORKTREE_NOT_CLEAN",
+        "WORKTREE_NOT_CLEAN",
+        {
+          git_status_clean_before: "NO",
+          git_status_clean_after: "NO",
+        },
+        false,
+      );
+    }
+    const restoreR = runCommand("git", ["restore", "--", OUT_REPORT_REL]);
+    if (!restoreR.ok) {
+      exitWithErrorReport(
+        ctx,
+        "precheck",
+        restoreR.message || "git_restore_orchestrator_report_failed",
+        "ORCHESTRATOR_REPORT_RESTORE_FAILED",
+        {
+          git_status_clean_before: "NO",
+          git_status_clean_after: "NO",
+        },
+        false,
+      );
+    }
+    gsBefore = gitPorcelain();
+    if (!gsBefore.ok || !isStrictCleanPorcelain(gsBefore.text)) {
+      exitWithErrorReport(
+        ctx,
+        "precheck",
+        "WORKTREE_NOT_CLEAN",
+        "WORKTREE_NOT_CLEAN",
+        {
+          git_status_clean_before: "NO",
+          git_status_clean_after: "NO",
+        },
+        false,
+      );
+    }
+  }
+
   ctx.git_status_clean_before = isStrictCleanPorcelain(gsBefore.text) ? "YES" : "NO";
   if (!isStrictCleanPorcelain(gsBefore.text)) {
     exitWithErrorReport(
