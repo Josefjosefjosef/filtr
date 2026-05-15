@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-15T13:00:02.196218Z",
+  "ingestedAt": "2026-05-15T13:40:02.731307Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Zradil vlastní jednotku dronů: Voják vynášel Rusům cíle útoků. Dostal 15 let",
+      "url": "https://ekonomickydenik.cz/zradil-vlastni-jednotku-dronu-rusko-15-let/",
+      "dt": "2026-05-15T13:03:09Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "cíle",
+        "dostal",
+        "dronů",
+        "jednotku",
+        "let",
+        "rusům",
+        "vlastní",
+        "voják",
+        "vynášel",
+        "zradil",
+        "útoků"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -765,30 +793,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Varování Trumpovi v Číně. Lepší vztahy ho budou něco stát",
-      "url": "https://ekonomickydenik.cz/varovani-trumpovi-cina-lepsi-vztahy/",
-      "dt": "2026-05-14T06:17:38Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "lepší",
-        "něco",
-        "stát",
-        "trumpovi",
-        "varování",
-        "vztahy",
-        "číně"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +803,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74414,
+      "bytes": 74420,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,12 +840,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T12:13:25Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T13:03:09Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 27,
-          "zdravi": 2,
-          "zpravy": 1
+          "zpravy": 2,
+          "finance": 26,
+          "zdravi": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -853,6 +857,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zradil vlastní jednotku dronů: Voják vynášel Rusům cíle útoků. Dostal 15 let",
+            "publishedAt": "2026-05-15T13:03:09Z"
+          },
           {
             "title": "Hrozí nekontrolované utrácení, varuje opozice. Schillerová protlačila změnu pravidel",
             "publishedAt": "2026-05-15T12:13:25Z"
@@ -880,10 +888,6 @@
           {
             "title": "Pražská energetika navýšila zisk na 3,2 miliardy korun. Roste na trhu s elektřinou i plynem",
             "publishedAt": "2026-05-15T09:38:09Z"
-          },
-          {
-            "title": "Předporodní příspěvek od ledna v novém. Naváže na něj vyšší rodičovská",
-            "publishedAt": "2026-05-15T08:37:31Z"
           }
         ]
       }

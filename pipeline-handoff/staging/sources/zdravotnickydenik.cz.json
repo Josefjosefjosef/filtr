@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-15T13:00:02.196218Z",
+  "ingestedAt": "2026-05-15T13:40:02.731307Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Sestry drží systém, ale 30 tisíc jich zamíří do důchodu. Nárůst počtu studentů stačit nebude",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/odchody-sester-do-duchodu-novi-studenti/",
+      "dt": "2026-05-15T13:07:58Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "ale",
+        "drží",
+        "důchodu",
+        "jich",
+        "nebude",
+        "nárůst",
+        "počtu",
+        "sestry",
+        "stačit",
+        "studentů",
+        "systém",
+        "tisíc",
+        "zamíří"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -252,35 +282,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Tichý zabiják útočí na stále mladší Čechy. Za vysoký krevní tlak může hlavně jedna věc",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/hypertenze-pribyva-u-deti-a-mladych-lidi/",
-      "dt": "2026-05-14T15:04:01Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "hlavně",
-        "jedna",
-        "krevní",
-        "mladší",
-        "stále",
-        "tichý",
-        "tlak",
-        "vysoký",
-        "věc",
-        "zabiják",
-        "útočí",
-        "čechy"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -291,7 +292,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 105164,
+      "bytes": 101523,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -328,7 +329,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-15T12:04:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T13:07:58Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -343,6 +344,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sestry drží systém, ale 30 tisíc jich zamíří do důchodu. Nárůst počtu studentů stačit nebude",
+            "publishedAt": "2026-05-15T13:07:58Z"
+          },
           {
             "title": "Skandál s posudky zasáhl po ÚVN i další elitní nemocnici. V policejní síti uvízl známý docent",
             "publishedAt": "2026-05-15T12:04:00Z"
@@ -370,10 +375,6 @@
           {
             "title": "Klíčová péče na hraně kolapsu: Ničí ji podseknuté úhrady i málo mladé krve. Potřeba ale poletí vzhůru",
             "publishedAt": "2026-05-15T06:00:00Z"
-          },
-          {
-            "title": "Konec diskriminace nezadaných? Vojtěch chce povolit umělé oplodnění i single ženám",
-            "publishedAt": "2026-05-15T05:00:00Z"
           }
         ]
       }
