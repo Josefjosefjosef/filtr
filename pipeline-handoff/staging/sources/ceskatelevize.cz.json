@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-15T14:25:08.495590Z",
+  "ingestedAt": "2026-05-15T15:04:51.245881Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Čtyři pětiny íránského arzenálu jsou zničeny, psát něco jiného je zrada, řekl Trump",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/ctyri-petiny-iranskeho-arzenalu-jsou-zniceny-psat-neco-jineho-je-zrada-rekl-trump-373486",
+      "dt": "2026-05-15T14:39:39Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "arzenálu",
+        "jiného",
+        "něco",
+        "psát",
+        "pětiny",
+        "trump",
+        "zničeny",
+        "zrada",
+        "íránského",
+        "čtyři",
+        "řekl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -730,27 +758,25 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Nečekali jsme tolik pozitivních reakcí na náš sjezd, řekl ČT Posselt",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/necekali-jsme-tolik-pozitivnich-reakci-na-nas-sjezd-rekl-ct-posselt-373440",
-      "dt": "2026-05-14T20:42:01Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Velká série Siniakové s Townsendovou skončila v Římě v semifinále",
+      "url": "https://sport.ceskatelevize.cz/clanek/tenis/velka-serie-siniakove-s-townsendovou-skoncila-v-rime-v-semifinale-156809",
+      "dt": "2026-05-15T14:21:55Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "jsme",
-        "nečekali",
-        "náš",
-        "posselt",
-        "pozitivních",
-        "reakcí",
-        "sjezd",
-        "tolik",
-        "řekl"
+        "semifinále",
+        "siniakové",
+        "skončila",
+        "série",
+        "townsendovou",
+        "velká",
+        "římě"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1464,31 +1490,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "City neztratilo nervy a snížilo náskok Arsenalu na dva body",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/city-neztratilo-nervy-a-snizilo-naskok-arsenalu-na-dva-body-156777",
-      "dt": "2026-05-13T21:10:14Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "arsenalu",
-        "body",
-        "city",
-        "dva",
-        "nervy",
-        "neztratilo",
-        "náskok",
-        "snížilo"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1499,7 +1500,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41718,
+      "bytes": 41681,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1559,7 +1560,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T14:39:39Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1575,6 +1576,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Čtyři pětiny íránského arzenálu jsou zničeny, psát něco jiného je zrada, řekl Trump",
+            "publishedAt": "2026-05-15T14:39:39Z"
+          },
           {
             "title": "Restaurování hrobek v egyptském Luxoru odhalilo malby z 18. dynastie",
             "publishedAt": "2026-05-15T14:00:00Z"
@@ -1602,10 +1607,6 @@
           {
             "title": "Voda na měsících Jupiteru a Saturnu mrzne do podoby štrůdlu, popsali čeští vědci",
             "publishedAt": "2026-05-15T11:00:00Z"
-          },
-          {
-            "title": "Festival muzejních nocí začíná ve Znojmě, poslední „zhasne“ Praha",
-            "publishedAt": "2026-05-15T10:52:45Z"
           }
         ]
       }
@@ -1617,7 +1618,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37730,
+      "bytes": 38113,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1654,7 +1655,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T12:43:43Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T14:21:55Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1669,6 +1670,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Velká série Siniakové s Townsendovou skončila v Římě v semifinále",
+            "publishedAt": "2026-05-15T14:21:55Z"
+          },
           {
             "title": "Martin Fuksa vyhrál v Braniboru závod na kilometr",
             "publishedAt": "2026-05-15T12:43:43Z"
@@ -1696,10 +1701,6 @@
           {
             "title": "Svitolinová zdolala Šwiatekovou a v Římě si po osmi letech opět zahraje o titul",
             "publishedAt": "2026-05-15T07:25:01Z"
-          },
-          {
-            "title": "Dobeš pomohl Montrealu k „mečbolu“, Dostálovi sezona v NHL skončila",
-            "publishedAt": "2026-05-15T06:23:29Z"
           }
         ]
       }
@@ -1711,7 +1712,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77430,
+      "bytes": 77425,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

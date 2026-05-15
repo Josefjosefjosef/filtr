@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-15T14:25:08.495590Z",
+  "ingestedAt": "2026-05-15T15:04:51.245881Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Hantaviry kolují i v ČR. Infektologové doporučují mokré smejčení",
+      "url": "https://www.zdravezpravy.cz/2026/05/15/hantaviry-koluji-i-v-cesku-infektologove-doporucuji-mokre-smejceni/",
+      "dt": "2026-05-15T13:15:04Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "doporučují",
+        "hantaviry",
+        "infektologové",
+        "kolují",
+        "mokré",
+        "smejčení"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -467,32 +490,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Biotechnologie nesou miliardy, ale ČR chybí víc než dostatek kapitálu",
-      "url": "https://www.zdravezpravy.cz/2026/05/06/biotechnologie-nesou-miliardy-ale-cesku-chybi-vic-nez-dostatek-kapitalu/",
-      "dt": "2026-05-06T13:55:54Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "ale",
-        "biotechnologie",
-        "chybí",
-        "dostatek",
-        "kapitálu",
-        "miliardy",
-        "nesou",
-        "než",
-        "víc"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -503,7 +500,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 201919,
+      "bytes": 200880,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -540,7 +537,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-15T11:10:12Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T13:15:04Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -556,6 +553,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hantaviry kolují i v ČR. Infektologové doporučují mokré smejčení",
+            "publishedAt": "2026-05-15T13:15:04Z"
+          },
           {
             "title": "Na severu Konga hasí epidemii eboly, zemřelo minimálně 65 lidí",
             "publishedAt": "2026-05-15T11:10:12Z"
@@ -583,10 +584,6 @@
           {
             "title": "Město Bruntál se brzy dočká nového domova Senevida",
             "publishedAt": "2026-05-13T08:25:46Z"
-          },
-          {
-            "title": "Marty Makary skončil jako šéf FDA. Rezignoval po tlaku Bílého domu",
-            "publishedAt": "2026-05-13T07:37:48Z"
           }
         ]
       }
