@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-15T15:04:51.245881Z",
+  "ingestedAt": "2026-05-15T15:44:44.223549Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Dopravní chaos v Praze. Semafory na 23 křižovatkách hromadně zhasly",
+      "url": "https://www.denik.cz/regiony/prazske-semafory-hromadne-zhasly-chaos-na-krizovatkach-usmernila-policie-2026051.html",
+      "dt": "2026-05-15T14:42:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "chaos",
+        "dopravní",
+        "hromadně",
+        "křižovatkách",
+        "praze",
+        "semafory",
+        "zhasly"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -622,32 +646,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Výsledky přijímacích zkoušek: Co druhé kolo, kdy se hlásit, kolik přihlášek dát",
-      "url": "https://www.denik.cz/skolstvi-a-vzdelavani/vysledky-prijimacch-zkouse-na-stredni-skoly-2026-kdy-druhe-kolo.html",
-      "dt": "2026-05-15T07:23:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "druhé",
-        "dát",
-        "hlásit",
-        "kolik",
-        "kolo",
-        "přihlášek",
-        "přijímacích",
-        "výsledky",
-        "zkoušek"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -658,7 +656,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29974,
+      "bytes": 30006,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -695,7 +693,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-15T14:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T14:42:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -711,6 +709,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dopravní chaos v Praze. Semafory na 23 křižovatkách hromadně zhasly",
+            "publishedAt": "2026-05-15T14:42:00Z"
+          },
           {
             "title": "Barokní zámek na Žatecku hledá nového majitele. K mání je za deset milionů",
             "publishedAt": "2026-05-15T14:40:00Z"
@@ -737,10 +739,6 @@
           },
           {
             "title": "V Brně spojili vlak a tramvaj. Unikátní vozidlo bude jezdit po známé železnici",
-            "publishedAt": "2026-05-15T13:00:00Z"
-          },
-          {
-            "title": "Čapí hnízdo v Černošíně je prý lepší než televize, říkají obyvatelé",
             "publishedAt": "2026-05-15T13:00:00Z"
           }
         ]

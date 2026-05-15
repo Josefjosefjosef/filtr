@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-15T15:04:51.245881Z",
+  "ingestedAt": "2026-05-15T15:44:44.223549Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Nechtělo se jim na frontu, platili šíbrům. Teď jim hrozí vězení",
+      "url": "https://ekonomickydenik.cz/nechtelo-se-jim-na-frontu-platili-sibrum-ted-jim-hrozi-vezeni/",
+      "dt": "2026-05-15T15:13:27Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "frontu",
+        "hrozí",
+        "jim",
+        "nechtělo",
+        "platili",
+        "vězení",
+        "šíbrům"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -766,33 +790,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Pravá ruka Zelenského ve vazbě. Přes luxusní byty měl prát špinavé peníze",
-      "url": "https://ekonomickydenik.cz/prava-ruka-zelenskeho-vazba/",
-      "dt": "2026-05-14T07:28:04Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "byty",
-        "luxusní",
-        "měl",
-        "peníze",
-        "pravá",
-        "prát",
-        "ruka",
-        "vazbě",
-        "zelenského",
-        "špinavé"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -803,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73469,
+      "bytes": 73046,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -840,11 +837,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T13:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T15:13:27Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 3,
-          "finance": 25,
+          "zpravy": 4,
+          "finance": 24,
           "zdravi": 2
         },
         "drop_counts": {
@@ -857,6 +854,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nechtělo se jim na frontu, platili šíbrům. Teď jim hrozí vězení",
+            "publishedAt": "2026-05-15T15:13:27Z"
+          },
           {
             "title": "Vlakem až na Jadran. Adriatic Express přidává novou zastávku u moře",
             "publishedAt": "2026-05-15T13:45:00Z"
@@ -884,10 +885,6 @@
           {
             "title": "Zlá zpráva pro Evropany: Sblížení USA s Čínou mění pravidla hry, vliv Unie padá",
             "publishedAt": "2026-05-15T09:57:54Z"
-          },
-          {
-            "title": "Boj o automobilový trh. Stellantis a Dongfeng podepsaly dohodu za miliardy",
-            "publishedAt": "2026-05-15T09:44:52Z"
           }
         ]
       }

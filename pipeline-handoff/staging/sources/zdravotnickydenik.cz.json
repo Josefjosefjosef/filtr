@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-15T15:04:51.245881Z",
+  "ingestedAt": "2026-05-15T15:44:44.223549Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "O cenách léků pro Evropany se nesmí rozhodovat v Bílém domě. Unie hraje o poslední výhodu",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/ceny-leku-bily-dum-unie-posledni-vyhoda/",
+      "dt": "2026-05-15T15:05:51Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "bílém",
+        "cenách",
+        "domě",
+        "evropany",
+        "hraje",
+        "léků",
+        "nesmí",
+        "poslední",
+        "rozhodovat",
+        "unie",
+        "výhodu"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -256,32 +284,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Robotická chirurgie v každé okresní nemocnici? Ministerstvo připravuje nová pravidla",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/roboticka-chirurgie-nemocnice-ministerstvo-pravidla/",
-      "dt": "2026-05-14T16:00:59Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "chirurgie",
-        "každé",
-        "ministerstvo",
-        "nemocnici",
-        "nová",
-        "okresní",
-        "pravidla",
-        "připravuje",
-        "robotická"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -292,7 +294,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 101523,
+      "bytes": 109883,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -329,7 +331,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-15T13:07:58Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T15:05:51Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -344,6 +346,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "O cenách léků pro Evropany se nesmí rozhodovat v Bílém domě. Unie hraje o poslední výhodu",
+            "publishedAt": "2026-05-15T15:05:51Z"
+          },
           {
             "title": "Sestry drží systém, ale 30 tisíc jich zamíří do důchodu. Nárůst počtu studentů stačit nebude",
             "publishedAt": "2026-05-15T13:07:58Z"
@@ -371,10 +377,6 @@
           {
             "title": "V USA nosí odznáček, v Česku očkování odmítají. Proč se zdravotníci nechrání proti chřipce?",
             "publishedAt": "2026-05-15T07:00:00Z"
-          },
-          {
-            "title": "Klíčová péče na hraně kolapsu: Ničí ji podseknuté úhrady i málo mladé krve. Potřeba ale poletí vzhůru",
-            "publishedAt": "2026-05-15T06:00:00Z"
           }
         ]
       }
