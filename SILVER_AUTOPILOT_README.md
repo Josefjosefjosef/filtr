@@ -14,6 +14,21 @@ Silver Autopilot V1 is a **local development orchestration layer**. It is **not*
 - **OpenAI**: only with `--ask-model` or **`--full-auto-loop`**, only if `OPENAI_API_KEY` is set in your **environment** (never committed; do not add `.env` to the repo). If the key is missing, those commands print `OPENAI_API_KEY_MISSING`, write a safe fallback into `SILVER_NEXT_ACTION.md`, and **do not throw**.
 - **No raw `MaxCycles 0` outer loop**: `-MaxCycles 0` alone **exits immediately** (exit code **1**) with `SILVER_LOOP_SAFETY_STOP reason=maxcycles_zero_requires_allowinfinite_or_autonomousmode`. Add **`-AllowInfinite`** or **`-AutonomousMode`** to enter **controlled autonomous mode**: hard cycle budget (default **512**), optional wall-clock caps, emergency stop file **`SILVER_STOP_AUTOPILOT`**, unexpected dirty-tree guard, repeated `--status` failure / no-progress / same next-action / same-PR-instruction streak breakers, safety-counter regression breaker, and `SILVER_LOOP_SAFETY_STOP` / progress-log `stop_reason` on breaker trips. See `scripts/silver-autonomous-loop-safety-diagnostic.ps1` for env variable names. Each **Node** autopilot command still runs once per invocation.
 
+## Silver Auto-Dev entrypoint (V1)
+
+Single-pass local orchestration: **bounded** `silver-pr-orchestrator-v1` safe queue (`--max=3`), then — when the queue reports `queue_safe_to_continue=YES` and `queue_stop_reason=no_safe_candidate` with **no** merge/sync work in the same run — writes a **deterministic** root `SILVER_NEXT_ACTION.md` (scripts-only / diagnostic task template) so you can paste **from disk into Cursor** without drafting the next ChatGPT prompt. Does **not** call the Cursor API. Never commits runtime `SILVER_*.md`.
+
+```bash
+npm run silver-auto
+# equivalent:
+node scripts/silver-auto-dev.cjs
+```
+
+- **Preflight:** strict clean `git status`, branch `main`, `node` + `npm` available, `git diff` / `git diff --cached` for `assets/app.js` must be empty.
+- **Queue:** `node scripts/silver-pr-orchestrator-v1.cjs --apply-safe-queue --max=3` (same bounded semantics as the orchestrator; no raw infinite loops).
+- **After queue work (merge/sync or multi-cycle stop):** prints a `SILVER_AUTO_DEV_QUEUE_SUMMARY` block and sets `recommended_next_command` to `npm run silver-auto` (re-run; no manual ChatGPT task drafting).
+- **Report:** overwrites `scripts/silver-auto-dev-report.json` each run (`mode=SILVER_AUTO_DEV`, queue fields, `next_action_written`, `recommended_next_command`, …).
+
 ## Commands
 
 ```bash
