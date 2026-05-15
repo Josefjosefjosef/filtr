@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-15T04:39:27.756831Z",
+  "ingestedAt": "2026-05-15T05:19:33.389963Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Nepodceňujte Connie, ukáže další knižní pokračování Kmotra",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/nepodcenujte-connie-ukaze-dalsi-knizni-pokracovani-kmotra-373439",
+      "dt": "2026-05-15T05:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "connie",
+        "další",
+        "kmotra",
+        "knižní",
+        "nepodceňujte",
+        "pokračování",
+        "ukáže"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -723,31 +747,6 @@
         "usa",
         "vnímá",
         "čína"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Exšéf filipínské policie uprchl ze senátu, kde se ukrýval před mezinárodním zatykačem",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/exsef-filipinske-policie-uprchl-ze-senatu-kde-se-ukryval-pred-mezinarodnim-zatykacem-373425",
-      "dt": "2026-05-14T09:44:43Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "exšéf",
-        "filipínské",
-        "mezinárodním",
-        "policie",
-        "senátu",
-        "ukrýval",
-        "uprchl",
-        "zatykačem"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1505,7 +1504,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43524,
+      "bytes": 43274,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1565,11 +1564,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T04:25:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T05:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
-          "other": 3
+          "other": 4,
+          "zpravy": 26
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1581,6 +1580,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nepodceňujte Connie, ukáže další knižní pokračování Kmotra",
+            "publishedAt": "2026-05-15T05:00:00Z"
+          },
           {
             "title": "Poslanci se věnovali chystaným změnám v superdávce",
             "publishedAt": "2026-05-15T04:25:00Z"
@@ -1608,10 +1611,6 @@
           {
             "title": "Policie zadržela muže podezřelého z krádeže lebky svaté Zdislavy",
             "publishedAt": "2026-05-14T18:31:32Z"
-          },
-          {
-            "title": "V Plzni zavřelo poslední kasino, plošný zákaz hazardu tam platí od ledna",
-            "publishedAt": "2026-05-14T18:00:46Z"
           }
         ]
       }
@@ -1717,7 +1716,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77176,
+      "bytes": 77147,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

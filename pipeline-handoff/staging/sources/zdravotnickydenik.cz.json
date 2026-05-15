@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-15T04:39:27.756831Z",
+  "ingestedAt": "2026-05-15T05:19:33.389963Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Konec diskriminace nezadaných? Vojtěch chce povolit umělé oplodnění i single ženám",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/vojtech-umele-oplodneni-single-zen/",
+      "dt": "2026-05-15T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "chce",
+        "diskriminace",
+        "konec",
+        "nezadaných",
+        "oplodnění",
+        "povolit",
+        "single",
+        "umělé",
+        "vojtěch",
+        "ženám"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -244,32 +271,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Jednodenní péče má růst. Soukromí poskytovatelé ale varují před slovenským scénářem",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/jednodenni-pece-soukromi-poskytovatele-slovensky-scenar/",
-      "dt": "2026-05-14T07:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "ale",
-        "jednodenní",
-        "poskytovatelé",
-        "péče",
-        "růst",
-        "scénářem",
-        "slovenským",
-        "soukromí",
-        "varují"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +281,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 77678,
+      "bytes": 78723,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +318,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-14T16:00:59Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -332,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec diskriminace nezadaných? Vojtěch chce povolit umělé oplodnění i single ženám",
+            "publishedAt": "2026-05-15T05:00:00Z"
+          },
           {
             "title": "Robotická chirurgie v každé okresní nemocnici? Ministerstvo připravuje nová pravidla",
             "publishedAt": "2026-05-14T16:00:59Z"
@@ -359,10 +364,6 @@
           {
             "title": "Lékař obžalovaný ze zneužití dětí se hájí: Chtěl jsem zlepšit kvalitu jejich života",
             "publishedAt": "2026-05-14T09:30:51Z"
-          },
-          {
-            "title": "Hantavirus Andes: EU aktivovala krizový mechanismus. Co to znamená pro Česko?",
-            "publishedAt": "2026-05-14T08:48:29Z"
           }
         ]
       }
