@@ -654,13 +654,18 @@ function proofSummaryConsistentFromAuthoritative(authoritativeGate) {
 
 function buildProofGateConsistencyReason(authoritative, deepEmbedded, rawFail, rawPass) {
   const parts = [];
+  parts.push("authoritative_verdict_primary=" + authoritative.gate);
   parts.push("authoritative=" + authoritative.gate + "@" + authoritative.source);
+  parts.push("authoritative_gate_used=realistic_mobile_corpus_json");
   if (deepEmbedded) parts.push("deep_product_embedded_gate=" + deepEmbedded);
   else parts.push("deep_product_embedded_gate=(absent)");
+  parts.push("embedded_gate_authoritative=NO");
   parts.push("raw_substring_FAIL_mentions=" + rawFail + "_PASS_mentions=" + rawPass);
   if (authoritative.gate === "PASS" && deepEmbedded === "FAIL") {
+    parts.push("deep_product_embedded_gate_hint=STALE_NON_AUTHORITATIVE_FAIL");
+    parts.push("embedded_FAIL_with_authoritative_PASS_means=not_real_product_defect");
     parts.push(
-      "diagnosis=embedded_sibling_FAIL_non_authoritative_when_standalone_audit_and_corpus_JSON_PASS_deep_may_rerun_gates",
+      "diagnosis=stale_embedded_sibling_hint_non_authoritative_not_product_fail_deep_may_rerun_gates",
     );
   } else if (authoritative.gate === "PASS" && rawFail > 0) {
     parts.push("diagnosis=raw_FAIL_strings_in_non_authoritative_or_restored_JSON_ignored_for_autopilot_PASS");
@@ -683,6 +688,13 @@ function printProofGateConsistencyResult(ctx) {
   console.log("selected_authoritative_source=" + String(ctx.selected_authoritative_source || ""));
   console.log("proof_summary_consistent=" + String(ctx.proof_summary_consistent || ""));
   console.log("gate_realistic_mobile=" + String(ctx.gate_realistic_mobile || ctx.authoritative_realistic_mobile || ""));
+  const authRmLine = String(ctx.authoritative_realistic_mobile || "").trim();
+  const deepEmbRaw = String(ctx.deep_product_embedded_gate_raw || "").trim();
+  if (authRmLine === "PASS" && deepEmbRaw === "FAIL") {
+    console.log("deep_product_embedded_gate_clarity=stale_non_authoritative_JSON_sibling_hint_only");
+    console.log("PASS_FAIL_verdict_source=authoritative_realistic_mobile_corpus_JSON_not_embedded_field");
+    console.log("real_product_defect_from_embedded_FAIL_when_authoritative_PASS=NO");
+  }
   console.log("reason=" + String(ctx.reason || ""));
   console.log("dangerous_write_count=" + String(ctx.dangerous_write_count != null ? ctx.dangerous_write_count : ""));
   console.log("false_write_count=" + String(ctx.false_write_count != null ? ctx.false_write_count : ""));
@@ -917,6 +929,7 @@ function cmdStatus(argvCommand) {
     changed_files: changed,
     post_merge_proof_exit: "",
     authoritative_realistic_mobile: authoritativeGateStatus,
+    deep_product_embedded_gate_raw: deepRmStatus,
     raw_realistic_mobile_fail_mentions: rawStatus.rawFail,
     raw_realistic_mobile_pass_mentions: rawStatus.rawPass,
     selected_authoritative_source: authForStatus.source,
@@ -1456,6 +1469,7 @@ function cmdPostMergeProof() {
       changed_files: gitChangedFilesList().join(";"),
       post_merge_proof_exit: 1,
       authoritative_realistic_mobile: authFail.gate,
+      deep_product_embedded_gate_raw: deepRm,
       raw_realistic_mobile_fail_mentions: rawPre.rawFail,
       raw_realistic_mobile_pass_mentions: rawPre.rawPass,
       selected_authoritative_source: authFail.source,
@@ -1536,6 +1550,7 @@ function cmdPostMergeProof() {
       changed_files: gitChangedFilesList().join(";"),
       post_merge_proof_exit: 1,
       authoritative_realistic_mobile: auth.gate,
+      deep_product_embedded_gate_raw: deepRm,
       raw_realistic_mobile_fail_mentions: rawPre.rawFail,
       raw_realistic_mobile_pass_mentions: rawPre.rawPass,
       selected_authoritative_source: auth.source,
@@ -1631,6 +1646,7 @@ function cmdPostMergeProof() {
     changed_files: gitChangedFilesList().join(";"),
     post_merge_proof_exit: 0,
     authoritative_realistic_mobile: auth.gate,
+    deep_product_embedded_gate_raw: deepRm,
     raw_realistic_mobile_fail_mentions: rawPost.rawFail,
     raw_realistic_mobile_pass_mentions: rawPost.rawPass,
     selected_authoritative_source: auth.source,
