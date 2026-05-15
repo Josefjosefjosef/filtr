@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-15T06:39:52.746845Z",
+  "ingestedAt": "2026-05-15T07:19:46.082220Z",
   "items": [
     {
       "section": "veda",
@@ -21,6 +21,31 @@
         "windows",
         "zrychlení",
         "závidí"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Netflix s reklamou už má 250 milionů diváků. Do Česka se zatím nechystá",
+      "url": "https://avmania.zive.cz/netflix-s-reklamou-uz-ma-250-milionu-divaku-do-ceska-se-zatim-nechysta",
+      "dt": "2026-05-15T06:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "250",
+        "diváků",
+        "milionů",
+        "nechystá",
+        "netflix",
+        "reklamou",
+        "zatím",
+        "česka"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -936,34 +961,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "HBO Max a 30 nejoblíbenějších filmů a seriálů v květnu 2026. Tohle Češi na HBO nejvíc sledují",
-      "url": "https://avmania.zive.cz/nejoblibenejsi-filmy-a-serialy-na-hbo-max",
-      "dt": "2026-05-12T11:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "2026",
-        "filmů",
-        "hbo",
-        "květnu",
-        "max",
-        "nejoblíbenějších",
-        "nejvíc",
-        "seriálů",
-        "sledují",
-        "tohle",
-        "češi"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -974,7 +971,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22513,
+      "bytes": 22301,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1011,7 +1008,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-15T05:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T06:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1029,6 +1026,10 @@
           {
             "title": "Projekt Windows K2 slibuje zrychlení. Microsoft závidí herní výkon SteamOS",
             "publishedAt": "2026-05-14T16:45:00Z"
+          },
+          {
+            "title": "Netflix s reklamou už má 250 milionů diváků. Do Česka se zatím nechystá",
+            "publishedAt": "2026-05-15T06:45:00Z"
           },
           {
             "title": "Hry zadarmo, nebo se slevou: Balík nezávislých pecek a Batmanova příběhovka zdarma",
@@ -1053,10 +1054,6 @@
           {
             "title": "AMD dosáhla rekordního podílu v notebookových procesorech. V serverech už bere skoro polovinu tržeb",
             "publishedAt": "2026-05-14T12:45:00Z"
-          },
-          {
-            "title": "Recenze hry Forza Horizon 6. I závodní arkáda může být kandidát na hru roku",
-            "publishedAt": "2026-05-14T13:15:00Z"
           }
         ]
       }

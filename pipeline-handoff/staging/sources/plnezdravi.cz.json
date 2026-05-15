@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "plnezdravi.cz",
-  "ingestedAt": "2026-05-15T06:39:52.746845Z",
+  "ingestedAt": "2026-05-15T07:19:46.082220Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Cukrovka 2. typu: Jak zkrotit glykémii včas?",
+      "url": "https://www.plnezdravi.cz/cukrovka-2-typu-jak-zkrotit-glykemii-vcas/",
+      "dt": "2026-05-15T07:00:23Z",
+      "media_raw": "Plné zdraví",
+      "media_norm": "Plné zdraví",
+      "tokens": [
+        "cukrovka",
+        "glykémii",
+        "typu",
+        "včas",
+        "zkrotit"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_plnezdravi",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "plnezdravi.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -461,32 +483,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "plnezdravi.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Proč nás dnes světlo obtěžuje víc než dřív? Světloplachost je na vzestupu",
-      "url": "https://www.plnezdravi.cz/proc-nas-dnes-svetlo-obtezuje-vic-nez-driv-svetloplachost-je-na-vzestupu/",
-      "dt": "2026-05-05T04:25:13Z",
-      "media_raw": "Plné zdraví",
-      "media_norm": "Plné zdraví",
-      "tokens": [
-        "dřív",
-        "než",
-        "nás",
-        "obtěžuje",
-        "proč",
-        "světlo",
-        "světloplachost",
-        "vzestupu",
-        "víc"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_plnezdravi",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "plnezdravi.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -497,7 +493,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.plnezdravi.cz/feed/",
-      "bytes": 157601,
+      "bytes": 158117,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -534,7 +530,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-14T14:00:45Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T07:00:23Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -549,6 +545,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cukrovka 2. typu: Jak zkrotit glykémii včas?",
+            "publishedAt": "2026-05-15T07:00:23Z"
+          },
           {
             "title": "Perfekcionismus pod palbou – Když „dobře“ nestačí",
             "publishedAt": "2026-05-14T14:00:45Z"
@@ -576,10 +576,6 @@
           {
             "title": "V Česku vyrůstá nemocnější generace. Hypertenze už není jen chorobou seniorů",
             "publishedAt": "2026-05-12T10:05:58Z"
-          },
-          {
-            "title": "Artróza kolene: Jak zastavit opotřebení kloubů",
-            "publishedAt": "2026-05-12T07:00:02Z"
           }
         ]
       }

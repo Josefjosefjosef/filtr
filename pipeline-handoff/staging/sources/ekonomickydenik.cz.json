@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-15T06:39:52.746845Z",
+  "ingestedAt": "2026-05-15T07:19:46.082220Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Polsko přijde o 4000 amerických vojáků. Trump stahuje i jednotky z Německa",
+      "url": "https://ekonomickydenik.cz/polsko-prijde-4000-americkych-vojaku-nemecko/",
+      "dt": "2026-05-15T07:04:58Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "4000",
+        "amerických",
+        "jednotky",
+        "německa",
+        "polsko",
+        "přijde",
+        "stahuje",
+        "trump",
+        "vojáků"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -761,33 +787,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Dreamlinerem přímo z Prahy: Do USA startuje nová dálková linka, létat se bude denně",
-      "url": "https://ekonomickydenik.cz/dalkove-spojeni-filadelfie/",
-      "dt": "2026-05-13T12:30:27Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "denně",
-        "dreamlinerem",
-        "dálková",
-        "linka",
-        "létat",
-        "nová",
-        "prahy",
-        "přímo",
-        "startuje",
-        "usa"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74242,
+      "bytes": 75021,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,7 +834,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T06:18:21Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T07:04:58Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -853,6 +852,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Polsko přijde o 4000 amerických vojáků. Trump stahuje i jednotky z Německa",
+            "publishedAt": "2026-05-15T07:04:58Z"
+          },
           {
             "title": "Trump hlásí z Číny „fantastické obchodní dohody“. Shoda je v otázce Blízkého východu",
             "publishedAt": "2026-05-15T06:18:21Z"
@@ -880,10 +883,6 @@
           {
             "title": "Bankovní elity se bojí šmírování Bílého domu. Končí s Amazonem, přecházejí k majiteli Lidlu",
             "publishedAt": "2026-05-14T13:50:09Z"
-          },
-          {
-            "title": "Evropa ekonomicky zamrzla. Spojené státy i přes válku ale zrychlují",
-            "publishedAt": "2026-05-14T13:35:50Z"
           }
         ]
       }

@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-15T06:39:52.746845Z",
+  "ingestedAt": "2026-05-15T07:19:46.082220Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "V USA nosí odznáček, v Česku očkování odmítají. Proč se zdravotníci nechrání proti chřipce?",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/proockovanost-zdravotniku-roman-chlibek/",
+      "dt": "2026-05-15T07:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "chřipce",
+        "nechrání",
+        "nosí",
+        "odmítají",
+        "odznáček",
+        "očkování",
+        "proti",
+        "proč",
+        "usa",
+        "zdravotníci",
+        "česku"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -251,30 +279,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Hantavirus Andes: EU aktivovala krizový mechanismus. Co to znamená pro Česko?",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/evropska-unie-hantavirus-krizovy-mechanismus/",
-      "dt": "2026-05-14T08:48:29Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "aktivovala",
-        "andes",
-        "hantavirus",
-        "krizový",
-        "mechanismus",
-        "znamená",
-        "česko"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -285,7 +289,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 93525,
+      "bytes": 103060,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -322,7 +326,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-15T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T07:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -337,6 +341,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V USA nosí odznáček, v Česku očkování odmítají. Proč se zdravotníci nechrání proti chřipce?",
+            "publishedAt": "2026-05-15T07:00:00Z"
+          },
           {
             "title": "Klíčová péče na hraně kolapsu: Ničí ji podseknuté úhrady i málo mladé krve. Potřeba ale poletí vzhůru",
             "publishedAt": "2026-05-15T06:00:00Z"
@@ -364,10 +372,6 @@
           {
             "title": "Kauza defibrilátorů se rozrůstá: VZP prověřuje stovky operací, policie zasahovala i v Ústí",
             "publishedAt": "2026-05-14T10:44:44Z"
-          },
-          {
-            "title": "Varování SZPI: Nejezte toto mleté maso, obsahuje nebezpečnou salmonelu",
-            "publishedAt": "2026-05-14T10:08:07Z"
           }
         ]
       }
