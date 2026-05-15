@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-15T21:08:08.384032Z",
+  "ingestedAt": "2026-05-15T21:44:49.023596Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kořenář byl 150 sekund od nuly, Červenka měnil historické statistiky",
+      "url": "https://sport.aktualne.cz/hokej/korenar-byl-150-sekund-od-nuly-cervenka-menil-historicke-statistiky/r~aaa293883131a110481bcf8de87be0c1/",
+      "dt": "2026-05-15T21:02:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "150",
+        "historické",
+        "kořenář",
+        "měnil",
+        "nuly",
+        "sekund",
+        "statistiky",
+        "červenka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -248,19 +273,21 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Finové proti Němcům kralovali v přesilovkách a do MS vstoupili vítězně",
+      "title": "Reprízu loňského finále zvládlo domácí Švýcarsko, první výhru má i Finsko",
       "url": "https://sport.aktualne.cz/hokej/ms-v-hokeji/finove-proti-nemcum-kralovali-v-presilovkach-a-do-ms-vstoupili-vitezne/r~aaa29a04b8692921f3231080e116c3b2/",
       "dt": "2026-05-15T16:58:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "finové",
-        "kralovali",
-        "němcům",
-        "proti",
-        "přesilovkách",
-        "vstoupili",
-        "vítězně"
+        "domácí",
+        "finsko",
+        "finále",
+        "loňského",
+        "první",
+        "reprízu",
+        "výhru",
+        "zvládlo",
+        "švýcarsko"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -507,35 +534,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Cíl: ruské město Rjazaň. Ukrajinci udeřili, prší černý déšť, údajně zabili i dítě",
-      "url": "https://zpravy.aktualne.cz/zahranici/z-nebe-prsi-cerny-dest-ukrajinci-uderili-na-ruskou-rafinerii/r~aaa29db9d6ca4711b4c80853aefc5b3f/",
-      "dt": "2026-05-15T08:47:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "cíl",
-        "déšť",
-        "dítě",
-        "město",
-        "prší",
-        "rjazaň",
-        "ruské",
-        "udeřili",
-        "ukrajinci",
-        "zabili",
-        "údajně",
-        "černý"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -546,7 +544,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22498,
+      "bytes": 22365,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -583,11 +581,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-15T20:52:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T21:02:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 5,
-          "zpravy": 13,
+          "sport": 6,
+          "zpravy": 12,
           "zdravi": 1,
           "other": 1
         },
@@ -601,6 +599,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kořenář byl 150 sekund od nuly, Červenka měnil historické statistiky",
+            "publishedAt": "2026-05-15T21:02:00Z"
+          },
           {
             "title": "Na úvod poklidná výhra. Triumf nad Dány dirigoval nestárnoucí Červenka",
             "publishedAt": "2026-05-15T20:52:00Z"
@@ -628,10 +630,6 @@
           {
             "title": "Česko - Dánsko 4:1. Úvod šampionátu českému týmu vyšel na jedničku",
             "publishedAt": "2026-05-15T17:47:00Z"
-          },
-          {
-            "title": "Dramatická přestřelka hokejových gigantů na MS. Kanada srazila Švédy v poslední třetině",
-            "publishedAt": "2026-05-15T16:57:00Z"
           }
         ]
       }
