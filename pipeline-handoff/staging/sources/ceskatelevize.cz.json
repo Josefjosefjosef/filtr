@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-15T17:45:02.378234Z",
+  "ingestedAt": "2026-05-15T18:25:16.349472Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Přes čtyřicet procent nově prodaných vozů v Česku tvoří elektroauta",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/pres-ctyricet-procent-nove-prodanych-vozu-v-cesku-tvori-elektroauta-373493",
+      "dt": "2026-05-15T18:18:41Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "elektroauta",
+        "nově",
+        "procent",
+        "prodaných",
+        "tvoří",
+        "vozů",
+        "česku",
+        "čtyřicet"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -736,32 +761,10 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Poslanci se věnovali chystaným změnám v superdávce",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/poslanci-se-venovali-chystanym-zmenam-v-superdavce-373444",
-      "dt": "2026-05-15T04:25:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "chystaným",
-        "poslanci",
-        "superdávce",
-        "věnovali",
-        "změnám"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "sport",
       "contentType": "article",
       "title": "Basketbalisté Opavy dráždili Nymburk bosou nohou",
-      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/domaci-souteze/basketbaliste-opavy-drazdili-nymburk-bosou-nohou-156812",
+      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/basketbaliste-opavy-drazdili-nymburk-bosou-nohou-156812",
       "dt": "2026-05-15T17:36:55Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
@@ -823,33 +826,6 @@
         "townsendovou",
         "velká",
         "římě"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vzdor Švédů uťal Brown a rozhodl o výhře Kanady. Finové si poradili s Němci",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/kanada-svedsko-a-finsko-nemecko-156808",
-      "dt": "2026-05-15T13:27:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "brown",
-        "finové",
-        "kanady",
-        "němci",
-        "poradili",
-        "rozhodl",
-        "uťal",
-        "vzdor",
-        "výhře",
-        "švédů"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1494,6 +1470,29 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Cleveland má po výhře v Detroitu na dosah postup do semifinále",
+      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/cleveland-ma-po-vyhre-v-detroitu-na-dosah-postup-do-semifinale-156780",
+      "dt": "2026-05-14T06:23:52Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "cleveland",
+        "detroitu",
+        "dosah",
+        "postup",
+        "semifinále",
+        "výhře"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1504,7 +1503,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 40462,
+      "bytes": 40860,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1564,10 +1563,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T16:35:11Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T18:18:41Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 24,
+          "finance": 1,
+          "zpravy": 23,
           "other": 6
         },
         "drop_counts": {
@@ -1580,6 +1580,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Přes čtyřicet procent nově prodaných vozů v Česku tvoří elektroauta",
+            "publishedAt": "2026-05-15T18:18:41Z"
+          },
           {
             "title": "Rusko chystá útok na prezidentskou kancelář v Kyjevě, tvrdí Zelenskyj",
             "publishedAt": "2026-05-15T16:35:11Z"
@@ -1607,10 +1611,6 @@
           {
             "title": "Není žádný dobrý postoj, říká expertka k politice na kulturních akcích",
             "publishedAt": "2026-05-15T13:23:01Z"
-          },
-          {
-            "title": "Obce a městské části lákají učitele nabídkou bytů",
-            "publishedAt": "2026-05-15T13:17:47Z"
           }
         ]
       }
@@ -1622,7 +1622,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38383,
+      "bytes": 38102,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1687,10 +1687,6 @@
             "publishedAt": "2026-05-15T14:21:55Z"
           },
           {
-            "title": "Vzdor Švédů uťal Brown a rozhodl o výhře Kanady. Finové si poradili s Němci",
-            "publishedAt": "2026-05-15T13:27:00Z"
-          },
-          {
             "title": "Martin Fuksa vyhrál v Braniboru závod na kilometr",
             "publishedAt": "2026-05-15T12:43:43Z"
           },
@@ -1705,6 +1701,10 @@
           {
             "title": "Melovský před premiérou na MS: Viděl jsem na chodbě Crosbyho, to bylo hustý",
             "publishedAt": "2026-05-15T10:19:30Z"
+          },
+          {
+            "title": "Češi jsou na písku v Sia-menu v osmifinále",
+            "publishedAt": "2026-05-15T09:33:50Z"
           }
         ]
       }
@@ -1716,7 +1716,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77443,
+      "bytes": 77562,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

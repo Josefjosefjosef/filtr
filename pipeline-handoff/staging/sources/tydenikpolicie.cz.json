@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-15T17:45:02.378234Z",
+  "ingestedAt": "2026-05-15T18:25:16.349472Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Policisté pátrají po mladém řidiči motocyklu. Na Písecku srazil cyklistu a z místa nehody ujel",
+      "url": "https://tydenikpolicie.cz/policiste-patraji-po-mladem-ridici-motocyklu-na-pisecku-srazil-cyklistu-a-z-mista-nehody-ujel/",
+      "dt": "2026-05-15T18:01:16Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "cyklistu",
+        "mladém",
+        "motocyklu",
+        "místa",
+        "nehody",
+        "policisté",
+        "pátrají",
+        "písecku",
+        "srazil",
+        "ujel",
+        "řidiči"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -243,34 +271,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Škodovka skončila po nehodě na Rychnovsku v příkopu. Opilý řidič tvrdil, že chtěl jen přeparkovat",
-      "url": "https://tydenikpolicie.cz/skodovka-skoncila-po-nehode-na-rychnovsku-v-prikopu-opily-ridic-tvrdil-ze-chtel-jen-preparkovat/",
-      "dt": "2026-05-15T07:26:58Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "chtěl",
-        "jen",
-        "nehodě",
-        "opilý",
-        "přeparkovat",
-        "příkopu",
-        "rychnovsku",
-        "skončila",
-        "tvrdil",
-        "řidič",
-        "škodovka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +281,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16241,
+      "bytes": 16174,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,7 +318,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-15T15:29:06Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T18:01:16Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -333,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policisté pátrají po mladém řidiči motocyklu. Na Písecku srazil cyklistu a z místa nehody ujel",
+            "publishedAt": "2026-05-15T18:01:16Z"
+          },
           {
             "title": "Poničené věci v mateřské školce v Černošíně a krádež hotovosti mají mít na svědomí dva nezletilí",
             "publishedAt": "2026-05-15T15:29:06Z"
@@ -360,10 +364,6 @@
           {
             "title": "Podezřelého z krádeže lebky svaté Zdislavy zadrželi v Mladé Boleslavi. Lebku zalil do betonu a chtěl ji hodit do řeky",
             "publishedAt": "2026-05-15T14:31:53Z"
-          },
-          {
-            "title": "Muž v Praze nestihl nastoupit do autobusu. Zlostí rozbil dveře",
-            "publishedAt": "2026-05-15T09:12:49Z"
           }
         ]
       }

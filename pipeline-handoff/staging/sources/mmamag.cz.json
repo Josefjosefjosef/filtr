@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-15T17:45:02.378234Z",
+  "ingestedAt": "2026-05-15T18:25:16.349472Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Rusové a Bělorusové dostali zelenou. Ve světovém zápase mohou znovu nastupovat pod vlastní vlajkou",
+      "url": "https://www.mmamag.cz/rusove-a-belorusove-se-vraci-pod-vlajkami/",
+      "dt": "2026-05-15T18:00:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "bělorusové",
+        "dostali",
+        "nastupovat",
+        "rusové",
+        "světovém",
+        "vlajkou",
+        "vlastní",
+        "zelenou",
+        "znovu",
+        "zápase"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1082,34 +1109,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Strickland porazil Chimaeva se zničeným ramenem. Nyní zveřejnil diagnózu a naznačil delší pauzu",
-      "url": "https://www.mmamag.cz/strickland-ukazal-zraneni-po-vyhre-nad-chimaevem/",
-      "dt": "2026-05-14T08:00:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "chimaeva",
-        "delší",
-        "diagnózu",
-        "naznačil",
-        "nyní",
-        "pauzu",
-        "porazil",
-        "ramenem",
-        "strickland",
-        "zničeným",
-        "zveřejnil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1120,7 +1119,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 80642,
+      "bytes": 80599,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1157,7 +1156,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-15T17:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T18:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1172,6 +1171,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rusové a Bělorusové dostali zelenou. Ve světovém zápase mohou znovu nastupovat pod vlastní vlajkou",
+            "publishedAt": "2026-05-15T18:00:00Z"
+          },
           {
             "title": "Rousey, nebo Carano? Hvězdy MMA nevidí jasného favorita",
             "publishedAt": "2026-05-15T17:15:00Z"
@@ -1199,10 +1202,6 @@
           {
             "title": "Pád nezničitelné ikony. Rousey dostala v kleci naloženo, hlavou se jí honily myšlenky na sebevraždu",
             "publishedAt": "2026-05-15T13:45:12Z"
-          },
-          {
-            "title": "Legenda UFC seděla ve vězení za střelbu na pedofila. Teď se vrací do světa MMA",
-            "publishedAt": "2026-05-15T13:27:41Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-15T17:45:02.378234Z",
+  "ingestedAt": "2026-05-15T18:25:16.349472Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Česko - Dánsko. Turnaj začíná i pro Čechy, na úvod bude chytat Kořenář",
+      "url": "https://sport.aktualne.cz/hokej/cesko-dansko-turnaj-zacina-i-pro-cechy-na-uvod-bude-chytat-korenar/r~aaa298450b00833e74e0ed914b393bd1/",
+      "dt": "2026-05-15T17:47:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "chytat",
+        "dánsko",
+        "kořenář",
+        "turnaj",
+        "začíná",
+        "úvod",
+        "čechy",
+        "česko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -508,33 +533,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "I obrovská houba může být mladá a chutná, říká houbař. Kam na ně vyrazit a co teď sbírat?",
-      "url": "https://magazin.aktualne.cz/i-obrovska-houba-muze-byt-mlada-a-chutna-rika-houbar-kam-na-ne-vyrazit-a-co-ted-sbirat/r~aaa292054d5a03dc746287d03addb616/",
-      "dt": "2026-05-15T12:35:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "být",
-        "chutná",
-        "houba",
-        "houbař",
-        "kam",
-        "mladá",
-        "obrovská",
-        "sbírat",
-        "vyrazit",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -545,7 +543,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22558,
+      "bytes": 22391,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -582,11 +580,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-15T17:16:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T17:47:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 12,
-          "sport": 5,
+          "sport": 6,
+          "zpravy": 11,
           "zdravi": 1,
           "other": 1,
           "finance": 1
@@ -601,6 +599,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česko - Dánsko. Turnaj začíná i pro Čechy, na úvod bude chytat Kořenář",
+            "publishedAt": "2026-05-15T17:47:00Z"
+          },
           {
             "title": "Rusko chystá velký útok na Ukrajinu. Podle Zelenského má mířit na prezidentskou kancelář",
             "publishedAt": "2026-01-21T06:45:00Z"
@@ -628,10 +630,6 @@
           {
             "title": "Nepotřebujeme válku 9500 mil daleko, prohlásil Trump. O Tchaj-wanu s Čínou nemá spor",
             "publishedAt": "2026-05-15T14:18:00Z"
-          },
-          {
-            "title": "V Klatovech bude městská hromadná doprava zdarma. Chtějí tím snížit počet aut v centru",
-            "publishedAt": "2026-05-15T15:32:00Z"
           }
         ]
       }
