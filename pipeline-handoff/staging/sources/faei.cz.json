@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-15T03:59:48.780117Z",
+  "ingestedAt": "2026-05-15T04:39:27.756831Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Mobil na dovolené v zahraničí. Kdy se z pohodlí stává drahá chyba?",
+      "url": "https://profitonline.cz/mobil-na-dovolene-v-zahranici-kdy-se-z-pohodli-stava-draha-chyba/",
+      "dt": "2026-05-15T04:00:16Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "chyba",
+        "dovolené",
+        "drahá",
+        "mobil",
+        "pohodlí",
+        "stává",
+        "zahraničí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -258,30 +282,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Největší baterie připomíná Lego. Ochrání před solárními elektrárnami",
-      "url": "https://profitonline.cz/nejvetsi-baterie-pripomina-lego-ochrani-pred-solarnimi-elektrarnami/",
-      "dt": "2026-05-13T04:00:14Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "baterie",
-        "elektrárnami",
-        "lego",
-        "největší",
-        "ochrání",
-        "připomíná",
-        "solárními"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -292,7 +292,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18613,
+      "bytes": 18619,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -329,11 +329,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-14T20:15:41Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T04:00:16Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 10,
-          "zdravi": 2
+          "finance": 11,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -345,6 +345,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mobil na dovolené v zahraničí. Kdy se z pohodlí stává drahá chyba?",
+            "publishedAt": "2026-05-15T04:00:16Z"
+          },
           {
             "title": "Vláda si otevírá dveře k dluhovému eldorádu",
             "publishedAt": "2026-05-14T20:15:41Z"
@@ -372,10 +376,6 @@
           {
             "title": "Inflace v Česku pokračuje v růstu",
             "publishedAt": "2026-05-13T21:15:47Z"
-          },
-          {
-            "title": "Manažeři kvality jsou nepostradatelní. Teď jim firmy rekordně přidaly",
-            "publishedAt": "2026-05-13T17:30:00Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-15T03:59:48.780117Z",
+  "ingestedAt": "2026-05-15T04:39:27.756831Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Reforma stavebních úřadů v ohrožení: Pod stát chce jen třetina úředníků",
+      "url": "https://ekonomickydenik.cz/jen-tretina-uredniku-chce-pod-stat-ministerstvo-uz-resi-krizove-scenare/",
+      "dt": "2026-05-15T04:30:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "chce",
+        "jen",
+        "ohrožení",
+        "reforma",
+        "stavebních",
+        "stát",
+        "třetina",
+        "úřadů",
+        "úředníků"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -758,32 +784,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Británie v klíčovém okamžiku. Premiér Starmer varuje před chaosem, kdyby skončil",
-      "url": "https://ekonomickydenik.cz/britanie-klicovy-okamzik-premier-starmer-chaos/",
-      "dt": "2026-05-13T11:25:56Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "británie",
-        "chaosem",
-        "kdyby",
-        "klíčovém",
-        "okamžiku",
-        "premiér",
-        "skončil",
-        "starmer",
-        "varuje"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74103,
+      "bytes": 73842,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T18:08:57Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T04:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -849,6 +849,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Reforma stavebních úřadů v ohrožení: Pod stát chce jen třetina úředníků",
+            "publishedAt": "2026-05-15T04:30:00Z"
+          },
           {
             "title": "Kreml využívá falešné rybáře k průniku do norských přístavů. Problém pro celé NATO",
             "publishedAt": "2026-05-14T18:08:57Z"
@@ -876,10 +880,6 @@
           {
             "title": "Schillerová láká na státní dluhopisy. Chce získat 20 miliard korun, jaký nabízí úrok?",
             "publishedAt": "2026-05-14T12:35:07Z"
-          },
-          {
-            "title": "Vlastní armáda EU? USA stahují vojáky, španělský plán přesto pohořel",
-            "publishedAt": "2026-05-14T11:26:00Z"
           }
         ]
       }
