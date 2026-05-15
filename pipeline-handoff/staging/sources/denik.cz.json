@@ -1,26 +1,26 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-15T13:40:02.731307Z",
+  "ingestedAt": "2026-05-15T14:25:08.495590Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Čapí hnízdo v Černošíně je prý lepší než televize, říkají obyvatelé",
-      "url": "https://tachovsky.denik.cz/ctenar-reporter/capi-hnizdo-v-cernosine-je-pry-lepsi-nez-televize-rikaji-obyvatele-20260514.html",
-      "dt": "2026-05-15T13:00:00Z",
+      "title": "Influeceři se vytratili, pořady končí. Orbánova porážka mění maďarská média",
+      "url": "https://www.denik.cz/staty-eu/madarsko-media-zmeny-orban-magyar.html",
+      "dt": "2026-05-15T13:21:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
-        "hnízdo",
-        "lepší",
-        "než",
-        "obyvatelé",
-        "prý",
-        "televize",
-        "čapí",
-        "černošíně",
-        "říkají"
+        "influeceři",
+        "končí",
+        "maďarská",
+        "média",
+        "mění",
+        "orbánova",
+        "porážka",
+        "pořady",
+        "vytratili"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -47,6 +47,32 @@
         "vozidlo",
         "známé",
         "železnici"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Čapí hnízdo v Černošíně je prý lepší než televize, říkají obyvatelé",
+      "url": "https://tachovsky.denik.cz/ctenar-reporter/capi-hnizdo-v-cernosine-je-pry-lepsi-nez-televize-rikaji-obyvatele-20260514.html",
+      "dt": "2026-05-15T13:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "hnízdo",
+        "lepší",
+        "než",
+        "obyvatelé",
+        "prý",
+        "televize",
+        "čapí",
+        "černošíně",
+        "říkají"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -137,22 +163,21 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Muž ukradenou lebku svaté Zdislavy zalil do betonu a chtěl ji pohřbít v řece",
+      "title": "Zloděj zalil lebku Zdislavy do betonu. Nesouhlasil s jejím vystavením v chrámu",
       "url": "https://www.denik.cz/regiony/kradez-lebka-svate-zdislavy-pachatel-jablonne.html",
       "dt": "2026-05-15T11:27:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
         "betonu",
-        "chtěl",
+        "chrámu",
+        "jejím",
         "lebku",
-        "muž",
-        "pohřbít",
-        "svaté",
-        "ukradenou",
+        "nesouhlasil",
+        "vystavením",
         "zalil",
         "zdislavy",
-        "řece"
+        "zloděj"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -626,32 +651,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Průzkum: Stát nemá určovat ceny, zákazníci chtějí slevové letáky",
-      "url": "https://www.denik.cz/ekonomika/obchodni-retezce-slevove-letaky-akcni-slevy-pruzkum.html",
-      "dt": "2026-05-15T05:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ceny",
-        "chtějí",
-        "letáky",
-        "nemá",
-        "průzkum",
-        "slevové",
-        "stát",
-        "určovat",
-        "zákazníci"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +661,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29955,
+      "bytes": 30011,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,11 +698,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-15T13:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T13:21:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 2
+          "zpravy": 24,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -716,11 +715,15 @@
         },
         "sample_titles": [
           {
-            "title": "Čapí hnízdo v Černošíně je prý lepší než televize, říkají obyvatelé",
-            "publishedAt": "2026-05-15T13:00:00Z"
+            "title": "Influeceři se vytratili, pořady končí. Orbánova porážka mění maďarská média",
+            "publishedAt": "2026-05-15T13:21:00Z"
           },
           {
             "title": "V Brně spojili vlak a tramvaj. Unikátní vozidlo bude jezdit po známé železnici",
+            "publishedAt": "2026-05-15T13:00:00Z"
+          },
+          {
+            "title": "Čapí hnízdo v Černošíně je prý lepší než televize, říkají obyvatelé",
             "publishedAt": "2026-05-15T13:00:00Z"
           },
           {
@@ -736,16 +739,12 @@
             "publishedAt": "2026-05-15T11:30:00Z"
           },
           {
-            "title": "Muž ukradenou lebku svaté Zdislavy zalil do betonu a chtěl ji pohřbít v řece",
+            "title": "Zloděj zalil lebku Zdislavy do betonu. Nesouhlasil s jejím vystavením v chrámu",
             "publishedAt": "2026-05-15T11:27:00Z"
           },
           {
             "title": "Billa zavádí slevy pro lidi nad 60 let. Má to ale háček, Češi spokojení nebudou",
             "publishedAt": "2026-05-15T11:01:00Z"
-          },
-          {
-            "title": "Někteří žáci se ráno výsledků nedočkali. Nápor byl moc velký, omlouval se CERMAT",
-            "publishedAt": "2026-05-15T10:50:00Z"
           }
         ]
       }

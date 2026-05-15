@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-15T13:40:02.731307Z",
+  "ingestedAt": "2026-05-15T14:25:08.495590Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Netflix a další na víkend: nový Punisher, Berlin a návrat Dobrých znamení. Taky Stathamův Working Man",
+      "url": "https://avmania.zive.cz/netflix-a-dalsi-na-vikend-novy-punisher-berlin-a-navrat-dobrych-znameni-taky-stathamuv-working-man",
+      "dt": "2026-05-15T13:27:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "berlin",
+        "další",
+        "dobrých",
+        "man",
+        "netflix",
+        "nový",
+        "návrat",
+        "punisher",
+        "stathamův",
+        "taky",
+        "víkend",
+        "working",
+        "znamení"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -933,34 +963,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Recenze filmu Hokum: Osvícení po irsku. Jeden z nejlepších psychologických hororů posledních let",
-      "url": "https://avmania.zive.cz/recenze-filmu-hokum-osviceni-po-irsku-jeden-z-nejlepsich-psychologickych-hororu-poslednich-let",
-      "dt": "2026-05-13T10:15:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "filmu",
-        "hokum",
-        "hororů",
-        "irsku",
-        "jeden",
-        "let",
-        "nejlepších",
-        "osvícení",
-        "posledních",
-        "psychologických",
-        "recenze"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -971,7 +973,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22616,
+      "bytes": 22409,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1008,7 +1010,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-15T12:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T13:27:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1023,6 +1025,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Netflix a další na víkend: nový Punisher, Berlin a návrat Dobrých znamení. Taky Stathamův Working Man",
+            "publishedAt": "2026-05-15T13:27:00Z"
+          },
           {
             "title": "Vybrali jsme nejlepší robotické vysavače. Lidar, mop i velkou základnu už koupíte pod 10 tisíc",
             "publishedAt": "2026-05-15T12:45:00Z"
@@ -1050,10 +1056,6 @@
           {
             "title": "Teorie velkého třesku má pokračování. Stuart rozbil realitu a teď musí zachránit vesmír",
             "publishedAt": "2026-05-14T15:45:00Z"
-          },
-          {
-            "title": "Netflix s reklamou už má 250 milionů diváků. Do Česka se zatím nechystá",
-            "publishedAt": "2026-05-15T06:45:00Z"
           }
         ]
       }

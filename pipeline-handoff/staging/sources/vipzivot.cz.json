@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vipzivot.cz",
-  "ingestedAt": "2026-05-15T13:40:02.731307Z",
+  "ingestedAt": "2026-05-15T14:25:08.495590Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Nazval ji troskou, nebyl jí oporou. Daniela čekala po Zrádcích obejmutí, Ondřej raději pařit",
+      "url": "https://vipzivot.cz/p/brzobohaty-nazval-danielu-troskou-nebyl-opora/",
+      "dt": "2026-05-15T13:58:00Z",
+      "media_raw": "VIPživot",
+      "media_norm": "VIPživot",
+      "tokens": [
+        "daniela",
+        "nazval",
+        "nebyl",
+        "obejmutí",
+        "ondřej",
+        "oporou",
+        "pařit",
+        "raději",
+        "troskou",
+        "zrádcích",
+        "čekala"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vipzivot",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "vipzivot.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -273,37 +301,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "vipzivot.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Hraní je moje poslání, bez něj bych umřel. Hrušínský po dvou nádorech odmítá odejít z Ulice, partnerka zoufá",
-      "url": "https://vipzivot.cz/p/rudolf-hrusinsky-hrani-ulice-zdravi-poslani-herec/",
-      "dt": "2026-05-15T04:15:00Z",
-      "media_raw": "VIPživot",
-      "media_norm": "VIPživot",
-      "tokens": [
-        "bych",
-        "dvou",
-        "hraní",
-        "hrušínský",
-        "moje",
-        "nádorech",
-        "něj",
-        "odejít",
-        "odmítá",
-        "partnerka",
-        "poslání",
-        "ulice",
-        "umřel",
-        "zoufá"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vipzivot",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "vipzivot.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -314,7 +311,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://vipzivot.cz/feed/",
-      "bytes": 128568,
+      "bytes": 135882,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -351,11 +348,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-15T12:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T13:58:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "other": 9
+          "other": 9,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -367,6 +364,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nazval ji troskou, nebyl jí oporou. Daniela čekala po Zrádcích obejmutí, Ondřej raději pařit",
+            "publishedAt": "2026-05-15T13:58:00Z"
+          },
           {
             "title": "Brzobohatý oznámil rozchod s Danielou stejnými slovy jako rozchod s Kuchařovou. Tehdy to skončilo soudem",
             "publishedAt": "2026-05-15T12:45:00Z"
@@ -394,10 +395,6 @@
           {
             "title": "Celé Česko ji zbožňovalo, pak přišel rozvod a ticho. Moderátorka Markéta Mayerová dnes vede úplně jiný život",
             "publishedAt": "2026-05-15T04:26:00Z"
-          },
-          {
-            "title": "Ondřej Hejma po debatě v ČT vybuchl. Kvůli Řezníčkovi rozpoutal válku, která rozdělila diváky ČT",
-            "publishedAt": "2026-05-15T04:25:00Z"
           }
         ]
       }
