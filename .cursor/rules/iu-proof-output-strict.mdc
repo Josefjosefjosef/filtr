@@ -1,0 +1,46 @@
+---
+description: infoUzel.cz — PROOF OUTPUT STRICT (P0, PERMANENT)
+alwaysApply: true
+---
+
+ABSOLUTNÍ PRAVIDLA PRO CURSOR (P0)
+
+VÝSTUPY
+
+Do chatu posílej POUZE ~~~text bloky.
+
+1 příkaz = 1 blok.
+
+Žádné věty mimo bloky.
+
+Žádné shrnutí, žádné komentáře.
+
+PROOF SKRIPTY
+
+Vždy jen v %TEMP%.
+
+Nikdy necommitovat proof do repa.
+
+Žádné tools/, artifacts/, proof/ v repo.
+
+RUNNER / EMIT
+
+Výstupy posílej jen přes %TEMP%\iu_emit.ps1 nebo %TEMP%\iu_runner.ps1.
+
+Žádný ruční copy-paste multiline.
+
+Jakýkoliv text mimo fence = STOP.
+
+FAIL-FAST
+
+Repo dirty = STOP.
+
+Jakýkoliv slepený výstup = STOP.
+
+Jakékoliv spojování příkazů (;, &&, více příkazů v jednom) = STOP.
+
+POWERSHELL
+
+Nepoužívej dlouhé -Command řetězce.
+
+Preferuj -File wrapper.

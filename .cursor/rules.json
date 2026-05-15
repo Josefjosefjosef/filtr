@@ -1,0 +1,49 @@
+{
+  "allow": [
+ 
+    "git *",
+    "gh *",
+ 
+    "Set-Location *",
+    "cd *",
+ 
+    "$ErrorActionPreference=*",
+    "$ErrorActionPreference *",
+    "$ErrorActionPreference='*'",
+    "$ErrorActionPreference=\"*\"",
+ 
+    "$*",
+    "Start-Sleep *",
+    "Get-Process *",
+    "Get-Service *",
+    "Get-Item *",
+    "Test-Path *",
+    "dir *",
+    "ls *",
+    "type *",
+    "cat *",
+    "echo *",
+    "findstr *",
+    "grep *",
+ 
+    "pwsh *",
+    "powershell *",
+    "cmd *",
+ 
+    "node *",
+    "npm *",
+    "python *",
+    "pip *",
+ 
+    "curl *",
+ 
+    "msedge *",
+    "*\\msedge.exe *",
+    "*\\chrome.exe *",
+    "*\\chromedriver.exe *",
+    "*\\msedgedriver.exe *",
+ 
+    "*\\Program Files*\\*.exe *",
+    "*\\AppData*\\*.exe *"
+  ]
+}

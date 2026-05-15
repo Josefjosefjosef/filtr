@@ -1,0 +1,160 @@
+{
+  "harness_id": "silver_real_screenshot_ux_diagnostic_v1",
+  "user_reference_main_commit": "e408d2507986a9872a03139758abefca3f7cfe82",
+  "main_commit": "e408d2507986a9872a03139758abefca3f7cfe82",
+  "fixed_now_iso": "2026-05-04T12:00:00",
+  "engine_changed": "NO",
+  "assets_app_changed": "NO",
+  "samples_total": 28,
+  "pass": 13,
+  "fail": 15,
+  "cluster_fail_counts": {
+    "query_to_create": 4,
+    "note_retrieval_fail": 3,
+    "task_title_pollution": 0,
+    "calendar_title_note_address_pollution": 1,
+    "reminder_vs_calendar": 1,
+    "module_negation_scope": 2,
+    "update_intent": 0,
+    "vague_time_policy": 4
+  },
+  "fails": [
+    {
+      "id": "ss_qtc_kolik_schuzek",
+      "product_cluster": "query_to_create",
+      "cat": "intent_fail",
+      "input": "Kolik mám dnes schůzek?",
+      "normalizedIntent": "calendar.create",
+      "processingState": "NEEDS_CLARIFICATION",
+      "cardKind": "calendar_draft"
+    },
+    {
+      "id": "ss_qtc_v_kolik",
+      "product_cluster": "query_to_create",
+      "cat": "intent_fail",
+      "input": "V kolik mám dneska schůzek?",
+      "normalizedIntent": "calendar.create",
+      "processingState": "NEEDS_CLARIFICATION",
+      "cardKind": "calendar_draft"
+    },
+    {
+      "id": "ss_qtc_ukoly_dnes",
+      "product_cluster": "query_to_create",
+      "cat": "calendar_vs_task_confusion",
+      "input": "Mám dnes nějaké úkoly?",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "cardKind": "read_card"
+    },
+    {
+      "id": "ss_qtc_kolik_poznamek",
+      "product_cluster": "query_to_create",
+      "cat": "intent_fail",
+      "input": "Kolik mám poznámek?",
+      "normalizedIntent": "clarification",
+      "processingState": "CLARIFICATION",
+      "cardKind": "clarification"
+    },
+    {
+      "id": "ss_nrf_narozeniny",
+      "product_cluster": "note_retrieval_fail",
+      "cat": "retrieval_content_miss",
+      "input": "Co mám v poznámkách o narozeninách?",
+      "normalizedIntent": "notes.read",
+      "processingState": "READ_OK",
+      "cardKind": "read_card"
+    },
+    {
+      "id": "ss_nrf_ulozene_veci",
+      "product_cluster": "note_retrieval_fail",
+      "cat": "retrieval_content_miss",
+      "input": "Ukaž mi uložené věci kolem dokumentů.",
+      "normalizedIntent": "global.search",
+      "processingState": "READ_OK",
+      "cardKind": "read_card"
+    },
+    {
+      "id": "ss_nrf_obsah_zubar",
+      "product_cluster": "note_retrieval_fail",
+      "cat": "intent_fail",
+      "input": "Jaká adresa je u zubaře v poznámkách?",
+      "normalizedIntent": "create.storage_disambiguation",
+      "processingState": "STORAGE_DISAMBIGUATION",
+      "cardKind": "storage_disambiguation"
+    },
+    {
+      "id": "ss_calpoll_vzit_do_pozn",
+      "product_cluster": "calendar_title_note_address_pollution",
+      "cat": "note_tail_in_title",
+      "input": "Zubař zítra 15:00 vzít kartičku — adresu dej do adresy ne do poznámky.",
+      "normalizedIntent": "calendar.create",
+      "processingState": "READY_TO_SAVE",
+      "cardKind": "calendar_draft"
+    },
+    {
+      "id": "ss_rvc_pripomen_task",
+      "product_cluster": "reminder_vs_calendar",
+      "cat": "calendar_vs_task_confusion",
+      "input": "Připomeň mi zítra v 8 nakoupit mléko.",
+      "normalizedIntent": "calendar.create",
+      "processingState": "READY_TO_SAVE",
+      "cardKind": "calendar_draft"
+    },
+    {
+      "id": "ss_mns_ne_kal_poz",
+      "product_cluster": "module_negation_scope",
+      "cat": "intent_fail",
+      "input": "Ne do kalendáře, ulož jen do poznámek: heslo WiFi doma je modrá-hvězda-99.",
+      "normalizedIntent": "clarification",
+      "processingState": "CLARIFICATION",
+      "cardKind": "clarification"
+    },
+    {
+      "id": "ss_mns_redirect",
+      "product_cluster": "module_negation_scope",
+      "cat": "intent_fail",
+      "input": "Neukládej to do poznámek, chci to v kalendáři: kurýr dnes 12:30.",
+      "normalizedIntent": "clarification",
+      "processingState": "CLARIFICATION",
+      "cardKind": "clarification"
+    },
+    {
+      "id": "ss_vtp_vecer",
+      "product_cluster": "vague_time_policy",
+      "cat": "vague_time_overcommit",
+      "input": "Schůzka s Pavlem zítra někdy večer.",
+      "normalizedIntent": "calendar.create",
+      "processingState": "READY_TO_SAVE",
+      "cardKind": "calendar_draft"
+    },
+    {
+      "id": "ss_vtp_po_obede",
+      "product_cluster": "vague_time_policy",
+      "cat": "unnecessary_disambiguation",
+      "input": "Účetní v pondělí po obědě.",
+      "normalizedIntent": "create.storage_disambiguation",
+      "processingState": "STORAGE_DISAMBIGUATION",
+      "cardKind": "storage_disambiguation"
+    },
+    {
+      "id": "ss_vtp_kolem_sedme",
+      "product_cluster": "vague_time_policy",
+      "cat": "unnecessary_disambiguation",
+      "input": "Kurýr dnes kolem sedmé.",
+      "normalizedIntent": "create.storage_disambiguation",
+      "processingState": "STORAGE_DISAMBIGUATION",
+      "cardKind": "storage_disambiguation"
+    },
+    {
+      "id": "ss_vtp_task_vecer",
+      "product_cluster": "vague_time_policy",
+      "cat": "vague_time_overcommit",
+      "input": "Úkol koupit uhlí zítra někdy večer.",
+      "normalizedIntent": "tasks.create",
+      "processingState": "READY_TO_SAVE",
+      "cardKind": "task_draft"
+    }
+  ],
+  "git_status_clean": "NO",
+  "git_status_short": "M scripts/silver-real-screenshot-ux-diagnostic.cjs"
+}

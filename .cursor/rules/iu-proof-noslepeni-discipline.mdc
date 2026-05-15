@@ -1,0 +1,33 @@
+---
+description: infoUzel.cz — PROOF OUTPUT: NO FALSE-POSITIVE "SLEPENE RADKY" (P0, PERMANENT)
+alwaysApply: true
+---
+
+# HARD RULES (P0)
+
+## 1) 1 CMD = 1 OUTPUT BLOCK (ABSOLUTE)
+- For every command I run, I will post exactly ONE code-fence block with ONLY the raw stdout of that command.
+- NEVER paste the command text into the block.
+- NEVER paste the prompt prefix (e.g. `PS C:\...>`).
+- NEVER mix outputs from multiple commands in one block.
+
+## 2) "SLEPENE RADKY" is ONLY if:
+- A single block contains evidence of multiple commands OR prompt text.
+- Or: the output truly lacks CR/LF separators in the captured raw stdout (not UI wrap).
+
+## 3) NO DANGEROUS REDIRECTION / FALSE ERRORS
+- In PowerShell, DO NOT use `2>nul` (cmd syntax) and DO NOT use pipes that trigger Out-File device errors.
+- Use PowerShell-native: `2>$null` and `Select-String -Quiet` when possible.
+
+## 4) BAN: dollar-dot
+- Never use dollar-dot (e.g. Path, LineNumber on `$`) in scripts or output formatting.
+- Use ONLY `$_` (pipeline variable) or explicit named variables.
+
+## 5) Prefer "boolean gates" (Quiet) to avoid formatting issues
+- For gates that only need PASS/FAIL, use `Select-String -Quiet` and print PASS/FAIL explicitly.
+- Do not print matched lines unless the gate requires audit output.
+
+## 6) If audit output is required:
+- Print EXACTLY 1 line per match using a single Write-Output per match, from pipeline objects.
+- Example pattern:
+  `... | ForEach-Object { Write-Output ($_.Path + ':' + $_.LineNumber + ':' + $_.Line.Trim()) }`

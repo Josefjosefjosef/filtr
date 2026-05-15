@@ -11,6 +11,9 @@ temp_*.lock
 # Generated data files (do not commit)
 filtr/data/**
 
+# Local build log (Windows Task Scheduler / dev)
+feed_build.log
+
 # Python cache
 __pycache__/
 *.py[cod]
@@ -22,9 +25,11 @@ __pycache__/
 .venv/
 venv/
 
-# IDE
-.vscode/
+# IDE (allow workspace settings for OOM prevention)
+.vscode/*
+!.vscode/settings.json
 .idea/
+.cursorignore
 
 # OS
 .DS_Store
@@ -39,3 +44,50 @@ tmp/_gitattributes_head.txt
 
 # Local CDP/Edge profiles (do not commit)
 tmp/cdp-edge-profile-*/
+
+# Local prod screenshots
+prod-*.png
+
+# Health report outputs (CI uploads as artifact)
+reports/
+reports-download/
+
+# Local nightly test outputs
+_nightly_test/
+
+# Local prod verify scripts (keep locally, do not commit)
+tools/verify-ai-close-x.mjs
+tools/verify-ai-close-x-prod.mjs
+
+# Local artifacts
+tools/_artifacts_ai_close_x/
+tools/_artifacts/
+
+# infoUzel: never track artifacts/proofs
+artifacts/
+
+# infoUzel: article pipeline staging (ephemeral; never commit)
+projects/data/staging/
+
+# Silver autopilot: local timeout artifact archives (never commit)
+.silver-runtime/
+
+# Pipeline handoff checkout (local; never commit on main — CI uses git add -f on handoff branch)
+/pipeline-handoff/
+
+# infoUzel: generated monitoring (never commit)
+projects/data/fetch_monitor.json
+projects/data/feed_snapshots/
+projects/data/feed_transport_state.json
+projects/data/section_release_state.json
+
+# Silver retrieval stress 300k local JSON exports (runtime; never commit large artifacts)
+scripts/silver-retrieval-stress-300k-export*.json
+
+# Node (vendor libs in assets/vendor; do not track node_modules)
+node_modules/
+
+# infoUzel: proof scripts only in %TEMP% (never commit root-level proof_*.mjs)
+/proof_*.mjs
+/proof-*.mjs
+

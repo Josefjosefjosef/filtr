@@ -1,0 +1,24 @@
+---
+description: infoUzel.cz — PS fallback ($_ only, no dollar-dot) + OS-safe CI (grep/pwsh, no rg)
+alwaysApply: true
+---
+
+# PS fallback + OS-safe CI (P0)
+
+## PowerShell ukázky a fallback skripty
+
+- **ZAKÁZÁNO** používat dollar-dot (např. dollar-dot Path, dollar-dot LineNumber, dollar-dot Line, dollar-dot Filename, dollar-dot Matches, dollar-dot Groups).
+- **POVINNÉ** používat `$_…` (např. `$_.Path`, `$_.LineNumber`, `$_.Line.Trim()`).
+- V pipeline `ForEach-Object { … }` je aktuální objekt v `$_`, ne jako dollar-dot.
+
+## OS větvení v GitHub Actions
+
+- Kroky pro kontrolu reportu / gates **MUSÍ** být oddělené:
+  - **Linux/macOS:** `if: runner.os == 'Linux' || runner.os == 'Darwin'`, `shell: bash`, kontrola přes `grep -q`.
+  - **Windows:** `if: runner.os == 'Windows'`, `shell: pwsh`, kontrola přes `Select-String -Quiet` nebo `Get-Content` + `-notmatch`.
+- **NIKDY** nemíchat v jednom kroku bash + pwsh bez jasné OS podmínky.
+
+## CI gates (nightly / health report)
+
+- **ZAKÁZÁNO** spoléhat na `rg` (ripgrep) v CI.
+- Pouze `grep` (Linux/macOS) nebo `Select-String` / `Get-Content` (Windows).

@@ -4,15 +4,20 @@
 Robustní Fetch Engine s retry, circuit breaker, karanténou
 """
 
+import os
 import time
 import random
 import sys
+import urllib.robotparser
 from datetime import datetime, timezone, timedelta
 from typing import Dict, Any, Optional, Tuple
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 
 import requests
 import feedparser
+
+# Domains that often return 403 to bots; report as http_403_blocked in diagnostics
+BLOCKED_403_DOMAINS = ("irozhlas.cz",)
 
 
 class CircuitBreaker:
@@ -84,10 +89,75 @@ class FetchEngine:
     - Limit paralelismu (aby nebyl rate-limit)
     """
     
-    def __init__(self, user_agent: str = "Mozilla/5.0 (compatible; infoUzelBot/1.0; +https://infouzel.cz)"):
+    def __init__(self, user_agent: str = "infoUzelBot/1.0 (+https://infouzel.cz/projects/bot/)"):
         self.user_agent = user_agent
         self.circuit_breaker = CircuitBreaker()
-    
+        self._robots_cache: Dict[str, Tuple[float, Optional[urllib.robotparser.RobotFileParser]]] = {}
+        self._robots_ttl_sec = 6 * 60 * 60  # 6 hours
+
+    def _host_key(self, url: str) -> str:
+        """Hostname lower, without www."""
+        try:
+            p = urlparse(url)
+            host = (p.hostname or "").lower()
+            if host.startswith("www."):
+                host = host[4:]
+            return host
+        except Exception:
+            return ""
+
+    def _robots_url(self, url: str) -> str:
+        """Robots.txt URL from request URL origin (keeps scheme and port)."""
+        try:
+            return urljoin(url, "/robots.txt")
+        except Exception:
+            return ""
+
+    def _get_robotparser(self, url: str) -> Optional[urllib.robotparser.RobotFileParser]:
+        host = self._host_key(url)
+        if not host:
+            return None
+        now = time.time()
+        if host in self._robots_cache:
+            cached_at, rp = self._robots_cache[host]
+            if now - cached_at < self._robots_ttl_sec and rp is not None:
+                return rp
+            if now - cached_at < self._robots_ttl_sec and rp is None:
+                return None  # cached failure → allow
+        try:
+            import urllib.request
+            robots_url = self._robots_url(url)
+            if not robots_url:
+                return None
+            req = urllib.request.Request(
+                robots_url,
+                headers={"User-Agent": self.user_agent, "From": "admin@infouzel.cz"},
+            )
+            with urllib.request.urlopen(req, timeout=5) as r:
+                rp = urllib.robotparser.RobotFileParser()
+                rp.parse(r.read().decode("utf-8", errors="replace").splitlines())
+                self._robots_cache[host] = (now, rp)
+                return rp
+        except Exception:
+            self._robots_cache[host] = (now, None)
+            return None
+
+    def _can_fetch(self, url: str) -> bool:
+        if not self._host_key(url):
+            return True
+        rp = self._get_robotparser(url)
+        if rp is None:
+            # strict proof mode: deny when robots unavailable (deterministic proof)
+            if os.environ.get("IU_ROBOTS_STRICT_PROOF") == "1":
+                return False
+            return True  # production: default allow on failure
+        try:
+            return rp.can_fetch(self.user_agent, url)
+        except Exception:
+            if os.environ.get("IU_ROBOTS_STRICT_PROOF") == "1":
+                return False
+            return True
+
     def fetch_with_retry(self, url: str, source_id: str, 
                        timeout_ms: int = 20000,
                        max_retries: int = 3,
@@ -98,9 +168,13 @@ class FetchEngine:
         Returns:
             (feed_dict, diagnostics_dict)
         """
+        host = self._host_key(url)
+        ts = datetime.now(timezone.utc).isoformat()
         diagnostics = {
             "url": url,
             "source_id": source_id,
+            "host": host,
+            "ts": ts,
             "httpStatus": 0,
             "contentType": "",
             "finalUrl": url,
@@ -118,7 +192,13 @@ class FetchEngine:
             diagnostics["quarantined"] = True
             return (None, diagnostics)
         
-        # 2) Retry loop
+        # 2) robots.txt – pokud disallow → skip (žádný request, ne error)
+        if not self._can_fetch(url):
+            diagnostics["reason"] = "robots_disallow"
+            diagnostics["skipped"] = True
+            return (None, diagnostics)
+        
+        # 3) Retry loop
         for attempt in range(max_retries):
             diagnostics["attempts"] = attempt + 1
             
@@ -135,16 +215,17 @@ class FetchEngine:
                 
                 # Success
                 if status_code == 200:
+                    diagnostics["reason"] = "ok"
                     # Parse
                     feed_dict, parse_diag = self._parse_feed(raw_bytes, content_type)
                     diagnostics.update(parse_diag)
+                    if not feed_dict:
+                        diagnostics["reason"] = parse_diag.get("reason", "parse_failed")
                     
                     if feed_dict:
                         self.circuit_breaker.record_success(source_id)
                         return (feed_dict, diagnostics)
                     else:
-                        # Parse failed, ale HTTP OK → ne retry
-                        diagnostics["reason"] = parse_diag.get("reason", "parse_failed")
                         self.circuit_breaker.record_failure(source_id)
                         return (None, diagnostics)
                 
@@ -155,7 +236,7 @@ class FetchEngine:
                         time.sleep(wait_ms / 1000.0)
                         continue
                     else:
-                        diagnostics["reason"] = "http_429_max_retries"
+                        diagnostics["reason"] = "http_429"
                         self.circuit_breaker.record_failure(source_id)
                         return (None, diagnostics)
                 
@@ -166,13 +247,16 @@ class FetchEngine:
                         time.sleep(wait_ms / 1000.0)
                         continue
                     else:
-                        diagnostics["reason"] = f"http_{status_code}_max_retries"
+                        diagnostics["reason"] = "http_other"
                         self.circuit_breaker.record_failure(source_id)
                         return (None, diagnostics)
                 
                 # 4xx (kromě 429) → non-retry
                 else:
-                    diagnostics["reason"] = f"http_{status_code}"
+                    if status_code == 403:
+                        diagnostics["reason"] = "http_403_blocked" if host in BLOCKED_403_DOMAINS else "http_403"
+                    else:
+                        diagnostics["reason"] = "http_other"
                     self.circuit_breaker.record_failure(source_id)
                     return (None, diagnostics)
             
@@ -182,7 +266,7 @@ class FetchEngine:
                     time.sleep(wait_ms / 1000.0)
                     continue
                 else:
-                    diagnostics["reason"] = "timeout_max_retries"
+                    diagnostics["reason"] = "timeout"
                     self.circuit_breaker.record_failure(source_id)
                     return (None, diagnostics)
             
@@ -192,32 +276,33 @@ class FetchEngine:
                     time.sleep(wait_ms / 1000.0)
                     continue
                 else:
-                    diagnostics["reason"] = "exception"
+                    diagnostics["reason"] = "http_other"
                     diagnostics["bozoException"] = str(e)
                     self.circuit_breaker.record_failure(source_id)
                     return (None, diagnostics)
         
         # Max retries reached
-        diagnostics["reason"] = "max_retries_exceeded"
+        diagnostics["reason"] = "http_other"
         self.circuit_breaker.record_failure(source_id)
         return (None, diagnostics)
     
     def _robust_fetch(self, url: str, timeout_ms: int) -> Tuple[int, str, str, bytes]:
         """
-        Základní HTTP fetch.
+        Základní HTTP fetch. Timeout hard-cap 5s.
         Returns: (status_code, final_url, content_type, raw_bytes)
         """
         headers = {
             "User-Agent": self.user_agent,
+            "From": "admin@infouzel.cz",
             "Accept": "application/rss+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.1",
             "Accept-Language": "cs-CZ,cs;q=0.9,en;q=0.3",
             "Cache-Control": "no-cache",
         }
-        
+        timeout_sec = min(5.0, timeout_ms / 1000.0)
         response = requests.get(
             url,
             headers=headers,
-            timeout=timeout_ms / 1000.0,
+            timeout=timeout_sec,
             allow_redirects=True,
             stream=False
         )
@@ -280,11 +365,32 @@ class FetchEngine:
         
         return raw_bytes.decode("latin-1", errors="replace")
     
+    def _looks_like_xml_or_feed(self, text: str) -> bool:
+        """RSS/Atom/XML body even when Content-Type is mislabeled as HTML."""
+        if not text:
+            return False
+        s = text.lstrip("\ufeff\u200b\u200c\u200d").strip()
+        if not s:
+            return False
+        low = s[:240].lower()
+        if low.startswith("<?xml"):
+            return True
+        if low.startswith("<rss"):
+            return True
+        if low.startswith("<feed"):
+            return True
+        if low.startswith("<rdf:") or low.startswith("<rdf:rdf"):
+            return True
+        return False
+
     def _is_html_content(self, text: str, content_type: str) -> bool:
         """Detekce HTML místo XML."""
         if not text:
             return False
-        
+
+        if self._looks_like_xml_or_feed(text):
+            return False
+
         text_lower = text.strip().lower()
         
         if "text/html" in content_type:

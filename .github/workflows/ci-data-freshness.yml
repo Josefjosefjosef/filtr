@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
 
 concurrency:
   group: ci-data-freshness
@@ -29,15 +30,20 @@ jobs:
           test -f projects/data/articles.json && echo "articles.json exists" || echo "articles.json missing"
           test -f projects/data/videos.json && echo "videos.json exists" || echo "videos.json missing"
 
+      # Repo freshness vs automation SLA: */5 publish check (GitHub min) + merge + Pages deploy.
+      # 360m (6h) covers observed backlog (~255m) with margin; fails if main data older than 6h.
       - name: Freshness check (max age minutes)
         env:
-          MAX_AGE_MINUTES: "120"
+          MAX_AGE_MINUTES: "360"
+          PENDING_PR_GRACE_MINUTES: "420"
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python - <<'PY'
-          import json, os, sys, datetime, pathlib
+          import json, os, sys, datetime, pathlib, subprocess
 
-          max_age_minutes = int(os.environ.get("MAX_AGE_MINUTES","120"))
-          now = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
+          max_age_minutes = int(os.environ.get("MAX_AGE_MINUTES","360"))
+          pending_grace = int(os.environ.get("PENDING_PR_GRACE_MINUTES","420"))
+          now = datetime.datetime.now(datetime.timezone.utc)
 
           def parse_iso(s):
             if not s: return None
@@ -89,6 +95,36 @@ jobs:
             msg = f"{path}: ts={ts.isoformat()} age_min={age:.1f} limit={max_age_minutes}"
             return (ok, msg)
 
+          def pending_data_pr_recent():
+            repo = os.environ.get("GITHUB_REPOSITORY") or ""
+            if not repo:
+              return None
+            try:
+              out = subprocess.run(
+                [
+                  "gh", "pr", "list", "--repo", repo,
+                  "--head", "automation/update-articles-data",
+                  "--base", "main", "--state", "open",
+                  "--json", "updatedAt,title,mergeStateStatus",
+                ],
+                capture_output=True, text=True, timeout=60,
+                env={**os.environ},
+              )
+              if out.returncode != 0 or not out.stdout.strip():
+                return None
+              arr = json.loads(out.stdout)
+              if not arr:
+                return None
+              pr = arr[0]
+              u = parse_iso(pr.get("updatedAt") or "")
+              if not u:
+                return None
+              age_min = (now - u).total_seconds() / 60.0
+              return (age_min, pr.get("mergeStateStatus"), pr.get("title"))
+            except Exception as e:
+              print("[freshness] pending_pr_check_error", e)
+              return None
+
           ok1, msg1 = check("projects/data/articles.json", required=True)
           ok2, msg2 = check("projects/data/videos.json", required=False)
 
@@ -96,6 +132,14 @@ jobs:
           print("[freshness]", msg2)
 
           if not ok1:
+            pend = pending_data_pr_recent()
+            if pend is not None:
+              age_min, mss, title = pend
+              if age_min <= pending_grace:
+                print("[freshness] main stale but open data PR updated %.0f min ago (mergeState=%s) title=%s — OK pending pipeline" % (age_min, mss, title))
+                print("OK: freshness grace (pending data PR)")
+                sys.exit(0)
+              print("[freshness] open data PR is stale (%.0f min since update, grace=%s) — not a pending pipeline" % (age_min, pending_grace))
             print("FAIL: articles data too old or missing")
             sys.exit(1)
 

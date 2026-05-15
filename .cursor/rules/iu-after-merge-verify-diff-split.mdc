@@ -1,0 +1,30 @@
+---
+description: After-merge verify PR-only diff and STOP-SHIP on runtime changes
+alwaysApply: true
+---
+
+# After-merge verify: diff split + STOP-SHIP
+
+## P0 rule
+
+Po každém merge / after-merge verify **POVINNĚ** provést:
+
+1. **Detekce merge commitu**
+   - `git rev-list --parents -n 1 HEAD` (2 hashe = merge commit)
+
+2. **PR-ONLY diff** (jen změny z vašeho PR, ne z bot/data commits)
+   - Merge commit: `git diff --name-only HEAD^1..HEAD`
+   - Non-merge: `git diff --name-only HEAD~1..HEAD`
+
+3. **Incoming/bot diff** (jen informativně)
+   - Merge: `git diff --name-only HEAD^2..HEAD`
+
+4. **STOP-SHIP guard** (na PR-ONLY diff)
+   - **STOP** pokud PR-ONLY obsahuje:
+     - `assets/`
+     - `.github/workflows/`
+     - `projects/index.html`
+     - `projects/` mimo `projects/data/**`
+
+5. **Výstupní disciplína**
+   - Odkaz na striktní rules: 1 příkaz = 1 blok, do chatu jen RAW stdout v `~~~text`.

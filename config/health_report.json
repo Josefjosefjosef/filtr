@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "timeouts": {
+    "http_sec": 10,
+    "stream_sec": 5
+  },
+  "limits": {
+    "css_kb_warn": 400,
+    "js_kb_warn": 600,
+    "repo_mb_warn": 50,
+    "feed_age_hours_warn": 24
+  },
+  "sampling": {
+    "radio_streams_sample": 8,
+    "affiliate_links_sample": 20
+  },
+  "critical_workflows_regex": [
+    "^pages\\.yml$",
+    "^update-articles\\.yml$",
+    "^update-weather\\.yml$",
+    "^update-namedays\\.yml$"
+  ],
+  "report_sections": [
+    "uptime",
+    "feeds",
+    "workflows",
+    "pages_assets",
+    "broken_links",
+    "radios",
+    "affiliates",
+    "performance",
+    "repo_size",
+    "duplicates"
+  ]
+}

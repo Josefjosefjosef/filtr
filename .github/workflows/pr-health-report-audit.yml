@@ -1,0 +1,78 @@
+# PR-only gate: proves tinycss2 + health_report duplicate audit on PR head (no nightly/main coupling).
+name: PR Health Report Audit
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: pr-health-audit-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pr-health-report-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python dependencies (tinycss2)
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements.txt
+          python3 -c "import tinycss2; print('TINYCSS2_IMPORT_OK', getattr(tinycss2, '__version__', 'unknown'))"
+
+      - name: Python compile gate (audit + report + css debt guard)
+        run: python -m py_compile scripts/health_report.py scripts/css_duplicate_audit.py scripts/css_debt_guard.py scripts/generate_security_governance_reports.py
+
+      - name: Run health report
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_WORKFLOW: ${{ github.workflow }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_RUN_NUMBER: ${{ github.run_number }}
+        run: |
+          set -euo pipefail
+          python3 scripts/health_report.py
+          echo "HEALTH_REPORT_EXIT_OK"
+
+      - name: Verify audit markers and sections (FAIL-FAST)
+        run: |
+          set -euo pipefail
+          test -f reports/latest.md
+          grep -q "REAL_CSS_DUPLICATE_AUDIT_OK=tinycss2" reports/latest.md || {
+            echo "::error::REAL_CSS_DUPLICATE_AUDIT_OK=tinycss2 not found in reports/latest.md"
+            exit 1
+          }
+          grep -q "Real CSS duplicate selector blocks" reports/latest.md || {
+            echo "::error::Real CSS duplicate selector blocks section not found"
+            exit 1
+          }
+          grep -q "CSS token frequency signals" reports/latest.md || {
+            echo "::error::CSS token frequency signals section not found"
+            exit 1
+          }
+          echo "PR_HEALTH_REPORT_AUDIT_GATES=PASS"
+
+      - name: CSS debt guard (AST baseline lock; HARD FAIL on debt growth)
+        run: |
+          set -euo pipefail
+          mkdir -p reports
+          python3 scripts/css_debt_guard.py --github-actions --json-summary reports/css_debt_guard_summary.json
+          test -f reports/css_debt_guard_summary.json
+
+      - name: Log audit excerpt
+        run: |
+          set -euo pipefail
+          echo "=== grep: marker + section headers ==="
+          grep -n "REAL_CSS_DUPLICATE_AUDIT_OK\|CSS debt guardrail\|CSS token frequency signals\|Legend (CSS metrics)" reports/latest.md | head -40

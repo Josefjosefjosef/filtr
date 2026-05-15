@@ -1,0 +1,35 @@
+# Production proof: AI quicklink no URL change, CLS=0. Tooling only.
+name: Verify AI quicklink (no URL)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: node node_modules/playwright/cli.js install chromium
+
+      - name: Run verify (production)
+        run: node tools/verify_ai_quicklink_no_url.mjs
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ai-quicklink-verify-screenshots
+          path: artifacts/ai-quicklink-verify/
+          if-no-files-found: ignore

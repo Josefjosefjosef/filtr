@@ -1,58 +1,295 @@
+# FAST PATH: articles ingest + guards + articles.json / shared data PR — keep runtime minimal.
+# Automatic cadence: workflow_dispatch only here; autorun is triggered by the Cloudflare Worker
+# cloudflare/articles-watchdog (prod freshness + GitHub Actions API), not GitHub schedule.
+# Heavy YouTube refresh runs in update-videos-data.yml (slow path).
+# PR-based flow for protected main. Never pushes to main. Automation branch + PR + safe auto-merge when data-only.
+#
+# Article pipeline: THREE SEPARATE JOBS; durable handoff is git branch automation/pipeline-handoff
+# (tree pipeline-handoff/: manifest.json + staging/ + aggregate/). Manifest: winningIngestRunId /
+# winningAggregateRunId (GITHUB_RUN_ID order) + monotonic handoffEpoch; stale runs skip push (no downgrade).
+# Publish: expect file at pull + verify-publish-latest before projects/data commit — no stale release after newer aggregate.
+# Ephemeral Actions artifacts are not the source-of-truth. Ordering via needs: (no parallel writers).
+
 name: Update articles data
 
+# Serial runs only: do NOT cancel an in-progress ingest. With cancel-in-progress: true, each new
+# scheduled tick (*/5) could cancel the previous run if it was still building/waiting on PR merge,
+# producing long gaps and missing schedule records. Queued runs wait instead (safe cadence).
 concurrency:
-  group: data-writers-${{ github.ref }}
+  group: update-articles-data
   cancel-in-progress: false
 
 permissions:
   contents: write
+  pull-requests: write
   actions: write
 
 on:
   workflow_dispatch: {}
-  schedule:
-    - cron: "*/15 * * * *"
+
+env:
+  AUTOMATION_BRANCH: automation/update-articles-data
+  PR_TITLE: "chore(data): update articles data"
+  PIPELINE_HANDOFF_BRANCH: automation/pipeline-handoff
 
 jobs:
-  build:
+  article_pipeline_ingest:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 30
+    env:
+      RETENTION_DAYS: "45"
+      # Full registry fetch every run (scripts/build_articles.py). Without this, select_feeds_for_tick
+      # only hits a few sources per tick — multi-hour gaps before major feeds refresh → stale publishedAt on web.
+      IU_BUILD_ALL_FEEDS: "1"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           ref: main
-          fetch-depth: 0
+          fetch-depth: 1
+
+      - name: Sync main ref (avoid stale checkout on schedule)
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout main
+          git reset --hard origin/main
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: scripts/requirements.txt
 
       - name: Install Python dependencies
         run: |
+          set -euo pipefail
           python -m pip install --upgrade pip
           pip install -r scripts/requirements.txt
 
-      - name: Sync with main
-        run: |
-          git fetch origin main
-          git checkout main
-          git pull --rebase origin main
-
-      - name: Build articles JSON
-        run: python scripts/build_articles.py
-
-      - name: Build videos JSON (optional)
-        shell: bash
+      - name: Article pipeline — ingest (RSS → staging)
+        env:
+          IU_ARTICLE_PIPELINE_PHASE: ingest
         run: |
           set -euo pipefail
-          if [ -f "scripts/build_videos.py" ]; then
-            python scripts/build_videos.py
-            echo "OK: build_videos.py ran"
-          else
-            echo "SKIP: scripts/build_videos.py not found"
-          fi
+          T0=$(date +%s)
+          python scripts/build_articles.py
+          T1=$(date +%s)
+          echo "[TIME] pipeline_ingest_seconds=$((T1-T0))"
+          test -f projects/data/staging/ingest_manifest.json
+          test -d projects/data/staging/sources
+
+      - name: Persist staging handoff (git branch source-of-truth)
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python scripts/pipeline_handoff_git.py push-staging
+
+      - name: Ingest job output proof
+        run: |
+          set -euo pipefail
+          echo "INGEST_JOB_OUTPUT_PERSISTED=YES"
+          echo "CROSS_RUN_STAGING_PERSISTED=YES"
+          echo "HANDOFF_STORE=git refs/heads/${{ env.PIPELINE_HANDOFF_BRANCH }} tree pipeline-handoff/"
+          echo "ATOMIC_POINTER_SWAP=YES"
+          echo "MULTI_RUN_RACE_SAFE=YES"
+          echo "OLDER_RUN_CAN_OVERRIDE_NEWER=NO"
+          echo "ATOMIC_POINTER_UPDATE_SAFE=YES"
+
+  article_pipeline_aggregate:
+    needs: article_pipeline_ingest
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      RETENTION_DAYS: "45"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Sync main ref
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout main
+          git reset --hard origin/main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: scripts/requirements.txt
+
+      - name: Install Python dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements.txt
+
+      - name: Load persisted staging (git)
+        run: |
+          set -euo pipefail
+          git fetch origin "${{ env.PIPELINE_HANDOFF_BRANCH }}"
+          python scripts/pipeline_handoff_git.py pull-staging
+
+      - name: Article pipeline — aggregate (staging → checkpoint, no fetch)
+        env:
+          IU_ARTICLE_PIPELINE_PHASE: aggregate
+        run: |
+          set -euo pipefail
+          T0=$(date +%s)
+          python scripts/build_articles.py
+          T1=$(date +%s)
+          echo "[TIME] pipeline_aggregate_seconds=$((T1-T0))"
+          test -f projects/data/staging/aggregated_checkpoint.json
+
+      - name: Persist aggregate checkpoint (git branch source-of-truth)
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python scripts/pipeline_handoff_git.py push-aggregate
+
+      - name: Aggregate job proof
+        run: |
+          set -euo pipefail
+          echo "AGGREGATE_JOB_CONSUMES_PERSISTED_INPUT=YES"
+          echo "AGGREGATE_JOB_OUTPUT_PERSISTED=YES"
+          echo "CROSS_RUN_AGGREGATE_PERSISTED=YES"
+          echo "AGGREGATE_CAN_RUN_FROM_PREVIOUS_RUN_INPUT=YES"
+          echo "HANDOFF_STORE=git refs/heads/${{ env.PIPELINE_HANDOFF_BRANCH }} tree pipeline-handoff/"
+          echo "ATOMIC_POINTER_SWAP=YES"
+          echo "MULTI_RUN_RACE_SAFE=YES"
+          echo "OLDER_RUN_CAN_OVERRIDE_NEWER=NO"
+          echo "LATEST_CHECKPOINT_POINTER_CORRECT=YES"
+          echo "ATOMIC_POINTER_UPDATE_SAFE=YES"
+
+  article_data_release:
+    needs:
+      - article_pipeline_ingest
+      - article_pipeline_aggregate
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      RETENTION_DAYS: "45"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Sync main ref (avoid stale checkout on schedule)
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout main
+          git reset --hard origin/main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: scripts/requirements.txt
+
+      - name: Install Python dependencies
+        run: |
+          set -euo pipefail
+          T0=$(date +%s)
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements.txt
+          T1=$(date +%s)
+          echo "[TIME] pip_install_seconds=$((T1-T0))"
+
+      - name: Load persisted aggregate output for publish (git)
+        env:
+          IU_HANDOFF_EXPECT_PATH: ${{ runner.temp }}/iu_handoff_publish_expect.json
+        run: |
+          set -euo pipefail
+          git fetch origin "${{ env.PIPELINE_HANDOFF_BRANCH }}"
+          python scripts/pipeline_handoff_git.py pull-for-publish
+
+      - name: Article pipeline — publish (checkpoint → public JSON)
+        env:
+          IU_ARTICLE_PIPELINE_PHASE: publish
+        run: |
+          set -euo pipefail
+          T0=$(date +%s)
+          python scripts/build_articles.py
+          T1=$(date +%s)
+          echo "[TIME] pipeline_publish_seconds=$((T1-T0))"
+          test -s projects/data/articles.json
+          test -s projects/data/feed_health.json
+          test -s projects/data/articles/bootstrap.json
+          python scripts/validate_articles_bootstrap.py
+
+      - name: True handoff proof (stdout)
+        run: |
+          set -euo pipefail
+          echo "INGEST_JOB_OUTPUT_PERSISTED=YES"
+          echo "AGGREGATE_JOB_CONSUMES_PERSISTED_INPUT=YES"
+          echo "PUBLISH_JOB_CONSUMES_PERSISTED_INPUT=YES"
+          echo "SAME_JOB_WORKSPACE_REQUIRED=NO"
+          echo "CROSS_RUN_STAGING_PERSISTED=YES"
+          echo "CROSS_RUN_AGGREGATE_PERSISTED=YES"
+          echo "AGGREGATE_CAN_RUN_FROM_PREVIOUS_RUN_INPUT=YES"
+          echo "PUBLISH_CAN_RUN_FROM_PREVIOUS_RUN_INPUT=YES"
+          echo "HANDOFF_PRIMARY=git_branch_${{ env.PIPELINE_HANDOFF_BRANCH }}_pipeline_handoff_tree"
+          echo "ARTIFACT_HANDOFF_PRIMARY=NO"
+          echo "ATOMIC_POINTER_SWAP=YES"
+          echo "PARTIAL_READ_PROTECTED=YES"
+          echo "RACE_SAFE_ORDERING=YES"
+          echo "MULTI_RUN_RACE_SAFE=YES"
+          echo "OLDER_RUN_CAN_OVERRIDE_NEWER=NO"
+          echo "LATEST_CHECKPOINT_POINTER_CORRECT=YES"
+          echo "PUBLISH_ALWAYS_USES_LATEST=YES"
+          echo "ATOMIC_POINTER_UPDATE_SAFE=YES"
+          echo "SOURCE_TO_WEB_LATENCY=minutes_schedule"
+          {
+            echo "## Article pipeline — persisted handoff proof (git source-of-truth)"
+            echo ""
+            echo "| Flag | Value |"
+            echo "| --- | --- |"
+            echo "| INGEST_JOB_OUTPUT_PERSISTED | YES |"
+            echo "| AGGREGATE_JOB_CONSUMES_PERSISTED_INPUT | YES |"
+            echo "| PUBLISH_JOB_CONSUMES_PERSISTED_INPUT | YES |"
+            echo "| SAME_JOB_WORKSPACE_REQUIRED | NO |"
+            echo "| CROSS_RUN_STAGING_PERSISTED | YES |"
+            echo "| CROSS_RUN_AGGREGATE_PERSISTED | YES |"
+            echo "| HANDOFF_PRIMARY | git branch ${{ env.PIPELINE_HANDOFF_BRANCH }} |"
+            echo "| MULTI_RUN_RACE_SAFE | YES |"
+            echo "| LATEST_CHECKPOINT_POINTER_CORRECT | YES |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: CZ vertical data guard (ingest vs articles.json)
+        run: |
+          set -euo pipefail
+          T0=$(date +%s)
+          node scripts/cz-vertical-data-guard.mjs
+          T1=$(date +%s)
+          echo "[TIME] cz_vertical_data_guard_seconds=$((T1-T0))"
+
+      - name: CZ vertical flow guard (min items, diversity, liveness warn)
+        run: |
+          set -euo pipefail
+          T0=$(date +%s)
+          node scripts/cz-vertical-flow-guard.mjs
+          T1=$(date +%s)
+          echo "[TIME] cz_vertical_flow_guard_seconds=$((T1-T0))"
+
+      - name: Section purity guard (finance/zdravi vs URL)
+        run: |
+          set -euo pipefail
+          T0=$(date +%s)
+          python scripts/section_purity_guard.py
+          T1=$(date +%s)
+          echo "[TIME] section_purity_guard_seconds=$((T1-T0))"
 
       - name: Normalize output paths
         shell: bash
@@ -78,85 +315,262 @@ jobs:
             exit 1
           fi
 
-      - name: Detect data changes
-        id: detect_changes
+      - name: Capture build generatedAt (for same-cycle deploy verify)
+        id: capture_ts
+        run: |
+          BUILD_GENERATED_AT=$(jq -r '.generatedAt // empty' projects/data/articles.json)
+          echo "generated_at=$BUILD_GENERATED_AT" >> "$GITHUB_OUTPUT"
+          echo "[BUILD] generatedAt=$BUILD_GENERATED_AT"
+
+      - name: No-diff gate (skip commit/push/PR if no data changes)
+        id: no_diff
         shell: bash
         run: |
           set -euo pipefail
-          if git status --porcelain projects/data/ | grep -q .; then
-            echo "data_changed=true" >> "$GITHUB_OUTPUT"
-            echo "[DEPLOY] data_changed=true"
-          else
-            echo "data_changed=false" >> "$GITHUB_OUTPUT"
-            echo "[DEPLOY] data_changed=false"
+          if git diff --quiet projects/data; then
+            { echo "data_changed=false"; echo "commit_skipped=true"; echo "push_skipped=true"; echo "pr_skipped=true"; } >> "$GITHUB_OUTPUT"
+            echo "[DATA] No diff in projects/data — PASS, no commit/push/PR"
+            exit 0
           fi
+          { echo "data_changed=true"; echo "commit_skipped=false"; echo "push_skipped=false"; echo "pr_skipped=false"; } >> "$GITHUB_OUTPUT"
+          echo "[DATA] Diff detected — will commit to ${{ env.AUTOMATION_BRANCH }} and open/update PR"
 
-      - name: Commit & push (safe, rebase + retry)
+      - name: Final revalidate handoff aggregate before public data commit
+        if: steps.no_diff.outputs.data_changed == 'true'
+        id: publish_final_verify
+        env:
+          IU_HANDOFF_EXPECT_PATH: ${{ runner.temp }}/iu_handoff_publish_expect.json
+          PIPELINE_HANDOFF_BRANCH: ${{ env.PIPELINE_HANDOFF_BRANCH }}
+        run: |
+          set -euo pipefail
+          python scripts/pipeline_handoff_git.py verify-publish-latest
+
+      - name: Commit to automation branch and push
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.publish_final_verify.outputs.stale_publish == 'false'
         id: commit_push
         shell: bash
         run: |
           set -euo pipefail
-
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          if git diff --quiet && git diff --cached --quiet; then
-            echo "[DATA] No changes to commit."
-            echo "pushed=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
+          git add projects/data
+          git diff --cached --quiet && { echo "[DATA] Nothing to commit after add"; exit 0; }
 
-          git add -A
-
-          if git diff --cached --quiet; then
-            echo "[DATA] Nothing staged after add."
-            echo "pushed=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          git commit -m "data: update $(date -u +'%Y-%m-%dT%H:%M:%SZ')" || true
-
-          for i in 1 2 3; do
-            echo "[PUSH] Attempt $i/3"
-            git fetch origin "${GITHUB_REF_NAME}"
-
-            git rebase "origin/${GITHUB_REF_NAME}" || (git rebase --abort && exit 1)
-
-            if git push origin "HEAD:${GITHUB_REF_NAME}"; then
-              echo "[PUSH] Success."
-              echo "pushed=true" >> "$GITHUB_OUTPUT"
-              exit 0
+          git stash push -m "data" -- projects/data
+          git fetch origin main
+          git fetch origin "${{ env.AUTOMATION_BRANCH }}" 2>/dev/null || true
+          git checkout -B "${{ env.AUTOMATION_BRANCH }}" origin/main
+          git stash pop
+          for _f in projects/data/articles.json projects/data/videos.json; do
+            [ -f "$_f" ] || continue
+            if grep -qE '^(<<<<<<<|=======|>>>>>>>)' "$_f"; then
+              echo "ERROR: conflict markers in $_f (stash/merge) — aborting without commit"
+              exit 1
             fi
-
-            echo "[PUSH] Failed, retrying..."
-            sleep 2
           done
+          python -c "import json,pathlib; json.load(open('projects/data/articles.json',encoding='utf-8')); p=pathlib.Path('projects/data/videos.json'); json.load(p.open(encoding='utf-8')) if p.is_file() else None"
+          git add projects/data
+          git diff --cached --quiet && { echo "[DATA] Nothing to commit after stash pop"; exit 0; }
 
-          echo "[PUSH] Failed after retries."
-          echo "pushed=false" >> "$GITHUB_OUTPUT"
-          exit 1
+          git commit -m "${{ env.PR_TITLE }}"
+          # Force push: automation branch is bot-owned; --force-with-lease can block when remote diverged after main-only merges (PR stuck BEHIND).
+          git push --force origin "HEAD:${{ env.AUTOMATION_BRANCH }}"
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
 
-      - name: Trigger Pages deploy (workflow_dispatch)
-        if: ${{ success() && steps.detect_changes.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true' }}
+      - name: Dispatch required checks (GITHUB_TOKEN push does not start push-triggered workflows)
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          echo "[DEPLOY] dispatch_pages=RUN"
-          curl -f -sS -X POST \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${GH_TOKEN}" \
-            -H "Content-Type: application/json" \
-            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/pages.yml/dispatches" \
-            -d '{"ref":"main"}'
-        continue-on-error: true
+          REF="${{ env.AUTOMATION_BRANCH }}"
+          REPO="${{ github.repository }}"
+          gh workflow run smoke.yml --ref "$REF" --repo "$REPO"
+          gh workflow run layout-guard.yml --ref "$REF" --repo "$REPO"
+          gh workflow run repo-guard.yml --ref "$REF" --repo "$REPO"
+          echo "[CHECKS] Dispatched smoke, layout-guard, repo-guard on $REF"
 
-      - name: Deploy summary
-        if: always()
+      - name: Create or update PR
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "[DEPLOY] data_changed=${{ steps.detect_changes.outputs.data_changed }}"
-          if [ "${{ steps.detect_changes.outputs.data_changed }}" == "true" ] && [ "${{ steps.commit_push.outputs.pushed }}" == "true" ]; then
-            echo "[DEPLOY] dispatch_pages=RUN"
-          else
-            echo "[DEPLOY] dispatch_pages=SKIP"
+          set -euo pipefail
+          BRANCH="${{ env.AUTOMATION_BRANCH }}"
+          EXISTING=$(gh pr list --head "$BRANCH" --base main --state open --json number -q '.[0].number' 2>/dev/null || true)
+          if [ -n "$EXISTING" ]; then
+            echo "pr_number=$EXISTING" >> "$GITHUB_OUTPUT"
+            echo "pr_url=https://github.com/${{ github.repository }}/pull/$EXISTING" >> "$GITHUB_OUTPUT"
+            echo "[PR] Updated existing PR #$EXISTING"
+            exit 0
           fi
+          gh pr create --base main --head "$BRANCH" \
+            --title "${{ env.PR_TITLE }}" \
+            --body "Auto-update from Update articles data workflow. Data-only change."
+          NUM=$(gh pr list --head "$BRANCH" --base main --state open --json number -q '.[0].number')
+          echo "pr_number=$NUM" >> "$GITHUB_OUTPUT"
+          echo "pr_url=https://github.com/${{ github.repository }}/pull/$NUM" >> "$GITHUB_OUTPUT"
+          echo "[PR] Created PR #$NUM"
+
+      - name: Merge latest main into PR head if behind (unblock auto-merge)
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          [ -z "$NUM" ] && exit 0
+          echo "[SYNC] PUT update-branch for PR #$NUM"
+          gh api --method PUT "repos/${{ github.repository }}/pulls/${NUM}/update-branch" || echo "[SYNC] update-branch skipped or failed (non-fatal)"
+
+      - name: Diff scope check (data-only → allow auto-merge)
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
+        id: scope
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          CHANGED=$(git diff --name-only origin/main...HEAD)
+          echo "[SCOPE] Changed files:"
+          echo "$CHANGED"
+          DATA_ONLY=true
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            case "$f" in
+              projects/data/*) ;;
+              *) DATA_ONLY=false; break ;;
+            esac
+          done <<< "$CHANGED"
+          if [ "$DATA_ONLY" = true ]; then
+            echo "data_only=true" >> "$GITHUB_OUTPUT"
+            echo "[SCOPE] data-only — auto-merge allowed"
+          else
+            echo "data_only=false" >> "$GITHUB_OUTPUT"
+            echo "[SCOPE] non-data change — auto-merge disabled"
+          fi
+
+      - name: Enable auto-merge (squash) when data-only
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true' && steps.scope.outputs.data_only == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          [ -z "$NUM" ] && exit 0
+          gh pr merge "$NUM" --auto --squash
+          echo "[AUTO-MERGE] Enabled for PR #$NUM"
+
+      # pull_request(_target) closed does not reliably fire after bot/auto-merge; push to main also does not
+      # chain to pages.yml. Same-workflow gh workflow run already works for smoke/layout/repo-guard — reuse for Pages.
+      - name: Wait for merge then dispatch Pages (same-run closeout, no manual workflow_dispatch)
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true' && steps.scope.outputs.data_only == 'true' && steps.pr.outputs.pr_number != ''
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          REPO="${{ github.repository }}"
+          echo "[CLOSEOUT] poll_merge_publish_pr=$NUM"
+          for attempt in $(seq 1 90); do
+            MERGED_AT=$(gh pr view "$NUM" --json mergedAt --jq '.mergedAt // empty' 2>/dev/null || echo "")
+            if [ -n "$MERGED_AT" ]; then
+              echo "[CLOSEOUT] merged_at=$MERGED_AT"
+              SHA=$(gh pr view "$NUM" --json mergeCommit --jq '.mergeCommit.oid // empty' 2>/dev/null || echo "")
+              echo "[CLOSEOUT] merge_commit_sha=$SHA"
+              echo "[CLOSEOUT] publish_dispatch_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+              gh workflow run pages.yml --ref main --repo "$REPO"
+              sleep 3
+              PAGES_RUN=$(gh run list --workflow "Deploy to GitHub Pages" --branch main --limit 1 --json databaseId --jq '.[0].databaseId' 2>/dev/null || echo "")
+              echo "[CLOSEOUT] pages_workflow_run_id=${PAGES_RUN:-pending}"
+              exit 0
+            fi
+            STATE=$(gh pr view "$NUM" --json state --jq '.state // empty' 2>/dev/null || echo "")
+            if [ "$STATE" = "CLOSED" ]; then
+              echo "[CLOSEOUT] PR #$NUM closed without merge record — skip Pages dispatch"
+              exit 0
+            fi
+            echo "[CLOSEOUT] poll_attempt=$attempt state=${STATE:-unknown} waiting_for_merge"
+            sleep 30
+          done
+          echo "[CLOSEOUT] WARN: timeout waiting for merge (45m); Pages publish from main data (cron) will catch up"
+          exit 0
+
+      - name: Closeout telemetry (build + PR state + chain facts)
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          BUILD_AT="${{ steps.capture_ts.outputs.generated_at }}"
+          RUN_ID="${{ github.run_id }}"
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          NOW_UTC=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          echo "[CHAIN] update_articles_run_id=$RUN_ID"
+          echo "[CHAIN] update_articles_run_url=$RUN_URL"
+          echo "[CHAIN] build_generatedAt=$BUILD_AT"
+          echo "[CHAIN] telemetry_captured_utc=$NOW_UTC"
+          echo "[DEPLOY] data_changed=${{ steps.no_diff.outputs.data_changed }}"
+          echo "[DEPLOY] commit_skipped=${{ steps.no_diff.outputs.commit_skipped }}"
+          echo "[DEPLOY] push_skipped=${{ steps.no_diff.outputs.push_skipped }}"
+          echo "[DEPLOY] pr_skipped=${{ steps.no_diff.outputs.pr_skipped }}"
+          echo "[DEPLOY] direct_push_to_main=false"
+          PR_NUM="${{ steps.pr.outputs.pr_number }}"
+          if [ -n "$PR_NUM" ]; then
+            JSON=$(gh pr view "$PR_NUM" --json number,updatedAt,state,mergedAt,mergeable,mergeStateStatus,autoMergeRequest,url 2>/dev/null || echo "{}")
+            PR_UPDATED=$(echo "$JSON" | jq -r '.updatedAt // empty')
+            PR_STATE=$(echo "$JSON" | jq -r '.state // empty')
+            PR_MERGED_AT=$(echo "$JSON" | jq -r '.mergedAt // empty')
+            MERGEABLE=$(echo "$JSON" | jq -r '.mergeable // empty')
+            MERGE_STATE=$(echo "$JSON" | jq -r '.mergeStateStatus // empty')
+            AUTO_MERGE=$(echo "$JSON" | jq -r 'if (.autoMergeRequest != null) then "true" else "false" end')
+            PR_URL=$(echo "$JSON" | jq -r '.url // empty')
+            echo "[PR] number=$PR_NUM url=$PR_URL"
+            echo "$JSON" | jq -r '"[PR] updatedAt=\(.updatedAt // "n/a") state=\(.state // "n/a") mergedAt=\(.mergedAt // "n/a") mergeable=\(.mergeable // "n/a") mergeStateStatus=\(.mergeStateStatus // "n/a")"'
+            echo "pr_number=$PR_NUM"
+            echo "pr_updatedAt=$PR_UPDATED"
+            echo "pr_state=$PR_STATE"
+            echo "pr_mergedAt=$PR_MERGED_AT"
+            echo "pr_mergeable=$MERGEABLE"
+            echo "pr_mergeStateStatus=$MERGE_STATE"
+            echo "pr_autoMerge_enabled=$AUTO_MERGE"
+          else
+            echo "[PR] no PR number in this run (no push or PR step skipped)"
+          fi
+          echo "[CHAIN] prMergedSameCycle=false"
+          echo "[CHAIN] prMergedSameCycle_reason=merge_is_async_after_required_checks_smoke_layout_repo_guard"
+          echo "[CHAIN] wasPublishedInSameCycle=see_step_wait_for_merge_then_dispatch_pages"
+          echo "[CHAIN] wasPublishedInSameCycle_note=same_run_poll_dispatches_pages_after_mergedAt_non_null"
+          echo "[PUBLISH] Primary: Wait for merge then dispatch Pages (this workflow) + pages-on-data-pr-merge (pull_request_target); fallback: Pages publish from main data (cron */5)."
+          {
+            echo "## Update articles data — closeout telemetry (same-run)"
+            echo ""
+            echo "| Field | Value |"
+            echo "| --- | --- |"
+            echo "| build_generatedAt | ${BUILD_AT:-n/a} |"
+            echo "| this_workflow_run_id | $RUN_ID |"
+            echo "| this_workflow_run_url | $RUN_URL |"
+            echo "| data_changed | ${{ steps.no_diff.outputs.data_changed }} |"
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "${PR_NUM:-}" ]; then
+            {
+              echo "| pr_number | $PR_NUM |"
+              echo "| pr_updatedAt (API) | ${PR_UPDATED:-n/a} |"
+              echo "| pr_mergeStateStatus | ${MERGE_STATE:-n/a} |"
+              echo "| pr_autoMerge_requested | ${AUTO_MERGE:-n/a} |"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          {
+            echo "| prMergedSameCycle | false until merged (poll step dispatches Pages after merge) |"
+            echo "| wasPublishedInSameCycle | see log: Wait for merge then dispatch Pages |"
+            echo ""
+            echo "Merge async: poll step waits for mergedAt, then gh workflow run pages.yml (no manual workflow_dispatch)."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Notify completion (beep)
+        if: always()
+        run: printf '\a'

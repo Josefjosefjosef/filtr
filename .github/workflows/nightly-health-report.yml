@@ -1,0 +1,516 @@
+# Schedule: 06:00 UTC once daily (1× denně)
+name: Nightly Health Report
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *"
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Repo hygiene check (workspace must be clean)
+        run: |
+          set -euo pipefail
+          STATUS=$(git status --porcelain)
+          if [ -n "$STATUS" ]; then
+            echo "::error::REPO_HYGIENE_FAIL: git status --porcelain is not empty (STOP-SHIP)"
+            echo "$STATUS"
+            exit 1
+          fi
+          echo "REPO_HYGIENE=PASS"
+
+      - name: Freshness gate (HEAD == origin/main)
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main --prune
+          HEAD_SHA="$(git rev-parse HEAD)"
+          ORIGIN_MAIN_SHA="$(git rev-parse origin/main)"
+
+          {
+            echo "HEAD_SHA=$HEAD_SHA"
+            echo "HEAD_SHA_SHORT=$(git rev-parse --short HEAD)"
+            echo "ORIGIN_MAIN_SHA=$ORIGIN_MAIN_SHA"
+          } >> "$GITHUB_ENV"
+
+          echo "HEAD_SHA=$HEAD_SHA"
+          echo "ORIGIN_MAIN_SHA=$ORIGIN_MAIN_SHA"
+
+          if [ "$HEAD_SHA" != "$ORIGIN_MAIN_SHA" ]; then
+            echo "::error::FRESHNESS_GATE_FAIL: HEAD_SHA != origin/main (STOP-SHIP). No email will be sent."
+            exit 1
+          fi
+
+          echo "FRESHNESS_GATE=PASS"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Python compile gate
+        run: python -m py_compile scripts/health_report.py scripts/css_duplicate_audit.py scripts/css_debt_guard.py scripts/generate_security_governance_reports.py scripts/generate_ultra_audit_wiki.py
+
+      - name: Health report selftest
+        run: python3 scripts/health_report.py --selftest
+
+      - name: Security/governance reports selftest
+        run: python3 scripts/generate_security_governance_reports.py --selftest
+
+      - name: Install Python deps (for robots proof)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements.txt
+
+      - name: Deterministic robots proofs (CI-only, temp scripts)
+        env:
+          IU_ROBOTS_STRICT_PROOF: "1"
+        run: |
+          set -euo pipefail
+          mkdir -p _tmp_proofs
+          cat > _tmp_proofs/iu_proof_robots.py << 'PYEOF'
+          import os, sys, time, threading, urllib.request
+          from http.server import HTTPServer, BaseHTTPRequestHandler
+          os.environ["IU_ROBOTS_STRICT_PROOF"] = "1"
+          sys.path.insert(0, os.getcwd())
+          from scripts.fetch_engine import FetchEngine
+          hits_ok, hits_blocked = 0, 0
+          class Handler(BaseHTTPRequestHandler):
+              def do_GET(self):
+                  global hits_ok, hits_blocked
+                  if self.path == "/robots.txt":
+                      self.send_response(200); self.send_header("Content-type", "text/plain"); self.end_headers()
+                      self.wfile.write(b"User-agent: *\nDisallow: /blocked\nAllow: /\n"); return
+                  if self.path == "/ok":
+                      hits_ok += 1
+                      self.send_response(200); self.send_header("Content-type", "application/xml"); self.end_headers()
+                      self.wfile.write(b"<?xml version='1.0'?><rss version='2.0'><channel><title>OK</title></channel></rss>"); return
+                  if self.path == "/blocked":
+                      hits_blocked += 1
+                      self.send_response(200); self.send_header("Content-type", "application/xml"); self.end_headers()
+                      self.wfile.write(b"<?xml version='1.0'?><rss version='2.0'><channel><title>B</title></channel></rss>"); return
+                  self.send_response(404); self.end_headers()
+              def log_message(self, *args): pass
+          server = HTTPServer(("127.0.0.1", 0), Handler)
+          port = server.server_address[1]
+          t = threading.Thread(target=server.serve_forever); t.daemon = True; t.start()
+          base = "http://127.0.0.1:" + str(port)
+          for _ in range(20):
+              try:
+                  with urllib.request.urlopen(base + "/robots.txt", timeout=2) as r:
+                      if r.getcode() == 200 and b"Disallow: /blocked" in r.read(): break
+              except Exception: pass
+              time.sleep(0.07)
+          else: raise SystemExit("handshake failed")
+          e = FetchEngine()
+          feed_ok, d_ok = e.fetch_with_retry(base + "/ok", "p1", timeout_ms=5000)
+          feed_bl, d_bl = e.fetch_with_retry(base + "/blocked", "p2", timeout_ms=5000)
+          server.shutdown()
+          ok = d_ok.get("reason") != "robots_disallow" and feed_ok is not None
+          bl = d_bl.get("reason") == "robots_disallow" and d_bl.get("skipped") is True
+          print("ROBOTS_PROOF_OK ok=%d blocked_skipped=%d hits_ok=%d hits_blocked=%d" % (1 if ok else 0, 1 if bl else 0, hits_ok, hits_blocked))
+          PYEOF
+          python3 _tmp_proofs/iu_proof_robots.py | grep -q "ROBOTS_PROOF_OK"
+          node -e "
+          const http=require('http');
+          const UA='infoUzelBot/1.0 (+https://infouzel.cz/projects/bot/)';
+          const cache=new Map();
+          function parseRobots(txt){const a=[],d=[];let rel=false;for(const line of txt.split(/\r?\n/)){const s=line.replace(/#.*/,'').trim().toLowerCase();if(s.startsWith('user-agent:')){const v=line.slice(line.indexOf(':')+1).trim();rel=v==='*'||v.toLowerCase().startsWith('infouzelbot');continue;}if(!rel)continue;if(s.startsWith('disallow:')){const v=line.slice(line.indexOf(':')+1).trim();if(v)d.push(v);}if(s.startsWith('allow:')){const v=line.slice(line.indexOf(':')+1).trim();if(v)a.push(v);}}return{a,d};}
+          function pathOk(path,r){let ma=-1,md=-1;for(const p of r.a)if(path===p||path.startsWith(p))ma=Math.max(ma,p.length);for(const p of r.d)if(path===p||path.startsWith(p))md=Math.max(md,p.length);return ma>md||md<0;}
+          async function getRules(origin){let h='';try{const u=new URL(origin);h=u.hostname.toLowerCase().replace(/^www\./,'');const c=cache.get(h);if(c&&(Date.now()-c.ts)<21600000)return c.r;const res=await fetch(origin.replace(/\/$/,'')+'/robots.txt',{headers:{'User-Agent':UA}});if(!res.ok){cache.set(h,{ts:Date.now(),r:{a:['/'],d:[]}});return{a:['/'],d:[]};}const body=await res.text();const r=parseRobots(body);cache.set(h,{ts:Date.now(),r});return r;}catch(e){return{a:['/'],d:[]};}}
+          async function canFetch(url){try{const u=new URL(url);const r=await getRules(u.origin);return pathOk(u.pathname||'/',r);}catch(e){return true;}}
+          let ok=0,bl=0,hr=0;
+          const srv=http.createServer((req,res)=>{if(req.url==='/robots.txt'){hr++;res.writeHead(200,{'Content-Type':'text/plain'});res.end('User-agent: *\nDisallow: /blocked\nAllow: /\n');return;}if(req.url==='/ok'){ok++;res.writeHead(200,{'Content-Type':'application/json'});res.end('{}');return;}if(req.url==='/blocked'){bl++;res.writeHead(200,{'Content-Type':'application/json'});res.end('{}');return;}res.writeHead(404);res.end();});
+          srv.listen(0,'127.0.0.1',async()=>{const port=srv.address().port,base='http://127.0.0.1:'+port;const u=await canFetch(base+'/ok');if(u){const r=await fetch(base+'/ok',{headers:{'User-Agent':UA}});if(r.ok)ok=1;}const b=!(await canFetch(base+'/blocked'));srv.close();console.log('ROBOTS_JS_PROOF_OK ok='+(u?1:0)+' blocked_skipped='+(b?1:0)+' hits_ok='+ok+' hits_blocked='+bl+' hits_robots='+hr);});
+          " | grep -q "ROBOTS_JS_PROOF_OK"
+          rm -rf _tmp_proofs
+
+      - name: Node syntax gate
+        run: node -c scripts/check_site.js
+
+      - name: Verify lockfile exists
+        run: test -f package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Puppeteer browsers
+        run: npx puppeteer browsers install chrome
+
+      - name: Set report date and time (UTC)
+        id: date
+        run: |
+          echo "date=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+          echo "time_utc=$(date -u +%H:%M)" >> "$GITHUB_OUTPUT"
+
+      - name: Run check_site.js
+        env:
+          SITE_URL: "https://infouzel.cz/projects/?debug=1&nosw=1&section=media"
+        run: node scripts/check_site.js
+
+      - name: Generate health report
+        shell: bash
+        env:
+          HEAD_SHA: ${{ env.HEAD_SHA }}
+          HEAD_SHA_SHORT: ${{ env.HEAD_SHA_SHORT }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_WORKFLOW: ${{ github.workflow }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_RUN_NUMBER: ${{ github.run_number }}
+        run: |
+          set -euo pipefail
+          python3 scripts/health_report.py
+
+      - name: CSS debt guard (AST baseline lock; HARD FAIL on debt growth)
+        run: |
+          set -euo pipefail
+          python3 scripts/css_debt_guard.py --github-actions --json-summary reports/css_debt_guard_summary.json
+
+      - name: Report output gates - Linux/macOS (grep only, no rg)
+        if: runner.os == 'Linux' || runner.os == 'Darwin'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f reports/check_site.json
+          test -f reports/latest.md
+          grep -n "INFOUZEL HEALTH REPORT" reports/latest.md
+          grep -n "^Critical:" reports/latest.md
+          grep -q "### Aggregator Safety" reports/latest.md || { echo "::error::Report missing Aggregator Safety section"; exit 1; }
+          grep -q "tinycss2" scripts/requirements.txt || { echo "::error::tinycss2 missing from scripts/requirements.txt"; exit 1; }
+          grep -q "REAL_CSS_DUPLICATE_AUDIT_OK=tinycss2" reports/latest.md || { echo "::error::Real CSS duplicate audit block missing or tinycss2 audit failed"; exit 1; }
+          grep -q "CSS debt guardrail" reports/latest.md || { echo "::error::CSS debt guard section missing"; exit 1; }
+          echo "REPORT_GATES=PASS"
+
+      - name: Report output gates - Windows (Select-String, no rg)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          if (-not (Test-Path reports/check_site.json)) { Write-Error "check_site.json missing"; exit 1 }
+          if (-not (Test-Path reports/latest.md)) { Write-Error "latest.md missing"; exit 1 }
+          $content = Get-Content -Raw reports/latest.md
+          if ($content -notmatch "INFOUZEL HEALTH REPORT") { Write-Error "Report title missing"; exit 1 }
+          if ($content -notmatch "### Aggregator Safety") { Write-Error "Report missing Aggregator Safety section"; exit 1 }
+          Write-Host "REPORT_GATES=PASS"
+
+      - name: Deterministic aggregator safety proof (CI, temp fetch_monitor)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p projects/data
+          echo '{"generatedAt":"2026-02-28T00:00:00Z","window":"run","blocked403ByHost":{"a.test":5},"robotsDisallowByHost":{"b.test":3},"totalByHost":{"b.test":20},"timeoutByHost":{"c.test":10},"domainCapByHost":{"d.test":5}}' > projects/data/fetch_monitor.json
+          python3 scripts/health_report.py
+          grep -q "### Aggregator Safety" reports/latest.md || { echo "::error::Proof: Aggregator Safety section missing"; exit 1; }
+          grep -q "ALERT: 403_SPIKE host=a.test count=5" reports/latest.md || { echo "::error::Proof: 403_SPIKE alert missing"; exit 1; }
+          grep -q "ALERT: ROBOTS_DISALLOW_RATE host=b.test" reports/latest.md || { echo "::error::Proof: ROBOTS_DISALLOW_RATE alert missing"; exit 1; }
+          grep -q "ALERT: TIMEOUT_SPIKE host=c.test count=10" reports/latest.md || { echo "::error::Proof: TIMEOUT_SPIKE alert missing"; exit 1; }
+          grep -q "ALERT: DOMAIN_CAP host=d.test count=5" reports/latest.md || { echo "::error::Proof: DOMAIN_CAP alert missing"; exit 1; }
+          rm -f projects/data/fetch_monitor.json
+          echo "AGGREGATOR_SAFETY_PROOF=PASS"
+
+      - name: No-stale-send guard (report must contain SHA + Run ID)
+        shell: bash
+        env:
+          HEAD_SHA: ${{ env.HEAD_SHA }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+
+          REPORT_PATH="reports/latest.md"
+          if [ ! -f "$REPORT_PATH" ]; then
+            echo "::error::NO_STALE_SEND_FAIL: report file not found at $REPORT_PATH"
+            exit 1
+          fi
+
+          grep -F "Commit SHA: ${HEAD_SHA}" "$REPORT_PATH" >/dev/null || { echo "::error::NO_STALE_SEND_FAIL: Commit SHA mismatch/missing"; exit 1; }
+          grep -F "Run ID: ${GITHUB_RUN_ID}" "$REPORT_PATH" >/dev/null || { echo "::error::NO_STALE_SEND_FAIL: Run ID missing"; exit 1; }
+
+          echo "NO_STALE_SEND=PASS"
+
+      - name: Generate ultra_audit_report.txt (forensic audit, no secrets)
+        shell: bash
+        env:
+          HEAD_SHA: ${{ env.HEAD_SHA }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          AUDIT="reports/ultra_audit_report.txt"
+          {
+            echo "=== ULTRA FORENSIC AUDIT — infoUzel.cz ==="
+            echo "META"
+            echo "generated_at: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "HEAD_SHA: ${HEAD_SHA}"
+            echo "GITHUB_RUN_ID: ${GITHUB_RUN_ID}"
+            echo "repo: ${GITHUB_REPOSITORY}"
+            echo ""
+            echo "=== REPO INVENTORY (git ls-files, sorted) ==="
+            git ls-files | sort
+            echo ""
+            echo "=== FILE STATS (path | bytes | lines) ==="
+            git ls-files | while read -r f; do
+              if [ -f "$f" ]; then
+                bytes=$(stat -c%s "$f" 2>/dev/null || echo 0)
+                lines=$(wc -l < "$f" 2>/dev/null || echo 0)
+                echo "$f | $bytes bytes | $lines lines"
+              fi
+            done
+            echo ""
+            echo "=== WORKFLOWS (name + blob hash) ==="
+            for w in .github/workflows/*.yml; do
+              [ -f "$w" ] && echo "$w $(git hash-object "$w" 2>/dev/null || echo N/A)"
+            done | sort
+            echo ""
+            echo "=== GREP INDEX (key patterns; excl. .github/workflows, node_modules, assets/vendor) ==="
+            for pat in "rss\|feed\|xml\|atom" "youtube\|youtu.be" "fetch(" "serviceWorker\|workbox" "indexeddb\|localStorage\|cacheStorage" "schedule\|cron" "process\.env" "try\s*{" "catch\s*(" "infouzel"; do
+              echo "--- pattern: $pat ---"
+              git grep -n "$pat" -- . ':(exclude).github/workflows' ':(exclude)node_modules' ':(exclude)assets/vendor' 2>/dev/null \
+                | sed -e 's/GITHUB_TOKEN/GITHUB_TKN/g' -e 's/GH_TOKEN/GH_TKN/g' \
+                | head -100 || true
+            done
+            echo ""
+            echo "=== CURRENT STATE (narrative) ==="
+            echo "Branch: $(git rev-parse --abbrev-ref HEAD). Commit: $(git rev-parse --short HEAD). Workflows: $(find .github/workflows -maxdepth 1 -name '*.yml' 2>/dev/null | wc -l)."
+          } > "$AUDIT"
+          echo "ULTRA_AUDIT_GENERATED=$AUDIT"
+
+      - name: STOP-SHIP guard (ultra report must not contain secrets)
+        shell: bash
+        run: |
+          set -euo pipefail
+          for bad in "API_KEY" "SECRET" "TOKEN" "BEGIN PRIVATE KEY" "AWS_SECRET_ACCESS_KEY"; do
+            if grep -q "$bad" reports/ultra_audit_report.txt 2>/dev/null; then
+              echo "::error::STOP_SHIP: ultra_audit_report.txt contains forbidden: $bad"
+              exit 1
+            fi
+          done
+          echo "STOP_SHIP_SECRETS=PASS"
+
+      - name: Generate ultra_audit_wiki.md (readable + sources)
+        shell: bash
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          mkdir -p reports
+
+          mapfile -t CANDIDATES < <(git ls-files | grep -Ei '(^|/)(sources|feeds|ingest|rss|youtube).*\.json$|(^|/)(sources|feeds|ingest|rss|youtube).*\.ya?ml$' | sort || true)
+
+          out="reports/ultra_audit_wiki.md"
+          {
+            echo "# infoUzel.cz – Ultra Audit (Wiki přehled)"
+            echo ""
+            echo "## META"
+            echo "- Repo: ${GITHUB_REPOSITORY}"
+            echo "- SHA: ${GITHUB_SHA}"
+            echo "- Run: ${GITHUB_RUN_ID}"
+            echo "- UTC: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            echo ""
+            echo "## ZDROJE – KONFIGURAČNÍ SOUBORY (nalezené v repu)"
+            if [ "${#CANDIDATES[@]}" -eq 0 ]; then
+              echo "- NENÍ IMPLEMENTOVÁNO (nenalezen žádný kandidátní config soubor pro zdroje)"
+            else
+              for f in "${CANDIDATES[@]}"; do
+                echo "- \`${f}\`"
+              done
+            fi
+            echo ""
+            echo "## RSS ZDROJE ČLÁNKŮ (jmenovitě)"
+            if [ "${#CANDIDATES[@]}" -eq 0 ]; then
+              echo "- NENÍ IMPLEMENTOVÁNO"
+            else
+              tmp_rss="$(mktemp)"
+              : > "$tmp_rss"
+              for f in "${CANDIDATES[@]}"; do
+                if [[ "$f" =~ \.json$ ]]; then
+                  jq -r '
+                    paths(scalars) as $p
+                    | (getpath($p) | tostring) as $v
+                    | select($v|test("^https?://"))
+                    | select($v|test("rss|feed|xml|atom"; "i"))
+                    | "\($v)\t\($p|map(tostring)|join("."))"
+                  ' "$f" 2>/dev/null | awk -v file="$f" '{print file "\t" $0}' >> "$tmp_rss" || true
+                else
+                  grep -Eio 'https?://[^"'\'' )]+' "$f" 2>/dev/null | grep -Ei 'rss|feed|xml|atom' | awk -v file="$f" '{print file "\t" $0 "\t<yaml-grep>"}' >> "$tmp_rss" || true
+                fi
+              done
+              if [ -s "$tmp_rss" ]; then
+                sort -u "$tmp_rss" | awk -F'\t' '{printf "- %s — %s (%s)\n",$2,$1,$3}'
+              else
+                echo "- NENÍ IMPLEMENTOVÁNO (nenalezeny RSS URL v kandidátních config souborech)"
+              fi
+              rm -f "$tmp_rss"
+            fi
+            echo ""
+            echo "## YOUTUBE ZDROJE (jmenovitě)"
+            if [ "${#CANDIDATES[@]}" -eq 0 ]; then
+              echo "- NENÍ IMPLEMENTOVÁNO"
+            else
+              tmp_yt="$(mktemp)"
+              : > "$tmp_yt"
+              for f in "${CANDIDATES[@]}"; do
+                if [[ "$f" =~ \.json$ ]]; then
+                  jq -r '
+                    paths(scalars) as $p
+                    | (getpath($p) | tostring) as $v
+                    | select($v|test("^https?://"))
+                    | select($v|test("youtube\.com|youtu\.be"; "i"))
+                    | "\($v)\t\($p|map(tostring)|join("."))"
+                  ' "$f" 2>/dev/null | awk -v file="$f" '{print file "\t" $0}' >> "$tmp_yt" || true
+                else
+                  grep -Eio 'https?://[^"'\'' )]+' "$f" 2>/dev/null | grep -Ei 'youtube\.com|youtu\.be' | awk -v file="$f" '{print file "\t" $0 "\t<yaml-grep>"}' >> "$tmp_yt" || true
+                fi
+              done
+              if [ -s "$tmp_yt" ]; then
+                sort -u "$tmp_yt" | awk -F'\t' '{printf "- %s — %s (%s)\n",$2,$1,$3}'
+              else
+                echo "- NENÍ IMPLEMENTOVÁNO (nenalezeny YouTube URL v kandidátních config souborech)"
+              fi
+              rm -f "$tmp_yt"
+            fi
+            echo ""
+            echo "## DETAILNÍ FORENSIC AUDIT"
+            echo "- Viz příloha \`ultra_audit_report.txt\`"
+          } > "$out"
+
+      - name: Generate security, compliance, and data governance reports
+        shell: bash
+        env:
+          HEAD_SHA: ${{ env.HEAD_SHA }}
+          HEAD_SHA_SHORT: ${{ env.HEAD_SHA_SHORT }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python3 scripts/generate_security_governance_reports.py
+          test -s reports/security_audit_report.txt
+          test -s reports/compliance_status_report.txt
+          test -s reports/data_governance_report.txt
+          grep -q "### RUNTIME DATA (always)" reports/ultra_audit_wiki.md
+          grep -q "## RUNTIME AKTIVITA ZA POSLEDNÍCH 24 H" reports/ultra_audit_wiki.md
+          echo "SECURITY_GOVERNANCE_REPORTS=OK"
+
+      - name: STOP-SHIP guard (regulatory reports must not contain PEM material)
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in reports/security_audit_report.txt reports/compliance_status_report.txt reports/data_governance_report.txt; do
+            if grep -q "BEGIN PRIVATE KEY" "$f" 2>/dev/null; then
+              echo "::error::STOP_SHIP: $f contains PEM marker"
+              exit 1
+            fi
+          done
+          echo "STOP_SHIP_REGULATORY_REPORTS=PASS"
+
+      - name: Copy nightly report for email attachments
+        shell: bash
+        run: |
+          cp reports/latest.md reports/nightly_health_report.txt
+          test -f reports/nightly_health_report.txt
+
+      - name: Email attachments gate (6 files for nightly mail)
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in \
+            reports/nightly_health_report.txt \
+            reports/ultra_audit_report.txt \
+            reports/ultra_audit_wiki.md \
+            reports/security_audit_report.txt \
+            reports/compliance_status_report.txt \
+            reports/data_governance_report.txt; do
+            test -f "$f"
+            test -s "$f"
+          done
+          echo "EMAIL_ATTACHMENTS_SIX_FILES_GATE=PASS"
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: health-report-${{ github.run_id }}
+          path: |
+            reports/latest.md
+            reports/nightly_health_report.txt
+            reports/ultra_audit_report.txt
+            reports/ultra_audit_wiki.md
+            reports/security_audit_report.txt
+            reports/compliance_status_report.txt
+            reports/data_governance_report.txt
+            reports/health-*.md
+            reports/health-*.json
+            reports/check_site.json
+          if-no-files-found: error
+
+      - name: Summary
+        run: |
+          {
+            echo "## Nightly Health Report"
+            echo ""
+            if [ -f reports/latest.md ]; then
+              head -40 reports/latest.md
+            else
+              echo "Report not generated (check logs)"
+            fi
+            echo ""
+            echo "### Artifact"
+            echo "Download artifact \`health-report-${{ github.run_id }}\` for full reports."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Compute email flags
+        shell: bash
+        run: |
+          if [ -n "${{ secrets.HEALTH_EMAIL_TO }}" ]; then
+            echo "HEALTH_EMAIL_CONFIGURED=true" >> "$GITHUB_ENV"
+          else
+            echo "HEALTH_EMAIL_CONFIGURED=false" >> "$GITHUB_ENV"
+          fi
+
+      - name: Email not configured
+        if: env.HEALTH_EMAIL_CONFIGURED != 'true'
+        run: echo "Email not configured (missing HEALTH_EMAIL_TO secret)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Compose email subject
+        shell: bash
+        env:
+          HEAD_SHA_SHORT: ${{ env.HEAD_SHA_SHORT }}
+          GITHUB_RUN_NUMBER: ${{ github.run_number }}
+        run: |
+          set -euo pipefail
+          echo "EMAIL_SUBJECT=INFOUZEL Health Report — $(date -u +%F) — main ${HEAD_SHA_SHORT} — run #${GITHUB_RUN_NUMBER}" >> "$GITHUB_ENV"
+
+      - name: Send email
+        if: success() && env.HEALTH_EMAIL_CONFIGURED == 'true'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.HEALTH_SMTP_SERVER }}
+          server_port: ${{ secrets.HEALTH_SMTP_PORT }}
+          username: ${{ secrets.HEALTH_SMTP_USERNAME }}
+          password: ${{ secrets.HEALTH_SMTP_PASSWORD }}
+          subject: ${{ env.EMAIL_SUBJECT }}
+          to: ${{ secrets.HEALTH_EMAIL_TO }}
+          from: ${{ secrets.HEALTH_EMAIL_FROM }}
+          body: file://reports/latest.md
+          attachments: |
+            reports/nightly_health_report.txt
+            reports/ultra_audit_report.txt
+            reports/ultra_audit_wiki.md
+            reports/security_audit_report.txt
+            reports/compliance_status_report.txt
+            reports/data_governance_report.txt

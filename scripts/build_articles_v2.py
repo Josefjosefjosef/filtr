@@ -3,6 +3,9 @@
 """
 build_articles_v2.py - Profesionální verze s data layer, fetch engine, validací
 END-TO-END pipeline: sources → fetch → normalize/dedupe → validate → write(next) → promote(prod) → update(lkg) → health
+
+NOTE: Production CI uses scripts/build_articles.py (source ingest → staging → aggregate → publish).
+This file is legacy / experimental; do not wire it into workflows alongside build_articles.py.
 """
 
 import json
@@ -10,6 +13,7 @@ import os
 import re
 import sys
 import time
+from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse, urlunparse, parse_qsl, urlencode
@@ -64,6 +68,7 @@ MAX_ITEMS_PER_FEED = config["limits"]["max_items_per_feed"]
 MAX_OUTPUT_ARTICLES = config["limits"]["max_output_articles"]
 MAX_OUTPUT_VIDEOS = config["limits"]["max_output_videos"]
 CLUSTER_JACCARD_THRESHOLD = config["clustering"]["jaccard_threshold"]
+MAX_PER_DOMAIN_PER_RUN = 60
 
 # Health gate prahy
 MIN_ARTICLES = config["health_gate"]["min_articles"]
@@ -557,6 +562,8 @@ def main() -> int:
     sources_ok = []
     sources_fail = []
     sources_quarantined = []
+    all_diagnostics = []
+    domain_count = defaultdict(int)
     
     # Fetch všech zdrojů
     for source in sources:
@@ -575,6 +582,18 @@ def main() -> int:
             print(f"[WARN] Source {source_id} has no URL, skipping", file=sys.stderr)
             continue
         
+        host = (urlparse(url).hostname or "").lower()
+        if host.startswith("www."):
+            host = host[4:]
+        if domain_count[host] >= MAX_PER_DOMAIN_PER_RUN:
+            all_diagnostics.append({
+                "host": host, "reason": "domain_cap", "ts": datetime.now(timezone.utc).isoformat(),
+                "url": url, "source_id": source_id,
+            })
+            print(f"[SKIP] {source_id}: domain_cap (max {MAX_PER_DOMAIN_PER_RUN} per domain)", file=sys.stderr)
+            continue
+        domain_count[host] += 1
+        
         # Fetch s retry (pouze RSS metadata, ne scrapování)
         policy = source.get("policy", {})
         feed_dict, diagnostics = fetch_engine.fetch_with_retry(
@@ -584,6 +603,7 @@ def main() -> int:
             max_retries=policy.get("max_retries", 3),
             backoff_base_ms=policy.get("backoff_base_ms", 1000)
         )
+        all_diagnostics.append(diagnostics)
         
         # Tracking stavu
         if diagnostics.get("quarantined"):
@@ -683,6 +703,33 @@ def main() -> int:
         })
     
     print(f"[INFO] Processed {len(sources_ok)} OK, {len(sources_fail)} FAIL, {len(sources_quarantined)} QUARANTINED", file=sys.stderr)
+    
+    # Fetch monitor (403 / robots disallow by host)
+    blocked403_by_host = defaultdict(int)
+    robots_disallow_by_host = defaultdict(int)
+    total_by_host = defaultdict(int)
+    for d in all_diagnostics:
+        h = d.get("host") or ""
+        if not h:
+            continue
+        total_by_host[h] += 1
+        r = d.get("reason") or ""
+        if r == "http_403_blocked":
+            blocked403_by_host[h] += 1
+        elif r == "robots_disallow":
+            robots_disallow_by_host[h] += 1
+    monitor_dir = os.path.join(ROOT_DIR, "projects", "data")
+    os.makedirs(monitor_dir, exist_ok=True)
+    monitor_path = os.path.join(monitor_dir, "fetch_monitor.json")
+    with open(monitor_path, "w", encoding="utf-8") as f:
+        json.dump({
+            "generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "window": "run",
+            "blocked403ByHost": dict(blocked403_by_host),
+            "robotsDisallowByHost": dict(robots_disallow_by_host),
+            "totalByHost": dict(total_by_host),
+        }, f, ensure_ascii=False, indent=2)
+    print(f"[INFO] Wrote {monitor_path}", file=sys.stderr)
     
     # Dedup článků
     seen_pre = set()

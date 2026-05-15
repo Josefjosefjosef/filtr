@@ -1,0 +1,30 @@
+# Target URL: https://steep-term-ba60.josef-zmrhal.workers.dev
+# Worker name MUST match subdomain label (steep-term-ba60).
+# Entrypoint MUST be src/index.mjs (decodeVinHandler + /health).
+#
+# Live proof after deploy:
+#   GET /health  -> {"ok":true,"worker":"up"}  (NOT {"error":"Not found"})
+#   GET /vin?vin=123 -> JSON with "success":false and Czech VIN message (NOT {"error":"Invalid VIN"})
+#
+# Deploy (requires CF login or CLOUDFLARE_API_TOKEN):
+#   cd cloudflare/vin-worker && npx wrangler deploy
+#
+# Secrets: wrangler secret put VIN_UPSTREAM_KEY
+# Remove bad upstream URL (525): wrangler secret delete VIN_UPSTREAM_URL
+name = "steep-term-ba60"
+main = "src/index.mjs"
+compatibility_date = "2024-11-01"
+workers_dev = true
+
+# R2: odkomentuj až po zapnutí R2 v Dashboardu (jinak wrangler deploy selže code 10042)
+# [[r2_buckets]]
+# binding = "R2_BUCKET"
+# bucket_name = "infouzel-ads-images"
+
+# Plain var (not secret): public base URL after R2 public access / custom domain
+# wrangler vars (or dashboard): R2_PUBLIC_BASE_URL = https://<your-r2-public-host>
+# Secret: IMAGE_UPLOAD_SECRET — Bearer token for POST /upload-image (never in frontend bundle)
+
+# Do not put API keys in this file.
+# Optional: uncomment after wrangler whoami -> account id
+# account_id = "YOUR_ACCOUNT_ID"

@@ -1,0 +1,53 @@
+name: Layout guard
+
+permissions:
+  statuses: write
+
+on:
+  pull_request:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - automation/update-articles-data
+  workflow_dispatch:
+
+jobs:
+  layout-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (PR head for pull_request_target)
+        if: github.event_name == 'pull_request_target'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Checkout
+        if: github.event_name != 'pull_request_target'
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm ci
+      - name: Install Playwright browsers
+        run: node node_modules/playwright/cli.js install --with-deps chromium
+      - run: node scripts/check_layout.js
+      - run: node scripts/silver-stack-guard.js
+      - run: node scripts/tall-preview-first-row-badge-guard.js
+      - name: Silver summary + calendar accent UI proof
+        run: node scripts/silver-summary-ui-proof.mjs
+
+      - name: Set required status context (layout-guard)
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          STATE="success"
+          if [ "${{ job.status }}" != "success" ]; then STATE="failure"; fi
+          SHA="${GITHUB_SHA}"
+          gh api --method POST "repos/${{ github.repository }}/statuses/${SHA}" \
+            -f state="$STATE" \
+            -f context="layout-guard" \
+            -f description="Required status context (layout-guard)" \
+            -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

@@ -1,0 +1,156 @@
+{
+  "contractVersion": 1,
+  "fixedNow": "2026-03-27T12:00:00",
+  "eventsDefault": [
+    { "id": "e1", "date": "2026-03-27", "time": "09:00", "title": "Ranní schůzka" },
+    { "id": "e2", "date": "2026-03-27", "time": "14:00", "title": "Oběd s klientem" },
+    { "id": "e3", "date": "2026-03-28", "time": "11:00", "title": "Zubař" },
+    { "id": "e4", "date": "2026-03-30", "time": "10:00", "title": "Práce" },
+    { "id": "e5", "date": "2026-03-24", "time": "16:00", "title": "Zubní hygiena" }
+  ],
+  "intentCases": [
+    { "id": "int-01", "input": "do kalendáře 27.3. zubar v 11 hod uloz", "expectNormalizedIntent": "calendar.create" },
+    { "id": "int-02", "input": "co mám dnes", "expectNormalizedIntent": "calendar.read" },
+    { "id": "int-03", "input": "kdy mám zubaře", "expectNormalizedIntent": "calendar.read" },
+    { "id": "int-04", "input": "do kalendáře uloz schuzku zitra v 10", "expectNormalizedIntent": "calendar.create" }
+  ],
+  "readCases": [
+    {
+      "id": "r-01",
+      "input": "co mám dnes",
+      "events": "default",
+      "expect": { "queryIntent": "agenda_for_day", "count": 2, "type": "agenda_for_day", "ambiguity": true }
+    },
+    {
+      "id": "r-02",
+      "input": "co mám zítra",
+      "events": "default",
+      "expect": { "queryIntent": "agenda_for_day", "count": 1, "type": "agenda_for_day", "ambiguity": false }
+    },
+    {
+      "id": "r-03",
+      "input": "co mám tento týden",
+      "events": "default",
+      "expect": { "queryIntent": "agenda_for_range", "count": 4, "type": "agenda_for_range", "ambiguity": true }
+    },
+    {
+      "id": "r-04",
+      "input": "co mám jako další",
+      "events": "default",
+      "expect": { "queryIntent": "next_event", "count": 1, "type": "next_event", "ambiguity": false }
+    },
+    {
+      "id": "r-05",
+      "input": "kdy mám další událost",
+      "events": "default",
+      "expect": { "queryIntent": "next_event", "count": 1, "type": "next_event", "ambiguity": false }
+    },
+    {
+      "id": "r-06",
+      "input": "kdy mám zubaře",
+      "events": "default",
+      "expect": { "queryIntent": "find_by_title", "count": 1, "type": "find_by_title", "ambiguity": false }
+    },
+    {
+      "id": "r-07",
+      "input": "kdy mám Zubar",
+      "events": "default",
+      "expect": { "queryIntent": "find_by_title", "count": 1, "type": "find_by_title", "ambiguity": false }
+    },
+    {
+      "id": "r-08",
+      "input": "mám schůzku s Petrem",
+      "events": [
+        { "id": "p1", "date": "2026-03-29", "time": "15:00", "title": "Schůzka s Petrem" }
+      ],
+      "expect": { "queryIntent": "find_by_title", "count": 1, "type": "find_by_title", "ambiguity": false }
+    },
+    {
+      "id": "r-09",
+      "input": "kolik mám dnes událostí",
+      "events": "default",
+      "expect": { "queryIntent": "count_events", "count": 2, "type": "count_events", "ambiguity": false }
+    },
+    {
+      "id": "r-10",
+      "input": "kolik mám zítra událostí",
+      "events": "default",
+      "expect": { "queryIntent": "count_events", "count": 1, "type": "count_events", "ambiguity": false }
+    },
+    {
+      "id": "r-11",
+      "input": "co mám dnes",
+      "events": [],
+      "expect": { "queryIntent": "agenda_for_day", "count": 0, "type": "agenda_for_day", "ambiguity": false }
+    },
+    {
+      "id": "r-12",
+      "input": "co mám jako další",
+      "events": [],
+      "expect": { "queryIntent": "next_event", "count": 0, "type": "next_event", "ambiguity": false }
+    },
+    {
+      "id": "r-13",
+      "input": "kdy mám zubaře",
+      "events": [],
+      "expect": { "queryIntent": "find_by_title", "count": 0, "type": "find_by_title", "ambiguity": false }
+    },
+    {
+      "id": "r-14",
+      "input": "kdy mám hygiena",
+      "events": "default",
+      "expect": { "queryIntent": "find_by_title", "count": 1, "type": "find_by_title", "ambiguity": false }
+    },
+    {
+      "id": "r-15",
+      "input": "kdy mám zubar",
+      "events": "default",
+      "expect": { "queryIntent": "find_by_title", "count": 1, "type": "find_by_title", "ambiguity": false }
+    },
+    {
+      "id": "r-16",
+      "input": "co mám na tento týden",
+      "events": "default",
+      "expect": { "queryIntent": "agenda_for_range", "count": 4, "type": "agenda_for_range", "ambiguity": true }
+    },
+    {
+      "id": "r-17",
+      "input": "co mám dneska",
+      "events": "default",
+      "expect": { "queryIntent": "agenda_for_day", "count": 2, "type": "agenda_for_day", "ambiguity": true }
+    },
+    {
+      "id": "r-18",
+      "input": "kdy mám zubaře",
+      "events": [
+        { "id": "a1", "date": "2026-03-28", "time": "11:00", "title": "Zubař" },
+        { "id": "a2", "date": "2026-03-29", "time": "09:00", "title": "Kontrola u zubaře" }
+      ],
+      "expect": { "queryIntent": "find_by_title", "count": 2, "type": "find_by_title", "ambiguity": true }
+    },
+    {
+      "id": "r-19",
+      "input": "kolik mám dnes událostí",
+      "events": [],
+      "expect": { "queryIntent": "count_events", "count": 0, "type": "count_events", "ambiguity": false }
+    },
+    {
+      "id": "r-20",
+      "input": "co mám zítra",
+      "events": [],
+      "expect": { "queryIntent": "agenda_for_day", "count": 0, "type": "agenda_for_day", "ambiguity": false }
+    },
+    {
+      "id": "r-21",
+      "input": "co mám tenhle týden",
+      "events": "default",
+      "expect": { "queryIntent": "agenda_for_range", "count": 4, "type": "agenda_for_range", "ambiguity": true }
+    },
+    {
+      "id": "r-22",
+      "input": "co mám zítra?",
+      "events": [],
+      "expect": { "queryIntent": "agenda_for_day", "count": 0, "type": "agenda_for_day", "ambiguity": false }
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+# Discovery evidence ops — allowlisted official-source monitoring only. No pricing, no basket, no commit.
+# Audit: final delivery-only hardpass (workflow has no git commit/push/gh pr create). Last-hardpass format compliance. Proof hardening: workflow safety refs file:line.
+name: Discovery Evidence Ops
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 8 * * *"
+
+jobs:
+  ops:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Run discovery evidence ops
+        id: ops
+        run: |
+          node scripts/discovery_evidence_ops.mjs > report.json
+          head -c 2000 report.json
+          echo ""
+        env:
+          NODE_ENV: production
+
+      - name: Validate report (no non-allowlisted)
+        run: |
+          set -e
+          if [ ! -f report.json ]; then
+            echo "::warning::Report file not created"
+            exit 0
+          fi
+          NON=$(node -e "const fs=require('fs'); const r=JSON.parse(fs.readFileSync('report.json','utf8')); console.log(r.nonAllowlistedSourcesCount || 0)")
+          if [ "$NON" != "0" ]; then
+            echo "::error::nonAllowlistedSourcesCount=$NON (must be 0)"
+            exit 1
+          fi
+          echo "nonAllowlistedSourcesCount=0"
+
+      - name: Upload report (artifact, not in repo)
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: discovery-evidence-ops-report
+          path: report.json
+          retention-days: 7
+# Workflow safety refs: step lines only (file:line; exclude comment-only lines).

@@ -1,0 +1,77 @@
+name: Smoke
+
+permissions:
+  statuses: write
+
+on:
+  pull_request:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - main
+      # Force-pushes z update-articles.yml často nespustí pull_request synchronize → povinné checky na data PR zůstaly viset (mergeStateStatus BLOCKED).
+      - automation/update-articles-data
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (PR head for pull_request_target)
+        if: github.event_name == 'pull_request_target'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Checkout
+        if: github.event_name != 'pull_request_target'
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - run: npm ci
+
+      - name: Silver calendar.create regression
+        run: npm run silver-regression
+
+      - name: Install Playwright browsers
+        run: node node_modules/playwright/cli.js install --with-deps chromium
+
+      - name: Ensure playwright bin executable (fallback)
+        run: |
+          if [ -f node_modules/.bin/playwright ]; then chmod +x node_modules/.bin/playwright || true; fi
+
+      - run: npm run smoke
+
+      - name: Silver mobile layout guard (prod Playwright)
+        run: node scripts/proof_silver_layout_guard.cjs
+
+      - name: Weather outside-temp emphasis guard
+        run: npm run weather-emphasis-guard
+
+      - name: Počasíčko / pocasicko data guard
+        run: npm run weather-pocasicko-guard
+
+      - name: CZ vertical sections guard (hry/kultura/veda/vzdelavani)
+        run: npm run section-cz-guard
+
+      - name: Perf regression guards (flicker phases + 16 nav latency + calendar/Silver surface)
+        run: npm run iu-perf-regression-guards
+
+      - name: Set required status context (smoke)
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          STATE="success"
+          if [ "${{ job.status }}" != "success" ]; then STATE="failure"; fi
+          SHA="${GITHUB_SHA}"
+          gh api --method POST "repos/${{ github.repository }}/statuses/${SHA}" \
+            -f state="$STATE" \
+            -f context="smoke" \
+            -f description="Required status context (smoke)" \
+            -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

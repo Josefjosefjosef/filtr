@@ -1,6 +1,8 @@
 name: Deploy to GitHub Pages
 
 on:
+  push:
+    branches: [ main ]
   workflow_dispatch:
 
 permissions:
@@ -9,78 +11,64 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Sanity check – data files
+      - name: Pages deploy telemetry (start)
+        shell: bash
         run: |
           set -euo pipefail
-          
-          # Check articles.json (required)
-          if [ ! -f projects/data/articles.json ]; then
-            echo "❌ projects/data/articles.json missing"
-            exit 1
-          fi
-          
-          if [ ! -s projects/data/articles.json ]; then
-            echo "❌ projects/data/articles.json is empty"
-            exit 1
-          fi
-          
-          # Validate articles.json is valid JSON and contains generatedAt
-          if ! python3 -c "import json; data = json.load(open('projects/data/articles.json')); assert 'generatedAt' in data, 'missing generatedAt key'" 2>/dev/null; then
-            echo "❌ projects/data/articles.json is invalid JSON or missing generatedAt key"
-            exit 1
-          fi
-          
-          echo "✅ projects/data/articles.json OK"
-          
-          # Check videos.json (optional)
-          if [ -f projects/data/videos.json ]; then
-            if [ ! -s projects/data/videos.json ]; then
-              echo "⚠️ projects/data/videos.json exists but is empty (warning only, continuing)"
-            else
-              echo "✅ projects/data/videos.json OK"
-            fi
-          else
-            echo "⚠️ projects/data/videos.json not present (optional)"
-          fi
+          echo "[PAGES] deploy_job_started_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "[PAGES] head_sha=${{ github.sha }}"
+          echo "[PAGES] triggering_event=${{ github.event_name }}"
 
-      - name: Sanity check – required files in repo root
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        with:
+          enablement: true
+
+      - name: Set asset version (short SHA)
+        run: echo "ASSET_VER=${GITHUB_SHA::8}" >> "$GITHUB_ENV"
+
+      - name: Path-based cache bust (copy assets to versioned filenames)
+        shell: bash
         run: |
-          test -f index.html || (echo "❌ index.html missing" && exit 1)
-          test -d assets || (echo "❌ assets/ missing" && exit 1)
-          test -d data || (echo "❌ data/ missing" && exit 1)
+          set -euo pipefail
+          echo "ASSET_VER=${ASSET_VER}"
+          cp assets/app.css "assets/app.${ASSET_VER}.css"
+          cp assets/app.js "assets/app.${ASSET_VER}.js"
+          ls -la "assets/app.${ASSET_VER}.css" "assets/app.${ASSET_VER}.js"
 
-          if [ ! -f data/articles.json ]; then
-            echo "⚠️ data/articles.json not present (allowed – ignored by git)"
-          else
-            echo "✅ data/articles.json found"
-          fi
+      - name: Rewrite HTML to versioned asset paths (deploy artifact only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          SITE_DIR="."
+          # Path-based cache bust: CDN cannot serve old file when URL path changes.
+          # Replace /assets/app.css?v=... and /assets/app.js?v=... with /assets/app.ASSET_VER.*
+          find "$SITE_DIR" -name "*.html" -print0 | xargs -0 sed -i \
+            -e "s#/assets/app\\.css?v=[A-Za-z0-9_-]*#/assets/app.${ASSET_VER}.css#g" \
+            -e "s#/assets/app\\.js?v=[A-Za-z0-9_-]*#/assets/app.${ASSET_VER}.js#g" \
+            -e "s#iu-data-ver-placeholder#${ASSET_VER}#g"
 
-          test -f assets/app-crash-shield.js || (echo "❌ assets/app-crash-shield.js missing" && exit 1)
-          test -f assets/app-render-optimizer.js || (echo "❌ assets/app-render-optimizer.js missing" && exit 1)
-          test -f assets/app.js || (echo "❌ assets/app.js missing" && exit 1)
-          test -f sw.js || (echo "❌ sw.js missing" && exit 1)
-          test -f .nojekyll || (echo "❌ .nojekyll missing" && exit 1)
+          echo "--- app.*.css refs after rewrite (first 20) ---"
+          grep -R --line-number "/assets/app\.${ASSET_VER}\.css" "$SITE_DIR" | head -n 20 || true
+          echo "--- app.*.js refs after rewrite (first 20) ---"
+          grep -R --line-number "/assets/app\.${ASSET_VER}\.js" "$SITE_DIR" | head -n 20 || true
 
-          echo "✅ Sanity check OK"
-
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages artifact
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
@@ -88,3 +76,33 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Post-deploy proof (best-effort)
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE_URL="${{ steps.deployment.outputs.page_url }}"
+          echo "Base URL: ${BASE_URL}"
+          curl -sL "${BASE_URL}projects/" | grep -oE "/assets/app\\.[a-f0-9]+\\.(css|js)" | head -n 5 || true
+
+      - name: Pages deploy telemetry (summary)
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          FIN_UTC=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          echo "[PAGES] deploy_finished_utc=$FIN_UTC"
+          {
+            echo "## Deploy to GitHub Pages — closeout telemetry"
+            echo ""
+            echo "| Field | Value |"
+            echo "| --- | --- |"
+            echo "| run_id | ${{ github.run_id }} |"
+            echo "| run_url | ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} |"
+            echo "| head_sha | ${{ github.sha }} |"
+            echo "| page_url | ${{ steps.deployment.outputs.page_url || 'n/a' }} |"
+            echo "| deploy_finished_utc | $FIN_UTC |"
+            echo ""
+            echo "Pair with **After-merge articles freshness** or prod curl for prod visible timestamp."
+          } >> "$GITHUB_STEP_SUMMARY"

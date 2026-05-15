@@ -1,20 +1,45 @@
 <!doctype html>
 <html lang="cs">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta http-equiv="refresh" content="0; url=/projects/" />
-    <title>infoUzel.cz</title>
-    <meta name="robots" content="noindex,nofollow" />
-  </head>
-  <body>
-    <noscript>
-      Pokračuj na <a href="/projects/">/projects/</a>.
-    </noscript>
-    <p>Pokračuji na <a href="/projects/">/projects/</a>…</p>
-    <script>
-      // fallback redirect (bez načítání jakýchkoli assetů)
-      location.replace("/projects/");
-    </script>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>infoUzel.cz</title>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #0B1F33;
+      color: transparent;
+      font-size: 0;
+      line-height: 0;
+      overflow: hidden;
+    }
+    /* pojistka: i kdyby se někdo pokusil něco vložit */
+    body * { display: none !important; }
+  </style>
+
+  <script>
+    (function () {
+      try {
+        var p = String(location.pathname || "").replace(/\\/g, "/");
+        var target = "/projects/";
+        if (p === target || p.indexOf("/projects/") === 0) return;
+        var host = String(location.hostname || "").toLowerCase();
+        /* P0: prod canonical host is apex — relative replace to /projects/ on www costs an extra full
+           navigation (www/projects → apex) after this shell; jump straight to apex /projects/ (one less document). */
+        if (host === "www.infouzel.cz") {
+          location.replace("https://infouzel.cz/projects/");
+          return;
+        }
+        location.replace(target);
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <noscript></noscript>
+</body>
 </html>

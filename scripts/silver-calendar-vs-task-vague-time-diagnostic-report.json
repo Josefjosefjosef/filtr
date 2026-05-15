@@ -1,0 +1,53 @@
+{
+  "harness_slice": "ambiguous_command|calendar_vs_task_confusion",
+  "product_subcluster": "calendar_vs_task_vague_time",
+  "main_commit": "5340ef96c9b2b486d9eb6cdba9bfe0231e92ede9",
+  "fixed_now_iso": "2026-05-04T12:00:00",
+  "cases_total": 2,
+  "cases_by_expected_policy": "unknown=2",
+  "cases_calendar_wrong": 0,
+  "cases_task_wrong": 0,
+  "cases_correct_clarification": 2,
+  "safety_risk_count": 0,
+  "recommended_policy": "clarification_primary;harness_expectedIntent_unknown;detectCollectionConfusion_FAIL_on_cross_collection (task_query+calendar.read|calendar_write+tasks.create);not_harness_bug;optional_product_split_later=task.read_for_deadline_shopping_vs_calendar.create_for_week_window_via_disambiguation_not_broad_classifier",
+  "recommended_next_cluster": "messy_czech|intent_fail",
+  "recommended_next_fix_scope": "After policy lock: minimal assets/app.js calendar_vs_task_router slice for vague-time Czech; keep harness unknown unless product re-labels expectedIntent per case",
+  "dangerous_write_count": 0,
+  "false_write_count": 0,
+  "query_created_write_count": 0,
+  "write_when_negated_count": 0,
+  "engine_changed": "YES",
+  "behavior_changed": "YES",
+  "changed_files": "assets/app.js;scripts/silver-next-product-priority-diagnostic.cjs;scripts/silver-calendar-vs-task-vague-time-diagnostic-report.json",
+  "git_status_clean": "NO",
+  "cases": [
+    {
+      "id": "amb_kytky",
+      "input": "Kdy mám koupit kytky?",
+      "group": "task_query",
+      "expectedIntent": "unknown",
+      "pass": true,
+      "cat": "",
+      "normalizedIntent": "unknown",
+      "processingState": "CLARIFICATION",
+      "auditIntent": "unknown",
+      "product_subcluster": "calendar_vs_task_vague_time",
+      "is_correct_clarification": "YES",
+      "safety_risk": "NONE"
+    },
+    {
+      "id": "amb_mama_week",
+      "input": "V tejdnu zavolat mámě.",
+      "group": "calendar_write",
+      "expectedIntent": "unknown",
+      "pass": true,
+      "cat": "",
+      "normalizedIntent": "clarification",
+      "processingState": "CLARIFICATION",
+      "auditIntent": "unknown",
+      "product_subcluster": "calendar_vs_task_vague_time",
+      "is_correct_clarification": "YES",
+      "safety_risk": "NONE"
+    }
+  ]
+}

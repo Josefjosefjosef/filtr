@@ -1,0 +1,78 @@
+name: Update weather history dataset
+
+concurrency:
+  group: data-writers-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "0 3 * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements.txt
+
+      - name: Build weather history dataset (RSS + oEmbed, auto SEO)
+        run: python scripts/build_weather_history.py
+
+      - name: Detect data changes
+        id: detect_changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- projects/data/weather_history_videos.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "[DATA] No changes."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "[DATA] Changed."
+          fi
+
+      - name: Commit & push (safe, rebase + retry) — only if changed
+        if: ${{ steps.detect_changes.outputs.changed == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add projects/data/weather_history_videos.json
+          git commit -m "auto: update weather history dataset + seo [skip ci]" || exit 0
+
+          for i in 1 2 3; do
+            echo "[PUSH] Attempt $i/3"
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase "origin/${GITHUB_REF_NAME}" || (git rebase --abort && exit 1)
+            if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+              echo "[PUSH] Success."
+              exit 0
+            fi
+            echo "[PUSH] Failed, retrying..."
+            sleep 2
+          done
+
+          echo "[PUSH] Failed after retries."
+          exit 1
+

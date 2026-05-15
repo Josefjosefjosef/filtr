@@ -1,0 +1,48 @@
+name: Verify first-click overlay (prod)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, test/verify-first-click-overlay]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - run: npm ci
+
+      - name: Debug Playwright presence
+        run: |
+          ls -la node_modules/.bin || true
+          node -p "require.resolve('playwright/package.json')" || true
+          node -p "require.resolve('@playwright/test/package.json')" || true
+
+      - name: Install Playwright browsers
+        run: node node_modules/playwright/cli.js install --with-deps chromium
+
+      - name: Fix bin permissions (if needed)
+        run: chmod +x node_modules/.bin/playwright || true
+
+      - name: Run verify
+        id: verify
+        continue-on-error: true
+        run: |
+          node tools/verify-first-click-overlay.mjs
+
+      # Block run avoids YAML parse (colons in echo text)
+      - name: Show verdict
+        run: |
+          cat tools/_artifacts/verdict.txt 2>/dev/null || echo "FIRST CLICK OVERLAY: FAIL - no verdict file"
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: first-click-overlay-artifacts
+          path: tools/_artifacts/

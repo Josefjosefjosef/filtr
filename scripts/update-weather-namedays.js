@@ -9,9 +9,118 @@
 const fs = require("fs");
 const path = require("path");
 
+const UA = "infoUzelBot/1.0 (+https://infouzel.cz/projects/bot/)";
+const FROM = "admin@infouzel.cz";
+const ROBOTS_TTL_MS = 6 * 60 * 60 * 1000; // 6h
+const robotsCache = new Map(); // host -> { ts, allow: string[], disallow: string[] }
+
+function getOrigin(urlStr) {
+  try {
+    const u = new URL(urlStr);
+    return u.origin;
+  } catch {
+    return "";
+  }
+}
+
+function parseRobotsTxt(txt) {
+  const allow = [];
+  const disallow = [];
+  let inRelevant = false;
+  const lines = txt.split(/\r?\n/);
+  for (const line of lines) {
+    const s = line.replace(/#.*/, "").trim().toLowerCase();
+    if (s.startsWith("user-agent:")) {
+      const val = line.slice(line.indexOf(":") + 1).trim();
+      inRelevant = val === "*" || val.toLowerCase().startsWith("infouzelbot");
+      continue;
+    }
+    if (!inRelevant) continue;
+    if (s.startsWith("disallow:")) {
+      const val = line.slice(line.indexOf(":") + 1).trim();
+      if (val) disallow.push(val);
+      continue;
+    }
+    if (s.startsWith("allow:")) {
+      const val = line.slice(line.indexOf(":") + 1).trim();
+      if (val) allow.push(val);
+    }
+  }
+  return { allow, disallow };
+}
+
+function pathAllowed(pathStr, rules) {
+  let maxAllow = -1;
+  let maxDisallow = -1;
+  for (const p of rules.allow) {
+    if (pathStr === p || pathStr.startsWith(p.replace(/\/$/, "") + "/") || pathStr.startsWith(p)) {
+      const len = p.length;
+      if (len > maxAllow) maxAllow = len;
+    }
+  }
+  for (const p of rules.disallow) {
+    if (pathStr === p || pathStr.startsWith(p.replace(/\/$/, "") + "/") || pathStr.startsWith(p)) {
+      const len = p.length;
+      if (len > maxDisallow) maxDisallow = len;
+    }
+  }
+  if (maxAllow > maxDisallow) return true;
+  if (maxDisallow >= 0) return false;
+  return true;
+}
+
+async function getRobotsRules(origin) {
+  if (!origin) return { allow: ["/"], disallow: [] };
+  let host = "";
+  try {
+    const u = new URL(origin);
+    host = u.hostname.toLowerCase().replace(/^www\./, "");
+    const cached = robotsCache.get(host);
+    const now = Date.now();
+    if (cached && (now - cached.ts) < ROBOTS_TTL_MS) return cached.rules;
+  } catch {
+    return { allow: ["/"], disallow: [] };
+  }
+  const ru = origin.replace(/\/$/, "") + "/robots.txt";
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 5000);
+    const res = await fetch(ru, {
+      headers: { "User-Agent": UA, "From": FROM },
+      cache: "no-store",
+      signal: ctrl.signal,
+    });
+    clearTimeout(t);
+    if (!res.ok) {
+      robotsCache.set(host, { ts: Date.now(), rules: { allow: ["/"], disallow: [] } });
+      return { allow: ["/"], disallow: [] };
+    }
+    const body = await res.text();
+    const rules = parseRobotsTxt(body);
+    robotsCache.set(host, { ts: Date.now(), rules });
+    return rules;
+  } catch {
+    robotsCache.set(host, { ts: Date.now(), rules: { allow: ["/"], disallow: [] } });
+    return { allow: ["/"], disallow: [] };
+  }
+}
+
+async function canFetch(urlStr) {
+  try {
+    const u = new URL(urlStr);
+    const origin = u.origin;
+    const pathStr = u.pathname || "/";
+    const rules = await getRobotsRules(origin);
+    return pathAllowed(pathStr, rules);
+  } catch {
+    return true;
+  }
+}
+
 async function fetchJson(url) {
+  if (!(await canFetch(url))) return null;
   const res = await fetch(url, {
-    headers: { "User-Agent": "infoUzel.cz-bot" },
+    headers: { "User-Agent": UA, "From": FROM },
     cache: "no-store",
   });
   if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
@@ -77,6 +186,10 @@ async function updateWeather() {
     "&timezone=Europe%2FPrague";
 
   const data = await fetchJson(url);
+  if (data === null) {
+    console.log("Weather skipped (robots disallow)");
+    return;
+  }
 
   // Current weather
   const temp = data?.current?.temperature_2m;

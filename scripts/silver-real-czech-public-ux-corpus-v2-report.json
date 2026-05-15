@@ -1,0 +1,416 @@
+{
+  "harness_id": "silver_real_czech_public_ux_corpus_v2",
+  "fixed_now": "2026-05-04T12:00:00",
+  "main_commit": "7033f3b53acdfeff448db3f607d8daaaf1540f0a",
+  "branch": "fix/rcz2-mobile-voice-intent-fail-alignment",
+  "engine_changed": "NO",
+  "assets_app_changed": "NO",
+  "changed_files": "scripts/audit_silver_realistic_mobile_corpus.cjs;scripts/silver-rcz2-mobile-voice-intent-fail-diagnostic-report.json;scripts/silver-rcz2-mobile-voice-intent-fail-diagnostic.cjs",
+  "total_cases": 108000,
+  "pass": 104172,
+  "fail": 3828,
+  "accuracy": "96.46",
+  "top_clusters": [
+    "rcz2_retrieval||intent_fail:1000",
+    "rcz2_ultra_short_chaos||intent_fail:944",
+    "rcz2_ultra_short_chaos||calendar_vs_task_confusion:942",
+    "rcz2_ultra_short_chaos||wrong_collection:942"
+  ],
+  "top_fail_examples": [
+    {
+      "id": "rcz2_0000008",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "petr odpoledne",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000023",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "mamka vecer prosim",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000035",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "stavba rano no",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000047",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "doktor rano fakt",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000068",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "petr odpoledne??",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000083",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "mamka vecer tyjo",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000095",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "stavba rano no",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000107",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "doktor rano rychle",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000128",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "petr odpoledne??",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000131",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "smlouva zitra prosim?",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000143",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "mamka vecer tyjo",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000155",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "stavba rano fakt",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000167",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "doktor rano rychle",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000188",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "petr odpoledne prosim",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000191",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "smlouva zitra prosim?",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000203",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "mamka vecer no",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000215",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "stavba rano fakt",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000227",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "doktor rano",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000248",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "petr odpoledne prosim",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000251",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "smlouva zitra tyjo?",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000263",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "mamka vecer no",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000275",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "stavba rano rychle",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000287",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "doktor rano",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000308",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "petr odpoledne tyjo",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000311",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "smlouva zitra tyjo?",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000323",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "mamka vecer fakt",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000335",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "stavba rano rychle",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000347",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "doktor rano??",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000368",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "petr odpoledne tyjo",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000371",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "smlouva zitra no?",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000383",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "mamka vecer fakt",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000395",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "stavba rano",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000407",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "doktor rano??",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000428",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "petr odpoledne no",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000431",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "smlouva zitra no?",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000443",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "mamka vecer rychle",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000455",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "stavba rano",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000467",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "doktor rano prosim",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000488",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "petr odpoledne no",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000491",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "smlouva zitra fakt?",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000503",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "mamka vecer rychle",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000515",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "stavba rano??",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000527",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "doktor rano prosim",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000548",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "petr odpoledne fakt",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000551",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "smlouva zitra fakt?",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000563",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "mamka vecer",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000575",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "stavba rano??",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000587",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "doktor rano tyjo",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000608",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "petr odpoledne fakt",
+      "ux_category": "ultra_short_chaos"
+    },
+    {
+      "id": "rcz2_0000611",
+      "cluster": "rcz2_ultra_short_chaos",
+      "cat": "calendar_vs_task_confusion",
+      "input": "smlouva zitra rychle?",
+      "ux_category": "ultra_short_chaos"
+    }
+  ],
+  "category_accuracy": {
+    "ultra_short_chaos": "76.43",
+    "dirty_czech_no_diacritics": "100.00",
+    "mobile_voice_chaos": "100.00",
+    "mixed_module_chaos": "100.00",
+    "ambiguity": "100.00",
+    "retrieval_relevance": "91.67",
+    "emotional_human_speech": "100.00",
+    "long_chaotic_prompts": "100.00"
+  },
+  "category_totals": {
+    "ultra_short_chaos": 12000,
+    "dirty_czech_no_diacritics": 16000,
+    "mobile_voice_chaos": 22000,
+    "mixed_module_chaos": 16000,
+    "ambiguity": 12000,
+    "retrieval_relevance": 12000,
+    "emotional_human_speech": 6000,
+    "long_chaotic_prompts": 12000
+  },
+  "safety_counters": {
+    "dangerous_write_count": 0,
+    "false_write_count": 0,
+    "query_created_write_count": 0,
+    "write_when_negated_count": 0
+  },
+  "calendar_write_20k": "SKIPPED",
+  "calendar_write_20k_preservation": "3000/3000 OK",
+  "embedded_audits": {
+    "note": "Run audit_silver_20000_routing_stable, audit_silver_quality_v2, audit_silver_realistic_mobile_corpus, silver-real-czech-corpus-v1, silver-deep-product-real-ux-v2 separately to refresh sibling JSON reports before relying on metrics_snapshot."
+  },
+  "metrics_snapshot": {
+    "20k_overall_accuracy": "SKIPPED",
+    "quality_accuracy": "100.00%",
+    "realistic_overall_accuracy": "100.00%",
+    "real_czech_corpus_accuracy": "100.00%",
+    "deep_product_real_ux_v2_accuracy": "92.00%"
+  },
+  "recommended_next_cluster": "rcz2_retrieval / intent_fail",
+  "recommended_next_fix_scope": "Impact leader «rcz2_retrieval» / «intent_fail»: Silver routing thresholds + Czech paraphrase templates",
+  "recommended_reason": "Top failing cluster indicates highest routing/semantic drift.",
+  "risk_level": "P1",
+  "ready_for_next_fix_task": "YES",
+  "git_status_clean": "YES",
+  "ready_for_pr": "YES"
+}

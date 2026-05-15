@@ -1,0 +1,232 @@
+name: After-merge verify (prod CSS marker)
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: after-merge-verify-main
+  cancel-in-progress: true
+
+jobs:
+  verify-prod-css:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      PROD_CSS_URL: https://josefjosefjosef.github.io/filtr/assets/app.css
+      MARKERS: |
+        TOPBAR CONTENT GRID
+        P0 PREMIUM SILVER (infoUzel.cz)
+      RETRY_MAX: "36"     # 36 * 10s = 6 minutes
+      RETRY_SLEEP: "10"   # seconds
+
+    steps:
+      - name: Verify production app.css contains markers (retry)
+        id: verify
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "Prod CSS: $PROD_CSS_URL"
+          echo "Markers:"
+          printf '%s\n' "$MARKERS"
+
+          mapfile -t markers <<<"$MARKERS"
+
+          found="false"
+          attempt=1
+          while [ "$attempt" -le "$RETRY_MAX" ]; do
+            echo "--- attempt $attempt/$RETRY_MAX ---"
+            # Cache-bust query is safe for GH Pages and avoids intermediary caches.
+            url="${PROD_CSS_URL}?verify=${GITHUB_SHA::7}-${GITHUB_RUN_ID}-${attempt}"
+
+            # Best-effort headers (for debugging)
+            echo "HEAD $url"
+            curl -fsSI \
+              -H "Cache-Control: no-cache" \
+              -H "Pragma: no-cache" \
+              "$url" | sed -nE 's/^(cache-control|etag|last-modified):/\\1:/Ip' || true
+
+            echo "GET $url"
+            css="$(curl -fsSL \
+              -H "Cache-Control: no-cache" \
+              -H "Pragma: no-cache" \
+              "$url" || true)"
+
+            tmp="$(mktemp)"
+            printf '%s' "$css" > "$tmp"
+            missing=()
+            for m in "${markers[@]}"; do
+              if [ -n "$m" ] && ! grep -Fq "$m" "$tmp"; then
+                missing+=("$m")
+              fi
+            done
+            if [ "${#missing[@]}" -eq 0 ]; then
+              rm -f "$tmp"
+              echo "OK: all markers found in production CSS."
+              found="true"
+              break
+            fi
+            rm -f "$tmp"
+
+            echo "NOT YET: missing markers:"
+            printf '  - %s\n' "${missing[@]}"
+            echo "Waiting ${RETRY_SLEEP}s..."
+            sleep "$RETRY_SLEEP"
+            attempt=$((attempt + 1))
+          done
+
+          echo "found=$found" >> "$GITHUB_OUTPUT"
+
+          if [ "$found" = "true" ]; then
+            {
+              echo "## After-merge verify"
+              echo "- ✅ All markers found in production:"
+              while IFS= read -r m; do
+                [ -n "$m" ] && echo "  - \`$m\`"
+              done <<<"$MARKERS"
+              echo "- URL: \`$PROD_CSS_URL\`"
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            {
+              echo "## After-merge verify"
+              echo "- ❌ Missing markers in production after retries:"
+              while IFS= read -r m; do
+                [ -n "$m" ] && echo "  - \`$m\`"
+              done <<<"$MARKERS"
+              echo "- URL: \`$PROD_CSS_URL\`"
+              echo "- Action: will dispatch Pages deploy workflow"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Dispatch Pages deploy workflow (pages.yml)
+        if: steps.verify.outputs.found != 'true'
+        id: dispatch
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const workflow_id = "pages.yml";
+            const ref = "main";
+            core.info(`Dispatching ${workflow_id} on ${owner}/${repo}@${ref}...`);
+            await github.rest.actions.createWorkflowDispatch({ owner, repo, workflow_id, ref });
+            core.setOutput("dispatched_at", new Date().toISOString());
+
+      - name: Wait for Pages deploy run to finish
+        if: steps.verify.outputs.found != 'true'
+        id: wait
+        uses: actions/github-script@v7
+        env:
+          DISPATCHED_AT: ${{ steps.dispatch.outputs.dispatched_at }}
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const workflow_id = "pages.yml";
+            const branch = "main";
+            const dispatchedAt = process.env.DISPATCHED_AT || "";
+            const dispatchedMs = dispatchedAt ? Date.parse(dispatchedAt) : Date.now();
+
+            core.info(`Waiting for workflow run: ${workflow_id} (branch=${branch}) after ${new Date(dispatchedMs).toISOString()}`);
+
+            async function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+            // 1) Find the run created after dispatch
+            let run = null;
+            for (let i = 0; i < 60; i++) { // up to ~10 minutes to appear
+              const res = await github.rest.actions.listWorkflowRuns({
+                owner, repo, workflow_id,
+                branch,
+                per_page: 10
+              });
+              const runs = res.data.workflow_runs || [];
+              run = runs.find(r => Date.parse(r.created_at) >= dispatchedMs - 5000); // small clock skew tolerance
+              if (run) break;
+              core.info("No matching run yet; sleeping 10s...");
+              await sleep(10_000);
+            }
+            if (!run) {
+              core.setFailed("ERROR: Could not find a Pages deploy run created after dispatch.");
+              return;
+            }
+
+            core.info(`Tracking run ${run.id}: ${run.html_url}`);
+
+            // 2) Wait for completion
+            for (let i = 0; i < 120; i++) { // up to ~10 minutes
+              const r = await github.rest.actions.getWorkflowRun({ owner, repo, run_id: run.id });
+              const status = r.data.status;
+              const conclusion = r.data.conclusion;
+              core.info(`status=${status} conclusion=${conclusion}`);
+              if (status === "completed") {
+                core.setOutput("run_id", String(run.id));
+                core.setOutput("run_url", r.data.html_url);
+                core.setOutput("conclusion", conclusion || "");
+                if (conclusion !== "success") {
+                  core.setFailed(`ERROR: Pages deploy finished with conclusion=${conclusion}`);
+                }
+                return;
+              }
+              await sleep(5_000);
+            }
+            core.setFailed("ERROR: Timed out waiting for Pages deploy to complete.");
+
+      - name: Re-verify production CSS after deploy (retry)
+        if: steps.verify.outputs.found != 'true'
+        shell: bash
+        env:
+          RUN_URL: ${{ steps.wait.outputs.run_url }}
+        run: |
+          set -euo pipefail
+
+          echo "Re-verify after Pages deploy run: ${RUN_URL:-unknown}"
+          echo "Prod CSS: $PROD_CSS_URL"
+          echo "Markers:"
+          printf '%s\n' "$MARKERS"
+
+          mapfile -t markers <<<"$MARKERS"
+
+          attempt=1
+          while [ "$attempt" -le "$RETRY_MAX" ]; do
+            echo "--- post-deploy attempt $attempt/$RETRY_MAX ---"
+            url="${PROD_CSS_URL}?verify=post-${GITHUB_SHA::7}-${GITHUB_RUN_ID}-${attempt}"
+            css="$(curl -fsSL -H "Cache-Control: no-cache" -H "Pragma: no-cache" "$url" || true)"
+            tmp="$(mktemp)"
+            printf '%s' "$css" > "$tmp"
+            missing=()
+            for m in "${markers[@]}"; do
+              if [ -n "$m" ] && ! grep -Fq "$m" "$tmp"; then
+                missing+=("$m")
+              fi
+            done
+            if [ "${#missing[@]}" -eq 0 ]; then
+              rm -f "$tmp"
+              echo "OK: all markers found after deploy."
+              {
+                echo "## After-merge verify (post-deploy)"
+                echo "- ✅ All markers found in production after deploy:"
+                while IFS= read -r m; do
+                  [ -n "$m" ] && echo "  - \`$m\`"
+                done <<<"$MARKERS"
+                echo "- URL: \`$PROD_CSS_URL\`"
+                echo "- Deploy run: \`${{ steps.wait.outputs.run_url }}\`"
+              } >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            rm -f "$tmp"
+            echo "Still missing markers:"
+            printf '  - %s\n' "${missing[@]}"
+            echo "Waiting ${RETRY_SLEEP}s..."
+            sleep "$RETRY_SLEEP"
+            attempt=$((attempt + 1))
+          done
+
+          echo "ERROR: markers still missing after deploy + retries."
+          exit 1
+

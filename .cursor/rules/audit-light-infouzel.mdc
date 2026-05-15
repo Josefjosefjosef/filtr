@@ -1,0 +1,32 @@
+---
+description: infoUzel.cz — AUDIT-LIGHT; úkol hotov při PASS=true a CLS=0 i když log není procesně perfektní
+alwaysApply: true
+---
+
+# AUDIT-LIGHT (infoUzel.cz)
+
+Platí při **CSS-only / UI-only** změnách s **produkčním proof PASS=true** a **CLS=0**.
+
+## Úkol je HOTOVO, i když
+
+- log není 100 % formátovaný
+- jsou slepené řádky
+- je porušené „1 příkaz = 1 výstup“
+- proof běžel na localhostu
+- je malá PowerShell chyba mimo proof
+
+→ To je **auditní** chyba, ne produkční. **Neprovádět re-run** kvůli formátu logu.
+
+## Re-run je povinný jen když
+
+- **PASS=false**
+- **CLS > 0**
+- diff mimo povolené soubory
+- změna JS/HTML/layoutu (mimo plán)
+- chyba v browser console
+- nejasné chování UI
+- PR mění více než plánované sekce
+
+## Shrnutí
+
+**PASS=true + CLS=0 + diff v pořádku + UI OK** ⇒ úkol HOTOVO. Nezdržovat vývoj re-runem kvůli procesnímu formátu.

@@ -1,0 +1,22 @@
+---
+description: infoUzel.cz — PROOF FORMAT LOCK: 1 CMD = 1 RAW STDOUT BLOCK (P0, PERMANENT)
+alwaysApply: true
+---
+
+# ABSOLUTE OUTPUT CONTRACT (P0)
+
+## A) One command per message-block
+- For EACH executed command: output EXACTLY ONE code fence block.
+- The block must contain ONLY the raw stdout of that command.
+
+## B) Forbidden inside any ~~~text block
+- The command text itself (e.g. `git status --short`).
+- Any prompt prefix like `PS C:\...>` or `>` or `cmd.exe` prompt.
+- Any extra commentary, labels, or headings.
+- Multiple command outputs in one block.
+
+## C) Fail-fast self-check before sending
+If any of these appear in the block, STOP and re-run correctly:
+- Starts with `PS ` or contains `PS C:\`
+- Contains the literal command (e.g. starts with `git `, `powershell `, `cd `)
+- Contains `At line:` / parser errors mixed with other command outputs in same block (means multiple runs got merged)

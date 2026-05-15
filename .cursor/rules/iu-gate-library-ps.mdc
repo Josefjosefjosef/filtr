@@ -1,0 +1,27 @@
+---
+description: infoUzel.cz — GATE LIBRARY (PowerShell): true PASS/FAIL, no false-positives (P0, PERMANENT)
+alwaysApply: true
+---
+
+# P0 GATE LIBRARY (use these patterns only)
+
+## 1) Boolean gate: pattern exists?
+Use Select-String -Quiet and print ONLY PASS/FAIL:
+Example:
+  $hit = (command | Select-String -Pattern "..." -Quiet)
+  if($hit){ "HIT" } else { "OK_EMPTY" }
+
+## 2) Never use in PowerShell gates
+- findstr
+- 2>nul (cmd redirection)  -> use 2>$null
+- $LASTEXITCODE for pipeline success/failure (unreliable with PowerShell cmdlets)
+- Out-File / implicit Out-File to devices
+- Formatting implicit objects when you only need PASS/FAIL
+
+## 3) Audit output (only when required)
+When output must list matches, force 1 match = 1 line:
+  ... | Select-String -Pattern "..." |
+  ForEach-Object { Write-Output ($_.Path + ':' + $_.LineNumber + ':' + $_.Line.Trim()) }
+
+## 4) Ban dollar-dot
+Never use dollar-dot (e.g. property on `$`). Only use `$_` or named vars.

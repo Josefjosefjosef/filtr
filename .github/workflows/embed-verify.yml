@@ -1,0 +1,35 @@
+# One-off / manual: hard verify 8× IU_AI_VIDEOS embed real play. No production code.
+name: Embed verify (8× YouTube)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: node node_modules/playwright/cli.js install chromium
+
+      - name: Run embed verify (real play)
+        run: node tools/verify_embed_playwright.mjs
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: embed-verify-screenshots
+          path: artifacts/embed-verify/
+          if-no-files-found: ignore
