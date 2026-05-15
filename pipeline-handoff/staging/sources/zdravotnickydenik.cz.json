@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-15T05:59:41.105015Z",
+  "ingestedAt": "2026-05-15T06:39:52.746845Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Klíčová péče na hraně kolapsu: Ničí ji podseknuté úhrady i málo mladé krve. Potřeba ale poletí vzhůru",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/interna-nizke-uhrady/",
+      "dt": "2026-05-15T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "ale",
+        "hraně",
+        "klíčová",
+        "kolapsu",
+        "krve",
+        "mladé",
+        "málo",
+        "ničí",
+        "podseknuté",
+        "poletí",
+        "potřeba",
+        "péče",
+        "vzhůru",
+        "úhrady"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -244,33 +275,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Klíšťata ve městech jsou dvakrát nebezpečnější než v lese. Experti varují před vysokou infekčností",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/klistata-mesta-nebezpeci-les-infekce/",
-      "dt": "2026-05-14T08:11:11Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "dvakrát",
-        "experti",
-        "infekčností",
-        "klíšťata",
-        "lese",
-        "městech",
-        "nebezpečnější",
-        "než",
-        "varují",
-        "vysokou"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +285,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 78723,
+      "bytes": 93525,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,7 +322,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-15T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -333,6 +337,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Klíčová péče na hraně kolapsu: Ničí ji podseknuté úhrady i málo mladé krve. Potřeba ale poletí vzhůru",
+            "publishedAt": "2026-05-15T06:00:00Z"
+          },
           {
             "title": "Konec diskriminace nezadaných? Vojtěch chce povolit umělé oplodnění i single ženám",
             "publishedAt": "2026-05-15T05:00:00Z"
@@ -360,10 +368,6 @@
           {
             "title": "Varování SZPI: Nejezte toto mleté maso, obsahuje nebezpečnou salmonelu",
             "publishedAt": "2026-05-14T10:08:07Z"
-          },
-          {
-            "title": "Lékař obžalovaný ze zneužití dětí se hájí: Chtěl jsem zlepšit kvalitu jejich života",
-            "publishedAt": "2026-05-14T09:30:51Z"
           }
         ]
       }

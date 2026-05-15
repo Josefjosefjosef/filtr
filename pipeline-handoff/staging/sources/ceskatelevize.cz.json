@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-15T05:59:41.105015Z",
+  "ingestedAt": "2026-05-15T06:39:52.746845Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Systém DiPSy hlásí výpadky. Má ukazovat výsledky přijímacích zkoušek",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/system-dipsy-hlasi-vypadky-ma-ukazovat-vysledky-prijimacich-zkousek-373457",
+      "dt": "2026-05-15T06:19:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dipsy",
+        "hlásí",
+        "přijímacích",
+        "systém",
+        "ukazovat",
+        "výpadky",
+        "výsledky",
+        "zkoušek"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -105,21 +130,19 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Trump se v Pekingu opět sešel se Si Ťin-pchingem, na programu mají pracovní oběd",
+      "title": "Trump po setkání se Si Ťin-pchingem vyjádřil naději ve zlepšení vztahů",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/trump-zakonci-dvoudenni-navstevu-ciny-poobedva-se-si-tin-pchingem-373455",
       "dt": "2026-05-15T01:33:04Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "mají",
-        "oběd",
-        "opět",
+        "naději",
         "pchingem",
-        "pekingu",
-        "pracovní",
-        "programu",
-        "sešel",
+        "setkání",
         "trump",
+        "vyjádřil",
+        "vztahů",
+        "zlepšení",
         "ťin"
       ],
       "feedCategory": "zpravy",
@@ -732,25 +755,28 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "sport",
       "contentType": "article",
-      "title": "Řadu zápasů na fotbalovém šampionátu může ohrozit „vlhké vedro“",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/radu-zapasu-na-fotbalovem-sampionatu-muze-ohrozit-vlhke-vedro-373426",
-      "dt": "2026-05-14T10:27:30Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Dobeš pomohl Montrealu k \"mečbolu\", Hertl zapsal asistenci při postupu Vegas",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/dobes-pomohl-montrealu-k-mecbolu-hertl-zapsal-asistenci-pri-postupu-vegas-156798",
+      "dt": "2026-05-15T06:23:29Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "fotbalovém",
-        "ohrozit",
-        "vedro",
-        "vlhké",
-        "zápasů",
-        "řadu",
-        "šampionátu"
+        "asistenci",
+        "dobeš",
+        "hertl",
+        "mečbolu",
+        "montrealu",
+        "pomohl",
+        "postupu",
+        "při",
+        "vegas",
+        "zapsal"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1468,32 +1494,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Češi pilovali přesilovky a hru v oslabení, rýsuje se složení speciálních formací",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/cesi-pilovali-presilovky-a-hru-v-oslabeni-rysuje-se-slozeni-specialnich-formaci-156769",
-      "dt": "2026-05-13T14:47:03Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "formací",
-        "hru",
-        "oslabení",
-        "pilovali",
-        "přesilovky",
-        "rýsuje",
-        "složení",
-        "speciálních",
-        "češi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1504,7 +1504,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43039,
+      "bytes": 43329,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1564,11 +1564,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T05:55:42Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T06:19:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
-          "other": 4
+          "zpravy": 27,
+          "other": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1580,6 +1580,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Systém DiPSy hlásí výpadky. Má ukazovat výsledky přijímacích zkoušek",
+            "publishedAt": "2026-05-15T06:19:00Z"
+          },
           {
             "title": "USA zrušily záměr dočasně nasadit v Polsku tisíce vojáků, píše Reuters",
             "publishedAt": "2026-05-15T05:55:42Z"
@@ -1597,7 +1601,7 @@
             "publishedAt": "2026-05-15T04:00:00Z"
           },
           {
-            "title": "Trump se v Pekingu opět sešel se Si Ťin-pchingem, na programu mají pracovní oběd",
+            "title": "Trump po setkání se Si Ťin-pchingem vyjádřil naději ve zlepšení vztahů",
             "publishedAt": "2026-05-15T01:33:04Z"
           },
           {
@@ -1607,10 +1611,6 @@
           {
             "title": "V Havaně jednala delegace USA vedená šéfem CIA, oznámila kubánská vláda",
             "publishedAt": "2026-05-14T21:11:51Z"
-          },
-          {
-            "title": "Nečekali jsme tolik pozitivních reakcí na náš sjezd, řekl ČT Posselt",
-            "publishedAt": "2026-05-14T20:42:01Z"
           }
         ]
       }
@@ -1622,7 +1622,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37688,
+      "bytes": 37629,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1659,7 +1659,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T06:23:29Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1674,6 +1674,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dobeš pomohl Montrealu k \"mečbolu\", Hertl zapsal asistenci při postupu Vegas",
+            "publishedAt": "2026-05-15T06:23:29Z"
+          },
           {
             "title": "Švýcarsko hostí MS po 17 letech. Zlato obhajují USA, největším favoritem je Kanada",
             "publishedAt": "2026-05-15T04:00:00Z"
@@ -1701,10 +1705,6 @@
           {
             "title": "Střídání nadmořských výšek a vedra dají fotbalové reprezentaci pořádně zabrat",
             "publishedAt": "2026-05-14T14:44:37Z"
-          },
-          {
-            "title": "Disciplinárka trestá: Chorý má stopku na šest zápasů, Douděra na tři",
-            "publishedAt": "2026-05-14T14:21:45Z"
           }
         ]
       }
@@ -1716,7 +1716,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77141,
+      "bytes": 77121,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-15T05:59:41.105015Z",
+  "ingestedAt": "2026-05-15T06:39:52.746845Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Petr Zelenka ve skupině Adastra povede oblast AI",
+      "url": "https://profitonline.cz/petr-zelenka-ve-skupine-adastra-povede-oblast-ai/",
+      "dt": "2026-05-15T06:00:27Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "adastra",
+        "oblast",
+        "petr",
+        "povede",
+        "skupině",
+        "zelenka"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -259,29 +282,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nicolas Eich novým generálním ředitelem Bezvavlasy",
-      "url": "https://profitonline.cz/nicolas-eich-novym-generalnim-reditelem-bezvavlasy/",
-      "dt": "2026-05-13T06:00:56Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "bezvavlasy",
-        "eich",
-        "generálním",
-        "nicolas",
-        "novým",
-        "ředitelem"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -292,7 +292,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18619,
+      "bytes": 18642,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -329,7 +329,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-15T04:00:16Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T06:00:27Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -345,6 +345,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Petr Zelenka ve skupině Adastra povede oblast AI",
+            "publishedAt": "2026-05-15T06:00:27Z"
+          },
           {
             "title": "Mobil na dovolené v zahraničí. Kdy se z pohodlí stává drahá chyba?",
             "publishedAt": "2026-05-15T04:00:16Z"
@@ -372,10 +376,6 @@
           {
             "title": "Nové léky na hubnutí významně snižují riziko infarktu či mrtvice",
             "publishedAt": "2026-05-14T04:00:14Z"
-          },
-          {
-            "title": "Inflace v Česku pokračuje v růstu",
-            "publishedAt": "2026-05-13T21:15:47Z"
           }
         ]
       }

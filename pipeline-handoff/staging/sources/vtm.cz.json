@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-15T05:59:41.105015Z",
+  "ingestedAt": "2026-05-15T06:39:52.746845Z",
   "items": [
     {
       "section": "veda",
@@ -21,6 +21,33 @@
         "windows",
         "zrychlení",
         "závidí"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Hry zadarmo, nebo se slevou: Balík nezávislých pecek a Batmanova příběhovka zdarma",
+      "url": "https://doupe.zive.cz/hry-zadarmo-nebo-se-slevou-balik-nezavislych-pecek-a-batmanova-pribehovka-zdarma",
+      "dt": "2026-05-15T05:10:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "balík",
+        "batmanova",
+        "hry",
+        "nebo",
+        "nezávislých",
+        "pecek",
+        "příběhovka",
+        "slevou",
+        "zadarmo",
+        "zdarma"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -937,31 +964,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "macOS 26.5 především opravuje chyby. Některé z nich pomohla odhalit AI",
-      "url": "https://www.zive.cz/clanky/macos-265-tahoe-novinky/sc-3-a-241121/default.aspx",
-      "dt": "2026-05-12T06:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "chyby",
-        "macos",
-        "nich",
-        "některé",
-        "odhalit",
-        "opravuje",
-        "pomohla",
-        "především"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -972,7 +974,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22479,
+      "bytes": 22513,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1009,7 +1011,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-14T18:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T05:10:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1027,6 +1029,10 @@
           {
             "title": "Projekt Windows K2 slibuje zrychlení. Microsoft závidí herní výkon SteamOS",
             "publishedAt": "2026-05-14T16:45:00Z"
+          },
+          {
+            "title": "Hry zadarmo, nebo se slevou: Balík nezávislých pecek a Batmanova příběhovka zdarma",
+            "publishedAt": "2026-05-15T05:10:00Z"
           },
           {
             "title": "Teorie velkého třesku má pokračování. Stuart rozbil realitu a teď musí zachránit vesmír",
@@ -1051,10 +1057,6 @@
           {
             "title": "Recenze hry Forza Horizon 6. I závodní arkáda může být kandidát na hru roku",
             "publishedAt": "2026-05-14T13:15:00Z"
-          },
-          {
-            "title": "Stahujte aktualizaci One UI 8.5 na starší Samsungy. Čeká vás pohodlnější ovládání a spousta nových funkcí",
-            "publishedAt": "2026-05-14T07:45:00Z"
           }
         ]
       }

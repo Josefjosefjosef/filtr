@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-05-15T05:59:41.105015Z",
+  "ingestedAt": "2026-05-15T06:39:52.746845Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Týden na řeckém Rhodosu z Ostravy vč. all-inclusive. Zájezd od 6 490 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/tyden-na-reckem-rhodosu-z-ostravy-vc-all-inclusive",
+      "dt": "2026-05-15T06:00:44Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "490",
+        "all",
+        "inclusive",
+        "ostravy",
+        "rhodosu",
+        "týden",
+        "zájezd",
+        "řeckém"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -478,35 +503,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Z Prahy na Sardinii přímým letem do 4* hotelů vč. all-inclusive na přelomu května a června. Zájezd od 14 890 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/z-prahy-na-sardinii-primym-letem-do-4-hotelu-vcetne-all-inclusive-na-prelomu-kvetna-a-cervna",
-      "dt": "2026-05-09T11:32:34Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "890",
-        "all",
-        "hotelů",
-        "inclusive",
-        "května",
-        "letem",
-        "prahy",
-        "přelomu",
-        "přímým",
-        "sardinii",
-        "zájezd",
-        "června"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -517,7 +513,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 46099,
+      "bytes": 43036,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -554,7 +550,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-14T12:44:38Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T06:00:44Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -569,6 +565,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Týden na řeckém Rhodosu z Ostravy vč. all-inclusive. Zájezd od 6 490 Kč",
+            "publishedAt": "2026-05-15T06:00:44Z"
+          },
           {
             "title": "Marsa Matrouh z Prahy na konci května. Zájezd od 9 990 Kč",
             "publishedAt": "2026-05-14T12:44:38Z"
@@ -596,10 +596,6 @@
           {
             "title": "Z Prahy i Ostravy do Kalifornie s LOTem. Letenky od 11 790 Kč",
             "publishedAt": "2026-05-13T10:18:20Z"
-          },
-          {
-            "title": "Z Prahy do švédského Göteborgu na jednu noc nebo pár dní. Letenky od 978 Kč",
-            "publishedAt": "2026-05-13T09:08:01Z"
           }
         ]
       }
