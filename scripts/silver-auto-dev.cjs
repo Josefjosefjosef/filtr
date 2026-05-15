@@ -18,6 +18,10 @@ const ORCHESTRATOR_REPORT = path.join(__dirname, "silver-pr-orchestrator-v1-repo
 const DEV_REPORT = path.join(__dirname, "silver-auto-dev-report.json");
 const NEXT_ACTION_FILE = path.join(REPO, "SILVER_NEXT_ACTION.md");
 const ADAPTER_PS1 = path.join(__dirname, "silver-cursor-agent-adapter.ps1");
+const CURSOR_ADAPTER_DIAGNOSTIC_JSON = path.join(
+  __dirname,
+  "silver-cursor-agent-adapter-diagnostic-report.json",
+);
 const RHC3_REPORT = path.join(__dirname, "silver-real-human-chaos-v3-report.json");
 const REALISTIC_MOBILE_REPORT = path.join(__dirname, "silver-realistic-mobile-corpus-report.json");
 
@@ -206,6 +210,8 @@ function cursorSchemaDefaults(cli) {
     cursor_adapter_available: "NO",
     cursor_adapter_executed: "NO",
     cursor_exit_code: "",
+    cursor_adapter_wsl_ubuntu: "",
+    cursor_diagnostic_wsl_ready: "",
     cursor_output_file: "SILVER_CURSOR_OUTPUT.md",
     max_cycles: cli.runCursor ? "1" : "",
     loop_mode: "NO",
@@ -243,16 +249,57 @@ function discoverCursorAdapter() {
   return { ok: false, reason: "pwsh_not_found_non_windows", shell: "", fileArgs: [] };
 }
 
-function runSilverCursorAdapter(adapter) {
-  const args = [
-    ...adapter.fileArgs,
+/**
+ * When Windows Cursor CLI is not adapter_ready (no headless marker), Silver may still
+ * run the verified WSL `agent --print --mode ask --trust --workspace` path (see diagnostic).
+ * @returns {"YES"|"NO"|"UNKNOWN"}
+ */
+function readWslCursorAdapterReadyFromDiagnostic() {
+  const parsed = readJsonFile(CURSOR_ADAPTER_DIAGNOSTIC_JSON);
+  if (!parsed.ok || !parsed.data || typeof parsed.data !== "object") {
+    return "UNKNOWN";
+  }
+  const w = parsed.data.wsl_cursor_agent_print_ask_trust;
+  if (!w || typeof w !== "object") {
+    return "UNKNOWN";
+  }
+  const s = w.adapter_ready;
+  if (s === "YES" || s === "NO") {
+    return s;
+  }
+  return "UNKNOWN";
+}
+
+/** @param {string} winAbs */
+function repoRootWindowsToWslMnt(winAbs) {
+  const norm = path.resolve(String(winAbs || ""));
+  const m = /^([A-Za-z]):([\\/].*)$/.exec(norm);
+  if (!m) {
+    return "";
+  }
+  const letter = m[1].toLowerCase();
+  const tail = m[2].replace(/^[\\/]+/, "").split(/[\\/]+/).filter(Boolean).join("/");
+  return `/mnt/${letter}/${tail}`;
+}
+
+function runSilverCursorAdapter(adapter, opts) {
+  const useWsl = Boolean(opts && opts.useWslUbuntuAgent);
+  const args = [...adapter.fileArgs];
+  if (useWsl) {
+    args.push("-WslUbuntuAgent");
+    const wslWs = repoRootWindowsToWslMnt(REPO);
+    if (wslWs) {
+      args.push("-WslWorkspaceLinuxPath", wslWs);
+    }
+  }
+  args.push(
     "-TaskFile",
     "SILVER_NEXT_ACTION.md",
     "-OutputFile",
     "SILVER_CURSOR_OUTPUT.md",
     "-TimeoutSeconds",
-    "600",
-  ];
+    "1200",
+  );
   return runCommand(adapter.shell, args);
 }
 
@@ -385,6 +432,8 @@ function printRunCursorSummary(rep) {
   console.log("=== SILVER_AUTO_CURSOR_ADAPTER_V1_RUN_SUMMARY ===");
   console.log(`cursor_adapter_mode=${String(rep.cursor_adapter_mode || "")}`);
   console.log(`cursor_adapter_available=${String(rep.cursor_adapter_available || "")}`);
+  console.log(`cursor_diagnostic_wsl_ready=${String(rep.cursor_diagnostic_wsl_ready || "")}`);
+  console.log(`cursor_adapter_wsl_ubuntu=${String(rep.cursor_adapter_wsl_ubuntu || "")}`);
   console.log(`cursor_adapter_executed=${String(rep.cursor_adapter_executed || "")}`);
   console.log(`cursor_exit_code=${String(rep.cursor_exit_code || "")}`);
   console.log(`cursor_output_file=${String(rep.cursor_output_file || "")}`);
@@ -602,6 +651,10 @@ function main() {
   if (cli.runCursor && orch.ok) {
     const adapter = discoverCursorAdapter();
     repOut.cursor_adapter_available = yn(adapter.ok);
+    const wslReady = readWslCursorAdapterReadyFromDiagnostic();
+    repOut.cursor_diagnostic_wsl_ready = wslReady;
+    const useWslUbuntuAgent =
+      process.platform === "win32" && adapter.ok && wslReady === "YES";
     if (!adapter.ok) {
       repOut.cursor_adapter_stop_reason = adapter.reason;
     }
@@ -613,7 +666,8 @@ function main() {
           String(adapter.reason || "unknown") +
           "). Fix scripts/silver-cursor-agent-adapter.ps1 / pwsh (non-Windows), then run scripts/silver-cursor-agent-adapter-diagnostic.ps1 until adapter_ready=YES.";
       } else {
-        const ar = runSilverCursorAdapter(adapter);
+        repOut.cursor_adapter_wsl_ubuntu = yn(useWslUbuntuAgent);
+        const ar = runSilverCursorAdapter(adapter, { useWslUbuntuAgent });
         repOut.cursor_adapter_executed = "YES";
         repOut.cursor_exit_code = String(ar.exitCode);
         if (!ar.ok || ar.exitCode !== 0) {
