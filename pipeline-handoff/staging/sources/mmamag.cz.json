@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-15T19:05:04.413406Z",
+  "ingestedAt": "2026-05-15T19:45:02.636375Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Starý Nate Diaz je zpět. Na veřejném tréninku si zapálil a šel po kameramanovi",
+      "url": "https://www.mmamag.cz/nate-diaz-kouril-a-sel-po-kameramanovi/",
+      "dt": "2026-05-15T19:31:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "diaz",
+        "kameramanovi",
+        "nate",
+        "starý",
+        "tréninku",
+        "veřejném",
+        "zapálil",
+        "zpět",
+        "šel"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1077,37 +1103,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "MMA kategorie od muší po těžkou váhu. Stačí 10 otázek na limity a většina fanoušků zjistí, že netuší skoro nic",
-      "url": "https://www.mmamag.cz/mma-kategorie-od-musi-po-tezkou-vahu-staci-10-otazek-na-limity-a-vetsina-fanousku-zjisti-ze-netusi-skoro-nic/",
-      "dt": "2026-05-14T08:53:34Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "fanoušků",
-        "kategorie",
-        "limity",
-        "mma",
-        "muší",
-        "netuší",
-        "nic",
-        "otázek",
-        "skoro",
-        "stačí",
-        "těžkou",
-        "váhu",
-        "většina",
-        "zjistí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1118,7 +1113,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 80574,
+      "bytes": 80601,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1155,7 +1150,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-15T18:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T19:31:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1170,6 +1165,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Starý Nate Diaz je zpět. Na veřejném tréninku si zapálil a šel po kameramanovi",
+            "publishedAt": "2026-05-15T19:31:00Z"
+          },
           {
             "title": "Jake Paul prozradil, kolik dostane Rousey za návrat. Víc než šampion UFC za titulový zápas",
             "publishedAt": "2026-05-15T18:45:00Z"
@@ -1197,10 +1196,6 @@
           {
             "title": "Oktagon ulovil mexického rváče se smrtícím skóre. Salas má 15 ukončení a v kleci nezná slitování",
             "publishedAt": "2026-05-15T15:00:00Z"
-          },
-          {
-            "title": "Z UFC vyletěl kvůli dopingu, teď opouští Oktagon. Lutterbach se vrací do RFA pro odvetu, na kterou se čeká čtyři roky",
-            "publishedAt": "2026-05-15T14:15:00Z"
           }
         ]
       }
