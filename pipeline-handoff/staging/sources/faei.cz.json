@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-15T08:59:48.014984Z",
+  "ingestedAt": "2026-05-15T09:39:46.640216Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nové dluhopisy pro Čechy: Stabilní investice, nebo drahý luxus pro stát?",
+      "url": "https://profitonline.cz/nove-dluhopisy-pro-cechy-stabilni-investice-nebo-drahy-luxus-pro-stat/",
+      "dt": "2026-05-15T09:00:40Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dluhopisy",
+        "drahý",
+        "investice",
+        "luxus",
+        "nebo",
+        "nové",
+        "stabilní",
+        "stát",
+        "čechy"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -263,29 +289,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zaostává EU za USA? Landovský se v zásadě trefil do černého",
-      "url": "https://profitonline.cz/zaostava-eu-za-usa-landovsky-se-v-zasade-trefil-do-cerneho/",
-      "dt": "2026-05-13T10:00:15Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "landovský",
-        "trefil",
-        "usa",
-        "zaostává",
-        "zásadě",
-        "černého"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -296,7 +299,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18669,
+      "bytes": 18579,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -333,7 +336,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-15T08:00:29Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T09:00:40Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -349,6 +352,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nové dluhopisy pro Čechy: Stabilní investice, nebo drahý luxus pro stát?",
+            "publishedAt": "2026-05-15T09:00:40Z"
+          },
           {
             "title": "Energetická modernizace státních budov a areálů stojí. Čeká se na předpisy a metodiku",
             "publishedAt": "2026-05-15T08:00:29Z"
@@ -376,10 +383,6 @@
           {
             "title": "Pohonné hmoty ženou inflaci vzhůru. Kdy zdraží potraviny?",
             "publishedAt": "2026-05-14T08:00:03Z"
-          },
-          {
-            "title": "David Tajzich vede fúze a akvizice v RSM",
-            "publishedAt": "2026-05-14T06:00:45Z"
           }
         ]
       }

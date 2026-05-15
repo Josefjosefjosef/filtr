@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-15T08:59:48.014984Z",
+  "ingestedAt": "2026-05-15T09:39:46.640216Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Muž v Praze nestihl nastoupit do autobusu. Zlostí rozbil dveře",
+      "url": "https://tydenikpolicie.cz/muz-v-praze-nestihl-nastoupit-do-autobusu-zlosti-rozbil-dvere/",
+      "dt": "2026-05-15T09:12:49Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "autobusu",
+        "dveře",
+        "muž",
+        "nastoupit",
+        "nestihl",
+        "praze",
+        "rozbil",
+        "zlostí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -240,30 +265,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zlatá královéhradecká zásahovka. Závod Šumaman ovládla už jedenáctkrát",
-      "url": "https://tydenikpolicie.cz/zlata-kralovehradecka-zasahovka-zavod-sumaman-ovladla-uz-jedenactkrat/",
-      "dt": "2026-05-14T11:38:14Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "jedenáctkrát",
-        "královéhradecká",
-        "ovládla",
-        "zlatá",
-        "zásahovka",
-        "závod",
-        "šumaman"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,7 +275,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16616,
+      "bytes": 16386,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -311,7 +312,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-15T07:57:06Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T09:12:49Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -326,6 +327,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Muž v Praze nestihl nastoupit do autobusu. Zlostí rozbil dveře",
+            "publishedAt": "2026-05-15T09:12:49Z"
+          },
           {
             "title": "Ženy na Novojičínsku naletěly muži, který jim dal padělané eurobankovky",
             "publishedAt": "2026-05-15T07:57:06Z"
@@ -353,10 +358,6 @@
           {
             "title": "Senior v Karlových Varech přivolal strážníky. Domníval se, že ho sousedé sledují pomocí stropních senzorů",
             "publishedAt": "2026-05-14T18:02:52Z"
-          },
-          {
-            "title": "Muž si měl zneužitím bankovní služby přijít téměř na milion korun",
-            "publishedAt": "2026-05-14T12:07:39Z"
           }
         ]
       }

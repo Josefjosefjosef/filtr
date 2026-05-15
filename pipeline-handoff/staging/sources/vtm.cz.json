@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-15T08:59:48.014984Z",
+  "ingestedAt": "2026-05-15T09:39:46.640216Z",
   "items": [
     {
       "section": "veda",
@@ -21,6 +21,36 @@
         "windows",
         "zrychlení",
         "závidí"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Návod na Feedly. Pomůže vám nezbláznit se z informačního přetlaku, dostane všechny oblíbené weby na jedno místo",
+      "url": "https://www.zive.cz/clanky/navod-na-feedly-pomuze-vam-nezblaznit-se-z-informacniho-pretlaku-dostane-vsechny-oblibene-weby-na-jedno-misto/sc-3-a-240748/default.aspx",
+      "dt": "2026-05-15T08:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "dostane",
+        "feedly",
+        "informačního",
+        "jedno",
+        "místo",
+        "nezbláznit",
+        "návod",
+        "oblíbené",
+        "pomůže",
+        "přetlaku",
+        "vám",
+        "všechny",
+        "weby"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -932,36 +962,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Stahujte aktualizaci pro iPhone. iOS 26.5 přináší nové tapety a emotikony, RCS zprávy zatím jen v zámoří",
-      "url": "https://mobilmania.zive.cz/clanky/stahujte-aktualizaci-pro-iphone-ios-265-prinasi-nove-tapety-a-emotikony-rcs-zpravy-zatim-jen-v-zamori/sc-3-a-1364707/default.aspx",
-      "dt": "2026-05-12T12:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "aktualizaci",
-        "emotikony",
-        "ios",
-        "iphone",
-        "jen",
-        "nové",
-        "přináší",
-        "rcs",
-        "stahujte",
-        "tapety",
-        "zatím",
-        "zprávy",
-        "zámoří"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -972,7 +972,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22433,
+      "bytes": 22526,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1009,7 +1009,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-15T07:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T08:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1027,6 +1027,10 @@
           {
             "title": "Projekt Windows K2 slibuje zrychlení. Microsoft závidí herní výkon SteamOS",
             "publishedAt": "2026-05-14T16:45:00Z"
+          },
+          {
+            "title": "Návod na Feedly. Pomůže vám nezbláznit se z informačního přetlaku, dostane všechny oblíbené weby na jedno místo",
+            "publishedAt": "2026-05-15T08:45:00Z"
           },
           {
             "title": "Výborný OLED monitor pod osm tisíc. Musíte si ale pospíšit, tento MSI se rychle vyprodá",
@@ -1051,10 +1055,6 @@
           {
             "title": "Operátorské bizáry. Naklonují váš hlas do automatických hovorů a filtrují kontroverzní obsah, třeba piercing",
             "publishedAt": "2026-05-14T18:45:00Z"
-          },
-          {
-            "title": "Srovnali jsme Mapy.com s šesti dalšími službami od Googlu, Applu, OSM... Která mapa je nejhezčí?",
-            "publishedAt": "2026-05-13T16:45:00Z"
           }
         ]
       }

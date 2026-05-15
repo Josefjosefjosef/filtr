@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "svetcestovatele.cz",
-  "ingestedAt": "2026-05-15T08:59:48.014984Z",
+  "ingestedAt": "2026-05-15T09:39:46.640216Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Tatry: Místo, kde se zrodily mnohé pohádky i filmy",
+      "url": "https://www.svetcestovatele.cz/tatry-misto-kde-se-zrodily-mnohe-pohadky-i-filmy/",
+      "dt": "2026-05-15T09:19:03Z",
+      "media_raw": "SvětCestovatele",
+      "media_norm": "SvětCestovatele",
+      "tokens": [
+        "filmy",
+        "mnohé",
+        "místo",
+        "pohádky",
+        "tatry",
+        "zrodily"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_svetcestovatele",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "svetcestovatele.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -503,34 +526,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "svetcestovatele.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Absurdní požadavek učitelek ze školky – doneste si příští týden vlákna, co vám zbudou v sušičce",
-      "url": "https://www.svetcestovatele.cz/absurdni-pozadavek-ucitelek-ze-skolky-doneste-si-pristi-tyden-vlakna-co-vam-zbudou-v-susicce/",
-      "dt": "2026-05-04T04:00:56Z",
-      "media_raw": "SvětCestovatele",
-      "media_norm": "SvětCestovatele",
-      "tokens": [
-        "absurdní",
-        "doneste",
-        "požadavek",
-        "příští",
-        "sušičce",
-        "týden",
-        "učitelek",
-        "vlákna",
-        "vám",
-        "zbudou",
-        "školky"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_svetcestovatele",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "svetcestovatele.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -541,7 +536,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.svetcestovatele.cz/feed/",
-      "bytes": 115825,
+      "bytes": 117617,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -578,7 +573,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-15T04:00:39Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T09:19:03Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -593,6 +588,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tatry: Místo, kde se zrodily mnohé pohádky i filmy",
+            "publishedAt": "2026-05-15T09:19:03Z"
+          },
           {
             "title": "Prý jsem trouba, když mě manželka nutí přebalovat. Posměváčky jsem rázně utřel",
             "publishedAt": "2026-05-15T04:00:39Z"
@@ -620,10 +619,6 @@
           {
             "title": "Chorvatsko zavádí před sezonou novinky v cestovním ruchu",
             "publishedAt": "2026-05-11T11:00:42Z"
-          },
-          {
-            "title": "Klíšťata tyhle vůně nesnášejí: Přírodní repelent funguje překvapivě dobře. Otestovali jsme to",
-            "publishedAt": "2026-05-11T04:00:12Z"
           }
         ]
       }

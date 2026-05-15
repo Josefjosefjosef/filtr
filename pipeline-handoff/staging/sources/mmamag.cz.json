@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-15T08:59:48.014984Z",
+  "ingestedAt": "2026-05-15T09:39:46.640216Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Dana White má v sobotu oznámit McGregorův návrat. UFC chce zastínit comeback Rondy Rousey",
+      "url": "https://www.mmamag.cz/dana-white-muze-oznamit-navrat-conora-mcgregora/",
+      "dt": "2026-05-15T09:00:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "chce",
+        "comeback",
+        "dana",
+        "mcgregorův",
+        "návrat",
+        "oznámit",
+        "rondy",
+        "rousey",
+        "sobotu",
+        "ufc",
+        "white",
+        "zastínit"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "video",
@@ -1093,34 +1122,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kultovní Van Dammův film se dočká remaku. Krvavý sport se vrací po téměř 40 letech",
-      "url": "https://www.mmamag.cz/krvavy-sport-se-vraci-kultovni-van-dammuv-film-ceka-remake/",
-      "dt": "2026-05-13T16:30:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "dammův",
-        "dočká",
-        "film",
-        "krvavý",
-        "kultovní",
-        "letech",
-        "remaku",
-        "sport",
-        "téměř",
-        "van",
-        "vrací"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1131,7 +1132,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 78825,
+      "bytes": 78724,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1168,7 +1169,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-15T08:32:51Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T09:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1183,6 +1184,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dana White má v sobotu oznámit McGregorův návrat. UFC chce zastínit comeback Rondy Rousey",
+            "publishedAt": "2026-05-15T09:00:00Z"
+          },
           {
             "title": "Konflikt hvězd akčního filmu mohl skončil rvačkou. Lundgren a Van Damme se kdysi málem poprali",
             "publishedAt": "2026-05-15T08:32:51Z"
@@ -1210,10 +1215,6 @@
           {
             "title": "Tyhle přezdívky nosily legendy boxu. Víc než 6 z 10 správně dají jen lidé, kteří tenhle sport opravdu žijí",
             "publishedAt": "2026-05-15T03:26:00Z"
-          },
-          {
-            "title": "Legendární vládci MMA a jejich rekordy. Kdo zdržel titul přes tisíc dní? 8 z 10 fanoušků v testu selže",
-            "publishedAt": "2026-05-15T03:03:00Z"
           }
         ]
       }
