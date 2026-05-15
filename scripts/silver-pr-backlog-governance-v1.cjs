@@ -50,6 +50,7 @@ function runGhJson(args) {
         cwd: REPO,
         encoding: "utf8",
         maxBuffer: 64 * 1024 * 1024,
+        stdio: ["ignore", "pipe", "pipe"],
       });
       return JSON.parse(out);
     } catch (e) {
