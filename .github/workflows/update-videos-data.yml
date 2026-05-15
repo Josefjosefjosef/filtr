@@ -104,7 +104,13 @@ jobs:
           git fetch origin main
           git fetch origin "${{ env.AUTOMATION_BRANCH }}" 2>/dev/null || true
           git checkout -B "${{ env.AUTOMATION_BRANCH }}" origin/main
-          git stash pop || true
+          git stash pop
+          _v="projects/data/videos.json"
+          if grep -qE '^(<<<<<<<|=======|>>>>>>>)' "$_v"; then
+            echo "ERROR: conflict markers in $_v (stash/merge) — aborting without commit"
+            exit 1
+          fi
+          python -c "import json; json.load(open('projects/data/videos.json', encoding='utf-8'))"
           git add projects/data/videos.json
           git diff --cached --quiet && { echo "[DATA] Nothing to commit after stash"; exit 0; }
 

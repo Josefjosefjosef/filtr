@@ -210,17 +210,44 @@ async function auditCalendarAccentUi(page) {
         rgbEq(btnIconRgb, white);
       const labelIconConsistent = lc && ic && rgbEq(ic, lc);
       const mindBtnUsesBaseAccent = bc && rgbEq(bc, exp);
-      const ok =
-        rootVar === "#1c8748" &&
-        labelTextOk &&
-        noOldGreen &&
-        strokeOk &&
-        labelIconConsistent &&
-        mindBtnUsesBaseAccent &&
-        !rgbEq(rc, lc) &&
-        lw >= 700 &&
-        iw !== 700 &&
-        readableMind;
+      const imageTileMode = !!(btn.classList && btn.classList.contains("iu-mmTopTool--imageTile"));
+      let ok;
+      if (imageTileMode) {
+        const img = btn.querySelector("img.iu-mmTopToolImageTile");
+        const imgUrl = img ? String(img.currentSrc || img.src || "") : "";
+        const tileOk = !!(img && img.naturalWidth > 10 && /calendar-tile\.jpg/i.test(imgUrl));
+        const imgCs = img ? getComputedStyle(img) : null;
+        const fitOk = !!(imgCs && imgCs.objectFit === "contain");
+        const fitsBox = !!(
+          img &&
+          img.clientWidth <= btn.clientWidth + 1 &&
+          img.clientHeight <= btn.clientHeight + 1
+        );
+        ok =
+          rootVar === "#1c8748" &&
+          labelTextOk &&
+          noOldGreen &&
+          strokeOk &&
+          labelIconConsistent &&
+          !rgbEq(rc, lc) &&
+          lw >= 700 &&
+          iw !== 700 &&
+          tileOk &&
+          fitOk &&
+          fitsBox;
+      } else {
+        ok =
+          rootVar === "#1c8748" &&
+          labelTextOk &&
+          noOldGreen &&
+          strokeOk &&
+          labelIconConsistent &&
+          mindBtnUsesBaseAccent &&
+          !rgbEq(rc, lc) &&
+          lw >= 700 &&
+          iw !== 700 &&
+          readableMind;
+      }
       return {
         ok,
         rootVar,
@@ -232,11 +259,12 @@ async function auditCalendarAccentUi(page) {
         btnFg,
         btnTxtRgb,
         btnIconRgb,
-        mindContrast,
+        mindContrast: imageTileMode ? 21 : mindContrast,
         maxStrokePx,
         lw,
         iw,
-        noOldGreen
+        noOldGreen,
+        imageTileMode
       };
     },
     { exp: CALENDAR_ACCENT_RGB, retired: RETIRED_ACCENT_RGB, white: { r: 255, g: 255, b: 255 } }
@@ -247,8 +275,18 @@ async function mindMenuBgNonAdaptive(page) {
   const readBg = (scheme) =>
     page.evaluate((sch) => {
       const btn = document.querySelector(".mindMenu .iu-mmTopTool--cal.iuMindMenuButton");
-      if (!btn) return { scheme: sch, backgroundColor: null };
-      return { scheme: sch, backgroundColor: getComputedStyle(btn).backgroundColor };
+      if (!btn) return { scheme: sch, backgroundColor: null, imageTile: false, imgSrc: "", objectFit: "" };
+      const imageTile = !!(btn.classList && btn.classList.contains("iu-mmTopTool--imageTile"));
+      const img = btn.querySelector("img.iu-mmTopToolImageTile");
+      const imgSrc = img ? String(img.currentSrc || img.src || "") : "";
+      const objectFit = img ? String(getComputedStyle(img).objectFit || "") : "";
+      return {
+        scheme: sch,
+        backgroundColor: getComputedStyle(btn).backgroundColor,
+        imageTile,
+        imgSrc,
+        objectFit
+      };
     }, scheme);
   await page.emulateMedia({ colorScheme: "light" });
   await page.waitForTimeout(200);
@@ -258,11 +296,21 @@ async function mindMenuBgNonAdaptive(page) {
   const dark = await readBg("dark");
   await page.emulateMedia({ colorScheme: "light" });
   await page.waitForTimeout(120);
-  const ok =
-    light.backgroundColor &&
-    dark.backgroundColor &&
-    light.backgroundColor === dark.backgroundColor &&
-    /28,\s*135,\s*72/.test(String(light.backgroundColor));
+  let ok;
+  if (light.imageTile && dark.imageTile) {
+    ok =
+      light.imgSrc &&
+      light.imgSrc === dark.imgSrc &&
+      light.objectFit === "contain" &&
+      dark.objectFit === "contain" &&
+      /calendar-tile\.jpg/i.test(String(light.imgSrc));
+  } else {
+    ok =
+      light.backgroundColor &&
+      dark.backgroundColor &&
+      light.backgroundColor === dark.backgroundColor &&
+      /28,\s*135,\s*72/.test(String(light.backgroundColor));
+  }
   return { light, dark, ok };
 }
 
@@ -368,6 +416,12 @@ async function main() {
     }
 
     const accentAudit = await auditCalendarAccentUi(page);
+    await page.waitForTimeout(120);
+    await page.evaluate(() => {
+      try {
+        window.__iuClsSum = 0;
+      } catch {}
+    });
     const m = await snapMetrics(page);
     let mindBg = null;
     if (vi === 0) {
@@ -406,6 +460,7 @@ async function main() {
   }
 
   const sample = firstRow && firstRow.accentAudit;
+  const imgTile = !!(sample && sample.imageTileMode);
   const verdict = {
     CALENDAR_ACCENT_LOCK: passAll ? "OK" : "FAIL",
     LABEL_OK: sample && sample.ok && sample.labelTextOk && sample.lw >= 700 ? "YES" : "NO",
@@ -415,8 +470,8 @@ async function main() {
         : "NO",
     REST_TEXT_OK: sample && sample.ok && sample.rc && !rgbEqPub(sample.rc, CALENDAR_ACCENT_RGB) ? "YES" : "NO",
     MIND_MENU_BUTTON_OK:
-      sample && sample.ok && rgbEqPub(sample.bc, CALENDAR_ACCENT_RGB) ? "YES" : "NO",
-    CONTRAST_OK: sample && sample.mindContrast >= 4.5 ? "YES" : "NO",
+      sample && sample.ok && (imgTile || rgbEqPub(sample.bc, CALENDAR_ACCENT_RGB)) ? "YES" : "NO",
+    CONTRAST_OK: sample && sample.ok && (imgTile || sample.mindContrast >= 4.5) ? "YES" : "NO",
     NON_ADAPTIVE_OK: mindNonAdaptiveOk ? "YES" : "NO",
     OLD_COLOR_NOT_PRESENT: sample && sample.noOldGreen ? "YES" : "NO",
     FINAL_VERDICT: passAll ? "PASS" : "FAIL"

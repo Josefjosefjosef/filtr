@@ -46,11 +46,20 @@ jobs:
 
       - run: npm run smoke
 
+      - name: Silver mobile layout guard (prod Playwright)
+        run: node scripts/proof_silver_layout_guard.cjs
+
       - name: Weather outside-temp emphasis guard
         run: npm run weather-emphasis-guard
 
+      - name: Počasíčko / pocasicko data guard
+        run: npm run weather-pocasicko-guard
+
       - name: CZ vertical sections guard (hry/kultura/veda/vzdelavani)
         run: npm run section-cz-guard
+
+      - name: Perf regression guards (flicker phases + 16 nav latency + calendar/Silver surface)
+        run: npm run iu-perf-regression-guards
 
       - name: Set required status context (smoke)
         if: always()

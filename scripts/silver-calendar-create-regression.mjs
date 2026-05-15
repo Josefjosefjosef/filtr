@@ -34,10 +34,9 @@ function loadEngine() {
   };
   ctx.window.document = ctx.document;
   vm.createContext(ctx);
-  vm.runInContext(
-    SILVER.replace(/document\.readyState/g, '"complete"').replace(/document\.addEventListener\([^)]+\)/g, "void 0"),
-    ctx
-  );
+  // Do not strip addEventListener via regex: arrow/listener bodies break `[^)]+` and yield `void 0 => {` (SyntaxError).
+  // A no-op addEventListener on ctx.document is enough; listener bodies are not invoked at eval time.
+  vm.runInContext(SILVER.replace(/document\.readyState/g, '"complete"'), ctx);
   return ctx.window.iuSilverCalendarEngine;
 }
 
@@ -57,6 +56,12 @@ function run() {
       title: r.draft.title || "",
       missingFields: sortArr(r.missingFields || [])
     };
+    if (Object.prototype.hasOwnProperty.call(c.expect, "note")) {
+      actual.note = String(r.draft.note || "");
+    }
+    if (Object.prototype.hasOwnProperty.call(c.expect, "location")) {
+      actual.location = String(r.draft.location || r.draft.address || "");
+    }
     const exp = {
       processingState: c.expect.processingState,
       date: c.expect.date || "",
@@ -64,12 +69,20 @@ function run() {
       title: c.expect.title || "",
       missingFields: sortArr(c.expect.missingFields || [])
     };
+    if (Object.prototype.hasOwnProperty.call(c.expect, "note")) {
+      exp.note = String(c.expect.note || "");
+    }
+    if (Object.prototype.hasOwnProperty.call(c.expect, "location")) {
+      exp.location = String(c.expect.location || "");
+    }
     const ok =
       actual.processingState === exp.processingState &&
       actual.date === exp.date &&
       actual.time === exp.time &&
       actual.title === exp.title &&
-      JSON.stringify(actual.missingFields) === JSON.stringify(exp.missingFields);
+      JSON.stringify(actual.missingFields) === JSON.stringify(exp.missingFields) &&
+      (!Object.prototype.hasOwnProperty.call(c.expect, "note") || actual.note === exp.note) &&
+      (!Object.prototype.hasOwnProperty.call(c.expect, "location") || actual.location === exp.location);
     if (ok) pass++;
     else fail++;
     results.push({
@@ -104,7 +117,56 @@ function run() {
     exitCode: fail > 0 ? 1 : 0
   };
   console.log(JSON.stringify({ summary }));
-  process.exit(summary.exitCode);
+
+  /** P0 embedded event note: calendar.create + event draft.note; žádný samostatný notes.create companion. */
+  const DUAL_NOW = new Date("2026-05-06T12:00:00");
+  const dualIn =
+    "Ulož mi schůzku ve středu s Tomášem na adrese Korunní 44 Praha do poznámky mi dej abych si sebou vzal deštník";
+  const dualR = eng.processUserTurn(dualIn, eng.createEmptyDraft(), { now: DUAL_NOW });
+  const comp = !!dualR.silverCompanionNoteTurn;
+  const calNote = String((dualR.draft && dualR.draft.note) || "").toLowerCase();
+  const dualOk =
+    dualR.normalizedIntent === "calendar.create" &&
+    !comp &&
+    (calNote.indexOf("deštník") >= 0 || calNote.indexOf("destnik") >= 0);
+  console.log(JSON.stringify({ case: "REAL_MULTI_INTENT_CAL_NOTE_SPLIT", pass: dualOk }));
+  const exitDual = dualOk ? 0 : 1;
+
+  /** P0 real mobile v1 — doplněné produkční věty (kalendář + adresace + připomenutí + dual-write). */
+  const RM_NOW = new Date("2026-03-27T12:00:00");
+  const rmZel =
+    "Ulož mi ve čtvrtek schůzku s panem Zelenkou na adrese Praha jedna vinohradská a do poznámky mi dej ať si připravím smlouvu";
+  const rmZR = eng.processUserTurn(rmZel, eng.createEmptyDraft(), { now: RM_NOW });
+  const zOk =
+    rmZR.normalizedIntent === "calendar.create" &&
+    !rmZR.silverCompanionNoteTurn &&
+    String((rmZR.draft && rmZR.draft.note) || "")
+      .toLowerCase()
+      .indexOf("smlouv") >= 0 &&
+    String((rmZR.draft && rmZR.draft.address) || "").toLowerCase().indexOf("vinohrad") >= 0;
+  console.log(JSON.stringify({ case: "REAL_MULTI_INTENT_ZELENKA_CAL_NOTE", pass: zOk }));
+
+  const rmW = "Kdy mi končí záruka TV";
+  const rmWR = eng.processUserTurn(rmW, eng.createEmptyDraft(), { now: RM_NOW });
+  const wOk =
+    rmWR.normalizedIntent === "notes.read" &&
+    rmWR.processingState === "READ_OK" &&
+    !/\bkalend/i.test(String(rmWR.assistantLead || rmWR.userFacingSummary || "").toLowerCase());
+  console.log(JSON.stringify({ case: "REAL_MOBILE_WARRANTY_NOTE_QUERY", pass: wOk }));
+
+  const rmT1 = "Nesmím zapomenout napsat do knihy úvodní kapitolu";
+  const rmT1R = eng.processUserTurn(rmT1, eng.createEmptyDraft(), { now: RM_NOW });
+  const t1Ok = rmT1R.normalizedIntent === "tasks.create" && rmT1R.processingState === "READY_TO_SAVE";
+  console.log(JSON.stringify({ case: "REAL_MOBILE_NESMIM_NAPSAT_TASK", pass: t1Ok }));
+
+  const rmT2 = "Nesmím zapomenout zaplatit nájem do pátku";
+  const rmT2R = eng.processUserTurn(rmT2, eng.createEmptyDraft(), { now: RM_NOW });
+  const t2Ok = rmT2R.normalizedIntent === "tasks.create" && rmT2R.processingState === "READY_TO_SAVE";
+  console.log(JSON.stringify({ case: "REAL_MOBILE_NESMIM_ZAPLATIT_TASK", pass: t2Ok }));
+
+  const exitRm = zOk && wOk && t1Ok && t2Ok ? 0 : 1;
+  const exitFinal = summary.exitCode !== 0 ? summary.exitCode : exitDual !== 0 ? exitDual : exitRm;
+  process.exit(exitFinal);
 }
 
 run();

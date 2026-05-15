@@ -1,14 +1,40 @@
 {
-  "contractVersion": "1",
+  "contractVersion": "5",
   "fixedNow": "2026-03-27T12:00:00",
   "cases": [
     { "id": "read-01", "input": "co mám dnes", "expect": { "normalizedIntent": "calendar.read", "processingState": "READ_OK", "clarificationReason": null } },
     { "id": "read-02", "input": "v kolik mám první schůzku", "expect": { "normalizedIntent": "calendar.read", "processingState": "READ_OK", "clarificationReason": null } },
     { "id": "create-01", "input": "ulož do kalendáře zítra zubaře v 8", "expect": { "normalizedIntent": "calendar.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
-    { "id": "miss-01", "input": "zítra zubař v 8", "expect": { "normalizedIntent": "create.storage_disambiguation", "processingState": "STORAGE_DISAMBIGUATION", "clarificationReason": "missing_explicit_target" } },
-    { "id": "notes-01", "input": "zapiš do poznámek auto je v servisu", "expect": { "normalizedIntent": "notes.future_candidate", "processingState": "CLARIFICATION", "clarificationReason": "future_target_not_supported_yet" } },
-    { "id": "tasks-01", "input": "přidej do úkolů zavolat účetní", "expect": { "normalizedIntent": "tasks.future_candidate", "processingState": "CLARIFICATION", "clarificationReason": "future_target_not_supported_yet" } },
+    { "id": "miss-01", "input": "zítra zubař v 8", "expect": { "normalizedIntent": "calendar.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
+    { "id": "notes-01", "input": "zapiš do poznámek auto je v servisu", "expect": { "normalizedIntent": "notes.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
+    { "id": "notes-02", "input": "Ulož poznámku číslo objednávky 12345", "expect": { "normalizedIntent": "notes.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
+    { "id": "notes-03", "input": "Poznámka: servis volat po 15. hodině", "expect": { "normalizedIntent": "notes.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
+    { "id": "notes-04", "input": "Poznamenej si reklamace televize", "expect": { "normalizedIntent": "notes.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
+    { "id": "notes-05", "input": "Napiš do poznámek že garance končí v červnu", "expect": { "normalizedIntent": "notes.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
+    { "id": "notes-06", "input": "Ulož do poznámek kontakt na servis", "expect": { "normalizedIntent": "notes.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
+    { "id": "notes-07", "input": "Dej do poznámek kód ABC123", "expect": { "normalizedIntent": "notes.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
+    { "id": "notes-empty-01", "input": "ulož poznámku", "expect": { "normalizedIntent": "notes.empty_prompt", "processingState": "CLARIFICATION", "clarificationReason": "notes_empty_body" } },
+    { "id": "tasks-01", "input": "přidej do úkolů zavolat účetní", "expect": { "normalizedIntent": "tasks.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
+    { "id": "tasks-02", "input": "Zítra mlíko koupit", "expect": { "normalizedIntent": "tasks.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
+    { "id": "tasks-03", "input": "Zaplatit nájem", "expect": { "normalizedIntent": "tasks.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
+    { "id": "tasks-cal-01", "input": "Zítra zubař v 18 hod.", "expect": { "normalizedIntent": "calendar.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
     { "id": "neg-01", "input": "neukládej do kalendáře zítra zubaře v 8", "expect": { "normalizedIntent": "clarification", "processingState": "CLARIFICATION", "clarificationReason": "negated_write_request" } },
-    { "id": "ambig-01", "input": "náhodný text bez kontextu xyz123", "expect": { "normalizedIntent": "clarification", "processingState": "CLARIFICATION", "clarificationReason": "ambiguous_request" } }
+    { "id": "ambig-01", "input": "náhodný text bez kontextu xyz123", "expect": { "normalizedIntent": "clarification", "processingState": "CLARIFICATION", "clarificationReason": "ambiguous_request" } },
+    { "id": "sb-v1-cal-18", "input": "Zítra zubař v 18", "expected": "calendar.create" },
+    { "id": "sb-v1-task-milk", "input": "Zítra mlíko koupit", "expected": "task.create" },
+    { "id": "sb-v1-note-order", "input": "Ulož poznámku číslo objednávky", "expected": "note.create" },
+    { "id": "sb-v1-unknown-praha", "input": "Praha jedna", "expected": "unknown" },
+    {
+      "id": "sb-v1-11-praha-zitra",
+      "input": "Praha jedna zítra",
+      "expect": {
+        "normalizedIntent": "create.storage_disambiguation",
+        "processingState": "STORAGE_DISAMBIGUATION",
+        "clarificationReason": "missing_explicit_target"
+      }
+    },
+    { "id": "v15-tasks-read", "input": "Najdi úkol nájem", "expected": "tasks.read" },
+    { "id": "v15-notes-read", "input": "Vyhledej pin karty", "expected": "notes.read" },
+    { "id": "v15-global-search", "input": "Najdi Petra", "expected": "global.search" }
   ]
 }

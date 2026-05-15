@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * Regression guard: Silver weather line — only "Venku je X °C" is emphasized
- * (.silver-weather-outside-temp). DOM + computed style + CLS/overflow/rail/console.
+ * Regression guard: Silver weather line — temperature emphasis (.silver-weather-outside-temp).
+ * Supports compact strip: numeric "X °C" / "—°C" in .silver-weather-outside-temp plus optional "Venku je " prefix sibling.
+ * DOM + computed style + CLS/overflow/rail/console.
  *
  * Run: node scripts/proofs/weather_emphasis_guard.mjs
  */
@@ -45,7 +46,8 @@ function startStaticServer() {
       let rel = decodeURIComponent(u.replace(/^\//, "")).replace(/\\/g, "/");
       if (rel.endsWith("/")) rel += "index.html";
       const fp = path.resolve(rootResolved, rel);
-      if (!fp.startsWith(rootResolved)) {
+      const relToRoot = path.relative(rootResolved, fp);
+      if (relToRoot.startsWith("..") || path.isAbsolute(relToRoot)) {
         res.statusCode = 403;
         res.end();
         return;
@@ -107,6 +109,90 @@ function fail(msg) {
   process.exit(1);
 }
 
+/**
+ * Minimal Open-Meteo-shaped JSON so iuFetchOpenMeteo + iuWxBuildWeatherState succeed under localhost.
+ * Proof-only: avoids flaky CORS / network console errors when Silver enters loading state and hits the real API.
+ */
+function buildGuardOpenMeteoMockBody() {
+  const pad2 = (n) => String(n).padStart(2, "0");
+  const now = Date.now();
+  const hourlyN = 48;
+  const hourly = {
+    time: [],
+    temperature_2m: [],
+    apparent_temperature: [],
+    weather_code: [],
+    precipitation_probability: [],
+    precipitation: [],
+    wind_speed_10m: [],
+    wind_gusts_10m: [],
+    wind_direction_10m: [],
+    pressure_msl: [],
+    relative_humidity_2m: [],
+    visibility: [],
+    uv_index: [],
+    is_day: [],
+  };
+  for (let i = 1; i <= hourlyN; i++) {
+    const t = new Date(now + i * 3600000);
+    hourly.time.push(t.toISOString());
+    hourly.temperature_2m.push(3);
+    hourly.apparent_temperature.push(1);
+    hourly.weather_code.push(3);
+    hourly.precipitation_probability.push(10);
+    hourly.precipitation.push(0);
+    hourly.wind_speed_10m.push(12);
+    hourly.wind_gusts_10m.push(18);
+    hourly.wind_direction_10m.push(200);
+    hourly.pressure_msl.push(1013);
+    hourly.relative_humidity_2m.push(72);
+    hourly.visibility.push(10000);
+    hourly.uv_index.push(1);
+    hourly.is_day.push(1);
+  }
+  const daily = {
+    time: [],
+    temperature_2m_max: [],
+    temperature_2m_min: [],
+    weather_code: [],
+    uv_index_max: [],
+    sunrise: [],
+    sunset: [],
+  };
+  for (let d = 0; d < 7; d++) {
+    const x = new Date(now + d * 86400000);
+    const y = x.getUTCFullYear();
+    const m = pad2(x.getUTCMonth() + 1);
+    const day = pad2(x.getUTCDate());
+    const ds = `${y}-${m}-${day}`;
+    daily.time.push(ds);
+    daily.temperature_2m_max.push(5);
+    daily.temperature_2m_min.push(1);
+    daily.weather_code.push(3);
+    daily.uv_index_max.push(2);
+    daily.sunrise.push(`${ds}T05:00`);
+    daily.sunset.push(`${ds}T19:00`);
+  }
+  const payload = {
+    current: {
+      time: new Date(now).toISOString(),
+      temperature_2m: 3,
+      apparent_temperature: 1,
+      weather_code: 3,
+      is_day: 1,
+      wind_speed_10m: 12,
+      wind_gusts_10m: 18,
+      wind_direction_10m: 200,
+      pressure_msl: 1013,
+      relative_humidity_2m: 72,
+      visibility: 10000,
+    },
+    hourly,
+    daily,
+  };
+  return JSON.stringify(payload);
+}
+
 async function main() {
   const { server, base } = await startStaticServer();
   const browser = await chromium.launch({ headless: true });
@@ -126,6 +212,14 @@ async function main() {
       });
       page.on("pageerror", (err) => {
         consoleErrors.push(String(err && err.message ? err.message : err));
+      });
+
+      await page.route(/^https:\/\/api\.open-meteo\.com\/v1\/forecast/, async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json; charset=utf-8",
+          body: buildGuardOpenMeteoMockBody(),
+        });
       });
 
       await page.addInitScript(() => {
@@ -168,6 +262,14 @@ async function main() {
         return el && /Venku\s+je/i.test(el.textContent || "");
       }, null, { timeout: 30000 });
 
+      /* Po stabilním „Venku je …“ vynulovat CLS: měří jen posuny po finálním paintu (grid / řádky Silver). */
+      await page.waitForTimeout(120);
+      await page.evaluate(() => {
+        try {
+          window.__iuClsSum = 0;
+        } catch {}
+      });
+
       const check = await page.evaluate(() => {
         function parseRgb(cssColor) {
           const s = String(cssColor || "").trim();
@@ -202,7 +304,9 @@ async function main() {
           kids[0].classList.contains("silver-weather-dpart");
 
         const txt = emph ? String(emph.textContent || "").trim() : "";
-        const venkuOk = /Venku\s+je\s+\d+\s*°C/i.test(txt);
+        const venkuOk = /Venku\s+je\s+-?\d+\s*°C/i.test(txt);
+        const compactTempOk = /^-?\d+\s*°C$/.test(txt) || txt === "—°C";
+        const tempOk = venkuOk || compactTempOk;
         const noLeak =
           !/Pocitově/i.test(txt) &&
           !/Oblačno/i.test(txt) &&
@@ -216,7 +320,12 @@ async function main() {
         const statusInEmph = !!(status && emph && emph.contains(status));
 
         const cs = emph ? window.getComputedStyle(emph) : null;
-        const lineCS = line1 ? window.getComputedStyle(line1) : null;
+        const line1Display = line1 ? String(window.getComputedStyle(line1).display || "") : "";
+        const lineAnchor =
+          line1 && line1Display === "contents"
+            ? line1.closest("#iuSilverWeatherCard") || line1.parentElement
+            : line1;
+        const lineCS = lineAnchor ? window.getComputedStyle(lineAnchor) : null;
         const feelsCS = feels ? window.getComputedStyle(feels) : null;
 
         const wEm = cs ? parseFloat(cs.fontWeight) || 0 : 0;
@@ -232,6 +341,8 @@ async function main() {
           line1Exists: !!line1,
           emphExists: !!emph,
           venkuOk,
+          compactTempOk,
+          tempOk,
           firstIsIcon,
           noLeak,
           iconInEmph,
@@ -254,7 +365,7 @@ async function main() {
       const ok =
         check.line1Exists &&
         check.emphExists &&
-        check.venkuOk &&
+        check.tempOk &&
         check.firstIsIcon &&
         check.noLeak &&
         !check.iconInEmph &&

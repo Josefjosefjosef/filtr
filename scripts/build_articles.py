@@ -9,7 +9,7 @@ import hashlib
 import sys
 import time
 import unicodedata
-from collections import defaultdict
+from collections import Counter, defaultdict
 from datetime import datetime, timezone, timedelta
 from urllib.parse import urlparse, urlunparse, parse_qsl, urlencode
 
@@ -36,7 +36,9 @@ _SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
 if _SCRIPTS_DIR not in sys.path:
     sys.path.insert(0, _SCRIPTS_DIR)
 
+from iu_blocked_sources import iu_is_blocked_pocasicko_source
 from iu_registry import (
+    SOURCE_BATCH_INTERNAL_GAP_MS_DEFAULT,
     collapse_feeds_by_url,
     compute_display_score,
     is_hard_blocked_url,
@@ -48,8 +50,22 @@ from iu_registry import (
     purge_blocked_articles,
     registry_active_entries,
     save_scheduler_state,
+    scheduler_cooldown_key,
     select_feeds_for_tick,
 )
+from iu_staging import (
+    deserialize_youtube_row,
+    ensure_staging_dirs,
+    load_staging_for_aggregate,
+    read_aggregated_checkpoint,
+    serialize_youtube_row,
+    write_aggregated_checkpoint,
+    write_ingest_manifest,
+    write_source_staging,
+    write_youtube_staging,
+)
+from ingest_telemetry import build_telemetry_payload, print_compact_audit, section_bucket
+from iu_feed_classification import classification_coverage_stats, enrich_article_list
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # repo root
 FEEDS_PATH = os.path.join(ROOT_DIR, "scripts", "feeds.json")
@@ -70,10 +86,14 @@ OUT_PATH = os.path.join(OUTPUT_DIR, "articles.json")
 HEALTH_PATH = os.path.join(OUTPUT_DIR, "feed_health.json")
 BRIEF_PATH = os.path.join(OUTPUT_DIR, "brief.json")
 META_PATH = os.path.join(OUTPUT_DIR, "meta.json")
+INGEST_TELEMETRY_PATH = os.path.join(OUTPUT_DIR, "ingest_telemetry", "latest.json")
 
 # ✅ Retention storage (sharded by day; append-only with dedup)
 ARTICLES_SHARD_DIR = os.path.join(OUTPUT_DIR, "articles")
 ARTICLES_INDEX_PATH = os.path.join(ARTICLES_SHARD_DIR, "index.json")
+ARTICLES_BOOTSTRAP_PATH = os.path.join(ARTICLES_SHARD_DIR, "bootstrap.json")
+BOOTSTRAP_MAX_ARTICLES = 1000
+BOOTSTRAP_HARD_CAP = 1100
 
 # ✅ NOVĚ: výstup videí (pro assets/app.js)
 VIDEOS_OUT_PATH = os.path.join(OUTPUT_DIR, "videos.json")
@@ -83,7 +103,6 @@ BOT_FROM_HEADER = "admin@infouzel.cz"
 REQUEST_TIMEOUT_SEC = 20
 
 MAX_ITEMS_PER_FEED = 40
-MAX_OUTPUT_ARTICLES = 220  # aby web zůstal svižný
 
 # Anti-block + výstupní limity
 GLOBAL_MIN_REQUEST_INTERVAL_SEC = 2.0
@@ -166,6 +185,39 @@ SECTION_ORDER = ["pocasi", "doprava", "aktualne", "krimi", "finance", "sport", "
 
 VALID_SECTIONS = {"pocasi","doprava","aktualne","krimi","finance","sport","zdravi","cestovani","hry","kultura","veda","vzdelavani"}
 
+# Per-sekční retence ve veřejném articles.json (žádný globální „media pool“ / finální globální řez po retenci).
+SECTION_RETENTION_CAP_DEFAULT = 12_500
+SECTION_RETENTION_CAP_OVERRIDES: dict[str, int] = {
+    "aktualne": 30_000,
+    "sport": 20_000,
+}
+
+
+def section_retention_cap(canonical_section: str) -> int:
+    """Tvrdý strop počtu článků v kanonické sekci po limitech a po sloučení s veřejným předchozím datasetem."""
+    s = (canonical_section or "").strip().lower()
+    v = SECTION_RETENTION_CAP_OVERRIDES.get(s)
+    if v is not None:
+        return int(v)
+    return int(SECTION_RETENTION_CAP_DEFAULT)
+
+
+# merge_article_lists(): horní mez jen proti nekonečnému růstu working setu před per-sekčním zpracováním;
+# nesmí globálně „useknout“ články dřív než per-sekční retence (žádný finální globální pool cut).
+MAX_MERGED_ARTICLES_POOL = 2_000_000
+
+
+def _section_retention_manifest() -> dict:
+    """Metadata ve výstupu — výhradně per-sekční capy (žádný globální maxPool)."""
+    caps = {s: section_retention_cap(s) for s in SECTION_ORDER}
+    return {
+        "model": "per-section-only",
+        "defaultCap": SECTION_RETENTION_CAP_DEFAULT,
+        "capsByCanonicalSection": caps,
+        "overrides": dict(SECTION_RETENTION_CAP_OVERRIDES),
+        "canonicalSectionCount": len(SECTION_ORDER),
+    }
+
 # Kanonické CZ vertikály — RSS topic v registru musí přesně odpovídat (infer_section se přeskakuje).
 FORCED_FEED_TOPICS = frozenset({"hry", "kultura", "veda", "vzdelavani", "cestovani"})
 
@@ -178,7 +230,7 @@ EXTREME_ARCHIVE_DAYS_VERTICAL = 365
 
 # Postupné uvolňování do veřejného JSON (per sekce za běh buildu)
 SECTION_RELEASE_STATE_PATH = os.path.join(OUTPUT_DIR, "section_release_state.json")
-MAX_SECTION_RELEASE_PER_RUN = 5
+MAX_SECTION_RELEASE_PER_RUN = 15
 
 
 # =========================
@@ -600,6 +652,163 @@ def apply_niche_fraction_limit(articles: list) -> list:
     return merged
 
 
+def _retention_section_key(article: dict) -> str:
+    """Kanonický klíč sekce pro výstupní retenci (shodné s stable_section / frontend topic)."""
+    if not isinstance(article, dict):
+        return "aktualne"
+    return stable_section(str(article.get("topic") or article.get("section") or "aktualne"))
+
+
+def _apply_niche_fraction_if_mixed_feedtypes(rows: list) -> list:
+    """
+    Globální NICHE_MAX_FRACTION je myšlený pro smíšený feed. V sekci, kde jsou jen niche feedy,
+    by 38 % řez zničilo celý vertikální pool — v takovém případě nic nedělej.
+    """
+    if not rows:
+        return rows
+    types = [str((r.get("feedType") or "") if isinstance(r, dict) else "") for r in rows]
+    all_niche = bool(types) and all(t == "niche" for t in types)
+    no_niche = not any(t == "niche" for t in types)
+    if all_niche or no_niche:
+        return rows
+    return apply_niche_fraction_limit(rows)
+
+
+def apply_per_section_limits_then_cap(articles: list) -> list:
+    """
+    Výstup pro articles.json: limity zvlášť v každé kanonické sekci — niche fraction
+    a topic/source limity jen uvnitř dané sekce. Poté až per-sekční cap (section_retention_cap),
+    dedupe URL v sekci, sloučení všech sekcí a řazení podle publishedAt + dedupe URL napříč sekcemi.
+    Žádný globální finální pool cut.
+    """
+    if not articles:
+        return []
+    by_sec: dict[str, list] = defaultdict(list)
+    for a in articles:
+        if not isinstance(a, dict):
+            continue
+        by_sec[_retention_section_key(a)].append(a)
+
+    out: list = []
+    seen_sec: set[str] = set()
+    for sec in SECTION_ORDER:
+        if sec not in by_sec:
+            continue
+        seen_sec.add(sec)
+        cap = section_retention_cap(sec)
+        rows = sorted(by_sec[sec], key=lambda x: str(x.get("publishedAt") or ""), reverse=True)
+        rows = apply_topic_and_source_limits(rows)
+        rows = _apply_niche_fraction_if_mixed_feedtypes(rows)
+        url_seen: set[str] = set()
+        deduped: list = []
+        for r in rows:
+            u = canonicalize_url((r.get("url") or "").strip())
+            if not u:
+                continue
+            if u in url_seen:
+                continue
+            url_seen.add(u)
+            deduped.append(r)
+        out.extend(deduped[:cap])
+
+    for sec in sorted(by_sec.keys()):
+        if sec in seen_sec:
+            continue
+        cap = section_retention_cap(sec)
+        rows = sorted(by_sec[sec], key=lambda x: str(x.get("publishedAt") or ""), reverse=True)
+        rows = apply_topic_and_source_limits(rows)
+        rows = _apply_niche_fraction_if_mixed_feedtypes(rows)
+        url_seen = set()
+        deduped = []
+        for r in rows:
+            u = canonicalize_url((r.get("url") or "").strip())
+            if not u:
+                continue
+            if u in url_seen:
+                continue
+            url_seen.add(u)
+            deduped.append(r)
+        out.extend(deduped[:cap])
+
+    url_global: set[str] = set()
+    merged: list = []
+    for r in sorted(out, key=lambda x: str(x.get("publishedAt") or ""), reverse=True):
+        u = canonicalize_url((r.get("url") or "").strip())
+        if not u or u in url_global:
+            continue
+        url_global.add(u)
+        merged.append(r)
+    return merged
+
+
+def apply_per_section_published_retention(prev_public: list, capped_feed: list) -> list:
+    """
+    Per-section append-only semantics for already shipped URLs (stable canonical URL identity).
+    Runs after apply_per_section_limits_then_cap (current curated feed).
+
+    1) Merge previous public articles.json with this run's capped output by URL; capped_feed wins
+       on collision (newer pipeline metadata / section).
+    2) Bucket by canonical section (_retention_section_key).
+    3) Within each section: sort newest first, hard cap section_retention_cap(sec) — trim
+       only the oldest tail (same URL cannot appear twice in a section).
+    4) Flatten, global sort by publishedAt, URL dedupe — no global pool cut after retention.
+    """
+    by_url: dict[str, dict] = {}
+    for a in prev_public or []:
+        if not isinstance(a, dict):
+            continue
+        u = canonicalize_url((a.get("url") or "").strip())
+        if not u or is_hard_blocked_url(u):
+            continue
+        by_url[u] = dict(a)
+    for a in capped_feed or []:
+        if not isinstance(a, dict):
+            continue
+        u = canonicalize_url((a.get("url") or "").strip())
+        if not u or is_hard_blocked_url(u):
+            continue
+        by_url[u] = dict(a)
+
+    by_sec: dict[str, list] = defaultdict(list)
+    for _u, a in by_url.items():
+        by_sec[_retention_section_key(a)].append(a)
+
+    flat: list = []
+    seen_sec: set[str] = set()
+    for sec in SECTION_ORDER:
+        if sec not in by_sec:
+            continue
+        seen_sec.add(sec)
+        cap = section_retention_cap(sec)
+        rows = sorted(
+            by_sec[sec], key=lambda x: str(x.get("publishedAt") or ""), reverse=True
+        )
+        if len(rows) > cap:
+            rows = rows[:cap]
+        flat.extend(rows)
+    for sec in sorted(by_sec.keys()):
+        if sec in seen_sec:
+            continue
+        cap = section_retention_cap(sec)
+        rows = sorted(
+            by_sec[sec], key=lambda x: str(x.get("publishedAt") or ""), reverse=True
+        )
+        if len(rows) > cap:
+            rows = rows[:cap]
+        flat.extend(rows)
+
+    flat.sort(key=lambda x: str(x.get("publishedAt") or ""), reverse=True)
+    seen_g: set[str] = set()
+    out: list = []
+    for r in flat:
+        u = canonicalize_url((r.get("url") or "").strip())
+        if not u or u in seen_g:
+            continue
+        seen_g.add(u)
+        out.append(r)
+    return out
+
+
 def _retention_key(it: dict) -> str:
     """
     Dedup key for retention:
@@ -622,6 +831,147 @@ def _retention_key(it: dict) -> str:
         return "h:" + hashlib.sha1(raw).hexdigest()
     except Exception:
         return "h:" + hashlib.sha1(repr(it).encode("utf-8", errors="ignore")).hexdigest()
+
+
+def _bootstrap_time_key(it: dict) -> str:
+    """Same temporal fields as runtime feed sort (assets/app.js enriched items)."""
+    return str(
+        it.get("publishedAt")
+        or it.get("published")
+        or it.get("date")
+        or it.get("createdAt")
+        or it.get("uploadedAt")
+        or it.get("time")
+        or ""
+    ).strip()
+
+
+def _bootstrap_sort_tuple(it: dict) -> tuple:
+    return (_bootstrap_time_key(it), str(it.get("url") or "").strip())
+
+
+def _articles_dict_list(final) -> list:
+    return [x for x in (final or []) if isinstance(x, dict)]
+
+
+def _trim_bootstrap_past_hard_cap(combined: list, hard_cap: int) -> list:
+    """Drop oldest items (after global desc sort) only if their section still has ≥2 rows."""
+    if len(combined) <= hard_cap:
+        return combined
+    out = list(combined)
+    out.sort(key=_bootstrap_sort_tuple, reverse=True)
+    while len(out) > hard_cap:
+        cnt = Counter()
+        for it in out:
+            s = str(it.get("section") or "").strip()
+            if s:
+                cnt[s] += 1
+        victim_idx = None
+        for i in range(len(out) - 1, -1, -1):
+            it = out[i]
+            s = str(it.get("section") or "").strip()
+            if not s or cnt.get(s, 0) > 1:
+                victim_idx = i
+                break
+        if victim_idx is None:
+            break
+        out.pop(victim_idx)
+    return out
+
+
+def _build_bootstrap_entries(final: list) -> list:
+    """
+    Narrow parallel dataset for future windowing (Phase 1): prefix of articles.json order
+    plus mandatory per-section coverage. Dedup = _retention_key (matches retention shards).
+    """
+    linear = _articles_dict_list(final)
+    if not linear:
+        return []
+    sections_present: set[str] = set()
+    for it in linear:
+        s = str(it.get("section") or "").strip()
+        if s:
+            sections_present.add(s)
+
+    prefix_len = min(BOOTSTRAP_MAX_ARTICLES, len(linear))
+    extras: list = []
+    while prefix_len >= 0:
+        prefix = linear[:prefix_len]
+        keys = {_retention_key(x) for x in prefix}
+        extras = []
+        for s in sorted(sections_present):
+            if any(str(x.get("section") or "").strip() == s for x in prefix):
+                continue
+            picked = None
+            for it in linear[prefix_len:]:
+                if str(it.get("section") or "").strip() != s:
+                    continue
+                k = _retention_key(it)
+                if k in keys:
+                    continue
+                picked = it
+                break
+            if picked is None:
+                for it in linear:
+                    if str(it.get("section") or "").strip() != s:
+                        continue
+                    k = _retention_key(it)
+                    if k in keys:
+                        continue
+                    picked = it
+                    break
+            if picked is not None:
+                extras.append(picked)
+                keys.add(_retention_key(picked))
+        if prefix_len + len(extras) <= BOOTSTRAP_HARD_CAP:
+            break
+        prefix_len -= 1
+
+    combined = linear[: max(0, prefix_len)] + extras
+    seen_k: set[str] = set()
+    deduped: list = []
+    for it in combined:
+        k = _retention_key(it)
+        if k in seen_k:
+            continue
+        seen_k.add(k)
+        deduped.append(it)
+    deduped.sort(key=_bootstrap_sort_tuple, reverse=True)
+    deduped = _trim_bootstrap_past_hard_cap(deduped, BOOTSTRAP_HARD_CAP)
+    deduped.sort(key=_bootstrap_sort_tuple, reverse=True)
+    return deduped
+
+
+def _emit_bootstrap_json(final: list, generated_at: str) -> None:
+    """Write projects/data/articles/bootstrap.json (build-only; frontend unchanged)."""
+    try:
+        os.makedirs(ARTICLES_SHARD_DIR, exist_ok=True)
+        articles = _build_bootstrap_entries(final)
+        sec_counts: dict[str, int] = {}
+        for it in articles:
+            s = str(it.get("section") or "").strip()
+            if not s:
+                continue
+            sec_counts[s] = sec_counts.get(s, 0) + 1
+        payload = {
+            "schemaVersion": 1,
+            "generatedAt": generated_at,
+            "articles": articles,
+            "bootstrapMeta": {
+                "canonicalBuildId": None,
+                "articleCount": len(articles),
+                "sectionCounts": sec_counts,
+                "sort": "publishedAt_desc",
+                "dedup": "url_canonical_v1",
+            },
+        }
+        _atomic_write_json(ARTICLES_BOOTSTRAP_PATH, payload)
+        print(
+            f"=== OUTPUT === wrote {len(articles)} bootstrap items to {ARTICLES_BOOTSTRAP_PATH}",
+            flush=True,
+        )
+    except Exception as e:
+        print("WARN: articles bootstrap.json failed:", str(e), flush=True)
 
 
 def normalize_media_name(name: str) -> str:
@@ -840,6 +1190,76 @@ def infer_section(url: str, title: str, fallback_topic: str) -> str:
         fb = "aktualne"
     fb = _adjust_fallback_topic_for_path(url, fb)
     return fb
+
+
+def _infer_section_strong_explicit_url_signals(url: str) -> str | None:
+    """
+    Pouze host/path — žádné klíčové slovo z titulku.
+    Slouží jako tvrdý „non-news“ signál pro registry feedy s fallback aktualne (Zprávy).
+    Vrací sekci nebo None, pokud URL nenasvědčuje jasné vertikále.
+    """
+    host, path = _host_path(url or "")
+    pl = (path or "").lower()
+    u = (url or "").lower()
+    h = (host or "").lower()
+
+    if "pocasi" in h or "/pocasi" in pl or "/pocasi-" in pl or pl.startswith("/pocasi"):
+        return "pocasi"
+
+    # Doprava: bez holého „/auto“ v cestě (falešné trefy na obecné zprávy, např. D11).
+    if "doprava" in h or "/doprava" in pl or "/nehody" in pl or "/nehoda" in pl:
+        return "doprava"
+
+    if "/cestovani" in pl or "/cestovan" in pl or "cestovani" in h:
+        return "cestovani"
+
+    if h.startswith("sport.") or "/sport" in pl or "/fotbal" in pl or "/hokej" in pl or "/tenis" in pl:
+        return "sport"
+    if "mmamag.cz" in h or "fights.cz" in h or h.startswith("isport."):
+        return "sport"
+
+    if "/ekonomika" in pl or "/finance" in pl or "/byznys" in pl or "/byznys/" in pl or "/reality" in pl:
+        return "finance"
+    if h.startswith("byznys.") or h.startswith("ekonomika.") or h.startswith("finance."):
+        return "finance"
+
+    if "/krimi" in pl or "/crime" in pl:
+        return "krimi"
+
+    if "/zdravi" in pl or "/zdrav" in pl or "zdravi" in h:
+        return "zdravi"
+
+    if "/veda/" in pl or pl.rstrip("/").endswith("/veda"):
+        return "veda"
+
+    if "/kultura/" in pl or pl.rstrip("/").endswith("/kultura"):
+        return "kultura"
+
+    if "/vzdelavani/" in pl or pl.rstrip("/").endswith("/vzdelavani") or "/skola/" in pl or pl.rstrip("/").endswith("/skola"):
+        return "vzdelavani"
+
+    if "/hry/" in pl or pl.rstrip("/").endswith("/hry"):
+        return "hry"
+
+    if "travel" in pl or "letenk" in pl or "pelipeck" in h:
+        return "cestovani"
+
+    return None
+
+
+def enforce_news_source_section_truth(url: str, title: str, fallback_topic: str) -> str:
+    """
+    Pro feedy zařazené jako obecné zpravodajství (registry topic aktualne):
+    výchozí sekce = aktualne; přepsání jen při silném explicitním signálu v URL/hostu.
+    Ostatní fallback topic = beze změny (finance, zdravi, vynucené vertikály, …).
+    """
+    fb0 = stable_section((fallback_topic or "aktualne").strip().lower())
+    if fb0 != "aktualne":
+        return infer_section(url, title, fallback_topic)
+    strong = _infer_section_strong_explicit_url_signals(url)
+    if strong is not None:
+        return strong
+    return _adjust_fallback_topic_for_path(url, "aktualne")
 
 
 def stable_section(section: str) -> str:
@@ -1825,14 +2245,23 @@ def load_youtube_feeds(path: str) -> list:
         if not channel:
             channel = "YouTube"
 
+        if iu_is_blocked_pocasicko_source(channel, str(item.get("name") or "")):
+            continue
+
         # source do FEED REPORTu
         source = f"YouTube – {channel}".strip()
+
+        qd = dict(parse_qsl(urlparse(url).query, keep_blank_values=True))
+        pl = (qd.get("playlist_id") or "").strip()
+        yt_canonical = f"yt_playlist_{pl}" if pl else "yt_" + hashlib.sha256(url.encode("utf-8")).hexdigest()[:24]
 
         meta = {
             "topic": topic,
             "source": source,
             "type": "youtube",
             "channel": channel,   # ✅ čistý název kanálu pro videos.json
+            "id": yt_canonical,
+            "registryGroup": [{"id": yt_canonical, "label": channel, "feed_url": url}],
         }
         out.append((url, meta))
 
@@ -1916,13 +2345,38 @@ def decode_with_fallback(raw_bytes: bytes) -> str:
     return raw_bytes.decode("latin-1", errors="replace")
 
 
+def looks_like_xml_or_feed(text: str) -> bool:
+    """
+    True when the body is RSS/Atom/XML even if Content-Type wrongly says text/html.
+    (Časté u CDN / starších serverů — bez toho končíme na not_xml_or_html při validním feedu.)
+    """
+    if not text:
+        return False
+    s = text.lstrip("\ufeff\u200b\u200c\u200d").strip()
+    if not s:
+        return False
+    low = s[:240].lower()
+    if low.startswith("<?xml"):
+        return True
+    if low.startswith("<rss"):
+        return True
+    if low.startswith("<feed"):
+        return True
+    if low.startswith("<rdf:") or low.startswith("<rdf:rdf"):
+        return True
+    return False
+
+
 def is_html_content(text: str, content_type: str) -> bool:
     """
     Detekce HTML místo XML/RSS.
     """
     if not text:
         return False
-    
+
+    if looks_like_xml_or_feed(text):
+        return False
+
     text_lower = text.strip().lower()
     
     # content-type kontrola
@@ -2210,16 +2664,554 @@ def build_brief(generated_at: str, articles: list) -> dict:
     }
 
 
+def _pipeline_phase() -> str:
+    """
+    Production CI (update-articles.yml): three separate jobs; durable handoff is the git tree
+    pipeline-handoff/ on branch automation/pipeline-handoff (manifest + blobs per commit), not
+    ephemeral Actions artifacts. Jobs may run on different runners; phases: ingest | aggregate | publish.
+    Default 'all' runs ingest→aggregate→publish in one process (local convenience only).
+    """
+    p = (os.getenv("IU_ARTICLE_PIPELINE_PHASE") or "all").strip().lower()
+    if p in ("ingest", "aggregate", "publish", "all"):
+        return p
+    return "all"
+
+
+def _aggregate_pipeline(
+    all_items: list,
+    per_feed_report: list,
+    yt_videos: list,
+    registry: dict,
+) -> dict:
+    """
+    Staging / in-memory raw items → merged + limited article lists (no RSS fetch).
+    """
+    seen_pre = set()
+    deduped_items = []
+    for it in sorted(all_items, key=lambda x: x["dt"], reverse=True):
+        key = (it["media_norm"], it["url"])
+        if key in seen_pre:
+            continue
+        seen_pre.add(key)
+        deduped_items.append(it)
+
+    clusters = cluster_items(deduped_items)
+
+    new_articles = []
+
+    sec_rank = {s: i for i, s in enumerate(SECTION_ORDER)}
+    clusters.sort(key=lambda c: (c.published_at(), -sec_rank.get(c.section, 999)), reverse=True)
+
+    for c in clusters:
+        sources = c.sources_unique()
+        published = c.published_at().isoformat().replace("+00:00", "Z")
+
+        if c.content_type == "video":
+            t = sorted(c.items, key=lambda x: x["dt"], reverse=True)[0]["title"]
+            title_out = _ensure_video_prefix(t)
+        else:
+            if c.unique_media_count() == 1:
+                t = sorted(c.items, key=lambda x: x["dt"], reverse=True)[0]["title"]
+                title_out = clean_single_source_title(t)
+            else:
+                title_out = choose_neutral_title(c.titles(), section=c.section)
+
+        pcat = _primary_category_from_cluster_items(c.items)
+        ftype = _feed_type_from_cluster_items(c.items)
+        thash = topic_hash_from_title(title_out)
+
+        primary_item = sorted(c.items, key=lambda x: x["dt"], reverse=True)[0]
+        _sl = fix_cz_mojibake(str(primary_item.get("media_raw") or "")).strip()
+        article_out = {
+            "topic": c.section,
+            "section": c.section,
+            "contentType": c.content_type,
+            "title": fix_cz_mojibake(title_out),
+            "publishedAt": published,
+            "sources": sources,
+            "primaryCategory": pcat,
+            "topicHash": thash,
+            "feedType": ftype,
+            "sourceDisplayWeight": float(primary_item.get("sourceDisplayWeight") or 1.0),
+            "sectionPrimary": str(primary_item.get("feedCategory") or ""),
+            "sourceLabel": _sl,
+        }
+        _fid = str(primary_item.get("feedId") or "").strip()
+        if _fid:
+            article_out["feedId"] = _fid
+        src0 = (sources or [{}])[0]
+        candidate = (src0.get("url", "") or "").strip()
+        if candidate.lower().startswith("http://") or candidate.lower().startswith("https://"):
+            article_out["url"] = candidate
+        else:
+            article_out["url"] = ""
+
+        new_articles.append(article_out)
+
+    generated_at = iso_now_z()
+
+    prev_payload = _safe_read_json(OUT_PATH) or {}
+    prev_list = list(prev_payload.get("articles") or [])
+    merged_articles = merge_article_lists(prev_list, new_articles, MAX_MERGED_ARTICLES_POOL)
+    merged_articles = purge_blocked_articles(merged_articles)
+    merged_articles = [remap_article_section_if_url_mismatch(a) for a in merged_articles]
+    merged_articles = [_apply_output_vertical_purity(a) for a in merged_articles]
+    merged_articles = [a for a in merged_articles if a is not None]
+    merged_articles = [_apply_second_layer_targeted_section_cleanup(a) for a in merged_articles]
+    merged_articles = _apply_conservative_topic_clustering(merged_articles)
+    for a in merged_articles:
+        a["duplicatePenalty"] = float(a.get("duplicatePenalty") or 1.0)
+        a["displayScore"] = compute_display_score(a)
+
+    merged_articles.sort(key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
+    merged_articles = apply_staggered_section_release(merged_articles, generated_at)
+    merged_articles = sorted(merged_articles, key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
+
+    out_articles = apply_per_section_limits_then_cap(merged_articles)
+    out_articles = apply_per_section_published_retention(prev_list, out_articles)
+    final = out_articles
+
+    tel_detail, tel_summary = build_telemetry_payload(
+        per_feed_report=per_feed_report,
+        deduped_items=deduped_items,
+        clusters=clusters,
+        new_articles=new_articles,
+        final_articles=final,
+        registry=registry,
+        generated_at=generated_at,
+    )
+
+    return {
+        "generated_at": generated_at,
+        "articles_full": out_articles,
+        "articles_final": final,
+        "per_feed_report": per_feed_report,
+        "youtube_pool": yt_videos,
+        "registry": registry,
+        "ingest_telemetry": tel_detail,
+        "ingest_telemetry_summary": tel_summary,
+    }
+
+
+def _publish_article_outputs(bundle: dict) -> int:
+    """Write public JSON (articles.json, shards, health, meta, brief, videos) from an aggregate bundle."""
+    generated_at = bundle["generated_at"]
+    out_articles = enrich_article_list(bundle["articles_full"])
+    final = enrich_article_list(bundle["articles_final"])
+    per_feed_report = bundle["per_feed_report"]
+    yt_videos = bundle["youtube_pool"]
+    registry = bundle.get("registry") or {}
+
+    # ===== RETENTION (ARTICLES) =====
+    try:
+        os.makedirs(ARTICLES_SHARD_DIR, exist_ok=True)
+
+        existing_index = _safe_read_json(ARTICLES_INDEX_PATH) or {}
+        prev_days = existing_index.get("days") if isinstance(existing_index, dict) else None
+        prev_days = prev_days if isinstance(prev_days, list) else []
+
+        prev_counts = {}
+        prev_order = []
+        for d in prev_days:
+            if not isinstance(d, dict):
+                continue
+            date = str(d.get("date") or "").strip()
+            if not date:
+                continue
+            prev_order.append(date)
+            try:
+                prev_counts[date] = int(d.get("count") or 0)
+            except Exception:
+                prev_counts[date] = 0
+
+        days_in_new = set()
+        by_day_new = {}
+        for it in out_articles:
+            pub = str(it.get("publishedAt") or "").strip()
+            if len(pub) < 10:
+                continue
+            day = pub[:10]
+            days_in_new.add(day)
+            by_day_new.setdefault(day, []).append(it)
+
+        new_counts = dict(prev_counts)
+        all_days = set(prev_order)
+
+        for day in sorted(days_in_new):
+            all_days.add(day)
+            day_path = os.path.join(ARTICLES_SHARD_DIR, f"{day}.json")
+            day_payload = _safe_read_json(day_path) or {}
+
+            existing_items = []
+            if isinstance(day_payload, dict):
+                if isinstance(day_payload.get("items"), list):
+                    existing_items = day_payload.get("items")
+                elif isinstance(day_payload.get("articles"), list):
+                    existing_items = day_payload.get("articles")
+            elif isinstance(day_payload, list):
+                existing_items = day_payload
+
+            merged = []
+            seen = set()
+            for src in (by_day_new.get(day) or []) + (existing_items or []):
+                if not isinstance(src, dict):
+                    continue
+                u0 = (src.get("url") or "").strip()
+                if is_hard_blocked_url(u0):
+                    continue
+                k = _retention_key(src)
+                if k in seen:
+                    continue
+                seen.add(k)
+                merged.append(src)
+
+            merged.sort(key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
+            _atomic_write_json(day_path, {"date": day, "generatedAt": generated_at, "items": merged})
+            new_counts[day] = len(merged)
+
+        ordered_days = sorted(all_days, reverse=True)
+
+        cutoff = (datetime.now(timezone.utc).date() - timedelta(days=RETENTION_DAYS - 1))
+        keep_days = []
+        for d in ordered_days:
+            dt_day = _parse_day_yyyy_mm_dd(d)
+            if not dt_day:
+                continue
+            if dt_day.date() >= cutoff:
+                keep_days.append(d)
+
+        keep_set = set(keep_days)
+
+        try:
+            for fn in os.listdir(ARTICLES_SHARD_DIR):
+                if fn == "index.json":
+                    continue
+                if not re.match(r"^\d{4}-\d{2}-\d{2}\.json$", fn):
+                    continue
+                day = fn[:-5]
+                if day in keep_set:
+                    continue
+                try:
+                    os.remove(os.path.join(ARTICLES_SHARD_DIR, fn))
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
+        index_payload = {
+            "generatedAt": generated_at,
+            "days": [{"date": d, "count": int(new_counts.get(d, 0) or 0)} for d in keep_days],
+        }
+        _atomic_write_json(ARTICLES_INDEX_PATH, index_payload)
+    except Exception as e:
+        print("WARN: retention shards failed:", str(e))
+
+    _fcov = classification_coverage_stats(final)
+    _fc_req = int(_fcov.get("total") or 0) > 0 and int(_fcov.get("withClassification") or 0) == int(
+        _fcov.get("total") or 0
+    )
+    payload = {
+        "generatedAt": generated_at,
+        "articles": final,
+        "mappingSingleSourceOfTruth": True,
+        "homepagePreviewUsesSectionMapper": True,
+        "feedClassificationSchemaVersion": 1,
+        "feedClassificationSource": "iu_feed_classification.py",
+        "feedClassificationCoveragePct": _fcov.get("coveragePct"),
+        "feedClassificationRequired": bool(_fc_req),
+        "registryVersion": registry.get("version") if isinstance(registry, dict) else None,
+        "sectionRetention": _section_retention_manifest(),
+    }
+
+    _atomic_write_json(OUT_PATH, payload)
+    _emit_bootstrap_json(final, generated_at)
+
+    health_payload = {
+        "updatedAt": generated_at,
+        "feeds": {
+            r["feed"]: {
+                "topic": r.get("topic", "aktualne"),
+                "source": r.get("source", ""),
+                "accepted": int(r.get("accepted", 0) or 0),
+                "status": r.get("status", "OK"),
+                "itemsParsed": int(r.get("itemsParsed", 0) or 0),
+                "itemsKept": int(r.get("itemsKept", 0) or 0),
+                "httpStatus": int(r.get("httpStatus", 0) or 0),
+                "contentType": r.get("contentType", ""),
+                "finalUrl": r.get("finalUrl", r["feed"]),
+                "bytes": int(r.get("bytes", 0) or 0),
+                "reason": r.get("reason", ""),
+                "bozo": bool(r.get("bozo", False)),
+                "bozoException": r.get("bozoException", ""),
+                "bozo_but_used": bool(r.get("bozo_but_used", False)),
+            }
+            for r in per_feed_report
+        },
+    }
+    _atomic_write_json(HEALTH_PATH, health_payload)
+
+    try:
+        tele = bundle.get("ingest_telemetry")
+        if isinstance(tele, dict) and tele.get("schemaVersion"):
+            os.makedirs(os.path.dirname(INGEST_TELEMETRY_PATH), exist_ok=True)
+            _atomic_write_json(INGEST_TELEMETRY_PATH, tele)
+            tsum = bundle.get("ingest_telemetry_summary")
+            if isinstance(tsum, dict):
+                print_compact_audit(tsum)
+    except Exception as e:
+        print("WARN: ingest telemetry write failed:", str(e))
+
+    meta_payload = build_meta(generated_at, final)
+    _atomic_write_json(META_PATH, meta_payload)
+
+    brief_payload = build_brief(generated_at, final)
+    _atomic_write_json(BRIEF_PATH, brief_payload)
+
+    yt_sorted = sorted(
+        yt_videos,
+        key=lambda v: (v.get("_dt") or datetime.now(timezone.utc), int(v.get("categoryWeight") or 0)),
+        reverse=True,
+    )
+
+    allow_meta = {}
+    allow_cfg = {}
+
+    cfg_version = int(allow_meta.get("version") or (allow_cfg.get("version") if isinstance(allow_cfg, dict) else 1) or 1)
+    primary_days = int(allow_meta.get("freshDaysPrimary") or 14)
+    fallback_days = int(allow_meta.get("freshDaysFallback") or 60)
+    target_share = float(allow_meta.get("freshTargetShare") or 0.7)
+    max_per_source = int(allow_meta.get("maxPerSource") or 25)
+    max_total = int(allow_meta.get("maxTotal") or 240)
+    if primary_days < 1:
+        primary_days = 14
+    if fallback_days < primary_days:
+        fallback_days = max(60, primary_days)
+    if target_share <= 0 or target_share > 1:
+        target_share = 0.7
+    if max_per_source < 1:
+        max_per_source = 25
+    if max_total < 1:
+        max_total = 240
+
+    def _age_days(dt_any) -> int:
+        try:
+            if isinstance(dt_any, datetime):
+                d = dt_any
+            else:
+                d = datetime.fromisoformat(str(dt_any).replace("Z", "+00:00"))
+            return int((datetime.now(timezone.utc) - d).total_seconds() // 86400)
+        except Exception:
+            return 999999
+
+    seen_vid = set()
+    per_source = {}
+    primary = []
+    fallback = []
+    older = []
+    for v in yt_sorted:
+        vid = (v.get("videoId") or "").strip()
+        if not vid or vid in seen_vid:
+            continue
+        if iu_is_blocked_pocasicko_source(str(v.get("channel") or ""), str(v.get("title") or ""), str(v.get("sourceKey") or "")):
+            continue
+        src_key = str(v.get("sourceKey") or v.get("channel") or "YouTube")
+        if per_source.get(src_key, 0) >= max_per_source:
+            continue
+        age = _age_days(v.get("_dt") or v.get("publishedAt") or "")
+        row = {
+            "title": v.get("title") or "",
+            "url": v.get("url") or "",
+            "videoId": vid,
+            "publishedAt": v.get("publishedAt") or "",
+            "channel": (v.get("channel") or "YouTube").strip() or "YouTube",
+            "category": (v.get("category") or "").strip(),
+            "thumb": v.get("thumb") or youtube_thumb_from_id(vid),
+        }
+        if age <= primary_days:
+            primary.append(row)
+        elif age <= fallback_days:
+            fallback.append(row)
+        else:
+            older.append(row)
+
+    target_primary = int((max_total * target_share) + 0.9999)
+    out_vid = []
+    used_sources = {}
+
+    def _take_from(bucket: list, limit: int = None):
+        nonlocal out_vid, seen_vid, used_sources
+        for row in bucket:
+            if limit is not None and len(out_vid) >= limit:
+                break
+            if len(out_vid) >= max_total:
+                break
+            vid = (row.get("videoId") or "").strip()
+            if not vid or vid in seen_vid:
+                continue
+            src_key = str(row.get("channel") or "YouTube")
+            if used_sources.get(src_key, 0) >= max_per_source:
+                continue
+            seen_vid.add(vid)
+            used_sources[src_key] = used_sources.get(src_key, 0) + 1
+            out_vid.append(row)
+
+    _take_from(primary, limit=min(max_total, target_primary))
+    _take_from(fallback)
+    _take_from(older)
+
+    primary_count = 0
+    fallback_count = 0
+    older_count = 0
+    for row in out_vid:
+        age = _age_days(row.get("publishedAt") or "")
+        if age <= primary_days:
+            primary_count += 1
+        elif age <= fallback_days:
+            fallback_count += 1
+        else:
+            older_count += 1
+
+    videos_payload = {
+        "generatedAt": generated_at,
+        "allowlistVersion": cfg_version,
+        "freshTargetShare": target_share,
+        "dedupeDays": int(allow_meta.get("dedupeDays") or 30),
+        "maxPerSource": max_per_source,
+        "maxTotal": max_total,
+        "freshness": {
+            "primaryDays": primary_days,
+            "fallbackDays": fallback_days,
+            "primaryCount": primary_count,
+            "fallbackCount": fallback_count,
+            "olderCount": older_count,
+            "total": len(out_vid),
+        },
+        "categories": allow_meta.get("categories") if isinstance(allow_meta.get("categories"), list) else [],
+        "videos": out_vid,
+    }
+
+    _atomic_write_json(VIDEOS_OUT_PATH, videos_payload)
+    print(f"VIDEOS_FRESHNESS primary14={primary_count} fallback60={fallback_count} older={older_count} total={len(out_vid)}")
+    print("=== FEED REPORT ===")
+    print(json.dumps(health_payload, ensure_ascii=False, indent=2))
+    print(f"=== OUTPUT === wrote {len(final)} items to {OUT_PATH}")
+    print(f"=== OUTPUT === wrote {len(out_vid)} videos to {VIDEOS_OUT_PATH}")
+
+    return 0
+
+
+def _handoff_meta_from_staging_manifest(loaded: dict) -> dict:
+    """Race-safe linkage: checkpoint ties to ingest snapshot (pipelineRunId) + this workflow run."""
+    man = loaded.get("manifest") if isinstance(loaded.get("manifest"), dict) else {}
+    pr = str(man.get("pipelineRunId") or os.environ.get("GITHUB_RUN_ID") or "").strip()
+    ar = (os.environ.get("GITHUB_RUN_ID") or "").strip() or "local"
+    return {
+        "stagingSnapshotIngestRunId": pr,
+        "aggregateWorkflowRunId": ar,
+    }
+
+
+def _checkpoint_bundle_for_disk(bundle: dict, handoff_meta: dict | None = None) -> dict:
+    """JSON-safe aggregate bundle for aggregated_checkpoint.json (youtube _dt as ISO)."""
+    yt = bundle.get("youtube_pool") or []
+    rows = [serialize_youtube_row(r) for r in yt if isinstance(r, dict)]
+    reg = bundle.get("registry")
+    rv = reg.get("version") if isinstance(reg, dict) else None
+    out = {
+        "generated_at": bundle["generated_at"],
+        "articles_full": bundle["articles_full"],
+        "articles_final": bundle["articles_final"],
+        "per_feed_report": bundle["per_feed_report"],
+        "youtube_pool": rows,
+        "registry_version": rv,
+    }
+    if bundle.get("ingest_telemetry"):
+        out["ingest_telemetry"] = bundle["ingest_telemetry"]
+    if bundle.get("ingest_telemetry_summary"):
+        out["ingest_telemetry_summary"] = bundle["ingest_telemetry_summary"]
+    if handoff_meta:
+        out["handoffMeta"] = handoff_meta
+    return out
+
+
+def _bundle_from_checkpoint(cp: dict) -> dict | None:
+    """Restore publish bundle from checkpoint + live registry file."""
+    if not isinstance(cp, dict):
+        return None
+    try:
+        reg = load_registry(REGISTRY_PATH)
+    except Exception:
+        reg = {}
+    yt_rows = cp.get("youtube_pool") or []
+    yt_restored = []
+    if isinstance(yt_rows, list):
+        for r in yt_rows:
+            if isinstance(r, dict):
+                yt_restored.append(deserialize_youtube_row(r))
+    return {
+        "generated_at": cp["generated_at"],
+        "articles_full": cp["articles_full"],
+        "articles_final": cp["articles_final"],
+        "per_feed_report": cp["per_feed_report"],
+        "youtube_pool": yt_restored,
+        "registry": reg,
+        "ingest_telemetry": cp.get("ingest_telemetry"),
+        "ingest_telemetry_summary": cp.get("ingest_telemetry_summary"),
+    }
+
+
+def _feed_report_attach_registry(rep: dict, meta: dict) -> None:
+    """Attach canonical registry identity for telemetry joins (must match article feedId)."""
+    fid = str(meta.get("id") or "").strip()
+    if fid:
+        rep["registryId"] = fid
+    rg = meta.get("registryGroup")
+    if isinstance(rg, list) and rg:
+        rep["registryGroup"] = rg
+
+
 # =========================
 # Main
 # =========================
 
 def main() -> int:
+    phase = _pipeline_phase()
     if not os.path.exists(REGISTRY_PATH):
         print(f"ERROR: missing {REGISTRY_PATH}", file=sys.stderr)
         return 2
 
     registry = load_registry(REGISTRY_PATH)
+
+    if phase == "publish":
+        print("[iu-pipeline] phase=publish reads aggregated_checkpoint only; no RSS fetch", flush=True)
+        cp = read_aggregated_checkpoint(OUTPUT_DIR)
+        if not isinstance(cp, dict) or not cp.get("generated_at"):
+            print("ERROR: missing aggregated checkpoint (run aggregate first)", file=sys.stderr)
+            return 2
+        cp_clean = {k: v for k, v in cp.items() if k != "schemaVersion"}
+        bundle = _bundle_from_checkpoint(cp_clean)
+        if bundle is None:
+            return 2
+        return _publish_article_outputs(bundle)
+
+    if phase == "aggregate":
+        print("[iu-pipeline] phase=aggregate reads staging only; no RSS fetch", flush=True)
+        loaded = load_staging_for_aggregate(OUTPUT_DIR)
+        bundle = _aggregate_pipeline(
+            loaded["all_items"],
+            loaded["per_feed_report"],
+            loaded["youtube_rows"],
+            registry,
+        )
+        hm = _handoff_meta_from_staging_manifest(loaded)
+        write_aggregated_checkpoint(OUTPUT_DIR, _checkpoint_bundle_for_disk(bundle, hm))
+        return 0
+
+    if phase not in ("ingest", "all"):
+        print(f"ERROR: unknown IU_ARTICLE_PIPELINE_PHASE={phase!r}", file=sys.stderr)
+        return 2
+
+    print(f"[iu-pipeline] phase={phase} RSS fetch → staging (scheduler unchanged)", flush=True)
     sched_state = load_scheduler_state(SCHEDULER_STATE_PATH)
     # IU_BUILD_ALL_FEEDS=1: jeden běh přes všechny aktivní registry feedy (ne 2–3/tick).
     _full_feed = os.getenv("IU_BUILD_ALL_FEEDS", "").strip().lower() in ("1", "true", "yes")
@@ -2247,16 +3239,36 @@ def main() -> int:
 
     all_items = []
     per_feed_report = []
+    items_by_batch = defaultdict(list)
+    reports_by_batch = defaultdict(list)
 
     # ✅ sběr YouTube videí (půjde do data/videos.json)
     yt_videos = []
     transport_state = load_transport_state()
     last_req_ts = [0.0]
     parsed_feed_cache = {}
+    try:
+        _gap_ms = int(
+            os.getenv("IU_SOURCE_BATCH_INTERNAL_GAP_MS", "").strip() or str(SOURCE_BATCH_INTERNAL_GAP_MS_DEFAULT)
+        )
+    except ValueError:
+        _gap_ms = SOURCE_BATCH_INTERNAL_GAP_MS_DEFAULT
+    _gap_ms = max(50, min(_gap_ms, 5000))
+    _gap_sec = _gap_ms / 1000.0
+    last_rss_ck_for_gap = ""
 
     for feed_url, meta in feed_items:
+        rg_meta = meta.get("registryGroup")
+        batch_ck = ""
+        if isinstance(rg_meta, list) and rg_meta and isinstance(rg_meta[0], dict):
+            batch_ck = scheduler_cooldown_key(rg_meta[0]) or ""
+
+        staging_batch_key = batch_ck
+        if not staging_batch_key:
+            staging_batch_key = "unbatched_" + hashlib.sha256(feed_url.encode("utf-8")).hexdigest()[:24]
+
         if is_hard_blocked_url(feed_url):
-            per_feed_report.append({
+            rep = {
                 "feed": feed_url,
                 "source": "",
                 "topic": "aktualne",
@@ -2269,7 +3281,10 @@ def main() -> int:
                 "itemsParsed": 0,
                 "itemsKept": 0,
                 "accepted": 0,
-            })
+            }
+            _feed_report_attach_registry(rep, meta)
+            per_feed_report.append(rep)
+            reports_by_batch[staging_batch_key].append(rep)
             continue
 
         fallback_topic = stable_section(meta.get("topic", "aktualne"))
@@ -2280,7 +3295,7 @@ def main() -> int:
         src_dw = float(meta.get("displayWeight") or 1.0)
 
         if meta.get("disabled"):
-            per_feed_report.append({
+            rep = {
                 "feed": feed_url,
                 "source": source,
                 "topic": fallback_topic,
@@ -2293,7 +3308,10 @@ def main() -> int:
                 "itemsParsed": 0,
                 "itemsKept": 0,
                 "accepted": 0,
-            })
+            }
+            _feed_report_attach_registry(rep, meta)
+            per_feed_report.append(rep)
+            reports_by_batch[staging_batch_key].append(rep)
             continue
 
         if feed_url in parsed_feed_cache:
@@ -2308,7 +3326,11 @@ def main() -> int:
                 "bozoException": "",
             }
         else:
+            if batch_ck and last_rss_ck_for_gap and last_rss_ck_for_gap == batch_ck:
+                time.sleep(_gap_sec)
             d, diagnostics = fetch_feed(feed_url, transport_state, last_req_ts)
+            if batch_ck:
+                last_rss_ck_for_gap = batch_ck
             if d is not None:
                 parsed_feed_cache[feed_url] = d
 
@@ -2330,7 +3352,8 @@ def main() -> int:
             "status": "OK",
             "bozo_but_used": False,
         }
-        
+        _feed_report_attach_registry(report_base, meta)
+
         # Pokud fetch selhal nebo vrátil HTML
         if d is None:
             reason = diagnostics.get("reason", "unknown")
@@ -2342,6 +3365,7 @@ def main() -> int:
                 for e in rg:
                     mark_feed_error(sched_state, str(e.get("id") or ""))
             per_feed_report.append(report_base)
+            reports_by_batch[staging_batch_key].append(report_base)
             continue
         
         entries = getattr(d, "entries", []) or []
@@ -2377,14 +3401,44 @@ def main() -> int:
         except Exception:
             pass
 
+        iu_tel = {
+            "raw_feed_new_item_count": 0,
+            "raw_feed_latest_publishedAt": "",
+            "valid_publishedAt_count": 0,
+            "mapped_to_section_count": defaultdict(int),
+            "drop_counts": {
+                "missing_publishedAt": 0,
+                "invalid_publishedAt": 0,
+                "parser_drop": 0,
+                "section_remap": 0,
+                "release_gate": 0,
+                "dedupe": 0,
+                "other": 0,
+            },
+            "sample_titles": [],
+        }
+
         for entry in entries[:MAX_ITEMS_PER_FEED]:
             link = canonicalize_url(getattr(entry, "link", "") or "")
             title = fix_cz_mojibake(getattr(entry, "title", "") or "")
             dt = parse_dt(entry)
+            has_rss_dt = bool(
+                getattr(entry, "published_parsed", None) or getattr(entry, "updated_parsed", None)
+            )
+
+            if link and title:
+                iso_edge = dt.isoformat().replace("+00:00", "Z")
+                cur = iu_tel["raw_feed_latest_publishedAt"]
+                if not cur or iso_edge > cur:
+                    iu_tel["raw_feed_latest_publishedAt"] = iso_edge
+                if not is_youtube_feed:
+                    iu_tel["raw_feed_new_item_count"] += 1
 
             if not link or not title:
+                iu_tel["drop_counts"]["parser_drop"] += 1
                 continue
             if is_hard_blocked_url(link):
+                iu_tel["drop_counts"]["parser_drop"] += 1
                 continue
 
             media_raw = fix_cz_mojibake(str(source).strip())
@@ -2399,8 +3453,14 @@ def main() -> int:
                 section = infer_section(link, title, fallback_topic=fallback_topic)
                 section = stable_section(section)
 
+                t_yt = fix_cz_mojibake(clean_title_basic(title))
+                ch_yt = channel_name or "YouTube"
+                meta_src_yt = (meta.get("source") or "") if isinstance(meta, dict) else ""
+                if iu_is_blocked_pocasicko_source(ch_yt, t_yt, str(meta_src_yt)):
+                    continue
+
                 yt_videos.append({
-                    "title": fix_cz_mojibake(clean_title_basic(title)),
+                    "title": t_yt,
                     "url": link,
                     "videoId": vid,
                     "publishedAt": dt.isoformat().replace("+00:00", "Z"),
@@ -2420,14 +3480,20 @@ def main() -> int:
             is_video = _is_video_entry(entry)
             content_type = "video" if is_video else "article"
 
+            if has_rss_dt:
+                iu_tel["valid_publishedAt_count"] += 1
+            else:
+                iu_tel["drop_counts"]["missing_publishedAt"] += 1
+
             if fallback_topic in FORCED_FEED_TOPICS:
                 section = fallback_topic
             else:
-                section = infer_section(link, title, fallback_topic=fallback_topic)
+                section = enforce_news_source_section_truth(link, title, fallback_topic=fallback_topic)
             section = stable_section(section)
 
             purity_sec = vertical_purity_final_section(section, title, link, dt)
             if purity_sec is None:
+                iu_tel["drop_counts"]["section_remap"] += 1
                 continue
             section = stable_section(purity_sec)
 
@@ -2444,13 +3510,32 @@ def main() -> int:
                 "feedType": feed_type,
                 "feedId": feed_id,
                 "sourceDisplayWeight": src_dw,
+                "sourceBatchKey": staging_batch_key,
             }
+            _bk = section_bucket(section)
+            iu_tel["mapped_to_section_count"][_bk] += 1
+            if len(iu_tel["sample_titles"]) < 8:
+                iu_tel["sample_titles"].append(
+                    {
+                        "title": fix_cz_mojibake(title),
+                        "publishedAt": dt.isoformat().replace("+00:00", "Z"),
+                    }
+                )
             all_items.append(item)
+            items_by_batch[staging_batch_key].append(item)
             accepted += 1
 
         report_base["itemsKept"] = accepted
         report_base["accepted"] = accepted
-        
+        report_base["iuTelemetry"] = {
+            "raw_feed_new_item_count": int(iu_tel["raw_feed_new_item_count"]),
+            "raw_feed_latest_publishedAt": str(iu_tel["raw_feed_latest_publishedAt"]),
+            "valid_publishedAt_count": int(iu_tel["valid_publishedAt_count"]),
+            "mapped_to_section_count": {k: int(v) for k, v in iu_tel["mapped_to_section_count"].items()},
+            "drop_counts": {k: int(v) for k, v in iu_tel["drop_counts"].items()},
+            "sample_titles": list(iu_tel["sample_titles"])[:8],
+        }
+
         # Status logika
         if bozo and accepted == 0:
             report_base["status"] = "BOZO"
@@ -2470,9 +3555,45 @@ def main() -> int:
         rg = meta.get("registryGroup")
         if rg and not is_youtube_feed:
             mark_feeds_fetched(sched_state, rg)
-        
-        per_feed_report.append(report_base)
 
+        per_feed_report.append(report_base)
+        reports_by_batch[staging_batch_key].append(report_base)
+
+    ingested_at = iso_now_z()
+    ensure_staging_dirs(OUTPUT_DIR)
+    all_batch_keys = sorted(set(items_by_batch.keys()) | set(reports_by_batch.keys()))
+    for bk in all_batch_keys:
+        write_source_staging(
+            OUTPUT_DIR,
+            bk,
+            list(items_by_batch.get(bk, [])),
+            list(reports_by_batch.get(bk, [])),
+            ingested_at,
+        )
+    write_youtube_staging(OUTPUT_DIR, yt_videos, ingested_at)
+    write_ingest_manifest(OUTPUT_DIR, all_batch_keys, ingested_at)
+
+    try:
+        save_transport_state(transport_state)
+    except Exception:
+        pass
+
+    try:
+        save_scheduler_state(SCHEDULER_STATE_PATH, sched_state)
+    except Exception as e:
+        print("WARN: scheduler_state write failed:", str(e))
+
+    if phase == "ingest":
+        return 0
+
+    loaded = load_staging_for_aggregate(OUTPUT_DIR)
+    bundle = _aggregate_pipeline(all_items, per_feed_report, yt_videos, registry)
+    hm = _handoff_meta_from_staging_manifest(loaded)
+    write_aggregated_checkpoint(OUTPUT_DIR, _checkpoint_bundle_for_disk(bundle, hm))
+    return _publish_article_outputs(bundle)
+
+
+def _legacy_main_removed_placeholder():
     # dedup v rámci jednoho média + URL (ARTICLES)
     seen_pre = set()
     deduped_items = []
@@ -2542,7 +3663,7 @@ def main() -> int:
 
     prev_payload = _safe_read_json(OUT_PATH) or {}
     prev_list = list(prev_payload.get("articles") or [])
-    merged_articles = merge_article_lists(prev_list, out_articles, max(500, MAX_OUTPUT_ARTICLES * 3))
+    merged_articles = merge_article_lists(prev_list, out_articles, MAX_MERGED_ARTICLES_POOL)
     merged_articles = purge_blocked_articles(merged_articles)
     merged_articles = [remap_article_section_if_url_mismatch(a) for a in merged_articles]
     merged_articles = [_apply_output_vertical_purity(a) for a in merged_articles]
@@ -2557,10 +3678,10 @@ def main() -> int:
     merged_articles = apply_staggered_section_release(merged_articles, generated_at)
     merged_articles = sorted(merged_articles, key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
 
-    merged_articles = apply_topic_and_source_limits(merged_articles)
-    merged_articles = apply_niche_fraction_limit(merged_articles)
-    out_articles = merged_articles
+    out_articles = apply_per_section_limits_then_cap(merged_articles)
+    out_articles = apply_per_section_published_retention(prev_list, out_articles)
     # Drip (releaseAt v budoucnu) schová většinu článků v UI — nesmí blokovat čerstvý feed; čas publikace zůstává v publishedAt.
+    out_articles = enrich_article_list(out_articles)
 
     try:
         save_transport_state(transport_state)
@@ -2684,18 +3805,28 @@ def main() -> int:
         print("WARN: retention shards failed:", str(e))
 
     # ===== FAST OUTPUT (ARTICLES) =====
-    final = out_articles[:MAX_OUTPUT_ARTICLES]
+    final = out_articles
 
+    _fcov = classification_coverage_stats(final)
+    _fc_req = int(_fcov.get("total") or 0) > 0 and int(_fcov.get("withClassification") or 0) == int(
+        _fcov.get("total") or 0
+    )
     payload = {
         "generatedAt": generated_at,
         "articles": final,
         "mappingSingleSourceOfTruth": True,
         "homepagePreviewUsesSectionMapper": True,
+        "feedClassificationSchemaVersion": 1,
+        "feedClassificationSource": "iu_feed_classification.py",
+        "feedClassificationCoveragePct": _fcov.get("coveragePct"),
+        "feedClassificationRequired": bool(_fc_req),
         "registryVersion": registry.get("version") if isinstance(registry, dict) else None,
+        "sectionRetention": _section_retention_manifest(),
     }
 
     # articles.json
     _atomic_write_json(OUT_PATH, payload)
+    _emit_bootstrap_json(final, generated_at)
 
     # feed_health.json (zachováváme kompatibilitu, ale přidáváme nové klíče)
     health_payload = {
@@ -2774,6 +3905,8 @@ def main() -> int:
     for v in yt_sorted:
         vid = (v.get("videoId") or "").strip()
         if not vid or vid in seen_vid:
+            continue
+        if iu_is_blocked_pocasicko_source(str(v.get("channel") or ""), str(v.get("title") or ""), str(v.get("sourceKey") or "")):
             continue
         src_key = str(v.get("sourceKey") or v.get("channel") or "YouTube")
         if per_source.get(src_key, 0) >= max_per_source:

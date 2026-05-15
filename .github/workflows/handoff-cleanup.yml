@@ -1,0 +1,266 @@
+# Isolated: prune Git history on automation/pipeline-handoff to reduce unbounded commit growth.
+# Does NOT touch ingest logic, scheduler, publish, or staging snapshot semantics (tip is still full replace per push-staging).
+# Requires: branch protection must allow GITHUB_TOKEN to force-push (or use a PAT via secrets).
+# RETENTION_DAYS = 7 (hardcoded in the script below).
+
+name: Handoff history cleanup (7d retention)
+
+on:
+  schedule:
+    - cron: "15 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: handoff-history-cleanup
+  cancel-in-progress: false
+
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prune automation/pipeline-handoff (keep commits from last 7 days)
+        run: |
+          set -euo pipefail
+          python3 << 'PY'
+          import json
+          import os
+          import subprocess
+          import sys
+
+          REPO = os.environ["GITHUB_WORKSPACE"]
+          BRANCH = "automation/pipeline-handoff"
+          RETENTION_DAYS = 7
+
+          def run(args):
+              r = subprocess.run(
+                  args,
+                  cwd=REPO,
+                  capture_output=True,
+                  text=True,
+                  encoding="utf-8",
+                  errors="replace",
+              )
+              if r.returncode != 0:
+                  sys.stderr.write(r.stderr or r.stdout or "")
+                  raise subprocess.CalledProcessError(r.returncode, args)
+              return (r.stdout or "").strip()
+
+          def rev_parse_commit(repo: str, rev: str) -> str | None:
+              r = subprocess.run(
+                  [
+                      "git",
+                      "-C",
+                      repo,
+                      "rev-parse",
+                      "--verify",
+                      f"{rev}^{{commit}}",
+                  ],
+                  cwd=REPO,
+                  capture_output=True,
+                  text=True,
+                  encoding="utf-8",
+                  errors="replace",
+              )
+              if r.returncode != 0:
+                  return None
+              out = (r.stdout or "").strip()
+              return out or None
+
+          def is_ancestor(repo: str, ancestor: str, descendant: str) -> bool:
+              r = subprocess.run(
+                  [
+                      "git",
+                      "-C",
+                      repo,
+                      "merge-base",
+                      "--is-ancestor",
+                      ancestor,
+                      descendant,
+                  ],
+                  cwd=REPO,
+                  capture_output=True,
+              )
+              return r.returncode == 0
+
+          subprocess.check_call(
+              ["git", "fetch", "origin", BRANCH],
+              cwd=REPO,
+          )
+          subprocess.check_call(
+              ["git", "checkout", "-B", "handoff-prune-work", f"origin/{BRANCH}"],
+              cwd=REPO,
+          )
+          tip_sha = rev_parse_commit(REPO, "HEAD")
+          if not tip_sha:
+              print(
+                  json.dumps(
+                      {
+                          "error": "tip_not_resolvable",
+                          "branch": BRANCH,
+                      },
+                      indent=2,
+                  ),
+                  file=sys.stderr,
+              )
+              sys.exit(1)
+
+          boundary = run(
+              [
+                  "git",
+                  "-C",
+                  REPO,
+                  "rev-list",
+                  "-1",
+                  f"--before={RETENTION_DAYS} days ago",
+                  tip_sha,
+              ]
+          )
+          total = int(
+              run(["git", "-C", REPO, "rev-list", "--count", tip_sha]) or "0"
+          )
+          summary = {
+              "branch": BRANCH,
+              "retention_days": RETENTION_DAYS,
+              "total_commits_before": total,
+              "tip_sha": tip_sha,
+              "boundary": boundary or None,
+          }
+          if not boundary:
+              summary["commits_kept"] = total
+              summary["commits_removed"] = 0
+              summary["action"] = "noop_all_within_window"
+              print(json.dumps(summary, indent=2))
+              sys.exit(0)
+
+          boundary_commit = rev_parse_commit(REPO, boundary)
+          boundary_ok = bool(
+              boundary_commit
+              and is_ancestor(REPO, boundary_commit, tip_sha)
+          )
+          summary["boundary_commit_resolved"] = boundary_commit
+          summary["boundary_ok"] = boundary_ok
+
+          range_expr = f"{boundary_commit}..{tip_sha}" if boundary_ok else None
+          if boundary_ok and range_expr:
+              kept_lines = [
+                  x
+                  for x in run(
+                      [
+                          "git",
+                          "-C",
+                          REPO,
+                          "rev-list",
+                          "--reverse",
+                          range_expr,
+                      ]
+                  ).splitlines()
+                  if x.strip()
+              ]
+          else:
+              kept_lines = [tip_sha]
+
+          use_cherry_pick = bool(
+              boundary_ok and range_expr and len(kept_lines) > 0
+          )
+          if use_cherry_pick:
+              kept = len(kept_lines)
+          else:
+              kept = 1
+              if boundary_ok and range_expr and len(kept_lines) == 0:
+                  summary["fallback_reason"] = (
+                      "empty_cherry_pick_range_flatten_tip"
+                  )
+              elif not boundary_ok:
+                  summary["fallback_reason"] = (
+                      "boundary_missing_or_not_ancestor_of_tip"
+                  )
+
+          removed = total - kept
+          summary["commits_kept"] = kept
+          summary["commits_removed"] = removed
+
+          if removed <= 0:
+              summary["action"] = "noop_nothing_to_drop"
+              print(json.dumps(summary, indent=2))
+              sys.exit(0)
+
+          subprocess.check_call(
+              ["git", "-C", REPO, "checkout", "--orphan", "handoff-pruned"],
+              cwd=REPO,
+          )
+          subprocess.run(
+              ["git", "-C", REPO, "rm", "-rf", "--ignore-unmatch", "."],
+              cwd=REPO,
+              capture_output=True,
+              text=True,
+          )
+          if use_cherry_pick:
+              subprocess.check_call(
+                  ["git", "-C", REPO, "cherry-pick", range_expr],
+                  cwd=REPO,
+              )
+              summary["prune_mode"] = "cherry_pick_range"
+          else:
+              subprocess.check_call(
+                  ["git", "-C", REPO, "checkout", tip_sha, "--", "."],
+                  cwd=REPO,
+              )
+              subprocess.check_call(
+                  ["git", "-C", REPO, "add", "-A"],
+                  cwd=REPO,
+              )
+              subprocess.check_call(
+                  [
+                      "git",
+                      "-C",
+                      REPO,
+                      "commit",
+                      "-m",
+                      "handoff: prune history (fallback: flatten tip; invalid/unreachable retention boundary)",
+                  ],
+                  cwd=REPO,
+              )
+              summary["prune_mode"] = "flatten_tip_snapshot"
+          subprocess.check_call(
+              [
+                  "git",
+                  "-C",
+                  REPO,
+                  "push",
+                  "--force-with-lease",
+                  "origin",
+                  f"handoff-pruned:{BRANCH}",
+              ],
+              cwd=REPO,
+          )
+          subprocess.check_call(
+              ["git", "fetch", "origin", BRANCH],
+              cwd=REPO,
+          )
+          if summary.get("prune_mode") == "flatten_tip_snapshot":
+              summary["action"] = "pruned_and_pushed_flatten_fallback"
+          else:
+              summary["action"] = "pruned_and_pushed"
+          total_after = int(
+              run(
+                  [
+                      "git",
+                      "-C",
+                      REPO,
+                      "rev-list",
+                      "--count",
+                      f"origin/{BRANCH}",
+                  ]
+              )
+              or "0"
+          )
+          summary["total_commits_after"] = total_after
+          print(json.dumps(summary, indent=2))
+          PY

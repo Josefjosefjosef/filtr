@@ -21,8 +21,12 @@ from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 REPO_ROOT = Path(__file__).resolve().parent.parent
 REPORTS_DIR = REPO_ROOT / "reports"
 FEEDS_JSON = REPO_ROOT / "scripts" / "feeds.json"
+FEEDS_YOUTUBE_JSON = REPO_ROOT / "scripts" / "feeds_youtube.json"
+SOURCES_JSON = REPO_ROOT / "config" / "sources.json"
+FEED_HEALTH_REL = "projects/data/feed_health.json"
 ARTICLES_JSON = REPO_ROOT / "projects" / "data" / "articles.json"
 WORKFLOWS_DIR = REPO_ROOT / ".github" / "workflows"
+INGEST_WORKFLOW_FILE = "update-articles.yml"
 
 
 def env_or_git_sha() -> str:
@@ -320,6 +324,436 @@ def compute_source_stats_last_24h(
     return stats
 
 
+def _git_show_text(rel_path: str, sha: str) -> Optional[str]:
+    try:
+        r = subprocess.run(
+            ["git", "-C", str(REPO_ROOT), "show", f"{sha}:{rel_path}"],
+            cwd=str(REPO_ROOT),
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=120,
+        )
+        if r.returncode != 0 or not (r.stdout or "").strip():
+            return None
+        return r.stdout
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+
+
+def _git_log_feed_health_commits(since_hours: int = 24) -> List[str]:
+    """Return commit SHAs touching feed_health.json in the last N hours (read-only git history)."""
+    since = (datetime.now(timezone.utc) - timedelta(hours=since_hours)).strftime("%Y-%m-%dT%H:%M:%S")
+    try:
+        r = subprocess.run(
+            [
+                "git",
+                "-C",
+                str(REPO_ROOT),
+                "log",
+                f"--since={since}",
+                "--format=%H",
+                "--",
+                FEED_HEALTH_REL,
+            ],
+            cwd=str(REPO_ROOT),
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=120,
+        )
+        if r.returncode != 0:
+            return []
+        return [ln.strip() for ln in (r.stdout or "").splitlines() if ln.strip()]
+    except (OSError, subprocess.TimeoutExpired):
+        return []
+
+
+def aggregate_feed_health_runtime_24h(
+    since_hours: int = 24,
+) -> Tuple[Dict[str, Dict[str, Any]], List[str]]:
+    """
+    Per feed URL (from feed_health.json keys): runs, success, empty, failed, total_articles, label.
+    Aggregates across git commits touching projects/data/feed_health.json in the window.
+    """
+    commits = _git_log_feed_health_commits(since_hours=since_hours)
+    agg: Dict[str, Dict[str, Any]] = {}
+
+    def ensure(url: str) -> Dict[str, Any]:
+        if url not in agg:
+            agg[url] = {
+                "label": "",
+                "runs": 0,
+                "success": 0,
+                "empty": 0,
+                "failed": 0,
+                "total_articles": 0,
+            }
+        return agg[url]
+
+    for sha in commits:
+        raw = _git_show_text(FEED_HEALTH_REL, sha)
+        if not raw:
+            continue
+        try:
+            data = json.loads(raw)
+        except json.JSONDecodeError:
+            continue
+        feeds = data.get("feeds") if isinstance(data, dict) else None
+        if not isinstance(feeds, dict):
+            continue
+        for url, row in feeds.items():
+            if not isinstance(row, dict):
+                continue
+            st = str(row.get("status") or "").strip().upper()
+            if st.startswith("SKIP") or "SKIPPED" in st:
+                continue
+            a = ensure(str(url))
+            lbl = str(row.get("source") or "").strip()
+            if lbl:
+                a["label"] = lbl
+            accepted = int(row.get("accepted") or 0)
+            kept = int(row.get("itemsKept") or row.get("itemsParsed") or 0)
+            a["runs"] += 1
+            if st == "OK":
+                if accepted > 0 or kept > 0:
+                    a["success"] += 1
+                    a["total_articles"] += accepted
+                else:
+                    a["empty"] += 1
+            else:
+                a["failed"] += 1
+
+    return agg, commits
+
+
+def count_gh_success_runs_24h() -> Optional[int]:
+    """Optional: gh run list for Update articles data (success) in last 24h. Requires gh + network in CI."""
+    try:
+        r = subprocess.run(
+            [
+                "gh",
+                "run",
+                "list",
+                "--repo",
+                os.environ.get("GITHUB_REPOSITORY", ""),
+                "--workflow",
+                INGEST_WORKFLOW_FILE,
+                "--limit",
+                "200",
+                "--json",
+                "conclusion,createdAt",
+            ],
+            cwd=str(REPO_ROOT),
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=60,
+        )
+        if r.returncode != 0 or not (r.stdout or "").strip():
+            return None
+        runs = json.loads(r.stdout)
+        if not isinstance(runs, list):
+            return None
+        now = datetime.now(timezone.utc)
+        start = now - timedelta(hours=24)
+        n = 0
+        for row in runs:
+            if not isinstance(row, dict):
+                continue
+            if str(row.get("conclusion") or "") != "success":
+                continue
+            ca = row.get("createdAt")
+            if not ca:
+                continue
+            try:
+                dt = datetime.fromisoformat(str(ca).replace("Z", "+00:00"))
+            except ValueError:
+                continue
+            if dt.astimezone(timezone.utc) > start:
+                n += 1
+        return n
+    except (OSError, subprocess.TimeoutExpired, json.JSONDecodeError):
+        return None
+
+
+def load_config_source_urls() -> List[Tuple[str, str, str]]:
+    """(url, label, origin) from config/sources.json, scripts/feeds.json, feeds_youtube (playlist→feed URL)."""
+    out: List[Tuple[str, str, str]] = []
+    seen: set = set()
+
+    def add(url: str, label: str, origin: str) -> None:
+        u = (url or "").strip()
+        if not u or not u.startswith("http"):
+            return
+        k = normalize_url_key(u)
+        if k in seen:
+            return
+        seen.add(k)
+        out.append((u, label or u, origin))
+
+    if SOURCES_JSON.is_file():
+        try:
+            data = json.loads(SOURCES_JSON.read_text(encoding="utf-8", errors="replace"))
+            for row in data.get("sources") or []:
+                if not isinstance(row, dict):
+                    continue
+                add(
+                    str(row.get("url") or ""),
+                    str(row.get("name") or row.get("id") or ""),
+                    "config/sources.json",
+                )
+        except (OSError, json.JSONDecodeError):
+            pass
+
+    feeds = load_feeds(FEEDS_JSON)
+    for row in feeds:
+        if not isinstance(row, dict):
+            continue
+        add(
+            str(row.get("url") or ""),
+            str(row.get("source") or row.get("id") or ""),
+            "scripts/feeds.json",
+        )
+
+    if FEEDS_YOUTUBE_JSON.is_file():
+        try:
+            yt = json.loads(FEEDS_YOUTUBE_JSON.read_text(encoding="utf-8", errors="replace"))
+            if isinstance(yt, list):
+                for row in yt:
+                    if not isinstance(row, dict):
+                        continue
+                    pid = str(row.get("playlistId") or "").strip()
+                    if not pid:
+                        continue
+                    u = f"https://www.youtube.com/feeds/videos.xml?playlist_id={pid}"
+                    ch = str(row.get("channel") or "YouTube")
+                    add(u, ch, "scripts/feeds_youtube.json")
+        except (OSError, json.JSONDecodeError):
+            pass
+
+    return out
+
+
+def config_urls_not_in_runtime(
+    runtime_by_url: Mapping[str, Any],
+    config_rows: Sequence[Tuple[str, str, str]],
+) -> List[Tuple[str, str, str]]:
+    """Config URLs whose normalized key never appeared in feed_health aggregation keys."""
+    runtime_keys = {normalize_url_key(u) for u in runtime_by_url.keys()}
+    missing: List[Tuple[str, str, str]] = []
+    seen_k: set = set()
+    for url, label, origin in config_rows:
+        k = normalize_url_key(url)
+        if k in seen_k:
+            continue
+        seen_k.add(k)
+        if k not in runtime_keys:
+            missing.append((url, label, origin))
+    return sorted(missing, key=lambda x: (x[2], x[1]))
+
+
+def _md_cell(s: str, max_len: int = 80) -> str:
+    t = (s or "").replace("|", "\\|").replace("\n", " ")
+    if len(t) > max_len:
+        return t[: max_len - 1] + "…"
+    return t
+
+
+def _runtime_snapshot_json(
+    agg: Mapping[str, Dict[str, Any]],
+    commit_shas: Sequence[str],
+    gh_success: Optional[int],
+    runtime_error: Optional[str],
+) -> str:
+    """Compact JSON for the mandatory RUNTIME DATA block (truncated)."""
+    preview: Dict[str, Any] = {}
+    for url, row in list(agg.items())[:8]:
+        preview[str(url)[:96]] = dict(row) if isinstance(row, dict) else row
+    payload = {
+        "commits_in_window": len(commit_shas),
+        "feed_count": len(agg),
+        "gh_success_runs_24h": gh_success,
+        "error": runtime_error,
+        "agg_preview": preview,
+    }
+    try:
+        blob = json.dumps(payload, ensure_ascii=False, indent=2)
+    except (TypeError, ValueError):
+        blob = json.dumps({"error": "runtime_snapshot_serialization_failed"}, indent=2)
+    if len(blob) > 500:
+        return blob[:499] + "…"
+    return blob
+
+
+def render_runtime_24h_section(
+    agg: Mapping[str, Dict[str, Any]],
+    commit_shas: Sequence[str],
+    gh_success: Optional[int],
+    now: datetime,
+    runtime_error: Optional[str] = None,
+) -> str:
+    snap = _runtime_snapshot_json(agg, commit_shas, gh_success, runtime_error)
+    lines: List[str] = [
+        "## RUNTIME AKTIVITA ZA POSLEDNÍCH 24 H (ODVOZENO Z DOSTUPNÝCH DAT)",
+        "",
+        "### RUNTIME DATA (always)",
+        "",
+        "```json",
+        snap,
+        "```",
+        "",
+    ]
+    if runtime_error:
+        safe_err = (runtime_error or "").replace("`", "'")
+        lines.extend(
+            [
+                f"> **RUNTIME AGGREGATION ERROR:** `{safe_err}`",
+                "",
+            ]
+        )
+    elif not agg:
+        lines.extend(
+            [
+                "> **NO DATA** — V agregaci nejsou žádné feed URL z `feed_health.json` "
+                f"(commity v okně: **{len(commit_shas)}**).",
+                "",
+            ]
+        )
+    lines.extend(
+        [
+        "> **Důležité:** Tato sekce **není** kopie konfigurace výše. Popisuje **agregované výsledky**",
+        "> z `projects/data/feed_health.json` v čase (Git historie commitů, které tento soubor mění).",
+        "> Nejedná se o přesný HTTP request log ani o úplný seznam všech feedů v každém běhu —",
+        "> jeden commit = jeden snapshot health reportu po proběhnutím ingestu.",
+        "",
+        "### Metodika (24h okno)",
+        "",
+        f"- Okno: posledních **24 h** do `{now.astimezone(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}` UTC.",
+        "- Zdroj dat: **read-only** `git log` / `git show` na `projects/data/feed_health.json`.",
+        "- U každého feed URL se počítá: `runs` (výskyty ve snapshotu), `success` (OK + články), `empty` (OK + 0 článků),",
+        "  `failed` (jiný stav než OK), `total_articles` součet pole `accepted` přes úspěšné běhy.",
+        "- Položky SKIPPED_* se do `runs` nepočítají (nešlo o HTTP ingest).",
+        "",
+        "### Běhy (odhad)",
+        "",
+        ],
+    )
+    lines.append(
+        f"- Commity měnící `feed_health.json` v okně (**snapshoty health reportu**): **{len(commit_shas)}**."
+    )
+    if gh_success is not None:
+        lines.append(
+            f"- Úspěšné běhy workflow `{INGEST_WORKFLOW_FILE}` (GitHub CLI, posledních 24 h): **{gh_success}**."
+        )
+    else:
+        lines.append(
+            f"- Počet úspěšných běhů z `gh run list` nelze v tomto prostředí ověřit (není k dispozici nebo selhalo). "
+            f"Použijte řádek výše (commity u `feed_health.json`) jako konzervativní proxy."
+        )
+    lines.extend(["", "### Per-source statistika (feed_health / Git, 24h)", ""])
+
+    rows = []
+    for url, d in agg.items():
+        rows.append(
+            (
+                float(d.get("total_articles") or 0),
+                _md_cell(d.get("label") or "", 40),
+                _md_cell(url, 72),
+                int(d.get("runs") or 0),
+                int(d.get("success") or 0),
+                int(d.get("empty") or 0),
+                int(d.get("failed") or 0),
+                int(d.get("total_articles") or 0),
+            )
+        )
+    rows.sort(key=lambda x: (-x[0], x[2]))
+
+    lines.append(
+        "| zdroj (label) | feed URL | runs | success | empty | failed | total_articles |"
+    )
+    lines.append("| --- | --- | ---: | ---: | ---: | ---: | ---: |")
+    for _, lab, url, runs, succ, emp, fail, tot in rows:
+        lines.append(f"| {lab} | {url} | {runs} | {succ} | {emp} | {fail} | {tot} |")
+
+    top = sorted(rows, key=lambda x: (-x[0], x[2]))[:10]
+    lines.extend(["", "### TOP 10 podle total_articles (stejné okno)", ""])
+    lines.append("| # | zdroj (label) | feed URL | total_articles |")
+    lines.append("| ---: | --- | --- | ---: |")
+    for i, (_, lab, url, _r, _s, _e, _f, tot) in enumerate(top, 1):
+        lines.append(f"| {i} | {lab} | {url} | {tot} |")
+
+    empty_or_zero = [x for x in rows if x[7] == 0 and x[3] > 0]
+    failed_all = [x for x in rows if x[3] > 0 and x[6] == x[3]]
+
+    lines.extend(
+        [
+            "",
+            "### EMPTY / FAILED (za 24h okno; ne „navždy mrtvé“)",
+            "",
+            "> Zde jde o **výsledek v tomto 24h okně** podle snapshotů `feed_health`. Feed může být jindy zdravý.",
+            "",
+        ]
+    )
+    if empty_or_zero:
+        lines.append("**Nulové články (total_articles = 0, ale feed se v okně objevil):**")
+        for _, lab, url, runs, succ, emp, fail, _ in sorted(empty_or_zero, key=lambda x: -x[3])[
+            :40
+        ]:
+            lines.append(
+                f"- `{lab}` — {url} — runs={runs}, empty={emp}, failed={fail}, success={succ}"
+            )
+        if len(empty_or_zero) > 40:
+            lines.append(f"- … (+{len(empty_or_zero) - 40} dalších)")
+    else:
+        lines.append("- (žádný takový záznam v agregaci)")
+    lines.append("")
+    if failed_all:
+        lines.append("**Všechny běhy ve window skončily jako failed (`failed == runs`):**")
+        for _, lab, url, runs, succ, emp, fail, _ in sorted(failed_all, key=lambda x: -x[3])[:40]:
+            lines.append(f"- `{lab}` — {url} — runs={runs}, failed={fail}, empty={emp}, success={succ}")
+        if len(failed_all) > 40:
+            lines.append(f"- … (+{len(failed_all) - 40} dalších)")
+    else:
+        lines.append("**failed == runs:** (žádný takový záznam)")
+    # Compact JSON for audit / mail (truncated)
+    try:
+        blob = json.dumps(
+            {u: dict(v) for u, v in agg.items()},
+            ensure_ascii=False,
+            indent=2,
+        )
+        if len(blob) > 12000:
+            blob = blob[:12000] + "\n… (truncated)"
+        lines.extend(["", "### Raw runtime agregace (JSON, může být zkráceno)", "", "```json", blob, "```", ""])
+    except (TypeError, ValueError):
+        pass
+
+    lines.append("")
+    return "\n".join(lines)
+
+
+def render_config_not_seen_section(missing: Sequence[Tuple[str, str, str]]) -> str:
+    lines: List[str] = [
+        "### Zdroje z configu / feeds souborů — neobjevily se v `feed_health` za 24h",
+        "",
+        "> URL z `config/sources.json`, `scripts/feeds.json`, `scripts/feeds_youtube.json`, které **nemají**",
+        "> v agregaci výše žádný odpovídající klíč feed URL (normalizovaný). Nemusí znamenat chybu —",
+        "> scheduler mohl feed v tomto okně nevybrat, nebo se URL liší od klíče v `feed_health`.",
+        "",
+    ]
+    if not missing:
+        lines.append("- (všechny sledované URL se v okně v `feed_health` alespoň jednou objevily, nebo seznam je prázdný)")
+    else:
+        for url, label, origin in missing:
+            lines.append(f"- `{label}` — `{url}` — *{origin}*")
+    lines.append("")
+    return "\n".join(lines)
+
+
 def load_feeds(path: Path) -> List[Dict[str, Any]]:
     if not path.is_file():
         return []
@@ -467,6 +901,14 @@ def render_sections_and_sources(
         "## SECTIONS AND SOURCES",
         "",
     ]
+    if not feeds:
+        lines.extend(
+            [
+                "> **Poznámka:** `scripts/feeds.json` je prázdný nebo neobsahuje položky. Kanonický seznam aktivních feedů "
+                "pro pipeline je obvykle v `projects/data/source_registry.json` (tento blok enumeruje jen `feeds.json`).",
+                "",
+            ]
+        )
     for sec in keys:
         sk = section_heading_key(sec) if sec != UNMAPPED_SECTION else (900, UNMAPPED_SECTION)
         title = sk[1]
@@ -492,6 +934,12 @@ def run_guards(
     stats: Mapping[str, Tuple[int, int]],
 ) -> None:
     """Hard-fail on format / metric / coverage."""
+    if "## KONFIGURAČNÍ ZDROJE" not in markdown:
+        sys.exit("GUARD_FAIL: missing KONFIGURAČNÍ ZDROJE heading")
+    if "### RUNTIME DATA (always)" not in markdown:
+        sys.exit("GUARD_FAIL: missing RUNTIME DATA (always) block")
+    if "## RUNTIME AKTIVITA ZA POSLEDNÍCH 24 H" not in markdown:
+        sys.exit("GUARD_FAIL: missing RUNTIME AKTIVITA heading")
     if "## SECTIONS AND SOURCES" not in markdown:
         sys.exit("GUARD_FAIL: missing SECTIONS AND SOURCES heading")
     if markdown.count("  - url:") != len(feeds):
@@ -518,6 +966,16 @@ def build_report() -> str:
     now = datetime.now(timezone.utc)
     stats = compute_source_stats_last_24h(feeds, articles, now=now)
 
+    runtime_error: Optional[str] = None
+    try:
+        agg, fh_commits = aggregate_feed_health_runtime_24h(since_hours=24)
+    except Exception as exc:  # noqa: BLE001 — report must still render; never silent fail
+        agg, fh_commits = {}, []
+        runtime_error = f"{type(exc).__name__}: {exc}"
+    gh_ok = count_gh_success_runs_24h()
+    config_rows = load_config_source_urls()
+    missing_urls = config_urls_not_in_runtime(agg, config_rows)
+
     repo = os.environ.get("GITHUB_REPOSITORY", "unknown/repo")
     sha = env_or_git_sha()
     run_id = os.environ.get("GITHUB_RUN_ID", "unknown")
@@ -532,14 +990,29 @@ def build_report() -> str:
         f"- Run: {run_id}",
         f"- UTC: {utc}",
         "",
-        "## ZDROJE – KONFIGURAČNÍ SOUBORY (nalezené v repu)",
+        "## KONFIGURAČNÍ ZDROJE (NEZNAMENÁ RUNTIME AKTIVITU)",
+        "",
+        "> **Tato část** popisuje **konfiguraci v repozitáři** (RSS/YouTube URL, soubory). ",
+        "> **Neříká**, kolikrát byl feed v posledních 24 h skutečně stažen v pipeline — to je až sekce **RUNTIME** níže.",
+        "",
+        "### Explicitní konfigurační soubory (reference)",
+        "",
     ]
+    if SOURCES_JSON.is_file():
+        lines.append(f"- `{SOURCES_JSON.relative_to(REPO_ROOT).as_posix()}`")
+    else:
+        lines.append("- `config/sources.json` — (soubor v aktuálním checkoutu nenalezen)")
+    if FEEDS_JSON.is_file():
+        lines.append(f"- `{FEEDS_JSON.relative_to(REPO_ROOT).as_posix()}`")
+    if FEEDS_YOUTUBE_JSON.is_file():
+        lines.append(f"- `{FEEDS_YOUTUBE_JSON.relative_to(REPO_ROOT).as_posix()}`")
+    lines.extend(["", "### Další kandidátní soubory (`git ls-files`, RSS/YouTube pattern)", ""])
     if not candidates:
         lines.append("- NENÍ IMPLEMENTOVÁNO (nenalezen žádný kandidátní config soubor pro zdroje)")
     else:
         for f in candidates:
             lines.append(f"- `{f}`")
-    lines.extend(["", "## RSS ZDROJE ČLÁNKŮ (jmenovitě)"])
+    lines.extend(["", "### RSS ZDROJE ČLÁNKŮ (výtažky z configů výše)", ""])
     if not candidates:
         lines.append("- NENÍ IMPLEMENTOVÁNO")
     else:
@@ -550,7 +1023,7 @@ def build_report() -> str:
             lines.append(
                 "- NENÍ IMPLEMENTOVÁNO (nenalezeny RSS URL v kandidátních config souborech)"
             )
-    lines.extend(["", "## YOUTUBE ZDROJE (jmenovitě)"])
+    lines.extend(["", "### YOUTUBE ZDROJE (výtažky z configů výše)", ""])
     if not candidates:
         lines.append("- NENÍ IMPLEMENTOVÁNO")
     else:
@@ -566,12 +1039,31 @@ def build_report() -> str:
             "",
             render_sections_and_sources(feeds, workflow_texts, stats, cadence).strip(),
             "",
+            render_runtime_24h_section(agg, fh_commits, gh_ok, now, runtime_error=runtime_error).strip(),
+            "",
+            render_config_not_seen_section(missing_urls).strip(),
+            "",
+            "## KRÁTKÝ ZÁVĚR",
+            "",
+            "- **Konfigurace** nahoře = co je v repu; **runtime** = co vyplynulo z agregace `feed_health.json` v Git historii za 24 h.",
+            "- **Není to** přesný HTTP log; je to **nejlepší read-only odhad** z dostupných health snapshotů.",
+            "- **Neviděné URL** v `feed_health` nemusí znamenat výpadek — scheduler může feed v okně nevybrat, nebo se URL liší od klíče ve snapshotu.",
+            "",
             "## DETAILNÍ FORENSIC AUDIT",
             "- Viz příloha `ultra_audit_report.txt`",
             "",
         ]
     )
     body = "\n".join(lines)
+    dbg = (os.environ.get("ULTRA_AUDIT_WIKI_DEBUG") or "").strip().lower()
+    if dbg in ("1", "true", "yes", "y"):
+        runtime_data = {
+            "commits_in_window": len(fh_commits),
+            "feed_count": len(agg),
+            "gh_success_runs_24h": gh_ok,
+            "error": runtime_error,
+        }
+        print("RUNTIME DATA:", json.dumps(runtime_data, ensure_ascii=False), file=sys.stderr)
     run_guards(body, feeds, stats)
     return body
 
@@ -605,7 +1097,12 @@ def selftest() -> int:
     st = compute_source_stats_last_24h(src, arts, now=now)
     assert st["a"][0] >= st["a"][1]
 
-    md = render_sections_and_sources(src, wfs, st, c)
+    md = (
+        "## KONFIGURAČNÍ ZDROJE (selftest stub)\n\n"
+        "## RUNTIME AKTIVITA ZA POSLEDNÍCH 24 H (selftest stub)\n\n"
+        "### RUNTIME DATA (always)\n\n```json\n{}\n```\n\n"
+        + render_sections_and_sources(src, wfs, st, c)
+    )
     run_guards(md, src, st)
     print("SELFTEST_OK")
     return 0
@@ -622,6 +1119,8 @@ def main() -> int:
     out = REPORTS_DIR / "ultra_audit_wiki.md"
     body = build_report()
     out.write_text(body, encoding="utf-8")
+    if "### RUNTIME DATA (always)" not in body:
+        sys.exit("INTERNAL_FAIL: RUNTIME DATA block missing after build_report")
     print(f"WROTE={out}")
     return 0
 

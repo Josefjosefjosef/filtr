@@ -1,5 +1,7 @@
 # Compares projects/data/articles.json on main vs production; dispatches pages.yml when stale.
 # Cadence: every 5 min (GitHub Actions minimum interval for scheduled workflows).
+# Article pipeline autorun is NOT driven by GitHub schedule — use Cloudflare Worker
+# cloudflare/articles-watchdog (cron → workflow_dispatch) so Actions stays the engine only.
 # Reliable “prod catch-up” loop: merges done via GITHUB_TOKEN in Actions do not reliably
 # trigger push-triggered downstream workflows, so scheduled + post-merge hooks keep publish deterministic.
 # workflow_run: re-check immediately after data-merge closeout workflows finish (faster than next cron tick).

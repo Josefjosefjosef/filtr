@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -120,6 +121,51 @@ def check_fetch_paths(app_js: Path):
     return issues
 
 
+def check_weather_inline_video_autopause(app_js: Path):
+    """Regression: Počasí YouTube preview must teardown when leaving the section (assets/app.js)."""
+    issues = []
+    if not app_js.exists():
+        return issues
+    t = app_js.read_text(encoding="utf-8")
+    if "function stopWeatherInlineVideo" not in t:
+        issues.append(
+            "assets/app.js must define stopWeatherInlineVideo(reason) for Počasí inline video cleanup"
+        )
+    if "window.stopWeatherInlineVideo" not in t:
+        issues.append("assets/app.js must expose stopWeatherInlineVideo on window for diagnostics/tests")
+    if "stopWeatherInlineVideo(" not in t:
+        issues.append("assets/app.js must call stopWeatherInlineVideo when leaving non–Počasí section")
+    if 'stopWeatherInlineVideo("applySection_non_weather")' not in t:
+        issues.append(
+            "assets/app.js must invoke stopWeatherInlineVideo from applySectionFromURL (applySection_non_weather)"
+        )
+    if "iuWeatherHistoryPlayerHost" not in t:
+        issues.append(
+            "assets/app.js stopWeatherInlineVideo must target iuWeatherHistoryPlayerHost (Počasí embed host)"
+        )
+    return issues
+
+
+def check_section_feed_header(app_js: Path, index_html: Path):
+    """Regresní guard: feed #dataUpdatedAt nesmí používat globální dataset generatedAt ani starý text."""
+    issues = []
+    if app_js.exists():
+        t = app_js.read_text(encoding="utf-8")
+        if "Poslední aktualizace dat" in t:
+            issues.append(
+                "assets/app.js must not contain legacy label 'Poslední aktualizace dat' (use section-derived header)"
+            )
+        if "iuMaxPublishedMsFromItems" not in t or "iuUpdateSectionDataUpdatedAtEl" not in t:
+            issues.append(
+                "assets/app.js must define iuMaxPublishedMsFromItems + iuUpdateSectionDataUpdatedAtEl for feed header"
+            )
+    if index_html.exists():
+        ix = index_html.read_text(encoding="utf-8")
+        if 'id="dataUpdatedAt"' in ix and "Poslední aktualizace sekce" not in ix:
+            issues.append("projects/index.html #dataUpdatedAt must use section-level placeholder (Poslední aktualizace sekce)")
+    return issues
+
+
 def main():
     issues = []
 
@@ -137,11 +183,29 @@ def main():
     if app_js.exists():
         issues += check_fetch_paths(app_js)
 
+    issues += check_weather_inline_video_autopause(app_js)
+
+    issues += check_section_feed_header(app_js, projects_index)
+
     issues += check_blocked_hedvabnastezka()
 
     data_dir = ROOT / "projects" / "data"
     issues += validate_json(data_dir / "articles.json", "articles")
     issues += validate_json(data_dir / "videos.json", "videos")
+
+    boot_path = data_dir / "articles" / "bootstrap.json"
+    if boot_path.exists():
+        chk = subprocess.run(
+            [sys.executable, str(ROOT / "scripts" / "validate_articles_bootstrap.py")],
+            cwd=str(ROOT),
+            capture_output=True,
+            text=True,
+        )
+        if chk.returncode != 0:
+            tail = ((chk.stderr or "") + (chk.stdout or "")).strip()[:4000]
+            issues.append(f"validate_articles_bootstrap.py failed: {tail or 'no output'}")
+    else:
+        issues.append(f"missing {boot_path} (expected Phase 1 bootstrap output)")
 
     if issues:
         print("Repo guard: FAIL")

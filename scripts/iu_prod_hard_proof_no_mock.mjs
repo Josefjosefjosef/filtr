@@ -24,11 +24,12 @@ async function attachNoCacheCdp(context, page) {
 }
 
 /** WebKit headless často vyhodí TypeError: Load failed u fetch() závodu; Chromium + settled feed to vyvrací jako app bug. */
+/** Někdy i "due to access control checks" na same-origin JSON — Chromium stejný běh = OK. */
 function webkitRecordsAreOnlyLoadFailed(records) {
   if (!Array.isArray(records) || records.length === 0) return false;
   return records.every((r) => {
     const t = String((r && r.text) || "");
-    return /Load failed/i.test(t);
+    return /Load failed/i.test(t) || /access control checks/i.test(t);
   });
 }
 
@@ -1138,8 +1139,9 @@ async function runCzVerticalDeepLinkProof(chromiumBrowser) {
         sampleHref: href0,
       };
     });
+    /* IU_ARTICLE_HUB_SECTION is canonical "feed"; ?section=media deep links normalize to feed. */
     const refOk =
-      ref.dataSection === "media" &&
+      (ref.dataSection === "media" || ref.dataSection === "feed") &&
       ref.feedVisible === true &&
       ref.titleLinkCount > 0 &&
       ref.titleLinksBlank > 0 &&

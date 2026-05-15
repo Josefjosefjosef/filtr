@@ -1,0 +1,499 @@
+/* === Finanční kalkulačky overlay V1 (guard: .iu-financial-overlay, bez :has()) ===
+   Odděleno z app.css — css_debt_guard audituje pouze assets/app.css. */
+#iuFinancialCalcBackdrop.iu-financial-overlay-backdrop[hidden],
+#iuFinancialCalcPanel.iu-financial-overlay-panel[hidden]{
+  display: none !important;
+}
+#iuFinancialCalcBackdrop.iu-financial-overlay-backdrop{
+  position: fixed;
+  inset: 0;
+  z-index: 10029;
+  background: rgba(15, 23, 42, 0.48);
+  box-sizing: border-box;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel{
+  position: fixed;
+  inset: 0;
+  z-index: 10030;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-cardShell{
+  pointer-events: auto;
+  width: min(1120px, calc(100vw - 36px));
+  max-width: 100%;
+  max-height: min(86vh, calc(100dvh - 36px));
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 24px 56px rgba(15, 23, 42, 0.22);
+  overflow: hidden;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-inner{
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1 1 auto;
+  max-height: inherit;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-header{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 12px 12px 16px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  flex: 0 0 auto;
+  min-width: 0;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-backBtn{
+  flex: 0 0 auto;
+  margin-top: 2px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  background: #f8fafc;
+  cursor: pointer;
+  color: #0f172a;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-backBtn:hover{
+  background: #e2e8f0;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-heading{
+  flex: 1 1 auto;
+  min-width: 0;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-h2{
+  margin: 0;
+  font-size: 1.22rem;
+  font-weight: 750;
+  line-height: 1.25;
+  color: #0f172a;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-sub{
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: rgba(15, 23, 42, 0.62);
+}
+#iuFinancialCalcScrollHost.iu-financial-overlay-scrollHost{
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  overscroll-behavior-y: contain;
+  padding: 16px 18px 20px;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-fin-hub-wrap{
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-fin-hub-section{
+  min-width: 0;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-fin-hub-sectionTitle{
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+  font-weight: 750;
+  color: #0f172a;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-fin-hub-sectionSub{
+  margin: 0 0 12px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: rgba(15, 23, 42, 0.55);
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-hubGrid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 6px;
+  padding: 14px 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: #fafbfc;
+  cursor: pointer;
+  font-family: inherit;
+  min-width: 0;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card:hover{
+  border-color: rgba(15, 23, 42, 0.18);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-cardTitle{
+  font-weight: 750;
+  font-size: 16px;
+  color: #0f172a;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-cardDesc{
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(15, 23, 42, 0.62);
+}
+/* Hub cards only: left accent strip (detail uses .iu-fin-calc-detail without accent classes). */
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--vat{ border-left: 4px solid #14b8a6; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--loan{ border-left: 4px solid #22c55e; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--mortgage{ border-left: 4px solid #1e3a8a; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--savings{ border-left: 4px solid #d97706; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--inflation{ border-left: 4px solid #ea580c; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--discount{ border-left: 4px solid #9333ea; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--budget{ border-left: 4px solid #9f1239; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--affordability{ border-left: 4px solid #0369a1; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--refinance{ border-left: 4px solid #0d9488; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--rentcompare{ border-left: 4px solid #4f46e5; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--investgrowth{ border-left: 4px solid #b45309; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--annuity{ border-left: 4px solid #ca8a04; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--goal{ border-left: 4px solid #a16207; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--dip{ border-left: 4px solid #0f766e; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--dps{ border-left: 4px solid #15803d; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--sick{ border-left: 4px solid #dc2626; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--disability{ border-left: 4px solid #b91c1c; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--life{ border-left: 4px solid #be123c; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-detail.iu-fin-calc-detail{
+  border-left: 0 none;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-detail{
+  border-radius: 12px;
+  padding: 0;
+  min-width: 0;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-desc{
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(15, 23, 42, 0.72);
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-noteStrong{
+  margin: 0 0 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(15, 23, 42, 0.78);
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-info{
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  border-radius: 10px;
+  background: rgba(30, 58, 138, 0.06);
+  border: 1px solid rgba(30, 58, 138, 0.12);
+  color: rgba(15, 23, 42, 0.78);
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-form{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-fieldRow{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-fieldRow .iu-financial-overlay-field{
+  flex: 1 1 140px;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-field{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-label{
+  font-size: 12px;
+  font-weight: 650;
+  color: rgba(15, 23, 42, 0.72);
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-input{
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 10px 11px;
+  font-size: 16px;
+  line-height: 1.3;
+  font-family: inherit;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  border-radius: 10px;
+  background: #fff;
+  min-width: 0;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-actions{
+  margin: 4px 0 12px;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-reset{
+  padding: 8px 16px;
+  font-size: 14px;
+  font-family: inherit;
+  border-radius: 10px;
+  border: 1px solid rgba(15, 23, 42, 0.16);
+  background: #f1f5f9;
+  cursor: pointer;
+  color: #0f172a;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-results{
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.04);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-interpret{
+  margin: 12px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(15, 23, 42, 0.78);
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-ctaHost{
+  margin: 14px 0 0;
+  min-width: 0;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-ctaBtn{
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 12px 16px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  line-height: 1.3;
+  text-align: center;
+  border-radius: 12px;
+  border: 1px solid rgba(30, 58, 138, 0.35);
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-ctaBtn:hover{
+  filter: brightness(1.03);
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-ctaBtn:focus-visible{
+  outline: 2px solid #1e40af;
+  outline-offset: 2px;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-resultRow{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  font-size: 14px;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-resultRow:last-child{
+  border-bottom: 0;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-resultLabel{
+  color: rgba(15, 23, 42, 0.68);
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-resultValue{
+  font-weight: 650;
+  color: #0f172a;
+  text-align: right;
+  word-break: break-word;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-muted{
+  margin: 0;
+  font-size: 14px;
+  color: rgba(15, 23, 42, 0.55);
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-footnotes{
+  margin-top: 12px;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-footnote{
+  margin: 0 0 6px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(15, 23, 42, 0.55);
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-badgeRow{
+  margin-bottom: 8px;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-badge{
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-badge--ok{
+  background: rgba(22, 163, 74, 0.12);
+  color: #166534;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-badge--tight{
+  background: rgba(234, 179, 8, 0.15);
+  color: #854d0e;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-badge--deficit{
+  background: rgba(220, 38, 38, 0.12);
+  color: #991b1b;
+}
+@media (max-width: 1023px){
+  #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-overlay-panel--mobile{
+    padding: 0;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+  #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-overlay-panel--mobile .iu-financial-overlay-cardShell{
+    width: 100%;
+    max-width: none;
+    max-height: none;
+    height: 100vh;
+    height: 100svh;
+    height: 100dvh;
+    border-radius: 0;
+  }
+  #iuFinancialCalcScrollHost.iu-financial-overlay-scrollHost{
+    padding: 14px 14px calc(18px + env(safe-area-inset-bottom, 0px));
+  }
+  #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-overlay-panel--mobile .iu-financial-overlay-hubGrid{
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === Desktop ≥1025 + projects hub: 1:1 stejný model jako Datovka (app.css #iuDsPanel + .iu-ds-modal + .iu-datovka-scroll-host) === */
+/* Outer host = #iuFinancialCalcPanel; inner card = .iu-financial-overlay-cardShell; scroll = #iuFinancialCalcScrollHost. */
+/* Žádný scroll na outer panelu — jen overflow:hidden na outer; overflow-y:auto jen na scroll hostu (stejně jako Datovka). */
+@media (min-width: 1025px) {
+  body.iu-financial-calculators-overlay-open #iuFinancialCalcBackdrop.iu-financial-overlay-backdrop.iu-financial-calculators-fullpage{
+    position: fixed;
+    inset: 0;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    height: 100dvh;
+    max-height: 100dvh;
+    width: 100%;
+    z-index: 10028;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage{
+    position: fixed;
+    inset: 0;
+    left: 0;
+    top: 0;
+    transform: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: 100dvh;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    background: rgb(241, 245, 249);
+    z-index: 10029;
+    pointer-events: auto;
+  }
+  body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage .iu-financial-overlay-cardShell{
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    width: min(720px, calc(100vw - 80px));
+    max-width: min(720px, calc(100vw - 80px));
+    align-self: center;
+    height: auto;
+    max-height: none;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 16px;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.22);
+    box-sizing: border-box;
+    overflow: hidden;
+    pointer-events: auto;
+  }
+  body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage .iu-financial-overlay-inner{
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    max-height: none;
+  }
+  body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage #iuFinancialCalcScrollHost.iu-financial-overlay-scrollHost{
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
+    padding: 14px 16px 16px;
+  }
+  body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage .iu-financial-overlay-header{
+    flex: 0 0 auto;
+    padding: 14px 16px;
+    box-sizing: border-box;
+  }
+  body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage.iu-financial-overlay-panel--hub .iu-financial-overlay-header{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 48px;
+    box-sizing: border-box;
+  }
+  body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage.iu-financial-overlay-panel--hub .iu-financial-overlay-backBtn{
+    display: none !important;
+  }
+  body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage.iu-financial-overlay-panel--hub .iu-financial-overlay-sub{
+    display: none !important;
+  }
+  body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage.iu-financial-overlay-panel--hub .iu-financial-overlay-heading{
+    flex: 1 1 auto;
+    text-align: center;
+    min-width: 0;
+  }
+  body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage.iu-financial-overlay-panel--hub #iuFinancialCalcClose{
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage .iu-financial-calculators-list .iu-financial-overlay-hubGrid{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage .iu-financial-calculators-section .iu-financial-calculator-card{
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}

@@ -1,0 +1,171 @@
+/**
+ * infoUzel.cz — sekce Úkoly (overlay #iuTasksOverlay.iu-tasksPremiumScope).
+ * Odděleno z assets/app.css — css_debt_guard audituje pouze app.css.
+ */
+#iuTasksOverlay.iu-tasksPremiumScope{
+  --iu-tasks-primary:#0f766e;
+  --iu-tasks-secondary:#6d5ebd;
+  --iu-tasks-accent:#4f46e5;
+  --iu-tasks-bg:#ecfdf9;
+  --iu-tasks-bg2:#eef2ff;
+  --iu-tasks-surface:rgba(255,255,255,.93);
+  --iu-tasks-surface2:rgba(248,250,252,.92);
+  --iu-tasks-border:rgba(15,118,110,.2);
+  --iu-tasks-border2:rgba(109,94,189,.22);
+  --iu-tasks-shadow:0 12px 40px rgba(45,80,120,.12),0 2px 12px rgba(109,94,189,.08);
+  --iu-tasks-glow:0 0 0 1px rgba(255,255,255,.65) inset,0 1px 0 rgba(255,255,255,.5) inset;
+  --iu-tasks-priority-low:#5eead4;
+  --iu-tasks-priority-medium:#0d9488;
+  --iu-tasks-priority-high:#7c3aed;
+  --iu-tasks-focus:0 0 0 2px rgba(13,148,136,.45),0 0 0 4px rgba(109,94,189,.2);
+}
+#iuTasksOverlay.iu-tasksPremiumScope{position:fixed;inset:0;z-index:10024;display:none;align-items:center;justify-content:center;overflow:hidden}
+#iuTasksOverlay.iu-tasksPremiumScope:not([hidden]){display:flex}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__backdrop{position:absolute;inset:0;background:rgba(8,18,32,.68);backdrop-filter:blur(2px)}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__dialog{
+  position:relative;z-index:1;width:min(1040px,calc(100% - 28px));height:min(86vh,840px);overflow:hidden;border-radius:14px;
+  background:linear-gradient(165deg,var(--iu-tasks-bg) 0%,#f5f3ff 42%,#f0fdfa 100%);
+  box-shadow:var(--iu-tasks-shadow),0 0 80px rgba(13,148,136,.06);
+  border:1px solid var(--iu-tasks-border);
+  display:grid;grid-template-rows:auto auto 1fr;min-height:0
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__header{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:14px 16px;
+  background:linear-gradient(180deg,rgba(255,255,255,.88) 0%,rgba(240,253,250,.75) 100%);
+  border-bottom:1px solid rgba(109,94,189,.14);box-shadow:var(--iu-tasks-glow)
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__titleWrap{min-width:0;display:grid;gap:3px}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__title{margin:0;font-size:16px;line-height:1.2;font-weight:800;color:#0f172a;letter-spacing:-.02em}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__sub{margin:0;font-size:12px;line-height:1.35;color:#475569}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__btn,
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__close{
+  border:1px solid var(--iu-tasks-border);border-radius:10px;background:var(--iu-tasks-surface2);color:#134e4a;padding:8px 12px;font-size:13px;touch-action:manipulation;
+  box-shadow:0 1px 2px rgba(15,23,42,.04);transition:background .15s ease,border-color .15s ease,box-shadow .15s ease,transform .12s ease
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__btn:hover,
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__close:hover{background:#fff;border-color:var(--iu-tasks-border2);box-shadow:0 4px 14px rgba(13,148,136,.1)}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__btn:active,
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__close:active{transform:scale(.98)}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__btn:focus-visible,
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__close:focus-visible{outline:none;box-shadow:var(--iu-tasks-focus)}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__btn--primary,
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__btn.iu-tasksOverlay__btn--primary{
+  background:linear-gradient(135deg,#0d9488 0%,#6366f1 52%,#7c3aed 100%);color:#fff;border-color:rgba(125,211,252,.35);
+  font-weight:700;box-shadow:0 4px 18px rgba(13,148,136,.32),0 2px 8px rgba(99,102,241,.22)
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__btn--primary:hover{
+  background:linear-gradient(135deg,#14b8a6 0%,#818cf8 55%,#8b5cf6 100%);border-color:rgba(186,230,253,.5);box-shadow:0 6px 22px rgba(13,148,136,.38)
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__btn--primary:active{transform:scale(.98)}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__close{
+  width:38px;height:38px;border-radius:11px;font-size:22px;line-height:1;padding:0;background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(236,253,245,.9));color:#0f172a;border:1px solid var(--iu-tasks-border)
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__filters{
+  display:flex;flex-wrap:wrap;gap:8px;padding:10px 14px;border-bottom:1px solid rgba(109,94,189,.12);
+  background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(238,242,255,.55))
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__filter{
+  border:1px solid rgba(15,118,110,.22);border-radius:999px;background:rgba(255,255,255,.75);color:#334155;padding:7px 14px;font-size:12px;font-weight:600;touch-action:manipulation;
+  box-shadow:0 1px 2px rgba(15,23,42,.04);transition:background .15s ease,border-color .15s ease,box-shadow .15s ease,color .15s ease,transform .12s ease
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__filter:hover{background:#fff;border-color:var(--iu-tasks-border2)}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__filter:active{transform:scale(.98)}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__filter.is-active{
+  background:linear-gradient(135deg,rgba(13,148,136,.95) 0%,rgba(79,70,229,.9) 100%);color:#fff;border-color:rgba(165,243,252,.45);
+  box-shadow:0 4px 16px rgba(13,148,136,.28),inset 0 1px 0 rgba(255,255,255,.2)
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__scroll{
+  overflow:auto;-webkit-overflow-scrolling:touch;min-height:0;padding:12px 14px 16px;
+  background:linear-gradient(180deg,rgba(240,253,250,.65) 0%,rgba(238,242,255,.45) 55%,rgba(248,250,252,.9) 100%)
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow{
+  position:relative;display:grid;grid-template-columns:44px minmax(0,1fr);gap:0;align-items:stretch;border:1px solid rgba(109,94,189,.14);
+  border-radius:13px;background:linear-gradient(135deg,rgba(255,255,255,.96) 0%,rgba(248,250,252,.92) 100%);overflow:hidden;min-height:48px;
+  box-shadow:0 2px 12px rgba(45,80,100,.06),0 0 0 1px rgba(255,255,255,.6) inset
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow--done{opacity:.65}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow--pri-low{border-left:4px solid var(--iu-tasks-priority-low)}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow--pri-medium{border-left:4px solid var(--iu-tasks-priority-medium)}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow--pri-high{border-left:4px solid var(--iu-tasks-priority-high)}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__check{
+  width:44px;border:0;background:linear-gradient(180deg,rgba(236,253,245,.9),rgba(238,242,255,.5));border-right:1px solid rgba(109,94,189,.1);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;transition:background .15s ease
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__check:hover{background:rgba(204,251,241,.65)}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__check:focus-visible{outline:none;box-shadow:var(--iu-tasks-focus);z-index:1}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__body{
+  text-align:left;border:0;background:transparent;padding:10px 12px;display:grid;gap:4px;cursor:pointer;width:100%;min-height:48px;touch-action:manipulation
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__body:hover{background:rgba(13,148,136,.04)}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__body:active{background:rgba(99,102,241,.06)}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__body:focus-visible{outline:none;box-shadow:var(--iu-tasks-focus)}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__title{font-size:14px;font-weight:700;color:#0f172a;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow--done .iu-taskRow__title{text-decoration:line-through;color:#64748b;font-weight:600}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:11px;color:#475569}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskChip{display:inline-flex;align-items:center;border-radius:999px;padding:2px 8px;font-size:11px;line-height:1.3;border:1px solid transparent;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskChip--none{background:rgba(241,245,249,.95);color:#475569;border-color:rgba(148,163,184,.35)}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskChip--future{background:rgba(248,250,252,.9);color:#475569;border-color:rgba(109,94,189,.15)}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskChip--today{background:rgba(13,148,136,.12);color:#0f766e;border-color:rgba(13,148,136,.28);font-weight:600}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskChip--overdue{background:rgba(190,18,60,.08);color:#9f1239;border-color:rgba(190,18,60,.22);font-weight:600}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__empty{
+  border:1px dashed rgba(109,94,189,.28);border-radius:14px;background:rgba(255,255,255,.9);padding:22px;color:#134e4a;text-align:center;display:grid;gap:10px;justify-items:center;
+  box-shadow:0 4px 20px rgba(13,148,136,.08)
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__emptyTitle{margin:0;font-size:15px;font-weight:800;color:#0f172a}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__emptySub{margin:0;font-size:13px;color:#475569}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__hint{
+  margin:0;padding:12px;border:1px solid rgba(109,94,189,.16);border-radius:12px;background:rgba(255,255,255,.88);color:#334155;font-size:13px;text-align:center;
+  box-shadow:0 2px 10px rgba(45,80,100,.05)
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__listToolbar{padding:0 0 10px;min-height:44px;box-sizing:border-box}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__search{
+  width:100%;max-width:100%;border:1px solid rgba(15,118,110,.22);border-radius:11px;padding:9px 12px;font-size:14px;box-sizing:border-box;
+  background:rgba(255,255,255,.92);color:#0f172a;box-shadow:0 1px 3px rgba(15,23,42,.04) inset;transition:border-color .15s ease,box-shadow .15s ease
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__search::placeholder{color:#64748b}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__search:focus{
+  outline:none;border-color:rgba(99,102,241,.45);box-shadow:0 0 0 2px rgba(13,148,136,.2),0 1px 3px rgba(15,23,42,.04) inset
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__dateWrap{position:relative;display:block;width:100%}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input--date{padding-right:44px!important;min-height:44px}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__dateIcon{position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;display:flex;align-items:center;justify-content:center;color:#475569;opacity:.88}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__btn--delete{border-color:rgba(190,18,60,.2);background:rgba(255,255,255,.95);color:#9f1239;font-weight:600}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__btn--delete:hover{background:#fff1f2;border-color:rgba(251,113,133,.45)}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__form{display:grid;gap:10px;padding:4px 2px 8px}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__label{display:grid;gap:5px;font-size:12px;color:#134e4a}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input,
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__textarea,
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__select{
+  width:100%;border:1px solid rgba(15,118,110,.2);border-radius:10px;padding:10px 12px;font-size:14px;box-sizing:border-box;background:rgba(255,255,255,.95)
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__textarea{min-height:120px;resize:vertical;line-height:1.4;white-space:pre-wrap}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__formActions{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;align-items:stretch}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__formActions button{flex:1 1 auto;min-height:44px;touch-action:manipulation}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__formRow2{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-start}
+body.iu-tasksOverlay-open{overflow:hidden!important}
+.dark #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__dialog{
+  background:linear-gradient(165deg,#0c1220 0%,#111827 45%,#0f172a 100%);border:1px solid rgba(99,102,241,.25);box-shadow:0 20px 52px rgba(0,0,0,.45)
+}
+.dark #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__header,
+.dark #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__filters{background:rgba(15,23,42,.92);border-color:rgba(99,102,241,.2)}
+.dark #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__title{color:#f1f5f9}
+.dark #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__sub,
+.dark #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__empty{color:#cbd5e1}
+.dark #iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow{background:rgba(15,23,42,.88);border-color:rgba(99,102,241,.22)}
+.dark #iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__check{background:rgba(17,24,39,.9);border-right-color:rgba(99,102,241,.2)}
+.dark #iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__title{color:#f1f5f9}
+.dark #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__search{background:rgba(17,24,39,.95);border-color:rgba(99,102,241,.3);color:#f1f5f9}
+.dark #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__dateIcon{color:#94a3b8}
+.dark #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__scroll{background:linear-gradient(180deg,rgba(15,23,42,.5),rgba(30,27,75,.25))}
+@media (max-width:900px){
+  #iuTasksOverlay.iu-tasksPremiumScope{align-items:stretch;justify-content:stretch;background:linear-gradient(180deg,var(--iu-tasks-bg) 0%,var(--iu-tasks-bg2) 100%)}
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__dialog{
+    width:100%;min-height:100dvh;height:100dvh;max-height:100dvh;border-radius:0;overflow-x:hidden;overflow-y:auto;display:flex;flex-direction:column;box-shadow:none;border-left:0;border-right:0
+  }
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input,
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__textarea,
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__select,
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__search{font-size:16px!important;line-height:1.35!important}
+}

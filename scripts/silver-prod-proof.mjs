@@ -71,6 +71,29 @@ function todayIsoDate() {
   return `${y}-${m}-${dd}`;
 }
 
+/**
+ * Desktop ≥1025px: iuDesktopMindMenuSilverSummaryHoverInit moves the calendar summary
+ * node into #iuMmHoverSummaryPanelShellCalendar; while closed the shell parks the card
+ * off-screen (fixed), so #iuSilverCalendarSummaryCard is outside the viewport until
+ * the MindMenu host is hovered. Open the panel before pointer/keyboard actions.
+ */
+async function ensureDesktopMindMenuCalendarSummaryHoverPanelOpen(page) {
+  const needs = await page.evaluate(() =>
+    document.body.classList.contains("iu-desktop-hover-summary-enabled")
+  );
+  if (!needs) return;
+  await page.locator("#iuMmHoverSummaryHostCalendar").hover({ timeout: 8000 });
+  await page.waitForTimeout(120);
+  await page.waitForFunction(
+    () => {
+      const shell = document.getElementById("iuMmHoverSummaryPanelShellCalendar");
+      return !!(shell && !shell.classList.contains("iu-mmHoverSummaryPanelShell--closed"));
+    },
+    null,
+    { timeout: 8000 }
+  );
+}
+
 async function main() {
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
@@ -131,7 +154,10 @@ async function main() {
   await closeCalendarOverlayIfOpen();
   const overlayBefore = await readCalendarOverlayState();
   await clsReset(page);
-  await page.click("#iuSilverCalendarSummaryCard", { timeout: 8000 });
+  const calCard = page.locator("#iuSilverCalendarSummaryCard");
+  await ensureDesktopMindMenuCalendarSummaryHoverPanelOpen(page);
+  await calCard.scrollIntoViewIfNeeded({ timeout: 8000 });
+  await calCard.click({ timeout: 8000 });
   await page.waitForFunction(() => {
     const o = document.getElementById("iuCalendarOverlay");
     return o && !o.hasAttribute("hidden");
@@ -152,7 +178,9 @@ async function main() {
   await page.waitForTimeout(520);
 
   await clsReset(page);
-  await page.press("#iuSilverCalendarSummaryCard", "Enter");
+  await ensureDesktopMindMenuCalendarSummaryHoverPanelOpen(page);
+  await calCard.scrollIntoViewIfNeeded({ timeout: 8000 });
+  await calCard.press("Enter");
   await page.waitForFunction(() => {
     const o = document.getElementById("iuCalendarOverlay");
     return o && !o.hasAttribute("hidden");
@@ -162,7 +190,9 @@ async function main() {
   await page.waitForTimeout(520);
 
   await clsReset(page);
-  await page.press("#iuSilverCalendarSummaryCard", "Space");
+  await ensureDesktopMindMenuCalendarSummaryHoverPanelOpen(page);
+  await calCard.scrollIntoViewIfNeeded({ timeout: 8000 });
+  await calCard.press("Space");
   await page.waitForFunction(() => {
     const o = document.getElementById("iuCalendarOverlay");
     return o && !o.hasAttribute("hidden");

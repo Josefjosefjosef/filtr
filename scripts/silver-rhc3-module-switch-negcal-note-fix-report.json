@@ -1,0 +1,262 @@
+{
+  "generated_at": "2026-05-13T01:47:59.296Z",
+  "branch": "fix/rhc3-negcal-note-engine-fix",
+  "main_commit": "3bced4f3b9d37d516747500db0a8b1c02667aede",
+  "main_before": "4caa6485df294ff5bb3cb251d2049f727457271e",
+  "target_cluster": "rhc3_module_switch_cal_to_note",
+  "total_cluster_cases": 400,
+  "cluster_pass_after": 381,
+  "cluster_fail_after": 19,
+  "cluster_fail_before": 32,
+  "fixed_count": 13,
+  "calendar_create_leak_before": 16,
+  "calendar_create_leak_after": 0,
+  "bucket_after": {
+    "TRUE_ENGINE_FAIL_MODULE_SWITCH": 0,
+    "GOLD_LABEL_TOO_AGGRESSIVE": 0,
+    "TEMPLATE_DNA_BAD_INPUT": 0,
+    "SAFETY_NEGATION_CONFLICT": 0,
+    "AMBIGUITY_SHOULD_CLARIFY": 0,
+    "ENGINE_SAFE_CLARIFICATION_OK": 4,
+    "WRONG_MODULE_REAL_BUG": 15,
+    "OTHER": 0
+  },
+  "true_engine_fail_before": 17,
+  "true_engine_fail_after": 0,
+  "wrong_module_real_bug_before": 15,
+  "wrong_module_real_bug_after": 15,
+  "ambiguous_input_count_before": 28,
+  "ambiguous_input_count_after": 15,
+  "harness_problem_count_before": 0,
+  "harness_problem_count_after": 0,
+  "safety": {
+    "dangerous_write_count": 0,
+    "false_write_count": 0,
+    "query_created_write_count": 0,
+    "write_when_negated_count": 0,
+    "p0_safety_expected_no_write_but_draft": 0,
+    "safety_all_zero": true
+  },
+  "must_pass": {
+    "total": 10,
+    "pass": 10,
+    "fail": 0,
+    "calendar_create_count": 0,
+    "results": [
+      {
+        "input": "hele ulož mi poznámku že PIN je doma, ne do kalendáře",
+        "eng": "clarification",
+        "ps": "CLARIFICATION",
+        "isCalendarCreate": false,
+        "accepted": true
+      },
+      {
+        "input": "prosím tě zapiš poznámku že klíče jsou v šuplíku, ne do kalendare",
+        "eng": "clarification",
+        "ps": "CLARIFICATION",
+        "isCalendarCreate": false,
+        "accepted": true
+      },
+      {
+        "input": "počkej ne kalendář, dej to do poznámky: právník volat zítra",
+        "eng": "unknown",
+        "ps": "CLARIFICATION",
+        "isCalendarCreate": false,
+        "accepted": true
+      },
+      {
+        "input": "nechci to v kalendáři, jen poznámka: auto má servis",
+        "eng": "unknown",
+        "ps": "CLARIFICATION",
+        "isCalendarCreate": false,
+        "accepted": true
+      },
+      {
+        "input": "ne do kalendáře prosím, poznamka že faktura je zaplacená",
+        "eng": "clarification",
+        "ps": "CLARIFICATION",
+        "isCalendarCreate": false,
+        "accepted": true
+      },
+      {
+        "input": "hele ulož mi do poznámek že PIN je doma, ale ne nějak do kalendáře",
+        "eng": "unknown",
+        "ps": "CLARIFICATION",
+        "isCalendarCreate": false,
+        "accepted": true
+      },
+      {
+        "input": "ulož mi narozeniny tety, ale ne trochu do kalendáře, do poznámek",
+        "eng": "unknown",
+        "ps": "CLARIFICATION",
+        "isCalendarCreate": false,
+        "accepted": true
+      },
+      {
+        "input": "vlastně Ulož mi číslo smlouvy, ale ne no do kalendáře, do poznámek",
+        "eng": "unknown",
+        "ps": "CLARIFICATION",
+        "isCalendarCreate": false,
+        "accepted": true
+      },
+      {
+        "input": "Uloz mi udaje k bance, ale ne trochu do kalendare, do poznamek",
+        "eng": "notes.create",
+        "ps": "READY_TO_SAVE",
+        "isCalendarCreate": false,
+        "accepted": true
+      },
+      {
+        "input": "no jo Ulož mi heslo k WiFi, ale ne nějak do kalendáře, do poznámek",
+        "eng": "unknown",
+        "ps": "CLARIFICATION",
+        "isCalendarCreate": false,
+        "accepted": true
+      }
+    ]
+  },
+  "protection": {
+    "total": 7,
+    "pass": 7,
+    "fail": 0,
+    "results": [
+      {
+        "input": "zapiš mi do kalendáře zítra schůzku s právníkem",
+        "eng": "calendar.create",
+        "ps": "NEEDS_CLARIFICATION",
+        "ok": true,
+        "reason": ""
+      },
+      {
+        "input": "ulož poznámku že PIN je doma",
+        "eng": "notes.create",
+        "ps": "READY_TO_SAVE",
+        "ok": true,
+        "reason": ""
+      },
+      {
+        "input": "nic neukládej, jen si přečti poznámky",
+        "eng": "notes.read",
+        "ps": "READ_OK",
+        "ok": true,
+        "reason": ""
+      },
+      {
+        "input": "jen čti, neukládej nic do poznámek",
+        "eng": "notes.read",
+        "ps": "READ_OK",
+        "ok": true,
+        "reason": ""
+      },
+      {
+        "input": "přidej úkol zavolat právníkovi, ne do kalendáře",
+        "eng": "tasks.create",
+        "ps": "READY_TO_SAVE",
+        "ok": true,
+        "reason": ""
+      },
+      {
+        "input": "co mám v kalendáři zítra",
+        "eng": "calendar.read",
+        "ps": "READ_OK",
+        "ok": true,
+        "reason": ""
+      },
+      {
+        "input": "co mám v poznámkách o právníkovi",
+        "eng": "notes.read",
+        "ps": "READ_OK",
+        "ok": true,
+        "reason": ""
+      }
+    ]
+  },
+  "git_status_clean": "NO",
+  "assets_app_hash_changed_during_run": "NO",
+  "examples_remaining_fails": [
+    {
+      "id": "rhc3_0003203",
+      "input": "proste jo hele Uloz mi dokumenty fakt ve spodni prihradce, ale ne do nejak kalendare, do poznamek. díky",
+      "bucket": "WRONG_MODULE_REAL_BUG",
+      "eng": "notes.create",
+      "ps": "READY_TO_SAVE"
+    },
+    {
+      "id": "rhc3_0003221",
+      "input": "vlastne kamo Uloz mi pojistka auta, ale ne do trochu kalendare, do poznamek. díky prosím rychle",
+      "bucket": "WRONG_MODULE_REAL_BUG",
+      "eng": "notes.create",
+      "ps": "READY_TO_SAVE"
+    },
+    {
+      "id": "rhc3_0003237",
+      "input": "hele Ulož mi narozeniny tety, ale ne do fakt kalendáře, do poznámek. jo",
+      "bucket": "WRONG_MODULE_REAL_BUG",
+      "eng": "notes.create",
+      "ps": "READY_TO_SAVE"
+    },
+    {
+      "id": "rhc3_0003327",
+      "input": "můžeš Ulož mi heslo k WiFi, ale ne jako do kalendáře, do poznámek. díky moc",
+      "bucket": "ENGINE_SAFE_CLARIFICATION_OK",
+      "eng": "unknown",
+      "ps": "CLARIFICATION"
+    },
+    {
+      "id": "rhc3_0003330",
+      "input": "proste Uloz mi udaje k bance, ale ne do nejak kalendare, do poznamek. prosím no stress",
+      "bucket": "WRONG_MODULE_REAL_BUG",
+      "eng": "notes.create",
+      "ps": "READY_TO_SAVE"
+    },
+    {
+      "id": "rhc3_0003354",
+      "input": "Ulož mi PIN ke kartě, ale ne do no kalendáře, do poznámek. no",
+      "bucket": "WRONG_MODULE_REAL_BUG",
+      "eng": "notes.create",
+      "ps": "READY_TO_SAVE"
+    },
+    {
+      "id": "rhc3_0003376",
+      "input": "hele Ulož mi narozeniny tety, ale ne do nějak kalendáře, do poznámek.",
+      "bucket": "WRONG_MODULE_REAL_BUG",
+      "eng": "notes.create",
+      "ps": "READY_TO_SAVE"
+    },
+    {
+      "id": "rhc3_0003381",
+      "input": "vlastne muzes Uloz mi pojistka auta, ale ne do jako kalendare, do poznamek. no stress",
+      "bucket": "WRONG_MODULE_REAL_BUG",
+      "eng": "notes.create",
+      "ps": "READY_TO_SAVE"
+    },
+    {
+      "id": "rhc3_0003414",
+      "input": "Ulož mi dokumenty fakt ve spodní přihrádce, ale ne do trochu kalendáře, do poznámek. jo",
+      "bucket": "WRONG_MODULE_REAL_BUG",
+      "eng": "notes.create",
+      "ps": "READY_TO_SAVE"
+    },
+    {
+      "id": "rhc3_0003423",
+      "input": "promiň Ulož mi údaje k bance, ale ne jako do kalendáře, do poznámek. prosím no stress",
+      "bucket": "ENGINE_SAFE_CLARIFICATION_OK",
+      "eng": "unknown",
+      "ps": "CLARIFICATION"
+    },
+    {
+      "id": "rhc3_0003448",
+      "input": "teda Uloz mi heslo k WiFi, ale ne do fakt kalendare, do poznamek. jo díky moc",
+      "bucket": "WRONG_MODULE_REAL_BUG",
+      "eng": "notes.create",
+      "ps": "READY_TO_SAVE"
+    },
+    {
+      "id": "rhc3_0003454",
+      "input": "no jo promin Uloz mi cislo smlouvy, ale ne do no kalendare, do poznamek.",
+      "bucket": "WRONG_MODULE_REAL_BUG",
+      "eng": "notes.create",
+      "ps": "READY_TO_SAVE"
+    }
+  ]
+}

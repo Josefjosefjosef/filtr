@@ -65,7 +65,7 @@ jobs:
           python-version: "3.11"
 
       - name: Python compile gate
-        run: python -m py_compile scripts/health_report.py scripts/css_duplicate_audit.py scripts/css_debt_guard.py scripts/generate_security_governance_reports.py
+        run: python -m py_compile scripts/health_report.py scripts/css_duplicate_audit.py scripts/css_debt_guard.py scripts/generate_security_governance_reports.py scripts/generate_ultra_audit_wiki.py
 
       - name: Health report selftest
         run: python3 scripts/health_report.py --selftest
@@ -276,10 +276,12 @@ jobs:
               [ -f "$w" ] && echo "$w $(git hash-object "$w" 2>/dev/null || echo N/A)"
             done | sort
             echo ""
-            echo "=== GREP INDEX (key patterns, excl. node_modules) ==="
+            echo "=== GREP INDEX (key patterns; excl. .github/workflows, node_modules, assets/vendor) ==="
             for pat in "rss\|feed\|xml\|atom" "youtube\|youtu.be" "fetch(" "serviceWorker\|workbox" "indexeddb\|localStorage\|cacheStorage" "schedule\|cron" "process\.env" "try\s*{" "catch\s*(" "infouzel"; do
               echo "--- pattern: $pat ---"
-              git grep -n "$pat" -- . 2>/dev/null | grep -v "node_modules" | head -100 || true
+              git grep -n "$pat" -- . ':(exclude).github/workflows' ':(exclude)node_modules' ':(exclude)assets/vendor' 2>/dev/null \
+                | sed -e 's/GITHUB_TOKEN/GITHUB_TKN/g' -e 's/GH_TOKEN/GH_TKN/g' \
+                | head -100 || true
             done
             echo ""
             echo "=== CURRENT STATE (narrative) ==="
@@ -401,6 +403,8 @@ jobs:
           test -s reports/security_audit_report.txt
           test -s reports/compliance_status_report.txt
           test -s reports/data_governance_report.txt
+          grep -q "### RUNTIME DATA (always)" reports/ultra_audit_wiki.md
+          grep -q "## RUNTIME AKTIVITA ZA POSLEDNÍCH 24 H" reports/ultra_audit_wiki.md
           echo "SECURITY_GOVERNANCE_REPORTS=OK"
 
       - name: STOP-SHIP guard (regulatory reports must not contain PEM material)
