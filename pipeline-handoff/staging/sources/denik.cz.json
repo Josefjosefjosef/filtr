@@ -1,26 +1,79 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-15T10:59:31.831670Z",
+  "ingestedAt": "2026-05-15T11:39:38.784755Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Billa zavádí slevy pro lidi nad 60 let. Má to ale háček, Češi spokojení nebudou",
+      "url": "https://www.denik.cz/ekonomika/billa-seniori-nakupy-slevy-zvyhodneni-prispevky-cesko-situace-202605.html",
+      "dt": "2026-05-15T11:01:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ale",
+        "billa",
+        "háček",
+        "let",
+        "lidi",
+        "nebudou",
+        "slevy",
+        "spokojení",
+        "zavádí",
+        "češi"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Putin slíbil konec války. Rusové pak podnikli největší dronový útok na Ukrajinu",
+      "title": "Někteří žáci se ráno výsledků nedočkali. Nápor byl moc velký, omlouval se CERMAT",
+      "url": "https://www.denik.cz/skolstvi-a-vzdelavani/vypadky-cermat-dipsy-vysledky-prijimacich-zkousek-zaci-stredni-skoly-prijimacky.html",
+      "dt": "2026-05-15T10:50:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "cermat",
+        "moc",
+        "nedočkali",
+        "nápor",
+        "někteří",
+        "omlouval",
+        "ráno",
+        "velký",
+        "výsledků",
+        "žáci"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Místo konce války největší ruský dronový útok. Ukrajinci: Jako Armageddon",
       "url": "https://www.denik.cz/ze_sveta/rusky-dronovy-utok-ukrajina.html",
       "dt": "2026-05-15T10:32:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
+        "armageddon",
         "dronový",
-        "konec",
+        "jako",
+        "konce",
+        "místo",
         "největší",
-        "pak",
-        "podnikli",
-        "putin",
-        "rusové",
-        "slíbil",
-        "ukrajinu",
+        "ruský",
+        "ukrajinci",
         "války",
         "útok"
       ],
@@ -597,55 +650,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Hlavní je měnit to, co měnit mohu, říká spisovatel Martin Vopěnka",
-      "url": "https://www.denik.cz/z_domova/spisovatel-martin-vopenka-rozhovor.html",
-      "dt": "2026-05-15T02:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "hlavní",
-        "martin",
-        "mohu",
-        "měnit",
-        "spisovatel",
-        "vopěnka",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Policie zadržela muže podezřelého z krádeže lebky svaté Zdislavy",
-      "url": "https://www.denik.cz/krimi/ceskolipska-policie-zadrzela-muze-podezreleho-z-kradeze-lebky-svate-zdislavy.html",
-      "dt": "2026-05-14T18:26:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "krádeže",
-        "lebky",
-        "muže",
-        "podezřelého",
-        "policie",
-        "svaté",
-        "zadržela",
-        "zdislavy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -656,7 +660,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29817,
+      "bytes": 30058,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -693,11 +697,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-15T10:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T11:01:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 1,
+          "finance": 2,
+          "zpravy": 22,
           "zdravi": 1
         },
         "drop_counts": {
@@ -711,7 +715,15 @@
         },
         "sample_titles": [
           {
-            "title": "Putin slíbil konec války. Rusové pak podnikli největší dronový útok na Ukrajinu",
+            "title": "Billa zavádí slevy pro lidi nad 60 let. Má to ale háček, Češi spokojení nebudou",
+            "publishedAt": "2026-05-15T11:01:00Z"
+          },
+          {
+            "title": "Někteří žáci se ráno výsledků nedočkali. Nápor byl moc velký, omlouval se CERMAT",
+            "publishedAt": "2026-05-15T10:50:00Z"
+          },
+          {
+            "title": "Místo konce války největší ruský dronový útok. Ukrajinci: Jako Armageddon",
             "publishedAt": "2026-05-15T10:32:00Z"
           },
           {
@@ -733,14 +745,6 @@
           {
             "title": "Na hřebenech Krkonoš chumelilo. Sněžku pokrylo několik centimetrů sněhu",
             "publishedAt": "2026-05-15T09:20:00Z"
-          },
-          {
-            "title": "Vražda na Velikonoce otřásla maloměstem. Otec mladíka bojoval za spravedlnost",
-            "publishedAt": "2026-05-15T09:00:00Z"
-          },
-          {
-            "title": "Teorie velkého třesku je zpět. Dostává šílený spin-off, vracejí se známé tváře",
-            "publishedAt": "2026-05-15T08:18:00Z"
           }
         ]
       }

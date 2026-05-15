@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-15T10:59:31.831670Z",
+  "ingestedAt": "2026-05-15T11:39:38.784755Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Vlakem z Česka až k Jadranu. Termín, kdy vyjede první Adriatic Express",
+      "url": "https://www.penize.cz/doprava/489767-vlakem-z-ceska-az-k-jadranu-termin-kdy-vyjede-prvni-adriatic-express",
+      "dt": "2026-05-15T13:34:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "adriatic",
+        "express",
+        "jadranu",
+        "první",
+        "termín",
+        "vlakem",
+        "vyjede",
+        "česka"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -485,31 +510,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Další zlevnění. Maximální ceny benzinu a nafty na středu 13. května",
-      "url": "https://www.penize.cz/doprava/489585-dalsi-zlevneni-maximalni-ceny-benzinu-a-nafty-na-stredu-13-kvetna",
-      "dt": "2026-05-12T14:05:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "benzinu",
-        "ceny",
-        "další",
-        "května",
-        "maximální",
-        "nafty",
-        "středu",
-        "zlevnění"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -520,7 +520,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 19041,
+      "bytes": 18946,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -557,11 +557,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-15T11:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T13:34:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 16,
-          "zpravy": 4
+          "zpravy": 4,
+          "finance": 16
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -573,6 +573,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vlakem z Česka až k Jadranu. Termín, kdy vyjede první Adriatic Express",
+            "publishedAt": "2026-05-15T13:34:00Z"
+          },
           {
             "title": "Digitalizace dávek se odkládá, některých ruší. Změny schválili poslanci",
             "publishedAt": "2026-05-15T11:40:00Z"
@@ -600,10 +604,6 @@
           {
             "title": "Maximální ceny benzinu a nafty na pátek 15. května",
             "publishedAt": "2026-05-14T13:58:00Z"
-          },
-          {
-            "title": "Schillerová představila nové Dluhopisy republiky. Protiinflační jsou s háčkem",
-            "publishedAt": "2026-05-14T13:15:00Z"
           }
         ]
       }

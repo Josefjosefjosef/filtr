@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-15T10:59:31.831670Z",
+  "ingestedAt": "2026-05-15T11:39:38.784755Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Dojde letecké palivo? Orlen Unipetrol popsal, jak jsou na tom rafinerie v Česku",
+      "url": "https://ekonomickydenik.cz/rafinerie-letecke-palivo-orlen-unipetrol/",
+      "dt": "2026-05-15T11:34:52Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dojde",
+        "letecké",
+        "orlen",
+        "palivo",
+        "popsal",
+        "rafinerie",
+        "tom",
+        "unipetrol",
+        "česku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -762,33 +788,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kolik Rusko vydělává na zablokovaném Hormuzu? Tučné sumy tečou za ropu a plyn",
-      "url": "https://ekonomickydenik.cz/kolik-rusko-vydelava-zablokovany-hormuz/",
-      "dt": "2026-05-14T04:15:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "hormuzu",
-        "kolik",
-        "plyn",
-        "ropu",
-        "rusko",
-        "sumy",
-        "tečou",
-        "tučné",
-        "vydělává",
-        "zablokovaném"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73574,
+      "bytes": 73942,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,11 +835,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T10:47:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T11:34:52Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 2,
           "finance": 27,
+          "zdravi": 2,
           "zpravy": 1
         },
         "drop_counts": {
@@ -853,6 +852,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dojde letecké palivo? Orlen Unipetrol popsal, jak jsou na tom rafinerie v Česku",
+            "publishedAt": "2026-05-15T11:34:52Z"
+          },
           {
             "title": "Znalecké posudky „na míru“ v ÚVN? Policie zasáhla i v jiné elitní nemocnici",
             "publishedAt": "2026-05-15T10:47:00Z"
@@ -880,10 +883,6 @@
           {
             "title": "Trump před cestou do Číny investoval do Applu. Nakoupil akcie za miliony",
             "publishedAt": "2026-05-15T08:07:13Z"
-          },
-          {
-            "title": "Polsko přijde o 4000 amerických vojáků. Trump stahuje i jednotky z Německa",
-            "publishedAt": "2026-05-15T07:04:58Z"
           }
         ]
       }
