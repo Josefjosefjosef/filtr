@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-15T08:19:53.630994Z",
+  "ingestedAt": "2026-05-15T08:59:48.014984Z",
   "items": [
     {
       "section": "finance",
@@ -81,6 +81,31 @@
         "republiky",
         "spočítali",
         "vlny"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Růst investic do českého obranného průmyslu?  Možnosti tu i přes rozpočtová omezení jsou",
+      "url": "https://archiv.hn.cz/c1-67875730-rust-investic-do-ceskeho-obranneho-prumyslu-moznosti-tu-i-pres-rozpoctova-omezeni-jsou",
+      "dt": "2026-05-15T05:39:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "investic",
+        "možnosti",
+        "obranného",
+        "omezení",
+        "průmyslu",
+        "rozpočtová",
+        "růst",
+        "českého"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1123,36 +1148,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Krachuje e-shop s doplňky stravy a zdravotnickými potřebami. Čelil problémům i kritice zákazníků kvůli nedodaným produktům",
-      "url": "https://archiv.hn.cz/c1-67876870-krachuje-e-shop-s-doplnky-stravy-a-zdravotnickymi-potrebami-celil-problemum-i-kritice-zakazniku-kvuli-nedodanym-produktum",
-      "dt": "2026-05-14T07:26:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "doplňky",
-        "krachuje",
-        "kritice",
-        "kvůli",
-        "nedodaným",
-        "potřebami",
-        "problémům",
-        "produktům",
-        "shop",
-        "stravy",
-        "zdravotnickými",
-        "zákazníků",
-        "čelil"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1163,7 +1158,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183035,
+      "bytes": 183102,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1230,6 +1225,10 @@
             "publishedAt": "2026-05-15T05:50:00Z"
           },
           {
+            "title": "Růst investic do českého obranného průmyslu?  Možnosti tu i přes rozpočtová omezení jsou",
+            "publishedAt": "2026-05-15T05:39:00Z"
+          },
+          {
             "title": "Útok je větší, než jsme předpokládali. Skupina Twist je pod tlakem, v úpadku jsou nově Bubblify a Trdlokafe",
             "publishedAt": "2026-05-15T05:15:00Z"
           },
@@ -1243,10 +1242,6 @@
           },
           {
             "title": "Češi sází na vzestup počítačové legendy. Mezi největší akcionáře Xeroxu míří investor do podceňovaných firem",
-            "publishedAt": "2026-05-14T22:00:00Z"
-          },
-          {
-            "title": "Týden s technologiemi: Evropa se pere s umělou inteligencí, bojí se o bezpečnost bankovního sektoru i o digitální trh",
             "publishedAt": "2026-05-14T22:00:00Z"
           }
         ]

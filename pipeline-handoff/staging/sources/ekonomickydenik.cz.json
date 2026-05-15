@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-15T08:19:53.630994Z",
+  "ingestedAt": "2026-05-15T08:59:48.014984Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Předporodní příspěvek od ledna v novém. Naváže na něj vyšší rodičovská",
+      "url": "https://ekonomickydenik.cz/predporodni-prispevek-leden-vyssi-rodicovska/",
+      "dt": "2026-05-15T08:37:31Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "ledna",
+        "naváže",
+        "novém",
+        "něj",
+        "předporodní",
+        "příspěvek",
+        "rodičovská",
+        "vyšší"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -402,7 +427,7 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Plán na renovaci budov státu se zadrhl, varují firmy z oboru. V čem je problém?",
+      "title": "Plán na renovaci budov státu vázne, varují firmy z oboru. V čem je problém?",
       "url": "https://ekonomickydenik.cz/vlada-sabotuje-investice-renovace-budov/",
       "dt": "2026-05-14T09:45:31Z",
       "media_raw": "Ekonomický deník",
@@ -416,7 +441,7 @@
         "renovaci",
         "státu",
         "varují",
-        "zadrhl",
+        "vázne",
         "čem"
       ],
       "feedCategory": "finance",
@@ -759,33 +784,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Převod auta kompletně online a SPZ do boxů. Proč návrh posbíral kritiku?",
-      "url": "https://ekonomickydenik.cz/prevod-auta-online-spz-boxy/",
-      "dt": "2026-05-13T13:55:02Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "auta",
-        "boxů",
-        "kompletně",
-        "kritiku",
-        "návrh",
-        "online",
-        "posbíral",
-        "proč",
-        "převod",
-        "spz"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74950,
+      "bytes": 75175,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,13 +831,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T08:07:13Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T08:37:31Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 27,
+          "finance": 28,
           "zpravy": 1,
-          "zdravi": 1,
-          "sport": 1
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -851,6 +848,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Předporodní příspěvek od ledna v novém. Naváže na něj vyšší rodičovská",
+            "publishedAt": "2026-05-15T08:37:31Z"
+          },
           {
             "title": "Trump před cestou do Číny investoval do Applu. Nakoupil akcie za miliony",
             "publishedAt": "2026-05-15T08:07:13Z"
@@ -878,10 +879,6 @@
           {
             "title": "Spor o sudetoněmecký sjezd: Sněmovna žádá zrušení, opozice i církev trvají na dialogu",
             "publishedAt": "2026-05-14T17:47:04Z"
-          },
-          {
-            "title": "I v Česku to je problém. Milion Evropanů chce zákaz praktik, které „léčí“ orientaci",
-            "publishedAt": "2026-05-14T15:56:48Z"
           }
         ]
       }
