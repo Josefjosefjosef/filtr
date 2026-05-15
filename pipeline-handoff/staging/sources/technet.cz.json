@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-05-15T22:24:36.966877Z",
+  "ingestedAt": "2026-05-15T23:04:33.284219Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Bezkřídlý zázrak i létající rakev. Jak vznikal legendární letoun F-104",
+      "url": "https://www.idnes.cz/technet/technika/nadzvukovy-letoun-f-104-starfighter-rekord.A141118_143639_tec_technika_vse",
+      "dt": "2026-05-15T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "104",
+        "bezkřídlý",
+        "legendární",
+        "letoun",
+        "létající",
+        "rakev",
+        "vznikal",
+        "zázrak"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Hurvínek už chodí po jevišti 100 let. Z původního Spejblíka vyrostla legenda",
+      "url": "https://www.idnes.cz/technet/pred-100-lety/pred-100-lety-hurvinek-spejbl-skupa.A260513_105116_pred-100-lety_vov",
+      "dt": "2026-05-15T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "100",
+        "chodí",
+        "hurvínek",
+        "jevišti",
+        "legenda",
+        "let",
+        "původního",
+        "spejblíka",
+        "vyrostla"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -712,58 +763,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Měly nahradit walkmany, ale nakonec je musela zachránit paměť RAM",
-      "url": "https://www.idnes.cz/technet/technika/discman-sony-ram-electronic-shock-protection-esp-g-protection.A260327_143155_tec_technika_dvr",
-      "dt": "2026-05-04T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "ale",
-        "musela",
-        "měly",
-        "nahradit",
-        "nakonec",
-        "paměť",
-        "ram",
-        "walkmany",
-        "zachránit"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Budoucí český astronaut Svoboda má za sebou základní výcvik. Čeká na misi",
-      "url": "https://www.idnes.cz/technet/vesmir/vesmir-cesky-astronaut-svoboda-vycvik-konec-esa-iss.A260504_135825_tec_vesmir_vse",
-      "dt": "2026-05-04T12:49:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "astronaut",
-        "budoucí",
-        "misi",
-        "sebou",
-        "svoboda",
-        "výcvik",
-        "základní",
-        "čeká",
-        "český"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -774,7 +773,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 45831,
+      "bytes": 45842,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -811,11 +810,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-14T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 19,
-          "zpravy": 11
+          "other": 21,
+          "zpravy": 9
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -827,6 +826,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bezkřídlý zázrak i létající rakev. Jak vznikal legendární letoun F-104",
+            "publishedAt": "2026-05-15T22:00:00Z"
+          },
+          {
+            "title": "Hurvínek už chodí po jevišti 100 let. Z původního Spejblíka vyrostla legenda",
+            "publishedAt": "2026-05-15T22:00:00Z"
+          },
           {
             "title": "Jaká letadla používaly a používají severokorejské aerolinky",
             "publishedAt": "2026-05-14T22:00:00Z"
@@ -850,14 +857,6 @@
           {
             "title": "Případ růžové kobylky. Tropický hmyz volí barvu Barbie. Má z ní prospěch",
             "publishedAt": "2026-05-13T08:02:04Z"
-          },
-          {
-            "title": "Dva v jednom. Vědci vyvinuli materiál pro lepší recyklaci plastů i levnou výrobu léčiv",
-            "publishedAt": "2026-05-13T07:48:00Z"
-          },
-          {
-            "title": "Jak je to možné? Íránská stíhačka z 50. let úspěšně zaútočila na americkou základnu",
-            "publishedAt": "2026-05-12T22:00:00Z"
           }
         ]
       }

@@ -1,24 +1,25 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-15T22:24:36.966877Z",
+  "ingestedAt": "2026-05-15T23:04:33.284219Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Izraelský útok na jihu Libanonu zabil šest lidí, 22 zranil",
+      "title": "Izrael útočil navzdory příměří: Na jihu Libanonu zemřelo šest lidí",
       "url": "https://www.idnes.cz/zpravy/zahranicni/izraelsky-utok-na-jihu-libanonu-zabil-sest-lidi-22-zranil.A260516_000339_zahranicni_air",
-      "dt": "2026-05-15T22:13:00Z",
+      "dt": "2026-05-15T22:45:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
-        "izraelský",
+        "izrael",
         "jihu",
         "libanonu",
         "lidí",
-        "zabil",
-        "zranil",
-        "útok",
+        "navzdory",
+        "příměří",
+        "zemřelo",
+        "útočil",
         "šest"
       ],
       "feedCategory": "zpravy",
@@ -795,6 +796,31 @@
     {
       "section": "finance",
       "contentType": "article",
+      "title": "Potíže s bramborami i vepřovým. Českým zemědělcům škodí čínská soběstačnost",
+      "url": "https://www.idnes.cz/ekonomika/domaci/zemedelstvi-potraviny-cina-eu.A260515_152141_ekonomika_drh",
+      "dt": "2026-05-15T22:00:00Z",
+      "media_raw": "iDNES / Ekonomika",
+      "media_norm": "iDNES / Ekonomika",
+      "tokens": [
+        "bramborami",
+        "potíže",
+        "soběstačnost",
+        "vepřovým",
+        "zemědělcům",
+        "českým",
+        "čínská",
+        "škodí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rubric",
+      "feedId": "fin_idnes_ekonomika",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
       "title": "Bubblify International a Trdlokafe Development 1 oznámily soudu svůj úpadek",
       "url": "https://www.idnes.cz/ekonomika/domaci/insolvence.A260513_090052_ekonomika_vebe",
       "dt": "2026-05-15T16:43:55Z",
@@ -1539,29 +1565,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Proč se v energetice vyplatí sázet na silné hráče",
-      "url": "https://www.idnes.cz/ekonomika/domaci/cez-silny-hrac-v-energetice-prinasi-stabilitu.A260505_123511_ekonomika_vok",
-      "dt": "2026-05-05T22:01:00Z",
-      "media_raw": "iDNES / Ekonomika",
-      "media_norm": "iDNES / Ekonomika",
-      "tokens": [
-        "energetice",
-        "hráče",
-        "proč",
-        "silné",
-        "sázet",
-        "vyplatí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rubric",
-      "feedId": "fin_idnes_ekonomika",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1572,7 +1575,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47126,
+      "bytes": 47301,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1609,7 +1612,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T22:13:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T22:45:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -1626,8 +1629,8 @@
         },
         "sample_titles": [
           {
-            "title": "Izraelský útok na jihu Libanonu zabil šest lidí, 22 zranil",
-            "publishedAt": "2026-05-15T22:13:00Z"
+            "title": "Izrael útočil navzdory příměří: Na jihu Libanonu zemřelo šest lidí",
+            "publishedAt": "2026-05-15T22:45:00Z"
           },
           {
             "title": "Test nealko ochucených piv: Spíš než hořké pivo vás osvěží letní chuť citrusů a ovoce",
@@ -1667,7 +1670,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=ekonomika",
-      "bytes": 47017,
+      "bytes": 47000,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1704,7 +1707,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T16:43:55Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 30
@@ -1719,6 +1722,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Potíže s bramborami i vepřovým. Českým zemědělcům škodí čínská soběstačnost",
+            "publishedAt": "2026-05-15T22:00:00Z"
+          },
           {
             "title": "Bubblify International a Trdlokafe Development 1 oznámily soudu svůj úpadek",
             "publishedAt": "2026-05-15T16:43:55Z"
@@ -1746,10 +1753,6 @@
           {
             "title": "Analytici vítají obnovení dluhopisů pro občany, popsali výhody proti spoření",
             "publishedAt": "2026-05-14T13:58:00Z"
-          },
-          {
-            "title": "Superdávka je odložená. Co to znamená pro lidi, kteří o ni požádali?",
-            "publishedAt": "2026-05-14T13:41:00Z"
           }
         ]
       }
