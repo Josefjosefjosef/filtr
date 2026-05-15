@@ -37,8 +37,15 @@ def validate_json(path: Path, key: str):
     if path.stat().st_size == 0:
         errors.append(f"{path} is empty")
         return errors
+    raw = path.read_text(encoding="utf-8")
+    # Unresolved merge/stash conflicts produce invalid JSON (often "line 2 column 1").
+    if "<<<<<<<" in raw or ">>>>>>>" in raw:
+        errors.append(
+            f"{path} contains unresolved git merge conflict markers; resolve and write valid JSON"
+        )
+        return errors
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload = json.loads(raw)
     except json.JSONDecodeError as exc:
         errors.append(f"{path} is not valid JSON: {exc}")
         return errors
