@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /**
- * Silver PR Orchestrator V1 — DRY-RUN only (no merge, push, sync, branch switch).
+ * Silver PR Orchestrator V1 — DRY-RUN by default; optional `--apply-one-safe-pr`
+ * for a single gated ultra-safe PR (docs/** or scripts/** only, LOW risk).
  * Uses frozen backlog JSON + GitHub CLI (gh pr view, gh pr diff --name-only).
- * Never checks out PR branches or mutates git remotes in DRY-RUN.
+ * DRY-RUN never merges, pushes, syncs, or updates branches.
  */
 /* eslint-disable no-console */
 "use strict";
@@ -120,6 +121,15 @@ function baseReport() {
   return {
     generatedAt: new Date().toISOString(),
     mode: "DRY_RUN",
+    apply_mode: "NO",
+    apply_candidate_pr: null,
+    apply_sync_attempted: "NO",
+    apply_sync_result: "NOT_RUN",
+    apply_merge_attempted: "NO",
+    apply_merge_result: "NOT_RUN",
+    apply_post_merge_proof: "NOT_RUN",
+    apply_stopped_reason: "",
+    safe_to_continue: "",
     main_commit: "",
     governance_loaded: false,
     triage_loaded: false,
@@ -531,9 +541,157 @@ function safeToEnableApply(evalResult, gitCleanAfterOk) {
 
 function finalizeDryRunReport(report) {
   report.mode = "DRY_RUN";
+  report.apply_mode = "NO";
   report.would_merge = "NO";
   report.would_push = "NO";
   report.dry_run_no_push_merge = "YES";
+}
+
+function applyUltraSafeGates(evalResult) {
+  if (evalResult.risk_level !== "LOW") return { ok: false, reason: "risk_not_low" };
+  const paths = evalResult.candidate_files || [];
+  if (!isLowRiskDocsOrScriptsOnly(paths)) return { ok: false, reason: "paths_not_docs_or_scripts_only" };
+  if (hasAssetsAppJs(paths) || hasAssetsAppCss(paths) || hasGithubWorkflow(paths)) {
+    return { ok: false, reason: "forbidden_path_surface" };
+  }
+  const ch = evalResult.status_checks_summary;
+  if (ch && (ch.failed > 0 || ch.pending > 0)) return { ok: false, reason: "checks_not_clean" };
+  const ms = String(evalResult.merge_state_status || "").toUpperCase();
+  const mg = String(evalResult.mergeable || "").toUpperCase();
+  if (mg === "CONFLICTING" || ms === "DIRTY" || ms === "CONFLICTING") {
+    return { ok: false, reason: "conflicting_or_dirty" };
+  }
+  const aa = evalResult.allowed_action;
+  if (aa !== "SYNC_ONLY" && aa !== "VERIFY_AND_MERGE_IF_CLEAN") {
+    return { ok: false, reason: `allowed_action:${aa}` };
+  }
+  return { ok: true, reason: "" };
+}
+
+function waitForPrChecksIdle(prNumber, maxWaitMs, pollMs) {
+  const deadline = Date.now() + maxWaitMs;
+  let lastSummary = null;
+  while (Date.now() < deadline) {
+    const prJson = runGhJsonWithRetry([
+      "pr",
+      "view",
+      String(prNumber),
+      "--json",
+      "number,title,url,headRefName,baseRefName,mergeStateStatus,mergeable,statusCheckRollup,isDraft",
+    ]);
+    if (!prJson.ok) {
+      return { ok: false, prView: null, message: prJson.message || "gh_poll_failed", summary: lastSummary };
+    }
+    const prView = prJson.data;
+    const summary = summarizeChecks(prView.statusCheckRollup);
+    lastSummary = summary;
+    if (summary.pending === 0) {
+      return { ok: true, prView, message: "", summary };
+    }
+    sleepMs(pollMs);
+  }
+  return { ok: false, prView: null, message: "ci_wait_timeout", summary: lastSummary };
+}
+
+function reverifyMergeReady(prView, paths, evalResult) {
+  if (!prView || prView.isDraft) return { ok: false, reason: "draft_or_missing_pr" };
+  const diffOk = isLowRiskDocsOrScriptsOnly(paths);
+  if (!diffOk) return { ok: false, reason: "paths_changed" };
+  if (hasAssetsAppJs(paths) || hasAssetsAppCss(paths) || hasGithubWorkflow(paths)) {
+    return { ok: false, reason: "forbidden_paths" };
+  }
+  const ch = summarizeChecks(prView.statusCheckRollup);
+  if (ch.failed > 0 || ch.pending > 0) return { ok: false, reason: "checks_not_pass" };
+  const ms = String(prView.mergeStateStatus || "").toUpperCase();
+  const mg = String(prView.mergeable || "").toUpperCase();
+  if (mg === "CONFLICTING" || ms === "DIRTY" || ms === "CONFLICTING") {
+    return { ok: false, reason: "merge_not_clean" };
+  }
+  if (ms !== "CLEAN") return { ok: false, reason: `merge_state_not_clean:${ms || "EMPTY"}` };
+  if (evalResult.risk_level !== "LOW") return { ok: false, reason: "risk_not_low" };
+  if (evalResult.allowed_action !== "VERIFY_AND_MERGE_IF_CLEAN") {
+    return { ok: false, reason: `action_not_merge:${evalResult.allowed_action}` };
+  }
+  return { ok: true, reason: "" };
+}
+
+function runNodeOrchestratorDryRun() {
+  const exe = process.execPath;
+  return runCommand(exe, [path.join(__dirname, "silver-pr-orchestrator-v1.cjs"), "--dry-run"], {
+    cwd: REPO,
+  });
+}
+
+function runSilverAutopilotStatus() {
+  const exe = process.execPath;
+  return runCommand(exe, [path.join(__dirname, "silver-autopilot.cjs"), "--status"], { cwd: REPO });
+}
+
+function runNpmSmoke() {
+  const npmCmd = process.platform === "win32" ? "npm.cmd" : "npm";
+  return runCommand(npmCmd, ["run", "smoke"], { cwd: REPO });
+}
+
+function buildReportSkeleton(ctx, mainCommit, governance, triage, prView, triageCategory, governanceCategory, evalResult) {
+  return {
+    ...baseReport(),
+    generatedAt: new Date().toISOString(),
+    main_commit: mainCommit,
+    governance_loaded: true,
+    triage_loaded: true,
+    governance_total_open_prs: governance.total_open_prs,
+    candidate_pr: prView.number,
+    candidate_title: prView.title,
+    candidate_url: prView.url,
+    candidate_head_ref: prView.headRefName,
+    candidate_base_ref: prView.baseRefName,
+    candidate_category: triageCategory,
+    governance_category: governanceCategory.length ? governanceCategory : null,
+    candidate_files: evalResult.candidate_files,
+    merge_state_status: evalResult.merge_state_status,
+    mergeable: evalResult.mergeable,
+    status_checks_summary: evalResult.status_checks_summary,
+    risk_level: evalResult.risk_level,
+    allowed_action: evalResult.allowed_action,
+    blocked_reason: evalResult.blocked_reason,
+    would_merge: evalResult.would_merge,
+    would_push: evalResult.would_push,
+    engine_changed: evalResult.engine_changed,
+    assets_app_changed: evalResult.assets_app_changed,
+    safe_to_enable_apply_mode: "NO",
+    recommended_next_command: evalResult.recommended_next_command,
+    error: "NO",
+    error_stage: "",
+    error_message: "",
+    git_status_clean_before: ctx.git_status_clean_before,
+    git_status_clean_after: "NO",
+    dry_run_no_push_merge: "YES",
+    branch_isolation_gh_only: "YES",
+  };
+}
+
+function writeApplyPassReport(rep) {
+  const gsFinal = gitPorcelain();
+  const afterCleanOk = gsFinal.ok && isCleanAfterOrchestratorRun(gsFinal.text);
+  const gitCleanAfterStrict = gsFinal.ok && isStrictCleanPorcelain(gsFinal.text);
+  rep.git_status_clean_after = gitCleanAfterStrict || afterCleanOk ? "YES" : "NO";
+  if (rep.mode === "DRY_RUN") {
+    rep.safe_to_enable_apply_mode = safeToEnableApply(
+      {
+        risk_level: rep.risk_level,
+        allowed_action: rep.allowed_action,
+      },
+      afterCleanOk,
+    );
+    if (!afterCleanOk) rep.safe_to_enable_apply_mode = "NO";
+  }
+  writeReportFile(rep);
+  console.log(`Wrote ${path.relative(REPO, OUT_REPORT)}`);
+}
+
+function exitApplyZero(rep) {
+  writeApplyPassReport(rep);
+  process.exit(0);
 }
 
 function exitWithErrorReport(ctx, stage, message, blockedReason, extras, attemptMain) {
@@ -566,24 +724,204 @@ function exitWithErrorReport(ctx, stage, message, blockedReason, extras, attempt
   process.exit(1);
 }
 
+function argvUsageError() {
+  const rep = baseReport();
+  rep.error = "YES";
+  rep.error_stage = "argv";
+  rep.error_message = "invalid_arguments";
+  rep.blocked_reason = "usage_requires_dry_run_or_apply_one_safe_pr";
+  const gsA = gitPorcelain();
+  rep.git_status_clean_before = gsA.ok && isStrictCleanPorcelain(gsA.text) ? "YES" : "NO";
+  writeReportFile(rep);
+  const gsB = gitPorcelain();
+  rep.git_status_clean_after = gsB.ok && isCleanAfterOrchestratorRun(gsB.text) ? "YES" : "NO";
+  writeReportFile(rep);
+  console.error(
+    "Usage: node scripts/silver-pr-orchestrator-v1.cjs --dry-run\n       node scripts/silver-pr-orchestrator-v1.cjs --apply-one-safe-pr",
+  );
+  process.exit(2);
+}
+
+function runDryRunMain(ctx, mainCommit, governance, triage, prNumber, triageCategory, governanceCategory, prView, diffPaths) {
+  const evalResult = evaluateCandidate(prView, diffPaths.paths, {
+    governanceCategory,
+    triageCategory,
+  });
+
+  const report = buildReportSkeleton(ctx, mainCommit, governance, triage, prView, triageCategory, governanceCategory, evalResult);
+  finalizeDryRunReport(report);
+  writeReportFile(report);
+
+  const gsFinal = gitPorcelain();
+  const afterCleanOk = gsFinal.ok && isCleanAfterOrchestratorRun(gsFinal.text);
+  const gitCleanAfterStrict = gsFinal.ok && isStrictCleanPorcelain(gsFinal.text);
+  report.git_status_clean_after = gitCleanAfterStrict || afterCleanOk ? "YES" : "NO";
+  report.safe_to_enable_apply_mode = safeToEnableApply(evalResult, afterCleanOk);
+  if (!afterCleanOk) {
+    report.safe_to_enable_apply_mode = "NO";
+  }
+
+  writeReportFile(report);
+  console.log(`Wrote ${path.relative(REPO, OUT_REPORT)}`);
+}
+
+function runApplyOneSafePrMain(ctx, mainCommit, governance, triage, prNumber, triageCategory, governanceCategory, prView, diffPaths) {
+  let curPrView = prView;
+  let curPaths = diffPaths.paths;
+  let evalResult = evaluateCandidate(curPrView, curPaths, {
+    governanceCategory,
+    triageCategory,
+  });
+
+  const gates = applyUltraSafeGates(evalResult);
+  const report = buildReportSkeleton(ctx, mainCommit, governance, triage, curPrView, triageCategory, governanceCategory, evalResult);
+  report.mode = "APPLY_ONE_SAFE_PR";
+  report.apply_mode = "YES";
+  report.apply_candidate_pr = gates.ok ? prNumber : null;
+  report.dry_run_no_push_merge = "NO";
+  report.branch_isolation_gh_only = "NO";
+  report.apply_sync_attempted = "NO";
+  report.apply_sync_result = "NOT_RUN";
+  report.apply_merge_attempted = "NO";
+  report.apply_merge_result = "NOT_RUN";
+  report.apply_post_merge_proof = "NOT_RUN";
+  report.apply_stopped_reason = "";
+  report.safe_to_continue = "NO";
+
+  if (!gates.ok) {
+    report.apply_stopped_reason = "no_safe_candidate";
+    report.apply_candidate_pr = null;
+    report.apply_merge_attempted = "NO";
+    report.safe_to_continue = "YES";
+    report.recommended_next_command = "node scripts/silver-pr-orchestrator-v1.cjs --dry-run";
+    exitApplyZero(report);
+    return;
+  }
+
+  report.apply_candidate_pr = prNumber;
+
+  if (evalResult.allowed_action === "SYNC_ONLY") {
+    report.apply_sync_attempted = "YES";
+    const syncR = runCommand("gh", ["pr", "update-branch", String(prNumber)]);
+    if (!syncR.ok) {
+      report.apply_sync_result = "FAIL";
+      report.apply_stopped_reason = "sync_failed";
+      report.safe_to_continue = "NO";
+      exitApplyZero(report);
+      return;
+    }
+    report.apply_sync_result = "PASS";
+
+    const waitR = waitForPrChecksIdle(prNumber, 50 * 60 * 1000, 15000);
+    if (!waitR.ok || !waitR.prView) {
+      report.apply_stopped_reason = waitR.message === "ci_wait_timeout" ? "ci_wait_timeout" : "ci_poll_failed";
+      report.safe_to_continue = "NO";
+      exitApplyZero(report);
+      return;
+    }
+    curPrView = waitR.prView;
+    const diffAfter = listChangedPathsFromGhNameOnly(prNumber);
+    if (!diffAfter.ok) {
+      report.apply_stopped_reason = `gates_failed:${diffAfter.message}`;
+      report.safe_to_continue = "NO";
+      exitApplyZero(report);
+      return;
+    }
+    curPaths = diffAfter.paths;
+    evalResult = evaluateCandidate(curPrView, curPaths, {
+      governanceCategory,
+      triageCategory,
+    });
+    Object.assign(report, {
+      candidate_files: evalResult.candidate_files,
+      merge_state_status: evalResult.merge_state_status,
+      mergeable: evalResult.mergeable,
+      status_checks_summary: evalResult.status_checks_summary,
+      risk_level: evalResult.risk_level,
+      allowed_action: evalResult.allowed_action,
+      blocked_reason: evalResult.blocked_reason,
+      would_merge: evalResult.would_merge,
+      would_push: evalResult.would_push,
+      engine_changed: evalResult.engine_changed,
+      assets_app_changed: evalResult.assets_app_changed,
+      recommended_next_command: evalResult.recommended_next_command,
+    });
+
+    const postSyncGates = applyUltraSafeGates(evalResult);
+    if (!postSyncGates.ok || evalResult.allowed_action !== "VERIFY_AND_MERGE_IF_CLEAN") {
+      report.apply_merge_attempted = "NO";
+      report.apply_stopped_reason = "post_sync_not_merge_ready";
+      report.safe_to_continue = "YES";
+      exitApplyZero(report);
+      return;
+    }
+  }
+
+  const mergeGates = reverifyMergeReady(curPrView, curPaths, evalResult);
+  if (!mergeGates.ok) {
+    report.apply_merge_attempted = "NO";
+    report.apply_stopped_reason = `pre_merge_reverify_failed:${mergeGates.reason}`;
+    report.safe_to_continue = "NO";
+    exitApplyZero(report);
+    return;
+  }
+
+  report.apply_merge_attempted = "YES";
+  const mergeR = runCommand("gh", ["pr", "merge", String(prNumber), "--squash", "--delete-branch"]);
+  if (!mergeR.ok) {
+    report.apply_merge_result = "FAIL";
+    report.apply_stopped_reason = "merge_failed";
+    report.safe_to_continue = "NO";
+    exitApplyZero(report);
+    return;
+  }
+  report.apply_merge_result = "PASS";
+
+  const co = runCommand("git", ["checkout", "main"]);
+  if (!co.ok) {
+    report.apply_post_merge_proof = "FAIL";
+    report.apply_stopped_reason = "post_merge_checkout_failed";
+    report.safe_to_continue = "NO";
+    exitApplyZero(report);
+    return;
+  }
+  const pull = runCommand("git", ["pull", "--ff-only"]);
+  if (!pull.ok) {
+    report.apply_post_merge_proof = "FAIL";
+    report.apply_stopped_reason = "post_merge_pull_failed";
+    report.safe_to_continue = "NO";
+    exitApplyZero(report);
+    return;
+  }
+
+  const dryChild = runNodeOrchestratorDryRun();
+  const apChild = runSilverAutopilotStatus();
+  const smokeChild = runNpmSmoke();
+  const proofOk = dryChild.ok && apChild.ok && smokeChild.ok;
+  report.apply_post_merge_proof = proofOk ? "PASS" : "FAIL";
+  if (!proofOk) {
+    report.apply_stopped_reason = "post_merge_proof_failed";
+    report.safe_to_continue = "NO";
+    exitApplyZero(report);
+    return;
+  }
+
+  report.apply_stopped_reason = "completed_ok";
+  report.safe_to_continue = "YES";
+  const headAfter = runCommand("git", ["rev-parse", "HEAD"]);
+  if (headAfter.ok) report.main_commit = headAfter.stdout.trim();
+  exitApplyZero(report);
+}
+
 function main() {
   const argv = process.argv.slice(2);
   const dry = argv.includes("--dry-run");
-  if (!dry || argv.some((a) => a === "--apply")) {
-    const rep = baseReport();
-    rep.error = "YES";
-    rep.error_stage = "argv";
-    rep.error_message = "invalid_arguments";
-    rep.blocked_reason = "usage_requires_dry_run_only";
-    const gsA = gitPorcelain();
-    rep.git_status_clean_before =
-      gsA.ok && isStrictCleanPorcelain(gsA.text) ? "YES" : "NO";
-    writeReportFile(rep);
-    const gsB = gitPorcelain();
-    rep.git_status_clean_after = gsB.ok && isCleanAfterOrchestratorRun(gsB.text) ? "YES" : "NO";
-    writeReportFile(rep);
-    console.error("Usage: node scripts/silver-pr-orchestrator-v1.cjs --dry-run");
-    process.exit(2);
+  const applyOne = argv.includes("--apply-one-safe-pr");
+  const forbidden = argv.some((a) => a === "--apply" || a.startsWith("--apply="));
+  const allowedFlags = new Set(["--dry-run", "--apply-one-safe-pr"]);
+  const unknown = argv.filter((a) => !allowedFlags.has(a));
+  if (forbidden || unknown.length > 0 || (dry === applyOne)) {
+    argvUsageError();
   }
 
   const ctx = { git_status_clean_before: "NO" };
@@ -661,6 +999,33 @@ function main() {
   const triage = tri.data;
 
   const rec = triage.recommended_first_sync_candidate;
+
+  if (applyOne && (!rec || typeof rec.number !== "number")) {
+    const rep = {
+      ...baseReport(),
+      generatedAt: new Date().toISOString(),
+      mode: "APPLY_ONE_SAFE_PR",
+      main_commit: mainCommit,
+      governance_loaded: true,
+      triage_loaded: true,
+      governance_total_open_prs: governance.total_open_prs,
+      apply_mode: "YES",
+      apply_candidate_pr: null,
+      apply_sync_attempted: "NO",
+      apply_sync_result: "NOT_RUN",
+      apply_merge_attempted: "NO",
+      apply_merge_result: "NOT_RUN",
+      apply_post_merge_proof: "NOT_RUN",
+      apply_stopped_reason: "no_safe_candidate",
+      safe_to_continue: "YES",
+      git_status_clean_before: ctx.git_status_clean_before,
+      recommended_next_command: "node scripts/silver-pr-orchestrator-v1.cjs --dry-run",
+      error: "NO",
+    };
+    exitApplyZero(rep);
+    return;
+  }
+
   if (!rec || typeof rec.number !== "number") {
     exitWithErrorReport(
       ctx,
@@ -738,62 +1103,11 @@ function main() {
     );
   }
 
-  const evalResult = evaluateCandidate(prView, diffPaths.paths, {
-    governanceCategory,
-    triageCategory,
-  });
-
-  const report = {
-    ...baseReport(),
-    generatedAt: new Date().toISOString(),
-    main_commit: mainCommit,
-    governance_loaded: true,
-    triage_loaded: true,
-    governance_total_open_prs: governance.total_open_prs,
-    candidate_pr: prView.number,
-    candidate_title: prView.title,
-    candidate_url: prView.url,
-    candidate_head_ref: prView.headRefName,
-    candidate_base_ref: prView.baseRefName,
-    candidate_category: triageCategory,
-    governance_category: governanceCategory.length ? governanceCategory : null,
-    candidate_files: evalResult.candidate_files,
-    merge_state_status: evalResult.merge_state_status,
-    mergeable: evalResult.mergeable,
-    status_checks_summary: evalResult.status_checks_summary,
-    risk_level: evalResult.risk_level,
-    allowed_action: evalResult.allowed_action,
-    blocked_reason: evalResult.blocked_reason,
-    would_merge: evalResult.would_merge,
-    would_push: evalResult.would_push,
-    engine_changed: evalResult.engine_changed,
-    assets_app_changed: evalResult.assets_app_changed,
-    safe_to_enable_apply_mode: "NO",
-    recommended_next_command: evalResult.recommended_next_command,
-    error: "NO",
-    error_stage: "",
-    error_message: "",
-    git_status_clean_before: ctx.git_status_clean_before,
-    git_status_clean_after: "NO",
-    dry_run_no_push_merge: "YES",
-    branch_isolation_gh_only: "YES",
-  };
-
-  finalizeDryRunReport(report);
-
-  writeReportFile(report);
-
-  const gsFinal = gitPorcelain();
-  const afterCleanOk = gsFinal.ok && isCleanAfterOrchestratorRun(gsFinal.text);
-  const gitCleanAfterStrict = gsFinal.ok && isStrictCleanPorcelain(gsFinal.text);
-  report.git_status_clean_after = gitCleanAfterStrict || afterCleanOk ? "YES" : "NO";
-  report.safe_to_enable_apply_mode = safeToEnableApply(evalResult, afterCleanOk);
-  if (!afterCleanOk) {
-    report.safe_to_enable_apply_mode = "NO";
+  if (applyOne) {
+    runApplyOneSafePrMain(ctx, mainCommit, governance, triage, prNumber, triageCategory, governanceCategory, prView, diffPaths);
+  } else {
+    runDryRunMain(ctx, mainCommit, governance, triage, prNumber, triageCategory, governanceCategory, prView, diffPaths);
   }
-
-  writeReportFile(report);
-  console.log(`Wrote ${path.relative(REPO, OUT_REPORT)}`);
 }
 
 try {
