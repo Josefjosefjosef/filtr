@@ -2,7 +2,8 @@
 /**
  * Silver PR Orchestrator V1 — DRY-RUN by default; optional `--apply-one-safe-pr`
  * for a single gated ultra-safe PR (docs/** or scripts/** only, LOW risk).
- * Uses frozen backlog JSON + GitHub CLI (gh pr view, gh pr diff --name-only).
+ * Uses frozen backlog JSON (hints) + GitHub CLI: live `gh pr list --state open`
+ * for the candidate pool, then `gh pr view` / `gh pr diff --name-only` per OPEN PR.
  * DRY-RUN never merges, pushes, or updates PR branches locally or via gh.
  */
 /* eslint-disable no-console */
@@ -134,6 +135,12 @@ function baseReport() {
     governance_loaded: false,
     triage_loaded: false,
     governance_total_open_prs: null,
+    total_open_prs: null,
+    safe_open_candidates: null,
+    recommended_first_safe_candidate: null,
+    recommended_first_safe_candidate_state: "",
+    open_backlog_refresh: "NO",
+    open_pr_filter_active: "NO",
     candidate_pr: null,
     candidate_state: "",
     apply_candidate_state: null,
@@ -195,6 +202,100 @@ function listChangedPathsFromGhNameOnly(prNumber) {
     .map((line) => normalizePath(line.trim()))
     .filter(Boolean);
   return { ok: true, paths };
+}
+
+/**
+ * Live OPEN PR numbers from GitHub (frozen backlog JSON is not used for pool membership).
+ */
+function listOpenPrNumbersFromGh() {
+  const r = runGhJsonWithRetry([
+    "pr",
+    "list",
+    "--state",
+    "open",
+    "--json",
+    "number",
+    "--limit",
+    "500",
+  ]);
+  if (!r.ok || !Array.isArray(r.data)) {
+    return { ok: false, numbers: [], message: r.message || "gh_pr_list_open_failed" };
+  }
+  const numbers = r.data
+    .map((row) => (row && typeof row.number === "number" ? row.number : null))
+    .filter((n) => n !== null)
+    .sort((a, b) => a - b);
+  return { ok: true, numbers, message: "" };
+}
+
+function governanceCategoryForPr(governance, prNumber) {
+  let governanceCategory = "";
+  if (governance && Array.isArray(governance.top_needs_sync)) {
+    const hit = governance.top_needs_sync.find((p) => p && p.number === prNumber);
+    if (hit && hit.category) governanceCategory = String(hit.category);
+  }
+  return governanceCategory;
+}
+
+function triageCategoryForPr(triage, prNumber) {
+  if (triage && Array.isArray(triage.prs)) {
+    const hit = triage.prs.find((p) => p && p.number === prNumber);
+    if (hit && hit.triageCategory) return String(hit.triageCategory);
+  }
+  const rec = triage && triage.recommended_first_sync_candidate;
+  if (rec && rec.number === prNumber) {
+    return String(rec.triageCategory || rec.category || "UNKNOWN");
+  }
+  return "UNKNOWN";
+}
+
+/**
+ * Scans every OPEN PR (ascending number): counts ultra-safe apply candidates; returns first match.
+ */
+function scanOpenPrSafePool(governance, triage, openNumbers) {
+  let safeCount = 0;
+  let firstPick = null;
+  for (const prNumber of openNumbers) {
+    const prJson = runGhJsonWithRetry([
+      "pr",
+      "view",
+      String(prNumber),
+      "--json",
+      "number,title,url,headRefName,baseRefName,mergeStateStatus,mergeable,statusCheckRollup,isDraft,state",
+    ]);
+    if (!prJson.ok) {
+      return { ok: false, safeCount, firstPick, message: prJson.message || "gh_pr_view_failed" };
+    }
+    const prView = prJson.data;
+    if (!prView || !isPrViewOpen(prView)) {
+      continue;
+    }
+    const diffPaths = listChangedPathsFromGhNameOnly(prNumber);
+    if (!diffPaths.ok) {
+      return { ok: false, safeCount, firstPick, message: diffPaths.message || "gh_pr_diff_failed" };
+    }
+    const triageCategory = triageCategoryForPr(triage, prNumber);
+    const governanceCategory = governanceCategoryForPr(governance, prNumber);
+    const evalResult = evaluateCandidate(prView, diffPaths.paths, {
+      governanceCategory,
+      triageCategory,
+    });
+    const gates = applyUltraSafeGates(evalResult, prView);
+    if (gates.ok) {
+      safeCount += 1;
+      if (!firstPick) {
+        firstPick = {
+          prNumber,
+          prView,
+          diffPaths,
+          triageCategory,
+          governanceCategory,
+          evalResult,
+        };
+      }
+    }
+  }
+  return { ok: true, safeCount, firstPick, message: "" };
 }
 
 function runGhJsonWithRetry(args) {
@@ -553,6 +654,7 @@ function evaluateCandidate(prView, changedPaths, hints) {
 function safeToEnableApply(evalResult, gitCleanAfterOk) {
   if (!gitCleanAfterOk) return "NO";
   const a = evalResult.allowed_action;
+  if (a === "no_safe_candidate") return "NO";
   if (a === "STOP_HIGH_RISK" || a === "STOP_CONFLICTING" || a === "STOP_PENDING" || a === "STOP_FAIL") {
     return "NO";
   }
@@ -663,7 +765,30 @@ function runNpmSmoke() {
   return runCommand(npmCmd, ["run", "smoke"], { cwd: REPO });
 }
 
-function buildReportSkeleton(ctx, mainCommit, governance, triage, prView, triageCategory, governanceCategory, evalResult) {
+function buildReportSkeleton(
+  ctx,
+  mainCommit,
+  governance,
+  triage,
+  prView,
+  triageCategory,
+  governanceCategory,
+  evalResult,
+  openPoolMeta,
+) {
+  const meta =
+    openPoolMeta && typeof openPoolMeta === "object"
+      ? openPoolMeta
+      : {
+          total_open_prs: null,
+          safe_open_candidates: null,
+          recommended_first_safe_candidate: null,
+          recommended_first_safe_candidate_state: "",
+          open_backlog_refresh: "NO",
+          open_pr_filter_active: "NO",
+        };
+  const hasPr = prView != null;
+  const govCatStr = String(governanceCategory || "");
   return {
     ...baseReport(),
     generatedAt: new Date().toISOString(),
@@ -671,15 +796,21 @@ function buildReportSkeleton(ctx, mainCommit, governance, triage, prView, triage
     governance_loaded: true,
     triage_loaded: true,
     governance_total_open_prs: governance.total_open_prs,
-    candidate_pr: prView.number,
-    candidate_state: prViewStateString(prView),
+    total_open_prs: meta.total_open_prs,
+    safe_open_candidates: meta.safe_open_candidates,
+    recommended_first_safe_candidate: meta.recommended_first_safe_candidate,
+    recommended_first_safe_candidate_state: meta.recommended_first_safe_candidate_state,
+    open_backlog_refresh: meta.open_backlog_refresh,
+    open_pr_filter_active: meta.open_pr_filter_active,
+    candidate_pr: hasPr ? prView.number : null,
+    candidate_state: hasPr ? prViewStateString(prView) : "",
     apply_candidate_state: null,
-    candidate_title: prView.title,
-    candidate_url: prView.url,
-    candidate_head_ref: prView.headRefName,
-    candidate_base_ref: prView.baseRefName,
-    candidate_category: triageCategory,
-    governance_category: governanceCategory.length ? governanceCategory : null,
+    candidate_title: hasPr ? prView.title : null,
+    candidate_url: hasPr ? prView.url : null,
+    candidate_head_ref: hasPr ? prView.headRefName : null,
+    candidate_base_ref: hasPr ? prView.baseRefName : null,
+    candidate_category: hasPr ? triageCategory : null,
+    governance_category: hasPr && govCatStr.length ? govCatStr : null,
     candidate_files: evalResult.candidate_files,
     merge_state_status: evalResult.merge_state_status,
     mergeable: evalResult.mergeable,
@@ -775,13 +906,53 @@ function argvUsageError() {
   process.exit(2);
 }
 
-function runDryRunMain(ctx, mainCommit, governance, triage, prNumber, triageCategory, governanceCategory, prView, diffPaths) {
-  const evalResult = evaluateCandidate(prView, diffPaths.paths, {
-    governanceCategory,
-    triageCategory,
-  });
-
-  const report = buildReportSkeleton(ctx, mainCommit, governance, triage, prView, triageCategory, governanceCategory, evalResult);
+function runDryRunNoSafeOpenCandidate(ctx, mainCommit, governance, triage, totalOpen, safeCount) {
+  const emptyChecks = {
+    total: 0,
+    completed: 0,
+    failed: 0,
+    pending: 0,
+    success: 0,
+    skipped: 0,
+    cancelled: 0,
+    neutral: 0,
+    failedNames: [],
+    pendingNames: [],
+  };
+  const evalResult = {
+    candidate_files: [],
+    status_checks_summary: emptyChecks,
+    merge_state_status: "",
+    mergeable: "",
+    risk_level: "NONE",
+    allowed_action: "no_safe_candidate",
+    blocked_reason: "no_safe_open_ultra_apply_candidate",
+    would_merge: "NO",
+    would_push: "NO",
+    engine_changed: "NO",
+    assets_app_changed: "NO",
+    recommended_next_command: "node scripts/silver-pr-orchestrator-v1.cjs --dry-run",
+  };
+  const openPoolMeta = {
+    total_open_prs: totalOpen,
+    safe_open_candidates: safeCount,
+    recommended_first_safe_candidate: null,
+    recommended_first_safe_candidate_state: "",
+    open_backlog_refresh: "YES",
+    open_pr_filter_active: "YES",
+  };
+  const report = buildReportSkeleton(
+    ctx,
+    mainCommit,
+    governance,
+    triage,
+    null,
+    "",
+    "",
+    evalResult,
+    openPoolMeta,
+  );
+  report.safe_to_continue = "YES";
   finalizeDryRunReport(report);
   writeReportFile(report);
 
@@ -798,7 +969,63 @@ function runDryRunMain(ctx, mainCommit, governance, triage, prNumber, triageCate
   console.log(`Wrote ${path.relative(REPO, OUT_REPORT)}`);
 }
 
-function runApplyOneSafePrMain(ctx, mainCommit, governance, triage, prNumber, triageCategory, governanceCategory, prView, diffPaths) {
+function runDryRunMain(
+  ctx,
+  mainCommit,
+  governance,
+  triage,
+  prNumber,
+  triageCategory,
+  governanceCategory,
+  prView,
+  diffPaths,
+  openPoolMeta,
+) {
+  const evalResult = evaluateCandidate(prView, diffPaths.paths, {
+    governanceCategory,
+    triageCategory,
+  });
+
+  const report = buildReportSkeleton(
+    ctx,
+    mainCommit,
+    governance,
+    triage,
+    prView,
+    triageCategory,
+    governanceCategory,
+    evalResult,
+    openPoolMeta,
+  );
+  report.safe_to_continue = "YES";
+  finalizeDryRunReport(report);
+  writeReportFile(report);
+
+  const gsFinal = gitPorcelain();
+  const afterCleanOk = gsFinal.ok && isCleanAfterOrchestratorRun(gsFinal.text);
+  const gitCleanAfterStrict = gsFinal.ok && isStrictCleanPorcelain(gsFinal.text);
+  report.git_status_clean_after = gitCleanAfterStrict || afterCleanOk ? "YES" : "NO";
+  report.safe_to_enable_apply_mode = safeToEnableApply(evalResult, afterCleanOk);
+  if (!afterCleanOk) {
+    report.safe_to_enable_apply_mode = "NO";
+  }
+
+  writeReportFile(report);
+  console.log(`Wrote ${path.relative(REPO, OUT_REPORT)}`);
+}
+
+function runApplyOneSafePrMain(
+  ctx,
+  mainCommit,
+  governance,
+  triage,
+  prNumber,
+  triageCategory,
+  governanceCategory,
+  prView,
+  diffPaths,
+  openPoolMeta,
+) {
   let curPrView = prView;
   let curPaths = diffPaths.paths;
   let evalResult = evaluateCandidate(curPrView, curPaths, {
@@ -807,7 +1034,17 @@ function runApplyOneSafePrMain(ctx, mainCommit, governance, triage, prNumber, tr
   });
 
   const gates = applyUltraSafeGates(evalResult, curPrView);
-  const report = buildReportSkeleton(ctx, mainCommit, governance, triage, curPrView, triageCategory, governanceCategory, evalResult);
+  const report = buildReportSkeleton(
+    ctx,
+    mainCommit,
+    governance,
+    triage,
+    curPrView,
+    triageCategory,
+    governanceCategory,
+    evalResult,
+    openPoolMeta,
+  );
   report.mode = "APPLY_ONE_SAFE_PR";
   report.apply_mode = "YES";
   report.apply_candidate_pr = gates.ok ? prNumber : null;
@@ -1145,40 +1382,13 @@ function main() {
   const governance = gov.data;
   const triage = tri.data;
 
-  const rec = triage.recommended_first_sync_candidate;
-
-  if (applyOne && (!rec || typeof rec.number !== "number")) {
-    const rep = {
-      ...baseReport(),
-      generatedAt: new Date().toISOString(),
-      mode: "APPLY_ONE_SAFE_PR",
-      main_commit: mainCommit,
-      governance_loaded: true,
-      triage_loaded: true,
-      governance_total_open_prs: governance.total_open_prs,
-      apply_mode: "YES",
-      apply_candidate_pr: null,
-      apply_sync_attempted: "NO",
-      apply_sync_result: "NOT_RUN",
-      apply_merge_attempted: "NO",
-      apply_merge_result: "NOT_RUN",
-      apply_post_merge_proof: "NOT_RUN",
-      apply_stopped_reason: "no_safe_candidate",
-      safe_to_continue: "YES",
-      git_status_clean_before: ctx.git_status_clean_before,
-      recommended_next_command: "node scripts/silver-pr-orchestrator-v1.cjs --dry-run",
-      error: "NO",
-    };
-    exitApplyZero(rep);
-    return;
-  }
-
-  if (!rec || typeof rec.number !== "number") {
+  const openList = listOpenPrNumbersFromGh();
+  if (!openList.ok) {
     exitWithErrorReport(
       ctx,
-      "triage_candidate",
-      "missing recommended_first_sync_candidate.number",
-      "missing recommended_first_sync_candidate.number",
+      "gh_pr_list_open",
+      openList.message,
+      openList.message,
       {
         main_commit: mainCommit,
         governance_loaded: true,
@@ -1190,70 +1400,109 @@ function main() {
     );
   }
 
-  const prNumber = rec.number;
-  const triageCategory = String(rec.triageCategory || rec.category || "UNKNOWN");
-
-  let governanceCategory = "";
-  if (Array.isArray(governance.top_needs_sync)) {
-    const hit = governance.top_needs_sync.find((p) => p && p.number === prNumber);
-    if (hit && hit.category) governanceCategory = String(hit.category);
-  }
-
-  const prJson = runGhJsonWithRetry([
-    "pr",
-    "view",
-    String(prNumber),
-    "--json",
-    "number,title,url,headRefName,baseRefName,mergeStateStatus,mergeable,statusCheckRollup,isDraft,state",
-  ]);
-  if (!prJson.ok) {
+  const scan = scanOpenPrSafePool(governance, triage, openList.numbers);
+  if (!scan.ok) {
     exitWithErrorReport(
       ctx,
-      "gh_pr_view",
-      prJson.message,
-      prJson.message,
+      "open_pr_safe_pool_scan",
+      scan.message,
+      scan.message,
       {
         main_commit: mainCommit,
         governance_loaded: true,
         triage_loaded: true,
         governance_total_open_prs: governance.total_open_prs,
-        candidate_pr: prNumber,
-        candidate_category: triageCategory,
+        total_open_prs: openList.numbers.length,
+        safe_open_candidates: scan.safeCount,
         git_status_clean_before: ctx.git_status_clean_before,
       },
       true,
     );
   }
 
-  const prView = prJson.data;
-  const diffPaths = listChangedPathsFromGhNameOnly(prNumber);
-  if (!diffPaths.ok) {
-    exitWithErrorReport(
-      ctx,
-      "gh_pr_diff",
-      diffPaths.message,
-      diffPaths.message,
-      {
-        main_commit: mainCommit,
-        governance_loaded: true,
-        triage_loaded: true,
-        governance_total_open_prs: governance.total_open_prs,
-        candidate_pr: prView.number,
-        candidate_title: prView.title,
-        candidate_url: prView.url,
-        candidate_head_ref: prView.headRefName,
-        candidate_base_ref: prView.baseRefName,
-        candidate_category: triageCategory,
-        git_status_clean_before: ctx.git_status_clean_before,
-      },
-      true,
-    );
-  }
+  const openPoolMeta = {
+    total_open_prs: openList.numbers.length,
+    safe_open_candidates: scan.safeCount,
+    recommended_first_safe_candidate: scan.firstPick ? scan.firstPick.prNumber : null,
+    recommended_first_safe_candidate_state: scan.firstPick ? prViewStateString(scan.firstPick.prView) : "",
+    open_backlog_refresh: "YES",
+    open_pr_filter_active: "YES",
+  };
 
   if (applyOne) {
-    runApplyOneSafePrMain(ctx, mainCommit, governance, triage, prNumber, triageCategory, governanceCategory, prView, diffPaths);
+    if (!scan.firstPick) {
+      const rep = {
+        ...baseReport(),
+        generatedAt: new Date().toISOString(),
+        mode: "APPLY_ONE_SAFE_PR",
+        main_commit: mainCommit,
+        governance_loaded: true,
+        triage_loaded: true,
+        governance_total_open_prs: governance.total_open_prs,
+        total_open_prs: openPoolMeta.total_open_prs,
+        safe_open_candidates: openPoolMeta.safe_open_candidates,
+        recommended_first_safe_candidate: null,
+        recommended_first_safe_candidate_state: "",
+        open_backlog_refresh: "YES",
+        open_pr_filter_active: "YES",
+        apply_mode: "YES",
+        apply_candidate_pr: null,
+        apply_sync_attempted: "NO",
+        apply_sync_result: "NOT_RUN",
+        apply_merge_attempted: "NO",
+        apply_merge_result: "NOT_RUN",
+        apply_post_merge_proof: "NOT_RUN",
+        apply_stopped_reason: "no_safe_candidate",
+        safe_to_continue: "YES",
+        git_status_clean_before: ctx.git_status_clean_before,
+        recommended_next_command: "node scripts/silver-pr-orchestrator-v1.cjs --dry-run",
+        error: "NO",
+        candidate_pr: null,
+        candidate_state: "",
+        allowed_action: "no_safe_candidate",
+        blocked_reason: "no_safe_open_ultra_apply_candidate",
+        dry_run_no_push_merge: "NO",
+        branch_isolation_gh_only: "NO",
+      };
+      exitApplyZero(rep);
+      return;
+    }
+    const fp = scan.firstPick;
+    runApplyOneSafePrMain(
+      ctx,
+      mainCommit,
+      governance,
+      triage,
+      fp.prNumber,
+      fp.triageCategory,
+      fp.governanceCategory,
+      fp.prView,
+      fp.diffPaths,
+      openPoolMeta,
+    );
+  } else if (!scan.firstPick) {
+    runDryRunNoSafeOpenCandidate(
+      ctx,
+      mainCommit,
+      governance,
+      triage,
+      openList.numbers.length,
+      scan.safeCount,
+    );
   } else {
-    runDryRunMain(ctx, mainCommit, governance, triage, prNumber, triageCategory, governanceCategory, prView, diffPaths);
+    const fp = scan.firstPick;
+    runDryRunMain(
+      ctx,
+      mainCommit,
+      governance,
+      triage,
+      fp.prNumber,
+      fp.triageCategory,
+      fp.governanceCategory,
+      fp.prView,
+      fp.diffPaths,
+      openPoolMeta,
+    );
   }
 }
 
