@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-15T07:19:46.082220Z",
+  "ingestedAt": "2026-05-15T08:19:53.630994Z",
   "items": [
     {
       "section": "veda",
@@ -21,6 +21,35 @@
         "windows",
         "zrychlení",
         "závidí"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Výborný OLED monitor pod osm tisíc. Musíte si ale pospíšit, tento MSI se rychle vyprodá",
+      "url": "https://www.zive.cz/clanky/nejlevnejsi-monitor-msi-mag-273qp/sc-3-a-241181/default.aspx",
+      "dt": "2026-05-15T07:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "ale",
+        "monitor",
+        "msi",
+        "musíte",
+        "oled",
+        "osm",
+        "pospíšit",
+        "rychle",
+        "tento",
+        "tisíc",
+        "vyprodá",
+        "výborný"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -933,34 +962,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "O2 nabízí akční tarif s 10 GB a 150 minutami za 349 Kč měsíčně. Cenu garantuje pouze na rok",
-      "url": "https://mobilmania.zive.cz/clanky/o2-nabizi-akcni-tarif-s-10-gb-a-150-minutami-za-349-kc-mesicne-cenu-garantuje-pouze-na-rok/sc-3-a-1364711/default.aspx",
-      "dt": "2026-05-12T15:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "150",
-        "349",
-        "akční",
-        "cenu",
-        "garantuje",
-        "minutami",
-        "měsíčně",
-        "nabízí",
-        "pouze",
-        "rok",
-        "tarif"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -971,7 +972,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22301,
+      "bytes": 22433,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1008,7 +1009,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-15T06:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T07:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1026,6 +1027,10 @@
           {
             "title": "Projekt Windows K2 slibuje zrychlení. Microsoft závidí herní výkon SteamOS",
             "publishedAt": "2026-05-14T16:45:00Z"
+          },
+          {
+            "title": "Výborný OLED monitor pod osm tisíc. Musíte si ale pospíšit, tento MSI se rychle vyprodá",
+            "publishedAt": "2026-05-15T07:45:00Z"
           },
           {
             "title": "Netflix s reklamou už má 250 milionů diváků. Do Česka se zatím nechystá",
@@ -1050,10 +1055,6 @@
           {
             "title": "Srovnali jsme Mapy.com s šesti dalšími službami od Googlu, Applu, OSM... Která mapa je nejhezčí?",
             "publishedAt": "2026-05-13T16:45:00Z"
-          },
-          {
-            "title": "AMD dosáhla rekordního podílu v notebookových procesorech. V serverech už bere skoro polovinu tržeb",
-            "publishedAt": "2026-05-14T12:45:00Z"
           }
         ]
       }

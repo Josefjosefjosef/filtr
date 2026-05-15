@@ -1,8 +1,41 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-15T07:19:46.082220Z",
+  "ingestedAt": "2026-05-15T08:19:53.630994Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "V boji o střední školy uspělo 93 procent přihlášených, Praha je na tom ale mnohem hůř. Mrhá potenciálem dětí, kritizuje Plaga",
+      "url": "https://domaci.hn.cz/c1-67877320-v-boji-o-stredni-skoly-uspelo-93-procent-prihlasenych-praha-je-na-tom-ale-mnohem-hur-mrha-potencialem-deti-kritizuje-plaga",
+      "dt": "2026-05-15T07:25:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "ale",
+        "boji",
+        "dětí",
+        "hůř",
+        "kritizuje",
+        "mnohem",
+        "mrhá",
+        "plaga",
+        "potenciálem",
+        "praha",
+        "procent",
+        "přihlášených",
+        "střední",
+        "tom",
+        "uspělo",
+        "školy"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -1120,29 +1153,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Živě: Poznejte finalisty 18. ročníku soutěže E.ON Energy Globe",
-      "url": "https://domaci.hn.cz/c1-67876660-zive-poznejte-finalisty-18-rocniku-souteze-e-on-energy-globe",
-      "dt": "2026-05-14T07:15:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "energy",
-        "finalisty",
-        "globe",
-        "poznejte",
-        "ročníku",
-        "soutěže"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1153,7 +1163,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 182807,
+      "bytes": 183035,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1190,11 +1200,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-15T06:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T07:25:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 4,
           "finance": 33,
+          "zpravy": 4,
           "zdravi": 3
         },
         "drop_counts": {
@@ -1207,6 +1217,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V boji o střední školy uspělo 93 procent přihlášených, Praha je na tom ale mnohem hůř. Mrhá potenciálem dětí, kritizuje Plaga",
+            "publishedAt": "2026-05-15T07:25:00Z"
+          },
           {
             "title": "OpenAI si najala právníky na Apple. Nelíbí se jí integrace ChatGPT ani pokukování po Googlu",
             "publishedAt": "2026-05-15T06:10:00Z"
@@ -1233,10 +1247,6 @@
           },
           {
             "title": "Týden s technologiemi: Evropa se pere s umělou inteligencí, bojí se o bezpečnost bankovního sektoru i o digitální trh",
-            "publishedAt": "2026-05-14T22:00:00Z"
-          },
-          {
-            "title": "Finanční trhy (15. 5. 2026)",
             "publishedAt": "2026-05-14T22:00:00Z"
           }
         ]

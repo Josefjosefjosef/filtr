@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-15T07:19:46.082220Z",
+  "ingestedAt": "2026-05-15T08:19:53.630994Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Vychází The Caribou Trail, nová hra z období první světové války",
+      "url": "https://zing.cz/article/vychazi-the-caribou-trail-nova-hra-z-obdobi-prvni-svetove-valky",
+      "dt": "2026-05-15T08:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "caribou",
+        "hra",
+        "nová",
+        "období",
+        "první",
+        "světové",
+        "the",
+        "trail",
+        "vychází",
+        "války"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1001,30 +1028,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Pokračování úspěšného Stellar Blade bude představeno již letos",
-      "url": "https://zing.cz/article/pokracovani-uspesneho-stellar-blade-bude-predstaveno-jiz-letos",
-      "dt": "2026-05-11T18:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "blade",
-        "již",
-        "letos",
-        "pokračování",
-        "představeno",
-        "stellar",
-        "úspěšného"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1035,7 +1038,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126414,
+      "bytes": 126424,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1072,7 +1075,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-15T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T08:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1088,6 +1091,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vychází The Caribou Trail, nová hra z období první světové války",
+            "publishedAt": "2026-05-15T08:00:00Z"
+          },
           {
             "title": "Reboot série DOOM slaví 10 let, jednotlivé díly můžete pořídit s výraznou slevou",
             "publishedAt": "2026-05-15T06:00:00Z"
@@ -1115,10 +1122,6 @@
           {
             "title": "Recenze Forza Horizon 6 - nezapomenutelný výlet do země vycházejícího slunce",
             "publishedAt": "2026-05-14T12:00:00Z"
-          },
-          {
-            "title": "Konami odhalilo prodejní čísla posledních dvou her ze série Silent Hill",
-            "publishedAt": "2026-05-14T10:00:00Z"
           }
         ]
       }

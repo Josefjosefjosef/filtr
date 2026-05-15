@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-15T07:19:46.082220Z",
+  "ingestedAt": "2026-05-15T08:19:53.630994Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Sociální sítě rozbíjejí rodiny stejně jako alkohol. Zákaz pro děti podporuje většina Čechů",
+      "url": "https://www.penize.cz/spotrebitel/489711-socialni-site-rozbijeji-rodiny-stejne-jako-alkohol-zakaz-pro-deti-podporuje-vetsina-cechu",
+      "dt": "2026-05-15T09:31:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "alkohol",
+        "děti",
+        "jako",
+        "podporuje",
+        "rodiny",
+        "rozbíjejí",
+        "sociální",
+        "stejně",
+        "sítě",
+        "většina",
+        "zákaz",
+        "čechů"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -484,30 +513,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Banky zvyšují úroky na termínovaných vkladech. Kde teď dostanete víc?",
-      "url": "https://www.penize.cz/terminovane-vklady/487483-terminovane-vklady-porovnani-uroku-banky-je-zvysuji",
-      "dt": "2026-05-12T05:05:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "banky",
-        "dostanete",
-        "termínovaných",
-        "vkladech",
-        "víc",
-        "zvyšují",
-        "úroky"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -518,7 +523,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18644,
+      "bytes": 18939,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -555,7 +560,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-15T05:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T09:31:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 15,
@@ -572,6 +577,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sociální sítě rozbíjejí rodiny stejně jako alkohol. Zákaz pro děti podporuje většina Čechů",
+            "publishedAt": "2026-05-15T09:31:00Z"
+          },
           {
             "title": "Vyplatí se nové dluhopisy od Schillerové? Lepší než spoření v bance, ukazuje porovnání",
             "publishedAt": "2026-05-15T05:10:00Z"
@@ -599,10 +608,6 @@
           {
             "title": "mBank přidala do aplikace nouzové tlačítko, má chránit peníze. Kde ho najdete?",
             "publishedAt": "2026-05-14T10:33:00Z"
-          },
-          {
-            "title": "Stejný obal, méně čokolády. Výrobce Milky klamal zákazníky, rozhodl soud",
-            "publishedAt": "2026-05-14T08:47:00Z"
           }
         ]
       }
