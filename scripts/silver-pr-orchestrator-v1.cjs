@@ -2,6 +2,7 @@
 /**
  * Silver PR Orchestrator V1 — DRY-RUN by default; optional `--apply-one-safe-pr`
  * for a single gated ultra-safe PR (docs/** or scripts/** only, LOW risk).
+ * Optional `--apply-safe-queue --max=N` (N=1..5): bounded loop of child `--apply-one-safe-pr` runs.
  * Uses frozen backlog JSON (hints) + GitHub CLI: live `gh pr list --state open`
  * for the candidate pool, then `gh pr view` / `gh pr diff --name-only` per OPEN PR.
  * DRY-RUN never merges, pushes, or updates PR branches locally or via gh.
@@ -105,6 +106,64 @@ function normalizePath(p) {
     .trim();
 }
 
+/** Untracked or tracked SILVER_*.md runtime reports must not appear in porcelain during queue runs. */
+function porcelainHasSilverRuntimeMd(paths) {
+  for (const p of paths) {
+    const base = path.posix.basename(normalizePath(p));
+    if (/^SILVER_.+\.md$/i.test(base)) return true;
+  }
+  return false;
+}
+
+function ensureStrictCleanOrRestoreOrchestratorReportOnly() {
+  let gs = gitPorcelain();
+  if (!gs.ok) {
+    return { ok: false, message: gs.err || "git_status_failed" };
+  }
+  if (isStrictCleanPorcelain(gs.text)) {
+    return { ok: true, porcelain: gs.text };
+  }
+  if (!isCleanAfterOrchestratorRun(gs.text)) {
+    return { ok: false, message: "WORKTREE_NOT_CLEAN" };
+  }
+  const restoreR = runCommand("git", ["restore", "--", OUT_REPORT_REL]);
+  if (!restoreR.ok) {
+    return { ok: false, message: restoreR.message || "git_restore_orchestrator_report_failed" };
+  }
+  gs = gitPorcelain();
+  if (!gs.ok || !isStrictCleanPorcelain(gs.text)) {
+    return { ok: false, message: "WORKTREE_NOT_CLEAN" };
+  }
+  return { ok: true, porcelain: gs.text };
+}
+
+function gitDiffAssetsAppJsNonEmpty() {
+  const r = runCommand("git", ["diff", "--", "assets/app.js"]);
+  if (!r.ok) {
+    return { ok: false, nonEmpty: true, message: r.message || "git_diff_failed" };
+  }
+  return { ok: true, nonEmpty: String(r.stdout || "").trim().length > 0 };
+}
+
+function postCycleQueueGuards() {
+  const gs = gitPorcelain();
+  if (!gs.ok) {
+    return { ok: false, reason: "git_status_failed", detail: gs.err || "" };
+  }
+  const paths = parsePorcelainPaths(gs.text);
+  if (porcelainHasSilverRuntimeMd(paths)) {
+    return { ok: false, reason: "runtime_silver_md_in_porcelain", detail: paths.join(",") };
+  }
+  if (!isStrictCleanPorcelain(gs.text) && !isCleanAfterOrchestratorRun(gs.text)) {
+    return { ok: false, reason: "worktree_not_clean", detail: gs.text.trim() };
+  }
+  const diffR = gitDiffAssetsAppJsNonEmpty();
+  if (!diffR.ok || diffR.nonEmpty) {
+    return { ok: false, reason: "assets_app_js_diff_non_empty", detail: diffR.message || "" };
+  }
+  return { ok: true, reason: "", detail: "" };
+}
+
 function readJsonFile(abs) {
   const r = { ok: false, data: null, message: "" };
   try {
@@ -189,6 +248,11 @@ function baseReport() {
     git_status_clean_after: "NO",
     dry_run_no_push_merge: "YES",
     branch_isolation_gh_only: "YES",
+    queue_mode: "NO",
+    queue_max: null,
+    queue_cycles_completed: 0,
+    queue_stop_reason: "",
+    queue_safe_to_continue: "",
   };
 }
 
@@ -885,7 +949,9 @@ function exitApplyZero(rep) {
 function exitWithErrorReport(ctx, stage, message, blockedReason, extras, attemptMain) {
   const rep = { ...baseReport(), ...extras };
   rep.generatedAt = new Date().toISOString();
-  rep.mode = "DRY_RUN";
+  if (!(extras && extras.mode)) {
+    rep.mode = "DRY_RUN";
+  }
   rep.error = "YES";
   rep.error_stage = stage;
   rep.error_message = message;
@@ -917,7 +983,12 @@ function argvUsageError() {
   rep.error = "YES";
   rep.error_stage = "argv";
   rep.error_message = "invalid_arguments";
-  rep.blocked_reason = "usage_requires_dry_run_or_apply_one_safe_pr";
+  rep.blocked_reason = "usage_invalid_arguments_dry_run_apply_one_or_apply_safe_queue";
+  rep.queue_mode = "NO";
+  rep.queue_max = null;
+  rep.queue_cycles_completed = 0;
+  rep.queue_stop_reason = "argv_invalid";
+  rep.queue_safe_to_continue = "NO";
   const gsA = gitPorcelain();
   rep.git_status_clean_before = gsA.ok && isStrictCleanPorcelain(gsA.text) ? "YES" : "NO";
   writeReportFile(rep);
@@ -925,7 +996,7 @@ function argvUsageError() {
   rep.git_status_clean_after = gsB.ok && isCleanAfterOrchestratorRun(gsB.text) ? "YES" : "NO";
   writeReportFile(rep);
   console.error(
-    "Usage: node scripts/silver-pr-orchestrator-v1.cjs --dry-run\n       node scripts/silver-pr-orchestrator-v1.cjs --apply-one-safe-pr",
+    "Usage: node scripts/silver-pr-orchestrator-v1.cjs --dry-run\n       node scripts/silver-pr-orchestrator-v1.cjs --apply-one-safe-pr\n       node scripts/silver-pr-orchestrator-v1.cjs --apply-safe-queue --max=N   (N must be 1..5; exactly one --max= flag)",
   );
   process.exit(2);
 }
@@ -1348,14 +1419,240 @@ function runApplyOneSafePrMain(
   exitApplyZero(report);
 }
 
+/**
+ * Bounded queue: spawns child `node ... --apply-one-safe-pr` up to queueMax times (1..5).
+ * Parent only enforces worktree hygiene + post-cycle guards; each child performs full apply flow.
+ */
+function runApplySafeQueueMain(ctx, mainCommitAtStart, queueMax) {
+  const exe = process.execPath;
+  const scriptPath = path.join(__dirname, "silver-pr-orchestrator-v1.cjs");
+
+  function buildFinalRep(childSnapshot, patch) {
+    const rep = { ...baseReport(), ...(childSnapshot || {}), ...patch };
+    rep.generatedAt = new Date().toISOString();
+    rep.mode = "APPLY_SAFE_QUEUE_V1";
+    rep.queue_mode = "APPLY_SAFE_QUEUE_V1";
+    rep.queue_max = queueMax;
+    rep.git_status_clean_before = ctx.git_status_clean_before;
+    if (!rep.main_commit || !String(rep.main_commit).trim()) {
+      rep.main_commit = mainCommitAtStart;
+    }
+    return rep;
+  }
+
+  let lastChild = null;
+
+  for (let cycle = 0; cycle < queueMax; cycle += 1) {
+    const pre = ensureStrictCleanOrRestoreOrchestratorReportOnly();
+    if (!pre.ok) {
+      const rep = buildFinalRep(lastChild, {
+        queue_cycles_completed: cycle,
+        queue_stop_reason: `precycle_${pre.message}`,
+        queue_safe_to_continue: "NO",
+        error: "YES",
+        error_stage: "apply_safe_queue_precycle",
+        error_message: pre.message,
+        blocked_reason: pre.message,
+        allowed_action: "STOP_FAIL",
+        dry_run_no_push_merge: "NO",
+        branch_isolation_gh_only: "NO",
+      });
+      writeApplyPassReport(rep);
+      console.error(pre.message);
+      process.exit(1);
+    }
+    const pathsPre = parsePorcelainPaths(pre.porcelain);
+    if (porcelainHasSilverRuntimeMd(pathsPre)) {
+      const rep = buildFinalRep(lastChild, {
+        queue_cycles_completed: cycle,
+        queue_stop_reason: "precycle_runtime_silver_md",
+        queue_safe_to_continue: "NO",
+        error: "YES",
+        error_stage: "apply_safe_queue_precycle",
+        error_message: "SILVER_*.md in porcelain",
+        blocked_reason: "runtime_silver_md_in_porcelain",
+        allowed_action: "STOP_FAIL",
+        dry_run_no_push_merge: "NO",
+        branch_isolation_gh_only: "NO",
+      });
+      writeApplyPassReport(rep);
+      process.exit(1);
+    }
+
+    const childRun = runCommand(exe, [scriptPath, "--apply-one-safe-pr"]);
+    const parsed = readJsonFile(OUT_REPORT);
+    if (!parsed.ok) {
+      const rep = buildFinalRep(lastChild, {
+        queue_cycles_completed: cycle + 1,
+        queue_stop_reason: "orchestrator_report_read_failed",
+        queue_safe_to_continue: "NO",
+        error: "YES",
+        error_stage: "apply_safe_queue_report",
+        error_message: parsed.message,
+        blocked_reason: parsed.message,
+        allowed_action: "STOP_FAIL",
+        dry_run_no_push_merge: "NO",
+        branch_isolation_gh_only: "NO",
+      });
+      writeApplyPassReport(rep);
+      console.error(parsed.message);
+      process.exit(1);
+    }
+    lastChild = parsed.data;
+
+    if (!childRun.ok) {
+      const rep = buildFinalRep(lastChild, {
+        queue_cycles_completed: cycle + 1,
+        queue_stop_reason: "apply_one_child_process_failed",
+        queue_safe_to_continue: "NO",
+        error: "YES",
+        error_stage: "apply_safe_queue_child",
+        error_message: childRun.message || String(childRun.exitCode),
+        blocked_reason: childRun.message || "child_process_failed",
+        allowed_action: "STOP_FAIL",
+        dry_run_no_push_merge: "NO",
+        branch_isolation_gh_only: "NO",
+      });
+      writeApplyPassReport(rep);
+      console.error(childRun.message || "child_process_failed");
+      process.exit(1);
+    }
+
+    if (String(lastChild.error || "") === "YES") {
+      const rep = buildFinalRep(lastChild, {
+        queue_cycles_completed: cycle + 1,
+        queue_stop_reason: "apply_one_report_error_yes",
+        queue_safe_to_continue: "NO",
+        dry_run_no_push_merge: "NO",
+        branch_isolation_gh_only: "NO",
+      });
+      writeApplyPassReport(rep);
+      process.exit(1);
+    }
+
+    const pg = postCycleQueueGuards();
+    if (!pg.ok) {
+      const rep = buildFinalRep(lastChild, {
+        queue_cycles_completed: cycle + 1,
+        queue_stop_reason: `post_cycle_${pg.reason}`,
+        queue_safe_to_continue: "NO",
+        error: "YES",
+        error_stage: "apply_safe_queue_post_cycle",
+        error_message: pg.detail || pg.reason,
+        blocked_reason: pg.reason,
+        allowed_action: "STOP_FAIL",
+        dry_run_no_push_merge: "NO",
+        branch_isolation_gh_only: "NO",
+      });
+      writeApplyPassReport(rep);
+      console.error(pg.reason);
+      process.exit(1);
+    }
+
+    if (String(lastChild.safe_to_continue || "") === "NO") {
+      const rep = buildFinalRep(lastChild, {
+        queue_cycles_completed: cycle + 1,
+        queue_stop_reason: String(lastChild.apply_stopped_reason || "safe_to_continue_no"),
+        queue_safe_to_continue: "NO",
+        dry_run_no_push_merge: "NO",
+        branch_isolation_gh_only: "NO",
+      });
+      writeApplyPassReport(rep);
+      process.exit(1);
+    }
+
+    const sr = String(lastChild.apply_stopped_reason || "");
+    if (sr === "no_safe_candidate") {
+      const rep = buildFinalRep(lastChild, {
+        queue_cycles_completed: cycle + 1,
+        queue_stop_reason: "no_safe_candidate",
+        queue_safe_to_continue: "YES",
+        safe_to_continue: "YES",
+        error: "NO",
+        dry_run_no_push_merge: "NO",
+        branch_isolation_gh_only: "NO",
+      });
+      writeApplyPassReport(rep);
+      process.exit(0);
+    }
+
+    if (sr === "completed_ok") {
+      if (cycle === queueMax - 1) {
+        const rep = buildFinalRep(lastChild, {
+          queue_cycles_completed: cycle + 1,
+          queue_stop_reason: "queue_max_reached",
+          queue_safe_to_continue: "YES",
+          safe_to_continue: "YES",
+          error: "NO",
+          dry_run_no_push_merge: "NO",
+          branch_isolation_gh_only: "NO",
+        });
+        writeApplyPassReport(rep);
+        process.exit(0);
+      }
+      continue;
+    }
+
+    const rep = buildFinalRep(lastChild, {
+      queue_cycles_completed: cycle + 1,
+      queue_stop_reason: sr || "apply_stopped_non_merge",
+      queue_safe_to_continue: "YES",
+      safe_to_continue: String(lastChild.safe_to_continue || "YES"),
+      error: "NO",
+      dry_run_no_push_merge: "NO",
+      branch_isolation_gh_only: "NO",
+    });
+    writeApplyPassReport(rep);
+    process.exit(0);
+  }
+}
+
+function queuePrecheckFailureExtras(applyQueue, queueMax, stopReason) {
+  if (!applyQueue) return {};
+  return {
+    mode: "APPLY_SAFE_QUEUE_V1",
+    queue_mode: "APPLY_SAFE_QUEUE_V1",
+    queue_max: queueMax,
+    queue_cycles_completed: 0,
+    queue_stop_reason: stopReason || "precheck_worktree_not_clean",
+    queue_safe_to_continue: "NO",
+  };
+}
+
 function main() {
   const argv = process.argv.slice(2);
   const dry = argv.includes("--dry-run");
   const applyOne = argv.includes("--apply-one-safe-pr");
+  const applyQueue = argv.includes("--apply-safe-queue");
   const forbidden = argv.some((a) => a === "--apply" || a.startsWith("--apply="));
-  const allowedFlags = new Set(["--dry-run", "--apply-one-safe-pr"]);
-  const unknown = argv.filter((a) => !allowedFlags.has(a));
-  if (forbidden || unknown.length > 0 || (dry === applyOne)) {
+
+  const maxArgv = argv.filter((a) => a.startsWith("--max="));
+  let queueMax = null;
+  if (maxArgv.length === 1) {
+    const raw = maxArgv[0].slice("--max=".length);
+    if (!/^\d+$/.test(raw) || String(parseInt(raw, 10)) !== raw) {
+      argvUsageError();
+    }
+    const n = parseInt(raw, 10);
+    if (n < 1 || n > 5) {
+      argvUsageError();
+    }
+    queueMax = n;
+  } else if (maxArgv.length > 1) {
+    argvUsageError();
+  }
+
+  const allowedFlags = new Set(["--dry-run", "--apply-one-safe-pr", "--apply-safe-queue"]);
+  const unknown = argv.filter((a) => !allowedFlags.has(a) && !/^--max=\d+$/.test(a));
+
+  const modeCount = (dry ? 1 : 0) + (applyOne ? 1 : 0) + (applyQueue ? 1 : 0);
+  if (forbidden || unknown.length > 0 || modeCount !== 1) {
+    argvUsageError();
+  }
+  if (applyQueue && queueMax === null) {
+    argvUsageError();
+  }
+  if (!applyQueue && maxArgv.length > 0) {
     argvUsageError();
   }
 
@@ -1373,7 +1670,7 @@ function main() {
     );
   }
 
-  if (applyOne && !isStrictCleanPorcelain(gsBefore.text)) {
+  if ((applyOne || applyQueue) && !isStrictCleanPorcelain(gsBefore.text)) {
     if (!isCleanAfterOrchestratorRun(gsBefore.text)) {
       exitWithErrorReport(
         ctx,
@@ -1383,6 +1680,7 @@ function main() {
         {
           git_status_clean_before: "NO",
           git_status_clean_after: "NO",
+          ...queuePrecheckFailureExtras(applyQueue, queueMax, "precheck_worktree_not_clean"),
         },
         false,
       );
@@ -1397,6 +1695,7 @@ function main() {
         {
           git_status_clean_before: "NO",
           git_status_clean_after: "NO",
+          ...queuePrecheckFailureExtras(applyQueue, queueMax, "precheck_orchestrator_report_restore_failed"),
         },
         false,
       );
@@ -1411,6 +1710,7 @@ function main() {
         {
           git_status_clean_before: "NO",
           git_status_clean_after: "NO",
+          ...queuePrecheckFailureExtras(applyQueue, queueMax, "precheck_worktree_still_dirty_after_restore"),
         },
         false,
       );
@@ -1427,6 +1727,7 @@ function main() {
       {
         git_status_clean_before: "NO",
         git_status_clean_after: "NO",
+        ...queuePrecheckFailureExtras(applyQueue, queueMax, "precheck_worktree_not_clean"),
       },
       false,
     );
@@ -1444,6 +1745,11 @@ function main() {
     );
   }
   const mainCommit = headR.stdout.trim();
+
+  if (applyQueue) {
+    runApplySafeQueueMain(ctx, mainCommit, queueMax);
+    return;
+  }
 
   const gov = readJsonFile(GOVERNANCE_JSON);
   if (!gov.ok) {
