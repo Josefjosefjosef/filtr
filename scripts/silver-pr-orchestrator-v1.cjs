@@ -425,6 +425,29 @@ function evaluateCandidate(prView, changedPaths, hints) {
     };
   }
 
+  const ultraSafeUnknownMergeability =
+    governanceCategoryHint === "NEEDS_REBASE_OR_SYNC" &&
+    triageCategoryHint === "SYNC_SAFE_LOW_RISK" &&
+    isLowRiskDocsOrScriptsOnly(paths) &&
+    paths.length > 0 &&
+    checksClean;
+
+  if (
+    mergeState === "UNKNOWN" &&
+    mergeable === "UNKNOWN" &&
+    ultraSafeUnknownMergeability
+  ) {
+    return {
+      ...base,
+      risk_level: "LOW",
+      allowed_action: "SYNC_ONLY",
+      blocked_reason: "branch_behind_base_sync_first",
+      would_merge: "NO",
+      would_push: "NO",
+      recommended_next_command: `gh pr sync ${prView.number}`,
+    };
+  }
+
   const mergeClean = mergeState === "CLEAN";
 
   if (mergeClean && isOnlyDocs(paths) && checksClean) {
