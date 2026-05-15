@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-15T12:20:23.348996Z",
+  "ingestedAt": "2026-05-15T13:00:02.196218Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Drobilův Anacot akvizicí posiluje kovovýrobu pro retail. Vstupuje do nového byznysu",
+      "url": "https://byznys.hn.cz/c1-67877380-drobiluv-anacot-akvizici-posiluje-kovovyrobu-pro-retail-vstupuje-do-noveho-byznysu",
+      "dt": "2026-05-15T12:45:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "akvizicí",
+        "anacot",
+        "byznysu",
+        "drobilův",
+        "kovovýrobu",
+        "nového",
+        "posiluje",
+        "retail",
+        "vstupuje"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1121,38 +1147,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nemohli bychom ho vyměnit třeba za 10 našich? Aneb když do Česka přijede politik, kterého byste chtěli mít doma",
-      "url": "https://domaci.hn.cz/c1-67876530-nemohli-bychom-ho-vymenit-treba-za-10-nasich-aneb-kdyz-do-ceska-prijede-politik-ktereho-byste-chteli-mit-doma",
-      "dt": "2026-05-14T08:59:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "aneb",
-        "bychom",
-        "byste",
-        "chtěli",
-        "doma",
-        "když",
-        "kterého",
-        "mít",
-        "našich",
-        "nemohli",
-        "politik",
-        "přijede",
-        "třeba",
-        "vyměnit",
-        "česka"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1163,7 +1157,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 182943,
+      "bytes": 182933,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1200,7 +1194,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-15T12:06:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T12:45:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 32,
@@ -1217,6 +1211,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Drobilův Anacot akvizicí posiluje kovovýrobu pro retail. Vstupuje do nového byznysu",
+            "publishedAt": "2026-05-15T12:45:00Z"
+          },
           {
             "title": "Optimismus ČNB neopouští ani v době surovinového šoku",
             "publishedAt": "2026-05-15T12:06:00Z"
@@ -1244,10 +1242,6 @@
           {
             "title": "Kdo se bojí druhé inflační vlny, má jasno. Spočítali jsme, co nabízí Dluhopisy republiky",
             "publishedAt": "2026-05-15T05:50:00Z"
-          },
-          {
-            "title": "Růst investic do českého obranného průmyslu?  Možnosti tu i přes rozpočtová omezení jsou",
-            "publishedAt": "2026-05-15T05:39:00Z"
           }
         ]
       }

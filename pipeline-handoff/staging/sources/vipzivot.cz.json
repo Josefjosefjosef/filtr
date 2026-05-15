@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vipzivot.cz",
-  "ingestedAt": "2026-05-15T12:20:23.348996Z",
+  "ingestedAt": "2026-05-15T13:00:02.196218Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Brzobohatý oznámil rozchod s Danielou stejnými slovy jako rozchod s Kuchařovou. Tehdy to skončilo soudem",
+      "url": "https://vipzivot.cz/p/brzobohaty-oznamil-rozchod-daniela-podoba-krach-kucharova/",
+      "dt": "2026-05-15T12:45:00Z",
+      "media_raw": "VIPživot",
+      "media_norm": "VIPživot",
+      "tokens": [
+        "brzobohatý",
+        "danielou",
+        "jako",
+        "kuchařovou",
+        "oznámil",
+        "rozchod",
+        "skončilo",
+        "slovy",
+        "soudem",
+        "stejnými",
+        "tehdy"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vipzivot",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "vipzivot.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -276,40 +304,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "vipzivot.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Osudoví muži Simony Stašové: S Italem italská domácnost, s Trávníčkem každodenní starosti. „Ono se taky s princem hrozně blbě žije,“ komentovala",
-      "url": "https://vipzivot.cz/p/osudovi-muzi-simony-stasove/",
-      "dt": "2026-05-15T04:13:00Z",
-      "media_raw": "VIPživot",
-      "media_norm": "VIPživot",
-      "tokens": [
-        "blbě",
-        "domácnost",
-        "hrozně",
-        "italem",
-        "italská",
-        "každodenní",
-        "komentovala",
-        "muži",
-        "ono",
-        "osudoví",
-        "princem",
-        "simony",
-        "starosti",
-        "stašové",
-        "taky",
-        "trávníčkem",
-        "žije"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vipzivot",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "vipzivot.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -320,7 +314,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://vipzivot.cz/feed/",
-      "bytes": 131581,
+      "bytes": 128568,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -357,10 +351,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-15T05:49:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T12:45:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "other": 10
+          "zpravy": 1,
+          "other": 9
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -372,6 +367,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Brzobohatý oznámil rozchod s Danielou stejnými slovy jako rozchod s Kuchařovou. Tehdy to skončilo soudem",
+            "publishedAt": "2026-05-15T12:45:00Z"
+          },
           {
             "title": "Neumannová musela najít investora, aby se zbavila expartnera. Chalupa na Zadově ji stála víc než 30 milionů",
             "publishedAt": "2026-05-15T05:49:00Z"
@@ -399,10 +398,6 @@
           {
             "title": "Ondřej Hejma po debatě v ČT vybuchl. Kvůli Řezníčkovi rozpoutal válku, která rozdělila diváky ČT",
             "publishedAt": "2026-05-15T04:25:00Z"
-          },
-          {
-            "title": "Kačenka zmizela, ostatní se po 44 letech sešli na pivu. Dětští herci ze S tebou mě baví svět prožili po filmu těžké chvíle",
-            "publishedAt": "2026-05-15T04:18:00Z"
           }
         ]
       }

@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-05-15T12:20:23.348996Z",
+  "ingestedAt": "2026-05-15T13:00:02.196218Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nejslavnější róby z festivalu v Cannes: Ikonické šaty vynesla princezna Diana, Sharon Stone i Rihanna",
+      "url": "https://www.prozeny.cz/clanek/krasa-a-moda-moda-nejslavnejsi-roby-z-festivalu-v-cannes-ikonicke-saty-vynesla-princezna-diana-sharon-stone-i-rihanna-98754",
+      "dt": "2026-05-15T12:47:04Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "cannes",
+        "diana",
+        "festivalu",
+        "ikonické",
+        "nejslavnější",
+        "princezna",
+        "rihanna",
+        "róby",
+        "sharon",
+        "stone",
+        "vynesla",
+        "šaty"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -809,35 +838,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Devadesátka – žádný věk! Jane Fonda a Joan Collins oslnily v Cannes. Komu to sluší víc?",
-      "url": "https://www.prozeny.cz/clanek/krasa-a-moda-modni-hvezdy-devadesatka-zadny-vek-jane-fonda-a-joan-collins-oslnily-v-cannes-komu-to-slusi-vic-103470",
-      "dt": "2026-05-13T08:09:46Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "cannes",
-        "collins",
-        "devadesátka",
-        "fonda",
-        "jane",
-        "joan",
-        "komu",
-        "oslnily",
-        "sluší",
-        "víc",
-        "věk",
-        "žádný"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -848,7 +848,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 40851,
+      "bytes": 40993,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -885,11 +885,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T10:13:57Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T12:47:04Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 29,
-          "finance": 1
+          "zdravi": 30
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -901,6 +900,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejslavnější róby z festivalu v Cannes: Ikonické šaty vynesla princezna Diana, Sharon Stone i Rihanna",
+            "publishedAt": "2026-05-15T12:47:04Z"
+          },
           {
             "title": "Eva a René Decastelo zase jako rodina. Napsal jí dojemné vyznání. Co ho k tomu přimělo?",
             "publishedAt": "2026-05-15T10:13:57Z"
@@ -927,10 +930,6 @@
           },
           {
             "title": "Konečně trend, který je krásný, romantický i praktický. Tyhle topy se nemačkají a udělají skvělou postavu",
-            "publishedAt": "2026-05-15T03:00:00Z"
-          },
-          {
-            "title": "Proměna čtenářky Jany (57): Stačilo pár chytrých změn a omládla o několik let",
             "publishedAt": "2026-05-15T03:00:00Z"
           }
         ]
