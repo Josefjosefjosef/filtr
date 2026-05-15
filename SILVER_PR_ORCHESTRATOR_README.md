@@ -38,6 +38,12 @@ The orchestrator refuses automation when it would hit high-risk or unknown surfa
 - Failed checks → `STOP_FAIL`
 - Paths outside **only** `docs/**` or **only** `scripts/**` (for the low-risk merge path) → `STOP_UNKNOWN` / engine-surface guard
 
+### `mergeStateStatus` edge cases
+
+GitHub can return `mergeStateStatus=UNKNOWN` while `mergeable=MERGEABLE`. For a **low-risk** candidate (`docs/**` or `scripts/**` only), **clean checks** (no pending/fail), and a **sync backlog hint** (`governance_category=NEEDS_REBASE_OR_SYNC` and/or triage `SYNC_SAFE_LOW_RISK`), the orchestrator maps this to **`SYNC_ONLY`** with `blocked_reason=merge_state_unknown_sync_first` (DRY-RUN still forces `would_merge` / `would_push` to `NO`; the recommended command remains `gh pr sync` for a human).
+
+When the decision is still **`STOP_UNKNOWN`**, `blocked_reason` appends a compact diagnostic after `unclassified_paths_or_merge_state;` (`merge_state`, `mergeable`, path counts, check counters, governance/triage categories).
+
 It **must not** target Silver engine or high-risk product PRs for automated apply. The **first future APPLY candidate** should be only a **low-risk** `docs/**` or `scripts/**` PR, after checks pass and merge state is acceptable, and only under a **separate** APPLY task — never implied by this DRY-RUN alone.
 
 ## Run
