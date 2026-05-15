@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-15T09:39:46.640216Z",
+  "ingestedAt": "2026-05-15T10:19:34.226043Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "O návratu po mrtvici nerozhodují jen léky. Nový projekt v Česku odhalil nečekaný klíč k uzdravení",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/mrtvice-novy-projekt-dobrovolnici/",
+      "dt": "2026-05-15T10:12:26Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "jen",
+        "klíč",
+        "léky",
+        "mrtvici",
+        "nerozhodují",
+        "nečekaný",
+        "nový",
+        "návratu",
+        "odhalil",
+        "projekt",
+        "uzdravení",
+        "česku"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -251,33 +280,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Ochranné limity na léky v roce 2026: Kolik zaplatíte a kdy už v lékárně nenecháte ani korunu?",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/ochranne-limity-na-leky-kolik-zaplatite/",
-      "dt": "2026-05-14T11:59:32Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "2026",
-        "kolik",
-        "korunu",
-        "limity",
-        "léky",
-        "lékárně",
-        "nenecháte",
-        "ochranné",
-        "roce",
-        "zaplatíte"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -288,7 +290,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 102955,
+      "bytes": 102985,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -325,7 +327,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-15T08:53:05Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T10:12:26Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -340,6 +342,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "O návratu po mrtvici nerozhodují jen léky. Nový projekt v Česku odhalil nečekaný klíč k uzdravení",
+            "publishedAt": "2026-05-15T10:12:26Z"
+          },
           {
             "title": "Stát zvýší příspěvky pro těžce nemocné. Sněmovna schválila 3000 korun měsíčně a nastálo",
             "publishedAt": "2026-05-15T08:53:05Z"
@@ -367,10 +373,6 @@
           {
             "title": "Robotická chirurgie v každé okresní nemocnici? Ministerstvo připravuje nová pravidla",
             "publishedAt": "2026-05-14T16:00:59Z"
-          },
-          {
-            "title": "Tichý zabiják útočí na stále mladší Čechy. Za vysoký krevní tlak může hlavně jedna věc",
-            "publishedAt": "2026-05-14T15:04:01Z"
           }
         ]
       }

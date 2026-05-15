@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-15T09:39:46.640216Z",
+  "ingestedAt": "2026-05-15T10:19:34.226043Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Digitalizace dávek se odkládá, některých ruší. Změny schválili poslanci",
+      "url": "https://www.penize.cz/rodicovsky-prispevek/489756-digitalizace-davek-se-odklada-nekterych-rusi-zmeny-scvhalili-poslanci",
+      "dt": "2026-05-15T11:40:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "digitalizace",
+        "dávek",
+        "některých",
+        "odkládá",
+        "poslanci",
+        "ruší",
+        "schválili",
+        "změny"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -485,34 +510,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Žlutý kvítek proti rakovině si poprvé můžete koupit i kartou. Ale jen v Praze",
-      "url": "https://www.penize.cz/zdravotnictvi/489551-zluty-kvitek-proti-rakovine-si-poprve-muzete-koupit-i-kartou-ale-jen-v-praze",
-      "dt": "2026-05-12T10:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "ale",
-        "jen",
-        "kartou",
-        "koupit",
-        "kvítek",
-        "můžete",
-        "poprvé",
-        "praze",
-        "proti",
-        "rakovině",
-        "žlutý"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -523,7 +520,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18939,
+      "bytes": 19041,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -560,12 +557,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-15T09:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T11:40:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 15,
-          "zpravy": 4,
-          "zdravi": 1
+          "finance": 16,
+          "zpravy": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -577,6 +573,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Digitalizace dávek se odkládá, některých ruší. Změny schválili poslanci",
+            "publishedAt": "2026-05-15T11:40:00Z"
+          },
           {
             "title": "Sociální sítě rozbíjejí rodiny stejně jako alkohol. Zákaz pro děti podporuje většina Čechů",
             "publishedAt": "2026-05-15T09:31:00Z"
@@ -604,10 +604,6 @@
           {
             "title": "Schillerová představila nové Dluhopisy republiky. Protiinflační jsou s háčkem",
             "publishedAt": "2026-05-14T13:15:00Z"
-          },
-          {
-            "title": "mBank přidala do aplikace nouzové tlačítko, má chránit peníze. Kde ho najdete?",
-            "publishedAt": "2026-05-14T10:33:00Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-15T09:39:46.640216Z",
+  "ingestedAt": "2026-05-15T10:19:34.226043Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "S nádorem mozku žijí pacienti i 15 let, ale nesmí jít o glioblastom",
+      "url": "https://www.zdravezpravy.cz/2026/05/15/s-nadorem-mozku-ziji-pacienti-i-15-let-nesmi-ale-jit-o-glioblastom/",
+      "dt": "2026-05-15T09:12:06Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "ale",
+        "glioblastom",
+        "jít",
+        "let",
+        "mozku",
+        "nesmí",
+        "nádorem",
+        "pacienti",
+        "žijí"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -466,29 +492,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Zhoubné nádory orofaryngu boomují, násobně více u mužů",
-      "url": "https://www.zdravezpravy.cz/2026/05/06/zhoubne-nadory-orofaryngu-boomuji-nasobne-vice-u-muzu/",
-      "dt": "2026-05-06T08:30:02Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "boomují",
-        "mužů",
-        "nádory",
-        "násobně",
-        "orofaryngu",
-        "zhoubné"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -499,7 +502,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 202681,
+      "bytes": 202496,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -536,7 +539,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-14T13:52:03Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T09:12:06Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -552,6 +555,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "S nádorem mozku žijí pacienti i 15 let, ale nesmí jít o glioblastom",
+            "publishedAt": "2026-05-15T09:12:06Z"
+          },
           {
             "title": "Interny jsou v minusu a lékaři se jim vyhýbají. Bez nich to ale nepůjde",
             "publishedAt": "2026-05-14T13:52:03Z"
@@ -579,10 +586,6 @@
           {
             "title": "Komentář: Proč tolik řidičů jezdí na červenou? Protože mohou!",
             "publishedAt": "2026-05-12T13:30:11Z"
-          },
-          {
-            "title": "V pražské ÚVN zasahovala policie! I kvůli falšování lékařských zpráv",
-            "publishedAt": "2026-05-12T11:15:43Z"
           }
         ]
       }

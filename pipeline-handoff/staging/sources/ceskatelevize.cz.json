@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-15T09:39:46.640216Z",
+  "ingestedAt": "2026-05-15T10:19:34.226043Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "U dánských břehů vyplavilo moře mrtvou velrybu, může to být Timmy",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/u-danskych-brehu-vyplavilo-more-mrtvou-velrybu-muze-to-byt-timmy-373471",
+      "dt": "2026-05-15T09:40:39Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "být",
+        "břehů",
+        "dánských",
+        "moře",
+        "mrtvou",
+        "timmy",
+        "velrybu",
+        "vyplavilo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -31,20 +56,22 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Zvířata ve městě žijí hlavně v noci, ukázal brněnský výzkum",
+      "title": "Řada zvířat využívá město pravidelně, mimo pozornost lidí, ukázal výzkum",
       "url": "https://ct24.ceskatelevize.cz/clanek/regiony/zvirata-ve-meste-ziji-hlavne-v-noci-ukazal-brnensky-vyzkum-373450",
       "dt": "2026-05-15T09:04:58Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "brněnský",
-        "hlavně",
-        "městě",
-        "noci",
+        "lidí",
+        "mimo",
+        "město",
+        "pozornost",
+        "pravidelně",
         "ukázal",
+        "využívá",
         "výzkum",
-        "zvířata",
-        "žijí"
+        "zvířat",
+        "řada"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -720,32 +747,6 @@
         "seniorům",
         "technologie",
         "zcela"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Požár na Jičínsku zasáhl bateriové úložiště, škoda je kolem dvaceti milionů",
-      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/kralovehradecky-kraj/na-jicinsku-hori-bateriove-uloziste-hasici-varuji-pred-zplodinami-373441",
-      "dt": "2026-05-14T13:41:08Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "bateriové",
-        "dvaceti",
-        "jičínsku",
-        "kolem",
-        "milionů",
-        "požár",
-        "zasáhl",
-        "úložiště",
-        "škoda"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1497,7 +1498,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42380,
+      "bytes": 42220,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1557,7 +1558,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T09:13:36Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T09:40:39Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1574,11 +1575,15 @@
         },
         "sample_titles": [
           {
+            "title": "U dánských břehů vyplavilo moře mrtvou velrybu, může to být Timmy",
+            "publishedAt": "2026-05-15T09:40:39Z"
+          },
+          {
             "title": "Česko a dalších 35 zemí podpořilo v Kišiněvě tribunál pro ruské zločiny",
             "publishedAt": "2026-05-15T09:13:36Z"
           },
           {
-            "title": "Zvířata ve městě žijí hlavně v noci, ukázal brněnský výzkum",
+            "title": "Řada zvířat využívá město pravidelně, mimo pozornost lidí, ukázal výzkum",
             "publishedAt": "2026-05-15T09:04:58Z"
           },
           {
@@ -1600,10 +1605,6 @@
           {
             "title": "Maturanti byli letos úspěšnější. Zkouškou prošlo devadesát procent",
             "publishedAt": "2026-05-15T07:34:30Z"
-          },
-          {
-            "title": "V Kongu oznámili epidemii eboly",
-            "publishedAt": "2026-05-15T07:22:31Z"
           }
         ]
       }
@@ -1709,7 +1710,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77135,
+      "bytes": 77533,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

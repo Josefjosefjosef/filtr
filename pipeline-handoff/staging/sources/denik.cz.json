@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-15T09:39:46.640216Z",
+  "ingestedAt": "2026-05-15T10:19:34.226043Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Desítky zemí včetně Česka podpořily vznik tribunálu pro ruskou agresi",
+      "url": "https://www.denik.cz/ze_sveta/desitky-zemi-vcetne-ceska-podporily-vznik-tribunalu-pro-ruskou-agresi.html",
+      "dt": "2026-05-15T09:26:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "agresi",
+        "desítky",
+        "podpořily",
+        "ruskou",
+        "tribunálu",
+        "vznik",
+        "včetně",
+        "zemí",
+        "česka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -620,32 +646,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Na Plzeňsku vyrostlo obří dřevěné srdce. Ohromuje i při pohledu z nebe",
-      "url": "https://www.denik.cz/regiony/pnovany-obri-drevene-srdce-zahrada-frantisek-vavricka.html",
-      "dt": "2026-05-14T15:40:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dřevěné",
-        "nebe",
-        "obří",
-        "ohromuje",
-        "plzeňsku",
-        "pohledu",
-        "při",
-        "srdce",
-        "vyrostlo"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -656,7 +656,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29568,
+      "bytes": 29802,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -693,7 +693,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-15T09:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T09:26:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -710,6 +710,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Desítky zemí včetně Česka podpořily vznik tribunálu pro ruskou agresi",
+            "publishedAt": "2026-05-15T09:26:00Z"
+          },
           {
             "title": "Na hřebenech Krkonoš chumelilo. Sněžku pokrylo několik centimetrů sněhu",
             "publishedAt": "2026-05-15T09:20:00Z"
@@ -737,10 +741,6 @@
           {
             "title": "Polonahý muž omylem vystoupil na módní přehlídce. Video boří internet",
             "publishedAt": "2026-05-15T07:16:00Z"
-          },
-          {
-            "title": "V Mostě otevřela unikátní česko-romská restaurace. Vaří v ní kuchařka od Kojota",
-            "publishedAt": "2026-05-15T06:44:00Z"
           }
         ]
       }
