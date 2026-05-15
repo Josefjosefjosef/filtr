@@ -294,7 +294,10 @@ function yn(b) {
   return b ? "YES" : "NO";
 }
 
-function evaluateCandidate(prView, changedPaths) {
+function evaluateCandidate(prView, changedPaths, hints) {
+  const h = hints && typeof hints === "object" ? hints : {};
+  const governanceCategoryHint = String(h.governanceCategory || "");
+  const triageCategoryHint = String(h.triageCategory || "");
   const paths = changedPaths;
   const checks = summarizeChecks(prView.statusCheckRollup);
   const mergeState = String(prView.mergeStateStatus || "").toUpperCase();
@@ -398,6 +401,30 @@ function evaluateCandidate(prView, changedPaths) {
   }
 
   const checksClean = checks.pending === 0 && checks.failed === 0;
+  const needsSyncFromBacklog =
+    governanceCategoryHint === "NEEDS_REBASE_OR_SYNC" ||
+    triageCategoryHint === "SYNC_SAFE_LOW_RISK" ||
+    /NEEDS_REBASE|NEEDS_SYNC|REBASE_OR_SYNC/i.test(triageCategoryHint) ||
+    /NEEDS_REBASE_OR_SYNC/i.test(governanceCategoryHint);
+
+  if (
+    mergeState === "UNKNOWN" &&
+    mergeable === "MERGEABLE" &&
+    isLowRiskDocsOrScriptsOnly(paths) &&
+    checksClean &&
+    needsSyncFromBacklog
+  ) {
+    return {
+      ...base,
+      risk_level: "LOW",
+      allowed_action: "SYNC_ONLY",
+      blocked_reason: "merge_state_unknown_sync_first",
+      would_merge: "NO",
+      would_push: "YES",
+      recommended_next_command: `gh pr sync ${prView.number}`,
+    };
+  }
+
   const mergeClean = mergeState === "CLEAN";
 
   if (mergeClean && isOnlyDocs(paths) && checksClean) {
@@ -446,11 +473,21 @@ function evaluateCandidate(prView, changedPaths) {
     };
   }
 
+  const diagParts = [
+    `merge_state=${mergeState || "EMPTY"}`,
+    `mergeable=${mergeable || "EMPTY"}`,
+    `paths_n=${paths.length}`,
+    `low_risk_docs_scripts=${yn(isLowRiskDocsOrScriptsOnly(paths))}`,
+    `pending=${checks.pending}`,
+    `failed=${checks.failed}`,
+    `governance_cat=${governanceCategoryHint || "EMPTY"}`,
+    `triage_cat=${triageCategoryHint || "EMPTY"}`,
+  ];
   return {
     ...base,
     risk_level: "UNKNOWN",
     allowed_action: "STOP_UNKNOWN",
-    blocked_reason: "unclassified_paths_or_merge_state",
+    blocked_reason: `unclassified_paths_or_merge_state;${diagParts.join(";")}`,
     recommended_next_command: `gh pr view ${prView.number} --web`,
   };
 }
@@ -621,6 +658,12 @@ function main() {
   const prNumber = rec.number;
   const triageCategory = String(rec.triageCategory || rec.category || "UNKNOWN");
 
+  let governanceCategory = "";
+  if (Array.isArray(governance.top_needs_sync)) {
+    const hit = governance.top_needs_sync.find((p) => p && p.number === prNumber);
+    if (hit && hit.category) governanceCategory = String(hit.category);
+  }
+
   const prJson = runGhJsonWithRetry([
     "pr",
     "view",
@@ -672,13 +715,10 @@ function main() {
     );
   }
 
-  const evalResult = evaluateCandidate(prView, diffPaths.paths);
-
-  let governanceCategory = "";
-  if (Array.isArray(governance.top_needs_sync)) {
-    const hit = governance.top_needs_sync.find((p) => p && p.number === prNumber);
-    if (hit && hit.category) governanceCategory = String(hit.category);
-  }
+  const evalResult = evaluateCandidate(prView, diffPaths.paths, {
+    governanceCategory,
+    triageCategory,
+  });
 
   const report = {
     ...baseReport(),
@@ -693,7 +733,7 @@ function main() {
     candidate_head_ref: prView.headRefName,
     candidate_base_ref: prView.baseRefName,
     candidate_category: triageCategory,
-    governance_category: governanceCategory || null,
+    governance_category: governanceCategory.length ? governanceCategory : null,
     candidate_files: evalResult.candidate_files,
     merge_state_status: evalResult.merge_state_status,
     mergeable: evalResult.mergeable,
