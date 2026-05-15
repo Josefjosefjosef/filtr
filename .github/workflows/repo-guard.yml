@@ -1,16 +1,30 @@
 name: Repo guard
 
+permissions:
+  statuses: write
+
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - automation/update-articles-data
   pull_request:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 jobs:
   repo-guard:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout (PR head for pull_request_target)
+        if: github.event_name == 'pull_request_target'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
       - name: Checkout
+        if: github.event_name != 'pull_request_target'
         uses: actions/checkout@v4
 
       - name: Setup Python
@@ -21,7 +35,38 @@ jobs:
       - name: Python syntax check (data generators)
         run: |
           python -m py_compile scripts/build_articles.py
+          python -m py_compile scripts/ingest_telemetry.py
           python -m py_compile scripts/build_videos.py
+          python -m py_compile scripts/build_weather_history.py
+          python -m py_compile scripts/iu_blocked_sources.py
+          python -m py_compile scripts/weather_pocasicko_guard.py
+          python -m py_compile scripts/iu_feed_classification.py
+          python -m py_compile scripts/validate_feed_classification.py
+          python -m py_compile scripts/validate_articles_bootstrap.py
+
+      - name: Počasíčko / pocasicko export guard
+        run: python scripts/weather_pocasicko_guard.py
+
+      - name: Feed classification unit tests
+        run: python scripts/test_iu_feed_classification.py
+
+      - name: Validate feed classification (same enrich as build_articles)
+        run: python scripts/validate_feed_classification.py --skip-missing --enrich
 
       - name: Run repo guard
         run: python scripts/repo_guard.py
+
+      - name: Set required status context (repo-guard)
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          STATE="success"
+          if [ "${{ job.status }}" != "success" ]; then STATE="failure"; fi
+          SHA="${GITHUB_SHA}"
+          gh api --method POST "repos/${{ github.repository }}/statuses/${SHA}" \
+            -f state="$STATE" \
+            -f context="repo-guard" \
+            -f description="Required status context (repo-guard)" \
+            -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

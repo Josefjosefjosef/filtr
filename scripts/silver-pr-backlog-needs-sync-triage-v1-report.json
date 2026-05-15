@@ -1,0 +1,607 @@
+{
+  "generatedAt": "2026-05-15T11:32:31.129Z",
+  "main_commit": "f93296c11f236b5316fe76b0d2d1ad8b771688df",
+  "total_target_prs": 9,
+  "counts_by_category": {
+    "SYNC_SAFE_LOW_RISK": 4,
+    "SYNC_SAFE_INFRA_ONLY": 2,
+    "SYNC_RISK_DATA_ONLY": 0,
+    "SYNC_RISK_ASSETS_APP_JS": 0,
+    "SYNC_RISK_WORKFLOW": 1,
+    "SYNC_RISK_MANY_FILES": 0,
+    "SYNC_NOT_RECOMMENDED_STALE": 0,
+    "SYNC_UNKNOWN_MANUAL_REVIEW": 2
+  },
+  "sync_safe_low_risk": [
+    {
+      "number": 159,
+      "title": "docs: transport data sources inventory (no eIDOS/IDOS)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/159",
+      "headRefName": "audit/transport-data-sources",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "createdAt": "2026-02-15T21:55:09Z",
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "isDraft": false,
+      "changedFiles": [
+        "docs/transport-data-sources.md"
+      ],
+      "changedFilesCount": 1,
+      "statusChecksSummary": {
+        "total": 1,
+        "completed": 1,
+        "failed": 0,
+        "pending": 0,
+        "success": 1,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "triageCategory": "SYNC_SAFE_LOW_RISK"
+    },
+    {
+      "number": 549,
+      "title": "diag: locate AI section render context (modal vs feed)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/549",
+      "headRefName": "diag/ai-section-render-location",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "createdAt": "2026-02-23T18:37:18Z",
+      "updatedAt": "2026-02-23T18:45:29Z",
+      "isDraft": false,
+      "changedFiles": [
+        "AI_SECTION_DIAGNOSIS.md",
+        "ai_background.txt",
+        "ai_dom_tree.txt",
+        "ai_modal_test.txt",
+        "ai_render_search.txt",
+        "ai_router.txt"
+      ],
+      "changedFilesCount": 6,
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "triageCategory": "SYNC_SAFE_LOW_RISK"
+    },
+    {
+      "number": 669,
+      "title": "chore/guard clean tree",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/669",
+      "headRefName": "chore/guard-clean-tree",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "createdAt": "2026-02-26T08:35:38Z",
+      "updatedAt": "2026-02-26T08:35:38Z",
+      "isDraft": false,
+      "changedFiles": [
+        ".cursorrules",
+        ".gitignore",
+        "tools/guard-clean-tree.ps1"
+      ],
+      "changedFilesCount": 3,
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "triageCategory": "SYNC_SAFE_LOW_RISK"
+    },
+    {
+      "number": 1702,
+      "title": "chore(deps-dev): Bump playwright from 1.58.2 to 1.59.1 in the npm-deps group across 1 directory",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1702",
+      "headRefName": "dependabot/npm_and_yarn/npm-deps-91e4669c83",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "createdAt": "2026-04-05T03:33:04Z",
+      "updatedAt": "2026-05-10T03:33:06Z",
+      "isDraft": false,
+      "changedFiles": [
+        "package-lock.json",
+        "package.json"
+      ],
+      "changedFilesCount": 2,
+      "statusChecksSummary": {
+        "total": 7,
+        "completed": 7,
+        "failed": 0,
+        "pending": 0,
+        "success": 7,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "triageCategory": "SYNC_SAFE_LOW_RISK"
+    }
+  ],
+  "sync_safe_infra_only": [
+    {
+      "number": 1205,
+      "title": "fix(proof): stabilize OCR harness flake detection",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1205",
+      "headRefName": "fix/ocr-phase73n-harness-flake-stabilization",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "createdAt": "2026-03-13T03:24:59Z",
+      "updatedAt": "2026-03-13T03:24:59Z",
+      "isDraft": false,
+      "changedFiles": [
+        "scripts/ocr_forensic_harness.mjs"
+      ],
+      "changedFilesCount": 1,
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "scripts_only_paths"
+      ],
+      "triageCategory": "SYNC_SAFE_INFRA_ONLY"
+    },
+    {
+      "number": 1251,
+      "title": "fix: correct guard metric validity and rail shift definition in proof harness",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1251",
+      "headRefName": "fix/proof-harness-guard-metric-validity",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "createdAt": "2026-03-16T01:08:23Z",
+      "updatedAt": "2026-03-16T01:08:23Z",
+      "isDraft": false,
+      "changedFiles": [
+        "scripts/proof_multi_viewport.js"
+      ],
+      "changedFilesCount": 1,
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "scripts_only_paths"
+      ],
+      "triageCategory": "SYNC_SAFE_INFRA_ONLY"
+    }
+  ],
+  "sync_risk_data_only": [],
+  "sync_risk_assets_app_js": [],
+  "sync_risk_workflow": [
+    {
+      "number": 1693,
+      "title": "fix: fail data workflows on stash conflicts and invalid JSON",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1693",
+      "headRefName": "fix/workflow-data-pr-stash-conflict-safety",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "createdAt": "2026-04-04T23:36:48Z",
+      "updatedAt": "2026-04-04T23:36:48Z",
+      "isDraft": false,
+      "changedFiles": [
+        ".github/workflows/update-articles.yml",
+        ".github/workflows/update-videos-data.yml"
+      ],
+      "changedFilesCount": 2,
+      "statusChecksSummary": {
+        "total": 8,
+        "completed": 8,
+        "failed": 0,
+        "pending": 0,
+        "success": 8,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_github_workflows"
+      ],
+      "triageCategory": "SYNC_RISK_WORKFLOW"
+    }
+  ],
+  "sync_risk_many_files": [],
+  "sync_not_recommended_stale": [],
+  "sync_unknown_manual_review": [
+    {
+      "number": 339,
+      "title": "UI: finalize topbar hamburger and media circle style",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/339",
+      "headRefName": "fix/topbar-buttons-final-style",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "createdAt": "2026-02-20T01:15:33Z",
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "isDraft": false,
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "changedFilesCount": 1,
+      "statusChecksSummary": {
+        "total": 2,
+        "completed": 2,
+        "failed": 0,
+        "pending": 0,
+        "success": 2,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "triageCategory": "SYNC_UNKNOWN_MANUAL_REVIEW"
+    },
+    {
+      "number": 877,
+      "title": "fix(topbar): CTA next to info i — override #iuTopbarRight 320px",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/877",
+      "headRefName": "fix/topbar-cta-right-edge-p0",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "createdAt": "2026-03-02T20:53:31Z",
+      "updatedAt": "2026-03-02T20:53:31Z",
+      "isDraft": false,
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "changedFilesCount": 1,
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "triageCategory": "SYNC_UNKNOWN_MANUAL_REVIEW"
+    }
+  ],
+  "recommended_first_sync_candidate": {
+    "number": 159,
+    "title": "docs: transport data sources inventory (no eIDOS/IDOS)",
+    "url": "https://github.com/Josefjosefjosef/filtr/pull/159",
+    "triageCategory": "SYNC_SAFE_LOW_RISK",
+    "changedFilesCount": 1
+  },
+  "recommended_next_action": "Prefer syncing PR #159 (SYNC_SAFE_LOW_RISK) first: merge latest main into its branch locally or via GitHub, then run smoke; avoid batch sync for higher-risk categories until reviewed.",
+  "prs": [
+    {
+      "number": 339,
+      "title": "UI: finalize topbar hamburger and media circle style",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/339",
+      "headRefName": "fix/topbar-buttons-final-style",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "createdAt": "2026-02-20T01:15:33Z",
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "isDraft": false,
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "changedFilesCount": 1,
+      "statusChecksSummary": {
+        "total": 2,
+        "completed": 2,
+        "failed": 0,
+        "pending": 0,
+        "success": 2,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "triageCategory": "SYNC_UNKNOWN_MANUAL_REVIEW"
+    },
+    {
+      "number": 159,
+      "title": "docs: transport data sources inventory (no eIDOS/IDOS)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/159",
+      "headRefName": "audit/transport-data-sources",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "createdAt": "2026-02-15T21:55:09Z",
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "isDraft": false,
+      "changedFiles": [
+        "docs/transport-data-sources.md"
+      ],
+      "changedFilesCount": 1,
+      "statusChecksSummary": {
+        "total": 1,
+        "completed": 1,
+        "failed": 0,
+        "pending": 0,
+        "success": 1,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "triageCategory": "SYNC_SAFE_LOW_RISK"
+    },
+    {
+      "number": 549,
+      "title": "diag: locate AI section render context (modal vs feed)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/549",
+      "headRefName": "diag/ai-section-render-location",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "createdAt": "2026-02-23T18:37:18Z",
+      "updatedAt": "2026-02-23T18:45:29Z",
+      "isDraft": false,
+      "changedFiles": [
+        "AI_SECTION_DIAGNOSIS.md",
+        "ai_background.txt",
+        "ai_dom_tree.txt",
+        "ai_modal_test.txt",
+        "ai_render_search.txt",
+        "ai_router.txt"
+      ],
+      "changedFilesCount": 6,
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "triageCategory": "SYNC_SAFE_LOW_RISK"
+    },
+    {
+      "number": 669,
+      "title": "chore/guard clean tree",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/669",
+      "headRefName": "chore/guard-clean-tree",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "createdAt": "2026-02-26T08:35:38Z",
+      "updatedAt": "2026-02-26T08:35:38Z",
+      "isDraft": false,
+      "changedFiles": [
+        ".cursorrules",
+        ".gitignore",
+        "tools/guard-clean-tree.ps1"
+      ],
+      "changedFilesCount": 3,
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "triageCategory": "SYNC_SAFE_LOW_RISK"
+    },
+    {
+      "number": 877,
+      "title": "fix(topbar): CTA next to info i — override #iuTopbarRight 320px",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/877",
+      "headRefName": "fix/topbar-cta-right-edge-p0",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "createdAt": "2026-03-02T20:53:31Z",
+      "updatedAt": "2026-03-02T20:53:31Z",
+      "isDraft": false,
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "changedFilesCount": 1,
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "triageCategory": "SYNC_UNKNOWN_MANUAL_REVIEW"
+    },
+    {
+      "number": 1205,
+      "title": "fix(proof): stabilize OCR harness flake detection",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1205",
+      "headRefName": "fix/ocr-phase73n-harness-flake-stabilization",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "createdAt": "2026-03-13T03:24:59Z",
+      "updatedAt": "2026-03-13T03:24:59Z",
+      "isDraft": false,
+      "changedFiles": [
+        "scripts/ocr_forensic_harness.mjs"
+      ],
+      "changedFilesCount": 1,
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "scripts_only_paths"
+      ],
+      "triageCategory": "SYNC_SAFE_INFRA_ONLY"
+    },
+    {
+      "number": 1251,
+      "title": "fix: correct guard metric validity and rail shift definition in proof harness",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1251",
+      "headRefName": "fix/proof-harness-guard-metric-validity",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "createdAt": "2026-03-16T01:08:23Z",
+      "updatedAt": "2026-03-16T01:08:23Z",
+      "isDraft": false,
+      "changedFiles": [
+        "scripts/proof_multi_viewport.js"
+      ],
+      "changedFilesCount": 1,
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "scripts_only_paths"
+      ],
+      "triageCategory": "SYNC_SAFE_INFRA_ONLY"
+    },
+    {
+      "number": 1693,
+      "title": "fix: fail data workflows on stash conflicts and invalid JSON",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1693",
+      "headRefName": "fix/workflow-data-pr-stash-conflict-safety",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "createdAt": "2026-04-04T23:36:48Z",
+      "updatedAt": "2026-04-04T23:36:48Z",
+      "isDraft": false,
+      "changedFiles": [
+        ".github/workflows/update-articles.yml",
+        ".github/workflows/update-videos-data.yml"
+      ],
+      "changedFilesCount": 2,
+      "statusChecksSummary": {
+        "total": 8,
+        "completed": 8,
+        "failed": 0,
+        "pending": 0,
+        "success": 8,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_github_workflows"
+      ],
+      "triageCategory": "SYNC_RISK_WORKFLOW"
+    },
+    {
+      "number": 1702,
+      "title": "chore(deps-dev): Bump playwright from 1.58.2 to 1.59.1 in the npm-deps group across 1 directory",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1702",
+      "headRefName": "dependabot/npm_and_yarn/npm-deps-91e4669c83",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "createdAt": "2026-04-05T03:33:04Z",
+      "updatedAt": "2026-05-10T03:33:06Z",
+      "isDraft": false,
+      "changedFiles": [
+        "package-lock.json",
+        "package.json"
+      ],
+      "changedFilesCount": 2,
+      "statusChecksSummary": {
+        "total": 7,
+        "completed": 7,
+        "failed": 0,
+        "pending": 0,
+        "success": 7,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "triageCategory": "SYNC_SAFE_LOW_RISK"
+    }
+  ]
+}

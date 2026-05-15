@@ -329,6 +329,162 @@
     };
   }
 
+  async function waitForGlobalFn(fnName, maxMs = 12000) {
+    const t0 = Date.now();
+    while (typeof window[fnName] !== "function") {
+      if (Date.now() - t0 > maxMs) return false;
+      await new Promise((r) => setTimeout(r, 20));
+    }
+    return true;
+  }
+
+  async function loadArticlesThroughSharedOrCache() {
+    const ready = await waitForGlobalFn("__iuLoadArticlesJsonOnce", 12000);
+    if (!ready) {
+      const cached = readBestCache("articles");
+      if (cached.ok) {
+        const parsed = safeJSONParse(cached.text);
+        if (parsed.ok) {
+          diagPushFetch({ t: nowISO(), name: "articles", url: DATA.articlesUrl, ok: false, source: "cache", msg: "no_loader_cache_only" });
+          return {
+            ok: false,
+            data: parsed.value,
+            source: "cache",
+            fallbackUsed: true,
+            cacheSlot: cached.slot,
+            error: new Error("articles_loader_missing"),
+            fetchedAt: nowISO(),
+          };
+        }
+        storageSet(cacheQuarantineKey("articles"), cached.text);
+      }
+      diagPushFetch({ t: nowISO(), name: "articles", url: DATA.articlesUrl, ok: false, source: "none", msg: "no_loader_no_network" });
+      return {
+        ok: false,
+        data: null,
+        source: "none",
+        fallbackUsed: false,
+        error: new Error("articles_loader_missing"),
+        fetchedAt: nowISO(),
+      };
+    }
+    try {
+      const v = await window.__iuLoadArticlesJsonOnce();
+      const text = JSON.stringify(v);
+      rotateWrite("articles", text);
+      diagPushFetch({ t: nowISO(), name: "articles", url: DATA.articlesUrl, ok: true, source: "network" });
+      diagSet("last_ok", { t: nowISO(), note: "data loaded", articles: "ok" });
+      return {
+        ok: true,
+        data: v,
+        source: "network",
+        attempt: 0,
+        fetchedAt: nowISO(),
+      };
+    } catch (e) {
+      log("loadArticlesThroughSharedOrCache fail", e);
+      diagPushFetch({ t: nowISO(), name: "articles", url: DATA.articlesUrl, ok: false, source: "network", msg: String(e?.message || e) });
+      const cached = readBestCache("articles");
+      if (cached.ok) {
+        const parsed = safeJSONParse(cached.text);
+        if (parsed.ok) {
+          diagPushFetch({ t: nowISO(), name: "articles", url: DATA.articlesUrl, ok: false, source: "cache", msg: "shared_fail_fallback" });
+          return {
+            ok: false,
+            data: parsed.value,
+            source: "cache",
+            fallbackUsed: true,
+            cacheSlot: cached.slot,
+            error: e,
+            fetchedAt: nowISO(),
+          };
+        }
+        storageSet(cacheQuarantineKey("articles"), cached.text);
+      }
+      return {
+        ok: false,
+        data: null,
+        source: "none",
+        fallbackUsed: false,
+        error: e,
+        fetchedAt: nowISO(),
+      };
+    }
+  }
+
+  async function loadVideosThroughSharedOrCache() {
+    const ready = await waitForGlobalFn("__iuLoadVideosJsonOnce", 12000);
+    if (!ready) {
+      const cached = readBestCache("videos");
+      if (cached.ok) {
+        const parsed = safeJSONParse(cached.text);
+        if (parsed.ok) {
+          diagPushFetch({ t: nowISO(), name: "videos", url: DATA.videosUrl, ok: false, source: "cache", msg: "no_loader_cache_only" });
+          return {
+            ok: false,
+            data: parsed.value,
+            source: "cache",
+            fallbackUsed: true,
+            cacheSlot: cached.slot,
+            error: new Error("videos_loader_missing"),
+            fetchedAt: nowISO(),
+          };
+        }
+        storageSet(cacheQuarantineKey("videos"), cached.text);
+      }
+      diagPushFetch({ t: nowISO(), name: "videos", url: DATA.videosUrl, ok: false, source: "none", msg: "no_loader_no_network" });
+      return {
+        ok: false,
+        data: null,
+        source: "none",
+        fallbackUsed: false,
+        error: new Error("videos_loader_missing"),
+        fetchedAt: nowISO(),
+      };
+    }
+    try {
+      const v = await window.__iuLoadVideosJsonOnce();
+      const text = JSON.stringify(v);
+      rotateWrite("videos", text);
+      diagPushFetch({ t: nowISO(), name: "videos", url: DATA.videosUrl, ok: true, source: "network" });
+      return {
+        ok: true,
+        data: v,
+        source: "network",
+        attempt: 0,
+        fetchedAt: nowISO(),
+      };
+    } catch (e) {
+      log("loadVideosThroughSharedOrCache fail", e);
+      diagPushFetch({ t: nowISO(), name: "videos", url: DATA.videosUrl, ok: false, source: "network", msg: String(e?.message || e) });
+      const cached = readBestCache("videos");
+      if (cached.ok) {
+        const parsed = safeJSONParse(cached.text);
+        if (parsed.ok) {
+          diagPushFetch({ t: nowISO(), name: "videos", url: DATA.videosUrl, ok: false, source: "cache", msg: "shared_fail_fallback" });
+          return {
+            ok: false,
+            data: parsed.value,
+            source: "cache",
+            fallbackUsed: true,
+            cacheSlot: cached.slot,
+            error: e,
+            fetchedAt: nowISO(),
+          };
+        }
+        storageSet(cacheQuarantineKey("videos"), cached.text);
+      }
+      return {
+        ok: false,
+        data: null,
+        source: "none",
+        fallbackUsed: false,
+        error: e,
+        fetchedAt: nowISO(),
+      };
+    }
+  }
+
   // =========================
   // === DATA LOADER (ARTICLES / VIDEOS / META / STATUS)
   // =========================
@@ -344,9 +500,14 @@
   const BASE = getBaseRoot();
 
   const PROJECTS_DATA_BASE = "/projects/data";
+  const dataVer = (typeof document !== "undefined" && document.querySelector) ? (document.querySelector('meta[name="iu-data-ver"]')?.getAttribute('content') || '').trim() : '';
+  const dataVerQParam = (() => {
+    const v = (dataVer && dataVer !== "iu-data-ver-placeholder") ? dataVer : "iu-data-ver-placeholder";
+    return "?v=" + encodeURIComponent(v);
+  })();
   const DATA = {
-    articlesUrl: `${PROJECTS_DATA_BASE}/articles.json`,
-    videosUrl: `${PROJECTS_DATA_BASE}/videos.json`,
+    articlesUrl: `${PROJECTS_DATA_BASE}/articles.json${dataVerQParam}`,
+    videosUrl: `${PROJECTS_DATA_BASE}/videos.json${dataVerQParam}`,
     metaUrl: `${PROJECTS_DATA_BASE}/meta.json`,
     statusUrl: `${PROJECTS_DATA_BASE}/status.json`  // status.json se generuje v workflow
   };
@@ -357,8 +518,8 @@
 
   async function loadAllData() {
     const [articles, videos, meta, status] = await Promise.all([
-      safeFetchJSON("articles", DATA.articlesUrl, { timeoutMs: 9000, retries: 2 }),
-      safeFetchJSON("videos", DATA.videosUrl, { timeoutMs: 9000, retries: 2 }),
+      loadArticlesThroughSharedOrCache(),
+      loadVideosThroughSharedOrCache(),
       safeFetchJSON("meta", DATA.metaUrl, { timeoutMs: 7000, retries: 1 }),
       safeFetchJSON("status", DATA.statusUrl, { timeoutMs: 5000, retries: 1 })
     ]);
@@ -443,38 +604,22 @@
   }
 
   // =========================
-  // === SERVICE WORKER REGISTER
+  // === SERVICE WORKER (crash-shield)
+  // Registration + update live in assets/app.js (iuEnsureServiceWorkerController) to avoid
+  // duplicate register/update races that surface as "Failed to update ... script ('Unknown')".
+  // Here: only ?nosw=1 kill switch (unregister).
   // =========================
 
-  async function registerSW() {
+  async function iuUnregisterServiceWorkersIfNosw() {
     try {
       if (!("serviceWorker" in navigator)) return;
-
       const NOSW = new URLSearchParams(location.search).get("nosw") === "1";
-      if (NOSW) {
-        try {
-          const regs = await navigator.serviceWorker.getRegistrations();
-          for (const reg of regs) {
-            await reg.unregister();
-          }
-        } catch (e) {}
-        return;
+      if (!NOSW) return;
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for (const reg of regs) {
+        await reg.unregister();
       }
-
-      const reg = await navigator.serviceWorker.register("/sw.js", { scope: "/" });
-      if (reg && reg.update) reg.update().catch(() => {});
-
-      if (!navigator.serviceWorker.controller) {
-        const reloadKey = "iu_sw_reload_done";
-        if (!sessionStorage.getItem(reloadKey)) {
-          sessionStorage.setItem(reloadKey, "1");
-          location.reload();
-          return;
-        }
-      }
-    } catch (e) {
-      warn("SW register failed", e);
-    }
+    } catch (e) {}
   }
 
   // =========================
@@ -498,7 +643,10 @@
 
   async function bootstrap() {
     try {
-      await registerSW();
+      if (window.__iuCrashShieldBootstrapStarted) return;
+      window.__iuCrashShieldBootstrapStarted = true;
+
+      await iuUnregisterServiceWorkersIfNosw();
 
       window.addEventListener("online", () => setStatusBadge("", "ok"));
       window.addEventListener("offline", () => setStatusBadge("Offline – zobrazuji uložená data", "offline"));

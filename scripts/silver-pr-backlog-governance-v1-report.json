@@ -1,0 +1,3731 @@
+{
+  "generatedAt": "2026-05-15T11:16:20.344Z",
+  "total_open_prs": 106,
+  "counts_by_category": {
+    "SAFE_TO_VERIFY_NOW": 0,
+    "NEEDS_REBASE_OR_SYNC": 9,
+    "CONFLICTING_DO_NOT_TOUCH": 43,
+    "DATA_PIPELINE_BLOCKED": 0,
+    "PRODUCT_HIGH_RISK_ASSETS_APP_JS": 50,
+    "WORKFLOW_INFRA": 0,
+    "STALE_CANDIDATE_TO_CLOSE": 0,
+    "UNKNOWN_MANUAL_REVIEW": 4
+  },
+  "top_safe_to_verify": [],
+  "top_needs_sync": [
+    {
+      "number": 339,
+      "title": "UI: finalize topbar hamburger and media circle style",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/339",
+      "category": "NEEDS_REBASE_OR_SYNC"
+    },
+    {
+      "number": 159,
+      "title": "docs: transport data sources inventory (no eIDOS/IDOS)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/159",
+      "category": "NEEDS_REBASE_OR_SYNC"
+    },
+    {
+      "number": 549,
+      "title": "diag: locate AI section render context (modal vs feed)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/549",
+      "category": "NEEDS_REBASE_OR_SYNC"
+    },
+    {
+      "number": 669,
+      "title": "chore/guard clean tree",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/669",
+      "category": "NEEDS_REBASE_OR_SYNC"
+    },
+    {
+      "number": 877,
+      "title": "fix(topbar): CTA next to info i — override #iuTopbarRight 320px",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/877",
+      "category": "NEEDS_REBASE_OR_SYNC"
+    },
+    {
+      "number": 1205,
+      "title": "fix(proof): stabilize OCR harness flake detection",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1205",
+      "category": "NEEDS_REBASE_OR_SYNC"
+    },
+    {
+      "number": 1251,
+      "title": "fix: correct guard metric validity and rail shift definition in proof harness",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1251",
+      "category": "NEEDS_REBASE_OR_SYNC"
+    },
+    {
+      "number": 1693,
+      "title": "fix: fail data workflows on stash conflicts and invalid JSON",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1693",
+      "category": "NEEDS_REBASE_OR_SYNC"
+    },
+    {
+      "number": 1702,
+      "title": "chore(deps-dev): Bump playwright from 1.58.2 to 1.59.1 in the npm-deps group across 1 directory",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1702",
+      "category": "NEEDS_REBASE_OR_SYNC"
+    }
+  ],
+  "top_conflicting": [
+    {
+      "number": 337,
+      "title": "UI: topbar left hamburger + media-circle aligned to rail, height matches search",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/337",
+      "category": "CONFLICTING_DO_NOT_TOUCH"
+    },
+    {
+      "number": 323,
+      "title": "UI: fix rail missing + prevent feed overlap MindMenu",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/323",
+      "category": "CONFLICTING_DO_NOT_TOUCH"
+    },
+    {
+      "number": 322,
+      "title": "guard: always run on pull_request",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/322",
+      "category": "CONFLICTING_DO_NOT_TOUCH"
+    },
+    {
+      "number": 320,
+      "title": "UI: premium polish left rail active/hover (CLS-safe)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/320",
+      "category": "CONFLICTING_DO_NOT_TOUCH"
+    },
+    {
+      "number": 313,
+      "title": "style: left rail flush-left + centered icons",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/313",
+      "category": "CONFLICTING_DO_NOT_TOUCH"
+    },
+    {
+      "number": 310,
+      "title": "style: rail max level (micro-highlight + subtle badges + micro-glow)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/310",
+      "category": "CONFLICTING_DO_NOT_TOUCH"
+    },
+    {
+      "number": 166,
+      "title": "fix(jr): ensure JR view spans full middle column",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/166",
+      "category": "CONFLICTING_DO_NOT_TOUCH"
+    },
+    {
+      "number": 17,
+      "title": "fix(ci): data freshness",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/17",
+      "category": "CONFLICTING_DO_NOT_TOUCH"
+    },
+    {
+      "number": 381,
+      "title": "UI: fix topbar gradient line gate",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/381",
+      "category": "CONFLICTING_DO_NOT_TOUCH"
+    },
+    {
+      "number": 382,
+      "title": "fix: show topbar gradient line on real topbar selector",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/382",
+      "category": "CONFLICTING_DO_NOT_TOUCH"
+    }
+  ],
+  "top_stale_to_close": [],
+  "data_blockers": [],
+  "high_risk_product_prs": [
+    {
+      "number": 3794,
+      "title": "P0: Silver day picker → orange buttons + back button (mobile/tablet) + cleanup",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/3794"
+    },
+    {
+      "number": 3670,
+      "title": "perf: batch initial feed rendering to reduce long tasks",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/3670"
+    },
+    {
+      "number": 3665,
+      "title": "fix: route fetchArticlesStatus fallback through shared articles.json loader",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/3665"
+    },
+    {
+      "number": 3661,
+      "title": "perf: reduce initial load work and data duplication",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/3661"
+    },
+    {
+      "number": 3473,
+      "title": "feat: TV program guided choice overlay",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/3473"
+    },
+    {
+      "number": 2954,
+      "title": "fix: mount Silver home preview cards on init for early clickability",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/2954"
+    },
+    {
+      "number": 2546,
+      "title": "perf/homepage top cards early render before heavy feed",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/2546"
+    },
+    {
+      "number": 2544,
+      "title": "test(webnav): stabilize detail back guard flow",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/2544"
+    },
+    {
+      "number": 2333,
+      "title": "fix: Silver header input landscape width and placeholder focus behavior",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/2333"
+    },
+    {
+      "number": 2289,
+      "title": "fix: reduce homepage first applyFilter cost via publication cluster cap + audit",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/2289"
+    },
+    {
+      "number": 2278,
+      "title": "fix: move homepage Silver retention boost off the critical first-settle path",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/2278"
+    },
+    {
+      "number": 2273,
+      "title": "chore: add guarded homepage load audit probes",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/2273"
+    },
+    {
+      "number": 2244,
+      "title": "chore: add homepage tab-resume probe hooks for desktop lag diagnostics",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/2244"
+    },
+    {
+      "number": 2229,
+      "title": "fix: dedupe Silver calendar/tasks tab-resume refresh (visibility only)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/2229"
+    },
+    {
+      "number": 1434,
+      "title": "fix: notes UX safe polish",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1434"
+    },
+    {
+      "number": 1380,
+      "title": "Finalize mobile MindMenu/tools fixes and CSS budget reduction",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1380"
+    },
+    {
+      "number": 1324,
+      "title": "fix/weather invalid coords guard",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1324"
+    },
+    {
+      "number": 1279,
+      "title": "feat: VIN UX loading + error states",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1279"
+    },
+    {
+      "number": 1212,
+      "title": "fix(ocr): resolve true prod init rejection",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1212"
+    },
+    {
+      "number": 1157,
+      "title": "fix: repair PWA CTA false-pass logic and hard-proof regressions",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1157"
+    },
+    {
+      "number": 1144,
+      "title": "fix: switch nakup domu to canonical standalone section behavior",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1144"
+    },
+    {
+      "number": 1085,
+      "title": "fix: completely remove topbar date and nameday slot",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1085"
+    },
+    {
+      "number": 1084,
+      "title": "chore: prefetch-on-intent + idle prewarm for left nav (warmView, pointerenter/focusin/touchstart, requestIdleCallback); data-nav-view for delegation",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1084"
+    },
+    {
+      "number": 1083,
+      "title": "chore: left nav event delegation – single listener on #iuLeftRail, data-nav-view, remove per-item handlers",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1083"
+    },
+    {
+      "number": 943,
+      "title": "fix: Word->PDF export - safe Fonts API (document.fonts.ready promise) to avoid pending on PROD",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/943"
+    },
+    {
+      "number": 931,
+      "title": "fix(pdf): robust unicode Text→PDF + docx drag&drop into textarea + share/download",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/931"
+    },
+    {
+      "number": 719,
+      "title": "fix(mindmenu): premium CC0 brand logos (Simple Icons) + gray gear, crisp SVG",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/719"
+    },
+    {
+      "number": 718,
+      "title": "fix(mindmenu): iOS softUI social icons + gap5 gear + lighter gear + no center on social off",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/718"
+    },
+    {
+      "number": 715,
+      "title": "fix(mindmenu): pill 210px + settings outside + 40px social slot (no CLS)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/715"
+    },
+    {
+      "number": 702,
+      "title": "Bakalari: single form save tiles with open+remove (max12)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/702"
+    },
+    {
+      "number": 701,
+      "title": "Fix Banka: rename CS, remove George, remove-below rules, fix login URLs",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/701"
+    },
+    {
+      "number": 680,
+      "title": "feat(convert): add Word/PDF convert section with unified UI + new emerald accent",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/680"
+    },
+    {
+      "number": 670,
+      "title": "fix(translator): forward button identical to AI + remove notes buttons",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/670"
+    },
+    {
+      "number": 599,
+      "title": "P0 fix: AI panel visibly open (is-open class + CSS)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/599"
+    },
+    {
+      "number": 594,
+      "title": "fix: scrollbar compensation when AI panel opens (prevent layout shift)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/594"
+    },
+    {
+      "number": 551,
+      "title": "Fix: stop panel routing recursion loop",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/551"
+    },
+    {
+      "number": 547,
+      "title": "fix/panel routing close on url change",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/547"
+    },
+    {
+      "number": 546,
+      "title": "Fix: safe panel routing without affecting feed section routing",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/546"
+    },
+    {
+      "number": 545,
+      "title": "Fix: add safe panel= routing without touching feed section routing",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/545"
+    },
+    {
+      "number": 544,
+      "title": "Fix: separate feed section routing from panels (no section hijack)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/544"
+    },
+    {
+      "number": 541,
+      "title": "Fix: persist AI section in URL after reload",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/541"
+    },
+    {
+      "number": 534,
+      "title": "fix: restore typography color/size regression (set html data-section)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/534"
+    },
+    {
+      "number": 510,
+      "title": "fix: add nofollow to external links rel attribute",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/510"
+    },
+    {
+      "number": 409,
+      "title": "chore(topbar): remove left-fill logic, keep solid topbar",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/409"
+    },
+    {
+      "number": 335,
+      "title": "UI: rebuild rail toggle as topbar-only button (stable, no feed relocation)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/335"
+    },
+    {
+      "number": 124,
+      "title": "feat: regular honeycomb Home hexagons + section icons",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/124"
+    },
+    {
+      "number": 22,
+      "title": "fix: PR16 gate - single render + single cachedItems assignment",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/22"
+    },
+    {
+      "number": 16,
+      "title": "fix: reduce CLS by stabilizing right column during initial paint",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/16"
+    },
+    {
+      "number": 13,
+      "title": "fix: keep existing feed during refresh to prevent blank flicker",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/13"
+    },
+    {
+      "number": 9,
+      "title": "fix: avoid sections bar flicker by atomic replaceChildren",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/9"
+    }
+  ],
+  "workflow_infra_prs": [],
+  "recommended_next_action": "Avoid CONFLICTING_DO_NOT_TOUCH PRs until merge state is clean; do not resolve conflicts in this governance pass.",
+  "prs": [
+    {
+      "number": 3794,
+      "title": "P0: Silver day picker → orange buttons + back button (mobile/tablet) + cleanup",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/3794",
+      "headRefName": "fix/silver-daypicker-orange-back",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "assets/app.js",
+        "projects/index.html"
+      ],
+      "statusChecksSummary": {
+        "total": 7,
+        "completed": 7,
+        "failed": 1,
+        "pending": 0,
+        "success": 6,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [
+          "pr-health-report-audit"
+        ],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js",
+        "checks_failed"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-05-02T13:56:25Z",
+      "createdAt": "2026-05-02T13:56:25Z"
+    },
+    {
+      "number": 3670,
+      "title": "perf: batch initial feed rendering to reduce long tasks",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/3670",
+      "headRefName": "fix/p0-feed-render-batching",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js",
+        "projects/index.html"
+      ],
+      "statusChecksSummary": {
+        "total": 7,
+        "completed": 7,
+        "failed": 0,
+        "pending": 0,
+        "success": 7,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-04-30T15:58:12Z",
+      "createdAt": "2026-04-30T15:58:12Z"
+    },
+    {
+      "number": 3665,
+      "title": "fix: route fetchArticlesStatus fallback through shared articles.json loader",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/3665",
+      "headRefName": "fix/fetch-articles-status-shared-loader",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "changedFiles": [
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 7,
+        "completed": 7,
+        "failed": 0,
+        "pending": 0,
+        "success": 7,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-04-30T13:03:43Z",
+      "createdAt": "2026-04-30T13:03:43Z"
+    },
+    {
+      "number": 3661,
+      "title": "perf: reduce initial load work and data duplication",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/3661",
+      "headRefName": "fix/p05-initial-load-js-data-cls",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "assets/app.js",
+        "projects/index.html"
+      ],
+      "statusChecksSummary": {
+        "total": 7,
+        "completed": 7,
+        "failed": 0,
+        "pending": 0,
+        "success": 7,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-04-30T12:24:47Z",
+      "createdAt": "2026-04-30T12:24:07Z"
+    },
+    {
+      "number": 3473,
+      "title": "feat: TV program guided choice overlay",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/3473",
+      "headRefName": "feat/tv-program-choice-ui",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js",
+        "projects/index.html"
+      ],
+      "statusChecksSummary": {
+        "total": 7,
+        "completed": 7,
+        "failed": 0,
+        "pending": 0,
+        "success": 7,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-04-27T16:42:44Z",
+      "createdAt": "2026-04-27T16:42:44Z"
+    },
+    {
+      "number": 3295,
+      "title": "fix: align mobile tablet section cards with home cards",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/3295",
+      "headRefName": "fix/mobile-tablet-card-alignment-with-home-cards",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 7,
+        "completed": 7,
+        "failed": 0,
+        "pending": 0,
+        "success": 7,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-04-25T10:24:09Z",
+      "createdAt": "2026-04-25T10:21:01Z"
+    },
+    {
+      "number": 3107,
+      "title": "fix: tighten mobile gate tabs to silver with top inner arc",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/3107",
+      "headRefName": "fix/mobile-gate-tabs-tight-silver-arc",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 7,
+        "completed": 7,
+        "failed": 0,
+        "pending": 0,
+        "success": 7,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-04-22T19:29:56Z",
+      "createdAt": "2026-04-22T19:29:56Z"
+    },
+    {
+      "number": 2954,
+      "title": "fix: mount Silver home preview cards on init for early clickability",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/2954",
+      "headRefName": "fix/homecards-early-mount-clickable",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "changedFiles": [
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 7,
+        "completed": 7,
+        "failed": 0,
+        "pending": 0,
+        "success": 7,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-04-20T14:24:16Z",
+      "createdAt": "2026-04-20T14:24:16Z"
+    },
+    {
+      "number": 2647,
+      "title": "fix(smoke): stabilize interrupted navigation race on media route",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/2647",
+      "headRefName": "fix/smoke-navigation-race-after-pr2644",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "scripts/smoke.mjs"
+      ],
+      "statusChecksSummary": {
+        "total": 7,
+        "completed": 7,
+        "failed": 0,
+        "pending": 0,
+        "success": 7,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-04-16T10:18:11Z",
+      "createdAt": "2026-04-16T10:18:11Z"
+    },
+    {
+      "number": 2546,
+      "title": "perf/homepage top cards early render before heavy feed",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/2546",
+      "headRefName": "perf/homepage-top-cards-early-render-before-heavy-feed",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js",
+        "projects/index.html",
+        "scripts/proofs/webnav_detail_backbar_guard.mjs"
+      ],
+      "statusChecksSummary": {
+        "total": 7,
+        "completed": 7,
+        "failed": 0,
+        "pending": 0,
+        "success": 7,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-04-14T23:27:39Z",
+      "createdAt": "2026-04-14T23:27:39Z"
+    },
+    {
+      "number": 2544,
+      "title": "test(webnav): stabilize detail back guard flow",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/2544",
+      "headRefName": "fix/webnav-detail-backbar-guard-stabilization",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js",
+        "scripts/proofs/webnav_detail_backbar_guard.mjs"
+      ],
+      "statusChecksSummary": {
+        "total": 7,
+        "completed": 7,
+        "failed": 0,
+        "pending": 0,
+        "success": 7,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-04-14T22:55:53Z",
+      "createdAt": "2026-04-14T22:55:53Z"
+    },
+    {
+      "number": 2333,
+      "title": "fix: Silver header input landscape width and placeholder focus behavior",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/2333",
+      "headRefName": "fix/silver-header-input-landscape-and-placeholder",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "assets/app.js",
+        "projects/index.html",
+        "scripts/css_debt_baseline.json"
+      ],
+      "statusChecksSummary": {
+        "total": 7,
+        "completed": 7,
+        "failed": 0,
+        "pending": 0,
+        "success": 7,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-04-12T02:23:52Z",
+      "createdAt": "2026-04-12T02:23:52Z"
+    },
+    {
+      "number": 2289,
+      "title": "fix: reduce homepage first applyFilter cost via publication cluster cap + audit",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/2289",
+      "headRefName": "fix/homepage-applyfilter-perf",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 7,
+        "completed": 7,
+        "failed": 0,
+        "pending": 0,
+        "success": 7,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-04-11T16:59:43Z",
+      "createdAt": "2026-04-11T16:59:43Z"
+    },
+    {
+      "number": 2278,
+      "title": "fix: move homepage Silver retention boost off the critical first-settle path",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/2278",
+      "headRefName": "fix/homepage-retention-fast-first-settle",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js",
+        "assets/iu-home-load-audit.js",
+        "package.json",
+        "projects/index.html",
+        "scripts/home-load-audit-proof.mjs"
+      ],
+      "statusChecksSummary": {
+        "total": 7,
+        "completed": 7,
+        "failed": 2,
+        "pending": 0,
+        "success": 5,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [
+          "smoke",
+          "smoke"
+        ],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js",
+        "checks_failed"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-04-11T14:29:23Z",
+      "createdAt": "2026-04-11T14:29:23Z"
+    },
+    {
+      "number": 2273,
+      "title": "chore: add guarded homepage load audit probes",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/2273",
+      "headRefName": "audit/homepage-cards-slow-load-hard-measurement",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js",
+        "assets/iu-home-load-audit.js",
+        "package.json",
+        "projects/index.html",
+        "scripts/home-load-audit-proof.mjs"
+      ],
+      "statusChecksSummary": {
+        "total": 7,
+        "completed": 7,
+        "failed": 0,
+        "pending": 0,
+        "success": 7,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-04-11T13:33:35Z",
+      "createdAt": "2026-04-11T13:33:35Z"
+    },
+    {
+      "number": 2244,
+      "title": "chore: add homepage tab-resume probe hooks for desktop lag diagnostics",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/2244",
+      "headRefName": "chore/homepage-resume-probe-diagnostics",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 7,
+        "completed": 7,
+        "failed": 2,
+        "pending": 0,
+        "success": 5,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [
+          "smoke",
+          "smoke"
+        ],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js",
+        "checks_failed"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-04-11T01:22:57Z",
+      "createdAt": "2026-04-11T01:22:57Z"
+    },
+    {
+      "number": 2229,
+      "title": "fix: dedupe Silver calendar/tasks tab-resume refresh (visibility only)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/2229",
+      "headRefName": "fix/pc-tab-return-lag-root-cause-and-stable-resume",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 7,
+        "completed": 7,
+        "failed": 0,
+        "pending": 0,
+        "success": 7,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-04-10T22:51:39Z",
+      "createdAt": "2026-04-10T21:23:30Z"
+    },
+    {
+      "number": 1869,
+      "title": "feat: add 24h runtime source activity to ultra audit wiki report",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1869",
+      "headRefName": "fix/ultra-audit-wiki-runtime-24h",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "scripts/generate_ultra_audit_wiki.py"
+      ],
+      "statusChecksSummary": {
+        "total": 7,
+        "completed": 7,
+        "failed": 0,
+        "pending": 0,
+        "success": 7,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-04-07T02:00:59Z",
+      "createdAt": "2026-04-07T02:00:59Z"
+    },
+    {
+      "number": 1857,
+      "title": "feat: safe retention of published articles (no removal regression)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1857",
+      "headRefName": "fix/published-articles-retention-no-removal",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "scripts/build_articles.py"
+      ],
+      "statusChecksSummary": {
+        "total": 7,
+        "completed": 7,
+        "failed": 0,
+        "pending": 0,
+        "success": 7,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-04-06T23:34:30Z",
+      "createdAt": "2026-04-06T23:34:30Z"
+    },
+    {
+      "number": 1702,
+      "title": "chore(deps-dev): Bump playwright from 1.58.2 to 1.59.1 in the npm-deps group across 1 directory",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1702",
+      "headRefName": "dependabot/npm_and_yarn/npm-deps-91e4669c83",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "changedFiles": [
+        "package-lock.json",
+        "package.json"
+      ],
+      "statusChecksSummary": {
+        "total": 7,
+        "completed": 7,
+        "failed": 0,
+        "pending": 0,
+        "success": 7,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "NEEDS_REBASE_OR_SYNC",
+      "isDraft": false,
+      "updatedAt": "2026-05-10T03:33:06Z",
+      "createdAt": "2026-04-05T03:33:04Z"
+    },
+    {
+      "number": 1693,
+      "title": "fix: fail data workflows on stash conflicts and invalid JSON",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1693",
+      "headRefName": "fix/workflow-data-pr-stash-conflict-safety",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "changedFiles": [
+        ".github/workflows/update-articles.yml",
+        ".github/workflows/update-videos-data.yml"
+      ],
+      "statusChecksSummary": {
+        "total": 8,
+        "completed": 8,
+        "failed": 0,
+        "pending": 0,
+        "success": 8,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_workflow_or_autopilot_infra"
+      ],
+      "category": "NEEDS_REBASE_OR_SYNC",
+      "isDraft": false,
+      "updatedAt": "2026-04-04T23:36:48Z",
+      "createdAt": "2026-04-04T23:36:48Z"
+    },
+    {
+      "number": 1497,
+      "title": "fix: revert mobile and tablet stack to last known good state",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1497",
+      "headRefName": "fix/hard-revert-mobile-tablet-stack-last-good-state",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 4,
+        "completed": 4,
+        "failed": 0,
+        "pending": 0,
+        "success": 4,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-03-30T10:36:05Z",
+      "createdAt": "2026-03-30T10:36:05Z"
+    },
+    {
+      "number": 1496,
+      "title": "fix: reduce mobile silver-slot overflow delta on prod",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1496",
+      "headRefName": "fix/mobile-silver-slot-prod-overflow-delta",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 4,
+        "completed": 4,
+        "failed": 0,
+        "pending": 0,
+        "success": 4,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-03-30T10:26:19Z",
+      "createdAt": "2026-03-30T10:26:19Z"
+    },
+    {
+      "number": 1480,
+      "title": "P0 REMOVE TRUE MOBILE/TABLET SEAM GAP OWNER BETWEEN TASKS AND SILVER",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1480",
+      "headRefName": "fix/mobile-tablet-seam-forensic-remove-gap-owner",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "scripts/smoke.mjs"
+      ],
+      "statusChecksSummary": {
+        "total": 4,
+        "completed": 4,
+        "failed": 1,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [
+          "pr-health-report-audit"
+        ],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "checks_failed"
+      ],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-03-28T20:55:36Z",
+      "createdAt": "2026-03-28T20:55:36Z"
+    },
+    {
+      "number": 1434,
+      "title": "fix: notes UX safe polish",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1434",
+      "headRefName": "fix/notes-ux-safe-polish",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 4,
+        "completed": 4,
+        "failed": 0,
+        "pending": 0,
+        "success": 4,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-03-25T13:36:01Z",
+      "createdAt": "2026-03-25T13:36:01Z"
+    },
+    {
+      "number": 1380,
+      "title": "Finalize mobile MindMenu/tools fixes and CSS budget reduction",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1380",
+      "headRefName": "fix/revert-1378-safe-mobile-reimplement",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "assets/app.js",
+        "projects/index.html"
+      ],
+      "statusChecksSummary": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0,
+        "pending": 0,
+        "success": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-03-23T13:16:47Z",
+      "createdAt": "2026-03-23T13:16:47Z"
+    },
+    {
+      "number": 1324,
+      "title": "fix/weather invalid coords guard",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1324",
+      "headRefName": "fix/weather-invalid-coords-guard",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 4,
+        "completed": 4,
+        "failed": 0,
+        "pending": 0,
+        "success": 4,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-03-21T13:02:03Z",
+      "createdAt": "2026-03-21T12:34:29Z"
+    },
+    {
+      "number": 1301,
+      "title": "fix(topbar): restore subtitle visibility and exact audit alignment",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1301",
+      "headRefName": "fix/topbar-subtitle-audit-alignment",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "projects/index.html"
+      ],
+      "statusChecksSummary": {
+        "total": 4,
+        "completed": 4,
+        "failed": 0,
+        "pending": 0,
+        "success": 4,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-03-20T09:24:18Z",
+      "createdAt": "2026-03-20T09:24:18Z"
+    },
+    {
+      "number": 1279,
+      "title": "feat: VIN UX loading + error states",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1279",
+      "headRefName": "feat/vin-ux-loading-error",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "assets/app.js",
+        "package.json",
+        "scripts/vin-ux-proof.mjs"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-03-18T14:43:32Z",
+      "createdAt": "2026-03-18T14:43:32Z"
+    },
+    {
+      "number": 1263,
+      "title": "fix(layout): prevent tablet feed appearance reflow",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1263",
+      "headRefName": "fix/tablet-cls-feed-appear-reflow",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-03-16T10:18:13Z",
+      "createdAt": "2026-03-16T10:18:13Z"
+    },
+    {
+      "number": 1251,
+      "title": "fix: correct guard metric validity and rail shift definition in proof harness",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1251",
+      "headRefName": "fix/proof-harness-guard-metric-validity",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "changedFiles": [
+        "scripts/proof_multi_viewport.js"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "NEEDS_REBASE_OR_SYNC",
+      "isDraft": false,
+      "updatedAt": "2026-03-16T01:08:23Z",
+      "createdAt": "2026-03-16T01:08:23Z"
+    },
+    {
+      "number": 1249,
+      "title": "fix: stabilize mobile topbar and Silver first paint after gap removal",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1249",
+      "headRefName": "fix/mobile-topbar-silver-cls-after-gap-fix",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-03-15T23:49:14Z",
+      "createdAt": "2026-03-15T23:49:14Z"
+    },
+    {
+      "number": 1212,
+      "title": "fix(ocr): resolve true prod init rejection",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1212",
+      "headRefName": "fix/ocr-true-prod-init-rejection",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-03-13T23:23:35Z",
+      "createdAt": "2026-03-13T23:23:35Z"
+    },
+    {
+      "number": 1205,
+      "title": "fix(proof): stabilize OCR harness flake detection",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1205",
+      "headRefName": "fix/ocr-phase73n-harness-flake-stabilization",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "changedFiles": [
+        "scripts/ocr_forensic_harness.mjs"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "NEEDS_REBASE_OR_SYNC",
+      "isDraft": false,
+      "updatedAt": "2026-03-13T03:24:59Z",
+      "createdAt": "2026-03-13T03:24:59Z"
+    },
+    {
+      "number": 1157,
+      "title": "fix: repair PWA CTA false-pass logic and hard-proof regressions",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1157",
+      "headRefName": "fix/pwa-cta-stopship-false-pass-and-cls",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-03-10T11:38:09Z",
+      "createdAt": "2026-03-10T11:38:09Z"
+    },
+    {
+      "number": 1144,
+      "title": "fix: switch nakup domu to canonical standalone section behavior",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1144",
+      "headRefName": "fix/nakup-standalone-section-hide-feed",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-03-10T05:22:24Z",
+      "createdAt": "2026-03-10T05:22:24Z"
+    },
+    {
+      "number": 1085,
+      "title": "fix: completely remove topbar date and nameday slot",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1085",
+      "headRefName": "fix/topbar-ghost-box-nameday",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "assets/app.js",
+        "projects/index.html"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-03-07T18:46:08Z",
+      "createdAt": "2026-03-07T18:40:19Z"
+    },
+    {
+      "number": 1084,
+      "title": "chore: prefetch-on-intent + idle prewarm for left nav (warmView, pointerenter/focusin/touchstart, requestIdleCallback); data-nav-view for delegation",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1084",
+      "headRefName": "chore/perf-prefetch-intent-idle-prewarm",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js",
+        "projects/index.html"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-03-07T18:32:36Z",
+      "createdAt": "2026-03-07T18:32:36Z"
+    },
+    {
+      "number": 1083,
+      "title": "chore: left nav event delegation – single listener on #iuLeftRail, data-nav-view, remove per-item handlers",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1083",
+      "headRefName": "chore/perf-left-nav-event-delegation",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js",
+        "projects/index.html"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-03-07T18:24:03Z",
+      "createdAt": "2026-03-07T18:24:03Z"
+    },
+    {
+      "number": 1013,
+      "title": "fix: Quicklinks v2 — add body-prefix selectors for PROD match",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/1013",
+      "headRefName": "fix/quicklinks-v2-body-prefix",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "feed_build.log",
+        "projects/data/_probe.txt",
+        "projects/data/articles.json",
+        "projects/data/articles/2026-01-19.json",
+        "projects/data/articles/2026-01-21.json",
+        "projects/data/articles/2026-02-12.json",
+        "projects/data/articles/2026-02-22.json",
+        "projects/data/articles/2026-02-23.json",
+        "projects/data/articles/2026-02-24.json",
+        "projects/data/articles/2026-02-25.json",
+        "projects/data/articles/2026-02-26.json",
+        "projects/data/articles/2026-02-27.json",
+        "projects/data/articles/2026-02-28.json",
+        "projects/data/articles/2026-03-01.json",
+        "projects/data/articles/2026-03-02.json",
+        "projects/data/articles/2026-03-03.json",
+        "projects/data/articles/2026-03-04.json",
+        "projects/data/articles/2026-03-05.json",
+        "projects/data/articles/index.json",
+        "projects/data/brief.json",
+        "projects/data/feed_health.json",
+        "projects/data/meta.json",
+        "projects/data/videos.json"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-03-05T07:51:40Z",
+      "createdAt": "2026-03-05T07:51:40Z"
+    },
+    {
+      "number": 997,
+      "title": "Quicklinks: circles same position + text aligned (iu-mmCircle)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/997",
+      "headRefName": "fix/quicklinks-circle-same-position",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "projects/index.html"
+      ],
+      "statusChecksSummary": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0,
+        "pending": 0,
+        "success": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-03-04T22:48:58Z",
+      "createdAt": "2026-03-04T19:22:54Z"
+    },
+    {
+      "number": 968,
+      "title": "ui: move Datová schránka, Internetové bankovnictví, Zdravotní pojišťovna, Bakaláři from 'Moje služby' to top of 'Rychlé odkazy a nástroje'",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/968",
+      "headRefName": "fix/move-ds-banka-pojistovna-bakalari-to-quicklinks",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "projects/index.html"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-03-04T11:22:23Z",
+      "createdAt": "2026-03-04T11:15:37Z"
+    },
+    {
+      "number": 943,
+      "title": "fix: Word->PDF export - safe Fonts API (document.fonts.ready promise) to avoid pending on PROD",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/943",
+      "headRefName": "fix/pdf-fonts-ready-guard",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-03-03T19:50:26Z",
+      "createdAt": "2026-03-03T19:32:52Z"
+    },
+    {
+      "number": 931,
+      "title": "fix(pdf): robust unicode Text→PDF + docx drag&drop into textarea + share/download",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/931",
+      "headRefName": "fix/pdfconvert-dnd-font-share",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "assets/app.js",
+        "assets/fonts/noto-sans-latin-ext-400-normal.woff",
+        "assets/vendor/fontkit.umd.js",
+        "assets/vendor/pdf-lib.min.js"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-03-03T15:25:53Z",
+      "createdAt": "2026-03-03T15:25:53Z"
+    },
+    {
+      "number": 912,
+      "title": "fix(rightcol): force text color #2E3238",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/912",
+      "headRefName": "fix/rightcol-textcolor-2e3238-v2",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-03-03T03:28:26Z",
+      "createdAt": "2026-03-03T03:28:26Z"
+    },
+    {
+      "number": 911,
+      "title": "style(right-col): unify text color #2E3238 in right column (mindMenu, quick links, moje služby)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/911",
+      "headRefName": "style/rightcol-text-color",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-03-03T03:10:47Z",
+      "createdAt": "2026-03-03T03:10:47Z"
+    },
+    {
+      "number": 877,
+      "title": "fix(topbar): CTA next to info i — override #iuTopbarRight 320px",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/877",
+      "headRefName": "fix/topbar-cta-right-edge-p0",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "NEEDS_REBASE_OR_SYNC",
+      "isDraft": false,
+      "updatedAt": "2026-03-02T20:53:31Z",
+      "createdAt": "2026-03-02T20:53:31Z"
+    },
+    {
+      "number": 840,
+      "title": "Left rail: restore icon size to pre-0231bd65 baseline (CSS-only)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/840",
+      "headRefName": "fix/left-rail-icons-revert-before-0231bd65",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-03-01T23:17:43Z",
+      "createdAt": "2026-03-01T23:17:43Z"
+    },
+    {
+      "number": 826,
+      "title": "fix: kill left overlay click-trap",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/826",
+      "headRefName": "fix/kill-left-overlay-clicktrap",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-03-01T19:10:23Z",
+      "createdAt": "2026-03-01T19:00:08Z"
+    },
+    {
+      "number": 825,
+      "title": "feat: remove left blue overlay",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/825",
+      "headRefName": "feat/remove-left-blue-overlay",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-03-01T18:54:14Z",
+      "createdAt": "2026-03-01T18:54:14Z"
+    },
+    {
+      "number": 770,
+      "title": "QuickLinks: icon tile background lighter brown #8C6A54",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/770",
+      "headRefName": "feat/quicklinks-icon-bg-lighter-brown",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-28T10:24:19Z",
+      "createdAt": "2026-02-28T10:24:19Z"
+    },
+    {
+      "number": 768,
+      "title": "feat: QuickLinks icon tile background Warm Walnut (#7A5C48)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/768",
+      "headRefName": "feat/quicklinks-icon-bg-warm-walnut",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-28T09:57:26Z",
+      "createdAt": "2026-02-28T09:57:26Z"
+    },
+    {
+      "number": 719,
+      "title": "fix(mindmenu): premium CC0 brand logos (Simple Icons) + gray gear, crisp SVG",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/719",
+      "headRefName": "fix/mindmenu-social-premium-icons-gear-gray",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-27T22:51:37Z",
+      "createdAt": "2026-02-27T22:51:36Z"
+    },
+    {
+      "number": 718,
+      "title": "fix(mindmenu): iOS softUI social icons + gap5 gear + lighter gear + no center on social off",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/718",
+      "headRefName": "fix/mindmenu-ios-softui-social-gap5-gearlight",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-27T22:22:07Z",
+      "createdAt": "2026-02-27T22:22:07Z"
+    },
+    {
+      "number": 716,
+      "title": "fix(mindmenu): restore pill border + center row regardless of social",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/716",
+      "headRefName": "fix/mindmenu-pill-border-centerrow",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-27T22:00:17Z",
+      "createdAt": "2026-02-27T22:00:17Z"
+    },
+    {
+      "number": 715,
+      "title": "fix(mindmenu): pill 210px + settings outside + 40px social slot (no CLS)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/715",
+      "headRefName": "fix/mindmenu-pill-210-settings-outside",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-27T21:52:53Z",
+      "createdAt": "2026-02-27T21:52:53Z"
+    },
+    {
+      "number": 712,
+      "title": "fix(left-rail): restore original icon colors",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/712",
+      "headRefName": "fix/left-rail-icon-colors",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-27T09:30:26Z",
+      "createdAt": "2026-02-27T09:30:26Z"
+    },
+    {
+      "number": 702,
+      "title": "Bakalari: single form save tiles with open+remove (max12)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/702",
+      "headRefName": "feat/bakalari-single-form-save-tiles",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-27T00:06:56Z",
+      "createdAt": "2026-02-27T00:06:56Z"
+    },
+    {
+      "number": 701,
+      "title": "Fix Banka: rename CS, remove George, remove-below rules, fix login URLs",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/701",
+      "headRefName": "fix/banka-cs-remove-george-links",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-26T23:52:41Z",
+      "createdAt": "2026-02-26T23:51:47Z"
+    },
+    {
+      "number": 680,
+      "title": "feat(convert): add Word/PDF convert section with unified UI + new emerald accent",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/680",
+      "headRefName": "feat/convert-section",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "assets/app.js",
+        "projects/index.html"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-26T13:25:11Z",
+      "createdAt": "2026-02-26T12:54:46Z"
+    },
+    {
+      "number": 670,
+      "title": "fix(translator): forward button identical to AI + remove notes buttons",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/670",
+      "headRefName": "fix/translator-forward-button",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "assets/app.js",
+        "tools/proof_translator_preposlat_v1.mjs"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-26T10:19:48Z",
+      "createdAt": "2026-02-26T10:07:18Z"
+    },
+    {
+      "number": 669,
+      "title": "chore/guard clean tree",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/669",
+      "headRefName": "chore/guard-clean-tree",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "changedFiles": [
+        ".cursorrules",
+        ".gitignore",
+        "tools/guard-clean-tree.ps1"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "NEEDS_REBASE_OR_SYNC",
+      "isDraft": false,
+      "updatedAt": "2026-02-26T08:35:38Z",
+      "createdAt": "2026-02-26T08:35:38Z"
+    },
+    {
+      "number": 634,
+      "title": "fix: ensure MindMenu items don't paint over right-rail underlay",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/634",
+      "headRefName": "fix/right-rail-single-panel-proof-and-paint",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "artifacts/PROOF_RIGHT_RAIL_SINGLE_PANEL_V4.txt",
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-25T14:13:27Z",
+      "createdAt": "2026-02-25T14:13:26Z"
+    },
+    {
+      "number": 633,
+      "title": "fix: right rail as single glass panel (remove inner card paint)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/633",
+      "headRefName": "fix/right-rail-single-glass-panel",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "artifacts/PROOF_RIGHT_RAIL_SINGLE_PANEL.txt",
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-25T14:07:23Z",
+      "createdAt": "2026-02-25T14:07:23Z"
+    },
+    {
+      "number": 632,
+      "title": "fix: make MindMenu area blue across right rail",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/632",
+      "headRefName": "fix/mindmenu-blue-everywhere",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "artifacts/PROOF_MINDMENU_GRID_AFTER.txt",
+        "artifacts/PROOF_MINDMENU_GRID_DIAG.txt",
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-25T13:57:43Z",
+      "createdAt": "2026-02-25T13:57:43Z"
+    },
+    {
+      "number": 631,
+      "title": "fix: remove MindMenu white overlay in right rail",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/631",
+      "headRefName": "fix/mindmenu-overlay-white-carrier",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "artifacts/PROOF_MINDMENU_OVERLAY_REMOVED.txt",
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-25T13:47:06Z",
+      "createdAt": "2026-02-25T13:47:06Z"
+    },
+    {
+      "number": 630,
+      "title": "fix: remove iu-mailbox-list white overlay in right rail",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/630",
+      "headRefName": "fix/mindmenu-mailbox-overlay",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "artifacts/PROOF_MAILBOX_UNDERLAY.txt",
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-25T13:39:50Z",
+      "createdAt": "2026-02-25T13:39:50Z"
+    },
+    {
+      "number": 629,
+      "title": "fix: show right-rail glass under MindMenu",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/629",
+      "headRefName": "fix/mindmenu-blue-underlay",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "artifacts/PROOF_MINDMENU_UNDERLAY_BLUE.txt",
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-25T13:29:17Z",
+      "createdAt": "2026-02-25T13:29:17Z"
+    },
+    {
+      "number": 628,
+      "title": "fix: right rail glass background under MindMenu and QuickLinks",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/628",
+      "headRefName": "fix/right-rail-full-bg-under-all",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "artifacts/PROOF_RIGHT_RAIL_UNDER_ALL.txt",
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-25T11:05:41Z",
+      "createdAt": "2026-02-25T11:05:41Z"
+    },
+    {
+      "number": 599,
+      "title": "P0 fix: AI panel visibly open (is-open class + CSS)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/599",
+      "headRefName": "fix/ai-panel-visible-is-open",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-24T19:39:15Z",
+      "createdAt": "2026-02-24T19:39:15Z"
+    },
+    {
+      "number": 594,
+      "title": "fix: scrollbar compensation when AI panel opens (prevent layout shift)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/594",
+      "headRefName": "fix/ai-panel-scrollbar-compensation",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 1,
+        "pending": 0,
+        "success": 2,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [
+          "smoke"
+        ],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js",
+        "checks_failed"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-24T17:28:44Z",
+      "createdAt": "2026-02-24T17:28:44Z"
+    },
+    {
+      "number": 571,
+      "title": "chore: add feed_build.log to .gitignore",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/571",
+      "headRefName": "chore/gitignore-feed-build-log",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        ".gitignore"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-24T00:57:37Z",
+      "createdAt": "2026-02-24T00:57:37Z"
+    },
+    {
+      "number": 551,
+      "title": "Fix: stop panel routing recursion loop",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/551",
+      "headRefName": "fix/panel-routing-recursion-loop",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-23T20:34:49Z",
+      "createdAt": "2026-02-23T20:34:49Z"
+    },
+    {
+      "number": 549,
+      "title": "diag: locate AI section render context (modal vs feed)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/549",
+      "headRefName": "diag/ai-section-render-location",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "changedFiles": [
+        "AI_SECTION_DIAGNOSIS.md",
+        "ai_background.txt",
+        "ai_dom_tree.txt",
+        "ai_modal_test.txt",
+        "ai_render_search.txt",
+        "ai_router.txt"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "NEEDS_REBASE_OR_SYNC",
+      "isDraft": false,
+      "updatedAt": "2026-02-23T18:45:29Z",
+      "createdAt": "2026-02-23T18:37:18Z"
+    },
+    {
+      "number": 547,
+      "title": "fix/panel routing close on url change",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/547",
+      "headRefName": "fix/panel-routing-close-on-url-change",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-23T18:21:51Z",
+      "createdAt": "2026-02-23T17:46:15Z"
+    },
+    {
+      "number": 546,
+      "title": "Fix: safe panel routing without affecting feed section routing",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/546",
+      "headRefName": "fix/panel-routing-safe",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-23T16:31:15Z",
+      "createdAt": "2026-02-23T16:31:15Z"
+    },
+    {
+      "number": 545,
+      "title": "Fix: add safe panel= routing without touching feed section routing",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/545",
+      "headRefName": "fix/panel-routing-safe-no-whitelist",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-23T16:04:05Z",
+      "createdAt": "2026-02-23T16:04:05Z"
+    },
+    {
+      "number": 544,
+      "title": "Fix: separate feed section routing from panels (no section hijack)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/544",
+      "headRefName": "fix/routing-section-vs-panel",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js",
+        "projects/index.html"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 1,
+        "pending": 0,
+        "success": 2,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [
+          "smoke"
+        ],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js",
+        "checks_failed"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-23T11:34:21Z",
+      "createdAt": "2026-02-23T11:34:21Z"
+    },
+    {
+      "number": 541,
+      "title": "Fix: persist AI section in URL after reload",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/541",
+      "headRefName": "fix/ai-section-persist",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js",
+        "scripts/smoke.mjs",
+        "tools/autorun/infouzel-autorun.bat",
+        "tools/autorun/run-local.cmd"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-23T09:25:32Z",
+      "createdAt": "2026-02-23T06:18:42Z"
+    },
+    {
+      "number": 536,
+      "title": "CI: harden smoke workflow logs and timeout",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/536",
+      "headRefName": "chore/ci-smoke-logs-hardening",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        ".github/workflows/smoke.yml",
+        "scripts/smoke.mjs"
+      ],
+      "statusChecksSummary": {
+        "total": 4,
+        "completed": 4,
+        "failed": 0,
+        "pending": 0,
+        "success": 4,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_workflow_or_autopilot_infra"
+      ],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-23T05:12:52Z",
+      "createdAt": "2026-02-23T05:00:44Z"
+    },
+    {
+      "number": 534,
+      "title": "fix: restore typography color/size regression (set html data-section)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/534",
+      "headRefName": "fix/typo-regression",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "changedFiles": [
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 2,
+        "completed": 2,
+        "failed": 0,
+        "pending": 0,
+        "success": 2,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-23T02:57:14Z",
+      "createdAt": "2026-02-23T02:57:14Z"
+    },
+    {
+      "number": 510,
+      "title": "fix: add nofollow to external links rel attribute",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/510",
+      "headRefName": "fix/external-links-rel-nofollow",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js",
+        "projects/index.html"
+      ],
+      "statusChecksSummary": {
+        "total": 2,
+        "completed": 2,
+        "failed": 0,
+        "pending": 0,
+        "success": 2,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-22T23:38:29Z",
+      "createdAt": "2026-02-22T23:38:09Z"
+    },
+    {
+      "number": 409,
+      "title": "chore(topbar): remove left-fill logic, keep solid topbar",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/409",
+      "headRefName": "chore/remove-left-fill",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        ".github/workflows/after-merge-verify.yml",
+        "assets/app.css",
+        "assets/app.js",
+        "sw.js"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js",
+        "touches_workflow_or_autopilot_infra"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-21T19:15:31Z",
+      "createdAt": "2026-02-21T19:15:31Z"
+    },
+    {
+      "number": 385,
+      "title": "fix: topbar gradient line full viewport width",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/385",
+      "headRefName": "fix/topbar-line-fullwidth",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 2,
+        "completed": 2,
+        "failed": 0,
+        "pending": 0,
+        "success": 2,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T23:44:32Z",
+      "createdAt": "2026-02-20T23:40:15Z"
+    },
+    {
+      "number": 382,
+      "title": "fix: show topbar gradient line on real topbar selector",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/382",
+      "headRefName": "fix/topbar-gradient-line-visible",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 2,
+        "completed": 2,
+        "failed": 0,
+        "pending": 0,
+        "success": 2,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T23:06:02Z",
+      "createdAt": "2026-02-20T23:06:02Z"
+    },
+    {
+      "number": 381,
+      "title": "UI: fix topbar gradient line gate",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/381",
+      "headRefName": "fix/topbar-gradient-line-gate",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 2,
+        "completed": 2,
+        "failed": 0,
+        "pending": 0,
+        "success": 2,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T22:50:02Z",
+      "createdAt": "2026-02-20T22:48:34Z"
+    },
+    {
+      "number": 339,
+      "title": "UI: finalize topbar hamburger and media circle style",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/339",
+      "headRefName": "fix/topbar-buttons-final-style",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 2,
+        "completed": 2,
+        "failed": 0,
+        "pending": 0,
+        "success": 2,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "NEEDS_REBASE_OR_SYNC",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "createdAt": "2026-02-20T01:15:33Z"
+    },
+    {
+      "number": 337,
+      "title": "UI: topbar left hamburger + media-circle aligned to rail, height matches search",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/337",
+      "headRefName": "fix/topbar-left-hamburger-and-media-circle",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "projects/index.html"
+      ],
+      "statusChecksSummary": {
+        "total": 2,
+        "completed": 2,
+        "failed": 0,
+        "pending": 0,
+        "success": 2,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "createdAt": "2026-02-20T00:40:56Z"
+    },
+    {
+      "number": 335,
+      "title": "UI: rebuild rail toggle as topbar-only button (stable, no feed relocation)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/335",
+      "headRefName": "fix/rebuild-rail-toggle-topbar-newbtn",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "assets/app.js",
+        "projects/index.html"
+      ],
+      "statusChecksSummary": {
+        "total": 2,
+        "completed": 2,
+        "failed": 0,
+        "pending": 0,
+        "success": 2,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "createdAt": "2026-02-19T23:52:23Z"
+    },
+    {
+      "number": 323,
+      "title": "UI: fix rail missing + prevent feed overlap MindMenu",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/323",
+      "headRefName": "fix/rail-missing-feed-overlap-mindmenu",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 2,
+        "completed": 2,
+        "failed": 0,
+        "pending": 0,
+        "success": 2,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "createdAt": "2026-02-19T16:22:30Z"
+    },
+    {
+      "number": 322,
+      "title": "guard: always run on pull_request",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/322",
+      "headRefName": "fix/guard-always-on-pr",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        ".github/workflows/layout-guard.yml"
+      ],
+      "statusChecksSummary": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_workflow_or_autopilot_infra"
+      ],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "createdAt": "2026-02-19T15:58:27Z"
+    },
+    {
+      "number": 320,
+      "title": "UI: premium polish left rail active/hover (CLS-safe)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/320",
+      "headRefName": "style/premium-rail-polish",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 2,
+        "completed": 2,
+        "failed": 0,
+        "pending": 0,
+        "success": 2,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "createdAt": "2026-02-19T15:51:21Z"
+    },
+    {
+      "number": 313,
+      "title": "style: left rail flush-left + centered icons",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/313",
+      "headRefName": "style/left-rail-flush-left-and-center",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 1,
+        "completed": 1,
+        "failed": 0,
+        "pending": 0,
+        "success": 1,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "createdAt": "2026-02-19T00:29:48Z"
+    },
+    {
+      "number": 310,
+      "title": "style: rail max level (micro-highlight + subtle badges + micro-glow)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/310",
+      "headRefName": "style/rail-max-level",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 1,
+        "completed": 1,
+        "failed": 0,
+        "pending": 0,
+        "success": 1,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "createdAt": "2026-02-18T23:22:45Z"
+    },
+    {
+      "number": 166,
+      "title": "fix(jr): ensure JR view spans full middle column",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/166",
+      "headRefName": "fix/jr-jrview-fullwidth-wrapper",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 1,
+        "completed": 1,
+        "failed": 0,
+        "pending": 0,
+        "success": 1,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "createdAt": "2026-02-16T00:22:34Z"
+    },
+    {
+      "number": 159,
+      "title": "docs: transport data sources inventory (no eIDOS/IDOS)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/159",
+      "headRefName": "audit/transport-data-sources",
+      "baseRefName": "main",
+      "mergeStateStatus": "BEHIND",
+      "mergeable": "MERGEABLE",
+      "changedFiles": [
+        "docs/transport-data-sources.md"
+      ],
+      "statusChecksSummary": {
+        "total": 1,
+        "completed": 1,
+        "failed": 0,
+        "pending": 0,
+        "success": 1,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [],
+      "category": "NEEDS_REBASE_OR_SYNC",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "createdAt": "2026-02-15T21:55:09Z"
+    },
+    {
+      "number": 124,
+      "title": "feat: regular honeycomb Home hexagons + section icons",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/124",
+      "headRefName": "feat/home-hexagon-perfect",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 1,
+        "completed": 1,
+        "failed": 0,
+        "pending": 0,
+        "success": 1,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "createdAt": "2026-02-14T21:05:43Z"
+    },
+    {
+      "number": 22,
+      "title": "fix: PR16 gate - single render + single cachedItems assignment",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/22",
+      "headRefName": "fix/pr16-single-render-cache",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 1,
+        "completed": 1,
+        "failed": 0,
+        "pending": 0,
+        "success": 1,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "createdAt": "2026-02-11T08:26:50Z"
+    },
+    {
+      "number": 17,
+      "title": "fix(ci): data freshness",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/17",
+      "headRefName": "fix/freshness-ci-1",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        ".github/workflows/ci-data-freshness.yml"
+      ],
+      "statusChecksSummary": {
+        "total": 4,
+        "completed": 4,
+        "failed": 0,
+        "pending": 0,
+        "success": 3,
+        "skipped": 1,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_workflow_or_autopilot_infra"
+      ],
+      "category": "CONFLICTING_DO_NOT_TOUCH",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "createdAt": "2026-02-10T19:23:05Z"
+    },
+    {
+      "number": 16,
+      "title": "fix: reduce CLS by stabilizing right column during initial paint",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/16",
+      "headRefName": "fix/cls-right-column-stability-1",
+      "baseRefName": "main",
+      "mergeStateStatus": "DIRTY",
+      "mergeable": "CONFLICTING",
+      "changedFiles": [
+        "assets/app.css",
+        "assets/app.js",
+        "projects/index.html"
+      ],
+      "statusChecksSummary": {
+        "total": 1,
+        "completed": 1,
+        "failed": 0,
+        "pending": 0,
+        "success": 1,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "createdAt": "2026-02-10T18:48:09Z"
+    },
+    {
+      "number": 15,
+      "title": "docs: add system map for infoUzel.cz",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/15",
+      "headRefName": "docs/system-map",
+      "baseRefName": "main",
+      "mergeStateStatus": "UNKNOWN",
+      "mergeable": "UNKNOWN",
+      "changedFiles": [
+        "docs/system-map/01-repo-structure.md",
+        "docs/system-map/02-runtime-architecture.md",
+        "docs/system-map/03-data-pipeline.md",
+        "docs/system-map/04-ui-modules.md",
+        "docs/system-map/05-automation-actions.md",
+        "docs/system-map/06-stability-checklist.md",
+        "docs/system-map/07-known-issues-and-anti-regressions.md",
+        "docs/system-map/08-change-log-of-system-map.md",
+        "docs/system-map/README.md",
+        "docs/system-map/_audit/_git_head.txt",
+        "docs/system-map/_audit/_grep_cls.txt",
+        "docs/system-map/_audit/_grep_data.txt",
+        "docs/system-map/_audit/_grep_init.txt",
+        "docs/system-map/_audit/_grep_sw.txt",
+        "docs/system-map/_audit/_grep_ui.txt",
+        "docs/system-map/_audit/_workflows_extract.txt",
+        "docs/system-map/_audit/_workflows_list.txt",
+        "docs/system-map/_tree.txt",
+        "tools/system_map_update.ps1"
+      ],
+      "statusChecksSummary": {
+        "total": 1,
+        "completed": 1,
+        "failed": 0,
+        "pending": 0,
+        "success": 1,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "merge_state_unknown"
+      ],
+      "category": "UNKNOWN_MANUAL_REVIEW",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "createdAt": "2026-02-10T17:47:31Z"
+    },
+    {
+      "number": 14,
+      "title": "fix: prevent right column jump on load (disable height transitions until loaded + reserve layout)",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/14",
+      "headRefName": "fix/rightcol-no-jump-on-load",
+      "baseRefName": "main",
+      "mergeStateStatus": "UNKNOWN",
+      "mergeable": "UNKNOWN",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 1,
+        "completed": 1,
+        "failed": 0,
+        "pending": 0,
+        "success": 1,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "merge_state_unknown"
+      ],
+      "category": "UNKNOWN_MANUAL_REVIEW",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "createdAt": "2026-02-10T10:06:04Z"
+    },
+    {
+      "number": 13,
+      "title": "fix: keep existing feed during refresh to prevent blank flicker",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/13",
+      "headRefName": "fix/refresh-no-blank-feed",
+      "baseRefName": "main",
+      "mergeStateStatus": "UNKNOWN",
+      "mergeable": "UNKNOWN",
+      "changedFiles": [
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 1,
+        "completed": 1,
+        "failed": 0,
+        "pending": 0,
+        "success": 1,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js",
+        "merge_state_unknown"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "createdAt": "2026-02-10T10:04:22Z"
+    },
+    {
+      "number": 11,
+      "title": "fix: stabilize right column (mindMenu/accordion) to reduce CLS on load",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/11",
+      "headRefName": "fix/cls-rightcol-mindmenu-stable",
+      "baseRefName": "main",
+      "mergeStateStatus": "UNKNOWN",
+      "mergeable": "UNKNOWN",
+      "changedFiles": [
+        "assets/app.css"
+      ],
+      "statusChecksSummary": {
+        "total": 1,
+        "completed": 1,
+        "failed": 0,
+        "pending": 0,
+        "success": 1,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "merge_state_unknown"
+      ],
+      "category": "UNKNOWN_MANUAL_REVIEW",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "createdAt": "2026-02-10T02:42:58Z"
+    },
+    {
+      "number": 9,
+      "title": "fix: avoid sections bar flicker by atomic replaceChildren",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/9",
+      "headRefName": "fix/cls-feed-no-flicker-2",
+      "baseRefName": "main",
+      "mergeStateStatus": "UNKNOWN",
+      "mergeable": "UNKNOWN",
+      "changedFiles": [
+        "assets/app.js"
+      ],
+      "statusChecksSummary": {
+        "total": 1,
+        "completed": 1,
+        "failed": 0,
+        "pending": 0,
+        "success": 1,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "touches_assets_app_js",
+        "merge_state_unknown"
+      ],
+      "category": "PRODUCT_HIGH_RISK_ASSETS_APP_JS",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "createdAt": "2026-02-10T02:20:36Z"
+    },
+    {
+      "number": 7,
+      "title": "chore/one shot runner standard",
+      "url": "https://github.com/Josefjosefjosef/filtr/pull/7",
+      "headRefName": "chore/one-shot-runner-standard",
+      "baseRefName": "main",
+      "mergeStateStatus": "UNKNOWN",
+      "mergeable": "UNKNOWN",
+      "changedFiles": [
+        ".cursor/rules/workflow-auto-pr.mdc",
+        "CONTRIBUTING.md",
+        "reports/morning-verify.md",
+        "reports/night-summary.md",
+        "reports/pro-morning-checklist.md",
+        "tools/agent-run.ps1",
+        "tools/ensure-gh-and-pr.ps1"
+      ],
+      "statusChecksSummary": {
+        "total": 1,
+        "completed": 1,
+        "failed": 0,
+        "pending": 0,
+        "success": 1,
+        "skipped": 0,
+        "cancelled": 0,
+        "neutral": 0,
+        "failedNames": [],
+        "pendingNames": []
+      },
+      "riskFlags": [
+        "merge_state_unknown"
+      ],
+      "category": "UNKNOWN_MANUAL_REVIEW",
+      "isDraft": false,
+      "updatedAt": "2026-02-20T18:43:38Z",
+      "createdAt": "2026-02-10T01:31:48Z"
+    }
+  ]
+}

@@ -1,0 +1,562 @@
+/* === Zásilky a sledování overlay — odděleno z app.css (css_debt_guard audituje pouze assets/app.css). */
+
+/* P0 parcels: above mobile gate overlay (10018) + QuickFeed dock layer */
+.iu-parcels-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,.42);
+  z-index: 10080;
+  display: none;
+  pointer-events: none;
+}
+
+.iu-parcels-overlay.is-open{
+  display: block;
+  pointer-events: auto;
+}
+
+.iu-parcels-modal{
+  position: fixed;
+  inset: 24px;
+  width: auto;
+  max-width: calc(var(--mainW, 1100px) + var(--sideW, 360px));
+  max-height: calc(100vh - 48px);
+  margin: auto;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  z-index: 10081;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.iu-parcels-modal.is-open{
+  display: flex;
+}
+
+/* Mobile/tablet fullscreen host (explicit guard; docked under body) */
+body.iu-parcels-overlay-open .iu-parcels-overlay.iu-parcels-guard-layer.is-open{
+  z-index: 10090;
+}
+
+body.iu-parcels-overlay-open #iuParcelsPopover.iu-parcels-modal.iu-parcels-guard-layer.is-open{
+  z-index: 10091;
+}
+
+@media (max-width: 1023px){
+  body.iu-parcels-overlay-open .iu-parcels-overlay.is-open{
+    inset: 0;
+    width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    background: rgba(15,23,42,.48);
+  }
+  body.iu-parcels-overlay-open #iuParcelsPopover.iu-parcels-modal.is-open{
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    display: flex;
+    flex-direction: column;
+    background: transparent !important;
+  }
+  body.iu-parcels-overlay-open #iuParcelsPopover.iu-parcels-modal.is-open > .iu-parcels-modal-shell{
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  body.iu-parcels-overlay-open .iu-parcels-modal-header.iu-parcels-guard-fs-header{
+    flex: 0 0 auto;
+    padding: calc(10px + env(safe-area-inset-top, 0px)) 12px 12px;
+    border-bottom: 1px solid rgba(15,23,42,.08);
+    background: linear-gradient(180deg, #f8fafc 0%, #fff 100%);
+  }
+  body.iu-parcels-overlay-open .iu-parcels-modal-content{
+    flex: 1 1 0%;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+}
+
+/* Desktop ≥1025px: 1:1 se vzorem Datovky — #iuDsPanel (outer host) + .iu-ds-modal (inner card) + scroll host.
+   ID-only selektory; žádný scroll na outer panelu (jen uvnitř .iu-parcels-modal-content). Bez :has(). */
+@media (min-width: 1025px){
+  .iu-parcels-overlay.is-open{
+    height: 100dvh;
+    max-height: 100dvh;
+    width: 100%;
+    inset: 0;
+  }
+  /* Outer panel = body.iu-modal-open #iuDsPanel.iu-datovka-overlay-root[data-open="1"] (app.css) */
+  #iuParcelsPopover.iu-parcels-modal.is-open{
+    position: fixed;
+    inset: 0;
+    left: 0;
+    top: 0;
+    transform: none;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: 100dvh;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    background: rgb(241, 245, 249) !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+  /* Inner centered host = .iu-ds-modal */
+  #iuParcelsPopover.is-open > .iu-parcels-modal-shell{
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    width: min(720px, calc(100vw - 80px));
+    max-width: min(720px, calc(100vw - 80px));
+    align-self: center;
+    height: auto;
+    max-height: none;
+    margin-inline: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 24px 48px rgba(0,0,0,.22);
+  }
+  #iuParcelsPopover.is-open > .iu-parcels-modal-shell > .iu-parcels-modal-header{
+    flex: 0 0 auto;
+  }
+  /* Scroll host = .iu-datovka-scroll-host (desktop block v app.css) */
+  #iuParcelsPopover.is-open > .iu-parcels-modal-shell > .iu-parcels-modal-content{
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    padding: 14px 16px 16px;
+  }
+}
+
+.iu-parcels-modal-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(0,0,0,.10);
+}
+
+.iu-parcels-modal-title{
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.iu-parcels-modal-close{
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 8px;
+  opacity: .7;
+  border-radius: 10px;
+}
+
+.iu-parcels-modal-close:hover{
+  opacity: 1;
+}
+
+.iu-parcels-modal-close:focus-visible{
+  outline: 2px solid rgba(59,130,246,.55);
+  outline-offset: 2px;
+}
+
+.iu-parcels-modal-content{
+  padding: 12px 16px 16px;
+  overflow: auto;
+  min-height: 0;
+}
+
+.iu-parcels-content-inner{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow: visible;
+  max-height: none;
+  min-height: 0;
+}
+
+.iu-parcels-content-inner *{
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.iu-parcels-quicktrack{
+  padding: 14px 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(15,23,42,.08);
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.iu-parcels-quicktrack-title{
+  margin: 0 0 6px 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.iu-parcels-quicktrack-lead{
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(15,23,42,.72);
+}
+
+.iu-parcels-quicktrack-row{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.iu-parcels-quicktrack-input{
+  flex: 1 1 220px;
+  max-width: 100%;
+  font-size: 16px;
+  min-height: 44px;
+}
+
+.iu-parcels-quicktrack-submit{
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding-left: 18px;
+  padding-right: 18px;
+  background: #0f172a;
+  color: #fff;
+  border-color: #0f172a;
+}
+
+.iu-parcels-quicktrack-submit:hover{
+  background: #1e293b;
+  border-color: #1e293b;
+}
+
+.iu-parcels-quicktrack-postal{
+  margin-top: 12px;
+}
+
+.iu-parcels-quicktrack-postal-label{
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(15,23,42,.75);
+  margin-bottom: 6px;
+}
+
+.iu-parcels-quicktrack-postal-input{
+  width: 100%;
+  max-width: 280px;
+  font-size: 16px;
+  min-height: 44px;
+}
+
+.iu-parcels-quicktrack-message{
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(15,23,42,.82);
+  min-height: 1.25em;
+}
+
+.iu-parcels-quicktrack-message.iu-parcels-quicktrack-message--warn{
+  color: #b45309;
+}
+
+.iu-parcels-quicktrack-message.iu-parcels-quicktrack-message--ok{
+  color: #15803d;
+}
+
+.iu-parcels-fallback-banner{
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(217,119,6,.35);
+  background: rgba(254,243,199,.45);
+  color: #92400e;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.iu-parcel-carrier{
+  width: 100%;
+  padding: 14px 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(15,23,42,.08);
+  background: #fff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.iu-parcel-carrier:last-child{
+  margin-bottom: 0;
+}
+
+.iu-parcel-carrier-head{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.iu-parcel-carrier-name{
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--iu-text, #111);
+}
+
+.iu-parcel-carrier-badge{
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(34,197,94,.12);
+  color: #166534;
+  border: 1px solid rgba(34,197,94,.28);
+}
+
+.iu-parcel-carrier-note{
+  margin: 0 0 10px 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: rgba(15,23,42,.65);
+}
+
+.iu-parcel-carrier--packeta{
+  border-color: rgba(230,0,18,.22);
+  background: linear-gradient(180deg, #fff 0%, rgba(230,0,18,.04) 100%);
+}
+
+.iu-parcel-carrier--balikovna{
+  border-color: rgba(30,64,175,.22);
+  background: linear-gradient(180deg, #fff 0%, rgba(30,64,175,.05) 100%);
+}
+
+.iu-parcel-carrier--ppl{
+  border-color: rgba(220,38,38,.2);
+  background: linear-gradient(180deg, #fff 0%, rgba(220,38,38,.04) 100%);
+}
+
+.iu-parcel-carrier--dpd{
+  border-color: rgba(194,65,12,.22);
+  background: linear-gradient(180deg, #fff 0%, rgba(234,88,12,.06) 100%);
+}
+
+.iu-parcel-carrier--gls{
+  border-color: rgba(5,150,105,.22);
+  background: linear-gradient(180deg, #fff 0%, rgba(16,185,129,.05) 100%);
+}
+
+.iu-parcel-carrier--wedo{
+  border-color: rgba(79,70,229,.2);
+  background: linear-gradient(180deg, #fff 0%, rgba(99,102,241,.05) 100%);
+}
+
+.iu-parcel-carrier--dhl{
+  border-color: rgba(234,179,8,.28);
+  background: linear-gradient(180deg, #fff 0%, rgba(250,204,21,.07) 100%);
+}
+
+.iu-parcel-carrier--messenger{
+  border-color: rgba(14,165,233,.22);
+  background: linear-gradient(180deg, #fff 0%, rgba(14,165,233,.06) 100%);
+}
+
+.iu-parcel-carrier.iu-parcel-carrier--selected{
+  border-color: rgba(59,130,246,.55);
+  box-shadow: 0 0 0 1px rgba(59,130,246,.2);
+  background: linear-gradient(180deg, #fff 0%, rgba(59,130,246,.06) 100%);
+}
+
+.iu-parcel-carrier.iu-parcel-carrier--auto{
+  border-color: rgba(34,197,94,.45);
+  box-shadow: 0 0 0 1px rgba(34,197,94,.18);
+}
+
+.iu-parcel-carrier.iu-parcel-carrier--neutral{
+  opacity: 0.92;
+}
+
+.iu-parcel-carrier[data-iu-parcel-needs-psc="1"].iu-parcel-carrier--needs-extra .iu-parcel-search-btn{
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.iu-parcel-carrier:focus-visible{
+  outline: 2px solid rgba(59,130,246,.5);
+  outline-offset: 2px;
+}
+
+.iu-parcelRows{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.iu-parcel-row{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: stretch;
+  position: relative;
+}
+
+.iu-parcelRows .iu-parcel-row:last-child{
+  margin-bottom: 0;
+}
+
+.iu-parcel-row-inputs{
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.iu-parcel-input{
+  flex: 0 0 50%;
+  max-width: 50%;
+  padding: 8px 12px;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.5;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.iu-parcel-input:focus{
+  outline: none;
+  border-color: rgba(0,123,255,.5);
+  box-shadow: 0 0 0 2px rgba(0,123,255,.1);
+}
+
+.iu-parcel-search-btn{
+  flex: 0 0 auto;
+  padding: 8px 16px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(0,0,0,.85);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.iu-parcel-search-btn:hover{
+  background: rgba(0,0,0,.02);
+  border-color: rgba(0,0,0,.35);
+}
+
+.iu-parcel-search-btn:active{
+  background: rgba(0,0,0,.05);
+}
+
+.iu-parcel-add-btn{
+  margin-top: 8px;
+  background: transparent;
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--iu-link, #1f3a5f);
+  text-decoration: underline;
+  text-decoration-color: rgba(31,58,95,.35);
+}
+
+.iu-parcel-add-btn:hover{
+  text-decoration-color: rgba(31,58,95,.75);
+}
+
+.iu-parcel-fallback-btn{
+  margin-top: 8px;
+  padding: 4px 8px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  font-size: 11px;
+  color: rgba(0,0,0,.5);
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: rgba(0,0,0,.2);
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.iu-parcel-fallback-btn:hover{
+  color: rgba(0,0,0,.75);
+  text-decoration-color: rgba(0,0,0,.4);
+}
+
+.iu-parcel-fallback-btn:focus-visible{
+  outline: 2px solid rgba(0,123,255,.5);
+  outline-offset: 2px;
+  color: rgba(0,0,0,.75);
+}
+
+@media (max-width: 768px){
+  body:not(.iu-parcels-overlay-open) .iu-parcels-modal{
+    inset: 12px;
+    max-height: calc(100vh - 24px);
+  }
+}
+
+@media (max-width: 1023px){
+  .iu-parcel-carrier .iu-parcel-input{
+    font-size: 16px;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 520px){
+  .iu-parcel-row-inputs{
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .iu-parcel-input{
+    flex: 0 0 auto;
+    max-width: 100%;
+    width: 100%;
+  }
+  .iu-parcel-search-btn{
+    width: 100%;
+  }
+}

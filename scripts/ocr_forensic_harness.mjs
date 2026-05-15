@@ -25,6 +25,11 @@ export const PIPELINE_STEPS = Object.freeze([
 const MIN_FIXTURE_BYTES = 500;
 const MIN_DIMENSION = 2;
 
+/** Recommended wait (ms) before snapshot so pipeline can complete; use in proof runner. */
+export const RECOMMENDED_COMPLETION_WAIT_MS = 18000;
+/** Max retries in runner when snapshot is likely incomplete (harness-only retry window). */
+export const RECOMMENDED_MAX_RETRIES = 3;
+
 /**
  * Fixture validity gate. If fixtureValidForParserExpectation=false, proof must not claim real pipeline fail.
  * @param {object} fixture - { fixtureProvided, fixtureFileName, fixtureMime, fixtureBytes, fixtureLooksBlank?, fixtureContainsReadableTextLikely?, fixtureContainsDigitsLikely? }
@@ -94,8 +99,22 @@ export function buildTruthTableFromDebug(debug) {
 }
 
 /**
+ * First failing step: first step in pipeline order that did not pass (reached or not).
+ * NONE only when all steps passed. Prevents firstFailingPipelineStep=NONE on incomplete/partial runs.
+ */
+export function firstFailingPipelineStepFromTruthTable(truthTable) {
+  const steps = PIPELINE_STEPS;
+  for (const s of steps) {
+    const row = truthTable[s];
+    if (!row || row.passed !== true) return s;
+  }
+  return null;
+}
+
+/**
  * Contradiction guard. If all steps passed=true, firstFailingPipelineStep must be null and finalRootCauseClass must not be pipeline failure.
  * If claimedFirstFailing is set while truth table has all passed, that is a contradiction (e.g. 7.3K bug).
+ * firstFailing = first step that did not pass (so never NONE when pipeline incomplete).
  * @param {object} truthTable - from buildTruthTableFromDebug
  * @param {{ claimedFirstFailing?: string|null }} opts - optional claimed first failing step from buggy harness
  * @returns {{ consistent: boolean, status: string, firstFailingPipelineStep: string|null, finalRootCauseClass: string|null, codeFixNeeded: boolean, fixTarget: string|null }}
@@ -103,14 +122,7 @@ export function buildTruthTableFromDebug(debug) {
 export function contradictionGuard(truthTable, opts = {}) {
   const steps = PIPELINE_STEPS;
   const allPassed = steps.every((s) => truthTable[s] && truthTable[s].passed === true);
-  let firstFailing = null;
-  for (const s of steps) {
-    const row = truthTable[s];
-    if (row && row.reached && !row.passed) {
-      firstFailing = s;
-      break;
-    }
-  }
+  const firstFailing = firstFailingPipelineStepFromTruthTable(truthTable);
   const claimed = opts.claimedFirstFailing != null && opts.claimedFirstFailing !== "" ? String(opts.claimedFirstFailing) : null;
 
   if (allPassed && claimed) {
@@ -134,11 +146,12 @@ export function validCorpusGuard(validCorpusUsed, corpusHasReadableText, corpusH
 
 /**
  * Verdict assembler. Allowed classes only. No pipeline failure class when fixture invalid or truth table all-passed.
- * @param {object} opts - { truthTable, fixtureValid, validCorpusUsed, corpusHasReadableText, corpusHasDigits, metrics }
+ * Incomplete-run guard: when runComplete=false, do not classify as REAL_PROD_PIPELINE_FAILURE (partial snapshot).
+ * @param {object} opts - { truthTable, validCorpusUsed, corpusHasReadableText, corpusHasDigits, metrics, fixture, claimedFirstFailing, runComplete }
  * @returns {{ finalRootCauseClass: string, firstFailingPipelineStep: string|null, prodProofPass: boolean, status: string, truthTableConsistent: boolean }}
  */
 export function verdictAssembler(opts) {
-  const { truthTable, validCorpusUsed, corpusHasReadableText, corpusHasDigits, metrics = {}, fixture: fixtureInput, claimedFirstFailing } = opts || {};
+  const { truthTable, validCorpusUsed, corpusHasReadableText, corpusHasDigits, metrics = {}, fixture: fixtureInput, claimedFirstFailing, runComplete = true } = opts || {};
   const contra = contradictionGuard(truthTable || {}, { claimedFirstFailing });
   const fixtureResult = fixtureValidityGate(fixtureInput || {});
 
@@ -180,7 +193,14 @@ export function verdictAssembler(opts) {
     };
   }
 
-  if (contra.firstFailingPipelineStep && fixtureResult.valid) {
+  const truthTableConsistent = contra.consistent;
+  const realPipelineFailureAllowed =
+    corpusOk &&
+    truthTableConsistent &&
+    contra.firstFailingPipelineStep != null &&
+    fixtureResult.valid &&
+    runComplete !== false;
+  if (realPipelineFailureAllowed && contra.firstFailingPipelineStep) {
     return {
       finalRootCauseClass: "REAL_PROD_PIPELINE_FAILURE",
       firstFailingPipelineStep: contra.firstFailingPipelineStep,
@@ -189,6 +209,17 @@ export function verdictAssembler(opts) {
       truthTableConsistent: true,
       codeFixNeeded: true,
       fixTarget: contra.firstFailingPipelineStep,
+    };
+  }
+  if (!runComplete && contra.firstFailingPipelineStep && fixtureResult.valid && corpusOk) {
+    return {
+      finalRootCauseClass: "INVALID_FORENSIC_VERDICT",
+      firstFailingPipelineStep: contra.firstFailingPipelineStep,
+      prodProofPass: false,
+      status: "INCOMPLETE_RUN",
+      truthTableConsistent: true,
+      codeFixNeeded: true,
+      fixTarget: "HARNESS",
     };
   }
 
@@ -205,7 +236,7 @@ export function verdictAssembler(opts) {
 
   return {
     finalRootCauseClass: "INVALID_FORENSIC_VERDICT",
-    firstFailingPipelineStep: null,
+    firstFailingPipelineStep: contra.firstFailingPipelineStep,
     prodProofPass: false,
     status: "UNKNOWN",
     truthTableConsistent: contra.consistent,
@@ -216,8 +247,9 @@ export function verdictAssembler(opts) {
 
 /**
  * One-shot: run fixture gate + truth table + contradiction guard + verdict from debug + fixture + metrics.
+ * @param {boolean} [runComplete=true] - set false when snapshot was taken before pipeline completion (incomplete-run guard).
  */
-export function runHarness(debug, fixture, metrics, validCorpusUsed, corpusHasReadableText, corpusHasDigits) {
+export function runHarness(debug, fixture, metrics, validCorpusUsed, corpusHasReadableText, corpusHasDigits, runComplete = true) {
   const gate = fixtureValidityGate(fixture);
   if (!gate.valid) {
     return { status: "INVALID_FIXTURE", finalRootCauseClass: "INVALID_TEST_FIXTURE", prodProofPass: false, truthTableConsistent: null, ...gate };
@@ -234,6 +266,7 @@ export function runHarness(debug, fixture, metrics, validCorpusUsed, corpusHasRe
     corpusHasDigits,
     metrics,
     fixture,
+    runComplete,
   });
   return { ...verdict, truthTable };
 }
