@@ -814,6 +814,7 @@ function runApplyOneSafePrMain(ctx, mainCommit, governance, triage, prNumber, tr
 
     const waitR = waitForPrChecksIdle(prNumber, 50 * 60 * 1000, 15000);
     if (!waitR.ok || !waitR.prView) {
+      report.apply_sync_result = "FAIL";
       report.apply_stopped_reason = waitR.message === "ci_wait_timeout" ? "ci_wait_timeout" : "ci_poll_failed";
       report.safe_to_continue = "NO";
       exitApplyZero(report);
