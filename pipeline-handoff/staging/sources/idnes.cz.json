@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-15T20:24:33.654875Z",
+  "ingestedAt": "2026-05-15T21:08:08.384032Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Policisté v Praze našli v autě pět kýblů marihuany. Řidiče okamžitě odvezli",
+      "url": "https://www.idnes.cz/praha/zpravy/praha-5-na-malvazinkach-xaveriova-konopi-marihuana-policie.A260515_215624_praha-zpravy_tmps",
+      "dt": "2026-05-15T20:29:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "autě",
+        "kýblů",
+        "marihuany",
+        "našli",
+        "odvezli",
+        "okamžitě",
+        "policisté",
+        "praze",
+        "pět",
+        "řidiče"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -753,32 +780,6 @@
         "ukrajině",
         "valerij",
         "zalužnyj"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Prořízl si hrdlo, přežil náhodou. Spisovatel s bipolární poruchou bourá stigma",
-      "url": "https://www.idnes.cz/pardubice/zpravy/donio-sbirka-spisovatel-sebevrazda-bipolarni-porucha.A260514_000319_pardubice-zpravy_lank",
-      "dt": "2026-05-15T14:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bipolární",
-        "bourá",
-        "hrdlo",
-        "náhodou",
-        "poruchou",
-        "prořízl",
-        "přežil",
-        "spisovatel",
-        "stigma"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1567,7 +1568,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48309,
+      "bytes": 48435,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1604,11 +1605,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T20:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T20:29:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 7,
           "zpravy": 22,
+          "finance": 7,
           "other": 1
         },
         "drop_counts": {
@@ -1621,6 +1622,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policisté v Praze našli v autě pět kýblů marihuany. Řidiče okamžitě odvezli",
+            "publishedAt": "2026-05-15T20:29:00Z"
+          },
           {
             "title": "Ruský soud nařídil společnosti Euroclear uhradit stamiliardy dolarů za zmrazená aktiva",
             "publishedAt": "2026-05-15T20:05:00Z"
@@ -1648,10 +1653,6 @@
           {
             "title": "Rusko tlačí na nový plynovod do Číny. Je to bezpečnější alternativa, tvrdí",
             "publishedAt": "2026-05-15T18:00:00Z"
-          },
-          {
-            "title": "Trumpovy vlastenecké plány nekončí. Podél řeky Potomac chce zahradu hrdinů",
-            "publishedAt": "2026-05-15T17:55:00Z"
           }
         ]
       }

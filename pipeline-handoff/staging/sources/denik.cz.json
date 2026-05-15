@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-15T20:24:33.654875Z",
+  "ingestedAt": "2026-05-15T21:08:08.384032Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Děsivé chvíle ve vzduchu. Letadlo nad Slovenskem zasáhl blesk",
+      "url": "https://www.denik.cz/staty-eu/wizz-air-bratislava-kosice-blesk.html",
+      "dt": "2026-05-15T20:10:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "blesk",
+        "chvíle",
+        "děsivé",
+        "letadlo",
+        "slovenskem",
+        "vzduchu",
+        "zasáhl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -619,31 +643,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Na hřebenech Krkonoš chumelilo. Sněžku pokrylo několik centimetrů sněhu",
-      "url": "https://www.denik.cz/regiony/snih-v-krkonosich-20260515.html",
-      "dt": "2026-05-15T09:20:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "centimetrů",
-        "chumelilo",
-        "hřebenech",
-        "krkonoš",
-        "několik",
-        "pokrylo",
-        "sněhu",
-        "sněžku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -654,7 +653,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29585,
+      "bytes": 29361,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -691,7 +690,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-15T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T20:10:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -707,6 +706,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Děsivé chvíle ve vzduchu. Letadlo nad Slovenskem zasáhl blesk",
+            "publishedAt": "2026-05-15T20:10:00Z"
+          },
           {
             "title": "Láska, která skončila smrtí. Sérii Monyová táhne nahoru Tereza Ramba",
             "publishedAt": "2026-05-15T18:00:00Z"
@@ -734,10 +737,6 @@
           {
             "title": "Internetový obchod s vitamíny a zdravotnickými potřebami končí. Nakupil dluhy",
             "publishedAt": "2026-05-15T14:28:00Z"
-          },
-          {
-            "title": "Státní dluh až 400 miliard ročně. Schillerová změnila zákonná pravidla",
-            "publishedAt": "2026-05-15T14:16:00Z"
           }
         ]
       }
