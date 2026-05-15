@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-05-15T15:44:44.223549Z",
+  "ingestedAt": "2026-05-15T16:25:00.934229Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "K-9, můj přítel se studeným čumákem: Podfuk tvůrců se psem, improvizace hvězdy a smrtelný osud psího parťáka",
+      "url": "https://www.vtelce.cz/k-9-muj-pritel-se-studenym-cumakem-podfuk-tvurcu-se-psem-improvizace-hvezdy-a-smrtelny-osud-psiho-partaka/",
+      "dt": "2026-05-15T15:50:05Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "hvězdy",
+        "improvizace",
+        "můj",
+        "osud",
+        "parťáka",
+        "podfuk",
+        "psem",
+        "psího",
+        "přítel",
+        "smrtelný",
+        "studeným",
+        "tvůrců",
+        "čumákem"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -258,36 +288,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "To: Psychické potíže po skončení natáčení, vyděšení dětští herci a rada „nevěřte klaunům“ jako konkurenční boj",
-      "url": "https://www.vtelce.cz/to-psychicke-potize-po-skonceni-nataceni-vydeseni-detsti-herci-a-rada-neverte-klaunum-jako-konkurencni-boj/",
-      "dt": "2026-05-13T18:28:58Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "boj",
-        "dětští",
-        "herci",
-        "jako",
-        "klaunům",
-        "konkurenční",
-        "natáčení",
-        "nevěřte",
-        "potíže",
-        "psychické",
-        "rada",
-        "skončení",
-        "vyděšení"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -298,8 +298,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 69186,
-      "reason": "",
+      "bytes": 72929,
+      "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -335,7 +335,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-15T08:15:37Z",
+        "raw_feed_latest_publishedAt": "2026-05-15T15:50:05Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "other": 9,
@@ -351,6 +351,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "K-9, můj přítel se studeným čumákem: Podfuk tvůrců se psem, improvizace hvězdy a smrtelný osud psího parťáka",
+            "publishedAt": "2026-05-15T15:50:05Z"
+          },
           {
             "title": "Ulice: Hruškovi v šoku, Erik je navštíví bez Natčina vědomí s velkou prosbou",
             "publishedAt": "2026-05-15T08:15:37Z"
@@ -378,10 +382,6 @@
           {
             "title": "Ulice: Soňa manipuluje okolím a hází špínu na Erika",
             "publishedAt": "2026-05-14T07:32:39Z"
-          },
-          {
-            "title": "Letošní Survivor hlasí velkou změnu: Truhla s hlasy dorazila do Prahy. Jméno vítěze zazní v přímém přenosu",
-            "publishedAt": "2026-05-14T06:56:50Z"
           }
         ]
       }
