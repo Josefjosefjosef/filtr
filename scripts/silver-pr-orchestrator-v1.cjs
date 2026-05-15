@@ -21,6 +21,10 @@ const OUT_REPORT_REL = "scripts/silver-pr-orchestrator-v1-report.json";
 
 const MAX_BUFFER = 64 * 1024 * 1024;
 
+/** After `gh pr update-branch`, GitHub may leave mergeStateStatus/mergeable UNKNOWN briefly; poll before giving up. */
+const POST_SYNC_UNKNOWN_RECHECK_MAX_ATTEMPTS = 8;
+const POST_SYNC_UNKNOWN_RECHECK_SLEEP_MS = 4000;
+
 function sleepMs(ms) {
   try {
     Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
@@ -130,6 +134,10 @@ function baseReport() {
     apply_merge_result: "NOT_RUN",
     apply_post_merge_proof: "NOT_RUN",
     apply_stopped_reason: "",
+    post_sync_recheck_attempted: "NO",
+    post_sync_recheck_count: 0,
+    post_sync_merge_state_final: "",
+    post_sync_mergeable_final: "",
     safe_to_continue: "",
     main_commit: "",
     governance_loaded: false,
@@ -697,6 +705,22 @@ function applyUltraSafeGates(evalResult, prView) {
   return { ok: true, reason: "" };
 }
 
+/**
+ * After a successful `gh pr update-branch`, GitHub sometimes returns mergeStateStatus=UNKNOWN
+ * and mergeable=UNKNOWN even when paths are scripts/docs-only and checks are idle. Recheck
+ * with `gh pr view` + `gh pr checks` before treating that as a final stop.
+ */
+function shouldPostSyncRecheckUnknownMergeState(curPrView, paths, evalResult) {
+  if (!curPrView || !isPrViewOpen(curPrView)) return false;
+  if (!paths || !paths.length || !isLowRiskDocsOrScriptsOnly(paths)) return false;
+  if (hasAssetsAppJs(paths) || hasAssetsAppCss(paths) || hasGithubWorkflow(paths)) return false;
+  const ch = evalResult.status_checks_summary;
+  if (!ch || ch.pending > 0 || ch.failed > 0) return false;
+  const ms = String(evalResult.merge_state_status || "").toUpperCase();
+  const mg = String(evalResult.mergeable || "").toUpperCase();
+  return ms === "UNKNOWN" && mg === "UNKNOWN";
+}
+
 function waitForPrChecksIdle(prNumber, maxWaitMs, pollMs) {
   const deadline = Date.now() + maxWaitMs;
   let lastSummary = null;
@@ -1057,6 +1081,10 @@ function runApplyOneSafePrMain(
   report.apply_merge_result = "NOT_RUN";
   report.apply_post_merge_proof = "NOT_RUN";
   report.apply_stopped_reason = "";
+  report.post_sync_recheck_attempted = "NO";
+  report.post_sync_recheck_count = 0;
+  report.post_sync_merge_state_final = "";
+  report.post_sync_mergeable_final = "";
   report.safe_to_continue = "NO";
 
   if (!gates.ok) {
@@ -1153,10 +1181,78 @@ function runApplyOneSafePrMain(
       candidate_state: prViewStateString(curPrView),
     });
 
+    report.post_sync_merge_state_final = String(evalResult.merge_state_status || "");
+    report.post_sync_mergeable_final = String(evalResult.mergeable || "");
+
+    if (shouldPostSyncRecheckUnknownMergeState(curPrView, curPaths, evalResult)) {
+      report.post_sync_recheck_attempted = "YES";
+      for (let attempt = 1; attempt <= POST_SYNC_UNKNOWN_RECHECK_MAX_ATTEMPTS; attempt += 1) {
+        report.post_sync_recheck_count = attempt;
+        if (attempt > 1) {
+          sleepMs(POST_SYNC_UNKNOWN_RECHECK_SLEEP_MS);
+        }
+        runCommand("gh", ["pr", "checks", String(prNumber)]);
+        const recheckView = runGhJsonWithRetry([
+          "pr",
+          "view",
+          String(prNumber),
+          "--json",
+          "number,title,url,headRefName,baseRefName,mergeStateStatus,mergeable,statusCheckRollup,isDraft,state",
+        ]);
+        if (!recheckView.ok || !recheckView.data) {
+          break;
+        }
+        curPrView = recheckView.data;
+        if (!isPrViewOpen(curPrView)) {
+          break;
+        }
+        const diffRecheck = listChangedPathsFromGhNameOnly(prNumber);
+        if (diffRecheck.ok) {
+          curPaths = diffRecheck.paths;
+        }
+        evalResult = evaluateCandidate(curPrView, curPaths, {
+          governanceCategory,
+          triageCategory,
+        });
+        report.post_sync_merge_state_final = String(evalResult.merge_state_status || "");
+        report.post_sync_mergeable_final = String(evalResult.mergeable || "");
+        Object.assign(report, {
+          candidate_files: evalResult.candidate_files,
+          merge_state_status: evalResult.merge_state_status,
+          mergeable: evalResult.mergeable,
+          status_checks_summary: evalResult.status_checks_summary,
+          risk_level: evalResult.risk_level,
+          allowed_action: evalResult.allowed_action,
+          blocked_reason: evalResult.blocked_reason,
+          would_merge: evalResult.would_merge,
+          would_push: evalResult.would_push,
+          engine_changed: evalResult.engine_changed,
+          assets_app_changed: evalResult.assets_app_changed,
+          recommended_next_command: evalResult.recommended_next_command,
+          candidate_state: prViewStateString(curPrView),
+        });
+        if (evalResult.allowed_action === "VERIFY_AND_MERGE_IF_CLEAN") {
+          break;
+        }
+        const msLoop = String(evalResult.merge_state_status || "").toUpperCase();
+        const mgLoop = String(evalResult.mergeable || "").toUpperCase();
+        if (!(msLoop === "UNKNOWN" && mgLoop === "UNKNOWN")) {
+          break;
+        }
+      }
+    }
+
     const postSyncGates = applyUltraSafeGates(evalResult, curPrView);
     if (!postSyncGates.ok || evalResult.allowed_action !== "VERIFY_AND_MERGE_IF_CLEAN") {
       report.apply_merge_attempted = "NO";
-      report.apply_stopped_reason = "post_sync_not_merge_ready";
+      const msEnd = String(evalResult.merge_state_status || "").toUpperCase();
+      const mgEnd = String(evalResult.mergeable || "").toUpperCase();
+      const stillBothUnknown = msEnd === "UNKNOWN" && mgEnd === "UNKNOWN";
+      if (report.post_sync_recheck_attempted === "YES" && stillBothUnknown) {
+        report.apply_stopped_reason = "post_sync_merge_state_unknown_after_recheck";
+      } else {
+        report.apply_stopped_reason = "post_sync_not_merge_ready";
+      }
       report.safe_to_continue = "YES";
       exitApplyZero(report);
       return;
