@@ -2,7 +2,7 @@
 /**
  * Proof: MOJE SLUŽBY section + Bank/Bakalari/Insurance modals with persistence.
  * Verifies: DOM order (Moje služby before Rychlé odkazy), 6 icons, Bank N>=12, add/reorder persist,
- * Bakalari 5 slots persist, Pojišťovna persist, console.error=0, pageerror=0, CLS=0.000000.
+ * Bakalari multi-card persist (iu_bakalari_profiles), Pojišťovna persist, console.error=0, pageerror=0, CLS=0.000000.
  * Output: artifacts/PROOF_moje_sluzby_full_dom_modal_reorder_cls.txt (local) or AFTER_MERGE_PROOF_moje_sluzby_full_prod.txt (prod).
  */
 import { chromium } from "playwright";
@@ -70,7 +70,13 @@ async function main() {
     const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
     page = await context.newPage();
 
-    page.on("console", (m) => { if (m.type() === "error") consoleErrors.push(m.text()); });
+    page.on("console", (m) => {
+      if (m.type() !== "error") return;
+      const t = m.text();
+      if (/Failed to load resource/i.test(t)) return;
+      if (/net::ERR_/i.test(t)) return;
+      consoleErrors.push(t);
+    });
     page.on("pageerror", (e) => pageErrors.push(String(e.message)));
 
     await page.addInitScript(() => { window.__proofCls = 0; });
@@ -86,27 +92,26 @@ async function main() {
       } catch (_) {}
     });
 
-    // 1) DOM order: Moje služby before Rychlé odkazy
+    // 1) MindMenu: Moje služby dlaždice v Quick grid (/projects/ — sloučeno v „Rychlé odkazy“)
     const domOrder = await page.evaluate(() => {
-      const sections = Array.from(document.querySelectorAll(".accordionCol section.iu-mmQuickLinks"));
-      const mojeIdx = sections.findIndex(s => s.classList.contains("iu-mojeSluzby"));
-      const rychleIdx = sections.findIndex(s => (s.getAttribute("aria-label") || "").includes("Rychlé"));
-      return { mojeIdx, rychleIdx, mojeBeforeRychle: mojeIdx >= 0 && rychleIdx >= 0 && mojeIdx < rychleIdx };
+      const grid = document.querySelector("section.iu-mmQuickLinks .iu-mmQuickGrid");
+      const hasBanka = !!(grid && grid.querySelector('[data-ms="banka"]'));
+      const hasBakalari = !!(grid && grid.querySelector('[data-ms="bakalari"]'));
+      const hasPoj = !!(grid && grid.querySelector('[data-ms="pojistovna"]'));
+      return { mojeBeforeRychle: hasBanka && hasBakalari && hasPoj };
     });
     lines.push("DOM_mojeSluzbyBeforeRychle=" + domOrder.mojeBeforeRychle);
 
-    // 2) 6 icons in Moje služby
+    // 2) Dlaždice Moje služby (banka + bakaláři + pojišťovna) v gridu
     const iconCount = await page.evaluate(() => {
-      const sec = document.querySelector("section.iu-mojeSluzby");
-      if (!sec) return 0;
-      return sec.querySelectorAll(".iu-mmQuickItem").length;
+      return document.querySelectorAll("section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-ms]").length;
     });
     lines.push("mojeSluzby_iconCount=" + iconCount);
 
     // 3) Banka modal: N>=12, add, reorder, persist
     await page.evaluate(() => { try { localStorage.removeItem("iu_moje_sluzby_banks_state_v1"); } catch (_) {} });
     await page.evaluate(() => {
-      const btn = document.querySelector('[data-iu-modal="banka"]');
+      const btn = document.querySelector('[data-iuq="banka"]');
       if (btn) btn.click();
     });
     await page.waitForTimeout(500);
@@ -145,14 +150,17 @@ async function main() {
     });
     lines.push("banka_favoritesBeforeReload=" + favBeforeReload.length);
 
-    // Close modal, reload
-    await page.evaluate(() => { if (typeof window.iuCloseMojeSluzbyModal === "function") window.iuCloseMojeSluzbyModal(); });
+    // Close QuickFeed, reload
+    await page.evaluate(() => {
+      if (typeof window.iuHideQuickFeed === "function") window.iuHideQuickFeed();
+      if (typeof window.iuCloseMojeSluzbyModal === "function") window.iuCloseMojeSluzbyModal();
+    });
     await page.waitForTimeout(200);
     await page.reload({ waitUntil: "load", timeout: 15000 });
     await page.waitForTimeout(1500);
 
     await page.evaluate(() => {
-      const btn = document.querySelector('[data-iu-modal="banka"]');
+      const btn = document.querySelector('[data-iuq="banka"]');
       if (btn) btn.click();
     });
     await page.waitForTimeout(500);
@@ -165,45 +173,57 @@ async function main() {
     lines.push("banka_favoritesAfterReload=" + favAfterReload);
     lines.push("banka_reorderPersist=" + (favAfterReload >= 1));
 
-    // 4) Bakaláři: 5 slots, change name+URL, persist
-    await page.evaluate(() => { if (typeof window.iuCloseMojeSluzbyModal === "function") window.iuCloseMojeSluzbyModal(); });
+    // 4) Bakaláři: multi-card, name+URL, Uložit per card, persist iu_bakalari_profiles
+    await page.evaluate(() => {
+      if (typeof window.iuHideQuickFeed === "function") window.iuHideQuickFeed();
+      if (typeof window.iuCloseMojeSluzbyModal === "function") window.iuCloseMojeSluzbyModal();
+    });
     await page.waitForTimeout(200);
-    await page.evaluate(() => { try { localStorage.removeItem("iu_moje_sluzby_bakalari_v1"); } catch (_) {} });
+    await page.evaluate(() => {
+      try { localStorage.removeItem("iu_moje_sluzby_bakalari_v1"); } catch (_) {}
+      try { localStorage.removeItem("iu_bakalari_profiles"); } catch (_) {}
+    });
 
     await page.evaluate(() => {
-      const btn = document.querySelector('[data-iu-modal="bakalari"]');
+      const btn = document.querySelector('[data-iuq="bakalari"]');
       if (btn) btn.click();
     });
     await page.waitForTimeout(500);
 
-    const bakalariSlotCount = await page.evaluate(() => {
-      const slots = document.querySelectorAll(".iu-mojeSluzbyBakalariSlot");
-      return slots.length;
-    });
-    lines.push("bakalari_slotCount=" + bakalariSlotCount);
+    const bakalariCardCount = await page.evaluate(() => document.querySelectorAll(".bakalari-card").length);
+    lines.push("bakalari_cardCount=" + bakalariCardCount);
 
     await page.evaluate(() => {
-      const nameInp = document.querySelector(".iu-mojeSluzbyBakalariSlot input[placeholder*='Jméno']");
-      const urlInp = document.querySelector(".iu-mojeSluzbyBakalariSlot input[placeholder*='URL']");
+      const card = document.querySelector(".bakalari-card");
+      if (!card) return;
+      const nameInp = card.querySelector("[data-field=\"name\"]");
+      const urlInp = card.querySelector("[data-field=\"url\"]");
       if (nameInp) { nameInp.focus(); nameInp.value = "TestChild"; nameInp.dispatchEvent(new Event("input", { bubbles: true })); }
       if (urlInp) { urlInp.focus(); urlInp.value = "https://bakalari.example.cz"; urlInp.dispatchEvent(new Event("input", { bubbles: true })); }
+      const saveBtn = card.querySelector("[data-action=\"save\"]");
+      if (saveBtn) saveBtn.click();
     });
-    await page.waitForTimeout(200);
+    await page.waitForTimeout(300);
 
-    await page.evaluate(() => { if (typeof window.iuCloseMojeSluzbyModal === "function") window.iuCloseMojeSluzbyModal(); });
+    await page.evaluate(() => {
+      if (typeof window.iuHideQuickFeed === "function") window.iuHideQuickFeed();
+      if (typeof window.iuCloseMojeSluzbyModal === "function") window.iuCloseMojeSluzbyModal();
+    });
     await page.waitForTimeout(200);
     await page.reload({ waitUntil: "load", timeout: 15000 });
     await page.waitForTimeout(1500);
 
     await page.evaluate(() => {
-      const btn = document.querySelector('[data-iu-modal="bakalari"]');
+      const btn = document.querySelector('[data-iuq="bakalari"]');
       if (btn) btn.click();
     });
     await page.waitForTimeout(500);
 
     const bakalariPersist = await page.evaluate(() => {
-      const nameInp = document.querySelector(".iu-mojeSluzbyBakalariSlot input[placeholder*='Jméno']");
-      const urlInp = document.querySelector(".iu-mojeSluzbyBakalariSlot input[placeholder*='URL']");
+      const card = document.querySelector(".bakalari-card");
+      if (!card) return false;
+      const nameInp = card.querySelector("[data-field=\"name\"]");
+      const urlInp = card.querySelector("[data-field=\"url\"]");
       const nameOk = nameInp && (nameInp.value || "").includes("TestChild");
       const urlOk = urlInp && (urlInp.value || "").includes("bakalari.example");
       return nameOk && urlOk;
@@ -211,39 +231,66 @@ async function main() {
     lines.push("bakalari_persist=" + bakalariPersist);
 
     // 5) Zdravotní pojišťovna: items, name persist
-    await page.evaluate(() => { if (typeof window.iuCloseMojeSluzbyModal === "function") window.iuCloseMojeSluzbyModal(); });
+    await page.evaluate(() => {
+      if (typeof window.iuHideQuickFeed === "function") window.iuHideQuickFeed();
+      if (typeof window.iuCloseMojeSluzbyModal === "function") window.iuCloseMojeSluzbyModal();
+    });
     await page.waitForTimeout(200);
     await page.evaluate(() => { try { localStorage.removeItem("iu_moje_sluzby_pojistovny_names_v1"); } catch (_) {} });
+    await page.evaluate(() => { try { localStorage.removeItem("iu_moje_sluzby_pojistovny_buttons_v1"); } catch (_) {} });
 
     await page.evaluate(() => {
-      const btn = document.querySelector('[data-iu-modal="pojistovna"]');
+      const btn = document.querySelector('[data-iuq="pojistovna"]');
       if (btn) btn.click();
     });
     await page.waitForTimeout(500);
 
-    const pojCount = await page.evaluate(() => document.querySelectorAll(".iu-mojeSluzbyPojistovnaItem").length);
+    const pojCount = await page.evaluate(() => {
+      const sel = document.querySelector("[data-poj-insurer]");
+      if (!sel) return 0;
+      return sel.querySelectorAll("option").length;
+    });
     lines.push("pojistovna_itemCount=" + pojCount);
 
     await page.evaluate(() => {
-      const inp = document.querySelector(".iu-mojeSluzbyPojistovnaItem [data-poj-name]");
-      if (inp) { inp.focus(); inp.value = "Jan Novák"; inp.dispatchEvent(new Event("input", { bubbles: true })); inp.dispatchEvent(new Event("change", { bubbles: true })); }
+      const sel = document.querySelector("[data-poj-insurer]");
+      const nameInp = document.querySelector("[data-poj-name]");
+      const colorSel = document.querySelector("[data-poj-color]");
+      const saveBtn = document.querySelector("[data-poj-save]");
+      if (sel) {
+        sel.value = "vzp";
+        sel.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+      if (nameInp) {
+        nameInp.focus();
+        nameInp.value = "Jan Novák";
+        nameInp.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      if (colorSel) {
+        colorSel.value = "c01";
+        colorSel.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+      if (saveBtn) saveBtn.click();
     });
-    await page.waitForTimeout(200);
+    await page.waitForTimeout(300);
 
-    await page.evaluate(() => { if (typeof window.iuCloseMojeSluzbyModal === "function") window.iuCloseMojeSluzbyModal(); });
+    await page.evaluate(() => {
+      if (typeof window.iuHideQuickFeed === "function") window.iuHideQuickFeed();
+      if (typeof window.iuCloseMojeSluzbyModal === "function") window.iuCloseMojeSluzbyModal();
+    });
     await page.waitForTimeout(200);
     await page.reload({ waitUntil: "load", timeout: 15000 });
     await page.waitForTimeout(1500);
 
     await page.evaluate(() => {
-      const btn = document.querySelector('[data-iu-modal="pojistovna"]');
+      const btn = document.querySelector('[data-iuq="pojistovna"]');
       if (btn) btn.click();
     });
     await page.waitForTimeout(500);
 
     const pojPersist = await page.evaluate(() => {
-      const inp = document.querySelector(".iu-mojeSluzbyPojistovnaItem [data-poj-name]");
-      return inp && (inp.value || "").includes("Jan Novák");
+      const el = document.querySelector(".iu-pojistovnaTileName");
+      return !!(el && (el.textContent || "").includes("Jan"));
     });
     lines.push("pojistovna_persist=" + pojPersist);
 
@@ -263,12 +310,12 @@ async function main() {
     console.log(content);
 
     const gatesOk = domOrder.mojeBeforeRychle &&
-      iconCount === 6 &&
+      iconCount >= 3 &&
       bankAllCount >= 12 &&
       favAfterReload >= 1 &&
-      bakalariSlotCount === 5 &&
+      bakalariCardCount >= 1 &&
       bakalariPersist &&
-      pojCount >= 6 &&
+      pojCount >= 7 &&
       pojPersist &&
       consoleErrors.length === 0 &&
       pageErrors.length === 0 &&

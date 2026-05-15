@@ -65,10 +65,13 @@ jobs:
           python-version: "3.11"
 
       - name: Python compile gate
-        run: python -m py_compile scripts/health_report.py
+        run: python -m py_compile scripts/health_report.py scripts/css_duplicate_audit.py scripts/css_debt_guard.py scripts/generate_security_governance_reports.py scripts/generate_ultra_audit_wiki.py
 
       - name: Health report selftest
         run: python3 scripts/health_report.py --selftest
+
+      - name: Security/governance reports selftest
+        run: python3 scripts/generate_security_governance_reports.py --selftest
 
       - name: Install Python deps (for robots proof)
         run: |
@@ -174,6 +177,11 @@ jobs:
           set -euo pipefail
           python3 scripts/health_report.py
 
+      - name: CSS debt guard (AST baseline lock; HARD FAIL on debt growth)
+        run: |
+          set -euo pipefail
+          python3 scripts/css_debt_guard.py --github-actions --json-summary reports/css_debt_guard_summary.json
+
       - name: Report output gates - Linux/macOS (grep only, no rg)
         if: runner.os == 'Linux' || runner.os == 'Darwin'
         shell: bash
@@ -184,6 +192,9 @@ jobs:
           grep -n "INFOUZEL HEALTH REPORT" reports/latest.md
           grep -n "^Critical:" reports/latest.md
           grep -q "### Aggregator Safety" reports/latest.md || { echo "::error::Report missing Aggregator Safety section"; exit 1; }
+          grep -q "tinycss2" scripts/requirements.txt || { echo "::error::tinycss2 missing from scripts/requirements.txt"; exit 1; }
+          grep -q "REAL_CSS_DUPLICATE_AUDIT_OK=tinycss2" reports/latest.md || { echo "::error::Real CSS duplicate audit block missing or tinycss2 audit failed"; exit 1; }
+          grep -q "CSS debt guardrail" reports/latest.md || { echo "::error::CSS debt guard section missing"; exit 1; }
           echo "REPORT_GATES=PASS"
 
       - name: Report output gates - Windows (Select-String, no rg)
@@ -265,10 +276,12 @@ jobs:
               [ -f "$w" ] && echo "$w $(git hash-object "$w" 2>/dev/null || echo N/A)"
             done | sort
             echo ""
-            echo "=== GREP INDEX (key patterns, excl. node_modules) ==="
+            echo "=== GREP INDEX (key patterns; excl. .github/workflows, node_modules, assets/vendor) ==="
             for pat in "rss\|feed\|xml\|atom" "youtube\|youtu.be" "fetch(" "serviceWorker\|workbox" "indexeddb\|localStorage\|cacheStorage" "schedule\|cron" "process\.env" "try\s*{" "catch\s*(" "infouzel"; do
               echo "--- pattern: $pat ---"
-              git grep -n "$pat" -- . 2>/dev/null | grep -v "node_modules" | head -100 || true
+              git grep -n "$pat" -- . ':(exclude).github/workflows' ':(exclude)node_modules' ':(exclude)assets/vendor' 2>/dev/null \
+                | sed -e 's/GITHUB_TOKEN/GITHUB_TKN/g' -e 's/GH_TOKEN/GH_TKN/g' \
+                | head -100 || true
             done
             echo ""
             echo "=== CURRENT STATE (narrative) ==="
@@ -377,11 +390,56 @@ jobs:
             echo "- Viz příloha \`ultra_audit_report.txt\`"
           } > "$out"
 
+      - name: Generate security, compliance, and data governance reports
+        shell: bash
+        env:
+          HEAD_SHA: ${{ env.HEAD_SHA }}
+          HEAD_SHA_SHORT: ${{ env.HEAD_SHA_SHORT }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python3 scripts/generate_security_governance_reports.py
+          test -s reports/security_audit_report.txt
+          test -s reports/compliance_status_report.txt
+          test -s reports/data_governance_report.txt
+          grep -q "### RUNTIME DATA (always)" reports/ultra_audit_wiki.md
+          grep -q "## RUNTIME AKTIVITA ZA POSLEDNÍCH 24 H" reports/ultra_audit_wiki.md
+          echo "SECURITY_GOVERNANCE_REPORTS=OK"
+
+      - name: STOP-SHIP guard (regulatory reports must not contain PEM material)
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in reports/security_audit_report.txt reports/compliance_status_report.txt reports/data_governance_report.txt; do
+            if grep -q "BEGIN PRIVATE KEY" "$f" 2>/dev/null; then
+              echo "::error::STOP_SHIP: $f contains PEM marker"
+              exit 1
+            fi
+          done
+          echo "STOP_SHIP_REGULATORY_REPORTS=PASS"
+
       - name: Copy nightly report for email attachments
         shell: bash
         run: |
           cp reports/latest.md reports/nightly_health_report.txt
           test -f reports/nightly_health_report.txt
+
+      - name: Email attachments gate (6 files for nightly mail)
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in \
+            reports/nightly_health_report.txt \
+            reports/ultra_audit_report.txt \
+            reports/ultra_audit_wiki.md \
+            reports/security_audit_report.txt \
+            reports/compliance_status_report.txt \
+            reports/data_governance_report.txt; do
+            test -f "$f"
+            test -s "$f"
+          done
+          echo "EMAIL_ATTACHMENTS_SIX_FILES_GATE=PASS"
 
       - name: Upload report artifact
         uses: actions/upload-artifact@v4
@@ -392,6 +450,9 @@ jobs:
             reports/nightly_health_report.txt
             reports/ultra_audit_report.txt
             reports/ultra_audit_wiki.md
+            reports/security_audit_report.txt
+            reports/compliance_status_report.txt
+            reports/data_governance_report.txt
             reports/health-*.md
             reports/health-*.json
             reports/check_site.json
@@ -450,3 +511,6 @@ jobs:
             reports/nightly_health_report.txt
             reports/ultra_audit_report.txt
             reports/ultra_audit_wiki.md
+            reports/security_audit_report.txt
+            reports/compliance_status_report.txt
+            reports/data_governance_report.txt

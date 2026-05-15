@@ -30,6 +30,11 @@ from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urlencode
 
 import requests
+
+_SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
+if _SCRIPTS_DIR not in sys.path:
+    sys.path.insert(0, _SCRIPTS_DIR)
+from iu_blocked_sources import iu_is_blocked_pocasicko_source
 import xml.etree.ElementTree as ET
 
 
@@ -216,6 +221,24 @@ def _oembed_embeddable(video_id: str, timeout_sec: int) -> bool:
         return False
 
 
+def _weather_history_item_blocked(it: Dict[str, Any]) -> bool:
+    if not isinstance(it, dict):
+        return False
+    parts: List[str] = [
+        str(it.get("source") or ""),
+        str(it.get("title") or ""),
+        str(it.get("note") or ""),
+    ]
+    seo = it.get("seo")
+    if isinstance(seo, dict):
+        for k in ("h2", "intro", "body", "closing"):
+            parts.append(str(seo.get(k) or ""))
+        bl = seo.get("bullets")
+        if isinstance(bl, list):
+            parts.extend(str(x) for x in bl)
+    return iu_is_blocked_pocasicko_source(*parts)
+
+
 def _normalize_existing_items(items: Any) -> Tuple[List[Dict[str, Any]], set]:
     out: List[Dict[str, Any]] = []
     ids = set()
@@ -228,6 +251,8 @@ def _normalize_existing_items(items: Any) -> Tuple[List[Dict[str, Any]], set]:
         if not vid:
             continue
         if vid in ids:
+            continue
+        if _weather_history_item_blocked(it):
             continue
         ids.add(vid)
         out.append(it)
@@ -472,6 +497,8 @@ def main() -> int:
                         continue
                     if keywords_none and _kw_none(title, keywords_none):
                         continue
+                    if iu_is_blocked_pocasicko_source(label, title):
+                        continue
                     seen_ids_run.add(vid)
                     raw_candidates.append({"id": vid, "year": year, "title": title, "source": label})
                 except Exception:
@@ -546,6 +573,8 @@ def main() -> int:
     for c in embeddable_candidates:
         if len(added) >= max_add:
             break
+        if iu_is_blocked_pocasicko_source(str(c.get("source") or ""), str(c.get("title") or "")):
+            continue
         vid = str(c.get("id") or "").strip()
         if not vid or vid in existing_ids:
             continue

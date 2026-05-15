@@ -1,0 +1,50 @@
+{
+  "generated_at": "2026-05-13T03:12:02.450Z",
+  "baseline_label": "PR4322_diagnostic_story_pre_harness_align",
+  "baseline": {
+    "cluster_fail_count": 405,
+    "task_create_clarify_chaos": 399,
+    "should_fix_harness_count": 403
+  },
+  "main_before": "2a76b8037d5147054b12b96cd3110007b96a3bcd",
+  "branch": "fix/rhc3-task-create-chaotic-clarify-harness",
+  "commit": "07c8752a75854760c0e4fe5e424699ceb46137b6",
+  "changed_files": "scripts/silver-real-human-chaos-v3.cjs;scripts/silver-rhc3-task-create-do-ukolu-diagnostic-report.json;scripts/silver-rhc3-task-create-do-ukolu-diagnostic.cjs;scripts/silver-rhc3-task-create-do-ukolu-harness-alignment-report.json",
+  "engine_changed": "NO",
+  "assets_app_changed": "NO",
+  "ui_changed": "NO",
+  "css_changed": "NO",
+  "backend_changed": "NO",
+  "after": {
+    "total_cluster_cases": 7059,
+    "cluster_fail_count": 0,
+    "task_create_clarify_chaos": 0,
+    "should_fix_harness_count": 0,
+    "must_fix_engine_count": 0,
+    "true_engine_fail_count": 0,
+    "wrong_module_count": 0,
+    "title_pollution_count": 0,
+    "ambiguous_input_count": 0,
+    "real_world_acceptable_count": 0,
+    "safety": {
+      "dangerous_write_count": 0,
+      "false_write_count": 0,
+      "query_created_write_count": 0,
+      "write_when_negated_count": 0
+    },
+    "gates": {
+      "smoke": "PASS",
+      "calendar_regression": "PASS",
+      "routing_20k": "PASS",
+      "quality": "PASS",
+      "realistic_mobile": "PASS",
+      "calendar_write_20k": "3000/3000",
+      "calendar_query_20k": "3000/3000",
+      "rhc3_foundation_pilot": "PASS"
+    },
+    "git_status_clean": "YES",
+    "ready_for_pr": "YES",
+    "recommended_next_task": "none: rhc3_task_create_do_ukolu cluster green under harness + engine baseline"
+  },
+  "text_block": "=== RHC3_TASK_CREATE_DO_UKOLU_HARNESS_ALIGNMENT_RESULT ===\nmain_before=2a76b8037d5147054b12b96cd3110007b96a3bcd\nbranch=fix/rhc3-task-create-chaotic-clarify-harness\ncommit=07c8752a75854760c0e4fe5e424699ceb46137b6\nchanged_files=scripts/silver-real-human-chaos-v3.cjs;scripts/silver-rhc3-task-create-do-ukolu-diagnostic-report.json;scripts/silver-rhc3-task-create-do-ukolu-diagnostic.cjs;scripts/silver-rhc3-task-create-do-ukolu-harness-alignment-report.json\nengine_changed=NO\nassets_app_changed=NO\nui_changed=NO\ncss_changed=NO\nbackend_changed=NO\ntotal_cluster_cases=7059\nbefore_cluster_fail_count=405\nafter_cluster_fail_count=0\nbefore_task_create_clarify_chaos=399\nafter_task_create_clarify_chaos=0\nbefore_should_fix_harness_count=403\nafter_should_fix_harness_count=0\nmust_fix_engine_count=0\ntrue_engine_fail_count=0\nwrong_module_count=0\ntitle_pollution_count=0\nambiguous_input_count=0\nreal_world_acceptable_count=0\ndangerous_write_count=0\nfalse_write_count=0\nquery_created_write_count=0\nwrite_when_negated_count=0\ncalendar_write_20k=3000/3000\ncalendar_query_20k=3000/3000\nrouting_20k=PASS\nquality=PASS\nrealistic_mobile=PASS\nrhc3_foundation_pilot=PASS\ncalendar_regression=PASS\ngit_status_clean=YES\nready_for_pr=YES\nrecommended_next_task=none: rhc3_task_create_do_ukolu cluster green under harness + engine baseline\n=== END_RHC3_TASK_CREATE_DO_UKOLU_HARNESS_ALIGNMENT_RESULT ==="
+}

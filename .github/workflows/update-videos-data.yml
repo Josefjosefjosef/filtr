@@ -1,0 +1,216 @@
+# SLOW PATH: YouTube videos pool only — does not block article ingest / articles.json refresh.
+# See update-articles.yml (FAST PATH for articles + shared data guards).
+name: Update videos data
+
+concurrency:
+  group: update-videos-data
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "30 */1 * * *"
+
+env:
+  AUTOMATION_BRANCH: automation/update-videos-data
+  PR_TITLE: "chore(data): update videos data"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Sync main ref
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout main
+          git reset --hard origin/main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: scripts/requirements.txt
+
+      - name: Install Python dependencies
+        run: |
+          set -euo pipefail
+          T0=$(date +%s)
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements.txt
+          T1=$(date +%s)
+          echo "[TIME] pip_install_seconds=$((T1-T0))"
+
+      - name: Build videos JSON
+        run: |
+          set -euo pipefail
+          T0=$(date +%s)
+          python scripts/build_videos.py
+          T1=$(date +%s)
+          echo "[TIME] build_videos_seconds=$((T1-T0))"
+
+      - name: Validate videos output
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -f projects/data/videos.json ]; then
+            echo "ERROR: projects/data/videos.json missing"
+            exit 1
+          fi
+          if [ "$(stat -c %s projects/data/videos.json)" -eq 0 ]; then
+            echo "ERROR: projects/data/videos.json is empty"
+            exit 1
+          fi
+
+      - name: No-diff gate (videos.json only)
+        id: no_diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet HEAD -- projects/data/videos.json; then
+            { echo "data_changed=false"; echo "commit_skipped=true"; } >> "$GITHUB_OUTPUT"
+            echo "[DATA] No change to videos.json — skip commit/PR"
+            exit 0
+          fi
+          { echo "data_changed=true"; echo "commit_skipped=false"; } >> "$GITHUB_OUTPUT"
+          echo "[DATA] videos.json changed — will open/update PR"
+
+      - name: Commit to automation branch and push
+        if: steps.no_diff.outputs.data_changed == 'true'
+        id: commit_push
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add projects/data/videos.json
+          git diff --cached --quiet && { echo "[DATA] Nothing to commit"; exit 0; }
+
+          git stash push -m "vid" -- projects/data/videos.json
+          git fetch origin main
+          git fetch origin "${{ env.AUTOMATION_BRANCH }}" 2>/dev/null || true
+          git checkout -B "${{ env.AUTOMATION_BRANCH }}" origin/main
+          git stash pop
+          _v="projects/data/videos.json"
+          if grep -qE '^(<<<<<<<|=======|>>>>>>>)' "$_v"; then
+            echo "ERROR: conflict markers in $_v (stash/merge) — aborting without commit"
+            exit 1
+          fi
+          python -c "import json; json.load(open('projects/data/videos.json', encoding='utf-8'))"
+          git add projects/data/videos.json
+          git diff --cached --quiet && { echo "[DATA] Nothing to commit after stash"; exit 0; }
+
+          git commit -m "${{ env.PR_TITLE }}"
+          git push --force origin "HEAD:${{ env.AUTOMATION_BRANCH }}"
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Dispatch required checks
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          REF="${{ env.AUTOMATION_BRANCH }}"
+          REPO="${{ github.repository }}"
+          gh workflow run smoke.yml --ref "$REF" --repo "$REPO"
+          gh workflow run layout-guard.yml --ref "$REF" --repo "$REPO"
+          gh workflow run repo-guard.yml --ref "$REF" --repo "$REPO"
+          echo "[CHECKS] Dispatched on $REF"
+
+      - name: Create or update PR
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          BRANCH="${{ env.AUTOMATION_BRANCH }}"
+          EXISTING=$(gh pr list --head "$BRANCH" --base main --state open --json number -q '.[0].number' 2>/dev/null || true)
+          if [ -n "$EXISTING" ]; then
+            echo "pr_number=$EXISTING" >> "$GITHUB_OUTPUT"
+            echo "pr_url=https://github.com/${{ github.repository }}/pull/$EXISTING" >> "$GITHUB_OUTPUT"
+            echo "[PR] Updated existing PR #$EXISTING"
+            exit 0
+          fi
+          gh pr create --base main --head "$BRANCH" \
+            --title "${{ env.PR_TITLE }}" \
+            --body "Auto-update from Update videos data workflow. Data-only change (videos.json)."
+          NUM=$(gh pr list --head "$BRANCH" --base main --state open --json number -q '.[0].number')
+          echo "pr_number=$NUM" >> "$GITHUB_OUTPUT"
+          echo "pr_url=https://github.com/${{ github.repository }}/pull/$NUM" >> "$GITHUB_OUTPUT"
+          echo "[PR] Created PR #$NUM"
+
+      - name: Merge latest main into PR head if behind (unblock auto-merge)
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          [ -z "$NUM" ] && exit 0
+          echo "[SYNC] PUT update-branch for PR #$NUM"
+          gh api --method PUT "repos/${{ github.repository }}/pulls/${NUM}/update-branch" || echo "[SYNC] update-branch skipped or failed (non-fatal)"
+
+      - name: Diff scope check (data-only → allow auto-merge)
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
+        id: scope
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          CHANGED=$(git diff --name-only origin/main...HEAD)
+          echo "[SCOPE] Changed files:"
+          echo "$CHANGED"
+          DATA_ONLY=true
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            case "$f" in
+              projects/data/*) ;;
+              *) DATA_ONLY=false; break ;;
+            esac
+          done <<< "$CHANGED"
+          if [ "$DATA_ONLY" = true ]; then
+            echo "data_only=true" >> "$GITHUB_OUTPUT"
+            echo "[SCOPE] data-only — auto-merge allowed"
+          else
+            echo "data_only=false" >> "$GITHUB_OUTPUT"
+            echo "[SCOPE] non-data change — auto-merge disabled"
+          fi
+
+      - name: Enable auto-merge (squash) when data-only
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true' && steps.scope.outputs.data_only == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          [ -z "$NUM" ] && exit 0
+          gh pr merge "$NUM" --auto --squash
+          echo "[AUTO-MERGE] Enabled for PR #$NUM"
+
+      - name: Deploy summary
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "[DEPLOY] data_changed=${{ steps.no_diff.outputs.data_changed }}"
+          echo "[DEPLOY] videos slow path — merge PR -> main -> Pages publish from main data (schedule */5 min)."
+
+      - name: Notify completion (beep)
+        if: always()
+        run: printf '\a'

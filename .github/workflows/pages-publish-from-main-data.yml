@@ -1,0 +1,111 @@
+# Compares projects/data/articles.json on main vs production; dispatches pages.yml when stale.
+# Cadence: every 5 min (GitHub Actions minimum interval for scheduled workflows).
+# Article pipeline autorun is NOT driven by GitHub schedule — use Cloudflare Worker
+# cloudflare/articles-watchdog (cron → workflow_dispatch) so Actions stays the engine only.
+# Reliable “prod catch-up” loop: merges done via GITHUB_TOKEN in Actions do not reliably
+# trigger push-triggered downstream workflows, so scheduled + post-merge hooks keep publish deterministic.
+# workflow_run: re-check immediately after data-merge closeout workflows finish (faster than next cron tick).
+name: Pages publish from main data
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_run:
+    workflows:
+      - Pages deploy after data PR merge
+      - After-merge articles freshness (prod)
+    types:
+      - completed
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: pages-publish-from-main-data
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Compare main generatedAt vs production
+        id: cmp
+        shell: bash
+        env:
+          TRIGGER_EVENT: ${{ github.event_name }}
+          PARENT_RUN_ID: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.id || '' }}
+          PARENT_RUN_NAME: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.name || '' }}
+          PARENT_CONCLUSION: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion || '' }}
+        run: |
+          set -euo pipefail
+          START_UTC=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          echo "closeout_compare_started_utc=$START_UTC"
+          echo "trigger_event=$TRIGGER_EVENT"
+          echo "parent_workflow_run_id=${PARENT_RUN_ID:-}"
+          echo "parent_workflow_name=${PARENT_RUN_NAME:-}"
+          echo "parent_workflow_conclusion=${PARENT_CONCLUSION:-}"
+          MAIN_AT=$(jq -r '.generatedAt // empty' projects/data/articles.json)
+          if [ -z "$MAIN_AT" ]; then
+            echo "ERROR: main articles.json missing generatedAt"
+            exit 1
+          fi
+          PROD_JSON=$(curl -sS -m 20 -H 'Cache-Control: no-cache' "https://infouzel.cz/projects/data/articles.json" || true)
+          PROD_AT=$(echo "$PROD_JSON" | jq -r '.generatedAt // empty' 2>/dev/null || true)
+          echo "main_generatedAt=$MAIN_AT" >> "$GITHUB_OUTPUT"
+          echo "prod_generatedAt=$PROD_AT" >> "$GITHUB_OUTPUT"
+          echo "[MAIN] generatedAt=$MAIN_AT"
+          echo "[PROD] generatedAt=$PROD_AT"
+          if [ -n "$PROD_AT" ] && [ "$PROD_AT" = "$MAIN_AT" ]; then
+            echo "needs_publish=false" >> "$GITHUB_OUTPUT"
+            echo "[PUBLISH] Up-to-date, no dispatch"
+          else
+            echo "needs_publish=true" >> "$GITHUB_OUTPUT"
+            echo "[PUBLISH] Stale prod, will dispatch pages.yml"
+          fi
+
+      - name: Dispatch pages.yml (main)
+        if: steps.cmp.outputs.needs_publish == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          DISPATCH_UTC=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          echo "[PAGES] publish_dispatch_utc=$DISPATCH_UTC"
+          OUT=$(gh workflow run pages.yml --ref main --repo "${{ github.repository }}" 2>&1) || true
+          echo "$OUT"
+          echo "[PAGES] Dispatched pages.yml on main (closeout)"
+
+      - name: Job summary (telemetry)
+        if: always()
+        shell: bash
+        env:
+          TRIGGER_EVENT: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          PARENT_ID="${{ github.event_name == 'workflow_run' && github.event.workflow_run.id || '' }}"
+          PARENT_URL="${{ github.event_name == 'workflow_run' && github.event.workflow_run.html_url || '' }}"
+          {
+            echo "## Pages publish from main data — closeout telemetry"
+            echo ""
+            echo "| Field | Value |"
+            echo "| --- | --- |"
+            echo "| this_run_id | ${{ github.run_id }} |"
+            echo "| this_run_url | ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} |"
+            echo "| trigger | $TRIGGER_EVENT |"
+            echo "| parent_workflow_run_id | ${PARENT_ID:-n/a} |"
+            echo "| parent_workflow_url | ${PARENT_URL:-n/a} |"
+            echo "| main_generatedAt | ${{ steps.cmp.outputs.main_generatedAt }} |"
+            echo "| prod_generatedAt | ${{ steps.cmp.outputs.prod_generatedAt }} |"
+            echo "| needs_publish | ${{ steps.cmp.outputs.needs_publish }} |"
+            echo ""
+            echo "ROOT_CAUSE_NOTE: scheduled + workflow_run re-check closes gap when push-triggered Pages is suppressed after bot merge."
+          } >> "$GITHUB_STEP_SUMMARY"

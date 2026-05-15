@@ -1,0 +1,540 @@
+{
+  "contractVersion": "3",
+  "fixedNow": "2026-03-27T12:00:00",
+  "cases": [
+    {
+      "id": "A1",
+      "group": "A-diacritics",
+      "input": "do kalendáře 27.3. Zubar v 11 hod uloz",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "11:00",
+        "title": "Zubar",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "A2",
+      "group": "A-diacritics",
+      "input": "do kalendáře 27.3. Zubař v 11 hod ulož",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "11:00",
+        "title": "Zubař",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "A3",
+      "group": "A-diacritics",
+      "input": "do kalendáře 27.3. Schuzka v 11 hod uloz",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "11:00",
+        "title": "Schůzka",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "A4",
+      "group": "A-diacritics",
+      "input": "do kalendáře 27.3. Schůzka v 11 hod ulož",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "11:00",
+        "title": "Schůzka",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "B1",
+      "group": "B-relative",
+      "input": "do kalendáře zitra zubar v 8 uloz",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-28",
+        "time": "08:00",
+        "title": "Zubar",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "B2",
+      "group": "B-relative",
+      "input": "do kalendáře zítra zubař v 8 ulož",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-28",
+        "time": "08:00",
+        "title": "Zubař",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "B3",
+      "group": "B-relative",
+      "input": "do kalendáře dnes schuzka v 15 uloz",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "15:00",
+        "title": "Schůzka",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "B4",
+      "group": "B-relative",
+      "input": "do kalendáře dnes schůzka v 15 ulož",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "15:00",
+        "title": "Schůzka",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "C1",
+      "group": "C-absolute-date",
+      "input": "do kalendáře 27.3. kontrola v 11 uloz",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "11:00",
+        "title": "Kontrola",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "C2",
+      "group": "C-absolute-date",
+      "input": "do kalendáře 27.3. kontrola v 11:30 uloz",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "11:30",
+        "title": "Kontrola",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "C3",
+      "group": "C-absolute-date",
+      "input": "do kalendáře 27.3. kontrola v 11 hod uloz",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "11:00",
+        "title": "Kontrola",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "D1",
+      "group": "D-missing",
+      "input": "do kalendáře 27.3. v 11 hod uloz",
+      "expect": {
+        "processingState": "NEEDS_CLARIFICATION",
+        "date": "2026-03-27",
+        "time": "11:00",
+        "title": "",
+        "missingFields": ["title"]
+      }
+    },
+    {
+      "id": "D2",
+      "group": "D-missing",
+      "input": "do kalendáře zitra zubar uloz",
+      "expect": {
+        "processingState": "NEEDS_CLARIFICATION",
+        "date": "2026-03-28",
+        "time": "",
+        "title": "Zubar",
+        "missingFields": ["time"]
+      }
+    },
+    {
+      "id": "D3",
+      "group": "D-missing",
+      "input": "do kalendáře zubar v 11 hod uloz",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "11:00",
+        "title": "Zubar",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "D4",
+      "group": "D-missing",
+      "input": "do kalendáře 27.3. uloz",
+      "expect": {
+        "processingState": "NEEDS_CLARIFICATION",
+        "date": "2026-03-27",
+        "time": "",
+        "title": "",
+        "missingFields": ["time", "title"]
+      }
+    },
+    {
+      "id": "E1",
+      "group": "E-title-position",
+      "input": "do kalendáře zubar 27.3. v 11 hod uloz",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "11:00",
+        "title": "Zubar",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "E2",
+      "group": "E-title-position",
+      "input": "do kalendáře 27.3. v 11 hod zubar uloz",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "11:00",
+        "title": "Zubar",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "E3",
+      "group": "E-title-position",
+      "input": "do kalendáře uloz 27.3. zubar v 11 hod",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "11:00",
+        "title": "Zubar",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "E4",
+      "group": "E-title-position",
+      "input": "do kalendare 27.3. zubar v 11 hod uloz",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "11:00",
+        "title": "Zubar",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "F1",
+      "group": "F-commands",
+      "input": "do kalendáře 27.3. test v 10 ulozit",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "10:00",
+        "title": "Test",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "F2",
+      "group": "F-commands",
+      "input": "do kalendáře 27.3. test v 10 ulozte",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "10:00",
+        "title": "Test",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "F3",
+      "group": "F-commands",
+      "input": "do kalendáře 27.3. test v 10 uložte",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "10:00",
+        "title": "Test",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "F4",
+      "group": "F-commands",
+      "input": "zitra zubar uloz do kalendare",
+      "expect": {
+        "processingState": "NEEDS_CLARIFICATION",
+        "date": "2026-03-28",
+        "time": "",
+        "title": "Zubar",
+        "missingFields": ["time"]
+      }
+    },
+    {
+      "id": "F5",
+      "group": "F-commands",
+      "input": "zitra zubar uloz do kalendáře",
+      "expect": {
+        "processingState": "NEEDS_CLARIFICATION",
+        "date": "2026-03-28",
+        "time": "",
+        "title": "Zubar",
+        "missingFields": ["time"]
+      }
+    },
+    {
+      "id": "G1",
+      "group": "G-short-title",
+      "input": "do kalendáře zitra doktor v 8 uloz",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-28",
+        "time": "08:00",
+        "title": "Doktor",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "G2",
+      "group": "G-short-title",
+      "input": "do kalendáře zitra ortoped v 9 uloz",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-28",
+        "time": "09:00",
+        "title": "Ortoped",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "G3",
+      "group": "G-short-title",
+      "input": "do kalendáře 27.3. servis v 10 uloz",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "10:00",
+        "title": "Servis",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "G4",
+      "group": "G-short-title",
+      "input": "ulož do kalendáře 27.3. zubar v 11 hod",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "11:00",
+        "title": "Zubar",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "G5",
+      "group": "G-short-title",
+      "input": "ulož do kalendáře 27.3. v 11 hod",
+      "expect": {
+        "processingState": "NEEDS_CLARIFICATION",
+        "date": "2026-03-27",
+        "time": "11:00",
+        "title": "",
+        "missingFields": ["title"]
+      }
+    },
+    {
+      "id": "G6",
+      "group": "G-short-title",
+      "input": "ulož do kalendáře zítra zubař v 8",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-28",
+        "time": "08:00",
+        "title": "Zubař",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "X1",
+      "group": "X-whitespace",
+      "input": "  do kalendáře 27.3.  Zubar  v  11  hod  uloz  ",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "11:00",
+        "title": "Zubar",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "X2",
+      "group": "X-punctuation",
+      "input": "do kalendáře 27.3. Zubar,v 11 hod uloz",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "11:00",
+        "title": "Zubar",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "E5",
+      "group": "E-title-position",
+      "input": "do kalendáře 27.3. zubar v 11 hod ulož",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "11:00",
+        "title": "Zubar",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "P0-1",
+      "group": "P0-user-baseline",
+      "input": "ulož do kalendáře zítra v 15 hod. právník",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-28",
+        "time": "15:00",
+        "title": "Právník",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "P0-2",
+      "group": "P0-user-baseline",
+      "input": "zítra v 18 hod. právník",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-28",
+        "time": "18:00",
+        "title": "Právník",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "P0-3",
+      "group": "P0-user-baseline",
+      "input": "zítra v 18 právník",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-28",
+        "time": "18:00",
+        "title": "Právník",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "P0-4",
+      "group": "P0-user-baseline",
+      "input": "zittra v 18 pravnik",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-28",
+        "time": "18:00",
+        "title": "Právník",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "P0-5",
+      "group": "P0-user-baseline",
+      "input": "v pondělí 9 doktor",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-30",
+        "time": "09:00",
+        "title": "Doktor",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "P0-6",
+      "group": "P0-user-baseline",
+      "input": "pondeli 9 doktor",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-30",
+        "time": "09:00",
+        "title": "Doktor",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "P0-7",
+      "group": "P0-user-baseline",
+      "input": "zítra v 15 schůzka Tomáš",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-28",
+        "time": "15:00",
+        "title": "Schůzka s Tomášem",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "P0-8",
+      "group": "P0-user-complex",
+      "input": "Ulož do kalendáře zítra v 15 hod. schůzka Tomáš do poznámky ulož vzít sebou sešit a adresa je Praha 3",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-28",
+        "time": "15:00",
+        "title": "Schůzka s Tomášem",
+        "note": "Vzít sebou sešit",
+        "location": "Praha 3",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "P0-9",
+      "group": "P0-user-complex",
+      "input": "zítra v 15 schuzka Tomas Praha 3 vzit sesit",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-28",
+        "time": "15:00",
+        "title": "Schůzka s Tomášem",
+        "note": "Vzít sešit",
+        "location": "Praha 3",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "RM-NOV",
+      "group": "P0-real-mobile",
+      "input": "Ulož mi schůzku s panem Novotným 22.5. v 15 hod. místo je restaurace palma na náměstí bratří synků Praha",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-05-22",
+        "time": "15:00",
+        "title": "Schůzka s panem Novotným",
+        "location": "restaurace palma na náměstí bratří synků Praha",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "RM-JAKUB-REM",
+      "group": "P0-real-mobile",
+      "input": "Ulož mi pozítří schůzku s Jakubem potkáme se na Štvanici a připomeň mi ať si sebou vezmu mobilní telefon",
+      "expect": {
+        "processingState": "NEEDS_CLARIFICATION",
+        "date": "2026-03-29",
+        "time": "",
+        "title": "Schůzka s Jakubem potkáme se na Štvanici",
+        "note": "A připomeň mi ať si sebou vezmu mobilní telefon",
+        "missingFields": ["time"]
+      }
+    }
+  ]
+}

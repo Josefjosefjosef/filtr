@@ -37,6 +37,10 @@ from urllib.parse import urlparse, parse_qs
 import requests
 import xml.etree.ElementTree as ET
 
+_SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
+if _SCRIPTS_DIR not in sys.path:
+    sys.path.insert(0, _SCRIPTS_DIR)
+from iu_blocked_sources import iu_is_blocked_pocasicko_source
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ALLOWLIST_PATH = os.path.join(ROOT_DIR, "projects", "data", "videos_allowlist.json")
@@ -638,6 +642,8 @@ def main() -> int:
                     continue
                 title = e.get("title") or ""
                 if not title:
+                    continue
+                if iu_is_blocked_pocasicko_source(channel_name, title, str(job.get("sourceTitle") or "")):
                     continue
                 if _title_blocked(title, title_blocklist):
                     continue

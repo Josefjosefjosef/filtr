@@ -1,0 +1,682 @@
+{
+  "schema": "css_debt_guard_v1",
+  "duplicate_selector_groups": 277,
+  "duplicate_rule_occurrences_in_groups": 748,
+  "classification_counts": {
+    "breakpoint_specific": 157,
+    "risky_layout_coupled": 98,
+    "intentional_cascade_candidate": 22
+  },
+  "debt_verdict_counts": {
+    "intentional_non_debt": 102,
+    "risk_now": 175
+  },
+  "debt_occurrence_counts": {
+    "intentional_non_debt": 293,
+    "risk_now": 455
+  },
+  "app_css_bytes": 627078,
+  "css_size_guard_budget_bytes": 4096,
+  "risk_zone_duplicate_groups": [
+    {
+      "selector_normalized": "#feed",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#feed .iu-meta-line",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#feed > *",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "#feed > article.news-card",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#feed > article.news-card .news-title, #feed > article.news-card .news-titleLink",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#feed article.news-card, #feed .news-card",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#iu-aiOverlay",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "#iuCenterStage #iuHomeView",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#iuCenterStage #iuRadioView",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#iuCenterStage #iuTvOnlineView",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#iuCenterStage[data-iu-view=\"quick\"] #iuQuickFeed",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#iuDsOverlay.iu-ds-overlay",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "#iuLeftRail",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "#iuLeftRail .iu-leftNav",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "#iuLeftRail .iu-leftNav .iu-leftNavLabel",
+      "classification": "intentional_cascade_candidate"
+    },
+    {
+      "selector_normalized": "#iuLeftRail .iu-leftNavIcon",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "#iuLeftRail .iu-leftNavItem",
+      "classification": "intentional_cascade_candidate"
+    },
+    {
+      "selector_normalized": "#iuLeftRail .iuLeftRailSectionTitle",
+      "classification": "intentional_cascade_candidate"
+    },
+    {
+      "selector_normalized": "#iuLeftRail .iuLeftRailSectionTitle:first-of-type",
+      "classification": "intentional_cascade_candidate"
+    },
+    {
+      "selector_normalized": "#iuMobileMindMenuFlow",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#iuRailToggleBtn::before",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "#iuRailToggleBtn:hover, #iuRailToggleBtn:focus-visible",
+      "classification": "intentional_cascade_candidate"
+    },
+    {
+      "selector_normalized": "#iuRailToggleBtn:hover::before, #iuRailToggleBtn:focus-visible::before",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "#iuTopbarRight",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "#iuTopbarToday",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#leftContent:has(#iuCenterStage[data-iu-view=\"quick\"])",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "#leftStickyHeader .iuTopbar .topbar-new-inner, #leftStickyHeader .iuTopbar .topbar-new-main",
+      "classification": "intentional_cascade_candidate"
+    },
+    {
+      "selector_normalized": "#newsList",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#newsList > #iuCenterStage",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-layout=\"ready\"]",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#topbarWrap #iuTopbarRight",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#topbarWrap .iuBrandBlock",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "#topbarWrap .iuHamburger",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#topbarWrap .topbar-new-inner, #topbarWrap .topbar-new-main",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#topbarWrap .topbar-new-main",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#topbarWrap.topbar-new.iuTopbar, header#topbarWrap.iuTopbar",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".accordionCol .mindMenu",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".accordionCol .mindMenu .iu-mailboxes",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".accordionCol .mindMenu .iu-mmQuickGrid",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".accordionCol .mindMenu .iu-mmQuickGrid .iuIconTile",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem span:last-of-type",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".accordionCol .mindMenu .iu-mmTopTools",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".accordionCol section.iu-mmQuickLinks",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".iu-infoItem::before",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".iu-leftNav",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".iu-leftNav .iu-leftNavIcon",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".iu-leftNav .iu-leftNavIcon, .iu-leftNav .iu-leftNavLabel",
+      "classification": "intentional_cascade_candidate"
+    },
+    {
+      "selector_normalized": ".iu-leftNav .iu-leftNavItem",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".iu-leftNav .iu-leftNavLabel",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".iu-leftNavItem.is-active",
+      "classification": "intentional_cascade_candidate"
+    },
+    {
+      "selector_normalized": ".iu-leftRail",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".iu-mmQuickItem",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".iu-mmQuickItem i",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".iu-mmQuickItem span",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".iu-mmQuickLinks .iuIconTile",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".iu-mobileFirstBlock .iuLeftRailSectionTitle",
+      "classification": "intentional_cascade_candidate"
+    },
+    {
+      "selector_normalized": ".iuQuickFeed .iuAiCard:hover, .iuQuickFeed .iuAiCard:focus-visible",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".iuTopSearch .iuTopSearch__panel, .iuTopSearch #iuTopbarSearchOverlay",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".iuTopbarContent",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".iuTopbarContent.is-3col",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".iuTopbarDay",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".iuTopbarFlowSpacer",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".iuTopbarNameday",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".iuTopbarSep",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".iuTopbar__gap80",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".iuVideoCard[data-iu-loaded=\"1\"] .iuVideoPoster, .iuVideoCard[data-iu-loaded=\"1\"] .iuVideoOverlay",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".iuVideoCard[data-iu-loaded=\"1\"]::before, .iuVideoCard[data-iu-loaded=\"1\"]::after",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".layout > aside.accordionCol",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label=\"Rychlé odkazy\"] .iu-mmQuickItemLink",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".layout > aside.accordionCol, .iu-rightContent, .iuRightPanel",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".mindMenu-scroll-wrapper::after",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".topbar",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".topbar-links",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".topbar-new",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".topbar-new .burger span",
+      "classification": "intentional_cascade_candidate"
+    },
+    {
+      "selector_normalized": ".topbar-new, .topbar-new-inner",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".topbar-new-inner",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".topbar-new-main .iu-infoBar",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".topbar-search",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ":is(#iuMapyView,#iuMapsView) .iuRadioChip:active",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ":is(#iuMapyView,#iuMapsView) .iuRadioChip:hover",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ":is(#iuMapyView,#iuMapsView) .iuRadioChip:hover :is(.iuRadioChipTitle,.iuRadioChipDesc)",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "aside#iuLeftRail",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent=\"finance\"] .iu-leftNavIcon svg, aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent=\"home\"] .iu-leftNavIcon svg, aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent=\"zdravi\"] .iu-leftNavIcon svg, aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent=\"travel\"] .iu-leftNavIcon svg",
+      "classification": "intentional_cascade_candidate"
+    },
+    {
+      "selector_normalized": "body #iuLeftRail",
+      "classification": "intentional_cascade_candidate"
+    },
+    {
+      "selector_normalized": "body #iuLeftRail .iu-leftNav .iu-leftNavItem",
+      "classification": "intentional_cascade_candidate"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu .iu-mmQuickGrid",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu .iu-mmQuickGrid .iuIconTile :is(svg,i), body .accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile :is(svg,i)",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu .iu-mmQuickGrid .iuIconTile, body .accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu .iu-mmQuickGrid .iuTileText",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink:hover",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileText, body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > span.iuTileText",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > a.iuTileLink, body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > button.iuTileLink, body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > a.iuTileLink::before, body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > button.iuTileLink::before, body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink::before",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > span.iuTileText, body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileText",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid .iuIconTile",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mojeSluzby)",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem span:last-of-type",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:hover, body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:active",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iuIconTile, body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iuIconTile",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid > *:nth-child(9)",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmLabel",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItem",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItemLink",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItemLink:focus-visible",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlText",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItem[data-ms=\"bakalari\"] .iu-mmQuickItemLink .iuQlIcon, section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItem[data-ms=\"bakalari\"] .iu-mmQuickItemLink .iuQlIcon",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItem[data-ms=\"banka\"] .iu-mmQuickItemLink .iuQlIcon, section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItem[data-ms=\"banka\"] .iu-mmQuickItemLink .iuQlIcon",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItem[data-ms=\"ds\"] .iu-mmQuickItemLink .iuQlIcon, section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItem[data-ms=\"ds\"] .iu-mmQuickItemLink .iuQlIcon",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItem[data-ms=\"pojistovna\"] .iu-mmQuickItemLink .iuQlIcon, section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItem[data-ms=\"pojistovna\"] .iu-mmQuickItemLink .iuQlIcon",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmSectionHead + .iu-mmQuickGrid, body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmSectionHead + .iu-mmQuickGrid",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .accordionCol .mindMenu section.iu-mojeSluzby, body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid .iuIconTile :is(svg,i), body .layout > aside.accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile :is(svg,i)",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid .iuIconTile, body .layout > aside.accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body aside#iuLeftRail.iu-leftRail .iu-leftNav .iu-leftNavItem[class] .iu-leftNavLabel, body #iuLeftRail .iu-leftNav .iu-leftNavItem .iu-leftNavLabel, aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body[data-section=\"jr\"] #iuCenterStage #iuJrEmptyView, html[data-section=\"jr\"] #iuCenterStage #iuJrEmptyView",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "body[data-section=\"mapy\"] #iuCenterStage #iuMapyView, html[data-section=\"mapy\"] #iuCenterStage #iuMapyView",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "body[data-section=\"namedays\"] #iuCenterStage #iuHolidaysView, html[data-section=\"namedays\"] #iuCenterStage #iuHolidaysView",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "body[data-section=\"pocasi\"] #iuCenterStage #iuWeatherView, html[data-section=\"pocasi\"] #iuCenterStage #iuWeatherView",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView #iuWxHours .iuWxHour, html[data-section=\"pocasi\"] #iuWeatherView #iuWxHours .iuWxHour",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed #iuWxHours .iuWxHour, html[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed #iuWxHours .iuWxHour",
+      "classification": "intentional_cascade_candidate"
+    },
+    {
+      "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed .iuBtn, body[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed .iuRadioChip, html[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed .iuBtn, html[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed .iuRadioChip",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed .iuBtn:hover, body[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed .iuRadioChip:hover, body[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed .iuBtn:focus-visible, body[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed .iuRadioChip:focus-visible, html[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed .iuBtn:hover, html[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed .iuRadioChip:hover, html[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed .iuBtn:focus-visible, html[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed .iuRadioChip:focus-visible",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed .iuNotesHost .iuNotes, html[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed .iuNotesHost .iuNotes",
+      "classification": "intentional_cascade_candidate"
+    },
+    {
+      "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed .iuNotesHost .iuNotesInput, html[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed .iuNotesHost .iuNotesInput",
+      "classification": "intentional_cascade_candidate"
+    },
+    {
+      "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView .iuWeatherQuickChip, html[data-section=\"pocasi\"] #iuWeatherView .iuWeatherQuickChip",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView .iuWeatherQuickGrid, html[data-section=\"pocasi\"] #iuWeatherView .iuWeatherQuickGrid",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView .iuWx7DayName, html[data-section=\"pocasi\"] #iuWeatherView .iuWx7DayName",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView .iuWx7Icon, html[data-section=\"pocasi\"] #iuWeatherView .iuWx7Icon",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView .iuWx7Row, html[data-section=\"pocasi\"] #iuWeatherView .iuWx7Row",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView .iuWx7Source a, html[data-section=\"pocasi\"] #iuWeatherView .iuWx7Source a",
+      "classification": "intentional_cascade_candidate"
+    },
+    {
+      "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView .iuWx7Temps, html[data-section=\"pocasi\"] #iuWeatherView .iuWx7Temps",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "body[data-section=\"travel\"] #iuCenterStage #iuTravelView, html[data-section=\"travel\"] #iuCenterStage #iuTravelView",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "body[data-section=\"travel\"] #iuTravelView .iuTravelCrisisGrid, html[data-section=\"travel\"] #iuTravelView .iuTravelCrisisGrid",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "header#topbarWrap.topbar-new.iuTopbar",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "header#topbarWrap.topbar-new.iuTopbar .topbar-new-inner",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrandSubtitle__menu",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrandSubtitle__sep",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrandSubtitle__silver",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrandSubtitle__tail",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "header#topbarWrap.topbar-new.iuTopbar::after",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "html.iuRailHidden #iuLeftRail, body.iuRailHidden #iuLeftRail",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "html.iuRailHidden #iuRailToggleBtn::before",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "html.iuRailHidden #iuRailToggleBtn:hover::before",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "#iuHomeHexGrid .iuHomeHex[data-section=\"tvprogram\"] .iuHomeHexIcon, #iuHomeHexGrid .iuHomeHex[data-section=\"tvprogram\"] .iuHomeHexIcon svg",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#iuLeftRail .iuLeftRailSectionTitle",
+      "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".iuLeftRailSectionTitle",
+      "classification": "intentional_cascade_candidate"
+    },
+    {
+      "selector_normalized": ":is(#iuMapyView,#iuMapsView,#iuTvOnlineView,#iuRadioView) .iuRadioChip:active",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ":is(#iuMapyView,#iuMapsView,#iuTvOnlineView,#iuRadioView) .iuRadioChip:hover",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ":is(#iuMapyView,#iuMapsView,#iuTvOnlineView,#iuRadioView) .iuRadioChip:hover :is(.iuRadioChipTitle,.iuRadioChipDesc)",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuMapyView, body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuMapsView, body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuJrEmptyView, body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuRadioView, body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuWeatherView, body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuTvOnlineView, body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuTvProgramView",
+      "classification": "breakpoint_specific"
+    }
+  ]
+}

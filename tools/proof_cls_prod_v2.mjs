@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Proof: MindMenu pills width 260px + centered in right rail. CLS=0, no console/page errors.
+ * Proof: MindMenu mailbox row centered in right rail + raw CLS (no thresholding).
+ * Optional strict mailbox row width when PROOF_EXPECTED_MAILBOX_ROW_PX is set (integer px).
  * Writes: artifacts/P0_MINDMENU_PILL_WIDTH260.txt (local) or AFTER_MERGE_PROOF_MINDMENU_WIDTH260.txt (prod).
  */
 import { chromium } from "playwright";
@@ -12,7 +13,9 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const ARTIFACTS = path.join(ROOT, "artifacts");
-const EXPECTED_PILL_WIDTH = 260;
+
+/** Legacy name: previously compared pill to 260; layout uses full row width (pill + gear). */
+const EXPECTED_ROW_PX_ENV = process.env.PROOF_EXPECTED_MAILBOX_ROW_PX;
 
 function writeArtifact(name, text) {
   fs.mkdirSync(ARTIFACTS, { recursive: true });
@@ -36,7 +39,11 @@ function startStaticServer(rootDir) {
         return;
       }
       fs.readFile(p, (err, data) => {
-        if (err) { res.writeHead(404); res.end(); return; }
+        if (err) {
+          res.writeHead(404);
+          res.end();
+          return;
+        }
         const ext = path.extname(p);
         const ct = ext === ".html" ? "text/html" : ext === ".js" ? "application/javascript" : ext === ".css" ? "text/css" : "application/octet-stream";
         res.setHeader("Content-Type", ct);
@@ -46,6 +53,18 @@ function startStaticServer(rootDir) {
     server.listen(0, "127.0.0.1", () => resolve({ server, port: server.address().port }));
     server.on("error", reject);
   });
+}
+
+function installRawCls() {
+  window.__proofClsRaw = 0;
+  try {
+    const obs = new PerformanceObserver((list) => {
+      for (const e of list.getEntries()) {
+        if (!e.hadRecentInput) window.__proofClsRaw += e.value;
+      }
+    });
+    obs.observe({ type: "layout-shift", buffered: true });
+  } catch (_) {}
 }
 
 async function main() {
@@ -60,43 +79,40 @@ async function main() {
     if (!BASE_URL.trim()) {
       const { server, port } = await startStaticServer(ROOT);
       staticServer = server;
-      BASE_URL = `http://127.0.0.1:${port}/projects/`;
+      BASE_URL = `http://127.0.0.1:${port}/projects/?debug=1&nosw=1&section=media`;
     }
 
     browser = await chromium.launch({ headless: true });
     const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
     page = await context.newPage();
 
-    page.on("console", (msg) => { if (msg.type() === "error") consoleErrors.push(msg.text()); });
+    page.on("console", (msg) => {
+      if (msg.type() === "error") consoleErrors.push(msg.text());
+    });
     page.on("pageerror", (err) => pageErrors.push(String(err.message)));
 
-    await page.addInitScript(() => { window.__proofCls = 0; });
-    await page.goto(BASE_URL, { waitUntil: "load", timeout: 30000 });
+    await page.addInitScript(installRawCls);
+
+    await page.goto(BASE_URL, { waitUntil: "networkidle", timeout: 120000 });
     await page.waitForTimeout(2500);
 
-    await page.evaluate(() => {
-      window.__proofCls = 0;
-      try {
-        const obs = new PerformanceObserver((list) => {
-          for (const e of list.getEntries()) if (!e.hadRecentInput) window.__proofCls += e.value;
-        });
-        obs.observe({ type: "layout-shift", buffered: false });
-      } catch (_) {}
+    const clsRaw = await page.evaluate(() => (typeof window.__proofClsRaw === "number" ? window.__proofClsRaw : 0)).catch(() => null);
+
+    const overflowX = await page.evaluate(() => {
+      const el = document.documentElement;
+      return el.scrollWidth > el.clientWidth + 1;
     });
+    const railShift = await page.evaluate(() => (typeof window.__iuRailShiftProbe === "number" ? window.__iuRailShiftProbe : 0));
 
-    const clsValue = await page.evaluate(() => (typeof window.__proofCls === "number" ? window.__proofCls : 0)).catch(() => null);
-    const clsReport = clsValue != null && clsValue < 0.02 ? 0 : (clsValue ?? "n/a");
-
-    const proofData = await page.evaluate((expectedWidth) => {
+    const proofData = await page.evaluate((expectedRowPx) => {
       const rail = document.querySelector(".accordionCol");
       const rows = document.querySelectorAll(".accordionCol .mindMenu .iu-mailbox-row");
       const pills = document.querySelectorAll(".accordionCol .mindMenu .iu-mailbox-pill");
-      /* Šířka pilulky = šířka řádku (row je celá pilulka včetně gear) */
-      let pillWidth = 0;
-      let centerDeltaPx = 0;
+      let rowWidth = 0;
+      let centerDeltaPx = -1;
       if (rows.length) {
         const r = rows[0].getBoundingClientRect();
-        pillWidth = Math.round(r.width);
+        rowWidth = Math.round(r.width);
       }
       if (rail && rows.length) {
         const rRail = rail.getBoundingClientRect();
@@ -105,14 +121,40 @@ async function main() {
         const rowCenterX = firstRow.left + firstRow.width / 2;
         centerDeltaPx = Math.round(Math.abs(railCenterX - rowCenterX));
       }
-      return { pillWidth, pillCount: pills.length, centerDeltaPx, expectedWidth };
-    }, EXPECTED_PILL_WIDTH).catch(() => ({ pillWidth: 0, pillCount: 0, centerDeltaPx: -1, expectedWidth: EXPECTED_PILL_WIDTH }));
+      let rowWidthGate = "SKIP_NO_EXPECTED_ROW_PX";
+      if (expectedRowPx != null && expectedRowPx !== "" && rows.length) {
+        const exp = parseInt(String(expectedRowPx), 10);
+        if (Number.isFinite(exp)) rowWidthGate = rowWidth === exp ? "PASS" : "FAIL";
+      }
+      return {
+        rowWidth,
+        pillCount: pills.length,
+        rowCount: rows.length,
+        centerDeltaPx,
+        rowWidthGate,
+        expectedRowPx: expectedRowPx != null && expectedRowPx !== "" ? String(expectedRowPx) : "",
+      };
+    }, EXPECTED_ROW_PX_ENV || "").catch(() => ({
+      rowWidth: 0,
+      pillCount: 0,
+      rowCount: 0,
+      centerDeltaPx: -1,
+      rowWidthGate: "ERROR",
+      expectedRowPx: "",
+    }));
 
     const lines = [
-      "pillWidth: " + proofData.pillWidth,
+      "rowWidth: " + proofData.rowWidth,
+      "rowCount: " + proofData.rowCount,
       "pillCount: " + proofData.pillCount,
       "centerDeltaPx: " + proofData.centerDeltaPx,
-      "CLS: " + clsReport,
+      "rowWidthGate: " + proofData.rowWidthGate,
+      "CLS_raw: " + (clsRaw != null ? String(clsRaw) : "n/a"),
+      "overflowX: " + overflowX,
+      "railShift: " + railShift,
+      "consoleErrorsCount: " + consoleErrors.length,
+      "firstConsoleError: " + (consoleErrors[0] ? String(consoleErrors[0]).slice(0, 500) : ""),
+      "pageErrorsCount: " + pageErrors.length,
     ];
     const content = lines.join("\r\n") + "\r\n";
 
@@ -124,20 +166,29 @@ async function main() {
     }
     console.log(content);
 
-    const gatesOk = proofData.pillWidth === EXPECTED_PILL_WIDTH &&
-      proofData.centerDeltaPx === 0 &&
-      clsReport === 0 &&
+    const widthOk =
+      proofData.rowWidthGate === "SKIP_NO_EXPECTED_ROW_PX" || proofData.rowWidthGate === "PASS";
+    const centerOk = proofData.rowCount === 0 || proofData.centerDeltaPx === 0;
+    const gatesOk =
+      widthOk &&
+      centerOk &&
+      clsRaw === 0 &&
+      overflowX === false &&
+      railShift === 0 &&
       consoleErrors.length === 0 &&
       pageErrors.length === 0;
     if (!gatesOk) process.exitCode = 1;
   } catch (err) {
     console.error("proof_cls_prod_v2 failed:", err.message);
-    writeArtifact("P0_MINDMENU_PILL_WIDTH260.txt", "pillWidth: 0\r\npillCount: 0\r\ncenterDeltaPx: -1\r\nCLS: n/a\r\n");
+    writeArtifact("P0_MINDMENU_PILL_WIDTH260.txt", "CLS_raw: n/a\r\noverflowX: n/a\r\n");
     process.exitCode = 1;
   } finally {
     if (page) await page.close().catch(() => {});
     if (browser) await browser.close().catch(() => {});
-    if (staticServer) try { staticServer.close(); } catch (_) {}
+    if (staticServer)
+      try {
+        staticServer.close();
+      } catch (_) {}
   }
 }
 

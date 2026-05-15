@@ -1,0 +1,273 @@
+# After-merge production freshness proof for articles/videos data.
+# Runs only on push to main that touches projects/data (e.g. merge of automation data PR).
+# Verifies: merge commit on main, Pages deploy, live JSON matches repo (SHA-256).
+
+name: After-merge articles freshness (prod)
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'projects/data/articles.json'
+      - 'projects/data/videos.json'
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: after-merge-articles-freshness
+  cancel-in-progress: false
+
+env:
+  LIVE_BASE: "https://infouzel.cz/projects/data"
+  PROPAGATION_ATTEMPTS_MAX: "24"
+  PROPAGATION_SLEEP_SEC: "15"
+
+jobs:
+  prod-freshness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Dispatch pages.yml (post-merge closeout)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          echo "[CLOSEOUT] merge_commit_sha=${{ github.sha }}"
+          echo "[CLOSEOUT] publish_dispatch_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          gh workflow run pages.yml --ref main --repo "${{ github.repository }}"
+          echo "[CLOSEOUT] pages.yml dispatched (covers cases where push-to-main does not trigger Deploy to GitHub Pages)"
+
+      - name: Checkout (merge commit)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Repo hashes
+        id: repo_hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          REPO_ARTICLES=$(sha256sum < projects/data/articles.json | awk '{print $1}')
+          echo "repo_articles_hash=$REPO_ARTICLES" >> "$GITHUB_OUTPUT"
+          if [ -f projects/data/videos.json ]; then
+            REPO_VIDEOS=$(sha256sum < projects/data/videos.json | awk '{print $1}')
+          else
+            REPO_VIDEOS=""
+          fi
+          echo "repo_videos_hash=$REPO_VIDEOS" >> "$GITHUB_OUTPUT"
+          echo "[REPO] articles sha256=$REPO_ARTICLES"
+          echo "[REPO] videos sha256=${REPO_VIDEOS:-none}"
+
+      - name: Detect Pages deploy run
+        id: pages_deploy
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          echo "merged_commit_sha=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+          # Find Pages workflow run for this ref (triggered by same push)
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            RUNS=$(gh run list --workflow=pages.yml --branch main --limit 5 --json databaseId,status,conclusion,headSha,url --jq '.[] | select(.headSha == "${{ github.sha }}") | "\(.databaseId) \(.status) \(.conclusion // "pending") \(.url)"' 2>/dev/null || true)
+            if [ -n "$RUNS" ]; then
+              FIRST=$(echo "$RUNS" | head -n1)
+              RUN_ID=$(echo "$FIRST" | awk '{print $1}')
+              STATUS=$(echo "$FIRST" | awk '{print $2}')
+              CONCLUSION=$(echo "$FIRST" | awk '{print $3}')
+              URL=$(echo "$FIRST" | awk '{print $4}')
+              { echo "pages_deploy_detected=true"; echo "pages_deploy_status=$STATUS"; echo "pages_deploy_conclusion=$CONCLUSION"; echo "pages_deploy_url=$URL"; echo "pages_run_id=$RUN_ID"; } >> "$GITHUB_OUTPUT"
+              echo "[PAGES] Run $RUN_ID status=$STATUS conclusion=$CONCLUSION"
+              break
+            fi
+            echo "[PAGES] Attempt $i: no run for ${{ github.sha }} yet; waiting 10s..."
+            sleep 10
+          done
+          if [ -z "${RUN_ID:-}" ]; then
+            { echo "pages_deploy_detected=false"; echo "pages_deploy_status=not_found"; echo "pages_deploy_url="; } >> "$GITHUB_OUTPUT"
+            echo "[PAGES] No deploy run found for this commit (will still poll live)"
+          fi
+
+      - name: Wait for Pages deploy to complete (if detected)
+        id: wait_pages
+        if: steps.pages_deploy.outputs.pages_deploy_detected == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          RUN_ID="${{ steps.pages_deploy.outputs.pages_run_id }}"
+          for i in $(seq 1 60); do
+            S=$(gh run view "$RUN_ID" --json status,conclusion -q '.status + " " + (.conclusion // "pending")')
+            STATUS=$(echo "$S" | awk '{print $1}')
+            CONCLUSION=$(echo "$S" | awk '{print $2}')
+            echo "[PAGES] $i status=$STATUS conclusion=$CONCLUSION"
+            if [ "$STATUS" = "completed" ]; then
+              echo "pages_deploy_conclusion=$CONCLUSION" >> "$GITHUB_OUTPUT"
+              if [ "$CONCLUSION" != "success" ]; then
+                echo "FAIL: Pages deploy finished with conclusion=$CONCLUSION"
+                exit 1
+              fi
+              break
+            fi
+            sleep 10
+          done
+          if [ "$STATUS" != "completed" ]; then
+            echo "FAIL: Timed out waiting for Pages deploy"
+            exit 1
+          fi
+
+      - name: Poll live JSON until match or timeout
+        id: live_match
+        run: |
+          set -euo pipefail
+          REPO_ARTICLES="${{ steps.repo_hashes.outputs.repo_articles_hash }}"
+          REPO_VIDEOS="${{ steps.repo_hashes.outputs.repo_videos_hash }}"
+          LIVE_ARTICLES_URL="${{ env.LIVE_BASE }}/articles.json"
+          LIVE_VIDEOS_URL="${{ env.LIVE_BASE }}/videos.json"
+          MAX=${{ env.PROPAGATION_ATTEMPTS_MAX }}
+          SLEEP=${{ env.PROPAGATION_SLEEP_SEC }}
+
+          live_articles_reachable="false"
+          live_videos_reachable="false"
+          live_articles_match="false"
+          live_videos_match="false"
+          live_articles_hash=""
+          live_videos_hash=""
+          propagation_attempts=0
+          stale_after_deploy="false"
+
+          for attempt in $(seq 1 "$MAX"); do
+            propagation_attempts=$attempt
+            echo "--- attempt $attempt/$MAX ---"
+
+            # Fetch live articles
+            LIVE_ARTICLES=$(curl -fsSL -H "Cache-Control: no-cache" -H "Pragma: no-cache" "${LIVE_ARTICLES_URL}?v=${GITHUB_SHA::7}-${attempt}" 2>/dev/null || true)
+            if [ -n "$LIVE_ARTICLES" ]; then
+              live_articles_reachable="true"
+              live_articles_hash=$(printf '%s' "$LIVE_ARTICLES" | sha256sum | awk '{print $1}')
+              if [ "$live_articles_hash" = "$REPO_ARTICLES" ]; then live_articles_match="true"; fi
+            fi
+
+            # Fetch live videos (optional)
+            LIVE_VIDEOS=$(curl -fsSL -H "Cache-Control: no-cache" -H "Pragma: no-cache" "${LIVE_VIDEOS_URL}?v=${GITHUB_SHA::7}-${attempt}" 2>/dev/null || true)
+            if [ -n "$LIVE_VIDEOS" ]; then
+              live_videos_reachable="true"
+              live_videos_hash=$(printf '%s' "$LIVE_VIDEOS" | sha256sum | awk '{print $1}')
+              if [ -z "$REPO_VIDEOS" ]; then
+                live_videos_match="true"
+              else
+                if [ "$live_videos_hash" = "$REPO_VIDEOS" ]; then live_videos_match="true"; fi
+              fi
+            elif [ -z "$REPO_VIDEOS" ]; then
+              live_videos_match="true"
+            fi
+
+            echo "live_articles_reachable=$live_articles_reachable live_articles_match=$live_articles_match repo_hash=$REPO_ARTICLES live_hash=$live_articles_hash"
+            echo "live_videos_reachable=$live_videos_reachable live_videos_match=$live_videos_match"
+
+            if [ "$live_articles_reachable" = "true" ] && [ "$live_articles_match" = "true" ]; then
+              if [ -n "$REPO_VIDEOS" ]; then
+                if [ "$live_videos_reachable" = "true" ] && [ "$live_videos_match" = "true" ]; then
+                  echo "PASS: articles and videos match live"
+                  break
+                fi
+              else
+                echo "PASS: articles match live (videos not in repo)"
+                break
+              fi
+            fi
+
+            if [ "$attempt" -eq "$MAX" ]; then
+              if [ "$live_articles_reachable" = "true" ] && [ "$live_articles_match" = "false" ]; then
+                stale_after_deploy="true"
+              fi
+              echo "FAIL: timeout; live did not match repo"
+              {
+                echo "merged_commit_sha=${{ github.sha }}"
+                echo "repo_articles_hash=$REPO_ARTICLES"
+                echo "live_articles_hash=$live_articles_hash"
+                echo "repo_videos_hash=$REPO_VIDEOS"
+                echo "live_videos_hash=$live_videos_hash"
+                echo "live_articles_match_repo=$live_articles_match"
+                echo "live_videos_match_repo=$live_videos_match"
+                echo "live_articles_reachable=$live_articles_reachable"
+                echo "live_videos_reachable=$live_videos_reachable"
+                echo "propagation_attempts=$propagation_attempts"
+                echo "propagation_wait_used=true"
+                echo "stale_after_deploy=$stale_after_deploy"
+                echo "freshness_prod_pass=false"
+                echo "status=FAIL"
+              } >> "$GITHUB_OUTPUT"
+              exit 1
+            fi
+
+            echo "Waiting ${SLEEP}s for propagation..."
+            sleep "$SLEEP"
+          done
+
+          {
+            echo "merged_commit_sha=${{ github.sha }}"
+            echo "repo_articles_hash=$REPO_ARTICLES"
+            echo "live_articles_hash=$live_articles_hash"
+            echo "repo_videos_hash=$REPO_VIDEOS"
+            echo "live_videos_hash=$live_videos_hash"
+            echo "live_articles_match_repo=$live_articles_match"
+            echo "live_videos_match_repo=$live_videos_match"
+            echo "live_articles_reachable=$live_articles_reachable"
+            echo "live_videos_reachable=$live_videos_reachable"
+            echo "propagation_attempts=$propagation_attempts"
+            echo "propagation_wait_used=true"
+            echo "stale_after_deploy=$stale_after_deploy"
+            echo "freshness_prod_pass=true"
+            echo "status=PASS"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Production truth output
+        if: always()
+        run: |
+          echo "mergedCommitSha=${{ steps.live_match.outputs.merged_commit_sha || github.sha }}"
+          echo "pagesDeployDetected=${{ steps.pages_deploy.outputs.pages_deploy_detected }}"
+          echo "pagesDeployStatus=${{ steps.pages_deploy.outputs.pages_deploy_status }}"
+          echo "pagesDeployUrl=${{ steps.pages_deploy.outputs.pages_deploy_url }}"
+          echo "repoArticlesHash=${{ steps.repo_hashes.outputs.repo_articles_hash }}"
+          echo "liveArticlesHash=${{ steps.live_match.outputs.live_articles_hash }}"
+          echo "repoVideosHash=${{ steps.repo_hashes.outputs.repo_videos_hash }}"
+          echo "liveVideosHash=${{ steps.live_match.outputs.live_videos_hash }}"
+          echo "liveArticlesMatchRepo=${{ steps.live_match.outputs.live_articles_match_repo }}"
+          echo "liveVideosMatchRepo=${{ steps.live_match.outputs.live_videos_match_repo }}"
+          echo "liveArticlesReachable=${{ steps.live_match.outputs.live_articles_reachable }}"
+          echo "liveVideosReachable=${{ steps.live_match.outputs.live_videos_reachable }}"
+          echo "propagationWaitUsed=${{ steps.live_match.outputs.propagation_wait_used }}"
+          echo "propagationAttempts=${{ steps.live_match.outputs.propagation_attempts }}"
+          echo "staleAfterDeploy=${{ steps.live_match.outputs.stale_after_deploy }}"
+          echo "freshnessProdPass=${{ steps.live_match.outputs.freshness_prod_pass }}"
+          echo "status=${{ steps.live_match.outputs.status }}"
+
+      - name: Closeout chain summary (GitHub Step Summary)
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          GEN_AT=""
+          if [ -f projects/data/articles.json ]; then
+            GEN_AT=$(jq -r '.generatedAt // empty' projects/data/articles.json)
+          fi
+          {
+            echo "## After-merge articles freshness — closeout telemetry"
+            echo ""
+            echo "| Field | Value |"
+            echo "| --- | --- |"
+            echo "| merge_commit_sha | ${{ github.sha }} |"
+            echo "| repo_articles_generatedAt | ${GEN_AT} |"
+            echo "| pages_run_id | ${{ steps.pages_deploy.outputs.pages_run_id }} |"
+            echo "| pages_deploy_url | ${{ steps.pages_deploy.outputs.pages_deploy_url }} |"
+            echo "| freshness_prod_pass | ${{ steps.live_match.outputs.freshness_prod_pass }} |"
+            echo "| propagation_attempts | ${{ steps.live_match.outputs.propagation_attempts }} |"
+            echo ""
+            echo "Deltas: use log timestamps above for merge → Pages finished → prod visible; this job polls prod until JSON hash matches repo."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Notify completion (beep)
+        if: always()
+        run: printf '\a'

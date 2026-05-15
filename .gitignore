@@ -11,6 +11,9 @@ temp_*.lock
 # Generated data files (do not commit)
 filtr/data/**
 
+# Local build log (Windows Task Scheduler / dev)
+feed_build.log
+
 # Python cache
 __pycache__/
 *.py[cod]
@@ -63,8 +66,23 @@ tools/_artifacts/
 # infoUzel: never track artifacts/proofs
 artifacts/
 
+# infoUzel: article pipeline staging (ephemeral; never commit)
+projects/data/staging/
+
+# Silver autopilot: local timeout artifact archives (never commit)
+.silver-runtime/
+
+# Pipeline handoff checkout (local; never commit on main — CI uses git add -f on handoff branch)
+/pipeline-handoff/
+
 # infoUzel: generated monitoring (never commit)
 projects/data/fetch_monitor.json
+projects/data/feed_snapshots/
+projects/data/feed_transport_state.json
+projects/data/section_release_state.json
+
+# Silver retrieval stress 300k local JSON exports (runtime; never commit large artifacts)
+scripts/silver-retrieval-stress-300k-export*.json
 
 # Node (vendor libs in assets/vendor; do not track node_modules)
 node_modules/

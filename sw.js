@@ -5,7 +5,11 @@
 */
 
 // Verze cache (měnit při každé významné změně)
-const CACHE_VERSION = "2026-03-01-never-empty-v1";
+// 2026-03-22: bust app shell po gap-align CSS (PR #1362) — klienti se starým SW mohli držet zastaralé /assets cache
+// 2026-03-22: bump — app.js silent SW activation (SKIP_WAITING + jeden reload, bez spodního CTA)
+// 2026-03-22: HTML document = network-first (žádný preferovaný starý shell)
+// 2026-03-29: PR #1488 — nový SW + vyprázdnění APP_SHELL_CACHE po deployi (staré app.*.css v cache)
+const CACHE_VERSION = "2026-04-22-invoice-overlay-v2";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
@@ -40,10 +44,12 @@ function getDataRequestType(pathname) {
 // BASE bude definován později, takže použijeme funkci
 function getAppShellUrls() {
   return [
-    BASE,
-    `${BASE}index.html`,
+    // P0: BASE / index.html — nepre-cacheovat (document = network-first; starý shell by přežíval)
     // CSS/JS musí být updatovatelný i se stabilním ?v=... (viz fetch handler níž)
     `${BASE}assets/app.css`,
+    `${BASE}assets/iu-financial-overlay.css`,
+    `${BASE}assets/iu-legal-documents-overlay.css`,
+    `${BASE}assets/iu-invoice-overlay.css`,
     `${BASE}assets/app-crash-shield.js`,
     `${BASE}assets/app-render-optimizer.js`,
     `${BASE}assets/app.js`,
@@ -126,40 +132,43 @@ function seedResponse(pathname) {
   });
 }
 
-async function handleCriticalDataRequest(event) {
-  const url = new URL(event.request.url);
-  const pathname = url.pathname;
+/**
+ * Feed-critical files: no SW body read / cache.put on live Response (avoids
+ * "Response body is already used", invalid Response, FetchEvent reject).
+ * Network-only pass-through; seed JSON only if network fails completely.
+ */
+function isProjectsFeedDataPath(pathname) {
+  if (!pathname.startsWith("/projects/data/")) return false;
+  const name = pathname.slice("/projects/data/".length);
+  return (
+    name === "articles.json" ||
+    name === "videos.json" ||
+    name === "_probe.txt"
+  );
+}
+
+async function handleProjectsFeedDataPassthrough(event, pathname) {
+  const doFetch = () =>
+    fetch(event.request, { cache: "no-store" });
 
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), DATA_FETCH_TIMEOUT_MS);
-    const networkResponse = await fetch(event.request, {
-      signal: controller.signal,
-      cache: "no-store",
-    });
-    clearTimeout(timeoutId);
-    if (!networkResponse.ok) throw new Error("Network not ok");
-    const contentType = networkResponse.headers.get("content-type") || "";
-    if (!contentType.includes("application/json")) throw new Error("Not JSON");
-    const clone = networkResponse.clone();
-    const text = await clone.text();
-    if (!text.trim().startsWith("{") && !text.trim().startsWith("[")) throw new Error("Not JSON body");
-    const cache = await caches.open(DATA_CACHE);
-    await cache.put(event.request, networkResponse.clone());
-    return networkResponse;
-  } catch (_) {
-    const cached = await caches.match(event.request);
-    if (cached) {
-      const ct = cached.headers.get("content-type") || "";
-      if (ct.includes("application/json")) {
-        try {
-          const text = await cached.clone().text();
-          if (text.trim().startsWith("{") || text.trim().startsWith("[")) return cached;
-        } catch (_) {}
-      }
-    }
-    return seedResponse(pathname);
-  }
+    const r = await doFetch();
+    if (r.ok) return r;
+  } catch (_) {}
+  try {
+    const r = await doFetch();
+    if (r.ok) return r;
+  } catch (_) {}
+
+  if (pathname.endsWith("articles.json")) return seedResponse(pathname);
+  if (pathname.endsWith("videos.json")) return seedResponse(pathname);
+  return new Response("stale\n", {
+    status: 200,
+    headers: {
+      "Content-Type": "text/plain; charset=utf-8",
+      "Cache-Control": "no-store",
+    },
+  });
 }
 
 async function handleDataRequest(event) {
@@ -191,8 +200,16 @@ async function handleDataRequest(event) {
     const contentType = networkResponse.headers.get("content-type") || "";
     if (isJson && !contentType.includes("application/json")) throw new Error("Not JSON");
 
-    const clone = networkResponse.clone();
-    const text = await clone.text();
+    const text = await networkResponse.text();
+    const hdrs = new Headers(networkResponse.headers);
+    hdrs.delete("content-length");
+    const replay = () =>
+      new Response(text, {
+        status: networkResponse.status,
+        statusText: networkResponse.statusText,
+        headers: hdrs,
+      });
+
     if (isJson) {
       if (!text.trim().startsWith("{") && !text.trim().startsWith("[")) throw new Error("Not JSON body");
       let generatedAt = null;
@@ -201,7 +218,8 @@ async function handleDataRequest(event) {
         generatedAt = obj && (obj.generatedAt || obj.generated_at);
       } catch (_) {}
       const cache = await caches.open(DATA_CACHE);
-      await cache.put(event.request, networkResponse.clone());
+      const bodyForClient = replay();
+      await cache.put(event.request, bodyForClient.clone());
       const metaCache = await caches.open(DATA_META_CACHE);
       const metaReq = new Request(event.request.url + ".meta");
       await metaCache.put(
@@ -215,25 +233,10 @@ async function handleDataRequest(event) {
           { headers: { "Content-Type": "application/json" } }
         )
       );
-      return networkResponse;
+      return bodyForClient;
     }
 
-    if (pathname.endsWith("probe.txt")) {
-      const cache = await caches.open(DATA_CACHE);
-      await cache.put(event.request, networkResponse.clone());
-      const metaCache = await caches.open(DATA_META_CACHE);
-      const metaReq = new Request(event.request.url + ".meta");
-      await metaCache.put(
-        metaReq,
-        new Response(
-          JSON.stringify({ timestamp: Date.now(), type: "probe" }),
-          { headers: { "Content-Type": "application/json" } }
-        )
-      );
-      return networkResponse;
-    }
-
-    return networkResponse;
+    return replay();
   } catch (_) {
     const cached = await caches.match(event.request);
     if (!cached) return send503();
@@ -259,16 +262,6 @@ async function handleDataRequest(event) {
       const age = Date.now() - Date.parse(generatedAt);
       const maxStale = MAX_STALE_MS[type] ?? MAX_STALE_MS.meta;
       if (age > maxStale) return send503();
-      return cached;
-    }
-
-    if (pathname.endsWith("probe.txt")) {
-      const metaCache = await caches.open(DATA_META_CACHE);
-      const metaRes = await metaCache.match(new Request(event.request.url + ".meta"));
-      if (!metaRes) return send503();
-      const meta = await metaRes.json();
-      if (!meta || !meta.timestamp) return send503();
-      if (Date.now() - meta.timestamp > MAX_STALE_MS.probe) return send503();
       return cached;
     }
 
@@ -303,12 +296,13 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   const path = url.pathname;
 
+  if (url.origin === self.location.origin && isProjectsFeedDataPath(path)) {
+    event.respondWith(handleProjectsFeedDataPassthrough(event, path));
+    return;
+  }
+
   if (url.origin === self.location.origin && path.startsWith("/projects/data/")) {
-    if (path.includes("articles.json") || path.includes("videos.json")) {
-      event.respondWith(handleCriticalDataRequest(event));
-      return;
-    }
-    if (path.endsWith(".json") || path.endsWith("probe.txt")) {
+    if (path.endsWith(".json")) {
       event.respondWith(handleDataRequest(event));
       return;
     }
@@ -321,8 +315,28 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (path.startsWith("/projects/data/")) {
-    event.respondWith(fetch(event.request, { cache: "no-store" }));
+  // P0: HTML dokumenty (navigace) — network-first; cache jen při výpadku sítě (offline fallback)
+  if (
+    event.request.method === "GET" &&
+    url.origin === self.location.origin &&
+    (event.request.mode === "navigate" || event.request.destination === "document")
+  ) {
+    event.respondWith(
+      (async () => {
+        try {
+          const res = await fetch(event.request, { cache: "no-store" });
+          return res;
+        } catch (_) {
+          const cached = await caches.match(event.request);
+          if (cached) return cached;
+          return new Response("", {
+            status: 503,
+            statusText: "Offline",
+            headers: { "Cache-Control": "no-store" },
+          });
+        }
+      })()
+    );
     return;
   }
 
@@ -474,18 +488,16 @@ self.addEventListener("fetch", (event) => {
           }
 
           if (isJSON) {
-            // Validní JSON - cacheuj
-            caches.open(DATA_CACHE).then((cache) => {
-              cache.put(event.request, response.clone());
-              // Ulož metadata pro TTL
-              const meta = {
-                timestamp: Date.now(),
-                type: path.includes("articles") ? "articles" : path.includes("videos") ? "videos" : path.includes("weather") ? "weather" : path.includes("namedays") ? "namedays" : "meta"
-              };
-              caches.open(DATA_META_CACHE).then((metaCache) => {
-                metaCache.put(new Request(event.request.url + ".meta"), new Response(JSON.stringify(meta)));
-              });
-            });
+            // Validní JSON - cacheuj (klonovat a await před return response — jinak tělo už čte klient a .clone() spadne)
+            const responseForCache = response.clone();
+            const cache = await caches.open(DATA_CACHE);
+            await cache.put(event.request, responseForCache);
+            const meta = {
+              timestamp: Date.now(),
+              type: path.includes("articles") ? "articles" : path.includes("videos") ? "videos" : path.includes("weather") ? "weather" : path.includes("namedays") ? "namedays" : "meta"
+            };
+            const metaCache = await caches.open(DATA_META_CACHE);
+            await metaCache.put(new Request(event.request.url + ".meta"), new Response(JSON.stringify(meta)));
           }
 
           return response;
@@ -520,11 +532,21 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Ostatní: Network First
+  // Ostatní: Network First (vždy platná Response — nikdy undefined)
   event.respondWith(
-    fetch(event.request).catch(() => {
-      return caches.match(event.request);
-    })
+    (async () => {
+      try {
+        return await fetch(event.request);
+      } catch (_) {
+        const c = await caches.match(event.request);
+        if (c) return c;
+        return new Response("", {
+          status: 503,
+          statusText: "Network Error",
+          headers: { "Cache-Control": "no-store" },
+        });
+      }
+    })()
   );
 });
 
