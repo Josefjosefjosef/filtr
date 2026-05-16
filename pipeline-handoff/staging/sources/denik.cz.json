@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-16T14:24:37.377847Z",
+  "ingestedAt": "2026-05-16T15:05:23.429822Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Případ smrti malého Émila pokročil, policie má DNA. Prarodičům někdo zapálil dům",
+      "url": "https://www.denik.cz/staty-eu/smrt-emila-francie-alpy-nove-stopy-dna.html",
+      "dt": "2026-05-16T14:45:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dna",
+        "dům",
+        "malého",
+        "někdo",
+        "pokročil",
+        "policie",
+        "prarodičům",
+        "případ",
+        "smrti",
+        "zapálil",
+        "émila"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -629,32 +657,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Láska, která skončila smrtí. Sérii Monyová táhne nahoru Tereza Ramba",
-      "url": "https://www.denik.cz/film-a-televize/monyova-serie-oneplay-tereza-ramba-prvni-dojmy.html",
-      "dt": "2026-05-15T18:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "láska",
-        "monyová",
-        "nahoru",
-        "ramba",
-        "skončila",
-        "smrtí",
-        "sérii",
-        "tereza",
-        "táhne"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -665,7 +667,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28064,
+      "bytes": 28158,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -702,7 +704,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-16T13:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T14:45:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -719,6 +721,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Případ smrti malého Émila pokročil, policie má DNA. Prarodičům někdo zapálil dům",
+            "publishedAt": "2026-05-16T14:45:00Z"
+          },
           {
             "title": "Z hrobu v Polsku vytáhli živého muže. Propadla se pod ním betonová deska",
             "publishedAt": "2026-05-16T13:20:00Z"
@@ -746,10 +752,6 @@
           {
             "title": "Muž obviněný z krádeže lebky sv. Zdislavy zůstává na svobodě. Do vazby nejde",
             "publishedAt": "2026-05-16T10:53:00Z"
-          },
-          {
-            "title": "Nábytkářský gigant bojuje o přežití. Firma nemá na výplaty, posílá je po částech",
-            "publishedAt": "2026-05-16T10:10:00Z"
           }
         ]
       }

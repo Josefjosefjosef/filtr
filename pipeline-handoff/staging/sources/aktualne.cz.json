@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-16T14:24:37.377847Z",
+  "ingestedAt": "2026-05-16T15:05:23.429822Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Od ABBY přes vousatou zpěvačku až po nebinární vítěze. Podívejte se, kdo je v Eurovizi nejúspěšnější",
+      "url": "https://zpravy.aktualne.cz/zahranici/od-abby-pres-vousatou-zpevacku-az-po-nebinarni-viteze-podivejte-se-kdo-je-v-eurovizi-nejuspesnejsi/r~aaa296504c34b600766da8026517efce/",
+      "dt": "2026-05-16T14:50:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "abby",
+        "eurovizi",
+        "nebinární",
+        "nejúspěšnější",
+        "podívejte",
+        "vousatou",
+        "vítěze",
+        "zpěvačku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Baník - Zlín. Baník hraje o ligový život, nesmí zaváhat. Nemá ale situaci ve své moci",
+      "url": "https://sport.aktualne.cz/fotbal/ceska-liga/banik-zlin-banik-hraje-o-ligovy-zivot-nesmi-zavahat-nema-ale-situaci-ve-sve-moci/r~aaa298e6b4d6cb54853c9c1b0cd484e8/",
+      "dt": "2026-05-16T14:24:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "ale",
+        "baník",
+        "hraje",
+        "ligový",
+        "moci",
+        "nemá",
+        "nesmí",
+        "situaci",
+        "své",
+        "zaváhat",
+        "zlín",
+        "život"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -484,62 +538,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Mlčení kolem „zákona pro Babiše“ prolomeno. Lidé od ministra popsali sporný prodej půdy",
-      "url": "https://zpravy.aktualne.cz/domaci/mlceni-kolem-zakona-pro-babise-prolomeno-lide-od-ministra-popsali-sporny-prodej-pudy/r~aaa298982935ee862ecfbab63071d3e5/",
-      "dt": "2026-05-16T09:21:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "babiše",
-        "kolem",
-        "lidé",
-        "ministra",
-        "mlčení",
-        "popsali",
-        "prodej",
-        "prolomeno",
-        "půdy",
-        "sporný",
-        "zákona"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nový český tank? Strnad přijel do Bratislavy se strojem Karpat, chce ho prodat armádě",
-      "url": "https://zpravy.aktualne.cz/domaci/novy-cesky-tank-strnad-prijel-do-bratislavy-se-strojem-karpat-chce-ho-prodat-armade/r~aaa2931709ac6fbcd8d97470732bff84/",
-      "dt": "2026-05-16T08:52:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "armádě",
-        "bratislavy",
-        "chce",
-        "karpat",
-        "nový",
-        "prodat",
-        "přijel",
-        "strnad",
-        "strojem",
-        "tank",
-        "český"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -550,7 +548,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21650,
+      "bytes": 21381,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -587,12 +585,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-16T14:03:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T14:50:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 13,
-          "other": 1,
-          "sport": 6
+          "zpravy": 12,
+          "sport": 7,
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -604,6 +602,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Od ABBY přes vousatou zpěvačku až po nebinární vítěze. Podívejte se, kdo je v Eurovizi nejúspěšnější",
+            "publishedAt": "2026-05-16T14:50:00Z"
+          },
+          {
+            "title": "Baník - Zlín. Baník hraje o ligový život, nesmí zaváhat. Nemá ale situaci ve své moci",
+            "publishedAt": "2026-05-16T14:24:00Z"
+          },
           {
             "title": "Kdybych byla dvoumetrový chlap, o fíkovém listu nemluvíme, říká favoritka ODS do čela Brna",
             "publishedAt": "2026-05-16T14:03:00Z"
@@ -627,14 +633,6 @@
           {
             "title": "Lituje, že nezvolil jinou formu protestu. Podezřelý z krádeže lebky sv. Zdislavy do vazby nepůjde",
             "publishedAt": "2026-05-16T11:11:00Z"
-          },
-          {
-            "title": "Válka v Íránu postihla i japonské pochutiny. Obaly brambůrků ztratily svoji barvu",
-            "publishedAt": "2026-05-16T12:05:00Z"
-          },
-          {
-            "title": "„Děsivě dominantní.“ Češi upoutali na MS nástupem, taková pasáž tu ještě nebyla",
-            "publishedAt": "2026-05-16T11:47:00Z"
           }
         ]
       }

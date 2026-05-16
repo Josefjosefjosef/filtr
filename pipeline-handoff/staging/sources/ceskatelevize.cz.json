@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-16T14:24:37.377847Z",
+  "ingestedAt": "2026-05-16T15:05:23.429822Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Uhynulá velryba u dánského ostrova je Timmy, potvrdily úřady",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/uhynula-velryba-u-danskeho-ostrova-je-timmy-potvrdily-urady-373512",
+      "dt": "2026-05-16T14:53:10Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dánského",
+        "ostrova",
+        "potvrdily",
+        "timmy",
+        "uhynulá",
+        "velryba",
+        "úřady"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -732,26 +756,23 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Přesnost a respekt. Odborníci debatovali o roli médií po masových tragédiích",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/presnost-a-respekt-odbornici-debatovali-o-roli-medii-po-masovych-tragediich-373413",
-      "dt": "2026-05-15T12:31:37Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Řáhová skončila na SP v Německu šestá na pětistovce",
+      "url": "https://sport.ceskatelevize.cz/clanek/rychlostni-kanoistika/rahova-skoncila-na-svetovem-poharu-v-brandenburgu-sesta-na-petistovce-156825",
+      "dt": "2026-05-16T14:26:23Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "debatovali",
-        "masových",
-        "médií",
-        "odborníci",
-        "přesnost",
-        "respekt",
-        "roli",
-        "tragédiích"
+        "německu",
+        "pětistovce",
+        "skončila",
+        "řáhová",
+        "šestá"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1470,31 +1491,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hrát za Kanadu se nikdy neomrzí, vyhlíží start MS hvězdný Crosby",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/hrat-za-kanadu-se-nikdy-neomrzi-vyhlizi-start-ms-hvezdny-crosby-156797",
-      "dt": "2026-05-14T18:45:40Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "crosby",
-        "hrát",
-        "hvězdný",
-        "kanadu",
-        "neomrzí",
-        "nikdy",
-        "start",
-        "vyhlíží"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1505,7 +1501,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43919,
+      "bytes": 43684,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1565,7 +1561,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T13:58:32Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T14:53:10Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 28,
@@ -1581,6 +1577,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Uhynulá velryba u dánského ostrova je Timmy, potvrdily úřady",
+            "publishedAt": "2026-05-16T14:53:10Z"
+          },
           {
             "title": "Stroje Gripen, Venom i španělský Tiger mohli vidět návštěvníci v Náměšti",
             "publishedAt": "2026-05-16T13:58:32Z"
@@ -1608,10 +1608,6 @@
           {
             "title": "Před dvaceti lety varoval Al Gore svět před klimatickou krizí",
             "publishedAt": "2026-05-16T08:00:00Z"
-          },
-          {
-            "title": "Jsme nezávislí a zbraně z USA jsou dány zákonem, reaguje Tchaj-wan na Trumpa",
-            "publishedAt": "2026-05-16T07:26:06Z"
           }
         ]
       }
@@ -1623,7 +1619,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38093,
+      "bytes": 38164,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1660,7 +1656,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T13:52:14Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T14:26:23Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1675,6 +1671,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Řáhová skončila na SP v Německu šestá na pětistovce",
+            "publishedAt": "2026-05-16T14:26:23Z"
+          },
           {
             "title": "Salač dojel v kvalifikaci na Velkou cenu Katalánska na sedmém místě",
             "publishedAt": "2026-05-16T13:52:14Z"
@@ -1702,10 +1702,6 @@
           {
             "title": "Nestálé počasí, výjimečná atmosféra. Májová regata nabídla napínavé souboje",
             "publishedAt": "2026-05-16T09:00:00Z"
-          },
-          {
-            "title": "První český soupeř na MS odtajnil nominaci. Nechybí ostřílený Son Hung-min",
-            "publishedAt": "2026-05-16T08:52:21Z"
           }
         ]
       }
@@ -1717,7 +1713,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77546,
+      "bytes": 77510,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

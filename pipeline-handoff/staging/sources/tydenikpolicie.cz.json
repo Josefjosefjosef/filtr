@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-16T14:24:37.377847Z",
+  "ingestedAt": "2026-05-16T15:05:23.429822Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Podvodníci se vydávali za mostecké kriminalisty. Žena přišla o téměř tři miliony korun",
+      "url": "https://tydenikpolicie.cz/podvodnici-se-vydavali-za-mostecke-kriminalisty-zena-prisla-o-temer-tri-miliony-korun/",
+      "dt": "2026-05-16T14:55:34Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "korun",
+        "kriminalisty",
+        "miliony",
+        "mostecké",
+        "podvodníci",
+        "přišla",
+        "téměř",
+        "tři",
+        "vydávali",
+        "žena"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -236,33 +263,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Po havárii elektromopedu policisté zjistili, že muž řídil pod vlivem alkoholu, bez řidičáku a bez registrace",
-      "url": "https://tydenikpolicie.cz/po-havarii-elektromopedu-policiste-zjistili-ze-muz-ridil-pod-vlivem-alkoholu-bez-ridicaku-a-bez-registrace/",
-      "dt": "2026-05-15T15:25:26Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "alkoholu",
-        "elektromopedu",
-        "havárii",
-        "muž",
-        "policisté",
-        "registrace",
-        "vlivem",
-        "zjistili",
-        "řidičáku",
-        "řídil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -273,7 +273,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16126,
+      "bytes": 16132,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -310,7 +310,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-16T14:20:50Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T14:55:34Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -325,6 +325,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Podvodníci se vydávali za mostecké kriminalisty. Žena přišla o téměř tři miliony korun",
+            "publishedAt": "2026-05-16T14:55:34Z"
+          },
           {
             "title": "Žena v Chomutově tvrdila, že je u nich v kočárkárně uvězněn syrský prezident",
             "publishedAt": "2026-05-16T14:20:50Z"
@@ -352,10 +356,6 @@
           {
             "title": "Dva muži měli napadnout známého a oloupit ho",
             "publishedAt": "2026-05-15T22:02:59Z"
-          },
-          {
-            "title": "Policisté pátrali po mladém řidiči motocyklu. Na Písecku srazil cyklistu a z místa nehody ujel",
-            "publishedAt": "2026-05-15T18:01:16Z"
           }
         ]
       }
