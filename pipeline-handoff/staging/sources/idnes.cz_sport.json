@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-16T08:24:52.749196Z",
+  "ingestedAt": "2026-05-16T09:04:47.516557Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Golfový major PGA Championship vedou Smalley a McNealy, McIlroy zvládl boj o cut",
+      "url": "https://www.idnes.cz/sport/ostatni/pga-championship-smalley-mcnealy-golf-major-newtown-square.A260516_103012_sporty_jrv",
+      "dt": "2026-05-16T08:37:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "boj",
+        "championship",
+        "cut",
+        "golfový",
+        "major",
+        "mcilroy",
+        "mcnealy",
+        "pga",
+        "smalley",
+        "vedou",
+        "zvládl"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -108,7 +136,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Schweiner s Trousilem podlehli Australanům a na písku v Číně skončili devátí",
+      "title": "Schweiner a Trousil podlehli Australanům, na písku v Číně skončili devátí",
       "url": "https://www.idnes.cz/sport/ostatni/schweiner-trousil-sia-men-plazovy-volejbal.A260516_083427_sporty_jrv",
       "dt": "2026-05-16T06:40:00Z",
       "media_raw": "iDNES / Sport",
@@ -120,7 +148,7 @@
         "písku",
         "schweiner",
         "skončili",
-        "trousilem",
+        "trousil",
         "číně"
       ],
       "feedCategory": "sport",
@@ -743,32 +771,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kanada - Švédsko 5:3. Gólovou přestřelku na úvod MS zvládli lépe Crosby a spol.",
-      "url": "https://www.idnes.cz/hokej/ms-2026/kanada-svedsko-online-zpravodajstvi.A260515_125344_ms-hokej-2026_luji",
-      "dt": "2026-05-15T17:06:25Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "crosby",
-        "gólovou",
-        "kanada",
-        "lépe",
-        "přestřelku",
-        "spol",
-        "zvládli",
-        "úvod",
-        "švédsko"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -779,7 +781,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45047,
+      "bytes": 45062,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -816,7 +818,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T08:37:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -831,6 +833,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Golfový major PGA Championship vedou Smalley a McNealy, McIlroy zvládl boj o cut",
+            "publishedAt": "2026-05-16T08:37:00Z"
+          },
           {
             "title": "ONLINE: Česko - Slovinsko. Druhý duel na MS, navážou hokejisté na úvodní výhru?",
             "publishedAt": "2026-05-16T08:00:00Z"
@@ -848,7 +854,7 @@
             "publishedAt": "2026-05-16T06:47:00Z"
           },
           {
-            "title": "Schweiner s Trousilem podlehli Australanům a na písku v Číně skončili devátí",
+            "title": "Schweiner a Trousil podlehli Australanům, na písku v Číně skončili devátí",
             "publishedAt": "2026-05-16T06:40:00Z"
           },
           {
@@ -858,10 +864,6 @@
           {
             "title": "Rulík po výhře: Je jedno, kdo dává góly. Nebýt Dánové v šesti, měli bychom nulu",
             "publishedAt": "2026-05-16T05:56:00Z"
-          },
-          {
-            "title": "Tabulky MS v hokeji 2026: pořadí skupin A a B",
-            "publishedAt": "2026-05-16T05:55:00Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-16T08:24:52.749196Z",
+  "ingestedAt": "2026-05-16T09:04:47.516557Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Soud rozhoduje o vazbě pro podezřelého z krádeže lebky svaté Zdislavy",
+      "url": "https://www.idnes.cz/zpravy/domaci/lebka-svate-zdislavy-soud-vazba-kradez-relikvie-zlodej-policie.A260516_101845_domaci_svm",
+      "dt": "2026-05-16T08:38:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "krádeže",
+        "lebky",
+        "podezřelého",
+        "rozhoduje",
+        "soud",
+        "svaté",
+        "vazbě",
+        "zdislavy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -753,33 +778,6 @@
         "svůj",
         "trdlokafe",
         "úpadek"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Čínský prezident Si Ťin-pching v září přijede do USA, přijal Trumpovo pozvání",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/cina-si-tin-pching-usa-navsteva-donald-trump.A260515_175522_zahranicni_kha",
-      "dt": "2026-05-15T16:06:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "pching",
-        "pozvání",
-        "prezident",
-        "přijal",
-        "přijede",
-        "trumpovo",
-        "usa",
-        "září",
-        "čínský",
-        "ťin"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1570,7 +1568,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48648,
+      "bytes": 48546,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1607,7 +1605,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T07:53:51Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T08:38:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -1623,6 +1621,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Soud rozhoduje o vazbě pro podezřelého z krádeže lebky svaté Zdislavy",
+            "publishedAt": "2026-05-16T08:38:00Z"
+          },
           {
             "title": "Miliardové podvody se soláry. Nový trik, jak získat dotace, jde jen těžko dokázat",
             "publishedAt": "2026-05-16T07:53:51Z"
@@ -1650,10 +1652,6 @@
           {
             "title": "Třemošnou čeká dopravní návrat o 15 let zpět, obchvat se uzavírá",
             "publishedAt": "2026-05-16T04:22:00Z"
-          },
-          {
-            "title": "Kam s dětmi v Brně, když pálí slunce i když prší? Objevte místo, kde nuda neexistuje",
-            "publishedAt": "2026-05-16T03:00:00Z"
           }
         ]
       }

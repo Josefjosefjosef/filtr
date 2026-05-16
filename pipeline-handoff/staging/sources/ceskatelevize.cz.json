@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-16T08:24:52.749196Z",
+  "ingestedAt": "2026-05-16T09:04:47.516557Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Soud rozhoduje o vazbě pro zloděje lebky svaté Zdislavy",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/soud-rozhoduje-o-vazbe-pro-zlodeje-lebky-svate-zdislavy-373502",
+      "dt": "2026-05-16T08:20:14Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "lebky",
+        "rozhoduje",
+        "soud",
+        "svaté",
+        "vazbě",
+        "zdislavy",
+        "zloděje"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -736,26 +760,28 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "U dánských břehů vyplavilo moře mrtvou velrybu, zřejmě Timmyho",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/u-danskych-brehu-vyplavilo-more-mrtvou-velrybu-muze-to-byt-timmy-373471",
-      "dt": "2026-05-15T09:40:39Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "První český soupeř na MS odtajnil nominaci. Nechybí ostřílený Son Hung-min",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/prvni-cesky-souper-na-ms-odtajnil-nominaci-nechybi-ostrileny-son-hung-min-156819",
+      "dt": "2026-05-16T08:52:21Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "břehů",
-        "dánských",
-        "moře",
-        "mrtvou",
-        "timmyho",
-        "velrybu",
-        "vyplavilo",
-        "zřejmě"
+        "hung",
+        "min",
+        "nechybí",
+        "nominaci",
+        "odtajnil",
+        "ostřílený",
+        "první",
+        "son",
+        "soupeř",
+        "český"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1473,30 +1499,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Změnil jsem mindset a funguje to, pochvaluje si paracyklista Jahoda",
-      "url": "https://sport.ceskatelevize.cz/clanek/sport-handicapovanych/zmenil-jsem-mindset-a-funguje-to-pochvaluje-si-paracyklista-jahoda-156788",
-      "dt": "2026-05-14T13:00:36Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "funguje",
-        "jahoda",
-        "jsem",
-        "mindset",
-        "paracyklista",
-        "pochvaluje",
-        "změnil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1507,7 +1509,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42356,
+      "bytes": 42353,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1567,11 +1569,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T08:20:14Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 4,
           "zpravy": 25,
+          "other": 4,
           "finance": 1
         },
         "drop_counts": {
@@ -1584,6 +1586,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Soud rozhoduje o vazbě pro zloděje lebky svaté Zdislavy",
+            "publishedAt": "2026-05-16T08:20:14Z"
+          },
           {
             "title": "Před dvaceti lety varoval Al Gore svět před klimatickou krizí",
             "publishedAt": "2026-05-16T08:00:00Z"
@@ -1611,10 +1617,6 @@
           {
             "title": "Trump: Americké a nigerijské síly zabily druhého nejvýše postaveného velitele IS na světě",
             "publishedAt": "2026-05-16T04:28:39Z"
-          },
-          {
-            "title": "O prázdninách se otevře stezka bývalým hnědouhelným lomem ČSA",
-            "publishedAt": "2026-05-16T04:00:00Z"
           }
         ]
       }
@@ -1626,7 +1628,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38063,
+      "bytes": 37941,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1663,7 +1665,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T07:21:26Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T08:52:21Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1678,6 +1680,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "První český soupeř na MS odtajnil nominaci. Nechybí ostřílený Son Hung-min",
+            "publishedAt": "2026-05-16T08:52:21Z"
+          },
           {
             "title": "Schweiner s Trousilem skončili na písku v Číně devátí",
             "publishedAt": "2026-05-16T07:21:26Z"
@@ -1705,10 +1711,6 @@
           {
             "title": "Basketbalisté Opavy dráždili Nymburk bosou nohou",
             "publishedAt": "2026-05-15T17:36:55Z"
-          },
-          {
-            "title": "Rychlý start a pohodový vstup do turnaje. Češi udrželi Dány na uzdě",
-            "publishedAt": "2026-05-15T17:28:00Z"
           }
         ]
       }
@@ -1720,7 +1722,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77134,
+      "bytes": 77176,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

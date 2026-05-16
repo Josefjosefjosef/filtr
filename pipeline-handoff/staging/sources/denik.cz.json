@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-16T08:24:52.749196Z",
+  "ingestedAt": "2026-05-16T09:04:47.516557Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Majitel štěněte nechtěl platit léčbu. Edu vyhodil do příkopu, už ho nezachránili",
+      "url": "https://www.denik.cz/regiony/plzen-rokycany-liblin-utulek-pes-tyrani.html",
+      "dt": "2026-05-16T08:20:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "edu",
+        "léčbu",
+        "majitel",
+        "nechtěl",
+        "nezachránili",
+        "platit",
+        "příkopu",
+        "vyhodil",
+        "štěněte"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -21,6 +47,32 @@
         "pětimetrový",
         "útok",
         "žralok"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na letišti v Náměšti začíná den otevřených dveří. Déšť návštěvníky neodrazuje",
+      "url": "https://www.denik.cz/regiony/na-letisti-v-namesti-zacina-den-otevrenych-dveri-dest-navstevniky-neodrazuje-202.html",
+      "dt": "2026-05-16T07:39:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "den",
+        "dveří",
+        "déšť",
+        "letišti",
+        "neodrazuje",
+        "náměšti",
+        "návštěvníky",
+        "otevřených",
+        "začíná"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -593,58 +645,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V Brně spojili vlak a tramvaj. Unikátní vozidlo bude jezdit po známé železnici",
-      "url": "https://www.denik.cz/regiony/brno-vlakotramvaj-lenka-salina-vlak-zeleznice-kopidlnka.html",
-      "dt": "2026-05-15T13:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "brně",
-        "jezdit",
-        "spojili",
-        "tramvaj",
-        "unikátní",
-        "vlak",
-        "vozidlo",
-        "známé",
-        "železnici"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Čapí hnízdo v Černošíně je prý lepší než televize, říkají obyvatelé",
-      "url": "https://tachovsky.denik.cz/ctenar-reporter/capi-hnizdo-v-cernosine-je-pry-lepsi-nez-televize-rikaji-obyvatele-20260514.html",
-      "dt": "2026-05-15T13:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "hnízdo",
-        "lepší",
-        "než",
-        "obyvatelé",
-        "prý",
-        "televize",
-        "čapí",
-        "černošíně",
-        "říkají"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -655,7 +655,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28610,
+      "bytes": 28689,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -692,7 +692,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-16T07:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T08:20:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -709,8 +709,16 @@
         },
         "sample_titles": [
           {
+            "title": "Majitel štěněte nechtěl platit léčbu. Edu vyhodil do příkopu, už ho nezachránili",
+            "publishedAt": "2026-05-16T08:20:00Z"
+          },
+          {
             "title": "Plavce v Austrálii napadl pětimetrový bílý žralok. Muž útok nepřežil",
             "publishedAt": "2026-05-16T07:40:00Z"
+          },
+          {
+            "title": "Na letišti v Náměšti začíná den otevřených dveří. Déšť návštěvníky neodrazuje",
+            "publishedAt": "2026-05-16T07:39:00Z"
           },
           {
             "title": "Putin příští týden navštíví Čínu, bude jednat s čínským prezidentem",
@@ -731,14 +739,6 @@
           {
             "title": "Zoubkové víly v akci. Hygienistky učily děti správně čistit zuby",
             "publishedAt": "2026-05-16T05:19:00Z"
-          },
-          {
-            "title": "Počasí na léto 2026: Pacifik se vaří a změní plány i v Česku",
-            "publishedAt": "2026-05-16T04:20:00Z"
-          },
-          {
-            "title": "Muž skončil v izolaci kvůli hantaviru: Vylodění? Jako záchrana, tekly mi slzy",
-            "publishedAt": "2026-05-16T04:05:00Z"
           }
         ]
       }
