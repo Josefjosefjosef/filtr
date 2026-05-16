@@ -1,25 +1,51 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-16T07:44:52.504615Z",
+  "ingestedAt": "2026-05-16T08:24:52.749196Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "San Antonio postoupilo do semifinále NBA, Detroit si vynutil sedmý zápas",
+      "title": "ONLINE: Česko - Slovinsko. Druhý duel na MS, navážou hokejisté na úvodní výhru?",
+      "url": "https://www.idnes.cz/hokej/ms-2026/cesko-slovinsko-ms-hokej-online-zpravodajstvi.A260516_082502_ms-hokej-2026_drev",
+      "dt": "2026-05-16T08:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "druhý",
+        "duel",
+        "hokejisté",
+        "navážou",
+        "slovinsko",
+        "výhru",
+        "úvodní",
+        "česko"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "San Antonio je v semifinále NBA. Detroit odvrátil vyřazení, rozhodne sedmý zápas",
       "url": "https://www.idnes.cz/sport/basket/nba-play-off-postup-san-antonio-detroit-cleveland-vyrovnano.A260516_090013_sport-basket_jrv",
-      "dt": "2026-05-16T07:20:00Z",
+      "dt": "2026-05-16T07:42:01Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
         "antonio",
         "detroit",
         "nba",
-        "postoupilo",
+        "odvrátil",
+        "rozhodne",
         "san",
         "sedmý",
         "semifinále",
-        "vynutil",
+        "vyřazení",
         "zápas"
       ],
       "feedCategory": "sport",
@@ -743,31 +769,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kanada na MS v hokeji 2026: program, výsledky, soupiska, bilance s Čechy",
-      "url": "https://www.idnes.cz/hokej/ms-2026/kanada-na-ms-v-hokeji-2026-program-a-vysledky.A260428_095708_ms-hokej-2026_ald",
-      "dt": "2026-05-15T17:05:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "2026",
-        "bilance",
-        "hokeji",
-        "kanada",
-        "program",
-        "soupiska",
-        "výsledky",
-        "čechy"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -778,7 +779,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45139,
+      "bytes": 45047,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -815,7 +816,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T07:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T08:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -831,8 +832,12 @@
         },
         "sample_titles": [
           {
-            "title": "San Antonio postoupilo do semifinále NBA, Detroit si vynutil sedmý zápas",
-            "publishedAt": "2026-05-16T07:20:00Z"
+            "title": "ONLINE: Česko - Slovinsko. Druhý duel na MS, navážou hokejisté na úvodní výhru?",
+            "publishedAt": "2026-05-16T08:00:00Z"
+          },
+          {
+            "title": "San Antonio je v semifinále NBA. Detroit odvrátil vyřazení, rozhodne sedmý zápas",
+            "publishedAt": "2026-05-16T07:42:01Z"
           },
           {
             "title": "Senna, Schumacher nebo Hamilton? Takhle dopadlo srovnání nejlepších pilotů F1",
@@ -857,10 +862,6 @@
           {
             "title": "Tabulky MS v hokeji 2026: pořadí skupin A a B",
             "publishedAt": "2026-05-16T05:55:00Z"
-          },
-          {
-            "title": "Drzoun Holzer vs. veterán UFC. Kdo na Oktagonu v Hannoveru získá šanci na titul?",
-            "publishedAt": "2026-05-16T05:44:00Z"
           }
         ]
       }

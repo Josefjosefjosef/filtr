@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-16T07:44:52.504615Z",
+  "ingestedAt": "2026-05-16T08:24:52.749196Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Velká rána pro českou reprezentantku v zámoří. Přetrhla si vaz v koleni a sezona pro ni skončila. Po operaci je i Reisingerová",
+      "url": "https://www.sport.cz/clanek/basketbal-velka-rana-pro-ceskou-reprezentantku-v-zamori-pretrhla-si-vaz-v-kolenu-a-sezona-pro-ni-skoncila-5454766",
+      "dt": "2026-05-16T05:51:09Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "koleni",
+        "operaci",
+        "přetrhla",
+        "reisingerová",
+        "reprezentantku",
+        "rána",
+        "sezona",
+        "skončila",
+        "vaz",
+        "velká",
+        "zámoří",
+        "českou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -228,33 +257,6 @@
         "skončila",
         "česká",
         "číně"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Velká rána pro českou reprezentantku v zámoří. Přetrhla si vaz v koleni a sezona pro ni skončila",
-      "url": "https://www.sport.cz/clanek/basketbal-velka-rana-pro-ceskou-reprezentantku-v-zamori-pretrhla-si-vaz-v-kolenu-a-sezona-pro-ni-skoncila-5454766",
-      "dt": "2026-05-16T05:51:09Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "koleni",
-        "přetrhla",
-        "reprezentantku",
-        "rána",
-        "sezona",
-        "skončila",
-        "vaz",
-        "velká",
-        "zámoří",
-        "českou"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -798,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45283,
+      "bytes": 45352,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,7 +840,8 @@
         "raw_feed_latest_publishedAt": "2026-05-16T07:37:30Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 30
+          "zdravi": 1,
+          "sport": 29
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -850,6 +853,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Velká rána pro českou reprezentantku v zámoří. Přetrhla si vaz v koleni a sezona pro ni skončila. Po operaci je i Reisingerová",
+            "publishedAt": "2026-05-16T05:51:09Z"
+          },
           {
             "title": "Fantastický moment na úvod MS. V Německu žasnou nad počinem jejich kapitána",
             "publishedAt": "2026-05-16T07:37:30Z"
@@ -877,10 +884,6 @@
           {
             "title": "Slovensko na MS v hokeji 2026: Program hokejistů Slovenska na šampionátu ve Švýcarsku",
             "publishedAt": "2026-05-14T07:12:00Z"
-          },
-          {
-            "title": "Program MS v hokeji 2026 ve Švýcarsku: Česko ve skupině B ve Fribourgu",
-            "publishedAt": "2026-05-11T08:03:00Z"
           }
         ]
       }

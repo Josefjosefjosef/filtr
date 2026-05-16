@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-16T07:44:52.504615Z",
+  "ingestedAt": "2026-05-16T08:24:52.749196Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Před dvaceti lety varoval Al Gore svět před klimatickou krizí",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/pred-dvaceti-lety-varoval-al-gore-svet-pred-klimatickou-krizi-373465",
+      "dt": "2026-05-16T08:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dvaceti",
+        "gore",
+        "klimatickou",
+        "krizí",
+        "lety",
+        "svět",
+        "varoval"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -728,31 +752,6 @@
         "velrybu",
         "vyplavilo",
         "zřejmě"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Česko a dalších 35 zemí podpořilo v Kišiněvě tribunál pro ruské zločiny",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/cesko-a-dalsich-35-zemi-podporilo-v-kisineve-tribunal-pro-ruske-zlociny-373470",
-      "dt": "2026-05-15T09:13:36Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "dalších",
-        "kišiněvě",
-        "podpořilo",
-        "ruské",
-        "tribunál",
-        "zemí",
-        "zločiny",
-        "česko"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1508,7 +1507,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42366,
+      "bytes": 42356,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1568,12 +1567,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T07:26:06Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T08:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
-          "finance": 1,
-          "other": 3
+          "other": 4,
+          "zpravy": 25,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1585,6 +1584,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Před dvaceti lety varoval Al Gore svět před klimatickou krizí",
+            "publishedAt": "2026-05-16T08:00:00Z"
+          },
           {
             "title": "Jsme nezávislí a zbraně z USA jsou dány zákonem, reaguje Tchaj-wan na Trumpa",
             "publishedAt": "2026-05-16T07:26:06Z"
@@ -1612,10 +1615,6 @@
           {
             "title": "O prázdninách se otevře stezka bývalým hnědouhelným lomem ČSA",
             "publishedAt": "2026-05-16T04:00:00Z"
-          },
-          {
-            "title": "Izrael při útoku v Libanonu zabil šest lidí a dalších 22 zranil, uvedla média",
-            "publishedAt": "2026-05-15T22:14:39Z"
           }
         ]
       }
@@ -1721,7 +1720,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77161,
+      "bytes": 77134,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
