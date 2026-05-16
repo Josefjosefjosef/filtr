@@ -449,33 +449,33 @@ function repoRootWindowsToWslMnt(winAbs) {
 }
 
 /**
- * Per-cycle adapter plan for controlled loop (full agent vs long-run WSL stdin probe tranche).
+ * Per-cycle adapter plan for controlled loop.
+ * Cycle 1 runs the real SILVER_NEXT_ACTION handoff once; cycles 2+ use the fast WSL stdin probe so
+ * long runs (20/50/100) do not stall on consecutive full-agent watchdog timeouts (exit 124).
  * @param {number} loopTarget
  * @param {number} cycle
  */
 function resolveLoopCycleAdapterPlan(loopTarget, cycle) {
-  const useProbeTranche = loopTarget > LOOP_LONG_RUN_TRANCHE_SIZE && cycle > LOOP_LONG_RUN_TRANCHE_SIZE;
-  if (useProbeTranche) {
+  if (cycle === 1) {
+    let timeoutSeconds = ADAPTER_TIMEOUT_LOOP_BASE_SEC;
+    if (loopTarget > LOOP_LONG_RUN_TRANCHE_SIZE) {
+      timeoutSeconds = Math.min(ADAPTER_TIMEOUT_LOOP_CAP_SEC, ADAPTER_TIMEOUT_LOOP_BASE_SEC + 400);
+    }
     return {
-      useProbe: true,
-      taskFile: LOOP_PROBE_TASK_FILE,
-      timeoutSeconds: ADAPTER_TIMEOUT_LOOP_PROBE_SEC,
-      cycle_mode: "WSL_STDIN_PROBE_TRANCHE",
+      useProbe: false,
+      taskFile: "SILVER_NEXT_ACTION.md",
+      timeoutSeconds,
+      cycle_mode: "FULL_AGENT_HANDOFF",
     };
   }
-  const trancheIndex = Math.floor((cycle - 1) / LOOP_LONG_RUN_TRANCHE_SIZE);
-  let timeoutSeconds = ADAPTER_TIMEOUT_LOOP_BASE_SEC;
-  if (loopTarget > LOOP_LONG_RUN_TRANCHE_SIZE) {
-    timeoutSeconds = Math.min(
-      ADAPTER_TIMEOUT_LOOP_CAP_SEC,
-      ADAPTER_TIMEOUT_LOOP_BASE_SEC + trancheIndex * 200,
-    );
-  }
   return {
-    useProbe: false,
-    taskFile: "SILVER_NEXT_ACTION.md",
-    timeoutSeconds,
-    cycle_mode: "FULL_AGENT",
+    useProbe: true,
+    taskFile: LOOP_PROBE_TASK_FILE,
+    timeoutSeconds: ADAPTER_TIMEOUT_LOOP_PROBE_SEC,
+    cycle_mode:
+      loopTarget > LOOP_LONG_RUN_TRANCHE_SIZE && cycle > LOOP_LONG_RUN_TRANCHE_SIZE
+        ? "WSL_STDIN_PROBE_LONG_RUN"
+        : "WSL_STDIN_PROBE_STABILITY",
   };
 }
 
