@@ -31,6 +31,7 @@ const {
   finalizeNoteCreateDoPoznamkStorageHarnessEval,
   finalizeNoteCreateDoPoznamkAmbiguousClarifyLaneHarnessEval,
   finalizeTaskCreateDoUkoluAmbiguousClarifyLaneHarnessEval,
+  finalizeAsciiTaskAmbiguousClarifyLaneHarnessEval,
   hasTaskCreateCanonFolded,
   taskCreateDoUkoluIsChaoticMutationSurface
 } = rhc3;
@@ -322,6 +323,7 @@ function main() {
       ev = finalizeNoteCreateDoPoznamkStorageHarnessEval(c, turn, ev);
       ev = finalizeNoteCreateDoPoznamkAmbiguousClarifyLaneHarnessEval(c, turn, ev);
       ev = finalizeTaskCreateDoUkoluAmbiguousClarifyLaneHarnessEval(c, turn, ev);
+      ev = finalizeAsciiTaskAmbiguousClarifyLaneHarnessEval(c, turn, ev);
     } catch (e) {
       turn = { normalizedIntent: "", processingState: "", draft: {} };
       ev = { pass: false, cat: "runtime_fail", auditIntent: "unknown", raw: String(e && e.message) };
