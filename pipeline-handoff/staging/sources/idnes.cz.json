@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-16T13:45:00.030846Z",
+  "ingestedAt": "2026-05-16T14:24:37.377847Z",
   "items": [
     {
       "section": "aktualne",
@@ -58,7 +58,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Zemi těsně mine asteroid, bude blíž než některé družice. Jak ho pozorovat?",
+      "title": "Zemi těsně mine asteroid, bude blíž než Měsíc. Jak ho pozorovat?",
       "url": "https://www.idnes.cz/zpravy/zahranicni/asteroid-jh2-planmeta-zeme-mesic-astronomie-dalekohled.A260516_143220_zahranicni_berr",
       "dt": "2026-05-16T13:10:00Z",
       "media_raw": "iDNES / Zprávy",
@@ -66,10 +66,9 @@
       "tokens": [
         "asteroid",
         "blíž",
-        "družice",
         "mine",
+        "měsíc",
         "než",
-        "některé",
         "pozorovat",
         "těsně",
         "zemi"
@@ -312,6 +311,34 @@
         "vyjednal",
         "wanu",
         "číně"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Evropa neumí jednat, říká šéf kanadské firmy.  Chce těžit antimon na Slovensku",
+      "url": "https://www.idnes.cz/ekonomika/zahranicni/cina-tezba-eu-suroviny-slovensko-antimon-technologie.A260511_120219_eko-zahranicni_jla",
+      "dt": "2026-05-16T09:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "antimon",
+        "chce",
+        "evropa",
+        "firmy",
+        "jednat",
+        "kanadské",
+        "neumí",
+        "slovensku",
+        "těžit",
+        "říká",
+        "šéf"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -760,29 +787,6 @@
         "také",
         "uganda",
         "umírají"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Izrael a Libanon se dohodly na prodloužení příměří o 45 dní",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/izrael-a-libanon-se-dohodly-na-prodlouzeni-primeri-o-45-dni-po-jednanich-ve-washingtonu-to-dnes-ozna.A260515_203635_zahranicni_iluj",
-      "dt": "2026-05-15T19:10:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "dní",
-        "dohodly",
-        "izrael",
-        "libanon",
-        "prodloužení",
-        "příměří"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1569,7 +1573,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49790,
+      "bytes": 49309,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1609,8 +1613,8 @@
         "raw_feed_latest_publishedAt": "2026-05-16T13:26:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
-          "finance": 4
+          "zpravy": 25,
+          "finance": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1631,7 +1635,7 @@
             "publishedAt": "2026-05-16T13:23:00Z"
           },
           {
-            "title": "Zemi těsně mine asteroid, bude blíž než některé družice. Jak ho pozorovat?",
+            "title": "Zemi těsně mine asteroid, bude blíž než Měsíc. Jak ho pozorovat?",
             "publishedAt": "2026-05-16T13:10:00Z"
           },
           {
