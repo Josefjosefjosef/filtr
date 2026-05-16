@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-16T09:04:47.516557Z",
+  "ingestedAt": "2026-05-16T09:44:36.515045Z",
   "items": [
     {
       "section": "aktualne",
@@ -233,23 +233,19 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Izrael při útoku v Libanonu zabil šest lidí a dalších 22 zranil, uvedla média",
+      "title": "Izrael navzdory prodlouženému příměří udeřil na jihu Libanonu",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/izrael-pri-utoku-v-libanonu-zabil-sest-lidi-a-dalsich-22-zranil-uvedla-media-373499",
       "dt": "2026-05-15T22:14:39Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "dalších",
         "izrael",
+        "jihu",
         "libanonu",
-        "lidí",
-        "média",
-        "při",
-        "uvedla",
-        "zabil",
-        "zranil",
-        "útoku",
-        "šest"
+        "navzdory",
+        "prodlouženému",
+        "příměří",
+        "udeřil"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -380,18 +376,17 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Přes čtyřicet procent nově prodaných vozů v Česku tvoří elektroauta",
+      "title": "Přes čtyřicet procent nově vyrobených vozů v Česku je elektrifikovaných",
       "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/pres-ctyricet-procent-nove-prodanych-vozu-v-cesku-tvori-elektroauta-373493",
       "dt": "2026-05-15T18:18:41Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "elektroauta",
+        "elektrifikovaných",
         "nově",
         "procent",
-        "prodaných",
-        "tvoří",
         "vozů",
+        "vyrobených",
         "česku",
         "čtyřicet"
       ],
@@ -755,6 +750,32 @@
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nestálé počasí, výjimečná atmosféra. Májová regata nabídla napínavé souboje",
+      "url": "https://sport.ceskatelevize.cz/clanek/ostatni/majova-regata-nabidla-dramaticke-podminky-i-napinave-souboje-v-chorvatsku-se-jela-po-sestadvacate-156817",
+      "dt": "2026-05-16T09:00:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "atmosféra",
+        "májová",
+        "nabídla",
+        "napínavé",
+        "nestálé",
+        "počasí",
+        "regata",
+        "souboje",
+        "výjimečná"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1472,33 +1493,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sudí rozhodli sporné situace v utkání Slavie s Jabloncem správně, potvrdila komise",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/sudi-rozhodli-sporne-situace-v-utkani-slavie-s-jabloncem-spravne-potvrdila-komise-156789",
-      "dt": "2026-05-14T13:16:48Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "jabloncem",
-        "komise",
-        "potvrdila",
-        "rozhodli",
-        "situace",
-        "slavie",
-        "sporné",
-        "správně",
-        "sudí",
-        "utkání"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1509,7 +1503,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42353,
+      "bytes": 42513,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1628,7 +1622,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37941,
+      "bytes": 38139,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1665,7 +1659,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T08:52:21Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T09:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1680,6 +1674,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nestálé počasí, výjimečná atmosféra. Májová regata nabídla napínavé souboje",
+            "publishedAt": "2026-05-16T09:00:00Z"
+          },
           {
             "title": "První český soupeř na MS odtajnil nominaci. Nechybí ostřílený Son Hung-min",
             "publishedAt": "2026-05-16T08:52:21Z"
@@ -1707,10 +1705,6 @@
           {
             "title": "Soutěž k MS v hokeji – 16. května",
             "publishedAt": "2026-05-15T22:00:00Z"
-          },
-          {
-            "title": "Basketbalisté Opavy dráždili Nymburk bosou nohou",
-            "publishedAt": "2026-05-15T17:36:55Z"
           }
         ]
       }
@@ -1722,7 +1716,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77176,
+      "bytes": 77188,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-16T09:04:47.516557Z",
+  "ingestedAt": "2026-05-16T09:44:36.515045Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na Jablonecku zavřeli továrnu a začali propouštět. Práci ztratí víc než sto lidí",
+      "url": "https://www.denik.cz/regiony/zavreni-tovarny-a-velke-propousteni-praci-na-jablonecku-ztrati-vic-nez-sto-lidi.html",
+      "dt": "2026-05-16T09:15:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "jablonecku",
+        "lidí",
+        "než",
+        "propouštět",
+        "práci",
+        "sto",
+        "továrnu",
+        "víc",
+        "zavřeli",
+        "začali",
+        "ztratí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Hantavirus je i v Česku, jde ale o mírnější typy a zdaleka ne tak nebezpečné",
+      "url": "https://www.denik.cz/zdravotnictvi/hantavirus-v-cesku-tipy-nemoc-prenos-mysi-hlodavci-sireni-moc-trus.html",
+      "dt": "2026-05-16T09:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ale",
+        "hantavirus",
+        "jde",
+        "mírnější",
+        "nebezpečné",
+        "tak",
+        "typy",
+        "zdaleka",
+        "česku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -595,56 +649,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Bývalá dánská královna je po operaci. Margrethe  podstoupila angioplastiku",
-      "url": "https://www.denik.cz/staty-eu/dansko-kralovna-margrethe-angioplastiku.html",
-      "dt": "2026-05-15T13:56:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "angioplastiku",
-        "bývalá",
-        "dánská",
-        "královna",
-        "margrethe",
-        "operaci",
-        "podstoupila"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Influeceři se vytratili, pořady končí. Orbánova porážka mění maďarská média",
-      "url": "https://www.denik.cz/staty-eu/madarsko-media-zmeny-orban-magyar.html",
-      "dt": "2026-05-15T13:21:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "influeceři",
-        "končí",
-        "maďarská",
-        "média",
-        "mění",
-        "orbánova",
-        "porážka",
-        "pořady",
-        "vytratili"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -655,7 +659,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28689,
+      "bytes": 28464,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -692,10 +696,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-16T08:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T09:15:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 24,
+          "zpravy": 23,
+          "zdravi": 1,
           "finance": 1
         },
         "drop_counts": {
@@ -708,6 +713,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na Jablonecku zavřeli továrnu a začali propouštět. Práci ztratí víc než sto lidí",
+            "publishedAt": "2026-05-16T09:15:00Z"
+          },
+          {
+            "title": "Hantavirus je i v Česku, jde ale o mírnější typy a zdaleka ne tak nebezpečné",
+            "publishedAt": "2026-05-16T09:00:00Z"
+          },
           {
             "title": "Majitel štěněte nechtěl platit léčbu. Edu vyhodil do příkopu, už ho nezachránili",
             "publishedAt": "2026-05-16T08:20:00Z"
@@ -731,14 +744,6 @@
           {
             "title": "Trump: Americké a nigerijské síly v Nigérii zabily velitele Islámského státu",
             "publishedAt": "2026-05-16T05:41:00Z"
-          },
-          {
-            "title": "Zatáhl ji do pole a ubodal. Propuštěný vrah zabil studentku, protože ho nechtěla",
-            "publishedAt": "2026-05-16T05:30:00Z"
-          },
-          {
-            "title": "Zoubkové víly v akci. Hygienistky učily děti správně čistit zuby",
-            "publishedAt": "2026-05-16T05:19:00Z"
           }
         ]
       }
