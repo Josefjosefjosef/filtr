@@ -36,6 +36,8 @@ const {
   finalizeModuleSwitchClarifyLaneHarnessEval,
   finalizeNegationNoWriteHarnessEval,
   finalizeNoteQueryKdeHarnessEval,
+  finalizeFillerNoteQueryHarnessEval,
+  fillerNoteQueryHarnessSafeClarificationOk,
   finalizeNoteCreateDoPoznamkStorageHarnessEval,
   finalizeNoteCreateDoPoznamkAmbiguousClarifyLaneHarnessEval,
   finalizeTaskCreateDoUkoluAmbiguousClarifyLaneHarnessEval
@@ -206,7 +208,9 @@ function gitAllowListClean() {
     const tracked = lines.filter((l) => !l.startsWith("??"));
     const allow = [
       "scripts/silver-rhc3-filler-note-query-diagnostic.cjs",
-      "scripts/silver-rhc3-filler-note-query-diagnostic-report.json"
+      "scripts/silver-rhc3-filler-note-query-diagnostic-report.json",
+      "scripts/silver-real-human-chaos-v3.cjs",
+      "scripts/silver-real-human-chaos-v3-report.json"
     ];
     const bad = tracked.filter((l) => {
       const pathPart = (l.length >= 4 ? l.slice(3) : l).trim().replace(/\\/g, "/");
@@ -364,6 +368,18 @@ function classifyFillerNoteQuery(c, turn, ev) {
     }
 
     if (eng === "clarification" || eng === "unknown" || auditIntent === "unknown") {
+      if (fillerNoteQueryHarnessSafeClarificationOk(c, turn, ev)) {
+        if (chaotic && listCue && fillerStructuralDisruption(c)) {
+          return { primary: "SAFE_CLARIFICATION_OK", subcluster: "note_query_clarify_chaos_heavy_structure" };
+        }
+        if (chaotic && listCue && fillerHesitationSurface(c)) {
+          return { primary: "SAFE_CLARIFICATION_OK", subcluster: "note_query_clarify_hesitation_ok" };
+        }
+        if (mobileVoice && listCue) {
+          return { primary: "SAFE_CLARIFICATION_OK", subcluster: "mobile_voice_safe_probe_notes" };
+        }
+        return { primary: "SAFE_CLARIFICATION_OK", subcluster: "filler_note_query_clarify_lane_ok" };
+      }
       if (!noteMarkers) {
         return { primary: "AMBIGUOUS_INPUT", subcluster: "lost_note_poznamky_markers" };
       }
@@ -371,19 +387,10 @@ function classifyFillerNoteQuery(c, turn, ev) {
         return { primary: "AMBIGUOUS_INPUT", subcluster: "chaotic_weak_note_list_cue" };
       }
       if (chaotic && listCue) {
-        if (fillerStructuralDisruption(c)) {
-          return { primary: "SAFE_CLARIFICATION_OK", subcluster: "note_query_clarify_chaos_heavy_structure" };
-        }
-        if (fillerHesitationSurface(c)) {
-          return { primary: "SAFE_CLARIFICATION_OK", subcluster: "note_query_clarify_hesitation_ok" };
-        }
         return { primary: "HARNESS_LABEL_PROBLEM", subcluster: "filler_only_clarify_instead_of_read" };
       }
       if (mobileVoice && !listCue) {
         return { primary: "REAL_WORLD_ACCEPTABLE", subcluster: "mobile_voice_weak_note_cue" };
-      }
-      if (mobileVoice && listCue) {
-        return { primary: "SAFE_CLARIFICATION_OK", subcluster: "mobile_voice_safe_probe_notes" };
       }
       if (partialRef || !listCue) {
         return { primary: "AMBIGUOUS_INPUT", subcluster: "partial_or_weak_note_query_surface" };
@@ -505,6 +512,7 @@ function main() {
       ev = finalizeModuleSwitchClarifyLaneHarnessEval(c, turn, ev);
       ev = finalizeNegationNoWriteHarnessEval(c, turn, ev);
       ev = finalizeNoteQueryKdeHarnessEval(c, turn, ev);
+      ev = finalizeFillerNoteQueryHarnessEval(c, turn, ev);
       ev = finalizeNoteCreateDoPoznamkStorageHarnessEval(c, turn, ev);
       ev = finalizeNoteCreateDoPoznamkAmbiguousClarifyLaneHarnessEval(c, turn, ev);
       ev = finalizeTaskCreateDoUkoluAmbiguousClarifyLaneHarnessEval(c, turn, ev);
@@ -621,7 +629,7 @@ function main() {
   }
 
   let recommendedNextTask =
-    "scripts-only: optional clarify lane for rhc3_filler_note_query (mirror rhc3_note_query_kde) after engine routing review; re-run diagnostic.";
+    "none: rhc3_filler_note_query safe-clarification harness aligned; re-run diagnostic after corpus changes.";
   if (queryCreatedWriteCount > 0) {
     recommendedNextTask =
       "engine_safety: note_query must not reach notes.create / READY_TO_SAVE without explicit ulož/napiš create verb.";
