@@ -1,6 +1,6 @@
 {
     "schema":  "silver-cursor-agent-adapter-diagnostic-v2",
-    "timestamp_utc":  "2026-05-14T06:43:55.0628363Z",
+    "timestamp_utc":  "2026-05-16T23:32:32.1379419Z",
     "repo_root":  "C:\\projects\\filtr",
     "cursor_where_exit":  0,
     "cursor_where_text":  "C:\\Users\\spedk\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin\\cursor\r\nC:\\Users\\spedk\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin\\cursor.cmd",
@@ -251,7 +251,7 @@
                                             "exit_code":  0,
                                             "timed_out":  "NO",
                                             "timeout_ms":  120000,
-                                            "stdout":  "Reading from stdin via: C:\\Users\\spedk\\AppData\\Local\\Temp\\code-stdin-FVX\n",
+                                            "stdout":  "Reading from stdin via: C:\\Users\\spedk\\AppData\\Local\\Temp\\code-stdin-l0p\n",
                                             "stdout_truncated":  "NO",
                                             "stderr":  "",
                                             "stderr_truncated":  "NO",
@@ -347,10 +347,10 @@
     "supports_yes_flag":  "NO",
     "supports_output_format_text":  "NO",
     "supports_output_format_json":  "NO",
-    "adapter_ready":  "NO",
-    "adapter_ready_reason":  "no_headless_marker_stdout_exit0_and_no_input_output",
-    "recommended_cursor_command":  "powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -Probe -OutputFile SILVER_CURSOR_OUTPUT.md -TimeoutSeconds 120",
-    "recommended_cursor_command_full_loop":  "",
+    "adapter_ready":  "YES",
+    "adapter_ready_reason":  "wsl_agent_print_ask_trust_workspace_all_guards",
+    "recommended_cursor_command":  "powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -WslUbuntuAgent -Probe -OutputFile SILVER_CURSOR_OUTPUT.md -TimeoutSeconds 120",
+    "recommended_cursor_command_full_loop":  "powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -WslUbuntuAgent -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE} -TimeoutSeconds 120",
     "diagnostic_exit":  0,
     "wsl_cursor_agent_print_ask_trust":  {
                                              "adapter_mode":  "wsl_agent_print_ask_trust_workspace",
@@ -359,7 +359,7 @@
                                              "workspace":  "/mnt/c/projects/filtr",
                                              "agent_exists_executable":  "YES",
                                              "agent_exists_exit_code":  0,
-                                             "agent_version":  "2026.05.09-0afadcc",
+                                             "agent_version":  "2026.05.16-0338208",
                                              "agent_version_exit_code":  0,
                                              "workspace_mount_ok":  "YES",
                                              "workspace_check_exit_code":  0,
@@ -373,7 +373,7 @@
                                              "marker_probe_stderr_sample":  "",
                                              "timeout_guard_ms":  120000,
                                              "timeout_guard":  "YES",
-                                             "repo_git_status_after_probe":  "",
+                                             "repo_git_status_after_probe":  " M SILVER_CURSOR_OUTPUT.md\n M SILVER_NEXT_ACTION.md\n M scripts/silver-cursor-agent-adapter-diagnostic-report.json\n M scripts/silver-cursor-agent-adapter-diagnostic.ps1\n M scripts/silver-cursor-agent-adapter.ps1",
                                              "repo_dirty_unexpected_paths":  [
 
                                                                              ],
@@ -393,6 +393,6 @@
                                    "cursor_agent":  "stdin_probe_5s_harmless_prompt_only",
                                    "cursor_minus":  "stdin_probe_5s_harmless_prompt_only",
                                    "cursor_chat":  "help_only_cursor_--chat_--help_full_window_chat_skipped_intentionally",
-                                   "repo_safe_unattended_cursor_agent":  "UNKNOWN_no_headless_marker"
+                                   "repo_safe_unattended_cursor_agent":  "YES_wsl_workspace_agent_print_probe"
                                }
 }

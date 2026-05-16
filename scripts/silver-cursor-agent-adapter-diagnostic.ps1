@@ -456,6 +456,7 @@ function Invoke-WslPrintAskTrustProbePack {
   if ($pack.agent_exists_executable -ne "YES") { $ok = $false }
   if ($pack.workspace_mount_ok -ne "YES") { $ok = $false }
   if ($pack.marker_probe_stdout_contains_marker -ne "YES") { $ok = $false }
+  if ($pack.marker_probe_stdout_marker_exact -ne "YES") { $ok = $false }
   if ($pack.marker_probe_exit_code -ne 0) { $ok = $false }
   if ($pr.timedOut) { $ok = $false }
   if ($pack.marker_probe_modifies_tracked_files -eq "YES") { $ok = $false }
@@ -834,18 +835,28 @@ foreach ($row in $stdinResults) {
 
 $headlessChannelOk = ($null -ne $preferredArgs)
 $stdinChannelOk = ($null -ne $preferredStdinArgs)
+$adapterOkWinCursor = $false
 $adapterOk = $false
 if ($report.cursor_agent_supports_input_output -eq "YES") {
   $adapterOk = $true
+  $adapterOkWinCursor = $true
   $report.adapter_ready_reason = "help_lists_input_output"
 }
 elseif ($headlessChannelOk) {
   $adapterOk = $true
+  $adapterOkWinCursor = $true
   $report.adapter_ready_reason = "headless_probe_marker_exit0_stdout"
 }
 elseif ($stdinChannelOk) {
   $adapterOk = $true
+  $adapterOkWinCursor = $true
   $report.adapter_ready_reason = "stdin_pipe_marker_exit0_stdout"
+}
+elseif (($null -ne $wslPrintAskTrustPack) -and ($wslPrintAskTrustPack.adapter_ready -eq "YES")) {
+  # Same strict gates already enforced in Invoke-WslPrintAskTrustProbePack (marker, exit 0,
+  # timeout, no dirty unexpected paths, no file modifications, etc.); unify root gate for orchestrators.
+  $adapterOk = $true
+  $report.adapter_ready_reason = "wsl_agent_print_ask_trust_workspace_all_guards"
 }
 
 if (-not $adapterOk) {
@@ -860,8 +871,18 @@ if (-not $adapterOk) {
 $report.adapter_ready = if ($adapterOk) { "YES" } else { "NO" }
 
 if ($adapterOk) {
-  $report.recommended_cursor_command = 'powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -Probe -OutputFile SILVER_CURSOR_OUTPUT.md -TimeoutSeconds 120'
-  $report.recommended_cursor_command_full_loop = 'powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE} -TimeoutSeconds 120'
+  if ($adapterOkWinCursor) {
+    $report.recommended_cursor_command = 'powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -Probe -OutputFile SILVER_CURSOR_OUTPUT.md -TimeoutSeconds 120'
+    $report.recommended_cursor_command_full_loop = 'powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE} -TimeoutSeconds 120'
+  }
+  else {
+    $wc = $wslPrintAskTrustPack.recommended_wsl_adapter_probe
+    if ([string]::IsNullOrWhiteSpace($wc)) {
+      $wc = 'powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -WslUbuntuAgent -Probe -OutputFile SILVER_CURSOR_OUTPUT.md -TimeoutSeconds 120'
+    }
+    $report.recommended_cursor_command = $wc
+    $report.recommended_cursor_command_full_loop = 'powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -WslUbuntuAgent -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE} -TimeoutSeconds 120'
+  }
 }
 else {
   $report.recommended_cursor_command = 'powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -Probe -OutputFile SILVER_CURSOR_OUTPUT.md -TimeoutSeconds 120'
@@ -879,6 +900,9 @@ if ($headlessChannelOk) {
 }
 elseif ($stdinChannelOk) {
   $sl["repo_safe_unattended_cursor_agent"] = "YES_stdin_pipe_marker_probe"
+}
+elseif (($null -ne $wslPrintAskTrustPack) -and ($wslPrintAskTrustPack.adapter_ready -eq "YES")) {
+  $sl["repo_safe_unattended_cursor_agent"] = "YES_wsl_workspace_agent_print_probe"
 }
 elseif ($interactiveAgent) {
   $sl["repo_safe_unattended_cursor_agent"] = "NO_probe_timed_out_interactive_or_blocked"

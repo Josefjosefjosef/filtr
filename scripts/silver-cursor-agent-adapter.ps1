@@ -409,6 +409,7 @@ function Get-CursorVersionLine {
 }
 
 function Test-DiagnosticAdapterReady {
+  # Root adapter_ready may be YES when only the WSL workspace lane qualifies; gate Windows invocations off the Windows lane reasons only.
   if (-not (Test-Path -LiteralPath $DiagReport)) {
     return $true
   }
@@ -418,7 +419,20 @@ function Test-DiagnosticAdapterReady {
     if ($null -eq $j.adapter_ready) {
       return $true
     }
-    return ($j.adapter_ready -eq "YES")
+    if ($j.adapter_ready -ne "YES") {
+      return $false
+    }
+    $why = ""
+    if ($null -ne $j.adapter_ready_reason) { $why = [string]$j.adapter_ready_reason }
+    if ([string]::IsNullOrWhiteSpace($why)) {
+      return $true
+    }
+    $winLanes = @{
+      help_lists_input_output = $true
+      headless_probe_marker_exit0_stdout = $true
+      stdin_pipe_marker_exit0_stdout = $true
+    }
+    return $winLanes.ContainsKey($why)
   }
   catch {
     return $true
@@ -1238,6 +1252,7 @@ possible_causes=
   }
 
   $adapterReadyDisk = Read-AdapterReadyFromDisk
+  $windowsLaneReadyGate = Test-DiagnosticAdapterReady
   $stdinPipeAck = "NO"
   if ($so -match "Reading from stdin") {
     $stdinPipeAck = "YES"
@@ -1251,7 +1266,7 @@ possible_causes=
     else {
       $probePass = "NO"
     }
-    if (($probePass -eq "YES") -and ($adapterReadyDisk -eq "YES")) {
+    if (($probePass -eq "YES") -and $windowsLaneReadyGate) {
       $canLoop = "YES"
     }
     else {
@@ -1259,7 +1274,7 @@ possible_causes=
     }
   }
   else {
-    if (($adapterReadyDisk -eq "YES") -and ($exitCode -eq 0) -and (-not $toFlag)) {
+    if ($windowsLaneReadyGate -and ($exitCode -eq 0) -and (-not $toFlag)) {
       $canLoop = "YES"
     }
     else {
