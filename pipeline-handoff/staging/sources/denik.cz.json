@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-16T15:05:23.429822Z",
+  "ingestedAt": "2026-05-16T15:44:51.123239Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Naděje je pryč. Mrtvá velryba u dánských břehů je Timmy, potvrdily úřady",
+      "url": "https://www.denik.cz/staty-eu/velryba-timmy-je-mrtva-keporkak.html",
+      "dt": "2026-05-16T15:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "břehů",
+        "dánských",
+        "mrtvá",
+        "naděje",
+        "potvrdily",
+        "pryč",
+        "timmy",
+        "velryba",
+        "úřady"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -633,30 +659,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Děsivé chvíle ve vzduchu. Letadlo nad Slovenskem zasáhl blesk",
-      "url": "https://www.denik.cz/staty-eu/wizz-air-bratislava-kosice-blesk.html",
-      "dt": "2026-05-15T20:10:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "blesk",
-        "chvíle",
-        "děsivé",
-        "letadlo",
-        "slovenskem",
-        "vzduchu",
-        "zasáhl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -667,7 +669,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28158,
+      "bytes": 28233,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -704,7 +706,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-16T14:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T15:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -721,6 +723,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Naděje je pryč. Mrtvá velryba u dánských břehů je Timmy, potvrdily úřady",
+            "publishedAt": "2026-05-16T15:00:00Z"
+          },
           {
             "title": "Případ smrti malého Émila pokročil, policie má DNA. Prarodičům někdo zapálil dům",
             "publishedAt": "2026-05-16T14:45:00Z"
@@ -748,10 +754,6 @@
           {
             "title": "Lidl světy a barevné regály. Řetězec od čtvrtka promění své prodejny",
             "publishedAt": "2026-05-16T11:00:00Z"
-          },
-          {
-            "title": "Muž obviněný z krádeže lebky sv. Zdislavy zůstává na svobodě. Do vazby nejde",
-            "publishedAt": "2026-05-16T10:53:00Z"
           }
         ]
       }
