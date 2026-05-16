@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-16T04:24:52.584494Z",
+  "ingestedAt": "2026-05-16T05:04:28.064854Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Třemošnou čeká dopravní návrat o 15 let zpět, obchvat se uzavírá",
+      "url": "https://www.idnes.cz/plzen/zpravy/tremosna-obchvat-uzavirka-doprava-estakada-kruhovy-objezd-zaluzi-bila-hora.A260515_113825_plzen-zpravy_vb",
+      "dt": "2026-05-16T04:22:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dopravní",
+        "let",
+        "návrat",
+        "obchvat",
+        "třemošnou",
+        "uzavírá",
+        "zpět",
+        "čeká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -760,32 +785,6 @@
         "sám",
         "tisíc",
         "zloděj"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Prodával stejné jachty dokola. Soud poslal podnikatele na 7,5 roku za mříže",
-      "url": "https://www.idnes.cz/brno/zpravy/podnikatel-jachty-soud-brno-uverovy-podvod-skoda-miliony.A260515_161216_brno-zpravy_icer",
-      "dt": "2026-05-15T14:58:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "dokola",
-        "jachty",
-        "mříže",
-        "podnikatele",
-        "poslal",
-        "prodával",
-        "roku",
-        "soud",
-        "stejné"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1576,7 +1575,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47369,
+      "bytes": 47789,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1613,7 +1612,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T04:22:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -1629,6 +1628,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Třemošnou čeká dopravní návrat o 15 let zpět, obchvat se uzavírá",
+            "publishedAt": "2026-05-16T04:22:00Z"
+          },
           {
             "title": "Kam s dětmi v Brně, když pálí slunce i když prší? Objevte místo, kde nuda neexistuje",
             "publishedAt": "2026-05-16T03:00:00Z"
@@ -1656,10 +1659,6 @@
           {
             "title": "Co víte o jihočeských rybnících a rybářství?",
             "publishedAt": "2026-05-15T22:00:00Z"
-          },
-          {
-            "title": "Policisté v Praze našli v autě pět kýblů marihuany. Řidiče okamžitě odvezli",
-            "publishedAt": "2026-05-15T20:29:00Z"
           }
         ]
       }

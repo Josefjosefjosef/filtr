@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-16T04:24:52.584494Z",
+  "ingestedAt": "2026-05-16T05:04:28.064854Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Výdaje na zdravotnictví v Německu explodovaly. Vzrostly o celoroční příjem Česka",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/vydaje-na-zdravotnictvi-v-nemecku-explodovaly/",
+      "dt": "2026-05-16T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "celoroční",
+        "explodovaly",
+        "německu",
+        "příjem",
+        "vzrostly",
+        "výdaje",
+        "zdravotnictví",
+        "česka"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -257,33 +282,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Konec diskriminace nezadaných? Vojtěch chce povolit umělé oplodnění i single ženám",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/vojtech-umele-oplodneni-single-zen/",
-      "dt": "2026-05-15T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "chce",
-        "diskriminace",
-        "konec",
-        "nezadaných",
-        "oplodnění",
-        "povolit",
-        "single",
-        "umělé",
-        "vojtěch",
-        "ženám"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -294,7 +292,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 109883,
+      "bytes": 107641,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -331,7 +329,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-15T15:05:51Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -346,6 +344,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Výdaje na zdravotnictví v Německu explodovaly. Vzrostly o celoroční příjem Česka",
+            "publishedAt": "2026-05-16T05:00:00Z"
+          },
           {
             "title": "O cenách léků pro Evropany se nesmí rozhodovat v Bílém domě. Unie hraje o poslední výhodu",
             "publishedAt": "2026-05-15T15:05:51Z"
@@ -373,10 +375,6 @@
           {
             "title": "Smrtící ebola znovu udeřila: Desítky mrtvých a stovky podezřelých případů",
             "publishedAt": "2026-05-15T07:40:44Z"
-          },
-          {
-            "title": "V USA nosí odznáček, v Česku očkování odmítají. Proč se zdravotníci nechrání proti chřipce?",
-            "publishedAt": "2026-05-15T07:00:00Z"
           }
         ]
       }

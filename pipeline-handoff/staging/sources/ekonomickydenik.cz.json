@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-16T04:24:52.584494Z",
+  "ingestedAt": "2026-05-16T05:04:28.064854Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Válečný zločin: Ruský velitel nařídil zohavit těla padlých Ukrajinců",
+      "url": "https://ekonomickydenik.cz/valecny-zlocin-rusko-velitel-zohaveni-padlych/",
+      "dt": "2026-05-16T04:30:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "nařídil",
+        "padlých",
+        "ruský",
+        "těla",
+        "ukrajinců",
+        "velitel",
+        "válečný",
+        "zločin",
+        "zohavit"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -769,31 +795,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ruské rakety v ohrožení: Ukrajina udeřila na tajné dodavatele Kremlu",
-      "url": "https://ekonomickydenik.cz/ruske-rakety-v-ohrozeni-ukrajina-sankce/",
-      "dt": "2026-05-14T08:40:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "dodavatele",
-        "kremlu",
-        "ohrožení",
-        "rakety",
-        "ruské",
-        "tajné",
-        "udeřila",
-        "ukrajina"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +805,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72901,
+      "bytes": 72958,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,7 +842,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T17:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T04:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -858,6 +859,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Válečný zločin: Ruský velitel nařídil zohavit těla padlých Ukrajinců",
+            "publishedAt": "2026-05-16T04:30:00Z"
+          },
           {
             "title": "„Zásoby plynu máme.“ Část Evropy chce víc těžit, kvůli závislosti na dovozu LNG",
             "publishedAt": "2026-05-15T17:35:00Z"
@@ -885,10 +890,6 @@
           {
             "title": "Znalecké posudky „na míru“ v ÚVN? Policie zasáhla i v jiné elitní nemocnici",
             "publishedAt": "2026-05-15T10:47:00Z"
-          },
-          {
-            "title": "Ukrajina a USA ladí právní detaily: Memorandum připravuje cestu pro budoucí obchod s drony",
-            "publishedAt": "2026-05-15T10:31:54Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-16T04:24:52.584494Z",
+  "ingestedAt": "2026-05-16T05:04:28.064854Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Lituju dánskýho gólmana! Kořenáře mrzí gól. A příjezd Dostála? Je mi to jedno, říká",
+      "url": "https://www.idnes.cz/hokej/ms-2026/josef-korenar-debut-narodni-tym-vyhra-dansko.A260515_233027_ms-hokej-2026_hrj",
+      "dt": "2026-05-16T05:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dostála",
+        "dánskýho",
+        "gól",
+        "gólmana",
+        "jedno",
+        "kořenáře",
+        "lituju",
+        "mrzí",
+        "příjezd",
+        "říká"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -746,29 +773,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fuksa na SP v Brandenburgu kraloval, Dostálovi se na kilometru nedařilo",
-      "url": "https://www.idnes.cz/sport/ostatni/fuksa-na-sp-v-brandenburgu-kraloval-dostalovi-se-na-kilometru-nedarilo.A260515_145144_sporty_tit",
-      "dt": "2026-05-15T13:28:31Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "brandenburgu",
-        "dostálovi",
-        "fuksa",
-        "kilometru",
-        "kraloval",
-        "nedařilo"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -779,7 +783,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45180,
+      "bytes": 45563,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -816,7 +820,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T05:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -831,6 +835,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lituju dánskýho gólmana! Kořenáře mrzí gól. A příjezd Dostála? Je mi to jedno, říká",
+            "publishedAt": "2026-05-16T05:00:00Z"
+          },
           {
             "title": "Dostal pěstí od fandů, přišel o práci, neboť se zastal Kúdely. Zlámal věští titul Hearts",
             "publishedAt": "2026-05-15T22:00:00Z"
@@ -858,10 +866,6 @@
           {
             "title": "Obhájci zlata z USA podlehli na MS domácím Švýcarům. Finové zdolali Němce",
             "publishedAt": "2026-05-15T21:04:29Z"
-          },
-          {
-            "title": "MS v hokeji 2026 ONLINE: Češi slaví první výhru na turnaji, nastoupí i v sobotu",
-            "publishedAt": "2026-05-15T20:59:00Z"
           }
         ]
       }
