@@ -1,8 +1,40 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-05-16T07:04:40.641746Z",
+  "ingestedAt": "2026-05-16T07:44:52.504615Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Are You The One: Hledání lásky jako strategická hra. Prima přináší novou seznamovací reality show",
+      "url": "https://www.vtelce.cz/are-you-the-one-hledani-lasky-jako-strategicka-hra-prima-prinasi-novou-seznamovaci-reality-show/",
+      "dt": "2026-05-16T07:29:50Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "are",
+        "hledání",
+        "hra",
+        "jako",
+        "lásky",
+        "novou",
+        "one",
+        "prima",
+        "přináší",
+        "reality",
+        "seznamovací",
+        "show",
+        "strategická",
+        "the",
+        "you"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -259,34 +291,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Já to tedy beru, šéfe: Panický strach z režiséra, doživotní výčitky a sanitka přímo na natáčení",
-      "url": "https://www.vtelce.cz/ja-to-tedy-beru-sefe-panicky-strach-z-rezisera-dozivotni-vycitky-a-sanitka-primo-na-nataceni/",
-      "dt": "2026-05-14T16:44:44Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "beru",
-        "doživotní",
-        "natáčení",
-        "panický",
-        "přímo",
-        "režiséra",
-        "sanitka",
-        "strach",
-        "tedy",
-        "výčitky",
-        "šéfe"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -297,8 +301,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 91735,
-      "reason": "",
+      "bytes": 88101,
+      "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -334,7 +338,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-15T17:42:31Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T07:29:50Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "other": 10
@@ -349,6 +353,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Are You The One: Hledání lásky jako strategická hra. Prima přináší novou seznamovací reality show",
+            "publishedAt": "2026-05-16T07:29:50Z"
+          },
           {
             "title": "Příběh plný nenápadné manipulace i velkého úspěchu. Každá epizoda odkrývá těžký osud známé spisovatelky",
             "publishedAt": "2026-05-15T17:42:31Z"
@@ -376,10 +384,6 @@
           {
             "title": "Nová série přiblíží osud Simony Monyové. Rodina spisovatelky poskytla tvůrcům osobní archiv",
             "publishedAt": "2026-05-15T07:08:43Z"
-          },
-          {
-            "title": "Šílený Max (1979): Hlavní role získaná díky barové rvačce, výplata v kartonech piva a natáčení bez povolení",
-            "publishedAt": "2026-05-14T17:12:38Z"
           }
         ]
       }

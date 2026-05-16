@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-16T07:04:40.641746Z",
+  "ingestedAt": "2026-05-16T07:44:52.504615Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "San Antonio postoupilo do semifinále NBA, Detroit si vynutil sedmý zápas",
+      "url": "https://www.idnes.cz/sport/basket/nba-play-off-postup-san-antonio-detroit-cleveland-vyrovnano.A260516_090013_sport-basket_jrv",
+      "dt": "2026-05-16T07:20:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "antonio",
+        "detroit",
+        "nba",
+        "postoupilo",
+        "san",
+        "sedmý",
+        "semifinále",
+        "vynutil",
+        "zápas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Senna, Schumacher nebo Hamilton? Takhle dopadlo srovnání nejlepších pilotů F1",
+      "url": "https://www.idnes.cz/sport/trendy/nejlepsi-piloti-f1-srovnani-denik-telegraph.A260513_114737_trendy_subt/foto",
+      "dt": "2026-05-16T07:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dopadlo",
+        "hamilton",
+        "nebo",
+        "nejlepších",
+        "pilotů",
+        "schumacher",
+        "senna",
+        "srovnání",
+        "takhle"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -716,56 +768,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Německo na MS v hokeji 2026: program, výsledky, soupiska, bilance s Čechy",
-      "url": "https://www.idnes.cz/hokej/ms-2026/nemecko-na-ms-v-hokeji-2026.A260513_082935_ms-hokej-2026_ald",
-      "dt": "2026-05-15T17:03:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "2026",
-        "bilance",
-        "hokeji",
-        "německo",
-        "program",
-        "soupiska",
-        "výsledky",
-        "čechy"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Finsko na MS v hokeji 2026: program, výsledky, soupiska, bilance s Čechy",
-      "url": "https://www.idnes.cz/hokej/ms-2026/finsko-na-ms-v-hokeji-2026.A260428_133242_ms-hokej-2026_ald",
-      "dt": "2026-05-15T17:01:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "2026",
-        "bilance",
-        "finsko",
-        "hokeji",
-        "program",
-        "soupiska",
-        "výsledky",
-        "čechy"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -776,7 +778,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 44328,
+      "bytes": 45139,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -813,7 +815,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T06:47:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T07:20:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -828,6 +830,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "San Antonio postoupilo do semifinále NBA, Detroit si vynutil sedmý zápas",
+            "publishedAt": "2026-05-16T07:20:00Z"
+          },
+          {
+            "title": "Senna, Schumacher nebo Hamilton? Takhle dopadlo srovnání nejlepších pilotů F1",
+            "publishedAt": "2026-05-16T07:00:00Z"
+          },
           {
             "title": "Slovinsko - Česko v TV: kde sledovat zápas MS v hokeji 2026 živě",
             "publishedAt": "2026-05-16T06:47:00Z"
@@ -851,14 +861,6 @@
           {
             "title": "Drzoun Holzer vs. veterán UFC. Kdo na Oktagonu v Hannoveru získá šanci na titul?",
             "publishedAt": "2026-05-16T05:44:00Z"
-          },
-          {
-            "title": "Byl příliš blízko slunce. Vingegaard spálil vyzyvatele, našel nového. A co dál? Uvidíte",
-            "publishedAt": "2026-05-16T05:35:00Z"
-          },
-          {
-            "title": "Lituju dánskýho gólmana! Kořenáře mrzí gól. A příjezd Dostála? Je mi to jedno, říká",
-            "publishedAt": "2026-05-16T05:00:00Z"
           }
         ]
       }

@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-16T07:04:40.641746Z",
+  "ingestedAt": "2026-05-16T07:44:52.504615Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Kde přišel Turek k penězům? On to neřekne, asi má strach",
+      "url": "https://www.epenize.eu/kde-prisel-turek-k-penezum-on-to-nerekne-asi-ma-strach/",
+      "dt": "2026-05-16T06:18:55Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "asi",
+        "neřekne",
+        "penězům",
+        "přišel",
+        "strach",
+        "turek"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -509,30 +532,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Dlužena von Bankrot: Kupka to za svou kritiku schytává",
-      "url": "https://www.epenize.eu/dluzena-von-bankrot-kupka-to-za-svou-kritiku-schytava/",
-      "dt": "2026-05-08T08:12:13Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "bankrot",
-        "dlužena",
-        "kritiku",
-        "kupka",
-        "schytává",
-        "svou",
-        "von"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -543,7 +542,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 118442,
+      "bytes": 118430,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -580,7 +579,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-15T23:00:46Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T06:18:55Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 17,
@@ -598,6 +597,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kde přišel Turek k penězům? On to neřekne, asi má strach",
+            "publishedAt": "2026-05-16T06:18:55Z"
+          },
           {
             "title": "„Hloupá osoba“: Trump měl mluvit o Číně, ale raději si vyřídil účty s moderátorkou CBS",
             "publishedAt": "2026-05-15T23:00:46Z"
@@ -625,10 +628,6 @@
           {
             "title": "Trump chce novináře v celách s násilníky? První dodatek ústavy zatím odolává",
             "publishedAt": "2026-05-13T23:00:52Z"
-          },
-          {
-            "title": "Přiznal Šťastný koryta? Hlídání Babiše skončilo podpisem koaliční smlouvy",
-            "publishedAt": "2026-05-13T08:32:32Z"
           }
         ]
       }
