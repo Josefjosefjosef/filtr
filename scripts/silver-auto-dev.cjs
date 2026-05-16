@@ -2,8 +2,10 @@
 /**
  * Silver Auto-Dev V1 — single-pass entrypoint: bounded safe PR queue, then deterministic
  * SILVER_NEXT_ACTION.md handoff when no ultra-safe PR candidate remains.
- * Optional `--run-cursor` (V1): after handoff, invokes `scripts/silver-cursor-agent-adapter.ps1`
- * once (max_cycles=1 only) — no outer loop. Does not modify assets/app.js or Silver engine.
+ * Optional `--run-cursor`: invokes `scripts/silver-cursor-agent-adapter.ps1` once when
+ * `--max-cycles=1` (default) without `--loop`. With `--loop --max-cycles=N` (N=1..HARD_SAFE_MAX_CYCLES),
+ * runs up to N bounded cycles with existing runtime safety gates. Does not modify
+ * assets/app.js or the Silver engine.
  */
 /* eslint-disable no-console */
 "use strict";
@@ -26,7 +28,9 @@ const RHC3_REPORT = path.join(__dirname, "silver-real-human-chaos-v3-report.json
 const REALISTIC_MOBILE_REPORT = path.join(__dirname, "silver-realistic-mobile-corpus-report.json");
 
 const MAX_BUFFER = 64 * 1024 * 1024;
-const LOOP_MAX_ALLOWED = new Set([1, 2, 3, 4, 5]);
+/** Absolute ceiling for `--loop --max-cycles=N` (user request must be <= this). */
+const HARD_SAFE_MAX_CYCLES = 100;
+const LOOP_GUARD_VERSION = "CONTROLLED_LOOP_V3_CONFIGURABLE";
 const LOOP_RUNTIME_ALLOWED_DIRTY_PATHS = new Set([
   "SILVER_CURSOR_OUTPUT.md",
   "SILVER_NEXT_ACTION.md",
@@ -224,6 +228,43 @@ function yn(b) {
   return b ? "YES" : "NO";
 }
 
+function maxCyclesGuardReport(cli) {
+  if (!cli.runCursor) return "";
+  return cli.maxCyclesError ? "FAIL" : "PASS";
+}
+
+/**
+ * @param {{ runCursor: boolean, loopMode: boolean, maxCycles: string, maxCyclesError: string, maxCyclesRaw: string|null }} cli
+ * @returns {{ hard_safe_max_cycles: string, requested_max_cycles: string, effective_max_cycles: string }}
+ */
+function loopGuardMetaFromCli(cli) {
+  const hard = String(HARD_SAFE_MAX_CYCLES);
+  if (!cli.runCursor) {
+    return { hard_safe_max_cycles: "", requested_max_cycles: "", effective_max_cycles: "" };
+  }
+  let requested = "";
+  let effective = "";
+  if (cli.loopMode) {
+    if (cli.maxCyclesRaw != null && String(cli.maxCyclesRaw).trim() !== "") {
+      requested = String(cli.maxCyclesRaw).trim();
+    } else if (!cli.maxCyclesError && cli.maxCycles) {
+      requested = cli.maxCycles;
+    }
+    if (!cli.maxCyclesError && cli.maxCycles) {
+      effective = cli.maxCycles;
+    }
+  } else {
+    requested =
+      cli.maxCyclesRaw == null || String(cli.maxCyclesRaw).trim() === ""
+        ? "1"
+        : String(cli.maxCyclesRaw).trim();
+    if (!cli.maxCyclesError) {
+      effective = cli.maxCycles || "1";
+    }
+  }
+  return { hard_safe_max_cycles: hard, requested_max_cycles: requested, effective_max_cycles: effective };
+}
+
 /**
  * @returns {{ runCursor: boolean, loopMode: boolean, maxCycles: string, maxCyclesError: string, maxCyclesRaw: string|null }}
  */
@@ -249,8 +290,10 @@ function parseSilverAutoCli(argv) {
       const n = parseInt(trimmed, 10);
       if (!Number.isFinite(n) || String(n) !== trimmed) {
         maxCyclesError = "INVALID_MAX_CYCLES";
-      } else if (!LOOP_MAX_ALLOWED.has(n)) {
-        maxCyclesError = "LOOP_MAX_CYCLES_ALLOWED_1_TO_5";
+      } else if (n <= 0) {
+        maxCyclesError = "MAX_CYCLES_ZERO_FORBIDDEN";
+      } else if (n > HARD_SAFE_MAX_CYCLES) {
+        maxCyclesError = "MAX_CYCLES_EXCEEDS_HARD_SAFE_LIMIT";
       } else {
         maxCycles = String(n);
       }
@@ -263,6 +306,8 @@ function parseSilverAutoCli(argv) {
       const n = parseInt(trimmed, 10);
       if (!Number.isFinite(n) || String(n) !== trimmed) {
         maxCyclesError = "INVALID_MAX_CYCLES";
+      } else if (n <= 0) {
+        maxCyclesError = "MAX_CYCLES_ZERO_FORBIDDEN";
       } else if (n !== 1) {
         maxCyclesError = "MAX_CYCLES_V1_ONLY_1";
       } else {
@@ -273,7 +318,41 @@ function parseSilverAutoCli(argv) {
   return { runCursor, loopMode, maxCycles, maxCyclesError, maxCyclesRaw };
 }
 
+/**
+ * @returns {boolean}
+ */
+function runCliLoopGuardSelftest() {
+  const t = (argv, wantErr) => {
+    const cli = parseSilverAutoCli(argv);
+    const got = cli.maxCyclesError || "";
+    if (got !== wantErr) {
+      console.error(
+        `CLI_LOOP_GUARD_SELFTEST_FAIL argv=${JSON.stringify(argv)} want_err=${JSON.stringify(wantErr)} got=${JSON.stringify(got)}`,
+      );
+      return false;
+    }
+    return true;
+  };
+  const all =
+    t(["--run-cursor", "--max-cycles=3"], "MAX_CYCLES_V1_ONLY_1") &&
+    t(["--run-cursor", "--max-cycles=4"], "MAX_CYCLES_V1_ONLY_1") &&
+    t(["--run-cursor", "--loop", "--max-cycles=2"], "") &&
+    t(["--run-cursor", "--loop", "--max-cycles=3"], "") &&
+    t(["--run-cursor", "--loop", "--max-cycles=4"], "") &&
+    t(["--run-cursor", "--loop", "--max-cycles=50"], "") &&
+    t(["--run-cursor", "--loop", "--max-cycles=100"], "") &&
+    t(["--run-cursor", "--loop", "--max-cycles=101"], "MAX_CYCLES_EXCEEDS_HARD_SAFE_LIMIT") &&
+    t(["--run-cursor", "--loop", "--max-cycles=0"], "MAX_CYCLES_ZERO_FORBIDDEN") &&
+    t(["--run-cursor", "--max-cycles=0"], "MAX_CYCLES_ZERO_FORBIDDEN") &&
+    t(["--run-cursor", "--loop", "--max-cycles=1"], "") &&
+    t(["--run-cursor", "--max-cycles=1"], "") &&
+    t(["--run-cursor"], "");
+  if (all) console.log("CLI_LOOP_GUARD_SELFTEST_PASS");
+  return all;
+}
+
 function cursorSchemaDefaults(cli) {
+  const loopMeta = loopGuardMetaFromCli(cli);
   return {
     cursor_adapter_mode: cli.runCursor ? "RUN_CURSOR_V1" : "OFF",
     cursor_adapter_available: "NO",
@@ -285,6 +364,11 @@ function cursorSchemaDefaults(cli) {
     max_cycles: cli.runCursor ? cli.maxCycles || "1" : "",
     loop_mode: cli.loopMode ? "YES" : "NO",
     loop_max_cycles: cli.loopMode ? cli.maxCycles : "",
+    hard_safe_max_cycles: loopMeta.hard_safe_max_cycles,
+    requested_max_cycles: loopMeta.requested_max_cycles,
+    effective_max_cycles: loopMeta.effective_max_cycles,
+    loop_guard_version: LOOP_GUARD_VERSION,
+    max_cycles_guard_result: maxCyclesGuardReport(cli),
     loop_cycles_completed: cli.loopMode ? "0" : "",
     loop_stop_reason: "",
     loop_safe_to_continue: "",
@@ -514,6 +598,11 @@ function printRunCursorSummary(rep) {
   console.log(`max_cycles=${String(rep.max_cycles || "")}`);
   console.log(`loop_mode=${String(rep.loop_mode || "")}`);
   console.log(`loop_max_cycles=${String(rep.loop_max_cycles || "")}`);
+  console.log(`hard_safe_max_cycles=${String(rep.hard_safe_max_cycles || "")}`);
+  console.log(`requested_max_cycles=${String(rep.requested_max_cycles || "")}`);
+  console.log(`effective_max_cycles=${String(rep.effective_max_cycles || "")}`);
+  console.log(`loop_guard_version=${String(rep.loop_guard_version || "")}`);
+  console.log(`max_cycles_guard_result=${String(rep.max_cycles_guard_result || "")}`);
   console.log(`loop_cycles_completed=${String(rep.loop_cycles_completed || "")}`);
   console.log(`loop_stop_reason=${String(rep.loop_stop_reason || "")}`);
   console.log(`loop_safe_to_continue=${String(rep.loop_safe_to_continue || "")}`);
@@ -527,7 +616,11 @@ function printRunCursorSummary(rep) {
 }
 
 function main() {
-  const cli = parseSilverAutoCli(process.argv.slice(2));
+  const argvSlice = process.argv.slice(2);
+  if (argvSlice.includes("--cli-loop-guard-selftest") || argvSlice.includes("--cli-cap3-selftest")) {
+    process.exit(runCliLoopGuardSelftest() ? 0 : 1);
+  }
+  const cli = parseSilverAutoCli(argvSlice);
   const startedAt = new Date().toISOString();
 
   if (cli.runCursor && cli.maxCyclesError) {
@@ -548,7 +641,7 @@ function main() {
         next_action_file: "SILVER_NEXT_ACTION.md",
         safe_to_continue: "NO",
         recommended_next_command: cli.loopMode
-          ? "Use: npm run silver-auto -- --run-cursor --loop --max-cycles=1..5"
+          ? `Use: npm run silver-auto -- --run-cursor --loop --max-cycles=1..${HARD_SAFE_MAX_CYCLES} (hard safe limit)`
           : "Use: npm run silver-auto -- --run-cursor --max-cycles=1 (single-run mode)",
         report_fields_added: "YES",
         max_cycles_arg: cli.maxCyclesRaw == null || cli.maxCyclesRaw === "" ? "default_implicit_1" : String(cli.maxCyclesRaw).trim(),
@@ -752,6 +845,9 @@ function main() {
         const loopTarget = parseInt(String(cli.maxCycles || "0"), 10);
         repOut.cursor_adapter_wsl_ubuntu = yn(useWslUbuntuAgent);
         repOut.loop_max_cycles = String(loopTarget);
+        repOut.hard_safe_max_cycles = String(HARD_SAFE_MAX_CYCLES);
+        repOut.requested_max_cycles = String(cli.maxCyclesRaw || "").trim() || String(loopTarget);
+        repOut.effective_max_cycles = String(loopTarget);
         let completed = 0;
         let loopStopReason = "";
         let loopSafe = "YES";
