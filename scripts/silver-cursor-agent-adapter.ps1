@@ -1,7 +1,7 @@
 #requires -Version 5.1
 <#
 .SYNOPSIS
-  Silver V1 — run `cursor agent` headless (Windows, preferred argv from diagnostic JSON) or WSL Ubuntu `agent` non-interactive (--print --mode ask --trust --workspace), capture stdout/stderr, write structured log to OutputFile.
+  Silver V1 — run `cursor agent` headless (Windows, preferred argv from diagnostic JSON) or WSL Ubuntu `agent` non-interactive (--print --trust --workspace), capture stdout/stderr, write structured log to OutputFile.
 
 .PARAMETER TaskFile
   Path to the markdown/text task (relative to repo root or absolute). Not used with -Probe.
@@ -19,7 +19,7 @@
   Harmless test. Without -TaskFile: stdin marker probe (stdout contains CURSOR_AGENT_STDIN_OK). With -WslUbuntuAgent and -TaskFile: WSL stdin regression probe (markdown-safe; stderr shell-leak gate). Exits 0 on pass, else 1. Bypasses adapter_ready JSON gate for execution, but can_run metadata requires adapter_ready=YES (Windows) or wsl_cursor_agent_print_ask_trust.adapter_ready=YES (WSL).
 
 .PARAMETER WslUbuntuAgent
-  Use verified non-interactive WSL path: write the task to a UTF-8 temp file under Windows, then run `wsl.exe -d <WslDistro> -- /bin/bash -c 'exec <WslAgentLinuxPath> --print --mode ask --trust --workspace <WslWorkspaceLinuxPath> < <temp-path-in-wsl>'` so the **shell one-liner contains only paths**, never raw markdown/task text. No `bash -lc` (non-login `-c` only). No PowerShell `PATH` export for the agent. Absolute agent path inside WSL.
+  Use verified non-interactive WSL path: write the task to a UTF-8 temp file under Windows, then run `wsl.exe -d <WslDistro> -- /bin/bash -c 'exec <WslAgentLinuxPath> --print --trust --workspace <WslWorkspaceLinuxPath> < <temp-path-in-wsl>'` so the **shell one-liner contains only paths**, never raw markdown/task text. No `bash -lc` (non-login `-c` only). No PowerShell `PATH` export for the agent. Absolute agent path inside WSL.
 
 .PARAMETER WslDistro
   WSL distribution name (default Ubuntu).
@@ -131,7 +131,7 @@ function Build-WslBashCExecRedirectScript {
     [string]$TaskPathWsl
   )
   $tq = '"' + ($TaskPathWsl.Replace('"', '\"')) + '"'
-  return 'exec ' + $AgentPath + ' --print --mode ask --trust --workspace ' + $WorkspacePath + ' <' + $tq
+  return 'exec ' + $AgentPath + ' --print --trust --workspace ' + $WorkspacePath + ' <' + $tq
 }
 
 function Resolve-RepoPath {
