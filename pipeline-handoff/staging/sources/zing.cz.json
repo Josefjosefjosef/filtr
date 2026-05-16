@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-16T17:44:34.461222Z",
+  "ingestedAt": "2026-05-16T18:24:40.269006Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Hry pro více hráčů, kde na rozhodnutí záleží",
+      "url": "https://zing.cz/article/hry-pro-vice-hracu-kde-na-rozhodnuti-zalezi",
+      "dt": "2026-05-16T18:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "hry",
+        "hráčů",
+        "rozhodnutí",
+        "záleží"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -976,31 +997,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Resonance: A Plague Tale Legacy se blíží, podívejte se na nové obrázky",
-      "url": "https://zing.cz/article/resonance-a-plague-tale-legacy-se-blizi-podivejte-se-na-nove-obrazky",
-      "dt": "2026-05-13T08:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "blíží",
-        "legacy",
-        "nové",
-        "obrázky",
-        "plague",
-        "podívejte",
-        "resonance",
-        "tale"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1011,7 +1007,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 127330,
+      "bytes": 127400,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1048,7 +1044,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-16T16:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T18:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1064,6 +1060,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hry pro více hráčů, kde na rozhodnutí záleží",
+            "publishedAt": "2026-05-16T18:00:00Z"
+          },
           {
             "title": "WoW Classic Plus? Blizzard se radí se streamery",
             "publishedAt": "2026-05-16T16:00:00Z"
@@ -1091,10 +1091,6 @@
           {
             "title": "Připravovaná ovčí apokalypsa Flock Off! má nový teaser",
             "publishedAt": "2026-05-16T06:00:00Z"
-          },
-          {
-            "title": "Need for Seat: Závody na kancelářských křeslech jsou virálním hitem",
-            "publishedAt": "2026-05-16T05:00:00Z"
           }
         ]
       }
