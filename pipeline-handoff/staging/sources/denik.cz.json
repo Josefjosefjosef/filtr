@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-16T16:24:41.069906Z",
+  "ingestedAt": "2026-05-16T17:04:40.390711Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Čeští vědci testují revoluční novinku. Na dálku odhalí čoudící auta",
+      "url": "https://www.denik.cz/doprava/cesko-emise-vedci-testuji-revolucni-novinku-na-dalku-odhali-coudici-auta.html",
+      "dt": "2026-05-16T16:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "auta",
+        "dálku",
+        "novinku",
+        "odhalí",
+        "revoluční",
+        "testují",
+        "vědci",
+        "čeští",
+        "čoudící"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -631,34 +657,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Velká čínská revoluce měla oživit socialismus, místo toho miliony životů zmařila",
-      "url": "https://www.denik.cz/historie/velka-cinska-revoluce-1966.html",
-      "dt": "2026-05-16T03:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "miliony",
-        "místo",
-        "měla",
-        "oživit",
-        "revoluce",
-        "socialismus",
-        "toho",
-        "velká",
-        "zmařila",
-        "čínská",
-        "životů"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -669,7 +667,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28074,
+      "bytes": 28317,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -706,7 +704,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-16T15:39:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T16:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -723,6 +721,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Čeští vědci testují revoluční novinku. Na dálku odhalí čoudící auta",
+            "publishedAt": "2026-05-16T16:30:00Z"
+          },
           {
             "title": "Aktivisté vyvěsili na Eiffelovu věž palestinskou vlajku, šest lidí bylo zatčeno",
             "publishedAt": "2026-05-16T15:39:00Z"
@@ -750,10 +752,6 @@
           {
             "title": "Vyprodaný večer šansonů v Olomouci připomněl jubileum Hany Hegerové",
             "publishedAt": "2026-05-16T13:00:00Z"
-          },
-          {
-            "title": "Cesta do Chorvatska autem vyjde letos dráž. Čechy teď láká autobus i polský vlak",
-            "publishedAt": "2026-05-16T12:30:00Z"
           }
         ]
       }
