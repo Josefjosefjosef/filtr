@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-16T09:44:36.515045Z",
+  "ingestedAt": "2026-05-16T10:24:35.528281Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kinobox Daily: Gangsterka Veřejní nepřátelé vypadá a zní jako žádný jiný blockbuster",
+      "url": "https://www.kinobox.cz/clanky/daily/53793-kinobox-daily-gangsterka-verejni-nepratele-vypada-a-zni-jako-zadny-jiny-blockbuster",
+      "dt": "2026-05-16T10:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "blockbuster",
+        "daily",
+        "gangsterka",
+        "jako",
+        "jiný",
+        "kinobox",
+        "nepřátelé",
+        "veřejní",
+        "vypadá",
+        "zní",
+        "žádný"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -527,34 +555,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Dva Batmanovi záporáci dostanou vlastní film. Režie by se mohl ujmout tvůrce komediálních hitů",
-      "url": "https://www.kinobox.cz/clanky/filmy/53659-dva-batmanovi",
-      "dt": "2026-05-14T07:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "batmanovi",
-        "dostanou",
-        "dva",
-        "film",
-        "hitů",
-        "komediálních",
-        "režie",
-        "tvůrce",
-        "ujmout",
-        "vlastní",
-        "záporáci"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -565,7 +565,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 27625,
+      "bytes": 27754,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -602,7 +602,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-16T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T10:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -617,6 +617,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinobox Daily: Gangsterka Veřejní nepřátelé vypadá a zní jako žádný jiný blockbuster",
+            "publishedAt": "2026-05-16T10:00:00Z"
+          },
           {
             "title": "Megan Fox slaví 40. Kariéra největšího sexsymbolu tisíciletí byla postavená na provokaci a lžích",
             "publishedAt": "2026-05-16T09:00:00Z"
@@ -644,10 +648,6 @@
           {
             "title": "Van Damme ve druhé světové válce. Legenda bojových umění se vrací ve vlastním Honu na ponorku",
             "publishedAt": "2026-05-15T12:00:00Z"
-          },
-          {
-            "title": "Survivor jde ve stopách Zrádců. Finále bude v historii show výjimečnou událostí",
-            "publishedAt": "2026-05-15T11:00:00Z"
           }
         ]
       }

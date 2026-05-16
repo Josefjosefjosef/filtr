@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-16T09:44:36.515045Z",
+  "ingestedAt": "2026-05-16T10:24:35.528281Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Cozy novinky s Terry #54",
+      "url": "https://zing.cz/article/cozy-novinky-s-terry-54",
+      "dt": "2026-05-16T10:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "cozy",
+        "novinky",
+        "terry"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -991,30 +1011,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Horor Directive 8020 od autorů Until Dawn je venku",
-      "url": "https://zing.cz/article/horor-directive-8020-od-autoru-until-dawn-je-venku",
-      "dt": "2026-05-12T18:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "8020",
-        "autorů",
-        "dawn",
-        "directive",
-        "horor",
-        "until",
-        "venku"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1025,7 +1021,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 127226,
+      "bytes": 127225,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1062,7 +1058,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-16T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1078,6 +1074,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cozy novinky s Terry #54",
+            "publishedAt": "2026-05-16T10:00:00Z"
+          },
           {
             "title": "Skywind: Morrowind převedený do Skyrimu. Výsledek bere dech",
             "publishedAt": "2026-05-16T08:00:00Z"
@@ -1105,10 +1105,6 @@
           {
             "title": "Aktivujte si zdarma na Steamu a Epic Games Storu hned několik her",
             "publishedAt": "2026-05-15T18:00:00Z"
-          },
-          {
-            "title": "GOG přidává podporu českých korun a regionálních cen",
-            "publishedAt": "2026-05-15T16:00:00Z"
           }
         ]
       }

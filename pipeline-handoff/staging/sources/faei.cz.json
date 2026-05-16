@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-16T09:44:36.515045Z",
+  "ingestedAt": "2026-05-16T10:24:35.528281Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Tycho de Brahe odtud pozoroval hvězdy. Belveder čeká rekonstrukce",
+      "url": "https://profitonline.cz/tycho-de-brahe-odtud-pozoroval-hvezdy-belveder-ceka-rekonstrukce/",
+      "dt": "2026-05-16T10:00:03Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "belveder",
+        "brahe",
+        "hvězdy",
+        "odtud",
+        "pozoroval",
+        "rekonstrukce",
+        "tycho",
+        "čeká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -264,28 +289,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Vláda si otevírá dveře k dluhovému eldorádu",
-      "url": "https://profitonline.cz/vlada-si-otevira-dvere-k-dluhovemu-eldoradu/",
-      "dt": "2026-05-14T20:15:41Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "dluhovému",
-        "dveře",
-        "eldorádu",
-        "otevírá",
-        "vláda"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -296,7 +299,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18757,
+      "bytes": 18940,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -333,7 +336,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-16T09:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T10:00:03Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -348,6 +351,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tycho de Brahe odtud pozoroval hvězdy. Belveder čeká rekonstrukce",
+            "publishedAt": "2026-05-16T10:00:03Z"
+          },
           {
             "title": "V Praze dramaticky přibývá aut",
             "publishedAt": "2026-05-16T09:10:00Z"
@@ -375,10 +382,6 @@
           {
             "title": "Návrat k normálu. Českým včelařům během letošní zimy uhynula jen desetina chovu",
             "publishedAt": "2026-05-15T11:00:26Z"
-          },
-          {
-            "title": "Nové dluhopisy pro Čechy: Stabilní investice, nebo drahý luxus pro stát?",
-            "publishedAt": "2026-05-15T09:00:40Z"
           }
         ]
       }

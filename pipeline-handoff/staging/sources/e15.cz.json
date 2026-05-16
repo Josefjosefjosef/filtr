@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-16T09:44:36.515045Z",
+  "ingestedAt": "2026-05-16T10:24:35.528281Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Brněnští vědci objevili bod zlomu, kdy začíná rakovina. Onemocní jí každý třetí Čech",
+      "url": "https://www.e15.cz/domaci/brnensti-vedci-objevili-bod-zlomu-kdy-zacina-rakovina-onemocni-ji-kazdy-treti-cech-1432852",
+      "dt": "2026-05-16T10:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "bod",
+        "brněnští",
+        "každý",
+        "objevili",
+        "onemocní",
+        "rakovina",
+        "třetí",
+        "vědci",
+        "začíná",
+        "zlomu",
+        "čech"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1077,34 +1105,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Komárkova KKCG prohrála v boji o kontrolu nad představenstvem firmy Ferretti. Výsledek chce napadnout",
-      "url": "https://www.e15.cz/byznys/komarkova-kkcg-prohrala-v-boji-o-kontrolu-nad-predstavenstvem-firmy-ferretti-vysledek-chce-napadnout-1432814",
-      "dt": "2026-05-14T10:40:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "boji",
-        "chce",
-        "ferretti",
-        "firmy",
-        "kkcg",
-        "komárkova",
-        "kontrolu",
-        "napadnout",
-        "prohrála",
-        "představenstvem",
-        "výsledek"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1115,7 +1115,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 53137,
+      "bytes": 53113,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1152,12 +1152,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-16T07:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 37,
-          "zpravy": 1,
-          "zdravi": 2
+          "zdravi": 3,
+          "finance": 36,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1169,6 +1169,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Brněnští vědci objevili bod zlomu, kdy začíná rakovina. Onemocní jí každý třetí Čech",
+            "publishedAt": "2026-05-16T10:00:00Z"
+          },
           {
             "title": "Dacia letos představí nový elektromobil. V základní výbavě bude jedním z nejlevnějších",
             "publishedAt": "2026-05-16T07:30:00Z"
@@ -1196,10 +1200,6 @@
           {
             "title": "Německo v pasti. Dobíječi elektromobilů upadají do insolvencí, prodělávají i v Česku",
             "publishedAt": "2026-05-16T03:00:00Z"
-          },
-          {
-            "title": "Italská vláda prověřuje spor Komárkovy KKCG s čínským akcionářem o výrobce jachet Ferretti",
-            "publishedAt": "2026-05-15T17:25:00Z"
           }
         ]
       }
