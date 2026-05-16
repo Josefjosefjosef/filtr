@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-16T21:05:08.791020Z",
+  "ingestedAt": "2026-05-16T21:44:41.548167Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Česká blamáž na slovinský způsob: rodák z Mostu slavil, Češi smutně koukali",
+      "url": "https://sport.aktualne.cz/hokej/slovinska-blamaz-rodak-z-mostu-slavil-cesi-smutne-koukali/r~aaa2938886efb0388e6d20add236faab/",
+      "dt": "2026-05-16T21:13:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "blamáž",
+        "koukali",
+        "mostu",
+        "rodák",
+        "slavil",
+        "slovinský",
+        "smutně",
+        "způsob",
+        "česká",
+        "češi"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -503,32 +530,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ostrava - Zlín 2:0. Baník ještě dýchá, gólovou pojistku přidal Frydrych",
-      "url": "https://sport.aktualne.cz/fotbal/ceska-liga/banik-zlin-banik-hraje-o-ligovy-zivot-nesmi-zavahat-nema-ale-situaci-ve-sve-moci/r~aaa298e6b4d6cb54853c9c1b0cd484e8/",
-      "dt": "2026-05-16T14:24:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "baník",
-        "dýchá",
-        "frydrych",
-        "gólovou",
-        "ještě",
-        "ostrava",
-        "pojistku",
-        "přidal",
-        "zlín"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -539,7 +540,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21415,
+      "bytes": 21531,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -576,7 +577,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-16T20:56:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T21:13:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "sport": 9,
@@ -593,6 +594,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česká blamáž na slovinský způsob: rodák z Mostu slavil, Češi smutně koukali",
+            "publishedAt": "2026-05-16T21:13:00Z"
+          },
           {
             "title": "Švýcaři opět ukázali svaly. Lotyše zasypali střelami, ke střelnici chyběla lepší koncovka",
             "publishedAt": "2026-05-16T20:56:00Z"
@@ -620,10 +625,6 @@
           {
             "title": "\"Rozhodčí slaboučkej. Katastrofa!\" Dukla zaváhala v boji o přežití, kouč byl vzteky bez sebe",
             "publishedAt": "2026-05-16T19:22:00Z"
-          },
-          {
-            "title": "Fanoušci po celé republice se spojili. Ostrým vzkazem zaútočili na Tvrdíka",
-            "publishedAt": "2026-05-16T19:08:00Z"
           }
         ]
       }
