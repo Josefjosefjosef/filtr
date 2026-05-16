@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-16T06:25:53.856403Z",
+  "ingestedAt": "2026-05-16T07:04:40.641746Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Čepo je v UFC. Slovák má potvrzený debut v Bělehradě, už zná i soupeře",
+      "url": "https://www.mmamag.cz/vlasto-cepo-je-v-ufc-debut-ma-v-belehrade/",
+      "dt": "2026-05-16T06:36:26Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "bělehradě",
+        "debut",
+        "potvrzený",
+        "slovák",
+        "soupeře",
+        "ufc",
+        "zná",
+        "čepo"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1078,33 +1103,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Josef Hála má po výhře v Oktagonu další zápas. V Praze ho čeká tvrdý ranař",
-      "url": "https://www.mmamag.cz/josef-hala-ma-dalsi-zapas-v-praze-ho-ceka-tvrdy/",
-      "dt": "2026-05-14T12:00:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "další",
-        "hála",
-        "josef",
-        "oktagonu",
-        "praze",
-        "ranař",
-        "tvrdý",
-        "výhře",
-        "zápas",
-        "čeká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1115,7 +1113,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 83086,
+      "bytes": 83031,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1152,7 +1150,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-16T04:28:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T06:36:26Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1167,6 +1165,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Čepo je v UFC. Slovák má potvrzený debut v Bělehradě, už zná i soupeře",
+            "publishedAt": "2026-05-16T06:36:26Z"
+          },
           {
             "title": "10 bojových umění, 10 popisů základní techniky. Víc než polovinu správně přiřadí jen hrstka lidí",
             "publishedAt": "2026-05-16T04:28:00Z"
@@ -1194,10 +1196,6 @@
           {
             "title": "Rousey, nebo Carano? Hvězdy MMA nevidí jasného favorita",
             "publishedAt": "2026-05-15T17:15:00Z"
-          },
-          {
-            "title": "Boxer přežil v Osvětimi 76 zápasů smrti. Poražený šel rovnou do plynové komory",
-            "publishedAt": "2026-05-15T16:30:00Z"
           }
         ]
       }

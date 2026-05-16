@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-16T06:25:53.856403Z",
+  "ingestedAt": "2026-05-16T07:04:40.641746Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Si, Trump a Thúkýdidova past",
+      "url": "https://profitonline.cz/si-trump-a-thukydidova-past/",
+      "dt": "2026-05-16T07:00:57Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "past",
+        "thúkýdidova",
+        "trump"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -269,31 +289,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Chataři a chalupáři si připlatí. Obce jim zvyšují daň z nemovitosti",
-      "url": "https://profitonline.cz/chatari-a-chalupari-si-priplati-obce-jim-zvysuji-dan-z-nemovitosti/",
-      "dt": "2026-05-14T10:00:47Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "chalupáři",
-        "chataři",
-        "daň",
-        "jim",
-        "nemovitosti",
-        "obce",
-        "připlatí",
-        "zvyšují"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -304,7 +299,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19229,
+      "bytes": 19102,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -341,7 +336,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-16T04:00:12Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T07:00:57Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -356,6 +351,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Si, Trump a Thúkýdidova past",
+            "publishedAt": "2026-05-16T07:00:57Z"
+          },
           {
             "title": "Okamžiky dějin: Den, kdy začal nejšílenější experiment komunistické ideologie",
             "publishedAt": "2026-05-16T04:00:12Z"
@@ -383,10 +382,6 @@
           {
             "title": "Energetická modernizace státních budov a areálů stojí. Čeká se na předpisy a metodiku",
             "publishedAt": "2026-05-15T08:00:29Z"
-          },
-          {
-            "title": "Petr Zelenka ve skupině Adastra povede oblast AI",
-            "publishedAt": "2026-05-15T06:00:27Z"
           }
         ]
       }
