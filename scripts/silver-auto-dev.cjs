@@ -26,6 +26,15 @@ const RHC3_REPORT = path.join(__dirname, "silver-real-human-chaos-v3-report.json
 const REALISTIC_MOBILE_REPORT = path.join(__dirname, "silver-realistic-mobile-corpus-report.json");
 
 const MAX_BUFFER = 64 * 1024 * 1024;
+const LOOP_MAX_ALLOWED = new Set([1, 2, 3, 4, 5]);
+const LOOP_RUNTIME_ALLOWED_DIRTY_PATHS = new Set([
+  "SILVER_CURSOR_OUTPUT.md",
+  "SILVER_NEXT_ACTION.md",
+  "SILVER_RUN_REPORT.md",
+  "scripts/silver-auto-dev-report.json",
+  "scripts/silver-pr-orchestrator-v1-report.json",
+  "scripts/silver-cursor-agent-adapter-diagnostic-report.json",
+]);
 
 function runCommand(cmd, args, options) {
   const opts = {
@@ -77,6 +86,49 @@ function gitDiffPathNonEmpty(rel) {
   const a = String(r.stdout || "").trim().length > 0;
   const b = String(r2.stdout || "").trim().length > 0;
   return { ok: true, nonEmpty: a || b };
+}
+
+/**
+ * @param {string} text
+ * @returns {string[]}
+ */
+function dirtyPathsFromPorcelain(text) {
+  const out = [];
+  const lines = String(text || "").split(/\r?\n/).filter(Boolean);
+  for (const line of lines) {
+    if (line.length < 4) continue;
+    const rawPath = line.slice(3).trim();
+    if (!rawPath) continue;
+    const renamedTo = rawPath.includes(" -> ") ? rawPath.split(" -> ").pop() : rawPath;
+    const p = String(renamedTo || "").trim();
+    if (p) out.push(p);
+  }
+  return out;
+}
+
+/**
+ * @returns {{ ok: boolean, gitClean: "YES"|"NO", dirtyPaths: string[], outsideAllowed: string[], reason: string }}
+ */
+function evaluateLoopRuntimeSafety() {
+  const p = gitPorcelain();
+  if (!p.ok) {
+    return {
+      ok: false,
+      gitClean: "NO",
+      dirtyPaths: [],
+      outsideAllowed: [],
+      reason: p.err || "GIT_STATUS_FAILED",
+    };
+  }
+  const dirtyPaths = dirtyPathsFromPorcelain(p.text);
+  const outsideAllowed = dirtyPaths.filter((x) => !LOOP_RUNTIME_ALLOWED_DIRTY_PATHS.has(x));
+  return {
+    ok: true,
+    gitClean: outsideAllowed.length === 0 ? "YES" : "NO",
+    dirtyPaths,
+    outsideAllowed,
+    reason: "",
+  };
 }
 
 function npmAvailable() {
@@ -173,10 +225,11 @@ function yn(b) {
 }
 
 /**
- * @returns {{ runCursor: boolean, maxCycles: string, maxCyclesError: string, maxCyclesRaw: string|null }}
+ * @returns {{ runCursor: boolean, loopMode: boolean, maxCycles: string, maxCyclesError: string, maxCyclesRaw: string|null }}
  */
 function parseSilverAutoCli(argv) {
   const runCursor = argv.includes("--run-cursor");
+  const loopMode = argv.includes("--loop");
   let maxCyclesRaw = null;
   for (const a of argv) {
     if (a.startsWith("--max-cycles=")) {
@@ -186,7 +239,23 @@ function parseSilverAutoCli(argv) {
   }
   let maxCyclesError = "";
   let maxCycles = "";
-  if (runCursor) {
+  if (loopMode && !runCursor) {
+    maxCyclesError = "LOOP_REQUIRES_RUN_CURSOR";
+  } else if (loopMode) {
+    if (maxCyclesRaw == null || maxCyclesRaw === "") {
+      maxCyclesError = "LOOP_REQUIRES_MAX_CYCLES";
+    } else {
+      const trimmed = String(maxCyclesRaw).trim();
+      const n = parseInt(trimmed, 10);
+      if (!Number.isFinite(n) || String(n) !== trimmed) {
+        maxCyclesError = "INVALID_MAX_CYCLES";
+      } else if (!LOOP_MAX_ALLOWED.has(n)) {
+        maxCyclesError = "LOOP_MAX_CYCLES_ALLOWED_1_TO_5";
+      } else {
+        maxCycles = String(n);
+      }
+    }
+  } else if (runCursor) {
     if (maxCyclesRaw == null || maxCyclesRaw === "") {
       maxCycles = "1";
     } else {
@@ -201,7 +270,7 @@ function parseSilverAutoCli(argv) {
       }
     }
   }
-  return { runCursor, maxCycles, maxCyclesError, maxCyclesRaw };
+  return { runCursor, loopMode, maxCycles, maxCyclesError, maxCyclesRaw };
 }
 
 function cursorSchemaDefaults(cli) {
@@ -213,8 +282,13 @@ function cursorSchemaDefaults(cli) {
     cursor_adapter_wsl_ubuntu: "",
     cursor_diagnostic_wsl_ready: "",
     cursor_output_file: "SILVER_CURSOR_OUTPUT.md",
-    max_cycles: cli.runCursor ? "1" : "",
-    loop_mode: "NO",
+    max_cycles: cli.runCursor ? cli.maxCycles || "1" : "",
+    loop_mode: cli.loopMode ? "YES" : "NO",
+    loop_max_cycles: cli.loopMode ? cli.maxCycles : "",
+    loop_cycles_completed: cli.loopMode ? "0" : "",
+    loop_stop_reason: "",
+    loop_safe_to_continue: "",
+    loop_completed: cli.loopMode ? "NO" : "",
   };
 }
 
@@ -439,6 +513,11 @@ function printRunCursorSummary(rep) {
   console.log(`cursor_output_file=${String(rep.cursor_output_file || "")}`);
   console.log(`max_cycles=${String(rep.max_cycles || "")}`);
   console.log(`loop_mode=${String(rep.loop_mode || "")}`);
+  console.log(`loop_max_cycles=${String(rep.loop_max_cycles || "")}`);
+  console.log(`loop_cycles_completed=${String(rep.loop_cycles_completed || "")}`);
+  console.log(`loop_stop_reason=${String(rep.loop_stop_reason || "")}`);
+  console.log(`loop_safe_to_continue=${String(rep.loop_safe_to_continue || "")}`);
+  console.log(`loop_completed=${String(rep.loop_completed || "")}`);
   console.log(`safe_to_continue=${String(rep.safe_to_continue || "")}`);
   console.log(`next_action_written=${String(rep.next_action_written || "")}`);
   if (rep.cursor_adapter_stop_reason) {
@@ -468,7 +547,9 @@ function main() {
         next_action_written: "NO",
         next_action_file: "SILVER_NEXT_ACTION.md",
         safe_to_continue: "NO",
-        recommended_next_command: "Use: npm run silver-auto -- --run-cursor --max-cycles=1 (V1 allows only max_cycles=1)",
+        recommended_next_command: cli.loopMode
+          ? "Use: npm run silver-auto -- --run-cursor --loop --max-cycles=1..5"
+          : "Use: npm run silver-auto -- --run-cursor --max-cycles=1 (single-run mode)",
         report_fields_added: "YES",
         max_cycles_arg: cli.maxCyclesRaw == null || cli.maxCyclesRaw === "" ? "default_implicit_1" : String(cli.maxCyclesRaw).trim(),
       },
@@ -642,7 +723,9 @@ function main() {
   if (cli.runCursor) {
     repOut.max_cycles_arg =
       cli.maxCyclesRaw == null || cli.maxCyclesRaw === ""
-        ? "default_implicit_1"
+        ? cli.loopMode
+          ? "required_for_loop"
+          : "default_implicit_1"
         : String(cli.maxCyclesRaw).trim();
   }
 
@@ -665,8 +748,59 @@ function main() {
           "STOP: cursor adapter unavailable (" +
           String(adapter.reason || "unknown") +
           "). Fix scripts/silver-cursor-agent-adapter.ps1 / pwsh (non-Windows), then run scripts/silver-cursor-agent-adapter-diagnostic.ps1 until adapter_ready=YES.";
-      } else {
+      } else if (cli.loopMode) {
+        const loopTarget = parseInt(String(cli.maxCycles || "0"), 10);
         repOut.cursor_adapter_wsl_ubuntu = yn(useWslUbuntuAgent);
+        repOut.loop_max_cycles = String(loopTarget);
+        let completed = 0;
+        let loopStopReason = "";
+        let loopSafe = "YES";
+        for (let cycle = 1; cycle <= loopTarget; cycle += 1) {
+          const ar = runSilverCursorAdapter(adapter, { useWslUbuntuAgent });
+          repOut.cursor_adapter_executed = "YES";
+          repOut.cursor_exit_code = String(ar.exitCode);
+          if (!ar.ok || ar.exitCode !== 0) {
+            loopStopReason = `CURSOR_EXIT_CODE_${String(ar.exitCode)}`;
+            loopSafe = "NO";
+            break;
+          }
+          if (String(repOut.safe_to_continue || "") !== "YES") {
+            loopStopReason = "SAFE_TO_CONTINUE_NO";
+            loopSafe = "NO";
+            break;
+          }
+          const runtime = evaluateLoopRuntimeSafety();
+          if (!runtime.ok) {
+            loopStopReason = runtime.reason || "RUNTIME_GIT_STATUS_FAILED";
+            loopSafe = "NO";
+            break;
+          }
+          if (runtime.outsideAllowed.length > 0) {
+            loopStopReason = "RUNTIME_DIRTY_OUTSIDE_ALLOWED";
+            loopSafe = "NO";
+            break;
+          }
+          const appCycleDiff = gitDiffPathNonEmpty("assets/app.js");
+          if (!appCycleDiff.ok || appCycleDiff.nonEmpty) {
+            loopStopReason = "ASSETS_APP_JS_CHANGED";
+            loopSafe = "NO";
+            break;
+          }
+          completed += 1;
+        }
+        repOut.loop_cycles_completed = String(completed);
+        repOut.loop_stop_reason = loopStopReason || "LOOP_COMPLETED";
+        repOut.loop_safe_to_continue = loopSafe;
+        if (completed === loopTarget && loopSafe === "YES") {
+          repOut.loop_completed = "YES";
+        } else {
+          repOut.loop_completed = "NO";
+          repOut.safe_to_continue = "NO";
+          repOut.recommended_next_command =
+            "STOP: inspect SILVER_CURSOR_OUTPUT.md and runtime dirty paths; fix blocker, then rerun npm run silver-auto -- --run-cursor --loop --max-cycles=" +
+            String(loopTarget);
+        }
+      } else {
         const ar = runSilverCursorAdapter(adapter, { useWslUbuntuAgent });
         repOut.cursor_adapter_executed = "YES";
         repOut.cursor_exit_code = String(ar.exitCode);
@@ -679,6 +813,13 @@ function main() {
     } else {
       repOut.cursor_adapter_executed = "NO";
       repOut.cursor_exit_code = "";
+      if (cli.loopMode) {
+        repOut.loop_cycles_completed = "0";
+        repOut.loop_stop_reason = "NO_HANDOFF_FOR_LOOP";
+        repOut.loop_safe_to_continue = "NO";
+        repOut.loop_completed = "NO";
+        repOut.safe_to_continue = "NO";
+      }
     }
   }
 
@@ -693,6 +834,8 @@ function main() {
     printRunCursorSummary(withCursorSchema(repOut, cli));
     let exitCode = 0;
     if (needCursorHandoff && repOut.cursor_adapter_available === "NO") {
+      exitCode = 1;
+    } else if (cli.loopMode && repOut.loop_completed !== "YES") {
       exitCode = 1;
     } else if (repOut.cursor_adapter_executed === "YES" && String(repOut.cursor_exit_code) !== "0") {
       exitCode = 1;
