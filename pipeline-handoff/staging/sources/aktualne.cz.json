@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-16T15:44:51.123239Z",
+  "ingestedAt": "2026-05-16T16:24:41.069906Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Umělé oplodnění pro single ženy je na dosah. Karty ale zamíchal i Babišův byznys",
+      "url": "https://zpravy.aktualne.cz/domaci/umele-oplodneni-pro-single-zeny-je-na-dosah-karty-ale-zamichal-i-babisuv-byznys/r~aaa299001410249d63f46daecebbe473/",
+      "dt": "2026-05-16T16:01:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "ale",
+        "babišův",
+        "byznys",
+        "dosah",
+        "karty",
+        "oplodnění",
+        "single",
+        "umělé",
+        "zamíchal",
+        "ženy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -513,32 +540,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Poprask v NHL. Vegas čelí kvůli trenéru Tortorellovi tvrdému trestu",
-      "url": "https://sport.aktualne.cz/hokej/poprask-v-nhl-vegas-dostalo-kvuli-treneru-tortorellovi-tvrdou-pokutu/r~aaa2909a5c1999f0200240fdf1ae0bd5/",
-      "dt": "2026-05-16T09:34:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "kvůli",
-        "nhl",
-        "poprask",
-        "tortorellovi",
-        "trenéru",
-        "trestu",
-        "tvrdému",
-        "vegas",
-        "čelí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -549,7 +550,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21448,
+      "bytes": 21655,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -586,11 +587,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-16T15:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T16:01:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 12,
-          "sport": 7,
+          "zpravy": 13,
+          "sport": 6,
           "other": 1
         },
         "drop_counts": {
@@ -603,6 +604,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Umělé oplodnění pro single ženy je na dosah. Karty ale zamíchal i Babišův byznys",
+            "publishedAt": "2026-05-16T16:01:00Z"
+          },
           {
             "title": "Vešel dovnitř, pak už ho nikdo neviděl. Pařížský soudce otevírá kauzu novináře zavražděného na konzulátě",
             "publishedAt": "2026-05-16T10:39:00Z"
@@ -630,10 +635,6 @@
           {
             "title": "„Do koncertního sálu bych je nedostal.“ Pražské jaro lákalo rodiny programem v parku",
             "publishedAt": "2026-05-16T13:04:00Z"
-          },
-          {
-            "title": "Slováci vydřeli vítězství nad Norskem. Podržel je gólman Hlavaj",
-            "publishedAt": "2026-05-16T12:51:00Z"
           }
         ]
       }

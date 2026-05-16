@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-16T15:44:51.123239Z",
+  "ingestedAt": "2026-05-16T16:24:41.069906Z",
   "items": [
     {
       "section": "veda",
@@ -24,6 +24,35 @@
         "zveřejňují",
         "česku",
         "čísla"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Hry z GOG nově nakoupíte přímo za české koruny. Díky regionálním cenám navíc ušetříte",
+      "url": "https://doupe.zive.cz/hry-z-gog-nove-nakoupite-primo-za-ceske-koruny-diky-regionalnim-cenam-navic-usetrite",
+      "dt": "2026-05-16T15:15:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "cenám",
+        "díky",
+        "gog",
+        "hry",
+        "koruny",
+        "nakoupíte",
+        "navíc",
+        "nově",
+        "přímo",
+        "regionálním",
+        "ušetříte",
+        "české"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -934,29 +963,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Recenze jednohubky Punisher: Poslední zúčtování na Disney+",
-      "url": "https://avmania.zive.cz/recenze-jednohubky-punisher-posledni-zuctovani-na-disney",
-      "dt": "2026-05-13T15:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "disney",
-        "jednohubky",
-        "poslední",
-        "punisher",
-        "recenze",
-        "zúčtování"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -967,7 +973,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22218,
+      "bytes": 22278,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1004,7 +1010,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-16T12:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T15:15:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1022,6 +1028,10 @@
           {
             "title": "AI chatboti zveřejňují skutečná čísla. Když jsme to zkusili v Česku, jedno z pěti opravdu zazvonilo",
             "publishedAt": "2026-05-15T14:45:00Z"
+          },
+          {
+            "title": "Hry z GOG nově nakoupíte přímo za české koruny. Díky regionálním cenám navíc ušetříte",
+            "publishedAt": "2026-05-16T15:15:00Z"
           },
           {
             "title": "Disney+ a 30 nejoblíbenějších filmů a seriálů v květnu 2026. Na co se Češi nejvíc dívají",
@@ -1046,10 +1056,6 @@
           {
             "title": "Vybrali jsme nejlepší robotické vysavače. Lidar, mop i velkou základnu už koupíte pod 10 tisíc",
             "publishedAt": "2026-05-15T12:45:00Z"
-          },
-          {
-            "title": "Netflix a další na víkend: nový Punisher, Berlin a návrat Dobrých znamení. Taky Stathamův Working Man",
-            "publishedAt": "2026-05-15T13:27:00Z"
           }
         ]
       }

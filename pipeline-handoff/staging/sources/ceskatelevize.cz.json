@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-16T15:44:51.123239Z",
+  "ingestedAt": "2026-05-16T16:24:41.069906Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "Meteorologové zrušili výstrahu před vydatným deštěm v Beskydech",
+      "url": "https://ct24.ceskatelevize.cz/clanek/pocasi/meteorologove-zrusili-vystrahu-pred-vydatnym-destem-v-beskydech-373513",
+      "dt": "2026-05-16T15:44:45Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "beskydech",
+        "deštěm",
+        "meteorologové",
+        "vydatným",
+        "výstrahu",
+        "zrušili"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -732,25 +755,26 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Obce a městské části lákají učitele nabídkou bytů",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/obce-a-mestske-casti-lakaji-ucitele-nabidkou-bytu-373480",
-      "dt": "2026-05-15T13:17:47Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Narváez podruhé udeřil. Ekvádorec vyhrál další etapu Gira",
+      "url": "https://sport.ceskatelevize.cz/clanek/cyklistika/narvaez-podruhe-uderil-ekvadorec-vyhral-dalsi-etapu-gira-156828",
+      "dt": "2026-05-16T15:46:38Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "bytů",
-        "lákají",
-        "městské",
-        "nabídkou",
-        "obce",
-        "učitele",
-        "části"
+        "další",
+        "ekvádorec",
+        "etapu",
+        "gira",
+        "narváez",
+        "podruhé",
+        "udeřil",
+        "vyhrál"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1468,31 +1492,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dobeš pomohl Montrealu k „mečbolu“, Dostálovi sezona v NHL skončila",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/dobes-pomohl-montrealu-k-mecbolu-hertl-zapsal-asistenci-pri-postupu-vegas-156798",
-      "dt": "2026-05-15T06:23:29Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "dobeš",
-        "dostálovi",
-        "mečbolu",
-        "montrealu",
-        "nhl",
-        "pomohl",
-        "sezona",
-        "skončila"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1503,7 +1502,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43616,
+      "bytes": 43349,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1563,7 +1562,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T15:11:14Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T15:44:45Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 28,
@@ -1579,6 +1578,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Meteorologové zrušili výstrahu před vydatným deštěm v Beskydech",
+            "publishedAt": "2026-05-16T15:44:45Z"
+          },
           {
             "title": "Desítky tisíc lidí se sešly na dvou protichůdných protestech v Londýně",
             "publishedAt": "2026-05-16T15:11:14Z"
@@ -1606,10 +1609,6 @@
           {
             "title": "Šéf ozbrojeného křídla Hamásu je mrtev, uvádí představitel hnutí i izraelská armáda",
             "publishedAt": "2026-05-16T10:21:54Z"
-          },
-          {
-            "title": "Soud odmítl poslat do vazby obviněného z krádeže lebky svaté Zdislavy",
-            "publishedAt": "2026-05-16T08:20:14Z"
           }
         ]
       }
@@ -1621,7 +1620,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38566,
+      "bytes": 38235,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1658,7 +1657,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T15:06:48Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T15:46:38Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1673,6 +1672,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Narváez podruhé udeřil. Ekvádorec vyhrál další etapu Gira",
+            "publishedAt": "2026-05-16T15:46:38Z"
+          },
           {
             "title": "Sinner porazil v dohrávce Medvěděva, finále v Římě odehraje s Ruudem",
             "publishedAt": "2026-05-16T15:06:48Z"
@@ -1700,10 +1703,6 @@
           {
             "title": "Koulařka Schilderová překonala v Šanghaji 21 metrů. Duplantisovi útok na rekord nevyšel",
             "publishedAt": "2026-05-16T11:59:17Z"
-          },
-          {
-            "title": "Dostál národní tým neposílí, na soupisce přibyli Ščotka s Mandátem",
-            "publishedAt": "2026-05-16T10:14:10Z"
           }
         ]
       }
@@ -1715,7 +1714,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77502,
+      "bytes": 77434,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
