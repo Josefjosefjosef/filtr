@@ -29,7 +29,7 @@ node scripts/silver-auto-dev.cjs
 - **After queue work (merge/sync or multi-cycle stop):** prints a `SILVER_AUTO_DEV_QUEUE_SUMMARY` block and sets `recommended_next_command` to `npm run silver-auto` (re-run; no manual ChatGPT task drafting).
 - **Report:** overwrites `scripts/silver-auto-dev-report.json` each run (`mode=SILVER_AUTO_DEV`, queue fields, `next_action_written`, `recommended_next_command`, …).
 
-**Cursor adapter run (V1, single cycle, no outer loop):** after the same queue + handoff logic, optionally invoke `scripts/silver-cursor-agent-adapter.ps1` once so the task in `SILVER_NEXT_ACTION.md` is piped to the Cursor CLI and capture is written to `SILVER_CURSOR_OUTPUT.md`. **V1 only allows `max_cycles=1`** (implicit default when omitted with `--run-cursor`; values `>1` stop with `MAX_CYCLES_V1_ONLY_1`). Does not loop; does not merge PRs; does not touch `assets/app.js` or the Silver engine.
+**Cursor adapter run (V1, single cycle, no outer loop):** after the same queue + handoff logic, optionally invoke `scripts/silver-cursor-agent-adapter.ps1` once so the task in `SILVER_NEXT_ACTION.md` is piped to the Cursor CLI and capture is written to `SILVER_CURSOR_OUTPUT.md`. **V1 only allows `max_cycles=1`** (implicit default when omitted with `--run-cursor`; values `>1` stop with `MAX_CYCLES_V1_ONLY_1`). With `--loop --max-cycles=N`, N may be 1 up to the script hard safe limit (see `hard_safe_max_cycles` / `loop_guard_version` in the auto-dev summary). Does not loop without `--loop`; does not merge PRs; does not touch `assets/app.js` or the Silver engine.
 
 ```bash
 npm run silver-auto -- --run-cursor --max-cycles=1
