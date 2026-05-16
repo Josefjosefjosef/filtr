@@ -11,7 +11,7 @@ const REPO = path.resolve(__dirname, "..");
 const REPORT_JSON = path.join(__dirname, "silver-rhc3-retrieval-fuzzy-note-read-diagnostic-report.json");
 
 /** User MAIN baseline for STOP-SHIP diff checks (tree must match for engine bundle paths). */
-const EXPECTED_MAIN_COMMIT = "7e5daa036eb7f6a83dec251f4f34140f84883101";
+const EXPECTED_MAIN_COMMIT = "d74e49eb5a204296275636dbd6a69db481a93230";
 
 const TARGET_CLUSTER = "rhc3_retrieval_fuzzy_note_read";
 const RANDOM_SAMPLE_SEED = 0x72686333;
@@ -29,6 +29,7 @@ const {
   finalizeModuleSwitchClarifyLaneHarnessEval,
   finalizeNegationNoWriteHarnessEval,
   finalizeNoteQueryKdeHarnessEval,
+  finalizeRetrievalFuzzyHarnessEval,
   finalizeNoteCreateDoPoznamkStorageHarnessEval,
   finalizeNoteCreateDoPoznamkAmbiguousClarifyLaneHarnessEval,
   finalizeTaskCreateDoUkoluAmbiguousClarifyLaneHarnessEval
@@ -240,6 +241,8 @@ function gitAllowListClean() {
     const lines = o.split(/\r?\n/).filter(Boolean);
     const tracked = lines.filter((l) => !l.startsWith("??"));
     const allow = [
+      "scripts/silver-real-human-chaos-v3.cjs",
+      "scripts/silver-real-human-chaos-v3-report.json",
       "scripts/silver-rhc3-retrieval-fuzzy-note-read-diagnostic.cjs",
       "scripts/silver-rhc3-retrieval-fuzzy-note-read-diagnostic-report.json"
     ];
@@ -376,6 +379,7 @@ function main() {
       ev = finalizeModuleSwitchClarifyLaneHarnessEval(c, turn, ev);
       ev = finalizeNegationNoWriteHarnessEval(c, turn, ev);
       ev = finalizeNoteQueryKdeHarnessEval(c, turn, ev);
+      ev = finalizeRetrievalFuzzyHarnessEval(c, turn, ev);
       ev = finalizeNoteCreateDoPoznamkStorageHarnessEval(c, turn, ev);
       ev = finalizeNoteCreateDoPoznamkAmbiguousClarifyLaneHarnessEval(c, turn, ev);
       ev = finalizeTaskCreateDoUkoluAmbiguousClarifyLaneHarnessEval(c, turn, ev);
@@ -525,6 +529,8 @@ function main() {
       const o = execSync("git status --porcelain", { cwd: REPO, encoding: "utf8" });
       const lines = o.split(/\r?\n/).filter(Boolean);
       const allow = [
+        "scripts/silver-real-human-chaos-v3.cjs",
+        "scripts/silver-real-human-chaos-v3-report.json",
         "scripts/silver-rhc3-retrieval-fuzzy-note-read-diagnostic.cjs",
         "scripts/silver-rhc3-retrieval-fuzzy-note-read-diagnostic-report.json"
       ];
