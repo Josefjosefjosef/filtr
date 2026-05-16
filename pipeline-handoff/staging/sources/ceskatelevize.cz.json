@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-16T05:44:38.672166Z",
+  "ingestedAt": "2026-05-16T06:25:53.856403Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "K zavedení chytrých kamer na stadionech jsou nutné legislativní změny",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/k-zavedeni-chytrych-kamer-na-stadionech-jsou-nutne-legislativni-zmeny-373494",
+      "dt": "2026-05-16T06:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "chytrých",
+        "kamer",
+        "legislativní",
+        "nutné",
+        "stadionech",
+        "zavedení",
+        "změny"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -722,33 +746,6 @@
         "kvůli",
         "letouny",
         "vyslali"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Filmové premiéry: Farma zvířat, Iron Maiden nebo návrat Top Gunu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/filmove-premiery-farma-zvirat-iron-maiden-nebo-navrat-top-gunu-373467",
-      "dt": "2026-05-15T08:13:33Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "farma",
-        "filmové",
-        "gunu",
-        "iron",
-        "maiden",
-        "nebo",
-        "návrat",
-        "premiéry",
-        "top",
-        "zvířat"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1505,7 +1502,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41736,
+      "bytes": 41940,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1565,12 +1562,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T06:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
+          "zpravy": 26,
           "finance": 1,
-          "other": 4
+          "other": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1582,6 +1579,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "K zavedení chytrých kamer na stadionech jsou nutné legislativní změny",
+            "publishedAt": "2026-05-16T06:00:00Z"
+          },
           {
             "title": "Některé řeky nedosahují ani třetiny květnových průtoků, vodáci ruší i závody",
             "publishedAt": "2026-05-16T05:00:00Z"
@@ -1609,10 +1610,6 @@
           {
             "title": "Na tři stovky připomínek se sešlo ke změně financování veřejnoprávních médií",
             "publishedAt": "2026-05-15T19:21:07Z"
-          },
-          {
-            "title": "USA oznámily prodloužení příměří mezi Libanonem a Izraelem o 45 dní",
-            "publishedAt": "2026-05-15T18:50:44Z"
           }
         ]
       }
@@ -1718,7 +1715,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77181,
+      "bytes": 77177,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

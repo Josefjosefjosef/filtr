@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-16T05:44:38.672166Z",
+  "ingestedAt": "2026-05-16T06:25:53.856403Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Novém Jičíně proběhlo součinnostní cvičení AMOK",
+      "url": "https://tydenikpolicie.cz/v-novem-jicine-probehlo-soucinnostni-cviceni-amok/",
+      "dt": "2026-05-16T06:02:50Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "amok",
+        "cvičení",
+        "jičíně",
+        "novém",
+        "proběhlo",
+        "součinnostní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -240,30 +263,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Policisté z Boršova hledají pachatele, který pohazuje návnady se špendlíky",
-      "url": "https://tydenikpolicie.cz/policiste-z-borsova-hledaji-pachatele-ktery-pohazuje-navnady-se-spendliky/",
-      "dt": "2026-05-15T14:36:52Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "boršova",
-        "hledají",
-        "návnady",
-        "pachatele",
-        "pohazuje",
-        "policisté",
-        "špendlíky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,7 +273,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15912,
+      "bytes": 16034,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -311,7 +310,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-16T04:02:58Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T06:02:50Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -326,6 +325,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Novém Jičíně proběhlo součinnostní cvičení AMOK",
+            "publishedAt": "2026-05-16T06:02:50Z"
+          },
           {
             "title": "Řidič audi přejel na Karlovarsku do protisměru, kde se srazil s protijedoucí škodovkou",
             "publishedAt": "2026-05-16T04:02:58Z"
@@ -353,10 +356,6 @@
           {
             "title": "Muž se u nabouraného auta v Hodoníně označil za spolujezdce. Řidič prý z místa utekl",
             "publishedAt": "2026-05-15T15:15:57Z"
-          },
-          {
-            "title": "Opilý jezdec, drogy i zákaz řízení. Výkonné elektrokoloběžky nesplňovaly zákonné podmínky",
-            "publishedAt": "2026-05-15T15:06:40Z"
           }
         ]
       }
