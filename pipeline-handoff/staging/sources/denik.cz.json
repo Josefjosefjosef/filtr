@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-16T11:04:32.388111Z",
+  "ingestedAt": "2026-05-16T11:44:45.117680Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Lidl světy a barevné regály. Řetězec od čtvrtka promění své prodejny",
+      "url": "https://www.denik.cz/ekonomika/lidl-zmena-na-prodejnach-nabidka-regaly.html",
+      "dt": "2026-05-16T11:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "barevné",
+        "lidl",
+        "prodejny",
+        "promění",
+        "regály",
+        "své",
+        "světy",
+        "čtvrtka",
+        "řetězec"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Muž obviněný z krádeže lebky sv. Zdislavy zůstává na svobodě. Do vazby nejde",
+      "url": "https://www.denik.cz/regiony/obvineni-zlodej-lebka-svate-zdislavy-soud-vazba-policie-20260516.html",
+      "dt": "2026-05-16T10:53:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "krádeže",
+        "lebky",
+        "muž",
+        "nejde",
+        "obviněný",
+        "svobodě",
+        "vazby",
+        "zdislavy",
+        "zůstává"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -598,57 +650,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Internetový obchod s vitamíny a zdravotnickými potřebami končí. Nakupil dluhy",
-      "url": "https://www.denik.cz/z_domova/obchod-online-medical-nedodane-zbozi-insolvence-dluhy-zavazky-pohledavky-recenze.html",
-      "dt": "2026-05-15T14:28:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dluhy",
-        "internetový",
-        "končí",
-        "nakupil",
-        "obchod",
-        "potřebami",
-        "vitamíny",
-        "zdravotnickými"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Státní dluh až 400 miliard ročně. Schillerová změnila zákonná pravidla",
-      "url": "https://www.denik.cz/ekonomika/statni-rozpocet-dluh-hdp-zakon-snemovna-analytici-schodek-eu.html",
-      "dt": "2026-05-15T14:16:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "400",
-        "dluh",
-        "miliard",
-        "pravidla",
-        "ročně",
-        "schillerová",
-        "státní",
-        "změnila",
-        "zákonná"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +660,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28409,
+      "bytes": 27891,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,12 +697,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-16T10:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T11:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
+          "finance": 1,
           "zpravy": 23,
-          "zdravi": 1,
-          "finance": 1
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -713,6 +714,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lidl světy a barevné regály. Řetězec od čtvrtka promění své prodejny",
+            "publishedAt": "2026-05-16T11:00:00Z"
+          },
+          {
+            "title": "Muž obviněný z krádeže lebky sv. Zdislavy zůstává na svobodě. Do vazby nejde",
+            "publishedAt": "2026-05-16T10:53:00Z"
+          },
           {
             "title": "Nábytkářský gigant bojuje o přežití. Firma nemá na výplaty, posílá je po částech",
             "publishedAt": "2026-05-16T10:10:00Z"
@@ -736,14 +745,6 @@
           {
             "title": "Na letišti v Náměšti začíná den otevřených dveří. Déšť návštěvníky neodrazuje",
             "publishedAt": "2026-05-16T07:39:00Z"
-          },
-          {
-            "title": "Putin příští týden navštíví Čínu, bude jednat s čínským prezidentem",
-            "publishedAt": "2026-05-16T07:38:00Z"
-          },
-          {
-            "title": "Casting na nového Jamese Bonda začal. Favority jsou Henry Cavill i Jacob Elordi",
-            "publishedAt": "2026-05-16T06:10:00Z"
           }
         ]
       }

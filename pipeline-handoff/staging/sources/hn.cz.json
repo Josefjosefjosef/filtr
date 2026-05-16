@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-16T11:04:32.388111Z",
+  "ingestedAt": "2026-05-16T11:44:45.117680Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Vládní antisudetská trapnost, peskování Juchelky Babišem a exot s MAGA čepicí na ministerstvu kultury",
+      "url": "https://podcasty.hn.cz/c1-67877390-vladni-antisudetska-trapnost-peskovani-juchelky-babisem-a-exot-s-maga-cepici-na-ministerstvu-kultury",
+      "dt": "2026-05-16T11:05:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "antisudetská",
+        "babišem",
+        "exot",
+        "juchelky",
+        "kultury",
+        "maga",
+        "ministerstvu",
+        "peskování",
+        "trapnost",
+        "vládní",
+        "čepicí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1121,37 +1149,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Forza Horizon 6: Japonská óda na benzín, ramen a horské průsmyky ukazuje, že i Microsoft umí udělat skutečný hit",
-      "url": "https://tech.hn.cz/c1-67876810-forza-horizon-6-japonska-oda-na-benzin-ramen-a-horske-prusmyky-ukazuje-ze-i-microsoft-umi-udelat-skutecny-hit",
-      "dt": "2026-05-14T12:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "benzín",
-        "forza",
-        "hit",
-        "horizon",
-        "horské",
-        "japonská",
-        "microsoft",
-        "průsmyky",
-        "ramen",
-        "skutečný",
-        "udělat",
-        "ukazuje",
-        "umí",
-        "óda"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1162,7 +1159,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183259,
+      "bytes": 183273,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1199,11 +1196,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-16T06:03:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T11:05:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 31,
-          "zpravy": 6,
+          "finance": 32,
+          "zpravy": 5,
           "zdravi": 3
         },
         "drop_counts": {
@@ -1216,6 +1213,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vládní antisudetská trapnost, peskování Juchelky Babišem a exot s MAGA čepicí na ministerstvu kultury",
+            "publishedAt": "2026-05-16T11:05:00Z"
+          },
           {
             "title": "Tak trochu netradiční teambuilding. Pět ponaučení z běžeckého závodu Vltava Run, která se mohou hodit šéfům firem i jejich podřízeným",
             "publishedAt": "2026-05-16T06:03:00Z"
@@ -1243,10 +1244,6 @@
           {
             "title": "Koaliční poslanci schválili kontroverzní rozpočtovou novelu. Opozice se chce obrátit na Ústavní soud",
             "publishedAt": "2026-05-15T11:34:00Z"
-          },
-          {
-            "title": "O peníze nešlo. Muž ukradenou lebku svaté Zdislavy zalil do betonu a chtěl ji pohřbít, oznámila policie",
-            "publishedAt": "2026-05-15T11:32:00Z"
           }
         ]
       }
