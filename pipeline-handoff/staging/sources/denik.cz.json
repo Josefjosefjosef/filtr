@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-16T03:05:18.473020Z",
+  "ingestedAt": "2026-05-16T03:45:16.233611Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Velká čínská revoluce měla oživit socialismus, místo toho miliony životů zmařila",
+      "url": "https://www.denik.cz/historie/velka-cinska-revoluce-1966.html",
+      "dt": "2026-05-16T03:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "miliony",
+        "místo",
+        "měla",
+        "oživit",
+        "revoluce",
+        "socialismus",
+        "toho",
+        "velká",
+        "zmařila",
+        "čínská",
+        "životů"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -619,32 +647,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Jablonné vyhlíží návrat Zdislaviny lebky. Cenná relikvie může být poškozená",
-      "url": "https://www.denik.cz/regiony/kradena-lebka-svate-zdislavy-rozbita-jablonne-navrat-dominikani.html",
-      "dt": "2026-05-15T10:18:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "být",
-        "cenná",
-        "jablonné",
-        "lebky",
-        "návrat",
-        "poškozená",
-        "relikvie",
-        "vyhlíží",
-        "zdislaviny"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -655,7 +657,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29377,
+      "bytes": 29417,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -692,7 +694,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-16T02:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T03:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -708,6 +710,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Velká čínská revoluce měla oživit socialismus, místo toho miliony životů zmařila",
+            "publishedAt": "2026-05-16T03:00:00Z"
+          },
           {
             "title": "Petra Janů: Rockovou holku ze mě museli vytesat. Já neznala ani Deep Purple",
             "publishedAt": "2026-05-16T02:30:00Z"
@@ -735,10 +741,6 @@
           {
             "title": "Velvyslanec Rudolf Jindrák: Mám problém s kolektivním usmiřováním",
             "publishedAt": "2026-05-15T16:00:00Z"
-          },
-          {
-            "title": "Barokní zámek na Žatecku hledá nového majitele. K mání je za deset milionů",
-            "publishedAt": "2026-05-15T15:00:00Z"
           }
         ]
       }
