@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-16T12:24:50.634316Z",
+  "ingestedAt": "2026-05-16T13:04:50.901415Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Více doplňků neznamená více zdraví. Farmakolog popsal, kdy ničí účinky léků",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/doplnky-zdravi-farmakolog-ucinky-leku/",
+      "dt": "2026-05-16T13:01:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "doplňků",
+        "farmakolog",
+        "léků",
+        "neznamená",
+        "ničí",
+        "popsal",
+        "zdraví",
+        "účinky"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -251,37 +276,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Klíčová péče na hraně kolapsu: Ničí ji podseknuté úhrady i málo mladé krve. Potřeba ale poletí vzhůru",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/interna-nizke-uhrady/",
-      "dt": "2026-05-15T06:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "ale",
-        "hraně",
-        "klíčová",
-        "kolapsu",
-        "krve",
-        "mladé",
-        "málo",
-        "ničí",
-        "podseknuté",
-        "poletí",
-        "potřeba",
-        "péče",
-        "vzhůru",
-        "úhrady"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -292,7 +286,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 107641,
+      "bytes": 102331,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -329,7 +323,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-16T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T13:01:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -344,6 +338,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Více doplňků neznamená více zdraví. Farmakolog popsal, kdy ničí účinky léků",
+            "publishedAt": "2026-05-16T13:01:00Z"
+          },
           {
             "title": "Výdaje na zdravotnictví v Německu explodovaly. Vzrostly o celoroční příjem Česka",
             "publishedAt": "2026-05-16T05:00:00Z"
@@ -371,10 +369,6 @@
           {
             "title": "Odposlechy a tajné schůzky: Jak se v Příbrami „porcovaly“ nemocniční zakázky za stovky milionů",
             "publishedAt": "2026-05-15T08:02:47Z"
-          },
-          {
-            "title": "Smrtící ebola znovu udeřila: Desítky mrtvých a stovky podezřelých případů",
-            "publishedAt": "2026-05-15T07:40:44Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-16T12:24:50.634316Z",
+  "ingestedAt": "2026-05-16T13:04:50.901415Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na peníze zapomeňte! Odstupné pro exministry pošle Magyar ukrajinskému sirotčinci",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/viktor-orban-madarsko-volby-peter-magyar-ukrajina.A260516_132537_zahranicni_berr",
+      "dt": "2026-05-16T12:18:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "exministry",
+        "magyar",
+        "odstupné",
+        "peníze",
+        "pošle",
+        "sirotčinci",
+        "ukrajinskému",
+        "zapomeňte"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -759,33 +784,6 @@
         "tlačí",
         "tvrdí",
         "číny"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trumpovy vlastenecké plány nekončí. Podél řeky Potomac chce zahradu hrdinů",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/usa-donald-trump-zahrada-hrdinu-reka-potomac.A260515_192426_zahranicni_kha",
-      "dt": "2026-05-15T17:55:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "chce",
-        "hrdinů",
-        "nekončí",
-        "plány",
-        "podél",
-        "potomac",
-        "trumpovy",
-        "vlastenecké",
-        "zahradu",
-        "řeky"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1572,7 +1570,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50286,
+      "bytes": 50278,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1609,7 +1607,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T12:09:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T12:18:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1625,6 +1623,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na peníze zapomeňte! Odstupné pro exministry pošle Magyar ukrajinskému sirotčinci",
+            "publishedAt": "2026-05-16T12:18:00Z"
+          },
           {
             "title": "Podezřelý z krádeže lebky světice nemusí do vazby. Vzkázal, čeho lituje",
             "publishedAt": "2026-05-16T12:09:00Z"
@@ -1652,10 +1654,6 @@
           {
             "title": "Američané zabili v Nigérii velitele islamistů. Složitá operace, napsal Trump",
             "publishedAt": "2026-05-16T09:17:28Z"
-          },
-          {
-            "title": "Velká Trumpova prohra. V Číně vyjednal jediný obchod, pak spílal Tchaj-wanu",
-            "publishedAt": "2026-05-16T09:04:00Z"
           }
         ]
       }

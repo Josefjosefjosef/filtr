@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-16T12:24:50.634316Z",
+  "ingestedAt": "2026-05-16T13:04:50.901415Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Cesta do Chorvatska autem vyjde letos dráž. Čechy teď láká autobus i polský vlak",
+      "url": "https://www.denik.cz/ekonomika/dovolena-chorvatsko-na-kolik-penez-vyjde-cesta-autem-vlakem-letadlem-prehled.html",
+      "dt": "2026-05-16T12:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "autem",
+        "autobus",
+        "cesta",
+        "chorvatska",
+        "dráž",
+        "letos",
+        "láká",
+        "polský",
+        "vlak",
+        "vyjde",
+        "čechy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -626,32 +654,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Barokní zámek na Žatecku hledá nového majitele. K mání je za deset milionů",
-      "url": "https://www.denik.cz/regiony/u-zatce-je-na-prodej-barokni-zamek-cena-deset-milionu-korun-20260515.html",
-      "dt": "2026-05-15T15:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "barokní",
-        "deset",
-        "hledá",
-        "majitele",
-        "milionů",
-        "mání",
-        "nového",
-        "zámek",
-        "žatecku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +664,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 27582,
+      "bytes": 28088,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,11 +701,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-16T11:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T12:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 1,
+          "finance": 2,
+          "zpravy": 22,
           "zdravi": 1
         },
         "drop_counts": {
@@ -716,6 +718,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cesta do Chorvatska autem vyjde letos dráž. Čechy teď láká autobus i polský vlak",
+            "publishedAt": "2026-05-16T12:30:00Z"
+          },
           {
             "title": "Nezaváhal. Policista zachránil děti z hořícího domu, záběry obletěly internet",
             "publishedAt": "2026-05-16T11:55:00Z"
@@ -743,10 +749,6 @@
           {
             "title": "Majitel štěněte nechtěl platit léčbu. Edu vyhodil do příkopu, už ho nezachránili",
             "publishedAt": "2026-05-16T08:20:00Z"
-          },
-          {
-            "title": "Plavce v Austrálii napadl pětimetrový bílý žralok. Muž útok nepřežil",
-            "publishedAt": "2026-05-16T07:40:00Z"
           }
         ]
       }
