@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-16T18:24:40.269006Z",
+  "ingestedAt": "2026-05-16T19:05:03.536850Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ve Splitu vyjelo při startu mimo ranvej letadlo Airbus se 130 lidmi na palubě",
+      "url": "https://www.denik.cz/staty-eu/chorvatsko-split-letadlo-airbus-mimo-ranvej.html",
+      "dt": "2026-05-16T18:12:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "130",
+        "airbus",
+        "letadlo",
+        "lidmi",
+        "mimo",
+        "palubě",
+        "při",
+        "ranvej",
+        "splitu",
+        "startu",
+        "vyjelo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -632,32 +660,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zoubkové víly v akci. Hygienistky učily děti správně čistit zuby",
-      "url": "https://chomutovsky.denik.cz/ctenar-reporter/zoubkove-vily-v-akci-hygienistky-ucily-deti-spravne-cistit-zuby-20260514.html",
-      "dt": "2026-05-16T05:19:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "akci",
-        "děti",
-        "hygienistky",
-        "správně",
-        "učily",
-        "víly",
-        "zoubkové",
-        "zuby",
-        "čistit"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -668,7 +670,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28029,
+      "bytes": 27915,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -705,7 +707,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-16T17:21:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T18:12:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -722,6 +724,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ve Splitu vyjelo při startu mimo ranvej letadlo Airbus se 130 lidmi na palubě",
+            "publishedAt": "2026-05-16T18:12:00Z"
+          },
           {
             "title": "Policie hledala v Chomutově muže s dlouhou zbraní. Nechoďte k oknům, žádala",
             "publishedAt": "2026-05-16T17:21:00Z"
@@ -749,10 +755,6 @@
           {
             "title": "Případ smrti malého Émila pokročil, policie má DNA. Prarodičům někdo zapálil dům",
             "publishedAt": "2026-05-16T14:45:00Z"
-          },
-          {
-            "title": "Z hrobu v Polsku vytáhli živého muže. Propadla se pod ním betonová deska",
-            "publishedAt": "2026-05-16T13:20:00Z"
           }
         ]
       }

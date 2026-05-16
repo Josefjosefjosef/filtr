@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-16T18:24:40.269006Z",
+  "ingestedAt": "2026-05-16T19:05:03.536850Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Masové protesty v Londýně. Dva znepřátelené tábory musely hlídat 4 tisíce policistů",
+      "url": "https://zpravy.aktualne.cz/zahranici/masove-protesty-v-londyne-dva-znepratelene-tabory-musely-hlidat-4-tisice-policistu/r~aaa296bf21e94e0b2f3e28a774605b34/",
+      "dt": "2026-05-16T18:52:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dva",
+        "hlídat",
+        "londýně",
+        "masové",
+        "musely",
+        "policistů",
+        "protesty",
+        "tisíce",
+        "tábory",
+        "znepřátelené"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -30,21 +57,22 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Česko - Slovinsko. Čechy čeká druhý zápas, do branky se postaví Pavlát",
+      "title": "Česko - Slovinsko 0:1. Skončila první třetina, Slovincům stačily na gól čtyři střely",
       "url": "https://sport.aktualne.cz/hokej/cesko-slovinsko-cechy-ceka-druhy-zapas-se-slovinci-neztratili-nikdy-ani-bod/r~aaa2945d521787d456f4cdf9d719a83a/",
       "dt": "2026-05-16T17:50:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "branky",
-        "druhý",
-        "pavlát",
-        "postaví",
+        "gól",
+        "první",
+        "skončila",
+        "slovincům",
         "slovinsko",
-        "zápas",
-        "čechy",
-        "čeká",
-        "česko"
+        "stačily",
+        "střely",
+        "třetina",
+        "česko",
+        "čtyři"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -508,32 +536,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Krejčíková už je zase hrozbou. V Parmě si jde pro další hardware, smějí se experti",
-      "url": "https://sport.aktualne.cz/tenis/krejcikova-uz-je-zase-hrozbou-v-parme-si-jde-pro-dalsi-hardware-smeji-se-experti/r~aaa29cb8482dd72b63e9d2b9a5d2c4b8/",
-      "dt": "2026-05-16T08:59:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "další",
-        "experti",
-        "hardware",
-        "hrozbou",
-        "jde",
-        "krejčíková",
-        "parmě",
-        "smějí",
-        "zase"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -544,7 +546,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21409,
+      "bytes": 21549,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -581,11 +583,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-16T17:50:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T18:52:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 7,
-          "zpravy": 11,
+          "zpravy": 12,
+          "sport": 6,
           "finance": 1,
           "other": 1
         },
@@ -600,11 +602,15 @@
         },
         "sample_titles": [
           {
+            "title": "Masové protesty v Londýně. Dva znepřátelené tábory musely hlídat 4 tisíce policistů",
+            "publishedAt": "2026-05-16T18:52:00Z"
+          },
+          {
             "title": "Slováci vydřeli vítězství nad Norskem. Podržel je gólman Hlavaj",
             "publishedAt": "2026-05-16T12:51:00Z"
           },
           {
-            "title": "Česko - Slovinsko. Čechy čeká druhý zápas, do branky se postaví Pavlát",
+            "title": "Česko - Slovinsko 0:1. Skončila první třetina, Slovincům stačily na gól čtyři střely",
             "publishedAt": "2026-05-16T17:50:00Z"
           },
           {
@@ -626,10 +632,6 @@
           {
             "title": "„Vystoupení z EU byla katastrofální chyba.“ Britský exministr chce kandidovat na lídra labouristů",
             "publishedAt": "2026-05-16T16:27:00Z"
-          },
-          {
-            "title": "Umělé oplodnění pro single ženy je na dosah. Karty ale zamíchal i Babišův byznys",
-            "publishedAt": "2026-05-16T16:01:00Z"
           }
         ]
       }
