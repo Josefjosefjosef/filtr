@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-16T03:45:16.233611Z",
+  "ingestedAt": "2026-05-16T04:24:52.584494Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Čeští fanoušci zaplavili Fribourg. Byli jsme jako doma, pochvalují si hokejisté",
+      "url": "https://www.sport.cz/clanek/hokej-ms-cesti-fanousci-zaplavili-fribourg-byli-jsme-jako-doma-pochvaluji-si-hokejiste-5454752",
+      "dt": "2026-05-16T03:50:38Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "byli",
+        "doma",
+        "fanoušci",
+        "fribourg",
+        "hokejisté",
+        "jako",
+        "jsme",
+        "pochvalují",
+        "zaplavili",
+        "čeští"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -745,29 +772,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Siniaková s Townsendovou přišly o svou vítěznou šňůru",
-      "url": "https://www.sport.cz/clanek/tenis-siniakova-s-townsendovou-necekane-padly-5454114",
-      "dt": "2026-05-15T13:16:04Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "přišly",
-        "siniaková",
-        "svou",
-        "townsendovou",
-        "vítěznou",
-        "šňůru"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -778,7 +782,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42685,
+      "bytes": 43365,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -815,7 +819,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T22:11:25Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T03:50:38Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -830,6 +834,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Čeští fanoušci zaplavili Fribourg. Byli jsme jako doma, pochvalují si hokejisté",
+            "publishedAt": "2026-05-16T03:50:38Z"
+          },
           {
             "title": "Já na trestnou? Voženílek se divil: Cítil jsem křivdu, asi mám nálepku",
             "publishedAt": "2026-05-15T22:11:25Z"
@@ -857,10 +865,6 @@
           {
             "title": "Aston Villa zdolala Liverpool a zajistila si Ligu mistrů",
             "publishedAt": "2026-05-15T21:12:31Z"
-          },
-          {
-            "title": "PÁLÍ NEDO: Češi dobře bruslili, byli pohybliví. Kořenář chytal koncentrovaně",
-            "publishedAt": "2026-05-15T21:10:24Z"
           }
         ]
       }
