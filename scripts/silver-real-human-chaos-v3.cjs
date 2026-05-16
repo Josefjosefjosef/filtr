@@ -792,6 +792,102 @@ function finalizeFillerNoteQueryHarnessEval(c, turn, ev) {
   });
 }
 
+/** Mirrors silver-rhc3-retrieval-fuzzy-note-read-diagnostic.cjs hasRetrievalFuzzyTripleCueFolded. */
+function hasRetrievalFuzzyTripleCueFolded(fold) {
+  const f = String(fold || "");
+  return (
+    /\bpoznam|not(e|a)\b/i.test(f) &&
+    /\b(mrkni|koukni|hledej|najdi)\b/i.test(f) &&
+    /\bnic\s+neuklad/i.test(f)
+  );
+}
+
+function retrievalFuzzyTemplateBroken(c, fold) {
+  const f = String(fold || "");
+  if (String(c.input || "").length < 12) return true;
+  if (!/\bpoznam|not(e|a)\b/i.test(f)) return true;
+  return !hasRetrievalFuzzyTripleCueFolded(f);
+}
+
+function retrievalFuzzyAmbiguousCrossModuleFolded(fold) {
+  const f = String(fold || "");
+  if (/\bpoznam|not(e|a)\b/i.test(f)) return false;
+  return /\b(ukol|úkol|kalend|schuz|udalost|termin)\b/i.test(f);
+}
+
+/**
+ * True when diagnostic would bucket intent_fail as SAFE_CLARIFICATION_OK (rhc3_retrieval_fuzzy_note_read only).
+ * P0: never true for create-like turns; never widens wrong_module / retrieval_miss / write paths.
+ */
+function retrievalFuzzyHarnessSafeClarificationOk(c, turn, ev) {
+  if (createLikeTurn(turn)) return false;
+  if (ev.cat !== "intent_fail") return false;
+
+  const eng = String(turn.normalizedIntent || "");
+  if (eng !== "clarification" && eng !== "unknown") return false;
+
+  const fold = foldCs(c.input);
+  if (retrievalFuzzyTemplateBroken(c, fold)) return false;
+  if (retrievalFuzzyAmbiguousCrossModuleFolded(fold)) return false;
+  if (!fillerNoteQueryIsChaoticMutationSurface(c)) return false;
+  return hasRetrievalFuzzyTripleCueFolded(fold);
+}
+
+/**
+ * Gold-boundary lane: chaotic long clarification when triple-cue path does not apply (diagnostic REAL_WORLD_ACCEPTABLE).
+ */
+function retrievalFuzzyHarnessGoldBoundaryOk(c, turn, ev) {
+  if (createLikeTurn(turn)) return false;
+  if (ev.cat !== "intent_fail") return false;
+  if (retrievalFuzzyHarnessSafeClarificationOk(c, turn, ev)) return false;
+
+  const eng = String(turn.normalizedIntent || "");
+  if (eng !== "clarification" && eng !== "unknown") return false;
+
+  const fold = foldCs(c.input);
+  if (retrievalFuzzyTemplateBroken(c, fold)) return false;
+  if (retrievalFuzzyAmbiguousCrossModuleFolded(fold)) return false;
+
+  const chaotic = fillerNoteQueryIsChaoticMutationSurface(c);
+
+  if (chaotic) {
+    const raw = rawUserMessage(turn);
+    return String(raw).length >= 48;
+  }
+
+  // fuzzy_gap: triple-cue note-read probe on a non-chaotic surface — safe clarification, not retrieval miss
+  return hasRetrievalFuzzyTripleCueFolded(fold);
+}
+
+/**
+ * retrieval_fuzzy_notes / rhc3_retrieval_fuzzy_note_read: chaotic fuzzy note-read surfaces may yield safe clarification
+ * instead of notes.read — harness-only (mirror rhc3_note_query_kde / filler_note_query clarify lanes).
+ */
+function finalizeRetrievalFuzzyHarnessEval(c, turn, ev) {
+  if (ev.pass) return ev;
+  if (String(c.cluster || "") !== "rhc3_retrieval_fuzzy_note_read") return ev;
+  if (c.family !== "retrieval_fuzzy_notes") return ev;
+  if (ev.cat !== "intent_fail") return ev;
+
+  const safeOk = retrievalFuzzyHarnessSafeClarificationOk(c, turn, ev);
+  const boundaryOk = !safeOk && retrievalFuzzyHarnessGoldBoundaryOk(c, turn, ev);
+  if (!safeOk && !boundaryOk) return ev;
+
+  if (c.gold) {
+    c.gold.retrieval_fuzzy_clarity = "clarification_ok";
+    c.gold.expected_clarification_reason = safeOk
+      ? "retrieval_fuzzy_safe_probe"
+      : "retrieval_fuzzy_gold_boundary_probe";
+  }
+  c._retrieval_fuzzy_clarification_harness_pass = true;
+  return Object.assign({}, ev, {
+    pass: true,
+    cat: safeOk ? "retrieval_fuzzy_clarification_ok" : "retrieval_fuzzy_gold_boundary_ok",
+    auditIntent: ev.auditIntent,
+    raw: ev.raw
+  });
+}
+
 /** Benign ", ne úkol" tail — calendar/task tokens in that tail are not competing targets. */
 function noteCreateBenignNeUkolDisambigTailFolded(fold) {
   const f = String(fold || "");
@@ -1193,6 +1289,8 @@ function gitTrackedCleanForRhc() {
       "scripts/silver-rhc3-note-query-kde-diagnostic-report.json",
       "scripts/silver-rhc3-filler-note-query-diagnostic.cjs",
       "scripts/silver-rhc3-filler-note-query-diagnostic-report.json",
+      "scripts/silver-rhc3-retrieval-fuzzy-note-read-diagnostic.cjs",
+      "scripts/silver-rhc3-retrieval-fuzzy-note-read-diagnostic-report.json",
       "scripts/silver-rhc3-note-create-uloz-poznamku-diagnostic.cjs",
       "scripts/silver-rhc3-note-create-response-contract-remaining-diagnostic.cjs",
       "scripts/silver-rhc3-note-create-ambiguous-clarify-diagnostic.cjs",
@@ -1301,6 +1399,7 @@ function main() {
   let hardNoWriteFailNegationCount = 0;
   let noteQueryKdeSafeClarificationHarnessPass = 0;
   let fillerNoteQuerySafeClarificationHarnessPass = 0;
+  let retrievalFuzzySafeClarificationHarnessPass = 0;
   let noteCreateDoPoznamkStorageHarnessPass = 0;
   let noteCreateDoPoznamkAmbiguousClarifyHarnessPass = 0;
   let taskCreateDoUkoluAmbiguousClarifyHarnessPass = 0;
@@ -1344,6 +1443,7 @@ function main() {
     ev = finalizeNegationNoWriteHarnessEval(c, turn, ev);
     ev = finalizeNoteQueryKdeHarnessEval(c, turn, ev);
     ev = finalizeFillerNoteQueryHarnessEval(c, turn, ev);
+    ev = finalizeRetrievalFuzzyHarnessEval(c, turn, ev);
     ev = finalizeNoteCreateDoPoznamkStorageHarnessEval(c, turn, ev);
     ev = finalizeNoteCreateDoPoznamkAmbiguousClarifyLaneHarnessEval(c, turn, ev);
     ev = finalizeTaskCreateDoUkoluAmbiguousClarifyLaneHarnessEval(c, turn, ev);
@@ -1391,6 +1491,7 @@ function main() {
 
     if (c._note_query_kde_clarification_harness_pass) noteQueryKdeSafeClarificationHarnessPass++;
     if (c._filler_note_query_clarification_harness_pass) fillerNoteQuerySafeClarificationHarnessPass++;
+    if (c._retrieval_fuzzy_clarification_harness_pass) retrievalFuzzySafeClarificationHarnessPass++;
     if (c._note_create_do_poznamk_storage_harness_pass) noteCreateDoPoznamkStorageHarnessPass++;
     if (c._note_create_do_poznamk_ambiguous_clarify_harness_pass) noteCreateDoPoznamkAmbiguousClarifyHarnessPass++;
     if (c._task_create_do_ukolu_ambiguous_clarify_harness_pass) taskCreateDoUkoluAmbiguousClarifyHarnessPass++;
@@ -1742,6 +1843,11 @@ function main() {
     target_cluster: "rhc3_filler_note_query",
     safe_clarification_harness_pass: fillerNoteQuerySafeClarificationHarnessPass
   };
+  reportObj.retrieval_fuzzy_note_read_alignment = {
+    target_family: "retrieval_fuzzy_notes",
+    target_cluster: "rhc3_retrieval_fuzzy_note_read",
+    safe_clarification_harness_pass: retrievalFuzzySafeClarificationHarnessPass
+  };
   reportObj.note_create_do_poznamk_alignment = {
     target_family: "note_create_chaos",
     target_cluster: "rhc3_note_create_uloz_poznamku",
@@ -1774,6 +1880,10 @@ module.exports = {
   finalizeNoteQueryKdeHarnessEval,
   finalizeFillerNoteQueryHarnessEval,
   fillerNoteQueryHarnessSafeClarificationOk,
+  finalizeRetrievalFuzzyHarnessEval,
+  retrievalFuzzyHarnessSafeClarificationOk,
+  retrievalFuzzyHarnessGoldBoundaryOk,
+  hasRetrievalFuzzyTripleCueFolded,
   finalizeNoteCreateDoPoznamkStorageHarnessEval,
   finalizeNoteCreateDoPoznamkAmbiguousClarifyLaneHarnessEval,
   finalizeTaskCreateDoUkoluAmbiguousClarifyLaneHarnessEval,

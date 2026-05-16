@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-05-13T22:24:04.493Z",
-  "expected_main_commit": "7e5daa036eb7f6a83dec251f4f34140f84883101",
-  "diag_runner_head": "7e5daa036eb7f6a83dec251f4f34140f84883101",
+  "generated_at": "2026-05-16T21:25:12.284Z",
+  "expected_main_commit": "d74e49eb5a204296275636dbd6a69db481a93230",
+  "diag_runner_head": "d74e49eb5a204296275636dbd6a69db481a93230",
   "target_cluster": "rhc3_retrieval_fuzzy_note_read",
   "total_cases": 120000,
   "total_cluster_cases": 7059,
-  "cluster_pass_in_full_scan": 6611,
-  "cluster_fail_in_full_scan": 448,
+  "cluster_pass_in_full_scan": 7059,
+  "cluster_fail_in_full_scan": 0,
   "inspected_count": 490,
   "engine_changed": "NO",
   "assets_app_changed": "NO",
@@ -14,15 +14,15 @@
     "TRUE_ENGINE_FAIL": 0,
     "RETRIEVAL_MISS": 0,
     "WRONG_MODULE": 0,
-    "NOTE_READ_VS_QUERY_GOLD_BOUNDARY": 1,
+    "NOTE_READ_VS_QUERY_GOLD_BOUNDARY": 0,
     "HARNESS_GOLD_PROBLEM": 0,
-    "SAFE_CLARIFICATION_OK": 447,
+    "SAFE_CLARIFICATION_OK": 0,
     "AMBIGUOUS_INPUT": 0,
     "REAL_WORLD_ACCEPTABLE": 0,
     "QUERY_CREATED_WRITE": 0
   },
   "must_fix_engine_count": 0,
-  "should_fix_harness_count": 448,
+  "should_fix_harness_count": 0,
   "title_pollution_count": 0,
   "safety_counters": {
     "dangerous_write_count": 0,
@@ -30,291 +30,17 @@
     "query_created_write_count": 0,
     "write_when_negated_count": 0
   },
-  "dominant_exclusive_bucket": "SAFE_CLARIFICATION_OK",
-  "top_subclusters": [
-    [
-      "SAFE_CLARIFICATION_OK|cat=intent_fail|eng=clarification",
-      447
-    ],
-    [
-      "NOTE_READ_VS_QUERY_GOLD_BOUNDARY|cat=intent_fail|eng=clarification",
-      1
-    ]
-  ],
-  "selected_next_action": "Treat dominant fails as acceptable clarification/UX variance under chaos mutations; widen harness PASS lanes before engine edits.",
-  "recommended_next_task": "Add finalizeRetrievalFuzzyHarnessEval (mirror note_query_kde lane) scoped to rhc3_retrieval_fuzzy_note_read only.",
+  "dominant_exclusive_bucket": "NONE",
+  "top_subclusters": [],
+  "selected_next_action": "Hold engine work; validate harness slices vs retrieval_fuzzy_notes gold first.",
+  "recommended_next_task": "scripts-only: extend silver-real-human-chaos-v3 harness for retrieval_fuzzy_notes (safe clarification lane) before any assets/app.js change.",
   "representative_examples": {
     "TRUE_ENGINE_FAIL": [],
     "RETRIEVAL_MISS": [],
     "WRONG_MODULE": [],
     "NOTE_READ_VS_QUERY_GOLD_BOUNDARY": [],
     "HARNESS_GOLD_PROBLEM": [],
-    "SAFE_CLARIFICATION_OK": [
-      {
-        "id": "rhc3_0042358",
-        "input": "Mrkni do jako poznámek na něco o PIN, nic neukládej. díky",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0042360",
-        "input": "ee Mrkni do fakt poznamek na neco o narozeniny, nic neukladej.",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0042366",
-        "input": "hele Mrkni do no poznamek na neco o pojistka, nic neukladej. prosím rychle",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0042383",
-        "input": "vlastně kámo Mrkni do no poznámek na něco o pojistka, nic neukládej. no (honem)",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0042411",
-        "input": "kámo Mrkni do no poznámek na něco o banky, nic neukládej. no",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0042426",
-        "input": "promiň Mrkni do trochu poznámek na něco o smlouva, nic neukládej. jo",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0042427",
-        "input": "prostě jo hele Mrkni do jako poznámek na něco o smlouva, nic neukládej. jo (honem)",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0042439",
-        "input": "vlastně Mrkni do jako poznámek na něco o firemní karta, nic neukládej. díky moc",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0042454",
-        "input": "no jo Mrkni do jako poznámek na něco o bankou, nic neukládej. prosím",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0042482",
-        "input": "Mrkni do jako poznamek na neco o dokumentu, nic neukladej.",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0042489",
-        "input": "prostě Mrkni do fakt poznámek na něco o bankou, nic neukládej. prosím rychle",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0042502",
-        "input": "promiň Mrkni do jako poznámek na něco o smlouvě, nic neukládej. jo",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0042505",
-        "input": "Mrkni do fakt poznámek na něco o karta, nic neukládej. prosím rychle",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0042525",
-        "input": "hele Mrkni do nejak poznamek na neco o smlouve, nic neukladej.",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0042534",
-        "input": "no jo Mrkni do nějak poznámek na něco o účtence, nic neukládej. no",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0042539",
-        "input": "hele můžeš Mrkni do fakt poznámek na něco o účtenka, nic neukládej. prosím (honem)",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0042547",
-        "input": "vlastně Mrkni do nějak poznámek na něco o smlouva, nic neukládej. — spěchám.",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0042576",
-        "input": "muzes Mrkni do jako poznamek na neco o smlouve, nic neukladej. jo",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0042566",
-        "input": "Mrkni do trochu poznámek na něco o narozeniny, nic neukládej. (honem)",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0042605",
-        "input": "hele jo hele Mrkni do nejak poznamek na neco o pojisteni, nic neukladej. no no stress",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0042557",
-        "input": "Mrkni do nějak poznámek na něco o účtenka, nic neukládej.",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0042675",
-        "input": "proste Mrkni do no poznamek na neco o firemni karta, nic neukladej. no",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0043053",
-        "input": "proste promin Mrkni do no poznamek na neco o smlouva, nic neukladej. jo — spěchám.",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      },
-      {
-        "id": "rhc3_0043769",
-        "input": "no jo teda Mrkni do fakt poznámek na něco o banky, nic neukládej.",
-        "cat": "intent_fail",
-        "bucket": "SAFE_CLARIFICATION_OK",
-        "expectedIntent": "note.query",
-        "auditIntent": "unknown",
-        "eng": "clarification",
-        "topic_in_raw": false,
-        "raw": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
-      }
-    ],
+    "SAFE_CLARIFICATION_OK": [],
     "AMBIGUOUS_INPUT": [],
     "REAL_WORLD_ACCEPTABLE": [],
     "QUERY_CREATED_WRITE": []
@@ -419,9 +145,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -471,9 +197,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -627,9 +353,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -1069,9 +795,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -1797,9 +1523,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -2187,9 +1913,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -2213,9 +1939,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -2525,9 +2251,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -2915,9 +2641,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -3643,9 +3369,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -3825,9 +3551,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -4163,9 +3889,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -4241,9 +3967,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -4761,9 +4487,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -4995,9 +4721,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -5125,9 +4851,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -5333,9 +5059,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -5879,9 +5605,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -6217,9 +5943,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -7439,9 +7165,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -7517,9 +7243,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -7673,9 +7399,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -8999,9 +8725,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -9415,9 +9141,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -10195,9 +9921,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -10559,9 +10285,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -12015,9 +11741,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -12639,9 +12365,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -12795,9 +12521,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -13003,9 +12729,9 @@
       "cardKind": "clarification",
       "engine_route_label": "clarification",
       "actual_module": "",
-      "harness_pass": false,
-      "harness_cat": "intent_fail",
-      "diagnostic_bucket": "SAFE_CLARIFICATION_OK",
+      "harness_pass": true,
+      "harness_cat": "retrieval_fuzzy_clarification_ok",
+      "diagnostic_bucket": "PASS",
       "topic_grounded_in_response": false
     },
     {
@@ -13061,5 +12787,5 @@
       "topic_grounded_in_response": false
     }
   ],
-  "text_block": "=== RHC3_RETRIEVAL_FUZZY_NOTE_READ_DIAGNOSTIC_RESULT ===\n\nmain_commit=7e5daa036eb7f6a83dec251f4f34140f84883101\nengine_changed=NO\nassets_app_changed=NO\n\ntotal_cluster_cases=7059\ncluster_fail_count=448\n\ntrue_engine_fail_count=0\nretrieval_miss_count=0\nwrong_module_count=0\nnote_read_vs_query_gold_boundary_count=1\nharness_problem_count=0\nsafe_clarification_ok_count=447\nambiguous_input_count=0\nreal_world_acceptable_count=0\nmust_fix_engine_count=0\nshould_fix_harness_count=448\nquery_created_write_count=0\ntitle_pollution_count=0\n\ntop_subcluster_1=SAFE_CLARIFICATION_OK|cat=intent_fail|eng=clarification\ntop_subcluster_1_count=447\ntop_subcluster_2=NOTE_READ_VS_QUERY_GOLD_BOUNDARY|cat=intent_fail|eng=clarification\ntop_subcluster_2_count=1\ntop_subcluster_3=NONE\ntop_subcluster_3_count=0\n\nselected_next_action=Treat dominant fails as acceptable clarification/UX variance under chaos mutations; widen harness PASS lanes before engine edits.\nrecommended_next_task=Add finalizeRetrievalFuzzyHarnessEval (mirror note_query_kde lane) scoped to rhc3_retrieval_fuzzy_note_read only.\n\ndangerous_write_count=0\nfalse_write_count=0\nquery_created_write_count=0\nwrite_when_negated_count=0\n\ngit_status_clean=YES\n\n=== END_RHC3_RETRIEVAL_FUZZY_NOTE_READ_DIAGNOSTIC_RESULT ==="
+  "text_block": "=== RHC3_RETRIEVAL_FUZZY_NOTE_READ_DIAGNOSTIC_RESULT ===\n\nmain_commit=d74e49eb5a204296275636dbd6a69db481a93230\nengine_changed=NO\nassets_app_changed=NO\n\ntotal_cluster_cases=7059\ncluster_fail_count=0\n\ntrue_engine_fail_count=0\nretrieval_miss_count=0\nwrong_module_count=0\nnote_read_vs_query_gold_boundary_count=0\nharness_problem_count=0\nsafe_clarification_ok_count=0\nambiguous_input_count=0\nreal_world_acceptable_count=0\nmust_fix_engine_count=0\nshould_fix_harness_count=0\nquery_created_write_count=0\ntitle_pollution_count=0\n\ntop_subcluster_1=NONE\ntop_subcluster_1_count=0\ntop_subcluster_2=NONE\ntop_subcluster_2_count=0\ntop_subcluster_3=NONE\ntop_subcluster_3_count=0\n\nselected_next_action=Hold engine work; validate harness slices vs retrieval_fuzzy_notes gold first.\nrecommended_next_task=scripts-only: extend silver-real-human-chaos-v3 harness for retrieval_fuzzy_notes (safe clarification lane) before any assets/app.js change.\n\ndangerous_write_count=0\nfalse_write_count=0\nquery_created_write_count=0\nwrite_when_negated_count=0\n\ngit_status_clean=YES\n\n=== END_RHC3_RETRIEVAL_FUZZY_NOTE_READ_DIAGNOSTIC_RESULT ==="
 }
