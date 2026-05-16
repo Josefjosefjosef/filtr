@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-16T05:04:28.064854Z",
+  "ingestedAt": "2026-05-16T05:44:38.672166Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zatáhl ji do pole a ubodal. Propuštěný vrah zabil studentku, protože ho nechtěla",
+      "url": "https://www.denik.cz/staty-eu/vrazda-studentky-rumunsko-propusteny-vrah.html",
+      "dt": "2026-05-16T05:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "nechtěla",
+        "pole",
+        "propuštěný",
+        "protože",
+        "studentku",
+        "ubodal",
+        "vrah",
+        "zabil",
+        "zatáhl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zoubkové víly v akci. Hygienistky učily děti správně čistit zuby",
+      "url": "https://chomutovsky.denik.cz/ctenar-reporter/zoubkove-vily-v-akci-hygienistky-ucily-deti-spravne-cistit-zuby-20260514.html",
+      "dt": "2026-05-16T05:19:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "akci",
+        "děti",
+        "hygienistky",
+        "správně",
+        "učily",
+        "víly",
+        "zoubkové",
+        "zuby",
+        "čistit"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -594,60 +646,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Billa zavádí slevy pro lidi nad 60 let. Má to ale háček, Češi spokojení nebudou",
-      "url": "https://www.denik.cz/ekonomika/billa-seniori-nakupy-slevy-zvyhodneni-prispevky-cesko-situace-202605.html",
-      "dt": "2026-05-15T11:01:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ale",
-        "billa",
-        "háček",
-        "let",
-        "lidi",
-        "nebudou",
-        "slevy",
-        "spokojení",
-        "zavádí",
-        "češi"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Někteří žáci se ráno výsledků nedočkali. Nápor byl moc velký, omlouval se CERMAT",
-      "url": "https://www.denik.cz/skolstvi-a-vzdelavani/vypadky-cermat-dipsy-vysledky-prijimacich-zkousek-zaci-stredni-skoly-prijimacky.html",
-      "dt": "2026-05-15T10:50:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "cermat",
-        "moc",
-        "nedočkali",
-        "nápor",
-        "někteří",
-        "omlouval",
-        "ráno",
-        "velký",
-        "výsledků",
-        "žáci"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -658,7 +656,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29278,
+      "bytes": 29291,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -695,11 +693,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-16T04:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T05:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 2
+          "zpravy": 24,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -711,6 +709,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zatáhl ji do pole a ubodal. Propuštěný vrah zabil studentku, protože ho nechtěla",
+            "publishedAt": "2026-05-16T05:30:00Z"
+          },
+          {
+            "title": "Zoubkové víly v akci. Hygienistky učily děti správně čistit zuby",
+            "publishedAt": "2026-05-16T05:19:00Z"
+          },
           {
             "title": "Počasí na léto 2026: Pacifik se vaří a změní plány i v Česku",
             "publishedAt": "2026-05-16T04:20:00Z"
@@ -734,14 +740,6 @@
           {
             "title": "Děsivé chvíle ve vzduchu. Letadlo nad Slovenskem zasáhl blesk",
             "publishedAt": "2026-05-15T20:10:00Z"
-          },
-          {
-            "title": "Láska, která skončila smrtí. Sérii Monyová táhne nahoru Tereza Ramba",
-            "publishedAt": "2026-05-15T18:00:00Z"
-          },
-          {
-            "title": "Došly síly i naděje. Ruská disidentka Litvinovová spáchala sebevraždu",
-            "publishedAt": "2026-05-15T16:32:00Z"
           }
         ]
       }

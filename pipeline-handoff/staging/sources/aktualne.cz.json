@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-16T05:04:28.064854Z",
+  "ingestedAt": "2026-05-16T05:44:38.672166Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Vozítko z Marsu poslalo nové selfie. Za roverem se skrývá geologický poklad",
+      "url": "https://magazin.aktualne.cz/vozitko-z-marsu-poslalo-nove-selfie-za-roverem-se-skryva-geologicky-poklad/r~aaa295471b15a2dceefaa0d8218794f5/",
+      "dt": "2026-05-16T05:30:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "geologický",
+        "marsu",
+        "nové",
+        "poklad",
+        "poslalo",
+        "roverem",
+        "selfie",
+        "skrývá",
+        "vozítko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "„Je mi to jedno.“ Český debutant upřímně o potenciální hvězdné posile z NHL",
+      "url": "https://sport.aktualne.cz/hokej/je-mi-to-jedno-cesky-debutant-uprimne-o-potencialni-hvezdne-posile-z-nhl/r~aaa29e904261b6101cd4d1788d02e321/",
+      "dt": "2026-05-16T05:17:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "debutant",
+        "hvězdné",
+        "jedno",
+        "nhl",
+        "posile",
+        "potenciální",
+        "upřímně",
+        "český"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -489,61 +540,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Alkohol, zneužívání funkce a naprostá nekompetence. Pod šéfem FBI se houpe židle",
-      "url": "https://zpravy.aktualne.cz/zahranici/alkohol-zneuzivani-funkce-a-naprosta-nekompetence-pod-sefem-fbi-se-houpe-zidle/r~aaa29b9bd7b83fd736035cab300768a9/",
-      "dt": "2026-05-15T15:56:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "alkohol",
-        "fbi",
-        "funkce",
-        "houpe",
-        "naprostá",
-        "nekompetence",
-        "zneužívání",
-        "šéfem",
-        "židle"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nepotřebujeme válku 9500 mil daleko, prohlásil Trump. O Tchaj-wanu s Čínou nemá spor",
-      "url": "https://zpravy.aktualne.cz/zahranici/nepotrebujeme-valku-9500-mil-daleko-prohlasil-trump-o-tchaj-wanu-s-cinou-nema-spor/r~aaa29cc3d113aff6ca6221e5eb96a1e4/",
-      "dt": "2026-05-15T14:18:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "9500",
-        "daleko",
-        "mil",
-        "nemá",
-        "nepotřebujeme",
-        "prohlásil",
-        "spor",
-        "tchaj",
-        "trump",
-        "válku",
-        "wanu",
-        "čínou"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -554,7 +550,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22409,
+      "bytes": 22570,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -591,13 +587,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-16T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T05:30:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 10,
+          "sport": 6,
           "other": 1,
-          "zpravy": 11,
           "finance": 2,
-          "sport": 5,
           "zdravi": 1
         },
         "drop_counts": {
@@ -610,6 +606,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vozítko z Marsu poslalo nové selfie. Za roverem se skrývá geologický poklad",
+            "publishedAt": "2026-05-16T05:30:00Z"
+          },
+          {
+            "title": "„Je mi to jedno.“ Český debutant upřímně o potenciální hvězdné posile z NHL",
+            "publishedAt": "2026-05-16T05:17:00Z"
+          },
           {
             "title": "KVÍZ: Jeden musí z kola ven. Odhalíte mezi českými filmy a tvůrci záludného vetřelce?",
             "publishedAt": "2026-05-16T05:00:00Z"
@@ -633,14 +637,6 @@
           {
             "title": "„Je přesvědčen, že jim Evropa něco dluží.“ Zelenského ostrá slova dráždí spojence",
             "publishedAt": "2026-05-16T03:30:00Z"
-          },
-          {
-            "title": "Kořenář byl 150 sekund od nuly, Červenka měnil historické statistiky",
-            "publishedAt": "2026-05-15T21:02:00Z"
-          },
-          {
-            "title": "Na úvod poklidná výhra. Triumf nad Dány dirigoval nestárnoucí Červenka",
-            "publishedAt": "2026-05-15T20:52:00Z"
           }
         ]
       }

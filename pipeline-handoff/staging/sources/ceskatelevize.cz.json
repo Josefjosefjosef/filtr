@@ -1,22 +1,49 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-16T05:04:28.064854Z",
+  "ingestedAt": "2026-05-16T05:44:38.672166Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Trump: Americké a nigerijské síly v Nigérii zabily velitele Islámského státu",
+      "title": "Některé řeky nedosahují ani třetiny květnových průtoků, vodáci ruší i závody",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/nektere-reky-nedosahuji-ani-tretiny-kvetnovych-prutoku-vodaci-rusi-i-zavody-373482",
+      "dt": "2026-05-16T05:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "květnových",
+        "nedosahují",
+        "některé",
+        "průtoků",
+        "ruší",
+        "třetiny",
+        "vodáci",
+        "závody",
+        "řeky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trump: Americké a nigerijské síly zabily druhého nejvýše postaveného velitele IS na světě",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/trump-americke-a-nigerijske-sily-v-nigerii-zabily-velitele-islamskeho-statu-373501",
       "dt": "2026-05-16T04:28:39Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
         "americké",
-        "islámského",
+        "druhého",
+        "nejvýše",
         "nigerijské",
-        "nigérii",
-        "státu",
+        "postaveného",
+        "světě",
         "síly",
         "trump",
         "velitele",
@@ -731,28 +758,26 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "sport",
       "contentType": "article",
-      "title": "Sysli mizí z Evropy. Škodí jim moderní zemědělství, chráněná území nestačí",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/sysli-mizi-z-evropy-skodi-jim-moderni-zemedelstvi-chranena-uzemi-nestaci-373462",
-      "dt": "2026-05-15T07:57:29Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Derby „ S“ může rozhodnout o titulu, Slavia nechce připustit oslavu sparťanek",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/derby-s-muze-rozhodnout-o-titulu-slavia-nechce-pripustit-oslavu-spartanek-156807",
+      "dt": "2026-05-16T05:00:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "chráněná",
-        "evropy",
-        "jim",
-        "mizí",
-        "moderní",
-        "nestačí",
-        "sysli",
-        "zemědělství",
-        "území",
-        "škodí"
+        "derby",
+        "nechce",
+        "oslavu",
+        "připustit",
+        "rozhodnout",
+        "slavia",
+        "sparťanek",
+        "titulu"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1470,28 +1495,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Schweiner s Trousilem zahájili v Číně výhrou",
-      "url": "https://sport.ceskatelevize.cz/clanek/plazovy-volejbal/schweiner-s-trousilem-zahajili-v-cine-vyhrou-156783",
-      "dt": "2026-05-14T10:25:50Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "schweiner",
-        "trousilem",
-        "výhrou",
-        "zahájili",
-        "číně"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1502,7 +1505,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41423,
+      "bytes": 41736,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1562,12 +1565,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T04:28:39Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T05:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 24,
+          "zpravy": 25,
           "finance": 1,
-          "other": 5
+          "other": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1580,7 +1583,11 @@
         },
         "sample_titles": [
           {
-            "title": "Trump: Americké a nigerijské síly v Nigérii zabily velitele Islámského státu",
+            "title": "Některé řeky nedosahují ani třetiny květnových průtoků, vodáci ruší i závody",
+            "publishedAt": "2026-05-16T05:00:00Z"
+          },
+          {
+            "title": "Trump: Americké a nigerijské síly zabily druhého nejvýše postaveného velitele IS na světě",
             "publishedAt": "2026-05-16T04:28:39Z"
           },
           {
@@ -1606,10 +1613,6 @@
           {
             "title": "USA oznámily prodloužení příměří mezi Libanonem a Izraelem o 45 dní",
             "publishedAt": "2026-05-15T18:50:44Z"
-          },
-          {
-            "title": "Odborníci hledají způsob, jak osvobodit relikvii svaté Zdislavy z betonu",
-            "publishedAt": "2026-05-15T18:31:17Z"
           }
         ]
       }
@@ -1621,7 +1624,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38038,
+      "bytes": 38029,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1658,7 +1661,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-15T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T05:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1673,6 +1676,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Derby „ S“ může rozhodnout o titulu, Slavia nechce připustit oslavu sparťanek",
+            "publishedAt": "2026-05-16T05:00:00Z"
+          },
           {
             "title": "Soutěž k MS v hokeji – 16. května",
             "publishedAt": "2026-05-15T22:00:00Z"
@@ -1700,10 +1707,6 @@
           {
             "title": "Martin Fuksa vyhrál v Braniboru závod na kilometr",
             "publishedAt": "2026-05-15T12:43:43Z"
-          },
-          {
-            "title": "Jsem srdcař, ve svém věku už ale do některých sjezdů nejdu, říká trenér Suchomel",
-            "publishedAt": "2026-05-15T12:05:02Z"
           }
         ]
       }
@@ -1715,7 +1718,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77183,
+      "bytes": 77181,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

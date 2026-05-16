@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-16T05:04:28.064854Z",
+  "ingestedAt": "2026-05-16T05:44:38.672166Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Američané zabili v Nigérii velitele islamistů. Složitá operace, napsal Trump",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/donald-trump-usa-nigerie-islamsky-stat-operace.A260516_070157_zahranicni_svm",
+      "dt": "2026-05-16T05:01:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "američané",
+        "islamistů",
+        "napsal",
+        "nigérii",
+        "operace",
+        "složitá",
+        "trump",
+        "velitele",
+        "zabili"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -757,34 +783,6 @@
         "tvrdí",
         "zelenskyj",
         "útok"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "VIDEO: Zloděj sebral boty za pět tisíc, na rohožce nechal svoje. Pak se sám prozradil",
-      "url": "https://www.idnes.cz/brno/zpravy/brno-straznici-kradez-tenisky-bystrc-mestska-policie-zlodej-boty.A260515_153002_brno-zpravy_icer",
-      "dt": "2026-05-15T14:59:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "boty",
-        "nechal",
-        "pak",
-        "prozradil",
-        "pět",
-        "rohožce",
-        "sebral",
-        "svoje",
-        "sám",
-        "tisíc",
-        "zloděj"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1575,7 +1573,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47789,
+      "bytes": 48042,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1612,7 +1610,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T04:22:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T05:01:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -1628,6 +1626,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Američané zabili v Nigérii velitele islamistů. Složitá operace, napsal Trump",
+            "publishedAt": "2026-05-16T05:01:00Z"
+          },
           {
             "title": "Třemošnou čeká dopravní návrat o 15 let zpět, obchvat se uzavírá",
             "publishedAt": "2026-05-16T04:22:00Z"
@@ -1654,10 +1656,6 @@
           },
           {
             "title": "Potíže s bramborami i vepřovým. Českým zemědělcům škodí čínská soběstačnost",
-            "publishedAt": "2026-05-15T22:00:00Z"
-          },
-          {
-            "title": "Co víte o jihočeských rybnících a rybářství?",
             "publishedAt": "2026-05-15T22:00:00Z"
           }
         ]
