@@ -1,27 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-16T21:44:41.548167Z",
+  "ingestedAt": "2026-05-16T22:24:43.433973Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Česká blamáž na slovinský způsob: rodák z Mostu slavil, Češi smutně koukali",
+      "title": "Náhoda, jednoznačný faul, nechápal obrat Rulík. Pro postup je to „velká komplikace“",
+      "url": "https://sport.aktualne.cz/hokej/nahoda-jednoznacny-faul-nechapal-obrat-rulik-pro-postup-je-to-velka-komplikace/r~aaa294ee7ef09404dbd4397f2305dc90/",
+      "dt": "2026-05-16T22:08:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "faul",
+        "jednoznačný",
+        "komplikace",
+        "nechápal",
+        "náhoda",
+        "obrat",
+        "postup",
+        "rulík",
+        "velká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Blamáž, která se zapíše do historie. Porážka se Slovinci připomněla ostudu s Poláky či Němci",
       "url": "https://sport.aktualne.cz/hokej/slovinska-blamaz-rodak-z-mostu-slavil-cesi-smutne-koukali/r~aaa2938886efb0388e6d20add236faab/",
       "dt": "2026-05-16T21:13:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
         "blamáž",
-        "koukali",
-        "mostu",
-        "rodák",
-        "slavil",
-        "slovinský",
-        "smutně",
-        "způsob",
-        "česká",
-        "češi"
+        "historie",
+        "němci",
+        "ostudu",
+        "poláky",
+        "porážka",
+        "připomněla",
+        "slovinci",
+        "zapíše"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -506,30 +531,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Jak funguje úspěch v Eurovizi. Analyzovali jsme 70 let dat",
-      "url": "https://zpravy.aktualne.cz/zahranici/od-abby-pres-vousatou-zpevacku-az-po-nebinarni-viteze-podivejte-se-kdo-je-v-eurovizi-nejuspesnejsi/r~aaa296504c34b600766da8026517efce/",
-      "dt": "2026-05-16T14:50:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "analyzovali",
-        "dat",
-        "eurovizi",
-        "funguje",
-        "jsme",
-        "let",
-        "úspěch"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -540,7 +541,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21531,
+      "bytes": 21704,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -577,11 +578,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-16T21:13:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T22:08:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 9,
-          "zpravy": 10,
+          "sport": 10,
+          "zpravy": 9,
           "finance": 1
         },
         "drop_counts": {
@@ -595,7 +596,11 @@
         },
         "sample_titles": [
           {
-            "title": "Česká blamáž na slovinský způsob: rodák z Mostu slavil, Češi smutně koukali",
+            "title": "Náhoda, jednoznačný faul, nechápal obrat Rulík. Pro postup je to „velká komplikace“",
+            "publishedAt": "2026-05-16T22:08:00Z"
+          },
+          {
+            "title": "Blamáž, která se zapíše do historie. Porážka se Slovinci připomněla ostudu s Poláky či Němci",
             "publishedAt": "2026-05-16T21:13:00Z"
           },
           {
@@ -621,10 +626,6 @@
           {
             "title": "Další narušení vzdušného prostoru NATO. V rumunské vesnici nalezli nevybuchlou střelu",
             "publishedAt": "2026-05-16T19:31:00Z"
-          },
-          {
-            "title": "\"Rozhodčí slaboučkej. Katastrofa!\" Dukla zaváhala v boji o přežití, kouč byl vzteky bez sebe",
-            "publishedAt": "2026-05-16T19:22:00Z"
           }
         ]
       }
