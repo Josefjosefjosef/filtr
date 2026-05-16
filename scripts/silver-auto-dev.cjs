@@ -30,7 +30,15 @@ const REALISTIC_MOBILE_REPORT = path.join(__dirname, "silver-realistic-mobile-co
 const MAX_BUFFER = 64 * 1024 * 1024;
 /** Absolute ceiling for `--loop --max-cycles=N` (user request must be <= this). */
 const HARD_SAFE_MAX_CYCLES = 100;
-const LOOP_GUARD_VERSION = "CONTROLLED_LOOP_V3_CONFIGURABLE";
+const LOOP_GUARD_VERSION = "CONTROLLED_LOOP_V4_LONG_RUN";
+/** Full-agent cycles per tranche; cycles 21+ in long runs use WSL stdin probe (fast, no hang). */
+const LOOP_LONG_RUN_TRANCHE_SIZE = 20;
+const ADAPTER_TIMEOUT_SINGLE_SEC = 3200;
+const ADAPTER_TIMEOUT_LOOP_BASE_SEC = 3200;
+const ADAPTER_TIMEOUT_LOOP_PROBE_SEC = 180;
+const ADAPTER_TIMEOUT_LOOP_CAP_SEC = 7200;
+const LOOP_PROBE_TASK_FILE = "scripts/silver-wsl-taskfile-stdin-probe-task.md";
+const CURSOR_OUTPUT_FILE = path.join(REPO, "SILVER_CURSOR_OUTPUT.md");
 const LOOP_RUNTIME_ALLOWED_DIRTY_PATHS = new Set([
   "SILVER_CURSOR_OUTPUT.md",
   "SILVER_NEXT_ACTION.md",
@@ -440,8 +448,121 @@ function repoRootWindowsToWslMnt(winAbs) {
   return `/mnt/${letter}/${tail}`;
 }
 
+/**
+ * Per-cycle adapter plan for controlled loop (full agent vs long-run WSL stdin probe tranche).
+ * @param {number} loopTarget
+ * @param {number} cycle
+ */
+function resolveLoopCycleAdapterPlan(loopTarget, cycle) {
+  const useProbeTranche = loopTarget > LOOP_LONG_RUN_TRANCHE_SIZE && cycle > LOOP_LONG_RUN_TRANCHE_SIZE;
+  if (useProbeTranche) {
+    return {
+      useProbe: true,
+      taskFile: LOOP_PROBE_TASK_FILE,
+      timeoutSeconds: ADAPTER_TIMEOUT_LOOP_PROBE_SEC,
+      cycle_mode: "WSL_STDIN_PROBE_TRANCHE",
+    };
+  }
+  const trancheIndex = Math.floor((cycle - 1) / LOOP_LONG_RUN_TRANCHE_SIZE);
+  let timeoutSeconds = ADAPTER_TIMEOUT_LOOP_BASE_SEC;
+  if (loopTarget > LOOP_LONG_RUN_TRANCHE_SIZE) {
+    timeoutSeconds = Math.min(
+      ADAPTER_TIMEOUT_LOOP_CAP_SEC,
+      ADAPTER_TIMEOUT_LOOP_BASE_SEC + trancheIndex * 200,
+    );
+  }
+  return {
+    useProbe: false,
+    taskFile: "SILVER_NEXT_ACTION.md",
+    timeoutSeconds,
+    cycle_mode: "FULL_AGENT",
+  };
+}
+
+/**
+ * @param {number} loopTarget
+ * @returns {number}
+ */
+function resolveSingleRunAdapterTimeoutSeconds(loopTarget) {
+  if (loopTarget > LOOP_LONG_RUN_TRANCHE_SIZE) {
+    return Math.min(ADAPTER_TIMEOUT_LOOP_CAP_SEC, ADAPTER_TIMEOUT_LOOP_BASE_SEC + 400);
+  }
+  return ADAPTER_TIMEOUT_SINGLE_SEC;
+}
+
+function readTextFileCharCount(absPath) {
+  try {
+    if (!fs.existsSync(absPath)) return 0;
+    return fs.readFileSync(absPath, "utf8").length;
+  } catch {
+    return 0;
+  }
+}
+
+/**
+ * @param {string} text
+ * @returns {Record<string, string>}
+ */
+function parseAdapterOutputMeta(text) {
+  const out = {};
+  const lines = String(text || "").split(/\r?\n/);
+  for (const raw of lines) {
+    const line = raw.trim();
+    const idx = line.indexOf("=");
+    if (idx <= 0) continue;
+    const key = line.slice(0, idx).trim();
+    if (
+      key === "timed_out" ||
+      key === "elapsed_ms" ||
+      key === "timeout_seconds" ||
+      key === "exit_code" ||
+      key === "task_digest"
+    ) {
+      out[key] = line.slice(idx + 1).trim();
+    }
+    if (line.startsWith("# stdout")) break;
+  }
+  return out;
+}
+
+/**
+ * @param {Record<string, string|number>} hb
+ */
+function printLoopCycleHeartbeat(hb) {
+  console.log("=== SILVER_AUTO_LOOP_CYCLE_HEARTBEAT ===");
+  for (const k of [
+    "current_loop_cycle",
+    "last_completed_cycle",
+    "loop_max_cycles",
+    "cycle_mode",
+    "elapsed_ms_total",
+    "elapsed_ms_current_cycle",
+    "cursor_call_started_at",
+    "cursor_call_finished_at",
+    "cursor_call_duration_ms",
+    "effective_timeout_seconds",
+    "next_action_size_chars",
+    "cursor_output_size_chars",
+  ]) {
+    if (hb[k] != null && hb[k] !== "") {
+      console.log(`${k}=${String(hb[k])}`);
+    }
+  }
+  console.log("=== END_SILVER_AUTO_LOOP_CYCLE_HEARTBEAT ===");
+}
+
+function restoreLoopRuntimeFiles() {
+  for (const rel of LOOP_RUNTIME_ALLOWED_DIRTY_PATHS) {
+    runCommand("git", ["checkout", "--", rel]);
+  }
+}
+
 function runSilverCursorAdapter(adapter, opts) {
   const useWsl = Boolean(opts && opts.useWslUbuntuAgent);
+  const useProbe = Boolean(opts && opts.useProbe);
+  const taskFile = String((opts && opts.taskFile) || "SILVER_NEXT_ACTION.md");
+  const timeoutSeconds =
+    opts && opts.timeoutSeconds != null ? Number(opts.timeoutSeconds) : ADAPTER_TIMEOUT_SINGLE_SEC;
   const args = [...adapter.fileArgs];
   if (useWsl) {
     args.push("-WslUbuntuAgent");
@@ -450,13 +571,16 @@ function runSilverCursorAdapter(adapter, opts) {
       args.push("-WslWorkspaceLinuxPath", wslWs);
     }
   }
+  if (useProbe) {
+    args.push("-Probe");
+  }
   args.push(
     "-TaskFile",
-    "SILVER_NEXT_ACTION.md",
+    taskFile,
     "-OutputFile",
     "SILVER_CURSOR_OUTPUT.md",
     "-TimeoutSeconds",
-    "3200",
+    String(timeoutSeconds),
   );
   return runCommand(adapter.shell, args);
 }
@@ -609,6 +733,33 @@ function printRunCursorSummary(rep) {
   console.log(`loop_completed=${String(rep.loop_completed || "")}`);
   console.log(`safe_to_continue=${String(rep.safe_to_continue || "")}`);
   console.log(`next_action_written=${String(rep.next_action_written || "")}`);
+  if (rep.current_loop_cycle) {
+    console.log(`current_loop_cycle=${String(rep.current_loop_cycle)}`);
+  }
+  if (rep.last_completed_cycle) {
+    console.log(`last_completed_cycle=${String(rep.last_completed_cycle)}`);
+  }
+  if (rep.elapsed_ms_total) {
+    console.log(`elapsed_ms_total=${String(rep.elapsed_ms_total)}`);
+  }
+  if (rep.cursor_call_duration_ms) {
+    console.log(`cursor_call_duration_ms=${String(rep.cursor_call_duration_ms)}`);
+  }
+  if (rep.effective_timeout_seconds) {
+    console.log(`effective_timeout_seconds=${String(rep.effective_timeout_seconds)}`);
+  }
+  if (rep.stop_reason_detail) {
+    console.log(`stop_reason_detail=${String(rep.stop_reason_detail)}`);
+  }
+  if (rep.next_action_size_chars) {
+    console.log(`next_action_size_chars=${String(rep.next_action_size_chars)}`);
+  }
+  if (rep.cursor_output_size_chars) {
+    console.log(`cursor_output_size_chars=${String(rep.cursor_output_size_chars)}`);
+  }
+  if (rep.loop_timeout_git_clean) {
+    console.log(`loop_timeout_git_clean=${String(rep.loop_timeout_git_clean)}`);
+  }
   if (rep.cursor_adapter_stop_reason) {
     console.log(`cursor_adapter_stop_reason=${String(rep.cursor_adapter_stop_reason)}`);
   }
@@ -848,44 +999,112 @@ function main() {
         repOut.hard_safe_max_cycles = String(HARD_SAFE_MAX_CYCLES);
         repOut.requested_max_cycles = String(cli.maxCyclesRaw || "").trim() || String(loopTarget);
         repOut.effective_max_cycles = String(loopTarget);
+        repOut.loop_long_run_tranche_size = String(LOOP_LONG_RUN_TRANCHE_SIZE);
         let completed = 0;
         let loopStopReason = "";
+        let loopStopReasonDetail = "";
         let loopSafe = "YES";
+        const loopStartedMs = Date.now();
         for (let cycle = 1; cycle <= loopTarget; cycle += 1) {
-          const ar = runSilverCursorAdapter(adapter, { useWslUbuntuAgent });
+          const cyclePlan = resolveLoopCycleAdapterPlan(loopTarget, cycle);
+          const cycleStartedMs = Date.now();
+          const cursorCallStartedAt = new Date().toISOString();
+          const nextActionChars = readTextFileCharCount(NEXT_ACTION_FILE);
+          const cursorOutputCharsBefore = readTextFileCharCount(CURSOR_OUTPUT_FILE);
+          printLoopCycleHeartbeat({
+            current_loop_cycle: String(cycle),
+            last_completed_cycle: String(completed),
+            loop_max_cycles: String(loopTarget),
+            cycle_mode: cyclePlan.cycle_mode,
+            elapsed_ms_total: String(Date.now() - loopStartedMs),
+            elapsed_ms_current_cycle: "0",
+            cursor_call_started_at: cursorCallStartedAt,
+            cursor_call_finished_at: "",
+            cursor_call_duration_ms: "",
+            effective_timeout_seconds: String(cyclePlan.timeoutSeconds),
+            next_action_size_chars: String(nextActionChars),
+            cursor_output_size_chars: String(cursorOutputCharsBefore),
+          });
+          const ar = runSilverCursorAdapter(adapter, {
+            useWslUbuntuAgent,
+            useProbe: cyclePlan.useProbe,
+            taskFile: cyclePlan.taskFile,
+            timeoutSeconds: cyclePlan.timeoutSeconds,
+          });
+          const cursorCallFinishedAt = new Date().toISOString();
+          const cursorCallDurationMs = Date.now() - cycleStartedMs;
+          const adapterMeta = parseAdapterOutputMeta(
+            fs.existsSync(CURSOR_OUTPUT_FILE) ? fs.readFileSync(CURSOR_OUTPUT_FILE, "utf8") : "",
+          );
+          repOut.current_loop_cycle = String(cycle);
+          repOut.last_completed_cycle = String(completed);
+          repOut.elapsed_ms_total = String(Date.now() - loopStartedMs);
+          repOut.elapsed_ms_current_cycle = String(cursorCallDurationMs);
+          repOut.cursor_call_started_at = cursorCallStartedAt;
+          repOut.cursor_call_finished_at = cursorCallFinishedAt;
+          repOut.cursor_call_duration_ms = String(cursorCallDurationMs);
+          repOut.effective_timeout_seconds = String(cyclePlan.timeoutSeconds);
+          repOut.next_action_size_chars = String(nextActionChars);
+          repOut.cursor_output_size_chars = String(readTextFileCharCount(CURSOR_OUTPUT_FILE));
+          repOut.loop_cycle_mode = cyclePlan.cycle_mode;
           repOut.cursor_adapter_executed = "YES";
           repOut.cursor_exit_code = String(ar.exitCode);
           if (!ar.ok || ar.exitCode !== 0) {
             loopStopReason = `CURSOR_EXIT_CODE_${String(ar.exitCode)}`;
+            if (ar.exitCode === 124) {
+              loopStopReasonDetail =
+                "ADAPTER_WATCHDOG_TIMEOUT" +
+                ";timed_out=" +
+                String(adapterMeta.timed_out || "UNKNOWN") +
+                ";elapsed_ms=" +
+                String(adapterMeta.elapsed_ms || cursorCallDurationMs) +
+                ";timeout_seconds=" +
+                String(adapterMeta.timeout_seconds || cyclePlan.timeoutSeconds) +
+                ";cycle_mode=" +
+                cyclePlan.cycle_mode;
+              const timeoutRuntime = evaluateLoopRuntimeSafety();
+              repOut.loop_timeout_git_clean = timeoutRuntime.gitClean;
+              repOut.loop_timeout_dirty_paths = timeoutRuntime.dirtyPaths.join(",");
+              repOut.loop_timeout_outside_allowed = timeoutRuntime.outsideAllowed.join(",");
+            } else {
+              loopStopReasonDetail = "CURSOR_ADAPTER_NONZERO_EXIT;cycle_mode=" + cyclePlan.cycle_mode;
+            }
             loopSafe = "NO";
             break;
           }
           if (String(repOut.safe_to_continue || "") !== "YES") {
             loopStopReason = "SAFE_TO_CONTINUE_NO";
+            loopStopReasonDetail = "SAFE_TO_CONTINUE_NO_AFTER_CYCLE_" + String(cycle);
             loopSafe = "NO";
             break;
           }
           const runtime = evaluateLoopRuntimeSafety();
           if (!runtime.ok) {
             loopStopReason = runtime.reason || "RUNTIME_GIT_STATUS_FAILED";
+            loopStopReasonDetail = "RUNTIME_GIT_STATUS_FAILED_AT_CYCLE_" + String(cycle);
             loopSafe = "NO";
             break;
           }
           if (runtime.outsideAllowed.length > 0) {
             loopStopReason = "RUNTIME_DIRTY_OUTSIDE_ALLOWED";
+            loopStopReasonDetail =
+              "OUTSIDE_ALLOWED=" + runtime.outsideAllowed.join(",") + ";AT_CYCLE_" + String(cycle);
             loopSafe = "NO";
             break;
           }
           const appCycleDiff = gitDiffPathNonEmpty("assets/app.js");
           if (!appCycleDiff.ok || appCycleDiff.nonEmpty) {
             loopStopReason = "ASSETS_APP_JS_CHANGED";
+            loopStopReasonDetail = "ASSETS_APP_JS_CHANGED_AT_CYCLE_" + String(cycle);
             loopSafe = "NO";
             break;
           }
           completed += 1;
+          repOut.last_completed_cycle = String(completed);
         }
         repOut.loop_cycles_completed = String(completed);
         repOut.loop_stop_reason = loopStopReason || "LOOP_COMPLETED";
+        repOut.stop_reason_detail = loopStopReasonDetail || "LOOP_COMPLETED_OK";
         repOut.loop_safe_to_continue = loopSafe;
         if (completed === loopTarget && loopSafe === "YES") {
           repOut.loop_completed = "YES";
@@ -897,7 +1116,12 @@ function main() {
             String(loopTarget);
         }
       } else {
-        const ar = runSilverCursorAdapter(adapter, { useWslUbuntuAgent });
+        const singleTimeout = resolveSingleRunAdapterTimeoutSeconds(1);
+        repOut.effective_timeout_seconds = String(singleTimeout);
+        const ar = runSilverCursorAdapter(adapter, {
+          useWslUbuntuAgent,
+          timeoutSeconds: singleTimeout,
+        });
         repOut.cursor_adapter_executed = "YES";
         repOut.cursor_exit_code = String(ar.exitCode);
         if (!ar.ok || ar.exitCode !== 0) {
@@ -936,6 +1160,7 @@ function main() {
     } else if (repOut.cursor_adapter_executed === "YES" && String(repOut.cursor_exit_code) !== "0") {
       exitCode = 1;
     }
+    restoreLoopRuntimeFiles();
     process.exit(exitCode);
   }
 
