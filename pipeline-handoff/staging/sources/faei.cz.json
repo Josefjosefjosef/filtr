@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-16T11:44:45.117680Z",
+  "ingestedAt": "2026-05-16T12:24:50.634316Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Úpadek čtení u dětí podsekává budoucí českou produktivitu",
+      "url": "https://profitonline.cz/upadek-cteni-u-deti-podsekava-budouci-ceskou-produktivitu/",
+      "dt": "2026-05-16T12:00:14Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "budoucí",
+        "dětí",
+        "podsekává",
+        "produktivitu",
+        "úpadek",
+        "českou",
+        "čtení"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -265,30 +289,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Mobil na dovolené v zahraničí. Kdy se z pohodlí stává drahá chyba?",
-      "url": "https://profitonline.cz/mobil-na-dovolene-v-zahranici-kdy-se-z-pohodli-stava-draha-chyba/",
-      "dt": "2026-05-15T04:00:16Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "chyba",
-        "dovolené",
-        "drahá",
-        "mobil",
-        "pohodlí",
-        "stává",
-        "zahraničí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -299,7 +299,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18940,
+      "bytes": 18912,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -336,7 +336,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-16T10:00:03Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T12:00:14Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -351,6 +351,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Úpadek čtení u dětí podsekává budoucí českou produktivitu",
+            "publishedAt": "2026-05-16T12:00:14Z"
+          },
           {
             "title": "Tycho de Brahe odtud pozoroval hvězdy. Belveder čeká rekonstrukce",
             "publishedAt": "2026-05-16T10:00:03Z"
@@ -378,10 +382,6 @@
           {
             "title": "Summitu v Pekingu dominovaly čipy, Tchaj-wan a boj o globální dominanci",
             "publishedAt": "2026-05-15T14:20:30Z"
-          },
-          {
-            "title": "Návrat k normálu. Českým včelařům během letošní zimy uhynula jen desetina chovu",
-            "publishedAt": "2026-05-15T11:00:26Z"
           }
         ]
       }

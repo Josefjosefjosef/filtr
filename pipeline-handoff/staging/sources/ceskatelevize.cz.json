@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-16T11:44:45.117680Z",
+  "ingestedAt": "2026-05-16T12:24:50.634316Z",
   "items": [
     {
       "section": "aktualne",
@@ -33,7 +33,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Soud neposlal muže podezřelého z krádeže lebky svaté Zdislavy do vazby",
+      "title": "Soud odmítl poslat do vazby podezřelého z krádeže lebky svaté Zdislavy",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/soud-rozhoduje-o-vazbe-pro-zlodeje-lebky-svate-zdislavy-373502",
       "dt": "2026-05-16T08:20:14Z",
       "media_raw": "ČT24 / Domácí",
@@ -41,9 +41,9 @@
       "tokens": [
         "krádeže",
         "lebky",
-        "muže",
-        "neposlal",
+        "odmítl",
         "podezřelého",
+        "poslat",
         "soud",
         "svaté",
         "vazby",
@@ -111,7 +111,7 @@
       "section": "aktualne",
       "contentType": "article",
       "title": "Lidé ve Vrančicích na Příbramsku v referendu odmítli stavbu větrných elektráren",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/lide-ve-vrancicich-na-pribramsku-v-referendu-odmitli-stavbu-vetrnych-elektraren-373503",
+      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/stredocesky-kraj/lide-ve-vrancicich-na-pribramsku-v-referendu-odmitli-stavbu-vetrnych-elektraren-373503",
       "dt": "2026-05-16T07:11:22Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
@@ -755,6 +755,32 @@
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Koulařka Schilderová překonala v Šanghaji 21 metrů. Duplantis se pokouší o další rekord",
+      "url": "https://sport.ceskatelevize.cz/clanek/atletika/koularka-schilderova-prekonala-v-sanghaji-21-metru-156821",
+      "dt": "2026-05-16T11:59:17Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "další",
+        "duplantis",
+        "koulařka",
+        "metrů",
+        "pokouší",
+        "překonala",
+        "rekord",
+        "schilderová",
+        "šanghaji"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1470,32 +1496,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Střídání nadmořských výšek a vedra dají fotbalové reprezentaci pořádně zabrat",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/stridani-nadmorskych-vysek-a-vedra-daji-fotbalove-reprezentaci-poradne-zabrat-156792",
-      "dt": "2026-05-14T14:44:37Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "dají",
-        "fotbalové",
-        "nadmořských",
-        "pořádně",
-        "reprezentaci",
-        "střídání",
-        "vedra",
-        "výšek",
-        "zabrat"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1506,7 +1506,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42415,
+      "bytes": 42516,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1587,7 +1587,7 @@
             "publishedAt": "2026-05-16T10:21:54Z"
           },
           {
-            "title": "Soud neposlal muže podezřelého z krádeže lebky svaté Zdislavy do vazby",
+            "title": "Soud odmítl poslat do vazby podezřelého z krádeže lebky svaté Zdislavy",
             "publishedAt": "2026-05-16T08:20:14Z"
           },
           {
@@ -1624,7 +1624,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37996,
+      "bytes": 37947,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1661,7 +1661,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T10:14:10Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T11:59:17Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1676,6 +1676,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Koulařka Schilderová překonala v Šanghaji 21 metrů. Duplantis se pokouší o další rekord",
+            "publishedAt": "2026-05-16T11:59:17Z"
+          },
           {
             "title": "Dostál národní tým neposílí, na soupisce přibyli Ščotka s Mandátem",
             "publishedAt": "2026-05-16T10:14:10Z"
@@ -1703,10 +1707,6 @@
           {
             "title": "Rulík po Dánsku: Pár věcí bylo všelijakých, musíme pracovat na jednoduchosti",
             "publishedAt": "2026-05-16T06:29:23Z"
-          },
-          {
-            "title": "Po snovém startu velká smůla. Čechová se zranila a sezona pro ni skončila",
-            "publishedAt": "2026-05-16T06:13:42Z"
           }
         ]
       }
@@ -1718,7 +1718,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77112,
+      "bytes": 77174,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

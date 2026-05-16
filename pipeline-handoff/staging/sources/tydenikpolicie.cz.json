@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-16T11:44:45.117680Z",
+  "ingestedAt": "2026-05-16T12:24:50.634316Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Kriminalisté v Praze zadrželi již více než dvacet kurýrů, kteří vybírali peníze od podvedených lidí",
+      "url": "https://tydenikpolicie.cz/kriminaliste-v-praze-zadrzeli-jiz-vice-nez-dvacet-kuryru-kteri-vybirali-penize-od-podvedenych-lidi/",
+      "dt": "2026-05-16T11:43:04Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "dvacet",
+        "již",
+        "kriminalisté",
+        "kteří",
+        "kurýrů",
+        "lidí",
+        "než",
+        "peníze",
+        "podvedených",
+        "praze",
+        "vybírali",
+        "zadrželi"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -236,33 +265,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Opilý jezdec, drogy i zákaz řízení. Výkonné elektrokoloběžky nesplňovaly zákonné podmínky",
-      "url": "https://tydenikpolicie.cz/opily-jezdec-drogy-i-zakaz-rizeni-vykonne-elektrokolobezky-nesplnovaly-zakonne-podminky/",
-      "dt": "2026-05-15T15:06:40Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "drogy",
-        "elektrokoloběžky",
-        "jezdec",
-        "nesplňovaly",
-        "opilý",
-        "podmínky",
-        "výkonné",
-        "zákaz",
-        "zákonné",
-        "řízení"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -273,7 +275,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16175,
+      "bytes": 16114,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -310,7 +312,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-16T11:29:11Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T11:43:04Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -325,6 +327,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kriminalisté v Praze zadrželi již více než dvacet kurýrů, kteří vybírali peníze od podvedených lidí",
+            "publishedAt": "2026-05-16T11:43:04Z"
+          },
           {
             "title": "V Praze proběhla bezpečnostní akce Jupiter. Vyvrcholila policejní uzávěrou magistrály",
             "publishedAt": "2026-05-16T11:29:11Z"
@@ -352,10 +358,6 @@
           {
             "title": "Poničené věci v mateřské školce v Černošíně a krádež hotovosti mají mít na svědomí dva nezletilí",
             "publishedAt": "2026-05-15T15:29:06Z"
-          },
-          {
-            "title": "Po havárii elektromopedu policisté zjistili, že muž řídil pod vlivem alkoholu, bez řidičáku a bez registrace",
-            "publishedAt": "2026-05-15T15:25:26Z"
           }
         ]
       }

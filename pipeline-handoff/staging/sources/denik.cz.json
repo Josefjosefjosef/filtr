@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-16T11:44:45.117680Z",
+  "ingestedAt": "2026-05-16T12:24:50.634316Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nezaváhal. Policista zachránil děti z hořícího domu, záběry obletěly internet",
+      "url": "https://www.denik.cz/ze_sveta/zachrana-z-horiciho-domu-usa-video.html",
+      "dt": "2026-05-16T11:55:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "domu",
+        "děti",
+        "hořícího",
+        "internet",
+        "nezaváhal",
+        "obletěly",
+        "policista",
+        "zachránil",
+        "záběry"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -626,30 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Dopravní chaos v Praze. Semafory na 23 křižovatkách hromadně zhasly",
-      "url": "https://www.denik.cz/regiony/prazske-semafory-hromadne-zhasly-chaos-na-krizovatkach-usmernila-policie-2026051.html",
-      "dt": "2026-05-15T14:42:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "chaos",
-        "dopravní",
-        "hromadně",
-        "křižovatkách",
-        "praze",
-        "semafory",
-        "zhasly"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -660,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 27891,
+      "bytes": 27582,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -697,11 +699,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-16T11:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T11:55:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 1,
           "zpravy": 23,
+          "finance": 1,
           "zdravi": 1
         },
         "drop_counts": {
@@ -714,6 +716,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nezaváhal. Policista zachránil děti z hořícího domu, záběry obletěly internet",
+            "publishedAt": "2026-05-16T11:55:00Z"
+          },
           {
             "title": "Lidl světy a barevné regály. Řetězec od čtvrtka promění své prodejny",
             "publishedAt": "2026-05-16T11:00:00Z"
@@ -741,10 +747,6 @@
           {
             "title": "Plavce v Austrálii napadl pětimetrový bílý žralok. Muž útok nepřežil",
             "publishedAt": "2026-05-16T07:40:00Z"
-          },
-          {
-            "title": "Na letišti v Náměšti začíná den otevřených dveří. Déšť návštěvníky neodrazuje",
-            "publishedAt": "2026-05-16T07:39:00Z"
           }
         ]
       }
