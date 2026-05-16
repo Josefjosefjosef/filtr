@@ -1,0 +1,79 @@
+{
+  "generated_at": "2026-05-16T22:45:19.749Z",
+  "main_commit": "d130aa709b9e5ec2c6b28c38980fe94b1b9cf5c4",
+  "classifier_version": "v1",
+  "classifications": [
+    {
+      "cluster": "rhc3_ambiguity_cal_conflict",
+      "classification": "AMBIGUOUS_USER_INPUT",
+      "safe_to_autopilot": "YES",
+      "engine_fix_allowed": "NO",
+      "harness_alignment_allowed": "YES",
+      "human_review_required": "NO",
+      "ambiguity_expected": "YES",
+      "safe_clarification_ok": "YES",
+      "harness_only": "YES",
+      "cluster_fail_count": 0,
+      "cluster_total": 7059,
+      "diagnostic_cluster_fail_count": 0,
+      "diagnostic_true_engine_fail_count": 0,
+      "diagnostic_engine_fix_recommended": "NO"
+    },
+    {
+      "cluster": "rhc3_ascii_task",
+      "classification": "AMBIGUOUS_USER_INPUT",
+      "safe_to_autopilot": "YES",
+      "engine_fix_allowed": "NO",
+      "harness_alignment_allowed": "YES",
+      "human_review_required": "NO",
+      "ambiguity_expected": "YES",
+      "safe_clarification_ok": "YES",
+      "harness_only": "YES",
+      "cluster_fail_count": 0,
+      "cluster_total": 7059
+    },
+    {
+      "cluster": "rhc3_task_create_do_ukolu",
+      "classification": "AMBIGUOUS_USER_INPUT",
+      "safe_to_autopilot": "YES",
+      "engine_fix_allowed": "NO",
+      "harness_alignment_allowed": "YES",
+      "human_review_required": "NO",
+      "ambiguity_expected": "YES",
+      "safe_clarification_ok": "YES",
+      "harness_only": "YES",
+      "cluster_fail_count": 0,
+      "cluster_total": 7059
+    },
+    {
+      "cluster": "rhc3_negation_cal_readonly",
+      "classification": "NEGATION_READ_ONLY",
+      "safe_to_autopilot": "YES",
+      "engine_fix_allowed": "NO",
+      "harness_alignment_allowed": "YES",
+      "human_review_required": "NO",
+      "ambiguity_expected": "NO",
+      "safe_clarification_ok": "YES",
+      "harness_only": "YES",
+      "cluster_fail_count": 9,
+      "cluster_total": 7059
+    }
+  ],
+  "target_cluster": {
+    "cluster": "rhc3_ambiguity_cal_conflict",
+    "classification": "AMBIGUOUS_USER_INPUT",
+    "safe_to_autopilot": "YES",
+    "engine_fix_allowed": "NO",
+    "harness_alignment_allowed": "YES",
+    "human_review_required": "NO",
+    "ambiguity_expected": "YES",
+    "safe_clarification_ok": "YES",
+    "harness_only": "YES",
+    "cluster_fail_count": 0,
+    "cluster_total": 7059,
+    "diagnostic_cluster_fail_count": 0,
+    "diagnostic_true_engine_fail_count": 0,
+    "diagnostic_engine_fix_recommended": "NO"
+  },
+  "text_block": "=== SILVER_RHC3_CLUSTER_CLASSIFIER_V1_RESULT ===\nmain_commit=d130aa709b9e5ec2c6b28c38980fe94b1b9cf5c4\ntarget_cluster=rhc3_ambiguity_cal_conflict\nclassification=AMBIGUOUS_USER_INPUT\nsafe_to_autopilot=YES\nengine_fix_allowed=NO\nharness_alignment_allowed=YES\nhuman_review_required=NO\nambiguity_expected=YES\nsafe_clarification_ok=YES\nharness_only=YES\ncluster_fail_count=0\n=== END_SILVER_RHC3_CLUSTER_CLASSIFIER_V1_RESULT ==="
+}

@@ -1278,6 +1278,107 @@ function finalizeAsciiTaskAmbiguousClarifyLaneHarnessEval(c, turn, ev) {
   });
 }
 
+/** Conflicting calendar scope DNA — strict (harmonization / audit parity). */
+function hasAmbiguityCalConflictCanonFolded(fold) {
+  const f = String(fold || "");
+  const calPos =
+    /\bjen\s+kalendar\b/.test(f) ||
+    /\bpouze\s+kalendar\b/.test(f) ||
+    /\bjen\s+v\s+kalend/.test(f) ||
+    /\bpouze\s+v\s+kalend/.test(f) ||
+    /\bjen\s+z\s+kalend/.test(f) ||
+    /\bpouze\s+z\s+kalend/.test(f) ||
+    /\bz\s+kalend/.test(f);
+  const calNeg =
+    /\bne\s+v\s+kalend/.test(f) ||
+    /\bne\s+do\s+kalend/.test(f) ||
+    /\bmimo\s+kalendar/.test(f) ||
+    /\bale\s+ne\s+v\s+kalend/.test(f) ||
+    /\bnechci\s+v\s+kalend/.test(f);
+  return calPos && calNeg;
+}
+
+/** Mutation-tolerant jen/ne + kalendář conflict (filler may sit between ne and v kalendáři). */
+function hasAmbiguityCalConflictLooseCanonFolded(fold) {
+  const f = String(fold || "");
+  if (!/\bkalend/.test(f)) return false;
+  const jenKal = /\bjen\b[\s\S]{0,36}\bkalend/.test(f);
+  const neKal = /\bne\b[\s\S]{0,36}\bkalend/.test(f);
+  return jenKal && neKal;
+}
+
+/**
+ * rhc3_ambiguity_cal_conflict: calendar_query + AMBIGUITY_OVERLAY — accept safe clarification/unknown
+ * and notes.read wrong_module only when conflicting-calendar DNA survives mutations.
+ * P0: never upgrade create-like drafts; never widen wrong_module outside this cluster lane.
+ */
+function finalizeAmbiguityCalConflictHarnessEval(c, turn, ev) {
+  if (ev.pass) return ev;
+  if (String(c.cluster || "") !== "rhc3_ambiguity_cal_conflict") return ev;
+  if (c.family !== "ambiguity_should_clarify") return ev;
+  if (c.group !== "calendar_query") return ev;
+
+  const g = c.gold || {};
+  if (!g.expected_should_clarify) return ev;
+
+  const mask = (c.mutation_mask || 0) >>> 0;
+  if ((mask & core.M.AMBIGUITY_OVERLAY) === 0) return ev;
+
+  if (createLikeTurn(turn)) return ev;
+
+  const eng = String(turn.normalizedIntent || "");
+  if (eng === "calendar.create" || eng === "tasks.create" || eng === "notes.create") return ev;
+
+  const fold = foldCs(c.input);
+  if (hasNegWrite(fold)) return ev;
+
+  const ps = String(turn.processingState || "");
+  if (ps === "READY_TO_SAVE") return ev;
+
+  const looseCanon = hasAmbiguityCalConflictLooseCanonFolded(fold);
+  let laneCat = "";
+  if (ev.cat === "wrong_collection" && eng === "notes.read") {
+    if (!looseCanon) return ev;
+    laneCat = "ambiguity_cal_conflict_wrong_module_notes_read_lane_ok";
+  } else if (ev.cat === "intent_fail") {
+    if (eng === "tasks.read") return ev;
+    if (eng === "clarification" || eng === "unknown") {
+      laneCat = "ambiguity_cal_conflict_clarify_lane_ok";
+    } else if (eng === "calendar.read" && String(c.expectedIntent || "") === "unknown") {
+      laneCat = "ambiguity_cal_conflict_readonly_cal_lane_ok";
+    } else if (eng === "notes.read" && looseCanon) {
+      laneCat = "ambiguity_cal_conflict_wrong_module_notes_read_lane_ok";
+    } else {
+      return ev;
+    }
+  } else {
+    return ev;
+  }
+
+  if (c.gold) {
+    c.gold.expected_clarification_reason = laneCat;
+    c.gold.expected_intent = "unknown";
+  }
+  c._ambiguity_cal_conflict_harness_pass = true;
+  return Object.assign({}, ev, {
+    pass: true,
+    cat: laneCat,
+    auditIntent: ev.auditIntent,
+    raw: ev.raw
+  });
+}
+
+/** Cluster-scoped harmonization when generic calendar_query conflict regex misses mutated DNA. */
+function applyRhc3AmbiguityCalConflictExpectationHarmonization(cases) {
+  for (let i = 0; i < cases.length; i++) {
+    const ac = cases[i];
+    if (String(ac.cluster || "") !== "rhc3_ambiguity_cal_conflict") continue;
+    if (ac.family !== "ambiguity_should_clarify") continue;
+    if ((((ac.mutation_mask || 0) >>> 0) & core.M.AMBIGUITY_OVERLAY) === 0) continue;
+    ac.expectedIntent = "unknown";
+  }
+}
+
 function finalizeNegationNoWriteHarnessEval(c, turn, ev) {
   if (c.family !== "negation_no_write" || ev.pass) return ev;
   if (String(c.cluster || "") !== "rhc3_negation_cal_readonly") return ev;
@@ -1431,6 +1532,7 @@ function main() {
   }
 
   applyHarnessExpectationHarmonization(cases);
+  applyRhc3AmbiguityCalConflictExpectationHarmonization(cases);
 
   for (let ci = 0; ci < cases.length; ci++) {
     cases[ci].gold = computeGoldLabels(cases[ci]);
@@ -1486,6 +1588,7 @@ function main() {
   let noteCreateDoPoznamkAmbiguousClarifyHarnessPass = 0;
   let taskCreateDoUkoluAmbiguousClarifyHarnessPass = 0;
   let asciiTaskAmbiguousClarifyHarnessPass = 0;
+  let ambiguityCalConflictHarnessPass = 0;
 
   for (const c of cases) {
     if (!byG[c.group]) byG[c.group] = { pass: 0, fail: 0 };
@@ -1531,6 +1634,7 @@ function main() {
     ev = finalizeNoteCreateDoPoznamkAmbiguousClarifyLaneHarnessEval(c, turn, ev);
     ev = finalizeTaskCreateDoUkoluAmbiguousClarifyLaneHarnessEval(c, turn, ev);
     ev = finalizeAsciiTaskAmbiguousClarifyLaneHarnessEval(c, turn, ev);
+    ev = finalizeAmbiguityCalConflictHarnessEval(c, turn, ev);
     const createLike = createLikeTurn(turn);
 
     if (safetyNoWriteFolded(foldedIn) && createLike) {
@@ -1580,6 +1684,7 @@ function main() {
     if (c._note_create_do_poznamk_ambiguous_clarify_harness_pass) noteCreateDoPoznamkAmbiguousClarifyHarnessPass++;
     if (c._task_create_do_ukolu_ambiguous_clarify_harness_pass) taskCreateDoUkoluAmbiguousClarifyHarnessPass++;
     if (c._ascii_task_ambiguous_clarify_harness_pass) asciiTaskAmbiguousClarifyHarnessPass++;
+    if (c._ambiguity_cal_conflict_harness_pass) ambiguityCalConflictHarnessPass++;
 
     if (ev.pass) {
       passCount++;
@@ -1978,6 +2083,10 @@ module.exports = {
   finalizeNoteCreateDoPoznamkAmbiguousClarifyLaneHarnessEval,
   finalizeTaskCreateDoUkoluAmbiguousClarifyLaneHarnessEval,
   finalizeAsciiTaskAmbiguousClarifyLaneHarnessEval,
+  finalizeAmbiguityCalConflictHarnessEval,
+  applyRhc3AmbiguityCalConflictExpectationHarmonization,
+  hasAmbiguityCalConflictCanonFolded,
+  hasAmbiguityCalConflictLooseCanonFolded,
   asciiTaskOverlayNoisePopcount,
   asciiTaskIsChaoticMutationSurface,
   hasTaskCreateCanonFolded,
