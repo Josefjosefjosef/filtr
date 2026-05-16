@@ -298,7 +298,7 @@ function runSilverCursorAdapter(adapter, opts) {
     "-OutputFile",
     "SILVER_CURSOR_OUTPUT.md",
     "-TimeoutSeconds",
-    "1200",
+    "3200",
   );
   return runCommand(adapter.shell, args);
 }
