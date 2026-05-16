@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-16T22:24:43.433973Z",
+  "ingestedAt": "2026-05-16T23:04:44.701493Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Soutěžní část finálového večera Eurovize je u konce. Čeká se na vyhlášení vítěze",
+      "url": "https://www.idnes.cz/kultura/hudba/eurovize-2026-cesko-daniel-zizka.A260515_133617_hudba_jgo",
+      "dt": "2026-05-16T22:27:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "eurovize",
+        "finálového",
+        "konce",
+        "soutěžní",
+        "večera",
+        "vyhlášení",
+        "vítěze",
+        "čeká",
+        "část"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -156,32 +182,6 @@
         "sauvignon",
         "vinné",
         "vypadá"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Soutěžní část finálového večera Eurovize je u konce. Čeká se na vyhlášení vítěze",
-      "url": "https://www.idnes.cz/kultura/hudba/eurovize-2026-cesko-daniel-zizka.A260515_133617_hudba_jgo",
-      "dt": "2026-05-16T21:58:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "eurovize",
-        "finálového",
-        "konce",
-        "soutěžní",
-        "večera",
-        "vyhlášení",
-        "vítěze",
-        "čeká",
-        "část"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1584,7 +1584,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47034,
+      "bytes": 47067,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1621,12 +1621,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T22:27:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "other": 3,
           "zpravy": 22,
-          "finance": 5,
-          "other": 3
+          "finance": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1638,6 +1638,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Soutěžní část finálového večera Eurovize je u konce. Čeká se na vyhlášení vítěze",
+            "publishedAt": "2026-05-16T22:27:00Z"
+          },
           {
             "title": "Byl krutý, ale bez něj jsem chtěla umřít, líčí bývalá členka sekty léčitele z Kutné Hory",
             "publishedAt": "2026-05-16T22:00:00Z"
@@ -1661,10 +1665,6 @@
           {
             "title": "Sauvignon ke klobáse, rosé k pizze. Jak vypadá vinné párování v centru Brna",
             "publishedAt": "2026-05-16T22:00:00Z"
-          },
-          {
-            "title": "Soutěžní část finálového večera Eurovize je u konce. Čeká se na vyhlášení vítěze",
-            "publishedAt": "2026-05-16T21:58:00Z"
           },
           {
             "title": "Nejlepší pivo měl Nepál, bez kávy ani krok. Vagabundi finišují čtyřletou túru z Bali",
