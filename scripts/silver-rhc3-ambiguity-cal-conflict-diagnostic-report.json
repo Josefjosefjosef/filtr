@@ -1,0 +1,34 @@
+{
+  "generated_at": "2026-05-16T22:41:42.031Z",
+  "expected_main_commit": "d130aa709b9e5ec2c6b28c38980fe94b1b9cf5c4",
+  "main_commit": "d130aa709b9e5ec2c6b28c38980fe94b1b9cf5c4",
+  "diag_runner_head": "d130aa709b9e5ec2c6b28c38980fe94b1b9cf5c4",
+  "target_cluster": "rhc3_ambiguity_cal_conflict",
+  "total_cluster_cases": 7059,
+  "cluster_pass": 7059,
+  "cluster_fail_count": 0,
+  "true_engine_fail_count": 0,
+  "must_fix_engine_count": 0,
+  "safe_clarification_count": 5647,
+  "ambiguity_count": 0,
+  "expected_clarification_count": 7059,
+  "wrong_module_count": 0,
+  "harness_finalize_would_pass": 1412,
+  "engine_fix_recommended": "NO",
+  "primary_bucket_counts": {
+    "TRUE_ENGINE_FAIL": 0,
+    "HARNESS_WRONG_MODULE_LANE": 0,
+    "HARNESS_GOLD_STRICT": 0,
+    "SAFE_CLARIFICATION_OK": 0,
+    "WRONG_MODULE_REAL_BUG": 0,
+    "OTHER": 0
+  },
+  "subcluster_counts": {},
+  "safety": {
+    "dangerous_write_count": 0,
+    "false_write_count": 0,
+    "query_created_write_count": 0,
+    "write_when_negated_count": 0
+  },
+  "text_block": "=== RHC3_AMBIGUITY_CAL_CONFLICT_DIAGNOSTIC_RESULT ===\nmain_commit=d130aa709b9e5ec2c6b28c38980fe94b1b9cf5c4\nexpected_main_commit=d130aa709b9e5ec2c6b28c38980fe94b1b9cf5c4\nengine_changed=NO\nassets_app_changed=NO\ntotal_cluster_cases=7059\ncluster_fail_count=0\ntrue_engine_fail_count=0\nmust_fix_engine_count=0\nsafe_clarification_count=5647\nambiguity_count=0\nexpected_clarification_count=7059\nwrong_module_count=0\nharness_finalize_would_pass=1412\nengine_fix_recommended=NO\ndangerous_write_count=0\nfalse_write_count=0\nquery_created_write_count=0\nwrite_when_negated_count=0\ngit_status_clean=NO\n=== END_RHC3_AMBIGUITY_CAL_CONFLICT_DIAGNOSTIC_RESULT ==="
+}
