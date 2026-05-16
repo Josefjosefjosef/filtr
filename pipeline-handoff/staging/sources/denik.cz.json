@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-16T20:24:47.179557Z",
+  "ingestedAt": "2026-05-16T21:05:08.791020Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Tragédie na letišti v Klatovech. Parašutistu se po pádu nepodařilo zachránit",
+      "url": "https://www.denik.cz/nehody/tragedie-na-letisti-v-klatovech-parasutistu-se-po-padu-nepodarilo-zachranit-2026.html",
+      "dt": "2026-05-16T20:13:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "klatovech",
+        "letišti",
+        "nepodařilo",
+        "parašutistu",
+        "pádu",
+        "tragédie",
+        "zachránit"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -633,32 +657,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zatáhl ji do pole a ubodal. Propuštěný vrah zabil studentku, protože ho nechtěla",
-      "url": "https://www.denik.cz/staty-eu/vrazda-studentky-rumunsko-propusteny-vrah.html",
-      "dt": "2026-05-16T05:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "nechtěla",
-        "pole",
-        "propuštěný",
-        "protože",
-        "studentku",
-        "ubodal",
-        "vrah",
-        "zabil",
-        "zatáhl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -669,7 +667,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 27976,
+      "bytes": 27725,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -706,7 +704,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-16T18:12:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T20:13:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -723,6 +721,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tragédie na letišti v Klatovech. Parašutistu se po pádu nepodařilo zachránit",
+            "publishedAt": "2026-05-16T20:13:00Z"
+          },
           {
             "title": "Ve Splitu vyjelo při startu mimo ranvej letadlo Airbus se 130 lidmi na palubě",
             "publishedAt": "2026-05-16T18:12:00Z"
@@ -750,10 +752,6 @@
           {
             "title": "Naděje je pryč. Mrtvá velryba u dánských břehů je Timmy, potvrdily úřady",
             "publishedAt": "2026-05-16T15:00:00Z"
-          },
-          {
-            "title": "Případ smrti malého Émila pokročil, policie má DNA. Prarodičům někdo zapálil dům",
-            "publishedAt": "2026-05-16T14:45:00Z"
           }
         ]
       }

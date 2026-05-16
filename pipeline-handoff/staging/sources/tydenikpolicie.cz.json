@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-16T20:24:47.179557Z",
+  "ingestedAt": "2026-05-16T21:05:08.791020Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na letišti u Klatov zemřel parašutista",
+      "url": "https://tydenikpolicie.cz/na-letisti-u-klatov-zemrel-parasutista/",
+      "dt": "2026-05-16T20:50:05Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "klatov",
+        "letišti",
+        "parašutista",
+        "zemřel"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -235,32 +256,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ženu kontaktoval falešný policista. Přišla o téměř 660 tisíc korun",
-      "url": "https://tydenikpolicie.cz/zenu-kontaktoval-falesny-policista-prisla-o-temer-660-tisic-korun/",
-      "dt": "2026-05-16T02:02:59Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "660",
-        "falešný",
-        "kontaktoval",
-        "korun",
-        "policista",
-        "přišla",
-        "tisíc",
-        "téměř",
-        "ženu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -271,7 +266,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16419,
+      "bytes": 16402,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -308,7 +303,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-16T20:08:24Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T20:50:05Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -323,6 +318,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na letišti u Klatov zemřel parašutista",
+            "publishedAt": "2026-05-16T20:50:05Z"
+          },
           {
             "title": "Po Chomutově se měl pohybovat muž s dlouhou zbraní. Zpacifikovala ho zásahová jednotka",
             "publishedAt": "2026-05-16T20:08:24Z"
@@ -350,10 +349,6 @@
           {
             "title": "V Praze proběhla bezpečnostní akce Jupiter. Vyvrcholila policejní uzávěrou magistrály",
             "publishedAt": "2026-05-16T11:29:11Z"
-          },
-          {
-            "title": "V Novém Jičíně proběhlo součinnostní cvičení AMOK",
-            "publishedAt": "2026-05-16T06:02:50Z"
           }
         ]
       }
