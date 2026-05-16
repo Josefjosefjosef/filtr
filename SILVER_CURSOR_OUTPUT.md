@@ -1,45 +1,63 @@
 # silver-cursor-agent-adapter
-adapter_mode=wsl_agent_print_ask_trust_workspace
+long_task_argv_recommendation=(none)
 wsl_workspace_linux_path=/mnt/c/projects/filtr
-cursor_version_exe=/home/spedk/.local/bin/agent
-repo_root=C:\projects\filtr
-timed_out=NO
-cursor_agent_exe=wsl.exe
-exit_code=0
-cursor_version=2026.05.09-0afadcc
-task_bytes_utf8=1101
-diagnostic_wsl_adapter_ready=YES
-output_file=C:\projects\filtr\SILVER_CURSOR_OUTPUT.md
-command_executed=wsl.exe -d Ubuntu -- /home/spedk/.local/bin/agent --print --mode ask --trust --workspace /mnt/c/projects/filtr
-
-cwd_powershell=C:\projects\filtr
-invocation_mode=wsl_direct_argv
-task_file=C:\projects\filtr\SILVER_NEXT_ACTION.md
 wsl_agent_linux_path=/home/spedk/.local/bin/agent
-adapter_subcommand_used=wsl_agent
-adapter_stdout_marker_exact=NO
-adapter_probe_pass=N/A
+exit_code=0
+post_timeout_output_interpretation=completed_with_stream_bytes_present
+adapter_mode=wsl_agent_print_ask_trust_workspace
+prompt_preview=Print exactly: CURSOR_AGENT_STDIN_OK. Do not modify files.
+streaming_output_supported=NO
+task_chars=58
+elapsed_ms=9893
+diagnostic_wsl_adapter_ready=YES
+repo_root=C:\projects\filtr
+task_digest=abd724776a324fb4
+timestamp_local=2026-05-17T01:40:23.7678723+02:00
+stderr_shell_leak_probe_pattern=NO
+task_too_large_for_argv=NO
+czech_backtick_parentheses_probe_pass=N/A
+stderr_bytes=0
+argv_mode=wsl_bash_c_exec_redirect
+task_file=(probe_inline)
+adapter_probe_pass=YES
+task_sha256_prefix=abd724776a324fb4
+wsl_prompt_delivery=bash_file_redirect
+process_end_utc=2026-05-16T23:40:38.5722166Z
+stdout_bytes=22
 wsl_distro=Ubuntu
-timestamp_local=2026-05-14T09:48:24.1681704+02:00
+task_lines=1
+process_start_utc=2026-05-16T23:40:28.6679181Z
+cwd_powershell=C:\projects\filtr
+stderr_nonempty=NO
+adapter_subcommand_used=wsl_agent
 can_run_full_auto_loop_maxcycles_1=YES
+last_stdout_bytes=UNAVAILABLE
+adapter_stdout_marker_exact=YES
+command_executed=wsl.exe -d Ubuntu -- /bin/bash -c <TASK_OMITTED:exec_agent_stdin_from_temp_file_path_only_no_task_text_in_shell_string>
+cursor_version_exe=/home/spedk/.local/bin/agent
+task_bytes_utf8=58
+cursor_version=2026.05.16-0338208
+last_stderr_bytes=UNAVAILABLE
+sentinel_present_in_command_executed=NO
+output_file=C:\projects\filtr\SILVER_CURSOR_OUTPUT.md
+stdout_nonempty=YES
+last_output_utc=UNAVAILABLE
+invocation_mode=wsl_bash_c_file_redirect
+task_file_used=NO
+cursor_agent_exe=wsl.exe
+timed_out=NO
+task_argv_safe_char_limit=8192
+timeout_seconds=3400
+
+SILVER_WSL_ADAPTER_STREAMING_AND_HEARTBEAT
+streaming_output_supported=NO
+last_output_utc=UNAVAILABLE
+last_stdout_bytes=UNAVAILABLE
+last_stderr_bytes=UNAVAILABLE
+adapter_wall_clock_note=WaitForExit blocks until exit or timeout; stdout/stderr are read only after the child process ends (no incremental reads), so there is no live streaming progress signal during the run.
+timeout_semantics=wall_clock_only
 
 # stdout
-## Ask mode (shrnutí po úklidu záhlaví souboru)
-
-- Adaptér: `exit_code=0`, `timed_out=NO`, `can_run_full_auto_loop_maxcycles_1=YES`.
-- Dříve byl do metadat vložen text z `SILVER_NEXT_ACTION.md` (neplatné příkazy `cat C:\...` a neexistující `scripts/silver-diagnostic.js`); ten byl z tohoto souboru odstraněn.
-- Pro čtení reportů na Windows používej `Get-Content -LiteralPath`, ne POSIX `cat` s cestou `C:\...` ve WSL příkazové řádce bez správného quotingu.
-- Diagnostika adaptéru v repu: `powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter-diagnostic.ps1`
-- Stav Silver: `node scripts/silver-autopilot.cjs --status`
-
-## Poznámka k `SILVER_RUN_REPORT.md` (dle posledního načtení)
-
-- `status=PASS`, `safety_counters` všechny nuly; `proof_gate_consistency_reason` může uvádět `deep_product_embedded_gate=FAIL` jako varování konzistence — není to automaticky `TRUE_ENGINE_FAIL`.
-
+CURSOR_AGENT_STDIN_OK
 # stderr
-/bin/bash: line 1: SILVER_CURSOR_OUTPUT.md: command not found
-cat: C:projectsfiltrSILVER_CURSOR_OUTPUT.md: No such file or directory
-/bin/bash: line 1: node: command not found
-cat: C:projectsfiltrSILVER_RUN_REPORT.md: No such file or directory
-/bin/bash: line 1: TRUE_ENGINE_FAIL: command not found
-/bin/bash: line 1: node: command not found
+

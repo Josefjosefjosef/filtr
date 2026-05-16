@@ -1,44 +1,71 @@
-<!-- SILVER_NEXT_ACTION: manual-quality-fix-2026-05-14; copy-paste for Cursor; not auto-applied -->
+﻿ÚKOL PRO CURSOR — Silver — FIX WSL ADAPTER READY GATE — SCRIPTS ONLY
 
-ÚKOL PRO CURSOR — infoUzel.cz / Silver
+CÍL:
+Opravit scripts/silver-cursor-agent-adapter.ps1 a související orchestration gating tak,
+aby WSL agent PASS lane nastavoval adapter_ready=YES i pro hlavní adapter flow.
 
-### Scope guard (povolené)
-- Úpravy jen: `scripts/silver-autopilot.cjs`, `scripts/silver-autopilot-loop.ps1`, dokumentace autopilota (`SILVER_AUTOPILOT_README.md`), runtime reporty `SILVER_*.md` v kořeni repa.
-- **Zakázáno:** `assets/app.js`, engine, routing, retrieval, nové halucinované skripty, deploy, spuštění **MaxCycles 0** nebo dalšího **MaxCycles 1** autopilot smyčky v rámci tohoto úkolu.
+AKTUÁLNÍ STAV:
+WSL probe:
+- marker_probe_pass=YES
+- adapter_ready=YES
+- safe_for_maxcycles_1=YES
 
-### STOP podmínky (hned ukonči zadání)
-- Jakákoliv změna engine nebo `assets/app.js`.
-- Spuštění `silver-autopilot-loop.ps1` s `-MaxCycles 0` nebo `-MaxCycles 1` (tento úkol je ruční validace a dokumentace — ne další loop).
-- Návrhy na neexistující soubory (`scripts/silver-diagnostic.js`, `scripts/silver-smoke-test-maxcycles-1.js`, apod.).
+ALE:
+root diagnostic stále vrací:
+adapter_ready=NO
+adapter_ready_reason=no_headless_marker_stdout_exit0_and_no_input_output
 
-### Kroky (PowerShell, repo `C:\projects\filtr`)
+DŮLEŽITÉ:
+Nejde o WSL failure.
+Jde o stale / incorrect top-level gating logic.
 
-1. **Vyhodnoť poslední výstupy (povinné):**
-   - `Set-Location C:\projects\filtr`
-   - `Get-Content -LiteralPath .\SILVER_CURSOR_OUTPUT.md -Raw`
-   - `Get-Content -LiteralPath .\SILVER_RUN_REPORT.md -Raw`
+SCOPE:
+Pouze:
+- scripts/silver-cursor-agent-adapter.ps1
+- scripts/silver-cursor-agent-adapter-diagnostic.ps1
+- případně související report JSON
 
-2. **Git — runtime jen po čtení:** Pokud `git status --short` ukazuje výhradně `SILVER_*.md` (případně již schválené reporting cesty), po shrnutí obsahu můžeš pro návrat na čistý strom použít např. `git restore --worktree -- SILVER_NEXT_ACTION.md` atd. — **nejprve čti, pak restore**, nikdy neobnovuj engine soubory „naslepo“.
+ZAKÁZÁNO:
+- assets/app.js
+- Silver engine
+- routing
+- UI/CSS/backend
+- broad refactor
 
-3. **Autopilot (existující skript):**
-   - `node scripts/silver-autopilot.cjs --status`
+POVINNÉ:
+- zachovat všechny safety guardy
+- MaxCycles0 musí zůstat BLOCKED
+- adapter_ready musí být YES pokud:
+  - WSL marker probe PASS
+  - stdout marker exact YES
+  - exit code 0
+  - timeout guard YES
+  - repo dirty unexpected NO
+- zachovat STOP při reálném selhání adapteru
+- žádné fake PASS
 
-4. **Volitelně — adaptér (existující):**
-   - `powershell -ExecutionPolicy Bypass -File scripts\silver-cursor-agent-adapter-diagnostic.ps1`
+OVĚŘ:
+powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter-diagnostic.ps1
 
-### Povinný výsledek (vlož do chatu po provedení)
+powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -WslUbuntuAgent -Probe -OutputFile SILVER_CURSOR_OUTPUT.md -TimeoutSeconds 120
 
-```
-=== SILVER_MANUAL_NEXT_ACTION_RESULT ===
-cursor_output_reviewed=YES/NO
-run_report_reviewed=YES/NO
-runtime_dirty_handled=YES/NO/NA
-autopilot_status_ran=YES/NO
-adapter_diagnostic_ran=YES/NO/NA
-engine_touched=NO
-assets_app_touched=NO
-maxcycles_zero_attempted=NO
-maxcycles_one_loop_attempted=NO
-hallucinated_scripts_suggested=NO
-=== END_SILVER_MANUAL_NEXT_ACTION_RESULT ===
-```
+git status --short
+
+PR vytvoř, ale nemerguj.
+
+RESULT BLOCK:
+=== SILVER_WSL_ADAPTER_GATE_FIX_RESULT ===
+engine_changed=NO
+assets_app_changed=NO
+adapter_ready_root=YES/NO
+wsl_probe_pass=YES/NO
+safe_for_maxcycles_1=YES/NO
+safe_for_maxcycles_0=YES/NO
+safety_guards_preserved=YES/NO
+git_status_clean=YES/NO
+pr_created=YES/NO
+pr_url=...
+ready_for_merge=YES/NO
+=== END_SILVER_WSL_ADAPTER_GATE_FIX_RESULT ===
+
+FINAL BEEP
