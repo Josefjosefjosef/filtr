@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-16T13:04:50.901415Z",
+  "ingestedAt": "2026-05-16T13:45:00.030846Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "„Do koncertního sálu bych je nedostal.“ Pražské jaro lákalo rodiny programem v parku",
+      "url": "https://magazin.aktualne.cz/kultura/do-koncertniho-salu-bych-je-nedostal-prazske-jaro-lakalo-rodiny-programem-v-parku/r~aaa292735e9f9fd11a1052a7e9ee24f6/",
+      "dt": "2026-05-16T13:04:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bych",
+        "jaro",
+        "koncertního",
+        "lákalo",
+        "nedostal",
+        "parku",
+        "pražské",
+        "programem",
+        "rodiny",
+        "sálu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -510,31 +537,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Řekněte, kdo má na zuby. Špidla jako možný „lidový vůdce“ levice",
-      "url": "https://zpravy.aktualne.cz/domaci/reknete-kdo-ma-na-zuby-spidla-jako-mozny-lidovy-vudce-levice/r~aaa292816205db8b92367a0e4d0088b1/",
-      "dt": "2026-05-16T06:00:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "jako",
-        "levice",
-        "lidový",
-        "možný",
-        "vůdce",
-        "zuby",
-        "řekněte",
-        "špidla"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -545,7 +547,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21624,
+      "bytes": 21587,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -582,11 +584,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-16T12:51:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T13:04:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "other": 1,
           "sport": 6,
-          "zpravy": 14
+          "zpravy": 13
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -598,6 +601,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Do koncertního sálu bych je nedostal.“ Pražské jaro lákalo rodiny programem v parku",
+            "publishedAt": "2026-05-16T13:04:00Z"
+          },
           {
             "title": "Slováci vydřeli vítězství nad Norskem. Podržel je gólman Hlavaj",
             "publishedAt": "2026-05-16T12:51:00Z"
@@ -625,10 +632,6 @@
           {
             "title": "Ve Skotsku vrcholí třaskavá bitva o titul. Rozhodčí skončil pod policejní ochranou",
             "publishedAt": "2026-05-16T11:36:00Z"
-          },
-          {
-            "title": "Rusko chystá velký útok na Ukrajinu. Podle Zelenského má mířit na prezidentskou kancelář",
-            "publishedAt": "2026-01-21T06:45:00Z"
           }
         ]
       }

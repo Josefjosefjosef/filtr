@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-16T13:04:50.901415Z",
+  "ingestedAt": "2026-05-16T13:45:00.030846Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Klempíř počítá s prosazením zákona o veřejnoprávních médiích",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/klempir-pocita-s-prosazenim-zakona-o-verejnopravnich-mediich-373508",
+      "dt": "2026-05-16T13:10:03Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "klempíř",
+        "médiích",
+        "počítá",
+        "prosazením",
+        "veřejnoprávních",
+        "zákona"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -725,33 +748,6 @@
         "resortů",
         "zástupci",
         "zón"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Voda na měsících Jupiteru a Saturnu mrzne do podoby štrůdlu, popsali čeští vědci",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/voda-na-mesicich-jupiteru-a-saturnu-mrzne-do-podoby-strudlu-popsali-cesti-vedci-373438",
-      "dt": "2026-05-15T11:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "jupiteru",
-        "mrzne",
-        "měsících",
-        "podoby",
-        "popsali",
-        "saturnu",
-        "voda",
-        "vědci",
-        "čeští",
-        "štrůdlu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1514,7 +1510,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44004,
+      "bytes": 44102,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1574,11 +1570,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T12:40:41Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T13:10:03Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
-          "other": 3
+          "zpravy": 28,
+          "other": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1590,6 +1586,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Klempíř počítá s prosazením zákona o veřejnoprávních médiích",
+            "publishedAt": "2026-05-16T13:10:03Z"
+          },
           {
             "title": "Rezignace na debatu o válce brzdí ruskou občanskou společnost, říká rusista",
             "publishedAt": "2026-05-16T12:40:41Z"
@@ -1617,10 +1617,6 @@
           {
             "title": "Lidé ve Vrančicích na Příbramsku v referendu odmítli stavbu větrných elektráren",
             "publishedAt": "2026-05-16T07:11:22Z"
-          },
-          {
-            "title": "Samosběr jahod začne u některých pěstitelů už v květnu, ceny mírně porostou",
-            "publishedAt": "2026-05-16T07:00:00Z"
           }
         ]
       }
@@ -1632,7 +1628,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38385,
+      "bytes": 38457,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1726,7 +1722,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77136,
+      "bytes": 77132,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
