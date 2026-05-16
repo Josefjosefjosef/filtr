@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-16T19:05:03.536850Z",
+  "ingestedAt": "2026-05-16T19:44:54.517188Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Ve finále Eurovize soutěží 25 zemí, vyhrát může i český zpěvák",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/ve-finale-eurovize-soutezi-25-zemi-vyhrat-muze-i-cesky-zpevak-373483",
+      "dt": "2026-05-16T19:09:40Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "eurovize",
+        "finále",
+        "soutěží",
+        "vyhrát",
+        "zemí",
+        "zpěvák",
+        "český"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -721,26 +745,26 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Rusko chystá útok na prezidentskou kancelář v Kyjevě, tvrdí Zelenskyj",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/rusko-chysta-utok-na-prezidentskou-kancelar-v-kyjeve-tvrdi-zelenskyj-373492",
-      "dt": "2026-05-15T16:35:11Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Kynžvart vyhrál první házenkářské finále. Rozhodly dva góly",
+      "url": "https://sport.ceskatelevize.cz/clanek/hazena/kynzvart-vyhral-prvni-hazenkarske-finale-rozhodly-dva-goly-156835",
+      "dt": "2026-05-16T19:30:39Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "chystá",
-        "kancelář",
-        "kyjevě",
-        "prezidentskou",
-        "rusko",
-        "tvrdí",
-        "zelenskyj",
-        "útok"
+        "dva",
+        "finále",
+        "góly",
+        "házenkářské",
+        "kynžvart",
+        "první",
+        "rozhodly",
+        "vyhrál"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1462,30 +1486,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Melovský před premiérou na MS: Viděl jsem na chodbě Crosbyho, to bylo hustý",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/melovsky-pred-premierou-na-ms-videl-jsem-na-chodbe-crosbyho-to-bylo-husty-156803",
-      "dt": "2026-05-15T10:19:30Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "chodbě",
-        "crosbyho",
-        "hustý",
-        "jsem",
-        "melovský",
-        "premiérou",
-        "viděl"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1496,7 +1496,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42742,
+      "bytes": 42924,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1556,12 +1556,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T18:30:05Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T19:09:40Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
-          "finance": 1,
-          "other": 2
+          "other": 3,
+          "zpravy": 26,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1573,6 +1573,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ve finále Eurovize soutěží 25 zemí, vyhrát může i český zpěvák",
+            "publishedAt": "2026-05-16T19:09:40Z"
+          },
           {
             "title": "V italské Modeně najel řidič do skupiny lidí",
             "publishedAt": "2026-05-16T18:30:05Z"
@@ -1600,10 +1604,6 @@
           {
             "title": "Meteorologové zrušili výstrahu před vydatným deštěm v Beskydech",
             "publishedAt": "2026-05-16T15:44:45Z"
-          },
-          {
-            "title": "Desítky tisíc lidí se sešly na dvou protichůdných protestech v Londýně",
-            "publishedAt": "2026-05-16T15:11:14Z"
           }
         ]
       }
@@ -1615,7 +1615,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37709,
+      "bytes": 37473,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1652,7 +1652,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T17:27:41Z",
+        "raw_feed_latest_publishedAt": "2026-05-16T19:30:39Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1667,6 +1667,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kynžvart vyhrál první házenkářské finále. Rozhodly dva góly",
+            "publishedAt": "2026-05-16T19:30:39Z"
+          },
           {
             "title": "Olomoucká Sigma si poradila s Karvinou, Baník doma porazil Zlín",
             "publishedAt": "2026-05-16T17:27:41Z"
@@ -1694,10 +1698,6 @@
           {
             "title": "Sinner porazil v dohrávce Medvěděva, finále v Římě odehraje s Ruudem",
             "publishedAt": "2026-05-16T15:06:48Z"
-          },
-          {
-            "title": "Kneblová a Chaloupka vybojovali na kánoi místo v reprezentaci",
-            "publishedAt": "2026-05-16T14:55:04Z"
           }
         ]
       }
