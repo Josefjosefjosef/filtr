@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-17T11:45:15.295485Z",
+  "ingestedAt": "2026-05-17T12:24:43.341789Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Tvůrce Stardew Valley přiznává, že potřebuje klid na další tvorbu",
+      "url": "https://zing.cz/article/tvurce-stardew-valley-priznava-ze-potrebuje-klid-na-dalsi-tvorbu",
+      "dt": "2026-05-17T12:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "další",
+        "klid",
+        "potřebuje",
+        "přiznává",
+        "stardew",
+        "tvorbu",
+        "tvůrce",
+        "valley"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -948,31 +973,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Nové informace o Assassin's Creed Hexe naznačují návrat Ezia",
-      "url": "https://zing.cz/article/unikly-informace-o-assassins-creed-hexe",
-      "dt": "2026-05-13T17:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "assassin",
-        "creed",
-        "ezia",
-        "hexe",
-        "informace",
-        "naznačují",
-        "nové",
-        "návrat"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -983,7 +983,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 127330,
+      "bytes": 127272,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1020,7 +1020,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-17T11:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1036,6 +1036,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tvůrce Stardew Valley přiznává, že potřebuje klid na další tvorbu",
+            "publishedAt": "2026-05-17T12:00:00Z"
+          },
           {
             "title": "Steampunková strategie v podobě obřího města na kolejích",
             "publishedAt": "2026-05-17T11:00:00Z"
@@ -1063,10 +1067,6 @@
           {
             "title": "WoW Classic Plus? Blizzard se radí se streamery",
             "publishedAt": "2026-05-16T16:00:00Z"
-          },
-          {
-            "title": "Isowulf: mod přetvoří Wolfenstein 3D na 2D",
-            "publishedAt": "2026-05-16T14:00:00Z"
           }
         ]
       }

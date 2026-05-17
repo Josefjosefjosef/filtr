@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-17T11:45:15.295485Z",
+  "ingestedAt": "2026-05-17T12:24:43.341789Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Mladý pár Ukrajinců plánoval rodinu, ona studovala v Česku. Zabil je ruský nálet",
+      "url": "https://www.denik.cz/ze_sveta/ap-mlady-par-zabity-pri-ruskych-uderech-planoval-rodinu-ona-studovala-v-cr.html",
+      "dt": "2026-05-17T11:37:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "mladý",
+        "nálet",
+        "ona",
+        "plánoval",
+        "pár",
+        "rodinu",
+        "ruský",
+        "studovala",
+        "ukrajinců",
+        "zabil",
+        "česku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -624,32 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "V Německu za letu explodovalo letadlo a zřítilo se mezi domy. Dva lidé zemřeli",
-      "url": "https://www.denik.cz/staty-eu/nehoda-letadla-v-nemecku-limburgerhof.html",
-      "dt": "2026-05-16T15:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "domy",
-        "dva",
-        "explodovalo",
-        "letadlo",
-        "letu",
-        "lidé",
-        "německu",
-        "zemřeli",
-        "zřítilo"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -660,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28852,
+      "bytes": 29228,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -697,7 +699,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-17T10:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T11:37:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -713,6 +715,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mladý pár Ukrajinců plánoval rodinu, ona studovala v Česku. Zabil je ruský nálet",
+            "publishedAt": "2026-05-17T11:37:00Z"
+          },
           {
             "title": "Útočník ho bodl do hlavy, i tak ho přemohl. Itálie oslavuje hrdinu z Modeny",
             "publishedAt": "2026-05-17T10:40:00Z"
@@ -740,10 +746,6 @@
           {
             "title": "V odstaveném autě v Texasu uhořely dvě malé děti. Matka čelí obvinění z vraždy",
             "publishedAt": "2026-05-17T07:20:00Z"
-          },
-          {
-            "title": "Marvel bez zábran. Punisher: Poslední zúčtování je krvavá a syrová jízda",
-            "publishedAt": "2026-05-17T06:00:00Z"
           }
         ]
       }

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-17T11:45:15.295485Z",
+  "ingestedAt": "2026-05-17T12:24:43.341789Z",
   "items": [
     {
       "section": "aktualne",
@@ -761,6 +761,29 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Salač zajel v Katalánsku nejlepší výsledek sezony",
+      "url": "https://sport.ceskatelevize.cz/clanek/motorsport/salac-zajel-v-katalansku-nejlepsi-vysledek-sezony-156845",
+      "dt": "2026-05-17T11:49:02Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "katalánsku",
+        "nejlepší",
+        "salač",
+        "sezony",
+        "výsledek",
+        "zajel"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Kousková útočí na třetí titul z evropského okruhu LET",
       "url": "https://sport.ceskatelevize.cz/clanek/golf/kouskova-utoci-na-treti-titul-z-evropskeho-okruhu-let-156843",
       "dt": "2026-05-17T10:22:54Z",
@@ -1471,31 +1494,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rulík po Dánsku: Pár věcí bylo všelijakých, musíme pracovat na jednoduchosti",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/rulik-po-dansku-par-veci-bylo-vselijakych-musime-pracovat-na-jednoduchosti-156814",
-      "dt": "2026-05-16T06:29:23Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "dánsku",
-        "jednoduchosti",
-        "musíme",
-        "pracovat",
-        "pár",
-        "rulík",
-        "věcí",
-        "všelijakých"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1625,7 +1623,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37297,
+      "bytes": 37031,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1662,7 +1660,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-17T10:22:54Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T11:49:02Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1677,6 +1675,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Salač zajel v Katalánsku nejlepší výsledek sezony",
+            "publishedAt": "2026-05-17T11:49:02Z"
+          },
           {
             "title": "Kousková útočí na třetí titul z evropského okruhu LET",
             "publishedAt": "2026-05-17T10:22:54Z"
@@ -1704,10 +1706,6 @@
           {
             "title": "Dobeš schytal výprask a střídal. O postupu rozhodne sedmý zápas",
             "publishedAt": "2026-05-17T06:14:29Z"
-          },
-          {
-            "title": "Soutěž k MS v hokeji – 17. května",
-            "publishedAt": "2026-05-16T22:00:00Z"
           }
         ]
       }
@@ -1719,7 +1717,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77879,
+      "bytes": 77854,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
