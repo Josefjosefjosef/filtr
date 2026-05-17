@@ -1,26 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-17T11:04:54.481220Z",
+  "ingestedAt": "2026-05-17T11:45:15.295485Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "HOKEJ ONLINE: Slováci poprvé udeřili! Obhájci trofeje už také vedou",
+      "title": "HOKEJ ONLINE: Obhájce trofeje znovu udeřil, outsider je ale stále na dostřel! Slováci hájí těsný náskok",
       "url": "https://www.sport.cz/clanek/hokej-ms-slovaci-zautoci-na-dalsi-vyhru-uradujici-mistri-sveta-touzi-napravit-nepovedeny-vstup-do-ms-5455487",
       "dt": "2026-05-17T04:50:43Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
+        "ale",
+        "dostřel",
         "hokej",
-        "obhájci",
+        "hájí",
+        "náskok",
+        "obhájce",
         "online",
-        "poprvé",
+        "outsider",
         "slováci",
-        "také",
+        "stále",
         "trofeje",
-        "udeřili",
-        "vedou"
+        "těsný",
+        "udeřil",
+        "znovu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ztráta v prvním kole, pak posun vpřed! Salač slaví v Barceloně nejlepší výsledek sezony",
+      "url": "https://www.sport.cz/clanek/moto-motocykly-ztrata-v-prvnim-kole-pak-posun-vpred-salac-slavi-v-barcelone-nejlepsi-vysledek-sezony-5456248",
+      "dt": "2026-05-17T11:05:39Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "barceloně",
+        "kole",
+        "nejlepší",
+        "pak",
+        "posun",
+        "prvním",
+        "salač",
+        "sezony",
+        "slaví",
+        "vpřed",
+        "výsledek",
+        "ztráta"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -747,34 +781,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Čech přemohl krajany. Snad mi doma nezapálí auto, smál se Horák po výhře Slovinska",
-      "url": "https://www.sport.cz/clanek/hokej-ms-cech-premohl-krajany-snad-mi-doma-nezapali-auto-smal-se-horak-po-vyhre-slovinska-5456116",
-      "dt": "2026-05-16T22:00:08Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "auto",
-        "doma",
-        "horák",
-        "krajany",
-        "nezapálí",
-        "přemohl",
-        "slovinska",
-        "smál",
-        "snad",
-        "výhře",
-        "čech"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -785,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 49705,
+      "bytes": 49319,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -822,10 +828,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-17T09:35:56Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T11:05:39Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 30
+          "sport": 29,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -838,8 +845,12 @@
         },
         "sample_titles": [
           {
-            "title": "HOKEJ ONLINE: Slováci poprvé udeřili! Obhájci trofeje už také vedou",
+            "title": "HOKEJ ONLINE: Obhájce trofeje znovu udeřil, outsider je ale stále na dostřel! Slováci hájí těsný náskok",
             "publishedAt": "2026-05-17T04:50:43Z"
+          },
+          {
+            "title": "Ztráta v prvním kole, pak posun vpřed! Salač slaví v Barceloně nejlepší výsledek sezony",
+            "publishedAt": "2026-05-17T11:05:39Z"
           },
           {
             "title": "Hlaváčková zahájila v Bulharsku Světový pohár devátým místem",
@@ -864,10 +875,6 @@
           {
             "title": "V Ostravě panikařili, záhadné věty zmátly i sázkaře. Konspirace zahýbala bojem o záchranu",
             "publishedAt": "2026-05-17T08:28:19Z"
-          },
-          {
-            "title": "Vadlejch vyhrál mítink v Tokiu! Poprvé od OH 2024 hodil přes 85 metrů",
-            "publishedAt": "2026-05-17T06:25:33Z"
           }
         ]
       }
