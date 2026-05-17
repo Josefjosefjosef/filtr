@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-17T08:25:22.514340Z",
+  "ingestedAt": "2026-05-17T09:04:42.887321Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Podprůměr, hokejisté ale u čtenářů vyvázli s dostatečnou. Nejhůř dopadl Mandát",
+      "url": "https://www.idnes.cz/hokej/ms-2026/cesko-slovinsko-znamkovani-vysledky.A260517_100125_ms-hokej-2026_huda",
+      "dt": "2026-05-17T08:46:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "ale",
+        "dopadl",
+        "dostatečnou",
+        "hokejisté",
+        "mandát",
+        "nejhůř",
+        "podprůměr",
+        "vyvázli",
+        "čtenářů"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -748,33 +774,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "MS v hokeji 2026 ONLINE: Češi koušou trpkou porážku, brankář Dostál nepřijede",
-      "url": "https://www.idnes.cz/hokej/ms-2026/ms-v-hokeji-2026-online-reportaz.A260513_124432_ms-hokej-2026_czo",
-      "dt": "2026-05-16T18:23:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "2026",
-        "brankář",
-        "dostál",
-        "hokeji",
-        "koušou",
-        "nepřijede",
-        "online",
-        "porážku",
-        "trpkou",
-        "češi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -785,7 +784,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47235,
+      "bytes": 47359,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -822,7 +821,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-17T07:41:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T08:46:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -838,6 +837,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Podprůměr, hokejisté ale u čtenářů vyvázli s dostatečnou. Nejhůř dopadl Mandát",
+            "publishedAt": "2026-05-17T08:46:00Z"
+          },
           {
             "title": "V Teplicích to bylo nepřijatelné, čílí se majitel Dukly. Volá po regulérnosti ligy",
             "publishedAt": "2026-05-17T07:41:00Z"
@@ -865,10 +868,6 @@
           {
             "title": "Švédsko - Česko v TV: kde sledovat zápas MS v hokeji 2026 živě",
             "publishedAt": "2026-05-17T06:29:00Z"
-          },
-          {
-            "title": "Šok ve Fribourgu, není to však poprvé. Připomeňte si i další porážky s outsidery",
-            "publishedAt": "2026-05-17T06:10:00Z"
           }
         ]
       }
