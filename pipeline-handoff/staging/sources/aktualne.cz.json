@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-17T14:25:06.058606Z",
+  "ingestedAt": "2026-05-17T15:06:03.362148Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Tlačil na poslance, ať pomohou. Zoufalý muž před lety zaplatil, dluh ale nezmizel",
+      "url": "https://zpravy.aktualne.cz/domaci/tlacil-na-poslance-at-pomohou-zoufaly-muz-pred-lety-zaplatil-dluh-ale-nezmizel/r~aaa2981a5146e53a6b319518a11e207f/",
+      "dt": "2026-05-17T14:27:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "ale",
+        "dluh",
+        "lety",
+        "muž",
+        "nezmizel",
+        "pomohou",
+        "poslance",
+        "tlačil",
+        "zaplatil",
+        "zoufalý"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -498,30 +525,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Velký návrat do klece. McGregor bude zápasit po pěti letech",
-      "url": "https://sport.aktualne.cz/ostatni-sporty/velky-navrat-do-klece-mcgregor-bude-zapasit-po-peti-letech/r~aaa299428f2da471157ebb3b7ea6ba0e/",
-      "dt": "2026-05-17T08:31:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "klece",
-        "letech",
-        "mcgregor",
-        "návrat",
-        "pěti",
-        "velký",
-        "zápasit"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -532,7 +535,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21675,
+      "bytes": 21751,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -569,11 +572,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-17T14:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T14:27:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 10,
-          "sport": 8,
+          "zpravy": 11,
+          "sport": 7,
           "finance": 1,
           "zdravi": 1
         },
@@ -587,6 +590,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tlačil na poslance, ať pomohou. Zoufalý muž před lety zaplatil, dluh ale nezmizel",
+            "publishedAt": "2026-05-17T14:27:00Z"
+          },
           {
             "title": "Feťácká liga: Praha se umístila vysoko, Češi se drží své „národní” drogy",
             "publishedAt": "2026-05-17T14:02:00Z"
@@ -614,10 +621,6 @@
           {
             "title": "Slováci přehráli Itálii a zůstali stoprocentní. Američané si poradili s Brity",
             "publishedAt": "2026-05-17T12:44:00Z"
-          },
-          {
-            "title": "Tvrdík otočil. Slavia nakonec nespustí kamerový systém na rozpoznávání obličejů",
-            "publishedAt": "2026-05-17T12:12:00Z"
           }
         ]
       }
