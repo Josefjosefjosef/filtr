@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-05-17T09:45:20.226061Z",
+  "ingestedAt": "2026-05-17T10:26:00.759370Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Má smysl chodit na třídní srazy? Podle toho, na jaké… Kdy si je užijete nejvíc?",
+      "url": "https://www.prozeny.cz/clanek/zdravi-a-zivotni-styl-ma-smysl-chodit-na-tridni-srazy-zalezi-jestli-jsou-ze-zakladky-nebo-stredni-94786",
+      "dt": "2026-05-17T09:59:01Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "chodit",
+        "jaké",
+        "nejvíc",
+        "podle",
+        "smysl",
+        "srazy",
+        "toho",
+        "třídní",
+        "užijete"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -816,34 +842,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Zahrada na pár metrech: tipy, jak pěstovat rajčata, jahody i saláty na balkoně nebo na parapetu",
-      "url": "https://www.prozeny.cz/clanek/bydleni-kvetiny-a-zahrada-zahrada-na-par-metrech-tipy-jak-pestovat-rajcata-jahody-i-salaty-na-balkone-nebo-na-parapetu-103409",
-      "dt": "2026-05-15T03:00:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "balkoně",
-        "jahody",
-        "metrech",
-        "nebo",
-        "parapetu",
-        "pár",
-        "pěstovat",
-        "rajčata",
-        "saláty",
-        "tipy",
-        "zahrada"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -854,7 +852,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 40606,
+      "bytes": 40542,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -891,7 +889,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-17T07:49:12Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T09:59:01Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 30
@@ -906,6 +904,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Má smysl chodit na třídní srazy? Podle toho, na jaké… Kdy si je užijete nejvíc?",
+            "publishedAt": "2026-05-17T09:59:01Z"
+          },
           {
             "title": "Skoro nahá v kostýmku Chanel. Ukázala, nebo neukázala vše? Kristen Stewart a „její“ dress code v Cannes",
             "publishedAt": "2026-05-17T07:49:12Z"
@@ -933,10 +935,6 @@
           {
             "title": "Navoněné papírové růže, cukrová vata a trička se Sandokanem. Poutě za socialismu byly jiný svět",
             "publishedAt": "2026-05-17T03:00:00Z"
-          },
-          {
-            "title": "Prince Harryho nepozvali! Chystá se další královská svatba. Koho tam ještě nechtějí?",
-            "publishedAt": "2026-05-16T11:41:17Z"
           }
         ]
       }

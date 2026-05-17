@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-17T09:45:20.226061Z",
+  "ingestedAt": "2026-05-17T10:26:00.759370Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Recenze Mixtape – nostalgický výlet",
+      "url": "https://zing.cz/article/recenze-mixtape-nostalgicky-vylet",
+      "dt": "2026-05-17T10:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "mixtape",
+        "nostalgický",
+        "recenze",
+        "výlet"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -958,31 +979,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Dvě čerstvé novinky potěší fanoušky strategií a odpočinkových titulů",
-      "url": "https://zing.cz/article/dve-cerstve-novinky-potesi-fanousky-strategii-a-odpocinkovych-titulu",
-      "dt": "2026-05-13T14:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "dvě",
-        "fanoušky",
-        "novinky",
-        "odpočinkových",
-        "potěší",
-        "strategií",
-        "titulů",
-        "čerstvé"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -993,7 +989,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 127361,
+      "bytes": 127278,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1030,7 +1026,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-17T08:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1046,6 +1042,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Recenze Mixtape – nostalgický výlet",
+            "publishedAt": "2026-05-17T10:00:00Z"
+          },
           {
             "title": "Hraní s rekordní výdrží - jak dopadla sluchátka HyperX Cloud Alpha 2 Wireless v testu?",
             "publishedAt": "2026-05-17T08:30:00Z"
@@ -1073,10 +1073,6 @@
           {
             "title": "Two Point Museum přináší kreativní DLC bez zásahu AI",
             "publishedAt": "2026-05-16T12:00:00Z"
-          },
-          {
-            "title": "Cozy novinky s Terry #54",
-            "publishedAt": "2026-05-16T10:00:00Z"
           }
         ]
       }
