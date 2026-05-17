@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-17T07:05:02.620786Z",
+  "ingestedAt": "2026-05-17T07:44:44.632024Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nová hra Kyjeva. Ukrajina tlačí Rusko k nečekanému „příměří pro letiště“",
+      "url": "https://zpravy.aktualne.cz/zahranici/nova-hra-kyjeva-ukrajina-tlaci-rusko-k-necekanemu-primeri-pro-letiste/r~aaa29ae2122755259a0ce1e473c1b09e/",
+      "dt": "2026-05-17T07:31:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "hra",
+        "kyjeva",
+        "letiště",
+        "nečekanému",
+        "nová",
+        "příměří",
+        "rusko",
+        "tlačí",
+        "ukrajina"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Konečná skončí jako předsedkyně KSČM, o funkci má zájem pět uchazečů",
+      "url": "https://zpravy.aktualne.cz/domaci/konecna-skonci-jako-predsedkyne-kscm-o-funkci-ma-zajem-pet-uchazecu/r~aaa29067d42d88e75bc24547129d5005/",
+      "dt": "2026-05-17T07:07:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "funkci",
+        "jako",
+        "konečná",
+        "ksčm",
+        "pět",
+        "předsedkyně",
+        "skončí",
+        "uchazečů",
+        "zájem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -487,58 +539,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "„Rozhodčí slaboučkej. Katastrofa!\" Dukla zaváhala v boji o přežití, kouč byl vzteky bez sebe",
-      "url": "https://sport.aktualne.cz/fotbal/ceska-liga/rozhodci-slabouckej-katastrofa-dukla-zavahala-v-boji-o-preziti-kouc-byl-vzteky-bez-sebe/r~aaa29ecbb0eb6bebd2890073b4a52ec5/",
-      "dt": "2026-05-16T19:22:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "boji",
-        "dukla",
-        "katastrofa",
-        "kouč",
-        "přežití",
-        "rozhodčí",
-        "sebe",
-        "slaboučkej",
-        "vzteky",
-        "zaváhala"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fanoušci po celé republice se spojili. Ostrým vzkazem zaútočili na Tvrdíka",
-      "url": "https://sport.aktualne.cz/fotbal/fanousci-po-cele-republice-se-spojili-ostrym-vzkazem-zautocili-na-tvrdika/r~aaa29cec38df05868c1b1a7b34ef20db/",
-      "dt": "2026-05-16T19:08:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "celé",
-        "fanoušci",
-        "ostrým",
-        "republice",
-        "spojili",
-        "tvrdíka",
-        "vzkazem",
-        "zaútočili"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -549,7 +549,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22261,
+      "bytes": 21932,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -586,12 +586,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-17T06:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T07:31:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 9,
           "finance": 2,
-          "sport": 9,
-          "zpravy": 7,
+          "sport": 7,
           "other": 2
         },
         "drop_counts": {
@@ -604,6 +604,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nová hra Kyjeva. Ukrajina tlačí Rusko k nečekanému „příměří pro letiště“",
+            "publishedAt": "2026-05-17T07:31:00Z"
+          },
+          {
+            "title": "Konečná skončí jako předsedkyně KSČM, o funkci má zájem pět uchazečů",
+            "publishedAt": "2026-05-17T07:07:00Z"
+          },
           {
             "title": "Zpomalte. Život není problém, který je třeba rychle vyřešit, ale zážitek, který je třeba prožít",
             "publishedAt": "2026-05-17T06:31:00Z"
@@ -627,14 +635,6 @@
           {
             "title": "Veřejně nikdy neřekla nic pozoruhodného, nesměla. Vyšla obsáhlá kniha o Alžbětě II.",
             "publishedAt": "2026-05-17T05:00:00Z"
-          },
-          {
-            "title": "KVÍZ: Jak dobře znáte ikonické světové mosty? Otestujte, zda je poznáte podle fotky či siluety",
-            "publishedAt": "2026-05-17T04:45:00Z"
-          },
-          {
-            "title": "Mezi šedými paneláky vzniklo kladivo na Quattro. Zapomenutá Lada měla prohánět Audi i Lancie",
-            "publishedAt": "2026-05-17T04:32:00Z"
           }
         ]
       }

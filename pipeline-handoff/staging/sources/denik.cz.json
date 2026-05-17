@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-17T07:05:02.620786Z",
+  "ingestedAt": "2026-05-17T07:44:44.632024Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V odstaveném autě v Texasu uhořely dvě malé děti. Matka čelí obvinění z vraždy",
+      "url": "https://www.denik.cz/ze_sveta/v-texasu-zemrely-dve-deti-v-horicim-aute.html",
+      "dt": "2026-05-17T07:20:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "autě",
+        "dvě",
+        "děti",
+        "malé",
+        "matka",
+        "obvinění",
+        "odstaveném",
+        "texasu",
+        "uhořely",
+        "vraždy",
+        "čelí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -82,7 +110,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Letošní Eurovizi poprvé vyhrálo Bulharsko s písní Bangaranga zpěvačky Dary",
+      "title": "Letošní Eurovizi vyhrálo Bulharsko s písní Bangaranga. Žižka skončil šestnáctý",
       "url": "https://www.denik.cz/hudba/letosni-eurovizi-poprve-vyhralo-bulharsko-s-pisni-bangaranga-zpevacky-dary.html",
       "dt": "2026-05-17T04:43:00Z",
       "media_raw": "Deník",
@@ -90,13 +118,13 @@
       "tokens": [
         "bangaranga",
         "bulharsko",
-        "dary",
         "eurovizi",
         "letošní",
-        "poprvé",
         "písní",
+        "skončil",
         "vyhrálo",
-        "zpěvačky"
+        "šestnáctý",
+        "žižka"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -627,32 +655,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nezaváhal. Policista zachránil děti z hořícího domu, záběry obletěly internet",
-      "url": "https://www.denik.cz/ze_sveta/zachrana-z-horiciho-domu-usa-video.html",
-      "dt": "2026-05-16T11:55:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "domu",
-        "děti",
-        "hořícího",
-        "internet",
-        "nezaváhal",
-        "obletěly",
-        "policista",
-        "zachránil",
-        "záběry"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -663,7 +665,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28418,
+      "bytes": 28460,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -700,7 +702,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-17T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T07:20:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -717,6 +719,10 @@
         },
         "sample_titles": [
           {
+            "title": "V odstaveném autě v Texasu uhořely dvě malé děti. Matka čelí obvinění z vraždy",
+            "publishedAt": "2026-05-17T07:20:00Z"
+          },
+          {
             "title": "Marvel bez zábran. Punisher: Poslední zúčtování je krvavá a syrová jízda",
             "publishedAt": "2026-05-17T06:00:00Z"
           },
@@ -729,7 +735,7 @@
             "publishedAt": "2026-05-17T05:00:00Z"
           },
           {
-            "title": "Letošní Eurovizi poprvé vyhrálo Bulharsko s písní Bangaranga zpěvačky Dary",
+            "title": "Letošní Eurovizi vyhrálo Bulharsko s písní Bangaranga. Žižka skončil šestnáctý",
             "publishedAt": "2026-05-17T04:43:00Z"
           },
           {
@@ -743,10 +749,6 @@
           {
             "title": "Poklad z Čáslavi. Unikátní nález mincí nemá ve světě obdoby",
             "publishedAt": "2026-05-17T04:00:00Z"
-          },
-          {
-            "title": "Sundat si tričko v Barceloně vyjde pěkně draho. Nově jsou pokuty i za další věci",
-            "publishedAt": "2026-05-17T03:30:00Z"
           }
         ]
       }
