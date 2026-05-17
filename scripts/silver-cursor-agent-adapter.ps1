@@ -131,7 +131,7 @@ function Build-WslBashCExecRedirectScript {
     [string]$TaskPathWsl
   )
   $tq = '"' + ($TaskPathWsl.Replace('"', '\"')) + '"'
-  return 'exec ' + $AgentPath + ' --print --trust --workspace ' + $WorkspacePath + ' <' + $tq
+  return 'exec ' + $AgentPath + ' --print --trust --force --workspace ' + $WorkspacePath + ' <' + $tq
 }
 
 function Resolve-RepoPath {
