@@ -122,6 +122,50 @@ function Read-TextFileOrEmpty {
   return [System.IO.File]::ReadAllText($Path)
 }
 
+function Read-SilverLoopTempCaptureFileWithRetry {
+  <#
+  .SYNOPSIS
+    Read temp stdout/stderr capture after cmd.exe redirect; tolerates brief exclusive locks.
+  #>
+  param(
+    [Parameter(Mandatory = $true)][string]$Path,
+    [int]$MaxAttempts = 20,
+    [int]$SleepMilliseconds = 200
+  )
+  if (-not (Test-Path -LiteralPath $Path)) {
+    return @{ Success = $true; Text = ""; FailureReason = "" }
+  }
+  $lastExMsg = ""
+  for ($attempt = 0; $attempt -lt $MaxAttempts; $attempt++) {
+    try {
+      $fs = New-Object System.IO.FileStream(
+        $Path,
+        [System.IO.FileMode]::Open,
+        [System.IO.FileAccess]::Read,
+        [System.IO.FileShare]::ReadWrite
+      )
+      try {
+        $sr = New-Object System.IO.StreamReader($fs, [System.Text.Encoding]::UTF8, $true)
+        try {
+          $txt = $sr.ReadToEnd()
+          return @{ Success = $true; Text = $txt; FailureReason = "" }
+        } finally {
+          $sr.Dispose()
+        }
+      } finally {
+        $fs.Dispose()
+      }
+    } catch {
+      $lastExMsg = $_.Exception.Message
+      if ($attempt -lt $MaxAttempts - 1) {
+        Start-Sleep -Milliseconds $SleepMilliseconds
+      }
+    }
+  }
+  $reason = "temp_capture_read_failed_after_" + [string]$MaxAttempts + "_attempts: " + $lastExMsg + "; path=" + $Path
+  return @{ Success = $false; Text = ""; FailureReason = $reason }
+}
+
 function Get-GitStatusShortText {
   param([string]$Cwd)
   $prev = $ErrorActionPreference
@@ -1193,10 +1237,24 @@ while ($true) {
         $ce = $p.ExitCode
         $script:LastCursorExit = [string]$ce
         $cursorExitStr = [string]$ce
-        $so = ""
-        $se = ""
-        if (Test-Path -LiteralPath $stdoutTmp) { $so = [System.IO.File]::ReadAllText($stdoutTmp) }
-        if (Test-Path -LiteralPath $stderrTmp) { $se = [System.IO.File]::ReadAllText($stderrTmp) }
+        $soRes = Read-SilverLoopTempCaptureFileWithRetry -Path $stdoutTmp
+        $seRes = Read-SilverLoopTempCaptureFileWithRetry -Path $stderrTmp
+        if ((-not $soRes.Success) -or (-not $seRes.Success)) {
+          $failParts = @()
+          if (-not $soRes.Success) { $failParts += $soRes.FailureReason }
+          if (-not $seRes.Success) { $failParts += $seRes.FailureReason }
+          $captureReadStop = [string]::Join(" | ", $failParts)
+          Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+            -CursorExit $cursorExitStr -AutopilotExit "N/A" -StatusExit "N/A" `
+            -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine $safetyPre `
+            -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
+            -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
+            -Headline (Get-NextActionHeadline -Text $nextText) -Focus "cursor_temp_capture_read_lock" `
+            -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
+            -StopReason $captureReadStop
+        }
+        $so = [string]$soRes.Text
+        $se = [string]$seRes.Text
         $soTrim = $so.Trim()
         $seTrim = $se.Trim()
         $adapterHeaderPresent = ($preCursorBody.IndexOf("# silver-cursor-agent-adapter", [System.StringComparison]::Ordinal) -ge 0)
