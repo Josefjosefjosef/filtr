@@ -1406,6 +1406,49 @@ function Normalize-SilverGitStatusWorkingTreeRel {
   return $s
 }
 
+function Get-SilverTransientGeneratedAuditReportRelPaths {
+  return @(
+    "scripts/silver-quality-v2-report.json",
+    "scripts/silver-realistic-mobile-corpus-report.json",
+    "scripts/silver-real-czech-corpus-v1-report.json",
+    "scripts/silver-real-czech-public-ux-corpus-v2-report.json",
+    "scripts/silver-deep-product-real-ux-v2-report.json",
+    "scripts/silver-real-human-chaos-v3-report.json"
+  )
+}
+
+function Restore-SilverTransientGeneratedAuditReports {
+  param([string]$RepoRoot)
+  $rels = Get-SilverTransientGeneratedAuditReportRelPaths
+  if (-not $rels -or $rels.Count -lt 1) { return }
+  $argTail = ""
+  foreach ($rel in $rels) {
+    if ($argTail.Length -gt 0) { $argTail += " " }
+    $argTail += $rel
+  }
+  $prev = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try {
+    $psi = New-Object System.Diagnostics.ProcessStartInfo
+    $psi.FileName = "git"
+    $psi.Arguments = "restore --worktree -- " + $argTail
+    $psi.WorkingDirectory = $RepoRoot
+    $psi.RedirectStandardOutput = $true
+    $psi.RedirectStandardError = $true
+    $psi.UseShellExecute = $false
+    $psi.CreateNoWindow = $true
+    $p = [System.Diagnostics.Process]::Start($psi)
+    $null = $p.StandardOutput.ReadToEnd()
+    $null = $p.StandardError.ReadToEnd()
+    $p.WaitForExit()
+  }
+  catch {
+  }
+  finally {
+    $ErrorActionPreference = $prev
+  }
+}
+
 function Restore-SilverAdapterDiagnosticReportJson {
   param([string]$RepoRoot)
   $prev = $ErrorActionPreference
@@ -1482,6 +1525,9 @@ function Test-AutonomousUnexpectedDirtyTree {
       "scripts/silver-cursor-agent-adapter-diagnostic.ps1",
       "scripts/silver-cursor-agent-adapter-diagnostic-report.json"
     )) {
+    [void]$allowed.Add($p)
+  }
+  foreach ($p in (Get-SilverTransientGeneratedAuditReportRelPaths)) {
     [void]$allowed.Add($p)
   }
   $paths = Get-GitStatusShortPaths -Cwd $Cwd
@@ -1810,6 +1856,7 @@ while ($true) {
   }
 
   if ($controlledInfinite) {
+    Restore-SilverTransientGeneratedAuditReports -RepoRoot $RepoRoot
     $dirtyGuardAuto = Test-AutonomousUnexpectedDirtyTree -Cwd $RepoRoot
     if (-not $dirtyGuardAuto.pass) {
       $mcDirty = ""
@@ -2136,6 +2183,7 @@ while ($true) {
         -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1
     }
     Restore-SilverAdapterDiagnosticReportJson -RepoRoot $RepoRoot
+    Restore-SilverTransientGeneratedAuditReports -RepoRoot $RepoRoot
     $nextAfterAuto = Read-TextFileOrEmpty -Path $NextActionPath
     if (-not (Test-SilverNextActionOutputQuality -Text $nextAfterAuto)) {
       Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
