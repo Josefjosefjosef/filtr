@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-17T04:26:20.275014Z",
+  "ingestedAt": "2026-05-17T05:05:04.091246Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Komora sester získává politickou podporu. V klíčové otázce se ale poslanci neshodnou",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/komora-sester-na-cem-se-poslanci-neshodnou/",
+      "dt": "2026-05-17T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "ale",
+        "klíčové",
+        "komora",
+        "neshodnou",
+        "otázce",
+        "podporu",
+        "politickou",
+        "poslanci",
+        "sester",
+        "získává"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -250,32 +277,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Odposlechy a tajné schůzky: Jak se v Příbrami „porcovaly“ nemocniční zakázky za stovky milionů",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/pribram-nemocnice-zakazky-ovlivnovani/",
-      "dt": "2026-05-15T08:02:47Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "milionů",
-        "nemocniční",
-        "odposlechy",
-        "porcovaly",
-        "příbrami",
-        "schůzky",
-        "stovky",
-        "tajné",
-        "zakázky"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -286,7 +287,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 92867,
+      "bytes": 101086,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -323,7 +324,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-16T15:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -338,6 +339,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Komora sester získává politickou podporu. V klíčové otázce se ale poslanci neshodnou",
+            "publishedAt": "2026-05-17T05:00:00Z"
+          },
           {
             "title": "Jak chránit mysl při chemoterapii? Proti „mozkové mlze“ pomáhají dvě obyčejné věci",
             "publishedAt": "2026-05-16T15:30:00Z"
@@ -365,10 +370,6 @@
           {
             "title": "Skandál s posudky zasáhl po ÚVN i další elitní nemocnici. V policejní síti uvízl známý docent",
             "publishedAt": "2026-05-15T12:04:00Z"
-          },
-          {
-            "title": "O návratu po mrtvici nerozhodují jen léky. Nový projekt v Česku odhalil nečekaný klíč k uzdravení",
-            "publishedAt": "2026-05-15T10:12:26Z"
           }
         ]
       }

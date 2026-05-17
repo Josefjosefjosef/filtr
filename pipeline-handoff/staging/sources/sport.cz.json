@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-17T04:26:20.275014Z",
+  "ingestedAt": "2026-05-17T05:05:04.091246Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Slováci zaútočí na další výhru, úřadující mistři světa touží napravit nepovedený vstup do MS",
+      "url": "https://www.sport.cz/clanek/hokej-ms-slovaci-zautoci-na-dalsi-vyhru-uradujici-mistri-sveta-touzi-napravit-nepovedeny-vstup-do-ms-5455487",
+      "dt": "2026-05-17T04:50:43Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "další",
+        "mistři",
+        "napravit",
+        "nepovedený",
+        "slováci",
+        "světa",
+        "touží",
+        "vstup",
+        "výhru",
+        "zaútočí",
+        "úřadující"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -22,6 +50,33 @@
         "střídal",
         "sérii",
         "zápas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Prohra se Slovinskem? Zní to blbě, dost zbytečná facka, vědí hokejisté po blamáži",
+      "url": "https://www.sport.cz/clanek/hokej-ms-prohra-se-slovinskem-zni-to-blbe-dost-zbytecna-facka-vedi-hokejiste-po-blamazi-5456119",
+      "dt": "2026-05-17T04:30:45Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "blamáži",
+        "blbě",
+        "dost",
+        "facka",
+        "hokejisté",
+        "prohra",
+        "slovinskem",
+        "vědí",
+        "zbytečná",
+        "zní"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -747,56 +802,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rázný posun do baráže. Artis deklasoval Žižkov a zabojuje o první ligu",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-2-liga-razny-posun-do-baraze-artis-deklasoval-zizkov-a-zabojuje-o-prvni-ligu-5455686",
-      "dt": "2026-05-16T17:05:26Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "artis",
-        "baráže",
-        "deklasoval",
-        "ligu",
-        "posun",
-        "první",
-        "rázný",
-        "zabojuje",
-        "žižkov"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Ital Bulega pokračuje v dominanci v superbikovém MS. Vyhrál i v Mostě",
-      "url": "https://www.sport.cz/clanek/moto-motocykly-ital-bulega-pokracuje-v-dominanci-v-superbikovem-ms-vyhral-i-v-moste-5455263",
-      "dt": "2026-05-16T15:07:59Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bulega",
-        "dominanci",
-        "ital",
-        "mostě",
-        "pokračuje",
-        "superbikovém",
-        "vyhrál"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -807,7 +812,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 50133,
+      "bytes": 51649,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -844,11 +849,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-17T03:59:38Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T04:50:43Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 29,
-          "zpravy": 1
+          "sport": 30
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -861,8 +865,16 @@
         },
         "sample_titles": [
           {
+            "title": "Slováci zaútočí na další výhru, úřadující mistři světa touží napravit nepovedený vstup do MS",
+            "publishedAt": "2026-05-17T04:50:43Z"
+          },
+          {
             "title": "Dobeš při kanonádě soupeře střídal. Sérii v NHL rozsekne sedmý zápas",
             "publishedAt": "2026-05-17T03:59:38Z"
+          },
+          {
+            "title": "Prohra se Slovinskem? Zní to blbě, dost zbytečná facka, vědí hokejisté po blamáži",
+            "publishedAt": "2026-05-17T04:30:45Z"
           },
           {
             "title": "Nepřijatelné. Odmítám mlčet, píše majitel Dukly po prohře. Liga řeší další skandál",
@@ -883,14 +895,6 @@
           {
             "title": "Sporný zákrok na Galvase? Podle hráče čistý, trenér viděl faul",
             "publishedAt": "2026-05-16T22:10:34Z"
-          },
-          {
-            "title": "SESTŘIH: Švýcaři výraznou převahu promítli nakonec i do skóre a jsou doma stoprocentní",
-            "publishedAt": "2026-05-16T20:38:31Z"
-          },
-          {
-            "title": "Čech přemohl krajany. Snad mi doma nezapálí auto, smál se Horák po výhře Slovinska",
-            "publishedAt": "2026-05-16T22:00:08Z"
           }
         ]
       }

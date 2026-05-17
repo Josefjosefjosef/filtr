@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-17T04:26:20.275014Z",
+  "ingestedAt": "2026-05-17T05:05:04.091246Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Polský Sršeň nastupuje: Blíží se masová výroba kopie íránského Šáhedu",
+      "url": "https://ekonomickydenik.cz/polsky-srsen-vyroba-kopie-iranskeho-sahedu/",
+      "dt": "2026-05-17T04:30:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "blíží",
+        "kopie",
+        "masová",
+        "nastupuje",
+        "polský",
+        "sršeň",
+        "výroba",
+        "íránského",
+        "šáhedu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -771,31 +797,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Tetřívek má přednost před auty. Národní park rozšiřuje kamerový systém",
-      "url": "https://ekonomickydenik.cz/krkonossky-narodni-park-kamery/",
-      "dt": "2026-05-14T13:15:28Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "auty",
-        "kamerový",
-        "národní",
-        "park",
-        "přednost",
-        "rozšiřuje",
-        "systém",
-        "tetřívek"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -806,7 +807,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72775,
+      "bytes": 72723,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -843,7 +844,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T12:10:14Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T04:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -860,6 +861,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Polský Sršeň nastupuje: Blíží se masová výroba kopie íránského Šáhedu",
+            "publishedAt": "2026-05-17T04:30:00Z"
+          },
           {
             "title": "„Sudetský strašák“ v Brně? Historik: politici vezou na vlně populismu a vyvolávají strach",
             "publishedAt": "2026-05-16T12:10:14Z"
@@ -887,10 +892,6 @@
           {
             "title": "Válečný zločin: Ruský velitel nařídil zohavit těla padlých Ukrajinců",
             "publishedAt": "2026-05-16T04:30:00Z"
-          },
-          {
-            "title": "„Zásoby plynu máme.“ Část Evropy chce víc těžit, kvůli závislosti na dovozu LNG",
-            "publishedAt": "2026-05-15T17:35:00Z"
           }
         ]
       }

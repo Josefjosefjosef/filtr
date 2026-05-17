@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-17T04:26:20.275014Z",
+  "ingestedAt": "2026-05-17T05:05:04.091246Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Celou sezonu jsme se chtěli baráži vyhnout a teď za ni budeme rádi, mudruje Frydrych",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/obrance-michal-frydrych-banik-ostrava-zlin-baraz-boj-o-zachranu-dukla.A260516_220141_fotbal_jsl",
+      "dt": "2026-05-17T04:24:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "baráži",
+        "budeme",
+        "celou",
+        "chtěli",
+        "frydrych",
+        "jsme",
+        "mudruje",
+        "rádi",
+        "sezonu",
+        "vyhnout"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -752,34 +779,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fanoušci vběhli na hřiště, Hearts smutní a titul slaví Celtic. Trofej získal i Čvančara",
-      "url": "https://www.idnes.cz/fotbal/zahranici/skotsko-titul-hearts-of-midlothian-celtic-glasgow-obra-cvancara.A260516_164815_fot_zahranici_duff",
-      "dt": "2026-05-16T15:14:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "celtic",
-        "fanoušci",
-        "hearts",
-        "hřiště",
-        "slaví",
-        "smutní",
-        "titul",
-        "trofej",
-        "vběhli",
-        "získal",
-        "čvančara"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45979,
+      "bytes": 46284,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-16T22:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T04:24:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -843,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Celou sezonu jsme se chtěli baráži vyhnout a teď za ni budeme rádi, mudruje Frydrych",
+            "publishedAt": "2026-05-17T04:24:00Z"
+          },
           {
             "title": "Sporný moment v závěru. Rulík viděl jasný faul, Galvas hlásil: Na sudí to nesvádějme",
             "publishedAt": "2026-05-16T22:33:00Z"
@@ -870,10 +873,6 @@
           {
             "title": "Švýcaři na MS zvítězili podruhé, šest bodů mají i Finové. Rakousko si zastřílelo",
             "publishedAt": "2026-05-16T21:03:24Z"
-          },
-          {
-            "title": "MS v hokeji 2026: Program, tabulky skupin, kdy hrají Češi?",
-            "publishedAt": "2026-05-16T20:45:00Z"
           }
         ]
       }
