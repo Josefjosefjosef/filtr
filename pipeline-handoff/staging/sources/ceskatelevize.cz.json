@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-17T19:09:47.895107Z",
+  "ingestedAt": "2026-05-17T19:50:23.899094Z",
   "items": [
     {
       "section": "aktualne",
@@ -755,6 +755,32 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Darida prodloužil smlouvu s Hradcem. Zažívám úžasnou českou kabinu, libuje si",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/darida-prodlouzil-smlouvu-s-hradcem-zazivam-uzasnou-ceskou-kabinu-libuje-si-156859",
+      "dt": "2026-05-17T19:32:52Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "darida",
+        "hradcem",
+        "kabinu",
+        "libuje",
+        "prodloužil",
+        "smlouvu",
+        "zažívám",
+        "úžasnou",
+        "českou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Sinner triumfoval v Římě a jako teprve druhý tenista vyhrál všechny turnaje Masters",
       "url": "https://sport.ceskatelevize.cz/clanek/tenis/sinner-triumfoval-v-rime-a-jako-teprve-druhy-tenista-vyhral-vsechny-turnaje-masters-156858",
       "dt": "2026-05-17T17:31:20Z",
@@ -1471,31 +1497,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Manchester City uspěl ve finále Anglického poháru. Rozhodl Semenyo",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/manchester-city-uspel-ve-finale-anglickeho-poharu-rozhodl-semenyo-156829",
-      "dt": "2026-05-16T16:19:59Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "anglického",
-        "city",
-        "finále",
-        "manchester",
-        "poháru",
-        "rozhodl",
-        "semenyo",
-        "uspěl"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1625,7 +1626,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37611,
+      "bytes": 37929,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1662,7 +1663,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-17T17:31:20Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T19:32:52Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1677,6 +1678,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Darida prodloužil smlouvu s Hradcem. Zažívám úžasnou českou kabinu, libuje si",
+            "publishedAt": "2026-05-17T19:32:52Z"
+          },
           {
             "title": "Sinner triumfoval v Římě a jako teprve druhý tenista vyhrál všechny turnaje Masters",
             "publishedAt": "2026-05-17T17:31:20Z"
@@ -1704,10 +1709,6 @@
           {
             "title": "Místo útoku na titul desáté místo. Kouskové se závěr German Masters nevydařil",
             "publishedAt": "2026-05-17T15:50:44Z"
-          },
-          {
-            "title": "Prohra se Slovinci pohledem čísel: Přes 80 střeleckých pokusů a 10 minut v přesilovkách bez gólu",
-            "publishedAt": "2026-05-17T15:23:46Z"
           }
         ]
       }

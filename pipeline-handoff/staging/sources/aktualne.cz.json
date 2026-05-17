@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-17T19:09:47.895107Z",
+  "ingestedAt": "2026-05-17T19:50:23.899094Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Další výhrůžky Trumpa: Írán bude zničen, pokud nepřistoupí na dohodu",
+      "url": "https://zpravy.aktualne.cz/zahranici/dalsi-vyhruzky-trumpa-iran-bude-znicen-pokud-nepristoupi-na-dohodu/r~aaa29b383fd08480041c40ed8a87c11b/",
+      "dt": "2026-05-17T19:06:57Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "další",
+        "dohodu",
+        "nepřistoupí",
+        "pokud",
+        "trumpa",
+        "výhrůžky",
+        "zničen",
+        "írán"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -501,33 +526,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ministr Motoristů promluvil o „náctiletém šéfovi“. Něco ale nesedí, došlo i na Turka",
-      "url": "https://zpravy.aktualne.cz/domaci/ministr-motoristu-promluvil-o-nactiletem-sefovi-neco-ale-nesedi-doslo-i-na-turka/r~aaa29ce9b7ab8083e9da8afa89fc3487/",
-      "dt": "2026-05-17T11:29:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "ale",
-        "došlo",
-        "ministr",
-        "motoristů",
-        "nesedí",
-        "náctiletém",
-        "něco",
-        "promluvil",
-        "turka",
-        "šéfovi"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -538,7 +536,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21885,
+      "bytes": 21758,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -575,11 +573,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-17T18:48:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T19:06:57Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 9,
           "zpravy": 10,
+          "sport": 9,
           "finance": 1
         },
         "drop_counts": {
@@ -592,6 +590,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Další výhrůžky Trumpa: Írán bude zničen, pokud nepřistoupí na dohodu",
+            "publishedAt": "2026-05-17T19:06:57Z"
+          },
           {
             "title": "Úchvatný gól nebyl West Hamu nic platný. Kladiváři mohou padnout už v úterý",
             "publishedAt": "2026-05-17T18:48:00Z"
@@ -619,10 +621,6 @@
           {
             "title": "„Korejci nejsou stěhovaví ptáci.“ Automobilka brzdí, třesk Nošovice čeká na podzim",
             "publishedAt": "2026-05-17T16:50:00Z"
-          },
-          {
-            "title": "Američany prý znepokojují kubánské drony. Ředitel CIA varoval Havanu",
-            "publishedAt": "2026-05-17T16:35:00Z"
           }
         ]
       }
