@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-17T17:09:47.234040Z",
+  "ingestedAt": "2026-05-17T17:49:44.019959Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Čajánek se oženil. Padesátiletý šampion si vzal o více než dvacet let mladší miss",
+      "url": "https://sport.aktualne.cz/hokej/cajanek-se-ozenil-padesatilety-sampion-si-vzal-o-vice-nez-dvacet-let-mladsi-miss/r~aaa29a67a7797dc159ec8c7610e57cf7/",
+      "dt": "2026-05-17T17:29:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dvacet",
+        "let",
+        "miss",
+        "mladší",
+        "než",
+        "oženil",
+        "padesátiletý",
+        "vzal",
+        "čajánek",
+        "šampion"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -500,34 +527,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sedm hřišť a 204 hráčů. Češi vyhořeli s trpaslíkem, který takový skalp nikdy neměl",
-      "url": "https://sport.aktualne.cz/hokej/sedm-hrist-a-394-hracu-cesi-vyhoreli-s-trpaslikem-ktery-takovy-skalp-nikdy-nemel/r~aaa297b24c55e057966a864612709e64/",
-      "dt": "2026-05-17T09:44:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "204",
-        "hráčů",
-        "hřišť",
-        "neměl",
-        "nikdy",
-        "sedm",
-        "skalp",
-        "takový",
-        "trpaslíkem",
-        "vyhořeli",
-        "češi"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -538,7 +537,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22284,
+      "bytes": 22135,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -575,7 +574,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-17T16:56:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T17:29:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "sport": 8,
@@ -593,6 +592,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Čajánek se oženil. Padesátiletý šampion si vzal o více než dvacet let mladší miss",
+            "publishedAt": "2026-05-17T17:29:00Z"
+          },
           {
             "title": "Hradcem otřásá fotbalová euforie. Votroci nadělili trojku Slavii a po 30 letech jsou v Evropě",
             "publishedAt": "2026-05-17T16:56:00Z"
@@ -620,10 +623,6 @@
           {
             "title": "Feťácká liga: Praha se umístila vysoko, Češi se drží své „národní” drogy",
             "publishedAt": "2026-05-17T14:02:00Z"
-          },
-          {
-            "title": "Německá policie u Lipska zastřelila uprchlého tygra. Dronem pátrá, zda v okolí není další šelma",
-            "publishedAt": "2026-05-17T14:00:00Z"
           }
         ]
       }
