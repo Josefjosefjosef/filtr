@@ -1,4 +1,4 @@
-﻿#requires -Version 5.1
+#requires -Version 5.1
 <#
 .SYNOPSIS
   Silver V1 â€” run `cursor agent` headless (Windows, preferred argv from diagnostic JSON) or WSL Ubuntu `agent` non-interactive (--print --trust --workspace), capture stdout/stderr, write structured log to OutputFile.
@@ -73,6 +73,20 @@ function Get-TaskTextLineCount {
   param([string]$Text)
   if ([string]::IsNullOrEmpty($Text)) { return 0 }
   return @(($Text -split "`r?`n", [StringSplitOptions]::None)).Count
+}
+
+function Get-SilverAutonomousRunMetaFromEnv {
+  $rid = [Environment]::GetEnvironmentVariable("SILVER_AUTONOMOUS_RUN_ID", "Process")
+  if ([string]::IsNullOrWhiteSpace($rid)) { $rid = "" }
+  $cyc = [Environment]::GetEnvironmentVariable("SILVER_AUTONOMOUS_CYCLE", "Process")
+  if ([string]::IsNullOrWhiteSpace($cyc)) { $cyc = "" }
+  $rs = [Environment]::GetEnvironmentVariable("SILVER_AUTONOMOUS_RUN_START_UTC", "Process")
+  if ([string]::IsNullOrWhiteSpace($rs)) { $rs = "" }
+  return @{
+    run_id = $rid.Trim()
+    cycle = $cyc.Trim()
+    run_start_utc = $rs.Trim()
+  }
 }
 
 function Get-TaskUtf8Sha256HexPrefix {
@@ -729,6 +743,34 @@ function Test-WslTaskfileProbeStderrShellLeak {
   return $false
 }
 
+function Test-WslAdapterShellExitNoise {
+  param(
+    [int]$WslExit,
+    [bool]$TimedOut,
+    [int]$StdoutBytes,
+    [int]$StderrBytes,
+    [bool]$StderrShellLeak
+  )
+  if ($TimedOut) { return $false }
+  if ($WslExit -eq 0) { return $false }
+  if ($StderrShellLeak) { return $false }
+  if ($StdoutBytes -lt 64) { return $false }
+  if ($StderrBytes -gt 4096) { return $false }
+  return $true
+}
+
+function Resolve-WslAdapterAuthoritativeExitCode {
+  param(
+    [int]$WslExit,
+    [bool]$ShellExitNoise,
+    [bool]$TimedOut
+  )
+  if ($TimedOut) { return $WslExit }
+  if ($WslExit -eq 0) { return 0 }
+  if ($ShellExitNoise) { return 0 }
+  return $WslExit
+}
+
 if ($Probe -and -not [string]::IsNullOrWhiteSpace($TaskFile)) {
   if (-not $WslUbuntuAgent) {
     Write-Error "-TaskFile with -Probe requires -WslUbuntuAgent (WSL stdin regression probe only)."
@@ -876,11 +918,16 @@ if ($WslUbuntuAgent) {
   if ($null -eq $so) { $so = "" }
   $se = $r.stderr
   if ($null -eq $se) { $se = "" }
-  $exitCode = $r.exit
+  $wslShellExit = [int]$r.exit
   $toFlag = $r.timedOut
 
   $stdoutBytes = $SilverUtf8NoBom.GetByteCount($so)
   $stderrBytes = $SilverUtf8NoBom.GetByteCount($se)
+  $stderrShellLeak = (Test-WslTaskfileProbeStderrShellLeak -Stderr $se)
+  $shellExitNoise = Test-WslAdapterShellExitNoise -WslExit $wslShellExit -TimedOut $toFlag -StdoutBytes $stdoutBytes -StderrBytes $stderrBytes -StderrShellLeak $stderrShellLeak
+  $authoritativeExit = Resolve-WslAdapterAuthoritativeExitCode -WslExit $wslShellExit -ShellExitNoise $shellExitNoise -TimedOut $toFlag
+  $exitCode = $authoritativeExit
+  $shellNoiseReconciled = $(if ($shellExitNoise) { "YES" } else { "NO" })
   $stdoutNonempty = $(if ($stdoutBytes -gt 0) { "YES" } else { "NO" })
   $stderrNonempty = $(if ($stderrBytes -gt 0) { "YES" } else { "NO" })
   $taskDigestHex = Get-TaskUtf8Sha256HexPrefix -Text $text -HexChars 16
@@ -906,7 +953,6 @@ if ($WslUbuntuAgent) {
     }
   }
 
-  $stderrShellLeak = (Test-WslTaskfileProbeStderrShellLeak -Stderr $se)
   $sentinelInCmd = $false
   if ($commandExecutedSanitized.Contains($WslTaskfileStdinProbeSentinel)) {
     $sentinelInCmd = $true
@@ -1000,10 +1046,15 @@ timeout_semantics=wall_clock_only
     $extraWsl = $extraWsl.TrimEnd() + "`r`n`r`n" + $streamDiag
   }
 
+  $autoRunMeta = Get-SilverAutonomousRunMetaFromEnv
   $meta = [ordered]@{
     timestamp_local = $tsLocal
     cwd_powershell = $cwdActual
     repo_root = $RepoRoot
+    autonomous_run_id = $autoRunMeta.run_id
+    autonomous_cycle = $autoRunMeta.cycle
+    autonomous_run_start_utc = $autoRunMeta.run_start_utc
+    adapter_output_state = "COMPLETED"
     adapter_mode = "wsl_agent_print_ask_trust_workspace"
     wsl_distro = $WslDistro
     wsl_agent_linux_path = $WslAgentLinuxPath
@@ -1031,6 +1082,9 @@ timeout_semantics=wall_clock_only
     process_end_utc = $processEndUtc
     elapsed_ms = [string]$elapsedMs
     timeout_seconds = [string]$TimeoutSeconds
+    wsl_shell_exit_code = [string]$wslShellExit
+    adapter_authoritative_exit_code = [string]$authoritativeExit
+    shell_exit_noise_reconciled = $shellNoiseReconciled
     exit_code = [string]$exitCode
     timed_out = $(if ($toFlag) { "YES" } else { "NO" })
     stdout_bytes = [string]$stdoutBytes
@@ -1297,10 +1351,15 @@ possible_causes=
     }
   }
 
+  $autoRunMetaWin = Get-SilverAutonomousRunMetaFromEnv
   $meta = [ordered]@{
     timestamp_local = $tsLocal
     cwd_powershell = $cwdActual
     repo_root = $RepoRoot
+    autonomous_run_id = $autoRunMetaWin.run_id
+    autonomous_cycle = $autoRunMetaWin.cycle
+    autonomous_run_start_utc = $autoRunMetaWin.run_start_utc
+    adapter_output_state = "COMPLETED"
     cursor_agent_exe = $cursorAgentExe
     cursor_version_exe = $cursorVersionExe
     cursor_version = $verLine

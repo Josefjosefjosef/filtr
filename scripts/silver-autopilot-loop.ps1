@@ -663,18 +663,32 @@ function Test-SilverAdapterMetaFreshForCycle {
     if ($metaState -eq "INVALIDATED_AWAITING_CYCLE") { return $false }
     $metaRun = ""
     if ($Meta.ContainsKey("autonomous_run_id")) { $metaRun = [string]$Meta["autonomous_run_id"] }
-    if ($metaRun.Trim() -ne $wantRunId) { return $false }
+    if ($metaRun.Trim().Length -gt 0) {
+      if ($metaRun.Trim() -ne $wantRunId) { return $false }
+    }
     $wantCycle = $ExpectedCycle.Trim()
     if ($wantCycle.Length -gt 0) {
       $metaCycle = ""
       if ($Meta.ContainsKey("autonomous_cycle")) { $metaCycle = [string]$Meta["autonomous_cycle"] }
-      if ($metaCycle.Trim() -ne $wantCycle) { return $false }
+      if ($metaCycle.Trim().Length -gt 0) {
+        if ($metaCycle.Trim() -ne $wantCycle) { return $false }
+      }
     }
     $wantRunStart = $ExpectedRunStartUtc.Trim()
     if ($wantRunStart.Length -gt 0) {
       $metaRunStart = ""
       if ($Meta.ContainsKey("autonomous_run_start_utc")) { $metaRunStart = [string]$Meta["autonomous_run_start_utc"] }
-      if (($metaRunStart.Trim().Length -gt 0) -and ($metaRunStart.Trim() -ne $wantRunStart)) { return $false }
+      if ($metaRunStart.Trim().Length -gt 0) {
+        $wantNorm = $wantRunStart
+        $metaNorm = $metaRunStart.Trim()
+        try {
+          $wantNorm = ([datetime]::Parse($wantRunStart, [System.Globalization.CultureInfo]::InvariantCulture, [System.Globalization.DateTimeStyles]::RoundtripKind)).ToUniversalTime().ToString("o")
+          $metaNorm = ([datetime]::Parse($metaRunStart.Trim(), [System.Globalization.CultureInfo]::InvariantCulture, [System.Globalization.DateTimeStyles]::RoundtripKind)).ToUniversalTime().ToString("o")
+        }
+        catch {
+        }
+        if ($metaNorm -ne $wantNorm) { return $false }
+      }
     }
   }
 
@@ -774,9 +788,25 @@ function Resolve-SilverCursorOuterExitFromAdapterMeta {
     return @{ EffectiveExit = $OuterExit; Reconciled = $false; FreshMeta = $false }
   }
   $adapterEx = ""
-  if ($meta.ContainsKey("exit_code")) { $adapterEx = [string]$meta["exit_code"] }
+  if ($meta.ContainsKey("adapter_authoritative_exit_code")) {
+    $adapterEx = [string]$meta["adapter_authoritative_exit_code"]
+  }
+  if (-not $adapterEx) {
+    if ($meta.ContainsKey("exit_code")) { $adapterEx = [string]$meta["exit_code"] }
+  }
+  $shellNoise = ""
+  if ($meta.ContainsKey("shell_exit_noise_reconciled")) {
+    $shellNoise = [string]$meta["shell_exit_noise_reconciled"]
+  }
   if ($adapterEx -eq "0") {
     return @{ EffectiveExit = 0; Reconciled = $true; FreshMeta = $true }
+  }
+  if (($shellNoise -eq "YES") -and ($meta.ContainsKey("stdout_nonempty")) -and ([string]$meta["stdout_nonempty"] -eq "YES")) {
+    $to = ""
+    if ($meta.ContainsKey("timed_out")) { $to = [string]$meta["timed_out"] }
+    if ($to -ne "YES") {
+      return @{ EffectiveExit = 0; Reconciled = $true; FreshMeta = $true }
+    }
   }
   return @{ EffectiveExit = $OuterExit; Reconciled = $false; FreshMeta = $true }
 }
@@ -1935,8 +1965,19 @@ while ($true) {
       $quotedOut = '"' + $outAbs.Replace('"', '""') + '"'
       $resolvedCmd = $CursorCommand.Replace("{TASK_FILE}", $quotedTask).Replace("{OUTPUT_FILE}", $quotedOut)
 
-      $stdoutTmp = Join-Path $env:TEMP ("silver-loop-cursor-out-" + $cycle + ".txt")
-      $stderrTmp = Join-Path $env:TEMP ("silver-loop-cursor-err-" + $cycle + ".txt")
+      $outerCaptureToken = [guid]::NewGuid().ToString("N")
+      if ($script:SilverAutonomousRunId) {
+        $runTok = ([string]$script:SilverAutonomousRunId).Trim()
+        if ($runTok.Length -gt 8) { $runTok = $runTok.Substring(0, 8) }
+        $outerCaptureToken = $runTok + "-c" + [string]$cycle + "-" + $outerCaptureToken.Substring(0, 8)
+      }
+      $stdoutTmp = Join-Path $env:TEMP ("silver-loop-cursor-out-" + $outerCaptureToken + ".txt")
+      $stderrTmp = Join-Path $env:TEMP ("silver-loop-cursor-err-" + $outerCaptureToken + ".txt")
+      foreach ($staleCap in @($stdoutTmp, $stderrTmp)) {
+        if (Test-Path -LiteralPath $staleCap) {
+          Remove-Item -LiteralPath $staleCap -Force -ErrorAction SilentlyContinue
+        }
+      }
 
       $utf8Log = [System.Text.UTF8Encoding]::new($false)
       $expectedTaskDigest = ""
@@ -1967,7 +2008,7 @@ while ($true) {
         $p.WaitForExit()
         $ce = $p.ExitCode
         $runCtxReconcile = Get-SilverAutonomousRunContext
-        $reconcile = Resolve-SilverCursorOuterExitFromAdapterMeta -OuterExit $ce -AdapterOutputPath $CursorOutputPath -ProcessStartUtc $cursorProcStartUtc -ExpectedTaskDigest $expectedTaskDigest -ExpectedTaskFile $expectedTaskFile -ExpectedRunId $runCtxReconcile.RunId -ExpectedCycle ([string]$cycle) -ExpectedRunStartUtc $runCtxReconcile.RunStartUtc
+        $reconcile = Resolve-SilverCursorOuterExitFromAdapterMeta -OuterExit $ce -AdapterOutputPath $CursorOutputPath -ProcessStartUtc $cursorProcStartUtc -ExpectedTaskDigest $expectedTaskDigest -ExpectedTaskFile $expectedTaskFile -ExpectedRunId $runCtxReconcile.RunId -ExpectedCycle $runCtxReconcile.Cycle -ExpectedRunStartUtc $runCtxReconcile.RunStartUtc
         if ($reconcile.Reconciled) {
           Write-Host ("silver-autopilot-loop: outer_cmd_exit=" + [string]$ce + " reconciled_to_adapter_exit_code=0 (fresh_meta=YES)") -ForegroundColor DarkYellow
           $ce = [int]$reconcile.EffectiveExit
@@ -2277,7 +2318,7 @@ while ($true) {
   }
   $passRunCtx = Get-SilverAutonomousRunContext
   $passCursorInvoked = ($passProcStart -ne [datetime]::MinValue)
-  Add-SilverCycleFieldsFromAdapterOutput -Fields $fieldsPass -AdapterOutputPath $CursorOutputPath -ProcessStartUtc $passProcStart -ExpectedTaskDigest $passDigest -ExpectedTaskFile $passTaskFile -ExpectedRunId $passRunCtx.RunId -ExpectedCycle ([string]$cycle) -ExpectedRunStartUtc $passRunCtx.RunStartUtc -CursorInvoked $passCursorInvoked
+  Add-SilverCycleFieldsFromAdapterOutput -Fields $fieldsPass -AdapterOutputPath $CursorOutputPath -ProcessStartUtc $passProcStart -ExpectedTaskDigest $passDigest -ExpectedTaskFile $passTaskFile -ExpectedRunId $passRunCtx.RunId -ExpectedCycle $passRunCtx.Cycle -ExpectedRunStartUtc $passRunCtx.RunStartUtc -CursorInvoked $passCursorInvoked
   if ($controlledInfinite) {
     $script:AutonomousCyclesCompleted++
     if ($se -eq 0) {
