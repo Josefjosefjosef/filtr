@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-17T21:51:01.495514Z",
+  "ingestedAt": "2026-05-17T22:29:34.435636Z",
   "items": [
     {
       "section": "aktualne",
@@ -756,6 +756,26 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Soutěž k MS v hokeji – 18. května",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/soutez-k-ms-v-hokeji-18-kvetna-156739",
+      "dt": "2026-05-17T22:00:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "hokeji",
+        "května",
+        "soutěž"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Džavoronok slaví s Perugií triumf v Lize mistrů",
       "url": "https://sport.ceskatelevize.cz/clanek/volejbal/dzavoronok-slavi-s-perugii-triumf-v-lize-mistru-156861",
       "dt": "2026-05-17T21:03:23Z",
@@ -1483,31 +1503,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Táborsko porazilo Opavu a zajistilo si baráž. Tu si zahraje i Artis Brno",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/taborsko-porazilo-opavu-a-zajistilo-si-baraz-tu-si-zahraje-i-artis-brno-156832",
-      "dt": "2026-05-16T16:50:31Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "artis",
-        "baráž",
-        "brno",
-        "opavu",
-        "porazilo",
-        "táborsko",
-        "zahraje",
-        "zajistilo"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1637,7 +1632,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38239,
+      "bytes": 37882,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1674,7 +1669,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-17T21:03:23Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1689,6 +1684,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Soutěž k MS v hokeji – 18. května",
+            "publishedAt": "2026-05-17T22:00:00Z"
+          },
           {
             "title": "Džavoronok slaví s Perugií triumf v Lize mistrů",
             "publishedAt": "2026-05-17T21:03:23Z"
@@ -1716,10 +1715,6 @@
           {
             "title": "Hokej fokus podcast: Senzační prohra se Slovinskem, absence Blümela, síla Kanady",
             "publishedAt": "2026-05-17T16:55:00Z"
-          },
-          {
-            "title": "O volném dnu se vydalo na led devět hráčů, trenéři se zapojili do baga",
-            "publishedAt": "2026-05-17T16:45:47Z"
           }
         ]
       }
@@ -1731,7 +1726,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77840,
+      "bytes": 77786,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

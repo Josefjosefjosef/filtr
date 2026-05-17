@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-17T21:51:01.495514Z",
+  "ingestedAt": "2026-05-17T22:29:34.435636Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vingegaardovy watty pod drobnohledem. Jeho data z Gira pitvá i Pogačarův tým",
+      "url": "https://www.idnes.cz/sport/cyklistika/jonas-vingegaard-giro-data-pogacar.A260517_192459_cyklistika_czo",
+      "dt": "2026-05-17T22:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "data",
+        "drobnohledem",
+        "gira",
+        "jeho",
+        "pitvá",
+        "pogačarův",
+        "tým",
+        "vingegaardovy",
+        "watty"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -756,33 +782,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Senzace i ponížení. Ve světě píší o české blamáži: Slovinci srazili velmoc na kolena!",
-      "url": "https://www.idnes.cz/hokej/ms-2026/cesko-slovinsko-ohlasy-v-mediich-senzace-reakce.A260517_105037_ms-hokej-2026_huda",
-      "dt": "2026-05-17T12:52:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "blamáži",
-        "kolena",
-        "ponížení",
-        "píší",
-        "senzace",
-        "slovinci",
-        "srazili",
-        "světě",
-        "velmoc",
-        "české"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46653,
+      "bytes": 46388,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +829,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-17T21:00:15Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -845,6 +844,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vingegaardovy watty pod drobnohledem. Jeho data z Gira pitvá i Pogačarův tým",
+            "publishedAt": "2026-05-17T22:00:00Z"
+          },
           {
             "title": "Netradiční bitvu si podmanili Američané, uspělo také Rakousko a Lotyšsko",
             "publishedAt": "2026-05-17T21:00:15Z"
@@ -872,10 +875,6 @@
           {
             "title": "Švédsko - Česko v TV: kde sledovat zápas MS v hokeji 2026 živě",
             "publishedAt": "2026-05-17T19:29:00Z"
-          },
-          {
-            "title": "Wolverhampton uhrál remízu, West Ham je blízko sestupu. United zvítězili",
-            "publishedAt": "2026-05-17T18:59:00Z"
           }
         ]
       }

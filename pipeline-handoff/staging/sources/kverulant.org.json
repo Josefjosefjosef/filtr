@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kverulant.org",
-  "ingestedAt": "2026-05-17T21:51:01.495514Z",
+  "ingestedAt": "2026-05-17T22:29:34.435636Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Anketa: Koupili byste si knihu o dějinách korupce v ČR a SR?",
+      "url": "https://www.kverulant.org/article/anketa-koupili-byste-si-knihu-o-dejinach-korupce-v-cr-a-sr/",
+      "dt": "2026-05-17T22:07:00Z",
+      "media_raw": "Kverulant",
+      "media_norm": "Kverulant",
+      "tokens": [
+        "anketa",
+        "byste",
+        "dějinách",
+        "knihu",
+        "korupce",
+        "koupili"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_kverulant",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "kverulant.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -224,29 +247,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "kverulant.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pět let od otevření areálu Pražského hradu",
-      "url": "https://www.kverulant.org/article/pet-let-od-otevreni-arealu-prazskeho-hradu/",
-      "dt": "2026-05-02T22:07:00Z",
-      "media_raw": "Kverulant",
-      "media_norm": "Kverulant",
-      "tokens": [
-        "areálu",
-        "hradu",
-        "let",
-        "otevření",
-        "pražského",
-        "pět"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_kverulant",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "kverulant.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -257,7 +257,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.kverulant.org/feed/",
-      "bytes": 132703,
+      "bytes": 132522,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -294,7 +294,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-14T22:41:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T22:07:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -309,6 +309,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Anketa: Koupili byste si knihu o dějinách korupce v ČR a SR?",
+            "publishedAt": "2026-05-17T22:07:00Z"
+          },
           {
             "title": "Kdo je Radomír Daňhel obviněný v bitcoinové kauze",
             "publishedAt": "2026-05-14T22:41:00Z"
@@ -336,10 +340,6 @@
           {
             "title": "Zkouška sirén připomíná📢podpořte Kverulanta",
             "publishedAt": "2026-05-05T22:07:00Z"
-          },
-          {
-            "title": "Ústavní soud odmítl Kostelecké uzeniny, důvodem byl Babišův střet zájmů",
-            "publishedAt": "2026-05-04T22:07:00Z"
           }
         ]
       }
