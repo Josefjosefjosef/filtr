@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-17T15:50:27.259528Z",
+  "ingestedAt": "2026-05-17T16:29:40.831368Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Trump letos čile obchodoval s akciemi",
+      "url": "https://profitonline.cz/trump-letos-cile-obchodoval-s-akciemi/",
+      "dt": "2026-05-17T16:20:46Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "akciemi",
+        "letos",
+        "obchodoval",
+        "trump",
+        "čile"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -261,28 +283,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Týden na akciových trzích: Mezi rekordy a korekcí",
-      "url": "https://profitonline.cz/tyden-na-akciovych-trzich-mezi-rekordy-a-korekci/",
-      "dt": "2026-05-15T16:30:14Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "akciových",
-        "korekcí",
-        "rekordy",
-        "trzích",
-        "týden"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -291,9 +291,9 @@
       "source": "FAEI",
       "topic": "finance",
       "httpStatus": 200,
-      "contentType": "text/xml;charset=utf-8",
+      "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19058,
+      "bytes": 18951,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -330,7 +330,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-17T14:00:22Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T16:20:46Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -345,6 +345,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump letos čile obchodoval s akciemi",
+            "publishedAt": "2026-05-17T16:20:46Z"
+          },
           {
             "title": "Nový zákon přináší pravidla pro bezpečné využívání dat státní správy",
             "publishedAt": "2026-05-17T14:00:22Z"
@@ -372,10 +376,6 @@
           {
             "title": "Tycho de Brahe odtud pozoroval hvězdy. Belveder čeká rekonstrukce",
             "publishedAt": "2026-05-16T10:00:03Z"
-          },
-          {
-            "title": "V Praze dramaticky přibývá aut",
-            "publishedAt": "2026-05-16T09:10:00Z"
           }
         ]
       }

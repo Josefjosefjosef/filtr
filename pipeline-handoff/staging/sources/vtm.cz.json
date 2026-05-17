@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-17T15:50:27.259528Z",
+  "ingestedAt": "2026-05-17T16:29:40.831368Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,34 @@
         "ubránit",
         "vybíráme",
         "zachránit"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "V Česku se peče další jednorožec. Firma úspěšného ajťáka má další miliardy od legend ze Silicon Valley",
+      "url": "https://www.zive.cz/clanky/v-cesku-se-pece-dalsi-jednorozec-firma-uspesneho-ajtaka-ma-dalsi-miliardy-od-legend-ze-silicon-valley/sc-3-a-241155/default.aspx",
+      "dt": "2026-05-17T15:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "ajťáka",
+        "další",
+        "firma",
+        "jednorožec",
+        "legend",
+        "miliardy",
+        "peče",
+        "silicon",
+        "valley",
+        "úspěšného",
+        "česku"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -943,34 +971,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "SPZ a techničáky půjde vyzvednout třeba v AlzaBoxu. Ministerstvo dopravy chystá další digitalizaci",
-      "url": "https://www.zive.cz/clanky/spz-a-technicaky-pujde-vyzvednout-treba-v-alzaboxu-ministerstvo-dopravy-chysta-dalsi-digitalizaci/sc-3-a-241160/default.aspx",
-      "dt": "2026-05-14T08:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "alzaboxu",
-        "chystá",
-        "další",
-        "digitalizaci",
-        "dopravy",
-        "ministerstvo",
-        "půjde",
-        "spz",
-        "techničáky",
-        "třeba",
-        "vyzvednout"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -981,7 +981,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22813,
+      "bytes": 22822,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1018,7 +1018,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-17T11:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T15:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1036,6 +1036,10 @@
           {
             "title": "Zachránit lidstvo, ubránit se hříčkám přírody. Vybíráme nejlepší strategie, kde jde hlavně o přežití",
             "publishedAt": "2026-05-17T05:10:00Z"
+          },
+          {
+            "title": "V Česku se peče další jednorožec. Firma úspěšného ajťáka má další miliardy od legend ze Silicon Valley",
+            "publishedAt": "2026-05-17T15:45:00Z"
           },
           {
             "title": "Režim Xbox promění počítače s Windows 11 ve falešné konzole. Ani v květnu se ale nezapomnělo na opravy a optimalizace",
@@ -1060,10 +1064,6 @@
           {
             "title": "Hry z GOG nově nakoupíte přímo za české koruny. Díky regionálním cenám navíc ušetříte",
             "publishedAt": "2026-05-16T15:15:00Z"
-          },
-          {
-            "title": "Vztahy mezi Applem a OpenAI jsou na bodu mrazu. Ve vzduchu visí i žaloba",
-            "publishedAt": "2026-05-16T11:45:00Z"
           }
         ]
       }
