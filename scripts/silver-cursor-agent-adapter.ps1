@@ -1,7 +1,7 @@
-#requires -Version 5.1
+﻿#requires -Version 5.1
 <#
 .SYNOPSIS
-  Silver V1 — run `cursor agent` headless (Windows, preferred argv from diagnostic JSON) or WSL Ubuntu `agent` non-interactive (--print --trust --workspace), capture stdout/stderr, write structured log to OutputFile.
+  Silver V1 â€” run `cursor agent` headless (Windows, preferred argv from diagnostic JSON) or WSL Ubuntu `agent` non-interactive (--print --trust --workspace), capture stdout/stderr, write structured log to OutputFile.
 
 .PARAMETER TaskFile
   Path to the markdown/text task (relative to repo root or absolute). Not used with -Probe.
@@ -32,7 +32,7 @@
 
 .NOTES
   Windows: Resolves **cursor.cmd** / **bin\\cursor** for `agent` (matches diagnostic); install-root **Cursor.exe** for `--version`.
-  WSL: **wsl.exe** runs **`/bin/bash -c`** with a one-liner that **only** contains `exec <agent> … < /mnt/c/…/temp.md` (task never embedded in argv or shell string). Diagnostic JSON key **wsl_cursor_agent_print_ask_trust.adapter_ready** gates non-probe runs.
+  WSL: **wsl.exe** runs **`/bin/bash -c`** with a one-liner that **only** contains `exec <agent> â€¦ < /mnt/c/â€¦/temp.md` (task never embedded in argv or shell string). Diagnostic JSON key **wsl_cursor_agent_print_ask_trust.adapter_ready** gates non-probe runs.
 #>
 param(
   [Parameter(Mandatory = $false)]
@@ -60,7 +60,7 @@ $Marker = "CURSOR_AGENT_STDIN_OK"
 $WslTaskfileStdinProbeSentinel = "SILVER_WSL_STDIN_PROBE_SENTINEL_9f2b"
 $WslTaskfileStdinProbeOkToken = "SILVER_WSL_TASKFILE_STDIN_PROBE_OK"
 
-# WSL: task body is never passed as wsl argv; a UTF-8 temp file is opened via /bin/bash -c exec … <path (path only, no task text in the shell string).
+# WSL: task body is never passed as wsl argv; a UTF-8 temp file is opened via /bin/bash -c exec â€¦ <path (path only, no task text in the shell string).
 $SilverWslTaskArgvSafeCharLimit = 8192
 $SilverUtf8NoBom = New-Object System.Text.UTF8Encoding $false
 
@@ -1060,7 +1060,7 @@ timeout_semantics=wall_clock_only
     }
     exit 1
   }
-  exit $exitCode
+  exit ([int]$exitCode)
 }
 
 $whereInfo = Get-CursorPathsFromWhere
@@ -1184,6 +1184,10 @@ if (-not $Probe) {
 }
 
 [System.IO.File]::WriteAllText($taskTmp, $text, (New-Object System.Text.UTF8Encoding $false))
+$processStartUtcWin = (Get-Date).ToUniversalTime().ToString("o")
+$processEndUtcWin = ""
+$elapsedMsWin = 0
+$wallSwWin = [System.Diagnostics.Stopwatch]::StartNew()
 try {
   $toFlag = $false
   $so = ""
@@ -1236,6 +1240,17 @@ try {
     $toFlag = $r.timedOut
     $rMode = [string]$r.mode
   }
+
+  $wallSwWin.Stop()
+  $processEndUtcWin = (Get-Date).ToUniversalTime().ToString("o")
+  $elapsedMsWin = [int64]$wallSwWin.ElapsedMilliseconds
+  $stdoutBytesWin = $SilverUtf8NoBom.GetByteCount($so)
+  $stderrBytesWin = $SilverUtf8NoBom.GetByteCount($se)
+  $stdoutNonemptyWin = $(if ($stdoutBytesWin -gt 0) { "YES" } else { "NO" })
+  $stderrNonemptyWin = $(if ($stderrBytesWin -gt 0) { "YES" } else { "NO" })
+  $taskDigestHexWin = Get-TaskUtf8Sha256HexPrefix -Text $text -HexChars 16
+  $taskCharsWin = [string]$text.Length
+  $taskLinesWin = [string](Get-TaskTextLineCount -Text $text)
 
   $emptyStreams = (($so.Trim().Length -eq 0) -and ($se.Trim().Length -eq 0))
   $extra = ""
@@ -1296,6 +1311,17 @@ possible_causes=
     preferred_headless_variant_id = $preferredMeta.variant_id
     task_file = $(if ($Probe) { "(probe_inline)" } else { $taskAbs })
     output_file = $outAbs
+    task_chars = $taskCharsWin
+    task_lines = $taskLinesWin
+    task_digest = $taskDigestHexWin
+    task_sha256_prefix = $taskDigestHexWin
+    process_start_utc = $processStartUtcWin
+    process_end_utc = $processEndUtcWin
+    elapsed_ms = [string]$elapsedMsWin
+    stdout_bytes = [string]$stdoutBytesWin
+    stderr_bytes = [string]$stderrBytesWin
+    stdout_nonempty = $stdoutNonemptyWin
+    stderr_nonempty = $stderrNonemptyWin
     task_bytes_utf8 = [string]$taskLen
     exit_code = [string]$exitCode
     timed_out = $(if ($toFlag) { "YES" } else { "NO" })
@@ -1314,7 +1340,7 @@ possible_causes=
     }
     exit 1
   }
-  exit $exitCode
+  exit ([int]$exitCode)
 }
 finally {
   if (Test-Path -LiteralPath $taskTmp) { Remove-Item -LiteralPath $taskTmp -Force -ErrorAction SilentlyContinue }

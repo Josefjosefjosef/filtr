@@ -65,6 +65,9 @@ param(
 
 Set-StrictMode -Version 2
 $ErrorActionPreference = "Stop"
+$script:SilverCycleCursorProcessStartUtc = [datetime]::MinValue
+$script:SilverCycleExpectedTaskDigest = ""
+$script:SilverCycleExpectedTaskFile = ""
 try {
   [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding $false
 } catch { }
@@ -429,6 +432,71 @@ function Test-NextActionLineIndicatesDocumentaryContext {
   return ($p -match '(?i)\binvalid\b|\bincorrect\b|\bwrong\b|ROOT\s+CAUSE|MUST\b|SILVER_NEXT_ACTION\.MD\s+GENERATED|GENERATED.{0,80}\binvalid\b|EXPLICIT\s+ARGS|WITHOUT\s+ARGS|bez[^\n]{0,20}(args|argument)|^TASK:|^GOAL:|^SCOPE:|^NO-GO:|^REQUIRED:|\*\*DO\s+NOT\b|ANTI[-\s]?PATTERN|PŘÍKLAD|NEPOUŽ|\breject\b')
 }
 
+
+function Test-NextActionLineIndicatesCatWindowsDocContext {
+  param([string]$NonemptyLine)
+  $p = ([string]$NonemptyLine).Trim()
+  if (-not $p) { return $false }
+  if (Test-NextActionLineIndicatesDocumentaryContext -NonemptyLine $p) { return $true }
+  return ($p -match '(?i)Nepoužívej|nepoužívej|never\s+(suggest|use)|don''?t\s+use|not\s+use|zakázan|Zakáz|použij\s+`Get-Content|use\s+Get-Content|Get-Content\s+-LiteralPath|místo\s+`?cat|instead\s+of\s+`?cat|`cat\s+C:\\[^`]*\.\.\.')
+}
+
+function Test-NextActionLineLooksLikeRunnableCatWindows {
+  param([string]$Line)
+  $t = ([string]$Line).Trim()
+  if (-not $t) { return $false }
+  if (Test-NextActionLineIndicatesCatWindowsDocContext -NonemptyLine $t) { return $false }
+  if ($t -match '(?i)`cat\s+C:\\[^`]*\.\.\.') { return $false }
+  if ($t -match '(?i)Nepoužívej[^\n]*`?cat\s+C:') { return $false }
+  if ($t -match '(?i)never\s+suggest[^\n]*`?cat\s+C:') { return $false }
+  if ($t -match '(?im)^\s*cat\s+C:\\') { return $true }
+  if ($t -match '(?i)\bCommand:\s*`?cat\s+C:\\') { return $true }
+  if ($t -match '(?i)`cat\s+C:\\') { return $true }
+  return $false
+}
+
+function Test-NextActionHasRunnableCatWindowsInvocation {
+  param([string]$Inner)
+  $text = ([string]$Inner).Replace("`r`n", "`n")
+  $fenceBodies = New-Object System.Collections.Generic.List[string]
+  $outsideLines = New-Object System.Collections.Generic.List[string]
+  $inFence = $false
+  $curFence = New-Object System.Collections.Generic.List[string]
+  foreach ($line in ($text -split "`n")) {
+    if ($line -match '^\s*```') {
+      if ($inFence) {
+        [void]$fenceBodies.Add(($curFence -join "`n"))
+        $curFence.Clear()
+        $inFence = $false
+      } else { $inFence = $true }
+      continue
+    }
+    if ($inFence) { [void]$curFence.Add($line); continue }
+    [void]$outsideLines.Add($line)
+  }
+  if ($inFence) { [void]$fenceBodies.Add(($curFence -join "`n")) }
+  foreach ($body in $fenceBodies) {
+    $prevNonEmpty = ""
+    foreach ($fline in ($body -split "`n")) {
+      $trimmed = ([string]$fline).Trim()
+      if (-not $trimmed) { continue }
+      if (-not (Test-NextActionLineLooksLikeRunnableCatWindows -Line $trimmed)) { $prevNonEmpty = $trimmed; continue }
+      $docAllowed = (Test-NextActionLineIndicatesCatWindowsDocContext -NonemptyLine $prevNonEmpty) -or (Test-NextActionLineIndicatesCatWindowsDocContext -NonemptyLine $trimmed)
+      if (-not $docAllowed) { return $true }
+      $prevNonEmpty = $trimmed
+    }
+  }
+  $prevNonEmpty = ""
+  foreach ($oline in $outsideLines) {
+    $trimmed = ([string]$oline).Trim()
+    if (-not $trimmed) { continue }
+    if (-not (Test-NextActionLineLooksLikeRunnableCatWindows -Line $trimmed)) { $prevNonEmpty = $trimmed; continue }
+    $docAllowed = (Test-NextActionLineIndicatesCatWindowsDocContext -NonemptyLine $prevNonEmpty) -or (Test-NextActionLineIndicatesCatWindowsDocContext -NonemptyLine $trimmed)
+    if (-not $docAllowed) { return $true }
+    $prevNonEmpty = $trimmed
+  }
+  return $false
+}
 function Test-NextActionHasBareSilverAutopilotNodeInvocation {
   param([string]$Inner)
   $text = ([string]$Inner).Replace("`r`n", "`n")
@@ -494,9 +562,7 @@ function Test-SilverNextActionOutputQuality {
   if (Test-NextActionHasBareSilverAutopilotNodeInvocation -Inner $Text) { return $false }
   if ($Text -match '(?i)\bnode\s+scripts/silver-diagnostic\.js\b') { return $false }
   if ($Text -match '(?i)\bnode\s+scripts/silver-smoke-test-maxcycles-1\.js\b') { return $false }
-  if ($Text -match '(?i)`cat\s+C:\\') { return $false }
-  if ($Text -match '(?i)Command:\s*`?cat\s+C:\\') { return $false }
-  if ($Text -match '(?im)^\s*cat\s+C:\\') { return $false }
+  if (Test-NextActionHasRunnableCatWindowsInvocation -Inner $Text) { return $false }
   return $true
 }
 
@@ -515,6 +581,144 @@ function Get-NextActionHeadline {
   $flat = ($Text -replace "`r?`n", " ").Trim()
   if ($flat.Length -gt 120) { return $flat.Substring(0, 120) }
   return $flat
+}
+
+function Get-SilverTaskUtf8Sha256HexPrefix {
+  param(
+    [string]$Text,
+    [int]$HexChars = 16
+  )
+  if ($null -eq $Text) { $Text = "" }
+  $enc = New-Object System.Text.UTF8Encoding $false
+  $bytes = $enc.GetBytes($Text)
+  $sha = [System.Security.Cryptography.SHA256]::Create()
+  try {
+    $hash = $sha.ComputeHash($bytes)
+  }
+  finally {
+    if ($null -ne $sha) { $sha.Dispose() }
+  }
+  $hex = [System.BitConverter]::ToString($hash).Replace("-", "").ToLowerInvariant()
+  if ($hex.Length -le $HexChars) { return $hex }
+  return $hex.Substring(0, $HexChars)
+}
+
+function Normalize-SilverPathForCompare {
+  param([string]$Path)
+  if (-not $Path) { return "" }
+  try {
+    return [System.IO.Path]::GetFullPath($Path).Trim().ToLowerInvariant()
+  }
+  catch {
+    return ([string]$Path).Trim().ToLowerInvariant().Replace("\", "/")
+  }
+}
+
+function Test-SilverAdapterMetaFreshForCycle {
+  param(
+    [hashtable]$Meta,
+    [datetime]$ProcessStartUtc,
+    [string]$AdapterOutputPath,
+    [string]$ExpectedTaskDigest = "",
+    [string]$ExpectedTaskFile = ""
+  )
+  if ($null -eq $Meta -or $Meta.Count -eq 0) { return $false }
+  if (-not (Test-Path -LiteralPath $AdapterOutputPath)) { return $false }
+  try {
+    $mtimeUtc = ([System.IO.File]::GetLastWriteTimeUtc($AdapterOutputPath))
+    if ($mtimeUtc -lt $ProcessStartUtc.AddSeconds(-2)) { return $false }
+  }
+  catch {
+    return $false
+  }
+
+  $procStartMeta = ""
+  if ($Meta.ContainsKey("process_start_utc")) { $procStartMeta = [string]$Meta["process_start_utc"] }
+  if ($procStartMeta.Trim().Length -gt 0) {
+    try {
+      $psMeta = [datetime]::Parse(
+        $procStartMeta,
+        [System.Globalization.CultureInfo]::InvariantCulture,
+        [System.Globalization.DateTimeStyles]::RoundtripKind
+      ).ToUniversalTime()
+      if ($psMeta -lt $ProcessStartUtc.AddSeconds(-5)) { return $false }
+    }
+    catch {
+      return $false
+    }
+  }
+  elseif ($Meta.ContainsKey("timestamp_local")) {
+    try {
+      $tsLocal = [datetime]::Parse(
+        [string]$Meta["timestamp_local"],
+        $null,
+        [System.Globalization.DateTimeStyles]::AssumeLocal
+      )
+      if ($tsLocal.ToUniversalTime() -lt $ProcessStartUtc.AddMinutes(-2)) { return $false }
+    }
+    catch {
+      if ($ExpectedTaskDigest.Trim().Length -gt 0) { return $false }
+    }
+  }
+  elseif ($ExpectedTaskDigest.Trim().Length -gt 0) {
+    return $false
+  }
+
+  if ($ExpectedTaskDigest.Trim().Length -gt 0) {
+    $metaDigest = ""
+    if ($Meta.ContainsKey("task_digest")) { $metaDigest = [string]$Meta["task_digest"] }
+    if ((-not $metaDigest) -and $Meta.ContainsKey("task_sha256_prefix")) {
+      $metaDigest = [string]$Meta["task_sha256_prefix"]
+    }
+    $metaDigest = $metaDigest.Trim().ToLowerInvariant()
+    $want = $ExpectedTaskDigest.Trim().ToLowerInvariant()
+    if ((-not $metaDigest) -or ($metaDigest -ne $want)) { return $false }
+  }
+
+  if ($ExpectedTaskFile.Trim().Length -gt 0) {
+    $metaTask = ""
+    if ($Meta.ContainsKey("task_file")) { $metaTask = [string]$Meta["task_file"] }
+    if ($metaTask -and ($metaTask -ne "(probe_inline)")) {
+      $nMeta = Normalize-SilverPathForCompare -Path $metaTask
+      $nWant = Normalize-SilverPathForCompare -Path $ExpectedTaskFile
+      if (($nMeta.Length -gt 0) -and ($nWant.Length -gt 0) -and ($nMeta -ne $nWant)) { return $false }
+    }
+  }
+
+  $to = ""
+  $sen = ""
+  if ($Meta.ContainsKey("timed_out")) { $to = [string]$Meta["timed_out"] }
+  if ($Meta.ContainsKey("stderr_nonempty")) { $sen = [string]$Meta["stderr_nonempty"] }
+  if ($to -eq "YES") { return $false }
+  if ($sen -eq "YES") { return $false }
+
+  return $true
+}
+
+function Resolve-SilverCursorOuterExitFromAdapterMeta {
+  param(
+    [int]$OuterExit,
+    [string]$AdapterOutputPath,
+    [datetime]$ProcessStartUtc,
+    [string]$ExpectedTaskDigest = "",
+    [string]$ExpectedTaskFile = ""
+  )
+  if ($OuterExit -eq 0) {
+    return @{ EffectiveExit = 0; Reconciled = $false; FreshMeta = $false }
+  }
+  if (-not (Test-Path -LiteralPath $AdapterOutputPath)) {
+    return @{ EffectiveExit = $OuterExit; Reconciled = $false; FreshMeta = $false }
+  }
+  $meta = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $AdapterOutputPath
+  if (-not (Test-SilverAdapterMetaFreshForCycle -Meta $meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile)) {
+    return @{ EffectiveExit = $OuterExit; Reconciled = $false; FreshMeta = $false }
+  }
+  $adapterEx = ""
+  if ($meta.ContainsKey("exit_code")) { $adapterEx = [string]$meta["exit_code"] }
+  if ($adapterEx -eq "0") {
+    return @{ EffectiveExit = 0; Reconciled = $true; FreshMeta = $true }
+  }
+  return @{ EffectiveExit = $OuterExit; Reconciled = $false; FreshMeta = $true }
 }
 
 function Get-SilverAdapterMetaKeyValuesFromMarkdown {
@@ -845,7 +1049,15 @@ function Stop-LoopWithFail {
     timeout_artifacts_archived = $timeoutArchivedFlag
   }
   $adapterOutForCycle = Join-Path $RepoRoot "SILVER_CURSOR_OUTPUT.md"
-  Add-SilverCycleFieldsFromAdapterOutput -Fields $fields -AdapterOutputPath $adapterOutForCycle
+  $failProcStart = [datetime]::MinValue
+  $failDigest = ""
+  $failTaskFile = ""
+  if ($script:SilverCycleCursorProcessStartUtc -and ($script:SilverCycleCursorProcessStartUtc -ne [datetime]::MinValue)) {
+    $failProcStart = $script:SilverCycleCursorProcessStartUtc
+    $failDigest = [string]$script:SilverCycleExpectedTaskDigest
+    $failTaskFile = [string]$script:SilverCycleExpectedTaskFile
+  }
+  Add-SilverCycleFieldsFromAdapterOutput -Fields $fields -AdapterOutputPath $adapterOutForCycle -ProcessStartUtc $failProcStart -ExpectedTaskDigest $failDigest -ExpectedTaskFile $failTaskFile
   Write-SilverProgressLogBlock -ProgressLogPath $ProgressLogPath -Outcome "FAIL" -Fields $fields
   Write-SilverColoredCycleSummary -Outcome "FAIL" -Fields $fields
   Invoke-SilverBeepFail -NoBeep:$NoBeep
@@ -1253,6 +1465,9 @@ while ($true) {
   $script:LastAutopilotExit = "N/A"
   $script:LastStatusExit = "N/A"
   $script:LastTaskExit = 0
+  $script:SilverCycleCursorProcessStartUtc = [datetime]::MinValue
+  $script:SilverCycleExpectedTaskDigest = ""
+  $script:SilverCycleExpectedTaskFile = ""
   Remove-Item Env:\SILVER_TIMEOUT_ARCHIVE_PATH -ErrorAction SilentlyContinue
   Remove-Item Env:\SILVER_TIMEOUT_ARTIFACTS_ARCHIVED -ErrorAction SilentlyContinue
 
@@ -1756,7 +1971,15 @@ while ($true) {
     dry_run = ($(if ($DryRun) { "YES" } else { "NO" }))
     stop_reason = "silver_full_auto_cycle_pass"
   }
-  Add-SilverCycleFieldsFromAdapterOutput -Fields $fieldsPass -AdapterOutputPath $CursorOutputPath
+  $passProcStart = [datetime]::MinValue
+  $passDigest = ""
+  $passTaskFile = ""
+  if ($script:SilverCycleCursorProcessStartUtc -and ($script:SilverCycleCursorProcessStartUtc -ne [datetime]::MinValue)) {
+    $passProcStart = $script:SilverCycleCursorProcessStartUtc
+    $passDigest = [string]$script:SilverCycleExpectedTaskDigest
+    $passTaskFile = [string]$script:SilverCycleExpectedTaskFile
+  }
+  Add-SilverCycleFieldsFromAdapterOutput -Fields $fieldsPass -AdapterOutputPath $CursorOutputPath -ProcessStartUtc $passProcStart -ExpectedTaskDigest $passDigest -ExpectedTaskFile $passTaskFile
   Write-SilverProgressLogBlock -ProgressLogPath $ProgressLogPath -Outcome "PASS" -Fields $fieldsPass
   Write-SilverColoredCycleSummary -Outcome "PASS" -Fields $fieldsPass
   Invoke-SilverBeepPass -NoBeep:$NoBeep

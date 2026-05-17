@@ -497,6 +497,93 @@ function lineIndicatesDocumentaryContext(nonemptyLine) {
 }
 
 /** True if bare `node …/silver-autopilot.cjs` (no `--…` autopilot argv) appears in segment. */
+
+/** Prose / STOP lines that mention forbidden `cat C:\...` as guidance, not as a runnable command. */
+function lineIndicatesCatWindowsDocContext(nonemptyLine) {
+  const p = String(nonemptyLine || "").trim();
+  if (!p) return false;
+  if (lineIndicatesDocumentaryContext(p)) return true;
+  return /NepouĹľĂ­vej|nepouĹľĂ­vej|never\s+(suggest|use)|don'?t\s+use|not\s+use|zakĂˇzan|ZakĂˇz|pouĹľij\s+`Get-Content|use\s+Get-Content|Get-Content\s+-LiteralPath|mĂ­sto\s+`?cat|instead\s+of\s+`?cat|`cat\s+C:\\[^`]*\.\.\./i.test(
+    p,
+  );
+}
+
+function lineLooksLikeRunnableCatWindows(line) {
+  const t = String(line || "").trim();
+  if (!t) return false;
+  if (lineIndicatesCatWindowsDocContext(t)) return false;
+  if (/`cat\s+C:\\[^`]*\.\.\./i.test(t)) return false;
+  if (/NepouĹľĂ­vej[^\n]*`?cat\s+C:/i.test(t)) return false;
+  if (/never\s+suggest[^\n]*`?cat\s+C:/i.test(t)) return false;
+  if (/^\s*cat\s+C:\\/i.test(t)) return true;
+  if (/\bCommand:\s*`?cat\s+C:\\/i.test(t)) return true;
+  if (/`cat\s+C:\\/i.test(t)) return true;
+  return false;
+}
+
+/** Runnable `cat C:\...` only; documentary / fenced explanatory mentions are allowed. */
+function nextActionHasRunnableCatWindowsInvocation(inner) {
+  const text = String(inner || "").replace(/\r\n/g, "\n");
+  const fenceBodies = [];
+  const outsideLines = [];
+  const lines = text.split(/\n/);
+  let inFence = false;
+  let curFenceLines = [];
+
+  for (const line of lines) {
+    if (/^\s*```/.test(line)) {
+      if (inFence) {
+        fenceBodies.push(curFenceLines.join("\n"));
+        curFenceLines = [];
+        inFence = false;
+      } else {
+        inFence = true;
+      }
+      continue;
+    }
+    if (inFence) {
+      curFenceLines.push(line);
+      continue;
+    }
+    outsideLines.push(line);
+  }
+  if (inFence) {
+    fenceBodies.push(curFenceLines.join("\n"));
+  }
+
+  for (let bi = 0; bi < fenceBodies.length; bi++) {
+    const fenceLines = fenceBodies[bi].split(/\n/);
+    let prevNonEmpty = "";
+    for (const line of fenceLines) {
+      const trimmed = String(line || "").trim();
+      if (!trimmed) continue;
+      if (!lineLooksLikeRunnableCatWindows(trimmed)) {
+        prevNonEmpty = trimmed;
+        continue;
+      }
+      const docAllowed =
+        lineIndicatesCatWindowsDocContext(prevNonEmpty) || lineIndicatesCatWindowsDocContext(trimmed);
+      if (!docAllowed) return true;
+      prevNonEmpty = trimmed;
+    }
+  }
+
+  let prevNonEmpty = "";
+  for (let li = 0; li < outsideLines.length; li++) {
+    const trimmed = String(outsideLines[li] || "").trim();
+    if (!trimmed) continue;
+    if (!lineLooksLikeRunnableCatWindows(trimmed)) {
+      prevNonEmpty = trimmed;
+      continue;
+    }
+    const docAllowed =
+      lineIndicatesCatWindowsDocContext(prevNonEmpty) || lineIndicatesCatWindowsDocContext(trimmed);
+    if (!docAllowed) return true;
+    prevNonEmpty = trimmed;
+  }
+
+  return false;
+}
 function segmentHasBareSilverAutopilotInvocation(rawSegment) {
   const raw = String(rawSegment || "").replace(/\r\n/g, "\n");
   const reNode = /\bnode(?:\.exe)?\s+/gi;
