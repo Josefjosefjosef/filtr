@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-17T13:45:12.326365Z",
+  "ingestedAt": "2026-05-17T14:25:06.058606Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nový zákon přináší pravidla pro bezpečné využívání dat státní správy",
+      "url": "https://profitonline.cz/novy-zakon-prinasi-pravidla-pro-bezpecne-vyuzivani-dat-statni-spravy/",
+      "dt": "2026-05-17T14:00:22Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "bezpečné",
+        "dat",
+        "nový",
+        "pravidla",
+        "přináší",
+        "správy",
+        "státní",
+        "využívání",
+        "zákon"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -257,32 +283,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Summitu v Pekingu dominovaly čipy, Tchaj-wan a boj o globální dominanci",
-      "url": "https://profitonline.cz/summitu-v-pekingu-dominovaly-cipy-tchaj-wan-a-boj-o-globalni-dominanci/",
-      "dt": "2026-05-15T14:20:30Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "boj",
-        "dominanci",
-        "dominovaly",
-        "globální",
-        "pekingu",
-        "summitu",
-        "tchaj",
-        "wan",
-        "čipy"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -293,7 +293,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18976,
+      "bytes": 19058,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -330,7 +330,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-17T12:00:18Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T14:00:22Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -345,6 +345,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nový zákon přináší pravidla pro bezpečné využívání dat státní správy",
+            "publishedAt": "2026-05-17T14:00:22Z"
+          },
           {
             "title": "Unie sází na jádro včetně malých reaktorů. Vyplatí se to?",
             "publishedAt": "2026-05-17T12:00:18Z"
@@ -372,10 +376,6 @@
           {
             "title": "V Praze dramaticky přibývá aut",
             "publishedAt": "2026-05-16T09:10:00Z"
-          },
-          {
-            "title": "Si, Trump a Thúkýdidova past",
-            "publishedAt": "2026-05-16T07:00:57Z"
           }
         ]
       }
