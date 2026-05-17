@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-17T13:05:55.268874Z",
+  "ingestedAt": "2026-05-17T13:45:12.326365Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Šmucler: Kraje nemají odborníky. Kontrolu zubařů by měla převzít komora",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/smucler-kraje-nemaji-odborniky-kontrolu-zubaru-by-mela-prevzit-komora/",
+      "dt": "2026-05-17T13:29:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "komora",
+        "kontrolu",
+        "kraje",
+        "měla",
+        "nemají",
+        "odborníky",
+        "převzít",
+        "zubařů",
+        "šmucler"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -250,35 +276,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "O návratu po mrtvici nerozhodují jen léky. Nový projekt v Česku odhalil nečekaný klíč k uzdravení",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/mrtvice-novy-projekt-dobrovolnici/",
-      "dt": "2026-05-15T10:12:26Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "jen",
-        "klíč",
-        "léky",
-        "mrtvici",
-        "nerozhodují",
-        "nečekaný",
-        "nový",
-        "návratu",
-        "odhalil",
-        "projekt",
-        "uzdravení",
-        "česku"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -289,7 +286,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 101747,
+      "bytes": 99357,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -326,7 +323,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-17T08:25:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T13:29:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -341,6 +338,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šmucler: Kraje nemají odborníky. Kontrolu zubařů by měla převzít komora",
+            "publishedAt": "2026-05-17T13:29:00Z"
+          },
           {
             "title": "Nová hrozba z Afriky: Ebola zasáhla hlavní města, WHO vyhlásila druhý nejvyšší stupeň pohotovosti",
             "publishedAt": "2026-05-17T08:25:00Z"
@@ -368,10 +369,6 @@
           {
             "title": "O cenách léků pro Evropany se nesmí rozhodovat v Bílém domě. Unie hraje o poslední výhodu",
             "publishedAt": "2026-05-15T15:05:51Z"
-          },
-          {
-            "title": "Sestry drží systém, ale 30 tisíc jich zamíří do důchodu. Nárůst počtu studentů stačit nebude",
-            "publishedAt": "2026-05-15T13:07:58Z"
           }
         ]
       }
