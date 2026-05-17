@@ -1,71 +1,48 @@
-﻿ÚKOL PRO CURSOR — Silver — FIX WSL ADAPTER READY GATE — SCRIPTS ONLY
+<!-- SILVER_NEXT_ACTION: full-auto-loop-openai; copy-paste for Cursor; not auto-applied -->
 
-CÍL:
-Opravit scripts/silver-cursor-agent-adapter.ps1 a související orchestration gating tak,
-aby WSL agent PASS lane nastavoval adapter_ready=YES i pro hlavní adapter flow.
+ÚKOL PRO CURSOR — infoUzel.cz / Silver
 
-AKTUÁLNÍ STAV:
-WSL probe:
-- marker_probe_pass=YES
-- adapter_ready=YES
-- safe_for_maxcycles_1=YES
+### 1. Ověření stavu repozitáře
+1. Otevřete PowerShell a nastavte aktuální adresář:
+   ```powershell
+   Set-Location C:\projects\filtr
+   ```
+2. Zkontrolujte stav git repozitáře:
+   ```powershell
+   git status --short
+   ```
 
-ALE:
-root diagnostic stále vrací:
-adapter_ready=NO
-adapter_ready_reason=no_headless_marker_stdout_exit0_and_no_input_output
+### 2. Spuštění diagnostiky
+3. Spusťte diagnostiku pro ověření stavu autopilota:
+   ```powershell
+   node scripts/silver-autopilot.cjs
+   ```
 
-DŮLEŽITÉ:
-Nejde o WSL failure.
-Jde o stale / incorrect top-level gating logic.
+### 3. Spuštění autonomního cyklu
+4. Spusťte autonomní cyklus s maximálním počtem cyklů 1:
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File scripts\silver-autopilot-loop.ps1 -MaxCycles 1 -CursorCommand "powershell -ExecutionPolicy Bypass -File scripts\silver-cursor-agent-adapter.ps1 -WslUbuntuAgent -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE} -TimeoutSeconds 3400"
+   ```
 
-SCOPE:
-Pouze:
-- scripts/silver-cursor-agent-adapter.ps1
-- scripts/silver-cursor-agent-adapter-diagnostic.ps1
-- případně související report JSON
+### 4. Kontrola výsledků
+5. Zkontrolujte posledních 80 řádků výstupu z běhu:
+   ```powershell
+   Get-Content SILVER_RUN_REPORT.md -Tail 80
+   ```
 
-ZAKÁZÁNO:
-- assets/app.js
-- Silver engine
-- routing
-- UI/CSS/backend
-- broad refactor
+### 5. Závěrečná kontrola
+6. Znovu zkontrolujte stav git repozitáře:
+   ```powershell
+   git status --short
+   ```
 
-POVINNÉ:
-- zachovat všechny safety guardy
-- MaxCycles0 musí zůstat BLOCKED
-- adapter_ready musí být YES pokud:
-  - WSL marker probe PASS
-  - stdout marker exact YES
-  - exit code 0
-  - timeout guard YES
-  - repo dirty unexpected NO
-- zachovat STOP při reálném selhání adapteru
-- žádné fake PASS
+### STOP podmínky
+- **MaxCycles 0 je BLOCKED**: Ověřte, že příkaz s `-MaxCycles 0` selže s odpovídající chybou.
 
-OVĚŘ:
-powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter-diagnostic.ps1
-
-powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -WslUbuntuAgent -Probe -OutputFile SILVER_CURSOR_OUTPUT.md -TimeoutSeconds 120
-
-git status --short
-
-PR vytvoř, ale nemerguj.
-
-RESULT BLOCK:
-=== SILVER_WSL_ADAPTER_GATE_FIX_RESULT ===
-engine_changed=NO
-assets_app_changed=NO
-adapter_ready_root=YES/NO
-wsl_probe_pass=YES/NO
-safe_for_maxcycles_1=YES/NO
-safe_for_maxcycles_0=YES/NO
-safety_guards_preserved=YES/NO
-git_status_clean=YES/NO
-pr_created=YES/NO
-pr_url=...
-ready_for_merge=YES/NO
-=== END_SILVER_WSL_ADAPTER_GATE_FIX_RESULT ===
-
-FINAL BEEP
+### Povinný výsledek
+```
+=== SILVER_AUTOPILOT_DIAGNOSTICS_RESULT ===
+git_status_clean=(zkontrolujte po cyklu)
+autopilot_exit=(spusť ověření lokálně)
+=== END_SILVER_AUTOPILOT_DIAGNOSTICS_RESULT ===
+```
