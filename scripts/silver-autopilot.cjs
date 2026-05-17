@@ -19,21 +19,6 @@ const RUN_REPORT = path.join(REPO, "SILVER_RUN_REPORT.md");
 const README = path.join(REPO, "SILVER_AUTOPILOT_README.md");
 const CURSOR_OUTPUT = path.join(REPO, "SILVER_CURSOR_OUTPUT.md");
 
-const FULL_AUTO_LOOP_ALLOWED_DIRTY = new Set(
-  [
-    "SILVER_STRATEGY.md",
-    "SILVER_NEXT_ACTION.md",
-    "SILVER_RUN_REPORT.md",
-    "SILVER_PROGRESS_LOG.md",
-    "SILVER_AUTOPILOT_README.md",
-    "SILVER_CURSOR_OUTPUT.md",
-    "SILVER_STOP_AUTOPILOT",
-    "scripts/silver-autopilot.cjs",
-    "scripts/silver-autopilot-loop.ps1",
-    "scripts/silver-autonomous-loop-safety-diagnostic.ps1",
-  ].map((s) => s.replace(/\\/g, "/")),
-);
-
 const RHC3_MAIN = path.join(SCRIPTS, "silver-real-human-chaos-v3.cjs");
 const RHC3_REPORT_JSON = path.join(SCRIPTS, "silver-real-human-chaos-v3-report.json");
 
@@ -104,10 +89,54 @@ function gitStatusPorcelain() {
 }
 
 function normalizeRepoRel(rel) {
-  return String(rel || "")
+  let s = String(rel || "")
     .replace(/\\/g, "/")
     .replace(/^\.\//, "")
     .trim();
+  /* Git may quote paths when core.quotePath is enabled; Windows adapters may vary slash/case. */
+  if (
+    (s.length >= 2 && s.charAt(0) === '"' && s.charAt(s.length - 1) === '"') ||
+    (s.length >= 2 && s.charAt(0) === "'" && s.charAt(s.length - 1) === "'")
+  ) {
+    s = s.slice(1, -1).trim().replace(/\\/g, "/");
+  }
+  return s;
+}
+
+/** Normalized repo-relative path for allowdirty / guard lookups (case-insensitive). */
+function repoRelGuardKey(rel) {
+  return normalizeRepoRel(rel).toLowerCase();
+}
+
+/** Paths allowed dirty during `--full-auto-loop` / controlled adapter runs (keys are lowercase). */
+const FULL_AUTO_LOOP_ALLOWED_DIRTY = new Set(
+  [
+    "SILVER_STRATEGY.md",
+    "SILVER_NEXT_ACTION.md",
+    "SILVER_RUN_REPORT.md",
+    "SILVER_PROGRESS_LOG.md",
+    "SILVER_AUTOPILOT_README.md",
+    "SILVER_CURSOR_OUTPUT.md",
+    "SILVER_STOP_AUTOPILOT",
+    "scripts/silver-autopilot.cjs",
+    "scripts/silver-autopilot-loop.ps1",
+    "scripts/silver-autonomous-loop-safety-diagnostic.ps1",
+    /* WSL / Cursor CLI adapter runtime may refresh adapter scripts + SILVER_CURSOR_OUTPUT.md during controlled loops */
+    "scripts/silver-cursor-agent-adapter.ps1",
+    "scripts/silver-cursor-agent-adapter-diagnostic.ps1",
+  ].map((s) => repoRelGuardKey(s)),
+);
+
+/** Porcelain rename/copy lines may report `orig -> dest`; guards must evaluate the working-tree path (dest). */
+function porcelainPathToWorkingTree(rel) {
+  let p = normalizeRepoRel(rel);
+  if (!p) return "";
+  const arrow = " -> ";
+  const idx = p.lastIndexOf(arrow);
+  if (idx >= 0) {
+    p = normalizeRepoRel(p.slice(idx + arrow.length));
+  }
+  return p;
 }
 
 function gitChangedFilesList() {
@@ -118,10 +147,14 @@ function gitChangedFilesList() {
     .map((l) => {
       const line = String(l || "").replace(/\r$/, "");
       if (!line) return "";
-      if (line.length >= 3 && line.charAt(2) === " ") return line.slice(3).trim();
-      const parts = line.trim().split(/\s+/);
-      if (parts.length >= 2) return parts.slice(1).join(" ").trim();
-      return line.trim();
+      let extracted = "";
+      if (line.length >= 3 && line.charAt(2) === " ") extracted = line.slice(3).trim();
+      else {
+        const parts = line.trim().split(/\s+/);
+        if (parts.length >= 2) extracted = parts.slice(1).join(" ").trim();
+        else extracted = line.trim();
+      }
+      return porcelainPathToWorkingTree(extracted);
     })
     .filter(Boolean);
 }
@@ -328,7 +361,7 @@ function dirtyGitUnexpectedForFullAutoLoop(changedList) {
   for (const rel of list) {
     const n = normalizeRepoRel(rel);
     if (!n) continue;
-    if (FULL_AUTO_LOOP_ALLOWED_DIRTY.has(n)) continue;
+    if (FULL_AUTO_LOOP_ALLOWED_DIRTY.has(repoRelGuardKey(n))) continue;
     return { pass: false, firstUnexpected: n };
   }
   return { pass: true, firstUnexpected: "" };
@@ -336,7 +369,7 @@ function dirtyGitUnexpectedForFullAutoLoop(changedList) {
 
 function assetsAppJsDirty(changedList) {
   const list = Array.isArray(changedList) ? changedList : [];
-  return list.some((rel) => normalizeRepoRel(rel) === "assets/app.js");
+  return list.some((rel) => repoRelGuardKey(rel) === "assets/app.js");
 }
 
 function pickFullAutoLoopInput() {

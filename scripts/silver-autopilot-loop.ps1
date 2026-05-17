@@ -749,6 +749,19 @@ function Get-GitStatusShortPaths {
       if ($parts.Count -ge 2) { $rel = $parts[1].Trim() } else { $rel = $line }
     }
     $rel = $rel -replace "\\", "/"
+    if (
+      ($rel.Length -ge 2) -and (
+        (($rel.StartsWith('"')) -and ($rel.EndsWith('"'))) -or
+        (($rel.StartsWith("'")) -and ($rel.EndsWith("'")))
+      )
+    ) {
+      $rel = $rel.Substring(1, $rel.Length - 2).Trim() -replace "\\", "/"
+    }
+    $arrowRen = " -> "
+    $ai = $rel.LastIndexOf($arrowRen)
+    if ($ai -ge 0) {
+      $rel = $rel.Substring($ai + $arrowRen.Length).Trim()
+    }
     if ($rel) { $out.Add($rel) }
   }
   return $out.ToArray()
@@ -767,7 +780,9 @@ function Test-AutonomousUnexpectedDirtyTree {
       "SILVER_STOP_AUTOPILOT",
       "scripts/silver-autopilot.cjs",
       "scripts/silver-autopilot-loop.ps1",
-      "scripts/silver-autonomous-loop-safety-diagnostic.ps1"
+      "scripts/silver-autonomous-loop-safety-diagnostic.ps1",
+      "scripts/silver-cursor-agent-adapter.ps1",
+      "scripts/silver-cursor-agent-adapter-diagnostic.ps1"
     )) {
     [void]$allowed.Add($p)
   }
