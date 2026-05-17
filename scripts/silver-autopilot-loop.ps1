@@ -173,7 +173,7 @@ function Get-GitStatusShortText {
   try {
     $psi = New-Object System.Diagnostics.ProcessStartInfo
     $psi.FileName = "git"
-    $psi.Arguments = "status --short"
+    $psi.Arguments = "-c core.quotePath=false status --short"
     $psi.WorkingDirectory = $Cwd
     $psi.RedirectStandardOutput = $true
     $psi.RedirectStandardError = $true
@@ -309,10 +309,11 @@ function Test-GitStatusClean {
 function Test-AssetsAppJsInStatus {
   param([string]$GitShort)
   if (-not $GitShort) { return $false }
-  $lines = $GitShort -split "`r?`n"
-  foreach ($line in $lines) {
-    $trim = $line.Trim()
-    if ($trim -match "assets/app\.js") { return $true }
+  foreach ($p in Get-GitStatusShortPathsFromText -Txt $GitShort) {
+    $n = ($p -replace '\\', '/').Trim()
+    if ([string]::Equals($n, "assets/app.js", [System.StringComparison]::OrdinalIgnoreCase)) {
+      return $true
+    }
   }
   return $false
 }
@@ -365,11 +366,132 @@ function Test-EngineTaskPolicyViolation {
   return ($engineish -and -not $diagnosticish)
 }
 
+function Test-IsScriptsSilverAutopilotPathSlice {
+  param([string]$PathSlice)
+  $p = ([string]$PathSlice).Trim() -replace '\\', '/'
+  if (-not $p) { return $false }
+  return ($p -match '^(?:\./)?scripts/silver-autopilot\.cjs$')
+}
+
+function Test-SegmentHasBareSilverAutopilotInvocation {
+  param([string]$RawSegment)
+  $raw = ([string]$RawSegment).Replace("`r`n", "`n")
+  $reNode = [regex]::new('\bnode(?:\.exe)?\s+', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $m = $reNode.Match($raw)
+  while ($m.Success) {
+    $i = $m.Index + $m.Length
+    if ($i -ge $raw.Length) { break }
+
+    $pathSlice = ""
+    $qc = $raw[$i]
+    if (($qc -eq '"') -or ($qc -eq "'") -or ($qc -eq '`')) {
+      $j = $i + 1
+      while ($j -lt $raw.Length) {
+        $c = $raw[$j]
+        if (($qc -ne '`') -and ($c -eq '\')) {
+          $j += 2
+          continue
+        }
+        if ($c -eq $qc) { break }
+        $j++
+      }
+      $pathSlice = $raw.Substring($i + 1, $j - $i - 1)
+      $i = $j + 1
+    }
+    else {
+      $j = $i
+      while ($j -lt $raw.Length) {
+        $c = $raw[$j]
+        if (($c -eq ' ') -or ($c -eq "`t") -or ($c -eq "`n") -or ($c -eq "`r")) { break }
+        $j++
+      }
+      $pathSlice = $raw.Substring($i, $j - $i)
+      $i = $j
+    }
+
+    if (Test-IsScriptsSilverAutopilotPathSlice -PathSlice $pathSlice) {
+      while (($i -lt $raw.Length) -and (($raw[$i] -eq ' ') -or ($raw[$i] -eq "`t"))) { $i++ }
+      $aft = if ($i -ge $raw.Length) { "" } else { $raw.Substring($i) }
+      if (-not ($aft -match '^--\s*\S')) {
+        return $true
+      }
+    }
+
+    $m = $reNode.Match($raw, $m.Index + 1)
+  }
+  return $false
+}
+
+function Test-NextActionLineIndicatesDocumentaryContext {
+  param([string]$NonemptyLine)
+  $p = ([string]$NonemptyLine).Trim()
+  if (-not $p) { return $false }
+  return ($p -match '(?i)\binvalid\b|\bincorrect\b|\bwrong\b|ROOT\s+CAUSE|MUST\b|SILVER_NEXT_ACTION\.MD\s+GENERATED|GENERATED.{0,80}\binvalid\b|EXPLICIT\s+ARGS|WITHOUT\s+ARGS|bez[^\n]{0,20}(args|argument)|^TASK:|^GOAL:|^SCOPE:|^NO-GO:|^REQUIRED:|\*\*DO\s+NOT\b|ANTI[-\s]?PATTERN|PŘÍKLAD|NEPOUŽ|\breject\b')
+}
+
+function Test-NextActionHasBareSilverAutopilotNodeInvocation {
+  param([string]$Inner)
+  $text = ([string]$Inner).Replace("`r`n", "`n")
+  $fenceBodies = New-Object System.Collections.Generic.List[string]
+  $outsideLines = New-Object System.Collections.Generic.List[string]
+  $inFence = $false
+  $curFence = New-Object System.Collections.Generic.List[string]
+
+  foreach ($line in ($text -split "`n")) {
+    if ($line -match '^\s*```') {
+      if ($inFence) {
+        [void]$fenceBodies.Add(($curFence -join "`n"))
+        $curFence.Clear()
+        $inFence = $false
+      }
+      else {
+        $inFence = $true
+      }
+      continue
+    }
+    if ($inFence) {
+      [void]$curFence.Add($line)
+      continue
+    }
+    [void]$outsideLines.Add($line)
+  }
+  if ($inFence) {
+    [void]$fenceBodies.Add(($curFence -join "`n"))
+  }
+
+  foreach ($body in $fenceBodies) {
+    if (Test-SegmentHasBareSilverAutopilotInvocation -RawSegment $body) {
+      return $true
+    }
+  }
+
+  $prevNonEmpty = ""
+  foreach ($oline in $outsideLines) {
+    $trimmed = ([string]$oline).Trim()
+    if (-not $trimmed) { continue }
+    if ($trimmed -notmatch '(?i)\bnode(?:\.exe)?\s+') {
+      $prevNonEmpty = $trimmed
+      continue
+    }
+    if (-not (Test-SegmentHasBareSilverAutopilotInvocation -RawSegment $trimmed)) {
+      $prevNonEmpty = $trimmed
+      continue
+    }
+    $docAllowed =
+      (Test-NextActionLineIndicatesDocumentaryContext -NonemptyLine $prevNonEmpty) -or
+      (Test-NextActionLineIndicatesDocumentaryContext -NonemptyLine $trimmed)
+    if (-not $docAllowed) { return $true }
+    $prevNonEmpty = $trimmed
+  }
+  return $false
+}
+
 function Test-SilverNextActionOutputQuality {
   param([string]$Text)
   if (-not $Text) { return $true }
   if ($Text -match "Ă") { return $false }
   if ($Text -match "â€") { return $false }
+  if (Test-NextActionHasBareSilverAutopilotNodeInvocation -Inner $Text) { return $false }
   if ($Text -match '(?i)\bnode\s+scripts/silver-diagnostic\.js\b') { return $false }
   if ($Text -match '(?i)\bnode\s+scripts/silver-smoke-test-maxcycles-1\.js\b') { return $false }
   if ($Text -match '(?i)`cat\s+C:\\') { return $false }
@@ -777,38 +899,134 @@ function Test-SilverEmergencyStopFilePresent {
   return (Test-Path -LiteralPath $Path)
 }
 
+function Decode-GitQuotedInnerSilver {
+  param([string]$Inner)
+  if ([string]::IsNullOrEmpty($Inner)) { return "" }
+  $chars = $Inner.ToCharArray()
+  $sb = New-Object System.Text.StringBuilder
+  $i = 0
+  while ($i -lt $chars.Length) {
+    $c = $chars[$i]
+    if ($c -ne '\') {
+      [void]$sb.Append($c)
+      $i++
+      continue
+    }
+    $i++
+    if ($i -ge $chars.Length) { break }
+    $esc = $chars[$i]
+    if ($esc -eq '\') {
+      [void]$sb.Append('\')
+      $i++
+      continue
+    }
+    if ($esc -eq '"') {
+      [void]$sb.Append('"')
+      $i++
+      continue
+    }
+    if ($esc -eq 'n') {
+      [void]$sb.Append("`n")
+      $i++
+      continue
+    }
+    if ($esc -eq 't') {
+      [void]$sb.Append("`t")
+      $i++
+      continue
+    }
+    $rest = $Inner.Substring($i)
+    $m = [regex]::Match($rest, '^([0-7]{1,3})')
+    if ($m.Success) {
+      $octVal = $m.Groups[1].Value
+      $code = ([Convert]::ToInt32($octVal, 8) -band 255)
+      [void]$sb.Append([char]$code)
+      $i += $octVal.Length
+      continue
+    }
+    [void]$sb.Append($esc)
+    $i++
+  }
+  return $sb.ToString()
+}
+
+function Normalize-SilverGitStatusWorkingTreeRel {
+  param([string]$ExtractedField)
+  $s = ([string]$ExtractedField).Trim() -replace '\\', '/'
+  while ($s.StartsWith("./")) {
+    $s = $s.Substring(2).Trim() -replace '\\', '/'
+  }
+  if (
+    ($s.Length -ge 2) -and (
+      (($s.StartsWith('"')) -and ($s.EndsWith('"'))) -or
+      (($s.StartsWith("'")) -and ($s.EndsWith("'")))
+    )
+  ) {
+    $innerPart = $s.Substring(1, $s.Length - 2)
+    $decoded = Decode-GitQuotedInnerSilver -Inner $innerPart
+    $s = ($decoded.Trim() -replace '\\', '/').Trim()
+    while ($s.StartsWith("./")) {
+      $s = $s.Substring(2).Trim() -replace '\\', '/'
+    }
+  }
+  return $s
+}
+
+function Restore-SilverAdapterDiagnosticReportJson {
+  param([string]$RepoRoot)
+  $prev = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try {
+    $psi = New-Object System.Diagnostics.ProcessStartInfo
+    $psi.FileName = "git"
+    $psi.Arguments = "restore --worktree -- scripts/silver-cursor-agent-adapter-diagnostic-report.json"
+    $psi.WorkingDirectory = $RepoRoot
+    $psi.RedirectStandardOutput = $true
+    $psi.RedirectStandardError = $true
+    $psi.UseShellExecute = $false
+    $psi.CreateNoWindow = $true
+    $p = [System.Diagnostics.Process]::Start($psi)
+    $null = $p.StandardOutput.ReadToEnd()
+    $null = $p.StandardError.ReadToEnd()
+    $p.WaitForExit()
+  }
+  catch {
+  }
+  finally {
+    $ErrorActionPreference = $prev
+  }
+}
+
+function Get-GitStatusShortPathsFromText {
+  param([string]$Txt)
+  if (-not $Txt) { return @() }
+  $outList = New-Object System.Collections.Generic.List[string]
+  foreach ($raw in $Txt -split "`r?`n") {
+    $line = $raw.Trim()
+    if (-not $line) { continue }
+    $relField = ""
+    if ($line.Length -ge 3 -and $line.Substring(2, 1) -eq " ") {
+      $relField = $line.Substring(3).Trim()
+    }
+    else {
+      $parts = $line -split "\s+", 2
+      if ($parts.Count -ge 2) { $relField = $parts[1].Trim() } else { $relField = $line }
+    }
+    $norm = Normalize-SilverGitStatusWorkingTreeRel -ExtractedField $relField
+    $arrowRen = " -> "
+    $ai = $norm.LastIndexOf($arrowRen)
+    if ($ai -ge 0) {
+      $norm = Normalize-SilverGitStatusWorkingTreeRel -ExtractedField ($norm.Substring($ai + $arrowRen.Length).Trim())
+    }
+    if ($norm) { [void]$outList.Add($norm) }
+  }
+  return $outList.ToArray()
+}
+
 function Get-GitStatusShortPaths {
   param([string]$Cwd)
   $txt = (Get-GitStatusShortText -Cwd $Cwd)
-  if (-not $txt) { return @() }
-  $out = New-Object System.Collections.Generic.List[string]
-  foreach ($raw in $txt -split "`r?`n") {
-    $line = $raw.Trim()
-    if (-not $line) { continue }
-    $rel = ""
-    if ($line.Length -ge 3 -and $line.Substring(2, 1) -eq " ") {
-      $rel = $line.Substring(3).Trim()
-    } else {
-      $parts = $line -split "\s+", 2
-      if ($parts.Count -ge 2) { $rel = $parts[1].Trim() } else { $rel = $line }
-    }
-    $rel = $rel -replace "\\", "/"
-    if (
-      ($rel.Length -ge 2) -and (
-        (($rel.StartsWith('"')) -and ($rel.EndsWith('"'))) -or
-        (($rel.StartsWith("'")) -and ($rel.EndsWith("'")))
-      )
-    ) {
-      $rel = $rel.Substring(1, $rel.Length - 2).Trim() -replace "\\", "/"
-    }
-    $arrowRen = " -> "
-    $ai = $rel.LastIndexOf($arrowRen)
-    if ($ai -ge 0) {
-      $rel = $rel.Substring($ai + $arrowRen.Length).Trim()
-    }
-    if ($rel) { $out.Add($rel) }
-  }
-  return $out.ToArray()
+  return Get-GitStatusShortPathsFromText -Txt $txt
 }
 
 function Test-AutonomousUnexpectedDirtyTree {
@@ -820,13 +1038,15 @@ function Test-AutonomousUnexpectedDirtyTree {
       "SILVER_RUN_REPORT.md",
       "SILVER_PROGRESS_LOG.md",
       "SILVER_AUTOPILOT_README.md",
+      "SILVER_PR_ORCHESTRATOR_README.md",
       "SILVER_CURSOR_OUTPUT.md",
       "SILVER_STOP_AUTOPILOT",
       "scripts/silver-autopilot.cjs",
       "scripts/silver-autopilot-loop.ps1",
       "scripts/silver-autonomous-loop-safety-diagnostic.ps1",
       "scripts/silver-cursor-agent-adapter.ps1",
-      "scripts/silver-cursor-agent-adapter-diagnostic.ps1"
+      "scripts/silver-cursor-agent-adapter-diagnostic.ps1",
+      "scripts/silver-cursor-agent-adapter-diagnostic-report.json"
     )) {
     [void]$allowed.Add($p)
   }
@@ -1155,6 +1375,20 @@ while ($true) {
       -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep -LastTaskExitCode 1
   }
 
+  # Rewrites SILVER_NEXT_ACTION.md when autopilot NEXT_ACTION inner quality gates fail (e.g. bare `node scripts/silver-autopilot.cjs`).
+  if (-not $DryRun) {
+    try {
+      $sanitizeRes = Invoke-NodeScript -WorkingDirectory $RepoRoot -Arguments @($AutopilotScript, "--sanitize-next-action-md") -PassThruExit $true
+      if (($null -ne $sanitizeRes) -and ($sanitizeRes.ExitCode -ne 0)) {
+        Write-Host ("silver-autopilot-loop: sanitize-next-action-md_exit=" + [string]$sanitizeRes.ExitCode + " continuing=YES") -ForegroundColor DarkYellow
+      }
+    }
+    catch {
+      Write-Host "silver-autopilot-loop: sanitize-next-action-md_invoke_failed continuing=YES" -ForegroundColor DarkYellow
+    }
+    $nextText = Read-TextFileOrEmpty -Path $NextActionPath
+  }
+
   $gitShort = Get-GitStatusShortText -Cwd $RepoRoot
   if (Test-AssetsAppJsInStatus -GitShort $gitShort) {
     if ($nextText -notmatch "ENGINE_ALLOWED") {
@@ -1180,7 +1414,7 @@ while ($true) {
       -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine "" -CalW "" -CalQ "" `
       -Headline (Get-NextActionHeadline -Text $nextText) -Focus "autonomous_bad_next_action_quality_precycle" `
       -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep -LastTaskExitCode 1 `
-      -StopReason "SILVER_NEXT_ACTION.md failed UTF-8/hallucination/cat-windows quality gate"
+      -StopReason "SILVER_NEXT_ACTION.md failed quality gate (UTF-8/hallucination/cat-windows/bare node scripts/silver-autopilot.cjs)"
   }
 
   $reportPre = Read-TextFileOrEmpty -Path $RunReportPath
@@ -1349,6 +1583,7 @@ while ($true) {
         -Headline (Get-NextActionHeadline -Text $nextText) -Focus "autopilot_exit_nonzero" `
         -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1
     }
+    Restore-SilverAdapterDiagnosticReportJson -RepoRoot $RepoRoot
     $nextAfterAuto = Read-TextFileOrEmpty -Path $NextActionPath
     if (-not (Test-SilverNextActionOutputQuality -Text $nextAfterAuto)) {
       Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
