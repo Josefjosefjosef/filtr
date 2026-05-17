@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-17T09:04:42.887321Z",
+  "ingestedAt": "2026-05-17T09:45:20.226061Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Ronaldo stále čeká na velkou trofej s an-Nasrem, v sobotu mu nevyšly dvě šance",
+      "url": "https://www.idnes.cz/fotbal/zahranici/ronaldo-an-nasr-cekani-na-velkou-trofej.A260517_103258_fot_zahranici_jrv",
+      "dt": "2026-05-17T09:08:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dvě",
+        "nasrem",
+        "nevyšly",
+        "ronaldo",
+        "sobotu",
+        "stále",
+        "trofej",
+        "velkou",
+        "čeká",
+        "šance"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -747,33 +774,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Pavel odmával triumf Bulegy, fanoušci v Mostě minutou potlesku uctili Holána",
-      "url": "https://www.idnes.cz/sport/motorsport/autodrom-most-mistrovstvi-sveta-superbiky-petr-pavel.A260516_175752_motorsport_ten",
-      "dt": "2026-05-16T18:31:47Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bulegy",
-        "fanoušci",
-        "holána",
-        "minutou",
-        "mostě",
-        "odmával",
-        "pavel",
-        "potlesku",
-        "triumf",
-        "uctili"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -784,7 +784,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47359,
+      "bytes": 47130,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -821,11 +821,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-17T08:46:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T09:08:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 29,
-          "zpravy": 1
+          "sport": 30
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -837,6 +836,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ronaldo stále čeká na velkou trofej s an-Nasrem, v sobotu mu nevyšly dvě šance",
+            "publishedAt": "2026-05-17T09:08:00Z"
+          },
           {
             "title": "Podprůměr, hokejisté ale u čtenářů vyvázli s dostatečnou. Nejhůř dopadl Mandát",
             "publishedAt": "2026-05-17T08:46:00Z"
@@ -864,10 +867,6 @@
           {
             "title": "Oštěpař Vadlejch vyhrál mítink v Tokiu, poprvé od OH 2024 přehodil 85 metrů",
             "publishedAt": "2026-05-17T06:59:58Z"
-          },
-          {
-            "title": "Švédsko - Česko v TV: kde sledovat zápas MS v hokeji 2026 živě",
-            "publishedAt": "2026-05-17T06:29:00Z"
           }
         ]
       }

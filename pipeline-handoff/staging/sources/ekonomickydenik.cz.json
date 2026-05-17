@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-17T09:04:42.887321Z",
+  "ingestedAt": "2026-05-17T09:45:20.226061Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Vlakem se klikatí růžová řeka. Pasažéry láká na jednu z nejbizarnějších gastro akcí Evropy",
+      "url": "https://ekonomickydenik.cz/vlakem-se-klikati-ruzova-reka-bizarni-gastro-akce-borsc/",
+      "dt": "2026-05-17T09:30:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "akcí",
+        "evropy",
+        "gastro",
+        "jednu",
+        "klikatí",
+        "láká",
+        "nejbizarnějších",
+        "pasažéry",
+        "růžová",
+        "vlakem",
+        "řeka"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -771,33 +799,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kreml využívá falešné rybáře k průniku do norských přístavů. Problém pro celé NATO",
-      "url": "https://ekonomickydenik.cz/kreml-vyuziva-falesne-rybare-k-pruniku-do-norskych-pristavu-nato/",
-      "dt": "2026-05-14T18:08:57Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "celé",
-        "falešné",
-        "kreml",
-        "nato",
-        "norských",
-        "problém",
-        "průniku",
-        "přístavů",
-        "rybáře",
-        "využívá"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -808,7 +809,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72692,
+      "bytes": 72657,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -845,11 +846,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-17T08:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T09:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 24,
-          "zpravy": 4,
+          "zpravy": 5,
+          "finance": 23,
           "zdravi": 2
         },
         "drop_counts": {
@@ -862,6 +863,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vlakem se klikatí růžová řeka. Pasažéry láká na jednu z nejbizarnějších gastro akcí Evropy",
+            "publishedAt": "2026-05-17T09:30:00Z"
+          },
           {
             "title": "Nabídky balkonových fotovoltaik přibývají. Vyplatí se? Odborníci jsou skeptičtí",
             "publishedAt": "2026-05-17T08:05:00Z"
@@ -889,10 +894,6 @@
           {
             "title": "Myslel si, že ho Afrika skryje. 2 Islámského státu neunikla složité noční pasti",
             "publishedAt": "2026-05-16T11:33:49Z"
-          },
-          {
-            "title": "Nová superdávka v akci: Čísla odhalují, komu stát přidá a kdo naopak tvrdě narazí",
-            "publishedAt": "2026-05-16T11:15:29Z"
           }
         ]
       }

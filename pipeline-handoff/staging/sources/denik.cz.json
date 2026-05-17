@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-17T09:04:42.887321Z",
+  "ingestedAt": "2026-05-17T09:45:20.226061Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Technické potíže a české zklamání. Žižku v Eurovizi srazily hlasy diváků",
+      "url": "https://www.denik.cz/hudba/eurovize-2026-finale-daniel-zizka-technicke-problemy-bulharsko.html",
+      "dt": "2026-05-17T09:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "diváků",
+        "eurovizi",
+        "hlasy",
+        "potíže",
+        "srazily",
+        "technické",
+        "zklamání",
+        "české",
+        "žižku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -446,7 +472,7 @@
     {
       "section": "krimi",
       "contentType": "article",
-      "title": "Nechoďte k oknům. Policie v Chomutově zadržela muže s dlouhou zbraní",
+      "title": "Policie hledala v Chomutově muže s dlouhou zbraní. Nechoďte k oknům, žádala",
       "url": "https://www.denik.cz/krimi/policie-podezreni-strelec-zbran-chomutov-20260516.html",
       "dt": "2026-05-16T17:21:00Z",
       "media_raw": "Deník",
@@ -454,12 +480,13 @@
       "tokens": [
         "chomutově",
         "dlouhou",
+        "hledala",
         "muže",
         "nechoďte",
         "oknům",
         "policie",
-        "zadržela",
-        "zbraní"
+        "zbraní",
+        "žádala"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -626,32 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Z hrobu v Polsku vytáhli živého muže. Propadla se pod ním betonová deska",
-      "url": "https://www.denik.cz/staty-eu/z-hrobu-vytahli-ziveho-muze-propadla-se-pod-nim-betonova-deska.html",
-      "dt": "2026-05-16T13:20:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "betonová",
-        "deska",
-        "hrobu",
-        "muže",
-        "ním",
-        "polsku",
-        "propadla",
-        "vytáhli",
-        "živého"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28613,
+      "bytes": 28734,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,11 +700,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-17T08:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T09:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 1,
-          "zpravy": 24
+          "zpravy": 24,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -715,6 +716,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Technické potíže a české zklamání. Žižku v Eurovizi srazily hlasy diváků",
+            "publishedAt": "2026-05-17T09:30:00Z"
+          },
           {
             "title": "Po Lidl botaskách se jen zaprášilo. Boty teď překupníci prodávají za dvojnásobek",
             "publishedAt": "2026-05-17T08:40:00Z"
@@ -742,10 +747,6 @@
           {
             "title": "Rio de Klin nehledejte v Brazílii. Betonový Ježíš stojí na Oravě",
             "publishedAt": "2026-05-17T05:00:00Z"
-          },
-          {
-            "title": "Letošní Eurovizi vyhrálo Bulharsko s písní Bangaranga. Žižka skončil šestnáctý",
-            "publishedAt": "2026-05-17T04:43:00Z"
           }
         ]
       }
