@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-17T07:44:44.632024Z",
+  "ingestedAt": "2026-05-17T08:25:22.514340Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Na superdávce vyplatil stát 563 milionů. Na starých dávkách 7,8 miliardy",
+      "url": "https://www.zdravezpravy.cz/2026/05/17/na-superdavce-vyplatil-stat-za-1-ctvrtleti-563-mil-kc-na-starych-davkach-78-mld-kc/",
+      "dt": "2026-05-17T07:26:39Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "563",
+        "dávkách",
+        "miliardy",
+        "milionů",
+        "starých",
+        "stát",
+        "superdávce",
+        "vyplatil"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -464,32 +489,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Senát vetoval nižší odvody OSVČ. Převod miliard z VZP ČR přijal",
-      "url": "https://www.zdravezpravy.cz/2026/05/07/senat-vetoval-nizsi-odvody-osvc-prevod-miliard-z-vzp-cr-prijal/",
-      "dt": "2026-05-07T08:34:28Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "miliard",
-        "nižší",
-        "odvody",
-        "osvč",
-        "převod",
-        "přijal",
-        "senát",
-        "vetoval",
-        "vzp"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -500,7 +499,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 200880,
+      "bytes": 198560,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -537,7 +536,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-15T13:15:04Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T07:26:39Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -553,6 +552,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na superdávce vyplatil stát 563 milionů. Na starých dávkách 7,8 miliardy",
+            "publishedAt": "2026-05-17T07:26:39Z"
+          },
           {
             "title": "Hantaviry kolují i v ČR. Infektologové doporučují mokré smejčení",
             "publishedAt": "2026-05-15T13:15:04Z"
@@ -580,10 +583,6 @@
           {
             "title": "Domácnosti s nízkou superdávkou mají žádat o MOP, radí úřady",
             "publishedAt": "2026-05-13T15:49:31Z"
-          },
-          {
-            "title": "Město Bruntál se brzy dočká nového domova Senevida",
-            "publishedAt": "2026-05-13T08:25:46Z"
           }
         ]
       }
