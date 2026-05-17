@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "seznamzpravy.cz",
-  "ingestedAt": "2026-05-17T17:49:44.019959Z",
+  "ingestedAt": "2026-05-17T18:30:57.596900Z",
   "items": [
     {
       "section": "aktualne",
@@ -1498,6 +1498,31 @@
     {
       "section": "aktualne",
       "contentType": "article",
+      "title": "Beze slova či úsměvu. Fotbalistky z KLDR na Jihu vyprodaly stadion",
+      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-beze-slova-ci-usmevu-fotbalistky-z-kldr-na-jihu-vyprodaly-stadion-306359",
+      "dt": "2026-05-17T18:30:00Z",
+      "media_raw": "Seznam Zprávy / Vzdělávání",
+      "media_norm": "Seznam Zprávy / Vzdělávání",
+      "tokens": [
+        "beze",
+        "fotbalistky",
+        "jihu",
+        "kldr",
+        "slova",
+        "stadion",
+        "vyprodaly",
+        "úsměvu"
+      ],
+      "feedCategory": "vzdelavani",
+      "feedType": "rubric",
+      "feedId": "vzd_seznam",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "seznamzpravy.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
       "title": "Mexico City se propadá o dva centimetry každý měsíc",
       "url": "https://www.seznamzpravy.cz/clanek/zahranicni-mexico-city-se-propada-o-dva-centimetry-kazdy-mesic-306364",
       "dt": "2026-05-17T17:40:00Z",
@@ -2214,32 +2239,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "seznamzpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "vzdelavani",
-      "contentType": "article",
-      "title": "Že je gay, farář poprvé oznámil během kázání. Církev ho odsunula z Česka",
-      "url": "https://www.seznamzpravy.cz/clanek/domaci-zivot-v-cesku-homosexualita-jako-hrich-to-je-nejnebezpecnejsi-mytus-rika-queer-farar-306325",
-      "dt": "2026-05-17T08:20:00Z",
-      "media_raw": "Seznam Zprávy / Vzdělávání",
-      "media_norm": "Seznam Zprávy / Vzdělávání",
-      "tokens": [
-        "během",
-        "církev",
-        "farář",
-        "gay",
-        "kázání",
-        "odsunula",
-        "oznámil",
-        "poprvé",
-        "česka"
-      ],
-      "feedCategory": "vzdelavani",
-      "feedType": "rubric",
-      "feedId": "vzd_seznam",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "seznamzpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -2443,7 +2442,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.seznamzpravy.cz/rss/vzdelavani",
-      "bytes": 35501,
+      "bytes": 35506,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2480,11 +2479,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-17T17:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T18:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 10,
-          "other": 20
+          "zpravy": 11,
+          "other": 19
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -2496,6 +2495,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Beze slova či úsměvu. Fotbalistky z KLDR na Jihu vyprodaly stadion",
+            "publishedAt": "2026-05-17T18:30:00Z"
+          },
           {
             "title": "Mexico City se propadá o dva centimetry každý měsíc",
             "publishedAt": "2026-05-17T17:40:00Z"
@@ -2523,10 +2526,6 @@
           {
             "title": "Klatovská třída v Plzni stála, policie řešila nález podezřelého kufru",
             "publishedAt": "2026-05-17T15:37:31Z"
-          },
-          {
-            "title": "Šrot se stává zlatem. Evropa ho přitom vyváží, říká Tykačův muž",
-            "publishedAt": "2026-05-17T15:20:24Z"
           }
         ]
       }

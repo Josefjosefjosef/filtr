@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-17T17:49:44.019959Z",
+  "ingestedAt": "2026-05-17T18:30:57.596900Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Slávističtí fanoušci se vzepřeli čistce. Vyvolávali Douděru, ale Chorého nikoliv",
+      "url": "https://sport.aktualne.cz/hradecti-fanousci-se-opreli-do-tvrdika-slaviste-vyvolavali-douderu-choreho-nikoliv/r~aaa2995c9f772ed524bb177ad4a13de7/",
+      "dt": "2026-05-17T18:10:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "ale",
+        "chorého",
+        "douděru",
+        "fanoušci",
+        "nikoliv",
+        "slávističtí",
+        "vyvolávali",
+        "vzepřeli",
+        "čistce"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -502,31 +528,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Kurtování a násilné injekce. Lidé by se divili, co se děje v psychiatrických nemocnicích",
-      "url": "https://zpravy.aktualne.cz/domaci/zdravotnictvi-22850dba-908b-4192-badc-0e7f1c003a00/kurtovani-a-nasilne-injekce-lide-by-se-divili-co-se-deje-v-psychiatrickych-nemocnicich/r~aaa2916e7a54c30a771cdd00bf6edfaa/",
-      "dt": "2026-05-17T09:47:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "divili",
-        "děje",
-        "injekce",
-        "kurtování",
-        "lidé",
-        "nemocnicích",
-        "násilné",
-        "psychiatrických"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -537,7 +538,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22135,
+      "bytes": 21977,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -574,13 +575,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-17T17:29:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T18:10:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 8,
+          "sport": 9,
           "zpravy": 10,
-          "finance": 1,
-          "zdravi": 1
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -592,6 +592,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Slávističtí fanoušci se vzepřeli čistce. Vyvolávali Douděru, ale Chorého nikoliv",
+            "publishedAt": "2026-05-17T18:10:00Z"
+          },
           {
             "title": "Čajánek se oženil. Padesátiletý šampion si vzal o více než dvacet let mladší miss",
             "publishedAt": "2026-05-17T17:29:00Z"
@@ -619,10 +623,6 @@
           {
             "title": "Tlačil na poslance, ať pomohou. Zoufalý muž před lety zaplatil, dluh ale nezmizel",
             "publishedAt": "2026-05-17T14:27:00Z"
-          },
-          {
-            "title": "Feťácká liga: Praha se umístila vysoko, Češi se drží své „národní” drogy",
-            "publishedAt": "2026-05-17T14:02:00Z"
           }
         ]
       }

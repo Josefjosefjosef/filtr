@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-17T17:49:44.019959Z",
+  "ingestedAt": "2026-05-17T18:30:57.596900Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kdyby Masaryk viděl, co Beneš udělal ze státu, zabil by ho, říká Pavel Kosatík",
+      "url": "https://www.idnes.cz/zpravy/domaci/pavel-kosatik-edvard-benes-masaryk-ceskoslovensko-sudetsti-nemci.A260511_160427_lidicky_kmk",
+      "dt": "2026-05-17T18:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "beneš",
+        "kdyby",
+        "kosatík",
+        "masaryk",
+        "pavel",
+        "státu",
+        "udělal",
+        "viděl",
+        "zabil",
+        "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -763,31 +790,6 @@
         "změna",
         "záplavě",
         "životního"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Šimečku dobíhá matčina kauza, ztrácí. Po volbách mu to může paradoxně pomoci",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/simecku-dobiha-matcina-kauza-ztraci-po-volbach-mu-to-muze-paradoxne-pomoci.A260515_190027_zahranicni_bury",
-      "dt": "2026-05-16T22:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "dobíhá",
-        "kauza",
-        "matčina",
-        "paradoxně",
-        "pomoci",
-        "volbách",
-        "ztrácí",
-        "šimečku"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1578,7 +1580,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 51570,
+      "bytes": 51571,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1615,7 +1617,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-17T17:36:58Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T18:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1632,6 +1634,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kdyby Masaryk viděl, co Beneš udělal ze státu, zabil by ho, říká Pavel Kosatík",
+            "publishedAt": "2026-05-17T18:00:00Z"
+          },
           {
             "title": "Na jedinou jadernou elektrárnu v SAE dopadl dron, nebezpečí nehrozí",
             "publishedAt": "2026-05-17T17:36:58Z"
@@ -1659,10 +1665,6 @@
           {
             "title": "Vystavování relikvií je tradice církve. Lebka se vrátí do baziliky, říká představený",
             "publishedAt": "2026-05-17T13:55:00Z"
-          },
-          {
-            "title": "Krvácející Rusko hledá spásu v Afričanech, podvedené chuďase žene do války",
-            "publishedAt": "2026-05-17T13:53:00Z"
           }
         ]
       }
