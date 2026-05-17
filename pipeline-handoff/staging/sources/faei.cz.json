@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-17T03:46:00.487789Z",
+  "ingestedAt": "2026-05-17T04:26:20.275014Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Poplatek za komunální odpad: Kdo se může stát nevědomky dlužníkem",
+      "url": "https://profitonline.cz/poplatek-za-komunalni-odpad-kdo-se-muze-stat-nevedomky-dluznikem/",
+      "dt": "2026-05-17T04:00:34Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dlužníkem",
+        "komunální",
+        "nevědomky",
+        "odpad",
+        "poplatek",
+        "stát"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -266,29 +289,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Petr Zelenka ve skupině Adastra povede oblast AI",
-      "url": "https://profitonline.cz/petr-zelenka-ve-skupine-adastra-povede-oblast-ai/",
-      "dt": "2026-05-15T06:00:27Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "adastra",
-        "oblast",
-        "petr",
-        "povede",
-        "skupině",
-        "zelenka"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -299,7 +299,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18912,
+      "bytes": 19052,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -336,7 +336,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-16T12:00:14Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T04:00:34Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -351,6 +351,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Poplatek za komunální odpad: Kdo se může stát nevědomky dlužníkem",
+            "publishedAt": "2026-05-17T04:00:34Z"
+          },
           {
             "title": "Úpadek čtení u dětí podsekává budoucí českou produktivitu",
             "publishedAt": "2026-05-16T12:00:14Z"
@@ -378,10 +382,6 @@
           {
             "title": "Týden na akciových trzích: Mezi rekordy a korekcí",
             "publishedAt": "2026-05-15T16:30:14Z"
-          },
-          {
-            "title": "Summitu v Pekingu dominovaly čipy, Tchaj-wan a boj o globální dominanci",
-            "publishedAt": "2026-05-15T14:20:30Z"
           }
         ]
       }
