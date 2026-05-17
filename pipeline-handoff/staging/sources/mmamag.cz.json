@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-17T21:09:32.556952Z",
+  "ingestedAt": "2026-05-17T21:51:01.495514Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Prohrával, pauzíroval, vydělává dál. McGregor je pro UFC pořád zlatý důl",
+      "url": "https://www.mmamag.cz/proc-mcgregor-porad-tolik-vydelava/",
+      "dt": "2026-05-17T21:15:47Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "důl",
+        "mcgregor",
+        "pauzíroval",
+        "pořád",
+        "prohrával",
+        "ufc",
+        "vydělává",
+        "zlatý"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1066,34 +1091,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Šampion KSW ukázal fotku ze shazování váhy. Fanoušci nechápou, jak může druhý den bojovat",
-      "url": "https://www.mmamag.cz/sampion-ksw-ukazal-fotku-po-shazovani-vahy/",
-      "dt": "2026-05-16T08:54:43Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "bojovat",
-        "den",
-        "druhý",
-        "fanoušci",
-        "fotku",
-        "ksw",
-        "nechápou",
-        "shazování",
-        "ukázal",
-        "váhy",
-        "šampion"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1104,7 +1101,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 84083,
+      "bytes": 84110,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1141,7 +1138,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-17T21:06:27Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T21:15:47Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1156,6 +1153,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Prohrával, pauzíroval, vydělává dál. McGregor je pro UFC pořád zlatý důl",
+            "publishedAt": "2026-05-17T21:15:47Z"
+          },
           {
             "title": "Jake Paul si půjčil staré hvězdy a Netflix to odvysílal milionům. Na dlouhodobou válku s UFC to ale nestačí",
             "publishedAt": "2026-05-17T21:06:27Z"
@@ -1183,10 +1184,6 @@
           {
             "title": "Max Holloway není jen ranař. Teď má vrátit McGregorovi porážku z roku 2013",
             "publishedAt": "2026-05-17T15:00:00Z"
-          },
-          {
-            "title": "McGregor změnil UFC. Zápasy prodával dřív, než došel do klece",
-            "publishedAt": "2026-05-17T14:15:00Z"
           }
         ]
       }
