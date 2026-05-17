@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-16T23:45:31.155201Z",
+  "ingestedAt": "2026-05-17T00:25:20.686926Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Eurovizi vyhrála Dara z Bulharska. Vystoupení Čecha Daniela Žižky provázely problémy",
+      "url": "https://zpravy.aktualne.cz/zahranici/ve-finale-eurovize-se-utka-25-zemi-soutezi-predchazela-protiizraelska-demonstrace/r~aaa29765d200b972ba983ba19c80d37c/",
+      "dt": "2026-05-16T20:42:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bulharska",
+        "daniela",
+        "dara",
+        "eurovizi",
+        "problémy",
+        "provázely",
+        "vyhrála",
+        "vystoupení",
+        "čecha",
+        "žižky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -103,32 +130,6 @@
         "vychytal",
         "český",
         "šokující"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vrcholí pěvecká soutěž Eurovize. Vyhrát může i český zpěvák Daniel Žižka",
-      "url": "https://zpravy.aktualne.cz/zahranici/ve-finale-eurovize-se-utka-25-zemi-soutezi-predchazela-protiizraelska-demonstrace/r~aaa29765d200b972ba983ba19c80d37c/",
-      "dt": "2026-05-16T20:42:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "daniel",
-        "eurovize",
-        "pěvecká",
-        "soutěž",
-        "vrcholí",
-        "vyhrát",
-        "zpěvák",
-        "český",
-        "žižka"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -542,7 +543,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21697,
+      "bytes": 21769,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -582,8 +583,8 @@
         "raw_feed_latest_publishedAt": "2026-05-16T22:08:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 10,
           "zpravy": 9,
+          "sport": 10,
           "finance": 1
         },
         "drop_counts": {
@@ -596,6 +597,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Eurovizi vyhrála Dara z Bulharska. Vystoupení Čecha Daniela Žižky provázely problémy",
+            "publishedAt": "2026-05-16T20:42:00Z"
+          },
           {
             "title": "Náhoda, pak jednoznačný faul, nechápal obrat Rulík. Vidí „velkou komplikaci“",
             "publishedAt": "2026-05-16T22:08:00Z"
@@ -611,10 +616,6 @@
           {
             "title": "Šokující porážka. Hokejisty vychytal český krajan, Slovinci se radují poprvé v historii",
             "publishedAt": "2026-05-16T20:44:00Z"
-          },
-          {
-            "title": "Vrcholí pěvecká soutěž Eurovize. Vyhrát může i český zpěvák Daniel Žižka",
-            "publishedAt": "2026-05-16T20:42:00Z"
           },
           {
             "title": "Potyčky při propalestinské manifestaci v Berlíně. Policie zatkla několik lidí.",
