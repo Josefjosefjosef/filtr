@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-05-17T15:06:03.362148Z",
+  "ingestedAt": "2026-05-17T15:50:27.259528Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Typologie podle hodiny, kdy jste přišli na svět. Čas narození ovlivní povahu, vztahy i celý život",
+      "url": "https://www.prozeny.cz/clanek/horoskopy-tajemno-typologie-podle-hodiny-kdy-jste-prisli-na-svet-cas-vaseho-narozeni-ma-vliv-na-vasi-povahu-98676",
+      "dt": "2026-05-17T15:15:00Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "celý",
+        "hodiny",
+        "jste",
+        "narození",
+        "ovlivní",
+        "podle",
+        "povahu",
+        "přišli",
+        "svět",
+        "typologie",
+        "vztahy",
+        "čas",
+        "život"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -815,34 +845,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Vysoký cholesterol nebolí, až jednoho dne způsobí infarkt nebo mrtvici. Nepodceňujte prevenci",
-      "url": "https://www.prozeny.cz/clanek/zdravi-wiki-nemoci-vysoky-cholesterol-neboli-az-jednoho-dne-zpusobi-infarkt-nebo-mrtvici-nepodcenujte-prevenci-103441",
-      "dt": "2026-05-15T03:00:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "cholesterol",
-        "dne",
-        "infarkt",
-        "jednoho",
-        "mrtvici",
-        "nebo",
-        "nebolí",
-        "nepodceňujte",
-        "prevenci",
-        "vysoký",
-        "způsobí"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -853,7 +855,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 40605,
+      "bytes": 40500,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -890,7 +892,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-17T11:59:05Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T15:15:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 30
@@ -905,6 +907,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Typologie podle hodiny, kdy jste přišli na svět. Čas narození ovlivní povahu, vztahy i celý život",
+            "publishedAt": "2026-05-17T15:15:00Z"
+          },
           {
             "title": "Norská princezna Mette‑Marit: Plíce jí kolabují, přesto oslavila se svým lidem státní svátek",
             "publishedAt": "2026-05-17T11:59:05Z"
@@ -931,10 +937,6 @@
           },
           {
             "title": "Sharon Stone září v outfitu, který sluší ve 30 i po 60. Tajemství je v detailech",
-            "publishedAt": "2026-05-17T03:00:00Z"
-          },
-          {
-            "title": "Hypertenze není nemoc seniorů! „Roste nám generace, která je objektivně nemocnější,“ říká expertka o vysokém tlaku",
             "publishedAt": "2026-05-17T03:00:00Z"
           }
         ]

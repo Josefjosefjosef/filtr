@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-17T15:06:03.362148Z",
+  "ingestedAt": "2026-05-17T15:50:27.259528Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Ronda Rousey si namastila kapsu. 17 sekund práce, skoro 50 milionů na účtu",
+      "url": "https://www.mmamag.cz/vysmata-rousey-17-sekund-prace-skoro-50-milionu-na-uctu/",
+      "dt": "2026-05-17T15:45:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "kapsu",
+        "milionů",
+        "namastila",
+        "práce",
+        "ronda",
+        "rousey",
+        "sekund",
+        "skoro",
+        "účtu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1075,31 +1101,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Čepo je v UFC. Slovák má potvrzený debut v Bělehradě, už zná i soupeře",
-      "url": "https://www.mmamag.cz/vlasto-cepo-je-v-ufc-debut-ma-v-belehrade/",
-      "dt": "2026-05-16T06:36:26Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "bělehradě",
-        "debut",
-        "potvrzený",
-        "slovák",
-        "soupeře",
-        "ufc",
-        "zná",
-        "čepo"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1110,7 +1111,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 84876,
+      "bytes": 84744,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1147,7 +1148,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-17T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T15:45:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1162,6 +1163,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ronda Rousey si namastila kapsu. 17 sekund práce, skoro 50 milionů na účtu",
+            "publishedAt": "2026-05-17T15:45:00Z"
+          },
           {
             "title": "Max Holloway není jen ranař. Teď má vrátit McGregorovi porážku z roku 2013",
             "publishedAt": "2026-05-17T15:00:00Z"
@@ -1189,10 +1194,6 @@
           {
             "title": "Jake Paul si rýpl do UFC. White podle něj vytáhl McGregora ze strachu z konkurence",
             "publishedAt": "2026-05-17T10:45:47Z"
-          },
-          {
-            "title": "17 sekund a konec. Rousey ukončila Carano ikonickou pákou a rovnou pověsila rukavice na hřebík",
-            "publishedAt": "2026-05-17T10:29:23Z"
           }
         ]
       }
