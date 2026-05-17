@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "plnezdravi.cz",
-  "ingestedAt": "2026-05-17T06:25:52.772576Z",
+  "ingestedAt": "2026-05-17T07:05:02.620786Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zvětšená prostata: Kdy je třeba zpozornět?",
+      "url": "https://www.plnezdravi.cz/zvetsena-prostata-kdy-je-treba-zpozornet/",
+      "dt": "2026-05-17T07:00:37Z",
+      "media_raw": "Plné zdraví",
+      "media_norm": "Plné zdraví",
+      "tokens": [
+        "prostata",
+        "třeba",
+        "zpozornět",
+        "zvětšená"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_plnezdravi",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "plnezdravi.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -458,29 +479,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "plnezdravi.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nadměrná konzumace brambůrek může způsobit závažná onemocnění",
-      "url": "https://www.plnezdravi.cz/bramburky-byvaji-pricinou-zavaznych-onemocneni/",
-      "dt": "2026-05-06T07:00:59Z",
-      "media_raw": "Plné zdraví",
-      "media_norm": "Plné zdraví",
-      "tokens": [
-        "brambůrek",
-        "konzumace",
-        "nadměrná",
-        "onemocnění",
-        "způsobit",
-        "závažná"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_plnezdravi",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "plnezdravi.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -491,7 +489,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.plnezdravi.cz/feed/",
-      "bytes": 157987,
+      "bytes": 158584,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -528,7 +526,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-16T07:00:57Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T07:00:37Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -543,6 +541,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zvětšená prostata: Kdy je třeba zpozornět?",
+            "publishedAt": "2026-05-17T07:00:37Z"
+          },
           {
             "title": "Osteoporóza: Jak zabránit řídnutí kostí?",
             "publishedAt": "2026-05-16T07:00:57Z"
@@ -570,10 +572,6 @@
           {
             "title": "Jak přežít digitální detox a zachránit si nervy?",
             "publishedAt": "2026-05-12T16:31:43Z"
-          },
-          {
-            "title": "Pánevní dno po porodu: Klíč k sexuálnímu zdraví i každodenní pohodě",
-            "publishedAt": "2026-05-12T16:24:21Z"
           }
         ]
       }

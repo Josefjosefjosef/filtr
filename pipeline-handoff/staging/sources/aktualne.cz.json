@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-17T06:25:52.772576Z",
+  "ingestedAt": "2026-05-17T07:05:02.620786Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zpomalte. Život není problém, který je třeba rychle vyřešit, ale zážitek, který je třeba prožít",
+      "url": "https://zpravy.aktualne.cz/ekonomika/zpomalte-zivot-neni-problem-ktery-je-treba-rychle-vyresit-ale-zazitek-ktery-je-treba-prozit/r~aaa29408b1aea8537ac7e4b5579cc10a/",
+      "dt": "2026-05-17T06:31:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "ale",
+        "problém",
+        "prožít",
+        "rychle",
+        "třeba",
+        "vyřešit",
+        "zpomalte",
+        "zážitek",
+        "život"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -248,10 +274,10 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "kultura",
       "contentType": "article",
       "title": "Eurovizi vyhrála Dara z Bulharska. Vystoupení Čecha Daniela Žižky provázely problémy",
-      "url": "https://zpravy.aktualne.cz/zahranici/ve-finale-eurovize-se-utka-25-zemi-soutezi-predchazela-protiizraelska-demonstrace/r~aaa29765d200b972ba983ba19c80d37c/",
+      "url": "https://magazin.aktualne.cz/kultura/hudba/ve-finale-eurovize-se-utka-25-zemi-soutezi-predchazela-protiizraelska-demonstrace/r~aaa29765d200b972ba983ba19c80d37c/",
       "dt": "2026-05-16T20:42:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
@@ -513,33 +539,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Masové protesty v Londýně. Dva znepřátelené tábory musely hlídat 4 tisíce policistů",
-      "url": "https://zpravy.aktualne.cz/zahranici/masove-protesty-v-londyne-dva-znepratelene-tabory-musely-hlidat-4-tisice-policistu/r~aaa296bf21e94e0b2f3e28a774605b34/",
-      "dt": "2026-05-16T18:52:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dva",
-        "hlídat",
-        "londýně",
-        "masové",
-        "musely",
-        "policistů",
-        "protesty",
-        "tisíce",
-        "tábory",
-        "znepřátelené"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -550,7 +549,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22350,
+      "bytes": 22261,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -587,13 +586,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-17T06:03:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T06:31:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "finance": 2,
           "sport": 9,
-          "zpravy": 9,
-          "other": 1,
-          "finance": 1
+          "zpravy": 7,
+          "other": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -605,6 +604,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zpomalte. Život není problém, který je třeba rychle vyřešit, ale zážitek, který je třeba prožít",
+            "publishedAt": "2026-05-17T06:31:00Z"
+          },
           {
             "title": "Nepřijatelné, soptil šéf Dukly. Myslel jsem, že ovlivňování zápasů patří do minulosti",
             "publishedAt": "2026-05-17T06:03:00Z"
@@ -632,10 +635,6 @@
           {
             "title": "Mezi šedými paneláky vzniklo kladivo na Quattro. Zapomenutá Lada měla prohánět Audi i Lancie",
             "publishedAt": "2026-05-17T04:32:00Z"
-          },
-          {
-            "title": "A pak udělal Putin chybu. Problémem vládce Kremlu není zdaleka jen Ukrajina",
-            "publishedAt": "2026-05-17T03:30:00Z"
           }
         ]
       }

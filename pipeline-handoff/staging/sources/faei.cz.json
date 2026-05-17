@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-17T06:25:52.772576Z",
+  "ingestedAt": "2026-05-17T07:05:02.620786Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Proč investoři důvěřují Alphabetu, ale u Mety zvedají varovný prst?",
+      "url": "https://profitonline.cz/proc-investori-duveruji-alphabetu-ale-u-mety-zvedaji-varovny-prst/",
+      "dt": "2026-05-17T07:00:22Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "ale",
+        "alphabetu",
+        "důvěřují",
+        "investoři",
+        "mety",
+        "proč",
+        "prst",
+        "varovný",
+        "zvedají"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -263,32 +289,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Energetická modernizace státních budov a areálů stojí. Čeká se na předpisy a metodiku",
-      "url": "https://profitonline.cz/energeticka-modernizace-statnich-budov-a-arealu-stoji-ceka-se-na-predpisy-a-metodiku/",
-      "dt": "2026-05-15T08:00:29Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "areálů",
-        "budov",
-        "energetická",
-        "metodiku",
-        "modernizace",
-        "předpisy",
-        "stojí",
-        "státních",
-        "čeká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -299,7 +299,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19052,
+      "bytes": 18974,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -336,7 +336,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-17T04:00:34Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T07:00:22Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -351,6 +351,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Proč investoři důvěřují Alphabetu, ale u Mety zvedají varovný prst?",
+            "publishedAt": "2026-05-17T07:00:22Z"
+          },
           {
             "title": "Poplatek za komunální odpad: Kdo se může stát nevědomky dlužníkem",
             "publishedAt": "2026-05-17T04:00:34Z"
@@ -378,10 +382,6 @@
           {
             "title": "Inflace? Centrální bankéři vyčkávají",
             "publishedAt": "2026-05-15T17:00:17Z"
-          },
-          {
-            "title": "Týden na akciových trzích: Mezi rekordy a korekcí",
-            "publishedAt": "2026-05-15T16:30:14Z"
           }
         ]
       }

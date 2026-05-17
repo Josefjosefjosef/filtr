@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-17T06:25:52.772576Z",
+  "ingestedAt": "2026-05-17T07:05:02.620786Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Marvel bez zábran. Punisher: Poslední zúčtování je krvavá a syrová jízda",
+      "url": "https://www.denik.cz/film-a-televize/recenze-punisher-posledni-zuctovani.html",
+      "dt": "2026-05-17T06:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "jízda",
+        "krvavá",
+        "marvel",
+        "poslední",
+        "punisher",
+        "syrová",
+        "zábran",
+        "zúčtování"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -289,7 +314,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Ve Splitu vyjelo při startu mimo ranvej letadlo Airbus se 130 lidmi na palubě",
+      "title": "Letadlo Airbus ve Splitu vyjelo při startu mimo ranvej. Na palubě bylo 130 lidí",
       "url": "https://www.denik.cz/staty-eu/chorvatsko-split-letadlo-airbus-mimo-ranvej.html",
       "dt": "2026-05-16T18:12:00Z",
       "media_raw": "Deník",
@@ -298,7 +323,7 @@
         "130",
         "airbus",
         "letadlo",
-        "lidmi",
+        "lidí",
         "mimo",
         "palubě",
         "při",
@@ -628,32 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Lidl světy a barevné regály. Řetězec od čtvrtka promění své prodejny",
-      "url": "https://www.denik.cz/ekonomika/lidl-zmena-na-prodejnach-nabidka-regaly.html",
-      "dt": "2026-05-16T11:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "barevné",
-        "lidl",
-        "prodejny",
-        "promění",
-        "regály",
-        "své",
-        "světy",
-        "čtvrtka",
-        "řetězec"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -664,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28338,
+      "bytes": 28418,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -701,11 +700,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-17T05:26:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T06:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 2
+          "zpravy": 24,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -717,6 +716,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Marvel bez zábran. Punisher: Poslední zúčtování je krvavá a syrová jízda",
+            "publishedAt": "2026-05-17T06:00:00Z"
+          },
           {
             "title": "WHO: Epidemie eboly v Kongu a Ugandě je ohrožení zdraví mezinárodního významu",
             "publishedAt": "2026-05-17T05:26:00Z"
@@ -744,10 +747,6 @@
           {
             "title": "Sundat si tričko v Barceloně vyjde pěkně draho. Nově jsou pokuty i za další věci",
             "publishedAt": "2026-05-17T03:30:00Z"
-          },
-          {
-            "title": "Před 35 lety zdolal Everest první Čech. Leopold Sulovský to zvládl s cigárkem",
-            "publishedAt": "2026-05-17T03:00:00Z"
           }
         ]
       }
