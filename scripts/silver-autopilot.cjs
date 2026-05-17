@@ -418,11 +418,56 @@ function assetsAppJsDirty(changedList) {
   return list.some((rel) => repoRelGuardKey(rel) === "assets/app.js");
 }
 
+function parseSilverAdapterMetaKeyValues(text) {
+  const out = {};
+  const full = String(text || "");
+  if (full.indexOf("# silver-cursor-agent-adapter") < 0) return out;
+  const marker = "# stdout";
+  const idx = full.indexOf(marker);
+  const head = idx >= 0 ? full.slice(0, idx) : full;
+  for (const raw of head.split(/\r?\n/)) {
+    const line = raw.trim();
+    if (!line || !line.includes("=")) continue;
+    const eq = line.indexOf("=");
+    if (eq <= 0) continue;
+    const k = line.slice(0, eq).trim();
+    if (!/^[a-zA-Z0-9_]+$/.test(k)) continue;
+    out[k] = line.slice(eq + 1);
+  }
+  return out;
+}
+
+function cursorOutputStaleForAutonomousRun(cursorText) {
+  const runId = String(process.env.SILVER_AUTONOMOUS_RUN_ID || "").trim();
+  if (!runId) return false;
+  const meta = parseSilverAdapterMetaKeyValues(cursorText);
+  if (String(meta.adapter_output_state || "").trim() === "INVALIDATED_AWAITING_CYCLE") return true;
+  const metaRunId = String(meta.autonomous_run_id || "").trim();
+  if (!metaRunId || metaRunId !== runId) return true;
+  const envCycle = String(process.env.SILVER_AUTONOMOUS_CYCLE || "").trim();
+  if (envCycle) {
+    const metaCycle = String(meta.autonomous_cycle || "").trim();
+    if (metaCycle !== envCycle) return true;
+  }
+  const envRunStart = String(process.env.SILVER_AUTONOMOUS_RUN_START_UTC || "").trim();
+  if (envRunStart) {
+    const metaRunStart = String(meta.autonomous_run_start_utc || "").trim();
+    if (metaRunStart && metaRunStart !== envRunStart) return true;
+  }
+  return false;
+}
+
 function pickFullAutoLoopInput() {
   const cursorText = readTextSafe(CURSOR_OUTPUT).trim();
   const reportText = readTextSafe(RUN_REPORT).trim();
   if (cursorText.length >= 20) {
-    return { source: "SILVER_CURSOR_OUTPUT.md", body: cursorText.slice(0, 24000) };
+    if (cursorOutputStaleForAutonomousRun(cursorText)) {
+      console.log(
+        "SILVER_CURSOR_OUTPUT_STALE=YES reason=autonomous_run_identity_mismatch_or_invalidated",
+      );
+    } else {
+      return { source: "SILVER_CURSOR_OUTPUT.md", body: cursorText.slice(0, 24000) };
+    }
   }
   if (reportText.length >= 10) {
     return { source: "SILVER_RUN_REPORT.md", body: reportText.slice(0, 24000) };
@@ -496,14 +541,12 @@ function lineIndicatesDocumentaryContext(nonemptyLine) {
   return /\binvalid\b|\bincorrect\b|\bwrong\b|ROOT\s+CAUSE|MUST\b|SILVER_NEXT_ACTION\.md\s+GENERATED\b|GENERATED.{0,80}\binvalid\b|EXPLICIT\s+ARGS|WITHOUT\s+ARGS|bez[^\n]{0,20}(args|argument)|^TASK:|^GOAL:|^SCOPE:|^NO-GO:|^REQUIRED:|\*\*DO\s+NOT\b|ANTI[-\s]?PATTERN|PŘÍKLAD|NEPOUŽ|\breject\b/i.test(p);
 }
 
-/** True if bare `node …/silver-autopilot.cjs` (no `--…` autopilot argv) appears in segment. */
-
 /** Prose / STOP lines that mention forbidden `cat C:\...` as guidance, not as a runnable command. */
 function lineIndicatesCatWindowsDocContext(nonemptyLine) {
   const p = String(nonemptyLine || "").trim();
   if (!p) return false;
   if (lineIndicatesDocumentaryContext(p)) return true;
-  return /NepouĹľĂ­vej|nepouĹľĂ­vej|never\s+(suggest|use)|don'?t\s+use|not\s+use|zakĂˇzan|ZakĂˇz|pouĹľij\s+`Get-Content|use\s+Get-Content|Get-Content\s+-LiteralPath|mĂ­sto\s+`?cat|instead\s+of\s+`?cat|`cat\s+C:\\[^`]*\.\.\./i.test(
+  return /Nepoužívej|nepoužívej|never\s+(suggest|use)|don'?t\s+use|not\s+use|zakázan|Zakáz|použij\s+`Get-Content|use\s+Get-Content|Get-Content\s+-LiteralPath|místo\s+`?cat|instead\s+of\s+`?cat|`cat\s+C:\\[^`]*\.\.\./i.test(
     p,
   );
 }
@@ -513,7 +556,7 @@ function lineLooksLikeRunnableCatWindows(line) {
   if (!t) return false;
   if (lineIndicatesCatWindowsDocContext(t)) return false;
   if (/`cat\s+C:\\[^`]*\.\.\./i.test(t)) return false;
-  if (/NepouĹľĂ­vej[^\n]*`?cat\s+C:/i.test(t)) return false;
+  if (/Nepoužívej[^\n]*`?cat\s+C:/i.test(t)) return false;
   if (/never\s+suggest[^\n]*`?cat\s+C:/i.test(t)) return false;
   if (/^\s*cat\s+C:\\/i.test(t)) return true;
   if (/\bCommand:\s*`?cat\s+C:\\/i.test(t)) return true;
@@ -584,6 +627,8 @@ function nextActionHasRunnableCatWindowsInvocation(inner) {
 
   return false;
 }
+
+/** True if bare `node …/silver-autopilot.cjs` (no `--…` autopilot argv) appears in segment. */
 function segmentHasBareSilverAutopilotInvocation(rawSegment) {
   const raw = String(rawSegment || "").replace(/\r\n/g, "\n");
   const reNode = /\bnode(?:\.exe)?\s+/gi;
@@ -831,7 +876,7 @@ function nextActionInnerQualityViolations(inner) {
   for (const re of NEXT_ACTION_BANNED_HALLUCINATION_RUNS) {
     if (re.test(t)) violations.push("banned_node_invocation:" + String(re));
   }
-  if (/`cat\s+C:\\/i.test(t) || /\bCommand:\s*`?cat\s+C:\\/i.test(t) || /^\s*cat\s+C:\\/im.test(t)) {
+  if (nextActionHasRunnableCatWindowsInvocation(t)) {
     violations.push("cat_windows_path");
   }
   return violations;
@@ -1075,6 +1120,37 @@ function proofSummaryConsistentFromAuthoritative(authoritativeGate) {
   return authoritativeGate === "PASS" ? "YES" : "NO";
 }
 
+/**
+ * Separates real adapter/run lifecycle stale meta from stale embedded JSON gate hints.
+ * Authoritative realistic_mobile corpus PASS always wins over sibling embedded FAIL strings.
+ */
+function classifyReportingHygiene(authoritativeGate, deepEmbedded, rawFail, rawPass) {
+  const authPass = String(authoritativeGate || "").trim() === "PASS";
+  const embeddedFail = String(deepEmbedded || "").trim() === "FAIL";
+  const staleEmbeddedHint = authPass && embeddedFail;
+  const rawFailHint = authPass && Number(rawFail) > 0;
+  const rawPassHint = authPass && Number(rawPass) > 0;
+  return {
+    real_stale_meta_issue_seen: "NO",
+    stale_embedded_hint_seen: staleEmbeddedHint ? "YES" : "NO",
+    stale_embedded_hint_non_authoritative: staleEmbeddedHint ? "YES" : "NO",
+    stale_raw_substring_hint_seen: rawFailHint ? "YES" : "NO",
+    stale_raw_substring_hint_non_authoritative: rawFailHint ? "YES" : "NO",
+    authoritative_runtime_pass: authPass ? "YES" : "NO",
+    reporting_embedded_fail_is_non_authoritative_hint: staleEmbeddedHint ? "YES" : "NO",
+    reporting_raw_fail_substrings_ignored_when_authoritative_pass: rawFailHint ? "YES" : "NO",
+    reporting_raw_pass_substrings_informational_only: rawPassHint ? "YES" : "NO",
+  };
+}
+
+function mergeReportingHygieneIntoPayload(payload, authoritativeGate, deepEmbedded, rawFail, rawPass) {
+  const h = classifyReportingHygiene(authoritativeGate, deepEmbedded, rawFail, rawPass);
+  for (const k of Object.keys(h)) {
+    payload[k] = h[k];
+  }
+  return payload;
+}
+
 function buildProofGateConsistencyReason(authoritative, deepEmbedded, rawFail, rawPass) {
   const parts = [];
   parts.push("authoritative_verdict_primary=" + authoritative.gate);
@@ -1118,6 +1194,19 @@ function printProofGateConsistencyResult(ctx) {
     console.log("PASS_FAIL_verdict_source=authoritative_realistic_mobile_corpus_JSON_not_embedded_field");
     console.log("real_product_defect_from_embedded_FAIL_when_authoritative_PASS=NO");
   }
+  const hygiene = classifyReportingHygiene(
+    authRmLine || ctx.authoritative_realistic_mobile,
+    deepEmbRaw,
+    ctx.raw_realistic_mobile_fail_mentions,
+    ctx.raw_realistic_mobile_pass_mentions,
+  );
+  console.log("real_stale_meta_issue_seen=" + hygiene.real_stale_meta_issue_seen);
+  console.log("stale_embedded_hint_seen=" + hygiene.stale_embedded_hint_seen);
+  console.log("stale_embedded_hint_non_authoritative=" + hygiene.stale_embedded_hint_non_authoritative);
+  console.log("authoritative_runtime_pass=" + hygiene.authoritative_runtime_pass);
+  console.log(
+    "reporting_embedded_fail_is_non_authoritative_hint=" + hygiene.reporting_embedded_fail_is_non_authoritative_hint,
+  );
   console.log("reason=" + String(ctx.reason || ""));
   console.log("dangerous_write_count=" + String(ctx.dangerous_write_count != null ? ctx.dangerous_write_count : ""));
   console.log("false_write_count=" + String(ctx.false_write_count != null ? ctx.false_write_count : ""));
@@ -1202,6 +1291,13 @@ function writeRunReport(payload) {
     "selected_authoritative_source=" + String(payload.selected_authoritative_source || ""),
     "proof_gate_consistency_reason=" + String(payload.proof_gate_consistency_reason || ""),
     "proof_summary_consistent=" + String(payload.proof_summary_consistent || ""),
+    "real_stale_meta_issue_seen=" + String(payload.real_stale_meta_issue_seen || "NO"),
+    "stale_embedded_hint_seen=" + String(payload.stale_embedded_hint_seen || "NO"),
+    "stale_embedded_hint_non_authoritative=" + String(payload.stale_embedded_hint_non_authoritative || "NO"),
+    "stale_raw_substring_hint_seen=" + String(payload.stale_raw_substring_hint_seen || "NO"),
+    "authoritative_runtime_pass=" + String(payload.authoritative_runtime_pass || ""),
+    "reporting_embedded_fail_is_non_authoritative_hint=" +
+      String(payload.reporting_embedded_fail_is_non_authoritative_hint || "NO"),
     "post_merge_proof_exit_code=" + String(payload.post_merge_proof_exit_code != null ? payload.post_merge_proof_exit_code : ""),
     "post_merge_proof_logical_status=" + String(payload.post_merge_proof_logical_status || ""),
     "post_merge_proof_process_exit=" + String(payload.post_merge_proof_process_exit != null ? payload.post_merge_proof_process_exit : ""),
@@ -1295,33 +1391,41 @@ function cmdStatus(argvCommand) {
     buildProofGateConsistencyReason(authForStatus, deepRmStatus, rawStatus.rawFail, rawStatus.rawPass) +
     " | context=--status_uses_on_disk_JSON_only_no_post_merge_step_exit_signal";
 
-  writeRunReport({
-    timestamp: nowIso(),
-    command: argvCommand || "--status",
-    status,
-    branch,
-    commit,
-    git_status_clean: clean ? "YES" : "NO",
-    changed_files: changed,
-    pr_info: pr.summary,
-    engine_changed: "NO",
-    assets_app_changed: "NO",
-    ui_changed: "NO",
-    css_changed: "NO",
-    backend_changed: "NO",
-    safety_counters: safetyStr,
-    calendar_write_20k: cal.calendar_write_20k,
-    calendar_query_20k: cal.calendar_query_20k,
-    gate_realistic_mobile: authoritativeGateStatus,
-    raw_realistic_mobile_mentions_FAIL: rawStatus.rawFail,
-    raw_realistic_mobile_mentions_PASS: rawStatus.rawPass,
-    selected_authoritative_source: authForStatus.source,
-    proof_gate_consistency_reason: reasonStatus,
-    proof_summary_consistent: summaryStatus,
-    post_merge_proof_exit_code: "",
-    next_recommended_command: nextCmd,
-    reason_for_stop: reason,
-  });
+  writeRunReport(
+    mergeReportingHygieneIntoPayload(
+      {
+        timestamp: nowIso(),
+        command: argvCommand || "--status",
+        status,
+        branch,
+        commit,
+        git_status_clean: clean ? "YES" : "NO",
+        changed_files: changed,
+        pr_info: pr.summary,
+        engine_changed: "NO",
+        assets_app_changed: "NO",
+        ui_changed: "NO",
+        css_changed: "NO",
+        backend_changed: "NO",
+        safety_counters: safetyStr,
+        calendar_write_20k: cal.calendar_write_20k,
+        calendar_query_20k: cal.calendar_query_20k,
+        gate_realistic_mobile: authoritativeGateStatus,
+        raw_realistic_mobile_mentions_FAIL: rawStatus.rawFail,
+        raw_realistic_mobile_mentions_PASS: rawStatus.rawPass,
+        selected_authoritative_source: authForStatus.source,
+        proof_gate_consistency_reason: reasonStatus,
+        proof_summary_consistent: summaryStatus,
+        post_merge_proof_exit_code: "",
+        next_recommended_command: nextCmd,
+        reason_for_stop: reason,
+      },
+      authoritativeGateStatus,
+      deepRmStatus,
+      rawStatus.rawFail,
+      rawStatus.rawPass,
+    ),
+  );
 
   console.log("=== SILVER_AUTOPILOT_STATUS ===");
   console.log("timestamp=" + nowIso());
@@ -1337,6 +1441,20 @@ function cmdStatus(argvCommand) {
   console.log("calendar_query_20k=" + cal.calendar_query_20k);
   console.log("next_recommended_command=" + nextCmd);
   console.log("PASS_FAIL=" + status);
+  const statusHygiene = classifyReportingHygiene(
+    authoritativeGateStatus,
+    deepRmStatus,
+    rawStatus.rawFail,
+    rawStatus.rawPass,
+  );
+  console.log("real_stale_meta_issue_seen=" + statusHygiene.real_stale_meta_issue_seen);
+  console.log("stale_embedded_hint_seen=" + statusHygiene.stale_embedded_hint_seen);
+  console.log("stale_embedded_hint_non_authoritative=" + statusHygiene.stale_embedded_hint_non_authoritative);
+  console.log("authoritative_runtime_pass=" + statusHygiene.authoritative_runtime_pass);
+  console.log(
+    "reporting_embedded_fail_is_non_authoritative_hint=" +
+      statusHygiene.reporting_embedded_fail_is_non_authoritative_hint,
+  );
   const statusTimeoutPath = String(process.env.SILVER_TIMEOUT_ARCHIVE_PATH || "").trim();
   if (statusTimeoutPath) {
     console.log("timeout_archive_path=" + statusTimeoutPath);
@@ -2085,38 +2203,46 @@ function cmdPostMergeProof() {
     git_status_clean: gitClean() ? "YES" : "NO",
     recommended_next_task: summaryFinal === "NO" ? "investigate_proof_gate_consistency" : "node scripts/silver-autopilot.cjs --status",
   });
-  writeRunReport({
-    timestamp: nowIso(),
-    command: "--post-merge-proof",
-    status: "PASS",
-    branch,
-    commit,
-    git_status_clean: gitClean() ? "YES" : "NO",
-    changed_files: gitChangedFilesList().join(";"),
-    pr_info: prOpen.summary,
-    engine_changed: "NO",
-    assets_app_changed: "NO",
-    ui_changed: "NO",
-    css_changed: "NO",
-    backend_changed: "NO",
-    safety_counters: JSON.stringify(safety),
-    calendar_write_20k: cal.calendar_write_20k,
-    calendar_query_20k: cal.calendar_query_20k,
-    gate_realistic_mobile: auth.gate,
-    raw_realistic_mobile_mentions_FAIL: rawPost.rawFail,
-    raw_realistic_mobile_mentions_PASS: rawPost.rawPass,
-    selected_authoritative_source: auth.source,
-    proof_gate_consistency_reason: reasonFinal,
-    proof_summary_consistent: summaryFinal,
-    post_merge_proof_exit_code: 0,
-    post_merge_proof_logical_status: "PASS",
-    post_merge_proof_process_exit: 0,
-    tracked_report_restore_before_realistic_mobile: trackedReportRestoreBeforeRealisticMobile,
-    failed_step: "",
-    failed_reason: "",
-    next_recommended_command: "node scripts/silver-autopilot.cjs --status",
-    reason_for_stop: "",
-  });
+  writeRunReport(
+    mergeReportingHygieneIntoPayload(
+      {
+        timestamp: nowIso(),
+        command: "--post-merge-proof",
+        status: "PASS",
+        branch,
+        commit,
+        git_status_clean: gitClean() ? "YES" : "NO",
+        changed_files: gitChangedFilesList().join(";"),
+        pr_info: prOpen.summary,
+        engine_changed: "NO",
+        assets_app_changed: "NO",
+        ui_changed: "NO",
+        css_changed: "NO",
+        backend_changed: "NO",
+        safety_counters: JSON.stringify(safety),
+        calendar_write_20k: cal.calendar_write_20k,
+        calendar_query_20k: cal.calendar_query_20k,
+        gate_realistic_mobile: auth.gate,
+        raw_realistic_mobile_mentions_FAIL: rawPost.rawFail,
+        raw_realistic_mobile_mentions_PASS: rawPost.rawPass,
+        selected_authoritative_source: auth.source,
+        proof_gate_consistency_reason: reasonFinal,
+        proof_summary_consistent: summaryFinal,
+        post_merge_proof_exit_code: 0,
+        post_merge_proof_logical_status: "PASS",
+        post_merge_proof_process_exit: 0,
+        tracked_report_restore_before_realistic_mobile: trackedReportRestoreBeforeRealisticMobile,
+        failed_step: "",
+        failed_reason: "",
+        next_recommended_command: "node scripts/silver-autopilot.cjs --status",
+        reason_for_stop: "",
+      },
+      auth.gate,
+      deepRm,
+      rawPost.rawFail,
+      rawPost.rawPass,
+    ),
+  );
   emitStrictResult({
     logicalStatus: "PASS",
     processExit: 0,
