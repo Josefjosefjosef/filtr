@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-17T19:50:23.899094Z",
+  "ingestedAt": "2026-05-17T20:30:04.697161Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Litvě našli havarovaný dron. Má se za to, že patří ukrajinské armádě",
+      "url": "https://www.denik.cz/staty-eu/havarovany-dron-v-litve.html",
+      "dt": "2026-05-17T19:43:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "armádě",
+        "dron",
+        "havarovaný",
+        "litvě",
+        "našli",
+        "patří",
+        "ukrajinské"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -623,32 +647,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Letošní Eurovizi vyhrálo Bulharsko s písní Bangaranga. Žižka skončil šestnáctý",
-      "url": "https://www.denik.cz/hudba/letosni-eurovizi-poprve-vyhralo-bulharsko-s-pisni-bangaranga-zpevacky-dary.html",
-      "dt": "2026-05-17T04:43:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bangaranga",
-        "bulharsko",
-        "eurovizi",
-        "letošní",
-        "písní",
-        "skončil",
-        "vyhrálo",
-        "šestnáctý",
-        "žižka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +657,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29805,
+      "bytes": 29411,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,7 +694,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-17T17:28:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T19:43:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -712,6 +710,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Litvě našli havarovaný dron. Má se za to, že patří ukrajinské armádě",
+            "publishedAt": "2026-05-17T19:43:00Z"
+          },
           {
             "title": "Pochod na podporu televize a rozhlasu. V Brně protestovaly tisíce lidí",
             "publishedAt": "2026-05-17T17:28:00Z"
@@ -739,10 +741,6 @@
           {
             "title": "V Lipsku utekl tygr a zranil člověka. Německá policie zvíře zastřelila",
             "publishedAt": "2026-05-17T14:44:00Z"
-          },
-          {
-            "title": "Dvouletou dívku v Texasu zabila převržená komoda. Rodiče teď varují ostatní",
-            "publishedAt": "2026-05-17T14:25:00Z"
           }
         ]
       }
