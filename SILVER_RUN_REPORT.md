@@ -1,12 +1,12 @@
 # SILVER_RUN_REPORT
 
-timestamp=2026-05-17T20:43:32.762Z
+timestamp=2026-05-17T22:45:43.985Z
 command=--status
 status=PASS
 branch=main
-commit=965f4184a363350b13f327aa8b685f2f350b3264
+commit=5bb15494f0348d85a0102bce760de2694e643e22
 git_status_clean=NO
-changed_files=SILVER_CURSOR_OUTPUT.md;SILVER_NEXT_ACTION.md;SILVER_RUN_REPORT.md
+changed_files=scripts/silver-autopilot-loop.ps1;scripts/silver-cursor-agent-adapter.ps1
 pr_info=(none)
 engine_changed=NO
 assets_app_changed=NO
