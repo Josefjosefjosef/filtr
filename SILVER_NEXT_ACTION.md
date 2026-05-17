@@ -9,29 +9,36 @@
    git status
    ```
 
-2. Přidej změny do commitu:
+2. Zjisti, jaké změny byly provedeny v `SILVER_NEXT_ACTION.md`, `SILVER_PROGRESS_LOG.md` a `SILVER_RUN_REPORT.md`:
+   ```powershell
+   git diff SILVER_NEXT_ACTION.md
+   git diff SILVER_PROGRESS_LOG.md
+   git diff SILVER_RUN_REPORT.md
+   ```
+
+3. Pokud jsou změny v těchto souborech relevantní, přidej je do commitu:
    ```powershell
    git add SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
    ```
 
-3. Vytvoř commit se zprávou:
+4. Vytvoř commit s popisem změn:
    ```powershell
    git commit -m "Zahrnutí změn v SILVER_NEXT_ACTION.md, SILVER_PROGRESS_LOG.md a SILVER_RUN_REPORT.md"
    ```
 
-4. Proveď push na `origin/main`:
+5. Pokus se odeslat změny na `origin`:
    ```powershell
    git push origin main
    ```
 
-=== 
 ### Scope guard
-Zajisti, že jsi přihlášený do GitHubu a máš správné přihlašovací údaje pro HTTPS nebo SSH.
+Zajisti, aby všechny provedené změny byly v souladu s pravidly Silver strategie a aby nedošlo k regresím.
 
 ### STOP podmínky
 - Raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode` je zakázáno.
 - Kontrolovaný autonomní režim vyžaduje tyto přepínače plus vestavěné limity.
 
 ### Povinný výsledek
-Zkontroluj, zda byly změny úspěšně přidány a commitovány, a zda byl push proveden bez chyb. 
-===
+```text
+Zkontroluj stav repozitáře a shrň změny v `SILVER_CURSOR_OUTPUT.md`. Zjisti, jaké změny byly provedeny v `SILVER_NEXT_ACTION.md`, `SILVER_PROGRESS_LOG.md` a `SILVER_RUN_REPORT.md`. Pokud jsou změny relevantní, přidej je do commitu a vytvoř commit s popisem změn. Pokus se odeslat změny na `origin`.
+```
