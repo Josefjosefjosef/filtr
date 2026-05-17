@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "isport.cz",
-  "ingestedAt": "2026-05-17T18:30:57.596900Z",
+  "ingestedAt": "2026-05-17T19:09:47.895107Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Souček s je s West Hamem krok od sestupu, Krejčí se vrátil po zranění. United slaví",
+      "url": "https://isport.blesk.cz/clanek/fotbal-zahranici-anglie-premier-league/475561/soucek-s-je-s-west-hamem-krok-od-sestupu-krejci-se-vratil-po-zraneni-united-slavi.html",
+      "dt": "2026-05-17T18:48:00Z",
+      "media_raw": "iSport",
+      "media_norm": "iSport",
+      "tokens": [
+        "hamem",
+        "krejčí",
+        "krok",
+        "sestupu",
+        "slaví",
+        "souček",
+        "united",
+        "vrátil",
+        "west",
+        "zranění"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_isport",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "isport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -157,33 +184,6 @@
         "titul",
         "těžká",
         "závěru"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_isport",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "isport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Krejčí se vrátil po zranění, Wolves remizovali. Slaví Manchester United i Aston Villa",
-      "url": "https://isport.blesk.cz/clanek/fotbal-zahranici-anglie-premier-league/475561/krejci-se-vratil-po-zraneni-wolves-remizovali-slavi-manchester-united-i-aston-villa.html",
-      "dt": "2026-05-17T17:19:00Z",
-      "media_raw": "iSport",
-      "media_norm": "iSport",
-      "tokens": [
-        "aston",
-        "krejčí",
-        "manchester",
-        "remizovali",
-        "slaví",
-        "united",
-        "villa",
-        "vrátil",
-        "wolves",
-        "zranění"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1064,7 +1064,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://isport.blesk.cz/rss",
-      "bytes": 62602,
+      "bytes": 62830,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1101,7 +1101,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-17T18:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T18:48:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1116,6 +1116,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Souček s je s West Hamem krok od sestupu, Krejčí se vrátil po zranění. United slaví",
+            "publishedAt": "2026-05-17T18:48:00Z"
+          },
           {
             "title": "ONLINE: Německo - Lotyšsko 0:0. Sebejisté výhry Švédska a USA. Podruhé uspělo Slovensko",
             "publishedAt": "2026-05-17T18:20:00Z"
@@ -1139,10 +1143,6 @@
           {
             "title": "Program nadstavby Chance Ligy: Termíny závěru skupiny o titul i těžká mise pro Baník",
             "publishedAt": "2026-05-17T17:25:00Z"
-          },
-          {
-            "title": "Krejčí se vrátil po zranění, Wolves remizovali. Slaví Manchester United i Aston Villa",
-            "publishedAt": "2026-05-17T17:19:00Z"
           },
           {
             "title": "SESTŘIH: Liberec - Sparta 0:2. Slovan počtvrté v řadě prohrál, v závěru zářil Haraslín",
