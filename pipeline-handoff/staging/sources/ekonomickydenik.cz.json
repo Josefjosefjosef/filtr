@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-17T05:45:23.769038Z",
+  "ingestedAt": "2026-05-17T06:25:52.772576Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Stát chystá velký návrat EET: Data z průzkumu ukazují rozpolcení a obavy podnikatelů",
+      "url": "https://ekonomickydenik.cz/navrat-eet-rozpolceni-a-obavy-podnikatele/",
+      "dt": "2026-05-17T05:45:50Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "chystá",
+        "data",
+        "eet",
+        "návrat",
+        "obavy",
+        "podnikatelů",
+        "průzkumu",
+        "rozpolcení",
+        "stát",
+        "ukazují",
+        "velký"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -773,34 +801,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Bankovní elity se bojí šmírování Bílého domu. Končí s Amazonem, přecházejí k majiteli Lidlu",
-      "url": "https://ekonomickydenik.cz/bankovni-elity-smirovani-amazon-schwarz-gruppe/",
-      "dt": "2026-05-14T13:50:09Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "amazonem",
-        "bankovní",
-        "bojí",
-        "bílého",
-        "domu",
-        "elity",
-        "končí",
-        "lidlu",
-        "majiteli",
-        "přecházejí",
-        "šmírování"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -811,7 +811,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72753,
+      "bytes": 72538,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -848,7 +848,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-17T05:38:26Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T05:45:50Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -865,6 +865,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Stát chystá velký návrat EET: Data z průzkumu ukazují rozpolcení a obavy podnikatelů",
+            "publishedAt": "2026-05-17T05:45:50Z"
+          },
           {
             "title": "Česko drží vyšší základní daň než Polsko a Maďarsko: Analýza odkrývá skrytá zatížení",
             "publishedAt": "2026-05-17T05:38:26Z"
@@ -892,10 +896,6 @@
           {
             "title": "Půlmiliardový škrt na poště? Stát mění plán a couvá před hrozbou z Bruselu",
             "publishedAt": "2026-05-16T10:07:21Z"
-          },
-          {
-            "title": "Místo lokálky autobus na zavolání? Kraj spočítal, co se mu vyplatí",
-            "publishedAt": "2026-05-16T09:55:00Z"
           }
         ]
       }

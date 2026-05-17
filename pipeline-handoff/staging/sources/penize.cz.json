@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-17T05:45:23.769038Z",
+  "ingestedAt": "2026-05-17T06:25:52.772576Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Skončí past na řidiče? Denní známka má fungovat tak, jak čekají",
+      "url": "https://www.penize.cz/doprava/489792-skonci-past-na-ridice-denni-znamka-ma-fungovat-tak-jak-cekaji",
+      "dt": "2026-05-17T07:30:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "denní",
+        "fungovat",
+        "past",
+        "skončí",
+        "tak",
+        "známka",
+        "čekají",
+        "řidiče"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -479,31 +504,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Nafta dál zlevňuje. Maximální ceny benzinu a nafty na čtvrtek 14. května",
-      "url": "https://www.penize.cz/doprava/489627-maximalni-ceny-benzinu-a-nafty-na-ctvrtek-14-kvetna",
-      "dt": "2026-05-13T13:57:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "benzinu",
-        "ceny",
-        "května",
-        "maximální",
-        "nafta",
-        "nafty",
-        "zlevňuje",
-        "čtvrtek"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -514,7 +514,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18818,
+      "bytes": 18710,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -551,11 +551,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-17T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T07:30:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 15,
-          "zpravy": 5
+          "zpravy": 5,
+          "finance": 15
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -567,6 +567,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Skončí past na řidiče? Denní známka má fungovat tak, jak čekají",
+            "publishedAt": "2026-05-17T07:30:00Z"
+          },
           {
             "title": "Dejte si Dluhopis republiky za rámeček. Takhle vypadají certifikáty",
             "publishedAt": "2026-05-17T07:00:00Z"
@@ -594,10 +598,6 @@
           {
             "title": "Sociální sítě rozbíjejí rodiny stejně jako alkohol. Zákaz pro děti podporuje většina Čechů",
             "publishedAt": "2026-05-15T09:31:00Z"
-          },
-          {
-            "title": "Vyplatí se nové dluhopisy od Schillerové? Lepší než spoření v bance, ukazuje porovnání",
-            "publishedAt": "2026-05-15T05:10:00Z"
           }
         ]
       }
