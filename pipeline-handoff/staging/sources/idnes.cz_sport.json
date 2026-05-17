@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-17T05:05:04.091246Z",
+  "ingestedAt": "2026-05-17T05:45:23.769038Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Gólman Horák: Celý život fandím Čechům a já je teď porazím. Snad mi nezapálí auto!",
+      "url": "https://www.idnes.cz/hokej/ms-2026/lukas-horak-golman-slovinsko-cesko-vyhra.A260516_233835_ms-hokej-2026_hrj",
+      "dt": "2026-05-17T05:18:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "auto",
+        "celý",
+        "fandím",
+        "gólman",
+        "horák",
+        "nezapálí",
+        "porazím",
+        "snad",
+        "čechům",
+        "život"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Buffalo otočilo v Montrealu a vynutilo si rozhodující sedmý zápas, Dobeš střídal",
+      "url": "https://www.idnes.cz/hokej/nhl/buffalo-montreal-play-off-jakub-dobes-zpravodajstvi.A260517_065906_nhl_jrv",
+      "dt": "2026-05-17T05:02:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "buffalo",
+        "dobeš",
+        "montrealu",
+        "otočilo",
+        "rozhodující",
+        "sedmý",
+        "střídal",
+        "vynutilo",
+        "zápas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -726,59 +779,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Giro d’Italia 2026: program, přehled a výsledky etap, favorité, Češi na startu",
-      "url": "https://www.idnes.cz/sport/cyklistika/giro-d-italia-prehled-souhrn-trasy-vysledky.A260423_130030_cyklistika_ipet",
-      "dt": "2026-05-16T16:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "2026",
-        "etap",
-        "favorité",
-        "giro",
-        "italia",
-        "program",
-        "přehled",
-        "startu",
-        "výsledky",
-        "češi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Narváez si v prudkých stěnách dojel pro druhý triumf, favorité se na Giru šetřili",
-      "url": "https://www.idnes.cz/sport/cyklistika/giro-2026-8-etapa-zpravodajstvi-online-vysledky.A260516_105139_cyklistika_ipet",
-      "dt": "2026-05-16T15:53:44Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dojel",
-        "druhý",
-        "favorité",
-        "giru",
-        "narváez",
-        "prudkých",
-        "stěnách",
-        "triumf",
-        "šetřili"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46284,
+      "bytes": 46358,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-17T04:24:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T05:18:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -842,6 +842,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Gólman Horák: Celý život fandím Čechům a já je teď porazím. Snad mi nezapálí auto!",
+            "publishedAt": "2026-05-17T05:18:00Z"
+          },
+          {
+            "title": "Buffalo otočilo v Montrealu a vynutilo si rozhodující sedmý zápas, Dobeš střídal",
+            "publishedAt": "2026-05-17T05:02:00Z"
+          },
           {
             "title": "Celou sezonu jsme se chtěli baráži vyhnout a teď za ni budeme rádi, mudruje Frydrych",
             "publishedAt": "2026-05-17T04:24:00Z"
@@ -865,14 +873,6 @@
           {
             "title": "Sudí, katastrofa! Někdo se zbláznil a já to nejsem, zlobil se kouč Dukly Šustr",
             "publishedAt": "2026-05-16T21:32:06Z"
-          },
-          {
-            "title": "Tabulky MS v hokeji 2026: pořadí skupin A a B",
-            "publishedAt": "2026-05-16T21:11:59Z"
-          },
-          {
-            "title": "Švýcaři na MS zvítězili podruhé, šest bodů mají i Finové. Rakousko si zastřílelo",
-            "publishedAt": "2026-05-16T21:03:24Z"
           }
         ]
       }

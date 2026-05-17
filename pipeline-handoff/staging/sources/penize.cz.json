@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-17T05:05:04.091246Z",
+  "ingestedAt": "2026-05-17T05:45:23.769038Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Dejte si Dluhopis republiky za rámeček. Takhle vypadají certifikáty",
+      "url": "https://www.penize.cz/dluhopisy/489790-dejte-si-dluhopis-republiky-za-ramecek-takhle-vypadaji-certifikaty",
+      "dt": "2026-05-17T07:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "certifikáty",
+        "dejte",
+        "dluhopis",
+        "republiky",
+        "rámeček",
+        "takhle",
+        "vypadají"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -480,33 +504,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nejlepší spořicí účet, víc salonků, konec kiosků. Co dalšího chystá mBank?",
-      "url": "https://www.penize.cz/osobni-ucty/479832-plany-mbank-nejlepsi-sporici-ucet-dalsi-salonky-investice",
-      "dt": "2026-05-13T05:10:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "chystá",
-        "dalšího",
-        "kiosků",
-        "konec",
-        "mbank",
-        "nejlepší",
-        "salonků",
-        "spořicí",
-        "víc",
-        "účet"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -517,7 +514,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18709,
+      "bytes": 18818,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -554,7 +551,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-16T07:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T07:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 15,
@@ -570,6 +567,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dejte si Dluhopis republiky za rámeček. Takhle vypadají certifikáty",
+            "publishedAt": "2026-05-17T07:00:00Z"
+          },
           {
             "title": "Česká pošta zavře devět poboček. Je mezi nimi i ta vaše?",
             "publishedAt": "2026-05-16T07:45:00Z"
@@ -597,10 +598,6 @@
           {
             "title": "Vyplatí se nové dluhopisy od Schillerové? Lepší než spoření v bance, ukazuje porovnání",
             "publishedAt": "2026-05-15T05:10:00Z"
-          },
-          {
-            "title": "Komerční banka dokončila převod klientů do KB+. Chystá další vylepšení",
-            "publishedAt": "2026-05-15T05:05:00Z"
           }
         ]
       }

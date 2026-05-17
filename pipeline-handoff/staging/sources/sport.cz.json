@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-17T05:05:04.091246Z",
+  "ingestedAt": "2026-05-17T05:45:23.769038Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Celou sezónu se chceme baráži vyhnout. Teď budeme rádi, když se do ní dostaneme, zdůraznil kapitán Baníku",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-celou-sezonu-se-chceme-barazi-vyhnout-ted-budeme-radi-kdyz-se-do-ni-dostaneme-zduraznil-kapitan-baniku-5456102",
+      "dt": "2026-05-17T05:14:48Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "baníku",
+        "baráži",
+        "budeme",
+        "celou",
+        "chceme",
+        "dostaneme",
+        "kapitán",
+        "když",
+        "rádi",
+        "sezónu",
+        "vyhnout",
+        "zdůraznil"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -34,7 +63,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Dobeš při kanonádě soupeře střídal. Sérii v NHL rozsekne sedmý zápas",
+      "title": "Dobeš při kanonádě soupeře střídal. Sérii NHL rozsekne sedmý zápas",
       "url": "https://www.sport.cz/clanek/hokej-nhl-dobes-pri-kanonade-soupere-stridal-serii-v-nhl-rozsekne-sedmy-zapasw-5456124",
       "dt": "2026-05-17T03:59:38Z",
       "media_raw": "Sport.cz",
@@ -775,33 +804,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Totální chaos po zisku titulu! Fanoušci Celtiku vběhli na hřiště a napadli soupeře",
-      "url": "https://www.sport.cz/clanek/fotbal-totalni-chaos-po-zisku-titulu-fanousci-celtiku-vbehli-na-hriste-a-napadli-soupere-5455750",
-      "dt": "2026-05-16T17:59:52Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "celtiku",
-        "chaos",
-        "fanoušci",
-        "hřiště",
-        "napadli",
-        "soupeře",
-        "titulu",
-        "totální",
-        "vběhli",
-        "zisku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -812,7 +814,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 51649,
+      "bytes": 52448,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -849,7 +851,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-17T04:50:43Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T05:14:48Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -865,11 +867,15 @@
         },
         "sample_titles": [
           {
+            "title": "Celou sezónu se chceme baráži vyhnout. Teď budeme rádi, když se do ní dostaneme, zdůraznil kapitán Baníku",
+            "publishedAt": "2026-05-17T05:14:48Z"
+          },
+          {
             "title": "Slováci zaútočí na další výhru, úřadující mistři světa touží napravit nepovedený vstup do MS",
             "publishedAt": "2026-05-17T04:50:43Z"
           },
           {
-            "title": "Dobeš při kanonádě soupeře střídal. Sérii v NHL rozsekne sedmý zápas",
+            "title": "Dobeš při kanonádě soupeře střídal. Sérii NHL rozsekne sedmý zápas",
             "publishedAt": "2026-05-17T03:59:38Z"
           },
           {
@@ -891,10 +897,6 @@
           {
             "title": "Novým koučem Chelsea by se podle médií měl stát Xabi Alonso",
             "publishedAt": "2026-05-16T22:17:27Z"
-          },
-          {
-            "title": "Sporný zákrok na Galvase? Podle hráče čistý, trenér viděl faul",
-            "publishedAt": "2026-05-16T22:10:34Z"
           }
         ]
       }

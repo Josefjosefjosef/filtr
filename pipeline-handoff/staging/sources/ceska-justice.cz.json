@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-05-17T05:05:04.091246Z",
+  "ingestedAt": "2026-05-17T05:45:23.769038Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Drama gradovalo každou minutou: Muž s puškou vešel do domu a začal unikat plyn",
+      "url": "https://www.ceska-justice.cz/2026/05/drama-muz-s-puskou-vesel-do-domu-a-zacal-unikat-plyn/",
+      "dt": "2026-05-17T05:23:54Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "domu",
+        "drama",
+        "gradovalo",
+        "každou",
+        "minutou",
+        "muž",
+        "plyn",
+        "puškou",
+        "unikat",
+        "vešel",
+        "začal"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -246,32 +274,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Školácká chyba: soud před zrušením bankrotu MikeJePána zapomněl nařídit jednání",
-      "url": "https://www.ceska-justice.cz/2026/05/skolacka-chyba-soud-oganesjan-insolvence/",
-      "dt": "2026-05-15T05:29:48Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "bankrotu",
-        "chyba",
-        "jednání",
-        "mikejepána",
-        "nařídit",
-        "soud",
-        "zapomněl",
-        "zrušením",
-        "školácká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +284,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 86967,
+      "bytes": 87521,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +321,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-17T04:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T05:23:54Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -334,6 +336,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Drama gradovalo každou minutou: Muž s puškou vešel do domu a začal unikat plyn",
+            "publishedAt": "2026-05-17T05:23:54Z"
+          },
           {
             "title": "Na internetu lákal dítě k pohlavnímu styku. Měla policie právo mu odebrat DNA?",
             "publishedAt": "2026-05-17T04:30:00Z"
@@ -361,10 +367,6 @@
           {
             "title": "„Placení daní musí být co nejjednodušší,“ říká k zapojení AI šéfka Finanční správy Hornochová",
             "publishedAt": "2026-05-15T11:20:12Z"
-          },
-          {
-            "title": "ODS hrozí Ústavním soudem. Schillerová chce uvolnit pravidla pro státní utrácení",
-            "publishedAt": "2026-05-15T11:11:08Z"
           }
         ]
       }
