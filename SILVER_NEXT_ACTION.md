@@ -8,37 +8,42 @@
    ```powershell
    git status
    ```
-
-2. Zjisti, jaké změny byly provedeny v `SILVER_NEXT_ACTION.md`, `SILVER_PROGRESS_LOG.md` a `SILVER_RUN_REPORT.md`:
+2. Proveď audit změn v souborech `SILVER_NEXT_ACTION.md`, `SILVER_PROGRESS_LOG.md` a `SILVER_RUN_REPORT.md`:
    ```powershell
    git diff SILVER_NEXT_ACTION.md
    git diff SILVER_PROGRESS_LOG.md
    git diff SILVER_RUN_REPORT.md
    ```
-
-3. Pokud jsou změny v těchto souborech relevantní, přidej je do commitu:
+3. Přidej změněné soubory do stagingu:
    ```powershell
-   git add SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
+   git add SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
    ```
-
-4. Vytvoř commit s popisem změn:
+4. Zkontroluj stav stagingu:
+   ```powershell
+   git status --short
+   ```
+5. Vytvoř commit se shrnutím změn:
    ```powershell
    git commit -m "Zahrnutí změn v SILVER_NEXT_ACTION.md, SILVER_PROGRESS_LOG.md a SILVER_RUN_REPORT.md"
    ```
-
-5. Pokus se odeslat změny na `origin`:
+6. Zkus provést push na `origin/main`:
    ```powershell
    git push origin main
    ```
 
 ### Scope guard
-Zajisti, aby všechny provedené změny byly v souladu s pravidly Silver strategie a aby nedošlo k regresím.
+Zajisti, že všechny změny jsou v souladu s pravidly Silver strategie a že nedochází k regresím.
 
 ### STOP podmínky
-- Raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode` je zakázáno.
-- Kontrolovaný autonomní režim vyžaduje tyto přepínače plus vestavěné limity.
+- Pokud se objeví jakékoliv chyby při `git push`, neprováděj žádné další akce, dokud nebude problém vyřešen.
+- Nepoužívej `-MaxCycles 0` bez `-AllowInfinite` a `-AutonomousMode`.
 
 ### Povinný výsledek
 ```text
-Zkontroluj stav repozitáře a shrň změny v `SILVER_CURSOR_OUTPUT.md`. Zjisti, jaké změny byly provedeny v `SILVER_NEXT_ACTION.md`, `SILVER_PROGRESS_LOG.md` a `SILVER_RUN_REPORT.md`. Pokud jsou změny relevantní, přidej je do commitu a vytvoř commit s popisem změn. Pokus se odeslat změny na `origin`.
+1. Stav repozitáře zkontrolován.
+2. Změny v souborech auditovány.
+3. Změněné soubory přidány do stagingu.
+4. Stav stagingu zkontrolován.
+5. Commit vytvořen.
+6. Push na `origin/main` proveden.
 ```
