@@ -173,6 +173,17 @@ const FULL_AUTO_LOOP_ALLOWED_DIRTY = new Set(
   ].map((s) => repoRelGuardKey(s)),
 );
 
+/** Regenerated audit JSON under scripts/ (SAFETY_REPORT_JSON); autonomous orchestration transient only. */
+const TRANSIENT_GENERATED_AUDIT_REPORT_KEYS = new Set(
+  SAFETY_REPORT_JSON.map((basename) => repoRelGuardKey("scripts/" + basename)),
+);
+
+function isTransientGeneratedAuditReportRel(rel) {
+  const n = normalizeRepoRel(rel);
+  if (!n) return false;
+  return TRANSIENT_GENERATED_AUDIT_REPORT_KEYS.has(repoRelGuardKey(n));
+}
+
 /** Porcelain rename/copy lines may report `orig -> dest`; guards must evaluate the working-tree path (dest). */
 function porcelainPathToWorkingTree(rel) {
   let p = normalizeRepoRel(rel);
@@ -408,6 +419,7 @@ function dirtyGitUnexpectedForFullAutoLoop(changedList) {
     const n = normalizeRepoRel(rel);
     if (!n) continue;
     if (FULL_AUTO_LOOP_ALLOWED_DIRTY.has(repoRelGuardKey(n))) continue;
+    if (isTransientGeneratedAuditReportRel(n)) continue;
     return { pass: false, firstUnexpected: n };
   }
   return { pass: true, firstUnexpected: "" };

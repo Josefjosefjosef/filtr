@@ -2,47 +2,39 @@
 
 ÚKOL PRO CURSOR — infoUzel.cz / Silver
 
-### 1. Ověření stavu repozitáře
-1. Otevřete PowerShell a nastavte aktuální adresář:
+### Úkol pro Cursor
+
+1. Zkontroluj stav repozitáře a ověř, zda je pracovní strom čistý.
    ```powershell
-   Set-Location C:\projects\filtr
+   Set-Location -Path C:\projects\filtr
+   git status
    ```
-2. Zkontrolujte stav git repozitáře:
+
+2. Pokud je pracovní strom nečistý, rozhodni se, zda chceš provést commit nebo obnovit změny. Pro commit použij:
+   ```powershell
+   git add SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
+   git commit -m "Uložení změn"
+   ```
+
+   Pokud chceš obnovit změny, použij:
+   ```powershell
+   git restore SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
+   ```
+
+3. Po vyřešení změn se pokus o push:
+   - Pokud používáš SSH, ujisti se, že máš správně nastavenou URL:
+     ```powershell
+     git remote set-url origin git@github.com:OWNER/filtr.git
+     ```
+   - Poté proveď push:
+     ```powershell
+     git push origin main
+     ```
+
+4. Znovu zkontroluj stav repozitáře:
    ```powershell
    git status --short
+   git show --name-only -1
    ```
 
-### 2. Spuštění diagnostiky
-3. Spusťte diagnostiku pro ověření stavu autopilota:
-   ```powershell
-   node scripts/silver-autopilot.cjs
-   ```
-
-### 3. Spuštění autonomního cyklu
-4. Spusťte autonomní cyklus s maximálním počtem cyklů 1:
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File scripts\silver-autopilot-loop.ps1 -MaxCycles 1 -CursorCommand "powershell -ExecutionPolicy Bypass -File scripts\silver-cursor-agent-adapter.ps1 -WslUbuntuAgent -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE} -TimeoutSeconds 3400"
-   ```
-
-### 4. Kontrola výsledků
-5. Zkontrolujte posledních 80 řádků výstupu z běhu:
-   ```powershell
-   Get-Content SILVER_RUN_REPORT.md -Tail 80
-   ```
-
-### 5. Závěrečná kontrola
-6. Znovu zkontrolujte stav git repozitáře:
-   ```powershell
-   git status --short
-   ```
-
-### STOP podmínky
-- **MaxCycles 0 je BLOCKED**: Ověřte, že příkaz s `-MaxCycles 0` selže s odpovídající chybou.
-
-### Povinný výsledek
-```
-=== SILVER_AUTOPILOT_DIAGNOSTICS_RESULT ===
-git_status_clean=(zkontrolujte po cyklu)
-autopilot_exit=(spusť ověření lokálně)
-=== END_SILVER_AUTOPILOT_DIAGNOSTICS_RESULT ===
-```
+===
