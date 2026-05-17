@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-17T20:30:04.697161Z",
+  "ingestedAt": "2026-05-17T21:09:32.556952Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Při letecké show v Idahu se srazily dvě stíhačky. Posádky se katapultovaly",
+      "url": "https://www.denik.cz/ze_sveta/v-usa-se-srazily-dve-stihacky.html",
+      "dt": "2026-05-17T20:41:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dvě",
+        "idahu",
+        "katapultovaly",
+        "letecké",
+        "posádky",
+        "při",
+        "show",
+        "srazily",
+        "stíhačky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -622,31 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rio de Klin nehledejte v Brazílii. Betonový Ježíš stojí na Oravě",
-      "url": "https://www.denik.cz/staty-eu/rio-de-klin-nehledejte-v-brazilii-betonovy-jezis-stoji-na-orave-slovensko.html",
-      "dt": "2026-05-17T05:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "betonový",
-        "brazílii",
-        "ježíš",
-        "klin",
-        "nehledejte",
-        "oravě",
-        "rio",
-        "stojí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -657,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29411,
+      "bytes": 29303,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -694,7 +695,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-17T19:43:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T20:41:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -710,6 +711,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Při letecké show v Idahu se srazily dvě stíhačky. Posádky se katapultovaly",
+            "publishedAt": "2026-05-17T20:41:00Z"
+          },
           {
             "title": "V Litvě našli havarovaný dron. Má se za to, že patří ukrajinské armádě",
             "publishedAt": "2026-05-17T19:43:00Z"
@@ -737,10 +742,6 @@
           {
             "title": "Češi míří za nákupy do Polska. Lákají ceny na tržnici i u čerpacích stanic",
             "publishedAt": "2026-05-17T15:25:00Z"
-          },
-          {
-            "title": "V Lipsku utekl tygr a zranil člověka. Německá policie zvíře zastřelila",
-            "publishedAt": "2026-05-17T14:44:00Z"
           }
         ]
       }

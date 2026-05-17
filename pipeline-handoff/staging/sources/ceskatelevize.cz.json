@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-17T20:30:04.697161Z",
+  "ingestedAt": "2026-05-17T21:09:32.556952Z",
   "items": [
     {
       "section": "aktualne",
@@ -222,14 +222,15 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "V jaderné elektrárně v Emirátech vypukl po útoku dronu požár",
+      "title": "V areálu jaderné elektrárny v Emirátech vypukl po útoku dronu požár",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/v-jaderne-elektrarne-v-emiratech-vypukl-po-utoku-dronu-pozar-373536",
       "dt": "2026-05-17T15:07:18Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
+        "areálu",
         "dronu",
-        "elektrárně",
+        "elektrárny",
         "emirátech",
         "jaderné",
         "požár",
@@ -477,7 +478,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Kvůli bombě z druhé světové války evakuují ve Pforzheimu třicet tisíc lidí",
+      "title": "Kvůli bombě z druhé světové války se evakuovalo ve Pforzheimu třicet tisíc lidí",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/kvuli-bombe-z-druhe-svetove-valky-evakuuji-ve-pforzheimu-tricet-tisic-lidi-373527",
       "dt": "2026-05-17T07:57:48Z",
       "media_raw": "ČT24 / Domácí",
@@ -485,7 +486,7 @@
       "tokens": [
         "bombě",
         "druhé",
-        "evakuují",
+        "evakuovalo",
         "kvůli",
         "lidí",
         "pforzheimu",
@@ -748,6 +749,29 @@
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Džavoronok slaví s Perugií triumf v Lize mistrů",
+      "url": "https://sport.ceskatelevize.cz/clanek/volejbal/dzavoronok-slavi-s-perugii-triumf-v-lize-mistru-156861",
+      "dt": "2026-05-17T21:03:23Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "džavoronok",
+        "lize",
+        "mistrů",
+        "perugií",
+        "slaví",
+        "triumf"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1189,16 +1213,22 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Německo – Lotyšsko a Norsko – Slovinsko",
+      "title": "Švédové v severském derby přehráli Dány, Norsku zajistil výhru hattrick Berglunda",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/ms-v-hokeji-italie-slovensko-a-velka-britanie-usa-156842",
       "dt": "2026-05-17T10:00:00Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
-        "lotyšsko",
-        "norsko",
-        "německo",
-        "slovinsko"
+        "berglunda",
+        "derby",
+        "dány",
+        "hattrick",
+        "norsku",
+        "přehráli",
+        "severském",
+        "výhru",
+        "zajistil",
+        "švédové"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1478,28 +1508,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nymburk porazil Opavu v semifinále i podruhé",
-      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/nymburk-porazil-opavu-v-semifinale-i-podruhe-156831",
-      "dt": "2026-05-16T16:48:51Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "nymburk",
-        "opavu",
-        "podruhé",
-        "porazil",
-        "semifinále"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1510,7 +1518,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43809,
+      "bytes": 43750,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1629,7 +1637,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37984,
+      "bytes": 38239,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1666,7 +1674,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-17T19:52:58Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T21:03:23Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1681,6 +1689,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Džavoronok slaví s Perugií triumf v Lize mistrů",
+            "publishedAt": "2026-05-17T21:03:23Z"
+          },
           {
             "title": "Real Madrid zvítězil na hřišti Sevilly, Atlético se dotáhlo na třetí Villarreal",
             "publishedAt": "2026-05-17T19:52:58Z"
@@ -1708,10 +1720,6 @@
           {
             "title": "O volném dnu se vydalo na led devět hráčů, trenéři se zapojili do baga",
             "publishedAt": "2026-05-17T16:45:47Z"
-          },
-          {
-            "title": "Vingegaard dokázal vyhrát i druhou horskou etapu, v růžovém zůstává Eulálio",
-            "publishedAt": "2026-05-17T16:00:13Z"
           }
         ]
       }
@@ -1723,7 +1731,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77877,
+      "bytes": 77840,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

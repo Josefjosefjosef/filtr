@@ -1,27 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-17T20:30:04.697161Z",
+  "ingestedAt": "2026-05-17T21:09:32.556952Z",
   "items": [
     {
-      "section": "kultura",
+      "section": "aktualne",
       "contentType": "article",
-      "title": "Nejtěžší je bobřík věrnosti. Foglarův Strach nad Bobří řekou temně zachycuje okupaci",
-      "url": "https://www.idnes.cz/kultura/literatura/strach-nad-bobri-rekou-nacisticka-okupace-hrdinstvi-zbabelost.A260514_170558_literatura_krou",
-      "dt": "2026-05-17T18:00:00Z",
+      "title": "Izrael navzdory příměří opět udeřil na jihu Libanonu. Zemřelo pět lidí, včetně dětí",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/izrael-libanon-utok-primeri-dohoda.A260517_215530_zahranicni_tmps",
+      "dt": "2026-05-17T19:55:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
-        "bobří",
-        "bobřík",
-        "foglarův",
-        "nejtěžší",
-        "okupaci",
-        "strach",
-        "temně",
-        "věrnosti",
-        "zachycuje",
-        "řekou"
+        "dětí",
+        "izrael",
+        "jihu",
+        "libanonu",
+        "lidí",
+        "navzdory",
+        "opět",
+        "pět",
+        "příměří",
+        "udeřil",
+        "včetně",
+        "zemřelo"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -49,6 +51,33 @@
         "viděl",
         "zabil",
         "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Nejtěžší je bobřík věrnosti. Foglarův Strach nad Bobří řekou temně zachycuje okupaci",
+      "url": "https://www.idnes.cz/kultura/literatura/strach-nad-bobri-rekou-nacisticka-okupace-hrdinstvi-zbabelost.A260514_170558_literatura_krou",
+      "dt": "2026-05-17T18:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "bobří",
+        "bobřík",
+        "foglarův",
+        "nejtěžší",
+        "okupaci",
+        "strach",
+        "temně",
+        "věrnosti",
+        "zachycuje",
+        "řekou"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -761,31 +790,6 @@
         "zpěvačka",
         "šestnáctý",
         "žižka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Pracující důchodci budou potřeba čím dál víc. Vyplatí se státu i firmám",
-      "url": "https://www.idnes.cz/finance/penze/duchodci-prace-legislativa-sleva-odvody-pracovni-trh.A260429_124348_penze_pzak",
-      "dt": "2026-05-16T22:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "důchodci",
-        "firmám",
-        "potřeba",
-        "pracující",
-        "státu",
-        "vyplatí",
-        "víc",
-        "čím"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1576,7 +1580,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 51113,
+      "bytes": 51450,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1613,12 +1617,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-17T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-17T19:55:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "zpravy": 26,
           "other": 3,
-          "zpravy": 25,
-          "finance": 2
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1631,11 +1635,15 @@
         },
         "sample_titles": [
           {
-            "title": "Nejtěžší je bobřík věrnosti. Foglarův Strach nad Bobří řekou temně zachycuje okupaci",
-            "publishedAt": "2026-05-17T18:00:00Z"
+            "title": "Izrael navzdory příměří opět udeřil na jihu Libanonu. Zemřelo pět lidí, včetně dětí",
+            "publishedAt": "2026-05-17T19:55:00Z"
           },
           {
             "title": "Kdyby Masaryk viděl, co Beneš udělal ze státu, zabil by ho, říká Pavel Kosatík",
+            "publishedAt": "2026-05-17T18:00:00Z"
+          },
+          {
+            "title": "Nejtěžší je bobřík věrnosti. Foglarův Strach nad Bobří řekou temně zachycuje okupaci",
             "publishedAt": "2026-05-17T18:00:00Z"
           },
           {
@@ -1657,10 +1665,6 @@
           {
             "title": "VIDEA TÝDNE: Topolánkova zpověď, botasky z Lidlu a Trump v Číně",
             "publishedAt": "2026-05-17T15:48:00Z"
-          },
-          {
-            "title": "Bouřlivá akce sociálních demokratů: slova o kolaboraci i fyzické napadení",
-            "publishedAt": "2026-05-17T15:33:00Z"
           }
         ]
       }
