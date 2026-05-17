@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Silver Autopilot V1 — local orchestration only (no runtime Silver changes).
- * Commands: --status | --verify-pr= | --merge-pr= | --post-merge-proof | --refresh-rhc3 | --ask-model | --auto | --full-auto-loop | --loop-once
+ * Commands: --status | --verify-pr= | --merge-pr= | --post-merge-proof | --refresh-rhc3 | --ask-model | --sanitize-next-action-md | --auto | --full-auto-loop | --loop-once
  */
 /* eslint-disable no-console */
 "use strict";
@@ -82,23 +82,66 @@ function runGit(args) {
 
 function gitStatusPorcelain() {
   try {
-    return runGit(["status", "--porcelain"]);
+    /* Avoid quoted/octal paths so porcelain parsing matches PS autopilot guard and WSL adapters. */
+    return runGit(["-c", "core.quotePath=false", "status", "--porcelain"]);
   } catch {
     return "DIRTY_UNKNOWN";
   }
 }
 
+/** Decode Git-style C escapes inside a quoted path segment (\n, \t, \\, \", octal \ddd). */
+function decodeGitQuotedInner(inner) {
+  const raw = String(inner || "");
+  let out = "";
+  for (let i = 0; i < raw.length; i++) {
+    const c = raw.charAt(i);
+    if (c !== "\\") {
+      out += c;
+      continue;
+    }
+    i++;
+    if (i >= raw.length) break;
+    const esc = raw.charAt(i);
+    if (esc === "\\" || esc === '"') {
+      out += esc;
+      continue;
+    }
+    if (esc === "n") {
+      out += "\n";
+      continue;
+    }
+    if (esc === "t") {
+      out += "\t";
+      continue;
+    }
+    const oct = raw.slice(i).match(/^([0-7]{1,3})/);
+    if (oct) {
+      const code = parseInt(oct[1], 8);
+      if (!Number.isNaN(code)) {
+        out += String.fromCharCode(code & 255);
+        i += oct[1].length - 1;
+        continue;
+      }
+    }
+    out += esc;
+  }
+  return out;
+}
+
 function normalizeRepoRel(rel) {
   let s = String(rel || "")
     .replace(/\\/g, "/")
-    .replace(/^\.\//, "")
+    .replace(/^\.\/+/, "")
     .trim();
   /* Git may quote paths when core.quotePath is enabled; Windows adapters may vary slash/case. */
   if (
     (s.length >= 2 && s.charAt(0) === '"' && s.charAt(s.length - 1) === '"') ||
     (s.length >= 2 && s.charAt(0) === "'" && s.charAt(s.length - 1) === "'")
   ) {
-    s = s.slice(1, -1).trim().replace(/\\/g, "/");
+    s = decodeGitQuotedInner(s.slice(1, -1))
+      .trim()
+      .replace(/\\/g, "/")
+      .replace(/^\.\/+/, "");
   }
   return s;
 }
@@ -116,6 +159,7 @@ const FULL_AUTO_LOOP_ALLOWED_DIRTY = new Set(
     "SILVER_RUN_REPORT.md",
     "SILVER_PROGRESS_LOG.md",
     "SILVER_AUTOPILOT_README.md",
+    "SILVER_PR_ORCHESTRATOR_README.md",
     "SILVER_CURSOR_OUTPUT.md",
     "SILVER_STOP_AUTOPILOT",
     "scripts/silver-autopilot.cjs",
@@ -124,6 +168,8 @@ const FULL_AUTO_LOOP_ALLOWED_DIRTY = new Set(
     /* WSL / Cursor CLI adapter runtime may refresh adapter scripts + SILVER_CURSOR_OUTPUT.md during controlled loops */
     "scripts/silver-cursor-agent-adapter.ps1",
     "scripts/silver-cursor-agent-adapter-diagnostic.ps1",
+    /* Adapter diagnostic JSON is regenerated/read during WSL agent flows; narrow runtime noise */
+    "scripts/silver-cursor-agent-adapter-diagnostic-report.json",
   ].map((s) => repoRelGuardKey(s)),
 );
 
@@ -433,11 +479,268 @@ const NEXT_ACTION_BANNED_HALLUCINATION_RUNS = [
   /\bnode\s+scripts\/silver-smoke-test-maxcycles-1\.js\b/i,
 ];
 
+/**
+ * `silver-autopilot.cjs` launched with argv[2] absent (bare) hits usage + exit 1.
+ * Fence blocks: Copy-paste runnable; flag any bare autopilot invocation.
+ * Prose outside fences: only flag lone command lines unless the prior text line looks documentary (invalid/example).
+ */
+function isScriptsSilverAutopilotPathSlice(pathSlice) {
+  const p = String(pathSlice || "").replace(/\\/g, "/").trim();
+  if (!p) return false;
+  return /^(?:\.\/)?scripts\/silver-autopilot\.cjs$/i.test(p);
+}
+
+function lineIndicatesDocumentaryContext(nonemptyLine) {
+  const p = String(nonemptyLine || "").trim();
+  if (!p) return false;
+  return /\binvalid\b|\bincorrect\b|\bwrong\b|ROOT\s+CAUSE|MUST\b|SILVER_NEXT_ACTION\.md\s+GENERATED\b|GENERATED.{0,80}\binvalid\b|EXPLICIT\s+ARGS|WITHOUT\s+ARGS|bez[^\n]{0,20}(args|argument)|^TASK:|^GOAL:|^SCOPE:|^NO-GO:|^REQUIRED:|\*\*DO\s+NOT\b|ANTI[-\s]?PATTERN|PŘÍKLAD|NEPOUŽ|\breject\b/i.test(p);
+}
+
+/** True if bare `node …/silver-autopilot.cjs` (no `--…` autopilot argv) appears in segment. */
+function segmentHasBareSilverAutopilotInvocation(rawSegment) {
+  const raw = String(rawSegment || "").replace(/\r\n/g, "\n");
+  const reNode = /\bnode(?:\.exe)?\s+/gi;
+  let n;
+  while ((n = reNode.exec(raw))) {
+    let i = n.index + n[0].length;
+    if (i >= raw.length) continue;
+
+    let pathSlice = "";
+    const qc = raw.charAt(i);
+    if (qc === '"' || qc === "'" || qc === "`") {
+      let j = i + 1;
+      while (j < raw.length) {
+        const c = raw.charAt(j);
+        if (qc !== "`" && c === "\\") {
+          j += 2;
+          continue;
+        }
+        if (c === qc) break;
+        j++;
+      }
+      pathSlice = raw.slice(i + 1, j);
+      i = j + 1;
+    } else {
+      let j = i;
+      while (j < raw.length) {
+        const c = raw.charAt(j);
+        if (c === " " || c === "\t" || c === "\n" || c === "\r") break;
+        j++;
+      }
+      pathSlice = raw.slice(i, j);
+      i = j;
+    }
+
+    if (!isScriptsSilverAutopilotPathSlice(pathSlice)) continue;
+
+    while (i < raw.length && (raw.charAt(i) === " " || raw.charAt(i) === "\t")) i++;
+    const aft = i >= raw.length ? "" : raw.slice(i);
+    if (/^--\s*\S/i.test(aft)) continue;
+    return true;
+  }
+  return false;
+}
+
+function nextActionHasBareSilverAutopilotNodeInvocation(inner) {
+  const text = String(inner || "").replace(/\r\n/g, "\n");
+  const fenceBodies = [];
+  const outsideLines = [];
+  const lines = text.split(/\n/);
+  let inFence = false;
+  let curFenceLines = [];
+
+  for (const line of lines) {
+    if (/^\s*```/.test(line)) {
+      if (inFence) {
+        fenceBodies.push(curFenceLines.join("\n"));
+        curFenceLines = [];
+        inFence = false;
+      } else {
+        inFence = true;
+      }
+      continue;
+    }
+
+    if (inFence) {
+      curFenceLines.push(line);
+      continue;
+    }
+
+    outsideLines.push(line);
+  }
+
+  if (inFence) {
+    fenceBodies.push(curFenceLines.join("\n"));
+  }
+
+  for (let bi = 0; bi < fenceBodies.length; bi++) {
+    if (segmentHasBareSilverAutopilotInvocation(fenceBodies[bi])) return true;
+  }
+
+  let prevNonEmpty = "";
+  for (let li = 0; li < outsideLines.length; li++) {
+    const trimmed = String(outsideLines[li] || "").trim();
+    if (!trimmed) continue;
+
+    if (!/\bnode(?:\.exe)?\s+/i.test(trimmed)) {
+      prevNonEmpty = trimmed;
+      continue;
+    }
+    if (!segmentHasBareSilverAutopilotInvocation(trimmed)) {
+      prevNonEmpty = trimmed;
+      continue;
+    }
+
+    const docAllowed = lineIndicatesDocumentaryContext(prevNonEmpty) || lineIndicatesDocumentaryContext(trimmed);
+    if (!docAllowed) return true;
+    prevNonEmpty = trimmed;
+  }
+
+  return false;
+}
+
+/** Replace bare autopilot invocations with explicit `--status` (deterministic, copy-paste safe). */
+function segmentSanitizeBareSilverAutopilotInvocation(rawSegment) {
+  let raw = String(rawSegment || "").replace(/\r\n/g, "\n");
+  const reNode = /\bnode(?:\.exe)?\s+/gi;
+  const patches = [];
+  let n;
+  while ((n = reNode.exec(raw))) {
+    let i = n.index + n[0].length;
+    if (i >= raw.length) continue;
+
+    let pathSlice = "";
+    const qc = raw.charAt(i);
+    if (qc === '"' || qc === "'" || qc === "`") {
+      let j = i + 1;
+      while (j < raw.length) {
+        const c = raw.charAt(j);
+        if (qc !== "`" && c === "\\") {
+          j += 2;
+          continue;
+        }
+        if (c === qc) break;
+        j++;
+      }
+      pathSlice = raw.slice(i + 1, j);
+      i = j + 1;
+    } else {
+      let j = i;
+      while (j < raw.length) {
+        const c = raw.charAt(j);
+        if (c === " " || c === "\t" || c === "\n" || c === "\r") break;
+        j++;
+      }
+      pathSlice = raw.slice(i, j);
+      i = j;
+    }
+
+    if (!isScriptsSilverAutopilotPathSlice(pathSlice)) continue;
+
+    while (i < raw.length && (raw.charAt(i) === " " || raw.charAt(i) === "\t")) i++;
+    const aft = i >= raw.length ? "" : raw.slice(i);
+    if (/^--\s*\S/i.test(aft)) continue;
+
+    let lineEnd = i;
+    while (lineEnd < raw.length && raw.charAt(lineEnd) !== "\n" && raw.charAt(lineEnd) !== "\r") {
+      lineEnd++;
+    }
+    patches.push({ from: i, to: lineEnd, insert: " --status" });
+  }
+
+  if (!patches.length) return raw;
+
+  patches.sort((a, b) => b.from - a.from);
+  for (const p of patches) {
+    raw = raw.slice(0, p.from) + p.insert + raw.slice(p.to);
+  }
+  return raw;
+}
+
+function sanitizeBareSilverAutopilotInText(inner) {
+  const lines = String(inner || "").replace(/\r\n/g, "\n").split(/\n/);
+  const out = [];
+  let inFence = false;
+  let fenceBuf = [];
+  let prevNonEmpty = "";
+
+  for (const line of lines) {
+    if (/^\s*```/.test(line)) {
+      if (inFence) {
+        const body = segmentSanitizeBareSilverAutopilotInvocation(fenceBuf.join("\n"));
+        for (const fl of body.split(/\n/)) {
+          out.push(fl);
+        }
+        fenceBuf = [];
+        inFence = false;
+        out.push(line);
+      } else {
+        inFence = true;
+        out.push(line);
+      }
+      continue;
+    }
+
+    if (inFence) {
+      fenceBuf.push(line);
+      continue;
+    }
+
+    const trimmed = String(line || "").trim();
+    if (
+      trimmed &&
+      /\bnode(?:\.exe)?\s+/i.test(trimmed) &&
+      segmentHasBareSilverAutopilotInvocation(trimmed) &&
+      !lineIndicatesDocumentaryContext(prevNonEmpty) &&
+      !lineIndicatesDocumentaryContext(trimmed)
+    ) {
+      out.push(segmentSanitizeBareSilverAutopilotInvocation(line));
+    } else {
+      out.push(line);
+    }
+    if (trimmed) prevNonEmpty = trimmed;
+  }
+
+  if (inFence) {
+    const body = segmentSanitizeBareSilverAutopilotInvocation(fenceBuf.join("\n"));
+    for (const fl of body.split(/\n/)) {
+      out.push(fl);
+    }
+  }
+
+  return out.join("\n");
+}
+
+/** Sanitize bare autopilot commands, then quality-gate; fallback if still invalid. */
+function resolveNextActionModelBody(rawBody, fallbackCtx) {
+  let body = String(rawBody || "")
+    .replace(/^\s*ÚKOL\s+PRO\s+CURSOR[^\n]*\n+/i, "")
+    .trim();
+  const hadBare = nextActionHasBareSilverAutopilotNodeInvocation(body);
+  if (hadBare) {
+    body = sanitizeBareSilverAutopilotInText(body);
+    console.log("SILVER_NEXT_ACTION_BARE_AUTOPILOT=sanitized_to_status");
+  }
+  const q = nextActionInnerQualityViolations(body);
+  if (q.length) {
+    return {
+      ok: false,
+      body: buildFullAutoQualityFallbackBody(fallbackCtx || {}),
+      violations: q,
+      bareSanitized: hadBare,
+    };
+  }
+  return { ok: true, body, violations: [], bareSanitized: hadBare };
+}
+
 function nextActionInnerQualityViolations(inner) {
   const t = String(inner || "");
   const violations = [];
   if (/Ă/.test(t)) violations.push("mojibake_C3");
   if (/â€/.test(t)) violations.push("mojibake_em_dash");
+  if (nextActionHasBareSilverAutopilotNodeInvocation(t)) {
+    violations.push("bare_silver_autopilot_node_use_status_subcommand");
+  }
   for (const re of NEXT_ACTION_BANNED_HALLUCINATION_RUNS) {
     if (re.test(t)) violations.push("banned_node_invocation:" + String(re));
   }
@@ -1664,7 +1967,7 @@ function cmdPostMergeProof() {
     "_note=post_restore_JSON_may_revert_to_stale_tracked_snapshot_use_authoritative_fields";
   let gs = "";
   try {
-    gs = runGit(["status", "--short"]);
+    gs = runGit(["-c", "core.quotePath=false", "status", "--short"]);
   } catch {
     gs = "UNKNOWN";
   }
@@ -1833,7 +2136,7 @@ async function cmdAskModel() {
   const report = readTextSafe(RUN_REPORT).slice(0, 12000);
   let gs = "";
   try {
-    gs = runGit(["status", "--short"]);
+    gs = runGit(["-c", "core.quotePath=false", "status", "--short"]);
   } catch {
     gs = "git_status_unavailable";
   }
@@ -1915,16 +2218,14 @@ async function cmdAskModel() {
     }
     const json = JSON.parse(raw);
     const rawAsk = String((((json.choices || [])[0] || {}).message || {}).content || "").trim();
-    const qAsk = nextActionInnerQualityViolations(rawAsk);
-    if (qAsk.length) {
-      console.log("SILVER_NEXT_ACTION_QUALITY_GATE=REJECT ask-model " + qAsk.join("; "));
-      text = buildFullAutoQualityFallbackBody({
-        inputSource: "SILVER_STRATEGY+RUN_REPORT+git",
-        changedFilesJoined: gs,
-      });
-    } else {
-      text = rawAsk;
+    const resolvedAsk = resolveNextActionModelBody(rawAsk, {
+      inputSource: "SILVER_STRATEGY+RUN_REPORT+git",
+      changedFilesJoined: gs,
+    });
+    if (!resolvedAsk.ok) {
+      console.log("SILVER_NEXT_ACTION_QUALITY_GATE=REJECT ask-model " + resolvedAsk.violations.join("; "));
     }
+    text = resolvedAsk.body;
   } catch (e) {
     console.log("STOP: OpenAI request error");
     return;
@@ -2155,22 +2456,21 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
             recommended = "Re-run after `node scripts/silver-autopilot.cjs --refresh-rhc3` or enrich SILVER_CURSOR_OUTPUT.md.";
             loopExit = 1;
           } else {
-            let body = text;
-            body = body.replace(/^\s*ÚKOL\s+PRO\s+CURSOR[^\n]*\n+/i, "").trim();
-            const qLoop = nextActionInnerQualityViolations(body);
-            if (qLoop.length) {
-              console.log("SILVER_NEXT_ACTION_QUALITY_GATE=REJECT full-auto-loop " + qLoop.join("; "));
-              const fb = buildFullAutoQualityFallbackBody({
-                inputSource: inputPick.source,
-                changedFilesJoined: changedJoined,
-              });
-              writeGuardedNext(fb, "full-auto-loop-quality-fallback");
+            const resolvedLoop = resolveNextActionModelBody(text, {
+              inputSource: inputPick.source,
+              changedFilesJoined: changedJoined,
+            });
+            if (!resolvedLoop.ok) {
+              console.log("SILVER_NEXT_ACTION_QUALITY_GATE=REJECT full-auto-loop " + resolvedLoop.violations.join("; "));
+              writeGuardedNext(resolvedLoop.body, "full-auto-loop-quality-fallback");
               recommended =
                 "Model output failed UTF-8/PowerShell/hallucination quality gate; deterministic SILVER_NEXT_ACTION.md written; see console SILVER_NEXT_ACTION_QUALITY_GATE.";
               loopExit = 0;
             } else {
-              writeGuardedNext(body, "full-auto-loop-openai");
-              recommended = "Execute steps in SILVER_NEXT_ACTION.md in Cursor.";
+              writeGuardedNext(resolvedLoop.body, "full-auto-loop-openai");
+              recommended = resolvedLoop.bareSanitized
+                ? "SILVER_NEXT_ACTION.md written (bare autopilot command sanitized to --status); execute in Cursor."
+                : "Execute steps in SILVER_NEXT_ACTION.md in Cursor.";
               loopExit = 0;
             }
           }
@@ -2231,6 +2531,25 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
   return loopExit;
 }
 
+function cmdSanitizeNextActionMd(argvCommand) {
+  const body = readTextSafe(NEXT_ACTION).trim();
+  const v = nextActionInnerQualityViolations(body);
+  if (!v.length) {
+    console.log("SILVER_NEXT_ACTION_SANITIZE=SKIP no_violations");
+    return 0;
+  }
+  const fb = buildFullAutoQualityFallbackBody({
+    inputSource: "SILVER_NEXT_ACTION.md (precycle sanitization)",
+    changedFilesJoined: gitChangedFilesList().join(";") || "(none)",
+  });
+  fs.writeFileSync(NEXT_ACTION, wrapNextActionDoc(fb, "sanitize-next-action-md"), "utf8");
+  console.log(
+    "SILVER_NEXT_ACTION_QUALITY_GATE_SANITIZE=APPLIED " + v.join("; ") + " argv=" + String(argvCommand || "--sanitize-next-action-md"),
+  );
+  console.log("SILVER_NEXT_ACTION_SANITIZED=YES recommended=node scripts/silver-autopilot.cjs --status");
+  return 0;
+}
+
 function parseArgs(argv) {
   const out = { cmd: null, pr: "", maxSteps: "1" };
   for (const a of argv) {
@@ -2244,6 +2563,7 @@ function parseArgs(argv) {
     } else if (a === "--post-merge-proof") out.cmd = "post-merge-proof";
     else if (a === "--refresh-rhc3") out.cmd = "refresh-rhc3";
     else if (a === "--ask-model") out.cmd = "ask-model";
+    else if (a === "--sanitize-next-action-md") out.cmd = "sanitize-next-action-md";
     else if (a === "--auto") out.cmd = "auto";
     else if (a === "--full-auto-loop" || a === "--loop-once") out.cmd = "full-auto-loop";
     else if (a.startsWith("--max-steps=")) out.maxSteps = a.slice("--max-steps=".length);
@@ -2269,6 +2589,7 @@ function parseArgs(argv) {
   else if (p.cmd === "post-merge-proof") exitCode = cmdPostMergeProof();
   else if (p.cmd === "refresh-rhc3") cmdRefreshRhc3();
   else if (p.cmd === "ask-model") await cmdAskModel();
+  else if (p.cmd === "sanitize-next-action-md") exitCode = cmdSanitizeNextActionMd("--sanitize-next-action-md");
   else if (p.cmd === "auto") cmdAuto(p.maxSteps);
   else if (p.cmd === "full-auto-loop") exitCode = await cmdFullAutoLoop(argv, p.maxSteps);
   if (exitCode) process.exit(exitCode);
