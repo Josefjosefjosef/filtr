@@ -86,6 +86,11 @@ $script:LastCursorExit = "N/A"
 $script:LastAutopilotExit = "N/A"
 $script:LastStatusExit = "N/A"
 $script:LastTaskExit = 0
+$script:SilverCycleCursorProcessStartUtc = [datetime]::MinValue
+$script:SilverCycleExpectedTaskDigest = ""
+$script:SilverCycleExpectedTaskFile = ""
+$script:SilverAutonomousRunId = ""
+$script:SilverAutonomousRunStartUtc = [datetime]::MinValue
 
 function Invoke-SilverBeepPass {
   param([switch]$NoBeep)
@@ -614,6 +619,73 @@ function Normalize-SilverPathForCompare {
   }
 }
 
+function Get-SilverAutonomousRunContext {
+  $rid = ""
+  if ((Get-Variable -Name SilverAutonomousRunId -Scope Script -ErrorAction SilentlyContinue) -and $script:SilverAutonomousRunId) {
+    $rid = [string]$script:SilverAutonomousRunId
+  }
+  if (-not $rid.Trim()) {
+    $rid = [Environment]::GetEnvironmentVariable("SILVER_AUTONOMOUS_RUN_ID", "Process")
+  }
+  if (-not $rid) { $rid = "" }
+  $rs = ""
+  if ($script:SilverAutonomousRunStartUtc -and ($script:SilverAutonomousRunStartUtc -ne [datetime]::MinValue)) {
+    $rs = $script:SilverAutonomousRunStartUtc.ToString("o")
+  }
+  if (-not $rs.Trim()) {
+    $rs = [Environment]::GetEnvironmentVariable("SILVER_AUTONOMOUS_RUN_START_UTC", "Process")
+  }
+  if (-not $rs) { $rs = "" }
+  $cyc = [Environment]::GetEnvironmentVariable("SILVER_AUTONOMOUS_CYCLE", "Process")
+  if (-not $cyc) { $cyc = "" }
+  return @{
+    RunId = $rid.Trim()
+    RunStartUtc = $rs.Trim()
+    Cycle = $cyc.Trim()
+  }
+}
+
+function Write-SilverCursorOutputInvalidatedStub {
+  param(
+    [string]$Path,
+    [string]$RunId,
+    [string]$RunStartUtcIso,
+    [string]$CycleState
+  )
+  $stub = @"
+# silver-cursor-agent-adapter
+autonomous_run_id=$RunId
+autonomous_run_start_utc=$RunStartUtcIso
+autonomous_cycle=$CycleState
+adapter_output_state=INVALIDATED_AWAITING_CYCLE
+process_start_utc=
+task_digest=
+exit_code=
+elapsed_ms=
+
+# stdout
+
+# stderr
+
+"@
+  [System.IO.File]::WriteAllText($Path, $stub, [System.Text.UTF8Encoding]::new($false))
+}
+
+function Initialize-SilverAutonomousRunLifecycle {
+  param(
+    [string]$RunId,
+    [datetime]$RunStartUtc,
+    [string]$CursorOutputPath
+  )
+  $runStartIso = $RunStartUtc.ToString("o")
+  $script:SilverAutonomousRunId = $RunId
+  $script:SilverAutonomousRunStartUtc = $RunStartUtc
+  $env:SILVER_AUTONOMOUS_RUN_ID = $RunId
+  $env:SILVER_AUTONOMOUS_RUN_START_UTC = $runStartIso
+  Remove-Item Env:\SILVER_AUTONOMOUS_CYCLE -ErrorAction SilentlyContinue
+  Write-SilverCursorOutputInvalidatedStub -Path $CursorOutputPath -RunId $RunId -RunStartUtcIso $runStartIso -CycleState "pending"
+}
+
 function Test-SilverAdapterMetaFreshForCycle {
   param(
     [hashtable]$Meta,
@@ -709,8 +781,11 @@ function Resolve-SilverCursorOuterExitFromAdapterMeta {
   if (-not (Test-Path -LiteralPath $AdapterOutputPath)) {
     return @{ EffectiveExit = $OuterExit; Reconciled = $false; FreshMeta = $false }
   }
+  if ($ProcessStartUtc -eq [datetime]::MinValue -and -not $runScoped) {
+    return
+  }
   $meta = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $AdapterOutputPath
-  if (-not (Test-SilverAdapterMetaFreshForCycle -Meta $meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile)) {
+  if (-not (Test-SilverAdapterMetaFreshForCycle -Meta $meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc)) {
     return @{ EffectiveExit = $OuterExit; Reconciled = $false; FreshMeta = $false }
   }
   $adapterEx = ""
@@ -753,11 +828,49 @@ function Get-SilverAdapterMetaKeyValuesFromMarkdown {
 function Add-SilverCycleFieldsFromAdapterOutput {
   param(
     [hashtable]$Fields,
-    [string]$AdapterOutputPath
+    [string]$AdapterOutputPath,
+    [datetime]$ProcessStartUtc = [datetime]::MinValue,
+    [string]$ExpectedTaskDigest = "",
+    [string]$ExpectedTaskFile = "",
+    [string]$ExpectedRunId = "",
+    [string]$ExpectedCycle = "",
+    [string]$ExpectedRunStartUtc = "",
+    [bool]$CursorInvoked = $true
   )
+  $runScoped = ($ExpectedRunId.Trim().Length -gt 0)
+  if (-not $CursorInvoked) {
+    if ($runScoped) {
+      $Fields["silver_cycle_adapter_meta_fresh"] = "NO"
+      $Fields["silver_cycle_stale_meta_skipped"] = "YES"
+      $Fields["silver_cycle_autonomous_run_id"] = $ExpectedRunId
+      if ($ExpectedCycle.Trim().Length -gt 0) {
+        $Fields["silver_cycle_autonomous_cycle"] = $ExpectedCycle
+      }
+    }
+    return
+  }
+  if ($ProcessStartUtc -eq [datetime]::MinValue -and -not $runScoped) {
+    return
+  }
   $meta = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $AdapterOutputPath
   if ($meta.Count -eq 0) { return }
-  function Take([string]$adapterKey) {
+  if ($runScoped) {
+    $Fields["silver_cycle_autonomous_run_id"] = $ExpectedRunId
+    if ($ExpectedCycle.Trim().Length -gt 0) {
+      $Fields["silver_cycle_autonomous_cycle"] = $ExpectedCycle
+    }
+  }
+  if ($ProcessStartUtc -ne [datetime]::MinValue) {
+    if (-not (Test-SilverAdapterMetaFreshForCycle -Meta $meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc)) {
+      $Fields["silver_cycle_adapter_meta_fresh"] = "NO"
+      return
+    }
+    $Fields["silver_cycle_adapter_meta_fresh"] = "YES"
+  }
+  elseif ($runScoped) {
+    $Fields["silver_cycle_adapter_meta_fresh"] = "NO"
+    return
+  }  function Take([string]$adapterKey) {
     if (-not $meta.ContainsKey($adapterKey)) { return "" }
     return [string]$meta[$adapterKey]
   }
@@ -1057,7 +1170,9 @@ function Stop-LoopWithFail {
     $failDigest = [string]$script:SilverCycleExpectedTaskDigest
     $failTaskFile = [string]$script:SilverCycleExpectedTaskFile
   }
-  Add-SilverCycleFieldsFromAdapterOutput -Fields $fields -AdapterOutputPath $adapterOutForCycle -ProcessStartUtc $failProcStart -ExpectedTaskDigest $failDigest -ExpectedTaskFile $failTaskFile
+  $failRunCtx = Get-SilverAutonomousRunContext
+  $failCursorInvoked = ($failProcStart -ne [datetime]::MinValue)
+  Add-SilverCycleFieldsFromAdapterOutput -Fields $fields -AdapterOutputPath $adapterOutForCycle -ProcessStartUtc $failProcStart -ExpectedTaskDigest $failDigest -ExpectedTaskFile $failTaskFile -ExpectedRunId $failRunCtx.RunId -ExpectedCycle $failRunCtx.Cycle -ExpectedRunStartUtc $failRunCtx.RunStartUtc -CursorInvoked $failCursorInvoked
   Write-SilverProgressLogBlock -ProgressLogPath $ProgressLogPath -Outcome "FAIL" -Fields $fields
   Write-SilverColoredCycleSummary -Outcome "FAIL" -Fields $fields
   Invoke-SilverBeepFail -NoBeep:$NoBeep
@@ -1465,6 +1580,11 @@ while ($true) {
   $script:LastAutopilotExit = "N/A"
   $script:LastStatusExit = "N/A"
   $script:LastTaskExit = 0
+$script:SilverCycleCursorProcessStartUtc = [datetime]::MinValue
+$script:SilverCycleExpectedTaskDigest = ""
+$script:SilverCycleExpectedTaskFile = ""
+$script:SilverAutonomousRunId = ""
+$script:SilverAutonomousRunStartUtc = [datetime]::MinValue
   $script:SilverCycleCursorProcessStartUtc = [datetime]::MinValue
   $script:SilverCycleExpectedTaskDigest = ""
   $script:SilverCycleExpectedTaskFile = ""
@@ -1669,9 +1789,19 @@ while ($true) {
       $stderrTmp = Join-Path $env:TEMP ("silver-loop-cursor-err-" + $cycle + ".txt")
 
       $utf8Log = [System.Text.UTF8Encoding]::new($false)
-      $preCursorBody = ""
-      if (Test-Path -LiteralPath $CursorOutputPath) {
-        $preCursorBody = [System.IO.File]::ReadAllText($CursorOutputPath, $utf8Log)
+      $expectedTaskDigest = ""
+      $expectedTaskFile = ""
+      if (Test-Path -LiteralPath $NextActionPath) {
+        $expectedTaskFile = (Resolve-Path -LiteralPath $NextActionPath).Path
+        $taskTextForDigest = [System.IO.File]::ReadAllText($expectedTaskFile, $utf8Log)
+        $expectedTaskDigest = Get-SilverTaskUtf8Sha256HexPrefix -Text $taskTextForDigest
+      }
+      $script:SilverCycleCursorProcessStartUtc = [datetime]::MinValue
+      $script:SilverCycleExpectedTaskDigest = $expectedTaskDigest
+      $script:SilverCycleExpectedTaskFile = $expectedTaskFile
+      if ($script:SilverAutonomousRunId) {
+        $runStartIsoInv = [string]$env:SILVER_AUTONOMOUS_RUN_START_UTC
+        Write-SilverCursorOutputInvalidatedStub -Path $CursorOutputPath -RunId $script:SilverAutonomousRunId -RunStartUtcIso $runStartIsoInv -CycleState ([string]$cycle)
       }
 
       $psi = New-Object System.Diagnostics.ProcessStartInfo
@@ -1680,10 +1810,25 @@ while ($true) {
       $psi.WorkingDirectory = $RepoRoot
       $psi.UseShellExecute = $false
       $psi.CreateNoWindow = $true
+      foreach ($envKey in @("SILVER_AUTONOMOUS_RUN_ID", "SILVER_AUTONOMOUS_RUN_START_UTC", "SILVER_AUTONOMOUS_CYCLE")) {
+        $envVal = [Environment]::GetEnvironmentVariable($envKey, "Process")
+        if ($envVal) { $psi.EnvironmentVariables[$envKey] = $envVal }
+      }
       try {
+        $cursorProcStartUtc = (Get-Date).ToUniversalTime()
+        $script:SilverCycleCursorProcessStartUtc = $cursorProcStartUtc
         $p = [System.Diagnostics.Process]::Start($psi)
         $p.WaitForExit()
         $ce = $p.ExitCode
+        $runCtxReconcile = Get-SilverAutonomousRunContext
+        $reconcile = Resolve-SilverCursorOuterExitFromAdapterMeta -OuterExit $ce -AdapterOutputPath $CursorOutputPath -ProcessStartUtc $cursorProcStartUtc -ExpectedTaskDigest $expectedTaskDigest -ExpectedTaskFile $expectedTaskFile -ExpectedRunId $runCtxReconcile.RunId -ExpectedCycle ([string]$cycle) -ExpectedRunStartUtc $runCtxReconcile.RunStartUtc
+        if ($reconcile.Reconciled) {
+          Write-Host ("silver-autopilot-loop: outer_cmd_exit=" + [string]$ce + " reconciled_to_adapter_exit_code=0 (fresh_meta=YES)") -ForegroundColor DarkYellow
+          $ce = [int]$reconcile.EffectiveExit
+        }
+        elseif (($ce -ne 0) -and (-not $reconcile.FreshMeta)) {
+          Write-Host ("silver-autopilot-loop: outer_cmd_exit=" + [string]$ce + " not_reconciled (adapter_meta_stale_or_mismatch)") -ForegroundColor DarkYellow
+        }
         $script:LastCursorExit = [string]$ce
         $cursorExitStr = [string]$ce
         $soRes = Read-SilverLoopTempCaptureFileWithRetry -Path $stdoutTmp
@@ -1706,16 +1851,29 @@ while ($true) {
         $se = [string]$seRes.Text
         $soTrim = $so.Trim()
         $seTrim = $se.Trim()
-        $adapterHeaderPresent = ($preCursorBody.IndexOf("# silver-cursor-agent-adapter", [System.StringComparison]::Ordinal) -ge 0)
-        if (($soTrim.Length -gt 0) -or ($seTrim.Length -gt 0)) {
-          if (($ce -eq 124) -and $adapterHeaderPresent) {
-            $merged = $preCursorBody.TrimEnd() + "`n`n# silver-autopilot-loop: outer cmd.exe wrapper (exit 124; adapter body preserved above)" + "`n# stdout`n" + $so + "`n# stderr`n" + $se + "`n"
+        $postCursorBody = ""
+        if (Test-Path -LiteralPath $CursorOutputPath) {
+          $postCursorBody = [System.IO.File]::ReadAllText($CursorOutputPath, $utf8Log)
+        }
+        $adapterBodyWritten = ($postCursorBody.IndexOf("# silver-cursor-agent-adapter", [System.StringComparison]::Ordinal) -ge 0)
+        $mergeAllowed = $true
+        if ($runCtxReconcile.RunId) {
+          $postMeta = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $CursorOutputPath
+          $mergeAllowed = Test-SilverAdapterMetaFreshForCycle -Meta $postMeta -ProcessStartUtc $cursorProcStartUtc -AdapterOutputPath $CursorOutputPath -ExpectedTaskDigest $expectedTaskDigest -ExpectedTaskFile $expectedTaskFile -ExpectedRunId $runCtxReconcile.RunId -ExpectedCycle ([string]$cycle) -ExpectedRunStartUtc $runCtxReconcile.RunStartUtc
+        }
+        if ($mergeAllowed -and (($soTrim.Length -gt 0) -or ($seTrim.Length -gt 0))) {
+          if ($adapterBodyWritten) {
+            $wrapNote = "outer cmd.exe wrapper (exit " + [string]$ce + "; adapter body preserved above)"
+            $merged = $postCursorBody.TrimEnd() + "`n`n# silver-autopilot-loop: " + $wrapNote + "`n# stdout`n" + $so + "`n# stderr`n" + $se + "`n"
             [System.IO.File]::WriteAllText($CursorOutputPath, $merged, $utf8Log)
           }
           else {
             $merged = "# silver-autopilot-loop: captured Cursor CLI output`n# stdout`n" + $so + "`n# stderr`n" + $se + "`n"
             [System.IO.File]::WriteAllText($CursorOutputPath, $merged, $utf8Log)
           }
+        }
+        elseif ((-not $mergeAllowed) -and $runCtxReconcile.RunId) {
+          Write-SilverCursorOutputInvalidatedStub -Path $CursorOutputPath -RunId $runCtxReconcile.RunId -RunStartUtcIso $runCtxReconcile.RunStartUtc -CycleState ("stale_rejected_" + [string]$cycle)
         }
         else {
           if (-not (Test-Path -LiteralPath $CursorOutputPath)) {
@@ -1979,7 +2137,9 @@ while ($true) {
     $passDigest = [string]$script:SilverCycleExpectedTaskDigest
     $passTaskFile = [string]$script:SilverCycleExpectedTaskFile
   }
-  Add-SilverCycleFieldsFromAdapterOutput -Fields $fieldsPass -AdapterOutputPath $CursorOutputPath -ProcessStartUtc $passProcStart -ExpectedTaskDigest $passDigest -ExpectedTaskFile $passTaskFile
+  $passRunCtx = Get-SilverAutonomousRunContext
+  $passCursorInvoked = ($passProcStart -ne [datetime]::MinValue)
+  Add-SilverCycleFieldsFromAdapterOutput -Fields $fieldsPass -AdapterOutputPath $CursorOutputPath -ProcessStartUtc $passProcStart -ExpectedTaskDigest $passDigest -ExpectedTaskFile $passTaskFile -ExpectedRunId $passRunCtx.RunId -ExpectedCycle ([string]$cycle) -ExpectedRunStartUtc $passRunCtx.RunStartUtc -CursorInvoked $passCursorInvoked
   Write-SilverProgressLogBlock -ProgressLogPath $ProgressLogPath -Outcome "PASS" -Fields $fieldsPass
   Write-SilverColoredCycleSummary -Outcome "PASS" -Fields $fieldsPass
   Invoke-SilverBeepPass -NoBeep:$NoBeep
