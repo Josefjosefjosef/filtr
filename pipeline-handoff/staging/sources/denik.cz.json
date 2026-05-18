@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-18T17:20:36.338467Z",
+  "ingestedAt": "2026-05-18T18:00:28.496315Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Střelec na jihu Turecka zabil čtyři lidi a osm dalších zranil, je na útěku",
+      "url": "https://www.denik.cz/staty-mimo-eu/strelec-na-jihu-turecka-zabil-ctyri-lidi-a-osm-dalsich-zranil-je-na-uteku.html",
+      "dt": "2026-05-18T17:36:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dalších",
+        "jihu",
+        "lidi",
+        "osm",
+        "střelec",
+        "turecka",
+        "zabil",
+        "zranil",
+        "útěku",
+        "čtyři"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -84,13 +111,13 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Proměna Lidu prošla pečlivým testem. Zákazníci si ji oblíbí, míní odborníci",
+      "title": "Proměna Lidlu prošla pečlivým testem. Zákazníci si ji oblíbí, míní odborníci",
       "url": "https://www.denik.cz/z_domova/prodejny-retezec-lidl-zmena-zakaznici-si-ho-oblibi-mini-odbornici.html",
       "dt": "2026-05-18T14:02:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
-        "lidu",
+        "lidlu",
         "míní",
         "oblíbí",
         "odborníci",
@@ -626,31 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Bělorusko zahájilo výcvik k použití jaderných zbraní, zapojilo se i Rusko",
-      "url": "https://www.denik.cz/staty-mimo-eu/belorusko-rusko-cviceni-vycvik-jaderne-zbrane-oresnik.html",
-      "dt": "2026-05-18T08:23:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bělorusko",
-        "jaderných",
-        "použití",
-        "rusko",
-        "výcvik",
-        "zahájilo",
-        "zapojilo",
-        "zbraní"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -661,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29713,
+      "bytes": 29639,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -698,7 +700,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-18T15:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T17:36:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -715,6 +717,10 @@
         },
         "sample_titles": [
           {
+            "title": "Střelec na jihu Turecka zabil čtyři lidi a osm dalších zranil, je na útěku",
+            "publishedAt": "2026-05-18T17:36:00Z"
+          },
+          {
             "title": "Jugoslávie i Afghánistán. Kdo je budoucí náčelník generálního štábu Hlaváč",
             "publishedAt": "2026-05-18T15:35:00Z"
           },
@@ -727,7 +733,7 @@
             "publishedAt": "2026-05-18T15:00:00Z"
           },
           {
-            "title": "Proměna Lidu prošla pečlivým testem. Zákazníci si ji oblíbí, míní odborníci",
+            "title": "Proměna Lidlu prošla pečlivým testem. Zákazníci si ji oblíbí, míní odborníci",
             "publishedAt": "2026-05-18T14:02:00Z"
           },
           {
@@ -741,10 +747,6 @@
           {
             "title": "Soud zprostil Feriho obžaloby z dalšího znásilnění. Nešlo o trestný čin, uvedl",
             "publishedAt": "2026-05-18T13:18:00Z"
-          },
-          {
-            "title": "Jak Češi hodnotí prezidenty? Nejlépe si vede Havel, Pavel klesl na třetí místo",
-            "publishedAt": "2026-05-18T13:12:00Z"
           }
         ]
       }
