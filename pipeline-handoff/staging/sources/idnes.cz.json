@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-18T20:40:30.035962Z",
+  "ingestedAt": "2026-05-18T21:20:19.833698Z",
   "items": [
     {
       "section": "aktualne",
@@ -49,6 +49,32 @@
         "shodla",
         "soud",
         "žalobu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pražská ODS vyšle do komunálních voleb devatenáct starostů. Povede je Portlík",
+      "url": "https://www.idnes.cz/praha/zpravy/podzimni-komunalni-volby-ods-predstavila-kandidatku.A260518_204611_praha-zpravy_jira",
+      "dt": "2026-05-18T19:23:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "devatenáct",
+        "komunálních",
+        "ods",
+        "portlík",
+        "povede",
+        "pražská",
+        "starostů",
+        "voleb",
+        "vyšle"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -757,34 +783,6 @@
         "vyslechl",
         "vězení",
         "znásilnění"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zkoušel jsem herce, říká podnikatel k muži s puškou na ulici. Vtrhla k němu zásahovka",
-      "url": "https://www.idnes.cz/usti/zpravy/policie-puska-obvineni-konkurz-film-nataceni.A260518_150037_usti-zpravy_grr",
-      "dt": "2026-05-18T13:47:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "herce",
-        "jsem",
-        "muži",
-        "němu",
-        "podnikatel",
-        "puškou",
-        "ulici",
-        "vtrhla",
-        "zkoušel",
-        "zásahovka",
-        "říká"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1582,7 +1580,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49738,
+      "bytes": 50093,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1645,6 +1643,10 @@
             "publishedAt": "2026-05-18T19:46:00Z"
           },
           {
+            "title": "Pražská ODS vyšle do komunálních voleb devatenáct starostů. Povede je Portlík",
+            "publishedAt": "2026-05-18T19:23:00Z"
+          },
+          {
             "title": "Tragédie na konci studia. Chlapci skočili do řeky pro spolužáka, utopili se i s ním",
             "publishedAt": "2026-05-18T18:16:00Z"
           },
@@ -1663,10 +1665,6 @@
           {
             "title": "Svět je náchylný k novým pandemiím a ohrožuje ho i krize důvěry, míní WHO",
             "publishedAt": "2026-05-18T17:04:00Z"
-          },
-          {
-            "title": "Záminka k invazi? Kuba chystá úder na tři vybrané strategické cíle, tvrdí Američané",
-            "publishedAt": "2026-05-18T17:00:00Z"
           }
         ]
       }
