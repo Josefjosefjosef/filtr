@@ -215,6 +215,102 @@ function isTransientGeneratedClusterClassifierReportRel(rel) {
   return TRANSIENT_GENERATED_CLUSTER_CLASSIFIER_REPORT_RE.test(n);
 }
 
+/** Narrow runtime-only paths safe to `git restore --worktree` before CAP50 / autonomous cycles (keys lowercase). */
+const CAP50_RUNTIME_RESTORE_EXACT = new Set(
+  [
+    "SILVER_CURSOR_OUTPUT.md",
+    "SILVER_NEXT_ACTION.md",
+    "SILVER_PROGRESS_LOG.md",
+    "SILVER_RUN_REPORT.md",
+    "scripts/silver-cursor-agent-adapter-diagnostic-report.json",
+    "scripts/silver-rhc3-negation-cal-readonly-diagnostic-report.json",
+  ].map((s) => repoRelGuardKey(s)),
+);
+
+function cap50RuntimeRestoreReason(rel) {
+  const n = normalizeRepoRel(rel);
+  if (!n) return "";
+  if (CAP50_RUNTIME_RESTORE_EXACT.has(repoRelGuardKey(n))) return "runtime_exact_allowlist";
+  if (isTransientGeneratedAuditReportRel(n)) return "runtime_transient_audit_json";
+  if (isTransientGeneratedClusterClassifierReportRel(n)) return "runtime_cluster_classifier_json";
+  return "";
+}
+
+function cap50PreflightRuntimeCleanup(dryRunOnly) {
+  const po = gitStatusPorcelain();
+  const dirtyBefore = [];
+  const toRestore = [];
+  const blocked = [];
+  let allowCount = 0;
+  if (po && po !== "DIRTY_UNKNOWN") {
+    for (const raw of po.split(/\r?\n/)) {
+      const line = String(raw || "").replace(/\r$/, "").trim();
+      if (!line) continue;
+      const st = line.length >= 2 ? line.slice(0, 2) : "";
+      let extracted = "";
+      if (line.length >= 3 && line.charAt(2) === " ") extracted = line.slice(3).trim();
+      else {
+        const parts = line.trim().split(/\s+/);
+        if (parts.length >= 2) extracted = parts.slice(1).join(" ").trim();
+        else extracted = line.trim();
+      }
+      const p = porcelainPathToWorkingTree(extracted);
+      if (!p) continue;
+      dirtyBefore.push(p);
+      const reason = cap50RuntimeRestoreReason(p);
+      if (st === "??") {
+        blocked.push(reason ? p + "(untracked_runtime_unknown)" : p + "(untracked_unknown)");
+        continue;
+      }
+      if (reason) {
+        allowCount++;
+        toRestore.push(p);
+      } else {
+        blocked.push(p);
+      }
+    }
+  }
+  const restored = [];
+  if (!dryRunOnly) {
+    for (const rel of toRestore) {
+      try {
+        execFileSync("git", ["restore", "--worktree", "--", rel], { cwd: REPO, stdio: "pipe" });
+        restored.push(rel);
+      } catch {
+        blocked.push(rel + "(restore_failed)");
+      }
+    }
+  } else {
+    for (const rel of toRestore) restored.push(rel + "(dry_run)");
+  }
+  const cleanAfter = gitClean() ? "YES" : "NO";
+  let safe = "NO";
+  if (blocked.length === 0) {
+    if (cleanAfter === "YES") safe = "YES";
+    else if (dryRunOnly && toRestore.length > 0 && dirtyBefore.length === toRestore.length) safe = "YES";
+  }
+  const passFail = safe === "YES" ? "PASS" : "FAIL";
+  const result = {
+    dirty_before: dirtyBefore.join(";"),
+    allowlisted_runtime_dirty_count: String(allowCount),
+    restored_runtime_files: restored.join(";"),
+    blocked_dirty_files: blocked.join(";"),
+    git_clean_after: cleanAfter,
+    safe_to_start_cycle: safe,
+    PASS_FAIL: passFail,
+  };
+  console.log("=== SILVER_CAP50_PREFLIGHT_CLEANUP_RESULT ===");
+  console.log("dirty_before=" + result.dirty_before);
+  console.log("allowlisted_runtime_dirty_count=" + result.allowlisted_runtime_dirty_count);
+  console.log("restored_runtime_files=" + result.restored_runtime_files);
+  console.log("blocked_dirty_files=" + result.blocked_dirty_files);
+  console.log("git_clean_after=" + result.git_clean_after);
+  console.log("safe_to_start_cycle=" + result.safe_to_start_cycle);
+  console.log("PASS_FAIL=" + result.PASS_FAIL);
+  console.log("=== END_SILVER_CAP50_PREFLIGHT_CLEANUP_RESULT ===");
+  return { result, exitCode: passFail === "PASS" ? 0 : 1 };
+}
+
 /** Porcelain rename/copy lines may report `orig -> dest`; guards must evaluate the working-tree path (dest). */
 function porcelainPathToWorkingTree(rel) {
   let p = normalizeRepoRel(rel);
@@ -3271,6 +3367,8 @@ function parseArgs(argv) {
     else if (a === "--cli-openai-next-action-utf8-selftest") out.cmd = "openai-next-action-utf8-selftest";
     else if (a === "--cli-openai-real-next-action-utf8-diagnostic") out.cmd = "openai-real-next-action-utf8-diagnostic";
     else if (a === "--cli-autonomous-adapter-diagnostic") out.cmd = "cli-autonomous-adapter-diagnostic";
+    else if (a === "--preflight-runtime-cleanup") out.cmd = "preflight-runtime-cleanup";
+    else if (a === "--preflight-runtime-cleanup-selftest") out.cmd = "preflight-runtime-cleanup-selftest";
     else if (a === "--auto") out.cmd = "auto";
     else if (a === "--full-auto-loop" || a === "--loop-once") out.cmd = "full-auto-loop";
     else if (a.startsWith("--max-steps=")) out.maxSteps = a.slice("--max-steps=".length);
@@ -3306,6 +3404,67 @@ function parseArgs(argv) {
     return;
   } else if (p.cmd === "cli-autonomous-adapter-diagnostic") {
     process.exit(cmdCliAutonomousAdapterDiagnostic());
+  } else if (p.cmd === "preflight-runtime-cleanup") {
+    const dryOnly = argv.indexOf("--dry-run") >= 0;
+    const pf = cap50PreflightRuntimeCleanup(dryOnly);
+    process.exit(pf.exitCode);
+  } else if (p.cmd === "preflight-runtime-cleanup-selftest") {
+    const cases = [
+      { rel: "SILVER_RUN_REPORT.md", pass: true },
+      { rel: "SILVER_NEXT_ACTION.md", pass: true },
+      { rel: "scripts/silver-rhc3-cluster-classifier-v1-report.json", pass: true },
+    ];
+    const failures = [];
+    const utf8 = { encoding: "utf8" };
+    for (const c of cases) {
+      const full = path.join(REPO, c.rel);
+      let backup = null;
+      try {
+        backup = fs.existsSync(full) ? fs.readFileSync(full, utf8) : null;
+        fs.writeFileSync(full, "# cap50-preflight-selftest\n", utf8);
+        const pf = cap50PreflightRuntimeCleanup(false);
+        if (!c.pass && pf.result.PASS_FAIL === "PASS") failures.push(c.rel + ": expected FAIL");
+        if (c.pass) {
+          if (!pf.result.restored_runtime_files.includes(c.rel)) {
+            failures.push(c.rel + ": not in restored_runtime_files");
+          }
+          const stillDirty = gitChangedFilesList().some(
+            (p) => repoRelGuardKey(p) === repoRelGuardKey(c.rel),
+          );
+          if (stillDirty) failures.push(c.rel + ": still dirty after restore");
+        }
+      } finally {
+        if (backup != null) fs.writeFileSync(full, backup, utf8);
+        else {
+          try {
+            execFileSync("git", ["restore", "--worktree", "--", c.rel], { cwd: REPO, stdio: "pipe" });
+          } catch {
+            /* best-effort */
+          }
+        }
+        cap50PreflightRuntimeCleanup(false);
+      }
+    }
+    const blockRel = "SILVER_CAP50_PREFLIGHT_SELFTEST_BLOCK.txt";
+    const blockFull = path.join(REPO, blockRel);
+    try {
+      fs.writeFileSync(blockFull, "block\n", utf8);
+      const pfBlock = cap50PreflightRuntimeCleanup(false);
+      if (pfBlock.result.PASS_FAIL !== "FAIL") failures.push("non_allowlist: expected FAIL");
+    } finally {
+      try {
+        fs.unlinkSync(blockFull);
+      } catch {
+        /* ignore */
+      }
+    }
+    if (failures.length) {
+      console.log("SILVER_CAP50_PREFLIGHT_CLEANUP_SELFTEST=FAIL");
+      for (const f of failures) console.log(f);
+      process.exit(1);
+    }
+    console.log("SILVER_CAP50_PREFLIGHT_CLEANUP_SELFTEST=PASS");
+    process.exit(0);
   } else if (p.cmd === "auto") cmdAuto(p.maxSteps);
   else if (p.cmd === "full-auto-loop") exitCode = await cmdFullAutoLoop(argv, p.maxSteps);
   if (exitCode) process.exit(exitCode);
