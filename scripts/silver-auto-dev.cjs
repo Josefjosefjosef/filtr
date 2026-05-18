@@ -30,9 +30,11 @@ const REALISTIC_MOBILE_REPORT = path.join(__dirname, "silver-realistic-mobile-co
 const MAX_BUFFER = 64 * 1024 * 1024;
 /** Absolute ceiling for `--loop --max-cycles=N` (user request must be <= this). */
 const HARD_SAFE_MAX_CYCLES = 100;
-const LOOP_GUARD_VERSION = "CONTROLLED_LOOP_V4_LONG_RUN";
-/** Full-agent cycles per tranche; cycles 21+ in long runs use WSL stdin probe (fast, no hang). */
+const LOOP_GUARD_VERSION = "CONTROLLED_LOOP_V5_HANDOFF_TRANCHE";
+/** Full-agent handoff cycles per tranche; short WSL stdin probes only after each tranche start. */
 const LOOP_LONG_RUN_TRANCHE_SIZE = 20;
+/** Max consecutive probe cycles immediately after each tranche handoff (health/stability only). */
+const LOOP_PROBE_CYCLES_PER_TRANCHE = 2;
 const ADAPTER_TIMEOUT_SINGLE_SEC = 3200;
 const ADAPTER_TIMEOUT_LOOP_BASE_SEC = 3200;
 const ADAPTER_TIMEOUT_LOOP_PROBE_SEC = 180;
@@ -485,18 +487,31 @@ function repoRootWindowsToWslMnt(winAbs) {
 }
 
 /**
+ * @param {number} cycle
+ * @returns {number} 1-based position within the current 20-cycle tranche
+ */
+function loopCyclePositionInTranche(cycle) {
+  return ((cycle - 1) % LOOP_LONG_RUN_TRANCHE_SIZE) + 1;
+}
+
+/**
  * Per-cycle adapter plan for controlled loop.
- * Cycle 1 runs the real SILVER_NEXT_ACTION handoff once; cycles 2+ use the fast WSL stdin probe so
- * long runs (20/50/100) do not stall on consecutive full-agent watchdog timeouts (exit 124).
+ * Each tranche starts with FULL_AGENT_HANDOFF (SILVER_NEXT_ACTION.md), then at most
+ * LOOP_PROBE_CYCLES_PER_TRANCHE fast WSL stdin probes, then execution handoff for the rest.
+ * Avoids V4 stall where cycles 2..N were all probes and no cluster work ran.
  * @param {number} loopTarget
  * @param {number} cycle
  */
 function resolveLoopCycleAdapterPlan(loopTarget, cycle) {
-  if (cycle === 1) {
-    let timeoutSeconds = ADAPTER_TIMEOUT_LOOP_BASE_SEC;
-    if (loopTarget > LOOP_LONG_RUN_TRANCHE_SIZE) {
-      timeoutSeconds = Math.min(ADAPTER_TIMEOUT_LOOP_CAP_SEC, ADAPTER_TIMEOUT_LOOP_BASE_SEC + 400);
-    }
+  const posInTranche = loopCyclePositionInTranche(cycle);
+  const isTrancheHandoff = posInTranche === 1;
+  const isProbeWindow =
+    posInTranche > 1 && posInTranche <= 1 + LOOP_PROBE_CYCLES_PER_TRANCHE;
+  let timeoutSeconds = ADAPTER_TIMEOUT_LOOP_BASE_SEC;
+  if (loopTarget > LOOP_LONG_RUN_TRANCHE_SIZE) {
+    timeoutSeconds = Math.min(ADAPTER_TIMEOUT_LOOP_CAP_SEC, ADAPTER_TIMEOUT_LOOP_BASE_SEC + 400);
+  }
+  if (isTrancheHandoff || !isProbeWindow) {
     return {
       useProbe: false,
       taskFile: "SILVER_NEXT_ACTION.md",
@@ -504,15 +519,57 @@ function resolveLoopCycleAdapterPlan(loopTarget, cycle) {
       cycle_mode: "FULL_AGENT_HANDOFF",
     };
   }
+  const longRunProbe =
+    loopTarget > LOOP_LONG_RUN_TRANCHE_SIZE && cycle > LOOP_LONG_RUN_TRANCHE_SIZE;
   return {
     useProbe: true,
     taskFile: LOOP_PROBE_TASK_FILE,
     timeoutSeconds: ADAPTER_TIMEOUT_LOOP_PROBE_SEC,
-    cycle_mode:
-      loopTarget > LOOP_LONG_RUN_TRANCHE_SIZE && cycle > LOOP_LONG_RUN_TRANCHE_SIZE
-        ? "WSL_STDIN_PROBE_LONG_RUN"
-        : "WSL_STDIN_PROBE_STABILITY",
+    cycle_mode: longRunProbe ? "WSL_STDIN_PROBE_LONG_RUN" : "WSL_STDIN_PROBE_STABILITY",
   };
+}
+
+/**
+ * @returns {boolean}
+ */
+function runCyclePlanSelftest() {
+  const expect = (loopTarget, cycle, wantMode, wantProbe) => {
+    const plan = resolveLoopCycleAdapterPlan(loopTarget, cycle);
+    if (plan.cycle_mode !== wantMode || plan.useProbe !== wantProbe) {
+      console.error(
+        `CYCLE_PLAN_SELFTEST_FAIL target=${loopTarget} cycle=${cycle} want_mode=${wantMode} want_probe=${wantProbe} got_mode=${plan.cycle_mode} got_probe=${plan.useProbe}`,
+      );
+      return false;
+    }
+    return true;
+  };
+  let ok = true;
+  ok =
+    expect(50, 1, "FULL_AGENT_HANDOFF", false) &&
+    expect(50, 2, "WSL_STDIN_PROBE_STABILITY", true) &&
+    expect(50, 3, "WSL_STDIN_PROBE_STABILITY", true) &&
+    expect(50, 4, "FULL_AGENT_HANDOFF", false) &&
+    expect(50, 20, "FULL_AGENT_HANDOFF", false) &&
+    expect(50, 21, "FULL_AGENT_HANDOFF", false) &&
+    expect(50, 22, "WSL_STDIN_PROBE_LONG_RUN", true) &&
+    expect(50, 23, "WSL_STDIN_PROBE_LONG_RUN", true) &&
+    expect(50, 24, "FULL_AGENT_HANDOFF", false) &&
+    ok;
+  let handoff50 = 0;
+  let probe50 = 0;
+  for (let c = 1; c <= 50; c += 1) {
+    const p = resolveLoopCycleAdapterPlan(50, c);
+    if (p.useProbe) probe50 += 1;
+    else handoff50 += 1;
+  }
+  if (handoff50 < 40 || probe50 > 8) {
+    console.error(
+      `CYCLE_PLAN_SELFTEST_FAIL cap50_balance handoff=${handoff50} probe=${probe50} want_handoff>=40 probe<=8`,
+    );
+    ok = false;
+  }
+  if (ok) console.log("CYCLE_PLAN_SELFTEST_PASS");
+  return ok;
 }
 
 /**
@@ -813,6 +870,9 @@ function main() {
   const argvSlice = process.argv.slice(2);
   if (argvSlice.includes("--cli-loop-guard-selftest") || argvSlice.includes("--cli-cap3-selftest")) {
     process.exit(runCliLoopGuardSelftest() ? 0 : 1);
+  }
+  if (argvSlice.includes("--cli-cycle-plan-selftest")) {
+    process.exit(runCyclePlanSelftest() ? 0 : 1);
   }
   const cli = parseSilverAutoCli(argvSlice);
   const startedAt = new Date().toISOString();
