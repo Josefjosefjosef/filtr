@@ -1631,6 +1631,9 @@ function writeRunReport(payload) {
     "failed_step=" + String(payload.failed_step || ""),
     "failed_reason=" + String(payload.failed_reason || ""),
     "next_recommended_command=" + String(payload.next_recommended_command || ""),
+    "recommended_next_task=" + String(payload.recommended_next_task || ""),
+    "utf8_mojibake_detected=" + String(payload.utf8_mojibake_detected || "NO"),
+    "ready_for_product_cap50=" + String(payload.ready_for_product_cap50 || ""),
     "reason_for_stop=" + String(payload.reason_for_stop || ""),
     "timeout_archive_path=" + timeoutArchivePathLine,
     "timeout_artifacts_archived=" + timeoutArtifactsArchivedLine,
@@ -3297,6 +3300,44 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
     git_status_clean: gitStatusClean,
     pr_ready: prReady,
     recommended_next_task: recommended,
+  });
+
+  let utf8MojibakeDetected = "NO";
+  let readyForProductCap50 = loopExit === 0 && prReady === "YES" ? "YES" : "NO";
+  if (nextActionWritten === "YES") {
+    const nextOnDisk = readTextSafe(NEXT_ACTION);
+    if (hasSilverUtf8MojibakeMarkers(nextOnDisk)) {
+      utf8MojibakeDetected = "YES";
+      readyForProductCap50 = "NO";
+      if (loopExit === 0) loopExit = 1;
+    }
+  }
+
+  writeRunReport({
+    timestamp: nowIso(),
+    command: "--full-auto-loop",
+    status: loopExit === 0 ? "PASS" : "STOP",
+    branch,
+    commit,
+    git_status_clean: gitStatusClean,
+    changed_files: changedFinal,
+    pr_info: "",
+    engine_changed: "NO",
+    assets_app_changed: assetsAppChangedFlag,
+    ui_changed: "NO",
+    css_changed: "NO",
+    backend_changed: "NO",
+    safety_counters: (() => {
+      const m = String(runReportText || "").match(/^safety_counters=(.*)$/m);
+      return m ? String(m[1]).trim() : "";
+    })(),
+    calendar_write_20k: "",
+    calendar_query_20k: "",
+    next_recommended_command: recommended,
+    recommended_next_task: recommended,
+    utf8_mojibake_detected: utf8MojibakeDetected,
+    ready_for_product_cap50: readyForProductCap50,
+    reason_for_stop: loopExit !== 0 ? recommended : "",
   });
 
   return loopExit;

@@ -34,6 +34,23 @@ function New-SilverCzechBadCharString {
 $script:SilverCzechGoodChars = New-SilverCzechGoodCharString
 $script:SilverCzechBadChars = New-SilverCzechBadCharString
 
+$script:SilverRealApiMojibakeMarkers = @(
+  [string][char]0x0102 + [char]0x0161,
+  [char]0x00E2 + [char]0x20AC + [char]0x0094,
+  [char]0x00E2 + [char]0x20AC + [char]0x0093,
+  "Ov" + [char]0x00C4,
+  [char]0x00C4 + [char]0x203A,
+  [char]0x017D + [char]0x0159,
+  [char]0x0102 + [char]0x02C1,
+  [char]0x00C4 + [char]0x0165,
+  [char]0x017D + [char]0x017E,
+  "po" + [char]0x017D,
+  "p" + [char]0x017D,
+  "zm" + [char]0x00C4,
+  "aktu" + [char]0x0102,
+  "p" + [char]0x017D + [char]0x203A
+)
+
 function Initialize-SilverConsoleUtf8 {
   try {
     $enc = New-Object System.Text.UTF8Encoding $false
@@ -71,10 +88,35 @@ function Test-SilverUtf8MojibakeMarkersCore {
   foreach ($ch in $script:SilverCzechBadChars.ToCharArray()) {
     if ($Text.IndexOf($ch) -ge 0) { return $true }
   }
+  foreach ($frag in $script:SilverRealApiMojibakeMarkers) {
+    if ($Text.IndexOf($frag, [System.StringComparison]::Ordinal) -ge 0) { return $true }
+  }
   if ($Text.Contains([string][char]0x00E2 + [char]0x20AC)) { return $true }
   if ($Text.Contains([string][char]0x00C3 + [char]0x009A)) { return $true }
   if ($Text.Contains('p' + [char]0x017D)) { return $true }
   return $false
+}
+
+function Get-SilverUtf8MojibakeHitLocations {
+  param([string]$Text)
+  $hits = New-Object System.Collections.Generic.List[string]
+  if ([string]::IsNullOrEmpty($Text)) { return $hits.ToArray() }
+  foreach ($ch in $script:SilverCzechBadChars.ToCharArray()) {
+    $idx = $Text.IndexOf($ch)
+    if ($idx -ge 0) {
+      [void]$hits.Add("char_" + [string]$ch + "@" + [string]$idx)
+    }
+  }
+  foreach ($frag in $script:SilverRealApiMojibakeMarkers) {
+    $idx = $Text.IndexOf($frag, [System.StringComparison]::Ordinal)
+    if ($idx -ge 0) {
+      [void]$hits.Add("frag_" + $frag + "@" + [string]$idx)
+    }
+  }
+  if ($Text.Contains([string][char]0x00E2 + [char]0x20AC)) {
+    [void]$hits.Add("frag_em_dash_mojibake")
+  }
+  return $hits.ToArray()
 }
 
 function Repair-SilverUtf8MojibakeText {
@@ -96,6 +138,22 @@ function Repair-SilverUtf8MojibakeText {
     }
     catch { }
   }
+  try {
+    $latin1 = [System.Text.Encoding]::GetEncoding(28591)
+    $byteList = New-Object System.Collections.Generic.List[byte]
+    foreach ($ch in $Text.ToCharArray()) {
+      $cp = [int][char]$ch
+      if ($cp -gt 255) {
+        $byteList = $null
+        break
+      }
+      [void]$byteList.Add([byte]$cp)
+    }
+    if ($null -ne $byteList) {
+      [void]$candidates.Add($utf8.GetString($byteList.ToArray()))
+    }
+  }
+  catch { }
   $best = $Text
   $bestScore = Get-SilverCzechTextScore -Text $Text
   foreach ($cand in $candidates) {
