@@ -8,46 +8,32 @@
    ```powershell
    Set-Location -LiteralPath C:\projects\filtr
    ```
-   
-2. Zkontrolujte stav repozitáře:
+
+2. Zkontrolujte stav repozitáře a zjistěte, které soubory byly změněny:
    ```bash
    git status
    ```
 
-3. Přidejte změněné soubory do stagingu:
+3. Zobrazte rozdíly mezi aktuálním stavem a posledním commitem:
+   ```bash
+   git diff --stat
+   ```
+
+4. Pokud chcete změny commitnout, přidejte je do staging oblasti:
    ```bash
    git add SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
    ```
 
-4. Vytvořte commit se zprávou:
+5. Vytvořte commit se zprávou:
    ```bash
-   git commit -m "Přidání změn"
+   git commit -m "Přidání změn v SILVER souborech"
    ```
 
-5. Zkontrolujte krátký stav repozitáře:
-   ```bash
-   git status --short
-   ```
-
-6. Zobrazte poslední commit a změněné soubory:
-   ```bash
-   git show --name-only -1
-   ```
-
-7. Pokuste se odeslat změny na upstream:
+6. Znovu zkuste pushnout změny na vzdálený repozitář:
    ```bash
    git push -u origin chore/silver-audit-repo-state
    ```
 
-### Scope guard
-- Ujistěte se, že všechny příkazy jsou prováděny v rámci schválených skriptů a že nedochází k žádným neautorizovaným změnám.
-
-### STOP podmínky
-- Pokud je repozitář špinavý (git_clean=NO), neprovádějte další automatické push pokusy, dokud nebude vyřešena autentizace.
-
-### Povinný výsledek
-```
 === 
-Zkontrolujte, zda byly změny úspěšně přidány a commitovány, a zda je repozitář čistý před pokusem o push.
+Zkontrolujte, zda byly změny úspěšně přidány a commitovány, a zda je repozitář čistý před pokusem o push. 
 ===
-```
