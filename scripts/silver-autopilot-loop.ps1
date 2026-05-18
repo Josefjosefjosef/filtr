@@ -63,7 +63,11 @@ param(
   [switch]$TimeoutArchiveSelfTest,
   [switch]$PreflightCleanupSelfTest,
   [switch]$Cap50TimeoutUtf8SelfTest,
-  [switch]$Cap50PostconditionSelfTest
+  [switch]$Cap50PostconditionSelfTest,
+  [switch]$Cap50HardPreflight,
+  [switch]$Cap50ThreeCycleProbe,
+  [switch]$Cap50ThreeCycleOrchestrationProbe,
+  [switch]$Cap50MojibakeRegressionSelfTest
 )
 
 Set-StrictMode -Version 2
@@ -1411,6 +1415,12 @@ function Stop-LoopWithFail {
   Add-SilverCycleFieldsFromAdapterOutput -Fields $fields -AdapterOutputPath $adapterOutForCycle -ProcessStartUtc $failProcStart -ExpectedTaskDigest $failDigest -ExpectedTaskFile $failTaskFile -ExpectedRunId $failRunCtx.RunId -ExpectedCycle $failRunCtx.Cycle -ExpectedRunStartUtc $failRunCtx.RunStartUtc -CursorInvoked $failCursorInvoked
   Write-SilverProgressLogBlock -ProgressLogPath $ProgressLogPath -Outcome "FAIL" -Fields $fields
   Write-SilverColoredCycleSummary -Outcome "FAIL" -Fields $fields
+  if ($controlledInfinite) {
+    $reportFail = Read-TextFileOrEmpty -Path (Join-Path $RepoRoot "SILVER_RUN_REPORT.md")
+    $safetyFail = Get-RunReportLineValue -ReportText $reportFail -Key "safety_counters"
+    $finalPost = Invoke-SilverCap50FinalPostcondition -RepoRoot $RepoRoot -CyclesCompleted $Cycle -StopReason $reasonLine -NextActionPath (Join-Path $RepoRoot "SILVER_NEXT_ACTION.md") -CursorOutputPath (Join-Path $RepoRoot "SILVER_CURSOR_OUTPUT.md") -SafetyCountersLine $safetyFail
+    Write-SilverCap50FinalPostconditionBlock -Result $finalPost
+  }
   Invoke-SilverBeepFail -NoBeep:$NoBeep
   exit 1
 }
@@ -1641,6 +1651,17 @@ function Test-SilverPathIsCap50RuntimeRestorable {
   return ($reason.Length -gt 0)
 }
 
+function Test-SilverCap50RuntimeEphemeralsClean {
+  param([string]$Cwd)
+  foreach ($rel in (Get-GitStatusShortPaths -Cwd $Cwd)) {
+    $n = ($rel -replace '\\', '/')
+    if (Test-SilverPathIsCap50RuntimeRestorable -RelPath $n) {
+      return $false
+    }
+  }
+  return $true
+}
+
 function Invoke-SilverGitRestoreWorktreePaths {
   param([string]$RepoRoot, [string[]]$RelPaths)
   if (-not $RelPaths -or $RelPaths.Count -lt 1) { return }
@@ -1665,7 +1686,14 @@ function Invoke-SilverGitRestoreWorktreePaths {
     $p = [System.Diagnostics.Process]::Start($psi)
     $null = $p.StandardOutput.ReadToEnd()
     $null = $p.StandardError.ReadToEnd()
-    $p.WaitForExit()
+    $p.WaitForExit() | Out-Null
+    if ($p.ExitCode -ne 0) {
+      Start-Sleep -Milliseconds 150
+      $p2 = [System.Diagnostics.Process]::Start($psi)
+      $null = $p2.StandardOutput.ReadToEnd()
+      $null = $p2.StandardError.ReadToEnd()
+      $p2.WaitForExit() | Out-Null
+    }
   }
   catch {
   }
@@ -1709,10 +1737,31 @@ function Get-GitStatusShortDirtyEntries {
   return $entries.ToArray()
 }
 
+function Invoke-SilverCap50PostCycleRuntimeCleanup {
+  param(
+    [string]$RepoRoot,
+    [int]$Cycle,
+    [string]$Reason,
+    [switch]$DryRunOnly,
+    [switch]$AllowForeignDirty
+  )
+  $archivePath = ""
+  if (-not $DryRunOnly) {
+    $arch = Archive-SilverCap50CycleRuntimeArtifacts -RepoRoot $RepoRoot -Cycle $Cycle -Reason $Reason
+    if ($arch.Archived -eq "YES") {
+      $archivePath = [string]$arch.RelativePath
+    }
+  }
+  $cleanup = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot -DryRunOnly:$DryRunOnly -AllowForeignDirty:$AllowForeignDirty
+  $cleanup.archive_path = $archivePath
+  return $cleanup
+}
+
 function Invoke-SilverCap50PreflightCleanup {
   param(
     [string]$RepoRoot,
-    [switch]$DryRunOnly
+    [switch]$DryRunOnly,
+    [switch]$AllowForeignDirty
   )
   $entries = Get-GitStatusShortDirtyEntries -Cwd $RepoRoot
   $dirtyBefore = New-Object System.Collections.Generic.List[string]
@@ -1750,10 +1799,14 @@ function Invoke-SilverCap50PreflightCleanup {
     foreach ($rp in $toRestore) { [void]$restored.Add($rp + '(dry_run)') }
   }
   $cleanAfter = if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" }
+  $runtimeClean = if (Test-SilverCap50RuntimeEphemeralsClean -Cwd $RepoRoot) { "YES" } else { "NO" }
   $safe = "NO"
   if ($blocked.Count -eq 0) {
     if ($cleanAfter -eq "YES") { $safe = "YES" }
     elseif ($DryRunOnly -and $toRestore.Count -gt 0 -and $dirtyBefore.Count -eq $toRestore.Count) { $safe = "YES" }
+  }
+  elseif ($AllowForeignDirty -and $runtimeClean -eq "YES") {
+    $safe = "YES"
   }
   $passFail = if ($safe -eq "YES") { "PASS" } else { "FAIL" }
   $sep = [char]59
@@ -1833,7 +1886,12 @@ function Invoke-SilverCap50PreflightCleanupSelfTest {
     }
     finally {
       if ($backup.Length -gt 0) {
-        [System.IO.File]::WriteAllText($full, $backup, $utf8)
+        try {
+          [System.IO.File]::WriteAllText($full, $backup, $utf8)
+        }
+        catch {
+          Invoke-SilverGitRestoreWorktreePaths -RepoRoot $RepoRoot -RelPaths @($RelPath)
+        }
       }
       else {
         Invoke-SilverGitRestoreWorktreePaths -RepoRoot $RepoRoot -RelPaths @($RelPath)
@@ -2083,7 +2141,7 @@ function Invoke-SilverCap50EvaluateCyclePostcondition {
   $cleanupDone = "NO"
   $gitCleanAfter = if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" }
   if (-not $DryRunOnly) {
-    $cleanupRes = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot
+    $cleanupRes = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $Cycle -Reason "cap50_cycle_postcondition"
     $cleanupDone = if ($cleanupRes.PASS_FAIL -eq "PASS") { "YES" } else { "NO" }
     $gitCleanAfter = [string]$cleanupRes.git_clean_after
     if ([string]$cleanupRes.blocked_dirty_files) {
@@ -2138,6 +2196,58 @@ function Invoke-SilverCap50EvaluateCyclePostcondition {
   }
 }
 
+function Invoke-SilverCap50ThreeCycleOrchestrationProbe {
+  param([string]$RepoRoot)
+  $utf8 = $script:SilverUtf8NoBom
+  $failures = New-Object System.Collections.Generic.List[string]
+  $goodTask = ([string][char]0x00DA + "KOL PRO CURSOR") + " cycle handoff " + [char]0x0159 + "ablona"
+  for ($i = 1; $i -le 3; $i++) {
+    $nextPath = Join-Path $RepoRoot "SILVER_NEXT_ACTION.md"
+    $cursorPath = Join-Path $RepoRoot "SILVER_CURSOR_OUTPUT.md"
+    $progressPath = Join-Path $RepoRoot "SILVER_PROGRESS_LOG.md"
+    $reportPath = Join-Path $RepoRoot "SILVER_RUN_REPORT.md"
+    $body = $goodTask + " cycle=" + [string]$i + "`nnode scripts/silver-rhc3-cluster-classifier-v1.cjs`n"
+    [System.IO.File]::WriteAllText($nextPath, $body, $utf8)
+    [System.IO.File]::WriteAllText($cursorPath, ("# silver-cursor-agent-adapter`nprompt_preview=" + $goodTask + "`n# stdout`n" + $goodTask + "`n"), $utf8)
+    [System.IO.File]::WriteAllText($progressPath, ("# cycle " + [string]$i + "`n"), $utf8)
+    [System.IO.File]::WriteAllText($reportPath, ("recommended_next_task=continue`ncycle=" + [string]$i + "`n"), $utf8)
+    $gate = Invoke-SilverCap50Utf8SurfacesHardGate -RepoRoot $RepoRoot -NextActionPath $nextPath -CursorOutputPath $cursorPath
+    if ($gate.PASS_FAIL -ne "PASS") {
+      [void]$failures.Add("cycle" + [string]$i + "_utf8_gate")
+    }
+    $cleanup = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $i -Reason "three_cycle_probe" -AllowForeignDirty
+    if ($cleanup.PASS_FAIL -ne "PASS") {
+      [void]$failures.Add("cycle" + [string]$i + "_cleanup:" + [string]$cleanup.blocked_dirty_files)
+    }
+    if (-not (Test-SilverCap50RuntimeEphemeralsClean -Cwd $RepoRoot)) {
+      $dirtyRt = New-Object System.Collections.Generic.List[string]
+      foreach ($rel in (Get-GitStatusShortPaths -Cwd $RepoRoot)) {
+        $n = ($rel -replace '\\', '/')
+        if (Test-SilverPathIsCap50RuntimeRestorable -RelPath $n) {
+          [void]$dirtyRt.Add($n)
+        }
+      }
+      [void]$failures.Add("cycle" + [string]$i + "_runtime_still_dirty=" + ($dirtyRt -join ","))
+    }
+    $mode = Get-SilverCap50NextActionMode -NextActionText $body -RecommendedNextTask "Execute steps in SILVER_NEXT_ACTION.md in Cursor." -ControlledInfinite $true
+    if ($i -lt 3 -and $mode -ne "AUTONOMOUS_CONTINUE") {
+      [void]$failures.Add("cycle" + [string]$i + "_next_action_not_autonomous")
+    }
+  }
+  $tok = Resolve-SilverCursorCommandAutonomousTimeout -CursorCommand 'powershell -File scripts/silver-cursor-agent-adapter.ps1 -TimeoutSeconds 120' -AutonomousOrCap50 $true
+  if ($tok.EffectiveTimeoutSeconds -ne $script:SilverCap50AutonomousEffectiveTimeoutSeconds) {
+    [void]$failures.Add("effective_timeout_not_3400")
+  }
+  $null = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle 3 -Reason "three_cycle_probe_final" -AllowForeignDirty
+  if ($failures.Count -gt 0) {
+    Write-Host "SILVER_CAP50_THREE_CYCLE_ORCHESTRATION_PROBE=FAIL" -ForegroundColor Red
+    foreach ($f in $failures) { Write-Host $f -ForegroundColor Red }
+    return $false
+  }
+  Write-Host "SILVER_CAP50_THREE_CYCLE_ORCHESTRATION_PROBE=PASS" -ForegroundColor Green
+  return $true
+}
+
 function Invoke-SilverCap50PostconditionSelfTest {
   param([string]$RepoRoot)
   $utf8 = $script:SilverUtf8NoBom
@@ -2147,6 +2257,22 @@ function Invoke-SilverCap50PostconditionSelfTest {
   $badPreviewLiteral = [string][char]0x0102 + [char]0x0161 + "KOL PRO CURSOR"
   if (-not (Test-SilverUtf8MojibakeMarkers -Text $badPreviewLiteral)) {
     [void]$failures.Add("mojibake_ukol_prompt_detect")
+  }
+  $realFailSample = @(
+    ([string][char]0x0102 + [char]0x0161 + "KOL PRO CURSOR"),
+    ("Aktu" + [char]0x0102 + [char]0x02C1 + "ln" + [char]0x0102 + [char]0x00AD),
+    ("Shrnut" + [char]0x0102 + [char]0x00AD),
+    ("Orchestr" + [char]0x0102 + [char]0x00A1 + "tor"),
+    ("dob" + [char]0x00C4 + [char]0x203A),
+    ([char]0x017D + [char]0x02C1 + "pinav"),
+    ("bezpe" + [char]0x00C4 + [char]0x0165 + "nostn" + [char]0x0102 + [char]0x00AD)
+  ) -join " "
+  if (-not (Test-SilverUtf8MojibakeMarkers -Text $realFailSample)) {
+    [void]$failures.Add("real_run_mojibake_sample_must_detect")
+  }
+  $realGate = Test-SilverCap50Utf8HardFailRaw -Text $realFailSample -SurfaceLabel "real_fail_regression"
+  if ($realGate.detected -ne "YES") {
+    [void]$failures.Add("real_run_mojibake_sample_hard_fail")
   }
   $badEmOnly = [string][char]0x00E2 + [char]0x20AC + [char]0x0094
   $hitStdout = Test-SilverCap50Utf8HardFailAfterRepair -Text $badEmOnly -SurfaceLabel "stdout"
@@ -2530,6 +2656,29 @@ if ($Cap50PostconditionSelfTest) {
   exit 0
 }
 
+if ($Cap50MojibakeRegressionSelfTest) {
+  $regScript = Join-Path $RepoRoot "scripts\silver-cap50-mojibake-regression-selftest.ps1"
+  if (-not (Test-Path -LiteralPath $regScript)) {
+    Write-Host "SILVER_CAP50_MOJIBAKE_REGRESSION_SELFTEST=FAIL missing_script" -ForegroundColor Red
+    exit 1
+  }
+  & powershell -NoProfile -ExecutionPolicy Bypass -File $regScript
+  exit $LASTEXITCODE
+}
+
+if ($Cap50ThreeCycleProbe -or $Cap50ThreeCycleOrchestrationProbe) {
+  $st3 = Invoke-SilverCap50ThreeCycleOrchestrationProbe -RepoRoot $RepoRoot
+  if (-not $st3) { exit 1 }
+  exit 0
+}
+
+if ($Cap50HardPreflight) {
+  $hp = Invoke-SilverCap50HardPreflight -RepoRoot $RepoRoot -CursorCommand $CursorCommand
+  Write-SilverCap50HardPreflightBlock -Result $hp
+  if ($hp.PASS_FAIL -ne "PASS") { exit 1 }
+  exit 0
+}
+
 if ($TimeoutArchiveSelfTest) {
   $td = Join-Path $env:TEMP ("silver-timeout-selftest-" + [guid]::NewGuid().ToString("N"))
   New-Item -ItemType Directory -Path $td -Force | Out-Null
@@ -2548,6 +2697,15 @@ if ($TimeoutArchiveSelfTest) {
   }
   Write-Host "SILVER_TIMEOUT_ARCHIVE_SELFTEST=PASS"
   exit 0
+}
+
+if ($controlledInfinite -and (-not $DryRun) -and (-not [string]::IsNullOrWhiteSpace($CursorCommand))) {
+  $hardPf = Invoke-SilverCap50HardPreflight -RepoRoot $RepoRoot -CursorCommand $CursorCommand
+  Write-SilverCap50HardPreflightBlock -Result $hardPf
+  if ($hardPf.PASS_FAIL -ne "PASS") {
+    Write-SilverSafetyConsoleStop -Reason "cap50_hard_preflight_fail"
+    exit 1
+  }
 }
 
 $cycle = 0
@@ -2983,6 +3141,11 @@ while ($true) {
     $ae = $auto.ExitCode
     $script:LastAutopilotExit = [string]$ae
     $autoExitStr = [string]$ae
+    $postAutoCleanup = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $cycle -Reason "after_autopilot_full_auto_loop"
+    Write-Host ("silver-autopilot-loop: post_autopilot_cleanup_PASS_FAIL=" + [string]$postAutoCleanup.PASS_FAIL) -ForegroundColor DarkCyan
+    if ($postAutoCleanup.PASS_FAIL -ne "PASS") {
+      Write-Host ("silver-autopilot-loop: post_autopilot_blocked_dirty_files=" + [string]$postAutoCleanup.blocked_dirty_files) -ForegroundColor Red
+    }
     if ($ae -ne 0) {
       Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
         -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit "N/A" `
@@ -3219,6 +3382,15 @@ if (-not $DryRun) {
   $finalCycle = $cycle
   if ($finalCycle -lt 1) { $finalCycle = 1 }
   $null = Stop-LoopOnHandoffPersistenceGuard -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $finalCycle -MainCommit $mainCommit -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep
+  if ($controlledInfinite) {
+    $reportEnd = Read-TextFileOrEmpty -Path $RunReportPath
+    $safetyEnd = Get-RunReportLineValue -ReportText $reportEnd -Key "safety_counters"
+    $finalOk = Invoke-SilverCap50FinalPostcondition -RepoRoot $RepoRoot -CyclesCompleted $script:AutonomousCyclesCompleted -StopReason "loop_exit" -NextActionPath $NextActionPath -CursorOutputPath $CursorOutputPath -SafetyCountersLine $safetyEnd
+    Write-SilverCap50FinalPostconditionBlock -Result $finalOk
+    if ($finalOk.PASS_FAIL -eq "PASS") {
+      Invoke-SilverBeepPass -NoBeep:$NoBeep
+    }
+  }
 }
 
 exit 0

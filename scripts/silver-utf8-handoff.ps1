@@ -35,9 +35,23 @@ $script:SilverCzechGoodChars = New-SilverCzechGoodCharString
 $script:SilverCzechBadChars = New-SilverCzechBadCharString
 
 $script:SilverRealApiMojibakeMarkers = @(
+  [string][char]0x0102 + [char]0x02C1,
+  [string][char]0x0102 + [char]0x00AD,
+  [string][char]0x0102 + [char]0x00A9,
+  [string][char]0x0102 + [char]0x00BD,
   [string][char]0x0102 + [char]0x0161,
+  "Aktu" + [char]0x0102 + [char]0x02C1 + "ln" + [char]0x0102 + [char]0x00AD,
+  "Shrnut" + [char]0x0102 + [char]0x00AD,
+  "Orchestr" + [char]0x0102 + [char]0x00A1 + "tor",
+  "dob" + [char]0x00C4 + [char]0x203A,
+  [char]0x017D + [char]0x02C1 + "pinav",
+  "bezpe" + [char]0x00C4 + [char]0x0165 + "nostn" + [char]0x0102 + [char]0x00AD,
+  "po" + [char]0x0102 + [char]0x00A1 + "tadla",
+  "ko" + [char]0x017D + [char]0x0159 + "eni",
+  [char]0x017D + [char]0x017E + [char]0x0102 + [char]0x00BD + "dn",
   [char]0x00E2 + [char]0x20AC + [char]0x0094,
   [char]0x00E2 + [char]0x20AC + [char]0x0093,
+  [char]0x00E2 + [char]0x20AC + [char]0x009D,
   "Ov" + [char]0x00C4,
   [char]0x00C4 + [char]0x203A,
   [char]0x017D + [char]0x0159,
@@ -48,7 +62,9 @@ $script:SilverRealApiMojibakeMarkers = @(
   "p" + [char]0x017D,
   "zm" + [char]0x00C4,
   "aktu" + [char]0x0102,
-  "p" + [char]0x017D + [char]0x203A
+  "p" + [char]0x017D + [char]0x203A,
+  "p" + [char]0x017D + [char]0x203A,
+  "klasifik" + [char]0x00C4 + "tor"
 )
 
 function Initialize-SilverConsoleUtf8 {
@@ -63,12 +79,12 @@ function Initialize-SilverConsoleUtf8 {
 function Test-SilverUtf8MojibakeMarkers {
   param([string]$Text)
   if ([string]::IsNullOrEmpty($Text)) { return $false }
-  if (Test-SilverUtf8MojibakeMarkersCore -Text $Text) { return $true }
-  $score = Get-SilverCzechTextScore -Text $Text
-  $cand = Repair-SilverUtf8MojibakeText -Text $Text
-  $candScore = Get-SilverCzechTextScore -Text $cand
-  if (($cand -ne $Text) -and ($candScore -gt $score)) { return $true }
-  return $false
+  return (Test-SilverUtf8MojibakeMarkersCore -Text $Text)
+}
+
+function Test-SilverUtf8MojibakeMarkersStrict {
+  param([string]$Text)
+  return (Test-SilverUtf8MojibakeMarkers -Text $Text)
 }
 
 function Get-SilverCzechTextScore {
@@ -189,20 +205,44 @@ function Read-TextFileUtf8NoBomShared {
   return [System.IO.File]::ReadAllText($Path, $script:SilverUtf8NoBom)
 }
 
-function Read-TextFileUtf8Handoff {
+function Read-TextFileUtf8Raw {
   param([string]$Path)
   $bytes = [System.IO.File]::ReadAllBytes($Path)
   $utf8 = $script:SilverUtf8NoBom
-  $text = ""
   if ($bytes.Length -ge 3 -and $bytes[0] -eq 0xEF -and $bytes[1] -eq 0xBB -and $bytes[2] -eq 0xBF) {
-    $text = $utf8.GetString($bytes, 3, $bytes.Length - 3)
+    return $utf8.GetString($bytes, 3, $bytes.Length - 3)
   }
-  else {
-    $text = $utf8.GetString($bytes)
-  }
+  return $utf8.GetString($bytes)
+}
+
+function Read-TextFileUtf8Handoff {
+  param([string]$Path)
+  $text = Read-TextFileUtf8Raw -Path $Path
   $repairedFlag = "NO"
   $fixed = Repair-SilverUtf8HandoffText -Text $text -Repaired ([ref]$repairedFlag)
   return $fixed
+}
+
+function Get-SilverUtf8MojibakeFirstSample {
+  param([string]$Text, [int]$ContextChars = 48)
+  if ([string]::IsNullOrEmpty($Text)) { return "" }
+  $idx = -1
+  foreach ($ch in $script:SilverCzechBadChars.ToCharArray()) {
+    $i = $Text.IndexOf($ch)
+    if ($i -ge 0 -and ($idx -lt 0 -or $i -lt $idx)) { $idx = $i }
+  }
+  foreach ($frag in $script:SilverRealApiMojibakeMarkers) {
+    $i = $Text.IndexOf($frag, [System.StringComparison]::Ordinal)
+    if ($i -ge 0 -and ($idx -lt 0 -or $i -lt $idx)) { $idx = $i }
+  }
+  if ($Text.Contains([string][char]0x00E2 + [char]0x20AC)) {
+    $i = $Text.IndexOf([string][char]0x00E2 + [char]0x20AC, [System.StringComparison]::Ordinal)
+    if ($i -ge 0 -and ($idx -lt 0 -or $i -lt $idx)) { $idx = $i }
+  }
+  if ($idx -lt 0) { return "" }
+  $start = [Math]::Max(0, $idx - $ContextChars)
+  $len = [Math]::Min($Text.Length - $start, ($ContextChars * 2) + 32)
+  return $Text.Substring($start, $len).Replace("`r", " ").Replace("`n", " ")
 }
 
 function Read-ProcessPipeUtf8 {

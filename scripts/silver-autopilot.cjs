@@ -191,6 +191,8 @@ const FULL_AUTO_LOOP_ALLOWED_DIRTY = new Set(
     "scripts/silver-cursor-agent-adapter-diagnostic.ps1",
     /* Adapter diagnostic JSON is regenerated/read during WSL agent flows; narrow runtime noise */
     "scripts/silver-cursor-agent-adapter-diagnostic-report.json",
+    "scripts/silver-rhc3-negation-cal-readonly-diagnostic-report.json",
+    "scripts/silver-rhc3-cluster-classifier-v1-report.json",
   ].map((s) => repoRelGuardKey(s)),
 );
 
@@ -546,6 +548,7 @@ function dirtyGitUnexpectedForFullAutoLoop(changedList) {
     const n = normalizeRepoRel(rel);
     if (!n) continue;
     if (FULL_AUTO_LOOP_ALLOWED_DIRTY.has(repoRelGuardKey(n))) continue;
+    if (cap50RuntimeRestoreReason(n)) continue;
     if (isTransientGeneratedAuditReportRel(n)) continue;
     if (isTransientGeneratedClusterClassifierReportRel(n)) continue;
     return { pass: false, firstUnexpected: n };
