@@ -1,4 +1,4 @@
-﻿#requires -Version 5.1
+#requires -Version 5.1
 <#
 .SYNOPSIS
   Silver FULL AUTO LOOP TRIGGER V1 — orchestrates SILVER_NEXT_ACTION.md → Cursor CLI → Autopilot → reports.
@@ -61,7 +61,8 @@ param(
   [int]$MaxCycleWallSeconds = 0,
   [int]$TotalWallSeconds = 0,
   [switch]$TimeoutArchiveSelfTest,
-  [switch]$PreflightCleanupSelfTest
+  [switch]$PreflightCleanupSelfTest,
+  [switch]$Cap50TimeoutUtf8SelfTest
 )
 
 Set-StrictMode -Version 2
@@ -78,6 +79,19 @@ $ProgressLogPath = Join-Path $RepoRoot "SILVER_PROGRESS_LOG.md"
 $CursorOutputPath = Join-Path $RepoRoot "SILVER_CURSOR_OUTPUT.md"
 $AutopilotScript = Join-Path $RepoRoot "scripts\silver-autopilot.cjs"
 $EmergencyStopPath = Join-Path $RepoRoot "SILVER_STOP_AUTOPILOT"
+$SilverUtf8HandoffPath = Join-Path $PSScriptRoot "silver-utf8-handoff.ps1"
+$SilverCap50PolicyPath = Join-Path $PSScriptRoot "silver-cap50-orchestration-policy.ps1"
+if (-not (Test-Path -LiteralPath $SilverUtf8HandoffPath)) {
+  Write-Error ("Missing UTF-8 handoff module: " + $SilverUtf8HandoffPath)
+  exit 2
+}
+if (-not (Test-Path -LiteralPath $SilverCap50PolicyPath)) {
+  Write-Error ("Missing CAP50 orchestration policy: " + $SilverCap50PolicyPath)
+  exit 2
+}
+. $SilverUtf8HandoffPath
+. $SilverCap50PolicyPath
+Initialize-SilverConsoleUtf8
 
 $script:CycleIndex = 0
 $script:LastCursorExit = "N/A"
@@ -125,8 +139,7 @@ function Test-RepoRootMatch {
 function Read-TextFileOrEmpty {
   param([string]$Path)
   if (-not (Test-Path -LiteralPath $Path)) { return "" }
-  $utf8Read = [System.Text.UTF8Encoding]::new($false)
-  return [System.IO.File]::ReadAllText($Path, $utf8Read)
+  return Read-TextFileUtf8Handoff -Path $Path
 }
 
 function Read-SilverLoopTempCaptureFileWithRetry {
@@ -894,7 +907,7 @@ function Test-SilverNextActionSilverWorkflowContext {
 function Test-SilverNextActionOutputQuality {
   param([string]$Text)
   if (-not $Text) { return $true }
-  if ($Text -match 'Ă|â€|Ĺ|pĹ|Ä›|OtevĹ|ZprĂ|pĹ™ejdÄ|ĂşKOL|ÄŤ|Ĺ™|Ă­|Ăˇ|Ă©') { return $false }
+  if (Test-SilverUtf8MojibakeMarkers -Text $Text) { return $false }
   $hasCluster = Test-SilverNextActionSilverWorkflowContext -Text $Text
   if ($Text -match '(?i)git\s+push\s+-u\s+origin') {
     if (-not $hasCluster) { return $false }
@@ -1097,6 +1110,7 @@ function Add-SilverCycleFieldsFromAdapterOutput {
   SetIf "silver_cycle_timed_out" (Take "timed_out")
   SetIf "silver_cycle_elapsed_ms" (Take "elapsed_ms")
   SetIf "silver_cycle_timeout_seconds" (Take "timeout_seconds")
+  SetIf "silver_cycle_effective_timeout_seconds" (Take "effective_timeout_seconds")
   SetIf "silver_cycle_adapter_exit_code" (Take "exit_code")
   $soB = Take "stdout_bytes"
   $seB = Take "stderr_bytes"
@@ -1342,6 +1356,14 @@ function Stop-LoopWithFail {
     if ($timeoutArchiveRel -and $timeoutArchiveRel.Trim().Length -gt 0) {
       $env:SILVER_TIMEOUT_ARCHIVE_PATH = ($timeoutArchiveRel -replace "\\", "/")
       $env:SILVER_TIMEOUT_ARTIFACTS_ARCHIVED = $timeoutArchivedFlag
+    }
+    $closeoutCleanup = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot
+    Write-Host ("silver-autopilot-loop: timeout_closeout_preflight_PASS_FAIL=" + [string]$closeoutCleanup.PASS_FAIL) -ForegroundColor DarkYellow
+    if ($closeoutCleanup.safe_to_start_cycle -eq "YES") {
+      $GitClean = "YES"
+    }
+    elseif ([string]$closeoutCleanup.blocked_dirty_files) {
+      Write-Host ("silver-autopilot-loop: timeout_closeout_blocked_dirty_files=" + [string]$closeoutCleanup.blocked_dirty_files) -ForegroundColor Red
     }
   }
   Write-Host ("SILVER_LOOP_SAFETY_STOP reason=" + $reasonLine) -ForegroundColor Red
@@ -1844,6 +1866,161 @@ function Invoke-SilverCap50PreflightCleanupSelfTest {
   return $true
 }
 
+function Invoke-SilverCap50TimeoutUtf8OrchestrationSelfTest {
+  param([string]$RepoRoot)
+  $utf8 = $script:SilverUtf8NoBom
+  $failures = New-Object System.Collections.Generic.List[string]
+
+  $tok120 = Resolve-SilverCursorCommandAutonomousTimeout -CursorCommand 'powershell -File scripts/silver-cursor-agent-adapter.ps1 -WslUbuntuAgent -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE} -TimeoutSeconds 120' -AutonomousOrCap50 $true
+  if ($tok120.EffectiveTimeoutSeconds -ne $script:SilverCap50AutonomousEffectiveTimeoutSeconds) {
+    [void]$failures.Add("cursor_command_120_not_bumped_to_3400")
+  }
+  if ($tok120.TimeoutAdjusted -ne "YES") {
+    [void]$failures.Add("cursor_command_120_timeout_adjusted_expected_YES")
+  }
+
+  $adapterPol = Resolve-SilverAutonomousAdapterTimeoutSeconds -RequestedTimeoutSeconds 120 -ProductTaskRun $true
+  if ($adapterPol.EffectiveTimeoutSeconds -ne $script:SilverCap50AutonomousEffectiveTimeoutSeconds) {
+    [void]$failures.Add("adapter_120_not_bumped_to_3400")
+  }
+  $probePol = Resolve-SilverAutonomousAdapterTimeoutSeconds -RequestedTimeoutSeconds 120 -Probe
+  if ($probePol.EffectiveTimeoutSeconds -ne 120) {
+    [void]$failures.Add("probe_120_should_remain_120")
+  }
+
+  $enc1252 = [System.Text.Encoding]::GetEncoding(1252)
+  $good = ([string][char]0x00DA + "KOL PRO CURSOR") + " Aktu" + [char]0x00E1 + "ln" + [char]0x00ED + " pozn" + [char]0x00E1 + "mka"
+  $bad = $enc1252.GetString($utf8.GetBytes($good))
+  $repairedFlag = "NO"
+  $fixed = Repair-SilverUtf8HandoffText -Text $bad -Repaired ([ref]$repairedFlag)
+  if (-not (Test-SilverCap50Utf8ProbeStrings -Text $fixed)) {
+    [void]$failures.Add("utf8_probe_strings_after_repair")
+  }
+
+  $tempDir = Join-Path $env:TEMP ("silver-cap50-utf8-selftest-" + [guid]::NewGuid().ToString())
+  New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+  try {
+    $nextPath = Join-Path $tempDir "SILVER_NEXT_ACTION.md"
+    [System.IO.File]::WriteAllText($nextPath, $good + "`n", $utf8)
+    $readBack = Read-TextFileUtf8Handoff -Path $nextPath
+    if (-not (Test-SilverCap50Utf8ProbeStrings -Text $readBack)) {
+      [void]$failures.Add("utf8_file_roundtrip_probe")
+    }
+  }
+  finally {
+    Remove-Item -LiteralPath $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+  }
+
+  $assetsRel = "assets/app.js"
+  $assetsFull = Join-Path $RepoRoot $assetsRel
+  $assetsBackup = ""
+  if (Test-Path -LiteralPath $assetsFull) {
+    $assetsBackup = [System.IO.File]::ReadAllText($assetsFull, $utf8)
+  }
+  try {
+    [System.IO.File]::WriteAllText($assetsFull, "/* cap50-selftest */`n", $utf8)
+    $resAssets = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot
+    if ($resAssets.PASS_FAIL -ne "FAIL") {
+      [void]$failures.Add("assets_app_js_should_block_preflight")
+    }
+    if ([string]$resAssets.blocked_dirty_files -notmatch 'assets/app\.js') {
+      [void]$failures.Add("assets_app_js_missing_from_blocked_dirty_files")
+    }
+  }
+  finally {
+    if ($assetsBackup.Length -gt 0) {
+      [System.IO.File]::WriteAllText($assetsFull, $assetsBackup, $utf8)
+    }
+    else {
+      Invoke-SilverGitRestoreWorktreePaths -RepoRoot $RepoRoot -RelPaths @($assetsRel)
+    }
+    $null = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot
+  }
+
+  if (-not (Test-SilverPathIsCap50RuntimeRestorable -RelPath "SILVER_CURSOR_OUTPUT.md")) {
+    [void]$failures.Add("allowlist_missing_SILVER_CURSOR_OUTPUT")
+  }
+  if (-not (Test-SilverPathIsCap50RuntimeRestorable -RelPath "scripts/silver-rhc3-cluster-classifier-v1-report.json")) {
+    [void]$failures.Add("allowlist_missing_cluster_classifier_json")
+  }
+  if (Test-SilverPathIsCap50RuntimeRestorable -RelPath "assets/app.js") {
+    [void]$failures.Add("allowlist_must_not_include_assets_app_js")
+  }
+
+  $knownRel = "SILVER_CURSOR_OUTPUT.md"
+  $knownFull = Join-Path $RepoRoot $knownRel
+  $knownBackup = ""
+  if (Test-Path -LiteralPath $knownFull) {
+    $knownBackup = [System.IO.File]::ReadAllText($knownFull, $utf8)
+  }
+  try {
+    $preEntries = Get-GitStatusShortDirtyEntries -Cwd $RepoRoot
+    $foreignDirty = New-Object System.Collections.Generic.List[string]
+    foreach ($ent in $preEntries) {
+      if (-not (Test-SilverPathIsCap50RuntimeRestorable -RelPath ([string]$ent.path))) {
+        [void]$foreignDirty.Add([string]$ent.path)
+      }
+    }
+    if ($foreignDirty.Count -gt 0) {
+      Write-Host ("silver-cap50-selftest: known_runtime_cleanup_skipped_foreign_dirty=" + ($foreignDirty -join ";")) -ForegroundColor DarkYellow
+    }
+    else {
+      [System.IO.File]::WriteAllText($knownFull, "# cap50-known-runtime-selftest`n", $utf8)
+      $resKnown = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot
+      if ($resKnown.PASS_FAIL -ne "PASS") {
+        [void]$failures.Add("known_runtime_SILVER_CURSOR_OUTPUT_not_cleaned")
+      }
+      $stillDirty = Get-GitStatusShortPaths -Cwd $RepoRoot
+      $stillHas = $false
+      foreach ($sp in $stillDirty) {
+        if ([string]::Equals(($sp -replace '\\', '/'), $knownRel, [System.StringComparison]::OrdinalIgnoreCase)) {
+          $stillHas = $true
+        }
+      }
+      if ($stillHas) {
+        [void]$failures.Add("known_runtime_still_dirty_after_restore")
+      }
+    }
+  }
+  finally {
+    if ($knownBackup.Length -gt 0) {
+      [System.IO.File]::WriteAllText($knownFull, $knownBackup, $utf8)
+    }
+    else {
+      Invoke-SilverGitRestoreWorktreePaths -RepoRoot $RepoRoot -RelPaths @($knownRel)
+    }
+  }
+
+  if (Test-SilverPathIsCap50RuntimeRestorable -RelPath "SILVER_CAP50_TIMEOUT_UTF8_SELFTEST_BLOCK.txt") {
+    [void]$failures.Add("unknown_file_must_not_be_cap50_restorable")
+  }
+  $unknownRel = "SILVER_CAP50_TIMEOUT_UTF8_SELFTEST_BLOCK.txt"
+  $unknownFull = Join-Path $RepoRoot $unknownRel
+  try {
+    [System.IO.File]::WriteAllText($unknownFull, "block`n", $utf8)
+    $resUnknown = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot
+    if ($resUnknown.PASS_FAIL -ne "FAIL") {
+      [void]$failures.Add("unknown_dirty_should_fail_preflight")
+    }
+    if ([string]$resUnknown.blocked_dirty_files -notmatch [regex]::Escape($unknownRel)) {
+      [void]$failures.Add("unknown_dirty_missing_from_blocked_dirty_files")
+    }
+  }
+  finally {
+    if (Test-Path -LiteralPath $unknownFull) {
+      Remove-Item -LiteralPath $unknownFull -Force -ErrorAction SilentlyContinue
+    }
+  }
+
+  if ($failures.Count -gt 0) {
+    Write-Host "SILVER_CAP50_TIMEOUT_UTF8_ORCHESTRATION_SELFTEST=FAIL" -ForegroundColor Red
+    foreach ($f in $failures) { Write-Host $f -ForegroundColor Red }
+    return $false
+  }
+  Write-Host "SILVER_CAP50_TIMEOUT_UTF8_ORCHESTRATION_SELFTEST=PASS" -ForegroundColor Green
+  return $true
+}
+
 function Get-GitStatusShortPathsFromText {
   param([string]$Txt)
   if (-not $Txt) { return @() }
@@ -1905,6 +2082,7 @@ function Test-AutonomousUnexpectedDirtyTree {
     $n = ($rel -replace "\\", "/").Trim()
     if (-not $n) { continue }
     if ($allowed.Contains($n)) { continue }
+    if (Test-SilverPathIsCap50RuntimeRestorable -RelPath $n) { continue }
     return @{ pass = $false; firstUnexpected = $n }
   }
   return @{ pass = $true; firstUnexpected = "" }
@@ -2156,6 +2334,12 @@ if ($PreflightCleanupSelfTest) {
   exit 0
 }
 
+if ($Cap50TimeoutUtf8SelfTest) {
+  $stCap = Invoke-SilverCap50TimeoutUtf8OrchestrationSelfTest -RepoRoot $RepoRoot
+  if (-not $stCap) { exit 1 }
+  exit 0
+}
+
 if ($TimeoutArchiveSelfTest) {
   $td = Join-Path $env:TEMP ("silver-timeout-selftest-" + [guid]::NewGuid().ToString("N"))
   New-Item -ItemType Directory -Path $td -Force | Out-Null
@@ -2392,6 +2576,19 @@ while ($true) {
 
   # Cursor adapter
   $cursorExitStr = "SKIPPED"
+  $cursorCommandEffective = $CursorCommand
+  $effectiveCap50TimeoutSeconds = 0
+  if (-not [string]::IsNullOrWhiteSpace($CursorCommand)) {
+    $tokCmd = Resolve-SilverCursorCommandAutonomousTimeout -CursorCommand $CursorCommand -AutonomousOrCap50 ($controlledInfinite -or ($MaxCycles -ge 1))
+    $cursorCommandEffective = [string]$tokCmd.Command
+    $effectiveCap50TimeoutSeconds = [int]$tokCmd.EffectiveTimeoutSeconds
+    if ([string]$tokCmd.TimeoutAdjusted -eq "YES") {
+      Write-Host ("silver-autopilot-loop: effective_timeout_seconds=" + [string]$effectiveCap50TimeoutSeconds + " cursor_command_timeout_adjusted=YES reason=" + [string]$tokCmd.TimeoutAdjustReason) -ForegroundColor DarkYellow
+    }
+    elseif ($effectiveCap50TimeoutSeconds -gt 0) {
+      Write-Host ("silver-autopilot-loop: effective_timeout_seconds=" + [string]$effectiveCap50TimeoutSeconds) -ForegroundColor DarkCyan
+    }
+  }
   if ([string]::IsNullOrWhiteSpace($CursorCommand)) {
     Write-Host "CursorCommand is not set - no destructive CLI will be launched." -ForegroundColor Yellow
     Write-Host "Set -CursorCommand with {TASK_FILE} and {OUTPUT_FILE} tokens for real loops." -ForegroundColor Yellow
@@ -2411,7 +2608,7 @@ while ($true) {
       $outAbs = $CursorOutputPath
       $quotedTask = '"' + $taskAbs.Replace('"', '""') + '"'
       $quotedOut = '"' + $outAbs.Replace('"', '""') + '"'
-      $resolvedCmd = $CursorCommand.Replace("{TASK_FILE}", $quotedTask).Replace("{OUTPUT_FILE}", $quotedOut)
+      $resolvedCmd = $cursorCommandEffective.Replace("{TASK_FILE}", $quotedTask).Replace("{OUTPUT_FILE}", $quotedOut)
 
       $outerCaptureToken = [guid]::NewGuid().ToString("N")
       if ($script:SilverAutonomousRunId) {

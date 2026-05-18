@@ -93,11 +93,12 @@ powershell -ExecutionPolicy Bypass -File scripts/silver-autopilot-loop.ps1 -DryR
 
 # Example real cycle (requires OPENAI_API_KEY in environment for autonomous next-task generation)
 powershell -ExecutionPolicy Bypass -File scripts/silver-autopilot-loop.ps1 -MaxCycles 1 -SleepSeconds 5 `
-  -CursorCommand "powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE} -TimeoutSeconds 120"
+  -CursorCommand "powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE} -TimeoutSeconds 3400"
 
 # Optional: same contract with WSL Ubuntu `agent` (non-interactive `--print --mode ask --trust --workspace`)
+# Legacy `-TimeoutSeconds 120` in -CursorCommand is auto-bumped to **3400** for autonomous/CAP50 product runs (probe stays 120).
 powershell -ExecutionPolicy Bypass -File scripts/silver-autopilot-loop.ps1 -MaxCycles 1 -SleepSeconds 5 `
-  -CursorCommand "powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -WslUbuntuAgent -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE} -TimeoutSeconds 120"
+  -CursorCommand "powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -WslUbuntuAgent -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE} -TimeoutSeconds 3400"
 ```
 
 ### Cursor agent adapter V1 (Windows)
@@ -153,7 +154,8 @@ Parameters:
 | `-MaxCycleWallSeconds` | Per-cycle wall budget in autonomous mode (**0** = env `SILVER_AUTONOMOUS_MAX_CYCLE_WALL_SECONDS` or **7200**; **-1** disables). |
 | `-TotalWallSeconds` | Total autonomous wall budget (**0** = env `SILVER_AUTONOMOUS_MAX_TOTAL_WALL_SECONDS` or **86400**; **-1** disables). |
 | `-SleepSeconds` | Pause between cycles (default **5**). |
-| `-CursorCommand` | Template; `{TASK_FILE}` → `SILVER_NEXT_ACTION.md`, `{OUTPUT_FILE}` → `SILVER_CURSOR_OUTPUT.md`. If omitted: **DryRun** continues with a warning; **non–DryRun** **STOP** (exit 1). |
+| `-CursorCommand` | Template; `{TASK_FILE}` → `SILVER_NEXT_ACTION.md`, `{OUTPUT_FILE}` → `SILVER_CURSOR_OUTPUT.md`. If omitted: **DryRun** continues with a warning; **non–DryRun** **STOP** (exit 1). Autonomous/CAP50: **`effective_timeout_seconds=3400`** (legacy **120** in the template is bumped; adapter logs `effective_timeout_seconds`). |
+| `-Cap50TimeoutUtf8SelfTest` | Orchestration selftest: timeout bump **120→3400**, UTF-8 handoff probes, preflight cleanup, dirty guard (no real CAP50 run). |
 | `-NoBeep` | Disable `[console]::beep` PASS/FAIL/COMPLETE signals. |
 
 Guards (non-exhaustive): repo root must be `C:\projects\filtr`; empty `SILVER_NEXT_ACTION.md` **STOP**; substring **`SILVER_DEVELOPMENT_COMPLETE`** ends the loop (exit 0, COMPLETE beep); `assets/app.js` dirty without **`ENGINE_ALLOWED`** in the next-action text **STOP**; engine-style tasks without diagnostics / **`ENGINE_ALLOWED`** **STOP**; nonzero safety counters in `SILVER_RUN_REPORT.md` **STOP**; non–DryRun without **`OPENAI_API_KEY`** **STOP** before `--full-auto-loop` (no fake autonomous run). Cursor non-zero exit or Autopilot non-zero exit **STOP**. After a successful `--full-auto-loop` write, **`SILVER_NEXT_ACTION.md` is scanned** for mojibake / banned hallucinated script paths / unsafe `cat C:\` command patterns — mismatch **STOP** (`next_action_quality_post_guard`). **Autonomous mode** (`-MaxCycles 0` + `-AllowInfinite` / `-AutonomousMode`) additionally enforces **hard cycle budget**, **`SILVER_STOP_AUTOPILOT`**, **unexpected dirty paths** (aligned with `--full-auto-loop` allowlist), **stuck/time** caps, **streak** and **safety regression** breakers; every autonomous breaker prints **`SILVER_LOOP_SAFETY_STOP reason=…`**.

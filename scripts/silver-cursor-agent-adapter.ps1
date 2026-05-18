@@ -76,10 +76,17 @@ if (-not (Test-Path -LiteralPath $SilverUtf8HandoffPath)) {
 . $SilverUtf8HandoffPath
 Initialize-SilverConsoleUtf8
 $SilverUtf8NoBom = $script:SilverUtf8NoBom
+$SilverCap50PolicyPath = Join-Path $PSScriptRoot "silver-cap50-orchestration-policy.ps1"
+if (-not (Test-Path -LiteralPath $SilverCap50PolicyPath)) {
+  Write-Error ("Missing CAP50 orchestration policy: " + $SilverCap50PolicyPath)
+  exit 2
+}
+. $SilverCap50PolicyPath
+$script:SilverEffectiveTimeoutSeconds = $TimeoutSeconds
 
 function Read-TextFileUtf8NoBom {
   param([string]$Path)
-  return Read-TextFileUtf8NoBomShared -Path $Path
+  return Read-TextFileUtf8Handoff -Path $Path
 }
 
 function Get-TaskTextLineCount {
@@ -989,6 +996,18 @@ if ($StagedWatchdogMaxExtensions -lt 0) {
   exit 4
 }
 
+$productTaskRun = (-not $Probe) -and (-not [string]::IsNullOrWhiteSpace($TaskFile))
+$autoMetaForTimeout = Get-SilverAutonomousRunMetaFromEnv
+if ($autoMetaForTimeout.run_id.Trim().Length -gt 0) {
+  $productTaskRun = $true
+}
+$timeoutResolve = Resolve-SilverAutonomousAdapterTimeoutSeconds -RequestedTimeoutSeconds $TimeoutSeconds -Probe:$Probe -ProductTaskRun:$productTaskRun
+if ($timeoutResolve.TimeoutAdjusted -eq "YES") {
+  Write-Host ("silver-cursor-agent-adapter: timeout_adjusted=YES effective_timeout_seconds=" + [string]$timeoutResolve.EffectiveTimeoutSeconds + " reason=" + [string]$timeoutResolve.TimeoutAdjustReason)
+}
+$TimeoutSeconds = [int]$timeoutResolve.TimeoutSeconds
+$script:SilverEffectiveTimeoutSeconds = [int]$timeoutResolve.EffectiveTimeoutSeconds
+
 $outAbs = Resolve-RepoPath -P $OutputFile
 $cwdActual = [System.IO.Directory]::GetCurrentDirectory()
 $tsLocal = (Get-Date).ToString("o")
@@ -1090,6 +1109,7 @@ if ($WslUbuntuAgent) {
     Write-Host ("task_argv_safe_char_limit=" + [string]$SilverWslTaskArgvSafeCharLimit)
     Write-Host ("task_too_large_for_argv=" + $taskTooLargeStr)
     Write-Host ("timeout_seconds=" + [string]$TimeoutSeconds)
+    Write-Host ("effective_timeout_seconds=" + [string]$script:SilverEffectiveTimeoutSeconds)
     Write-Host ("probe=" + $(if ($Probe) { "YES" } else { "NO" }))
     Write-Host "=== END_SILVER_CURSOR_AGENT_ADAPTER_DRY_RUN ==="
     exit 0
@@ -1251,6 +1271,7 @@ czech_backtick_parentheses_probe_pass=$czechProbe
 SILVER_WSL_ADAPTER_TIMEOUT_NOTE
 timed_out=YES
 timeout_seconds=$TimeoutSeconds
+effective_timeout_seconds=$($script:SilverEffectiveTimeoutSeconds)
 recommendation=Increase -TimeoutSeconds if the task is legitimately long-running; otherwise investigate agent hang or auth (prompt is delivered via bash file redirect, not argv).
 "@
     if ([string]::IsNullOrWhiteSpace($extraWsl)) {
@@ -1322,6 +1343,7 @@ watchdog_stop_reason=$watchdogStopReason
     process_end_utc = $processEndUtc
     elapsed_ms = [string]$elapsedMs
     timeout_seconds = [string]$TimeoutSeconds
+    effective_timeout_seconds = [string]$script:SilverEffectiveTimeoutSeconds
     watchdog_max_timeout_seconds = $(if ($MaxTimeoutSeconds -gt 0) { [string]$MaxTimeoutSeconds } else { [string]$TimeoutSeconds })
     timeout_class = [string]$TimeoutClass
     watchdog_extensions_used = [string]$watchdogExtensionsUsed
@@ -1476,6 +1498,7 @@ if ($DryRun) {
   Write-Host ("output_file=" + $outAbs)
   Write-Host ("task_bytes_utf8=" + [string]$taskLen)
   Write-Host ("timeout_seconds=" + [string]$TimeoutSeconds)
+  Write-Host ("effective_timeout_seconds=" + [string]$script:SilverEffectiveTimeoutSeconds)
   Write-Host ("probe=" + $(if ($Probe) { "YES" } else { "NO" }))
   Write-Host "=== END_SILVER_CURSOR_AGENT_ADAPTER_DRY_RUN ==="
   exit 0
@@ -1633,6 +1656,8 @@ possible_causes=
     stdout_nonempty = $stdoutNonemptyWin
     stderr_nonempty = $stderrNonemptyWin
     task_bytes_utf8 = [string]$taskLen
+    timeout_seconds = [string]$TimeoutSeconds
+    effective_timeout_seconds = [string]$script:SilverEffectiveTimeoutSeconds
     exit_code = [string]$exitCode
     timed_out = $(if ($toFlag) { "YES" } else { "NO" })
     adapter_probe_pass = $probePass
