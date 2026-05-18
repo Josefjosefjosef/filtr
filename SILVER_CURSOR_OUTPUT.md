@@ -1,45 +1,49 @@
-# silver-cursor-agent-adapter — manuální audit (Cursor)
+# silver-cursor-agent-adapter
+autonomous_run_id=de105f7f334b4445bf2ffc9abaab26fa
+autonomous_run_start_utc=2026-05-18T03:31:13.7456429Z
+autonomous_cycle=5
+adapter_output_state=INVALIDATED_AWAITING_CYCLE
+process_start_utc=
+task_digest=
+exit_code=
+elapsed_ms=
 
-`audit_timestamp_utc=2026-05-18 (Cursor session)`
+# Manuální audit (Cursor) — 2026-05-18
 
 ## Stav repozitáře (před commitem této série)
 
 - **Větev:** `chore/silver-audit-repo-state`
-- **HEAD:** `a350296b571a0b223e29bf7632ddb6f82ac8bdbc` (`a350296b57`)
-- **Working tree:** nečistý — upraveny pouze sledované soubory níže (žádné další změny mimo tento auditní balík nejsou v `git status` uvedeny).
+- **HEAD před aplikovaným commitem změn:** `8d43fe1d84e4bade7cd9203424f1b0a69b7b97f`
+- **Working tree:** nečistý pouze níže — v `git status --short` nejsou jiné cesty.
 
-## Shrnutí změn ve čtyřech souborech (audit `git diff --stat`)
+## Shrnutí změn (audit `git diff --stat`)
 
-| Soubor                     | Stav (diffstat)                                      |
-|---------------------------|------------------------------------------------------|
-| `SILVER_CURSOR_OUTPUT.md` | −10 řádků / kompaktnější výstup → doplněno toto shrnutí |
-| `SILVER_NEXT_ACTION.md`   | rozšířen úkol (kroky 1–6, STOP, povinný výsledek)   |
-| `SILVER_PROGRESS_LOG.md` | +47 řádků (nové / doplněné záznamy cyklů)           |
-| `SILVER_RUN_REPORT.md`    | aktualizace `--status` bloku / metadat běhu         |
+| Soubor | Shrnutí |
+|--------|---------|
+| `SILVER_CURSOR_OUTPUT.md` | Adaptér-meta + doplněné shrnutí auditu této série |
+| `SILVER_NEXT_ACTION.md` | Úkol Cursor (vč. dvougrep na `MaxCycles`, krok 7) |
+| `SILVER_PROGRESS_LOG.md` | +47 řádků — záznam cyklu 4 (`timestamp=2026-05-18T05:37:18`) |
+| `SILVER_RUN_REPORT.md` | `--status`: časové razítko, `commit` = HEAD výše |
 
-Souhrnně: **4 soubory, +73 −21** (dle posledního `git diff --stat` nad uvedenou čtveřicí).
+Poslední agregovaný `--stat`: **4 soubory, +88 −43** (po doplnění shrnutí v tomto souboru)
 
 ## Ověření `MaxCycles` mimo `.silver-runtime`
 
-Příkaz `grep -rn MaxCycles --include='SILVER*.md' . --exclude-dir=.silver-runtime` našel výskyty **pouze** v:
+Příkaz `grep -rn MaxCycles --include='SILVER*.md' . --exclude-dir=.silver-runtime` vrací výskyty jen v dokumentaci:
 
-- `SILVER_AUTOPILOT_README.md` — dokumentace zákazu holého `-MaxCycles 0` a správného autonomního režimu
-- `SILVER_NEXT_ACTION.md` — návod na grep + odkaz na STOP podmínky (žádný spustitelný holý outer loop)
-- `SILVER_PR_ORCHESTRATOR_README.md` — zákaz raw MaxCycles0 / nesprávného napojení
+- `SILVER_AUTOPILOT_README.md` — polítika bezpečného použití `-MaxCycles` / autonomous režimu
+- `SILVER_NEXT_ACTION.md` — řádky s ukázkou `grep` (ne bezpečnostní problém sama o sobě)
+- `SILVER_PR_ORCHESTRATOR_README.md` — zakázání raw MaxCycles0 u orchestrátoru
 
-V **`.silver-runtime/**`** zůstávají archivované/log kopie `SILVER*.md` s historickými příkazy (mimo produkční kořenové dokumenty); **nejsou** součástí commitu tohoto auditu.
+V **`.silver-runtime/**`** výskyty odpovídají archivovaným kopiím a **nejspadají** do stejného auditu jako kořenové `SILVER*.md`.
 
-**STOP podmínka:** v kořenových `SILVER*.md` (po vyloučení `.silver-runtime`) není doporučen žádný raw `-MaxCycles 0` bez `-AllowInfinite` / `-AutonomousMode`; dokumentace explicitně zákaz popisuje.
+## Povinný výsledek (gate plaintext)
 
-## Povinný výsledek
-
-```plaintext
-Stav repozitáře zkontrolován, audit diffů proveden, `MaxCycles` ověřen, auditní commit vytvořen.
+```
+Stav repozitáře zkontrolován; diff stat nad čtyřmi soubory zdokumentován; MaxCycles mimo .silver-runtime ověřen vůči dokumentované bezpečnostní linii.
 ```
 
 ---
-
-# stdout / stderr (placeholder pro adaptér)
 
 # stdout
 
