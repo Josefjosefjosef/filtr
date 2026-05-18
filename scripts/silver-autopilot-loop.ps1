@@ -642,7 +642,7 @@ function Initialize-SilverAutonomousRunLifecycle {
   Write-SilverCursorOutputInvalidatedStub -Path $CursorOutputPath -RunId $RunId -RunStartUtcIso $runStartIso -CycleState "pending"
 }
 
-function Test-SilverAdapterMetaFreshForCycle {
+function Test-SilverAdapterMetaCycleScoped {
   param(
     [hashtable]$Meta,
     [datetime]$ProcessStartUtc,
@@ -756,13 +756,29 @@ function Test-SilverAdapterMetaFreshForCycle {
     }
   }
 
+  return $true
+}
+
+function Test-SilverAdapterMetaFreshForCycle {
+  param(
+    [hashtable]$Meta,
+    [datetime]$ProcessStartUtc,
+    [string]$AdapterOutputPath,
+    [string]$ExpectedTaskDigest = "",
+    [string]$ExpectedTaskFile = "",
+    [string]$ExpectedRunId = "",
+    [string]$ExpectedCycle = "",
+    [string]$ExpectedRunStartUtc = ""
+  )
+  if (-not (Test-SilverAdapterMetaCycleScoped -Meta $Meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc)) {
+    return $false
+  }
   $to = ""
   $sen = ""
   if ($Meta.ContainsKey("timed_out")) { $to = [string]$Meta["timed_out"] }
   if ($Meta.ContainsKey("stderr_nonempty")) { $sen = [string]$Meta["stderr_nonempty"] }
   if ($to -eq "YES") { return $false }
   if ($sen -eq "YES") { return $false }
-
   return $true
 }
 
@@ -959,14 +975,25 @@ function Add-SilverCycleFieldsFromAdapterOutput {
     }
   }
   if ($ProcessStartUtc -ne [datetime]::MinValue) {
-    if (-not (Test-SilverAdapterMetaFreshForCycle -Meta $meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc)) {
+    $metaCycleScoped = Test-SilverAdapterMetaCycleScoped -Meta $meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc
+    $metaFresh = Test-SilverAdapterMetaFreshForCycle -Meta $meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc
+    if ($metaFresh) {
+      $Fields["silver_cycle_adapter_meta_fresh"] = "YES"
+    }
+    else {
       $Fields["silver_cycle_adapter_meta_fresh"] = "NO"
-      if ($runScoped) {
-        $Fields["silver_cycle_real_stale_adapter_meta_issue"] = "YES"
-      }
+    }
+    if ($runScoped -and (-not $metaCycleScoped)) {
+      $Fields["silver_cycle_real_stale_adapter_meta_issue"] = "YES"
       return
     }
-    $Fields["silver_cycle_adapter_meta_fresh"] = "YES"
+    if (-not $metaFresh) {
+      $toOnly = ""
+      if ($meta.ContainsKey("timed_out")) { $toOnly = [string]$meta["timed_out"] }
+      if ($toOnly -eq "YES") {
+        $Fields["silver_cycle_adapter_meta_timeout_blocks_reconcile"] = "YES"
+      }
+    }
   }
   elseif ($runScoped) {
     $Fields["silver_cycle_adapter_meta_fresh"] = "NO"
