@@ -1,30 +1,26 @@
 {
-  "generated_at": "2026-05-13T01:07:22.388Z",
-  "main_commit": "4caa6485df294ff5bb3cb251d2049f727457271e",
+  "generated_at": "2026-05-18T12:32:53.825Z",
+  "main_commit": "8d565f0e720a1d797e3e07975ea5d537a2d00c2c",
   "total_cases_scanned": 6800,
   "target_cluster": "rhc3_module_switch_cal_to_note",
   "total_cluster_cases": 400,
-  "cluster_pass": 368,
-  "cluster_fail": 32,
-  "cluster_fail_pct": "8.00",
+  "cluster_pass": 400,
+  "cluster_fail": 0,
+  "cluster_fail_pct": "0.00",
   "internal_bucket_counts": {
-    "TRUE_ENGINE_FAIL_MODULE_SWITCH": 17,
+    "TRUE_ENGINE_FAIL_MODULE_SWITCH": 0,
     "GOLD_LABEL_TOO_AGGRESSIVE": 0,
     "TEMPLATE_DNA_BAD_INPUT": 0,
     "SAFETY_NEGATION_CONFLICT": 0,
     "AMBIGUITY_SHOULD_CLARIFY": 0,
     "ENGINE_SAFE_CLARIFICATION_OK": 0,
-    "WRONG_MODULE_REAL_BUG": 15,
+    "WRONG_MODULE_REAL_BUG": 0,
     "OTHER": 0
   },
   "internal_bucket_ranked": [
     [
       "TRUE_ENGINE_FAIL_MODULE_SWITCH",
-      17
-    ],
-    [
-      "WRONG_MODULE_REAL_BUG",
-      15
+      0
     ],
     [
       "GOLD_LABEL_TOO_AGGRESSIVE",
@@ -47,19 +43,23 @@
       0
     ],
     [
+      "WRONG_MODULE_REAL_BUG",
+      0
+    ],
+    [
       "OTHER",
       0
     ]
   ],
   "user_partition": {
-    "true_engine_fail_count": 17,
+    "true_engine_fail_count": 0,
     "harness_problem_count": 0,
-    "ambiguous_input_count": 28,
+    "ambiguous_input_count": 0,
     "safe_clarification_ok_count": 0,
-    "real_world_acceptable_count": 17,
-    "must_fix_engine_count": 32,
+    "real_world_acceptable_count": 0,
+    "must_fix_engine_count": 0,
     "should_fix_harness_count": 0,
-    "overlap_ambiguous_gold_and_must_fix": 28,
+    "overlap_ambiguous_gold_and_must_fix": 0,
     "harness_only_fail_count": 0,
     "interpretation": {
       "ambiguous_input_count": "Fails where gold.expected_intent is unknown (ambiguous / clarify lane).",
@@ -70,77 +70,16 @@
     }
   },
   "pattern_rollups": {
-    "uloz_do_poznamky": 32,
+    "uloz_do_poznamky": 0,
     "zapis_do_kalendare_proxy": 0,
     "embedded_switch_phrase": 0,
     "correction_phrase": 0,
-    "chaos_filler": 13,
-    "voice_wording_mobile": 28,
-    "partial_or_surface_clarify": 28,
-    "cross_module_task_or_cal": 17
+    "chaos_filler": 0,
+    "voice_wording_mobile": 0,
+    "partial_or_surface_clarify": 0,
+    "cross_module_task_or_cal": 0
   },
-  "top_subclusters": [
-    {
-      "label": "clarity=ambiguous | harness_cat=wrong_collection | eng=calendar.create | ps=NEEDS_CLARIFICATION | bucket=TRUE_ENGINE_FAIL_MODULE_SWITCH | cue uloz=1 note=1 neg_cal_surface=1 cal_word=1 | chaos_filler_between_ne_and_cal+mobile_prefix",
-      "count": 6,
-      "pct_of_cluster_fail": "18.75"
-    },
-    {
-      "label": "clarity=ambiguous | harness_cat=wrong_collection | eng=calendar.create | ps=NEEDS_CLARIFICATION | bucket=TRUE_ENGINE_FAIL_MODULE_SWITCH | cue uloz=1 note=1 neg_cal_surface=1 cal_word=1 | chaos_filler_between_ne_and_cal+spoken_compress",
-      "count": 5,
-      "pct_of_cluster_fail": "15.63"
-    },
-    {
-      "label": "clarity=ambiguous | harness_cat=intent_fail | eng=notes.create | ps=READY_TO_SAVE | bucket=WRONG_MODULE_REAL_BUG | cue uloz=1 note=1 neg_cal_surface=1 cal_word=1 | surface_plain+spoken_compress",
-      "count": 4,
-      "pct_of_cluster_fail": "12.50"
-    },
-    {
-      "label": "clarity=future_engine_candidate | harness_cat=wrong_collection | eng=calendar.create | ps=NEEDS_CLARIFICATION | bucket=TRUE_ENGINE_FAIL_MODULE_SWITCH | cue uloz=1 note=1 neg_cal_surface=1 cal_word=1 | chaos_filler_between_ne_and_cal+mobile_prefix+spoken_compress",
-      "count": 3,
-      "pct_of_cluster_fail": "9.38"
-    },
-    {
-      "label": "clarity=ambiguous | harness_cat=intent_fail | eng=notes.create | ps=READY_TO_SAVE | bucket=WRONG_MODULE_REAL_BUG | cue uloz=1 note=1 neg_cal_surface=1 cal_word=1 | surface_plain+mobile_prefix+spoken_compress",
-      "count": 2,
-      "pct_of_cluster_fail": "6.25"
-    },
-    {
-      "label": "clarity=ambiguous | harness_cat=intent_fail | eng=notes.create | ps=READY_TO_SAVE | bucket=WRONG_MODULE_REAL_BUG | cue uloz=1 note=1 neg_cal_surface=1 cal_word=1 | voice_filler_lane",
-      "count": 2,
-      "pct_of_cluster_fail": "6.25"
-    },
-    {
-      "label": "clarity=ambiguous | harness_cat=intent_fail | eng=notes.create | ps=READY_TO_SAVE | bucket=WRONG_MODULE_REAL_BUG | cue uloz=1 note=1 neg_cal_surface=1 cal_word=1 | voice_filler_lane+mobile_prefix+spoken_compress",
-      "count": 1,
-      "pct_of_cluster_fail": "3.13"
-    },
-    {
-      "label": "clarity=ambiguous | harness_cat=intent_fail | eng=notes.create | ps=READY_TO_SAVE | bucket=WRONG_MODULE_REAL_BUG | cue uloz=1 note=1 neg_cal_surface=1 cal_word=1 | voice_filler_lane+spoken_compress",
-      "count": 1,
-      "pct_of_cluster_fail": "3.13"
-    },
-    {
-      "label": "clarity=future_engine_candidate | harness_cat=wrong_collection | eng=calendar.create | ps=NEEDS_CLARIFICATION | bucket=TRUE_ENGINE_FAIL_MODULE_SWITCH | cue uloz=1 note=1 neg_cal_surface=1 cal_word=1 | chaos_filler_between_ne_and_cal+mobile_prefix",
-      "count": 1,
-      "pct_of_cluster_fail": "3.13"
-    },
-    {
-      "label": "clarity=ambiguous | harness_cat=intent_fail | eng=notes.create | ps=READY_TO_SAVE | bucket=WRONG_MODULE_REAL_BUG | cue uloz=1 note=1 neg_cal_surface=1 cal_word=1 | surface_plain",
-      "count": 1,
-      "pct_of_cluster_fail": "3.13"
-    },
-    {
-      "label": "clarity=ambiguous | harness_cat=intent_fail | eng=notes.create | ps=READY_TO_SAVE | bucket=WRONG_MODULE_REAL_BUG | cue uloz=1 note=1 neg_cal_surface=1 cal_word=1 | ascii_lane+mobile_prefix+spoken_compress",
-      "count": 1,
-      "pct_of_cluster_fail": "3.13"
-    },
-    {
-      "label": "clarity=ambiguous | harness_cat=wrong_collection | eng=calendar.create | ps=NEEDS_CLARIFICATION | bucket=TRUE_ENGINE_FAIL_MODULE_SWITCH | cue uloz=1 note=1 neg_cal_surface=1 cal_word=1 | chaos_filler_between_ne_and_cal+mobile_prefix+spoken_compress",
-      "count": 1,
-      "pct_of_cluster_fail": "3.13"
-    }
-  ],
+  "top_subclusters": [],
   "safety": {
     "dangerous_write_count": 0,
     "false_write_count": 0,
@@ -159,50 +98,8 @@
     "realistic_mobile": "SKIPPED"
   },
   "examples_top_subclusters": {
-    "top1": [
-      {
-        "id": "rhc3_0003226",
-        "input": "teda Ulož mi narozeniny tety, ale ne trochu do kalendáře, do poznámek. no",
-        "raw": "Potřebuji upřesnit detaily — níže je náhled toho, co už bezpečně držím v návrhu."
-      },
-      {
-        "id": "rhc3_0003260",
-        "input": "promiň Ulož mi PIN ke kartě, ale ne no do kalendáře, do poznámek. díky prosím rychle",
-        "raw": "Potřebuji upřesnit detaily — níže je náhled toho, co už bezpečně držím v návrhu."
-      },
-      {
-        "id": "rhc3_0003328",
-        "input": "hele kamo Uloz mi udaje k bance, ale ne trochu do kalendare, do poznamek. prosím",
-        "raw": "Potřebuji upřesnit detaily — níže je náhled toho, co už bezpečně držím v návrhu."
-      },
-      {
-        "id": "rhc3_0003460",
-        "input": "kámo Ulož mi poznamka k nájmu, ale ne nějak do kalendáře, do poznámek. díky",
-        "raw": "Potřebuji upřesnit detaily — níže je náhled toho, co už bezpečně držím v návrhu."
-      }
-    ],
-    "top2": [
-      {
-        "id": "rhc3_0003311",
-        "input": "no jo Ulož mi dokumenty fakt ve spodní přihrádce, ale ne fakt do kalendáře, do poznámek. prosím",
-        "raw": "Potřebuji upřesnit detaily — níže je náhled toho, co už bezpečně držím v návrhu."
-      },
-      {
-        "id": "rhc3_0003491",
-        "input": "no jo Ulož mi narozeniny tety, ale ne trochu do kalendáře, do poznámek. no — spěchám.",
-        "raw": "Potřebuji upřesnit detaily — níže je náhled toho, co už bezpečně držím v návrhu."
-      },
-      {
-        "id": "rhc3_0003517",
-        "input": "no jo Ulož mi heslo k WiFi, ale ne nějak do kalendáře, do poznámek. díky (honem)",
-        "raw": "Potřebuji upřesnit detaily — níže je náhled toho, co už bezpečně držím v návrhu."
-      },
-      {
-        "id": "rhc3_0003551",
-        "input": "vlastně Ulož mi číslo smlouvy, ale ne no do kalendáře, do poznámek. prosím",
-        "raw": "Potřebuji upřesnit detaily — níže je náhled toho, co už bezpečně držím v návrhu."
-      }
-    ]
+    "top1": [],
+    "top2": []
   },
   "engine_changed": "NO",
   "assets_app_changed": "NO"

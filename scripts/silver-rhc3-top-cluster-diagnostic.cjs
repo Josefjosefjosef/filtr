@@ -22,7 +22,12 @@ const TOTAL_CASES = (() => {
 
 const core = require("./rhc-v3-deterministic-core.cjs");
 const rhc3 = require("./silver-real-human-chaos-v3.cjs");
-const { computeGoldLabels, finalizeModuleSwitchHarnessEval, finalizeModuleSwitchClarifyLaneHarnessEval } = rhc3;
+const {
+  computeGoldLabels,
+  finalizeModuleSwitchHarnessEval,
+  finalizeModuleSwitchClarifyLaneHarnessEval,
+  finalizeModuleSwitchNegJakoCalToNoteHarnessEval
+} = rhc3;
 const harness = require("./audit_silver_realistic_mobile_corpus.cjs");
 
 const { loadEngine, evaluateOne, applyHarnessExpectationHarmonization, ctxForCase, foldCs, rawUserMessage } = harness;
@@ -329,6 +334,7 @@ function main() {
       ev = evaluateOne(c, turn);
       ev = finalizeModuleSwitchHarnessEval(c, turn, ev);
       ev = finalizeModuleSwitchClarifyLaneHarnessEval(c, turn, ev);
+      ev = finalizeModuleSwitchNegJakoCalToNoteHarnessEval(c, turn, ev);
     } catch (e) {
       clusterFail++;
       turn = { normalizedIntent: "", processingState: "", draft: {} };
