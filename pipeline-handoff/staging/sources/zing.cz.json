@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-18T03:50:29.061818Z",
+  "ingestedAt": "2026-05-18T04:30:37.133267Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Další licencovaná hra od 2K bude již zítra stažena z prodeje",
+      "url": "https://zing.cz/article/dalsi-licencovana-hra-od-2k-bude-jiz-zitra-stazena-z-prodeje",
+      "dt": "2026-05-18T04:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "další",
+        "hra",
+        "již",
+        "licencovaná",
+        "prodeje",
+        "stažena",
+        "zítra"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -945,31 +969,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "The Talos Principle 3 oficiálně představeno, k dispozici je premiérová ukázka",
-      "url": "https://zing.cz/article/the-talos-principle-3-oficialne-predstaveno-k-dispozici-je-premierova-ukazka",
-      "dt": "2026-05-14T06:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "dispozici",
-        "oficiálně",
-        "premiérová",
-        "principle",
-        "představeno",
-        "talos",
-        "the",
-        "ukázka"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -980,7 +979,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 127366,
+      "bytes": 127405,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1017,11 +1016,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-17T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T04:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "other": 39,
-          "zpravy": 1
+          "other": 40
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1033,6 +1031,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Další licencovaná hra od 2K bude již zítra stažena z prodeje",
+            "publishedAt": "2026-05-18T04:00:00Z"
+          },
           {
             "title": "Co hrát v partě? 5 tipů na hry pro více hráčů u jedné obrazovky",
             "publishedAt": "2026-05-17T18:00:00Z"
@@ -1060,10 +1062,6 @@
           {
             "title": "Hraní s rekordní výdrží - jak dopadla sluchátka HyperX Cloud Alpha 2 Wireless v testu?",
             "publishedAt": "2026-05-17T08:30:00Z"
-          },
-          {
-            "title": "Turtle WoW se definitivně loučí",
-            "publishedAt": "2026-05-17T06:00:00Z"
           }
         ]
       }

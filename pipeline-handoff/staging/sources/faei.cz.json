@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-18T03:50:29.061818Z",
+  "ingestedAt": "2026-05-18T04:30:37.133267Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "The Economist: Izraelský teror plodí teror palestinský, varuje bývalý poradce premiéra Perese",
+      "url": "https://profitonline.cz/the-economist-izraelsky-teror-plodi-teror-palestinsky-varuje-byvaly-poradce-premiera-perese/",
+      "dt": "2026-05-18T04:00:24Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "bývalý",
+        "economist",
+        "izraelský",
+        "palestinský",
+        "perese",
+        "plodí",
+        "poradce",
+        "premiéra",
+        "teror",
+        "the",
+        "varuje"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -262,27 +290,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Inflace? Centrální bankéři vyčkávají",
-      "url": "https://profitonline.cz/inflace-centralni-bankeri-vyckavaji/",
-      "dt": "2026-05-15T17:00:17Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "bankéři",
-        "centrální",
-        "inflace",
-        "vyčkávají"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -293,7 +300,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18951,
+      "bytes": 19170,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -330,7 +337,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-17T16:20:46Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T04:00:24Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -345,6 +352,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "The Economist: Izraelský teror plodí teror palestinský, varuje bývalý poradce premiéra Perese",
+            "publishedAt": "2026-05-18T04:00:24Z"
+          },
           {
             "title": "Trump letos čile obchodoval s akciemi",
             "publishedAt": "2026-05-17T16:20:46Z"
@@ -372,10 +383,6 @@
           {
             "title": "Úpadek čtení u dětí podsekává budoucí českou produktivitu",
             "publishedAt": "2026-05-16T12:00:14Z"
-          },
-          {
-            "title": "Tycho de Brahe odtud pozoroval hvězdy. Belveder čeká rekonstrukce",
-            "publishedAt": "2026-05-16T10:00:03Z"
           }
         ]
       }
