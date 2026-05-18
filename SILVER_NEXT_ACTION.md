@@ -14,41 +14,39 @@
    git diff SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md SILVER_CURSOR_OUTPUT.md
    ```
 
-3. Zkontroluj, že working tree je čistý:
+3. Zkontroluj, zda jsou všechny změny v whitelistovaných souborech:
    ```powershell
    git status --short
    ```
 
-4. Přidej změněné soubory do commitu:
+4. Přidej změněné soubory do stagingu:
    ```powershell
    git add SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
    ```
 
-5. Vytvoř commit se zprávou:
+5. Proveď commit se zprávou:
    ```powershell
    git commit -m "chore(silver): aktualizace SILVER_* po cyklu 5"
    ```
 
-6. Zobraz poslední commit a jeho změny:
+6. Zkontroluj poslední commit a ujisti se, že je working tree čistý:
    ```powershell
    git show --name-only -1
-   ```
-
-7. Znovu zkontroluj, že working tree je čistý:
-   ```powershell
    git status --short
    ```
 
 ### Scope guard
-- **Soubory**: SILVER_CURSOR_OUTPUT.md, SILVER_NEXT_ACTION.md, SILVER_PROGRESS_LOG.md, SILVER_RUN_REPORT.md
+- Cíl: Zkontrolovat a aktualizovat stav repozitáře.
+- Soubory (whitelist): SILVER_CURSOR_OUTPUT.md, SILVER_NEXT_ACTION.md, SILVER_PROGRESS_LOG.md, SILVER_RUN_REPORT.md
+- NO-GO: Jakékoliv změny mimo whitelistované soubory.
 
 ### STOP podmínky
-- Jakékoliv změny mimo whitelistované soubory jsou zakázány.
-- Výstup z `git status --short` po commitu musí být prázdný.
+- Raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode` je zakázáno; řízený autonomní režim vyžaduje tyto přepínače plus vestavěné limity (viz SILVER_AUTOPILOT_README.md).
+- Nikdy neporušuj bezpečnostní brány orchestrátoru.
 
 ### Povinný výsledek
 ```
-=== 
+===
 CÍL: Zkontrolovat a aktualizovat stav repozitáře.
 SOUBORY (whitelist): SILVER_CURSOR_OUTPUT.md, SILVER_NEXT_ACTION.md, SILVER_PROGRESS_LOG.md, SILVER_RUN_REPORT.md
 NO-GO: Jakékoliv změny mimo whitelistované soubory.
