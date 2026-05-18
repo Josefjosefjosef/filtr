@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-18T11:54:31.086238Z",
+  "ingestedAt": "2026-05-18T12:35:05.288955Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Maximální ceny benzinu a nafty na úterý 19. května",
+      "url": "https://www.penize.cz/doprava/489860-maximalni-ceny-benzinu-a-nafty-na-utery-19-kvetna",
+      "dt": "2026-05-18T13:59:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "benzinu",
+        "ceny",
+        "května",
+        "maximální",
+        "nafty",
+        "úterý"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -478,32 +501,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Stejný obal, méně čokolády. Výrobce Milky klamal zákazníky, rozhodl soud",
-      "url": "https://www.penize.cz/nakupy/489667-stejny-obal-mene-cokolady-vyrobce-milky-klamal-zakazniky-rozhodl-soud",
-      "dt": "2026-05-14T08:47:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "klamal",
-        "milky",
-        "obal",
-        "rozhodl",
-        "soud",
-        "stejný",
-        "výrobce",
-        "zákazníky",
-        "čokolády"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -514,7 +511,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18484,
+      "bytes": 18599,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -551,11 +548,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-18T13:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T13:59:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 14,
-          "zpravy": 6
+          "zpravy": 6,
+          "finance": 14
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -567,6 +564,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Maximální ceny benzinu a nafty na úterý 19. května",
+            "publishedAt": "2026-05-18T13:59:00Z"
+          },
           {
             "title": "Rodičovský příspěvek stoupne. Rozhodne rok narození",
             "publishedAt": "2026-05-18T13:30:00Z"
@@ -594,10 +595,6 @@
           {
             "title": "Česká pošta zavře devět poboček. Je mezi nimi i ta vaše?",
             "publishedAt": "2026-05-16T07:45:00Z"
-          },
-          {
-            "title": "Bitcoin je nové zlato, řekl nový šéf americké centrální banky",
-            "publishedAt": "2026-05-16T07:00:00Z"
           }
         ]
       }

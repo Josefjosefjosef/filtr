@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-18T11:54:31.086238Z",
+  "ingestedAt": "2026-05-18T12:35:05.288955Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Méně úniků tepla i lepší komfort pro pacienty. D-energy opraví dvě nemocnice na Plzeňsku",
+      "url": "https://ekonomickydenik.cz/d-energy-opravi-dve-nemocnice-na-plzensku/",
+      "dt": "2026-05-18T12:27:28Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dvě",
+        "energy",
+        "komfort",
+        "lepší",
+        "nemocnice",
+        "opraví",
+        "pacienty",
+        "plzeňsku",
+        "tepla",
+        "úniků"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Mezi Bílým domem a Mordorem. Evropa se spoléhá na tajemnou firmu",
+      "url": "https://ekonomickydenik.cz/mezi-bilym-domem-a-mordorem-evropa-se-spoleha-na-tajemnou-firmu/",
+      "dt": "2026-05-18T12:14:02Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bílým",
+        "domem",
+        "evropa",
+        "firmu",
+        "mordorem",
+        "spoléhá",
+        "tajemnou"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -744,60 +795,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Znalecké posudky „na míru“ v ÚVN? Policie zasáhla i v jiné elitní nemocnici",
-      "url": "https://ekonomickydenik.cz/znalecke-posudky-na-miru-policie-uvn-i-jina-nemocnice/",
-      "dt": "2026-05-15T10:47:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "elitní",
-        "jiné",
-        "míru",
-        "nemocnici",
-        "policie",
-        "posudky",
-        "zasáhla",
-        "znalecké",
-        "úvn"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ukrajina a USA ladí právní detaily: Memorandum připravuje cestu pro budoucí obchod s drony",
-      "url": "https://ekonomickydenik.cz/ukrajina-a-usa-ladi-pravni-detaily-obchod-s-drony/",
-      "dt": "2026-05-15T10:31:54Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "budoucí",
-        "cestu",
-        "detaily",
-        "drony",
-        "ladí",
-        "memorandum",
-        "obchod",
-        "právní",
-        "připravuje",
-        "ukrajina",
-        "usa"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -808,7 +805,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71485,
+      "bytes": 71350,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -845,13 +842,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-18T11:24:51Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T12:27:28Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "zdravi": 1,
           "finance": 22,
           "sport": 1,
-          "zpravy": 6,
-          "zdravi": 1
+          "zpravy": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -863,6 +860,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Méně úniků tepla i lepší komfort pro pacienty. D-energy opraví dvě nemocnice na Plzeňsku",
+            "publishedAt": "2026-05-18T12:27:28Z"
+          },
+          {
+            "title": "Mezi Bílým domem a Mordorem. Evropa se spoléhá na tajemnou firmu",
+            "publishedAt": "2026-05-18T12:14:02Z"
+          },
           {
             "title": "Průzkum o prezidentech překvapil: Klaus těsně přeskočil Pavla",
             "publishedAt": "2026-05-18T11:24:51Z"
@@ -886,14 +891,6 @@
           {
             "title": "Vláda vypsala první soutěž na podporu biometanu. Zájem o účast mají innogy či EFG",
             "publishedAt": "2026-05-18T04:30:00Z"
-          },
-          {
-            "title": "Čeká ČT a rozhlas drsný finanční pád? Babiš oznámil datum, kdy se rozhodne",
-            "publishedAt": "2026-05-17T12:38:23Z"
-          },
-          {
-            "title": "Studovala v Česku pak poznala životní lásku. Oba nakonec zemřeli v Kyjevě",
-            "publishedAt": "2026-05-17T12:24:28Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-18T11:54:31.086238Z",
+  "ingestedAt": "2026-05-18T12:35:05.288955Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Útočník č. 1 na oslabení. Lotyš Dzierkals stráví ve Spartě i příští sezonu",
+      "url": "https://www.idnes.cz/hokej/extraliga/sparta-praha-martins-dzierkals-prodlouzeni-smlouvy.A260518_135043_hokej_ipet",
+      "dt": "2026-05-18T11:59:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dzierkals",
+        "lotyš",
+        "oslabení",
+        "příští",
+        "sezonu",
+        "spartě",
+        "stráví",
+        "útočník"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -758,31 +783,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Netradiční bitvu si podmanili Američané, uspělo také Rakousko a Lotyšsko",
-      "url": "https://www.idnes.cz/hokej/ms-2026/skupina-a-velka-britanie-usa-rakousko-nemecko-lotyssko-online-zpravodajstvi.A260516_230554_ms-hokej-2026_huda",
-      "dt": "2026-05-17T21:00:15Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "američané",
-        "bitvu",
-        "lotyšsko",
-        "netradiční",
-        "podmanili",
-        "rakousko",
-        "také",
-        "uspělo"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47324,
+      "bytes": 46981,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-18T11:08:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T11:59:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -845,6 +845,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Útočník č. 1 na oslabení. Lotyš Dzierkals stráví ve Spartě i příští sezonu",
+            "publishedAt": "2026-05-18T11:59:00Z"
+          },
           {
             "title": "Čtrnáct trofejí má, chybí jen dvě. Sinner se řítí za dokonalostí, rychleji než Djokovič",
             "publishedAt": "2026-05-18T11:08:00Z"
@@ -872,10 +876,6 @@
           {
             "title": "Mistrovství světa? Nejsem nervózní, nechám to osudu, líčil plzeňský Višinský",
             "publishedAt": "2026-05-18T09:40:00Z"
-          },
-          {
-            "title": "Trpěl jsem, jak mě lidé pomlouvali, říká Neymar. Na MS je prý připravený",
-            "publishedAt": "2026-05-18T09:20:00Z"
           }
         ]
       }

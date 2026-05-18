@@ -1,27 +1,48 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-18T11:54:31.086238Z",
+  "ingestedAt": "2026-05-18T12:35:05.288955Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Vláda schválila návrh růstu rodičovské na 400 tisíc od ledna pro nově narozené",
+      "title": "Rodičovská od příštího roku vzroste. Novelu schválila vláda",
       "url": "https://www.denik.cz/z_domova/rodicovska-vlada-novela-o-statni-socialni-podpore.html",
       "dt": "2026-05-18T11:37:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
-        "400",
-        "ledna",
-        "narozené",
-        "nově",
-        "návrh",
-        "rodičovské",
-        "růstu",
+        "novelu",
+        "příštího",
+        "rodičovská",
+        "roku",
         "schválila",
-        "tisíc",
-        "vláda"
+        "vláda",
+        "vzroste"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Dvouletá holčička se bez vědomí rodičů ráno vydala k Lidlu",
+      "url": "https://berounsky.denik.cz/krimi/dvouleta-holcicka-se-bez-vedomi-rodicu-rano-vydala-k-lidlu-20260518.html",
+      "dt": "2026-05-18T11:31:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dvouletá",
+        "holčička",
+        "lidlu",
+        "rodičů",
+        "ráno",
+        "vydala",
+        "vědomí"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -632,32 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Při letecké show v Idahu se srazily dvě stíhačky. Posádky se katapultovaly",
-      "url": "https://www.denik.cz/ze_sveta/v-usa-se-srazily-dve-stihacky.html",
-      "dt": "2026-05-17T20:41:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dvě",
-        "idahu",
-        "katapultovaly",
-        "letecké",
-        "posádky",
-        "při",
-        "show",
-        "srazily",
-        "stíhačky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -668,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28749,
+      "bytes": 28888,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -723,8 +718,12 @@
         },
         "sample_titles": [
           {
-            "title": "Vláda schválila návrh růstu rodičovské na 400 tisíc od ledna pro nově narozené",
+            "title": "Rodičovská od příštího roku vzroste. Novelu schválila vláda",
             "publishedAt": "2026-05-18T11:37:00Z"
+          },
+          {
+            "title": "Dvouletá holčička se bez vědomí rodičů ráno vydala k Lidlu",
+            "publishedAt": "2026-05-18T11:31:00Z"
           },
           {
             "title": "Opilé děti v Praze vylezly na vysoký jeřáb. Procházely se 30 metrů nad zemí",
@@ -749,10 +748,6 @@
           {
             "title": "Loď s hantavirem zakotvila v Rotterdamu k dezinfekci, posádka půjde do karantény",
             "publishedAt": "2026-05-18T09:36:00Z"
-          },
-          {
-            "title": "Jih Číny zasáhlo silné zemětřesení, dva lidé zemřeli",
-            "publishedAt": "2026-05-18T09:27:00Z"
           }
         ]
       }
