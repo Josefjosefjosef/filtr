@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-18T09:54:34.101426Z",
+  "ingestedAt": "2026-05-18T10:34:31.886824Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Aliens: Fireteam Elite 2 ukázalo premiérové záběry z hraní",
+      "url": "https://zing.cz/article/aliens-fireteam-elite-2-ukazalo-premierove-zabery-z-hrani",
+      "dt": "2026-05-18T10:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "aliens",
+        "elite",
+        "fireteam",
+        "hraní",
+        "premiérové",
+        "ukázalo",
+        "záběry"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -943,32 +967,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Assassin's Creed spouští hon za pokladem v hodnotě půl milionu dolarů",
-      "url": "https://zing.cz/article/assassins-creed-spousti-hon-za-pokladem-v-hodnote-pul-milionu-dolaru",
-      "dt": "2026-05-14T09:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "assassin",
-        "creed",
-        "dolarů",
-        "hodnotě",
-        "hon",
-        "milionu",
-        "pokladem",
-        "půl",
-        "spouští"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -979,7 +977,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 127290,
+      "bytes": 127126,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1016,10 +1014,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-18T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "other": 40
+          "zpravy": 1,
+          "other": 39
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1031,6 +1030,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Aliens: Fireteam Elite 2 ukázalo premiérové záběry z hraní",
+            "publishedAt": "2026-05-18T10:00:00Z"
+          },
           {
             "title": "Duchovní nástupce série Titanfall je údajně ve vývoji",
             "publishedAt": "2026-05-18T08:00:00Z"
@@ -1058,10 +1061,6 @@
           {
             "title": "Tvůrce Stardew Valley přiznává, že potřebuje klid na další tvorbu",
             "publishedAt": "2026-05-17T12:00:00Z"
-          },
-          {
-            "title": "Steampunková strategie v podobě obřího města na kolejích",
-            "publishedAt": "2026-05-17T11:00:00Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-18T09:54:34.101426Z",
+  "ingestedAt": "2026-05-18T10:34:31.886824Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Konec závislosti na Číně? EU chystá „pravidlo tří“ pro strategické nákupy",
+      "url": "https://ekonomickydenik.cz/konec-zavislosti-na-cine-eu-chysta-pravidlo-tri-pro-strategicke-nakupy/",
+      "dt": "2026-05-18T10:00:46Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "chystá",
+        "konec",
+        "nákupy",
+        "pravidlo",
+        "strategické",
+        "tří",
+        "závislosti",
+        "číně"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -778,31 +803,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Boj o automobilový trh. Stellantis a Dongfeng podepsaly dohodu za miliardy",
-      "url": "https://ekonomickydenik.cz/boj-automobily-trh-stellantis-dongfeng/",
-      "dt": "2026-05-15T09:44:52Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "automobilový",
-        "boj",
-        "dohodu",
-        "dongfeng",
-        "miliardy",
-        "podepsaly",
-        "stellantis",
-        "trh"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -813,7 +813,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70920,
+      "bytes": 71364,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -850,11 +850,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-18T09:20:22Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T10:00:46Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 1,
           "finance": 22,
+          "sport": 1,
           "zpravy": 6,
           "zdravi": 1
         },
@@ -868,6 +868,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec závislosti na Číně? EU chystá „pravidlo tří“ pro strategické nákupy",
+            "publishedAt": "2026-05-18T10:00:46Z"
+          },
           {
             "title": "Výdejní boxy pro SPZ zůstávají. Automatické vyřazení vozidel se ale změní",
             "publishedAt": "2026-05-18T09:20:22Z"
@@ -895,10 +899,6 @@
           {
             "title": "Konec EU jako mírového projektu? Silné armády mohou ovládnout evropští populisté",
             "publishedAt": "2026-05-17T10:30:00Z"
-          },
-          {
-            "title": "Vlakem se klikatí růžová řeka. Pasažéry láká na jednu z nejbizarnějších gastro akcí Evropy",
-            "publishedAt": "2026-05-17T09:30:00Z"
           }
         ]
       }

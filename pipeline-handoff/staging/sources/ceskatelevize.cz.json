@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-18T09:54:34.101426Z",
+  "ingestedAt": "2026-05-18T10:34:31.886824Z",
   "items": [
     {
       "section": "aktualne",
@@ -181,21 +181,21 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Ukrajina hlásí mrtvého a desítky zraněných. Rusové zasáhli i severokorejskou loď",
+      "title": "Ukrajina i Rusko hlásí mrtvé. Rusové zasáhli i loď s čínskou posádkou",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/ukrajina-po-ruskych-utocich-hlasi-jednoho-mrtveho-a-desitky-zranenych-373551",
       "dt": "2026-05-18T06:41:50Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "desítky",
         "hlásí",
         "loď",
-        "mrtvého",
+        "mrtvé",
+        "posádkou",
+        "rusko",
         "rusové",
-        "severokorejskou",
         "ukrajina",
         "zasáhli",
-        "zraněných"
+        "čínskou"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -742,6 +742,30 @@
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Koška skončil jedenáctý na MS v olympijské třídě Formula Kite",
+      "url": "https://sport.ceskatelevize.cz/clanek/ostatni/koska-skoncil-jedenacty-na-ms-v-olympijske-tride-formula-kite-156866",
+      "dt": "2026-05-18T10:25:29Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "formula",
+        "jedenáctý",
+        "kite",
+        "koška",
+        "olympijské",
+        "skončil",
+        "třídě"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1474,31 +1498,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dobeš schytal výprask a střídal. O postupu rozhodne sedmý zápas",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/dobes-schytal-vyprask-a-stridal-o-postupu-rozhodne-sedmy-zapas-156837",
-      "dt": "2026-05-17T06:14:29Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "dobeš",
-        "postupu",
-        "rozhodne",
-        "schytal",
-        "sedmý",
-        "střídal",
-        "výprask",
-        "zápas"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1509,7 +1508,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42235,
+      "bytes": 42263,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1615,7 +1614,7 @@
             "publishedAt": "2026-05-18T06:57:00Z"
           },
           {
-            "title": "Ukrajina hlásí mrtvého a desítky zraněných. Rusové zasáhli i severokorejskou loď",
+            "title": "Ukrajina i Rusko hlásí mrtvé. Rusové zasáhli i loď s čínskou posádkou",
             "publishedAt": "2026-05-18T06:41:50Z"
           }
         ]
@@ -1628,7 +1627,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38518,
+      "bytes": 38439,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1665,7 +1664,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-18T09:08:45Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T10:25:29Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1680,6 +1679,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Koška skončil jedenáctý na MS v olympijské třídě Formula Kite",
+            "publishedAt": "2026-05-18T10:25:29Z"
+          },
           {
             "title": "Šigut a dalších 12 obviněných ve fotbalové kauze se přiznali ke korupci",
             "publishedAt": "2026-05-18T09:08:45Z"
@@ -1707,10 +1710,6 @@
           {
             "title": "Džavoronok slaví s Perugií triumf v Lize mistrů",
             "publishedAt": "2026-05-17T21:03:23Z"
-          },
-          {
-            "title": "Real Madrid zvítězil na hřišti Sevilly, Atlético se dotáhlo na třetí Villarreal",
-            "publishedAt": "2026-05-17T19:52:58Z"
           }
         ]
       }
@@ -1722,7 +1721,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77739,
+      "bytes": 77609,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-18T09:54:34.101426Z",
+  "ingestedAt": "2026-05-18T10:34:31.886824Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Sociální sítě už škodí v rodinách stejně jako alkohol",
+      "url": "https://profitonline.cz/socialni-site-uz-skodi-v-rodinach-stejne-jako-alkohol/",
+      "dt": "2026-05-18T10:00:33Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "alkohol",
+        "jako",
+        "rodinách",
+        "sociální",
+        "stejně",
+        "sítě",
+        "škodí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -272,27 +296,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "V Praze dramaticky přibývá aut",
-      "url": "https://profitonline.cz/v-praze-dramaticky-pribyva-aut/",
-      "dt": "2026-05-16T09:10:00Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "aut",
-        "dramaticky",
-        "praze",
-        "přibývá"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -303,7 +306,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19219,
+      "bytes": 19496,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -340,7 +343,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-18T08:00:29Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T10:00:33Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -355,6 +358,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sociální sítě už škodí v rodinách stejně jako alkohol",
+            "publishedAt": "2026-05-18T10:00:33Z"
+          },
           {
             "title": "Uzavřený Hormuzský průliv sníží celosvětový růst HDP",
             "publishedAt": "2026-05-18T08:00:29Z"
@@ -382,10 +389,6 @@
           {
             "title": "Novinky v osobních financích: Jak si Češi vedou ve finančních průzkumech?",
             "publishedAt": "2026-05-17T10:00:04Z"
-          },
-          {
-            "title": "Proč investoři důvěřují Alphabetu, ale u Mety zvedají varovný prst?",
-            "publishedAt": "2026-05-17T07:00:22Z"
           }
         ]
       }
