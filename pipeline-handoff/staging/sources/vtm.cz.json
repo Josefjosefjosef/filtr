@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-18T13:55:04.242929Z",
+  "ingestedAt": "2026-05-18T15:20:37.572069Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,36 @@
         "německo",
         "vede",
         "vídně"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Gmail nabízí jen 5 GB místa, pokud mu nesvěříte telefonní číslo. Zatím jde o test v pár zemích",
+      "url": "https://www.zive.cz/clanky/gmail-nabizi-jen-5-gb-mista-pokud-mu-nesverite-telefonni-cislo-zatim-jde-o-test-v-par-zemich/sc-3-a-241198/default.aspx",
+      "dt": "2026-05-18T14:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "gmail",
+        "jde",
+        "jen",
+        "místa",
+        "nabízí",
+        "nesvěříte",
+        "pokud",
+        "pár",
+        "telefonní",
+        "test",
+        "zatím",
+        "zemích",
+        "číslo"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -949,33 +979,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Recenze hry Forza Horizon 6. I závodní arkáda může být kandidát na hru roku",
-      "url": "https://doupe.zive.cz/forza-horizon-6-recenze-pc",
-      "dt": "2026-05-14T13:15:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "arkáda",
-        "být",
-        "forza",
-        "horizon",
-        "hru",
-        "hry",
-        "kandidát",
-        "recenze",
-        "roku",
-        "závodní"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -986,7 +989,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22902,
+      "bytes": 22999,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1023,7 +1026,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-18T12:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T14:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1041,6 +1044,10 @@
           {
             "title": "Z Katovic do Vídně je to 1200 km a cesta vede přes Německo. Google nám už 16 let dluží cyklonavigaci",
             "publishedAt": "2026-05-18T12:45:00Z"
+          },
+          {
+            "title": "Gmail nabízí jen 5 GB místa, pokud mu nesvěříte telefonní číslo. Zatím jde o test v pár zemích",
+            "publishedAt": "2026-05-18T14:45:00Z"
           },
           {
             "title": "V Česku se peče další jednorožec. Firma úspěšného ajťáka má další miliardy od legend ze Silicon Valley",
@@ -1065,10 +1072,6 @@
           {
             "title": "Útočníci ukradli desítky tisíc účtů na Facebooku. Zneužili k tomu běžnou službu od Googlu",
             "publishedAt": "2026-05-17T07:45:00Z"
-          },
-          {
-            "title": "Když je AI horší než originál. Nová Xperia schytává kritiku za zbytečné vylepšování fotek",
-            "publishedAt": "2026-05-18T06:45:00Z"
           }
         ]
       }

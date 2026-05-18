@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-18T13:55:04.242929Z",
+  "ingestedAt": "2026-05-18T15:20:37.572069Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Top kina ČR: Ďábel nosí Pradu 2 se stává letošní jedničkou. Michael ale trpělivě dotahuje",
+      "url": "https://www.kinobox.cz/clanky/tema/53892-top-kina-cr-dabel-nosi-pradu-2-se-stava-letosni-jednickou-michael-ale-trpelive-dotahuje",
+      "dt": "2026-05-18T15:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "ale",
+        "dotahuje",
+        "jedničkou",
+        "kina",
+        "letošní",
+        "michael",
+        "nosí",
+        "pradu",
+        "stává",
+        "top",
+        "trpělivě",
+        "ďábel"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -525,32 +554,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "VOD tipy: Očekávaná Monyová, krvavá marvelovka i český komediální hit",
-      "url": "https://www.kinobox.cz/clanky/vod/53788-vod-tipy-ocekavana-monyova-krvava-marvelovka-i-cesky-komedialni-hit",
-      "dt": "2026-05-15T17:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "hit",
-        "komediální",
-        "krvavá",
-        "marvelovka",
-        "monyová",
-        "očekávaná",
-        "tipy",
-        "vod",
-        "český"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -561,7 +564,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 29149,
+      "bytes": 29267,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -598,7 +601,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-18T13:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T15:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -613,6 +616,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Top kina ČR: Ďábel nosí Pradu 2 se stává letošní jedničkou. Michael ale trpělivě dotahuje",
+            "publishedAt": "2026-05-18T15:00:00Z"
+          },
           {
             "title": "Konečně pořádný prequel k Pánovi prstenů? Peter Jackson si brousí zuby na Silmarillion",
             "publishedAt": "2026-05-18T13:00:00Z"
@@ -640,10 +647,6 @@
           {
             "title": "Tmavomodrý svět slaví 25 let. Jan Svěrák už by ho dnes nenatočil, scénář vykradl Hollywood",
             "publishedAt": "2026-05-17T17:00:00Z"
-          },
-          {
-            "title": "V Hollywoodu odpálil kokain. Rebel Dennis Hopper měl nejdivočejší filmovou kariéru",
-            "publishedAt": "2026-05-17T14:00:00Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hlidacipes.org",
-  "ingestedAt": "2026-05-18T13:55:04.242929Z",
+  "ingestedAt": "2026-05-18T15:20:37.572069Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Jan Urban: Pokyny jen ústně aneb „Vylikvidování“ německé menšiny v Československu",
+      "url": "https://hlidacipes.org/jan-urban-pokyny-jen-ustne-aneb-vylikvidovani-nemecke-mensiny-v-ceskoslovensku/",
+      "dt": "2026-05-18T14:00:45Z",
+      "media_raw": "HlídacíPes",
+      "media_norm": "HlídacíPes",
+      "tokens": [
+        "aneb",
+        "jan",
+        "jen",
+        "menšiny",
+        "německé",
+        "pokyny",
+        "urban",
+        "vylikvidování",
+        "ústně",
+        "československu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_hlidacipes",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "hlidacipes.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -232,32 +259,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "hlidacipes.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Jan Urban: Otevřete staré rány, chceme slyšet pravdu o minulosti",
-      "url": "https://hlidacipes.org/jan-urban-otevrete-stare-rany-chceme-slyset-pravdu-o-minulosti/",
-      "dt": "2026-05-14T04:30:53Z",
-      "media_raw": "HlídacíPes",
-      "media_norm": "HlídacíPes",
-      "tokens": [
-        "chceme",
-        "jan",
-        "minulosti",
-        "otevřete",
-        "pravdu",
-        "rány",
-        "slyšet",
-        "staré",
-        "urban"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_hlidacipes",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "hlidacipes.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -266,9 +267,9 @@
       "source": "HlídacíPes",
       "topic": "aktualne",
       "httpStatus": 200,
-      "contentType": "text/xml;charset=utf-8",
+      "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://hlidacipes.org/feed/",
-      "bytes": 17127,
+      "bytes": 17785,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -305,7 +306,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-18T09:30:58Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T14:00:45Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -320,6 +321,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jan Urban: Pokyny jen ústně aneb „Vylikvidování“ německé menšiny v Československu",
+            "publishedAt": "2026-05-18T14:00:45Z"
+          },
           {
             "title": "Ivan Kytka: Odvaha nebát se a nekrást. A jet na sudetoněmecký sjezd do Brna",
             "publishedAt": "2026-05-18T09:30:58Z"
@@ -347,10 +352,6 @@
           {
             "title": "Jak chtěl Brusel ublížit mojí škodověnce… A jak to všechno dopadlo",
             "publishedAt": "2026-05-15T04:30:30Z"
-          },
-          {
-            "title": "Jan Urban: Poslanecká přehlídka demagogie, hlouposti a neúcty k faktům",
-            "publishedAt": "2026-05-14T15:38:07Z"
           }
         ]
       }
