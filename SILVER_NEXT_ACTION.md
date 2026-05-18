@@ -14,22 +14,33 @@
    git diff --stat SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_RUN_REPORT.md SILVER_PROGRESS_LOG.md
    ```
 
-3. Ověř výskyty `MaxCycles` v souborech:
+3. Zkontroluj výskyty `MaxCycles` v markdown souborech:
    ```powershell
    grep -n MaxCycles SILVER*.md
    ```
 
-4. Zkontroluj STOP podmínky v `SILVER_AUTOPILOT_README.md` a ujisti se, že jsou splněny:
+4. Zkontroluj stav bezpečnostních čítačů v `SILVER_RUN_REPORT.md`:
    ```powershell
-   Get-Content -LiteralPath SILVER_AUTOPILOT_README.md
+   Get-Content -LiteralPath SILVER_RUN_REPORT.md
    ```
 
-5. Pokud je vše v pořádku, přidej změny a vytvoř commit podle tvého procesu Silver:
+5. Pokud jsou všechny `safety_counters` na nule a `status=PASS`, přidej změny a vytvoř commit:
    ```powershell
    git add SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_RUN_REPORT.md SILVER_PROGRESS_LOG.md
    git commit -m "Audit a aktualizace stavu repozitáře"
-   ``` 
+   ```
 
-=== 
-Zkontrolován stav repozitáře a provedeny audity souborů. 
-===
+### Scope guard
+Zajisti, že všechny úkoly splňují podmínky bezpečnosti a neprovádějí žádné změny, které by mohly způsobit regresi.
+
+### STOP podmínky
+Nespouštěj žádné akce s `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode`. Zkontroluj, zda jsou všechny bezpečnostní čítače na nule a že je stav v pořádku.
+
+### Povinný výsledek
+```
+- Zkontrolován stav repozitáře.
+- Auditovány změny v markdown souborech.
+- Zkontrolovány výskyty `MaxCycles`.
+- Zajištěno, že všechny `safety_counters` jsou na nule a `status=PASS`.
+- Vytvořen commit s auditními změnami.
+```
