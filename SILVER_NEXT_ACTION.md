@@ -7,42 +7,34 @@
    ```powershell  
    git status  
    ```  
-2. Proveď audit změn v souborech:  
+2. Proveď audit změn v souborech `SILVER_NEXT_ACTION.md` a `SILVER_PROGRESS_LOG.md`:  
    ```powershell  
-   git diff SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md  
+   git diff SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md  
    ```  
-3. Zkontroluj krátký stav repozitáře:  
+3. Pokud se rozhodneš, že změny v `SILVER_NEXT_ACTION.md` a `SILVER_PROGRESS_LOG.md` jsou v pořádku, commitni je:  
    ```powershell  
-   git status --short  
+   git add SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md  
+   git commit -m "chore(silver): commit changes in NEXT_ACTION and PROGRESS_LOG"  
    ```  
-4. Pokud jsou změny připravené, přidej je do stagingu:  
+4. Pokud chceš změny vrátit, použij:  
    ```powershell  
-   git add SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md  
-   ```  
-5. Proveď commit s odpovídající zprávou:  
-   ```powershell  
-   git commit -m "chore(silver): sync Silver tracking artifacts after cycle 10 audit"  
-   ```  
-6. Zkontroluj krátký stav repozitáře po commitu:  
-   ```powershell  
-   git status --short  
-   ```  
-7. Zobraz poslední commit a jeho změny:  
-   ```powershell  
-   git show --name-only -1  
+   git restore SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md  
    ```  
 
 ### Scope guard  
-Zajišťuji, že všechny příkazy jsou v souladu s pravidly a neprovádím žádné změny mimo whitelistované soubory.
+Zajisti, že všechny provedené změny budou v souladu s pravidly Silver strategie a nebudou obsahovat žádné regresní chyby.
 
 ### STOP podmínky  
 - Raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode` je zakázáno.  
 - Kontrolovaný autonomní režim vyžaduje tyto přepínače plus vestavěné limity (viz SILVER_AUTOPILOT_README.md).  
-- Nikdy neporušuji bezpečnostní brány orchestrátoru.
+- Nikdy neobcházej bezpečnostní brány orchestrátoru.
 
 ### Povinný výsledek  
-```
-===
-Zkontrolován stav repozitáře a proveden audit změn v souborech. Rozhodnutí: commit (ne restore).
-===
+```  
+===  
+1. Zkontroluj stav repozitáře a shrň změny v `SILVER_CURSOR_OUTPUT.md`.  
+2. Proveď audit změn v souborech `SILVER_NEXT_ACTION.md` a `SILVER_PROGRESS_LOG.md`.  
+3. Pokud se rozhodneš, že změny jsou v pořádku, commitni je.  
+4. Pokud chceš změny vrátit, použij `git restore`.  
+===  
 ```
