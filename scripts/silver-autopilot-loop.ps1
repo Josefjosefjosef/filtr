@@ -893,13 +893,24 @@ function Test-SilverNextActionOutputQuality {
   param([string]$Text)
   if (-not $Text) { return $true }
   if ($Text -match 'Ă|â€|Ĺ|pĹ|Ä›|OtevĹ|ZprĂ|pĹ™ejdÄ|ĂşKOL|ÄŤ|Ĺ™|Ă­|Ăˇ|Ă©') { return $false }
+  $hasCluster = Test-SilverNextActionSilverWorkflowContext -Text $Text
   if ($Text -match '(?i)git\s+push\s+-u\s+origin') {
-    if (-not (Test-SilverNextActionSilverWorkflowContext -Text $Text)) { return $false }
+    if (-not $hasCluster) { return $false }
   }
   if ($Text -match 'chore/silver-audit-repo-state') { return $false }
+  if ($Text -match '(?i)(?:--verify-pr=\d+|\bverify-pr\b)') {
+    if (-not $hasCluster) { return $false }
+  }
   if ($Text -match '(?i)(?:sudo\s+apt\s+(?:update|install)|gh\s+auth\s+login)') {
-    if ($Text -match '(?i)verify-pr|git\s+push\s+-u') {
-      if (-not (Test-SilverNextActionSilverWorkflowContext -Text $Text)) { return $false }
+    if (-not $hasCluster) { return $false }
+  }
+  if ($Text -match '(?i)--verify-pr=3794\b') { return $false }
+  if ($Text -match '(?i)full-auto-loop-openai' -and $Text -match '(?i)(?:sudo\s+apt|gh\s+auth|verify-pr)') {
+    if (-not $hasCluster) { return $false }
+  }
+  if (-not $hasCluster) {
+    if ($Text -match '(?i)(?:sudo\s+apt|gh\s+auth|verify-pr|git\s+push\s+-u)') {
+      if ($Text -notmatch '(?i)INFRA_BLOCKER_REASON:\s*\S+') { return $false }
     }
   }
   if (Test-NextActionHasBareSilverAutopilotNodeInvocation -Inner $Text) { return $false }

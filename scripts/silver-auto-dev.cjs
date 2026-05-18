@@ -13,6 +13,7 @@
 const fs = require("fs");
 const path = require("path");
 const { execFileSync } = require("child_process");
+const plannerHandoff = require("./silver-next-action-planner-handoff.cjs");
 
 const REPO = path.resolve(__dirname, "..");
 const ORCHESTRATOR_SCRIPT = path.join(__dirname, "silver-pr-orchestrator-v1.cjs");
@@ -24,9 +25,6 @@ const CURSOR_ADAPTER_DIAGNOSTIC_JSON = path.join(
   __dirname,
   "silver-cursor-agent-adapter-diagnostic-report.json",
 );
-const RHC3_REPORT = path.join(__dirname, "silver-real-human-chaos-v3-report.json");
-const REALISTIC_MOBILE_REPORT = path.join(__dirname, "silver-realistic-mobile-corpus-report.json");
-
 const MAX_BUFFER = 64 * 1024 * 1024;
 /** Absolute ceiling for `--loop --max-cycles=N` (user request must be <= this). */
 const HARD_SAFE_MAX_CYCLES = 100;
@@ -61,12 +59,13 @@ const LOOP_RUNTIME_RESTORE_ON_EXIT_PATHS = new Set(
   [...LOOP_RUNTIME_ALLOWED_DIRTY_PATHS].filter((p) => !LOOP_HANDOFF_PERSIST_PATHS.has(p)),
 );
 
-/** UTF-8 mis-decoded Czech (Latin-1/Windows-1252 read as UTF-8). */
-const SILVER_NEXT_ACTION_MOJIBAKE_RE =
-  /Ă|â€|Ĺ|pĹ|Ä›|OtevĹ|ZprĂ|pĹ™ejdÄ|ĂşKOL|ÄŤ|Ĺ™|Ă­|Ăˇ|Ă©/;
-
-const SILVER_NEXT_ACTION_SILVER_WORKFLOW_RE =
-  /PRODUCT_CLUSTER|NEXT PRODUCT CLUSTER|silver-rhc3|cluster diagnostic|cluster-classifier|SILVER_RHC3_CLUSTER_CLASSIFIER|harness|audit_silver|SILVER_PRODUCT_CLUSTER|top_cluster=/i;
+const {
+  pickTopClusterDiagnostic,
+  buildHandoffMarkdown,
+  silverNextActionHasClusterWorkflow,
+  silverNextActionQualityViolations,
+  runPlannerClusterPreferenceSelftest,
+} = plannerHandoff;
 
 /** Regenerated Silver diagnostic JSON under scripts/ only (narrow; not source or engine paths). */
 const LOOP_RUNTIME_GENERATED_DIAGNOSTIC_REPORT_RE =
@@ -243,74 +242,6 @@ function readJsonFile(abs) {
   } catch (e) {
     return { ok: false, data: null, message: String(e.message || e || "json_read_failed") };
   }
-}
-
-function parseTopFailClustersFromReport(data) {
-  if (!data || typeof data !== "object") return [];
-  const arr = data.top_fail_clusters;
-  if (!Array.isArray(arr)) return [];
-  const out = [];
-  for (const row of arr) {
-    const s = String(row);
-    const idx = s.lastIndexOf(":");
-    if (idx <= 0) continue;
-    const name = s.slice(0, idx).trim();
-    const count = parseInt(s.slice(idx + 1), 10);
-    if (!name || !Number.isFinite(count) || count <= 0) continue;
-    out.push({ name, count });
-  }
-  return out;
-}
-
-function pickTopClusterDiagnostic() {
-  const rhc3 = readJsonFile(RHC3_REPORT);
-  if (rhc3.ok && rhc3.data) {
-    const tops = parseTopFailClustersFromReport(rhc3.data);
-    if (tops.length) {
-      const t = tops[0];
-      return {
-        source: "scripts/silver-real-human-chaos-v3-report.json",
-        cluster: t.name,
-        count: t.count,
-        top_preview: tops.slice(0, 8).map((x) => `${x.name}:${x.count}`).join(" | "),
-      };
-    }
-  }
-  const mob = readJsonFile(REALISTIC_MOBILE_REPORT);
-  if (mob.ok && mob.data) {
-    const tops = parseTopFailClustersFromReport(mob.data);
-    if (tops.length) {
-      const t = tops[0];
-      return {
-        source: "scripts/silver-realistic-mobile-corpus-report.json",
-        cluster: t.name,
-        count: t.count,
-        top_preview: tops.slice(0, 8).map((x) => `${x.name}:${x.count}`).join(" | "),
-      };
-    }
-    const fc = mob.data.fail_count_by_cluster;
-    if (fc && typeof fc === "object") {
-      const pairs = Object.keys(fc)
-        .map((k) => ({ name: k, count: Number(fc[k]) }))
-        .filter((p) => p.name && Number.isFinite(p.count) && p.count > 0)
-        .sort((a, b) => b.count - a.count);
-      if (pairs.length) {
-        const t = pairs[0];
-        return {
-          source: "scripts/silver-realistic-mobile-corpus-report.json:fail_count_by_cluster",
-          cluster: t.name,
-          count: t.count,
-          top_preview: pairs.slice(0, 8).map((x) => `${x.name}:${x.count}`).join(" | "),
-        };
-      }
-    }
-  }
-  return {
-    source: "(no_cluster_report)",
-    cluster: "(unknown)",
-    count: 0,
-    top_preview: "(no nonzero fail clusters found on disk — run harnesses if needed)",
-  };
 }
 
 function yn(b) {
@@ -692,39 +623,6 @@ function printLoopCycleHeartbeat(hb) {
  * @returns {string[]}
  */
 /**
- * @param {string} text
- * @returns {boolean}
- */
-function silverNextActionHasClusterWorkflow(text) {
-  return SILVER_NEXT_ACTION_SILVER_WORKFLOW_RE.test(String(text || ""));
-}
-
-/**
- * @param {string} text
- * @returns {string[]}
- */
-function silverNextActionQualityViolations(text) {
-  const t = String(text || "");
-  const v = [];
-  const clusterWorkflow = silverNextActionHasClusterWorkflow(t);
-  if (SILVER_NEXT_ACTION_MOJIBAKE_RE.test(t)) v.push("mojibake_utf8");
-  if (!clusterWorkflow) {
-    if (/git\s+push\s+-u\s+origin/i.test(t)) v.push("generic_git_push_upstream");
-    if (/chore\/silver-audit-repo-state/i.test(t)) v.push("generic_chore_silver_audit_push");
-    if (/(?:--verify-pr=\d+|\bverify-pr\b)/i.test(t)) {
-      v.push("generic_verify_pr_not_cluster_workflow");
-    }
-    if (/(?:sudo\s+apt\s+(?:update|install)|gh\s+auth\s+login)/i.test(t)) {
-      v.push("generic_gh_sudo_not_cluster_workflow");
-    }
-    if (/full-auto-loop-openai/i.test(t) && /(?:sudo\s+apt|gh\s+auth|verify-pr)/i.test(t)) {
-      v.push("generic_full_auto_infra_not_cluster_workflow");
-    }
-  }
-  return v;
-}
-
-/**
  * @param {{ mainCommit: string, queueReport: object|null, clusterDiag: object }} ctx
  * @returns {string}
  */
@@ -1036,91 +934,8 @@ function queueDidMergeOrSync(rep) {
   return Boolean(mergeOk || syncOk || maxed || multiCycleNoSafe);
 }
 
-function buildQueueSummaryLines(rep) {
-  if (!rep || typeof rep !== "object") return "(no orchestrator report)";
-  const lines = [
-    `- mode: ${String(rep.mode || "")}`,
-    `- queue_safe_to_continue: ${String(rep.queue_safe_to_continue || rep.safe_to_continue || "")}`,
-    `- queue_stop_reason: ${String(rep.queue_stop_reason || "")}`,
-    `- queue_cycles_completed: ${String(rep.queue_cycles_completed != null ? rep.queue_cycles_completed : "")}`,
-    `- apply_stopped_reason: ${String(rep.apply_stopped_reason || "")}`,
-    `- apply_merge_attempted/result: ${String(rep.apply_merge_attempted || "")}/${String(rep.apply_merge_result || "")}`,
-    `- apply_sync_attempted/result: ${String(rep.apply_sync_attempted || "")}/${String(rep.apply_sync_result || "")}`,
-    `- safe_open_candidates: ${String(rep.safe_open_candidates != null ? rep.safe_open_candidates : "")}`,
-    `- total_open_prs: ${String(rep.total_open_prs != null ? rep.total_open_prs : "")}`,
-    `- error: ${String(rep.error || "")}`,
-  ];
-  return lines.join("\n");
-}
-
 function writeDevReport(obj) {
   fs.writeFileSync(DEV_REPORT, `${JSON.stringify(obj, null, 2)}\n`, "utf8");
-}
-
-function buildHandoffMarkdown(ctx) {
-  const diag = ctx.clusterDiag || pickTopClusterDiagnostic();
-  const qrep = ctx.queueReport || {};
-  const main = ctx.mainCommit || "";
-  return [
-    "<!-- SILVER_NEXT_ACTION: silver-auto-dev V1 deterministic handoff; not auto-applied -->",
-    "",
-    "ÚKOL PRO CURSOR — infoUzel.cz / Silver — NEXT PRODUCT CLUSTER DIAGNOSTIC — NO ENGINE CHANGE + FINAL BEEP",
-    "",
-    "### Kontext (automaticky)",
-    "",
-    `- **Aktuální main commit:** \`${main}\``,
-    "- **PR orchestrátor (poslední běh):** viz shrnutí níže + `scripts/silver-pr-orchestrator-v1-report.json`.",
-    "",
-    "### Shrnutí fronty safe PR",
-    "",
-    "```text",
-    buildQueueSummaryLines(qrep),
-    "```",
-    "",
-    "### Stav bezpečnosti / scope",
-    "",
-    "- **Zakázáno:** měnit `assets/app.js`, Silver engine (jádro), UI/CSS/backend jen kvůli diagnostice, GitHub workflows, nekonečné smyčky, surové `-MaxCycles 0` bez řízených pojistek z dokumentace.",
-    "- **Povoleno:** skripty pod `scripts/`, audity/diagnostika existujících harnessů, čtení reportů JSON/MD, změny striktně mimo engine dle existující strategie.",
-    "",
-    "### Diagnostika top clusteru (disk)",
-    "",
-    `- **Zdroj:** ${diag.source}`,
-    `- **Top cluster:** \`${diag.cluster}\` (count=${diag.count})`,
-    `- **Náhled top:** ${diag.top_preview}`,
-    "",
-    "### Kroky (max 7)",
-    "",
-    "1) `Set-Location C:\\\\projects\\\\filtr`",
-    "2) `git status --short` — nesmí být neočekávané změny mimo výslovně povolené reporting soubory.",
-    "3) `node scripts/silver-autopilot.cjs --status` — ověř safety/gate signály v konzoli a `SILVER_RUN_REPORT.md`.",
-    `4) Zaměř se na cluster **${diag.cluster}**: nejprve \`node scripts/silver-rhc3-cluster-classifier-v1.cjs\`, pak existující \`silver-*\` diagnostické skripty pro tento typ selhání (manifest v README autopilota; nevymýšlej nové cesty).`,
-    "5) Pokud reporty JSON ukazují **harness-only** signály vs **true engine fail**, drž se pravidla: nejdřív důkaz z harness JSON (`true_engine_fail_count`, `must_fix_engine_count`, …).",
-    "6) `npm run smoke` po jakékoli smysluplné změně skriptů (ne u čistého read-only průzkumu).",
-    "7) Výstup vlož do chatu dle bloku níže.",
-    "",
-    "### Povinný výstup (vlož do chatu)",
-    "",
-    "```text",
-    "=== SILVER_PRODUCT_CLUSTER_DIAGNOSTIC_RESULT ===",
-    `main_commit=${main}`,
-    `top_cluster=${diag.cluster}`,
-    `cluster_source=${diag.source}`,
-    "engine_touched=NO",
-    "assets_app_touched=NO",
-    "harness_next_command=(vyplň přesný příkaz, který jsi spustil)",
-    "PASS_FAIL=(PASS|FAIL)",
-    "=== END_SILVER_PRODUCT_CLUSTER_DIAGNOSTIC_RESULT ===",
-    "```",
-    "",
-    "### FINISH",
-    "",
-    "Na konci lokálního ověření v PowerShell:",
-    "",
-    "```powershell",
-    "[console]::beep(880, 200)",
-    "```",
-    "",
-  ].join("\n");
 }
 
 function buildRunAgainSummary(ctx) {
@@ -1218,6 +1033,9 @@ function main() {
   }
   if (argvSlice.includes("--cli-loop-runtime-dirty-selftest")) {
     process.exit(runLoopRuntimeDirtySelftest() ? 0 : 1);
+  }
+  if (argvSlice.includes("--cli-planner-cluster-preference-selftest")) {
+    process.exit(runPlannerClusterPreferenceSelftest() ? 0 : 1);
   }
   const cli = parseSilverAutoCli(argvSlice);
   const startedAt = new Date().toISOString();
@@ -1622,6 +1440,13 @@ function main() {
                 String(loopTarget);
         }
       } else {
+        if (needCursorHandoff) {
+          enforceDeterministicClusterNextAction({
+            mainCommit,
+            queueReport: qrep,
+            clusterDiag: pickTopClusterDiagnostic(),
+          });
+        }
         const singleTimeout = resolveSingleRunAdapterTimeoutSeconds(1);
         repOut.effective_timeout_seconds = String(singleTimeout);
         const ar = runSilverCursorAdapter(adapter, {
