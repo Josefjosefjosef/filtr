@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-18T18:39:57.037876Z",
+  "ingestedAt": "2026-05-18T19:19:51.860949Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Hypotéky nečekaně zdražují. Panika ale není na místě",
+      "url": "https://profitonline.cz/hypoteky-necekane-zdrazuji-panika-ale-neni-na-miste/",
+      "dt": "2026-05-18T19:00:47Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "ale",
+        "hypotéky",
+        "místě",
+        "nečekaně",
+        "panika",
+        "zdražují"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -265,32 +288,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Proč investoři důvěřují Alphabetu, ale u Mety zvedají varovný prst?",
-      "url": "https://profitonline.cz/proc-investori-duveruji-alphabetu-ale-u-mety-zvedaji-varovny-prst/",
-      "dt": "2026-05-17T07:00:22Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "ale",
-        "alphabetu",
-        "důvěřují",
-        "investoři",
-        "mety",
-        "proč",
-        "prst",
-        "varovný",
-        "zvedají"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -301,7 +298,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18867,
+      "bytes": 18889,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -338,7 +335,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-18T18:30:19Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T19:00:47Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -353,6 +350,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hypotéky nečekaně zdražují. Panika ale není na místě",
+            "publishedAt": "2026-05-18T19:00:47Z"
+          },
           {
             "title": "Bitcoin po nedávném růstu koriguje",
             "publishedAt": "2026-05-18T18:30:19Z"
@@ -380,10 +381,6 @@
           {
             "title": "The Economist: Izraelský teror plodí teror palestinský, varuje bývalý poradce premiéra Perese",
             "publishedAt": "2026-05-18T04:00:24Z"
-          },
-          {
-            "title": "Trump letos čile obchodoval s akciemi",
-            "publishedAt": "2026-05-17T16:20:46Z"
           }
         ]
       }
