@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-05-18T07:09:51.200064Z",
+  "ingestedAt": "2026-05-18T07:49:45.372466Z",
   "items": [
     {
       "section": "veda",
@@ -45,6 +45,33 @@
         "měsíc",
         "poslední",
         "přípravy"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Dorůstání končetin a orgánů? Regenerace u lidí jen usnula, vědci ji umí probudit",
+      "url": "https://www.lidovky.cz/orientace/regenerace-tkan-evoluce-koncetina-colek-clovek-veda-medicina.A260517_932056_ln-orientace_lval",
+      "dt": "2026-05-17T16:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "dorůstání",
+        "jen",
+        "končetin",
+        "lidí",
+        "orgánů",
+        "probudit",
+        "regenerace",
+        "umí",
+        "usnula",
+        "vědci"
       ],
       "feedCategory": "veda",
       "feedType": "rubric",
@@ -738,30 +765,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pohodlněji si vinylovou desku nepustíte, novinka Sony je i pro nešiky",
-      "url": "https://www.idnes.cz/technet/audio-foto-video/gramofon-sony-ps-lx5bt-automaticky-vinyl-deska-audio-technica-at91.A260504_135452_audio-foto-video_nyv",
-      "dt": "2026-05-05T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "desku",
-        "nepustíte",
-        "nešiky",
-        "novinka",
-        "pohodlněji",
-        "sony",
-        "vinylovou"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -772,7 +775,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 46214,
+      "bytes": 46337,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -812,8 +815,8 @@
         "raw_feed_latest_publishedAt": "2026-05-17T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 18,
-          "zpravy": 12
+          "other": 19,
+          "zpravy": 11
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -834,6 +837,10 @@
             "publishedAt": "2026-05-17T22:00:00Z"
           },
           {
+            "title": "Dorůstání končetin a orgánů? Regenerace u lidí jen usnula, vědci ji umí probudit",
+            "publishedAt": "2026-05-17T16:00:00Z"
+          },
+          {
             "title": "„S našimi zatracenými loděmi je dnes něco špatně.“ Sto deset let od Jutska",
             "publishedAt": "2026-05-16T22:00:00Z"
           },
@@ -851,10 +858,6 @@
           },
           {
             "title": "Jak obstál repráček Ikea ve srovnání? Toto dostanete za svých 129 korun",
-            "publishedAt": "2026-05-13T22:00:00Z"
-          },
-          {
-            "title": "Zrod diktátora v rukavičkách. Piłsudski provedl před 100 lety krvavý puč v Polsku",
             "publishedAt": "2026-05-13T22:00:00Z"
           }
         ]

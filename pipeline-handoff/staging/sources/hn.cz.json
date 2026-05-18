@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-18T07:09:51.200064Z",
+  "ingestedAt": "2026-05-18T07:49:45.372466Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Pravěká stomatologie. Neandertálci uměli ošetřovat zubní kazy, bolestivý zákrok mohl trvat skoro hodinu",
+      "url": "https://zahranicni.hn.cz/c1-67877670-praveka-stomatologie-neandertalci-umeli-osetrovat-zubni-kazy-bolestivy-zakrok-mohl-trvat-skoro-hodinu",
+      "dt": "2026-05-18T06:59:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bolestivý",
+        "hodinu",
+        "kazy",
+        "neandertálci",
+        "ošetřovat",
+        "pravěká",
+        "skoro",
+        "stomatologie",
+        "trvat",
+        "uměli",
+        "zubní",
+        "zákrok"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1122,33 +1151,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "České firmy odmítají investory i burzu. Raději rostou pomaleji, ale po svém",
-      "url": "https://archiv.hn.cz/c1-67877130-ceske-firmy-odmitaji-investory-i-burzu-radeji-rostou-pomaleji-ale-po-svem",
-      "dt": "2026-05-14T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "ale",
-        "burzu",
-        "firmy",
-        "investory",
-        "odmítají",
-        "pomaleji",
-        "raději",
-        "rostou",
-        "svém",
-        "české"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1159,7 +1161,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183192,
+      "bytes": 183332,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1196,7 +1198,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-18T06:50:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T06:59:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 29,
@@ -1213,6 +1215,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pravěká stomatologie. Neandertálci uměli ošetřovat zubní kazy, bolestivý zákrok mohl trvat skoro hodinu",
+            "publishedAt": "2026-05-18T06:59:00Z"
+          },
           {
             "title": "I Wall Street umí odpouštět. Odepsané firmy jsou znovu hvězdami trhu a přitahují investory",
             "publishedAt": "2026-05-18T06:50:00Z"
@@ -1240,10 +1246,6 @@
           {
             "title": "Zmocněnci pro likvidaci Green Dealu a šulení závazků vůči NATO. Orwell by měl z vládního názvosloví radost",
             "publishedAt": "2026-05-17T19:00:00Z"
-          },
-          {
-            "title": "Pokud se žák s 50 body dostane na gympl v Příbrami a v Praze ani náhodou, je to protiústavní. Spor má u soudu šanci, říká expert",
-            "publishedAt": "2026-05-17T22:00:00Z"
           }
         ]
       }
