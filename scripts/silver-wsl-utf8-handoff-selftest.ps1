@@ -7,11 +7,17 @@ Set-StrictMode -Version 2
 $ErrorActionPreference = "Stop"
 
 $Handoff = Join-Path $PSScriptRoot "silver-utf8-handoff.ps1"
+$Policy = Join-Path $PSScriptRoot "silver-cap50-orchestration-policy.ps1"
 if (-not (Test-Path -LiteralPath $Handoff)) {
   Write-Error ("Missing: " + $Handoff)
   exit 2
 }
+if (-not (Test-Path -LiteralPath $Policy)) {
+  Write-Error ("Missing: " + $Policy)
+  exit 2
+}
 . $Handoff
+. $Policy
 Initialize-SilverConsoleUtf8
 
 $utf8 = $script:SilverUtf8NoBom
@@ -31,7 +37,8 @@ function Assert-True {
 function New-SilverUtf8HandoffSelftestGoodText {
   return (
     [string][char]0x00DA + "KOL PRO CURSOR " + [char]0x2014 + " kalend" +
-    [char]0x00E1 + [char]0x0159 + " p" + [char]0x0159 + [char]0x00ED + "kaz Zpr" + [char]0x00E1 + "va"
+    [char]0x00E1 + [char]0x0159 + " Aktu" + [char]0x00E1 + "ln" + [char]0x00ED +
+    " pozn" + [char]0x00E1 + "mka " + [char]0x0159 + [char]0x00ED + "kaz Zpr" + [char]0x00E1 + "va"
   )
 }
 
@@ -47,6 +54,7 @@ $fixed = Repair-SilverUtf8HandoffText -Text $sampleBad -Repaired ([ref]$repaired
 Assert-True -Cond ($repairedFlag -eq "YES") -Label "repair_flag_set"
 Assert-True -Cond (-not (Test-SilverUtf8MojibakeMarkers -Text $fixed)) -Label "repair_removes_markers"
 Assert-True -Cond ($fixed.Contains([string][char]0x00DA + "KOL")) -Label "repair_restores_ukol"
+Assert-True -Cond (Test-SilverCap50Utf8ProbeStrings -Text $fixed) -Label "utf8_probe_ukol_aktualni_poznamka"
 
 $tempDir = Join-Path $env:TEMP ("silver-wsl-utf8-handoff-selftest-" + [guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
@@ -58,8 +66,9 @@ $sampleGood
 - radek s diakritikou
 "@
 [System.IO.File]::WriteAllText($nextPath, $mdBody, $utf8)
-$readBack = Read-TextFileUtf8NoBomShared -Path $nextPath
+$readBack = Read-TextFileUtf8Handoff -Path $nextPath
 Assert-True -Cond ($readBack.Contains([string][char]0x00DA + "KOL")) -Label "utf8_file_roundtrip_next_action"
+Assert-True -Cond (Test-SilverCap50Utf8ProbeStrings -Text $readBack) -Label "utf8_handoff_file_roundtrip_probe"
 Assert-True -Cond (-not (Test-SilverUtf8MojibakeMarkers -Text $readBack)) -Label "utf8_file_no_mojibake"
 
 $adapterStub = @"

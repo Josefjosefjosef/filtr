@@ -131,6 +131,22 @@ function Read-TextFileUtf8NoBomShared {
   return [System.IO.File]::ReadAllText($Path, $script:SilverUtf8NoBom)
 }
 
+function Read-TextFileUtf8Handoff {
+  param([string]$Path)
+  $bytes = [System.IO.File]::ReadAllBytes($Path)
+  $utf8 = $script:SilverUtf8NoBom
+  $text = ""
+  if ($bytes.Length -ge 3 -and $bytes[0] -eq 0xEF -and $bytes[1] -eq 0xBB -and $bytes[2] -eq 0xBF) {
+    $text = $utf8.GetString($bytes, 3, $bytes.Length - 3)
+  }
+  else {
+    $text = $utf8.GetString($bytes)
+  }
+  $repairedFlag = "NO"
+  $fixed = Repair-SilverUtf8HandoffText -Text $text -Repaired ([ref]$repairedFlag)
+  return $fixed
+}
+
 function Read-ProcessPipeUtf8 {
   param([System.IO.StreamReader]$Reader)
   if ($null -eq $Reader) { return "" }
