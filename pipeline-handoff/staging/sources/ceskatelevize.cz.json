@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-18T21:20:19.833698Z",
+  "ingestedAt": "2026-05-18T22:01:39.780775Z",
   "items": [
     {
       "section": "aktualne",
@@ -746,6 +746,28 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Arsenal má kolo před koncem na dosah titul",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/arsenal-ma-kolo-pred-koncem-na-dosah-titul-156879",
+      "dt": "2026-05-18T21:42:10Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "arsenal",
+        "dosah",
+        "kolo",
+        "koncem",
+        "titul"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Bouzková měla ve Štrasburku navrch v souboji se Siniakovou",
       "url": "https://sport.ceskatelevize.cz/clanek/tenis/bouzkova-mela-ve-strasburku-navrch-v-souboji-se-siniakovou-156878",
       "dt": "2026-05-18T18:27:26Z",
@@ -1465,32 +1487,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Prohra se Slovinci pohledem čísel: Přes 80 střeleckých pokusů a 10 minut v přesilovkách bez gólu",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/prohra-se-slovinci-pohledem-cisel-pres-80-streleckych-pokusu-a-10-minut-v-presilovkach-bez-golu-156847",
-      "dt": "2026-05-17T15:23:46Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "gólu",
-        "minut",
-        "pohledem",
-        "pokusů",
-        "prohra",
-        "přesilovkách",
-        "slovinci",
-        "střeleckých",
-        "čísel"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1620,7 +1616,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37580,
+      "bytes": 37400,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1657,7 +1653,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-18T18:27:26Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T21:42:10Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1672,6 +1668,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Arsenal má kolo před koncem na dosah titul",
+            "publishedAt": "2026-05-18T21:42:10Z"
+          },
           {
             "title": "Bouzková měla ve Štrasburku navrch v souboji se Siniakovou",
             "publishedAt": "2026-05-18T18:27:26Z"
@@ -1699,10 +1699,6 @@
           {
             "title": "Osmé kolo patřilo Rytířům, souboj o druhé místo vyhrálo Znojmo",
             "publishedAt": "2026-05-18T13:49:15Z"
-          },
-          {
-            "title": "Vstup českého týmu do MS v hokeji sledovalo 1,5 milionu lidí",
-            "publishedAt": "2026-05-18T13:24:23Z"
           }
         ]
       }

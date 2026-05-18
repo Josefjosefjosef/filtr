@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-18T21:20:19.833698Z",
+  "ingestedAt": "2026-05-18T22:01:39.780775Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trump se Grónska nevzdává. Nejsme na prodej, vzkázal mu tamní premiér",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/postoj-usa-ke-gronsku-se-nezmenil-rekl-gronsky-premier-nielsen.A260518_185255_zahranicni_idh",
+      "dt": "2026-05-18T21:15:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "grónska",
+        "nejsme",
+        "nevzdává",
+        "premiér",
+        "prodej",
+        "tamní",
+        "trump",
+        "vzkázal"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -755,34 +780,6 @@
         "proti",
         "slovenka",
         "zasáhl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Další znásilnění? Nevinen, vyslechl si Feri. Obžaloba pro něj chtěla rok vězení navíc",
-      "url": "https://www.idnes.cz/zpravy/domaci/feri-soud-zaverecne-reci-znasilneni.A260515_153458_domaci_mul",
-      "dt": "2026-05-18T13:47:44Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "chtěla",
-        "další",
-        "feri",
-        "navíc",
-        "nevinen",
-        "něj",
-        "obžaloba",
-        "rok",
-        "vyslechl",
-        "vězení",
-        "znásilnění"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1580,7 +1577,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50093,
+      "bytes": 49953,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1617,7 +1614,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-18T20:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T21:15:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1634,6 +1631,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump se Grónska nevzdává. Nejsme na prodej, vzkázal mu tamní premiér",
+            "publishedAt": "2026-05-18T21:15:00Z"
+          },
           {
             "title": "Trump dal poslední šanci jednání s Íránem. Chystal už nový útok na úterý",
             "publishedAt": "2026-05-18T20:05:00Z"
@@ -1661,10 +1662,6 @@
           {
             "title": "Kritéria Eurovize jsou satanistická, odmítl Lavrov návrat Ruska do soutěže",
             "publishedAt": "2026-05-18T17:34:00Z"
-          },
-          {
-            "title": "Svět je náchylný k novým pandemiím a ohrožuje ho i krize důvěry, míní WHO",
-            "publishedAt": "2026-05-18T17:04:00Z"
           }
         ]
       }

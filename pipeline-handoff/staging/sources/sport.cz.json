@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-18T21:20:19.833698Z",
+  "ingestedAt": "2026-05-18T22:01:39.780775Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "V nominaci Brazílie na MS nechybí Neymar, který v národním týmu skoro tři roky nehrál",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-v-nominaci-brazilie-na-ms-nechybi-neymar-ktery-v-narodnim-tymu-skoro-tri-roky-nehral-5458144",
+      "dt": "2026-05-18T21:34:24Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "brazílie",
+        "nechybí",
+        "nehrál",
+        "neymar",
+        "nominaci",
+        "národním",
+        "roky",
+        "skoro",
+        "týmu",
+        "tři"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -217,7 +244,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Švýcaři nasázeli pět gólů za třetinu. Na MS zůstávají stoprocentní",
+      "title": "SESTŘIH: Švýcaři nasázeli pět gólů za třetinu. Na MS zůstávají stoprocentní",
       "url": "https://www.sport.cz/clanek/hokej-ms-svycari-nasazeli-pet-golu-za-tretinu-na-ms-zustavaji-stoprocentni-5458062",
       "dt": "2026-05-18T20:35:41Z",
       "media_raw": "Sport.cz",
@@ -226,6 +253,7 @@
         "gólů",
         "nasázeli",
         "pět",
+        "sestřih",
         "stoprocentní",
         "třetinu",
         "zůstávají",
@@ -749,31 +777,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Komise si posvítila na kontroverzní duel o záchranu. Udělala i nezvyklý krok",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-komise-si-posvitila-na-kontroverzni-duel-o-zachranu-udelala-i-nezvykly-krok-5457450",
-      "dt": "2026-05-18T13:24:08Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "duel",
-        "komise",
-        "kontroverzní",
-        "krok",
-        "nezvyklý",
-        "posvítila",
-        "udělala",
-        "záchranu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -784,7 +787,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44693,
+      "bytes": 44740,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -821,7 +824,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-18T21:11:12Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T21:34:24Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -836,6 +839,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V nominaci Brazílie na MS nechybí Neymar, který v národním týmu skoro tři roky nehrál",
+            "publishedAt": "2026-05-18T21:34:24Z"
+          },
           {
             "title": "Zbrklý hvizd, podivná vysvětlení. Divočinu proti Švédům ovlivnil finský arbitr",
             "publishedAt": "2026-05-18T21:11:12Z"
@@ -863,10 +870,6 @@
           {
             "title": "Fantazie! Bojovní Češi si na MS vyšlápli na Švédsko",
             "publishedAt": "2026-05-18T07:03:10Z"
-          },
-          {
-            "title": "Švýcaři zůstávají suverénní. Finové rozdrtili USA, Kanada zvládla pomstu",
-            "publishedAt": "2026-05-18T10:04:54Z"
           }
         ]
       }
