@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-18T11:15:15.075008Z",
+  "ingestedAt": "2026-05-18T11:54:31.086238Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Rodičovský příspěvek stoupne. Rozhodne rok narození",
+      "url": "https://www.penize.cz/rodicovsky-prispevek/489816-zvyseni-rodicovskeho-prispevku-od-roku-2027-schvalila-vlada",
+      "dt": "2026-05-18T13:30:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "narození",
+        "příspěvek",
+        "rodičovský",
+        "rok",
+        "rozhodne",
+        "stoupne"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -481,31 +504,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "„Ukažte mi občanku.“ Kdy musíte průkaz totožnosti skutečně předložit a komu",
-      "url": "https://www.penize.cz/spotrebitel/489666-ukazte-mi-obcanku-kdy-musite-prukaz-totoznosti-skutecne-ukazat-a-komu",
-      "dt": "2026-05-14T07:49:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "komu",
-        "musíte",
-        "občanku",
-        "průkaz",
-        "předložit",
-        "skutečně",
-        "totožnosti",
-        "ukažte"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -516,7 +514,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18696,
+      "bytes": 18484,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -553,7 +551,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-18T12:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T13:30:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 14,
@@ -569,6 +567,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rodičovský příspěvek stoupne. Rozhodne rok narození",
+            "publishedAt": "2026-05-18T13:30:00Z"
+          },
           {
             "title": "Privatbanka mění název a má velké plány. Penta ukázala, co chystá",
             "publishedAt": "2026-05-18T12:15:00Z"
@@ -596,10 +598,6 @@
           {
             "title": "Bitcoin je nové zlato, řekl nový šéf americké centrální banky",
             "publishedAt": "2026-05-16T07:00:00Z"
-          },
-          {
-            "title": "Maximální ceny benzinu a nafty na víkend a pondělí",
-            "publishedAt": "2026-05-15T14:01:00Z"
           }
         ]
       }

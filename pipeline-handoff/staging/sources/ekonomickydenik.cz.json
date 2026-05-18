@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-18T11:15:15.075008Z",
+  "ingestedAt": "2026-05-18T11:54:31.086238Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Průzkum o prezidentech překvapil: Klaus těsně přeskočil Pavla",
+      "url": "https://ekonomickydenik.cz/pruzkum-prezidenti-havel-klaus-pavel/",
+      "dt": "2026-05-18T11:24:51Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "klaus",
+        "pavla",
+        "prezidentech",
+        "průzkum",
+        "překvapil",
+        "přeskočil",
+        "těsně"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -774,35 +798,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zlá zpráva pro Evropany: Sblížení USA s Čínou mění pravidla hry, vliv Unie padá",
-      "url": "https://ekonomickydenik.cz/zla-zprava-sblizeni-usa-cina-unie/",
-      "dt": "2026-05-15T09:57:54Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "evropany",
-        "hry",
-        "mění",
-        "padá",
-        "pravidla",
-        "sblížení",
-        "unie",
-        "usa",
-        "vliv",
-        "zlá",
-        "zpráva",
-        "čínou"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -813,7 +808,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71364,
+      "bytes": 71485,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -850,7 +845,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-18T10:00:46Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T11:24:51Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 22,
@@ -868,6 +863,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Průzkum o prezidentech překvapil: Klaus těsně přeskočil Pavla",
+            "publishedAt": "2026-05-18T11:24:51Z"
+          },
           {
             "title": "Konec závislosti na Číně? EU chystá „pravidlo tří“ pro strategické nákupy",
             "publishedAt": "2026-05-18T10:00:46Z"
@@ -895,10 +894,6 @@
           {
             "title": "Studovala v Česku pak poznala životní lásku. Oba nakonec zemřeli v Kyjevě",
             "publishedAt": "2026-05-17T12:24:28Z"
-          },
-          {
-            "title": "Konec EU jako mírového projektu? Silné armády mohou ovládnout evropští populisté",
-            "publishedAt": "2026-05-17T10:30:00Z"
           }
         ]
       }

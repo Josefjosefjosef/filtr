@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-18T11:15:15.075008Z",
+  "ingestedAt": "2026-05-18T11:54:31.086238Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Sen českých žen se naplňuje. Chystá se mamograf bez žádanky",
+      "url": "https://www.zdravezpravy.cz/2026/05/18/sen-ceskych-zen-se-naplnuje-chysta-se-mamograf-bez-zadanky/",
+      "dt": "2026-05-18T10:52:42Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "chystá",
+        "mamograf",
+        "naplňuje",
+        "sen",
+        "českých",
+        "žen",
+        "žádanky"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -465,29 +489,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Na epilepsii teď předepíší i lékaři FN Ostrava moderní léky",
-      "url": "https://www.zdravezpravy.cz/2026/05/07/na-epilepsii-ted-predepisi-neurologove-fn-ostrava-i-moderni-leky/",
-      "dt": "2026-05-07T14:52:02Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "epilepsii",
-        "lékaři",
-        "léky",
-        "moderní",
-        "ostrava",
-        "předepíší"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -498,7 +499,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 197586,
+      "bytes": 198363,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -535,7 +536,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-18T08:54:57Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T10:52:42Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -551,6 +552,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sen českých žen se naplňuje. Chystá se mamograf bez žádanky",
+            "publishedAt": "2026-05-18T10:52:42Z"
+          },
           {
             "title": "Epidemie eboly se šíří z Konga do dalších zemí. Situace je vážná",
             "publishedAt": "2026-05-18T08:54:57Z"
@@ -578,10 +583,6 @@
           {
             "title": "EK doporučí unijním zemím zakázat léčbu homosexuality",
             "publishedAt": "2026-05-14T11:00:50Z"
-          },
-          {
-            "title": "Do zdravotnictví má jít příští rok už přes 600 mld. Kč. Chystají se změny",
-            "publishedAt": "2026-05-14T08:54:30Z"
           }
         ]
       }
