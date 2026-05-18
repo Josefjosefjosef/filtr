@@ -50,6 +50,24 @@ const LOOP_RUNTIME_ALLOWED_DIRTY_PATHS = new Set([
   "scripts/silver-cursor-agent-adapter-diagnostic-report.json",
 ]);
 
+/** Handoff artifacts kept on disk after a successful loop for manual CAP review (never git checkout). */
+const LOOP_HANDOFF_PERSIST_PATHS = new Set([
+  "SILVER_CURSOR_OUTPUT.md",
+  "SILVER_NEXT_ACTION.md",
+]);
+
+/** Runtime JSON/report paths restored after loop so the working tree stays clean. */
+const LOOP_RUNTIME_RESTORE_ON_EXIT_PATHS = new Set(
+  [...LOOP_RUNTIME_ALLOWED_DIRTY_PATHS].filter((p) => !LOOP_HANDOFF_PERSIST_PATHS.has(p)),
+);
+
+/** UTF-8 mis-decoded Czech (Latin-1/Windows-1252 read as UTF-8). */
+const SILVER_NEXT_ACTION_MOJIBAKE_RE =
+  /Ă|â€|Ĺ|pĹ|Ä›|OtevĹ|ZprĂ|pĹ™ejdÄ|ĂşKOL|ÄŤ|Ĺ™|Ă­|Ăˇ|Ă©/;
+
+const SILVER_NEXT_ACTION_SILVER_WORKFLOW_RE =
+  /PRODUCT_CLUSTER|NEXT PRODUCT CLUSTER|silver-rhc3|scripts\/silver-|cluster diagnostic|harness|audit_silver|SILVER_PRODUCT_CLUSTER|top_cluster=/i;
+
 /** Regenerated Silver diagnostic JSON under scripts/ only (narrow; not source or engine paths). */
 const LOOP_RUNTIME_GENERATED_DIAGNOSTIC_REPORT_RE =
   /^scripts\/silver-[a-z0-9][a-z0-9_-]*-diagnostic-report\.json$/i;
@@ -644,8 +662,125 @@ function printLoopCycleHeartbeat(hb) {
   console.log("=== END_SILVER_AUTO_LOOP_CYCLE_HEARTBEAT ===");
 }
 
+/**
+ * @param {string} text
+ * @returns {string[]}
+ */
+function silverNextActionQualityViolations(text) {
+  const t = String(text || "");
+  const v = [];
+  if (SILVER_NEXT_ACTION_MOJIBAKE_RE.test(t)) v.push("mojibake_utf8");
+  if (/git\s+push\s+-u\s+origin/i.test(t) && !SILVER_NEXT_ACTION_SILVER_WORKFLOW_RE.test(t)) {
+    v.push("generic_git_push_upstream");
+  }
+  if (/chore\/silver-audit-repo-state/i.test(t)) v.push("generic_chore_silver_audit_push");
+  if (
+    /(?:sudo\s+apt\s+(?:update|install)|gh\s+auth\s+login)/i.test(t) &&
+    /verify-pr|git\s+push\s+-u/i.test(t) &&
+    !SILVER_NEXT_ACTION_SILVER_WORKFLOW_RE.test(t)
+  ) {
+    v.push("generic_gh_install_not_cluster_workflow");
+  }
+  return v;
+}
+
+/**
+ * @param {string} text
+ * @returns {Record<string, string>}
+ */
+function parseAdapterOutputMetaFull(text) {
+  const out = {};
+  const full = String(text || "");
+  if (full.indexOf("# silver-cursor-agent-adapter") < 0) return out;
+  const marker = "# stdout";
+  const idx = full.indexOf(marker);
+  const head = idx >= 0 ? full.slice(0, idx) : full;
+  for (const raw of head.split(/\r?\n/)) {
+    const line = raw.trim();
+    if (!line || !line.includes("=")) continue;
+    const eq = line.indexOf("=");
+    if (eq <= 0) continue;
+    const k = line.slice(0, eq).trim();
+    if (!/^[a-zA-Z0-9_]+$/.test(k)) continue;
+    out[k] = line.slice(eq + 1).trim();
+  }
+  return out;
+}
+
+/**
+ * @param {string} text
+ * @returns {string[]}
+ */
+function cursorOutputPersistenceViolations(text) {
+  const full = String(text || "");
+  const v = [];
+  if (!full.trim()) {
+    v.push("cursor_output_missing");
+    return v;
+  }
+  const meta = parseAdapterOutputMetaFull(full);
+  if (String(meta.adapter_output_state || "") === "INVALIDATED_AWAITING_CYCLE") {
+    v.push("invalidated_awaiting_cycle");
+  }
+  const stdoutMarker = "# stdout";
+  const idx = full.indexOf(stdoutMarker);
+  const tail = idx >= 0 ? full.slice(idx + stdoutMarker.length) : "";
+  const stderrMarker = "# stderr";
+  const stderrIdx = tail.indexOf(stderrMarker);
+  const stdoutBody = (stderrIdx >= 0 ? tail.slice(0, stderrIdx) : tail).replace(/\s/g, "");
+  if (stdoutBody.length < 20 && String(meta.stdout_nonempty || "").toUpperCase() !== "YES") {
+    v.push("cursor_stdout_empty");
+  }
+  return v;
+}
+
+/**
+ * @returns {boolean}
+ */
+function runHandoffPersistenceSelftest() {
+  let ok = true;
+  const badMoji = silverNextActionQualityViolations("ĂšKOL PRO CURSOR â€” git push -u origin chore/silver-audit-repo-state");
+  if (!badMoji.length) {
+    console.error("HANDOFF_PERSISTENCE_SELFTEST_FAIL mojibake_generic_expected");
+    ok = false;
+  }
+  const goodCluster = silverNextActionQualityViolations(
+    "ÚKOL PRO CURSOR — NEXT PRODUCT CLUSTER\nnode scripts/silver-rhc3-top-cluster-diagnostic.cjs",
+  );
+  if (goodCluster.length) {
+    console.error("HANDOFF_PERSISTENCE_SELFTEST_FAIL cluster_task_rejected " + goodCluster.join(";"));
+    ok = false;
+  }
+  const inv = cursorOutputPersistenceViolations(
+    "# silver-cursor-agent-adapter\nadapter_output_state=INVALIDATED_AWAITING_CYCLE\n# stdout\n\n",
+  );
+  if (!inv.includes("invalidated_awaiting_cycle")) {
+    console.error("HANDOFF_PERSISTENCE_SELFTEST_FAIL invalidated_guard");
+    ok = false;
+  }
+  const done = cursorOutputPersistenceViolations(
+    "# silver-cursor-agent-adapter\nadapter_output_state=COMPLETED\nstdout_nonempty=YES\n# stdout\n" +
+      "x".repeat(25) +
+      "\n",
+  );
+  if (done.length) {
+    console.error("HANDOFF_PERSISTENCE_SELFTEST_FAIL completed_should_pass " + done.join(";"));
+    ok = false;
+  }
+  if (!LOOP_HANDOFF_PERSIST_PATHS.has("SILVER_CURSOR_OUTPUT.md")) {
+    console.error("HANDOFF_PERSISTENCE_SELFTEST_FAIL persist_set");
+    ok = false;
+  }
+  if (LOOP_RUNTIME_RESTORE_ON_EXIT_PATHS.has("SILVER_CURSOR_OUTPUT.md")) {
+    console.error("HANDOFF_PERSISTENCE_SELFTEST_FAIL restore_set_excludes_handoff");
+    ok = false;
+  }
+  if (ok) console.log("HANDOFF_PERSISTENCE_SELFTEST_PASS");
+  return ok;
+}
+
 function restoreLoopRuntimeFiles() {
-  for (const rel of LOOP_RUNTIME_ALLOWED_DIRTY_PATHS) {
+  for (const rel of LOOP_RUNTIME_RESTORE_ON_EXIT_PATHS) {
     runCommand("git", ["checkout", "--", rel]);
   }
   const p = gitPorcelain();
@@ -655,6 +790,40 @@ function restoreLoopRuntimeFiles() {
       runCommand("git", ["checkout", "--", rel]);
     }
   }
+}
+
+/**
+ * @param {number} loopTarget
+ * @param {number} completed
+ * @param {string} loopSafe
+ * @returns {{ ok: boolean, stopReason: string, detail: string }}
+ */
+function evaluateLoopHandoffPersistence(loopTarget, completed, loopSafe) {
+  if (loopSafe !== "YES" || completed !== loopTarget) {
+    return { ok: true, stopReason: "", detail: "" };
+  }
+  let cursorText = "";
+  let nextText = "";
+  try {
+    if (fs.existsSync(CURSOR_OUTPUT_FILE)) cursorText = fs.readFileSync(CURSOR_OUTPUT_FILE, "utf8");
+    if (fs.existsSync(NEXT_ACTION_FILE)) nextText = fs.readFileSync(NEXT_ACTION_FILE, "utf8");
+  } catch (e) {
+    return {
+      ok: false,
+      stopReason: "HANDOFF_PERSISTENCE_READ_FAILED",
+      detail: String((e && e.message) || e || "read_failed"),
+    };
+  }
+  const cv = cursorOutputPersistenceViolations(cursorText);
+  const nv = silverNextActionQualityViolations(nextText);
+  if (cv.length || nv.length) {
+    return {
+      ok: false,
+      stopReason: "HANDOFF_PERSISTENCE_GUARD_FAIL",
+      detail: "cursor=" + cv.join(",") + ";next_action=" + nv.join(","),
+    };
+  }
+  return { ok: true, stopReason: "", detail: "" };
 }
 
 function runSilverCursorAdapter(adapter, opts) {
@@ -863,6 +1032,12 @@ function printRunCursorSummary(rep) {
   if (rep.cursor_adapter_stop_reason) {
     console.log(`cursor_adapter_stop_reason=${String(rep.cursor_adapter_stop_reason)}`);
   }
+  if (rep.handoff_persistence_guard) {
+    console.log(`handoff_persistence_guard=${String(rep.handoff_persistence_guard)}`);
+  }
+  if (rep.handoff_persistence_detail) {
+    console.log(`handoff_persistence_detail=${String(rep.handoff_persistence_detail)}`);
+  }
   console.log("=== END_SILVER_AUTO_CURSOR_ADAPTER_V1_RUN_SUMMARY ===");
 }
 
@@ -873,6 +1048,9 @@ function main() {
   }
   if (argvSlice.includes("--cli-cycle-plan-selftest")) {
     process.exit(runCyclePlanSelftest() ? 0 : 1);
+  }
+  if (argvSlice.includes("--cli-handoff-persistence-selftest")) {
+    process.exit(runHandoffPersistenceSelftest() ? 0 : 1);
   }
   const cli = parseSilverAutoCli(argvSlice);
   const startedAt = new Date().toISOString();
@@ -1206,17 +1384,32 @@ function main() {
           repOut.last_completed_cycle = String(completed);
         }
         repOut.loop_cycles_completed = String(completed);
+        const handoffPersist = evaluateLoopHandoffPersistence(loopTarget, completed, loopSafe);
+        if (!handoffPersist.ok) {
+          loopStopReason = handoffPersist.stopReason;
+          loopStopReasonDetail = handoffPersist.detail;
+          loopSafe = "NO";
+        }
         repOut.loop_stop_reason = loopStopReason || "LOOP_COMPLETED";
         repOut.stop_reason_detail = loopStopReasonDetail || "LOOP_COMPLETED_OK";
         repOut.loop_safe_to_continue = loopSafe;
+        repOut.handoff_persistence_guard = handoffPersist.ok ? "PASS" : "FAIL";
+        if (handoffPersist.detail) {
+          repOut.handoff_persistence_detail = handoffPersist.detail;
+        }
         if (completed === loopTarget && loopSafe === "YES") {
           repOut.loop_completed = "YES";
         } else {
           repOut.loop_completed = "NO";
           repOut.safe_to_continue = "NO";
           repOut.recommended_next_command =
-            "STOP: inspect SILVER_CURSOR_OUTPUT.md and runtime dirty paths; fix blocker, then rerun npm run silver-auto -- --run-cursor --loop --max-cycles=" +
-            String(loopTarget);
+            handoffPersist.ok
+              ? "STOP: inspect SILVER_CURSOR_OUTPUT.md and runtime dirty paths; fix blocker, then rerun npm run silver-auto -- --run-cursor --loop --max-cycles=" +
+                String(loopTarget)
+              : "STOP: handoff persistence guard failed (" +
+                String(handoffPersist.detail || handoffPersist.stopReason) +
+                "); read SILVER_CURSOR_OUTPUT.md and SILVER_NEXT_ACTION.md; fix encoding/generic task; rerun npm run silver-auto -- --run-cursor --loop --max-cycles=" +
+                String(loopTarget);
         }
       } else {
         const singleTimeout = resolveSingleRunAdapterTimeoutSeconds(1);
