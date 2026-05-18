@@ -4,65 +4,41 @@
 
 ### Úkol pro Cursor
 
-1. Otevřete terminál a přejděte do adresáře projektu:  
+1. Otevřete PowerShell a přejděte do adresáře projektu:
    ```powershell
    Set-Location -LiteralPath C:\projects\filtr
    ```
-
-2. Ověřte stav repozitáře a seznam změn:  
+2. Ověřte stav repozitáře:
    ```powershell
    git status
    ```
-
-3. Přihlaste se do GitHubu pomocí CLI:  
+3. Rozhodněte, zda chcete **commitnout** změny v `SILVER_*.md`, nebo je **vrátit** pomocí `git restore`:
+   - Pro commit:
+     ```powershell
+     git add SILVER_*.md
+     git commit -m "Upravené soubory pro audit Silver"
+     ```
+   - Pro vrácení změn:
+     ```powershell
+     git restore SILVER_*.md
+     ```
+4. Přihlaste se k GitHubu:
    ```powershell
    gh auth login
    ```
-
-4. Rozhodněte se, co udělat se změněnými soubory `SILVER_*.md`: commitnout, stashnout nebo zahodit. Pokud se rozhodnete commitnout, použijte:  
-   ```powershell
-   git add SILVER_*.md
-   git commit -m "Upravené soubory pro audit Silver"
-   ```
-
-5. Zkuste znovu provést push:  
+5. Po vyčištění pracovního stromu proveďte push:
    ```powershell
    git push -u origin chore/silver-audit-repo-state
    ```
 
 ### Scope guard
-- Zajistěte, že všechny kroky jsou provedeny v souladu se strategií Silver a že nedochází k žádným regresím.
+Tento úkol je zaměřen na zajištění čistoty pracovního stromu a přihlášení k GitHubu před provedením push.
 
 ### STOP podmínky
-- Raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode` je zakázáno; kontrolovaný autonomní režim vyžaduje tyto přepínače plus vestavěné limity.
+- Pracovní strom musí být čistý (`git_clean=NO`).
+- Žádné změny nesmí být necommitnuté před provedením push.
 
 ### Povinný výsledek
 ```
-=== 
-1. Otevřete terminál a přejděte do adresáře projektu:  
-   ```powershell
-   Set-Location -LiteralPath C:\projects\filtr
-   ```
-
-2. Ověřte stav repozitáře a seznam změn:  
-   ```powershell
-   git status
-   ```
-
-3. Přihlaste se do GitHubu pomocí CLI:  
-   ```powershell
-   gh auth login
-   ```
-
-4. Rozhodněte se, co udělat se změněnými soubory `SILVER_*.md`: commitnout, stashnout nebo zahodit. Pokud se rozhodnete commitnout, použijte:  
-   ```powershell
-   git add SILVER_*.md
-   git commit -m "Upravené soubory pro audit Silver"
-   ```
-
-5. Zkuste znovu provést push:  
-   ```powershell
-   git push -u origin chore/silver-audit-repo-state
-   ```
-===
+Ověření stavu repozitáře a autentizace pro GitHub.
 ```
