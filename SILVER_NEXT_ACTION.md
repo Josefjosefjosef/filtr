@@ -19,24 +19,28 @@
    git status --short
    ```
 
-4. Pokud chceš uchovat změny, proveď commit:
+4. Pokud jsou změny v soulade s whitelistem, přidej soubory a udělej commit:
    ```powershell
    git add SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
    git commit -m "chore(silver): sync Silver tracking artifacts after cycle 10 audit"
    ```
 
-5. Pokud chceš zrušit změny, proveď restore:
+5. Znovu zkontroluj krátký stav repozitáře:
    ```powershell
-   git restore SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
+   git status --short
    ```
 
 ### Scope guard
-Zajisti, že všechny změny jsou v souladu s pravidly Silver strategie a že žádné další soubory nejsou ovlivněny.
+Zajisti, aby všechny změny byly v souladu s definovanými pravidly a aby nedošlo k porušení bezpečnostních opatření.
 
 ### STOP podmínky
-Raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode` nepoužívám; kontrolovaný autonomní režim zůstává v souladu se zadáním.
+Nepoužívej raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode`. Kontroluj, že všechny příkazy jsou v souladu s bezpečnostními pravidly.
 
 ### Povinný výsledek
+Zkontroluj, že všechny příkazy byly úspěšně provedeny a že repozitář je čistý po commitu.
+
 ```
-Zkontroluj stav repozitáře a shrň změny v `SILVER_CURSOR_OUTPUT.md`, proveď audit změn v souborech a zkontroluj krátký stav repozitáře. Rozhodni se, zda provedeš commit nebo restore.
+===
+Zkontrolován stav repozitáře a shrnuty změny v `SILVER_CURSOR_OUTPUT.md`, proveden audit souborů a krátký stav repozitáře. Rozhodnutí: commit (ne restore).
+===
 ```
