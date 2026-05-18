@@ -1,7 +1,7 @@
 # silver-cursor-agent-adapter
 autonomous_run_id=de105f7f334b4445bf2ffc9abaab26fa
 autonomous_run_start_utc=2026-05-18T03:31:13.7456429Z
-autonomous_cycle=7
+autonomous_cycle=9
 adapter_output_state=INVALIDATED_AWAITING_CYCLE
 process_start_utc=
 task_digest=
@@ -13,8 +13,9 @@ elapsed_ms=
 ## Repo audit snapshot (Cursor, 2026-05-18)
 
 - Branch: `chore/silver-audit-repo-state`
-- Stav před `git add`: změněny pouze čtyři soubory uvedené v NEXT_ACTION (`SILVER_CURSOR_OUTPUT.md`, `SILVER_NEXT_ACTION.md`, `SILVER_PROGRESS_LOG.md`, `SILVER_RUN_REPORT.md`); staged prázdné
-- Audit diff `--stat`: 82 řádků přidáno, 54 odstraněno (warning Gitu o CRLF→LF jen u `SILVER_PROGRESS_LOG.md`)
-- Vyhledání `MaxCycles` v `SILVER*.md`: výskyty v `SILVER_AUTOPILOT_README.md`, `SILVER_NEXT_ACTION.md`, `SILVER_PR_ORCHESTRATOR_README.md` — jen popisy zákazu raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode` a bezpečných alternativ (`--exclude-dir=.silver-runtime`; žádné další `SILVER*.md`)
+- `git status`: změněny pouze 4 soubory, nic ve stage (`SILVER_CURSOR_OUTPUT.md`, `SILVER_NEXT_ACTION.md`, `SILVER_PROGRESS_LOG.md`, `SILVER_RUN_REPORT.md`)
+- `git diff --stat` (stejné 4 soubory, po doplnění tohoto bloku): 4 files changed, 68 insertions(+), 41 deletions(-); Git varoval u `SILVER_PROGRESS_LOG.md` (CRLF→LF při dalším dotyku)
+- `MaxCycles` v `SILVER*.md` (`grep -rn`, `--exclude-dir=.silver-runtime`): `SILVER_AUTOPILOT_README.md`, `SILVER_PR_ORCHESTRATOR_README.md`, `SILVER_NEXT_ACTION.md` (krok 3), `SILVER_CURSOR_OUTPUT.md` (tento auditní řádek)
+- Pozn.: krok 5 v `SILVER_NEXT_ACTION.md` zní „commit pokud je strom čistý“; pro záznam změn je potřeba commitovat nečistý strom — po commitu je `--short` prázdný
 
 # stderr
