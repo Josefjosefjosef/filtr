@@ -11,34 +11,27 @@
 
 2. Proveď audit diffů čtyř souborů:
    ```powershell
-   git diff --stat SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_RUN_REPORT.md SILVER_PROGRESS_LOG.md
+   git diff --stat -- SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
    ```
 
-3. Zkontroluj výskyt `MaxCycles` v souborech `SILVER*.md`:
+3. Ověř, zda je v dokumentaci uveden `MaxCycles`:
    ```powershell
-   grep -rn MaxCycles --include='SILVER*.md' . --exclude-dir=.silver-runtime 2>/dev/null || true
+   grep -n MaxCycles SILVER*.md
    ```
 
-4. Zkontroluj stav git:
-   ```powershell
-   git status --short
-   ```
-
-5. Změny commitni lokálně:
+4. Pokud jsou změny v pořádku, přidej je do commitu:
    ```powershell
    git add SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
-   git commit -m "Audit a aktualizace výstupů"
    ```
 
-6. Pokus se o push na `origin`:
+5. Vytvoř commit s konvenční zprávou:
    ```powershell
-   git push -u origin HEAD
+   git commit -m "chore: silver audit outputs"
    ```
 
-=== 
-Zkontroloval jsem stav repozitáře a shrnul změny v `SILVER_CURSOR_OUTPUT.md`. 
-Provedl jsem audit diffů čtyř souborů. 
-Zkontroloval jsem výskyt `MaxCycles` v souborech `SILVER*.md`. 
-Zkontroloval jsem stav git. 
-Změny jsem commitnul lokálně; push na `origin` se v tomto běhu neprovedl kvůli chybějícím HTTPS GitHub pověřením — prosím pusť lokálně `git push -u origin HEAD` (nebo použij SSO/SSH, pokud už ho máš pro tento repo). 
+6. Proveď push na vzdálenou větev, pokud máš nastavené credly k `origin`:
+   ```powershell
+   git push origin chore/silver-audit-repo-state
+   ```
+
 ===
