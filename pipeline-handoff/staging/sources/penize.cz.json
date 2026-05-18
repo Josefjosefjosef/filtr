@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-18T02:29:39.069028Z",
+  "ingestedAt": "2026-05-18T03:10:01.003491Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Penzijní připojištění vás připravuje o úspory. Nové porovnání starých fondů",
+      "url": "https://www.penize.cz/penzijni-pripojisteni/482513-penzijni-pripojisteni-2025-porovnani-vynosy-zhodnoceni",
+      "dt": "2026-05-18T05:05:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "fondů",
+        "nové",
+        "penzijní",
+        "porovnání",
+        "připojištění",
+        "připravuje",
+        "starých",
+        "vás",
+        "úspory"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -481,29 +507,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Prémiové bankovnictví UniCredit má novou tvář a je dostupnější",
-      "url": "https://www.penize.cz/osobni-ucty/489646-premiove-bankovnictvi-unicredit-ma-novou-a-dostupnejsi-tvar",
-      "dt": "2026-05-13T18:30:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "bankovnictví",
-        "dostupnější",
-        "novou",
-        "prémiové",
-        "tvář",
-        "unicredit"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -514,7 +517,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18710,
+      "bytes": 18770,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -551,11 +554,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-17T07:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T05:05:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 5,
-          "finance": 15
+          "finance": 15,
+          "zpravy": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -567,6 +570,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Penzijní připojištění vás připravuje o úspory. Nové porovnání starých fondů",
+            "publishedAt": "2026-05-18T05:05:00Z"
+          },
           {
             "title": "Skončí past na řidiče? Denní známka má fungovat tak, jak čekají",
             "publishedAt": "2026-05-17T07:30:00Z"
@@ -594,10 +601,6 @@
           {
             "title": "Digitalizace dávek se odkládá, některých ruší. Změny schválili poslanci",
             "publishedAt": "2026-05-15T11:40:00Z"
-          },
-          {
-            "title": "Sociální sítě rozbíjejí rodiny stejně jako alkohol. Zákaz pro děti podporuje většina Čechů",
-            "publishedAt": "2026-05-15T09:31:00Z"
           }
         ]
       }
