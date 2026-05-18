@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-18T07:49:45.372466Z",
+  "ingestedAt": "2026-05-18T08:30:59.067171Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Íránu tikají hodiny, varuje Trump. Pentagon označil cíle pro novou vlnu úderů",
+      "url": "https://www.denik.cz/ze_sveta/iran-vyjednavani-mir-cas-donald-trump-usa-valka-nove-udery-utok.html",
+      "dt": "2026-05-18T07:57:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "cíle",
+        "hodiny",
+        "novou",
+        "označil",
+        "pentagon",
+        "tikají",
+        "trump",
+        "varuje",
+        "vlnu",
+        "íránu",
+        "úderů"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -619,34 +647,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Mladý pár Ukrajinců plánoval rodinu, ona studovala v Česku. Zabil je ruský nálet",
-      "url": "https://www.denik.cz/ze_sveta/ap-mlady-par-zabity-pri-ruskych-uderech-planoval-rodinu-ona-studovala-v-cr.html",
-      "dt": "2026-05-17T11:37:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "mladý",
-        "nálet",
-        "ona",
-        "plánoval",
-        "pár",
-        "rodinu",
-        "ruský",
-        "studovala",
-        "ukrajinců",
-        "zabil",
-        "česku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -657,7 +657,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29370,
+      "bytes": 29118,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -694,7 +694,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-18T06:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T07:57:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -711,6 +711,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Íránu tikají hodiny, varuje Trump. Pentagon označil cíle pro novou vlnu úderů",
+            "publishedAt": "2026-05-18T07:57:00Z"
+          },
           {
             "title": "Pozdvižení na D46: Od Vyškova jelo auto ve starých policejních barvách s majákem",
             "publishedAt": "2026-05-18T06:20:00Z"
@@ -738,10 +742,6 @@
           {
             "title": "Chorvatsko před 100 lety: Vypadalo zcela jinak. Bez turistů, s osly a vinicemi",
             "publishedAt": "2026-05-18T03:00:00Z"
-          },
-          {
-            "title": "Jízdy, testy i první pomoc. Dopravní soutěž prověřila znalosti mladých cyklistů",
-            "publishedAt": "2026-05-18T02:27:00Z"
           }
         ]
       }

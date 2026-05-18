@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-18T07:49:45.372466Z",
+  "ingestedAt": "2026-05-18T08:30:59.067171Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Festival Open House Praha otevře více než 100 budov. Mimo jiné i jízdárnu Savarin",
+      "url": "https://magazin.aktualne.cz/kultura/festival-open-house-praha-otevre-vice-nez-100-budov-mimo-jine-i-jizdarnu-savarin/r~aaa29f7187d71af40feade465aadb711/",
+      "dt": "2026-05-18T08:05:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "100",
+        "budov",
+        "festival",
+        "house",
+        "jiné",
+        "jízdárnu",
+        "mimo",
+        "než",
+        "open",
+        "otevře",
+        "praha",
+        "savarin"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ukrajina po ruských útocích hlásí jednoho mrtvého a kolem 40 zraněných",
+      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
+      "dt": "2026-01-21T06:45:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "hlásí",
+        "jednoho",
+        "kolem",
+        "mrtvého",
+        "ruských",
+        "ukrajina",
+        "zraněných",
+        "útocích"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -128,31 +182,6 @@
         "zničením",
         "íránu",
         "čas"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ukrajina po ruských útocích hlásí jednoho mrtvého a kolem 40 zraněných",
-      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
-      "dt": "2026-01-21T06:45:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "hlásí",
-        "jednoho",
-        "kolem",
-        "mrtvého",
-        "ruských",
-        "ukrajina",
-        "zraněných",
-        "útocích"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -504,32 +533,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Na Slovensku nefunguje nic, rozjela se opora. A vulgárně vylíčila, co fanoušci nevidí",
-      "url": "https://sport.aktualne.cz/hokej/na-slovensku-nefunguje-nic-rozjela-se-opora-a-vulgarne-vylicila-co-fanousci-nevidi/r~aaa298053fddafee8d834f2601376641/",
-      "dt": "2026-05-18T03:50:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "fanoušci",
-        "nefunguje",
-        "nevidí",
-        "nic",
-        "opora",
-        "rozjela",
-        "slovensku",
-        "vulgárně",
-        "vylíčila"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -540,7 +543,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22023,
+      "bytes": 22147,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -577,15 +580,15 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-18T07:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T08:05:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "other": 2,
           "zpravy": 12,
-          "sport": 4,
+          "sport": 3,
           "cestovani": 1,
           "zdravi": 1,
-          "finance": 1,
-          "other": 1
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -597,6 +600,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Festival Open House Praha otevře více než 100 budov. Mimo jiné i jízdárnu Savarin",
+            "publishedAt": "2026-05-18T08:05:00Z"
+          },
+          {
+            "title": "Ukrajina po ruských útocích hlásí jednoho mrtvého a kolem 40 zraněných",
+            "publishedAt": "2026-01-21T06:45:00Z"
+          },
           {
             "title": "Sehnal miliony na kauci. Zelenského klíčový muž smí opustit vazbu, viní ho z praní peněz",
             "publishedAt": "2026-05-18T07:32:00Z"
@@ -618,16 +629,8 @@
             "publishedAt": "2026-02-28T14:04:00Z"
           },
           {
-            "title": "Ukrajina po ruských útocích hlásí jednoho mrtvého a kolem 40 zraněných",
-            "publishedAt": "2026-01-21T06:45:00Z"
-          },
-          {
             "title": "Bartůňková po jízdě v Římě slaví životní posun v žebříčku WTA",
             "publishedAt": "2026-05-18T06:46:00Z"
-          },
-          {
-            "title": "Podivná sbírka na letenku pro prezidenta Pavla. Zůnův resort reagoval",
-            "publishedAt": "2026-05-18T03:30:00Z"
           }
         ]
       }

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-18T07:49:45.372466Z",
+  "ingestedAt": "2026-05-18T08:30:59.067171Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Uzavřený Hormuzský průliv sníží celosvětový růst HDP",
+      "url": "https://profitonline.cz/uzavreny-hormuzsky-pruliv-snizi-celosvetovy-rust-hdp/",
+      "dt": "2026-05-18T08:00:29Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "celosvětový",
+        "hdp",
+        "hormuzský",
+        "průliv",
+        "růst",
+        "sníží",
+        "uzavřený"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -269,26 +293,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Si, Trump a Thúkýdidova past",
-      "url": "https://profitonline.cz/si-trump-a-thukydidova-past/",
-      "dt": "2026-05-16T07:00:57Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "past",
-        "thúkýdidova",
-        "trump"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -299,7 +303,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18944,
+      "bytes": 19219,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -336,7 +340,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-18T06:00:35Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T08:00:29Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -351,6 +355,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Uzavřený Hormuzský průliv sníží celosvětový růst HDP",
+            "publishedAt": "2026-05-18T08:00:29Z"
+          },
           {
             "title": "Zlato z dovolené: Výhodný nákup, nebo drahý suvenýr?",
             "publishedAt": "2026-05-18T06:00:35Z"
@@ -378,10 +386,6 @@
           {
             "title": "Proč investoři důvěřují Alphabetu, ale u Mety zvedají varovný prst?",
             "publishedAt": "2026-05-17T07:00:22Z"
-          },
-          {
-            "title": "Poplatek za komunální odpad: Kdo se může stát nevědomky dlužníkem",
-            "publishedAt": "2026-05-17T04:00:34Z"
           }
         ]
       }

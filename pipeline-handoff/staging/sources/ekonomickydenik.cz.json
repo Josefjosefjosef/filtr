@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-18T07:49:45.372466Z",
+  "ingestedAt": "2026-05-18T08:30:59.067171Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "„Íránu se krátí čas, nic z nich nezbude“, Trump opět hrozí zničením",
+      "url": "https://ekonomickydenik.cz/iranu-se-krati-cas-nic-z-nich-nezbude-trump-opet-hrozi-znicenim/",
+      "dt": "2026-05-18T07:53:12Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "hrozí",
+        "krátí",
+        "nezbude",
+        "nic",
+        "nich",
+        "opět",
+        "trump",
+        "zničením",
+        "íránu",
+        "čas"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -777,31 +804,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Předporodní příspěvek od ledna v novém. Naváže na něj vyšší rodičovská",
-      "url": "https://ekonomickydenik.cz/predporodni-prispevek-leden-vyssi-rodicovska/",
-      "dt": "2026-05-15T08:37:31Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "ledna",
-        "naváže",
-        "novém",
-        "něj",
-        "předporodní",
-        "příspěvek",
-        "rodičovská",
-        "vyšší"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -812,7 +814,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71179,
+      "bytes": 70949,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -849,11 +851,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-18T06:34:54Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T07:53:12Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 6,
           "finance": 22,
+          "zpravy": 6,
           "zdravi": 2
         },
         "drop_counts": {
@@ -866,6 +868,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Íránu se krátí čas, nic z nich nezbude“, Trump opět hrozí zničením",
+            "publishedAt": "2026-05-18T07:53:12Z"
+          },
           {
             "title": "Žádná auta, ani zbraně. Drahé energie. Čínský útok na Tchaj-wan by Evropu citelně zabolel",
             "publishedAt": "2026-05-18T06:34:54Z"
@@ -893,10 +899,6 @@
           {
             "title": "Nabídky balkonových fotovoltaik přibývají. Vyplatí se? Odborníci jsou skeptičtí",
             "publishedAt": "2026-05-17T08:05:00Z"
-          },
-          {
-            "title": "Konec „Rudé Kateřiny“: Klíčová postava komunistů se stane řadovou členkou",
-            "publishedAt": "2026-05-17T06:56:39Z"
           }
         ]
       }

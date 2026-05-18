@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-18T07:49:45.372466Z",
+  "ingestedAt": "2026-05-18T08:30:59.067171Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Obří škrty ve farmafirmách: Zavírají továrny a propouštějí. Místa ruší i covidová superstar",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/skrty-farmafirmy-tovarny-propousti/",
+      "dt": "2026-05-18T08:00:35Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "covidová",
+        "farmafirmách",
+        "místa",
+        "obří",
+        "propouštějí",
+        "ruší",
+        "superstar",
+        "továrny",
+        "zavírají",
+        "škrty"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -246,31 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Výdaje na zdravotnictví v Německu explodovaly. Vzrostly o celoroční příjem Česka",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/vydaje-na-zdravotnictvi-v-nemecku-explodovaly/",
-      "dt": "2026-05-16T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "celoroční",
-        "explodovaly",
-        "německu",
-        "příjem",
-        "vzrostly",
-        "výdaje",
-        "zdravotnictví",
-        "česka"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 122401,
+      "bytes": 126330,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,7 +320,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-18T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T08:00:35Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -333,6 +335,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Obří škrty ve farmafirmách: Zavírají továrny a propouštějí. Místa ruší i covidová superstar",
+            "publishedAt": "2026-05-18T08:00:35Z"
+          },
           {
             "title": "S rýmou do práce? České nemocnice popsaly, za jakých okolností mohou nachlazení lékaři léčit",
             "publishedAt": "2026-05-18T07:00:00Z"
@@ -360,10 +366,6 @@
           {
             "title": "Jak chránit mysl při chemoterapii? Proti „mozkové mlze“ pomáhají dvě obyčejné věci",
             "publishedAt": "2026-05-16T15:30:00Z"
-          },
-          {
-            "title": "Hrozí zavlečení eboly do Česka? Hygienici popsali aktuální míru rizika",
-            "publishedAt": "2026-05-16T14:40:00Z"
           }
         ]
       }

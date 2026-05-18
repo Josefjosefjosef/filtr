@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-18T07:49:45.372466Z",
+  "ingestedAt": "2026-05-18T08:30:59.067171Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,35 @@
         "valley",
         "úspěšného",
         "česku"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Nejlevnější klávesnici s magnetickými spínači má Alza. Tahle Rapture je za 800 Kč, dříve stála třikrát tolik",
+      "url": "https://www.zive.cz/clanky/nejlevnejsi-klavesnice-alza-rapture-kilo-v2-he/sc-3-a-241212/default.aspx",
+      "dt": "2026-05-18T07:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "800",
+        "alza",
+        "dříve",
+        "klávesnici",
+        "magnetickými",
+        "nejlevnější",
+        "rapture",
+        "spínači",
+        "stála",
+        "tahle",
+        "tolik",
+        "třikrát"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -944,33 +973,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Skrytý nástroj v Androidu přehledně ukazuje, které aplikace zabírají nejvíc operační paměti",
-      "url": "https://mobilmania.zive.cz/clanky/skryty-nastroj-v-androidu-podrobne-ukazuje-ktere-aplikace-zabiraji-nejvic-operacni-pameti/sc-3-a-1364678/default.aspx",
-      "dt": "2026-05-13T11:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "androidu",
-        "aplikace",
-        "nejvíc",
-        "nástroj",
-        "operační",
-        "paměti",
-        "přehledně",
-        "skrytý",
-        "ukazuje",
-        "zabírají"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -981,7 +983,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22585,
+      "bytes": 22550,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1018,7 +1020,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-18T06:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T07:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1036,6 +1038,10 @@
           {
             "title": "V Česku se peče další jednorožec. Firma úspěšného ajťáka má další miliardy od legend ze Silicon Valley",
             "publishedAt": "2026-05-17T15:45:00Z"
+          },
+          {
+            "title": "Nejlevnější klávesnici s magnetickými spínači má Alza. Tahle Rapture je za 800 Kč, dříve stála třikrát tolik",
+            "publishedAt": "2026-05-18T07:45:00Z"
           },
           {
             "title": "Když je AI horší než originál. Nová Xperia schytává kritiku za zbytečné vylepšování fotek",
@@ -1060,10 +1066,6 @@
           {
             "title": "Vybrali jsme nejlepší robotické vysavače. Lidar, mop i velkou základnu už koupíte pod 10 tisíc",
             "publishedAt": "2026-05-15T12:45:00Z"
-          },
-          {
-            "title": "Týden Živě: Apple vyhodil Intel dveřmi, ten vrací se oknem. A po cestě se skamarádil s Muskem",
-            "publishedAt": "2026-05-16T16:45:00Z"
           }
         ]
       }

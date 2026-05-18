@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-18T07:49:45.372466Z",
+  "ingestedAt": "2026-05-18T08:30:59.067171Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Co si dnes obléknu? Studentská firma roku zvítězila s aplikací, která zná odpověď",
+      "url": "https://www.epenize.eu/co-si-dnes-obleknu-studentska-firma-roku-zvitezila-s-aplikaci-ktera-zna-odpoved/",
+      "dt": "2026-05-18T08:04:26Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "aplikací",
+        "firma",
+        "obléknu",
+        "odpověď",
+        "roku",
+        "studentská",
+        "zná",
+        "zvítězila"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -506,32 +531,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fotbal jako obraz dnešní společnosti. Je mi líto slušných fanoušků Slavie",
-      "url": "https://www.epenize.eu/fotbal-jako-obraz-dnesni-spolecnosti-je-mi-lito-slusnych-fanousku-slavie/",
-      "dt": "2026-05-10T12:20:01Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "dnešní",
-        "fanoušků",
-        "fotbal",
-        "jako",
-        "líto",
-        "obraz",
-        "slavie",
-        "slušných",
-        "společnosti"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -542,7 +541,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 121722,
+      "bytes": 124158,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -579,13 +578,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-18T06:26:02Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T08:04:26Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zdravi": 2,
           "finance": 17,
-          "zdravi": 1,
-          "zpravy": 1,
-          "sport": 1
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -597,6 +595,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Co si dnes obléknu? Studentská firma roku zvítězila s aplikací, která zná odpověď",
+            "publishedAt": "2026-05-18T08:04:26Z"
+          },
           {
             "title": "Hlasování o landsmanšaftu: Igor se nestihl odhlásit",
             "publishedAt": "2026-05-18T06:26:02Z"
@@ -624,10 +626,6 @@
           {
             "title": "Prodejní automaty jako nová alternativa v Evropě",
             "publishedAt": "2026-05-15T09:09:35Z"
-          },
-          {
-            "title": "Petr Fiala mění styl komunikace. Virální videa, AI i politická ironie mají oslovit nové publikum",
-            "publishedAt": "2026-05-15T08:58:19Z"
           }
         ]
       }
