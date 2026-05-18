@@ -8,35 +8,36 @@
    ```powershell
    Set-Location -LiteralPath C:\projects\filtr
    ```
-2. Spusťte příkaz pro ověření stavu repozitáře:
+
+2. Vytvořte záložní commit pro změny v souborech `SILVER_CURSOR_OUTPUT.md`, `SILVER_NEXT_ACTION.md`, `SILVER_PROGRESS_LOG.md`, `SILVER_RUN_REPORT.md`:
    ```powershell
-   git status --short
+   git add SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
+   git commit -m "Záložní commit před autentizací a push"
    ```
-3. Přihlaste se do GitHub CLI:
+
+3. Přihlaste se do GitHubu pomocí `gh`:
    ```powershell
    gh auth login
    ```
-4. Ověřte stav přihlášení:
+
+4. Ověřte stav autentizace:
    ```powershell
    gh auth status
    ```
-5. Nastavte GitHub CLI pro použití s Gitem:
-   ```powershell
-   gh auth setup-git
-   ```
-6. Proveďte push změn na vzdálené úložiště:
+
+5. Vytvořte remote větev na GitHubu:
    ```powershell
    git push -u origin chore/silver-audit-repo-state
    ```
 
+=== 
 ### Scope guard
-Zajistěte, aby všechny příkazy byly provedeny v uvedeném pořadí a aby bylo přihlášení úspěšné před provedením push.
+Zajistěte, že všechny příkazy jsou prováděny v PowerShellu na Windows a že máte platné přihlašovací údaje pro GitHub.
 
 ### STOP podmínky
-- Pokud `git status` ukazuje necommitnuté změny, proveďte commit před pokusem o push.
-- Raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode` je zakázáno; kontrolovaný autonomní režim vyžaduje tyto přepínače plus vestavěné limity.
+- Raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode` je zakázáno.
+- Řízený autonomní režim vyžaduje tyto přepínače plus vestavěné limity.
 
 ### Povinný výsledek
-```plaintext
-Úkol byl úspěšně proveden, změny byly úspěšně odeslány na vzdálené úložiště.
-```
+Ujistěte se, že všechny příkazy byly úspěšně provedeny a že jste se přihlásili do GitHubu a vytvořili remote větev. 
+===
