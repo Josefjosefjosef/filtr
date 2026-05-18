@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-18T19:19:51.860949Z",
+  "ingestedAt": "2026-05-18T20:00:29.385915Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trump oznámil, že odkládá údery na Írán",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/trump-oznamil-ze-odklada-udery-na-iran-373585",
+      "dt": "2026-05-18T19:29:21Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "odkládá",
+        "oznámil",
+        "trump",
+        "írán",
+        "údery"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -243,32 +265,6 @@
         "trump",
         "úniku",
         "žalobu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trojice zadržená v Polsku kvůli útoku na pardubickou zbrojovku poputuje do Česka",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/trojice-zadrzena-v-polsku-kvuli-utoku-na-pardubickou-zbrojovku-poputuje-do-ceska-373569",
-      "dt": "2026-05-18T13:49:41Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "kvůli",
-        "pardubickou",
-        "polsku",
-        "poputuje",
-        "trojice",
-        "zadržená",
-        "zbrojovku",
-        "útoku",
-        "česka"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1505,7 +1501,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41099,
+      "bytes": 41059,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1565,7 +1561,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-18T19:14:56Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T19:29:21Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1582,6 +1578,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump oznámil, že odkládá údery na Írán",
+            "publishedAt": "2026-05-18T19:29:21Z"
+          },
           {
             "title": "Izrael i palestinští teroristé páchali v Gaze válečné zločiny, uvedl úřad OSN",
             "publishedAt": "2026-05-18T19:14:56Z"
@@ -1609,10 +1609,6 @@
           {
             "title": "SOUHRN: Zásadní události pondělí 18. května",
             "publishedAt": "2026-05-18T16:29:00Z"
-          },
-          {
-            "title": "Na hlavě státu záleží, říká Kosatík v souvislosti s knihou o Benešovi",
-            "publishedAt": "2026-05-18T14:50:22Z"
           }
         ]
       }
