@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-18T20:00:29.385915Z",
+  "ingestedAt": "2026-05-18T20:40:30.035962Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "USA se uzavírají před ebolou. Kvůli smrtící nákaze vyhlásily okamžitý zákaz vstupu pro cizince",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/usa-ebola-zakaz-vstupu-cizinci/",
+      "dt": "2026-05-18T20:15:12Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "cizince",
+        "ebolou",
+        "kvůli",
+        "nákaze",
+        "okamžitý",
+        "smrtící",
+        "usa",
+        "uzavírají",
+        "vstupu",
+        "vyhlásily",
+        "zákaz"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -247,34 +275,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Pokročilé role sester? Nejdříve je třeba opustit „model Iny“ z Nemocnice na kraji města",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/pokrocile-role-sester-nejdriv-je-treba-opustit-model-iny/",
-      "dt": "2026-05-18T06:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "iny",
-        "kraji",
-        "model",
-        "města",
-        "nejdříve",
-        "nemocnice",
-        "opustit",
-        "pokročilé",
-        "role",
-        "sester",
-        "třeba"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -285,7 +285,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 104095,
+      "bytes": 101845,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -322,7 +322,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-18T16:56:13Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T20:15:12Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -337,6 +337,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "USA se uzavírají před ebolou. Kvůli smrtící nákaze vyhlásily okamžitý zákaz vstupu pro cizince",
+            "publishedAt": "2026-05-18T20:15:12Z"
+          },
           {
             "title": "Ministerstvo protidrogovou politiku nezvládne. Bémův poradce kvůli rozhodnutí vlády končí",
             "publishedAt": "2026-05-18T16:56:13Z"
@@ -364,10 +368,6 @@
           {
             "title": "Zlom v léčbě depresí a úzkostí. Od letoška pojišťovny plně hradí on-line psychoterapii",
             "publishedAt": "2026-05-18T10:00:00Z"
-          },
-          {
-            "title": "Obří škrty ve farmafirmách: Zavírají továrny a propouštějí. Místa ruší i covidová superstar",
-            "publishedAt": "2026-05-18T08:00:35Z"
           }
         ]
       }
