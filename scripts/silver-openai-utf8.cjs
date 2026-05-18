@@ -11,7 +11,25 @@ const { SILVER_NEXT_ACTION_MOJIBAKE_RE } = require("./silver-next-action-planner
 
 const CZECH_GOOD_CHARS =
   "áčďéěíňóřšťúůýžÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ—";
-const CZECH_BAD_CHARS = "ĂÄŹÂÃ";
+const CZECH_BAD_CHARS = "ĂÄŹÂÃĹ";
+
+/** Substrings observed in real OpenAI full-auto-loop mojibake (diagnostic audit). */
+const REAL_API_MOJIBAKE_MARKERS = [
+  "Ăš",
+  "â€",
+  "â€”",
+  "OvÄ",
+  "Ä›",
+  "Ĺ™",
+  "Ăˇ",
+  "ÄŤ",
+  "Ĺľ",
+  "poĹ",
+  "pĹ",
+  "zmÄ",
+  "aktuĂ",
+  "pĹ™",
+];
 
 const LEGACY_DECODE_LABELS = ["windows-1252", "iso-8859-1", "windows-1250"];
 
@@ -43,15 +61,67 @@ function czechTextScore(text) {
   return score;
 }
 
+function listDetectedMojibakeMarkers(text) {
+  const t = String(text || "");
+  const found = [];
+  for (const m of REAL_API_MOJIBAKE_MARKERS) {
+    if (t.includes(m)) found.push(m);
+  }
+  for (const ch of CZECH_BAD_CHARS) {
+    if (t.includes(ch) && !found.includes(ch)) found.push(ch);
+  }
+  if (t.includes("\u00e2\u20ac") && !found.includes("â€")) found.push("â€");
+  return found;
+}
+
 function hasSilverUtf8MojibakeMarkersCore(text) {
   const t = String(text || "");
   if (!t) return false;
-  for (const ch of CZECH_BAD_CHARS) {
-    if (t.includes(ch)) return true;
-  }
-  if (t.includes("\u00e2\u20ac")) return true;
+  if (listDetectedMojibakeMarkers(t).length) return true;
   if (t.includes("\u00c3\u009a")) return true;
   if (t.includes("p\u017d")) return true;
+  return false;
+}
+
+function hasCzechUnicodeMarkers(text) {
+  const t = String(text || "");
+  if (!t) return false;
+  if (t.includes("ÚKOL PRO CURSOR")) return true;
+  for (const ch of CZECH_GOOD_CHARS) {
+    if (t.includes(ch)) return true;
+  }
+  return false;
+}
+
+function buildUtf8RepairCandidates(text) {
+  const input = String(text || "");
+  /** @type {string[]} */
+  const candidates = [input];
+  for (const label of LEGACY_DECODE_LABELS) {
+    try {
+      const buf = legacyBytesFromMisdecodedText(input, label);
+      if (buf) candidates.push(buf.toString("utf8"));
+    } catch {
+      /* skip */
+    }
+  }
+  try {
+    candidates.push(Buffer.from(input, "latin1").toString("utf8"));
+  } catch {
+    /* skip */
+  }
+  return candidates;
+}
+
+function shouldAttemptUtf8Repair(text) {
+  const t = String(text || "");
+  if (!t) return false;
+  if (hasSilverUtf8MojibakeMarkersCore(t)) return true;
+  if (SILVER_NEXT_ACTION_MOJIBAKE_RE.test(t)) return true;
+  const baseScore = czechTextScore(t);
+  for (const cand of buildUtf8RepairCandidates(t)) {
+    if (cand !== t && czechTextScore(cand) > baseScore) return true;
+  }
   return false;
 }
 
@@ -85,29 +155,11 @@ function legacyBytesFromMisdecodedText(text, label) {
 function repairSilverUtf8MojibakeText(text) {
   const input = String(text || "");
   if (!input) return input;
-  if (!hasSilverUtf8MojibakeMarkersCore(input) && !SILVER_NEXT_ACTION_MOJIBAKE_RE.test(input)) {
-    return input;
-  }
-
-  /** @type {string[]} */
-  const candidates = [input];
-  for (const label of LEGACY_DECODE_LABELS) {
-    try {
-      const buf = legacyBytesFromMisdecodedText(input, label);
-      if (buf) candidates.push(buf.toString("utf8"));
-    } catch {
-      /* skip */
-    }
-  }
-  try {
-    candidates.push(Buffer.from(input, "latin1").toString("utf8"));
-  } catch {
-    /* skip */
-  }
+  if (!shouldAttemptUtf8Repair(input)) return input;
 
   let best = input;
   let bestScore = czechTextScore(input);
-  for (const cand of candidates) {
+  for (const cand of buildUtf8RepairCandidates(input)) {
     const sc = czechTextScore(cand);
     if (sc > bestScore) {
       bestScore = sc;
@@ -115,6 +167,13 @@ function repairSilverUtf8MojibakeText(text) {
     }
   }
   return best;
+}
+
+function stripSilverAutopilotUkolHeaderLine(text) {
+  return String(text || "").replace(
+    /^\s*(?:Ú|Ăš|Ãš|Ã\u0083Âš)KOL\s+PRO\s+CURSOR[^\n]*\n+/i,
+    "",
+  );
 }
 
 /**
@@ -142,7 +201,19 @@ function parseOpenAiChatCompletionRaw(raw) {
 
 function extractOpenAiChatMessageContent(json) {
   const msg = (((json || {}).choices || [])[0] || {}).message || {};
-  return String(msg.content || "");
+  const c = msg.content;
+  if (typeof c === "string") return c;
+  if (Array.isArray(c)) {
+    return c
+      .map((part) => {
+        if (typeof part === "string") return part;
+        if (part && typeof part.text === "string") return part.text;
+        if (part && typeof part.content === "string") return part.content;
+        return "";
+      })
+      .join("");
+  }
+  return String(c || "");
 }
 
 /**
@@ -168,6 +239,22 @@ function runOpenAiNextActionUtf8Selftest() {
     "ÚKOL PRO CURSOR — Ověřte případně čistý ě\n\n```powershell\nGet-Content -LiteralPath .\\SILVER_NEXT_ACTION.md\n```\n";
   const utf8Bytes = Buffer.from(sampleGood, "utf8");
   const sampleBad = new TextDecoder("windows-1252").decode(utf8Bytes);
+
+  const realApiBadSamples = [
+    "ĂšKOL PRO CURSOR â€”",
+    "OvÄ›Ĺ™te",
+    "aktuĂˇlnĂ­",
+    "pĹ™eÄŤtÄ›te",
+    "zmÄ›nÄ›nĂ©",
+    "poĹ™Ăˇdku",
+  ];
+  for (const badLine of realApiBadSamples) {
+    const fixedLine = repairSilverUtf8MojibakeText(badLine);
+    if (hasSilverUtf8MojibakeMarkers(fixedLine)) {
+      console.error("OPENAI_NEXT_ACTION_UTF8_SELFTEST_FAIL real_api_marker:" + badLine);
+      ok = false;
+    }
+  }
 
   if (!hasSilverUtf8MojibakeMarkers(sampleBad)) {
     console.error("OPENAI_NEXT_ACTION_UTF8_SELFTEST_FAIL detect_mojibake_sample");
@@ -202,6 +289,15 @@ function runOpenAiNextActionUtf8Selftest() {
     ok = false;
   }
 
+  const mockArrayJson = JSON.stringify({
+    choices: [{ message: { content: [{ type: "text", text: sampleBad }] } }],
+  });
+  const coercedArray = coerceOpenAiChatCompletionText(mockArrayJson);
+  if (coercedArray.content !== sampleGood.trim()) {
+    console.error("OPENAI_NEXT_ACTION_UTF8_SELFTEST_FAIL openai_json_array_coerce");
+    ok = false;
+  }
+
   const tempDir = path.join(
     require("os").tmpdir(),
     "silver-openai-next-action-utf8-selftest-" + String(Date.now()),
@@ -231,18 +327,70 @@ function runOpenAiNextActionUtf8Selftest() {
   return ok;
 }
 
+/**
+ * @param {{ rawUtf8: string, extractedContent: string, repairedContent: string, finalFileText: string }} stages
+ */
+function printOpenAiRealNextActionUtf8Diagnostic(stages) {
+  const raw = String(stages.rawUtf8 || "");
+  const extracted = String(stages.extractedContent || "");
+  const repaired = String(stages.repairedContent || "");
+  const finalFile = String(stages.finalFileText || "");
+  const rawMarkers = listDetectedMojibakeMarkers(raw);
+  const extractedMarkers = listDetectedMojibakeMarkers(extracted);
+  const repairedMarkers = listDetectedMojibakeMarkers(repaired);
+  const finalMarkers = listDetectedMojibakeMarkers(finalFile);
+  const repairApplied = repaired !== extracted ? "YES" : "NO";
+
+  console.log("=== OPENAI_REAL_NEXT_ACTION_UTF8_DIAGNOSTIC ===");
+  console.log(
+    "raw_utf8_decode_contains_mojibake=" + (hasSilverUtf8MojibakeMarkers(raw) ? "YES" : "NO"),
+  );
+  console.log(
+    "extracted_content_contains_mojibake=" + (hasSilverUtf8MojibakeMarkers(extracted) ? "YES" : "NO"),
+  );
+  console.log(
+    "repaired_content_contains_mojibake=" + (hasSilverUtf8MojibakeMarkers(repaired) ? "YES" : "NO"),
+  );
+  console.log(
+    "final_file_contains_mojibake=" + (hasSilverUtf8MojibakeMarkers(finalFile) ? "YES" : "NO"),
+  );
+  console.log(
+    "final_file_contains_czech_unicode=" + (hasCzechUnicodeMarkers(finalFile) ? "YES" : "NO"),
+  );
+  console.log("detected_markers=" + (finalMarkers.length ? finalMarkers.join(",") : "(none)"));
+  console.log("raw_markers=" + (rawMarkers.length ? rawMarkers.join(",") : "(none)"));
+  console.log("extracted_markers=" + (extractedMarkers.length ? extractedMarkers.join(",") : "(none)"));
+  console.log("repaired_markers=" + (repairedMarkers.length ? repairedMarkers.join(",") : "(none)"));
+  console.log("repair_applied=" + repairApplied);
+  console.log("write_encoding=utf8_no_bom");
+  console.log("=== END_OPENAI_REAL_NEXT_ACTION_UTF8_DIAGNOSTIC ===");
+
+  const pass =
+    !hasSilverUtf8MojibakeMarkers(finalFile) && hasCzechUnicodeMarkers(finalFile);
+  if (pass) console.log("OPENAI_REAL_NEXT_ACTION_UTF8_DIAGNOSTIC_PASS");
+  else console.log("OPENAI_REAL_NEXT_ACTION_UTF8_DIAGNOSTIC_FAIL");
+  return pass;
+}
+
 module.exports = {
   CZECH_GOOD_CHARS,
   CZECH_BAD_CHARS,
+  REAL_API_MOJIBAKE_MARKERS,
   czechTextScore,
   hasSilverUtf8MojibakeMarkers,
   hasSilverUtf8MojibakeMarkersCore,
+  hasCzechUnicodeMarkers,
+  listDetectedMojibakeMarkers,
+  buildUtf8RepairCandidates,
+  shouldAttemptUtf8Repair,
   repairSilverUtf8MojibakeText,
   repairSilverOpenAiUtf8Text,
+  stripSilverAutopilotUkolHeaderLine,
   decodeFetchBodyUtf8,
   parseOpenAiChatCompletionRaw,
   extractOpenAiChatMessageContent,
   coerceOpenAiChatCompletionText,
   writeUtf8FileNoBom,
   runOpenAiNextActionUtf8Selftest,
+  printOpenAiRealNextActionUtf8Diagnostic,
 };
