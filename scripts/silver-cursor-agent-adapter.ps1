@@ -45,7 +45,13 @@ param(
   [switch]$WslUbuntuAgent,
   [string]$WslDistro = "Ubuntu",
   [string]$WslAgentLinuxPath = "/home/spedk/.local/bin/agent",
-  [string]$WslWorkspaceLinuxPath = "/mnt/c/projects/filtr"
+  [string]$WslWorkspaceLinuxPath = "/mnt/c/projects/filtr",
+  [int]$MaxTimeoutSeconds = 0,
+  [int]$StagedWatchdogSliceSeconds = 0,
+  [int]$StagedWatchdogExtensionSeconds = 1800,
+  [int]$StagedWatchdogMaxExtensions = 2,
+  [int]$StagedWatchdogStallSeconds = 1200,
+  [string]$TimeoutClass = "WALL_CLOCK"
 )
 
 Set-StrictMode -Version 2
@@ -232,6 +238,177 @@ function Invoke-WslAgentCapture {
   if ([string]::IsNullOrEmpty($so)) { $so = "" }
   if ([string]::IsNullOrEmpty($se)) { $se = "" }
   return @{ exit = $code; timedOut = $timedOut; stdout = $so; stderr = $se }
+}
+
+function Get-SilverRepoProgressHeartbeatSnapshot {
+  param([string]$RepoRoot)
+  $items = New-Object System.Collections.Generic.List[string]
+  $rootFiles = @(
+    "SILVER_NEXT_ACTION.md",
+    "SILVER_RUN_REPORT.md",
+    "SILVER_PROGRESS_LOG.md"
+  )
+  foreach ($rel in $rootFiles) {
+    $abs = Join-Path $RepoRoot $rel
+    if (Test-Path -LiteralPath $abs) {
+      $fi = Get-Item -LiteralPath $abs
+      $relNorm = $rel.Replace("\", "/")
+      [void]$items.Add($relNorm + ":" + [string]$fi.Length + ":" + [string]$fi.LastWriteTimeUtc.Ticks)
+    }
+  }
+  $scriptsDir = Join-Path $RepoRoot "scripts"
+  if (Test-Path -LiteralPath $scriptsDir) {
+    $diag = Get-ChildItem -LiteralPath $scriptsDir -Filter "silver-*-diagnostic-report.json" -File -ErrorAction SilentlyContinue
+    foreach ($f in $diag) {
+      [void]$items.Add(("scripts/" + $f.Name + ":" + [string]$f.Length + ":" + [string]$f.LastWriteTimeUtc.Ticks))
+    }
+    $cls = Get-ChildItem -LiteralPath $scriptsDir -Filter "silver-*-cluster-classifier*-report.json" -File -ErrorAction SilentlyContinue
+    foreach ($f in $cls) {
+      [void]$items.Add(("scripts/" + $f.Name + ":" + [string]$f.Length + ":" + [string]$f.LastWriteTimeUtc.Ticks))
+    }
+  }
+  $arr = $items.ToArray()
+  [Array]::Sort($arr)
+  return ($arr -join "|")
+}
+
+function Invoke-WslAgentCaptureStaged {
+  param(
+    [string]$Distro,
+    [string[]]$LinuxArgvAfterDoubleDash,
+    [string]$WorkDirWindows,
+    [int]$TimeoutMs,
+    [int]$MaxTimeoutMs,
+    [int]$SliceMs,
+    [int]$ExtensionMs,
+    [int]$MaxExtensions,
+    [int]$StallMs,
+    [string]$StdinPayload = ""
+  )
+  $argList = New-Object System.Collections.Generic.List[string]
+  [void]$argList.Add("-d")
+  [void]$argList.Add($Distro)
+  [void]$argList.Add("--")
+  foreach ($x in $LinuxArgvAfterDoubleDash) {
+    [void]$argList.Add([string]$x)
+  }
+  $psi = New-Object System.Diagnostics.ProcessStartInfo
+  $psi.FileName = "wsl.exe"
+  $psi.UseShellExecute = $false
+  $psi.CreateNoWindow = $true
+  $psi.WorkingDirectory = $WorkDirWindows
+  $psi.RedirectStandardOutput = $true
+  $psi.RedirectStandardError = $true
+  $psi.StandardOutputEncoding = [System.Text.Encoding]::UTF8
+  $psi.StandardErrorEncoding = [System.Text.Encoding]::UTF8
+  $useStdin = (-not [string]::IsNullOrEmpty($StdinPayload))
+  if ($useStdin) {
+    $psi.RedirectStandardInput = $true
+  }
+  $argLine = ""
+  foreach ($a in $argList) {
+    if ($argLine.Length -gt 0) { $argLine += " " }
+    if ($a -match '[\s"]') {
+      $argLine += '"' + ($a.Replace('"', '\"')) + '"'
+    }
+    else {
+      $argLine += $a
+    }
+  }
+  $psi.Arguments = $argLine
+  $p = New-Object System.Diagnostics.Process
+  $p.StartInfo = $psi
+  $timedOut = $false
+  $code = 0
+  $so = ""
+  $se = ""
+  $extensionsUsed = 0
+  $progressEver = $false
+  $lastProgressUtc = ""
+  $stopReason = "completed"
+  try {
+    [void]$p.Start()
+    if ($useStdin) {
+      $utf8NoBom = New-Object System.Text.UTF8Encoding $false
+      $bytes = $utf8NoBom.GetBytes($StdinPayload)
+      $bs = $p.StandardInput.BaseStream
+      $bs.Write($bytes, 0, $bytes.Length)
+      $bs.Flush()
+      $p.StandardInput.Close()
+    }
+    $wallStart = [DateTime]::UtcNow
+    $lastProgressUtcDt = $wallStart
+    $lastSnap = Get-SilverRepoProgressHeartbeatSnapshot -RepoRoot $WorkDirWindows
+    $budgetMs = $TimeoutMs
+    if ($MaxTimeoutMs -lt $budgetMs) { $MaxTimeoutMs = $budgetMs }
+    if ($SliceMs -lt 1000) { $SliceMs = 1000 }
+    while ($true) {
+      $elapsedMs = [int64](([DateTime]::UtcNow - $wallStart).TotalMilliseconds)
+      $remainBudgetMs = $budgetMs - $elapsedMs
+      if ($remainBudgetMs -lt 1) { $remainBudgetMs = 1 }
+      $waitMs = $SliceMs
+      if ($waitMs -gt $remainBudgetMs) { $waitMs = [int]$remainBudgetMs }
+      if ($p.WaitForExit([int]$waitMs)) {
+        $code = [int]$p.ExitCode
+        $stopReason = "completed"
+        break
+      }
+      $snapNow = Get-SilverRepoProgressHeartbeatSnapshot -RepoRoot $WorkDirWindows
+      if ($snapNow -ne $lastSnap) {
+        $progressEver = $true
+        $lastSnap = $snapNow
+        $lastProgressUtcDt = [DateTime]::UtcNow
+        $lastProgressUtc = $lastProgressUtcDt.ToString("o")
+      }
+      $elapsedMs = [int64](([DateTime]::UtcNow - $wallStart).TotalMilliseconds)
+      $stallAgeMs = [int64](([DateTime]::UtcNow - $lastProgressUtcDt).TotalMilliseconds)
+      if ($elapsedMs -ge $TimeoutMs -and $stallAgeMs -ge $StallMs) {
+        try { $p.Kill() } catch { }
+        $timedOut = $true
+        $code = 124
+        $stopReason = "stalled_no_repo_progress"
+        break
+      }
+      if ($elapsedMs -ge $MaxTimeoutMs) {
+        try { $p.Kill() } catch { }
+        $timedOut = $true
+        $code = 124
+        $stopReason = "max_timeout_cap"
+        break
+      }
+      if ($elapsedMs -ge $TimeoutMs -and $progressEver -and $extensionsUsed -lt $MaxExtensions) {
+        $extensionsUsed += 1
+        $budgetMs = $budgetMs + $ExtensionMs
+        if ($budgetMs -gt $MaxTimeoutMs) { $budgetMs = $MaxTimeoutMs }
+        $stopReason = "extended_for_progress"
+      }
+    }
+    $so = $p.StandardOutput.ReadToEnd()
+    $se = $p.StandardError.ReadToEnd()
+  }
+  catch {
+    $se = "WSL_ADAPTER_EXCEPTION: " + $_.Exception.Message
+    $code = 255
+    $stopReason = "exception"
+  }
+  finally {
+    try { $p.Dispose() } catch { }
+  }
+  if ([string]::IsNullOrEmpty($so)) { $so = "" }
+  if ([string]::IsNullOrEmpty($se)) { $se = "" }
+  if ([string]::IsNullOrEmpty($lastProgressUtc)) {
+    $lastProgressUtc = $lastProgressUtcDt.ToString("o")
+  }
+  return @{
+    exit = $code
+    timedOut = $timedOut
+    stdout = $so
+    stderr = $se
+    extensionsUsed = $extensionsUsed
+    progressEver = $progressEver
+    lastProgressUtc = $lastProgressUtc
+    watchdogStopReason = $stopReason
+  }
 }
 
 function Read-WslAdapterReadyFromDisk {
@@ -791,11 +968,38 @@ if ($TimeoutSeconds -lt 1) {
   Write-Error "TimeoutSeconds must be >= 1."
   exit 4
 }
+if ($MaxTimeoutSeconds -gt 0 -and $MaxTimeoutSeconds -lt $TimeoutSeconds) {
+  Write-Error "MaxTimeoutSeconds must be >= TimeoutSeconds when set."
+  exit 4
+}
+if ($StagedWatchdogSliceSeconds -lt 0) {
+  Write-Error "StagedWatchdogSliceSeconds must be >= 0."
+  exit 4
+}
+if ($StagedWatchdogMaxExtensions -lt 0) {
+  Write-Error "StagedWatchdogMaxExtensions must be >= 0."
+  exit 4
+}
 
 $outAbs = Resolve-RepoPath -P $OutputFile
 $cwdActual = [System.IO.Directory]::GetCurrentDirectory()
 $tsLocal = (Get-Date).ToString("o")
 $ms = $TimeoutSeconds * 1000
+$maxMs = $ms
+if ($MaxTimeoutSeconds -gt 0) {
+  $maxMs = $MaxTimeoutSeconds * 1000
+}
+$stagedWatchdogEnabled = ($StagedWatchdogSliceSeconds -gt 0 -and $maxMs -gt $ms)
+$sliceMs = 0
+if ($stagedWatchdogEnabled) {
+  $sliceMs = $StagedWatchdogSliceSeconds * 1000
+}
+$extensionMs = $StagedWatchdogExtensionSeconds * 1000
+$stallMs = $StagedWatchdogStallSeconds * 1000
+$watchdogExtensionsUsed = 0
+$watchdogProgressEver = $false
+$watchdogLastProgressUtc = "UNAVAILABLE"
+$watchdogStopReason = "wall_clock_only"
 
 if ($WslUbuntuAgent) {
   $wslAdapterReadyDisk = Read-WslAdapterReadyFromDisk
@@ -904,7 +1108,16 @@ if ($WslUbuntuAgent) {
 
     $processStartUtc = (Get-Date).ToUniversalTime().ToString("o")
     $wallSw = [System.Diagnostics.Stopwatch]::StartNew()
-    $r = Invoke-WslAgentCapture -Distro $WslDistro -LinuxArgvAfterDoubleDash $linuxArgv -WorkDirWindows $RepoRoot -TimeoutMs $ms
+    if ($stagedWatchdogEnabled) {
+      $r = Invoke-WslAgentCaptureStaged -Distro $WslDistro -LinuxArgvAfterDoubleDash $linuxArgv -WorkDirWindows $RepoRoot -TimeoutMs $ms -MaxTimeoutMs $maxMs -SliceMs $sliceMs -ExtensionMs $extensionMs -MaxExtensions $StagedWatchdogMaxExtensions -StallMs $stallMs
+      $watchdogExtensionsUsed = [int]$r.extensionsUsed
+      $watchdogProgressEver = [bool]$r.progressEver
+      if ($r.lastProgressUtc) { $watchdogLastProgressUtc = [string]$r.lastProgressUtc }
+      $watchdogStopReason = [string]$r.watchdogStopReason
+    }
+    else {
+      $r = Invoke-WslAgentCapture -Distro $WslDistro -LinuxArgvAfterDoubleDash $linuxArgv -WorkDirWindows $RepoRoot -TimeoutMs $ms
+    }
     $wallSw.Stop()
     $processEndUtc = (Get-Date).ToUniversalTime().ToString("o")
     $elapsedMs = [int64]$wallSw.ElapsedMilliseconds
@@ -1030,14 +1243,23 @@ recommendation=Increase -TimeoutSeconds if the task is legitimately long-running
     }
   }
 
+  $timeoutSemantics = "wall_clock_only"
+  if ($stagedWatchdogEnabled) {
+    $timeoutSemantics = "staged_repo_progress_heartbeat"
+  }
   $streamDiag = @"
 SILVER_WSL_ADAPTER_STREAMING_AND_HEARTBEAT
 streaming_output_supported=NO
-last_output_utc=UNAVAILABLE
+last_output_utc=$watchdogLastProgressUtc
 last_stdout_bytes=UNAVAILABLE
 last_stderr_bytes=UNAVAILABLE
-adapter_wall_clock_note=WaitForExit blocks until exit or timeout; stdout/stderr are read only after the child process ends (no incremental reads), so there is no live streaming progress signal during the run.
-timeout_semantics=wall_clock_only
+adapter_wall_clock_note=Staged watchdog polls allowed repo progress files between WaitForExit slices; stdout/stderr are still read only after the child process ends.
+timeout_semantics=$timeoutSemantics
+timeout_class=$TimeoutClass
+watchdog_max_timeout_seconds=$(if ($MaxTimeoutSeconds -gt 0) { [string]$MaxTimeoutSeconds } else { [string]$TimeoutSeconds })
+watchdog_extensions_used=$watchdogExtensionsUsed
+watchdog_progress_detected=$(if ($watchdogProgressEver) { "YES" } else { "NO" })
+watchdog_stop_reason=$watchdogStopReason
 "@
   if ([string]::IsNullOrWhiteSpace($extraWsl)) {
     $extraWsl = $streamDiag
@@ -1082,6 +1304,11 @@ timeout_semantics=wall_clock_only
     process_end_utc = $processEndUtc
     elapsed_ms = [string]$elapsedMs
     timeout_seconds = [string]$TimeoutSeconds
+    watchdog_max_timeout_seconds = $(if ($MaxTimeoutSeconds -gt 0) { [string]$MaxTimeoutSeconds } else { [string]$TimeoutSeconds })
+    timeout_class = [string]$TimeoutClass
+    watchdog_extensions_used = [string]$watchdogExtensionsUsed
+    watchdog_progress_detected = $(if ($watchdogProgressEver) { "YES" } else { "NO" })
+    watchdog_stop_reason = [string]$watchdogStopReason
     wsl_shell_exit_code = [string]$wslShellExit
     adapter_authoritative_exit_code = [string]$authoritativeExit
     shell_exit_noise_reconciled = $shellNoiseReconciled
