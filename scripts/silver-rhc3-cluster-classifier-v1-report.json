@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-05-16T22:45:19.749Z",
-  "main_commit": "d130aa709b9e5ec2c6b28c38980fe94b1b9cf5c4",
+  "generated_at": "2026-05-18T21:28:12.266Z",
+  "main_commit": "893763bd622e6c168dbec2342fc0d93432da7cdd",
   "classifier_version": "v1",
   "classifications": [
     {
@@ -57,11 +57,28 @@
       "harness_only": "YES",
       "cluster_fail_count": 9,
       "cluster_total": 7059
+    },
+    {
+      "cluster": "rhc3_mobile_voice_cal",
+      "classification": "MOBILE_VOICE_CHAOS",
+      "safe_to_autopilot": "YES",
+      "engine_fix_allowed": "NO",
+      "harness_alignment_allowed": "YES",
+      "human_review_required": "NO",
+      "ambiguity_expected": "YES",
+      "safe_clarification_ok": "YES",
+      "harness_only": "YES",
+      "cluster_fail_count": 0,
+      "cluster_total": 7059,
+      "diagnostic_cluster_fail_count": 0,
+      "diagnostic_true_engine_fail_count": 0,
+      "diagnostic_engine_fix_recommended": "NO",
+      "diagnostic_PASS_FAIL": "FAIL"
     }
   ],
   "target_cluster": {
-    "cluster": "rhc3_ambiguity_cal_conflict",
-    "classification": "AMBIGUOUS_USER_INPUT",
+    "cluster": "rhc3_mobile_voice_cal",
+    "classification": "MOBILE_VOICE_CHAOS",
     "safe_to_autopilot": "YES",
     "engine_fix_allowed": "NO",
     "harness_alignment_allowed": "YES",
@@ -73,7 +90,8 @@
     "cluster_total": 7059,
     "diagnostic_cluster_fail_count": 0,
     "diagnostic_true_engine_fail_count": 0,
-    "diagnostic_engine_fix_recommended": "NO"
+    "diagnostic_engine_fix_recommended": "NO",
+    "diagnostic_PASS_FAIL": "FAIL"
   },
-  "text_block": "=== SILVER_RHC3_CLUSTER_CLASSIFIER_V1_RESULT ===\nmain_commit=d130aa709b9e5ec2c6b28c38980fe94b1b9cf5c4\ntarget_cluster=rhc3_ambiguity_cal_conflict\nclassification=AMBIGUOUS_USER_INPUT\nsafe_to_autopilot=YES\nengine_fix_allowed=NO\nharness_alignment_allowed=YES\nhuman_review_required=NO\nambiguity_expected=YES\nsafe_clarification_ok=YES\nharness_only=YES\ncluster_fail_count=0\n=== END_SILVER_RHC3_CLUSTER_CLASSIFIER_V1_RESULT ==="
+  "text_block": "=== SILVER_RHC3_CLUSTER_CLASSIFIER_V1_RESULT ===\nmain_commit=893763bd622e6c168dbec2342fc0d93432da7cdd\ntarget_cluster=rhc3_mobile_voice_cal\nclassification=MOBILE_VOICE_CHAOS\nsafe_to_autopilot=YES\nengine_fix_allowed=NO\nharness_alignment_allowed=YES\nhuman_review_required=NO\nambiguity_expected=YES\nsafe_clarification_ok=YES\nharness_only=YES\ncluster_fail_count=0\n=== END_SILVER_RHC3_CLUSTER_CLASSIFIER_V1_RESULT ==="
 }
