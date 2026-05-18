@@ -12,16 +12,18 @@
    ```powershell
    git diff SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
    ```
-3. Zkontroluj, že pracovní strom je čistý:
+3. Zkontroluj, zda je výstup z `git status --short` prázdný:
    ```powershell
    git status --short
    ```
 
 ### Scope guard
-- Změny se musí týkat pouze whitelistovaných souborů: `SILVER_CURSOR_OUTPUT.md`, `SILVER_NEXT_ACTION.md`, `SILVER_PROGRESS_LOG.md`, `SILVER_RUN_REPORT.md`.
+- Cíl: Zkontrolovat a auditovat změny v repozitáři.
+- Soubory (whitelist): SILVER_CURSOR_OUTPUT.md, SILVER_NEXT_ACTION.md, SILVER_PROGRESS_LOG.md, SILVER_RUN_REPORT.md
+- NO-GO: Jakékoliv změny mimo whitelistované soubory.
 
 ### STOP podmínky
-- Pracovní strom musí být čistý po provedení auditních kroků.
+- GATE (co musí vypsat / změřit): Prázdný výstup z `git status --short` po auditu.
 
 ### Povinný výsledek
 ```
