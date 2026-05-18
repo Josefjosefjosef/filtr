@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-18T16:40:35.388563Z",
+  "ingestedAt": "2026-05-18T17:20:36.338467Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "TV tipy: Videoherní Mortal Kombat, zápasník Tom Hardy i Tarantinova válečná klasika",
+      "url": "https://www.kinobox.cz/clanky/tema/53890-tv-tipy-videoherni-mortal-kombat-zapasnik-tom-hardy-i-tarantinova-valecna-klasika",
+      "dt": "2026-05-18T17:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "hardy",
+        "klasika",
+        "kombat",
+        "mortal",
+        "tarantinova",
+        "tipy",
+        "tom",
+        "videoherní",
+        "válečná",
+        "zápasník"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -527,33 +554,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Kdo je tu vetřelcem? Jihoameričané představují svou největší sci-fi, z které budete mít noční můry",
-      "url": "https://www.kinobox.cz/clanky/filmy/53727-kdo-je-tu-vetrelcem-spanele-predstavuji-svou-nejvetsi-sci-fi-desivejsi-nez-pad-do-tmy",
-      "dt": "2026-05-16T07:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "budete",
-        "jihoameričané",
-        "mít",
-        "můry",
-        "největší",
-        "noční",
-        "představují",
-        "sci",
-        "svou",
-        "vetřelcem"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -564,7 +564,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 29267,
+      "bytes": 29145,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -601,7 +601,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-18T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T17:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -616,6 +616,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "TV tipy: Videoherní Mortal Kombat, zápasník Tom Hardy i Tarantinova válečná klasika",
+            "publishedAt": "2026-05-18T17:00:00Z"
+          },
           {
             "title": "Top kina ČR: Ďábel nosí Pradu 2 se stává letošní jedničkou. Michael ale trpělivě dotahuje",
             "publishedAt": "2026-05-18T15:00:00Z"
@@ -643,10 +647,6 @@
           {
             "title": "Ulice konečně odhalí obávaného stalkera. Dopadení vyvrcholí vyhroceným konfliktem",
             "publishedAt": "2026-05-18T06:00:00Z"
-          },
-          {
-            "title": "Tmavomodrý svět slaví 25 let. Jan Svěrák už by ho dnes nenatočil, scénář vykradl Hollywood",
-            "publishedAt": "2026-05-17T17:00:00Z"
           }
         ]
       }

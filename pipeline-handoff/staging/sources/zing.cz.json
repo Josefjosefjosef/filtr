@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-18T16:40:35.388563Z",
+  "ingestedAt": "2026-05-18T17:20:36.338467Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Sony zdražuje předplatné PlayStation Plus",
+      "url": "https://zing.cz/article/sony-zdrazuje-predplatne-playstation-plus-2",
+      "dt": "2026-05-18T17:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "playstation",
+        "plus",
+        "předplatné",
+        "sony",
+        "zdražuje"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -944,31 +966,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "MMO ze světa Pána prstenů bylo s největší pravděpodobností kompletně zrušeno",
-      "url": "https://zing.cz/article/mmo-ze-sveta-pana-prstenu-bylo-s-nejvetsi-pravdepodobnosti-kompletne-zruseno",
-      "dt": "2026-05-14T16:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "kompletně",
-        "mmo",
-        "největší",
-        "pravděpodobností",
-        "prstenů",
-        "pána",
-        "světa",
-        "zrušeno"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -979,7 +976,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126992,
+      "bytes": 126903,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1016,7 +1013,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-18T16:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T17:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1032,6 +1029,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sony zdražuje předplatné PlayStation Plus",
+            "publishedAt": "2026-05-18T17:00:00Z"
+          },
           {
             "title": "LEGO Batman: Legacy of the Dark Knight se povedl, shodují se první recenze",
             "publishedAt": "2026-05-18T16:00:00Z"
@@ -1059,10 +1060,6 @@
           {
             "title": "Další licencovaná hra od 2K bude již zítra stažena z prodeje",
             "publishedAt": "2026-05-18T04:00:00Z"
-          },
-          {
-            "title": "Co hrát v partě? 5 tipů na hry pro více hráčů u jedné obrazovky",
-            "publishedAt": "2026-05-17T18:00:00Z"
           }
         ]
       }
