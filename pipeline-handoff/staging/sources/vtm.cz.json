@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-18T18:00:28.496315Z",
+  "ingestedAt": "2026-05-18T18:39:57.037876Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,34 @@
         "německo",
         "vede",
         "vídně"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Květnový akční tarif T-Mobilu nabídne 150 minut, 150 SMS a 5 GB dat za 335 Kč měsíčně",
+      "url": "https://mobilmania.zive.cz/clanky/akcni-tarif-t-mobile-akvizicni-nabidka-za-zvyhodnenou-cenu-202604/sc-3-a-1364549/default.aspx",
+      "dt": "2026-05-18T17:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "150",
+        "335",
+        "akční",
+        "dat",
+        "květnový",
+        "minut",
+        "mobilu",
+        "měsíčně",
+        "nabídne",
+        "sms",
+        "tarif"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -953,33 +981,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Hry zadarmo, nebo se slevou: Balík nezávislých pecek a Batmanova příběhovka zdarma",
-      "url": "https://doupe.zive.cz/hry-zadarmo-nebo-se-slevou-balik-nezavislych-pecek-a-batmanova-pribehovka-zdarma",
-      "dt": "2026-05-15T05:10:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "balík",
-        "batmanova",
-        "hry",
-        "nebo",
-        "nezávislých",
-        "pecek",
-        "příběhovka",
-        "slevou",
-        "zadarmo",
-        "zdarma"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -990,7 +991,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22964,
+      "bytes": 22776,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1027,7 +1028,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-18T15:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T17:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1045,6 +1046,10 @@
           {
             "title": "Z Katovic do Vídně je to 1200 km a cesta vede přes Německo. Google nám už 16 let dluží cyklonavigaci",
             "publishedAt": "2026-05-18T12:45:00Z"
+          },
+          {
+            "title": "Květnový akční tarif T-Mobilu nabídne 150 minut, 150 SMS a 5 GB dat za 335 Kč měsíčně",
+            "publishedAt": "2026-05-18T17:45:00Z"
           },
           {
             "title": "Recenze telefonu Honor 600 Lite. Odlehčený model upoutá dobrou výdrží a líbivým vzhledem",
@@ -1069,10 +1074,6 @@
           {
             "title": "Nejlevnější klávesnici s magnetickými spínači má Alza. Tahle Rapture je za 800 Kč, dříve stála třikrát tolik",
             "publishedAt": "2026-05-18T07:45:00Z"
-          },
-          {
-            "title": "Jedny malé bedny pro televizi, Bluetooth i gramofon. Fyne Audio Cubitt 5 nahrazují celé domácí Hi-Fi",
-            "publishedAt": "2026-05-18T08:45:00Z"
           }
         ]
       }

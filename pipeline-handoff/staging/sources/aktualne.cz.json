@@ -1,26 +1,54 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-18T18:00:28.496315Z",
+  "ingestedAt": "2026-05-18T18:39:57.037876Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Vzácnou relikvii ukradl věřící muž s jasným plánem. Co ale policie zatím neprozradila?",
+      "url": "https://zpravy.aktualne.cz/domaci/vzacnou-relikvii-ukradl-verici-muz-s-jasnym-planem-co-ale-policie-zatim-neprozradila/r~aaa294b3bcbb326ca958ae9442865018/",
+      "dt": "2026-05-18T18:11:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "ale",
+        "jasným",
+        "muž",
+        "neprozradila",
+        "plánem",
+        "policie",
+        "relikvii",
+        "ukradl",
+        "vzácnou",
+        "věřící",
+        "zatím"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Česko - Švédsko. Češi  chtějí odčinit sobotní blamáž, do branky se vrací Kořenář",
+      "title": "Česko - Švédsko 1:0. Druhý český gól neplatí, rozhodčí chybně přerušil hru",
       "url": "https://sport.aktualne.cz/hokej/cesko-svedsko-cesi-chteji-odcinit-sobotni-blamaz-do-branky-se-vraci-korenar/r~aaa29d195a988efde313cadaa0a52047/",
       "dt": "2026-05-18T17:31:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "blamáž",
-        "branky",
-        "chtějí",
-        "kořenář",
-        "odčinit",
-        "sobotní",
-        "vrací",
+        "chybně",
+        "druhý",
+        "gól",
+        "hru",
+        "neplatí",
+        "přerušil",
+        "rozhodčí",
         "česko",
-        "češi",
+        "český",
         "švédsko"
       ],
       "feedCategory": "zpravy",
@@ -510,34 +538,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pojďme mluvit s Evropou, vzkázal Kreml po útoku na Moskvu. Řekl, s kým jednat odmítá",
-      "url": "https://zpravy.aktualne.cz/zahranici/pojdme-mluvit-s-evropou-vzkazal-kreml-po-utoku-na-moskvu-rekl-s-kym-jednat-odmita/r~aaa29389d507728974267d40e8c02799/",
-      "dt": "2026-05-18T12:20:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "evropou",
-        "jednat",
-        "kreml",
-        "kým",
-        "mluvit",
-        "moskvu",
-        "odmítá",
-        "pojďme",
-        "vzkázal",
-        "útoku",
-        "řekl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -548,7 +548,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22358,
+      "bytes": 22348,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -585,11 +585,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-18T17:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T18:11:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 5,
           "zpravy": 13,
+          "sport": 5,
           "finance": 1,
           "other": 1
         },
@@ -604,7 +604,11 @@
         },
         "sample_titles": [
           {
-            "title": "Česko - Švédsko. Češi  chtějí odčinit sobotní blamáž, do branky se vrací Kořenář",
+            "title": "Vzácnou relikvii ukradl věřící muž s jasným plánem. Co ale policie zatím neprozradila?",
+            "publishedAt": "2026-05-18T18:11:00Z"
+          },
+          {
+            "title": "Česko - Švédsko 1:0. Druhý český gól neplatí, rozhodčí chybně přerušil hru",
             "publishedAt": "2026-05-18T17:31:00Z"
           },
           {
@@ -630,10 +634,6 @@
           {
             "title": "„Rozpočet nestačí.“ Vládní návrh podle České televize oslabuje financování i nezávislost",
             "publishedAt": "2026-05-18T16:21:00Z"
-          },
-          {
-            "title": "Pavel udělil záštitu festivalu Meeting Brno, který hostí sjezd sudetských Němců",
-            "publishedAt": "2026-05-18T14:32:00Z"
           }
         ]
       }

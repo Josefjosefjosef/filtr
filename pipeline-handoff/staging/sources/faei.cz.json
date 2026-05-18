@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-18T18:00:28.496315Z",
+  "ingestedAt": "2026-05-18T18:39:57.037876Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Bitcoin po nedávném růstu koriguje",
+      "url": "https://profitonline.cz/bitcoin-po-nedavnem-rustu-koriguje/",
+      "dt": "2026-05-18T18:30:19Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "bitcoin",
+        "koriguje",
+        "nedávném",
+        "růstu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -270,29 +291,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Poplatek za komunální odpad: Kdo se může stát nevědomky dlužníkem",
-      "url": "https://profitonline.cz/poplatek-za-komunalni-odpad-kdo-se-muze-stat-nevedomky-dluznikem/",
-      "dt": "2026-05-17T04:00:34Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "dlužníkem",
-        "komunální",
-        "nevědomky",
-        "odpad",
-        "poplatek",
-        "stát"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -303,7 +301,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19106,
+      "bytes": 18867,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -340,7 +338,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-18T13:30:09Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T18:30:19Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -355,6 +353,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bitcoin po nedávném růstu koriguje",
+            "publishedAt": "2026-05-18T18:30:19Z"
+          },
           {
             "title": "Česko vládne evropské nezaměstnanosti. Ale je to důvod k oslavě?",
             "publishedAt": "2026-05-18T13:30:09Z"
@@ -382,10 +384,6 @@
           {
             "title": "Trump letos čile obchodoval s akciemi",
             "publishedAt": "2026-05-17T16:20:46Z"
-          },
-          {
-            "title": "Nový zákon přináší pravidla pro bezpečné využívání dat státní správy",
-            "publishedAt": "2026-05-17T14:00:22Z"
           }
         ]
       }
