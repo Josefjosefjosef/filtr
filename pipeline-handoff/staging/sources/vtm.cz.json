@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-18T08:30:59.067171Z",
+  "ingestedAt": "2026-05-18T09:09:37.957579Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,35 @@
         "valley",
         "úspěšného",
         "česku"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Jedny malé bedny pro televizi, Bluetooth i gramofon. Fyne Audio Cubitt 5 nahrazují celé domácí Hi-Fi",
+      "url": "https://avmania.zive.cz/jedny-male-bedny-pro-televizi-bluetooth-i-gramofon-fyne-audio-cubitt-5-nahrazuji-cele-domaci-hi-fi",
+      "dt": "2026-05-18T08:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "audio",
+        "bedny",
+        "bluetooth",
+        "celé",
+        "cubitt",
+        "domácí",
+        "fyne",
+        "gramofon",
+        "jedny",
+        "malé",
+        "nahrazují",
+        "televizi"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -944,35 +973,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Googlebook je nová éra laptopů od Googlu. Poznáte je podle barevného proužku, AI se spustí zatřesením kurzoru",
-      "url": "https://www.zive.cz/clanky/googlebook-je-nova-era-laptopu-od-googlu-poznate-je-podle-barevneho-prouzku-ai-se-spusti-zatresenim-kurzoru/sc-3-a-241133/default.aspx",
-      "dt": "2026-05-12T17:00:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "barevného",
-        "googlebook",
-        "googlu",
-        "kurzoru",
-        "laptopů",
-        "nová",
-        "podle",
-        "poznáte",
-        "proužku",
-        "spustí",
-        "zatřesením",
-        "éra"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -983,7 +983,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22550,
+      "bytes": 22504,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1020,7 +1020,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-18T07:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T08:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1038,6 +1038,10 @@
           {
             "title": "V Česku se peče další jednorožec. Firma úspěšného ajťáka má další miliardy od legend ze Silicon Valley",
             "publishedAt": "2026-05-17T15:45:00Z"
+          },
+          {
+            "title": "Jedny malé bedny pro televizi, Bluetooth i gramofon. Fyne Audio Cubitt 5 nahrazují celé domácí Hi-Fi",
+            "publishedAt": "2026-05-18T08:45:00Z"
           },
           {
             "title": "Nejlevnější klávesnici s magnetickými spínači má Alza. Tahle Rapture je za 800 Kč, dříve stála třikrát tolik",
@@ -1062,10 +1066,6 @@
           {
             "title": "AI chatboti zveřejňují skutečná čísla. Když jsme to zkusili v Česku, jedno z pěti opravdu zazvonilo",
             "publishedAt": "2026-05-15T14:45:00Z"
-          },
-          {
-            "title": "Vybrali jsme nejlepší robotické vysavače. Lidar, mop i velkou základnu už koupíte pod 10 tisíc",
-            "publishedAt": "2026-05-15T12:45:00Z"
           }
         ]
       }

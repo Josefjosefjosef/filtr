@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-18T08:30:59.067171Z",
+  "ingestedAt": "2026-05-18T09:09:37.957579Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Spořitelna přestává trestat drobné investory, ruší minimální poplatek",
+      "url": "https://www.penize.cz/akcie/489824-sporitelna-prestava-trestat-drobne-investory-rusi-minimalni-poplatek",
+      "dt": "2026-05-18T10:40:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "drobné",
+        "investory",
+        "minimální",
+        "poplatek",
+        "přestává",
+        "ruší",
+        "spořitelna",
+        "trestat"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -481,32 +506,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Cena nemovitosti v roce 2026: Jak ji určit, než to za vás udělá trh",
-      "url": "https://www.penize.cz/nemovitosti/489652-cena-nemovitosti-v-roce-2026-jak-ji-urcit-nez-to-za-vas-udela-trh",
-      "dt": "2026-05-14T05:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "2026",
-        "cena",
-        "nemovitosti",
-        "než",
-        "roce",
-        "trh",
-        "udělá",
-        "určit",
-        "vás"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -517,7 +516,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18770,
+      "bytes": 18789,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -554,11 +553,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-18T05:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T10:40:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 15,
-          "zpravy": 5
+          "zpravy": 6,
+          "finance": 14
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -570,6 +569,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Spořitelna přestává trestat drobné investory, ruší minimální poplatek",
+            "publishedAt": "2026-05-18T10:40:00Z"
+          },
           {
             "title": "Penzijní připojištění vás připravuje o úspory. Nové porovnání starých fondů",
             "publishedAt": "2026-05-18T05:05:00Z"
@@ -597,10 +600,6 @@
           {
             "title": "Vlakem z Česka až k Jadranu. Termín, kdy vyjede první Adriatic Express",
             "publishedAt": "2026-05-15T13:34:00Z"
-          },
-          {
-            "title": "Digitalizace dávek se odkládá, některých ruší. Změny schválili poslanci",
-            "publishedAt": "2026-05-15T11:40:00Z"
           }
         ]
       }

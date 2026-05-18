@@ -1,8 +1,41 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-18T08:30:59.067171Z",
+  "ingestedAt": "2026-05-18T09:09:37.957579Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Slovenský rekord Daniela Křetínského. Jeho elektrárny loni vydělaly skoro miliardu eur. Ficova vláda chce firmu ovládnout",
+      "url": "https://byznys.hn.cz/c1-67877690-slovensky-rekord-daniela-kretinskeho-jeho-elektrarny-loni-vydelaly-skoro-miliardu-eur-ficova-vlada-chce-firmu-ovladnout",
+      "dt": "2026-05-18T08:11:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "chce",
+        "daniela",
+        "elektrárny",
+        "eur",
+        "ficova",
+        "firmu",
+        "jeho",
+        "křetínského",
+        "loni",
+        "miliardu",
+        "ovládnout",
+        "rekord",
+        "skoro",
+        "slovenský",
+        "vláda",
+        "vydělaly"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1121,35 +1154,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Týden s technologiemi: Evropa se pere s umělou inteligencí, bojí se o bezpečnost bankovního sektoru i o digitální trh",
-      "url": "https://archiv.hn.cz/c1-67877150-tyden-s-technologiemi-evropa-se-pere-s-umelou-inteligenci-boji-se-o-bezpecnost-bankovniho-sektoru-i-o-digitalni-trh",
-      "dt": "2026-05-14T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bankovního",
-        "bezpečnost",
-        "bojí",
-        "digitální",
-        "evropa",
-        "inteligencí",
-        "pere",
-        "sektoru",
-        "technologiemi",
-        "trh",
-        "týden",
-        "umělou"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1160,7 +1164,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183323,
+      "bytes": 183240,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1197,7 +1201,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-18T06:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T08:11:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 29,
@@ -1214,6 +1218,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Slovenský rekord Daniela Křetínského. Jeho elektrárny loni vydělaly skoro miliardu eur. Ficova vláda chce firmu ovládnout",
+            "publishedAt": "2026-05-18T08:11:00Z"
+          },
           {
             "title": "Pravěká stomatologie. Neandertálci uměli ošetřovat zubní kazy, bolestivý zákrok mohl trvat skoro hodinu",
             "publishedAt": "2026-05-18T06:59:00Z"
@@ -1241,10 +1249,6 @@
           {
             "title": "V Česku stoupá zájem o elektromobily, vede Škoda Auto",
             "publishedAt": "2026-05-17T22:00:00Z"
-          },
-          {
-            "title": "Zmocněnci pro likvidaci Green Dealu a šulení závazků vůči NATO. Orwell by měl z vládního názvosloví radost",
-            "publishedAt": "2026-05-17T19:00:00Z"
           }
         ]
       }
