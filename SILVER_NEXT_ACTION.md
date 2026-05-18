@@ -8,37 +8,35 @@
    ```powershell
    Set-Location -LiteralPath C:\projects\filtr
    ```
-2. Ověřte stav repozitáře:
+2. Spusťte příkaz pro ověření stavu repozitáře:
    ```powershell
-   git status
+   git status --short
    ```
-3. Rozhodněte, zda chcete **commitnout** změny v `SILVER_*.md`, nebo je **vrátit** pomocí `git restore`:
-   - Pro commit:
-     ```powershell
-     git add SILVER_*.md
-     git commit -m "Upravené soubory pro audit Silver"
-     ```
-   - Pro vrácení změn:
-     ```powershell
-     git restore SILVER_*.md
-     ```
-4. Přihlaste se k GitHubu:
+3. Přihlaste se do GitHub CLI:
    ```powershell
    gh auth login
    ```
-5. Po vyčištění pracovního stromu proveďte push:
+4. Ověřte stav přihlášení:
+   ```powershell
+   gh auth status
+   ```
+5. Nastavte GitHub CLI pro použití s Gitem:
+   ```powershell
+   gh auth setup-git
+   ```
+6. Proveďte push změn na vzdálené úložiště:
    ```powershell
    git push -u origin chore/silver-audit-repo-state
    ```
 
 ### Scope guard
-Tento úkol je zaměřen na zajištění čistoty pracovního stromu a přihlášení k GitHubu před provedením push.
+Zajistěte, aby všechny příkazy byly provedeny v uvedeném pořadí a aby bylo přihlášení úspěšné před provedením push.
 
 ### STOP podmínky
-- Pracovní strom musí být čistý (`git_clean=NO`).
-- Žádné změny nesmí být necommitnuté před provedením push.
+- Pokud `git status` ukazuje necommitnuté změny, proveďte commit před pokusem o push.
+- Raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode` je zakázáno; kontrolovaný autonomní režim vyžaduje tyto přepínače plus vestavěné limity.
 
 ### Povinný výsledek
-```
-Ověření stavu repozitáře a autentizace pro GitHub.
+```plaintext
+Úkol byl úspěšně proveden, změny byly úspěšně odeslány na vzdálené úložiště.
 ```
