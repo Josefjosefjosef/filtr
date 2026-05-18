@@ -37,6 +37,12 @@ const ADAPTER_TIMEOUT_SINGLE_SEC = 3200;
 const ADAPTER_TIMEOUT_LOOP_BASE_SEC = 3200;
 const ADAPTER_TIMEOUT_LOOP_PROBE_SEC = 180;
 const ADAPTER_TIMEOUT_LOOP_CAP_SEC = 7200;
+/** Cluster FULL_AGENT_HANDOFF base budget before staged extensions (seconds). */
+const ADAPTER_TIMEOUT_CLUSTER_BASE_SEC = 5400;
+const ADAPTER_STAGED_SLICE_SEC = 300;
+const ADAPTER_STAGED_EXTENSION_SEC = 1800;
+const ADAPTER_STAGED_MAX_EXTENSIONS = 2;
+const ADAPTER_STAGED_STALL_SEC = 1200;
 const LOOP_PROBE_TASK_FILE = "scripts/silver-wsl-taskfile-stdin-probe-task.md";
 const CURSOR_OUTPUT_FILE = path.join(REPO, "SILVER_CURSOR_OUTPUT.md");
 const LOOP_RUNTIME_ALLOWED_DIRTY_PATHS = new Set([
@@ -481,15 +487,10 @@ function resolveLoopCycleAdapterPlan(loopTarget, cycle) {
   const isTrancheHandoff = posInTranche === 1;
   const isProbeWindow =
     posInTranche > 1 && posInTranche <= 1 + LOOP_PROBE_CYCLES_PER_TRANCHE;
-  let timeoutSeconds = ADAPTER_TIMEOUT_LOOP_BASE_SEC;
-  if (loopTarget > LOOP_LONG_RUN_TRANCHE_SIZE) {
-    timeoutSeconds = Math.min(ADAPTER_TIMEOUT_LOOP_CAP_SEC, ADAPTER_TIMEOUT_LOOP_BASE_SEC + 400);
-  }
   if (isTrancheHandoff || !isProbeWindow) {
     return {
       useProbe: false,
       taskFile: "SILVER_NEXT_ACTION.md",
-      timeoutSeconds,
       cycle_mode: "FULL_AGENT_HANDOFF",
     };
   }
@@ -498,8 +499,49 @@ function resolveLoopCycleAdapterPlan(loopTarget, cycle) {
   return {
     useProbe: true,
     taskFile: LOOP_PROBE_TASK_FILE,
-    timeoutSeconds: ADAPTER_TIMEOUT_LOOP_PROBE_SEC,
     cycle_mode: longRunProbe ? "WSL_STDIN_PROBE_LONG_RUN" : "WSL_STDIN_PROBE_STABILITY",
+  };
+}
+
+/**
+ * Deterministic staged timeout policy for adapter invocation (scripts-only).
+ * @param {number} loopTarget
+ * @param {{ useProbe: boolean, cycle_mode: string }} cyclePlan
+ * @param {string} nextActionText
+ */
+function resolveAdapterTimeoutPolicy(loopTarget, cyclePlan, nextActionText) {
+  if (cyclePlan.useProbe) {
+    return {
+      timeoutSeconds: ADAPTER_TIMEOUT_LOOP_PROBE_SEC,
+      maxTimeoutSeconds: ADAPTER_TIMEOUT_LOOP_PROBE_SEC,
+      timeoutClass: "PROBE",
+      stagedWatchdog: false,
+    };
+  }
+  const clusterHandoff =
+    cyclePlan.cycle_mode === "FULL_AGENT_HANDOFF" &&
+    silverNextActionHasClusterWorkflow(nextActionText);
+  if (clusterHandoff) {
+    return {
+      timeoutSeconds: ADAPTER_TIMEOUT_CLUSTER_BASE_SEC,
+      maxTimeoutSeconds: ADAPTER_TIMEOUT_LOOP_CAP_SEC,
+      timeoutClass: "CLUSTER_LONG_RUN_STAGED",
+      stagedWatchdog: true,
+      stagedSliceSeconds: ADAPTER_STAGED_SLICE_SEC,
+      stagedExtensionSeconds: ADAPTER_STAGED_EXTENSION_SEC,
+      stagedMaxExtensions: ADAPTER_STAGED_MAX_EXTENSIONS,
+      stagedStallSeconds: ADAPTER_STAGED_STALL_SEC,
+    };
+  }
+  let timeoutSeconds = ADAPTER_TIMEOUT_LOOP_BASE_SEC;
+  if (loopTarget > LOOP_LONG_RUN_TRANCHE_SIZE) {
+    timeoutSeconds = Math.min(ADAPTER_TIMEOUT_LOOP_CAP_SEC, ADAPTER_TIMEOUT_LOOP_BASE_SEC + 400);
+  }
+  return {
+    timeoutSeconds,
+    maxTimeoutSeconds: timeoutSeconds,
+    timeoutClass: "STANDARD_WALL_CLOCK",
+    stagedWatchdog: false,
   };
 }
 
@@ -550,11 +592,13 @@ function runCyclePlanSelftest() {
  * @param {number} loopTarget
  * @returns {number}
  */
-function resolveSingleRunAdapterTimeoutSeconds(loopTarget) {
-  if (loopTarget > LOOP_LONG_RUN_TRANCHE_SIZE) {
-    return Math.min(ADAPTER_TIMEOUT_LOOP_CAP_SEC, ADAPTER_TIMEOUT_LOOP_BASE_SEC + 400);
-  }
-  return ADAPTER_TIMEOUT_SINGLE_SEC;
+/**
+ * @param {number} loopTarget
+ * @param {string} nextActionText
+ */
+function resolveSingleRunAdapterTimeoutPolicy(loopTarget, nextActionText) {
+  const plan = { useProbe: false, cycle_mode: "FULL_AGENT_HANDOFF" };
+  return resolveAdapterTimeoutPolicy(loopTarget, plan, nextActionText);
 }
 
 function readTextFileCharCount(absPath) {
@@ -582,6 +626,11 @@ function parseAdapterOutputMeta(text) {
       key === "timed_out" ||
       key === "elapsed_ms" ||
       key === "timeout_seconds" ||
+      key === "watchdog_max_timeout_seconds" ||
+      key === "timeout_class" ||
+      key === "watchdog_stop_reason" ||
+      key === "watchdog_progress_detected" ||
+      key === "watchdog_extensions_used" ||
       key === "exit_code" ||
       key === "task_digest"
     ) {
@@ -608,6 +657,8 @@ function printLoopCycleHeartbeat(hb) {
     "cursor_call_finished_at",
     "cursor_call_duration_ms",
     "effective_timeout_seconds",
+    "watchdog_max_timeout_seconds",
+    "timeout_class",
     "next_action_size_chars",
     "cursor_output_size_chars",
   ]) {
@@ -838,6 +889,47 @@ function runHandoffPersistenceSelftest() {
   return ok;
 }
 
+/**
+ * @returns {boolean}
+ */
+function runTimeoutPolicySelftest() {
+  let ok = true;
+  const clusterText =
+    "ÚKOL PRO CURSOR — NEXT PRODUCT CLUSTER\nnode scripts/silver-rhc3-cluster-classifier-v1.cjs\ntop_cluster=foo";
+  const probePlan = resolveLoopCycleAdapterPlan(5, 2);
+  const probePolicy = resolveAdapterTimeoutPolicy(5, probePlan, clusterText);
+  if (probePolicy.timeoutClass !== "PROBE" || probePolicy.stagedWatchdog) {
+    console.error("TIMEOUT_POLICY_SELFTEST_FAIL probe");
+    ok = false;
+  }
+  const handoffPlan = resolveLoopCycleAdapterPlan(5, 1);
+  const clusterPolicy = resolveAdapterTimeoutPolicy(5, handoffPlan, clusterText);
+  if (
+    clusterPolicy.timeoutClass !== "CLUSTER_LONG_RUN_STAGED" ||
+    !clusterPolicy.stagedWatchdog ||
+    clusterPolicy.timeoutSeconds !== ADAPTER_TIMEOUT_CLUSTER_BASE_SEC ||
+    clusterPolicy.maxTimeoutSeconds !== ADAPTER_TIMEOUT_LOOP_CAP_SEC
+  ) {
+    console.error("TIMEOUT_POLICY_SELFTEST_FAIL cluster_staged");
+    ok = false;
+  }
+  const genericPolicy = resolveAdapterTimeoutPolicy(5, handoffPlan, "sudo apt update\ngh auth login");
+  if (genericPolicy.timeoutClass !== "STANDARD_WALL_CLOCK" || genericPolicy.stagedWatchdog) {
+    console.error("TIMEOUT_POLICY_SELFTEST_FAIL generic_wall_clock");
+    ok = false;
+  }
+  if (clusterPolicy.maxTimeoutSeconds > ADAPTER_TIMEOUT_LOOP_CAP_SEC) {
+    console.error("TIMEOUT_POLICY_SELFTEST_FAIL cluster_max_exceeds_cap");
+    ok = false;
+  }
+  if (ADAPTER_TIMEOUT_CLUSTER_BASE_SEC >= ADAPTER_TIMEOUT_LOOP_CAP_SEC) {
+    console.error("TIMEOUT_POLICY_SELFTEST_FAIL cluster_base_must_be_below_cap");
+    ok = false;
+  }
+  if (ok) console.log("TIMEOUT_POLICY_SELFTEST_PASS");
+  return ok;
+}
+
 function restoreLoopRuntimeFiles() {
   for (const rel of LOOP_RUNTIME_RESTORE_ON_EXIT_PATHS) {
     runCommand("git", ["checkout", "--", rel]);
@@ -891,6 +983,8 @@ function runSilverCursorAdapter(adapter, opts) {
   const taskFile = String((opts && opts.taskFile) || "SILVER_NEXT_ACTION.md");
   const timeoutSeconds =
     opts && opts.timeoutSeconds != null ? Number(opts.timeoutSeconds) : ADAPTER_TIMEOUT_SINGLE_SEC;
+  const maxTimeoutSeconds =
+    opts && opts.maxTimeoutSeconds != null ? Number(opts.maxTimeoutSeconds) : timeoutSeconds;
   const args = [...adapter.fileArgs];
   if (useWsl) {
     args.push("-WslUbuntuAgent");
@@ -910,6 +1004,30 @@ function runSilverCursorAdapter(adapter, opts) {
     "-TimeoutSeconds",
     String(timeoutSeconds),
   );
+  if (opts && opts.timeoutClass) {
+    args.push("-TimeoutClass", String(opts.timeoutClass));
+  }
+  if (maxTimeoutSeconds > timeoutSeconds && opts && opts.stagedWatchdog) {
+    args.push("-MaxTimeoutSeconds", String(maxTimeoutSeconds));
+    args.push(
+      "-StagedWatchdogSliceSeconds",
+      String(opts.stagedSliceSeconds != null ? opts.stagedSliceSeconds : ADAPTER_STAGED_SLICE_SEC),
+    );
+    args.push(
+      "-StagedWatchdogExtensionSeconds",
+      String(
+        opts.stagedExtensionSeconds != null ? opts.stagedExtensionSeconds : ADAPTER_STAGED_EXTENSION_SEC,
+      ),
+    );
+    args.push(
+      "-StagedWatchdogMaxExtensions",
+      String(opts.stagedMaxExtensions != null ? opts.stagedMaxExtensions : ADAPTER_STAGED_MAX_EXTENSIONS),
+    );
+    args.push(
+      "-StagedWatchdogStallSeconds",
+      String(opts.stagedStallSeconds != null ? opts.stagedStallSeconds : ADAPTER_STAGED_STALL_SEC),
+    );
+  }
   return runCommand(adapter.shell, args);
 }
 
@@ -1036,6 +1154,9 @@ function main() {
   }
   if (argvSlice.includes("--cli-planner-cluster-preference-selftest")) {
     process.exit(runPlannerClusterPreferenceSelftest() ? 0 : 1);
+  }
+  if (argvSlice.includes("--cli-timeout-policy-selftest")) {
+    process.exit(runTimeoutPolicySelftest() ? 0 : 1);
   }
   const cli = parseSilverAutoCli(argvSlice);
   const startedAt = new Date().toISOString();
@@ -1298,6 +1419,15 @@ function main() {
         }
         for (let cycle = 1; cycle <= loopTarget && loopSafe === "YES"; cycle += 1) {
           const cyclePlan = resolveLoopCycleAdapterPlan(loopTarget, cycle);
+          let nextActionText = "";
+          try {
+            if (fs.existsSync(NEXT_ACTION_FILE)) {
+              nextActionText = fs.readFileSync(NEXT_ACTION_FILE, "utf8");
+            }
+          } catch {
+            nextActionText = "";
+          }
+          const timeoutPolicy = resolveAdapterTimeoutPolicy(loopTarget, cyclePlan, nextActionText);
           const cycleStartedMs = Date.now();
           const cursorCallStartedAt = new Date().toISOString();
           const nextActionChars = readTextFileCharCount(NEXT_ACTION_FILE);
@@ -1312,7 +1442,9 @@ function main() {
             cursor_call_started_at: cursorCallStartedAt,
             cursor_call_finished_at: "",
             cursor_call_duration_ms: "",
-            effective_timeout_seconds: String(cyclePlan.timeoutSeconds),
+            effective_timeout_seconds: String(timeoutPolicy.timeoutSeconds),
+            watchdog_max_timeout_seconds: String(timeoutPolicy.maxTimeoutSeconds),
+            timeout_class: String(timeoutPolicy.timeoutClass),
             next_action_size_chars: String(nextActionChars),
             cursor_output_size_chars: String(cursorOutputCharsBefore),
           });
@@ -1320,7 +1452,14 @@ function main() {
             useWslUbuntuAgent,
             useProbe: cyclePlan.useProbe,
             taskFile: cyclePlan.taskFile,
-            timeoutSeconds: cyclePlan.timeoutSeconds,
+            timeoutSeconds: timeoutPolicy.timeoutSeconds,
+            maxTimeoutSeconds: timeoutPolicy.maxTimeoutSeconds,
+            timeoutClass: timeoutPolicy.timeoutClass,
+            stagedWatchdog: timeoutPolicy.stagedWatchdog,
+            stagedSliceSeconds: timeoutPolicy.stagedSliceSeconds,
+            stagedExtensionSeconds: timeoutPolicy.stagedExtensionSeconds,
+            stagedMaxExtensions: timeoutPolicy.stagedMaxExtensions,
+            stagedStallSeconds: timeoutPolicy.stagedStallSeconds,
           });
           const cursorCallFinishedAt = new Date().toISOString();
           const cursorCallDurationMs = Date.now() - cycleStartedMs;
@@ -1334,7 +1473,9 @@ function main() {
           repOut.cursor_call_started_at = cursorCallStartedAt;
           repOut.cursor_call_finished_at = cursorCallFinishedAt;
           repOut.cursor_call_duration_ms = String(cursorCallDurationMs);
-          repOut.effective_timeout_seconds = String(cyclePlan.timeoutSeconds);
+          repOut.effective_timeout_seconds = String(timeoutPolicy.timeoutSeconds);
+          repOut.watchdog_max_timeout_seconds = String(timeoutPolicy.maxTimeoutSeconds);
+          repOut.timeout_class = String(timeoutPolicy.timeoutClass);
           repOut.next_action_size_chars = String(nextActionChars);
           repOut.cursor_output_size_chars = String(readTextFileCharCount(CURSOR_OUTPUT_FILE));
           repOut.loop_cycle_mode = cyclePlan.cycle_mode;
@@ -1350,7 +1491,17 @@ function main() {
                 ";elapsed_ms=" +
                 String(adapterMeta.elapsed_ms || cursorCallDurationMs) +
                 ";timeout_seconds=" +
-                String(adapterMeta.timeout_seconds || cyclePlan.timeoutSeconds) +
+                String(adapterMeta.timeout_seconds || timeoutPolicy.timeoutSeconds) +
+                ";watchdog_max_timeout_seconds=" +
+                String(adapterMeta.watchdog_max_timeout_seconds || timeoutPolicy.maxTimeoutSeconds) +
+                ";timeout_class=" +
+                String(adapterMeta.timeout_class || timeoutPolicy.timeoutClass) +
+                ";watchdog_stop_reason=" +
+                String(adapterMeta.watchdog_stop_reason || "UNKNOWN") +
+                ";watchdog_progress_detected=" +
+                String(adapterMeta.watchdog_progress_detected || "UNKNOWN") +
+                ";watchdog_extensions_used=" +
+                String(adapterMeta.watchdog_extensions_used || "0") +
                 ";cycle_mode=" +
                 cyclePlan.cycle_mode;
               const timeoutRuntime = evaluateLoopRuntimeSafety();
@@ -1447,11 +1598,28 @@ function main() {
             clusterDiag: pickTopClusterDiagnostic(),
           });
         }
-        const singleTimeout = resolveSingleRunAdapterTimeoutSeconds(1);
-        repOut.effective_timeout_seconds = String(singleTimeout);
+        let singleNextText = "";
+        try {
+          if (fs.existsSync(NEXT_ACTION_FILE)) {
+            singleNextText = fs.readFileSync(NEXT_ACTION_FILE, "utf8");
+          }
+        } catch {
+          singleNextText = "";
+        }
+        const singlePolicy = resolveSingleRunAdapterTimeoutPolicy(1, singleNextText);
+        repOut.effective_timeout_seconds = String(singlePolicy.timeoutSeconds);
+        repOut.watchdog_max_timeout_seconds = String(singlePolicy.maxTimeoutSeconds);
+        repOut.timeout_class = String(singlePolicy.timeoutClass);
         const ar = runSilverCursorAdapter(adapter, {
           useWslUbuntuAgent,
-          timeoutSeconds: singleTimeout,
+          timeoutSeconds: singlePolicy.timeoutSeconds,
+          maxTimeoutSeconds: singlePolicy.maxTimeoutSeconds,
+          timeoutClass: singlePolicy.timeoutClass,
+          stagedWatchdog: singlePolicy.stagedWatchdog,
+          stagedSliceSeconds: singlePolicy.stagedSliceSeconds,
+          stagedExtensionSeconds: singlePolicy.stagedExtensionSeconds,
+          stagedMaxExtensions: singlePolicy.stagedMaxExtensions,
+          stagedStallSeconds: singlePolicy.stagedStallSeconds,
         });
         repOut.cursor_adapter_executed = "YES";
         repOut.cursor_exit_code = String(ar.exitCode);
