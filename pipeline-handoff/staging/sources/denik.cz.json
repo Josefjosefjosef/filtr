@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-18T03:10:01.003491Z",
+  "ingestedAt": "2026-05-18T03:50:29.061818Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Do Česka míří cílená léčba na Alzheimera. Přinese roky kvalitního života navíc",
+      "url": "https://www.denik.cz/zdravotnictvi/cesi-alzheimerova-choroba-cilena-lecba-rozhovor-jakub-hort.html",
+      "dt": "2026-05-18T03:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "alzheimera",
+        "cílená",
+        "kvalitního",
+        "léčba",
+        "míří",
+        "navíc",
+        "přinese",
+        "roky",
+        "česka",
+        "života"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -621,33 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Češi chtějí zachovat zpravodajskou roli České televize a rozhlasu, říká průzkum",
-      "url": "https://www.denik.cz/z_domova/ceska-televize-cesky-rozhlas-poplatky-zpravodajstvi-pruzkum.html",
-      "dt": "2026-05-17T07:50:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "chtějí",
-        "průzkum",
-        "roli",
-        "rozhlasu",
-        "televize",
-        "zachovat",
-        "zpravodajskou",
-        "české",
-        "češi",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -658,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29764,
+      "bytes": 29443,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -695,10 +695,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-18T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T03:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
+          "zdravi": 1,
+          "zpravy": 22,
           "finance": 2
         },
         "drop_counts": {
@@ -711,6 +712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Do Česka míří cílená léčba na Alzheimera. Přinese roky kvalitního života navíc",
+            "publishedAt": "2026-05-18T03:30:00Z"
+          },
           {
             "title": "Chorvatsko před 100 lety: Vypadalo zcela jinak. Bez turistů, s osly a vinicemi",
             "publishedAt": "2026-05-18T03:00:00Z"
@@ -738,10 +743,6 @@
           {
             "title": "Při ozbrojeném útoku ve středu Mexika zemřelo deset lidí včetně jednoho dítěte",
             "publishedAt": "2026-05-17T17:23:00Z"
-          },
-          {
-            "title": "Tragédie v Thajsku: Při nehodě na skútru zemřela Češka i její irský přítel",
-            "publishedAt": "2026-05-17T16:58:00Z"
           }
         ]
       }
