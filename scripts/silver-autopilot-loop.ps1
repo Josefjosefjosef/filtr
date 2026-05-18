@@ -62,7 +62,8 @@ param(
   [int]$TotalWallSeconds = 0,
   [switch]$TimeoutArchiveSelfTest,
   [switch]$PreflightCleanupSelfTest,
-  [switch]$Cap50TimeoutUtf8SelfTest
+  [switch]$Cap50TimeoutUtf8SelfTest,
+  [switch]$Cap50PostconditionSelfTest
 )
 
 Set-StrictMode -Version 2
@@ -1889,12 +1890,21 @@ function Invoke-SilverCap50TimeoutUtf8OrchestrationSelfTest {
   }
 
   $enc1252 = [System.Text.Encoding]::GetEncoding(1252)
-  $good = ([string][char]0x00DA + "KOL PRO CURSOR") + " Aktu" + [char]0x00E1 + "ln" + [char]0x00ED + " pozn" + [char]0x00E1 + "mka"
+  $good = ([string][char]0x00DA + "KOL PRO CURSOR") + " Aktu" + [char]0x00E1 + "ln" + [char]0x00ED + " pozn" + [char]0x00E1 + "mka zm" + [char]0x011B + "nil klasifik" + [char]0x00E1 + "tor p" + [char]0x0161 + "pinav" + [char]0x00E9 + "m"
   $bad = $enc1252.GetString($utf8.GetBytes($good))
   $repairedFlag = "NO"
   $fixed = Repair-SilverUtf8HandoffText -Text $bad -Repaired ([ref]$repairedFlag)
   if (-not (Test-SilverCap50Utf8ProbeStrings -Text $fixed)) {
     [void]$failures.Add("utf8_probe_strings_after_repair")
+  }
+  $badEmOnly = [char]0x00E2 + [char]0x20AC + [char]0x0094
+  $hitEm = Test-SilverCap50Utf8HardFailAfterRepair -Text $badEmOnly -SurfaceLabel "stdout"
+  if ($hitEm.detected -ne "YES") {
+    [void]$failures.Add("hard_fail_em_dash_mojibake")
+  }
+  $hitClean = Test-SilverCap50Utf8HardFailAfterRepair -Text $fixed -SurfaceLabel "repaired"
+  if ($hitClean.detected -ne "NO") {
+    [void]$failures.Add("hard_fail_clean_after_repair")
   }
 
   $tempDir = Join-Path $env:TEMP ("silver-cap50-utf8-selftest-" + [guid]::NewGuid().ToString())
@@ -2018,6 +2028,180 @@ function Invoke-SilverCap50TimeoutUtf8OrchestrationSelfTest {
     return $false
   }
   Write-Host "SILVER_CAP50_TIMEOUT_UTF8_ORCHESTRATION_SELFTEST=PASS" -ForegroundColor Green
+  return $true
+}
+
+function Write-SilverCap50CyclePostconditionBlock {
+  param([hashtable]$Result)
+  Write-Host ""
+  Write-Host "=== SILVER_CAP50_CYCLE_POSTCONDITION ===" -ForegroundColor Cyan
+  Write-Host ("cycle=" + [string]$Result.cycle)
+  Write-Host ("cursor_exit=" + [string]$Result.cursor_exit)
+  Write-Host ("autopilot_exit=" + [string]$Result.autopilot_exit)
+  Write-Host ("effective_timeout_seconds=" + [string]$Result.effective_timeout_seconds)
+  Write-Host ("utf8_mojibake_detected=" + [string]$Result.utf8_mojibake_detected)
+  Write-Host ("runtime_dirty_files=" + [string]$Result.runtime_dirty_files)
+  Write-Host ("runtime_cleanup_done=" + [string]$Result.runtime_cleanup_done)
+  Write-Host ("git_status_clean_after_cleanup=" + [string]$Result.git_status_clean_after_cleanup)
+  Write-Host ("next_action_mode=" + [string]$Result.next_action_mode)
+  Write-Host ("safe_to_continue=" + [string]$Result.safe_to_continue)
+  $pfCol = "Red"
+  if ([string]$Result.PASS_FAIL -eq "PASS") { $pfCol = "Green" }
+  Write-Host ("PASS_FAIL=" + [string]$Result.PASS_FAIL) -ForegroundColor $pfCol
+  if ([string]$Result.utf8_mojibake_locations) {
+    Write-Host ("utf8_mojibake_locations=" + [string]$Result.utf8_mojibake_locations)
+  }
+  if ([string]$Result.postcondition_reason) {
+    Write-Host ("postcondition_reason=" + [string]$Result.postcondition_reason)
+  }
+  Write-Host "=== END_SILVER_CAP50_CYCLE_POSTCONDITION ===" -ForegroundColor Cyan
+  Write-Host ""
+}
+
+function Invoke-SilverCap50EvaluateCyclePostcondition {
+  param(
+    [string]$RepoRoot,
+    [int]$Cycle,
+    [string]$CursorExit,
+    [string]$AutopilotExit,
+    [int]$EffectiveTimeoutSeconds,
+    [bool]$ControlledInfinite,
+    [string]$SafetyCountersLine,
+    [switch]$DryRunOnly
+  )
+  $nextPath = Join-Path $RepoRoot "SILVER_NEXT_ACTION.md"
+  $cursorPath = Join-Path $RepoRoot "SILVER_CURSOR_OUTPUT.md"
+  $runReportPath = Join-Path $RepoRoot "SILVER_RUN_REPORT.md"
+  $recommended = ""
+  if (Test-Path -LiteralPath $runReportPath) {
+    $reportText = Read-TextFileOrEmpty -Path $runReportPath
+    $recommended = Get-RunReportLineValue -ReportText $reportText -Key "recommended_next_task"
+  }
+  $nextAfter = Read-TextFileOrEmpty -Path $nextPath
+  $utf8Gate = Invoke-SilverCap50Utf8SurfacesHardGate -RepoRoot $RepoRoot -NextActionPath $nextPath -CursorOutputPath $cursorPath
+  $runtimeDirty = (Get-GitStatusShortPaths -Cwd $RepoRoot) -join ";"
+  $cleanupDone = "NO"
+  $gitCleanAfter = if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" }
+  if (-not $DryRunOnly) {
+    $cleanupRes = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot
+    $cleanupDone = if ($cleanupRes.PASS_FAIL -eq "PASS") { "YES" } else { "NO" }
+    $gitCleanAfter = [string]$cleanupRes.git_clean_after
+    if ([string]$cleanupRes.blocked_dirty_files) {
+      $runtimeDirty = [string]$cleanupRes.blocked_dirty_files
+    }
+  }
+  $nextMode = Get-SilverCap50NextActionMode -NextActionText $nextAfter -RecommendedNextTask $recommended -ControlledInfinite $ControlledInfinite
+  $safetyBlocked = Test-SafetyCountersBlocked -SafetyCountersLine $SafetyCountersLine
+  $safe = "NO"
+  $passFail = "FAIL"
+  $reason = ""
+  if ($utf8Gate.utf8_mojibake_detected -eq "YES") {
+    $reason = "utf8_mojibake_detected"
+  }
+  elseif ($CursorExit -ne "0") {
+    $reason = "cursor_exit_nonzero"
+  }
+  elseif ($AutopilotExit -ne "0") {
+    $reason = "autopilot_exit_nonzero"
+  }
+  elseif ($safetyBlocked) {
+    $reason = "safety_counters_nonzero"
+  }
+  elseif ($gitCleanAfter -ne "YES") {
+    $reason = "git_not_clean_after_runtime_cleanup"
+  }
+  elseif ($ControlledInfinite -and $nextMode -eq "MANUAL_REQUIRED") {
+    $reason = "manual_next_action_required"
+  }
+  elseif ($ControlledInfinite -and $nextMode -ne "AUTONOMOUS_CONTINUE") {
+    $reason = "next_action_not_autonomous"
+  }
+  else {
+    $safe = "YES"
+    $passFail = "PASS"
+  }
+  return @{
+    cycle                           = [string]$Cycle
+    cursor_exit                     = [string]$CursorExit
+    autopilot_exit                  = [string]$AutopilotExit
+    effective_timeout_seconds       = [string]$EffectiveTimeoutSeconds
+    utf8_mojibake_detected          = [string]$utf8Gate.utf8_mojibake_detected
+    utf8_mojibake_locations         = [string]$utf8Gate.utf8_mojibake_locations
+    runtime_dirty_files             = $runtimeDirty
+    runtime_cleanup_done            = $cleanupDone
+    git_status_clean_after_cleanup  = $gitCleanAfter
+    next_action_mode                = $nextMode
+    safe_to_continue                = $safe
+    PASS_FAIL                       = $passFail
+    postcondition_reason            = $reason
+    ready_for_product_cap50         = $(if ($passFail -eq "PASS") { "YES" } else { "NO" })
+  }
+}
+
+function Invoke-SilverCap50PostconditionSelfTest {
+  param([string]$RepoRoot)
+  $utf8 = $script:SilverUtf8NoBom
+  $failures = New-Object System.Collections.Generic.List[string]
+  $enc1252 = [System.Text.Encoding]::GetEncoding(1252)
+  $good = ([string][char]0x00DA + "KOL PRO CURSOR") + " Aktu" + [char]0x00E1 + "ln" + [char]0x00ED + " pozn" + [char]0x00E1 + "mka zm" + [char]0x011B + "nil klasifik" + [char]0x00E1 + "tor p" + [char]0x0161 + "pinav" + [char]0x00E9 + "m"
+  $badPreviewLiteral = [string][char]0x0102 + [char]0x0161 + "KOL PRO CURSOR"
+  if (-not (Test-SilverUtf8MojibakeMarkers -Text $badPreviewLiteral)) {
+    [void]$failures.Add("mojibake_ukol_prompt_detect")
+  }
+  $badEmOnly = [string][char]0x00E2 + [char]0x20AC + [char]0x0094
+  $hitStdout = Test-SilverCap50Utf8HardFailAfterRepair -Text $badEmOnly -SurfaceLabel "stdout"
+  if ($hitStdout.detected -ne "YES") {
+    [void]$failures.Add("mojibake_stdout_em_dash_must_fail")
+  }
+  $hitGood = Test-SilverCap50Utf8HardFailAfterRepair -Text $good -SurfaceLabel "clean"
+  if ($hitGood.detected -ne "NO") {
+    [void]$failures.Add("clean_utf8_must_pass")
+  }
+  if (-not (Test-SilverCap50Utf8ProbeStrings -Text $good)) {
+    [void]$failures.Add("utf8_probe_strings_clean")
+  }
+  if (-not (Test-SilverCap50ManualOnlyRecommendedNextTask -Text "Execute steps in SILVER_NEXT_ACTION.md in Cursor.")) {
+    [void]$failures.Add("manual_recommended_detect")
+  }
+  $modeCont = Get-SilverCap50NextActionMode -NextActionText ($good + "`nnode scripts/silver-rhc3-cluster-classifier-v1.cjs") -RecommendedNextTask "Execute steps in SILVER_NEXT_ACTION.md in Cursor." -ControlledInfinite $true
+  if ($modeCont -ne "AUTONOMOUS_CONTINUE") {
+    [void]$failures.Add("autonomous_continue_with_safe_next_action")
+  }
+  $modeManual = Get-SilverCap50NextActionMode -NextActionText 'STOP - needs human' -RecommendedNextTask "Execute steps in SILVER_NEXT_ACTION.md in Cursor." -ControlledInfinite $true
+  if ($modeManual -ne "MANUAL_REQUIRED") {
+    [void]$failures.Add("manual_required_on_stop")
+  }
+  $tempDir = Join-Path $env:TEMP ("silver-cap50-postcondition-selftest-" + [guid]::NewGuid().ToString())
+  New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+  try {
+    $nextPath = Join-Path $tempDir "SILVER_NEXT_ACTION.md"
+    [System.IO.File]::WriteAllText($nextPath, $good + "`n", $utf8)
+    $cursorPath = Join-Path $tempDir "SILVER_CURSOR_OUTPUT.md"
+    $cursorBody = "# silver-cursor-agent-adapter`nprompt_preview=" + $good + "`n# stdout`n" + $good + "`n"
+    [System.IO.File]::WriteAllText($cursorPath, $cursorBody, $utf8)
+    $gateOk = Invoke-SilverCap50Utf8SurfacesHardGate -RepoRoot $tempDir -NextActionPath $nextPath -CursorOutputPath $cursorPath
+    if ($gateOk.PASS_FAIL -ne "PASS") {
+      [void]$failures.Add("utf8_surfaces_gate_clean_path")
+    }
+    $cursorBad = "# silver-cursor-agent-adapter`nprompt_preview=" + $badEmOnly + "`n# stdout`nfail`n"
+    [System.IO.File]::WriteAllText($cursorPath, $cursorBad, $utf8)
+    $gateBad = Invoke-SilverCap50Utf8SurfacesHardGate -RepoRoot $tempDir -NextActionPath $nextPath -CursorOutputPath $cursorPath
+    if ($gateBad.PASS_FAIL -ne "FAIL") {
+      [void]$failures.Add("utf8_surfaces_gate_mojibake_must_fail")
+    }
+  }
+  finally {
+    Remove-Item -LiteralPath $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+  }
+  if (-not (Invoke-SilverCap50PreflightCleanupSelfTest -RepoRoot $RepoRoot)) {
+    [void]$failures.Add("preflight_cleanup_selftest")
+  }
+  if ($failures.Count -gt 0) {
+    Write-Host "SILVER_CAP50_POSTCONDITION_SELFTEST=FAIL" -ForegroundColor Red
+    foreach ($f in $failures) { Write-Host $f -ForegroundColor Red }
+    return $false
+  }
+  Write-Host "SILVER_CAP50_POSTCONDITION_SELFTEST=PASS" -ForegroundColor Green
   return $true
 }
 
@@ -2337,6 +2521,12 @@ if ($PreflightCleanupSelfTest) {
 if ($Cap50TimeoutUtf8SelfTest) {
   $stCap = Invoke-SilverCap50TimeoutUtf8OrchestrationSelfTest -RepoRoot $RepoRoot
   if (-not $stCap) { exit 1 }
+  exit 0
+}
+
+if ($Cap50PostconditionSelfTest) {
+  $stPost = Invoke-SilverCap50PostconditionSelfTest -RepoRoot $RepoRoot
+  if (-not $stPost) { exit 1 }
   exit 0
 }
 
@@ -2725,14 +2915,28 @@ while ($true) {
       }
 
       if ($ce -ne 0) {
+        $cursorStopReason = ""
+        if ($ce -eq 124) { $cursorStopReason = "cursor_outer_or_adapter_timeout_exit_124" }
+        elseif ($ce -eq 12) { $cursorStopReason = "utf8_mojibake_detected" }
         Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
           -CursorExit $cursorExitStr -AutopilotExit "N/A" -StatusExit "N/A" `
           -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine $safetyPre `
           -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
           -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
-          -Headline (Get-NextActionHeadline -Text $nextText) -Focus "cursor_exit_nonzero" `
+          -Headline (Get-NextActionHeadline -Text $nextText) -Focus $(if ($ce -eq 12) { "utf8_mojibake_hard_fail" } else { "cursor_exit_nonzero" }) `
           -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
-          -StopReason $(if ($ce -eq 124) { "cursor_outer_or_adapter_timeout_exit_124" } else { "" })
+          -StopReason $cursorStopReason
+      }
+      $utf8AfterCursor = Invoke-SilverCap50Utf8SurfacesHardGate -RepoRoot $RepoRoot -NextActionPath $NextActionPath -CursorOutputPath $CursorOutputPath
+      if ($utf8AfterCursor.PASS_FAIL -ne "PASS") {
+        Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+          -CursorExit $cursorExitStr -AutopilotExit "N/A" -StatusExit "N/A" `
+          -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine $safetyPre `
+          -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
+          -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
+          -Headline (Get-NextActionHeadline -Text $nextText) -Focus "utf8_mojibake_post_cursor" `
+          -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
+          -StopReason ([string]$utf8AfterCursor.reason)
       }
     } else {
       $cursorExitStr = "SKIPPED_DRY_RUN"
@@ -2980,6 +3184,27 @@ while ($true) {
     }
     Update-SilverAutonomousReportingHygieneAccumulator -ReportText $reportPost -CycleFields $fieldsPass
   }
+  $postCond = Invoke-SilverCap50EvaluateCyclePostcondition `
+    -RepoRoot $RepoRoot -Cycle $cycle -CursorExit $cursorExitStr -AutopilotExit $autoExitStr `
+    -EffectiveTimeoutSeconds $effectiveCap50TimeoutSeconds -ControlledInfinite $controlledInfinite `
+    -SafetyCountersLine $safetyPost -DryRunOnly:$DryRun
+  Write-SilverCap50CyclePostconditionBlock -Result $postCond
+  if ($postCond.PASS_FAIL -ne "PASS") {
+    $pcReason = [string]$postCond.postcondition_reason
+    if (-not $pcReason) { $pcReason = "cap50_postcondition_fail" }
+    Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+      -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit ([string]$se) `
+      -GitClean ([string]$postCond.git_status_clean_after_cleanup) -SafetyLine $safetyPost `
+      -CalW (Get-RunReportLineValue -ReportText $reportPost -Key "calendar_write_20k") `
+      -CalQ (Get-RunReportLineValue -ReportText $reportPost -Key "calendar_query_20k") `
+      -Headline (Get-NextActionHeadline -Text $nextAfter) -Focus "cap50_postcondition_fail" `
+      -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep -LastTaskExitCode 1 `
+      -StopReason $pcReason
+  }
+  $fieldsPass["cap50_postcondition"] = "PASS"
+  $fieldsPass["utf8_mojibake_detected"] = [string]$postCond.utf8_mojibake_detected
+  $fieldsPass["next_action_mode"] = [string]$postCond.next_action_mode
+  $fieldsPass["git_status_clean_after_cleanup"] = [string]$postCond.git_status_clean_after_cleanup
   Write-SilverProgressLogBlock -ProgressLogPath $ProgressLogPath -Outcome "PASS" -Fields $fieldsPass
   Write-SilverColoredCycleSummary -Outcome "PASS" -Fields $fieldsPass
   Invoke-SilverBeepPass -NoBeep:$NoBeep

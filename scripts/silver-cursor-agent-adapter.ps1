@@ -1307,6 +1307,31 @@ watchdog_stop_reason=$watchdogStopReason
     $extraWsl = $extraWsl.TrimEnd() + "`r`n`r`n" + $streamDiag
   }
 
+  $utf8HardFail = "NO"
+  $utf8HardFailLocations = ""
+  $utf8HardFailReason = ""
+  $utf8Surfaces = @(
+    @{ text = $text; label = "task_text" },
+    @{ text = $promptPreview; label = "prompt_preview" },
+    @{ text = $so; label = "stdout" },
+    @{ text = $se; label = "stderr" }
+  )
+  $utf8LocParts = New-Object System.Collections.Generic.List[string]
+  foreach ($surf in $utf8Surfaces) {
+    $hit = Test-SilverCap50Utf8HardFailAfterRepair -Text ([string]$surf.text) -SurfaceLabel ([string]$surf.label)
+    if ($hit.detected -eq "YES") {
+      $utf8HardFail = "YES"
+      [void]$utf8LocParts.Add([string]$hit.surface + ":" + [string]$hit.locations)
+    }
+  }
+  if ($utf8HardFail -eq "YES") {
+    $utf8HardFailLocations = ($utf8LocParts -join " | ")
+    $utf8HardFailReason = "utf8_mojibake_detected"
+    $canLoop = "NO"
+    $exitCode = 12
+    $authoritativeExit = 12
+  }
+
   $autoRunMeta = Get-SilverAutonomousRunMetaFromEnv
   $meta = [ordered]@{
     timestamp_local = $tsLocal
@@ -1374,6 +1399,10 @@ watchdog_stop_reason=$watchdogStopReason
     stdout_mojibake_repaired = $stdoutMojibakeRepaired
     stderr_mojibake_repaired = $stderrMojibakeRepaired
     task_text_mojibake_repaired = $textRepairedFlag
+    utf8_mojibake_detected = $utf8HardFail
+    utf8_mojibake_locations = $utf8HardFailLocations
+    utf8_hard_fail_reason = $utf8HardFailReason
+    ready_for_product_cap50 = $(if ($utf8HardFail -eq "YES") { "NO" } else { "YES" })
     adapter_subcommand_used = "wsl_agent"
     long_task_argv_recommendation = $longTaskRec
     can_run_full_auto_loop_maxcycles_1 = $canLoop

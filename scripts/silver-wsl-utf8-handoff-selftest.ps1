@@ -38,7 +38,8 @@ function New-SilverUtf8HandoffSelftestGoodText {
   return (
     [string][char]0x00DA + "KOL PRO CURSOR " + [char]0x2014 + " kalend" +
     [char]0x00E1 + [char]0x0159 + " Aktu" + [char]0x00E1 + "ln" + [char]0x00ED +
-    " pozn" + [char]0x00E1 + "mka " + [char]0x0159 + [char]0x00ED + "kaz Zpr" + [char]0x00E1 + "va"
+    " pozn" + [char]0x00E1 + "mka zm" + [char]0x011B + "nil klasifik" + [char]0x00E1 +
+    "tor p" + [char]0x0159 + "i " + [char]0x0161 + "pinav" + [char]0x00E9 + "m worktree"
   )
 }
 
@@ -55,6 +56,19 @@ Assert-True -Cond ($repairedFlag -eq "YES") -Label "repair_flag_set"
 Assert-True -Cond (-not (Test-SilverUtf8MojibakeMarkers -Text $fixed)) -Label "repair_removes_markers"
 Assert-True -Cond ($fixed.Contains([string][char]0x00DA + "KOL")) -Label "repair_restores_ukol"
 Assert-True -Cond (Test-SilverCap50Utf8ProbeStrings -Text $fixed) -Label "utf8_probe_ukol_aktualni_poznamka"
+
+$badUkLiteral = [string][char]0x0102 + [char]0x0161 + "KOL PRO CURSOR"
+Assert-True -Cond (Test-SilverUtf8MojibakeMarkers -Text $badUkLiteral) -Label "detect_literal_ukol_mojibake"
+$badZmLiteral = "Co jsem zm" + [char]0x00C4 + [char]0x203A + "nil a klasifik" + [char]0x00C4 + "tor"
+Assert-True -Cond (Test-SilverUtf8MojibakeMarkers -Text $badZmLiteral) -Label "detect_literal_zmenil_mojibake"
+$badEmDash = "text " + [char]0x00E2 + [char]0x20AC + [char]0x0094 + " tail"
+$hitEm = Test-SilverCap50Utf8HardFailAfterRepair -Text $badEmDash -SurfaceLabel "stdout"
+Assert-True -Cond ($hitEm.detected -eq "YES") -Label "hard_fail_stdout_em_dash_mojibake"
+$repZm = "NO"
+$fixedZm = Repair-SilverUtf8HandoffText -Text $badZmLiteral -Repaired ([ref]$repZm)
+Assert-True -Cond ((-not (Test-SilverUtf8MojibakeMarkers -Text $fixedZm)) -and ($fixedZm.IndexOf("zm" + [char]0x011B + "nil", [System.StringComparison]::Ordinal) -ge 0)) -Label "repair_zmenil_restores_czech"
+$hitClean = Test-SilverCap50Utf8HardFailAfterRepair -Text $fixed -SurfaceLabel "repaired"
+Assert-True -Cond ($hitClean.detected -eq "NO") -Label "hard_fail_clean_pass"
 
 $tempDir = Join-Path $env:TEMP ("silver-wsl-utf8-handoff-selftest-" + [guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
