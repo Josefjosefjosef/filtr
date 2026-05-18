@@ -4,61 +4,41 @@
 
 ### Úkol pro Cursor
 
-1. Zkontroluj stav repozitáře a shrň změny v `SILVER_CURSOR_OUTPUT.md`:
-    ```powershell
-    git status
-    ```
-
-2. Proveď audit diffů čtyř souborů:
-    ```powershell
-    git diff --stat -- SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
-    ```
-
-3. Ověř, zda se v dokumentaci nachází `MaxCycles`:
-    ```powershell
-    rg -n MaxCycles --glob 'SILVER*.md' /mnt/c/projects/filtr
-    ```
-
-4. Zkontroluj krátký stav git repozitáře:
-    ```powershell
-    git status --short
-    ```
-
-5. Přidej změněné soubory do commitu:
-    ```powershell
-    git add SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
-    ```
-
-6. Vytvoř commit se shrnutím:
-    ```powershell
-    git commit -m "chore: silver audit outputs"
-    ```
-
-7. Zobraz poslední commit a jeho soubory:
-    ```powershell
-    git show --name-only -1
-    ```
-
-8. Pokus se provést push na `origin`:
-    ```powershell
-    git push origin chore/silver-audit-repo-state
-    ```
+1. Otevřete terminál a přejděte do adresáře projektu:
+   ```powershell
+   Set-Location -LiteralPath C:\projects\filtr
+   ```
+2. Zkontrolujte stav repozitáře:
+   ```powershell
+   git status
+   ```
+3. Vyberte jednu z následujících možností pro vyřešení nečistého stavu repozitáře:
+   - **A** – Přidejte změněné soubory a vytvořte commit:
+     ```powershell
+     git add SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
+     git commit -m "Přidání změn"
+     git push -u origin chore/silver-audit-repo-state
+     ```
+   - **B** – Uložte změny do stash a proveďte push:
+     ```powershell
+     git stash push -m "silver wip" -- SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
+     git push -u origin chore/silver-audit-repo-state
+     git stash pop
+     ```
+   - **C** – Zahoďte změny:
+     ```powershell
+     git restore SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
+     git push
+     ```
 
 ### Scope guard
-Zajisti, že všechny příkazy jsou prováděny v rámci schválených skriptů a že nedochází k žádným neautorizovaným změnám.
+Zajistěte, aby všechny změny byly správně zpracovány před provedením dalších kroků.
 
 ### STOP podmínky
-- Raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode` je zakázáno.
-- Kontrolovaný autonomní režim vyžaduje tyto přepínače plus vestavěné limity.
+- Pokud je repozitář nečistý, není možné provést `git push` bez vyřešení změn.
+- Raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode` je zakázáno; řízený autonomní režim vyžaduje tyto přepínače plus vestavěné limity.
 
 ### Povinný výsledek
 ```plaintext
-1. Zkontrolován stav repozitáře.
-2. Audit diffů proveden.
-3. Ověřen výskyt `MaxCycles` v dokumentaci.
-4. Krátký stav git repozitáře zkontrolován.
-5. Změněné soubory přidány do commitu.
-6. Commit vytvořen.
-7. Poslední commit a jeho soubory zobrazeny.
-8. Push na `origin` proveden.
+Repozitář byl úspěšně vyčištěn a změny byly odeslány na upstream.
 ```
