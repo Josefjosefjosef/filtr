@@ -1,12 +1,12 @@
 # SILVER_RUN_REPORT
 
-timestamp=2026-05-18T00:27:57.914Z
+timestamp=2026-05-18T00:40:11.668Z
 command=--status
 status=PASS
 branch=chore/silver-audit-cycle-7
-commit=b8119f42504495319eb5a0253d2e67b06acabad5
-git_status_clean=NO
-changed_files=SILVER_CURSOR_OUTPUT.md;SILVER_NEXT_ACTION.md;SILVER_RUN_REPORT.md
+commit=3893cf178a93637e3e5d6dfd8106ab7c3d5d479e
+git_status_clean=YES
+changed_files=
 pr_info=(none)
 engine_changed=NO
 assets_app_changed=NO
@@ -34,7 +34,7 @@ post_merge_proof_process_exit=
 tracked_report_restore_before_realistic_mobile=
 failed_step=
 failed_reason=
-next_recommended_command=git status; resolve dirty tree before verify/merge/auto
+next_recommended_command=node scripts/silver-autopilot.cjs --verify-pr=<NUMBER>
 reason_for_stop=
 timeout_archive_path=
 timeout_artifacts_archived=NO
