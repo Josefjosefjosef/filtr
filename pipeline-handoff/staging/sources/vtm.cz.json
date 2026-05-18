@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-18T12:35:05.288955Z",
+  "ingestedAt": "2026-05-18T13:15:46.605388Z",
   "items": [
     {
       "section": "veda",
@@ -24,6 +24,34 @@
         "malé",
         "nahrazují",
         "televizi"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Z Katovic do Vídně je to 1200 km a cesta vede přes Německo. Google nám už 16 let dluží cyklonavigaci",
+      "url": "https://www.zive.cz/clanky/z-katovic-do-vidne-je-to-1200-km-a-cesta-vede-pres-nemecko-google-nam-uz-16-let-dluzi-cyklonavigaci/sc-3-a-241217/default.aspx",
+      "dt": "2026-05-18T12:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "1200",
+        "cesta",
+        "cyklonavigaci",
+        "dluží",
+        "google",
+        "katovic",
+        "let",
+        "nám",
+        "německo",
+        "vede",
+        "vídně"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -948,35 +976,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Stahujte aktualizaci One UI 8.5 na starší Samsungy. Čeká vás pohodlnější ovládání a spousta nových funkcí",
-      "url": "https://mobilmania.zive.cz/clanky/jak-samsungy-zmeni-aktualizace-na-one-ui-85-teste-se-na-pohodlnejsi-ovladani-a-snazsi-vyhledavani-202605/sc-3-a-1364706/default.aspx",
-      "dt": "2026-05-14T07:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "aktualizaci",
-        "funkcí",
-        "nových",
-        "one",
-        "ovládání",
-        "pohodlnější",
-        "samsungy",
-        "spousta",
-        "stahujte",
-        "starší",
-        "vás",
-        "čeká"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -987,7 +986,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22709,
+      "bytes": 22902,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1024,7 +1023,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-18T11:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T12:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1042,6 +1041,10 @@
           {
             "title": "Jedny malé bedny pro televizi, Bluetooth i gramofon. Fyne Audio Cubitt 5 nahrazují celé domácí Hi-Fi",
             "publishedAt": "2026-05-18T08:45:00Z"
+          },
+          {
+            "title": "Z Katovic do Vídně je to 1200 km a cesta vede přes Německo. Google nám už 16 let dluží cyklonavigaci",
+            "publishedAt": "2026-05-18T12:45:00Z"
           },
           {
             "title": "Siri v iOS 27 projde radikální proměnou. Stane se součástí Dynamic Islandu a bude fungovat i jako samostatná aplikace",
@@ -1066,10 +1069,6 @@
           {
             "title": "V Česku se peče další jednorožec. Firma úspěšného ajťáka má další miliardy od legend ze Silicon Valley",
             "publishedAt": "2026-05-17T15:45:00Z"
-          },
-          {
-            "title": "Zachránit lidstvo, ubránit se hříčkám přírody. Vybíráme nejlepší strategie, kde jde hlavně o přežití",
-            "publishedAt": "2026-05-17T05:10:00Z"
           }
         ]
       }
