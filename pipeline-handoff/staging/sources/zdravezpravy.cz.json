@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-18T16:00:45.995812Z",
+  "ingestedAt": "2026-05-18T16:40:35.388563Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Cenu za ošetřovatelství získaly profesorka Jarošová a sestra Hošková",
+      "url": "https://www.zdravezpravy.cz/2026/05/18/cenu-za-osetrovatelstvi-ziskaly-profesorka-jarosova-a-sestra-hoskova/",
+      "dt": "2026-05-18T15:49:32Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "cenu",
+        "hošková",
+        "jarošová",
+        "ošetřovatelství",
+        "profesorka",
+        "sestra",
+        "získaly"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -465,30 +489,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "FutureLife Group premiéra Babiše zavádí AI do umělého oplodnění",
-      "url": "https://www.zdravezpravy.cz/2026/05/08/babisova-futurelife-group-zavadi-ai-do-umeleho-oplodneni/",
-      "dt": "2026-05-08T06:30:12Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "babiše",
-        "futurelife",
-        "group",
-        "oplodnění",
-        "premiéra",
-        "umělého",
-        "zavádí"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -499,7 +499,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 198363,
+      "bytes": 193554,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -536,7 +536,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-18T10:52:42Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T15:49:32Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -552,6 +552,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cenu za ošetřovatelství získaly profesorka Jarošová a sestra Hošková",
+            "publishedAt": "2026-05-18T15:49:32Z"
+          },
           {
             "title": "Sen českých žen se naplňuje. Chystá se mamograf bez žádanky",
             "publishedAt": "2026-05-18T10:52:42Z"
@@ -579,10 +583,6 @@
           {
             "title": "Interny jsou v minusu a lékaři se jim vyhýbají. Bez nich to ale nepůjde",
             "publishedAt": "2026-05-14T13:52:03Z"
-          },
-          {
-            "title": "EK doporučí unijním zemím zakázat léčbu homosexuality",
-            "publishedAt": "2026-05-14T11:00:50Z"
           }
         ]
       }
