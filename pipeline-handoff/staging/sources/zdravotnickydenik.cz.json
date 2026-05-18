@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-18T06:32:10.858171Z",
+  "ingestedAt": "2026-05-18T07:09:51.200064Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "S rýmou do práce? České nemocnice popsaly, za jakých okolností mohou nachlazení lékaři léčit",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/nemoce-nozokomialni-nakazy-zdravotnici-a-navstevy/",
+      "dt": "2026-05-18T07:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "jakých",
+        "lékaři",
+        "léčit",
+        "nachlazení",
+        "nemocnice",
+        "okolností",
+        "popsaly",
+        "práce",
+        "rýmou",
+        "české"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -244,34 +271,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "O cenách léků pro Evropany se nesmí rozhodovat v Bílém domě. Unie hraje o poslední výhodu",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/ceny-leku-bily-dum-unie-posledni-vyhoda/",
-      "dt": "2026-05-15T15:05:51Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "bílém",
-        "cenách",
-        "domě",
-        "evropany",
-        "hraje",
-        "léků",
-        "nesmí",
-        "poslední",
-        "rozhodovat",
-        "unie",
-        "výhodu"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +281,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 107423,
+      "bytes": 122014,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +318,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-18T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T07:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -334,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "S rýmou do práce? České nemocnice popsaly, za jakých okolností mohou nachlazení lékaři léčit",
+            "publishedAt": "2026-05-18T07:00:00Z"
+          },
           {
             "title": "Pokročilé role sester? Nejdříve je třeba opustit „model Iny“ z Nemocnice na kraji města",
             "publishedAt": "2026-05-18T06:00:00Z"
@@ -361,10 +364,6 @@
           {
             "title": "Hrozí zavlečení eboly do Česka? Hygienici popsali aktuální míru rizika",
             "publishedAt": "2026-05-16T14:40:00Z"
-          },
-          {
-            "title": "Více doplňků neznamená více zdraví. Farmakolog popsal, kdy ničí účinky léků",
-            "publishedAt": "2026-05-16T13:01:00Z"
           }
         ]
       }

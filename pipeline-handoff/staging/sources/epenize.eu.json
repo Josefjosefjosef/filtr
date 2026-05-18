@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-18T06:32:10.858171Z",
+  "ingestedAt": "2026-05-18T07:09:51.200064Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Hlasování o landsmanšaftu: Igor se nestihl odhlásit",
+      "url": "https://www.epenize.eu/hlasovani-o-landsmansaftu-igor-se-nestihl-odhlasit/",
+      "dt": "2026-05-18T06:26:02Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "hlasování",
+        "igor",
+        "landsmanšaftu",
+        "nestihl",
+        "odhlásit"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -510,29 +532,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Omluva za nedochvilnost. Obyčejná slušnost, pane Babiši",
-      "url": "https://www.epenize.eu/omluva-za-nedochvilnost-obycejna-slusnost-pane-babisi/",
-      "dt": "2026-05-10T08:59:13Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "babiši",
-        "nedochvilnost",
-        "obyčejná",
-        "omluva",
-        "pane",
-        "slušnost"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -543,7 +542,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 120746,
+      "bytes": 121722,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -580,7 +579,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-17T23:00:27Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T06:26:02Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 17,
@@ -598,6 +597,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hlasování o landsmanšaftu: Igor se nestihl odhlásit",
+            "publishedAt": "2026-05-18T06:26:02Z"
+          },
           {
             "title": "„Třikrát jsem ho volil.“: MAGA volič v přímém přenosu označil Trumpa za nejhoršího prezidenta v dějinách",
             "publishedAt": "2026-05-17T23:00:27Z"
@@ -625,10 +628,6 @@
           {
             "title": "Petr Fiala mění styl komunikace. Virální videa, AI i politická ironie mají oslovit nové publikum",
             "publishedAt": "2026-05-15T08:58:19Z"
-          },
-          {
-            "title": "Polsko investuje do větrníků v přepočtu 180 miliard korun. U nás se jen šíří anti-větrné pověry",
-            "publishedAt": "2026-05-15T06:46:21Z"
           }
         ]
       }

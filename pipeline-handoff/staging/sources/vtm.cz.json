@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-18T06:32:10.858171Z",
+  "ingestedAt": "2026-05-18T07:09:51.200064Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,34 @@
         "valley",
         "úspěšného",
         "česku"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Když je AI horší než originál. Nová Xperia schytává kritiku za zbytečné vylepšování fotek",
+      "url": "https://mobilmania.zive.cz/clanky/kdyz-je-ai-horsi-nez-original-nova-xperia-schytava-kritiku-za-zbytecne-vylepsovani-fotek/sc-3-a-1364735/default.aspx",
+      "dt": "2026-05-18T06:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "fotek",
+        "horší",
+        "když",
+        "kritiku",
+        "než",
+        "nová",
+        "originál",
+        "schytává",
+        "vylepšování",
+        "xperia",
+        "zbytečné"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -943,34 +971,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Změřili jsme krutou realitu herních notebooků. S rozpočtem 56 000 Kč je stolní počítač o 50 % výkonnější",
-      "url": "https://www.zive.cz/clanky/zmerili-jsme-krutou-realitu-hernich-notebooku-s-rozpoctem-56-000-kc-je-stolni-pocitac-o-50--vykonnejsi/sc-3-a-240682/default.aspx",
-      "dt": "2026-05-14T10:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "000",
-        "herních",
-        "jsme",
-        "krutou",
-        "notebooků",
-        "počítač",
-        "realitu",
-        "rozpočtem",
-        "stolní",
-        "výkonnější",
-        "změřili"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -981,7 +981,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22822,
+      "bytes": 22585,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1018,7 +1018,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-17T15:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T06:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1036,6 +1036,10 @@
           {
             "title": "V Česku se peče další jednorožec. Firma úspěšného ajťáka má další miliardy od legend ze Silicon Valley",
             "publishedAt": "2026-05-17T15:45:00Z"
+          },
+          {
+            "title": "Když je AI horší než originál. Nová Xperia schytává kritiku za zbytečné vylepšování fotek",
+            "publishedAt": "2026-05-18T06:45:00Z"
           },
           {
             "title": "Zachránit lidstvo, ubránit se hříčkám přírody. Vybíráme nejlepší strategie, kde jde hlavně o přežití",
@@ -1060,10 +1064,6 @@
           {
             "title": "Týden Živě: Apple vyhodil Intel dveřmi, ten vrací se oknem. A po cestě se skamarádil s Muskem",
             "publishedAt": "2026-05-16T16:45:00Z"
-          },
-          {
-            "title": "Hry z GOG nově nakoupíte přímo za české koruny. Díky regionálním cenám navíc ušetříte",
-            "publishedAt": "2026-05-16T15:15:00Z"
           }
         ]
       }
