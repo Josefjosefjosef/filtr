@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-18T22:40:36.305241Z",
+  "ingestedAt": "2026-05-18T23:25:24.833194Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "To jsem absolutně nečekal, žasl Rulík. A podnět na sudí? Po zkušenostech už ne",
+      "url": "https://sport.aktualne.cz/hokej/to-jsem-absolutne-necekal-zasl-rulik-podnety-na-sudi-uz-cesi-radsi-nedavaji/r~aaa29c1ded8d6a0fff505c0265400ead/",
+      "dt": "2026-05-18T22:59:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "absolutně",
+        "jsem",
+        "nečekal",
+        "podnět",
+        "rulík",
+        "sudí",
+        "zkušenostech",
+        "žasl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -507,33 +532,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Slovenskem hýbe bizarní „langošová aféra“ za chybějící háček. Fico mluví o šikaně",
-      "url": "https://zpravy.aktualne.cz/zahranici/tvrdy-trest-pro-stankare-za-chybejici-hacek-bizarni-langosova-afera-hybe-slovenskem/r~aaa297750c4804cac8f4877ab9b1b256/",
-      "dt": "2026-05-18T14:06:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "aféra",
-        "bizarní",
-        "chybějící",
-        "fico",
-        "háček",
-        "hýbe",
-        "langošová",
-        "mluví",
-        "slovenskem",
-        "šikaně"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -544,7 +542,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22152,
+      "bytes": 22102,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -581,11 +579,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-18T20:51:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T22:59:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 6,
-          "zpravy": 12,
+          "sport": 7,
+          "zpravy": 11,
           "finance": 1,
           "other": 1
         },
@@ -599,6 +597,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "To jsem absolutně nečekal, žasl Rulík. A podnět na sudí? Po zkušenostech už ne",
+            "publishedAt": "2026-05-18T22:59:00Z"
+          },
           {
             "title": "Češi vybojovali důležitou výhru. Projděte si program, výsledky a čísla z MS",
             "publishedAt": "2026-05-15T11:37:00Z"
@@ -626,10 +628,6 @@
           {
             "title": "Česko - Švédsko 4:3. Čeští hokejisté ubránili důležité vítězství",
             "publishedAt": "2026-05-18T17:31:00Z"
-          },
-          {
-            "title": "Kanada až v poslední třetině odvrátila senzaci. I Finové a Švýcaři mají třetí výhry",
-            "publishedAt": "2026-05-18T17:24:00Z"
           }
         ]
       }
