@@ -2,41 +2,67 @@
 
 ÚKOL PRO CURSOR — infoUzel.cz / Silver
 
-### Úkol pro Cursor  
+### Úkol pro Cursor
+
 1. Otevřete terminál a přejděte do adresáře projektu:  
-   ```powershell  
-   Set-Location -LiteralPath C:\projects\filtr  
-   ```  
-2. Zkontrolujte stav repozitáře:  
-   ```powershell  
-   git status  
-   ```  
-3. Přihlaste se do GitHubu pomocí CLI, pokud ještě nejste přihlášeni:  
-   ```powershell  
-   gh auth login  
-   ```  
-4. Zkontrolujte, zda máte necommitnuté změny:  
-   ```powershell  
-   git status  
-   ```  
-5. Pokud máte necommitnuté změny, proveďte commit:  
-   ```powershell  
-   git add .  
-   git commit -m "Popis změn"  
-   ```  
-6. Poté proveďte push na vzdálený repozitář:  
-   ```powershell  
-   git push -u origin chore/silver-audit-repo-state  
-   ```  
+   ```powershell
+   Set-Location -LiteralPath C:\projects\filtr
+   ```
 
-### Scope guard  
-Zajistěte, aby všechny příkazy byly provedeny v uvedeném pořadí a aby byl repozitář v čistém stavu před provedením push.
+2. Ověřte stav repozitáře a seznam změn:  
+   ```powershell
+   git status
+   ```
 
-### STOP podmínky  
-- Raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode` je zakázáno.  
-- Kontrolovaný autonomní režim vyžaduje tyto přepínače plus vestavěné limity (viz SILVER_AUTOPILOT_README.md).  
+3. Přihlaste se do GitHubu pomocí CLI:  
+   ```powershell
+   gh auth login
+   ```
 
-### Povinný výsledek  
-```  
-Push změn na `origin` byl úspěšný.  
+4. Rozhodněte se, co udělat se změněnými soubory `SILVER_*.md`: commitnout, stashnout nebo zahodit. Pokud se rozhodnete commitnout, použijte:  
+   ```powershell
+   git add SILVER_*.md
+   git commit -m "Upravené soubory pro audit Silver"
+   ```
+
+5. Zkuste znovu provést push:  
+   ```powershell
+   git push -u origin chore/silver-audit-repo-state
+   ```
+
+### Scope guard
+- Zajistěte, že všechny kroky jsou provedeny v souladu se strategií Silver a že nedochází k žádným regresím.
+
+### STOP podmínky
+- Raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode` je zakázáno; kontrolovaný autonomní režim vyžaduje tyto přepínače plus vestavěné limity.
+
+### Povinný výsledek
+```
+=== 
+1. Otevřete terminál a přejděte do adresáře projektu:  
+   ```powershell
+   Set-Location -LiteralPath C:\projects\filtr
+   ```
+
+2. Ověřte stav repozitáře a seznam změn:  
+   ```powershell
+   git status
+   ```
+
+3. Přihlaste se do GitHubu pomocí CLI:  
+   ```powershell
+   gh auth login
+   ```
+
+4. Rozhodněte se, co udělat se změněnými soubory `SILVER_*.md`: commitnout, stashnout nebo zahodit. Pokud se rozhodnete commitnout, použijte:  
+   ```powershell
+   git add SILVER_*.md
+   git commit -m "Upravené soubory pro audit Silver"
+   ```
+
+5. Zkuste znovu provést push:  
+   ```powershell
+   git push -u origin chore/silver-audit-repo-state
+   ```
+===
 ```
