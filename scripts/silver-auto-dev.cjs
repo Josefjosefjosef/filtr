@@ -48,6 +48,42 @@ const LOOP_RUNTIME_ALLOWED_DIRTY_PATHS = new Set([
   "scripts/silver-cursor-agent-adapter-diagnostic-report.json",
 ]);
 
+/** Regenerated Silver diagnostic JSON under scripts/ only (narrow; not source or engine paths). */
+const LOOP_RUNTIME_GENERATED_DIAGNOSTIC_REPORT_RE =
+  /^scripts\/silver-[a-z0-9][a-z0-9_-]*-diagnostic-report\.json$/i;
+
+/**
+ * @param {string} rel
+ * @returns {string}
+ */
+function normalizeLoopRuntimeRepoRel(rel) {
+  return String(rel || "")
+    .trim()
+    .replace(/\\/g, "/")
+    .replace(/^\.\/+/, "");
+}
+
+/**
+ * @param {string} rel
+ * @returns {boolean}
+ */
+function isLoopRuntimeAllowedGeneratedDiagnosticReport(rel) {
+  const p = normalizeLoopRuntimeRepoRel(rel);
+  if (!p || p.includes("..")) return false;
+  return LOOP_RUNTIME_GENERATED_DIAGNOSTIC_REPORT_RE.test(p);
+}
+
+/**
+ * @param {string} rel
+ * @returns {boolean}
+ */
+function isLoopRuntimeAllowedDirtyPath(rel) {
+  const p = normalizeLoopRuntimeRepoRel(rel);
+  if (!p) return false;
+  if (LOOP_RUNTIME_ALLOWED_DIRTY_PATHS.has(p)) return true;
+  return isLoopRuntimeAllowedGeneratedDiagnosticReport(p);
+}
+
 function runCommand(cmd, args, options) {
   const opts = {
     cwd: REPO,
@@ -133,7 +169,7 @@ function evaluateLoopRuntimeSafety() {
     };
   }
   const dirtyPaths = dirtyPathsFromPorcelain(p.text);
-  const outsideAllowed = dirtyPaths.filter((x) => !LOOP_RUNTIME_ALLOWED_DIRTY_PATHS.has(x));
+  const outsideAllowed = dirtyPaths.filter((x) => !isLoopRuntimeAllowedDirtyPath(x));
   return {
     ok: true,
     gitClean: outsideAllowed.length === 0 ? "YES" : "NO",
@@ -554,6 +590,13 @@ function printLoopCycleHeartbeat(hb) {
 function restoreLoopRuntimeFiles() {
   for (const rel of LOOP_RUNTIME_ALLOWED_DIRTY_PATHS) {
     runCommand("git", ["checkout", "--", rel]);
+  }
+  const p = gitPorcelain();
+  if (!p.ok) return;
+  for (const rel of dirtyPathsFromPorcelain(p.text)) {
+    if (isLoopRuntimeAllowedGeneratedDiagnosticReport(rel)) {
+      runCommand("git", ["checkout", "--", rel]);
+    }
   }
 }
 
