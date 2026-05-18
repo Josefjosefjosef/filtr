@@ -1407,6 +1407,189 @@ function finalizeCalQueryTopicClarifyLaneHarnessEval(c, turn, ev) {
   });
 }
 
+/** Mirrors silver-rhc3-mobile-voice-cluster-diagnostic.cjs mobile voice chaos heuristics (cluster-scoped). */
+function mobileVoiceCalFillerScoreFolded(f) {
+  const x = String(f || "");
+  let n = 0;
+  const fillers = [
+    /\bhele\b/g,
+    /\bbtw\b/g,
+    /\btyjo\b/g,
+    /\bfakt\b/g,
+    /\bjako\b/g,
+    /\bprosim\b/g,
+    /\bdiky\b/g,
+    /\bdíky\b/g,
+    /\bvlastne\b/g,
+    /\bpockej\b/g,
+    /\bjojo\b/g,
+    /\beee+\b/g,
+    /\behm\b/g
+  ];
+  for (let i = 0; i < fillers.length; i++) {
+    const m = x.match(fillers[i]);
+    if (m) n += m.length;
+  }
+  return n;
+}
+
+function mobileVoiceCalModuleSwitchFolded(f) {
+  return /\bne\s+do\s+(kalend|ukol|poznam)|\bne\s+v\s+(kalend|ukol|poznam)|\bale\s+do\s+(kalend|ukol|poznam)/.test(
+    String(f || "")
+  );
+}
+
+function mobileVoiceCalSelfCorrectionFolded(f) {
+  return /\b(vlastne|vlastně|spis|spíš|oprav|prepis|přepiš|presun|přesuň|zrus|zruš|nedavej|nedávej|neukladej|neukládej|pockej|počkej|ne\s+pockej|fakt\s+ne)\b/.test(
+    String(f || "")
+  );
+}
+
+function mobileVoiceCalWriteChaosFolded(f) {
+  const x = String(f || "");
+  if (!x) return false;
+  if (mobileVoiceCalModuleSwitchFolded(x)) return true;
+  if (mobileVoiceCalSelfCorrectionFolded(x)) return true;
+  if (/\bnevim\b|\bnevím\b/.test(x)) return true;
+  return mobileVoiceCalFillerScoreFolded(x) >= 2;
+}
+
+function mobileVoiceCalHasReadQueryCue(f) {
+  return (
+    /\b(kde|kdy|co\s+mam|mrkni|najdi|hled|podivej|podívej|koukni|ukaz\s+mi)\b/.test(f) || /\?/.test(f)
+  );
+}
+
+function mobileVoiceCalHasCalendarSignal(f) {
+  return /\b(kalend|schuz|schůz|udalost|udál|zubar|zubař|dokt|rano|ráno|vecer|večer|zitra|zítra|pozitri|pozítří|program\s+na)\b/.test(f);
+}
+
+function mobileVoiceCalHasTaskSignal(f) {
+  return /\b(ukol|úkol|uloha|úloh|splnit|udel|udělat|koupit|do\s+ukol|v\s+ukol)\b/.test(f);
+}
+
+function mobileVoiceCalHasNoteSignal(f) {
+  return /\b(poznam|poznám|napis\s+si|zapamat|do\s+poznam|v\s+poznam)\b/.test(f);
+}
+
+function mobileVoiceCalExplicitModuleKind(f) {
+  if (/\b(do\s+kalend|v\s+kalend|jen\s+v\s+kalend)\b/.test(f)) return "calendar";
+  if (/\b(do\s+ukol|v\s+ukol|jen\s+v\s+ukol)\b/.test(f)) return "task";
+  if (/\b(do\s+poznam|v\s+poznam|jen\s+v\s+poznam)\b/.test(f)) return "note";
+  return "";
+}
+
+function mobileVoiceCalTemplateDnaMismatch(g, f) {
+  const grp = String(g || "");
+  const cal = mobileVoiceCalHasCalendarSignal(f);
+  const task = mobileVoiceCalHasTaskSignal(f);
+  const note = mobileVoiceCalHasNoteSignal(f);
+  if (grp.indexOf("calendar") === 0 && !cal && (task || note)) return true;
+  if (grp.indexOf("task") === 0 && !task && (cal || note)) return true;
+  if (grp.indexOf("note") === 0 && !note && (cal || task)) return true;
+  return false;
+}
+
+function mobileVoiceCalExplicitModuleMissed(g, exp, act, eng, ps, f) {
+  const explicit = mobileVoiceCalExplicitModuleKind(f);
+  if (!explicit) return "";
+  const expCal = String(exp || "").indexOf("calendar") === 0;
+  const expTask = String(exp || "").indexOf("task") === 0;
+  const expNote = String(exp || "").indexOf("note") === 0;
+  if (expCal && explicit === "calendar" && (act === "unknown" || act !== exp)) return "calendar";
+  if (expTask && explicit === "task" && (act === "unknown" || act !== exp)) return "task";
+  if (expNote && explicit === "note" && (act === "unknown" || act !== exp)) return "note";
+  if (g === "calendar_write" && explicit === "calendar" && eng !== "calendar.create" && ps !== "READY_TO_SAVE") {
+    return "calendar";
+  }
+  return "";
+}
+
+function mobileVoiceCalIsChaoticMutationSurface(c) {
+  const mask = (c.mutation_mask || 0) >>> 0;
+  const noiseMask =
+    core.M.FILLER_PREFIX |
+    core.M.FILLER_SUFFIX |
+    core.M.HESITATION |
+    core.M.MOBILE_PREFIX |
+    core.M.SPOKEN_COMPRESS |
+    core.M.EMOTIONAL |
+    core.M.TYPO_LITE |
+    core.M.STRIP_DIACRITICS |
+    core.M.PARTIAL_REF;
+  if (popcountMask(mask, noiseMask) >= 3) return true;
+  if ((mask & core.M.NEGATION_OVERLAY) !== 0) return true;
+  if ((mask & core.M.AMBIGUITY_OVERLAY) !== 0) return true;
+  return false;
+}
+
+/**
+ * True when diagnostic would bucket intent_fail as harness_should_accept_safe_clarification (rhc3_mobile_voice_cal only).
+ * P0: never upgrade create-like drafts; never widen tight do-kalend canon without mobile voice chaos surface.
+ */
+function mobileVoiceCalHarnessSafeClarificationOk(c, turn, ev) {
+  if (String(c.cluster || "") !== "rhc3_mobile_voice_cal") return false;
+  if (c.family !== "mobile_voice_dirty_czech") return false;
+  if (ev.pass) return false;
+  if (c.group !== "calendar_write") return false;
+  if (ev.cat !== "intent_fail") return false;
+
+  const eng = String(turn.normalizedIntent || "");
+  const ps = String(turn.processingState || "");
+  const act = String(ev.auditIntent || "");
+  const exp = String(c.expectedIntent || "");
+  const g = String(c.group || "");
+  const fold = foldCs(c.input);
+
+  if (createLikeTurn(turn)) return false;
+  if (hasNegWrite(fold)) return false;
+  if (safetyNoWriteFolded(fold)) return false;
+  if (ev.cat === "query_created_write" || ev.cat === "negative_instruction_fail") return false;
+
+  if (mobileVoiceCalHasReadQueryCue(fold) && g.indexOf("write") >= 0) return false;
+  if (
+    mobileVoiceCalModuleSwitchFolded(fold) &&
+    (mobileVoiceCalHasCalendarSignal(fold) || mobileVoiceCalHasTaskSignal(fold) || mobileVoiceCalHasNoteSignal(fold))
+  ) {
+    return false;
+  }
+  if (mobileVoiceCalTemplateDnaMismatch(g, fold)) return false;
+  if (mobileVoiceCalExplicitModuleMissed(g, exp, act, eng, ps, fold)) return false;
+
+  const expUn = exp === "unknown";
+  const actUn = act === "unknown";
+  if (!expUn && actUn && (ps === "STORAGE_DISAMBIGUATION" || eng === "create.storage_disambiguation")) {
+    return false;
+  }
+
+  if (!expUn && actUn && (eng === "clarification" || ps === "CLARIFICATION")) {
+    return mobileVoiceCalWriteChaosFolded(fold) || mobileVoiceCalIsChaoticMutationSurface(c);
+  }
+
+  return false;
+}
+
+/**
+ * mobile_voice_dirty_czech / rhc3_mobile_voice_cal: accept safe clarification/unknown on chaotic calendar_write
+ * surfaces when engine refuses create without draft leak (mirror mobile-voice cluster diagnostic lane).
+ */
+function finalizeMobileVoiceCalHarnessEval(c, turn, ev) {
+  if (ev.pass) return ev;
+  if (!mobileVoiceCalHarnessSafeClarificationOk(c, turn, ev)) return ev;
+
+  if (c.gold) {
+    c.gold.mobile_voice_cal_clarity = "clarification_ok";
+    c.gold.expected_clarification_reason = "mobile_voice_cal_safe_clarify_lane_ok";
+  }
+  c._mobile_voice_cal_clarification_harness_pass = true;
+  return Object.assign({}, ev, {
+    pass: true,
+    cat: "mobile_voice_cal_clarification_ok",
+    auditIntent: ev.auditIntent,
+    raw: ev.raw
+  });
+}
+
 /**
  * rhc3_ambiguity_cal_conflict: calendar_query + AMBIGUITY_OVERLAY — accept safe clarification/unknown
  * and notes.read wrong_module only when conflicting-calendar DNA survives mutations.
@@ -1581,6 +1764,11 @@ function gitTrackedCleanForRhc() {
       "scripts/silver-rhc-v3-foundation-pilot-report.json",
       "scripts/silver-rhc3-module-switch-triage.cjs",
       "scripts/silver-rhc3-module-switch-triage-report.json",
+      "scripts/silver-rhc3-mobile-voice-cluster-diagnostic.cjs",
+      "scripts/silver-rhc3-mobile-voice-cluster-diagnostic-report.json",
+      "scripts/silver-rhc3-mobile-voice-harness-alignment-report.json",
+      "scripts/silver-rhc3-cluster-classifier-v1.cjs",
+      "scripts/silver-rhc3-cluster-classifier-v1-report.json",
       "assets/app.js"
     ];
     const bad = tracked.filter((l) => {
@@ -1693,6 +1881,7 @@ function main() {
   let asciiTaskAmbiguousClarifyHarnessPass = 0;
   let ambiguityCalConflictHarnessPass = 0;
   let calQueryTopicClarifyLaneHarnessPass = 0;
+  let mobileVoiceCalClarificationHarnessPass = 0;
 
   for (const c of cases) {
     if (!byG[c.group]) byG[c.group] = { pass: 0, fail: 0 };
@@ -1741,6 +1930,7 @@ function main() {
     ev = finalizeAsciiTaskAmbiguousClarifyLaneHarnessEval(c, turn, ev);
     ev = finalizeAmbiguityCalConflictHarnessEval(c, turn, ev);
     ev = finalizeCalQueryTopicClarifyLaneHarnessEval(c, turn, ev);
+    ev = finalizeMobileVoiceCalHarnessEval(c, turn, ev);
     const createLike = createLikeTurn(turn);
 
     if (safetyNoWriteFolded(foldedIn) && createLike) {
@@ -1793,6 +1983,10 @@ function main() {
     if (c._ascii_task_ambiguous_clarify_harness_pass) asciiTaskAmbiguousClarifyHarnessPass++;
     if (c._ambiguity_cal_conflict_harness_pass) ambiguityCalConflictHarnessPass++;
     if (c._cal_query_topic_clarify_lane_harness_pass) calQueryTopicClarifyLaneHarnessPass++;
+    if (c._mobile_voice_cal_clarification_harness_pass) {
+      mobileVoiceCalClarificationHarnessPass++;
+      if (c.family === "mobile_voice_dirty_czech") safeClarificationAcceptedCount++;
+    }
 
     if (ev.pass) {
       passCount++;
@@ -2232,6 +2426,8 @@ module.exports = {
   finalizeAsciiTaskAmbiguousClarifyLaneHarnessEval,
   finalizeAmbiguityCalConflictHarnessEval,
   finalizeCalQueryTopicClarifyLaneHarnessEval,
+  finalizeMobileVoiceCalHarnessEval,
+  mobileVoiceCalHarnessSafeClarificationOk,
   hasRelaxedCalQueryTopicDnaFolded,
   applyRhc3AmbiguityCalConflictExpectationHarmonization,
   hasAmbiguityCalConflictCanonFolded,

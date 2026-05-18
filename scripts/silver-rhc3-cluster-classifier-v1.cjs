@@ -10,6 +10,7 @@ const REPO = path.resolve(__dirname, "..");
 const REPORT_JSON = path.join(__dirname, "silver-rhc3-cluster-classifier-v1-report.json");
 const RHC3_REPORT = path.join(__dirname, "silver-real-human-chaos-v3-report.json");
 const AMBIGUITY_DIAG_REPORT = path.join(__dirname, "silver-rhc3-ambiguity-cal-conflict-diagnostic-report.json");
+const MOBILE_VOICE_DIAG_REPORT = path.join(__dirname, "silver-rhc3-mobile-voice-cluster-diagnostic-report.json");
 
 const CLUSTER_RULES = {
   rhc3_ambiguity_cal_conflict: {
@@ -51,6 +52,16 @@ const CLUSTER_RULES = {
     ambiguity_expected: "NO",
     safe_clarification_ok: "YES",
     harness_only: "YES"
+  },
+  rhc3_mobile_voice_cal: {
+    classification: "MOBILE_VOICE_CHAOS",
+    safe_to_autopilot: "YES",
+    engine_fix_allowed: "CONDITIONAL",
+    harness_alignment_allowed: "YES",
+    human_review_required: "NO",
+    ambiguity_expected: "YES",
+    safe_clarification_ok: "YES",
+    harness_only: "CONDITIONAL"
   }
 };
 
@@ -68,7 +79,7 @@ function parseTopClusterLine(line) {
   return { cluster: m[1], fail: parseInt(m[2], 10), total: parseInt(m[3], 10) };
 }
 
-function classifyCluster(cluster, rhc3Report, ambiguityDiag) {
+function classifyCluster(cluster, rhc3Report, ambiguityDiag, mobileVoiceDiag) {
   const base = CLUSTER_RULES[cluster];
   if (!base) {
     return {
@@ -109,6 +120,21 @@ function classifyCluster(cluster, rhc3Report, ambiguityDiag) {
     }
   }
 
+  if (cluster === "rhc3_mobile_voice_cal" && mobileVoiceDiag) {
+    out.diagnostic_cluster_fail_count = mobileVoiceDiag.cluster_total;
+    out.diagnostic_true_engine_fail_count = mobileVoiceDiag.true_engine_bug_count;
+    out.diagnostic_engine_fix_recommended = mobileVoiceDiag.ready_for_engine_fix;
+    out.diagnostic_PASS_FAIL = mobileVoiceDiag.PASS_FAIL;
+    if (mobileVoiceDiag.ready_for_engine_fix === "NO") {
+      out.harness_only = "YES";
+      out.engine_fix_allowed = "NO";
+      out.harness_alignment_allowed = "YES";
+    } else {
+      out.harness_only = "CONDITIONAL";
+      out.engine_fix_allowed = "YES";
+    }
+  }
+
   return out;
 }
 
@@ -122,19 +148,20 @@ function main() {
 
   const rhc3Report = readJsonSafe(RHC3_REPORT);
   const ambiguityDiag = readJsonSafe(AMBIGUITY_DIAG_REPORT);
+  const mobileVoiceDiag = readJsonSafe(MOBILE_VOICE_DIAG_REPORT);
 
   const clusterKeys = Object.keys(CLUSTER_RULES);
   const classifications = [];
   for (let i = 0; i < clusterKeys.length; i++) {
-    classifications.push(classifyCluster(clusterKeys[i], rhc3Report, ambiguityDiag));
+    classifications.push(classifyCluster(clusterKeys[i], rhc3Report, ambiguityDiag, mobileVoiceDiag));
   }
 
-  const target = classifyCluster("rhc3_ambiguity_cal_conflict", rhc3Report, ambiguityDiag);
+  const target = classifyCluster("rhc3_mobile_voice_cal", rhc3Report, ambiguityDiag, mobileVoiceDiag);
 
   const textBlock = [
     "=== SILVER_RHC3_CLUSTER_CLASSIFIER_V1_RESULT ===",
     "main_commit=" + mainCommit,
-    "target_cluster=rhc3_ambiguity_cal_conflict",
+    "target_cluster=rhc3_mobile_voice_cal",
     "classification=" + target.classification,
     "safe_to_autopilot=" + target.safe_to_autopilot,
     "engine_fix_allowed=" + target.engine_fix_allowed,
