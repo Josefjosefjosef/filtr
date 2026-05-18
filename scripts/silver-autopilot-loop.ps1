@@ -60,7 +60,8 @@ param(
   [int]$PrLoopStopAfter = 4,
   [int]$MaxCycleWallSeconds = 0,
   [int]$TotalWallSeconds = 0,
-  [switch]$TimeoutArchiveSelfTest
+  [switch]$TimeoutArchiveSelfTest,
+  [switch]$PreflightCleanupSelfTest
 )
 
 Set-StrictMode -Version 2
@@ -1579,6 +1580,270 @@ function Restore-SilverAdapterDiagnosticReportJson {
   }
 }
 
+function Test-SilverPathIsTransientClusterClassifierReport {
+  param([string]$RelPath)
+  $n = ([string]$RelPath).Trim() -replace '\\', '/'
+  if (-not $n) { return $false }
+  return ($n -cmatch '^scripts/silver-[a-z0-9][a-z0-9_-]*-cluster-classifier-v\d+-report\.json$')
+}
+
+function Get-SilverCap50RuntimeRestoreAllowReason {
+  param([string]$RelPath)
+  $n = ([string]$RelPath).Trim() -replace '\\', '/'
+  if (-not $n) { return "" }
+  switch -Regex ($n) {
+    '^SILVER_CURSOR_OUTPUT\.md$' { return 'runtime_reporting_md' }
+    '^SILVER_NEXT_ACTION\.md$' { return 'runtime_reporting_md' }
+    '^SILVER_PROGRESS_LOG\.md$' { return 'runtime_reporting_md' }
+    '^SILVER_RUN_REPORT\.md$' { return 'runtime_reporting_md' }
+    '^scripts/silver-cursor-agent-adapter-diagnostic-report\.json$' { return 'runtime_adapter_diagnostic_json' }
+    '^scripts/silver-rhc3-negation-cal-readonly-diagnostic-report\.json$' { return 'runtime_rhc3_diagnostic_json' }
+    default {
+      foreach ($auditRel in (Get-SilverTransientGeneratedAuditReportRelPaths)) {
+        if ([string]::Equals($n, $auditRel, [System.StringComparison]::OrdinalIgnoreCase)) {
+          return 'runtime_transient_audit_json'
+        }
+      }
+      if (Test-SilverPathIsTransientClusterClassifierReport -RelPath $n) {
+        return 'runtime_cluster_classifier_json'
+      }
+      return ''
+    }
+  }
+}
+
+function Test-SilverPathIsCap50RuntimeRestorable {
+  param([string]$RelPath)
+  $reason = Get-SilverCap50RuntimeRestoreAllowReason -RelPath $RelPath
+  return ($reason.Length -gt 0)
+}
+
+function Invoke-SilverGitRestoreWorktreePaths {
+  param([string]$RepoRoot, [string[]]$RelPaths)
+  if (-not $RelPaths -or $RelPaths.Count -lt 1) { return }
+  $argTail = ""
+  foreach ($rel in $RelPaths) {
+    if (-not $rel) { continue }
+    if ($argTail.Length -gt 0) { $argTail += " " }
+    $argTail += ([string]$rel).Trim() -replace '\\', '/'
+  }
+  if (-not $argTail) { return }
+  $prev = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try {
+    $psi = New-Object System.Diagnostics.ProcessStartInfo
+    $psi.FileName = "git"
+    $psi.Arguments = "restore --worktree -- " + $argTail
+    $psi.WorkingDirectory = $RepoRoot
+    $psi.RedirectStandardOutput = $true
+    $psi.RedirectStandardError = $true
+    $psi.UseShellExecute = $false
+    $psi.CreateNoWindow = $true
+    $p = [System.Diagnostics.Process]::Start($psi)
+    $null = $p.StandardOutput.ReadToEnd()
+    $null = $p.StandardError.ReadToEnd()
+    $p.WaitForExit()
+  }
+  catch {
+  }
+  finally {
+    $ErrorActionPreference = $prev
+  }
+}
+
+function Get-GitStatusShortDirtyEntries {
+  param([string]$Cwd)
+  $txt = (Get-GitStatusShortText -Cwd $Cwd)
+  $entries = New-Object System.Collections.Generic.List[object]
+  if (-not $txt) { return $entries.ToArray() }
+  foreach ($raw in $txt -split "`r?`n") {
+    $line = $raw.Trim()
+    if (-not $line) { continue }
+    $st = ""
+    if ($line.Length -ge 2) { $st = $line.Substring(0, 2) }
+    $relField = ""
+    if ($line.Length -ge 3 -and $line.Substring(2, 1) -eq " ") {
+      $relField = $line.Substring(3).Trim()
+    }
+    else {
+      $parts = $line -split "\s+", 2
+      if ($parts.Count -ge 2) { $relField = $parts[1].Trim() } else { $relField = $line }
+    }
+    $norm = Normalize-SilverGitStatusWorkingTreeRel -ExtractedField $relField
+    $arrowRen = " -> "
+    $ai = $norm.LastIndexOf($arrowRen)
+    if ($ai -ge 0) {
+      $norm = Normalize-SilverGitStatusWorkingTreeRel -ExtractedField ($norm.Substring($ai + $arrowRen.Length).Trim())
+    }
+    if (-not $norm) { continue }
+    $untracked = ($st -eq "??")
+    [void]$entries.Add(@{
+        path      = ($norm -replace '\\', '/')
+        untracked = $untracked
+        status    = $st
+      })
+  }
+  return $entries.ToArray()
+}
+
+function Invoke-SilverCap50PreflightCleanup {
+  param(
+    [string]$RepoRoot,
+    [switch]$DryRunOnly
+  )
+  $entries = Get-GitStatusShortDirtyEntries -Cwd $RepoRoot
+  $dirtyBefore = New-Object System.Collections.Generic.List[string]
+  $toRestore = New-Object System.Collections.Generic.List[string]
+  $blocked = New-Object System.Collections.Generic.List[string]
+  $allowCount = 0
+  foreach ($ent in $entries) {
+    $p = [string]$ent.path
+    if (-not $p) { continue }
+    [void]$dirtyBefore.Add($p)
+    $reason = Get-SilverCap50RuntimeRestoreAllowReason -RelPath $p
+    if ($ent.untracked) {
+      if ($reason) {
+        [void]$blocked.Add($p + '(untracked_runtime_unknown)')
+      }
+      else {
+        [void]$blocked.Add($p + '(untracked_unknown)')
+      }
+      continue
+    }
+    if ($reason) {
+      $allowCount++
+      [void]$toRestore.Add($p)
+    }
+    else {
+      [void]$blocked.Add($p)
+    }
+  }
+  $restored = New-Object System.Collections.Generic.List[string]
+  if ((-not $DryRunOnly) -and ($toRestore.Count -gt 0)) {
+    Invoke-SilverGitRestoreWorktreePaths -RepoRoot $RepoRoot -RelPaths $toRestore.ToArray()
+    foreach ($rp in $toRestore) { [void]$restored.Add($rp) }
+  }
+  elseif ($DryRunOnly) {
+    foreach ($rp in $toRestore) { [void]$restored.Add($rp + '(dry_run)') }
+  }
+  $cleanAfter = if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" }
+  $safe = "NO"
+  if ($blocked.Count -eq 0) {
+    if ($cleanAfter -eq "YES") { $safe = "YES" }
+    elseif ($DryRunOnly -and $toRestore.Count -gt 0 -and $dirtyBefore.Count -eq $toRestore.Count) { $safe = "YES" }
+  }
+  $passFail = if ($safe -eq "YES") { "PASS" } else { "FAIL" }
+  $sep = [char]59
+  return @{
+    dirty_before                      = ($dirtyBefore -join $sep)
+    allowlisted_runtime_dirty_count   = [string]$allowCount
+    restored_runtime_files            = ($restored -join $sep)
+    blocked_dirty_files               = ($blocked -join $sep)
+    git_clean_after                   = $cleanAfter
+    safe_to_start_cycle               = $safe
+    PASS_FAIL                         = $passFail
+  }
+}
+
+function Write-SilverCap50PreflightCleanupResultBlock {
+  param([hashtable]$Result)
+  $rb = [string]$Result.dirty_before
+  $rac = [string]$Result.allowlisted_runtime_dirty_count
+  $rrf = [string]$Result.restored_runtime_files
+  $bdf = [string]$Result.blocked_dirty_files
+  $gca = [string]$Result.git_clean_after
+  $sts = [string]$Result.safe_to_start_cycle
+  $pff = [string]$Result.PASS_FAIL
+  Write-Host ""
+  Write-Host "=== SILVER_CAP50_PREFLIGHT_CLEANUP_RESULT ===" -ForegroundColor Cyan
+  Write-Host ("dirty_before=" + $rb)
+  Write-Host ("allowlisted_runtime_dirty_count=" + $rac)
+  Write-Host ("restored_runtime_files=" + $rrf)
+  Write-Host ("blocked_dirty_files=" + $bdf)
+  Write-Host ("git_clean_after=" + $gca)
+  Write-Host ("safe_to_start_cycle=" + $sts)
+  $pfCol = "Red"
+  if ($pff -eq "PASS") { $pfCol = "Green" }
+  Write-Host ("PASS_FAIL=" + $pff) -ForegroundColor $pfCol
+  Write-Host "=== END_SILVER_CAP50_PREFLIGHT_CLEANUP_RESULT ===" -ForegroundColor Cyan
+  Write-Host ""
+}
+
+function Invoke-SilverCap50PreflightCleanupSelfTest {
+  param([string]$RepoRoot)
+  $utf8 = New-Object System.Text.UTF8Encoding $false
+  $failures = New-Object System.Collections.Generic.List[string]
+  function Test-OneCase {
+    param([string]$Name, [string]$RelPath, [bool]$ExpectPass)
+    $full = Join-Path $RepoRoot $RelPath
+    $backup = ""
+    if (Test-Path -LiteralPath $full) {
+      $backup = [System.IO.File]::ReadAllText($full, $utf8)
+    }
+    try {
+      [System.IO.File]::WriteAllText($full, "# cap50-preflight-selftest " + $Name + "`n", $utf8)
+      $res = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot
+      $restoredTxt = [string]$res.restored_runtime_files
+      $stillDirty = Get-GitStatusShortPaths -Cwd $RepoRoot
+      $stillHasTarget = $false
+      foreach ($sp in $stillDirty) {
+        if ([string]::Equals(($sp -replace '\\', '/'), $RelPath, [System.StringComparison]::OrdinalIgnoreCase)) {
+          $stillHasTarget = $true
+        }
+      }
+      if ($ExpectPass) {
+        if ($restoredTxt.IndexOf($RelPath, [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
+          [void]$failures.Add($Name + ": target not in restored_runtime_files")
+        }
+        if ($stillHasTarget) {
+          [void]$failures.Add($Name + ": target still dirty after restore")
+        }
+      }
+      else {
+        if ($res.PASS_FAIL -ne "FAIL") {
+          [void]$failures.Add($Name + ": expected FAIL got " + $res.PASS_FAIL)
+        }
+        if ([string]$res.blocked_dirty_files.Length -lt 1) {
+          [void]$failures.Add($Name + ": expected blocked_dirty_files")
+        }
+      }
+    }
+    finally {
+      if ($backup.Length -gt 0) {
+        [System.IO.File]::WriteAllText($full, $backup, $utf8)
+      }
+      else {
+        Invoke-SilverGitRestoreWorktreePaths -RepoRoot $RepoRoot -RelPaths @($RelPath)
+      }
+      $null = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot
+    }
+  }
+  Test-OneCase -Name "dirty_SILVER_RUN_REPORT" -RelPath "SILVER_RUN_REPORT.md" -ExpectPass $true
+  Test-OneCase -Name "dirty_SILVER_NEXT_ACTION" -RelPath "SILVER_NEXT_ACTION.md" -ExpectPass $true
+  Test-OneCase -Name "dirty_cluster_classifier_json" -RelPath "scripts/silver-rhc3-cluster-classifier-v1-report.json" -ExpectPass $true
+  $blockRel = "SILVER_CAP50_PREFLIGHT_SELFTEST_BLOCK.txt"
+  $blockFull = Join-Path $RepoRoot $blockRel
+  try {
+    [System.IO.File]::WriteAllText($blockFull, "block`n", $utf8)
+    $resBlock = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot
+    if ($resBlock.PASS_FAIL -ne "FAIL") {
+      [void]$failures.Add("non_allowlist: expected FAIL")
+    }
+  }
+  finally {
+    if (Test-Path -LiteralPath $blockFull) {
+      Remove-Item -LiteralPath $blockFull -Force -ErrorAction SilentlyContinue
+    }
+  }
+  if ($failures.Count -gt 0) {
+    Write-Host "SILVER_CAP50_PREFLIGHT_CLEANUP_SELFTEST=FAIL" -ForegroundColor Red
+    foreach ($f in $failures) { Write-Host $f -ForegroundColor Red }
+    return $false
+  }
+  Write-Host "SILVER_CAP50_PREFLIGHT_CLEANUP_SELFTEST=PASS" -ForegroundColor Green
+  return $true
+}
+
 function Get-GitStatusShortPathsFromText {
   param([string]$Txt)
   if (-not $Txt) { return @() }
@@ -1885,6 +2150,12 @@ if ($controlledInfinite) {
   Write-Host ("silver-autopilot-loop: autonomous_run_id=" + $script:SilverAutonomousRunId + " runtime_cursor_output_invalidated=YES") -ForegroundColor DarkCyan
 }
 
+if ($PreflightCleanupSelfTest) {
+  $stOk = Invoke-SilverCap50PreflightCleanupSelfTest -RepoRoot $RepoRoot
+  if (-not $stOk) { exit 1 }
+  exit 0
+}
+
 if ($TimeoutArchiveSelfTest) {
   $td = Join-Path $env:TEMP ("silver-timeout-selftest-" + [guid]::NewGuid().ToString("N"))
   New-Item -ItemType Directory -Path $td -Force | Out-Null
@@ -1958,6 +2229,31 @@ while ($true) {
     }
     Write-SilverAutonomousBudgetExit -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mcStop `
       -Reason "emergency_stop_file_present" -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep
+  }
+
+  $preflightCap50 = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot -DryRunOnly:$DryRun
+  Write-SilverCap50PreflightCleanupResultBlock -Result $preflightCap50
+  if ($preflightCap50.safe_to_start_cycle -ne "YES") {
+    $mcPf = ""
+    try {
+      $prevEaPf = $ErrorActionPreference
+      $ErrorActionPreference = "Continue"
+      $mcPf = (& git -C $RepoRoot rev-parse HEAD 2>$null).Trim()
+      $ErrorActionPreference = $prevEaPf
+    } catch {
+      $mcPf = ""
+    }
+    $nextPeekPf = Read-TextFileOrEmpty -Path $NextActionPath
+    $pfStop = "blocked=" + [string]$preflightCap50.blocked_dirty_files
+    if (-not $preflightCap50.blocked_dirty_files) {
+      $pfStop = "git_not_clean_after_restore"
+    }
+    Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mcPf `
+      -CursorExit "N/A" -AutopilotExit "N/A" -StatusExit "N/A" `
+      -GitClean ([string]$preflightCap50.git_clean_after) -SafetyLine "" -CalW "" -CalQ "" `
+      -Headline (Get-NextActionHeadline -Text $nextPeekPf) -Focus "cap50_preflight_cleanup_blocked" `
+      -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep -LastTaskExitCode 1 `
+      -StopReason $pfStop
   }
 
   if ($controlledInfinite) {
