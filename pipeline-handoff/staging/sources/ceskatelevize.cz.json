@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-18T09:09:37.957579Z",
+  "ingestedAt": "2026-05-18T09:54:34.101426Z",
   "items": [
     {
       "section": "aktualne",
@@ -749,6 +749,30 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Šigut a dalších 12 obviněných ve fotbalové kauze se přiznali ke korupci",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/sigut-a-dalsich-12-obvinenych-ve-fotbalove-kauze-se-priznalo-ke-korupci-156865",
+      "dt": "2026-05-18T09:08:45Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "dalších",
+        "fotbalové",
+        "kauze",
+        "korupci",
+        "obviněných",
+        "přiznali",
+        "šigut"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Brněnští basketbalisté zahájili v Pardubicích vítězně semifinálovou sérii",
       "url": "https://sport.ceskatelevize.cz/clanek/basketbal/brnensti-basketbaliste-zahajili-v-pardubicich-vitezne-semifinalovou-serii-156864",
       "dt": "2026-05-18T07:29:34Z",
@@ -1475,26 +1499,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Soutěž k MS v hokeji – 17. května",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/soutez-k-ms-v-hokeji-17-kvetna-156738",
-      "dt": "2026-05-16T22:00:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "hokeji",
-        "května",
-        "soutěž"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1505,7 +1509,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42257,
+      "bytes": 42235,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1624,7 +1628,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38162,
+      "bytes": 38518,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1661,7 +1665,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-18T07:29:34Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T09:08:45Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1676,6 +1680,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šigut a dalších 12 obviněných ve fotbalové kauze se přiznali ke korupci",
+            "publishedAt": "2026-05-18T09:08:45Z"
+          },
           {
             "title": "Brněnští basketbalisté zahájili v Pardubicích vítězně semifinálovou sérii",
             "publishedAt": "2026-05-18T07:29:34Z"
@@ -1703,10 +1711,6 @@
           {
             "title": "Real Madrid zvítězil na hřišti Sevilly, Atlético se dotáhlo na třetí Villarreal",
             "publishedAt": "2026-05-17T19:52:58Z"
-          },
-          {
-            "title": "Darida prodloužil smlouvu s Hradcem. Zažívám úžasnou českou kabinu, libuje si",
-            "publishedAt": "2026-05-17T19:32:52Z"
           }
         ]
       }
@@ -1718,7 +1722,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77725,
+      "bytes": 77739,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

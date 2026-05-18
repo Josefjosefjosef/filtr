@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-18T09:09:37.957579Z",
+  "ingestedAt": "2026-05-18T09:54:34.101426Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Výdejní boxy pro SPZ zůstávají. Automatické vyřazení vozidel se ale změní",
+      "url": "https://ekonomickydenik.cz/spz-vydejni-boxy-novela-zmeny/",
+      "dt": "2026-05-18T09:20:22Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "ale",
+        "automatické",
+        "boxy",
+        "spz",
+        "vozidel",
+        "vyřazení",
+        "výdejní",
+        "změní",
+        "zůstávají"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -777,33 +803,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Pražská energetika navýšila zisk na 3,2 miliardy korun. Roste na trhu s elektřinou i plynem",
-      "url": "https://ekonomickydenik.cz/prazska-energetika-navysila-zisk-3-miliardy/",
-      "dt": "2026-05-15T09:38:09Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "elektřinou",
-        "energetika",
-        "korun",
-        "miliardy",
-        "navýšila",
-        "plynem",
-        "pražská",
-        "roste",
-        "trhu",
-        "zisk"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -814,7 +813,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70949,
+      "bytes": 70920,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -851,12 +850,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-18T07:53:12Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T09:20:22Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "sport": 1,
           "finance": 22,
           "zpravy": 6,
-          "zdravi": 2
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -868,6 +868,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Výdejní boxy pro SPZ zůstávají. Automatické vyřazení vozidel se ale změní",
+            "publishedAt": "2026-05-18T09:20:22Z"
+          },
           {
             "title": "„Íránu se krátí čas, nic z nich nezbude“, Trump opět hrozí zničením",
             "publishedAt": "2026-05-18T07:53:12Z"
@@ -895,10 +899,6 @@
           {
             "title": "Vlakem se klikatí růžová řeka. Pasažéry láká na jednu z nejbizarnějších gastro akcí Evropy",
             "publishedAt": "2026-05-17T09:30:00Z"
-          },
-          {
-            "title": "Nabídky balkonových fotovoltaik přibývají. Vyplatí se? Odborníci jsou skeptičtí",
-            "publishedAt": "2026-05-17T08:05:00Z"
           }
         ]
       }
