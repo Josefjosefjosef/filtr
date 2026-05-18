@@ -1,12 +1,12 @@
 # SILVER_RUN_REPORT
 
-timestamp=2026-05-17T22:45:43.985Z
+timestamp=2026-05-18T01:34:45.000Z
 command=--status
 status=PASS
-branch=main
-commit=5bb15494f0348d85a0102bce760de2694e643e22
-git_status_clean=NO
-changed_files=scripts/silver-autopilot-loop.ps1;scripts/silver-cursor-agent-adapter.ps1
+branch=chore/silver-audit-cycle-7
+commit=a6f62190f4c7f6cde95e59b289057f082ad8f3ac
+git_status_clean=YES
+changed_files=(none)
 pr_info=(none)
 engine_changed=NO
 assets_app_changed=NO
@@ -34,10 +34,11 @@ post_merge_proof_process_exit=
 tracked_report_restore_before_realistic_mobile=
 failed_step=
 failed_reason=
-next_recommended_command=git status; resolve dirty tree before verify/merge/auto
+next_recommended_command=workspace clean expected after Cursor audit commit
 reason_for_stop=
 timeout_archive_path=
 timeout_artifacts_archived=NO
 
 ## Notes
 - Autopilot V1 never commits secrets. Do not paste `OPENAI_API_KEY` into this file.
+- Pole `commit` může být o jeden bod v historii opožděné vůči aktuálnímu HEAD, pokud záznam vzniká ručně; pro přesnou shodu spusťte `silver-autopilot` s `--status` dle dokumentace projektu.
