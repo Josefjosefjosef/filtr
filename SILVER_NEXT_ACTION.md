@@ -9,35 +9,29 @@
    Set-Location -LiteralPath C:\projects\filtr
    ```
 
-2. Vytvořte záložní commit pro změny v souborech `SILVER_CURSOR_OUTPUT.md`, `SILVER_NEXT_ACTION.md`, `SILVER_PROGRESS_LOG.md`, `SILVER_RUN_REPORT.md`:
+2. Přidejte změněné soubory do gitu:
    ```powershell
    git add SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
+   ```
+
+3. Vytvořte záložní commit:
+   ```powershell
    git commit -m "Záložní commit před autentizací a push"
    ```
 
-3. Přihlaste se do GitHubu pomocí `gh`:
+4. Přihlaste se do GitHubu:
    ```powershell
    gh auth login
    ```
 
-4. Ověřte stav autentizace:
+5. Zkontrolujte stav přihlášení:
    ```powershell
    gh auth status
    ```
 
-5. Vytvořte remote větev na GitHubu:
+6. Proveďte push na vzdálenou větev:
    ```powershell
    git push -u origin chore/silver-audit-repo-state
    ```
 
-=== 
-### Scope guard
-Zajistěte, že všechny příkazy jsou prováděny v PowerShellu na Windows a že máte platné přihlašovací údaje pro GitHub.
-
-### STOP podmínky
-- Raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode` je zakázáno.
-- Řízený autonomní režim vyžaduje tyto přepínače plus vestavěné limity.
-
-### Povinný výsledek
-Ujistěte se, že všechny příkazy byly úspěšně provedeny a že jste se přihlásili do GitHubu a vytvořili remote větev. 
 ===
