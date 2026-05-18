@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-18T04:30:37.133267Z",
+  "ingestedAt": "2026-05-18T05:09:36.102209Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hradec, Evropa! Jsem rád, že toho můžu být součástí, usmíval se trenér Horejš",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-nadstavba-slavia-hradec-david-horejs-trener-evropa.A260517_214139_fotbal_tals",
+      "dt": "2026-05-18T04:28:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "být",
+        "evropa",
+        "horejš",
+        "hradec",
+        "jsem",
+        "můžu",
+        "rád",
+        "součástí",
+        "toho",
+        "trenér",
+        "usmíval"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -756,32 +784,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ústí se rozloučilo s Grigarem a spol., Habanec poslal body do nebe. Zůstane?",
-      "url": "https://www.idnes.cz/fotbal/domaci-souteze/usti-konec-veteranu-grigar-vondrasek-nejistota-habanec.A260517_142436_fot_dsouteze_pbi",
-      "dt": "2026-05-17T13:14:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "body",
-        "grigarem",
-        "habanec",
-        "nebe",
-        "poslal",
-        "rozloučilo",
-        "spol",
-        "zůstane",
-        "ústí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46388,
+      "bytes": 46320,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-17T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T04:28:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -844,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hradec, Evropa! Jsem rád, že toho můžu být součástí, usmíval se trenér Horejš",
+            "publishedAt": "2026-05-18T04:28:00Z"
+          },
           {
             "title": "Vingegaardovy watty pod drobnohledem. Jeho data z Gira pitvá i Pogačarův tým",
             "publishedAt": "2026-05-17T22:00:00Z"
@@ -871,10 +877,6 @@
           {
             "title": "Priske dostal dort, pak prohlásil: Zůstanu, dokud mě ve Spartě budou chtít",
             "publishedAt": "2026-05-17T19:40:00Z"
-          },
-          {
-            "title": "Švédsko - Česko v TV: kde sledovat zápas MS v hokeji 2026 živě",
-            "publishedAt": "2026-05-17T19:29:00Z"
           }
         ]
       }

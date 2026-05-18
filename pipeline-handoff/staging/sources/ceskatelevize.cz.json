@@ -1,8 +1,54 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-18T04:30:37.133267Z",
+  "ingestedAt": "2026-05-18T05:09:36.102209Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "MHD mají některá města zdarma, nově to zavedou i Klatovy",
+      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/hromadnou-dopravu-zdarma-maji-jen-nektera-mesta-nove-ji-zavadeji-klatovy-373478",
+      "dt": "2026-05-18T05:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "klatovy",
+        "mají",
+        "mhd",
+        "města",
+        "nově",
+        "některá",
+        "zavedou",
+        "zdarma"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Přibývá ruských turistů v Evropě",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/pribyva-ruskych-turistu-v-evrope-373534",
+      "dt": "2026-05-18T04:30:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "evropě",
+        "přibývá",
+        "ruských",
+        "turistů"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -690,57 +736,6 @@
         "vám",
         "zvedli",
         "říčanech"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "WHO: Epidemie eboly v Kongu a Ugandě je ohrožení zdraví mezinárodního významu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/who-epidemie-eboly-v-kongu-a-ugande-je-ohrozeni-zdravi-mezinarodniho-vyznamu-373524",
-      "dt": "2026-05-17T02:35:40Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "eboly",
-        "epidemie",
-        "kongu",
-        "mezinárodního",
-        "ohrožení",
-        "ugandě",
-        "významu",
-        "who",
-        "zdraví"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kanadskému pasažérovi výletní lodi vyšel pozitivní test na hantavirus",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/kanadskemu-pasazerovi-vyletni-lodi-vysel-pozitivni-test-na-hantavirus-373521",
-      "dt": "2026-05-16T23:43:39Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "hantavirus",
-        "kanadskému",
-        "lodi",
-        "pasažérovi",
-        "pozitivní",
-        "test",
-        "vyšel",
-        "výletní"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1510,7 +1505,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43405,
+      "bytes": 43427,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1570,11 +1565,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-18T04:12:10Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T05:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 2,
           "zpravy": 27,
+          "finance": 2,
           "other": 1
         },
         "drop_counts": {
@@ -1587,6 +1582,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "MHD mají některá města zdarma, nově to zavedou i Klatovy",
+            "publishedAt": "2026-05-18T05:00:00Z"
+          },
+          {
+            "title": "Přibývá ruských turistů v Evropě",
+            "publishedAt": "2026-05-18T04:30:00Z"
+          },
           {
             "title": "Banky poskytly v dubnu hypotéky za 61,5 miliardy korun",
             "publishedAt": "2026-05-18T04:12:10Z"
@@ -1610,14 +1613,6 @@
           {
             "title": "ŘSD i Správa železnic chtějí příští rok o miliardy víc",
             "publishedAt": "2026-05-17T18:36:13Z"
-          },
-          {
-            "title": "Praha odstranila nebezpečnou skluzavku",
-            "publishedAt": "2026-05-17T18:26:23Z"
-          },
-          {
-            "title": "Školy omezují používání mobilů, v některých děti tráví přestávky aktivněji",
-            "publishedAt": "2026-05-17T18:00:00Z"
           }
         ]
       }
@@ -1723,7 +1718,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77909,
+      "bytes": 77954,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

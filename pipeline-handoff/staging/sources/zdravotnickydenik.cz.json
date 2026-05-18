@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-18T04:30:37.133267Z",
+  "ingestedAt": "2026-05-18T05:09:36.102209Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Strach z dalšího dítěte nevzniká v peněžence. Vojtěch plánuje překreslit síť porodnic",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/strach-z-dalsiho-ditete-vojtech-sit-porodnic/",
+      "dt": "2026-05-18T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dalšího",
+        "dítěte",
+        "nevzniká",
+        "peněžence",
+        "plánuje",
+        "porodnic",
+        "překreslit",
+        "strach",
+        "síť",
+        "vojtěch"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -247,35 +274,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Skandál s posudky zasáhl po ÚVN i další elitní nemocnici. V policejní síti uvízl známý docent",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/posudky-uvn-dalsi-nemocnice-policie/",
-      "dt": "2026-05-15T12:04:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "další",
-        "docent",
-        "elitní",
-        "nemocnici",
-        "policejní",
-        "posudky",
-        "skandál",
-        "síti",
-        "uvízl",
-        "zasáhl",
-        "známý",
-        "úvn"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -286,7 +284,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 99357,
+      "bytes": 103683,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -323,7 +321,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-17T13:29:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -338,6 +336,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Strach z dalšího dítěte nevzniká v peněžence. Vojtěch plánuje překreslit síť porodnic",
+            "publishedAt": "2026-05-18T05:00:00Z"
+          },
           {
             "title": "Šmucler: Kraje nemají odborníky. Kontrolu zubařů by měla převzít komora",
             "publishedAt": "2026-05-17T13:29:00Z"
@@ -365,10 +367,6 @@
           {
             "title": "Výdaje na zdravotnictví v Německu explodovaly. Vzrostly o celoroční příjem Česka",
             "publishedAt": "2026-05-16T05:00:00Z"
-          },
-          {
-            "title": "O cenách léků pro Evropany se nesmí rozhodovat v Bílém domě. Unie hraje o poslední výhodu",
-            "publishedAt": "2026-05-15T15:05:51Z"
           }
         ]
       }

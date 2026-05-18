@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-18T04:30:37.133267Z",
+  "ingestedAt": "2026-05-18T05:09:36.102209Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Rakousku napadlo stádo krav manželský pár, žena zemřela",
+      "url": "https://www.denik.cz/staty-eu/rakousko-stado-krav-napadeni-zena-zemrela.html",
+      "dt": "2026-05-18T04:34:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "krav",
+        "manželský",
+        "napadlo",
+        "pár",
+        "rakousku",
+        "stádo",
+        "zemřela",
+        "žena"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Umělá inteligence, kam se podíváš. V Cannes se s ní filmaři netají",
+      "url": "https://www.denik.cz/film-a-televize/ai-nastroje-film-cannes.html",
+      "dt": "2026-05-18T04:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "cannes",
+        "filmaři",
+        "inteligence",
+        "kam",
+        "netají",
+        "podíváš",
+        "umělá"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -599,55 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Po Lidl botaskách se jen zaprášilo. Boty teď překupníci prodávají za dvojnásobek",
-      "url": "https://www.denik.cz/ekonomika/lidl-botas-botasky-cena-preprodej.html",
-      "dt": "2026-05-17T08:40:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "botaskách",
-        "boty",
-        "dvojnásobek",
-        "jen",
-        "lidl",
-        "prodávají",
-        "překupníci",
-        "zaprášilo"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Máme nějakou budoucnost? V Cannes se představil film Fatherland",
-      "url": "https://www.denik.cz/film-a-televize/cannes-fatherland-pawlikowski-soutez-valka-nemecko.html",
-      "dt": "2026-05-17T08:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "budoucnost",
-        "cannes",
-        "fatherland",
-        "film",
-        "máme",
-        "nějakou",
-        "představil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -658,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29443,
+      "bytes": 29232,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -695,12 +695,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-18T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T04:34:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
+          "zpravy": 23,
           "zdravi": 1,
-          "zpravy": 22,
-          "finance": 2
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -712,6 +712,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Rakousku napadlo stádo krav manželský pár, žena zemřela",
+            "publishedAt": "2026-05-18T04:34:00Z"
+          },
+          {
+            "title": "Umělá inteligence, kam se podíváš. V Cannes se s ní filmaři netají",
+            "publishedAt": "2026-05-18T04:30:00Z"
+          },
           {
             "title": "Do Česka míří cílená léčba na Alzheimera. Přinese roky kvalitního života navíc",
             "publishedAt": "2026-05-18T03:30:00Z"
@@ -735,14 +743,6 @@
           {
             "title": "V Litvě našli havarovaný dron. Má se za to, že patří ukrajinské armádě",
             "publishedAt": "2026-05-17T19:43:00Z"
-          },
-          {
-            "title": "Pochod na podporu televize a rozhlasu. V Brně protestovaly tisíce lidí",
-            "publishedAt": "2026-05-17T17:28:00Z"
-          },
-          {
-            "title": "Při ozbrojeném útoku ve středu Mexika zemřelo deset lidí včetně jednoho dítěte",
-            "publishedAt": "2026-05-17T17:23:00Z"
           }
         ]
       }

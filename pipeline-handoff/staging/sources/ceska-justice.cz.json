@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-05-18T04:30:37.133267Z",
+  "ingestedAt": "2026-05-18T05:09:36.102209Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Čapí hnízdo jako příklad soudního ping-pongu. Může odvolací soud přikázat odsouzení?",
+      "url": "https://www.ceska-justice.cz/2026/05/justicni-ping-pong-nebo-kradez-instance/",
+      "dt": "2026-05-18T04:30:00Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "hnízdo",
+        "jako",
+        "odsouzení",
+        "odvolací",
+        "ping",
+        "pongu",
+        "přikázat",
+        "příklad",
+        "soud",
+        "soudního",
+        "čapí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -245,34 +273,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Placení daní musí být co nejjednodušší,“ říká k zapojení AI šéfka Finanční správy Hornochová",
-      "url": "https://www.ceska-justice.cz/2026/05/placeni-dani-musi-byt-co-nejjednodussi-rika-k-zapojeni-ai-sefka-financni-spravy-hornochova/",
-      "dt": "2026-05-15T11:20:12Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "být",
-        "daní",
-        "finanční",
-        "hornochová",
-        "musí",
-        "nejjednodušší",
-        "placení",
-        "správy",
-        "zapojení",
-        "říká",
-        "šéfka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -283,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 93789,
+      "bytes": 92569,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -320,7 +320,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-17T12:08:33Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T04:30:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -335,6 +335,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Čapí hnízdo jako příklad soudního ping-pongu. Může odvolací soud přikázat odsouzení?",
+            "publishedAt": "2026-05-18T04:30:00Z"
+          },
           {
             "title": "Šéf Ústavního soudu v Terezíně: Současné dění v sobě skrývá temný záblesk minulosti",
             "publishedAt": "2026-05-17T12:08:33Z"
@@ -362,10 +366,6 @@
           {
             "title": "Schillerová chce posílit kontrolu advokátů. Žižlavský varuje před zásahy jako po roce 1948",
             "publishedAt": "2026-05-16T04:30:00Z"
-          },
-          {
-            "title": "Selhal systém? Ministerstvo se po tragických úmrtích dětí zaměří na kontroly OSPOD",
-            "publishedAt": "2026-05-15T16:26:50Z"
           }
         ]
       }
