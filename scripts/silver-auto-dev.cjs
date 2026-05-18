@@ -799,6 +799,28 @@ function runRuntimeArtifactSelftest() {
 }
 
 /**
+ * @returns {boolean}
+ */
+function runWslUtf8HandoffSelftest() {
+  const ps1 = path.join(__dirname, "silver-wsl-utf8-handoff-selftest.ps1");
+  const r = runCommand(
+    "powershell.exe",
+    ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", ps1],
+    { cwd: REPO },
+  );
+  if (!r.ok) {
+    console.error("WSL_UTF8_HANDOFF_SELFTEST_FAIL exit=" + String(r.exitCode));
+    return false;
+  }
+  if (!/SILVER_WSL_UTF8_HANDOFF_SELFTEST=PASS/.test(r.stdout || "")) {
+    console.error("WSL_UTF8_HANDOFF_SELFTEST_FAIL missing_pass_marker");
+    return false;
+  }
+  console.log("WSL_UTF8_HANDOFF_SELFTEST_PASS");
+  return true;
+}
+
+/**
  * CAP5 proxy: regenerate classifier report and assert loop runtime guard allows it.
  * @returns {boolean}
  */
@@ -1157,6 +1179,9 @@ function main() {
   }
   if (argvSlice.includes("--cli-timeout-policy-selftest")) {
     process.exit(runTimeoutPolicySelftest() ? 0 : 1);
+  }
+  if (argvSlice.includes("--cli-wsl-utf8-handoff-selftest")) {
+    process.exit(runWslUtf8HandoffSelftest() ? 0 : 1);
   }
   const cli = parseSilverAutoCli(argvSlice);
   const startedAt = new Date().toISOString();

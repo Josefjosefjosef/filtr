@@ -68,11 +68,18 @@ $WslTaskfileStdinProbeOkToken = "SILVER_WSL_TASKFILE_STDIN_PROBE_OK"
 
 # WSL: task body is never passed as wsl argv; a UTF-8 temp file is opened via /bin/bash -c exec â€¦ <path (path only, no task text in the shell string).
 $SilverWslTaskArgvSafeCharLimit = 8192
-$SilverUtf8NoBom = New-Object System.Text.UTF8Encoding $false
+$SilverUtf8HandoffPath = Join-Path $PSScriptRoot "silver-utf8-handoff.ps1"
+if (-not (Test-Path -LiteralPath $SilverUtf8HandoffPath)) {
+  Write-Error ("Missing UTF-8 handoff module: " + $SilverUtf8HandoffPath)
+  exit 2
+}
+. $SilverUtf8HandoffPath
+Initialize-SilverConsoleUtf8
+$SilverUtf8NoBom = $script:SilverUtf8NoBom
 
 function Read-TextFileUtf8NoBom {
   param([string]$Path)
-  return [System.IO.File]::ReadAllText($Path, $SilverUtf8NoBom)
+  return Read-TextFileUtf8NoBomShared -Path $Path
 }
 
 function Get-TaskTextLineCount {
@@ -151,7 +158,8 @@ function Build-WslBashCExecRedirectScript {
     [string]$TaskPathWsl
   )
   $tq = '"' + ($TaskPathWsl.Replace('"', '\"')) + '"'
-  return 'exec ' + $AgentPath + ' --print --trust --force --workspace ' + $WorkspacePath + ' <' + $tq
+  $core = 'exec ' + $AgentPath + ' --print --trust --force --workspace ' + $WorkspacePath + ' <' + $tq
+  return Add-SilverWslBashLocaleToScript -BashScript $core
 }
 
 function Resolve-RepoPath {
@@ -184,8 +192,6 @@ function Invoke-WslAgentCapture {
   $psi.WorkingDirectory = $WorkDirWindows
   $psi.RedirectStandardOutput = $true
   $psi.RedirectStandardError = $true
-  $psi.StandardOutputEncoding = [System.Text.Encoding]::UTF8
-  $psi.StandardErrorEncoding = [System.Text.Encoding]::UTF8
   $useStdin = (-not [string]::IsNullOrEmpty($StdinPayload))
   if ($useStdin) {
     $psi.RedirectStandardInput = $true
@@ -207,6 +213,7 @@ function Invoke-WslAgentCapture {
   $code = 0
   $so = ""
   $se = ""
+  $prevWslUtf8 = Set-SilverWslUtf8ProcessEnvironment
   try {
     [void]$p.Start()
     if ($useStdin) {
@@ -225,14 +232,15 @@ function Invoke-WslAgentCapture {
     else {
       $code = [int]$p.ExitCode
     }
-    $so = $p.StandardOutput.ReadToEnd()
-    $se = $p.StandardError.ReadToEnd()
+    $so = Read-ProcessPipeUtf8 -Reader $p.StandardOutput
+    $se = Read-ProcessPipeUtf8 -Reader $p.StandardError
   }
   catch {
     $se = "WSL_ADAPTER_EXCEPTION: " + $_.Exception.Message
     $code = 255
   }
   finally {
+    Restore-SilverWslUtf8ProcessEnvironment -PreviousValue $prevWslUtf8
     try { $p.Dispose() } catch { }
   }
   if ([string]::IsNullOrEmpty($so)) { $so = "" }
@@ -299,8 +307,6 @@ function Invoke-WslAgentCaptureStaged {
   $psi.WorkingDirectory = $WorkDirWindows
   $psi.RedirectStandardOutput = $true
   $psi.RedirectStandardError = $true
-  $psi.StandardOutputEncoding = [System.Text.Encoding]::UTF8
-  $psi.StandardErrorEncoding = [System.Text.Encoding]::UTF8
   $useStdin = (-not [string]::IsNullOrEmpty($StdinPayload))
   if ($useStdin) {
     $psi.RedirectStandardInput = $true
@@ -326,6 +332,7 @@ function Invoke-WslAgentCaptureStaged {
   $progressEver = $false
   $lastProgressUtc = ""
   $stopReason = "completed"
+  $prevWslUtf8Staged = Set-SilverWslUtf8ProcessEnvironment
   try {
     [void]$p.Start()
     if ($useStdin) {
@@ -383,8 +390,8 @@ function Invoke-WslAgentCaptureStaged {
         $stopReason = "extended_for_progress"
       }
     }
-    $so = $p.StandardOutput.ReadToEnd()
-    $se = $p.StandardError.ReadToEnd()
+    $so = Read-ProcessPipeUtf8 -Reader $p.StandardOutput
+    $se = Read-ProcessPipeUtf8 -Reader $p.StandardError
   }
   catch {
     $se = "WSL_ADAPTER_EXCEPTION: " + $_.Exception.Message
@@ -392,6 +399,7 @@ function Invoke-WslAgentCaptureStaged {
     $stopReason = "exception"
   }
   finally {
+    Restore-SilverWslUtf8ProcessEnvironment -PreviousValue $prevWslUtf8Staged
     try { $p.Dispose() } catch { }
   }
   if ([string]::IsNullOrEmpty($so)) { $so = "" }
@@ -850,10 +858,10 @@ function Invoke-CursorAgentCmdPipe {
     catch { }
   }
   if (Test-Path -LiteralPath $StdoutFile) {
-    $so = [System.IO.File]::ReadAllText($StdoutFile)
+    $so = Read-TextFileUtf8NoBom -Path $StdoutFile
   }
   if (Test-Path -LiteralPath $StderrFile) {
-    $se = [System.IO.File]::ReadAllText($StderrFile)
+    $se = Read-TextFileUtf8NoBom -Path $StderrFile
   }
   $modeTok = "agent"
   if ($ArgvAfterExe.Count -gt 0) {
@@ -1046,6 +1054,8 @@ if ($WslUbuntuAgent) {
 
   $taskChars = $text.Length
   $taskLines = Get-TaskTextLineCount -Text $text
+  $textRepairedFlag = "NO"
+  $text = Repair-SilverUtf8HandoffText -Text $text -Repaired ([ref]$textRepairedFlag)
   $promptPreview = Get-PromptPreviewLimited -Text $text -MaxLen 300
   $taskTooLargeForArgv = $false
   $taskTooLargeStr = "NO"
@@ -1131,6 +1141,14 @@ if ($WslUbuntuAgent) {
   if ($null -eq $so) { $so = "" }
   $se = $r.stderr
   if ($null -eq $se) { $se = "" }
+  $stdoutMojibakeRepaired = "NO"
+  $stderrMojibakeRepaired = "NO"
+  $so = Repair-SilverUtf8HandoffText -Text $so -Repaired ([ref]$stdoutMojibakeRepaired)
+  $se = Repair-SilverUtf8HandoffText -Text $se -Repaired ([ref]$stderrMojibakeRepaired)
+  $utf8MojibakeRepaired = "NO"
+  if (($stdoutMojibakeRepaired -eq "YES") -or ($stderrMojibakeRepaired -eq "YES") -or ($textRepairedFlag -eq "YES")) {
+    $utf8MojibakeRepaired = "YES"
+  }
   $wslShellExit = [int]$r.exit
   $toFlag = $r.timedOut
 
@@ -1328,6 +1346,12 @@ watchdog_stop_reason=$watchdogStopReason
     stderr_shell_leak_probe_pattern = $(if ($stderrShellLeak) { "YES" } else { "NO" })
     sentinel_present_in_command_executed = $(if ($sentinelInCmd) { "YES" } else { "NO" })
     czech_backtick_parentheses_probe_pass = $czechProbe
+    wsl_locale_utf8 = "YES"
+    wsl_utf8_env = "YES"
+    utf8_mojibake_repaired = $utf8MojibakeRepaired
+    stdout_mojibake_repaired = $stdoutMojibakeRepaired
+    stderr_mojibake_repaired = $stderrMojibakeRepaired
+    task_text_mojibake_repaired = $textRepairedFlag
     adapter_subcommand_used = "wsl_agent"
     long_task_argv_recommendation = $longTaskRec
     can_run_full_auto_loop_maxcycles_1 = $canLoop
