@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-18T22:01:39.780775Z",
+  "ingestedAt": "2026-05-18T22:40:36.305241Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Tři muži zahynuli při střelbě v mešitě v San Diegu. Oba útočníci jsou po smrti",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/tri-muzi-zahynuli-pri-strelbe-v-san-diegu-a-oba-utocnici-jsou-po-smrti-373586",
+      "dt": "2026-05-18T22:00:07Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "diegu",
+        "mešitě",
+        "muži",
+        "oba",
+        "při",
+        "san",
+        "smrti",
+        "střelbě",
+        "tři",
+        "zahynuli",
+        "útočníci"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -718,27 +746,21 @@
       "_dt_serialized": true
     },
     {
-      "section": "pocasi",
+      "section": "sport",
       "contentType": "article",
-      "title": "Denní teploty budou tento týden kolem dvaceti stupňů, občas zaprší",
-      "url": "https://ct24.ceskatelevize.cz/clanek/pocasi/denni-teploty-budou-tento-tyden-kolem-dvaceti-stupnu-obcas-zaprsi-373549",
-      "dt": "2026-05-18T06:02:09Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Soutěž k MS v hokeji – 19. května",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/soutez-k-ms-v-hokeji-19-kvetna-156740",
+      "dt": "2026-05-18T22:00:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "denní",
-        "dvaceti",
-        "kolem",
-        "občas",
-        "stupňů",
-        "tento",
-        "teploty",
-        "týden",
-        "zaprší"
+        "hokeji",
+        "května",
+        "soutěž"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1461,32 +1483,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Místo útoku na titul desáté místo. Kouskové se závěr German Masters nevydařil",
-      "url": "https://sport.ceskatelevize.cz/clanek/golf/misto-utoku-na-titul-desate-misto-kouskove-se-zaver-german-masters-nevydaril-156852",
-      "dt": "2026-05-17T15:50:44Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "desáté",
-        "german",
-        "kouskové",
-        "masters",
-        "místo",
-        "nevydařil",
-        "titul",
-        "závěr",
-        "útoku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1497,7 +1493,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41733,
+      "bytes": 41772,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1557,7 +1553,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-18T20:22:05Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T22:00:07Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1574,6 +1570,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tři muži zahynuli při střelbě v mešitě v San Diegu. Oba útočníci jsou po smrti",
+            "publishedAt": "2026-05-18T22:00:07Z"
+          },
           {
             "title": "„Nám všechno blokují a SBU si létá.“ V Rusku sílí obavy z ukrajinských dronů",
             "publishedAt": "2026-05-18T20:22:05Z"
@@ -1601,10 +1601,6 @@
           {
             "title": "USA opět prodloužily výjimku umožňující nákup ruské ropy na tankerech",
             "publishedAt": "2026-05-18T17:03:36Z"
-          },
-          {
-            "title": "Cenu Olgy Havlové získala asistentka znevýhodněných Marie Svobodová",
-            "publishedAt": "2026-05-18T16:45:42Z"
           }
         ]
       }
@@ -1616,7 +1612,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37400,
+      "bytes": 36805,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1653,7 +1649,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-18T21:42:10Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1668,6 +1664,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Soutěž k MS v hokeji – 19. května",
+            "publishedAt": "2026-05-18T22:00:00Z"
+          },
           {
             "title": "Arsenal má kolo před koncem na dosah titul",
             "publishedAt": "2026-05-18T21:42:10Z"
@@ -1695,10 +1695,6 @@
           {
             "title": "Američané schytali výprask od Finů, Crosby se proti Dánsku blýskl čtyřmi asistencemi",
             "publishedAt": "2026-05-18T13:58:00Z"
-          },
-          {
-            "title": "Osmé kolo patřilo Rytířům, souboj o druhé místo vyhrálo Znojmo",
-            "publishedAt": "2026-05-18T13:49:15Z"
           }
         ]
       }
@@ -1710,7 +1706,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77380,
+      "bytes": 77094,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
