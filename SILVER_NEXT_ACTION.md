@@ -14,49 +14,46 @@
    git diff SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md SILVER_CURSOR_OUTPUT.md
    ```
 
-3. Zkontroluj, zda je pracovní strom čistý:
+3. Zkontroluj, že working tree je čistý:
    ```powershell
    git status --short
    ```
 
-4. Pokud jsou změny v pořádku, přidej soubory do commitu:
+4. Přidej změněné soubory do commitu:
    ```powershell
    git add SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
    ```
 
-5. Vytvoř commit s popisem:
+5. Vytvoř commit se zprávou:
    ```powershell
    git commit -m "chore(silver): aktualizace SILVER_* po cyklu 5"
    ```
 
-6. Zkontroluj poslední commit a jeho změny:
+6. Zobraz poslední commit a jeho změny:
    ```powershell
    git show --name-only -1
    ```
 
-7. Znovu zkontroluj stav repozitáře:
+7. Znovu zkontroluj, že working tree je čistý:
    ```powershell
    git status --short
    ```
 
 ### Scope guard
-Zajisti, že všechny příkazy budou provedeny v rámci schválených souborů a že pracovní strom zůstane čistý.
+- **Soubory**: SILVER_CURSOR_OUTPUT.md, SILVER_NEXT_ACTION.md, SILVER_PROGRESS_LOG.md, SILVER_RUN_REPORT.md
 
 ### STOP podmínky
-- Příkaz `git status --short` musí vrátit prázdný výstup po provedení commitu.
-- Změněny mohou být pouze uvedené čtyři soubory v tomto commitu.
+- Jakékoliv změny mimo whitelistované soubory jsou zakázány.
+- Výstup z `git status --short` po commitu musí být prázdný.
 
 ### Povinný výsledek
-```plaintext
+```
+=== 
 CÍL: Zkontrolovat a aktualizovat stav repozitáře.
-
 SOUBORY (whitelist): SILVER_CURSOR_OUTPUT.md, SILVER_NEXT_ACTION.md, SILVER_PROGRESS_LOG.md, SILVER_RUN_REPORT.md
-
 NO-GO: Jakékoliv změny mimo whitelistované soubory.
-
 KROKY (max 7): 1-7 výše.
-
 GATE (co musí vypsat / změřit): Prázdný výstup z `git status --short` po commitu.
-
 COMMIT MESSAGE: chore(silver): aktualizace SILVER_* po cyklu 5
+===
 ```
