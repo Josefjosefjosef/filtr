@@ -5,40 +5,45 @@
 ### Úkol pro Cursor
 
 1. Zkontroluj stav repozitáře a shrň změny v `SILVER_CURSOR_OUTPUT.md`:
-   ```powershell
-   git status
-   ```
+    ```powershell
+    git status
+    ```
 
 2. Proveď audit diffů čtyř souborů:
-   ```powershell
-   git diff --stat SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_RUN_REPORT.md SILVER_PROGRESS_LOG.md
-   ```
+    ```powershell
+    git diff --stat SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_RUN_REPORT.md SILVER_PROGRESS_LOG.md
+    ```
 
-3. Zkontroluj výskyty `MaxCycles` v markdown souborech:
-   ```powershell
-   grep -rn MaxCycles --include='SILVER*.md' .
-   ```
+3. Zkontroluj hodnotu `MaxCycles` v souborech:
+    ```powershell
+    grep -rn MaxCycles --include='SILVER*.md' .
+    ```
 
-4. Zkontroluj, zda jsou safety counters na nule a status je PASS:
-   ```powershell
-   git show --name-only -1
-   ```
+4. Zobraz poslední commit a jeho změny:
+    ```powershell
+    git show --name-only -1
+    ```
 
-5. Vytvoř commit s auditovanými změnami:
-   ```powershell
-   git add SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_RUN_REPORT.md SILVER_PROGRESS_LOG.md
-   git commit -m "Audit a aktualizace stavu repozitáře"
-   ```
+5. Pokud je vše v pořádku, vytvoř novou větev a proveď commit:
+    ```powershell
+    git checkout -b chore/silver-audit-repo-state
+    git add SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_RUN_REPORT.md SILVER_PROGRESS_LOG.md
+    git commit -m "Audit a aktualizace stavu repozitáře"
+    ```
 
-6. Zkontroluj, zda je pracovní strom čistý:
-   ```powershell
-   git status --short
-   ```
+### Scope guard
+Zajisti, aby všechny provedené změny byly v souladu s definovanou strategií Silver a aby nedošlo k žádným regresím.
 
+### STOP podmínky
+- Raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode` je zakázáno.
+- Kontrolovaný autonomní režim vyžaduje tyto přepínače plus vestavěné limity (viz SILVER_AUTOPILOT_README.md).
+- Nikdy neobcházej bezpečnostní brány orchestrátoru.
+
+### Povinný výsledek
+```
 === 
-- Zkontrolován stav repozitáře — **ANO**.
-- Auditovány změny v markdown souborech — **ANO**.
-- Zkontrolovány výskyty `MaxCycles` — **ANO**.
-- Zajištěno `safety_counters=0` a `status=PASS` — **ANO**.
-- Vytvořen commit — **ANO**.
+Zkontrolován stav repozitáře a shrnuty změny v `SILVER_CURSOR_OUTPUT.md`. 
+Proveden audit diffů čtyř souborů a zkontrolována hodnota `MaxCycles`. 
+Vytvořena nová větev a proveden commit. 
 ===
+```
