@@ -14,24 +14,37 @@
    git diff --stat SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_RUN_REPORT.md SILVER_PROGRESS_LOG.md
    ```
 
-3. Zkontroluj hodnotu `MaxCycles` v kořenových `SILVER*.md` souborech:
+3. Ověř, zda je `MaxCycles` mimo `.silver-runtime`:
    ```powershell
    grep -rn MaxCycles --include='SILVER*.md' .
-   ```
-
-4. Zkontroluj hodnotu `MaxCycles` v kořenových `SILVER*.md` souborech mimo `.silver-runtime`:
-   ```powershell
    grep -rn MaxCycles --include='SILVER*.md' . --exclude-dir=.silver-runtime
    ```
 
-5. Vytvoř auditní commit se shrnutím změn:
+4. Zkontroluj, zda je pracovní strom čistý:
+   ```powershell
+   git status --short
+   ```
+
+5. Přidej změněné soubory a vytvoř commit:
    ```powershell
    git add SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_RUN_REPORT.md SILVER_PROGRESS_LOG.md
    git commit -m "Audit a aktualizace stavu repozitáře"
    ```
 
-=== 
-Zkontrolován stav repozitáře a shrnuty změny v `SILVER_CURSOR_OUTPUT.md`. 
-Proveden audit diffů čtyř souborů a zkontrolována hodnota `MaxCycles`. 
-Vytvořen auditní commit se shrnutím změn. 
-===
+6. Zobraz poslední commit a jeho změny:
+   ```powershell
+   git show --name-only -1
+   ```
+
+### Scope guard
+Zajisti, aby všechny kroky byly provedeny v souladu s pravidly Silver strategie a aby nedošlo k žádným regresím.
+
+### STOP podmínky
+- Raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode` je zakázáno.
+- Kontrolovaný autonomní režim vyžaduje tyto přepínače plus vestavěné limity (viz SILVER_AUTOPILOT_README.md).
+- Nikdy neobcházej bezpečnostní brány orchestrátoru.
+
+### Povinný výsledek
+```plaintext
+Stav repozitáře zkontrolován, audit diffů proveden, `MaxCycles` ověřen, auditní commit vytvořen.
+```

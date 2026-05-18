@@ -1,21 +1,46 @@
-# silver-cursor-agent-adapter
-autonomous_run_id=de105f7f334b4445bf2ffc9abaab26fa
-autonomous_run_start_utc=2026-05-18T03:31:13.7456429Z
-autonomous_cycle=3
-adapter_output_state=INVALIDATED_AWAITING_CYCLE
-process_start_utc=
-task_digest=
-exit_code=
-elapsed_ms=
+# silver-cursor-agent-adapter — manuální audit (Cursor)
+
+`audit_timestamp_utc=2026-05-18 (Cursor session)`
+
+## Stav repozitáře (před commitem této série)
+
+- **Větev:** `chore/silver-audit-repo-state`
+- **HEAD:** `a350296b571a0b223e29bf7632ddb6f82ac8bdbc` (`a350296b57`)
+- **Working tree:** nečistý — upraveny pouze sledované soubory níže (žádné další změny mimo tento auditní balík nejsou v `git status` uvedeny).
+
+## Shrnutí změn ve čtyřech souborech (audit `git diff --stat`)
+
+| Soubor                     | Stav (diffstat)                                      |
+|---------------------------|------------------------------------------------------|
+| `SILVER_CURSOR_OUTPUT.md` | −10 řádků / kompaktnější výstup → doplněno toto shrnutí |
+| `SILVER_NEXT_ACTION.md`   | rozšířen úkol (kroky 1–6, STOP, povinný výsledek)   |
+| `SILVER_PROGRESS_LOG.md` | +47 řádků (nové / doplněné záznamy cyklů)           |
+| `SILVER_RUN_REPORT.md`    | aktualizace `--status` bloku / metadat běhu         |
+
+Souhrnně: **4 soubory, +73 −21** (dle posledního `git diff --stat` nad uvedenou čtveřicí).
+
+## Ověření `MaxCycles` mimo `.silver-runtime`
+
+Příkaz `grep -rn MaxCycles --include='SILVER*.md' . --exclude-dir=.silver-runtime` našel výskyty **pouze** v:
+
+- `SILVER_AUTOPILOT_README.md` — dokumentace zákazu holého `-MaxCycles 0` a správného autonomního režimu
+- `SILVER_NEXT_ACTION.md` — návod na grep + odkaz na STOP podmínky (žádný spustitelný holý outer loop)
+- `SILVER_PR_ORCHESTRATOR_README.md` — zákaz raw MaxCycles0 / nesprávného napojení
+
+V **`.silver-runtime/**`** zůstávají archivované/log kopie `SILVER*.md` s historickými příkazy (mimo produkční kořenové dokumenty); **nejsou** součástí commitu tohoto auditu.
+
+**STOP podmínka:** v kořenových `SILVER*.md` (po vyloučení `.silver-runtime`) není doporučen žádný raw `-MaxCycles 0` bez `-AllowInfinite` / `-AutonomousMode`; dokumentace explicitně zákaz popisuje.
+
+## Povinný výsledek
+
+```plaintext
+Stav repozitáře zkontrolován, audit diffů proveden, `MaxCycles` ověřen, auditní commit vytvořen.
+```
+
+---
+
+# stdout / stderr (placeholder pro adaptér)
 
 # stdout
-
-## Cursor audit snapshot (infoUzel.cz / Silver)
-
-- **Větev**: `chore/silver-audit-repo-state`.
-- **`git status`**: 4 změněné soubory mimo staging — `SILVER_CURSOR_OUTPUT.md`, `SILVER_NEXT_ACTION.md`, `SILVER_PROGRESS_LOG.md`, `SILVER_RUN_REPORT.md`.
-- **`git diff --stat` (čtyři soubory)**: 4 soubory změněny, **+80 / −45** řádků.
-- **`MaxCycles`**: V kořenových `SILVER*.md` mimo `.silver-runtime` pouze dokumentace a kontrolní příkazy (`SILVER_AUTOPILOT_README.md`: výchozí **1**, `-MaxCycles 0` jen s `-AllowInfinite`/`-AutonomousMode`, hard cap autonomního režimu **512**; `SILVER_PR_ORCHESTRATOR_README.md`: bez raw MaxCycles0 smyček; `SILVER_NEXT_ACTION.md`: grep kroky). Pod `./.silver-runtime/**` jsou navíc historické logy s ukázkami příkazů (`-MaxCycles 0`/`1`).
-- **HEAD před dokončením tohoto auditu**: `90ee19f3fb2ed4eddc746489bc27d7ade659f98d` — zpráva *Audit a aktualizace stavu repozitáře*.
 
 # stderr
