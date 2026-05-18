@@ -877,11 +877,36 @@ function resolveNextActionModelBody(rawBody, fallbackCtx) {
   return { ok: true, body, violations: [], bareSanitized: hadBare };
 }
 
+const NEXT_ACTION_MOJIBAKE_RE =
+  /Ă|â€|Ĺ|pĹ|Ä›|OtevĹ|ZprĂ|pĹ™ejdÄ|ĂşKOL|ÄŤ|Ĺ™|Ă­|Ăˇ|Ă©/;
+
+const NEXT_ACTION_SILVER_WORKFLOW_RE =
+  /PRODUCT_CLUSTER|NEXT PRODUCT CLUSTER|silver-rhc3|scripts\/silver-|cluster diagnostic|harness|audit_silver|SILVER_PRODUCT_CLUSTER|top_cluster=/i;
+
+function nextActionGenericNonSilverViolations(inner) {
+  const t = String(inner || "");
+  const violations = [];
+  if (/git\s+push\s+-u\s+origin/i.test(t) && !NEXT_ACTION_SILVER_WORKFLOW_RE.test(t)) {
+    violations.push("generic_git_push_upstream");
+  }
+  if (/chore\/silver-audit-repo-state/i.test(t)) {
+    violations.push("generic_chore_silver_audit_push");
+  }
+  if (
+    /(?:sudo\s+apt\s+(?:update|install)|gh\s+auth\s+login)/i.test(t) &&
+    /verify-pr|git\s+push\s+-u/i.test(t) &&
+    !NEXT_ACTION_SILVER_WORKFLOW_RE.test(t)
+  ) {
+    violations.push("generic_gh_install_not_cluster_workflow");
+  }
+  return violations;
+}
+
 function nextActionInnerQualityViolations(inner) {
   const t = String(inner || "");
   const violations = [];
-  if (/Ă/.test(t)) violations.push("mojibake_C3");
-  if (/â€/.test(t)) violations.push("mojibake_em_dash");
+  if (NEXT_ACTION_MOJIBAKE_RE.test(t)) violations.push("mojibake_utf8");
+  violations.push(...nextActionGenericNonSilverViolations(t));
   if (nextActionHasBareSilverAutopilotNodeInvocation(t)) {
     violations.push("bare_silver_autopilot_node_use_status_subcommand");
   }

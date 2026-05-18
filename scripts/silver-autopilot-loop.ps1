@@ -884,16 +884,82 @@ function Test-NextActionHasBareSilverAutopilotNodeInvocation {
   return $false
 }
 
+function Test-SilverNextActionSilverWorkflowContext {
+  param([string]$Text)
+  return ($Text -match '(?i)PRODUCT_CLUSTER|NEXT PRODUCT CLUSTER|silver-rhc3|scripts/silver-|cluster diagnostic|harness|audit_silver|SILVER_PRODUCT_CLUSTER|top_cluster=')
+}
+
 function Test-SilverNextActionOutputQuality {
   param([string]$Text)
   if (-not $Text) { return $true }
-  if ($Text -match "Ă") { return $false }
-  if ($Text -match "â€") { return $false }
+  if ($Text -match 'Ă|â€|Ĺ|pĹ|Ä›|OtevĹ|ZprĂ|pĹ™ejdÄ|ĂşKOL|ÄŤ|Ĺ™|Ă­|Ăˇ|Ă©') { return $false }
+  if ($Text -match '(?i)git\s+push\s+-u\s+origin') {
+    if (-not (Test-SilverNextActionSilverWorkflowContext -Text $Text)) { return $false }
+  }
+  if ($Text -match 'chore/silver-audit-repo-state') { return $false }
+  if ($Text -match '(?i)(?:sudo\s+apt\s+(?:update|install)|gh\s+auth\s+login)') {
+    if ($Text -match '(?i)verify-pr|git\s+push\s+-u') {
+      if (-not (Test-SilverNextActionSilverWorkflowContext -Text $Text)) { return $false }
+    }
+  }
   if (Test-NextActionHasBareSilverAutopilotNodeInvocation -Inner $Text) { return $false }
   if ($Text -match '(?i)\bnode\s+scripts/silver-diagnostic\.js\b') { return $false }
   if ($Text -match '(?i)\bnode\s+scripts/silver-smoke-test-maxcycles-1\.js\b') { return $false }
   if (Test-NextActionHasRunnableCatWindowsInvocation -Inner $Text) { return $false }
   return $true
+}
+
+function Test-SilverCursorOutputHandoffValid {
+  param([string]$Path)
+  if (-not (Test-Path -LiteralPath $Path)) { return $false }
+  $utf8 = New-Object System.Text.UTF8Encoding $false
+  $full = [System.IO.File]::ReadAllText($Path, $utf8)
+  if ($full.IndexOf("# silver-cursor-agent-adapter", [System.StringComparison]::Ordinal) -lt 0) {
+    return $false
+  }
+  $meta = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $Path
+  if ($meta.ContainsKey("adapter_output_state")) {
+    if ([string]$meta["adapter_output_state"] -eq "INVALIDATED_AWAITING_CYCLE") { return $false }
+  }
+  $stdoutMarker = "# stdout"
+  $idx = $full.IndexOf($stdoutMarker, [System.StringComparison]::Ordinal)
+  if ($idx -lt 0) { return $false }
+  $tail = $full.Substring($idx + $stdoutMarker.Length)
+  $stderrMarker = "# stderr"
+  $stderrIdx = $tail.IndexOf($stderrMarker, [System.StringComparison]::Ordinal)
+  if ($stderrIdx -ge 0) { $tail = $tail.Substring(0, $stderrIdx) }
+  $stdoutCompact = ($tail -replace '\s', '')
+  if ($stdoutCompact.Length -ge 20) { return $true }
+  $stdoutNonempty = ""
+  if ($meta.ContainsKey("stdout_nonempty")) { $stdoutNonempty = [string]$meta["stdout_nonempty"] }
+  return ($stdoutNonempty.Trim().ToUpperInvariant() -eq "YES")
+}
+
+function Stop-LoopOnHandoffPersistenceGuard {
+  param(
+    [string]$ProgressLogPath,
+    [string]$RepoRoot,
+    [int]$Cycle,
+    [string]$MainCommit,
+    [string]$DryRunText,
+    [switch]$NoBeep
+  )
+  $nextPath = Join-Path $RepoRoot "SILVER_NEXT_ACTION.md"
+  $cursorPath = Join-Path $RepoRoot "SILVER_CURSOR_OUTPUT.md"
+  $nextText = Read-TextFileOrEmpty -Path $nextPath
+  $nextOk = Test-SilverNextActionOutputQuality -Text $nextText
+  $cursorOk = Test-SilverCursorOutputHandoffValid -Path $cursorPath
+  if ($nextOk -and $cursorOk) { return $true }
+  $focus = "handoff_persistence_guard_fail"
+  if (-not $nextOk) { $focus = $focus + "|next_action_quality" }
+  if (-not $cursorOk) { $focus = $focus + "|cursor_output_invalidated_or_empty" }
+  Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $MainCommit `
+    -CursorExit "N/A" -AutopilotExit "N/A" -StatusExit "N/A" `
+    -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine "" -CalW "" -CalQ "" `
+    -Headline (Get-NextActionHeadline -Text $nextText) -Focus $focus `
+    -DryRunText $DryRunText -NoBeep:$NoBeep -LastTaskExitCode 1 `
+    -StopReason "HANDOFF_PERSISTENCE_GUARD_FAIL"
+  return $false
 }
 
 function Get-NextActionHeadline {
@@ -2409,6 +2475,12 @@ while ($true) {
   if ($infinite -or $cycle -lt $MaxCycles) {
     Start-Sleep -Seconds $SleepSeconds
   }
+}
+
+if (-not $DryRun) {
+  $finalCycle = $cycle
+  if ($finalCycle -lt 1) { $finalCycle = 1 }
+  $null = Stop-LoopOnHandoffPersistenceGuard -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $finalCycle -MainCommit $mainCommit -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep
 }
 
 exit 0
