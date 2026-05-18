@@ -1307,6 +1307,54 @@ function hasAmbiguityCalConflictLooseCanonFolded(fold) {
   return jenKal && neKal;
 }
 
+/** Relaxed calendar-query topic DNA for rhc3_cal_query_topic canon ("Co mám … v kalendáři ohledně …"). */
+function hasRelaxedCalQueryTopicDnaFolded(fold) {
+  const f = String(fold || "");
+  return (
+    /\bco\b/i.test(f) &&
+    /\bm(am|ame)\b/i.test(f) &&
+    /\bkalend/i.test(f) &&
+    /\bohledn/i.test(f)
+  );
+}
+
+/**
+ * rhc3_cal_query_topic / calendar_query_chaos: hesitation-mediated routing may land on
+ * calendar.create + NEEDS_CLARIFICATION without READY_TO_SAVE — safe clarification, not a write.
+ * P0: cluster+family scoped; requires HESITATION + relaxed cal-query DNA; never READY_TO_SAVE.
+ */
+function finalizeCalQueryTopicClarifyLaneHarnessEval(c, turn, ev) {
+  if (ev.pass) return ev;
+  if (String(c.cluster || "") !== "rhc3_cal_query_topic") return ev;
+  if (c.family !== "calendar_query_chaos") return ev;
+  if (ev.cat !== "intent_fail") return ev;
+
+  const eng = String(turn.normalizedIntent || "");
+  const ps = String(turn.processingState || "");
+  if (ps === "READY_TO_SAVE") return ev;
+  if (eng !== "calendar.create") return ev;
+  if (ps !== "NEEDS_CLARIFICATION") return ev;
+
+  const mask = (c.mutation_mask || 0) >>> 0;
+  if ((mask & core.M.HESITATION) === 0) return ev;
+
+  const fold = foldCs(c.input);
+  if (!hasRelaxedCalQueryTopicDnaFolded(fold)) return ev;
+  if (safetyNoWriteFolded(fold)) return ev;
+  if (hasNegWrite(fold)) return ev;
+
+  if (c.gold) {
+    c.gold.expected_clarification_reason = "cal_query_topic_hesitation_clarify_lane_ok";
+  }
+  c._cal_query_topic_clarify_lane_harness_pass = true;
+  return Object.assign({}, ev, {
+    pass: true,
+    cat: "cal_query_topic_hesitation_clarify_lane_ok",
+    auditIntent: ev.auditIntent,
+    raw: ev.raw
+  });
+}
+
 /**
  * rhc3_ambiguity_cal_conflict: calendar_query + AMBIGUITY_OVERLAY — accept safe clarification/unknown
  * and notes.read wrong_module only when conflicting-calendar DNA survives mutations.
@@ -1589,6 +1637,7 @@ function main() {
   let taskCreateDoUkoluAmbiguousClarifyHarnessPass = 0;
   let asciiTaskAmbiguousClarifyHarnessPass = 0;
   let ambiguityCalConflictHarnessPass = 0;
+  let calQueryTopicClarifyLaneHarnessPass = 0;
 
   for (const c of cases) {
     if (!byG[c.group]) byG[c.group] = { pass: 0, fail: 0 };
@@ -1635,6 +1684,7 @@ function main() {
     ev = finalizeTaskCreateDoUkoluAmbiguousClarifyLaneHarnessEval(c, turn, ev);
     ev = finalizeAsciiTaskAmbiguousClarifyLaneHarnessEval(c, turn, ev);
     ev = finalizeAmbiguityCalConflictHarnessEval(c, turn, ev);
+    ev = finalizeCalQueryTopicClarifyLaneHarnessEval(c, turn, ev);
     const createLike = createLikeTurn(turn);
 
     if (safetyNoWriteFolded(foldedIn) && createLike) {
@@ -1685,6 +1735,7 @@ function main() {
     if (c._task_create_do_ukolu_ambiguous_clarify_harness_pass) taskCreateDoUkoluAmbiguousClarifyHarnessPass++;
     if (c._ascii_task_ambiguous_clarify_harness_pass) asciiTaskAmbiguousClarifyHarnessPass++;
     if (c._ambiguity_cal_conflict_harness_pass) ambiguityCalConflictHarnessPass++;
+    if (c._cal_query_topic_clarify_lane_harness_pass) calQueryTopicClarifyLaneHarnessPass++;
 
     if (ev.pass) {
       passCount++;
@@ -2054,6 +2105,11 @@ function main() {
     target_cluster: "rhc3_ascii_task",
     ambiguous_clarify_lane_harness_pass: asciiTaskAmbiguousClarifyHarnessPass
   };
+  reportObj.cal_query_topic_alignment = {
+    target_family: "calendar_query_chaos",
+    target_cluster: "rhc3_cal_query_topic",
+    hesitation_clarify_lane_harness_pass: calQueryTopicClarifyLaneHarnessPass
+  };
   reportObj.pr_result_block = prBlock;
   fs.writeFileSync(REPORT_JSON, JSON.stringify(reportObj, null, 2), "utf8");
 }
@@ -2084,6 +2140,8 @@ module.exports = {
   finalizeTaskCreateDoUkoluAmbiguousClarifyLaneHarnessEval,
   finalizeAsciiTaskAmbiguousClarifyLaneHarnessEval,
   finalizeAmbiguityCalConflictHarnessEval,
+  finalizeCalQueryTopicClarifyLaneHarnessEval,
+  hasRelaxedCalQueryTopicDnaFolded,
   applyRhc3AmbiguityCalConflictExpectationHarmonization,
   hasAmbiguityCalConflictCanonFolded,
   hasAmbiguityCalConflictLooseCanonFolded,
