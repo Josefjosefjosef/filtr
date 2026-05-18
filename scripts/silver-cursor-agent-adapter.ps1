@@ -1161,6 +1161,8 @@ if ($WslUbuntuAgent) {
   if ($null -eq $so) { $so = "" }
   $se = $r.stderr
   if ($null -eq $se) { $se = "" }
+  $soRaw = $so
+  $seRaw = $se
   $stdoutMojibakeRepaired = "NO"
   $stderrMojibakeRepaired = "NO"
   $so = Repair-SilverUtf8HandoffText -Text $so -Repaired ([ref]$stdoutMojibakeRepaired)
@@ -1313,6 +1315,8 @@ watchdog_stop_reason=$watchdogStopReason
   $utf8Surfaces = @(
     @{ text = $text; label = "task_text" },
     @{ text = $promptPreview; label = "prompt_preview" },
+    @{ text = $soRaw; label = "stdout_raw" },
+    @{ text = $seRaw; label = "stderr_raw" },
     @{ text = $so; label = "stdout" },
     @{ text = $se; label = "stderr" }
   )
@@ -1409,6 +1413,27 @@ watchdog_stop_reason=$watchdogStopReason
   }
 
   Write-AdapterOutputFile -Path $outAbs -Meta $meta -Stdout $so -Stderr $se -ExtraBlock $extraWsl
+
+  $postWriteGate = Invoke-SilverCap50Utf8SurfacesHardGate -RepoRoot $RepoRoot -NextActionPath $taskAbs -CursorOutputPath $outAbs
+  if ($postWriteGate.PASS_FAIL -ne "PASS") {
+    $utf8HardFail = "YES"
+    $utf8HardFailLocations = [string]$postWriteGate.utf8_mojibake_locations
+    if ([string]$postWriteGate.utf8_mojibake_first_sample) {
+      $utf8HardFailLocations = $utf8HardFailLocations + " | sample=" + [string]$postWriteGate.utf8_mojibake_first_sample
+    }
+    $utf8HardFailReason = "utf8_mojibake_detected_post_write"
+    $canLoop = "NO"
+    $exitCode = 12
+    $authoritativeExit = 12
+    $meta["utf8_mojibake_detected"] = "YES"
+    $meta["utf8_mojibake_locations"] = $utf8HardFailLocations
+    $meta["utf8_hard_fail_reason"] = $utf8HardFailReason
+    $meta["ready_for_product_cap50"] = "NO"
+    $meta["can_run_full_auto_loop_maxcycles_1"] = "NO"
+    $meta["adapter_authoritative_exit_code"] = "12"
+    $meta["exit_code"] = "12"
+    Write-AdapterOutputFile -Path $outAbs -Meta $meta -Stdout $so -Stderr $se -ExtraBlock $extraWsl
+  }
 
   if ($Probe) {
     if ($probePass -eq "YES") {
