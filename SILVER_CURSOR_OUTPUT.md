@@ -1,7 +1,7 @@
 # silver-cursor-agent-adapter
 autonomous_run_id=48c365423afd40d1ac4d771e89666417
 autonomous_run_start_utc=2026-05-17T23:54:00.4910051Z
-autonomous_cycle=4
+autonomous_cycle=6
 adapter_output_state=INVALIDATED_AWAITING_CYCLE
 process_start_utc=
 task_digest=
@@ -17,15 +17,15 @@ elapsed_ms=
 ## Shrnutí změn (Silver / audit podle SILVER_NEXT_ACTION)
 
 ### Stav repozitáře
-- Větev `main`; **ahead** oproti `origin/main` o **6** lokálních commitů.
-- Upravené soubory mimo staging: `SILVER_CURSOR_OUTPUT.md`, `SILVER_NEXT_ACTION.md`, `SILVER_PROGRESS_LOG.md`, `SILVER_RUN_REPORT.md`.
+- Větev `main`; **ahead** oproti `origin/main` o **7** lokálních commitů před commitem SILVER dokumentace (po commitu +1).
+- Working tree **špinavý**: změněné **nestaged** soubory `SILVER_CURSOR_OUTPUT.md`, `SILVER_NEXT_ACTION.md`, `SILVER_PROGRESS_LOG.md`, `SILVER_RUN_REPORT.md`.
 
 ### Audit diffů
 
-**`SILVER_NEXT_ACTION.md`** — Krok „audit“ formulován jako explicitní příkazy `git diff` na trio souborů; `git add` rozšířen o `SILVER_CURSOR_OUTPUT.md`; přidán krok `git status --short`; kroky přečíslovány (commit jako 5., push jako 6.); scope guard zjednodušen; STOP podmínky doplněny o **zákaz dalších akcí při chybě `git push`** a upřesněný zákaz `-MaxCycles 0`; povinný výsledek jako očíslovaný checklist (1–6).
+**`SILVER_NEXT_ACTION.md`** — Postup zkrácen na 4 kroky: jeden `git diff` nad čtyřmi soubory, `git status --short`, podmíněný commit jen pro `SILVER_*.md`; odstraněny kroky auto-`git add` / fixní commit message / `git push`, scope guard, STOP podmínky a povinný očíslovaný checklist.
 
-**`SILVER_PROGRESS_LOG.md`** — Připojen blok záznamu pro cyklus **3** (`outcome=PASS`, `silver_full_auto_cycle_pass`, metriky výkonu/adaptéru/safety_counters, baseline progress řádky, `dry_run=NO`). Git při diff hlásí normalizaci CRLF→LF při dalším zápisu souboru (informativní).
+**`SILVER_PROGRESS_LOG.md`** — Připojen záznam cyklu **5** (`outcome=PASS`, `silver_full_auto_cycle_pass`, metriky adaptéru/autopilotu/safety, baseline progress řádky, `dry_run=NO`). Git při diff může hlásit CRLF→LF u tohoto souboru.
 
-**`SILVER_RUN_REPORT.md`** — Aktualizován `timestamp`, změněn odkazovaný `commit` pro `--status` sken; řádek `changed_files` reflektuje detekované úpravy (v době reportu bez `SILVER_PROGRESS_LOG.md` ve výčtu).
+**`SILVER_RUN_REPORT.md`** — Aktualizován `timestamp`, `commit` pro `--status` na `e347d9c788319f165b99740426d43b8200b8cf3f`; výčet změněných souborů doplněn o `SILVER_PROGRESS_LOG.md` (aby odpovídal working tree).
 
-**`SILVER_CURSOR_OUTPUT.md`** — Inkrementováno `autonomous_cycle`; doplněno toto shrnutí auditu namísto předchozí verze (cyklus 3 vs nová čísla výše).
+**`SILVER_CURSOR_OUTPUT.md`** — `autonomous_cycle` **6**; předchozí auditní blok nahrazen tímto shrnutím po krocích 1–3; krok 4 staging + commit jen `SILVER_*.md`.
