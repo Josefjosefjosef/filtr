@@ -8,39 +8,55 @@
    ```powershell
    git status
    ```
+
 2. Proveď audit změn v souborech:
    ```powershell
    git diff SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md SILVER_CURSOR_OUTPUT.md
    ```
-3. Zkontroluj krátký stav gitu:
+
+3. Zkontroluj, zda je pracovní strom čistý:
    ```powershell
    git status --short
    ```
-4. Doplň/upřesni `SILVER_CURSOR_OUTPUT.md` (shrnutí).
-5. Přidej změny do gitu (jen whitelist):
+
+4. Pokud jsou změny v pořádku, přidej soubory do commitu:
    ```powershell
    git add SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
    ```
-6. Proveď commit se smysluplnou zprávou:
+
+5. Vytvoř commit s popisem:
    ```powershell
    git commit -m "chore(silver): aktualizace SILVER_* po cyklu 5"
    ```
-7. Zobraz poslední commit a jeho soubory:
+
+6. Zkontroluj poslední commit a jeho změny:
    ```powershell
    git show --name-only -1
    ```
 
+7. Znovu zkontroluj stav repozitáře:
+   ```powershell
+   git status --short
+   ```
+
 ### Scope guard
-- Změny musí být provedeny pouze na souborech uvedených v whitelistu.
-- Po commitu musí být pracovní strom čistý.
+Zajisti, že všechny příkazy budou provedeny v rámci schválených souborů a že pracovní strom zůstane čistý.
 
 ### STOP podmínky
-- Raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode` je zakázáno.
-- Kontrolovaný autonomní režim vyžaduje tyto přepínače plus vestavěné limity.
+- Příkaz `git status --short` musí vrátit prázdný výstup po provedení commitu.
+- Změněny mohou být pouze uvedené čtyři soubory v tomto commitu.
 
 ### Povinný výsledek
-```
-- Commit: `0f906c75e`
-- Soubory: `SILVER_CURSOR_OUTPUT.md`, `SILVER_NEXT_ACTION.md`, `SILVER_PROGRESS_LOG.md`, `SILVER_RUN_REPORT.md`
-- Po commitu: `git status --short` → prázdný výstup (čistý working tree).
+```plaintext
+CÍL: Zkontrolovat a aktualizovat stav repozitáře.
+
+SOUBORY (whitelist): SILVER_CURSOR_OUTPUT.md, SILVER_NEXT_ACTION.md, SILVER_PROGRESS_LOG.md, SILVER_RUN_REPORT.md
+
+NO-GO: Jakékoliv změny mimo whitelistované soubory.
+
+KROKY (max 7): 1-7 výše.
+
+GATE (co musí vypsat / změřit): Prázdný výstup z `git status --short` po commitu.
+
+COMMIT MESSAGE: chore(silver): aktualizace SILVER_* po cyklu 5
 ```
