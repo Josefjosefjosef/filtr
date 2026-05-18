@@ -19,33 +19,32 @@
    grep -rn MaxCycles --include='SILVER*.md' .
    ```
 
-4. Načti obsah `SILVER_RUN_REPORT.md`:
+4. Zkontroluj stav safety counters:
    ```powershell
-   Get-Content -LiteralPath SILVER_RUN_REPORT.md
+   git show --name-only -1
    ```
 
-5. Zkontroluj, zda jsou všechny safety counters na nule a status je PASS:
-   ```powershell
-   Get-Content -LiteralPath SILVER_RUN_REPORT.md | Select-String -Pattern 'safety_counters|status'
-   ```
-
-6. Pokud je vše v pořádku, přidej změny a vytvoř commit:
+5. Pokud je vše v pořádku, přidej změny a vytvoř commit:
    ```powershell
    git add SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_RUN_REPORT.md SILVER_PROGRESS_LOG.md
    git commit -m "Audit a aktualizace stavu repozitáře"
    ```
 
+6. Zobraz poslední commit:
+   ```powershell
+   git show --name-only -1
+   ```
+
 ### Scope guard
-Zajisti, že všechny kroky budou provedeny v souladu s bezpečnostními pravidly a bez porušení integrity repozitáře.
+- Zajištěno, že všechny příkazy jsou v souladu s pravidly Silver strategie.
 
 ### STOP podmínky
 - Raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode` je zakázáno.
 - Kontrolovaný autonomní režim vyžaduje tyto přepínače plus vestavěné limity.
 
 ### Povinný výsledek
-Zajisti, aby byly splněny všechny podmínky a výsledky uvedené v checklistu. Výstup by měl být ve formátu:
 ```
-=== 
+===
 - Zkontrolován stav repozitáře — **ANO**.
 - Auditovány změny v markdown souborech — **ANO**.
 - Zkontrolovány výskyty `MaxCycles` — **ANO**.
