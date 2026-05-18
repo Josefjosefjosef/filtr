@@ -20,9 +20,14 @@ const {
 const {
   coerceOpenAiChatCompletionText,
   decodeFetchBodyUtf8,
+  parseOpenAiChatCompletionRaw,
+  extractOpenAiChatMessageContent,
   repairSilverOpenAiUtf8Text,
+  stripSilverAutopilotUkolHeaderLine,
+  hasSilverUtf8MojibakeMarkers,
   writeUtf8FileNoBom,
   runOpenAiNextActionUtf8Selftest,
+  printOpenAiRealNextActionUtf8Diagnostic,
 } = require("./silver-openai-utf8.cjs");
 
 const REPO = path.resolve(__dirname, "..");
@@ -883,11 +888,21 @@ function sanitizeBareSilverAutopilotInText(inner) {
 }
 
 /** Sanitize bare autopilot commands, then quality-gate; fallback if still invalid. */
+function writeNextActionUtf8Safe(absPath, text) {
+  let body = repairSilverOpenAiUtf8Text(String(text || "").trim());
+  writeUtf8FileNoBom(absPath, body);
+  const readBack = fs.readFileSync(absPath, "utf8");
+  if (hasSilverUtf8MojibakeMarkers(readBack)) {
+    body = repairSilverOpenAiUtf8Text(readBack);
+    writeUtf8FileNoBom(absPath, body);
+    console.log("SILVER_OPENAI_UTF8_REPAIR=YES path=post_write_readback");
+  }
+  return body;
+}
+
 function resolveNextActionModelBody(rawBody, fallbackCtx) {
   let body = repairSilverOpenAiUtf8Text(
-    String(rawBody || "")
-      .replace(/^\s*ÚKOL\s+PRO\s+CURSOR[^\n]*\n+/i, "")
-      .trim(),
+    stripSilverAutopilotUkolHeaderLine(String(rawBody || "").trim()),
   );
   const hadBare = nextActionHasBareSilverAutopilotNodeInvocation(body);
   if (hadBare) {
@@ -2568,6 +2583,109 @@ function cmdAuto(maxSteps) {
   console.log("PASS: auto executed one safe step (status refresh)");
 }
 
+async function cmdOpenAiRealNextActionUtf8Diagnostic() {
+  const key = String(process.env.OPENAI_API_KEY || "").trim();
+  if (!key) {
+    console.log("OPENAI_API_KEY_MISSING");
+    process.exit(1);
+    return;
+  }
+  const inputPick = pickFullAutoLoopInput();
+  if (!inputPick.body || inputPick.source === "(none)") {
+    console.log("STOP: no usable SILVER_CURSOR_OUTPUT.md / SILVER_RUN_REPORT.md input");
+    process.exit(1);
+    return;
+  }
+  const strat = readTextSafe(STRATEGY).slice(0, 12000);
+  const commit = runGit(["rev-parse", "HEAD"]);
+  const branch = runGit(["rev-parse", "--abbrev-ref", "HEAD"]);
+  const changedJoined = gitChangedFilesList().map(normalizeRepoRel).filter(Boolean).join(";");
+  const autoStatus = [
+    "branch=" + branch,
+    "commit=" + commit,
+    "changed_files=" + changedJoined,
+    "input_source=" + inputPick.source,
+  ].join("\n");
+  const manifestLoop = buildRepoScriptsManifestForPrompt();
+  const model = String(process.env.SILVER_AUTOPILOT_OPENAI_MODEL || "gpt-4o-mini").trim();
+  const systemContent =
+    "You are a Silver (infoUzel.cz) development copilot. Output a single copy-paste task for Cursor. " +
+    "Language: Czech (cs) with correct diacritics and real Unicode (Ú, ř, š, em dash —). Never emit UTF-8 mis-decoded mojibake (e.g. Ă or â€). " +
+    "Do not repeat the line starting with ÚKOL PRO CURSOR (the file template adds it). Start with numbered steps or ### headings. " +
+    "Windows PowerShell first: use Get-Content -LiteralPath, Set-Location, Join-Path; never suggest `cat C:\\...` or POSIX cat with Windows drive letters. " +
+    "NEVER invent script paths. Only reference files under scripts/ that appear in the USER manifest list; if unsure use only `node scripts/silver-autopilot.cjs --status`. " +
+    "Hard rules: diagnostic-first; cluster-driven; scripts-only dominance; safety-first; zero-regression; " +
+    "no broad refactor; engine only after proven TRUE_ENGINE_FAIL and surgically; assets/app.js only after explicit human permission.";
+  const userContent =
+    "### SILVER_STRATEGY.md (excerpt)\n" +
+    strat +
+    "\n\n### Autopilot status snapshot\n" +
+    autoStatus +
+    "\n\n### Last Cursor output / report (from " +
+    inputPick.source +
+    ")\n" +
+    inputPick.body +
+    "\n\n### Existující skripty v repu (manifest — používej POUZE tyto nebo podmnožinu)\n" +
+    manifestLoop +
+    "\n\n### Deliverable\n" +
+    "Produce ONE next task in Czech: concise numbered steps; exact commands only from manifest above or `node scripts/silver-autopilot.cjs --status`; scripts-only unless engine failure is proven; never hallucinate scripts/*.js paths.";
+
+  let rawUtf8 = "";
+  try {
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + key,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model,
+        temperature: 0.2,
+        max_tokens: 2200,
+        messages: [
+          { role: "system", content: systemContent },
+          { role: "user", content: userContent },
+        ],
+      }),
+    });
+    rawUtf8 = await decodeFetchBodyUtf8(res);
+    if (!res.ok) {
+      console.log("STOP: OpenAI HTTP " + res.status);
+      console.log(rawUtf8.slice(0, 800));
+      process.exit(1);
+      return;
+    }
+  } catch {
+    console.log("STOP: OpenAI request error");
+    process.exit(1);
+    return;
+  }
+
+  const json = parseOpenAiChatCompletionRaw(rawUtf8);
+  const extractedContent = extractOpenAiChatMessageContent(json).trim();
+  const coerced = coerceOpenAiChatCompletionText(rawUtf8);
+  const resolved = resolveNextActionModelBody(coerced.content, {
+    inputSource: inputPick.source,
+    changedFilesJoined: changedJoined,
+    mainCommit: commit,
+    guardBlocked: false,
+    safetyBlocked: false,
+    dirtyBlocked: false,
+  });
+  const finalInner = resolved.ok ? resolved.body : coerced.content;
+  const finalDoc = wrapNextActionDoc(finalInner, "real-api-utf8-diagnostic");
+  writeNextActionUtf8Safe(NEXT_ACTION, finalDoc);
+  const finalFileText = fs.readFileSync(NEXT_ACTION, "utf8");
+
+  const pass = printOpenAiRealNextActionUtf8Diagnostic({
+    rawUtf8,
+    extractedContent,
+    repairedContent: coerced.content,
+    finalFileText,
+  });
+  process.exit(pass ? 0 : 1);
+}
+
 async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
   const ms = parseInt(String(maxStepsArg || "1"), 10) || 1;
   if (ms !== 1) {
@@ -2613,7 +2731,7 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
   };
 
   function writeGuardedNext(inner, tag) {
-    let body = repairSilverOpenAiUtf8Text(String(inner || "").trim());
+    let body = repairSilverOpenAiUtf8Text(stripSilverAutopilotUkolHeaderLine(String(inner || "").trim()));
     let finalTag = String(tag || "silver-autopilot");
     const probeDoc = wrapNextActionDoc(body, finalTag);
     const plannerViolations = silverNextActionQualityViolations(probeDoc);
@@ -2632,9 +2750,9 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
     }
     innerNext = body;
     if (silverNextActionHasClusterWorkflow(body) && /<!--\s*SILVER_NEXT_ACTION:/i.test(body)) {
-      writeUtf8FileNoBom(NEXT_ACTION, body);
+      writeNextActionUtf8Safe(NEXT_ACTION, body);
     } else {
-      writeUtf8FileNoBom(NEXT_ACTION, wrapNextActionDoc(body, finalTag));
+      writeNextActionUtf8Safe(NEXT_ACTION, wrapNextActionDoc(body, finalTag));
     }
     nextActionWritten = "YES";
   }
@@ -2935,6 +3053,7 @@ function parseArgs(argv) {
     else if (a === "--sanitize-next-action-md") out.cmd = "sanitize-next-action-md";
     else if (a === "--cli-planner-cluster-preference-selftest") out.cmd = "planner-cluster-selftest";
     else if (a === "--cli-openai-next-action-utf8-selftest") out.cmd = "openai-next-action-utf8-selftest";
+    else if (a === "--cli-openai-real-next-action-utf8-diagnostic") out.cmd = "openai-real-next-action-utf8-diagnostic";
     else if (a === "--auto") out.cmd = "auto";
     else if (a === "--full-auto-loop" || a === "--loop-once") out.cmd = "full-auto-loop";
     else if (a.startsWith("--max-steps=")) out.maxSteps = a.slice("--max-steps=".length);
@@ -2965,8 +3084,10 @@ function parseArgs(argv) {
     process.exit(runPlannerClusterPreferenceSelftest() ? 0 : 1);
   } else if (p.cmd === "openai-next-action-utf8-selftest") {
     process.exit(runOpenAiNextActionUtf8Selftest() ? 0 : 1);
-  }
-  else if (p.cmd === "auto") cmdAuto(p.maxSteps);
+  } else if (p.cmd === "openai-real-next-action-utf8-diagnostic") {
+    await cmdOpenAiRealNextActionUtf8Diagnostic();
+    return;
+  } else if (p.cmd === "auto") cmdAuto(p.maxSteps);
   else if (p.cmd === "full-auto-loop") exitCode = await cmdFullAutoLoop(argv, p.maxSteps);
   if (exitCode) process.exit(exitCode);
 })().catch((e) => {
