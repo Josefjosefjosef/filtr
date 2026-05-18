@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-18T15:20:37.572069Z",
+  "ingestedAt": "2026-05-18T16:00:45.995812Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,35 @@
         "německo",
         "vede",
         "vídně"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Recenze telefonu Honor 600 Lite. Odlehčený model upoutá dobrou výdrží a líbivým vzhledem",
+      "url": "https://mobilmania.zive.cz/clanky/recenze-telefonu-honor-600-lite-odlehceny-model-upouta-dobrou-vydrzi-a-libivym-vzhledem/sc-3-a-1364727/default.aspx",
+      "dt": "2026-05-18T15:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "600",
+        "dobrou",
+        "honor",
+        "lite",
+        "líbivým",
+        "model",
+        "odlehčený",
+        "recenze",
+        "telefonu",
+        "upoutá",
+        "vzhledem",
+        "výdrží"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -951,34 +980,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "AMD dosáhla rekordního podílu v notebookových procesorech. V serverech už bere skoro polovinu tržeb",
-      "url": "https://www.zive.cz/clanky/amd-dosahla-rekordniho-podilu-v-notebookovych-procesorech-v-serverech-uz-bere-skoro-polovinu-trzeb/sc-3-a-241163/default.aspx",
-      "dt": "2026-05-14T12:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "amd",
-        "bere",
-        "dosáhla",
-        "notebookových",
-        "podílu",
-        "polovinu",
-        "procesorech",
-        "rekordního",
-        "serverech",
-        "skoro",
-        "tržeb"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -989,7 +990,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22999,
+      "bytes": 22964,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1026,7 +1027,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-18T14:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T15:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1044,6 +1045,10 @@
           {
             "title": "Z Katovic do Vídně je to 1200 km a cesta vede přes Německo. Google nám už 16 let dluží cyklonavigaci",
             "publishedAt": "2026-05-18T12:45:00Z"
+          },
+          {
+            "title": "Recenze telefonu Honor 600 Lite. Odlehčený model upoutá dobrou výdrží a líbivým vzhledem",
+            "publishedAt": "2026-05-18T15:45:00Z"
           },
           {
             "title": "Gmail nabízí jen 5 GB místa, pokud mu nesvěříte telefonní číslo. Zatím jde o test v pár zemích",
@@ -1068,10 +1073,6 @@
           {
             "title": "Jedny malé bedny pro televizi, Bluetooth i gramofon. Fyne Audio Cubitt 5 nahrazují celé domácí Hi-Fi",
             "publishedAt": "2026-05-18T08:45:00Z"
-          },
-          {
-            "title": "Útočníci ukradli desítky tisíc účtů na Facebooku. Zneužili k tomu běžnou službu od Googlu",
-            "publishedAt": "2026-05-17T07:45:00Z"
           }
         ]
       }

@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-18T15:20:37.572069Z",
+  "ingestedAt": "2026-05-18T16:00:45.995812Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ukrajina po ruských útocích hlásí jednoho mrtvého a kolem 40 zraněných",
+      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
+      "dt": "2026-01-21T06:45:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "hlásí",
+        "jednoho",
+        "kolem",
+        "mrtvého",
+        "ruských",
+        "ukrajina",
+        "zraněných",
+        "útocích"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Fukal: Po blamáži další ostuda. Sázka na jednu kartu se může vymstít",
+      "url": "https://sport.aktualne.cz/fotbal/fukal-po-blamazi-dalsi-ostuda-sazka-na-jednu-kartu-se-muze-vymstit/r~aaa294a190bf27e9069bf5d59470b3fb/",
+      "dt": "2026-05-18T15:47:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "blamáži",
+        "další",
+        "fukal",
+        "jednu",
+        "kartu",
+        "ostuda",
+        "sázka",
+        "vymstít"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -157,31 +207,6 @@
         "zničením",
         "íránu",
         "čas"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ukrajina po ruských útocích hlásí jednoho mrtvého a kolem 40 zraněných",
-      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
-      "dt": "2026-01-21T06:45:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "hlásí",
-        "jednoho",
-        "kolem",
-        "mrtvého",
-        "ruských",
-        "ukrajina",
-        "zraněných",
-        "útocích"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -508,33 +533,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Příběh o BMW vyměněném za Ladu předčil miliardové Ferrari, blýskla se i česká Praga",
-      "url": "https://zpravy.aktualne.cz/ekonomika/auto/technika-a-design/pribeh-o-bmw-vymenenem-za-ladu-porazil-miliardove-ferrari-blyskla-se-i-ceska-praga/r~aaa293e447e8b96d148447fca8d7c74f/",
-      "dt": "2026-05-18T11:02:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "blýskla",
-        "bmw",
-        "ferrari",
-        "ladu",
-        "miliardové",
-        "praga",
-        "předčil",
-        "příběh",
-        "vyměněném",
-        "česká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -545,7 +543,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22462,
+      "bytes": 22342,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -582,13 +580,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-18T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T15:47:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 14,
-          "sport": 3,
+          "sport": 4,
           "other": 1,
-          "finance": 2
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -600,6 +598,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ukrajina po ruských útocích hlásí jednoho mrtvého a kolem 40 zraněných",
+            "publishedAt": "2026-01-21T06:45:00Z"
+          },
+          {
+            "title": "Fukal: Po blamáži další ostuda. Sázka na jednu kartu se může vymstít",
+            "publishedAt": "2026-05-18T15:47:00Z"
+          },
           {
             "title": "Politická šikana: V čem Babiš škodí a jak se srocují kritici sudetských Němců",
             "publishedAt": "2026-05-18T15:00:00Z"
@@ -623,14 +629,6 @@
           {
             "title": "„Krátí se jim čas, měli by sebou pohnout.“ Trump opět pohrozil Íránu zničením",
             "publishedAt": "2026-02-28T14:04:00Z"
-          },
-          {
-            "title": "Ukrajina po ruských útocích hlásí jednoho mrtvého a kolem 40 zraněných",
-            "publishedAt": "2026-01-21T06:45:00Z"
-          },
-          {
-            "title": "Hlaváč má nahradit Řehku v čele generálního štábu. Prezident Pavel je připraven ho jmenovat",
-            "publishedAt": "2026-05-18T12:18:00Z"
           }
         ]
       }

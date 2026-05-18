@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-18T15:20:37.572069Z",
+  "ingestedAt": "2026-05-18T16:00:45.995812Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Jugoslávie i Afghánistán. Kdo je budoucí náčelník generálního štábu Hlaváč",
+      "url": "https://www.denik.cz/z_domova/mise-v-jugoslavii-i-afghanistanu-kdo-je-novy-nacelnik-generalniho-stabu-hlavac-2.html",
+      "dt": "2026-05-18T15:35:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "afghánistán",
+        "budoucí",
+        "generálního",
+        "hlaváč",
+        "jugoslávie",
+        "náčelník",
+        "štábu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Privatbanka mění název na Penta Bank. Plánuje expanzi a sází na technologie",
+      "url": "https://www.denik.cz/ekonomika/privatbanka-meni-nazev-na-penta-banku-planuje-expanzi-a-sazi-na-technologie.html",
+      "dt": "2026-05-18T15:10:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bank",
+        "expanzi",
+        "mění",
+        "název",
+        "penta",
+        "plánuje",
+        "privatbanka",
+        "sází",
+        "technologie"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -601,59 +651,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Íránu tikají hodiny, varuje Trump. Pentagon označil cíle pro novou vlnu úderů",
-      "url": "https://www.denik.cz/ze_sveta/iran-vyjednavani-mir-cas-donald-trump-usa-valka-nove-udery-utok.html",
-      "dt": "2026-05-18T07:57:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "cíle",
-        "hodiny",
-        "novou",
-        "označil",
-        "pentagon",
-        "tikají",
-        "trump",
-        "varuje",
-        "vlnu",
-        "íránu",
-        "úderů"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Zaútočil sekáčkem. Agresorovi z obchodního centra v Hradci hrozí až 20 let",
-      "url": "https://www.denik.cz/krimi/futurum-hradec-kralove-utok-napadeni-vysetrovani-ukonceni.html",
-      "dt": "2026-05-18T07:16:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "agresorovi",
-        "centra",
-        "hradci",
-        "hrozí",
-        "let",
-        "obchodního",
-        "sekáčkem",
-        "zaútočil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -664,7 +661,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29124,
+      "bytes": 29712,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -701,10 +698,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-18T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T15:35:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 25
+          "zpravy": 24,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -716,6 +714,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jugoslávie i Afghánistán. Kdo je budoucí náčelník generálního štábu Hlaváč",
+            "publishedAt": "2026-05-18T15:35:00Z"
+          },
+          {
+            "title": "Privatbanka mění název na Penta Bank. Plánuje expanzi a sází na technologie",
+            "publishedAt": "2026-05-18T15:10:00Z"
+          },
           {
             "title": "Evropa musí začít od sebe, ne čekat odměnu za vývoz hodnot, říká ekonom Singer",
             "publishedAt": "2026-05-18T15:00:00Z"
@@ -739,14 +745,6 @@
           {
             "title": "Jak Češi hodnotí prezidenty? Nejlépe si vede Havel, Pavel klesl na třetí místo",
             "publishedAt": "2026-05-18T13:12:00Z"
-          },
-          {
-            "title": "Sigma je pro mě víc než klub, říká Robert Šrejma",
-            "publishedAt": "2026-05-18T13:00:00Z"
-          },
-          {
-            "title": "Rodičovský příspěvek se zvýší a půjde čerpat dříve: Od kdy a koho se změna týká",
-            "publishedAt": "2026-05-18T12:48:00Z"
           }
         ]
       }

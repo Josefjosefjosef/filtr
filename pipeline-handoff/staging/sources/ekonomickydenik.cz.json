@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-18T15:20:37.572069Z",
+  "ingestedAt": "2026-05-18T16:00:45.995812Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ukrajina má vlastní verzi obávané ruské zbraně. Na záběrech ukázala, co dokáže",
+      "url": "https://ekonomickydenik.cz/ukrajina-vlastni-verze-obavane-ruske-zbrane/",
+      "dt": "2026-05-18T15:51:13Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dokáže",
+        "obávané",
+        "ruské",
+        "ukrajina",
+        "ukázala",
+        "verzi",
+        "vlastní",
+        "zbraně",
+        "záběrech"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -770,35 +796,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "„Zásoby plynu máme.“ Část Evropy chce víc těžit, kvůli závislosti na dovozu LNG",
-      "url": "https://ekonomickydenik.cz/zasoby-plynu-mame-tezit-zavislost-lng/",
-      "dt": "2026-05-15T17:35:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "chce",
-        "dovozu",
-        "evropy",
-        "kvůli",
-        "lng",
-        "máme",
-        "plynu",
-        "těžit",
-        "víc",
-        "zásoby",
-        "závislosti",
-        "část"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -809,7 +806,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70580,
+      "bytes": 70784,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -846,7 +843,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-18T14:54:18Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T15:51:13Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -864,6 +861,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ukrajina má vlastní verzi obávané ruské zbraně. Na záběrech ukázala, co dokáže",
+            "publishedAt": "2026-05-18T15:51:13Z"
+          },
           {
             "title": "Proti zneužívání dávek i SPZ. Babiš naznačil, jaké se chystá zpřísnění pro uprchlíky z Ukrajiny",
             "publishedAt": "2026-05-18T14:54:18Z"
@@ -891,10 +892,6 @@
           {
             "title": "Mezi Bílým domem a Mordorem. Evropa se spoléhá na tajemnou firmu",
             "publishedAt": "2026-05-18T12:14:02Z"
-          },
-          {
-            "title": "Průzkum o prezidentech překvapil: Klaus těsně přeskočil Pavla",
-            "publishedAt": "2026-05-18T11:24:51Z"
           }
         ]
       }
