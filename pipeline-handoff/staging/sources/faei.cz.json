@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-18T10:34:31.886824Z",
+  "ingestedAt": "2026-05-18T11:15:15.075008Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Svět zachvátila obava z velké inflace",
+      "url": "https://profitonline.cz/svet-zachvatila-obava-z-velke-inflace/",
+      "dt": "2026-05-18T11:00:21Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "inflace",
+        "obava",
+        "svět",
+        "velké",
+        "zachvátila"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -271,31 +293,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Tycho de Brahe odtud pozoroval hvězdy. Belveder čeká rekonstrukce",
-      "url": "https://profitonline.cz/tycho-de-brahe-odtud-pozoroval-hvezdy-belveder-ceka-rekonstrukce/",
-      "dt": "2026-05-16T10:00:03Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "belveder",
-        "brahe",
-        "hvězdy",
-        "odtud",
-        "pozoroval",
-        "rekonstrukce",
-        "tycho",
-        "čeká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -306,7 +303,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19496,
+      "bytes": 19367,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -343,7 +340,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-18T10:00:33Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T11:00:21Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -358,6 +355,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Svět zachvátila obava z velké inflace",
+            "publishedAt": "2026-05-18T11:00:21Z"
+          },
           {
             "title": "Sociální sítě už škodí v rodinách stejně jako alkohol",
             "publishedAt": "2026-05-18T10:00:33Z"
@@ -385,10 +386,6 @@
           {
             "title": "Unie sází na jádro včetně malých reaktorů. Vyplatí se to?",
             "publishedAt": "2026-05-17T12:00:18Z"
-          },
-          {
-            "title": "Novinky v osobních financích: Jak si Češi vedou ve finančních průzkumech?",
-            "publishedAt": "2026-05-17T10:00:04Z"
           }
         ]
       }

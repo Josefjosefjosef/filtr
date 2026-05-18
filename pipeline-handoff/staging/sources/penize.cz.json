@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-18T10:34:31.886824Z",
+  "ingestedAt": "2026-05-18T11:15:15.075008Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Privatbanka mění název a má velké plány. Penta ukázala, co chystá",
+      "url": "https://www.penize.cz/osobni-ucty/487482-penta-bank-byvala-privatbanka-ma-velke-plany-co-chysta",
+      "dt": "2026-05-18T12:15:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "chystá",
+        "mění",
+        "název",
+        "penta",
+        "plány",
+        "privatbanka",
+        "ukázala",
+        "velké"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -481,31 +506,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Půjčky dostanou přísnější pravidla. Jak je vidí experti a co by ještě změnili?",
-      "url": "https://www.penize.cz/spotrebitelske-uvery/489459-pujcky-dostanou-prisnejsi-pravidla-jak-je-vidi-experti-a-co-by-jeste-zmenili",
-      "dt": "2026-05-14T05:05:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "dostanou",
-        "experti",
-        "ještě",
-        "pravidla",
-        "přísnější",
-        "půjčky",
-        "vidí",
-        "změnili"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -516,7 +516,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18789,
+      "bytes": 18696,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -553,11 +553,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-18T10:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T12:15:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 6,
-          "finance": 14
+          "finance": 14,
+          "zpravy": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -569,6 +569,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Privatbanka mění název a má velké plány. Penta ukázala, co chystá",
+            "publishedAt": "2026-05-18T12:15:00Z"
+          },
           {
             "title": "Spořitelna přestává trestat drobné investory, ruší minimální poplatek",
             "publishedAt": "2026-05-18T10:40:00Z"
@@ -596,10 +600,6 @@
           {
             "title": "Maximální ceny benzinu a nafty na víkend a pondělí",
             "publishedAt": "2026-05-15T14:01:00Z"
-          },
-          {
-            "title": "Vlakem z Česka až k Jadranu. Termín, kdy vyjede první Adriatic Express",
-            "publishedAt": "2026-05-15T13:34:00Z"
           }
         ]
       }
