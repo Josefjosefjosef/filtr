@@ -8,37 +8,44 @@
    ```powershell
    Set-Location -LiteralPath C:\projects\filtr
    ```
+
 2. Zkontrolujte stav repozitáře:
    ```powershell
    git status
    ```
-3. Vyberte jednu z následujících možností pro vyřešení nečistého stavu repozitáře:
-   - **A** – Přidejte změněné soubory a vytvořte commit:
-     ```powershell
-     git add SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
-     git commit -m "Přidání změn"
-     git push -u origin chore/silver-audit-repo-state
-     ```
-   - **B** – Uložte změny do stash a proveďte push:
-     ```powershell
-     git stash push -m "silver wip" -- SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
-     git push -u origin chore/silver-audit-repo-state
-     git stash pop
-     ```
-   - **C** – Zahoďte změny:
-     ```powershell
-     git restore SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
-     git push
-     ```
+
+3. Přidejte změněné soubory k commitu:
+   ```powershell
+   git add SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
+   ```
+
+4. Vytvořte commit se zprávou:
+   ```powershell
+   git commit -m "Přidání změn"
+   ```
+
+5. Zkontrolujte krátký stav repozitáře:
+   ```powershell
+   git status --short
+   ```
+
+6. Zobrazte poslední commit:
+   ```powershell
+   git show --name-only -1
+   ```
+
+7. Pokuste se odeslat změny na upstream:
+   ```powershell
+   git push -u origin chore/silver-audit-repo-state
+   ```
 
 ### Scope guard
-Zajistěte, aby všechny změny byly správně zpracovány před provedením dalších kroků.
+- Zajistěte, že všechny příkazy jsou prováděny v rámci schválených skriptů a postupů.
 
 ### STOP podmínky
-- Pokud je repozitář nečistý, není možné provést `git push` bez vyřešení změn.
-- Raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode` je zakázáno; řízený autonomní režim vyžaduje tyto přepínače plus vestavěné limity.
+- Pokud je repozitář nečistý (git_clean=NO), neprovádějte žádné další akce bez předchozího shrnutí a případného obnovení změn.
 
 ### Povinný výsledek
-```plaintext
+```
 Repozitář byl úspěšně vyčištěn a změny byly odeslány na upstream.
 ```
