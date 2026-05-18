@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-18T05:50:00.370876Z",
+  "ingestedAt": "2026-05-18T06:32:10.858171Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zlato z dovolené: Výhodný nákup, nebo drahý suvenýr?",
+      "url": "https://profitonline.cz/zlato-z-dovolene-vyhodny-nakup-nebo-drahy-suvenyr/",
+      "dt": "2026-05-18T06:00:35Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dovolené",
+        "drahý",
+        "nebo",
+        "nákup",
+        "suvenýr",
+        "výhodný",
+        "zlato"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -265,31 +289,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Okamžiky dějin: Den, kdy začal nejšílenější experiment komunistické ideologie",
-      "url": "https://profitonline.cz/okamziky-dejin-den-kdy-zacal-nejsilenejsi-experiment-komunisticke-ideologie/",
-      "dt": "2026-05-16T04:00:12Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "den",
-        "dějin",
-        "experiment",
-        "ideologie",
-        "komunistické",
-        "nejšílenější",
-        "okamžiky",
-        "začal"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -300,7 +299,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19170,
+      "bytes": 18944,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -337,7 +336,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-18T04:00:24Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T06:00:35Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -352,6 +351,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zlato z dovolené: Výhodný nákup, nebo drahý suvenýr?",
+            "publishedAt": "2026-05-18T06:00:35Z"
+          },
           {
             "title": "The Economist: Izraelský teror plodí teror palestinský, varuje bývalý poradce premiéra Perese",
             "publishedAt": "2026-05-18T04:00:24Z"
@@ -379,10 +382,6 @@
           {
             "title": "Poplatek za komunální odpad: Kdo se může stát nevědomky dlužníkem",
             "publishedAt": "2026-05-17T04:00:34Z"
-          },
-          {
-            "title": "Úpadek čtení u dětí podsekává budoucí českou produktivitu",
-            "publishedAt": "2026-05-16T12:00:14Z"
           }
         ]
       }

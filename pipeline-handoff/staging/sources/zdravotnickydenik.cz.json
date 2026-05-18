@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-18T05:50:00.370876Z",
+  "ingestedAt": "2026-05-18T06:32:10.858171Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Pokročilé role sester? Nejdříve je třeba opustit „model Iny“ z Nemocnice na kraji města",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/pokrocile-role-sester-nejdriv-je-treba-opustit-model-iny/",
+      "dt": "2026-05-18T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "iny",
+        "kraji",
+        "model",
+        "města",
+        "nejdříve",
+        "nemocnice",
+        "opustit",
+        "pokročilé",
+        "role",
+        "sester",
+        "třeba"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -244,36 +272,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Sestry drží systém, ale 30 tisíc jich zamíří do důchodu. Nárůst počtu studentů stačit nebude",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/odchody-sester-do-duchodu-novi-studenti/",
-      "dt": "2026-05-15T13:07:58Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "ale",
-        "drží",
-        "důchodu",
-        "jich",
-        "nebude",
-        "nárůst",
-        "počtu",
-        "sestry",
-        "stačit",
-        "studentů",
-        "systém",
-        "tisíc",
-        "zamíří"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -284,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 103683,
+      "bytes": 107423,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -321,7 +319,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-18T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -336,6 +334,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pokročilé role sester? Nejdříve je třeba opustit „model Iny“ z Nemocnice na kraji města",
+            "publishedAt": "2026-05-18T06:00:00Z"
+          },
           {
             "title": "Strach z dalšího dítěte nevzniká v peněžence. Vojtěch plánuje překreslit síť porodnic",
             "publishedAt": "2026-05-18T05:00:00Z"
@@ -363,10 +365,6 @@
           {
             "title": "Více doplňků neznamená více zdraví. Farmakolog popsal, kdy ničí účinky léků",
             "publishedAt": "2026-05-16T13:01:00Z"
-          },
-          {
-            "title": "Výdaje na zdravotnictví v Německu explodovaly. Vzrostly o celoroční příjem Česka",
-            "publishedAt": "2026-05-16T05:00:00Z"
           }
         ]
       }

@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-18T05:50:00.370876Z",
+  "ingestedAt": "2026-05-18T06:32:10.858171Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Sami si zavařili, porážka přišla ve špatný čas. Důležité bude, jak hokejisté zareagují",
+      "url": "https://www.idnes.cz/hokej/ms-2026/cesko-slovinsko-reakce-zmeny-analyza.A260517_173919_ms-hokej-2026_czo",
+      "dt": "2026-05-18T05:58:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "důležité",
+        "hokejisté",
+        "porážka",
+        "přišla",
+        "sami",
+        "zareagují",
+        "zavařili",
+        "čas",
+        "špatný"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Detroit si nechal postup proklouznout mezi prsty, Cleveland narazí na Knicks",
+      "url": "https://www.idnes.cz/sport/basket/nba-2-kolo-play-off-sedmy-zapas-detroit-cleveland-vysledky.A260518_072948_sport-basket_ipet",
+      "dt": "2026-05-18T05:42:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "cleveland",
+        "detroit",
+        "knicks",
+        "narazí",
+        "nechal",
+        "postup",
+        "proklouznout",
+        "prsty"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -735,59 +786,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "MS v hokeji 2026 ONLINE: Češi koušou trpkou porážku a dál hledají sestavu",
-      "url": "https://www.idnes.cz/hokej/ms-2026/ms-v-hokeji-2026-online-reportaz.A260513_124432_ms-hokej-2026_czo",
-      "dt": "2026-05-17T15:04:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "2026",
-        "hledají",
-        "hokeji",
-        "koušou",
-        "online",
-        "porážku",
-        "sestavu",
-        "trpkou",
-        "češi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Po zaváhání zpět do práce. Na tréninku jen devět hráčů, Plekanec naznačil změny",
-      "url": "https://www.idnes.cz/hokej/ms-2026/trenink-hokejistu-po-prohre-se-slovinskem.A260517_111215_ms-hokej-2026_hrj",
-      "dt": "2026-05-17T14:17:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "devět",
-        "hráčů",
-        "jen",
-        "naznačil",
-        "plekanec",
-        "práce",
-        "tréninku",
-        "zaváhání",
-        "změny",
-        "zpět"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46521,
+      "bytes": 46299,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-18T05:12:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T05:58:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -850,6 +848,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sami si zavařili, porážka přišla ve špatný čas. Důležité bude, jak hokejisté zareagují",
+            "publishedAt": "2026-05-18T05:58:00Z"
+          },
+          {
+            "title": "Detroit si nechal postup proklouznout mezi prsty, Cleveland narazí na Knicks",
+            "publishedAt": "2026-05-18T05:42:00Z"
+          },
           {
             "title": "Gilgeous-Alexander je opět MVP, Jokič a Wembanyama proti němu neměli šanci",
             "publishedAt": "2026-05-18T05:12:00Z"
@@ -873,14 +879,6 @@
           {
             "title": "Perugia ovládla volejbalovou Ligu mistrů, raduje se i český smečař Džavoronok",
             "publishedAt": "2026-05-17T20:56:00Z"
-          },
-          {
-            "title": "Slováci zapsali druhou výhru, severské derby ovládlo Švédsko. Slaví i Norsko",
-            "publishedAt": "2026-05-17T20:48:07Z"
-          },
-          {
-            "title": "MS v hokeji 2026: Program, tabulky skupin, kdy hrají Češi?",
-            "publishedAt": "2026-05-17T20:48:00Z"
           }
         ]
       }
