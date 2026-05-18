@@ -18,6 +18,11 @@ $ProbeOneLine = "Print exactly: CURSOR_AGENT_STDIN_OK. Do not modify files."
 $Marker = "CURSOR_AGENT_STDIN_OK"
 $HeadlessProbeMs = 120000
 $MaxStreamCharsInJson = 65536
+$SilverUtf8HandoffPath = Join-Path $PSScriptRoot "silver-utf8-handoff.ps1"
+if (Test-Path -LiteralPath $SilverUtf8HandoffPath) {
+  . $SilverUtf8HandoffPath
+  Initialize-SilverConsoleUtf8
+}
 
 function Invoke-ExternalCapture {
   param(
@@ -250,8 +255,6 @@ function Invoke-WslDiagCapture {
   $psi.WorkingDirectory = $WorkDirWindows
   $psi.RedirectStandardOutput = $true
   $psi.RedirectStandardError = $true
-  $psi.StandardOutputEncoding = [System.Text.Encoding]::UTF8
-  $psi.StandardErrorEncoding = [System.Text.Encoding]::UTF8
   $argLine = ""
   foreach ($a in $argList) {
     if ($argLine.Length -gt 0) { $argLine += " " }
@@ -269,6 +272,10 @@ function Invoke-WslDiagCapture {
   $code = 0
   $so = ""
   $se = ""
+  $prevWslUtf8 = ""
+  if (Get-Command Set-SilverWslUtf8ProcessEnvironment -ErrorAction SilentlyContinue) {
+    $prevWslUtf8 = Set-SilverWslUtf8ProcessEnvironment
+  }
   try {
     [void]$p.Start()
     if (-not $p.WaitForExit($TimeoutMs)) {
@@ -279,18 +286,33 @@ function Invoke-WslDiagCapture {
     else {
       $code = [int]$p.ExitCode
     }
-    $so = $p.StandardOutput.ReadToEnd()
-    $se = $p.StandardError.ReadToEnd()
+    if (Get-Command Read-ProcessPipeUtf8 -ErrorAction SilentlyContinue) {
+      $so = Read-ProcessPipeUtf8 -Reader $p.StandardOutput
+      $se = Read-ProcessPipeUtf8 -Reader $p.StandardError
+    }
+    else {
+      $so = $p.StandardOutput.ReadToEnd()
+      $se = $p.StandardError.ReadToEnd()
+    }
   }
   catch {
     $se = "WSL_DIAG_EXCEPTION: " + $_.Exception.Message
     $code = 255
   }
   finally {
+    if (Get-Command Restore-SilverWslUtf8ProcessEnvironment -ErrorAction SilentlyContinue) {
+      Restore-SilverWslUtf8ProcessEnvironment -PreviousValue $prevWslUtf8
+    }
     try { $p.Dispose() } catch { }
   }
   if ([string]::IsNullOrEmpty($so)) { $so = "" }
   if ([string]::IsNullOrEmpty($se)) { $se = "" }
+  if (Get-Command Repair-SilverUtf8HandoffText -ErrorAction SilentlyContinue) {
+    $repSo = "NO"
+    $repSe = "NO"
+    $so = Repair-SilverUtf8HandoffText -Text $so -Repaired ([ref]$repSo)
+    $se = Repair-SilverUtf8HandoffText -Text $se -Repaired ([ref]$repSe)
+  }
   return @{ exit = $code; timedOut = $timedOut; stdout = $so; stderr = $se }
 }
 

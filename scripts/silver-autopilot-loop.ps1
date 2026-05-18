@@ -124,7 +124,8 @@ function Test-RepoRootMatch {
 function Read-TextFileOrEmpty {
   param([string]$Path)
   if (-not (Test-Path -LiteralPath $Path)) { return "" }
-  return [System.IO.File]::ReadAllText($Path)
+  $utf8Read = [System.Text.UTF8Encoding]::new($false)
+  return [System.IO.File]::ReadAllText($Path, $utf8Read)
 }
 
 function Read-SilverLoopTempCaptureFileWithRetry {
@@ -2187,6 +2188,14 @@ while ($true) {
         }
         $so = [string]$soRes.Text
         $se = [string]$seRes.Text
+        $handoffUtf8 = Join-Path $PSScriptRoot "silver-utf8-handoff.ps1"
+        if (Test-Path -LiteralPath $handoffUtf8) {
+          . $handoffUtf8
+          $soRep = "NO"
+          $seRep = "NO"
+          $so = Repair-SilverUtf8HandoffText -Text $so -Repaired ([ref]$soRep)
+          $se = Repair-SilverUtf8HandoffText -Text $se -Repaired ([ref]$seRep)
+        }
         $soTrim = $so.Trim()
         $seTrim = $se.Trim()
         $postCursorBody = ""
