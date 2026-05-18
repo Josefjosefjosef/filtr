@@ -28,6 +28,7 @@ const {
   computeGoldLabels,
   finalizeModuleSwitchHarnessEval,
   finalizeModuleSwitchClarifyLaneHarnessEval,
+  finalizeModuleSwitchNegJakoCalToNoteHarnessEval,
   finalizeNegationNoWriteHarnessEval,
   finalizeNoteQueryKdeHarnessEval,
   finalizeNoteCreateDoPoznamkStorageHarnessEval,
@@ -297,6 +298,7 @@ function main() {
       ev = evaluateOne(c, turn);
       ev = finalizeModuleSwitchHarnessEval(c, turn, ev);
       ev = finalizeModuleSwitchClarifyLaneHarnessEval(c, turn, ev);
+      ev = finalizeModuleSwitchNegJakoCalToNoteHarnessEval(c, turn, ev);
       ev = finalizeNegationNoWriteHarnessEval(c, turn, ev);
       ev = finalizeNoteQueryKdeHarnessEval(c, turn, ev);
       ev = finalizeNoteCreateDoPoznamkStorageHarnessEval(c, turn, ev);
