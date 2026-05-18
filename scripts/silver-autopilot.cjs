@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Silver Autopilot V1 — local orchestration only (no runtime Silver changes).
- * Commands: --status | --verify-pr= | --merge-pr= | --post-merge-proof | --refresh-rhc3 | --ask-model | --sanitize-next-action-md | --auto | --full-auto-loop | --loop-once
+ * Commands: --status | --verify-pr= | --merge-pr= | --post-merge-proof | --refresh-rhc3 | --ask-model | --sanitize-next-action-md | --auto | --full-auto-loop | --loop-once | --cli-autonomous-adapter-diagnostic
  */
 /* eslint-disable no-console */
 "use strict";
@@ -481,6 +481,26 @@ function parseSilverAdapterMetaKeyValues(text) {
   return out;
 }
 
+const ADAPTER_OUTPUT_STATE_COMPLETED = new Set(["COMPLETED", "COMPLETE"]);
+
+function isSilverAdapterCapture(text) {
+  return String(text || "").indexOf("# silver-cursor-agent-adapter") >= 0;
+}
+
+function extractSilverAdapterStreamBodies(full) {
+  const marker = "# stdout";
+  const idx = full.indexOf(marker);
+  const tail = idx >= 0 ? full.slice(idx + marker.length) : "";
+  const stderrMarker = "# stderr";
+  const stderrIdx = tail.indexOf(stderrMarker);
+  const stdoutRaw = stderrIdx >= 0 ? tail.slice(0, stderrIdx) : tail;
+  const stderrRaw = stderrIdx >= 0 ? tail.slice(stderrIdx + stderrMarker.length) : "";
+  return {
+    stdoutNonWs: stdoutRaw.replace(/\s/g, ""),
+    stderrNonWs: stderrRaw.replace(/\s/g, ""),
+  };
+}
+
 function cursorOutputStaleForAutonomousRun(cursorText) {
   const runId = String(process.env.SILVER_AUTONOMOUS_RUN_ID || "").trim();
   if (!runId) return false;
@@ -501,22 +521,145 @@ function cursorOutputStaleForAutonomousRun(cursorText) {
   return false;
 }
 
+/**
+ * Authoritative gate for adapter capture used by full-auto-loop (always enforced for adapter files).
+ * @returns {object}
+ */
+function evaluateAutonomousAdapterOutput(cursorText) {
+  const full = String(cursorText || "");
+  const meta = parseSilverAdapterMetaKeyValues(full);
+  const streams = extractSilverAdapterStreamBodies(full);
+  const state = String(meta.adapter_output_state || "").trim();
+  const stdoutFlagYes = String(meta.stdout_nonempty || "").toUpperCase() === "YES";
+  const stdout_present =
+    streams.stdoutNonWs.length >= 20 || (stdoutFlagYes && streams.stdoutNonWs.length > 0) ? "YES" : "NO";
+  const stderr_present =
+    streams.stderrNonWs.length > 0 || String(meta.stderr_nonempty || "").toUpperCase() === "YES" ? "YES" : "NO";
+  const task_digest_present = String(meta.task_digest || "").trim().length > 0 ? "YES" : "NO";
+  const process_start_present = String(meta.process_start_utc || "").trim().length > 0 ? "YES" : "NO";
+  const exit_code_present = String(meta.exit_code || "").trim().length > 0 ? "YES" : "NO";
+  const autonomous_cycle = String(meta.autonomous_cycle || "").trim() || "(empty)";
+
+  const base = {
+    adapter_output_state: state || "(empty)",
+    adapter_output_valid: "NO",
+    stale_detected: "NO",
+    lifecycle_block_reason: "",
+    stdout_present,
+    stderr_present,
+    task_digest_present,
+    process_start_present,
+    autonomous_cycle,
+    next_action_generation_allowed: "NO",
+    fallback_template_used: "NO",
+    is_adapter_capture: isSilverAdapterCapture(full) ? "YES" : "NO",
+  };
+
+  if (!isSilverAdapterCapture(full)) {
+    return {
+      ...base,
+      adapter_output_valid: "NA",
+      lifecycle_block_reason: "not_adapter_capture",
+      next_action_generation_allowed: "NA",
+    };
+  }
+
+  let reason = "";
+  if (state === "INVALIDATED_AWAITING_CYCLE") {
+    reason = "invalidated_awaiting_cycle_non_authoritative";
+    base.stale_detected = "YES";
+  } else if (!ADAPTER_OUTPUT_STATE_COMPLETED.has(state)) {
+    reason = "adapter_output_state_not_completed:" + (state || "(empty)");
+    if (state) base.stale_detected = "YES";
+  } else if (process_start_present === "NO") {
+    reason = "missing_process_start_utc";
+  } else if (exit_code_present === "NO") {
+    reason = "missing_exit_code";
+  } else if (stdout_present === "NO") {
+    reason = "empty_stdout";
+  } else if (task_digest_present === "NO") {
+    reason = "missing_task_digest";
+  } else if (cursorOutputStaleForAutonomousRun(full)) {
+    reason = "autonomous_run_identity_mismatch";
+    base.stale_detected = "YES";
+  } else {
+    base.adapter_output_valid = "YES";
+    base.next_action_generation_allowed = "YES";
+    reason = "(none)";
+  }
+
+  if (base.adapter_output_valid !== "YES") {
+    base.lifecycle_block_reason = reason;
+  } else {
+    base.lifecycle_block_reason = reason;
+  }
+  return base;
+}
+
+function buildAdapterInvalidFailSafeStopBody(evalResult) {
+  const ev = evalResult || {};
+  return [
+    "STOP — SILVER_CURSOR_OUTPUT.md adapter capture is stale or non-authoritative.",
+    "",
+    "- adapter_output_state=" + String(ev.adapter_output_state || "(unknown)"),
+    "- lifecycle_block_reason=" + String(ev.lifecycle_block_reason || "(unknown)"),
+    "- stale_detected=" + String(ev.stale_detected || "NO"),
+    "",
+    "INVALIDATED_AWAITING_CYCLE and empty adapter stdout must never drive --full-auto-loop.",
+    "",
+    "1) Inspect adapter lifecycle:",
+    "",
+    "```",
+    "node scripts/silver-autopilot.cjs --cli-autonomous-adapter-diagnostic",
+    "```",
+    "",
+    "2) Run a fresh controlled adapter capture, then re-check diagnostic until adapter_output_valid=YES.",
+    "",
+    "3) Re-run full-auto-loop only after a valid adapter cycle:",
+    "",
+    "```",
+    "node scripts/silver-autopilot.cjs --full-auto-loop --max-steps=1",
+    "```",
+  ].join("\n");
+}
+
 function pickFullAutoLoopInput() {
   const cursorText = readTextSafe(CURSOR_OUTPUT).trim();
   const reportText = readTextSafe(RUN_REPORT).trim();
+  let adapterEval = null;
+
   if (cursorText.length >= 20) {
+    if (isSilverAdapterCapture(cursorText)) {
+      adapterEval = evaluateAutonomousAdapterOutput(cursorText);
+      if (adapterEval.adapter_output_valid !== "YES") {
+        console.log(
+          "SILVER_CURSOR_OUTPUT_ADAPTER_INVALID=YES reason=" +
+            String(adapterEval.lifecycle_block_reason || "unknown"),
+        );
+        return {
+          source: "(adapter-invalid)",
+          body: "",
+          adapterEval,
+          adapterBlockReason: adapterEval.lifecycle_block_reason,
+        };
+      }
+    }
     if (cursorOutputStaleForAutonomousRun(cursorText)) {
       console.log(
         "SILVER_CURSOR_OUTPUT_STALE=YES reason=autonomous_run_identity_mismatch_or_invalidated",
       );
     } else {
-      return { source: "SILVER_CURSOR_OUTPUT.md", body: cursorText.slice(0, 24000) };
+      return {
+        source: "SILVER_CURSOR_OUTPUT.md",
+        body: cursorText.slice(0, 24000),
+        adapterEval: adapterEval || evaluateAutonomousAdapterOutput(cursorText),
+      };
     }
   }
   if (reportText.length >= 10) {
-    return { source: "SILVER_RUN_REPORT.md", body: reportText.slice(0, 24000) };
+    return { source: "SILVER_RUN_REPORT.md", body: reportText.slice(0, 24000), adapterEval };
   }
-  return { source: "(none)", body: "" };
+  return { source: "(none)", body: "", adapterEval };
 }
 
 function violatesEngineTaskWithoutDiagnosticPolicy(text) {
@@ -931,6 +1074,9 @@ function normalizePlannerContext(ctx) {
 }
 
 function buildPlannerRejectedBody(fallbackCtx) {
+  if (fallbackCtx && fallbackCtx.adapterInvalid) {
+    return buildAdapterInvalidFailSafeStopBody(fallbackCtx.adapterEval);
+  }
   const plannerCtx = normalizePlannerContext(fallbackCtx || {});
   if (isHealthyPlannerContext(plannerCtx)) {
     return buildClusterHandoffForHealthyPlanner({
@@ -1037,6 +1183,7 @@ function printFullAutoLoopResult(ctx) {
   console.log("main_commit=" + String(ctx.main_commit || ""));
   console.log("mode=" + String(ctx.mode || ""));
   console.log("input_source=" + String(ctx.input_source || ""));
+  if (ctx.adapter_gate) console.log(String(ctx.adapter_gate));
   console.log("openai_api=" + String(ctx.openai_api || ""));
   console.log("next_action_written=" + String(ctx.next_action_written || "NO"));
   console.log("next_action_file=SILVER_NEXT_ACTION.md");
@@ -2686,6 +2833,58 @@ async function cmdOpenAiRealNextActionUtf8Diagnostic() {
   process.exit(pass ? 0 : 1);
 }
 
+function runAutonomousAdapterDiagnosticSelftest() {
+  const stub =
+    "# silver-cursor-agent-adapter\nadapter_output_state=INVALIDATED_AWAITING_CYCLE\nprocess_start_utc=\ntask_digest=\nexit_code=\n# stdout\n\n# stderr\n\n";
+  const ev = evaluateAutonomousAdapterOutput(stub);
+  if (ev.adapter_output_valid !== "NO" || ev.stale_detected !== "YES") {
+    console.log("AUTONOMOUS_ADAPTER_DIAGNOSTIC_SELFTEST=FAIL invalidated_stub");
+    return false;
+  }
+  const good =
+    "# silver-cursor-agent-adapter\nadapter_output_state=COMPLETED\nprocess_start_utc=2026-01-01T00:00:00.000Z\nexit_code=0\ntask_digest=abc123\nstdout_nonempty=YES\n# stdout\n" +
+    "x".repeat(25) +
+    "\n# stderr\n\n";
+  const evOk = evaluateAutonomousAdapterOutput(good);
+  if (evOk.adapter_output_valid !== "YES" || evOk.next_action_generation_allowed !== "YES") {
+    console.log("AUTONOMOUS_ADAPTER_DIAGNOSTIC_SELFTEST=FAIL completed_capture");
+    return false;
+  }
+  console.log("AUTONOMOUS_ADAPTER_DIAGNOSTIC_SELFTEST=PASS");
+  return true;
+}
+
+function cmdCliAutonomousAdapterDiagnostic() {
+  const cursorText = readTextSafe(CURSOR_OUTPUT);
+  const ev = evaluateAutonomousAdapterOutput(cursorText);
+  const nextPath = readTextSafe(NEXT_ACTION);
+  const nextTagMatch = nextPath.match(/<!--\s*SILVER_NEXT_ACTION:\s*([^;]+)/i);
+  const nextTag = nextTagMatch ? String(nextTagMatch[1]).trim() : "(none)";
+  const fallback_template_used =
+    /full-auto-loop-unclear-input|full-auto-loop-quality-fallback/i.test(nextTag) ? "YES" : "NO";
+
+  console.log("=== SILVER_CLI_AUTONOMOUS_ADAPTER_DIAGNOSTIC ===");
+  console.log("adapter_output_state=" + ev.adapter_output_state);
+  console.log("adapter_output_valid=" + ev.adapter_output_valid);
+  console.log("stale_detected=" + ev.stale_detected);
+  console.log("lifecycle_block_reason=" + ev.lifecycle_block_reason);
+  console.log("stdout_present=" + ev.stdout_present);
+  console.log("stderr_present=" + ev.stderr_present);
+  console.log("task_digest_present=" + ev.task_digest_present);
+  console.log("process_start_present=" + ev.process_start_present);
+  console.log("autonomous_cycle=" + ev.autonomous_cycle);
+  console.log("next_action_generation_allowed=" + ev.next_action_generation_allowed);
+  console.log("fallback_template_used=" + fallback_template_used);
+  console.log("is_adapter_capture=" + ev.is_adapter_capture);
+  console.log("SILVER_AUTONOMOUS_RUN_ID=" + (String(process.env.SILVER_AUTONOMOUS_RUN_ID || "").trim() || "(unset)"));
+  console.log("=== END_SILVER_CLI_AUTONOMOUS_ADAPTER_DIAGNOSTIC ===");
+
+  const selfOk = runAutonomousAdapterDiagnosticSelftest();
+  if (!selfOk) return 1;
+  if (ev.is_adapter_capture === "YES" && ev.adapter_output_valid !== "YES") return 1;
+  return 0;
+}
+
 async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
   const ms = parseInt(String(maxStepsArg || "1"), 10) || 1;
   if (ms !== 1) {
@@ -2777,6 +2976,15 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
       ].join("\n"),
       "full-auto-loop-guard",
     );
+    loopExit = 1;
+  } else if (inputPick.source === "(adapter-invalid)") {
+    recommended =
+      "STOP: refresh SILVER_CURSOR_OUTPUT.md via controlled adapter cycle; require adapter_output_valid=YES before full-auto-loop.";
+    writeGuardedNext(
+      buildAdapterInvalidFailSafeStopBody(inputPick.adapterEval),
+      "full-auto-loop-adapter-invalid",
+    );
+    console.log("SILVER_FULL_AUTO_LOOP_ADAPTER_GATE=BLOCKED");
     loopExit = 1;
   } else if (!inputPick.body || inputPick.source === "(none)") {
     recommended =
@@ -2912,6 +3120,8 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
               guardBlocked: false,
               safetyBlocked: safetyGuard === "FAIL",
               dirtyBlocked: !dirtyD.pass,
+              adapterInvalid: inputPick.source === "(adapter-invalid)",
+              adapterEval: inputPick.adapterEval,
             });
             if (!resolvedLoop.ok) {
               console.log("SILVER_NEXT_ACTION_QUALITY_GATE=REJECT full-auto-loop " + resolvedLoop.violations.join("; "));
@@ -2955,10 +3165,16 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
       ? "YES"
       : "NO";
 
+  const adapterGateLine =
+    inputPick.adapterEval && inputPick.adapterEval.is_adapter_capture === "YES"
+      ? "adapter_output_valid=" + inputPick.adapterEval.adapter_output_valid
+      : "adapter_output_valid=NA";
+
   printFullAutoLoopResult({
     main_commit: commit,
     mode,
     input_source: inputPick.source,
+    adapter_gate: adapterGateLine,
     openai_api: openaiApiLine,
     next_action_written: nextActionWritten,
     engine_changed: "NO",
@@ -3054,6 +3270,7 @@ function parseArgs(argv) {
     else if (a === "--cli-planner-cluster-preference-selftest") out.cmd = "planner-cluster-selftest";
     else if (a === "--cli-openai-next-action-utf8-selftest") out.cmd = "openai-next-action-utf8-selftest";
     else if (a === "--cli-openai-real-next-action-utf8-diagnostic") out.cmd = "openai-real-next-action-utf8-diagnostic";
+    else if (a === "--cli-autonomous-adapter-diagnostic") out.cmd = "cli-autonomous-adapter-diagnostic";
     else if (a === "--auto") out.cmd = "auto";
     else if (a === "--full-auto-loop" || a === "--loop-once") out.cmd = "full-auto-loop";
     else if (a.startsWith("--max-steps=")) out.maxSteps = a.slice("--max-steps=".length);
@@ -3087,6 +3304,8 @@ function parseArgs(argv) {
   } else if (p.cmd === "openai-real-next-action-utf8-diagnostic") {
     await cmdOpenAiRealNextActionUtf8Diagnostic();
     return;
+  } else if (p.cmd === "cli-autonomous-adapter-diagnostic") {
+    process.exit(cmdCliAutonomousAdapterDiagnostic());
   } else if (p.cmd === "auto") cmdAuto(p.maxSteps);
   else if (p.cmd === "full-auto-loop") exitCode = await cmdFullAutoLoop(argv, p.maxSteps);
   if (exitCode) process.exit(exitCode);
