@@ -19,23 +19,40 @@
    git diff SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md
    ```
 
-4. Přidej všechny změněné soubory do stagingu:
+4. Přidej změněné soubory do stagingu:
    ```powershell
    git add SILVER_CURSOR_OUTPUT.md SILVER_NEXT_ACTION.md SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md
    ```
 
-5. Zkontroluj stav stagingu:
+5. Zkontroluj stav repozitáře po přidání souborů:
    ```powershell
    git status --short
    ```
 
-6. Pokud je vše v pořádku, proveď commit:
+6. Vytvoř commit s popisem "chore(silver): audit a aktualizace souborů":
    ```powershell
    git commit -m "chore(silver): audit a aktualizace souborů"
    ```
 
-===
-Zkontrolován stav repozitáře a shrnuty změny.
-Provedeny audity změn v `SILVER_CURSOR_OUTPUT.md`, `SILVER_RUN_REPORT.md`, `SILVER_NEXT_ACTION.md` a `SILVER_PROGRESS_LOG.md`.
-Připraveny příkazy pro `git add` a případný commit.
-===
+7. Zobraz poslední commit a jeho změny:
+   ```powershell
+   git show --name-only -1
+   ```
+
+8. Zkontroluj stav repozitáře po commitu:
+   ```powershell
+   git status --short
+   ```
+
+### Scope guard
+Zajisti, že všechny kroky budou provedeny v souladu s bezpečnostními pravidly a bez regresí.
+
+### STOP podmínky
+- Raw `-MaxCycles 0` bez `-AllowInfinite`/`-AutonomousMode` je zakázáno.
+- Kontrolovaný autonomní režim vyžaduje tyto přepínače plus vestavěné limity (viz SILVER_AUTOPILOT_README.md).
+- Nikdy neobcházej bezpečnostní brány orchestrátoru.
+
+### Povinný výsledek
+```plaintext
+Zkontroluj stav repozitáře a shrň změny v `SILVER_CURSOR_OUTPUT.md`, proveď audit změn a vytvoř commit s popisem "chore(silver): audit a aktualizace souborů".
+```
