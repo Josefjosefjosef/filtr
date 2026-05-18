@@ -66,11 +66,15 @@ const SILVER_NEXT_ACTION_MOJIBAKE_RE =
   /Ă|â€|Ĺ|pĹ|Ä›|OtevĹ|ZprĂ|pĹ™ejdÄ|ĂşKOL|ÄŤ|Ĺ™|Ă­|Ăˇ|Ă©/;
 
 const SILVER_NEXT_ACTION_SILVER_WORKFLOW_RE =
-  /PRODUCT_CLUSTER|NEXT PRODUCT CLUSTER|silver-rhc3|scripts\/silver-|cluster diagnostic|harness|audit_silver|SILVER_PRODUCT_CLUSTER|top_cluster=/i;
+  /PRODUCT_CLUSTER|NEXT PRODUCT CLUSTER|silver-rhc3|cluster diagnostic|cluster-classifier|SILVER_RHC3_CLUSTER_CLASSIFIER|harness|audit_silver|SILVER_PRODUCT_CLUSTER|top_cluster=/i;
 
 /** Regenerated Silver diagnostic JSON under scripts/ only (narrow; not source or engine paths). */
 const LOOP_RUNTIME_GENERATED_DIAGNOSTIC_REPORT_RE =
   /^scripts\/silver-[a-z0-9][a-z0-9_-]*-diagnostic-report\.json$/i;
+
+/** Regenerated cluster-classifier JSON under scripts/ (runtime-only; not engine paths). */
+const LOOP_RUNTIME_GENERATED_CLUSTER_CLASSIFIER_REPORT_RE =
+  /^scripts\/silver-[a-z0-9][a-z0-9_-]*-cluster-classifier-v\d+-report\.json$/i;
 
 /**
  * @param {string} rel
@@ -97,11 +101,32 @@ function isLoopRuntimeAllowedGeneratedDiagnosticReport(rel) {
  * @param {string} rel
  * @returns {boolean}
  */
+function isLoopRuntimeAllowedGeneratedClusterClassifierReport(rel) {
+  const p = normalizeLoopRuntimeRepoRel(rel);
+  if (!p || p.includes("..")) return false;
+  return LOOP_RUNTIME_GENERATED_CLUSTER_CLASSIFIER_REPORT_RE.test(p);
+}
+
+/**
+ * @param {string} rel
+ * @returns {boolean}
+ */
+function isLoopRuntimeAllowedGeneratedScriptReport(rel) {
+  return (
+    isLoopRuntimeAllowedGeneratedDiagnosticReport(rel) ||
+    isLoopRuntimeAllowedGeneratedClusterClassifierReport(rel)
+  );
+}
+
+/**
+ * @param {string} rel
+ * @returns {boolean}
+ */
 function isLoopRuntimeAllowedDirtyPath(rel) {
   const p = normalizeLoopRuntimeRepoRel(rel);
   if (!p) return false;
   if (LOOP_RUNTIME_ALLOWED_DIRTY_PATHS.has(p)) return true;
-  return isLoopRuntimeAllowedGeneratedDiagnosticReport(p);
+  return isLoopRuntimeAllowedGeneratedScriptReport(p);
 }
 
 function runCommand(cmd, args, options) {
@@ -666,22 +691,86 @@ function printLoopCycleHeartbeat(hb) {
  * @param {string} text
  * @returns {string[]}
  */
+/**
+ * @param {string} text
+ * @returns {boolean}
+ */
+function silverNextActionHasClusterWorkflow(text) {
+  return SILVER_NEXT_ACTION_SILVER_WORKFLOW_RE.test(String(text || ""));
+}
+
+/**
+ * @param {string} text
+ * @returns {string[]}
+ */
 function silverNextActionQualityViolations(text) {
   const t = String(text || "");
   const v = [];
+  const clusterWorkflow = silverNextActionHasClusterWorkflow(t);
   if (SILVER_NEXT_ACTION_MOJIBAKE_RE.test(t)) v.push("mojibake_utf8");
-  if (/git\s+push\s+-u\s+origin/i.test(t) && !SILVER_NEXT_ACTION_SILVER_WORKFLOW_RE.test(t)) {
-    v.push("generic_git_push_upstream");
-  }
-  if (/chore\/silver-audit-repo-state/i.test(t)) v.push("generic_chore_silver_audit_push");
-  if (
-    /(?:sudo\s+apt\s+(?:update|install)|gh\s+auth\s+login)/i.test(t) &&
-    /verify-pr|git\s+push\s+-u/i.test(t) &&
-    !SILVER_NEXT_ACTION_SILVER_WORKFLOW_RE.test(t)
-  ) {
-    v.push("generic_gh_install_not_cluster_workflow");
+  if (!clusterWorkflow) {
+    if (/git\s+push\s+-u\s+origin/i.test(t)) v.push("generic_git_push_upstream");
+    if (/chore\/silver-audit-repo-state/i.test(t)) v.push("generic_chore_silver_audit_push");
+    if (/(?:--verify-pr=\d+|\bverify-pr\b)/i.test(t)) {
+      v.push("generic_verify_pr_not_cluster_workflow");
+    }
+    if (/(?:sudo\s+apt\s+(?:update|install)|gh\s+auth\s+login)/i.test(t)) {
+      v.push("generic_gh_sudo_not_cluster_workflow");
+    }
+    if (/full-auto-loop-openai/i.test(t) && /(?:sudo\s+apt|gh\s+auth|verify-pr)/i.test(t)) {
+      v.push("generic_full_auto_infra_not_cluster_workflow");
+    }
   }
   return v;
+}
+
+/**
+ * @param {{ mainCommit: string, queueReport: object|null, clusterDiag: object }} ctx
+ * @returns {string}
+ */
+function buildDeterministicClusterHandoffMarkdown(ctx) {
+  return buildHandoffMarkdown(ctx);
+}
+
+/**
+ * @returns {{ ok: boolean, text: string, violations: string[] }}
+ */
+function readSilverNextActionQuality() {
+  let text = "";
+  try {
+    if (fs.existsSync(NEXT_ACTION_FILE)) text = fs.readFileSync(NEXT_ACTION_FILE, "utf8");
+  } catch {
+    return { ok: false, text: "", violations: ["next_action_read_failed"] };
+  }
+  const violations = silverNextActionQualityViolations(text);
+  return { ok: true, text, violations };
+}
+
+/**
+ * @param {{ mainCommit: string, queueReport: object|null, clusterDiag: object }} ctx
+ * @returns {"YES"|"NO"}
+ */
+function regenerateDeterministicClusterNextAction(ctx) {
+  fs.writeFileSync(NEXT_ACTION_FILE, buildDeterministicClusterHandoffMarkdown(ctx), "utf8");
+  return "YES";
+}
+
+/**
+ * @param {{ mainCommit: string, queueReport: object|null, clusterDiag: object }} ctx
+ * @returns {{ ok: boolean, violations: string[], regenerated: "YES"|"NO" }}
+ */
+function enforceDeterministicClusterNextAction(ctx) {
+  const read0 = readSilverNextActionQuality();
+  if (!read0.ok) return { ok: false, violations: read0.violations, regenerated: "NO" };
+  if (!read0.violations.length) return { ok: true, violations: [], regenerated: "NO" };
+  regenerateDeterministicClusterNextAction(ctx);
+  const read1 = readSilverNextActionQuality();
+  if (!read1.ok) return { ok: false, violations: read1.violations, regenerated: "YES" };
+  return {
+    ok: read1.violations.length === 0,
+    violations: read1.violations.length ? read1.violations : read0.violations,
+    regenerated: "YES",
+  };
 }
 
 /**
@@ -737,6 +826,67 @@ function cursorOutputPersistenceViolations(text) {
 /**
  * @returns {boolean}
  */
+/**
+ * @returns {boolean}
+ */
+function runRuntimeArtifactSelftest() {
+  let ok = true;
+  const cases = [
+    ["scripts/silver-rhc3-cluster-classifier-v1-report.json", true],
+    ["scripts/silver-rcz2-mobile-voice-intent-fail-diagnostic-report.json", true],
+    ["scripts/silver-pr-orchestrator-v1-report.json", true],
+    ["assets/app.js", false],
+    ["scripts/silver-autopilot.cjs", false],
+  ];
+  for (const [rel, want] of cases) {
+    const got = isLoopRuntimeAllowedDirtyPath(rel);
+    if (got !== want) {
+      console.error(`RUNTIME_ARTIFACT_SELFTEST_FAIL rel=${rel} want=${want} got=${got}`);
+      ok = false;
+    }
+  }
+  if (ok) console.log("RUNTIME_ARTIFACT_SELFTEST_PASS");
+  return ok;
+}
+
+/**
+ * CAP5 proxy: regenerate classifier report and assert loop runtime guard allows it.
+ * @returns {boolean}
+ */
+function runLoopRuntimeDirtySelftest() {
+  const classifierRel = "scripts/silver-rhc3-cluster-classifier-v1-report.json";
+  const gen = runCommand(process.execPath, [
+    path.join(__dirname, "silver-rhc3-cluster-classifier-v1.cjs"),
+  ]);
+  if (!gen.ok) {
+    console.error("LOOP_RUNTIME_DIRTY_SELFTEST_FAIL classifier_exit=" + String(gen.exitCode));
+    return false;
+  }
+  const runtime = evaluateLoopRuntimeSafety();
+  if (!runtime.ok) {
+    console.error("LOOP_RUNTIME_DIRTY_SELFTEST_FAIL git_status=" + runtime.reason);
+    return false;
+  }
+  if (runtime.outsideAllowed.length > 0) {
+    console.error(
+      "LOOP_RUNTIME_DIRTY_SELFTEST_FAIL outside=" + runtime.outsideAllowed.join(","),
+    );
+    runCommand("git", ["checkout", "--", classifierRel]);
+    return false;
+  }
+  const hasClassifier = runtime.dirtyPaths.some(
+    (p) => normalizeLoopRuntimeRepoRel(p) === classifierRel,
+  );
+  if (!hasClassifier) {
+    console.error("LOOP_RUNTIME_DIRTY_SELFTEST_FAIL classifier_not_dirty");
+    runCommand("git", ["checkout", "--", classifierRel]);
+    return false;
+  }
+  runCommand("git", ["checkout", "--", classifierRel]);
+  console.log("LOOP_RUNTIME_DIRTY_SELFTEST_PASS");
+  return true;
+}
+
 function runHandoffPersistenceSelftest() {
   let ok = true;
   const badMoji = silverNextActionQualityViolations("ĂšKOL PRO CURSOR â€” git push -u origin chore/silver-audit-repo-state");
@@ -749,6 +899,17 @@ function runHandoffPersistenceSelftest() {
   );
   if (goodCluster.length) {
     console.error("HANDOFF_PERSISTENCE_SELFTEST_FAIL cluster_task_rejected " + goodCluster.join(";"));
+    ok = false;
+  }
+  const genericGh = silverNextActionQualityViolations(
+    "<!-- SILVER_NEXT_ACTION: full-auto-loop-openai -->\nsudo apt update\ngh auth login\nnode scripts/silver-autopilot.cjs --verify-pr=3794",
+  );
+  if (!genericGh.length) {
+    console.error("HANDOFF_PERSISTENCE_SELFTEST_FAIL generic_gh_verify_expected");
+    ok = false;
+  }
+  if (!isLoopRuntimeAllowedGeneratedClusterClassifierReport("scripts/silver-rhc3-cluster-classifier-v1-report.json")) {
+    console.error("HANDOFF_PERSISTENCE_SELFTEST_FAIL classifier_report_not_allowed");
     ok = false;
   }
   const inv = cursorOutputPersistenceViolations(
@@ -786,7 +947,7 @@ function restoreLoopRuntimeFiles() {
   const p = gitPorcelain();
   if (!p.ok) return;
   for (const rel of dirtyPathsFromPorcelain(p.text)) {
-    if (isLoopRuntimeAllowedGeneratedDiagnosticReport(rel)) {
+    if (isLoopRuntimeAllowedGeneratedScriptReport(rel)) {
       runCommand("git", ["checkout", "--", rel]);
     }
   }
@@ -932,7 +1093,7 @@ function buildHandoffMarkdown(ctx) {
     "1) `Set-Location C:\\\\projects\\\\filtr`",
     "2) `git status --short` — nesmí být neočekávané změny mimo výslovně povolené reporting soubory.",
     "3) `node scripts/silver-autopilot.cjs --status` — ověř safety/gate signály v konzoli a `SILVER_RUN_REPORT.md`.",
-    `4) Zaměř se na cluster **${diag.cluster}**: spusť existující diagnostické skripty pro tento typ selhání (vyber z manifestu v README autopilota / existujících \`silver-*\` harnessů; nevymýšlej nové cesty).`,
+    `4) Zaměř se na cluster **${diag.cluster}**: nejprve \`node scripts/silver-rhc3-cluster-classifier-v1.cjs\`, pak existující \`silver-*\` diagnostické skripty pro tento typ selhání (manifest v README autopilota; nevymýšlej nové cesty).`,
     "5) Pokud reporty JSON ukazují **harness-only** signály vs **true engine fail**, drž se pravidla: nejdřív důkaz z harness JSON (`true_engine_fail_count`, `must_fix_engine_count`, …).",
     "6) `npm run smoke` po jakékoli smysluplné změně skriptů (ne u čistého read-only průzkumu).",
     "7) Výstup vlož do chatu dle bloku níže.",
@@ -1051,6 +1212,12 @@ function main() {
   }
   if (argvSlice.includes("--cli-handoff-persistence-selftest")) {
     process.exit(runHandoffPersistenceSelftest() ? 0 : 1);
+  }
+  if (argvSlice.includes("--cli-runtime-artifact-selftest")) {
+    process.exit(runRuntimeArtifactSelftest() ? 0 : 1);
+  }
+  if (argvSlice.includes("--cli-loop-runtime-dirty-selftest")) {
+    process.exit(runLoopRuntimeDirtySelftest() ? 0 : 1);
   }
   const cli = parseSilverAutoCli(argvSlice);
   const startedAt = new Date().toISOString();
@@ -1281,12 +1448,37 @@ function main() {
         repOut.requested_max_cycles = String(cli.maxCyclesRaw || "").trim() || String(loopTarget);
         repOut.effective_max_cycles = String(loopTarget);
         repOut.loop_long_run_tranche_size = String(LOOP_LONG_RUN_TRANCHE_SIZE);
+        const loopHandoffCtx = {
+          mainCommit,
+          queueReport: qrep,
+          clusterDiag: pickTopClusterDiagnostic(),
+        };
+        const preLoopRead = readSilverNextActionQuality();
+        let preLoopRegenerated = "NO";
+        if (preLoopRead.ok && preLoopRead.violations.length) {
+          preLoopRegenerated = regenerateDeterministicClusterNextAction(loopHandoffCtx);
+        }
+        const preLoopNext = readSilverNextActionQuality();
+        repOut.loop_next_action_precheck = preLoopNext.ok && preLoopNext.violations.length === 0 ? "PASS" : "FAIL";
+        if (preLoopRead.violations.length) {
+          repOut.loop_next_action_violations = preLoopRead.violations.join(",");
+          repOut.loop_next_action_regenerated = preLoopRegenerated;
+        }
         let completed = 0;
         let loopStopReason = "";
         let loopStopReasonDetail = "";
         let loopSafe = "YES";
         const loopStartedMs = Date.now();
-        for (let cycle = 1; cycle <= loopTarget; cycle += 1) {
+        if (!preLoopNext.ok || preLoopNext.violations.length > 0) {
+          loopStopReason = "NEXT_ACTION_GENERIC_NOT_CLUSTER_WORKFLOW";
+          loopStopReasonDetail =
+            "PRECHECK=" +
+            (preLoopRead.violations.length ? preLoopRead.violations.join(",") : preLoopNext.violations.join(",")) +
+            ";REGENERATED=" +
+            preLoopRegenerated;
+          loopSafe = "NO";
+        }
+        for (let cycle = 1; cycle <= loopTarget && loopSafe === "YES"; cycle += 1) {
           const cyclePlan = resolveLoopCycleAdapterPlan(loopTarget, cycle);
           const cycleStartedMs = Date.now();
           const cursorCallStartedAt = new Date().toISOString();
@@ -1372,6 +1564,24 @@ function main() {
               "OUTSIDE_ALLOWED=" + runtime.outsideAllowed.join(",") + ";AT_CYCLE_" + String(cycle);
             loopSafe = "NO";
             break;
+          }
+          if (cyclePlan.cycle_mode === "FULL_AGENT_HANDOFF") {
+            const postRead = readSilverNextActionQuality();
+            repOut.loop_next_action_post_cycle =
+              postRead.ok && postRead.violations.length === 0 ? "PASS" : "FAIL";
+            if (postRead.ok && postRead.violations.length > 0) {
+              const regen = regenerateDeterministicClusterNextAction(loopHandoffCtx);
+              loopStopReason = "NEXT_ACTION_GENERIC_NOT_CLUSTER_WORKFLOW";
+              loopStopReasonDetail =
+                "POST_CYCLE=" +
+                postRead.violations.join(",") +
+                ";REGENERATED=" +
+                regen +
+                ";AT_CYCLE_" +
+                String(cycle);
+              loopSafe = "NO";
+              break;
+            }
           }
           const appCycleDiff = gitDiffPathNonEmpty("assets/app.js");
           if (!appCycleDiff.ok || appCycleDiff.nonEmpty) {

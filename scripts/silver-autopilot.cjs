@@ -184,6 +184,16 @@ function isTransientGeneratedAuditReportRel(rel) {
   return TRANSIENT_GENERATED_AUDIT_REPORT_KEYS.has(repoRelGuardKey(n));
 }
 
+/** Regenerated cluster-classifier JSON under scripts/ (runtime-only). */
+const TRANSIENT_GENERATED_CLUSTER_CLASSIFIER_REPORT_RE =
+  /^scripts\/silver-[a-z0-9][a-z0-9_-]*-cluster-classifier-v\d+-report\.json$/i;
+
+function isTransientGeneratedClusterClassifierReportRel(rel) {
+  const n = normalizeRepoRel(rel);
+  if (!n) return false;
+  return TRANSIENT_GENERATED_CLUSTER_CLASSIFIER_REPORT_RE.test(n);
+}
+
 /** Porcelain rename/copy lines may report `orig -> dest`; guards must evaluate the working-tree path (dest). */
 function porcelainPathToWorkingTree(rel) {
   let p = normalizeRepoRel(rel);
@@ -420,6 +430,7 @@ function dirtyGitUnexpectedForFullAutoLoop(changedList) {
     if (!n) continue;
     if (FULL_AUTO_LOOP_ALLOWED_DIRTY.has(repoRelGuardKey(n))) continue;
     if (isTransientGeneratedAuditReportRel(n)) continue;
+    if (isTransientGeneratedClusterClassifierReportRel(n)) continue;
     return { pass: false, firstUnexpected: n };
   }
   return { pass: true, firstUnexpected: "" };
@@ -881,23 +892,26 @@ const NEXT_ACTION_MOJIBAKE_RE =
   /Ă|â€|Ĺ|pĹ|Ä›|OtevĹ|ZprĂ|pĹ™ejdÄ|ĂşKOL|ÄŤ|Ĺ™|Ă­|Ăˇ|Ă©/;
 
 const NEXT_ACTION_SILVER_WORKFLOW_RE =
-  /PRODUCT_CLUSTER|NEXT PRODUCT CLUSTER|silver-rhc3|scripts\/silver-|cluster diagnostic|harness|audit_silver|SILVER_PRODUCT_CLUSTER|top_cluster=/i;
+  /PRODUCT_CLUSTER|NEXT PRODUCT CLUSTER|silver-rhc3|cluster diagnostic|cluster-classifier|SILVER_RHC3_CLUSTER_CLASSIFIER|harness|audit_silver|SILVER_PRODUCT_CLUSTER|top_cluster=/i;
+
+function nextActionHasSilverClusterWorkflow(inner) {
+  return NEXT_ACTION_SILVER_WORKFLOW_RE.test(String(inner || ""));
+}
 
 function nextActionGenericNonSilverViolations(inner) {
   const t = String(inner || "");
   const violations = [];
-  if (/git\s+push\s+-u\s+origin/i.test(t) && !NEXT_ACTION_SILVER_WORKFLOW_RE.test(t)) {
-    violations.push("generic_git_push_upstream");
+  if (nextActionHasSilverClusterWorkflow(t)) return violations;
+  if (/git\s+push\s+-u\s+origin/i.test(t)) violations.push("generic_git_push_upstream");
+  if (/chore\/silver-audit-repo-state/i.test(t)) violations.push("generic_chore_silver_audit_push");
+  if (/(?:--verify-pr=\d+|\bverify-pr\b)/i.test(t)) {
+    violations.push("generic_verify_pr_not_cluster_workflow");
   }
-  if (/chore\/silver-audit-repo-state/i.test(t)) {
-    violations.push("generic_chore_silver_audit_push");
+  if (/(?:sudo\s+apt\s+(?:update|install)|gh\s+auth\s+login)/i.test(t)) {
+    violations.push("generic_gh_sudo_not_cluster_workflow");
   }
-  if (
-    /(?:sudo\s+apt\s+(?:update|install)|gh\s+auth\s+login)/i.test(t) &&
-    /verify-pr|git\s+push\s+-u/i.test(t) &&
-    !NEXT_ACTION_SILVER_WORKFLOW_RE.test(t)
-  ) {
-    violations.push("generic_gh_install_not_cluster_workflow");
+  if (/full-auto-loop-openai/i.test(t) && /(?:sudo\s+apt|gh\s+auth|verify-pr)/i.test(t)) {
+    violations.push("generic_full_auto_infra_not_cluster_workflow");
   }
   return violations;
 }
