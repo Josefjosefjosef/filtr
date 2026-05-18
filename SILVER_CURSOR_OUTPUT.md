@@ -1,7 +1,7 @@
 # silver-cursor-agent-adapter
-autonomous_run_id=d440f52cb36a4e2a9116fa7440d334c1
-autonomous_run_start_utc=2026-05-18T00:40:12.1791898Z
-autonomous_cycle=49
+autonomous_run_id=de105f7f334b4445bf2ffc9abaab26fa
+autonomous_run_start_utc=2026-05-18T03:31:13.7456429Z
+autonomous_cycle=1
 adapter_output_state=INVALIDATED_AWAITING_CYCLE
 process_start_utc=
 task_digest=
@@ -12,11 +12,11 @@ elapsed_ms=
 
 ## Cursor audit snapshot (infoUzel.cz / Silver)
 
-- **Větev**: `chore/silver-audit-cycle-7`
-- **Git stav před závěrem auditu**: necommitované lokální změny ve čtyřech souborech `SILVER_CURSOR_OUTPUT.md`, `SILVER_NEXT_ACTION.md`, `SILVER_RUN_REPORT.md`, `SILVER_PROGRESS_LOG.md` (staging/commit probíhá v kroků 5–6).
-- **Diff stat na čtyřech souborech (proti `HEAD`)**: doplněný audit checklist v `SILVER_NEXT_ACTION.md`, rozšířený blok cyklu 48 v `SILVER_PROGRESS_LOG.md`, úpravy metadat autopilota v tomto výstupu a v `SILVER_RUN_REPORT.md`, celkově řádově ~55 řádků (`git diff --stat` na zmíněných cestách).
-- **`MaxCycles` v `SILVER*.md`**: v kořeni repozitáře se `MaxCycles` objevuje mimo jiné v `SILVER_NEXT_ACTION.md` (text úlohy vč. příkazu `grep`) a v dokumentaci `SILVER_AUTOPILOT_README.md` / `SILVER_PR_ORCHESTRATOR_README.md`; pro úplný `grep -rn … .` mohou vizitovat i kopie pod `.silver-runtime/`.
-- **Run report**: v `SILVER_RUN_REPORT.md` je `status=PASS` a všechny položky v `safety_counters` mají hodnoty `*_count=0` (stav z posledního `--status`/zápisu).
-- **Pozor na `git show --name-only -1`**: ukáže jen seznam souborů v **posledním** commitu; čísla `safety_counters` a `status=PASS` je potřeba číst přímo v `SILVER_RUN_REPORT.md`.
+- **Větev**: `chore/silver-audit-repo-state` (založena z `main` pro auditní commit).
+- **Změny oproti `HEAD` před commitem**: pouze `SILVER_CURSOR_OUTPUT.md` a `SILVER_RUN_REPORT.md`; `SILVER_NEXT_ACTION.md` a `SILVER_PROGRESS_LOG.md` beze změny.
+- **`git diff --stat` na čtyřech whitelist souborech**: diff jen ve dvou souborech (viz výše), celkem řádově +8 / −18 řádků v tomto diffu.
+- **`MaxCycles` v `SILVER*.md`**: v kořeni repa výskyty v `SILVER_NEXT_ACTION.md` (návod vč. řádku s příkazem `grep`), `SILVER_AUTOPILOT_README.md`, `SILVER_PR_ORCHESTRATOR_README.md`; další řádky pod `.silver-runtime/` (timeout archivy).
+- **`SILVER_RUN_REPORT.md`**: `status=PASS`, `safety_counters=dangerous_write_count=0;false_write_count=0;query_created_write_count=0;write_when_negated_count=0`, `commit=53132070b9fdc2c8489287684ea38090801ba8b3` (aktuální `HEAD` v době auditu).
+- **`git show --name-only -1`**: uvádí také `scripts/silver-autopilot-loop.ps1`; ověření `PASS` a číselných counterů je vždy přímo v `SILVER_RUN_REPORT.md`.
 
 # stderr
