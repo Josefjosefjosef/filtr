@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-19T09:41:09.137636Z",
+  "ingestedAt": "2026-05-19T10:20:19.865295Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Smrtící ebola se šíří mimořádně rychle. Světová zdravotnická organizace svolala krizový výbor",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/ebola-se-siri-mimoradne-rychle-svetova-zdravotnicka-organizace/",
+      "dt": "2026-05-19T09:42:57Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "ebola",
+        "krizový",
+        "mimořádně",
+        "organizace",
+        "rychle",
+        "smrtící",
+        "svolala",
+        "světová",
+        "výbor",
+        "zdravotnická",
+        "šíří"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -249,33 +277,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Cena za přínos ošetřovatelství má dvě vítězky. Převzaly ji profesorka z Ostravy a sestra z Prahy",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/cena-osetrovatelstvi-dve-vitezky-ostrava-praha/",
-      "dt": "2026-05-18T14:22:34Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "cena",
-        "dvě",
-        "ostravy",
-        "ošetřovatelství",
-        "prahy",
-        "profesorka",
-        "převzaly",
-        "přínos",
-        "sestra",
-        "vítězky"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -286,7 +287,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 82786,
+      "bytes": 82578,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -323,7 +324,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-19T09:06:35Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T09:42:57Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -338,6 +339,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Smrtící ebola se šíří mimořádně rychle. Světová zdravotnická organizace svolala krizový výbor",
+            "publishedAt": "2026-05-19T09:42:57Z"
+          },
           {
             "title": "Protidrogový koordinátor Bém končí. Vláda našla novou šéfku pro boj s drogami i duševní zdraví",
             "publishedAt": "2026-05-19T09:06:35Z"
@@ -365,10 +370,6 @@
           {
             "title": "Ministerstvo protidrogovou politiku nezvládne. Bémův poradce kvůli rozhodnutí vlády končí",
             "publishedAt": "2026-05-18T16:56:13Z"
-          },
-          {
-            "title": "Slovenský megaprojekt v troskách. Rozestavěnou nemocnici za miliardy jde zachraňovat česká firma",
-            "publishedAt": "2026-05-18T15:45:02Z"
           }
         ]
       }

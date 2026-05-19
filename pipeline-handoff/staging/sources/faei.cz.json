@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-19T09:41:09.137636Z",
+  "ingestedAt": "2026-05-19T10:20:19.865295Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "V ordinacích přibývá zmatených seniorů. Neví, jaké léky berou a proč",
+      "url": "https://profitonline.cz/v-ordinacich-pribyva-zmatenych-senioru-nevi-jake-leky-berou-a-proc/",
+      "dt": "2026-05-19T10:00:01Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "berou",
+        "jaké",
+        "léky",
+        "neví",
+        "ordinacích",
+        "proč",
+        "přibývá",
+        "seniorů",
+        "zmatených"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -263,28 +289,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Trump letos čile obchodoval s akciemi",
-      "url": "https://profitonline.cz/trump-letos-cile-obchodoval-s-akciemi/",
-      "dt": "2026-05-17T16:20:46Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "akciemi",
-        "letos",
-        "obchodoval",
-        "trump",
-        "čile"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -295,7 +299,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18543,
+      "bytes": 18675,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -332,10 +336,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-19T08:00:55Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T10:00:01Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 12
+          "zdravi": 1,
+          "finance": 11
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -347,6 +352,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V ordinacích přibývá zmatených seniorů. Neví, jaké léky berou a proč",
+            "publishedAt": "2026-05-19T10:00:01Z"
+          },
           {
             "title": "Banga vydává nový videoklip. Kombinuje virtuální realitu se skutečností",
             "publishedAt": "2026-05-19T08:00:55Z"
@@ -374,10 +383,6 @@
           {
             "title": "Svět zachvátila obava z velké inflace",
             "publishedAt": "2026-05-18T11:00:21Z"
-          },
-          {
-            "title": "Sociální sítě už škodí v rodinách stejně jako alkohol",
-            "publishedAt": "2026-05-18T10:00:33Z"
           }
         ]
       }

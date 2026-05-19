@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-19T09:41:09.137636Z",
+  "ingestedAt": "2026-05-19T10:20:19.865295Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Mikulášek vytáhl na Polláka intimní fotky. Ten mluvil o zneužití identity a šel na policii",
+      "url": "https://www.mmamag.cz/pollak-sel-kvuli-fotkam-na-policii/",
+      "dt": "2026-05-19T09:45:04Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "fotky",
+        "identity",
+        "intimní",
+        "mikulášek",
+        "mluvil",
+        "policii",
+        "polláka",
+        "ten",
+        "vytáhl",
+        "zneužití",
+        "šel"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1094,34 +1122,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Odhaleny kulisy McGregorova návratu. Karta turnaje UFC 329 je nabita hvězdnými jmény",
-      "url": "https://www.mmamag.cz/ufc-329-ma-kompletni-kartu-mcgregor-holloway-i-pimblett/",
-      "dt": "2026-05-17T20:32:08Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "329",
-        "hvězdnými",
-        "jmény",
-        "karta",
-        "kulisy",
-        "mcgregorova",
-        "nabita",
-        "návratu",
-        "odhaleny",
-        "turnaje",
-        "ufc"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1132,7 +1132,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 86702,
+      "bytes": 86685,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1169,7 +1169,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-19T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T09:45:04Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1184,6 +1184,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mikulášek vytáhl na Polláka intimní fotky. Ten mluvil o zneužití identity a šel na policii",
+            "publishedAt": "2026-05-19T09:45:04Z"
+          },
           {
             "title": "UFC zažilo historicky nejslabší sledovanost. Ve stejný večer Rousey na Netflixu válcovala celou Ameriku",
             "publishedAt": "2026-05-19T09:00:00Z"
@@ -1211,10 +1215,6 @@
           {
             "title": "Známý bojovník Oktagonu boural. Pár dní po narození druhého dítěte ho čeká operace",
             "publishedAt": "2026-05-19T07:54:51Z"
-          },
-          {
-            "title": "Jon Jones chce pryč z UFC. Láká ho box a zápas s mužem, kterého Dana White nenávidí",
-            "publishedAt": "2026-05-19T07:30:00Z"
           }
         ]
       }
