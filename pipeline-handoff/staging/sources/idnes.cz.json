@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-19T15:45:48.780353Z",
+  "ingestedAt": "2026-05-19T16:29:39.299078Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V pražských Záběhlicích se srazil elektrobus s tramvají, mnoho zraněných",
+      "url": "https://www.idnes.cz/praha/zpravy/v-zabehlicich-se-srazil-autobus-s-tramvaji-zachranari-aktivovali-traumaplan.A260519_105248_praha-zpravy_bur",
+      "dt": "2026-05-19T16:08:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "elektrobus",
+        "mnoho",
+        "pražských",
+        "srazil",
+        "tramvají",
+        "zraněných",
+        "záběhlicích"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -669,30 +693,6 @@
         "oceňuje",
         "remundová",
         "sabina"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V pražských Záběhlicích se srazil elektrobus s tramvají, mnoho zraněných",
-      "url": "https://www.idnes.cz/praha/zpravy/v-zabehlicich-se-srazil-autobus-s-tramvaji-zachranari-aktivovali-traumaplan.A260519_105248_praha-zpravy_bur",
-      "dt": "2026-05-19T11:47:10Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "elektrobus",
-        "mnoho",
-        "pražských",
-        "srazil",
-        "tramvají",
-        "zraněných",
-        "záběhlicích"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1567,7 +1567,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48991,
+      "bytes": 49032,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1604,7 +1604,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T15:37:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T16:08:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1621,6 +1621,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V pražských Záběhlicích se srazil elektrobus s tramvají, mnoho zraněných",
+            "publishedAt": "2026-05-19T16:08:00Z"
+          },
           {
             "title": "Motorkářka zemřela při srážce s kamionem. Následky omezily i D55",
             "publishedAt": "2026-05-19T15:37:00Z"
@@ -1648,10 +1652,6 @@
           {
             "title": "Vojenské opravny u Nového Jičína mohou vyrábět obrněné vozy Bushmastery",
             "publishedAt": "2026-05-19T14:40:00Z"
-          },
-          {
-            "title": "Izrael na moři zadržel i sestru irské prezidentky. Nepřijatelné, zuří premiér",
-            "publishedAt": "2026-05-19T14:39:00Z"
           }
         ]
       }
