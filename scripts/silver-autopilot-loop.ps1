@@ -1683,7 +1683,7 @@ function Test-Cap50GitCleanExceptHandoffArtifacts {
   foreach ($rel in (Get-GitStatusShortPaths -Cwd $Cwd)) {
     $n = ($rel -replace '\\', '/').Trim()
     if (-not $n) { continue }
-    if ($n -eq 'SILVER_NEXT_ACTION.md' -or $n -eq 'SILVER_RUN_REPORT.md') { continue }
+    if ($n -eq 'SILVER_NEXT_ACTION.md' -or $n -eq 'SILVER_RUN_REPORT.md' -or $n -eq 'SILVER_PROGRESS_LOG.md') { continue }
     if (Test-SilverPathIsCap50RuntimeRestorable -RelPath $n) { continue }
     return $false
   }
@@ -1941,6 +1941,7 @@ function Invoke-SilverCap50PreflightCleanupSelfTest {
   }
   Test-OneCase -Name "dirty_SILVER_RUN_REPORT" -RelPath "SILVER_RUN_REPORT.md" -ExpectPass $true
   Test-OneCase -Name "dirty_SILVER_NEXT_ACTION" -RelPath "SILVER_NEXT_ACTION.md" -ExpectPass $true
+  Test-OneCase -Name "dirty_SILVER_PROGRESS_LOG" -RelPath "SILVER_PROGRESS_LOG.md" -ExpectPass $true
   Test-OneCase -Name "dirty_cluster_classifier_json" -RelPath "scripts/silver-rhc3-cluster-classifier-v1-report.json" -ExpectPass $true
   $blockRel = "SILVER_CAP50_PREFLIGHT_SELFTEST_BLOCK.txt"
   $blockFull = Join-Path $RepoRoot $blockRel
@@ -2181,7 +2182,7 @@ function Invoke-SilverCap50EvaluateCyclePostcondition {
   $cleanupDone = "NO"
   $gitCleanAfter = if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" }
   if (-not $DryRunOnly) {
-    $cleanupRes = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $Cycle -Reason "cap50_cycle_postcondition" -ExcludeRestoreRelPaths @("SILVER_NEXT_ACTION.md", "SILVER_RUN_REPORT.md")
+    $cleanupRes = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $Cycle -Reason "cap50_cycle_postcondition" -ExcludeRestoreRelPaths @("SILVER_NEXT_ACTION.md", "SILVER_RUN_REPORT.md", "SILVER_PROGRESS_LOG.md") -AllowHandoffDirty
     $cleanupDone = if ($cleanupRes.PASS_FAIL -eq "PASS") { "YES" } else { "NO" }
     $gitCleanAfter = [string]$cleanupRes.git_clean_after
     if ([string]$cleanupRes.blocked_dirty_files) {
@@ -2190,6 +2191,7 @@ function Invoke-SilverCap50EvaluateCyclePostcondition {
   }
   $nextMode = Get-SilverCap50NextActionMode -NextActionText $nextAfter -RecommendedNextTask $recommended -ControlledInfinite $ControlledInfinite
   $safetyBlocked = Test-SafetyCountersBlocked -SafetyCountersLine $SafetyCountersLine
+  $gitHandoffOk = ($gitCleanAfter -eq "YES") -or (Test-Cap50GitCleanExceptHandoffArtifacts -Cwd $RepoRoot)
   $safe = "NO"
   $passFail = "FAIL"
   $reason = ""
@@ -2205,10 +2207,8 @@ function Invoke-SilverCap50EvaluateCyclePostcondition {
   elseif ($safetyBlocked) {
     $reason = "safety_counters_nonzero"
   }
-  elseif ($gitCleanAfter -ne "YES") {
-    if (-not (Test-Cap50GitCleanExceptHandoffArtifacts -Cwd $RepoRoot)) {
-      $reason = "git_not_clean_after_runtime_cleanup"
-    }
+  elseif (-not $gitHandoffOk) {
+    $reason = "git_not_clean_after_runtime_cleanup"
   }
   elseif ($ControlledInfinite -and $nextMode -eq "MANUAL_REQUIRED") {
     $reason = "manual_next_action_required"
@@ -2366,6 +2366,27 @@ function Invoke-SilverCap50PostconditionSelfTest {
   }
   if (-not (Invoke-SilverCap50PreflightCleanupSelfTest -RepoRoot $RepoRoot)) {
     [void]$failures.Add("preflight_cleanup_selftest")
+  }
+  foreach ($synthetic in @(
+      @("SILVER_NEXT_ACTION.md", "SILVER_RUN_REPORT.md", "SILVER_PROGRESS_LOG.md"),
+      @("SILVER_PROGRESS_LOG.md"),
+      @("SILVER_NEXT_ACTION.md", "SILVER_RUN_REPORT.md", "SILVER_PROGRESS_LOG.md", "SILVER_CURSOR_OUTPUT.md")
+    )) {
+    $handoffSyntheticOk = $true
+    foreach ($n in $synthetic) {
+      $norm = ($n -replace '\\', '/').Trim()
+      if (-not $norm) { continue }
+      if ($norm -eq 'SILVER_NEXT_ACTION.md' -or $norm -eq 'SILVER_RUN_REPORT.md' -or $norm -eq 'SILVER_PROGRESS_LOG.md') { continue }
+      if (Test-SilverPathIsCap50RuntimeRestorable -RelPath $norm) { continue }
+      $handoffSyntheticOk = $false
+      break
+    }
+    if (-not $handoffSyntheticOk) {
+      [void]$failures.Add("handoff_allowlist_synthetic:" + ($synthetic -join ","))
+    }
+  }
+  if (Test-SilverPathIsCap50RuntimeRestorable -RelPath "SILVER_CAP50_PREFLIGHT_SELFTEST_BLOCK.txt") {
+    [void]$failures.Add("handoff_allowlist_must_not_broaden_unknown_md")
   }
   if ($failures.Count -gt 0) {
     Write-Host "SILVER_CAP50_POSTCONDITION_SELFTEST=FAIL" -ForegroundColor Red
@@ -3196,7 +3217,7 @@ while ($true) {
     $ae = $auto.ExitCode
     $script:LastAutopilotExit = [string]$ae
     $autoExitStr = [string]$ae
-    $autopilotHandoffPreserve = @("SILVER_NEXT_ACTION.md", "SILVER_RUN_REPORT.md")
+    $autopilotHandoffPreserve = @("SILVER_NEXT_ACTION.md", "SILVER_RUN_REPORT.md", "SILVER_PROGRESS_LOG.md")
     $nextAfterAuto = Read-TextFileOrEmpty -Path $NextActionPath
     if (-not (Test-SilverNextActionOutputQuality -Text $nextAfterAuto)) {
       try {
@@ -3450,6 +3471,7 @@ if (-not $DryRun) {
   if ($finalCycle -lt 1) { $finalCycle = 1 }
   $null = Stop-LoopOnHandoffPersistenceGuard -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $finalCycle -MainCommit $mainCommit -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep
   if ($controlledInfinite) {
+    $null = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $finalCycle -Reason "loop_exit_final_runtime_restore"
     $reportEnd = Read-TextFileOrEmpty -Path $RunReportPath
     $safetyEnd = Get-RunReportLineValue -ReportText $reportEnd -Key "safety_counters"
     $finalOk = Invoke-SilverCap50FinalPostcondition -RepoRoot $RepoRoot -CyclesCompleted $script:AutonomousCyclesCompleted -StopReason "loop_exit" -NextActionPath $NextActionPath -CursorOutputPath $CursorOutputPath -SafetyCountersLine $safetyEnd
