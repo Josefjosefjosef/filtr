@@ -69,6 +69,8 @@ $fixedZm = Repair-SilverUtf8HandoffText -Text $badZmLiteral -Repaired ([ref]$rep
 Assert-True -Cond ((-not (Test-SilverUtf8MojibakeMarkers -Text $fixedZm)) -and ($fixedZm.IndexOf("zm" + [char]0x011B + "nil", [System.StringComparison]::Ordinal) -ge 0)) -Label "repair_zmenil_restores_czech"
 $hitClean = Test-SilverCap50Utf8HardFailAfterRepair -Text $fixed -SurfaceLabel "repaired"
 Assert-True -Cond ($hitClean.detected -eq "NO") -Label "hard_fail_clean_pass"
+$goodWithZadny = "probe " + [char]0x017D + [char]0x00E1 + "dn" + [char]0x00FD + " commit"
+Assert-True -Cond (-not (Test-SilverUtf8MojibakeMarkers -Text $goodWithZadny)) -Label "valid_zadny_not_mojibake_false_positive"
 
 $tempDir = Join-Path $env:TEMP ("silver-wsl-utf8-handoff-selftest-" + [guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Path $tempDir -Force | Out-Null

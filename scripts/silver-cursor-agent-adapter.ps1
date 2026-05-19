@@ -42,6 +42,7 @@ param(
   [switch]$DryRun,
   [int]$TimeoutSeconds = 600,
   [switch]$Probe,
+  [switch]$Utf8CaptureProbe,
   [switch]$WslUbuntuAgent,
   [string]$WslDistro = "Ubuntu",
   [string]$WslAgentLinuxPath = "/home/spedk/.local/bin/agent",
@@ -86,7 +87,7 @@ $script:SilverEffectiveTimeoutSeconds = $TimeoutSeconds
 
 function Read-TextFileUtf8NoBom {
   param([string]$Path)
-  return Read-TextFileUtf8Handoff -Path $Path
+  return Read-TextFileUtf8Raw -Path $Path
 }
 
 function Get-TaskTextLineCount {
@@ -199,6 +200,7 @@ function Invoke-WslAgentCapture {
   $psi.WorkingDirectory = $WorkDirWindows
   $psi.RedirectStandardOutput = $true
   $psi.RedirectStandardError = $true
+  Set-SilverProcessStartInfoUtf8Streams -Psi $psi
   $useStdin = (-not [string]::IsNullOrEmpty($StdinPayload))
   if ($useStdin) {
     $psi.RedirectStandardInput = $true
@@ -314,6 +316,7 @@ function Invoke-WslAgentCaptureStaged {
   $psi.WorkingDirectory = $WorkDirWindows
   $psi.RedirectStandardOutput = $true
   $psi.RedirectStandardError = $true
+  Set-SilverProcessStartInfoUtf8Streams -Psi $psi
   $useStdin = (-not [string]::IsNullOrEmpty($StdinPayload))
   if ($useStdin) {
     $psi.RedirectStandardInput = $true
@@ -782,13 +785,13 @@ function Invoke-CursorAgentHeadlessCapture {
       try { $p.Kill() } catch { }
       $timedOut = $true
       $code = 124
-      if (Test-Path -LiteralPath $outF) { $so = [System.IO.File]::ReadAllText($outF) }
-      if (Test-Path -LiteralPath $errF) { $se = [System.IO.File]::ReadAllText($errF) }
+      if (Test-Path -LiteralPath $outF) { $so = Read-CmdRedirectCaptureFileUtf8 -Path $outF }
+      if (Test-Path -LiteralPath $errF) { $se = Read-CmdRedirectCaptureFileUtf8 -Path $errF }
       return @{ exit = $code; timedOut = $timedOut; stdout = $so; stderr = $se; inner_cmd = $inner }
     }
     $code = [int]$p.ExitCode
-    if (Test-Path -LiteralPath $outF) { $so = [System.IO.File]::ReadAllText($outF) }
-    if (Test-Path -LiteralPath $errF) { $se = [System.IO.File]::ReadAllText($errF) }
+    if (Test-Path -LiteralPath $outF) { $so = Read-CmdRedirectCaptureFileUtf8 -Path $outF }
+    if (Test-Path -LiteralPath $errF) { $se = Read-CmdRedirectCaptureFileUtf8 -Path $errF }
     return @{ exit = $code; timedOut = $timedOut; stdout = $so; stderr = $se; inner_cmd = $inner }
   }
   catch {
@@ -970,10 +973,10 @@ if ($Probe -and -not [string]::IsNullOrWhiteSpace($TaskFile)) {
   }
 }
 
-if (-not $Probe) {
+if (-not $Probe -and -not $Utf8CaptureProbe) {
   if ([string]::IsNullOrWhiteSpace($TaskFile)) {
     if (-not ($WslUbuntuAgent -and $DryRun)) {
-      Write-Error "TaskFile is required unless -Probe is set."
+      Write-Error "TaskFile is required unless -Probe or -Utf8CaptureProbe is set."
       exit 6
     }
   }
@@ -996,12 +999,12 @@ if ($StagedWatchdogMaxExtensions -lt 0) {
   exit 4
 }
 
-$productTaskRun = (-not $Probe) -and (-not [string]::IsNullOrWhiteSpace($TaskFile))
+$productTaskRun = (-not $Probe) -and (-not $Utf8CaptureProbe) -and (-not [string]::IsNullOrWhiteSpace($TaskFile))
 $autoMetaForTimeout = Get-SilverAutonomousRunMetaFromEnv
 if ($autoMetaForTimeout.run_id.Trim().Length -gt 0) {
   $productTaskRun = $true
 }
-$timeoutResolve = Resolve-SilverAutonomousAdapterTimeoutSeconds -RequestedTimeoutSeconds $TimeoutSeconds -Probe:$Probe -ProductTaskRun:$productTaskRun
+$timeoutResolve = Resolve-SilverAutonomousAdapterTimeoutSeconds -RequestedTimeoutSeconds $TimeoutSeconds -Probe:($Probe -or $Utf8CaptureProbe) -ProductTaskRun:$productTaskRun
 if ($timeoutResolve.TimeoutAdjusted -eq "YES") {
   Write-Host ("silver-cursor-agent-adapter: timeout_adjusted=YES effective_timeout_seconds=" + [string]$timeoutResolve.EffectiveTimeoutSeconds + " reason=" + [string]$timeoutResolve.TimeoutAdjustReason)
 }
@@ -1027,6 +1030,56 @@ $watchdogExtensionsUsed = 0
 $watchdogProgressEver = $false
 $watchdogLastProgressUtc = "UNAVAILABLE"
 $watchdogStopReason = "wall_clock_only"
+
+if ($Utf8CaptureProbe) {
+  if (-not $WslUbuntuAgent) {
+    Write-Error "-Utf8CaptureProbe requires -WslUbuntuAgent (same WSL capture path as production)."
+    exit 6
+  }
+  $probePhrases = Get-SilverUtf8CaptureProbeRequiredPhrases
+  $probeTaskBody = ($probePhrases -join "`n") + "`n"
+  $probeTaskWindows = Join-Path $env:TEMP ("silver-utf8-capture-probe-task-" + [guid]::NewGuid().ToString() + ".md")
+  if ([System.IO.Path]::IsPathRooted($OutputFile)) {
+    $probeOutAbs = [System.IO.Path]::GetFullPath($OutputFile)
+  }
+  else {
+    $probeOutAbs = Resolve-RepoPath -P $OutputFile
+  }
+  [System.IO.File]::WriteAllText($probeTaskWindows, $probeTaskBody, $SilverUtf8NoBom)
+  $textProbe = Read-TextFileUtf8Raw -Path $probeTaskWindows
+  $textProbeRepaired = "NO"
+  $textProbe = Repair-SilverUtf8HandoffText -Text $textProbe -Repaired ([ref]$textProbeRepaired)
+  $promptPreviewProbe = Get-PromptPreviewLimited -Text $textProbe -MaxLen 300
+  $wslTaskProbe = Convert-WindowsPathToWslPath -WindowsPath $probeTaskWindows
+  $tqProbe = '"' + ($wslTaskProbe.Replace('"', '\"')) + '"'
+  $bashProbe = Add-SilverWslBashLocaleToScript -BashScript ('cat ' + $tqProbe)
+  $rProbe = Invoke-WslAgentCapture -Distro $WslDistro -LinuxArgvAfterDoubleDash @("/bin/bash", "-c", $bashProbe) -WorkDirWindows $RepoRoot -TimeoutMs 60000
+  $soProbe = $rProbe.stdout
+  if ($null -eq $soProbe) { $soProbe = "" }
+  $seProbe = $rProbe.stderr
+  if ($null -eq $seProbe) { $seProbe = "" }
+  $stdoutProbePass = if (Test-SilverRealUtf8CaptureProbeText -Text $soProbe) { "PASS" } else { "FAIL" }
+  $previewProbePass = if (Test-SilverPromptPreviewUtf8ProbeText -Text $promptPreviewProbe) { "PASS" } else { "FAIL" }
+  $metaProbe = [ordered]@{
+    timestamp_local = $tsLocal
+    adapter_mode = "utf8_capture_probe"
+    probe_task_file = $probeTaskWindows
+    prompt_preview = $promptPreviewProbe
+    real_stdout_utf8_capture_probe = $stdoutProbePass
+    prompt_preview_utf8_probe = $previewProbePass
+    utf8_mojibake_detected = $(if ((Test-SilverRealUtf8CaptureProbeText -Text $soProbe) -and (Test-SilverPromptPreviewUtf8ProbeText -Text $promptPreviewProbe)) { "NO" } else { "YES" })
+    exit_code = [string]$rProbe.exit
+  }
+  Write-AdapterOutputFile -Path $probeOutAbs -Meta $metaProbe -Stdout $soProbe -Stderr $seProbe -ExtraBlock "SILVER_UTF8_CAPTURE_PROBE"
+  try { Remove-Item -LiteralPath $probeTaskWindows -Force -ErrorAction SilentlyContinue } catch { }
+  Write-Host "=== SILVER_REAL_STDOUT_UTF8_CAPTURE_PROBE ==="
+  Write-Host ("real_stdout_utf8_capture_probe=" + $stdoutProbePass)
+  Write-Host ("prompt_preview_utf8_probe=" + $previewProbePass)
+  Write-Host ("PASS_FAIL=" + $(if (($stdoutProbePass -eq "PASS") -and ($previewProbePass -eq "PASS")) { "PASS" } else { "FAIL" }))
+  Write-Host "=== END_SILVER_REAL_STDOUT_UTF8_CAPTURE_PROBE ==="
+  if (($stdoutProbePass -eq "PASS") -and ($previewProbePass -eq "PASS")) { exit 0 }
+  exit 1
+}
 
 if ($WslUbuntuAgent) {
   $wslAdapterReadyDisk = Read-WslAdapterReadyFromDisk

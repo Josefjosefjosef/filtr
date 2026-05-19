@@ -250,6 +250,23 @@ function Invoke-SilverCap50Utf8SurfacesHardGate {
   }
 }
 
+function Test-SilverCap50OrchestrationScriptsOnlyBlockedDirty {
+  param([string]$BlockedDirtyFiles)
+  if ([string]::IsNullOrWhiteSpace($BlockedDirtyFiles)) { return $false }
+  $any = $false
+  foreach ($raw in $BlockedDirtyFiles -split ';') {
+    $part = $raw.Trim()
+    if (-not $part) { continue }
+    $any = $true
+    $p = $part
+    $paren = $p.LastIndexOf('(')
+    if ($paren -gt 0) { $p = $p.Substring(0, $paren).Trim() }
+    $p = ($p -replace '\\', '/')
+    if ($p -notmatch '^scripts/silver-') { return $false }
+  }
+  return $any
+}
+
 function Get-SilverCap50RuntimeEphemeralRelPaths {
   return @(
     "SILVER_CURSOR_OUTPUT.md",
@@ -272,6 +289,61 @@ function Get-SilverCap50RuntimeGeneratedReportRelPaths {
     }
   }
   return $out.ToArray()
+}
+
+function Archive-SilverCap50Utf8FailureRuntimeArtifacts {
+  param(
+    [string]$RepoRoot,
+    [int]$Cycle,
+    [string]$Reason,
+    [string]$CursorExit = ""
+  )
+  $archived = "NO"
+  $relOut = ""
+  $fullDir = ""
+  try {
+    $stamp = (Get-Date).ToUniversalTime().ToString("yyyyMMdd-HHmmss") + "Z-c" + [string]$Cycle
+    $destDir = Join-Path (Join-Path (Join-Path $RepoRoot ".silver-runtime") "failures") $stamp
+    New-Item -ItemType Directory -Force -Path $destDir | Out-Null
+    $copied = New-Object System.Collections.Generic.List[string]
+    $missing = New-Object System.Collections.Generic.List[string]
+    $names = New-Object System.Collections.Generic.List[string]
+    foreach ($n in (Get-SilverCap50RuntimeEphemeralRelPaths)) { [void]$names.Add($n) }
+    foreach ($n in (Get-SilverCap50RuntimeGeneratedReportRelPaths -RepoRoot $RepoRoot)) { [void]$names.Add($n) }
+    foreach ($name in $names) {
+      $src = Join-Path $RepoRoot $name
+      if (Test-Path -LiteralPath $src) {
+        Copy-Item -LiteralPath $src -Destination (Join-Path $destDir ([System.IO.Path]::GetFileName($name))) -Force
+        [void]$copied.Add($name)
+      }
+      else {
+        [void]$missing.Add($name)
+      }
+    }
+    $head = ""
+    try { $head = (& git -C $RepoRoot rev-parse HEAD 2>$null).Trim() } catch { $head = "" }
+    $relSlash = ".silver-runtime/failures/" + $stamp
+    $manifest = [ordered]@{
+      utc_timestamp = $stamp
+      cycle = $Cycle
+      main_commit_head = $head
+      reason = $Reason
+      cursor_exit = $CursorExit
+      copied_files = $copied.ToArray()
+      missing_files = $missing.ToArray()
+      archive_path = $relSlash
+    }
+    [System.IO.File]::WriteAllText((Join-Path $destDir "manifest.json"), ($manifest | ConvertTo-Json -Depth 8), [System.Text.UTF8Encoding]::new($false))
+    $archived = "YES"
+    $relOut = $relSlash
+    $fullDir = $destDir
+  }
+  catch {
+    $archived = "NO"
+    $relOut = ""
+    $fullDir = ""
+  }
+  return @{ RelativePath = $relOut; Archived = $archived; FullPath = $fullDir }
 }
 
 function Archive-SilverCap50CycleRuntimeArtifacts {
@@ -380,6 +452,27 @@ function Invoke-SilverCap50HardPreflight {
     if ($LASTEXITCODE -eq 0) { $cleanupProbe = "PASS" } else { [void]$failures.Add("runtime_cleanup_probe") }
     $ErrorActionPreference = $prevEa3
   }
+  $realStdoutUtf8Capture = "FAIL"
+  $promptPreviewUtf8 = "FAIL"
+  $realCaptureScript = Join-Path $RepoRoot "scripts\silver-real-stdout-utf8-capture-probe.ps1"
+  if (Test-Path -LiteralPath $realCaptureScript) {
+    $prevEaCap = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    $capOut = & powershell -NoProfile -ExecutionPolicy Bypass -File $realCaptureScript 2>&1 | Out-String
+    if ($LASTEXITCODE -eq 0) { $realStdoutUtf8Capture = "PASS" } else { [void]$failures.Add("real_stdout_utf8_capture_probe") }
+    if ($capOut -match 'prompt_preview_utf8_probe=PASS') { $promptPreviewUtf8 = "PASS" }
+    elseif ($capOut -match 'prompt_preview_utf8_probe=FAIL') {
+      $promptPreviewUtf8 = "FAIL"
+      if ($realStdoutUtf8Capture -eq "PASS") { [void]$failures.Add("prompt_preview_utf8_probe") }
+    }
+    else {
+      [void]$failures.Add("prompt_preview_utf8_probe")
+    }
+    $ErrorActionPreference = $prevEaCap
+  }
+  else {
+    [void]$failures.Add("real_stdout_utf8_capture_probe_script_missing")
+  }
   $threeCycle = "SKIP"
   if (-not $SkipThreeCycleProbe) {
     $loopScript3 = Join-Path $RepoRoot "scripts\silver-autopilot-loop.ps1"
@@ -403,6 +496,8 @@ function Invoke-SilverCap50HardPreflight {
     cursor_command_present              = $cursorPresent
     effective_timeout_seconds           = $effectiveTimeout
     utf8_real_path_probe                = $utf8Real
+    real_stdout_utf8_capture_probe      = $realStdoutUtf8Capture
+    prompt_preview_utf8_probe           = $promptPreviewUtf8
     mojibake_detector_regression        = $mojReg
     runtime_cleanup_probe               = $cleanupProbe
     three_cycle_orchestration_probe     = $threeCycle
@@ -421,6 +516,8 @@ function Write-SilverCap50HardPreflightBlock {
   Write-Host ("cursor_command_present=" + [string]$Result.cursor_command_present)
   Write-Host ("effective_timeout_seconds=" + [string]$Result.effective_timeout_seconds)
   Write-Host ("utf8_real_path_probe=" + [string]$Result.utf8_real_path_probe)
+  Write-Host ("real_stdout_utf8_capture_probe=" + [string]$Result.real_stdout_utf8_capture_probe)
+  Write-Host ("prompt_preview_utf8_probe=" + [string]$Result.prompt_preview_utf8_probe)
   Write-Host ("mojibake_detector_regression=" + [string]$Result.mojibake_detector_regression)
   Write-Host ("runtime_cleanup_probe=" + [string]$Result.runtime_cleanup_probe)
   Write-Host ("three_cycle_orchestration_probe=" + [string]$Result.three_cycle_orchestration_probe)
