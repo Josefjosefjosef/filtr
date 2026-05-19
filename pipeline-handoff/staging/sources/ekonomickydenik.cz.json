@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-19T03:35:42.089846Z",
+  "ingestedAt": "2026-05-19T04:15:08.734818Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Energetický gigant žaluje regulační úřad. Pokud uspěje, cena elektřiny vzroste",
+      "url": "https://ekonomickydenik.cz/distributor-zaluje-eru-cen-vzroste/",
+      "dt": "2026-05-19T04:05:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "cena",
+        "elektřiny",
+        "energetický",
+        "gigant",
+        "pokud",
+        "regulační",
+        "uspěje",
+        "vzroste",
+        "úřad",
+        "žaluje"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -771,32 +798,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Půlmiliardový škrt na poště? Stát mění plán a couvá před hrozbou z Bruselu",
-      "url": "https://ekonomickydenik.cz/pulmiliardovy-skrt-na-poste-stat-meni-plan/",
-      "dt": "2026-05-16T10:07:21Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "bruselu",
-        "couvá",
-        "hrozbou",
-        "mění",
-        "plán",
-        "poště",
-        "půlmiliardový",
-        "stát",
-        "škrt"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -807,7 +808,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70540,
+      "bytes": 70404,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -844,12 +845,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-18T17:13:27Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T04:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 25,
+          "zdravi": 2,
+          "finance": 24,
           "zpravy": 3,
-          "zdravi": 1,
           "sport": 1
         },
         "drop_counts": {
@@ -862,6 +863,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Energetický gigant žaluje regulační úřad. Pokud uspěje, cena elektřiny vzroste",
+            "publishedAt": "2026-05-19T04:05:00Z"
+          },
           {
             "title": "Hranice, která kouše. Proč Němci i Francouzi stále provádějí kontroly?",
             "publishedAt": "2026-05-18T17:13:27Z"
@@ -889,10 +894,6 @@
           {
             "title": "Řehku má vystřídat Hlaváč: Zůna byl proti. Nového náčelníka podpořila Černochová",
             "publishedAt": "2026-05-18T13:24:39Z"
-          },
-          {
-            "title": "Konec nelegální migrace do EU? Čísla klesla o čtvrtinu. Azylový pakt pravidla ještě přitvrdí",
-            "publishedAt": "2026-05-18T13:20:54Z"
           }
         ]
       }

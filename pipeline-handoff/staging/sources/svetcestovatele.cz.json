@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "svetcestovatele.cz",
-  "ingestedAt": "2026-05-19T03:35:42.089846Z",
+  "ingestedAt": "2026-05-19T04:15:08.734818Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Tankování „po špunt“: Zlozvyk, který vám může provětrat peněženku i odrovnat motor",
+      "url": "https://www.svetcestovatele.cz/tankovani-po-spunt-zlozvyk-ktery-vam-muze-provetrat-penezenku-i-odrovnat-motor/",
+      "dt": "2026-05-19T04:00:14Z",
+      "media_raw": "SvětCestovatele",
+      "media_norm": "SvětCestovatele",
+      "tokens": [
+        "motor",
+        "odrovnat",
+        "peněženku",
+        "provětrat",
+        "tankování",
+        "vám",
+        "zlozvyk",
+        "špunt"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_svetcestovatele",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "svetcestovatele.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -494,34 +519,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "svetcestovatele.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Supermarkety míří na festivaly. Značky už nechtějí jen prodávat, ale stát se součástí zážitku",
-      "url": "https://www.svetcestovatele.cz/supermarkety-miri-na-festivaly-znacky-uz-nechteji-jen-prodavat-ale-stat-se-soucasti-zazitku/",
-      "dt": "2026-05-08T06:12:35Z",
-      "media_raw": "SvětCestovatele",
-      "media_norm": "SvětCestovatele",
-      "tokens": [
-        "ale",
-        "festivaly",
-        "jen",
-        "míří",
-        "nechtějí",
-        "prodávat",
-        "součástí",
-        "stát",
-        "supermarkety",
-        "značky",
-        "zážitku"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_svetcestovatele",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "svetcestovatele.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -532,7 +529,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.svetcestovatele.cz/feed/",
-      "bytes": 122167,
+      "bytes": 122014,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -569,7 +566,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-18T11:00:07Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T04:00:14Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -584,6 +581,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tankování „po špunt“: Zlozvyk, který vám může provětrat peněženku i odrovnat motor",
+            "publishedAt": "2026-05-19T04:00:14Z"
+          },
           {
             "title": "Turbulence k létání patří. Co o nich ale vlastně víte?",
             "publishedAt": "2026-05-18T11:00:07Z"
@@ -611,10 +612,6 @@
           {
             "title": "Zahrada zámku Ratměřice ukrývá poklad: dva obří sekvojovce",
             "publishedAt": "2026-05-15T11:00:15Z"
-          },
-          {
-            "title": "Tatry: Místo, kde se zrodily mnohé pohádky i filmy",
-            "publishedAt": "2026-05-15T09:19:03Z"
           }
         ]
       }

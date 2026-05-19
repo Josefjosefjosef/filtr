@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-19T03:35:42.089846Z",
+  "ingestedAt": "2026-05-19T04:15:08.734818Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Dobeš slaví. Ve velmi dramatickém zápase vychytal Montrealu postup",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-dobes-slavi-ve-velmi-dramatickem-zapase-vychytal-montrealu-postup-5458160",
+      "dt": "2026-05-19T03:58:38Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "dobeš",
+        "dramatickém",
+        "montrealu",
+        "postup",
+        "slaví",
+        "velmi",
+        "vychytal",
+        "zápase"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -759,28 +784,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Další obrovská posila pro mistrovské Pardubice",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-dalsi-obrovska-posila-pro-mistrovske-pardubice-5457482",
-      "dt": "2026-05-18T13:37:36Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "další",
-        "mistrovské",
-        "obrovská",
-        "pardubice",
-        "posila"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 47178,
+      "bytes": 46571,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-18T23:43:38Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T03:58:38Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -843,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dobeš slaví. Ve velmi dramatickém zápase vychytal Montrealu postup",
+            "publishedAt": "2026-05-19T03:58:38Z"
+          },
           {
             "title": "Češi vyvolali paniku. Odporné, úplný úpadek, děsí se ve Švédsku",
             "publishedAt": "2026-05-18T23:43:38Z"
@@ -870,10 +877,6 @@
           {
             "title": "STUDIO MS HOKEJ: Sobota je zapomenuta. Strašně důležité vítězství, prohlásil Málek. Našel ale i velkou kaňku",
             "publishedAt": "2026-05-18T15:45:36Z"
-          },
-          {
-            "title": "Česko proti Švédsku na MS v hokeji 2026 ve Fribourgu. Jaká je vzájemná bilance obou týmů na světových šampionátech",
-            "publishedAt": "2026-05-18T05:03:00Z"
           }
         ]
       }

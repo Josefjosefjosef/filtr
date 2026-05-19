@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-19T03:35:42.089846Z",
+  "ingestedAt": "2026-05-19T04:15:08.734818Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Cena prvního Čtyřlístku vyskočila za několik let o desítky tisíc",
+      "url": "https://profitonline.cz/cena-prvniho-ctyrlistku-vyskocila-za-nekolik-let-o-desitky-tisic/",
+      "dt": "2026-05-19T04:00:02Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "cena",
+        "desítky",
+        "let",
+        "několik",
+        "prvního",
+        "tisíc",
+        "vyskočila",
+        "čtyřlístku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -264,30 +289,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Novinky v osobních financích: Jak si Češi vedou ve finančních průzkumech?",
-      "url": "https://profitonline.cz/novinky-v-osobnich-financich-jak-si-cesi-vedou-ve-financnich-pruzkumech/",
-      "dt": "2026-05-17T10:00:04Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "financích",
-        "finančních",
-        "novinky",
-        "osobních",
-        "průzkumech",
-        "vedou",
-        "češi"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -298,7 +299,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18889,
+      "bytes": 18827,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -335,7 +336,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-18T19:00:47Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T04:00:02Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -350,6 +351,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cena prvního Čtyřlístku vyskočila za několik let o desítky tisíc",
+            "publishedAt": "2026-05-19T04:00:02Z"
+          },
           {
             "title": "Hypotéky nečekaně zdražují. Panika ale není na místě",
             "publishedAt": "2026-05-18T19:00:47Z"
@@ -377,10 +382,6 @@
           {
             "title": "Zlato z dovolené: Výhodný nákup, nebo drahý suvenýr?",
             "publishedAt": "2026-05-18T06:00:35Z"
-          },
-          {
-            "title": "The Economist: Izraelský teror plodí teror palestinský, varuje bývalý poradce premiéra Perese",
-            "publishedAt": "2026-05-18T04:00:24Z"
           }
         ]
       }
