@@ -294,6 +294,10 @@ function runPlannerClusterPreferenceSelftest() {
     console.error("PLANNER_CLUSTER_SELFTEST_FAIL handoff_missing_markers");
     ok = false;
   }
+  if (isHealthyPlannerContext({ guardBlocked: true, safetyBlocked: false, dirtyBlocked: false })) {
+    console.error("PLANNER_CLUSTER_SELFTEST_FAIL guard_blocked_must_be_unhealthy");
+    ok = false;
+  }
   if (ok) console.log("PLANNER_CLUSTER_PREFERENCE_SELFTEST_PASS");
   return ok;
 }

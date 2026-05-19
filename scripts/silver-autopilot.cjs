@@ -1152,11 +1152,15 @@ function resolveNextActionModelBody(rawBody, fallbackCtx) {
     console.log("SILVER_NEXT_ACTION_BARE_AUTOPILOT=sanitized_to_status");
   }
   const q = nextActionInnerQualityViolations(body);
-  if (q.length) {
+  const tagProbeViolations = silverNextActionQualityViolations(
+    wrapNextActionDoc(body, "full-auto-loop-openai"),
+  );
+  const allViolations = [...new Set([...q, ...tagProbeViolations])];
+  if (allViolations.length) {
     return {
       ok: false,
       body: buildPlannerRejectedBody(fallbackCtx || {}),
-      violations: q,
+      violations: allViolations,
       bareSanitized: hadBare,
       clusterHandoff: isHealthyPlannerContext(normalizePlannerContext(fallbackCtx || {})),
     };
@@ -3036,17 +3040,39 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
     let finalTag = String(tag || "silver-autopilot");
     const probeDoc = wrapNextActionDoc(body, finalTag);
     const plannerViolations = silverNextActionQualityViolations(probeDoc);
-    if (plannerViolations.length && isHealthyPlannerContext(plannerCtxBase)) {
-      body = writeClusterHandoffFile(commit);
-      finalTag = "planner-cluster-handoff-enforced";
-      console.log(
-        "SILVER_NEXT_ACTION_PLANNER_ENFORCE=cluster_handoff tag_was=" +
-          String(tag || "") +
-          " violations=" +
-          plannerViolations.join("; "),
-      );
+    if (plannerViolations.length) {
+      if (isHealthyPlannerContext(plannerCtxBase)) {
+        body = writeClusterHandoffFile(commit);
+        finalTag = "planner-cluster-handoff-enforced";
+        console.log(
+          "SILVER_NEXT_ACTION_PLANNER_ENFORCE=cluster_handoff tag_was=" +
+            String(tag || "") +
+            " violations=" +
+            plannerViolations.join("; "),
+        );
+      } else {
+        body = stripSilverAutopilotUkolHeaderLine(
+          buildFullAutoQualityFallbackBody({
+            inputSource: inputPick.source,
+            changedFilesJoined: changedJoined,
+            mainCommit: commit,
+          }),
+        );
+        finalTag = "planner-quality-fallback-enforced";
+        console.log(
+          "SILVER_NEXT_ACTION_PLANNER_ENFORCE=manual_fallback tag_was=" +
+            String(tag || "") +
+            " violations=" +
+            plannerViolations.join("; "),
+        );
+      }
       innerNext = body;
       nextActionWritten = "YES";
+      if (silverNextActionHasClusterWorkflow(body) && /<!--\s*SILVER_NEXT_ACTION:/i.test(body)) {
+        writeNextActionUtf8Safe(NEXT_ACTION, body);
+      } else {
+        writeNextActionUtf8Safe(NEXT_ACTION, wrapNextActionDoc(body, finalTag));
+      }
       return;
     }
     innerNext = body;

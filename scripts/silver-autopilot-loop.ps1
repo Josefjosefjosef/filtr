@@ -3188,6 +3188,17 @@ while ($true) {
     Restore-SilverTransientGeneratedAuditReports -RepoRoot $RepoRoot
     $nextAfterAuto = Read-TextFileOrEmpty -Path $NextActionPath
     if (-not (Test-SilverNextActionOutputQuality -Text $nextAfterAuto)) {
+      try {
+        $sanitizePost = Invoke-NodeScript -WorkingDirectory $RepoRoot -Arguments @($AutopilotScript, "--sanitize-next-action-md") -PassThruExit $true
+        if (($null -ne $sanitizePost) -and ($sanitizePost.ExitCode -eq 0)) {
+          $nextAfterAuto = Read-TextFileOrEmpty -Path $NextActionPath
+        }
+      }
+      catch {
+        Write-Host "silver-autopilot-loop: post_autopilot_sanitize_invoke_failed continuing=STOP" -ForegroundColor DarkYellow
+      }
+    }
+    if (-not (Test-SilverNextActionOutputQuality -Text $nextAfterAuto)) {
       Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
         -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit "N/A" `
         -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine $safetyPre `
