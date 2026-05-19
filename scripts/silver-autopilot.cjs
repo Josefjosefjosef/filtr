@@ -3067,21 +3067,51 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
         );
       }
       innerNext = body;
+      persistGuardedNextActionBody(body, finalTag);
       nextActionWritten = "YES";
-      if (silverNextActionHasClusterWorkflow(body) && /<!--\s*SILVER_NEXT_ACTION:/i.test(body)) {
-        writeNextActionUtf8Safe(NEXT_ACTION, body);
-      } else {
-        writeNextActionUtf8Safe(NEXT_ACTION, wrapNextActionDoc(body, finalTag));
-      }
       return;
     }
     innerNext = body;
-    if (silverNextActionHasClusterWorkflow(body) && /<!--\s*SILVER_NEXT_ACTION:/i.test(body)) {
-      writeNextActionUtf8Safe(NEXT_ACTION, body);
-    } else {
-      writeNextActionUtf8Safe(NEXT_ACTION, wrapNextActionDoc(body, finalTag));
-    }
+    persistGuardedNextActionBody(body, finalTag);
     nextActionWritten = "YES";
+  }
+
+  function persistGuardedNextActionBody(body, finalTag) {
+    let outBody = String(body || "").trim();
+    let outTag = String(finalTag || "silver-autopilot");
+    let outDoc = "";
+    if (silverNextActionHasClusterWorkflow(outBody) && /<!--\s*SILVER_NEXT_ACTION:/i.test(outBody)) {
+      outDoc = outBody;
+    } else {
+      outDoc = wrapNextActionDoc(outBody, outTag);
+    }
+    let finalViolations = silverNextActionQualityViolations(outDoc);
+    if (finalViolations.length) {
+      if (isHealthyPlannerContext(plannerCtxBase)) {
+        outDoc = writeClusterHandoffFile(commit);
+        outTag = "planner-cluster-handoff-enforced";
+      } else {
+        outDoc = wrapNextActionDoc(
+          stripSilverAutopilotUkolHeaderLine(
+            buildFullAutoQualityFallbackBody({
+              inputSource: inputPick.source,
+              changedFilesJoined: changedJoined,
+              mainCommit: commit,
+            }),
+          ),
+          "planner-quality-fallback-enforced",
+        );
+        outTag = "planner-quality-fallback-enforced";
+      }
+      console.log(
+        "SILVER_NEXT_ACTION_PLANNER_ENFORCE=final_gate tag_was=" +
+          String(finalTag || "") +
+          " violations=" +
+          finalViolations.join("; "),
+      );
+    }
+    writeNextActionUtf8Safe(NEXT_ACTION, outDoc);
+    return outTag;
   }
 
   const guardBlocked = !dirtyD.pass || assetsAppGuard === "FAIL" || safetyGuard === "FAIL";
@@ -3339,6 +3369,13 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
       utf8MojibakeDetected = "YES";
       readyForProductCap50 = "NO";
       if (loopExit === 0) loopExit = 1;
+    }
+    const qualityViolations = silverNextActionQualityViolations(nextOnDisk);
+    if (qualityViolations.length && loopExit === 0) {
+      cmdSanitizeNextActionMd("--full-auto-loop-end-sanitize");
+      console.log(
+        "SILVER_NEXT_ACTION_END_SANITIZE=YES violations=" + qualityViolations.join("; "),
+      );
     }
   }
 
