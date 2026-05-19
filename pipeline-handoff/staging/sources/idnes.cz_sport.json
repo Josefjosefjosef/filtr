@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-19T21:55:29.617179Z",
+  "ingestedAt": "2026-05-19T22:35:00.346702Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "MS ve fotbale 2026: program, výsledky, skupiny, s kým hrají Češi",
+      "url": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/ms-ve-fotbale-2026-program-vysledky-s-kym-hraji-cesi.A260228_211333_ms-fotbal_ald",
+      "dt": "2026-05-19T22:17:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "2026",
+        "fotbale",
+        "hrají",
+        "kým",
+        "program",
+        "skupiny",
+        "výsledky",
+        "češi"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nejsem jako Gudas. Alscher vypráví o životě a pověsti: Vím, že mě lidé neznají",
+      "url": "https://www.idnes.cz/hokej/ms-2026/marek-alscher-rozhovor.A260519_115532_ms-hokej-2026_hrj",
+      "dt": "2026-05-19T22:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "alscher",
+        "gudas",
+        "jako",
+        "lidé",
+        "nejsem",
+        "neznají",
+        "pověsti",
+        "vypráví",
+        "vím",
+        "životě"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -732,58 +784,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rekordní šesté MS pro Ronalda. Portugalci zveřejnili nominaci symbolicky i s Jotou",
-      "url": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/portugalsko-nominace-ms-2026-ronaldo-jota.A260519_153919_ms-fotbal_czo",
-      "dt": "2026-05-19T13:46:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "jotou",
-        "nominaci",
-        "portugalci",
-        "rekordní",
-        "ronalda",
-        "symbolicky",
-        "zveřejnili",
-        "šesté"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Náhradní řešení pro získání licence. Sezonu můžeme dohrát v Příbrami, hlásí Dynamo",
-      "url": "https://www.idnes.cz/ceske-budejovice/zpravy/fotbal-dynamo-budejovice-pribram-licence-majitelka-presun.A260519_143139_budejovice-zpravy_pkr",
-      "dt": "2026-05-19T13:17:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dohrát",
-        "dynamo",
-        "hlásí",
-        "licence",
-        "můžeme",
-        "náhradní",
-        "příbrami",
-        "sezonu",
-        "získání",
-        "řešení"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48512,
+      "bytes": 48584,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T21:46:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T22:17:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -846,6 +846,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "MS ve fotbale 2026: program, výsledky, skupiny, s kým hrají Češi",
+            "publishedAt": "2026-05-19T22:17:00Z"
+          },
+          {
+            "title": "Nejsem jako Gudas. Alscher vypráví o životě a pověsti: Vím, že mě lidé neznají",
+            "publishedAt": "2026-05-19T22:00:00Z"
+          },
           {
             "title": "MS v hokeji 2026 ONLINE: Čechy ve středu čeká Itálie. Ščotka vyvázl bez trestu",
             "publishedAt": "2026-05-19T21:46:00Z"
@@ -869,14 +877,6 @@
           {
             "title": "Rakousko zdolalo Lotyše a je stoprocentní, Maďarsko deklasovalo Velkou Británii",
             "publishedAt": "2026-05-19T20:54:00Z"
-          },
-          {
-            "title": "Nymburk si pohodlně zajistil třetí výhru a blíží se finále. Bohačík dosáhl na milník",
-            "publishedAt": "2026-05-19T20:25:00Z"
-          },
-          {
-            "title": "Bývalému kouči Slovácka zpřísnila UEFA trest za natáčení hráček ve sprchách",
-            "publishedAt": "2026-05-19T19:07:00Z"
           }
         ]
       }

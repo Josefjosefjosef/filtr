@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-19T21:55:29.617179Z",
+  "ingestedAt": "2026-05-19T22:35:00.346702Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Izrael udeřil na jihu Libanonu, útoky provedl i Hizballáh",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/izrael-uderil-na-jihu-libanonu-utoky-provedl-i-hizballah-373632",
+      "dt": "2026-05-19T22:18:11Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "hizballáh",
+        "izrael",
+        "jihu",
+        "libanonu",
+        "provedl",
+        "udeřil",
+        "útoky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -736,25 +760,21 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Resort financí požaduje přepracování zákona o veřejnoprávních médiích",
-      "url": "https://ct24.ceskatelevize.cz/clanek/media/resort-financi-pozaduje-prepracovani-zakona-o-verejnopravnich-mediich-373597",
-      "dt": "2026-05-19T08:13:29Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Soutěž k MS v hokeji – 20. května",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/soutez-k-ms-v-hokeji-20-kvetna-156741",
+      "dt": "2026-05-19T22:00:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "financí",
-        "médiích",
-        "požaduje",
-        "přepracování",
-        "resort",
-        "veřejnoprávních",
-        "zákona"
+        "hokeji",
+        "května",
+        "soutěž"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1484,32 +1504,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Na Dukle mu spílají ve velkém, podle komise ale Berka v Teplicích nechyboval",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/na-dukle-mu-spilaji-ve-velkem-podle-komise-ale-berka-v-teplicich-nechyboval-156870",
-      "dt": "2026-05-18T13:13:51Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "ale",
-        "berka",
-        "dukle",
-        "komise",
-        "nechyboval",
-        "podle",
-        "spílají",
-        "teplicích",
-        "velkém"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1520,7 +1514,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44042,
+      "bytes": 43942,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1580,7 +1574,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T19:49:45Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T22:18:11Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1597,6 +1591,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Izrael udeřil na jihu Libanonu, útoky provedl i Hizballáh",
+            "publishedAt": "2026-05-19T22:18:11Z"
+          },
           {
             "title": "Česko se připravuje na přijetí občana USA s podezřením na nákazu ebolou",
             "publishedAt": "2026-05-19T19:49:45Z"
@@ -1624,10 +1622,6 @@
           {
             "title": "V létě se částečně otevřou nové úseky D7 ve středních Čechách. Staví se i jinde",
             "publishedAt": "2026-05-19T18:05:25Z"
-          },
-          {
-            "title": "Zemědělce trápí rostoucí náklady. Ovlivnit mohou i ceny potravin",
-            "publishedAt": "2026-05-19T18:04:05Z"
           }
         ]
       }
@@ -1639,7 +1633,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37135,
+      "bytes": 36861,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1676,7 +1670,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T20:49:19Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1691,6 +1685,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Soutěž k MS v hokeji – 20. května",
+            "publishedAt": "2026-05-19T22:00:00Z"
+          },
           {
             "title": "Nymburk zvítězil i ve třetím finálovém duelu a míří za titulem",
             "publishedAt": "2026-05-19T20:49:19Z"
@@ -1718,10 +1716,6 @@
           {
             "title": "Alcaraz kvůli zraněnému zápěstí vynechá i Wimbledon",
             "publishedAt": "2026-05-19T15:29:02Z"
-          },
-          {
-            "title": "Fotbalové Budějovice údajně nedostaly licenci pro druhou ligu, klub to nepotvrdil",
-            "publishedAt": "2026-05-19T14:45:37Z"
           }
         ]
       }
@@ -1733,7 +1727,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77630,
+      "bytes": 77270,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

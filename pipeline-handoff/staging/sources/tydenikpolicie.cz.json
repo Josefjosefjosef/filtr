@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-19T21:55:29.617179Z",
+  "ingestedAt": "2026-05-19T22:35:00.346702Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zadržený muž vyhrožoval na služebně v Litvínově policistovi kvůli sundání pout",
+      "url": "https://tydenikpolicie.cz/zadrzeny-muz-vyhrozoval-na-sluzebne-v-litvinove-policistovi-kvuli-sundani-pout/",
+      "dt": "2026-05-19T22:02:50Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "kvůli",
+        "litvínově",
+        "muž",
+        "policistovi",
+        "pout",
+        "služebně",
+        "sundání",
+        "vyhrožoval",
+        "zadržený"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -234,33 +260,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Olomoučtí kriminalisté zadrželi a obvinili dva muže podezřelé z přepadení tří lidí",
-      "url": "https://tydenikpolicie.cz/olomoucti-kriminaliste-zadrzeli-a-obvinili-dva-muze-podezrele-z-prepadeni-tri-lidi/",
-      "dt": "2026-05-19T07:49:45Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "dva",
-        "kriminalisté",
-        "lidí",
-        "muže",
-        "obvinili",
-        "olomoučtí",
-        "podezřelé",
-        "přepadení",
-        "tří",
-        "zadrželi"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -271,7 +270,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16847,
+      "bytes": 16858,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -308,7 +307,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-19T21:14:45Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T22:02:50Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -323,6 +322,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zadržený muž vyhrožoval na služebně v Litvínově policistovi kvůli sundání pout",
+            "publishedAt": "2026-05-19T22:02:50Z"
+          },
           {
             "title": "Při čelní srážce s kamionem zemřela na Uherskohradišťsku 25letá motorkářka",
             "publishedAt": "2026-05-19T21:14:45Z"
@@ -350,10 +353,6 @@
           {
             "title": "Kriminalisté z pražské Palmovky zadrželi podezřelého z přepadení kurýra",
             "publishedAt": "2026-05-19T12:32:40Z"
-          },
-          {
-            "title": "Osmnáct zraněných po čelní srážce autobusu MHD s tramvají v Praze",
-            "publishedAt": "2026-05-19T12:04:42Z"
           }
         ]
       }

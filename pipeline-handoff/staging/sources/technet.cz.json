@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-05-19T21:55:29.617179Z",
+  "ingestedAt": "2026-05-19T22:35:00.346702Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Starý zvětšovák nevyhazujte. Propojte jej s mobilem a ulehčete si práci",
+      "url": "https://www.idnes.cz/technet/technika/fototechniky-zvetsovak-mobil.A260511_162305_tec_technika_alv",
+      "dt": "2026-05-19T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "jej",
+        "mobilem",
+        "nevyhazujte",
+        "propojte",
+        "práci",
+        "starý",
+        "ulehčete",
+        "zvětšovák"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -413,7 +438,7 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Jak je to možné? Íránská stíhačka z 50. let úspěšně zaútočila na americkou základnu",
       "url": "https://www.idnes.cz/technet/vojenstvi/northrop-f-5-freedom-fighter-tiger-ii-letiste-zakladna-nalet-camp-buehring-iran-kuvajt-spojene-staty.A260512_132859_vojenstvi_ilrj",
@@ -438,7 +463,7 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Naháněla hrůzu ve válce i dnes. Německá stíhačka Focke-Wulf FW 190",
       "url": "https://www.idnes.cz/technet/vojenstvi/fw190-hahnweide-focke-wulf-fw190.A260512_133215_vojenstvi_alv",
@@ -463,7 +488,7 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Před 100 lety přeletěla vzducholoď Norge severní pól",
       "url": "https://www.idnes.cz/technet/pred-100-lety/pred-100-lety-vzducholod-norge-severni-pol.A260512_150832_pred-100-lety_vov",
@@ -734,32 +759,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Jupiter je placatější, než jsme mysleli. Měření mu ubralo dvanáct kilometrů",
-      "url": "https://www.lidovky.cz/orientace/jupiter-juno-sonda-polomer-rotace-slunecni-soustava-voyager-pioneer-nasa-mereni.A260506_114614_ln-orientace_lrj",
-      "dt": "2026-05-08T08:02:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "dvanáct",
-        "jsme",
-        "jupiter",
-        "kilometrů",
-        "mysleli",
-        "měření",
-        "než",
-        "placatější",
-        "ubralo"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -770,7 +769,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 46317,
+      "bytes": 46925,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -807,11 +806,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T19:57:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 19,
-          "zpravy": 11
+          "other": 17,
+          "zpravy": 13
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -823,6 +822,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Starý zvětšovák nevyhazujte. Propojte jej s mobilem a ulehčete si práci",
+            "publishedAt": "2026-05-19T22:00:00Z"
+          },
           {
             "title": "Google ukázal, jak nám změní vyhledávání. Jeho AI více rozumí světu",
             "publishedAt": "2026-05-19T19:57:00Z"
@@ -850,10 +853,6 @@
           {
             "title": "„S našimi zatracenými loděmi je dnes něco špatně.“ Sto deset let od Jutska",
             "publishedAt": "2026-05-16T22:00:00Z"
-          },
-          {
-            "title": "Bezkřídlý zázrak i létající rakev. Jak vznikal legendární letoun F-104",
-            "publishedAt": "2026-05-15T22:00:00Z"
           }
         ]
       }
