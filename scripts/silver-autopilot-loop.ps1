@@ -62,6 +62,7 @@ param(
   [int]$TotalWallSeconds = 0,
   [switch]$TimeoutArchiveSelfTest,
   [switch]$Cap50TimeoutCloseoutSelfTest,
+  [switch]$Cap50Timeout124FinalPostconditionSelfTest,
   [switch]$PreflightCleanupSelfTest,
   [switch]$Cap50TimeoutUtf8SelfTest,
   [switch]$Cap50PostconditionSelfTest,
@@ -1614,6 +1615,9 @@ function Stop-LoopWithFail {
   }
   Write-SilverColoredCycleSummary -Outcome "FAIL" -Fields $fields
   if ($controlledInfinite) {
+    if (-not (Test-GitStatusClean -Cwd $RepoRoot)) {
+      $null = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot
+    }
     $reportFail = Read-TextFileOrEmpty -Path (Join-Path $RepoRoot "SILVER_RUN_REPORT.md")
     $safetyFail = Get-RunReportLineValue -ReportText $reportFail -Key "safety_counters"
     $finalPost = Invoke-SilverCap50FinalPostcondition -RepoRoot $RepoRoot -CyclesCompleted $Cycle -StopReason $reasonLine -NextActionPath (Join-Path $RepoRoot "SILVER_NEXT_ACTION.md") -CursorOutputPath (Join-Path $RepoRoot "SILVER_CURSOR_OUTPUT.md") -SafetyCountersLine $safetyFail
@@ -2391,6 +2395,100 @@ function Invoke-SilverCap50TimeoutCloseoutSelfTest {
   return $true
 }
 
+function Invoke-SilverCap50Timeout124FinalPostconditionSelfTest {
+  param([string]$RepoRoot)
+  $utf8 = New-Object System.Text.UTF8Encoding $false
+  $failures = New-Object System.Collections.Generic.List[string]
+  $td = Join-Path $env:TEMP ("silver-timeout124-final-post-" + [guid]::NewGuid().ToString("N"))
+  New-Item -ItemType Directory -Path $td -Force | Out-Null
+  $prevEa = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try {
+    Set-Location -LiteralPath $td
+    & git init 2>$null | Out-Null
+    & git config user.email "silver-timeout124-post@local" 2>$null
+    & git config user.name "silver-timeout124-post" 2>$null
+    [System.IO.File]::WriteAllText((Join-Path $td ".gitignore"), ".silver-runtime/`n", $utf8)
+    $diagJson = "scripts/silver-rhc3-negation-cal-readonly-diagnostic-report.json"
+    $diagDir = Join-Path $td "scripts"
+    New-Item -ItemType Directory -Path $diagDir -Force | Out-Null
+    [System.IO.File]::WriteAllText((Join-Path $td $diagJson), "{`"selftest`":true}`n", $utf8)
+    foreach ($n in @("SILVER_PROGRESS_LOG.md", "SILVER_NEXT_ACTION.md", "SILVER_CURSOR_OUTPUT.md", "SILVER_RUN_REPORT.md")) {
+      [System.IO.File]::WriteAllText((Join-Path $td $n), "# " + $n + "`n", $utf8)
+    }
+    & git add .gitignore SILVER_PROGRESS_LOG.md SILVER_NEXT_ACTION.md SILVER_CURSOR_OUTPUT.md SILVER_RUN_REPORT.md $diagJson 2>$null
+    & git commit -m "init" 2>$null | Out-Null
+    $adapterBody = @"
+# silver-cursor-agent-adapter
+timed_out=YES
+exit_code=124
+adapter_authoritative_exit_code=124
+autonomous_cycle=1
+autonomous_run_id=timeout124-selftest
+process_start_utc=2026-05-19T19:26:32.4149789Z
+process_end_utc=2026-05-19T20:23:12.4540978Z
+task_digest=6b51824d04c91eb0
+stdout_nonempty=YES
+# stdout
+partial work before wall clock timeout
+
+SILVER_TIMEOUT_CLOSEOUT_REMINDER
+read_before_git_restore_or_clean=YES
+"@
+    [System.IO.File]::WriteAllText((Join-Path $td "SILVER_CURSOR_OUTPUT.md"), $adapterBody, $utf8)
+    [System.IO.File]::WriteAllText((Join-Path $td "SILVER_NEXT_ACTION.md"), "# dirty next action`n", $utf8)
+    [System.IO.File]::WriteAllText((Join-Path $td $diagJson), "{`"dirty`":true}`n", $utf8)
+    $rtArch = Join-Path $td ".silver-runtime/timeouts/selftest-timeout124"
+    New-Item -ItemType Directory -Path $rtArch -Force | Out-Null
+    [System.IO.File]::WriteAllText((Join-Path $rtArch "manifest.json"), "{`"selftest`":true}`n", $utf8)
+    $fields = @{
+      timestamp             = (Get-Date).ToString("s")
+      cycle                 = "1"
+      main_commit           = "deadbeef"
+      last_task_exit        = "1"
+      cursor_exit           = "124"
+      autopilot_exit        = "N/A"
+      autopilot_status_exit = "N/A"
+      git_status_clean      = "NO"
+      safety_counters       = "dangerous_write_count=0;false_write_count=0;query_created_write_count=0;write_when_negated_count=0"
+      stop_reason           = "cursor_outer_or_adapter_timeout_exit_124"
+      closeout_kind         = "adapter_timeout"
+    }
+    $close = Invoke-SilverCap50AdapterTimeoutCloseout -RepoRoot $td -Reason "selftest_timeout124_final_post" -CursorExit "124" -TimedOut "YES" -ProgressLogFields $fields -ProgressOutcome "FAIL"
+    if ($close.PASS_FAIL -ne "PASS") {
+      [void]$failures.Add("timeout_closeout_preflight:" + [string]$close.blocked_dirty_files)
+    }
+    if ([string]$close.git_status_clean_after_closeout -ne "YES") {
+      [void]$failures.Add("closeout_git_clean_expected_YES")
+    }
+    $finalPost = Invoke-SilverCap50FinalPostcondition -RepoRoot $td -CyclesCompleted 1 -StopReason "cursor_exit_nonzero|stop_reason=cursor_outer_or_adapter_timeout_exit_124" -NextActionPath (Join-Path $td "SILVER_NEXT_ACTION.md") -CursorOutputPath (Join-Path $td "SILVER_CURSOR_OUTPUT.md") -SafetyCountersLine "dangerous_write_count=0;false_write_count=0;query_created_write_count=0;write_when_negated_count=0"
+    if ([string]$finalPost.git_status_clean_after_cleanup -ne "YES") {
+      [void]$failures.Add("final_post_git_clean_expected_YES_got=" + [string]$finalPost.git_status_clean_after_cleanup)
+    }
+    if ([string]$finalPost.dirty_runtime_leftovers -ne "NO") {
+      [void]$failures.Add("final_post_dirty_runtime_leftovers_expected_NO_got=" + [string]$finalPost.dirty_runtime_leftovers + " blocked=" + [string]$finalPost.blocked_dirty_files)
+    }
+    if ([string]$finalPost.PASS_FAIL -ne "PASS") {
+      [void]$failures.Add("final_post_PASS_FAIL_expected_PASS")
+    }
+    if (-not (Test-GitStatusClean -Cwd $td)) {
+      [void]$failures.Add("repo_not_clean_after_final_postcondition")
+    }
+  }
+  finally {
+    $ErrorActionPreference = $prevEa
+    Set-Location -LiteralPath $RepoRoot
+    Remove-Item -LiteralPath $td -Recurse -Force -ErrorAction SilentlyContinue
+  }
+  if ($failures.Count -gt 0) {
+    Write-Host "SILVER_CAP50_TIMEOUT124_FINAL_POSTCONDITION_SELFTEST=FAIL" -ForegroundColor Red
+    foreach ($f in $failures) { Write-Host $f -ForegroundColor Red }
+    return $false
+  }
+  Write-Host "SILVER_CAP50_TIMEOUT124_FINAL_POSTCONDITION_SELFTEST=PASS" -ForegroundColor Green
+  return $true
+}
+
 function Invoke-SilverCap50GitNotCleanAfterRestoreSelfTest {
   param([string]$RepoRoot)
   $utf8 = New-Object System.Text.UTF8Encoding $false
@@ -2947,6 +3045,9 @@ function Invoke-SilverCap50PostconditionSelfTest {
   if (-not (Invoke-SilverCap50TimeoutCloseoutSelfTest -RepoRoot $RepoRoot)) {
     [void]$failures.Add("timeout_closeout_selftest")
   }
+  if (-not (Invoke-SilverCap50Timeout124FinalPostconditionSelfTest -RepoRoot $RepoRoot)) {
+    [void]$failures.Add("timeout124_final_postcondition_selftest")
+  }
   if (-not (Invoke-SilverCap50GitNotCleanAfterRestoreSelfTest -RepoRoot $RepoRoot)) {
     [void]$failures.Add("git_not_clean_after_restore_selftest")
   }
@@ -3344,6 +3445,12 @@ if ($Cap50TimeoutCloseoutSelfTest) {
   exit 0
 }
 
+if ($Cap50Timeout124FinalPostconditionSelfTest) {
+  $stT124 = Invoke-SilverCap50Timeout124FinalPostconditionSelfTest -RepoRoot $RepoRoot
+  if (-not $stT124) { exit 1 }
+  exit 0
+}
+
 if ($Cap50GitNotCleanAfterRestoreSelfTest) {
   $stGitClean = Invoke-SilverCap50GitNotCleanAfterRestoreSelfTest -RepoRoot $RepoRoot
   if (-not $stGitClean) { exit 1 }
@@ -3724,7 +3831,14 @@ while ($true) {
           $ce = [int]$reconcile.EffectiveExit
         }
         elseif (($ce -ne 0) -and (-not $reconcile.FreshMeta)) {
-          Write-Host ("silver-autopilot-loop: outer_cmd_exit=" + [string]$ce + " not_reconciled (adapter_meta_stale_or_mismatch)") -ForegroundColor DarkYellow
+          $reconcileNote = "adapter_meta_stale_or_mismatch"
+          if (Test-Path -LiteralPath $CursorOutputPath) {
+            $metaReconcile = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $CursorOutputPath
+            if ($metaReconcile.ContainsKey("timed_out") -and ([string]$metaReconcile["timed_out"] -eq "YES")) {
+              $reconcileNote = "adapter_meta_timeout_blocks_reconcile"
+            }
+          }
+          Write-Host ("silver-autopilot-loop: outer_cmd_exit=" + [string]$ce + " not_reconciled (" + $reconcileNote + ")") -ForegroundColor DarkYellow
         }
         $script:LastCursorExit = [string]$ce
         $cursorExitStr = [string]$ce

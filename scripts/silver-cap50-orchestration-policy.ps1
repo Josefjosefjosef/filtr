@@ -538,33 +538,42 @@ function Invoke-SilverCap50FinalPostcondition {
     [switch]$DryRunOnly
   )
   $utf8Gate = Invoke-SilverCap50Utf8SurfacesHardGate -RepoRoot $RepoRoot -NextActionPath $NextActionPath -CursorOutputPath $CursorOutputPath
-  $dirtyLeft = "NO"
-  $blocked = ""
-  $gitClean = "NO"
-  $po = ""
-  try { $po = (& git -C $RepoRoot status --porcelain 2>$null) } catch { $po = "DIRTY_UNKNOWN" }
-  if ($po -eq "") { $gitClean = "YES" }
-  else {
-    $gitClean = "NO"
-    $dirtyLeft = "YES"
-    $blockedParts = New-Object System.Collections.Generic.List[string]
-    foreach ($raw in $po -split "`r?`n") {
-      $line = $raw.Trim()
-      if (-not $line) { continue }
-      $rel = ""
-      if ($line.Length -ge 3 -and $line.Substring(2, 1) -eq " ") { $rel = $line.Substring(3).Trim() }
-      else {
-        $parts = $line -split "\s+", 2
-        if ($parts.Count -ge 2) { $rel = $parts[1].Trim() } else { $rel = $line }
-      }
-      $rel = ($rel -replace '\\', '/')
-      $arrow = " -> "
-      $ai = $rel.LastIndexOf($arrow)
-      if ($ai -ge 0) { $rel = $rel.Substring($ai + $arrow.Length).Trim() }
-      if ($rel) { [void]$blockedParts.Add($rel) }
+  if ((-not $DryRunOnly) -and (Get-Command -Name Invoke-SilverCap50PreflightCleanup -ErrorAction SilentlyContinue)) {
+    if (-not (Test-GitStatusClean -Cwd $RepoRoot)) {
+      $null = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot
     }
-    $blocked = ($blockedParts -join ";")
   }
+  $forbiddenLeft = New-Object System.Collections.Generic.List[string]
+  $restorableLeft = New-Object System.Collections.Generic.List[string]
+  if (Get-Command -Name Get-GitStatusShortDirtyEntries -ErrorAction SilentlyContinue) {
+    foreach ($ent in (Get-GitStatusShortDirtyEntries -Cwd $RepoRoot)) {
+      $p = [string]$ent.path
+      if (-not $p) { continue }
+      if (Get-Command -Name Test-SilverPathIsCap50IgnorableUntrackedRuntime -ErrorAction SilentlyContinue) {
+        if (Test-SilverPathIsCap50IgnorableUntrackedRuntime -RelPath $p) { continue }
+      }
+      elseif ($p -cmatch '^\.silver-runtime(/|$)') { continue }
+      if ((Get-Command -Name Test-SilverPathIsCap50RuntimeRestorable -ErrorAction SilentlyContinue) -and (Test-SilverPathIsCap50RuntimeRestorable -RelPath $p)) {
+        [void]$restorableLeft.Add($p)
+        continue
+      }
+      [void]$forbiddenLeft.Add($p)
+    }
+  }
+  else {
+    foreach ($p in (Get-GitStatusShortPaths -Cwd $RepoRoot)) {
+      $n = ([string]$p).Trim() -replace '\\', '/'
+      if (-not $n) { continue }
+      if ($n -cmatch '^\.silver-runtime(/|$)') { continue }
+      [void]$forbiddenLeft.Add($n)
+    }
+  }
+  $gitClean = if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" }
+  $dirtyLeft = if ($forbiddenLeft.Count -gt 0) { "YES" } else { "NO" }
+  $blockedParts = New-Object System.Collections.Generic.List[string]
+  foreach ($fp in $forbiddenLeft) { [void]$blockedParts.Add([string]$fp) }
+  foreach ($rp in $restorableLeft) { [void]$blockedParts.Add([string]$rp + "(restorable_unrestored)") }
+  $blocked = ($blockedParts -join ";")
   $manual = "NO"
   $nextText = ""
   if (Test-Path -LiteralPath $NextActionPath) {
