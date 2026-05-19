@@ -1,0 +1,887 @@
+#!/usr/bin/env node
+/**
+ * Silver audit registry + maturity + TRUE_ENGINE_FAIL prioritizer + NEXT CAP selector.
+ * Orchestration/reporting only — no engine / assets changes.
+ */
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const { execSync } = require("child_process");
+
+const SCRIPT_DIR = __dirname;
+
+const MATURITY = {
+  PLANNED_ONLY: "PLANNED_ONLY",
+  FOUNDATION_ONLY: "FOUNDATION_ONLY",
+  PARTIAL: "PARTIAL",
+  ACTIVE: "ACTIVE",
+  STABLE: "STABLE",
+  STALE: "STALE",
+};
+
+const STALE_DAYS = 21;
+
+/** Canonical audit catalog — never claim ACTIVE without on-disk evidence. */
+const AUDIT_CATALOG = [
+  {
+    id: "rhc3",
+    audit_name: "Real Human Chaos V3",
+    audit_size: "500k",
+    public_product_impact: "HIGH",
+    harness_scripts: ["silver-real-human-chaos-v3.cjs"],
+    report_json: "silver-real-human-chaos-v3-report.json",
+    classifier_json: "silver-rhc3-cluster-classifier-v1-report.json",
+    cluster_prefix: "rhc3_",
+    safety_sensitive: true,
+  },
+  {
+    id: "retrieval_stress",
+    audit_name: "Retrieval Stress",
+    audit_size: "300k",
+    public_product_impact: "HIGH",
+    harness_scripts: [
+      "silver-retrieval-stress-300k-generator.cjs",
+      "silver-retrieval-stress-300k-foundation-diagnostic.cjs",
+    ],
+    report_json: "silver-retrieval-stress-300k-foundation-diagnostic-report.json",
+    foundation_scripts: ["silver-retrieval-stress-300k-prep.cjs"],
+    cluster_prefix: "retrieval_",
+    safety_sensitive: false,
+  },
+  {
+    id: "self_correction",
+    audit_name: "Self-Correction",
+    audit_size: "240k",
+    public_product_impact: "MEDIUM",
+    harness_scripts: [],
+    report_json: "",
+    cluster_prefix: "self_correction",
+    safety_sensitive: false,
+  },
+  {
+    id: "negative_no_write",
+    audit_name: "Negative / No-write",
+    audit_size: "200k",
+    public_product_impact: "HIGH",
+    harness_scripts: ["silver-rhc3-negation-cal-readonly-diagnostic.cjs"],
+    report_json: "silver-rhc3-negation-cal-readonly-diagnostic-report.json",
+    cluster_prefix: "negation_",
+    safety_sensitive: true,
+  },
+  {
+    id: "multi_intent",
+    audit_name: "Multi-Intent Orchestration",
+    audit_size: "200k",
+    public_product_impact: "MEDIUM",
+    harness_scripts: [],
+    report_json: "",
+    cluster_prefix: "multi_intent",
+    safety_sensitive: false,
+  },
+  {
+    id: "title_cleanup",
+    audit_name: "Title Cleanup / Action Extraction",
+    audit_size: "160k",
+    public_product_impact: "MEDIUM",
+    harness_scripts: ["audit_silver_20000_routing_stable.cjs"],
+    report_json: "",
+    cluster_prefix: "title_cleanup",
+    safety_sensitive: false,
+  },
+  {
+    id: "long_session",
+    audit_name: "Long Session Memory",
+    audit_size: "150k",
+    public_product_impact: "MEDIUM",
+    harness_scripts: ["silver-session-memory-v14-regression.mjs"],
+    report_json: "",
+    cluster_prefix: "long_session",
+    safety_sensitive: false,
+  },
+  {
+    id: "agenda_summary",
+    audit_name: "Agenda Summary / Overview",
+    audit_size: "120k",
+    public_product_impact: "MEDIUM",
+    harness_scripts: ["silver-calendar-read-regression.mjs"],
+    report_json: "",
+    cluster_prefix: "agenda_",
+    safety_sensitive: false,
+  },
+  {
+    id: "public_ux",
+    audit_name: "Public UX Mixed Corpus",
+    audit_size: "500k+",
+    public_product_impact: "HIGH",
+    harness_scripts: ["silver-real-czech-public-ux-corpus-v2.cjs"],
+    report_json: "silver-real-czech-public-ux-corpus-v2-report.json",
+    cluster_prefix: "rcz2_",
+    safety_sensitive: true,
+  },
+];
+
+function readJsonSafe(absPath) {
+  try {
+    return JSON.parse(fs.readFileSync(absPath, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readTextSafe(absPath) {
+  try {
+    return fs.readFileSync(absPath, "utf8");
+  } catch {
+    return "";
+  }
+}
+
+function fileStat(absPath) {
+  try {
+    const st = fs.statSync(absPath);
+    return { exists: true, mtimeMs: st.mtimeMs, size: st.size };
+  } catch {
+    return { exists: false, mtimeMs: 0, size: 0 };
+  }
+}
+
+function gitHead(repoRoot) {
+  try {
+    return execSync("git", ["rev-parse", "HEAD"], { cwd: repoRoot, encoding: "utf8" }).trim();
+  } catch {
+    return "";
+  }
+}
+
+function parseIsoAgeDays(iso) {
+  if (!iso) return null;
+  const t = Date.parse(iso);
+  if (Number.isNaN(t)) return null;
+  return (Date.now() - t) / (86400 * 1000);
+}
+
+function parseClusterString(entry) {
+  if (typeof entry !== "string") return null;
+  const s = entry.trim();
+  if (!s) return null;
+  const pipe = s.indexOf("||");
+  const colon = s.lastIndexOf(":");
+  if (pipe >= 0) {
+    const cluster = s.slice(0, pipe).trim();
+    const rest = s.slice(pipe + 2);
+    const c2 = rest.lastIndexOf(":");
+    const cat = c2 >= 0 ? rest.slice(0, c2).trim() : rest;
+    const count = parseInt(c2 >= 0 ? rest.slice(c2 + 1) : "0", 10);
+    return { cluster, category: cat, count: Number.isFinite(count) ? count : 0 };
+  }
+  if (colon <= 0) return { cluster: s, category: "", count: 0 };
+  const cluster = s.slice(0, colon).trim();
+  let right = s.slice(colon + 1);
+  const slash = right.indexOf("/");
+  if (slash >= 0) right = right.slice(0, slash);
+  const count = parseInt(right, 10);
+  return { cluster, category: "", count: Number.isFinite(count) ? count : 0 };
+}
+
+function collectClustersFromReport(basename, data, auditId) {
+  const out = [];
+  if (!data || typeof data !== "object") return out;
+  const push = (name, count, extra) => {
+    const n = String(name || "").trim();
+    const c = Number(count);
+    if (!n || !Number.isFinite(c) || c <= 0) return;
+    out.push(
+      Object.assign(
+        {
+          audit_id: auditId,
+          source_report: basename,
+          cluster: n,
+          fail_count: c,
+        },
+        extra || {},
+      ),
+    );
+  };
+  if (Array.isArray(data.top_fail_clusters)) {
+    for (const e of data.top_fail_clusters) {
+      const p = parseClusterString(e);
+      if (p) push(p.cluster, p.count, { category: p.category });
+    }
+  }
+  if (Array.isArray(data.top_clusters)) {
+    for (const e of data.top_clusters) {
+      const p = parseClusterString(e);
+      if (p) push(p.cluster, p.count, { category: p.category });
+    }
+  }
+  const fc = data.fail_count_by_cluster;
+  if (fc && typeof fc === "object") {
+    for (const k of Object.keys(fc)) {
+      push(k, fc[k], {});
+    }
+  }
+  if (data.target_cluster && data.intent_fail_count > 0) {
+    push(data.target_cluster, data.intent_fail_count, { from_target: true });
+  }
+  return out;
+}
+
+function loadClassifierMap(repoRoot) {
+  const abs = path.join(repoRoot, "scripts", "silver-rhc3-cluster-classifier-v1-report.json");
+  const data = readJsonSafe(abs);
+  const map = {};
+  if (!data || !Array.isArray(data.classifications)) return map;
+  for (const row of data.classifications) {
+    if (!row || !row.cluster) continue;
+    map[row.cluster] = row;
+  }
+  return map;
+}
+
+function inferTrueEngineFail(cluster, classifierRow, safetySensitive) {
+  const name = String(cluster.cluster || "").toLowerCase();
+  const cls = classifierRow || {};
+  const diagTef = Number(cls.diagnostic_true_engine_fail_count);
+  const harnessOnly = cls.harness_only === "YES" || cls.engine_fix_allowed === "NO";
+  const engineAllowed = cls.engine_fix_allowed === "YES";
+  const engineRec = cls.diagnostic_engine_fix_recommended === "YES";
+
+  if (harnessOnly && !engineRec && !(diagTef > 0)) {
+    return { confidence: "LOW", kind: "harness_or_gold", harness_only: "YES" };
+  }
+  if (engineAllowed && (diagTef > 0 || engineRec)) {
+    return { confidence: "HIGH", kind: "TRUE_ENGINE_FAIL", harness_only: "NO" };
+  }
+  if (/negation|no_write|dangerous|false_write|safety/.test(name) && safetySensitive) {
+    return { confidence: "HIGH", kind: "TRUE_ENGINE_FAIL", harness_only: "NO" };
+  }
+  if (/retrieval|false_empty|relevance|fuzzy/.test(name)) {
+    return { confidence: cluster.fail_count >= 50 ? "HIGH" : "MEDIUM", kind: "TRUE_ENGINE_FAIL", harness_only: "NO" };
+  }
+  if (/intent_fail|calendar_vs_task|wrong_collection|clarif/.test(name)) {
+    return { confidence: "MEDIUM", kind: "mixed_engine_harness", harness_only: "PARTIAL" };
+  }
+  if (/ambiguous|filler|ascii|voice|partial_cal/.test(name)) {
+    return { confidence: "LOW", kind: "harness_or_ambiguity", harness_only: "YES" };
+  }
+  if (cluster.fail_count >= 100) {
+    return { confidence: "MEDIUM", kind: "needs_diagnostic", harness_only: "UNKNOWN" };
+  }
+  return { confidence: "LOW", kind: "unclear", harness_only: "UNKNOWN" };
+}
+
+function safetyRiskFor(cluster, auditEntry, safetyAgg) {
+  if (auditEntry.safety_sensitive) {
+    if (/negation|no_write|dangerous|false_write|write_when/.test(String(cluster.cluster))) return "HIGH";
+  }
+  if (safetyAgg) {
+    const bad =
+      safetyAgg.dangerous_write_count > 0 ||
+      safetyAgg.false_write_count > 0 ||
+      safetyAgg.query_created_write_count > 0 ||
+      safetyAgg.write_when_negated_count > 0;
+    if (bad && auditEntry.safety_sensitive) return "HIGH";
+  }
+  if (/safety|negation|no_write/.test(String(cluster.cluster))) return "MEDIUM";
+  return "LOW";
+}
+
+function extractSafetyCounters(data) {
+  const nested = data && data.safety && typeof data.safety === "object" ? data.safety : {};
+  const pick = (k) => {
+    const v = data && data[k] != null ? data[k] : nested[k];
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  };
+  return {
+    dangerous_write_count: pick("dangerous_write_count"),
+    false_write_count: pick("false_write_count"),
+    query_created_write_count: Math.max(pick("query_created_write_count"), pick("query_created_write_count_realistic")),
+    write_when_negated_count: pick("write_when_negated_count"),
+  };
+}
+
+function aggregateSafetyFromReports(repoRoot) {
+  const names = [
+    "silver-quality-v2-report.json",
+    "silver-real-human-chaos-v3-report.json",
+    "silver-real-czech-public-ux-corpus-v2-report.json",
+  ];
+  const agg = {
+    dangerous_write_count: 0,
+    false_write_count: 0,
+    query_created_write_count: 0,
+    write_when_negated_count: 0,
+  };
+  for (const fn of names) {
+    const d = readJsonSafe(path.join(repoRoot, "scripts", fn));
+    const s = extractSafetyCounters(d);
+    for (const k of Object.keys(agg)) {
+      agg[k] = Math.max(agg[k], s[k]);
+    }
+  }
+  return agg;
+}
+
+function classifyMaturity(entry, repoRoot, headCommit) {
+  const scriptsDir = path.join(repoRoot, "scripts");
+  let hasHarness = false;
+  let hasFoundation = false;
+  let hasReport = false;
+  let reportData = null;
+  let lastRun = "";
+  let lastCommit = "";
+
+  for (const s of entry.harness_scripts || []) {
+    if (fileStat(path.join(scriptsDir, s)).exists) hasHarness = true;
+  }
+  for (const s of entry.foundation_scripts || []) {
+    if (fileStat(path.join(scriptsDir, s)).exists) hasFoundation = true;
+  }
+  if (entry.report_json) {
+    const rp = path.join(scriptsDir, entry.report_json);
+    const st = fileStat(rp);
+    if (st.exists) {
+      hasReport = true;
+      reportData = readJsonSafe(rp);
+      lastRun = new Date(st.mtimeMs).toISOString();
+      lastCommit =
+        (reportData && (reportData.main_commit || reportData.actual_main_commit || reportData.expected_main_commit)) ||
+        "";
+    }
+  }
+
+  let maturity = MATURITY.PLANNED_ONLY;
+  let foundation_only = "YES";
+  let stale = "NO";
+
+  if (!hasHarness && !hasFoundation && !hasReport) {
+    maturity = MATURITY.PLANNED_ONLY;
+  } else if (hasFoundation && !hasHarness && !hasReport) {
+    maturity = MATURITY.FOUNDATION_ONLY;
+  } else if (hasHarness && !hasReport) {
+    maturity = MATURITY.PARTIAL;
+    foundation_only = hasFoundation ? "YES" : "NO";
+  } else if (hasReport) {
+    const acc = reportData && (reportData.overall_accuracy || reportData.accuracy || reportData.retrieval_accuracy_percent);
+    const failN = Number(reportData && (reportData.fail_count || reportData.intent_fail_count));
+    const passN = Number(reportData && (reportData.pass_count || reportData.pass));
+    const total = Number(reportData && (reportData.total_cases || reportData.total_rcz2_retrieval_cases));
+    const ageDays = parseIsoAgeDays((reportData && reportData.generated_at) || lastRun);
+    const commitMismatch = headCommit && lastCommit && headCommit !== lastCommit;
+    if (commitMismatch || (ageDays != null && ageDays > STALE_DAYS)) {
+      maturity = MATURITY.STALE;
+      stale = "YES";
+    } else if (acc && parseFloat(String(acc)) >= 99.5 && (!Number.isFinite(failN) || failN <= 20)) {
+      maturity = MATURITY.STABLE;
+      foundation_only = "NO";
+    } else {
+      maturity = MATURITY.ACTIVE;
+      foundation_only = "NO";
+    }
+    if (hasFoundation && !hasHarness) {
+      maturity = MATURITY.FOUNDATION_ONLY;
+      foundation_only = "YES";
+    }
+    if (total > 0 && passN > 0 && passN / total < 0.5 && maturity !== MATURITY.STALE) {
+      maturity = MATURITY.PARTIAL;
+    }
+  }
+
+  return {
+    maturity,
+    foundation_only,
+    stale,
+    last_run: lastRun || "(nikdy)",
+    last_commit: lastCommit || "(neznámý)",
+    has_harness: hasHarness,
+    has_report: hasReport,
+    report_data: reportData,
+  };
+}
+
+function buildAuditRegistry(repoRoot) {
+  const scriptsDir = path.join(repoRoot, "scripts");
+  const headCommit = gitHead(repoRoot);
+  const classifierMap = loadClassifierMap(repoRoot);
+  const safetyAgg = aggregateSafetyFromReports(repoRoot);
+  const audits = [];
+
+  for (const spec of AUDIT_CATALOG) {
+    const mat = classifyMaturity(spec, repoRoot, headCommit);
+    const clusters = mat.report_data
+      ? collectClustersFromReport(spec.report_json, mat.report_data, spec.id)
+      : [];
+
+    const clusterMap = {};
+    for (const c of clusters) {
+      const key = c.cluster;
+      if (!clusterMap[key]) clusterMap[key] = Object.assign({}, c);
+      else clusterMap[key].fail_count = Math.max(clusterMap[key].fail_count, c.fail_count);
+    }
+    const enrichedClusters = Object.keys(clusterMap).map((key) => {
+      const c = clusterMap[key];
+      const cls = classifierMap[c.cluster];
+      const tef = inferTrueEngineFail(c, cls, spec.safety_sensitive);
+      return Object.assign({}, c, {
+        true_engine_fail_confidence: tef.confidence,
+        true_engine_fail_kind: tef.kind,
+        harness_only: tef.harness_only,
+        safety_risk: safetyRiskFor(c, spec, safetyAgg),
+        classifier_engine_fix_allowed: cls ? cls.engine_fix_allowed : "UNKNOWN",
+      });
+    });
+
+    const trueEngineClusters = enrichedClusters.filter(
+      (c) => c.true_engine_fail_confidence === "HIGH" || c.true_engine_fail_confidence === "MEDIUM",
+    );
+    const harnessOnlyClusters = enrichedClusters.filter((c) => c.harness_only === "YES");
+
+    const topCluster = enrichedClusters.sort((a, b) => b.fail_count - a.fail_count)[0] || null;
+
+    const usable =
+      (mat.maturity === MATURITY.ACTIVE || mat.maturity === MATURITY.STABLE || mat.maturity === MATURITY.PARTIAL) &&
+      mat.foundation_only !== "YES" &&
+      mat.stale !== "YES" &&
+      (trueEngineClusters.length > 0 || (topCluster && topCluster.fail_count > 0));
+
+    let status = "planned";
+    if (mat.maturity === MATURITY.PLANNED_ONLY) status = "not_created";
+    else if (mat.maturity === MATURITY.FOUNDATION_ONLY) status = "foundation";
+    else if (mat.maturity === MATURITY.STALE) status = "stale";
+    else if (mat.maturity === MATURITY.STABLE) status = "stable_active";
+    else if (mat.maturity === MATURITY.ACTIVE) status = "active";
+    else status = "partial";
+
+    audits.push({
+      audit_id: spec.id,
+      audit_name: spec.audit_name,
+      status,
+      maturity: mat.maturity,
+      last_run: mat.last_run,
+      last_commit: mat.last_commit,
+      usable_for_cap_selection: usable ? "YES" : "NO",
+      true_engine_fail_clusters: trueEngineClusters.map((c) => c.cluster).join("|") || "(žádný)",
+      true_engine_fail_cluster_count: trueEngineClusters.length,
+      harness_only_cluster_count: harnessOnlyClusters.length,
+      top_cluster: topCluster ? topCluster.cluster + ":" + topCluster.fail_count : "(žádný)",
+      safety_risk: topCluster ? topCluster.safety_risk : spec.safety_sensitive ? "MEDIUM" : "LOW",
+      audit_size: spec.audit_size,
+      stale: mat.stale,
+      foundation_only: mat.foundation_only,
+      public_product_impact: spec.public_product_impact,
+      clusters: enrichedClusters,
+    });
+  }
+
+  return { repoRoot, headCommit, safetyAgg, audits, generated_at: new Date().toISOString() };
+}
+
+function scoreClusterForPriority(c, audit) {
+  const impactMap = { HIGH: 3, MEDIUM: 2, LOW: 1 };
+  const confMap = { HIGH: 3, MEDIUM: 2, LOW: 0 };
+  const riskMap = { HIGH: 3, MEDIUM: 2, LOW: 1 };
+  const fixMap = { YES: 2, PARTIAL: 1, NO: 0, UNKNOWN: 0 };
+  const matMap = {
+    ACTIVE: 2,
+    STABLE: 1,
+    PARTIAL: 1,
+    STALE: 0,
+    FOUNDATION_ONLY: 0,
+    PLANNED_ONLY: 0,
+  };
+  const reproducibility = Math.min(3, Math.log10(Math.max(1, c.fail_count)) / 2);
+  const auditQuality = matMap[audit.maturity] || 0;
+  const deterministicFix = fixMap[c.classifier_engine_fix_allowed] || (c.true_engine_fail_confidence === "HIGH" ? 2 : 0);
+  const harnessPenalty = c.harness_only === "YES" || c.true_engine_fail_confidence === "LOW" ? 0 : 1;
+
+  return (
+    (confMap[c.true_engine_fail_confidence] || 0) * 10000000 +
+    riskMap[c.safety_risk || "LOW"] * 1000000 +
+    (impactMap[audit.public_product_impact] || 1) * 100000 +
+    harnessPenalty * 50000 +
+    reproducibility * 1000 +
+    auditQuality * 100 +
+    deterministicFix * 10 +
+    c.fail_count
+  );
+}
+
+function prioritizeTrueEngineFail(registry) {
+  const rows = [];
+  const seen = new Set();
+  for (const audit of registry.audits) {
+    if (audit.usable_for_cap_selection !== "YES" && audit.clusters.length === 0) continue;
+    for (const c of audit.clusters) {
+      if (c.fail_count <= 0) continue;
+      const dedupeKey = audit.audit_id + "\0" + c.cluster;
+      if (seen.has(dedupeKey)) continue;
+      seen.add(dedupeKey);
+      rows.push({
+        audit_id: audit.audit_id,
+        audit_name: audit.audit_name,
+        cluster: c.cluster,
+        fail_count: c.fail_count,
+        safety_risk: c.safety_risk,
+        public_product_impact: audit.public_product_impact,
+        true_engine_fail_confidence: c.true_engine_fail_confidence,
+        true_engine_fail_kind: c.true_engine_fail_kind,
+        harness_only: c.harness_only,
+        maturity: audit.maturity,
+        score: scoreClusterForPriority(c, audit),
+      });
+    }
+  }
+  rows.sort((a, b) => b.score - a.score);
+  return rows;
+}
+
+function recommendCapType(row, audit) {
+  if (!row) return "CAP10";
+  if (row.safety_risk === "HIGH" || row.fail_count >= 2000) return "CAP10";
+  if (row.fail_count >= 500 || row.true_engine_fail_confidence === "HIGH") return "CAP15";
+  if (audit.maturity === MATURITY.PARTIAL || audit.foundation_only === "YES") return "CAP25";
+  if (row.fail_count >= 100) return "CAP25";
+  return "CAP50";
+}
+
+function expectedOutcomeFor(row) {
+  if (!row) return "audit expansion";
+  if (row.harness_only === "YES") return "harness alignment";
+  if (row.true_engine_fail_confidence === "HIGH" && row.true_engine_fail_kind === "TRUE_ENGINE_FAIL") return "engine PR";
+  if (row.true_engine_fail_confidence === "MEDIUM") return "engine PR or harness split";
+  if (row.true_engine_fail_kind === "harness_or_gold") return "harness alignment";
+  return "diagnostic only";
+}
+
+function estimatedRiskFor(row, audit) {
+  if (row && row.safety_risk === "HIGH") return "HIGH";
+  if (audit && audit.maturity === MATURITY.STALE) return "HIGH";
+  if (row && row.true_engine_fail_confidence === "LOW") return "MEDIUM";
+  if (row && row.harness_only === "YES") return "LOW";
+  return "LOW";
+}
+
+function selectNextCap(registry, prioritized) {
+  const top = prioritized[0];
+  if (!top) {
+    const expand = registry.audits.find(
+      (a) => a.foundation_only === "YES" || a.maturity === MATURITY.PLANNED_ONLY || a.maturity === MATURITY.FOUNDATION_ONLY,
+    );
+    return {
+      recommended_cap: "CAP25",
+      audit_name: expand ? expand.audit_name : "(žádný)",
+      audit_id: expand ? expand.audit_id : "",
+      cluster: "(žádný)",
+      expected_outcome: "audit expansion",
+      estimated_risk: "LOW",
+      rationale: "Chybí aktivní TRUE_ENGINE_FAIL cluster — rozšířit audit nebo obnovit stale report.",
+    };
+  }
+  const audit = registry.audits.find((a) => a.audit_id === top.audit_id);
+  return {
+    recommended_cap: recommendCapType(top, audit || {}),
+    audit_name: top.audit_name,
+    audit_id: top.audit_id,
+    cluster: top.cluster,
+    expected_outcome: expectedOutcomeFor(top),
+    estimated_risk: estimatedRiskFor(top, audit),
+    rationale:
+      "Top cluster podle safety × dopad × TRUE_ENGINE_FAIL confidence × reprodukovatelnost; audit maturity=" +
+      (audit ? audit.maturity : "?"),
+  };
+}
+
+function enforceCapOutcome(meta) {
+  const cycles = Number(meta.cycles_completed) || 0;
+  const prCreated = Number(meta.pr_created_count) > 0 || meta.pr_created === "YES";
+  const productFix = meta.product_fix_created === "YES" || meta.engine_changed === "YES";
+  const trueEngineFound = meta.true_engine_fail_found === "YES";
+  const clearExplanation = meta.clear_no_fix_explanation === "YES";
+  const orchestrationOnly = meta.orchestration_only_run === "YES";
+  const capLabel = String(meta.cap_label || "").toUpperCase();
+
+  let lowProductLoop = "NO";
+  let recommendation = "pokračovat doporučeným CAP během dle priority matrix";
+
+  if (!prCreated && !productFix && !trueEngineFound && !clearExplanation) {
+    if (orchestrationOnly || cycles >= 2) {
+      lowProductLoop = "YES";
+      recommendation =
+        "Zastavit dlouhé CAP50 bez produktu; přepnout audit/cluster dle SILVER_AUDIT_PRIORITY_MATRIX nebo rozšířit audit.";
+    }
+  }
+  if (lowProductLoop === "YES" && capLabel === "CAP50") {
+    recommendation = "STOP CAP50 — LOW_PRODUCT_VALUE_LOOP; použít CAP10–CAP25 na konkrétní TRUE_ENGINE_FAIL cluster.";
+  }
+
+  return {
+    low_product_value_loop: lowProductLoop,
+    cap_outcome_class: lowProductLoop === "YES" ? "LOW_PRODUCT_VALUE_LOOP" : prCreated || productFix ? "PRODUCT" : "DIAGNOSTIC",
+    recommendation,
+  };
+}
+
+function silverProductTrend(registry, prioritized) {
+  const active = registry.audits.filter((a) => a.maturity === MATURITY.ACTIVE || a.maturity === MATURITY.STABLE);
+  const top = prioritized[0];
+  if (active.length >= 3 && top && top.true_engine_fail_confidence === "HIGH") {
+    return "Silver se může zlepšovat produktově — priorita na " + top.audit_name + " / " + top.cluster;
+  }
+  if (registry.audits.every((a) => a.foundation_only === "YES" || a.maturity === MATURITY.PLANNED_ONLY)) {
+    return "Stagnace — většina auditů je foundation/planned; nejdřív audit expansion.";
+  }
+  if (top && top.harness_only === "YES") {
+    return "Cluster pravděpodobně není TRUE_ENGINE_FAIL — spíš harness/gold alignment.";
+  }
+  return "Zlepšuje se spíš orchestrace — ověřit CAP scorecard a audit maturity před dalším engine PR.";
+}
+
+function renderCzechRegistryTable(registry) {
+  const lines = ["SILVER_AUDIT_REGISTRY", ""];
+  for (const a of registry.audits) {
+    lines.push(
+      [
+        "audit_name=" + a.audit_name,
+        "status=" + a.status,
+        "maturity=" + a.maturity,
+        "last_run=" + a.last_run,
+        "last_commit=" + a.last_commit,
+        "usable_for_cap_selection=" + a.usable_for_cap_selection,
+        "true_engine_fail_clusters=" + a.true_engine_fail_clusters,
+        "top_cluster=" + a.top_cluster,
+        "safety_risk=" + a.safety_risk,
+        "audit_size=" + a.audit_size,
+        "stale=" + a.stale,
+        "foundation_only=" + a.foundation_only,
+        "public_product_impact=" + a.public_product_impact,
+      ].join(" | "),
+    );
+  }
+  return lines.join("\n");
+}
+
+function renderCzechPriorityMatrix(prioritized, limit) {
+  const lines = ["SILVER_AUDIT_PRIORITY_MATRIX", ""];
+  const n = limit || 8;
+  let i = 0;
+  for (const row of prioritized.slice(0, n)) {
+    i++;
+    const cap = recommendCapType(row, { maturity: row.maturity, foundation_only: "NO" });
+    lines.push(String(i) + ".");
+    lines.push("Audit: " + row.audit_name);
+    lines.push("Cluster: " + row.cluster + " (fails=" + row.fail_count + ")");
+    lines.push("Impact: " + row.public_product_impact);
+    lines.push("TRUE_ENGINE_FAIL confidence: " + row.true_engine_fail_confidence);
+    lines.push("Recommended CAP: " + cap);
+    lines.push("Expected outcome: " + expectedOutcomeFor(row));
+    lines.push("Risk: " + estimatedRiskFor(row, { maturity: row.maturity }));
+    lines.push("");
+  }
+  return lines.join("\n");
+}
+
+function renderFoundationActions(registry) {
+  const lines = [];
+  let idx = 0;
+  for (const a of registry.audits) {
+    if (a.maturity !== MATURITY.FOUNDATION_ONLY && a.maturity !== MATURITY.PLANNED_ONLY) continue;
+    idx++;
+    lines.push(String(idx) + ".");
+    lines.push("Audit: " + a.audit_name);
+    lines.push("Status: " + a.maturity);
+    lines.push("Recommended action: audit expansion");
+    lines.push("Risk: LOW");
+    lines.push("");
+  }
+  return lines;
+}
+
+function renderNextCapBlock(nextCap) {
+  return [
+    "SILVER_NEXT_CAP_RECOMMENDATION",
+    "",
+    "Doporučený CAP: " + nextCap.recommended_cap,
+    "Audit: " + nextCap.audit_name,
+    "Cluster: " + nextCap.cluster,
+    "Očekávaný výsledek: " + nextCap.expected_outcome,
+    "Odhad rizika: " + nextCap.estimated_risk,
+    "Zdůvodnění: " + nextCap.rationale,
+  ].join("\n");
+}
+
+function renderCapOutcomeBlock(outcome) {
+  return [
+    "SILVER_CAP_OUTCOME_ENFORCEMENT",
+    "",
+    "low_product_value_loop=" + outcome.low_product_value_loop,
+    "cap_outcome_class=" + outcome.cap_outcome_class,
+    "doporučení=" + outcome.recommendation,
+  ].join("\n");
+}
+
+function runSelfTest() {
+  const td = path.join(require("os").tmpdir(), "silver-audit-registry-selftest-" + Date.now());
+  fs.mkdirSync(path.join(td, "scripts"), { recursive: true });
+
+  const rcz2 = {
+    harness_id: "test",
+    generated_at: new Date().toISOString(),
+    main_commit: "abc",
+    total_cases: 1000,
+    fail: 120,
+    pass: 880,
+    accuracy: "88.0",
+    top_clusters: ["rcz2_retrieval||intent_fail:80", "rcz2_ultra_short_chaos||intent_fail:40"],
+  };
+  fs.writeFileSync(path.join(td, "scripts", "silver-real-czech-public-ux-corpus-v2-report.json"), JSON.stringify(rcz2));
+  fs.writeFileSync(
+    path.join(td, "scripts", "silver-real-human-chaos-v3.cjs"),
+    "// harness stub\n",
+    "utf8",
+  );
+  const rhc3 = {
+    generated_at: new Date().toISOString(),
+    main_commit: "abc",
+    total_cases: 5000,
+    fail_count: 5,
+    pass_count: 4995,
+    overall_accuracy: "99.9",
+    top_fail_clusters: ["rhc3_negation_cal_readonly:5"],
+  };
+  fs.writeFileSync(path.join(td, "scripts", "silver-real-human-chaos-v3-report.json"), JSON.stringify(rhc3));
+
+  const reg = buildAuditRegistry(td);
+  const pri = prioritizeTrueEngineFail(reg);
+  const next = selectNextCap(reg, pri);
+  const outcome = enforceCapOutcome({
+    cycles_completed: 3,
+    pr_created_count: 0,
+    orchestration_only_run: "YES",
+    cap_label: "CAP50",
+  });
+
+  const checks = [];
+  checks.push(reg.audits.length === AUDIT_CATALOG.length);
+  checks.push(pri.length > 0);
+  checks.push(next.recommended_cap && next.audit_name);
+  checks.push(outcome.low_product_value_loop === "YES");
+  const pub = reg.audits.find((a) => a.audit_id === "public_ux");
+  checks.push(pub && pub.maturity === MATURITY.ACTIVE);
+  const planned = reg.audits.find((a) => a.audit_id === "self_correction");
+  checks.push(planned && planned.maturity === MATURITY.PLANNED_ONLY);
+
+  const pass = checks.every(Boolean);
+  console.log("=== SILVER_AUDIT_REGISTRY_SELFTEST ===");
+  console.log("SILVER_AUDIT_REGISTRY_SELFTEST=" + (pass ? "PASS" : "FAIL"));
+  console.log("audits_catalog_count=" + reg.audits.length);
+  console.log("priority_rows=" + pri.length);
+  console.log("low_product_loop_detection=" + outcome.low_product_value_loop);
+  console.log("=== END_SILVER_AUDIT_REGISTRY_SELFTEST ===");
+  try {
+    fs.rmSync(td, { recursive: true, force: true });
+  } catch {
+    /* ignore */
+  }
+  process.exit(pass ? 0 : 1);
+}
+
+function parseArgs(argv) {
+  const out = { cmd: "report", repoRoot: path.join(SCRIPT_DIR, ".."), capMeta: {} };
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a === "selftest") out.cmd = "selftest";
+    else if (a === "report") out.cmd = "report";
+    else if (a === "cap-outcome") out.cmd = "cap-outcome";
+    else if (a === "--repo-root" && argv[i + 1]) {
+      out.repoRoot = path.resolve(argv[++i]);
+    } else if (a.startsWith("--cycles=")) out.capMeta.cycles_completed = parseInt(a.slice(9), 10);
+    else if (a.startsWith("--cap-label=")) out.capMeta.cap_label = a.slice(12);
+    else if (a === "--orchestration-only") out.capMeta.orchestration_only_run = "YES";
+    else if (a === "--pr-created") out.capMeta.pr_created_count = 1;
+    else if (a === "--product-fix") out.capMeta.product_fix_created = "YES";
+    else if (a === "--true-engine-fail") out.capMeta.true_engine_fail_found = "YES";
+    else if (a === "--clear-explanation") out.capMeta.clear_no_fix_explanation = "YES";
+  }
+  return out;
+}
+
+function printImplementationResult(opts) {
+  const lines = [
+    "AUDIT_REGISTRY_IMPLEMENTATION_RESULT",
+    "",
+    "changed_files=scripts/silver-audit-registry.cjs;scripts/silver-audit-registry.ps1;scripts/silver-autopilot.cjs;scripts/silver-autopilot-loop.ps1;SILVER_AUTOPILOT_README.md",
+    "engine_changed=NO",
+    "assets_app_changed=NO",
+    "audit_registry_added=" + (opts.audit_registry_added || "YES"),
+    "maturity_classification_added=" + (opts.maturity_classification_added || "YES"),
+    "next_cap_selector_added=" + (opts.next_cap_selector_added || "YES"),
+    "true_engine_fail_prioritizer_added=" + (opts.true_engine_fail_prioritizer_added || "YES"),
+    "cap_outcome_enforcement_added=" + (opts.cap_outcome_enforcement_added || "YES"),
+    "low_product_value_loop_detection_added=" + (opts.low_product_value_loop_detection_added || "YES"),
+    "smoke=" + (opts.smoke || "UNKNOWN"),
+    "autopilot_status=" + (opts.autopilot_status || "UNKNOWN"),
+    "safety_counters=" + (opts.safety_counters || "UNKNOWN"),
+    "git_status_clean=" + (opts.git_status_clean || "UNKNOWN"),
+    "pr_created=NO",
+    "recommended_next_step=" + (opts.recommended_next_step || "node scripts/silver-audit-registry.cjs report"),
+  ];
+  console.log(lines.join("\n"));
+}
+
+function emitFullReport(repoRoot, capMeta) {
+  const registry = buildAuditRegistry(repoRoot);
+  const prioritized = prioritizeTrueEngineFail(registry);
+  const nextCap = selectNextCap(registry, prioritized);
+  const outcome = enforceCapOutcome(capMeta || {});
+  const trend = silverProductTrend(registry, prioritized);
+
+  const matrixLines = renderCzechPriorityMatrix(prioritized, 6);
+  const foundationExtra = renderFoundationActions(registry);
+  const blocks = [
+    renderCzechRegistryTable(registry),
+    "",
+    matrixLines,
+    foundationExtra.length ? foundationExtra.join("\n") : "",
+    renderNextCapBlock(nextCap),
+    "",
+    renderCapOutcomeBlock(outcome),
+    "",
+    "SILVER_PRODUCT_TREND",
+    trend,
+  ].filter((x) => x !== "");
+
+  process.stdout.write(blocks.join("\n") + "\n");
+  return { registry, prioritized, nextCap, outcome, trend };
+}
+
+function main() {
+  const args = parseArgs(process.argv.slice(2));
+  if (args.cmd === "selftest") {
+    runSelfTest();
+    return;
+  }
+  if (args.cmd === "cap-outcome") {
+    const o = enforceCapOutcome(args.capMeta);
+    console.log(renderCapOutcomeBlock(o));
+    return;
+  }
+  emitFullReport(args.repoRoot, args.capMeta);
+}
+
+module.exports = {
+  AUDIT_CATALOG,
+  MATURITY,
+  buildAuditRegistry,
+  prioritizeTrueEngineFail,
+  selectNextCap,
+  enforceCapOutcome,
+  emitFullReport,
+  renderCzechRegistryTable,
+  renderCapOutcomeBlock,
+};
+
+if (require.main === module) {
+  main();
+}

@@ -43,6 +43,7 @@ If the adapter script is missing, `pwsh` is unavailable on non-Windows, or `adap
 
 ```bash
 node scripts/silver-autopilot.cjs --status
+node scripts/silver-autopilot.cjs --audit-registry
 node scripts/silver-autopilot.cjs --verify-pr=4340
 node scripts/silver-autopilot.cjs --merge-pr=4340
 node scripts/silver-autopilot.cjs --post-merge-proof
@@ -53,7 +54,8 @@ node scripts/silver-autopilot.cjs --full-auto-loop --max-steps=1
 node scripts/silver-autopilot.cjs --loop-once
 ```
 
-- **`--status`**: prints status and updates `SILVER_RUN_REPORT.md`.
+- **`--status`**: prints status and updates `SILVER_RUN_REPORT.md`. Also prints compact **`audit_registry_*`** lines (next CAP, audit, cluster). Set `SILVER_AUDIT_REGISTRY_VERBOSE=1` to embed the full Czech registry block in the same run.
+- **`--audit-registry`**: full Czech report — `SILVER_AUDIT_REGISTRY`, `SILVER_AUDIT_PRIORITY_MATRIX`, `SILVER_NEXT_CAP_RECOMMENDATION`, `SILVER_CAP_OUTCOME_ENFORCEMENT`, `SILVER_PRODUCT_TREND`. Orchestration only; does not modify engine or `assets/app.js`.
 - **`--verify-pr`**: uses `gh pr view` / `gh pr diff --name-only`; prints `READY_TO_MERGE` or `STOP` with a reason.
 - **`--merge-pr`**: merges only if verify would return `READY_TO_MERGE`; then `git checkout main` + `git pull --ff-only`, and refreshes the run report.
 - **`--post-merge-proof`**: runs the proof script chain from `package.json` / `scripts` (smoke, calendar regression, audits, corpora). **Before** `audit_silver_realistic_mobile_corpus.cjs`, Autopilot runs `git restore` on tracked `scripts/*report.json` only (so that audit does not see dirty tracked report JSON from earlier steps). After the chain, it restores tracked report JSON again and prints `git status --short`. **Any logical STOP** in this command (dirty tree preflight, nonzero step exit, nonzero safety counters, calendar 20k gate, proof-gate failure) updates `SILVER_RUN_REPORT.md` with `post_merge_proof_logical_status=FAIL` / `post_merge_proof_process_exit=1` and **exits the Node process with code 1** so shells and CI cannot treat a proof failure as success.
@@ -160,7 +162,13 @@ Parameters:
 | `-Cap50HardPreflight` | Emits **`SILVER_CAP50_HARD_PREFLIGHT`** (UTF-8 selftest, mojibake regression, cleanup probe, three-cycle probe); **STOP** if any sub-probe is not PASS. |
 | `-Cap50ThreeCycleOrchestrationProbe` | Simulates **3** runtime handoff cycles: write `SILVER_*` → post-cycle archive/restore → verify runtime ephemerals clean (no product CAP50). |
 | `-Cap50MojibakeRegressionSelfTest` | Runs `scripts/silver-cap50-mojibake-regression-selftest.ps1` (last known false-negative sample must FAIL). |
+| `-CapProductScorecardSelfTest` | Runs `node scripts/silver-cap-product-scorecard.cjs selftest` (before/after delta, baseline guard, Czech block). |
+| `-AuditRegistrySelfTest` | Runs `node scripts/silver-audit-registry.cjs selftest` (maturity, prioritizer, LOW_PRODUCT_VALUE_LOOP). |
 | `-NoBeep` | Disable `[console]::beep` PASS/FAIL/COMPLETE signals. |
+
+**CAP BEFORE/AFTER product scorecard (all CAPX / CAP50):** at loop start the orchestrator captures a **before** snapshot (`%TEMP%\\silver-cap-scorecard-*\\before.json`); on exit it runs **`finalize`** and prints **`SILVER_CAP_BEFORE_AFTER_SCORECARD`** (Czech) plus appends to `SILVER_PROGRESS_LOG.md`. Metrics are **auditované** only when backed by `scripts/*-report.json` or non-placeholder `SILVER_RUN_REPORT.md` lines; `baseline_pending_precise_measurement` is **never** counted as product improvement. If no verified product shift: explicit guard *„Běh nepřinesl ověřený produktový posun Silvera…“*.
+
+**Audit registry + NEXT CAP selector (orchestration):** `scripts/silver-audit-registry.cjs` evidences canonical audits (RHC3 500k, Retrieval Stress 300k, Public UX 500k+, …), classifies maturity (`FOUNDATION_ONLY` … `STALE`), ranks **TRUE_ENGINE_FAIL** clusters, recommends **CAP10–CAP50**, and flags **`LOW_PRODUCT_VALUE_LOOP`** when a CAP run produces no PR, no engine fix, and no clear explanation. Controlled autonomous loops print the full Czech matrix at start/end; after each scorecard finalize, **`SILVER_CAP_OUTCOME_ENFORCEMENT`** is appended to `SILVER_PROGRESS_LOG.md`. Standalone: `node scripts/silver-audit-registry.cjs report`.
 
 **CAP50 product run gates (orchestration only):** before controlled autonomous/CAP50, the loop prints **`SILVER_CAP50_HARD_PREFLIGHT`** (`safe_to_start_product_cap50=YES` required). After each cycle and on exit: **`SILVER_CAP50_CYCLE_POSTCONDITION`** / **`SILVER_CAP50_FINAL_POSTCONDITION`**. Runtime markdown + transient `scripts/*-report.json` are archived under `.silver-runtime/cycles/<timestamp>/` then `git restore --worktree` so **`dirty_git_guard`** does not block on orchestration handoff files. UTF-8 mojibake is a **hard fail** on raw `SILVER_CURSOR_OUTPUT.md` (full file + `prompt_preview` / stdout / stderr), including a **post-write** adapter recheck.
 
