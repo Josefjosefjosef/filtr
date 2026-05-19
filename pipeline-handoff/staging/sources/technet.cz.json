@@ -1,24 +1,25 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-05-19T19:54:37.908567Z",
+  "ingestedAt": "2026-05-19T20:34:33.190702Z",
   "items": [
     {
       "section": "veda",
       "contentType": "article",
-      "title": "Podívejte se na to nejlepší z oslav 70 let základy v Náměšti nad Oslavou",
-      "url": "https://www.idnes.cz/technet/vojenstvi/den-otevrenych-dveri-namest.A260518_143544_vojenstvi_alv",
-      "dt": "2026-05-18T22:00:00Z",
+      "title": "Google ukázal, jak nám změní vyhledávání. Jeho AI více rozumí světu",
+      "url": "https://www.idnes.cz/technet/software/google-io-umela-inteligence-ai-vyhledavani-gemini-android-xr-chrome.A260519_120608_software_vse",
+      "dt": "2026-05-19T19:57:00Z",
       "media_raw": "iDNES / Technet",
       "media_norm": "iDNES / Technet",
       "tokens": [
-        "let",
-        "nejlepší",
-        "náměšti",
-        "oslav",
-        "oslavou",
-        "podívejte",
-        "základy"
+        "google",
+        "jeho",
+        "nám",
+        "rozumí",
+        "světu",
+        "ukázal",
+        "vyhledávání",
+        "změní"
       ],
       "feedCategory": "veda",
       "feedType": "rubric",
@@ -43,6 +44,30 @@
         "slaví",
         "sony",
         "televizory"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Podívejte se na to nejlepší z oslav 70 let základy v Náměšti nad Oslavou",
+      "url": "https://www.idnes.cz/technet/vojenstvi/den-otevrenych-dveri-namest.A260518_143544_vojenstvi_alv",
+      "dt": "2026-05-18T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "let",
+        "nejlepší",
+        "náměšti",
+        "oslav",
+        "oslavou",
+        "podívejte",
+        "základy"
       ],
       "feedCategory": "veda",
       "feedType": "rubric",
@@ -735,31 +760,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rusko nejen pomáhalo nacistickému Německu, ale šlo ještě dál",
-      "url": "https://www.idnes.cz/technet/vojenstvi/zacatek-druhe-svetova-valky-spoluprace-sovetsky-svaz-treti-rise.A260507_014555_vojenstvi_erp",
-      "dt": "2026-05-07T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "ale",
-        "ještě",
-        "nacistickému",
-        "nejen",
-        "německu",
-        "pomáhalo",
-        "rusko",
-        "šlo"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -770,7 +770,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 46283,
+      "bytes": 46317,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -807,11 +807,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-18T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T19:57:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 18,
-          "zpravy": 12
+          "other": 19,
+          "zpravy": 11
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -824,11 +824,15 @@
         },
         "sample_titles": [
           {
-            "title": "Podívejte se na to nejlepší z oslav 70 let základy v Náměšti nad Oslavou",
-            "publishedAt": "2026-05-18T22:00:00Z"
+            "title": "Google ukázal, jak nám změní vyhledávání. Jeho AI více rozumí světu",
+            "publishedAt": "2026-05-19T19:57:00Z"
           },
           {
             "title": "Sony slaví 80 let. Podívejte se na nejzajímavější televizory historie",
+            "publishedAt": "2026-05-18T22:00:00Z"
+          },
+          {
+            "title": "Podívejte se na to nejlepší z oslav 70 let základy v Náměšti nad Oslavou",
             "publishedAt": "2026-05-18T22:00:00Z"
           },
           {
@@ -849,10 +853,6 @@
           },
           {
             "title": "Bezkřídlý zázrak i létající rakev. Jak vznikal legendární letoun F-104",
-            "publishedAt": "2026-05-15T22:00:00Z"
-          },
-          {
-            "title": "Hurvínek už chodí po jevišti 100 let. Z původního Spejblíka vyrostla legenda",
             "publishedAt": "2026-05-15T22:00:00Z"
           }
         ]

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-19T19:54:37.908567Z",
+  "ingestedAt": "2026-05-19T20:34:33.190702Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Osoba s rizikem nákazy ebolou je na cestě do ČR, tvrdí americký institut",
+      "url": "https://www.denik.cz/z_domova/ebola-nakaza-cesko-usa.html",
+      "dt": "2026-05-19T19:45:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "americký",
+        "cestě",
+        "ebolou",
+        "institut",
+        "nákazy",
+        "osoba",
+        "rizikem",
+        "tvrdí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -627,31 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Protidrogový koordinátor Bém na konci června skončí, nahradí ho Protopopová",
-      "url": "https://www.denik.cz/cesko-a-eu/protidrogovy-koordinator-bem-na-konci-cervna-skonci-nahradi-ho-protopopova.html",
-      "dt": "2026-05-19T09:15:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bém",
-        "konci",
-        "koordinátor",
-        "nahradí",
-        "protidrogový",
-        "protopopová",
-        "skončí",
-        "června"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29737,
+      "bytes": 29463,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,11 +699,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-19T18:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T19:45:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 1,
-          "zpravy": 24
+          "zpravy": 24,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -715,6 +715,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Osoba s rizikem nákazy ebolou je na cestě do ČR, tvrdí americký institut",
+            "publishedAt": "2026-05-19T19:45:00Z"
+          },
           {
             "title": "Guvernér Michl vyhlásil válku inflaci. I za cenu drcení ekonomiky, tvrdil",
             "publishedAt": "2026-05-19T18:01:00Z"
@@ -742,10 +746,6 @@
           {
             "title": "Přežila sama v prázdném bytě. Majitelé fenky se odstěhovali, ta nyní hledá domov",
             "publishedAt": "2026-05-19T15:30:00Z"
-          },
-          {
-            "title": "Dron zabíjel na tržišti. Svědci viní súdánskou armádu, ta odpovědnost popírá",
-            "publishedAt": "2026-05-19T15:13:00Z"
           }
         ]
       }

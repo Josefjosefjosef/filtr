@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-19T19:54:37.908567Z",
+  "ingestedAt": "2026-05-19T20:34:33.190702Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Člověk s vysokým rizikem nákazy ebolou je na cestě do Česka, hlásí CDC",
+      "url": "https://www.idnes.cz/zpravy/domaci/ebola-cr-nakaza-kongo-riziko-cesta.A260519_214637_zahranicni_fohl",
+      "dt": "2026-05-19T20:03:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "cdc",
+        "cestě",
+        "ebolou",
+        "hlásí",
+        "nákazy",
+        "rizikem",
+        "vysokým",
+        "česka",
+        "člověk"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ruská ropa se opět dobývá do Evropy. Britové oklikou slevili ze sankcí u paliv",
+      "url": "https://www.idnes.cz/ekonomika/zahranicni/ropa-licence-britanie-rusko-dovazeni-treti-zeme.A260519_210750_eko-zahranicni_fohl",
+      "dt": "2026-05-19T19:48:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "britové",
+        "dobývá",
+        "evropy",
+        "oklikou",
+        "opět",
+        "paliv",
+        "ropa",
+        "ruská",
+        "sankcí",
+        "slevili"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -727,57 +780,6 @@
         "vystrčilovy",
         "wan",
         "známe"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rumunská stíhačka sestřelila nad Estonskem ukrajinský dron mířící na Rusko",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/rumunska-stihacka-sestrelila-nad-estonskem-ukrajinsky-dron-mirici-na-rusko.A260519_131101_zahranicni_bro",
-      "dt": "2026-05-19T12:52:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "dron",
-        "estonskem",
-        "mířící",
-        "rumunská",
-        "rusko",
-        "sestřelila",
-        "stíhačka",
-        "ukrajinský"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Tragédie na Bajkalu. Při převrácení vrtulového člunu zemřelo pět lidí",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/pet-lidi-prislo-o-zivot-kdyz-se-na-bajkalu-prevratil-vrtulovy-clun.A260519_140456_zahranicni_dtt",
-      "dt": "2026-05-19T12:43:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bajkalu",
-        "lidí",
-        "pět",
-        "převrácení",
-        "při",
-        "tragédie",
-        "vrtulového",
-        "zemřelo",
-        "člunu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1575,7 +1577,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47939,
+      "bytes": 47469,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1612,12 +1614,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T19:13:27Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T20:03:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 28,
-          "other": 1,
-          "finance": 1
+          "zpravy": 27,
+          "finance": 2,
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1629,6 +1631,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Člověk s vysokým rizikem nákazy ebolou je na cestě do Česka, hlásí CDC",
+            "publishedAt": "2026-05-19T20:03:00Z"
+          },
+          {
+            "title": "Ruská ropa se opět dobývá do Evropy. Britové oklikou slevili ze sankcí u paliv",
+            "publishedAt": "2026-05-19T19:48:00Z"
+          },
           {
             "title": "Rozhovory USA s Íránem postoupily, řekl Vance. Nevyloučil však další boje",
             "publishedAt": "2026-05-19T19:13:27Z"
@@ -1652,14 +1662,6 @@
           {
             "title": "Ebola se šíří rychleji, než WHO čekalo. Kongo hlásí přes 500 nakažených",
             "publishedAt": "2026-05-19T17:40:00Z"
-          },
-          {
-            "title": "Policista srazil vzdávajícího se muže pěstí k zemi a pak do něj i kopal, ukázalo video",
-            "publishedAt": "2026-05-19T17:12:00Z"
-          },
-          {
-            "title": "Maďarský premiér Magyar navštívil Polsko. Uvedl, že chce posílit spolupráci ve V4",
-            "publishedAt": "2026-05-19T16:48:00Z"
           }
         ]
       }
