@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-19T02:05:20.224194Z",
+  "ingestedAt": "2026-05-19T02:50:08.125097Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Policisté pátrají po mladém cyklistovi, který se ve Vrchlabí srazil s peugeotem a z místa nehody ujel",
+      "url": "https://tydenikpolicie.cz/policiste-patraji-po-mladem-cyklistovi-ktery-se-ve-vrchlabi-srazil-s-peugeotem-a-z-mista-nehody-ujel/",
+      "dt": "2026-05-19T02:02:27Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "cyklistovi",
+        "mladém",
+        "místa",
+        "nehody",
+        "peugeotem",
+        "policisté",
+        "pátrají",
+        "srazil",
+        "ujel",
+        "vrchlabí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -238,29 +265,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Řidič porsche naborual u Bělé pod Pradědem do svodidel",
-      "url": "https://tydenikpolicie.cz/ridic-porsche-naborual-u-bele-pod-pradedem-do-svodidel/",
-      "dt": "2026-05-18T10:05:41Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "bělé",
-        "naborual",
-        "porsche",
-        "pradědem",
-        "svodidel",
-        "řidič"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -271,7 +275,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16046,
+      "bytes": 16228,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -308,7 +312,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-18T14:57:14Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T02:02:27Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -323,6 +327,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policisté pátrají po mladém cyklistovi, který se ve Vrchlabí srazil s peugeotem a z místa nehody ujel",
+            "publishedAt": "2026-05-19T02:02:27Z"
+          },
           {
             "title": "Policisté z Varnsdorfu zachránili muže, který chtěl skočit z okna",
             "publishedAt": "2026-05-18T14:57:14Z"
@@ -350,10 +358,6 @@
           {
             "title": "Policisté na Havlíčkobrodsku řešili o víkendu dva případy mladistvých předávkovaných neznámými látkami",
             "publishedAt": "2026-05-18T11:55:05Z"
-          },
-          {
-            "title": "Řidiči v Plzni nebyl lhostejný osud zmatené seniorky, která ho požádala o svezení. S prosbou o pomoc se obrátil na strážníky",
-            "publishedAt": "2026-05-18T11:43:38Z"
           }
         ]
       }
