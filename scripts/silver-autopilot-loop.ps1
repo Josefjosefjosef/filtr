@@ -69,7 +69,8 @@ param(
   [switch]$Cap50ThreeCycleProbe,
   [switch]$Cap50ThreeCycleOrchestrationProbe,
   [switch]$Cap50MojibakeRegressionSelfTest,
-  [switch]$Cap50RealUtf8CaptureProbe
+  [switch]$Cap50RealUtf8CaptureProbe,
+  [switch]$Cap50GitNotCleanAfterRestoreSelfTest
 )
 
 Set-StrictMode -Version 2
@@ -225,7 +226,7 @@ function Restore-SilverProgressLogForAutopilotGuard {
   try {
     $psi = New-Object System.Diagnostics.ProcessStartInfo
     $psi.FileName = "git"
-    $psi.Arguments = "restore --worktree -- " + $ProgressRel
+    $psi.Arguments = "restore --source=HEAD --staged --worktree -- " + $ProgressRel
     $psi.WorkingDirectory = $RepoRoot
     $psi.RedirectStandardOutput = $true
     $psi.RedirectStandardError = $true
@@ -395,6 +396,67 @@ function Invoke-SilverCap50AdapterTimeoutCloseout {
     blocked_dirty_files               = [string]$closeoutCleanup.blocked_dirty_files
     git_status_clean_after_closeout   = $gitCleanAfter
     closeout_kind                     = "adapter_timeout"
+    progress_log_written_to_archive   = $(if ($archProgressPath) { "YES" } else { "NO" })
+  }
+}
+
+function Invoke-SilverCap50OrchestrationRuntimeCloseout {
+  param(
+    [string]$RepoRoot,
+    [int]$Cycle,
+    [string]$Reason,
+    [hashtable]$ProgressLogFields,
+    [string]$ProgressOutcome = "FAIL",
+    [string]$CloseoutKind = "orchestration_fail"
+  )
+  $archOut = Archive-SilverCap50CycleRuntimeArtifacts -RepoRoot $RepoRoot -Cycle $Cycle -Reason $Reason
+  $archiveRel = [string]$archOut.RelativePath
+  $archivedFlag = [string]$archOut.Archived
+  $archProgressPath = ""
+  if ($archOut.FullPath -and (Test-Path -LiteralPath $archOut.FullPath)) {
+    $archProgressPath = Join-Path $archOut.FullPath "SILVER_PROGRESS_LOG.md"
+    if (-not (Test-Path -LiteralPath $archProgressPath)) {
+      $repoProgress = Join-Path $RepoRoot "SILVER_PROGRESS_LOG.md"
+      if (Test-Path -LiteralPath $repoProgress) {
+        Copy-Item -LiteralPath $repoProgress -Destination $archProgressPath -Force
+      }
+    }
+    if ($null -ne $ProgressLogFields) {
+      $pf = @{}
+      foreach ($k in $ProgressLogFields.Keys) { $pf[$k] = $ProgressLogFields[$k] }
+      if (-not $pf.ContainsKey("closeout_kind")) { $pf["closeout_kind"] = $CloseoutKind }
+      if (-not $pf.ContainsKey("timeout_artifacts_archived")) { $pf["timeout_artifacts_archived"] = $archivedFlag }
+      if ($archiveRel) { $pf["timeout_archive_path"] = ($archiveRel -replace "\\", "/") }
+      Write-SilverProgressLogBlock -ProgressLogPath $archProgressPath -Outcome $ProgressOutcome -Fields $pf
+      Update-SilverTimeoutArchiveManifestCloseout -ArchiveDir $archOut.FullPath -ExtraFields @{
+        progress_log_fail_appended_to_archive = "YES"
+        closeout_kind                         = $CloseoutKind
+      }
+    }
+  }
+  $closeoutCleanup = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot
+  Write-Host ("silver-autopilot-loop: orchestration_closeout_preflight_PASS_FAIL=" + [string]$closeoutCleanup.PASS_FAIL) -ForegroundColor DarkYellow
+  if ([string]$closeoutCleanup.blocked_dirty_files) {
+    Write-Host ("silver-autopilot-loop: orchestration_closeout_blocked_dirty_files=" + [string]$closeoutCleanup.blocked_dirty_files) -ForegroundColor Red
+  }
+  if ([string]$closeoutCleanup.remaining_forbidden_dirty_files) {
+    Write-Host ("silver-autopilot-loop: orchestration_closeout_remaining_forbidden_dirty_files=" + [string]$closeoutCleanup.remaining_forbidden_dirty_files) -ForegroundColor Red
+  }
+  $gitCleanAfter = [string]$closeoutCleanup.git_clean_after
+  return @{
+    timeout_archive_path              = $archiveRel
+    timeout_artifacts_archived        = $archivedFlag
+    runtime_artifacts_archived        = $archivedFlag
+    runtime_artifacts_restored        = $(if ($closeoutCleanup.PASS_FAIL -eq "PASS") { "YES" } else { "NO" })
+    PASS_FAIL                         = [string]$closeoutCleanup.PASS_FAIL
+    safe_to_start_cycle               = [string]$closeoutCleanup.safe_to_start_cycle
+    blocked_dirty_files               = [string]$closeoutCleanup.blocked_dirty_files
+    git_status_clean_after_closeout   = $gitCleanAfter
+    closeout_kind                     = $(if ([string]$closeoutCleanup.closeout_kind) { [string]$closeoutCleanup.closeout_kind } else { $CloseoutKind })
+    failure_class                     = [string]$closeoutCleanup.failure_class
+    blocked_dirty_classification      = [string]$closeoutCleanup.blocked_dirty_classification
+    restored_runtime_files            = [string]$closeoutCleanup.restored_runtime_files
+    remaining_forbidden_dirty_files   = [string]$closeoutCleanup.remaining_forbidden_dirty_files
     progress_log_written_to_archive   = $(if ($archProgressPath) { "YES" } else { "NO" })
   }
 }
@@ -1286,6 +1348,12 @@ function Write-SilverProgressLogBlock {
     "timeout_archive_path",
     "timeout_artifacts_archived",
     "closeout_kind",
+    "failure_class",
+    "blocked_dirty_classification",
+    "restored_runtime_files",
+    "remaining_forbidden_dirty_files",
+    "runtime_artifacts_archived",
+    "runtime_artifacts_restored",
     "git_status_clean_after_closeout",
     "progress_log_written_to_archive"
   )
@@ -1513,6 +1581,33 @@ function Stop-LoopWithFail {
     }
     $fields["git_status_clean"] = $GitClean
     $skipRepoProgressLogWrite = $true
+  }
+  if ((-not $skipRepoProgressLogWrite) -and (-not $isTimeoutStop) -and ($DryRunText -ne "YES")) {
+    $closeKindOrch = "orchestration_fail"
+    if ($StopReason -match "git_not_clean") {
+      $closeKindOrch = "runtime_artifact_restorable"
+    }
+    $orchClose = Invoke-SilverCap50OrchestrationRuntimeCloseout -RepoRoot $RepoRoot -Cycle $Cycle -Reason $reasonLine -ProgressLogFields $fields -ProgressOutcome "FAIL" -CloseoutKind $closeKindOrch
+    $fields["closeout_kind"] = [string]$orchClose.closeout_kind
+    $fields["failure_class"] = [string]$orchClose.failure_class
+    $fields["blocked_dirty_classification"] = [string]$orchClose.blocked_dirty_classification
+    $fields["restored_runtime_files"] = [string]$orchClose.restored_runtime_files
+    $fields["remaining_forbidden_dirty_files"] = [string]$orchClose.remaining_forbidden_dirty_files
+    $fields["timeout_archive_path"] = [string]$orchClose.timeout_archive_path
+    $fields["timeout_artifacts_archived"] = [string]$orchClose.timeout_artifacts_archived
+    $fields["runtime_artifacts_archived"] = [string]$orchClose.runtime_artifacts_archived
+    $fields["runtime_artifacts_restored"] = [string]$orchClose.runtime_artifacts_restored
+    $fields["git_status_clean_after_closeout"] = [string]$orchClose.git_status_clean_after_closeout
+    $fields["progress_log_written_to_archive"] = [string]$orchClose.progress_log_written_to_archive
+    if ([string]$orchClose.PASS_FAIL -eq "PASS") {
+      $GitClean = "YES"
+      $fields["git_status_clean"] = "YES"
+      $skipRepoProgressLogWrite = $true
+    }
+    else {
+      $GitClean = "NO"
+      $fields["git_status_clean"] = "NO"
+    }
   }
   if (-not $skipRepoProgressLogWrite) {
     Write-SilverProgressLogBlock -ProgressLogPath $ProgressLogPath -Outcome "FAIL" -Fields $fields
@@ -1754,6 +1849,59 @@ function Test-SilverPathIsCap50RuntimeRestorable {
   return ($reason.Length -gt 0)
 }
 
+function Get-SilverCap50CloseoutClassificationFromDirtyPaths {
+  param([string[]]$Paths)
+  $list = New-Object System.Collections.Generic.List[string]
+  foreach ($p in $Paths) {
+    $n = ([string]$p).Trim() -replace '\\', '/'
+    if (-not $n) { continue }
+    if ($n -cmatch '^\.silver-runtime(/|$)') { continue }
+    [void]$list.Add($n)
+  }
+  if ($list.Count -lt 1) {
+    return @{
+      closeout_kind                  = "clean"
+      blocked_dirty_classification   = ""
+      failure_class                  = "none"
+    }
+  }
+  foreach ($n in $list) {
+    if ([string]::Equals($n, "assets/app.js", [System.StringComparison]::OrdinalIgnoreCase)) {
+      return @{
+        closeout_kind                  = "forbidden_product_dirty"
+        blocked_dirty_classification   = $n
+        failure_class                  = "forbidden_product_dirty"
+      }
+    }
+    if ($n -match '^(assets/|projects/(?!data/)|\.github/workflows/)') {
+      return @{
+        closeout_kind                  = "forbidden_product_dirty"
+        blocked_dirty_classification   = $n
+        failure_class                  = "forbidden_product_dirty"
+      }
+    }
+  }
+  $allRestorable = $true
+  foreach ($n in $list) {
+    if (-not (Test-SilverPathIsCap50RuntimeRestorable -RelPath $n)) {
+      $allRestorable = $false
+      break
+    }
+  }
+  if ($allRestorable) {
+    return @{
+      closeout_kind                  = "runtime_artifact_restorable"
+      blocked_dirty_classification   = ($list -join ";")
+      failure_class                  = "runtime_artifact_restorable"
+    }
+  }
+  return @{
+    closeout_kind                  = "forbidden_dirty"
+    blocked_dirty_classification   = ($list -join ";")
+    failure_class                  = "forbidden_dirty"
+  }
+}
+
 function Test-SilverPathIsCap50IgnorableUntrackedRuntime {
   param([string]$RelPath)
   $n = ([string]$RelPath).Trim() -replace '\\', '/'
@@ -1802,7 +1950,7 @@ function Invoke-SilverGitRestoreWorktreePaths {
   try {
     $psi = New-Object System.Diagnostics.ProcessStartInfo
     $psi.FileName = "git"
-    $psi.Arguments = "restore --worktree -- " + $argTail
+    $psi.Arguments = "restore --source=HEAD --staged --worktree -- " + $argTail
     $psi.WorkingDirectory = $RepoRoot
     $psi.RedirectStandardOutput = $true
     $psi.RedirectStandardError = $true
@@ -1936,6 +2084,39 @@ function Invoke-SilverCap50PreflightCleanup {
     foreach ($rp in $toRestore) { [void]$restored.Add($rp + '(dry_run)') }
   }
   $cleanAfter = if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" }
+  $remainingPaths = Get-GitStatusShortPaths -Cwd $RepoRoot
+  $classAfter = Get-SilverCap50CloseoutClassificationFromDirtyPaths -Paths $remainingPaths
+  $closeoutKind = [string]$classAfter.closeout_kind
+  $failureClass = [string]$classAfter.failure_class
+  $blockedClass = [string]$classAfter.blocked_dirty_classification
+  if (
+    (-not $DryRunOnly) -and
+    ($blocked.Count -eq 0) -and
+    ($cleanAfter -eq "NO") -and
+    ($closeoutKind -eq "runtime_artifact_restorable")
+  ) {
+    $retryRestore = New-Object System.Collections.Generic.List[string]
+    foreach ($rp in $remainingPaths) {
+      $rn = ([string]$rp).Trim() -replace '\\', '/'
+      if (-not $rn) { continue }
+      if ($excludeNorm.Contains($rn)) { continue }
+      if (Test-SilverPathIsCap50RuntimeRestorable -RelPath $rn) {
+        [void]$retryRestore.Add($rn)
+      }
+    }
+    if ($retryRestore.Count -gt 0) {
+      Invoke-SilverGitRestoreWorktreePaths -RepoRoot $RepoRoot -RelPaths $retryRestore.ToArray()
+      foreach ($rp in $retryRestore) {
+        if ($restored -notcontains $rp) { [void]$restored.Add($rp) }
+      }
+      $cleanAfter = if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" }
+      $remainingPaths = Get-GitStatusShortPaths -Cwd $RepoRoot
+      $classAfter = Get-SilverCap50CloseoutClassificationFromDirtyPaths -Paths $remainingPaths
+      $closeoutKind = [string]$classAfter.closeout_kind
+      $failureClass = [string]$classAfter.failure_class
+      $blockedClass = [string]$classAfter.blocked_dirty_classification
+    }
+  }
   $runtimeClean = if (Test-SilverCap50RuntimeEphemeralsClean -Cwd $RepoRoot) { "YES" } else { "NO" }
   $safe = "NO"
   if ($blocked.Count -eq 0) {
@@ -1948,6 +2129,14 @@ function Invoke-SilverCap50PreflightCleanup {
   }
   $passFail = if ($safe -eq "YES") { "PASS" } else { "FAIL" }
   $sep = [char]59
+  $forbiddenRemaining = New-Object System.Collections.Generic.List[string]
+  foreach ($rp in $remainingPaths) {
+    $rn = ([string]$rp).Trim() -replace '\\', '/'
+    if (-not $rn) { continue }
+    if (Test-SilverPathIsCap50IgnorableUntrackedRuntime -RelPath $rn) { continue }
+    if (Test-SilverPathIsCap50RuntimeRestorable -RelPath $rn) { continue }
+    [void]$forbiddenRemaining.Add($rn)
+  }
   return @{
     dirty_before                      = ($dirtyBefore -join $sep)
     allowlisted_runtime_dirty_count   = [string]$allowCount
@@ -1956,6 +2145,10 @@ function Invoke-SilverCap50PreflightCleanup {
     git_clean_after                   = $cleanAfter
     safe_to_start_cycle               = $safe
     PASS_FAIL                         = $passFail
+    closeout_kind                     = $closeoutKind
+    failure_class                     = $failureClass
+    blocked_dirty_classification      = $blockedClass
+    remaining_forbidden_dirty_files   = ($forbiddenRemaining -join $sep)
   }
 }
 
@@ -1976,6 +2169,18 @@ function Write-SilverCap50PreflightCleanupResultBlock {
   Write-Host ("blocked_dirty_files=" + $bdf)
   Write-Host ("git_clean_after=" + $gca)
   Write-Host ("safe_to_start_cycle=" + $sts)
+  if ($Result.ContainsKey("closeout_kind")) {
+    Write-Host ("closeout_kind=" + [string]$Result.closeout_kind)
+  }
+  if ($Result.ContainsKey("failure_class")) {
+    Write-Host ("failure_class=" + [string]$Result.failure_class)
+  }
+  if ($Result.ContainsKey("blocked_dirty_classification")) {
+    Write-Host ("blocked_dirty_classification=" + [string]$Result.blocked_dirty_classification)
+  }
+  if ($Result.ContainsKey("remaining_forbidden_dirty_files")) {
+    Write-Host ("remaining_forbidden_dirty_files=" + [string]$Result.remaining_forbidden_dirty_files)
+  }
   $pfCol = "Red"
   if ($pff -eq "PASS") { $pfCol = "Green" }
   Write-Host ("PASS_FAIL=" + $pff) -ForegroundColor $pfCol
@@ -2183,6 +2388,158 @@ function Invoke-SilverCap50TimeoutCloseoutSelfTest {
     return $false
   }
   Write-Host "SILVER_CAP50_TIMEOUT_CLOSEOUT_SELFTEST=PASS" -ForegroundColor Green
+  return $true
+}
+
+function Invoke-SilverCap50GitNotCleanAfterRestoreSelfTest {
+  param([string]$RepoRoot)
+  $utf8 = New-Object System.Text.UTF8Encoding $false
+  $failures = New-Object System.Collections.Generic.List[string]
+  $td = Join-Path $env:TEMP ("silver-git-not-clean-restore-selftest-" + [guid]::NewGuid().ToString("N"))
+  New-Item -ItemType Directory -Path $td -Force | Out-Null
+  $prevEa = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try {
+    Set-Location -LiteralPath $td
+    & git init 2>$null | Out-Null
+    & git config user.email "silver-git-clean-selftest@local" 2>$null
+    & git config user.name "silver-git-clean-selftest" 2>$null
+    [System.IO.File]::WriteAllText((Join-Path $td ".gitignore"), ".silver-runtime/`n", $utf8)
+    $names = @("SILVER_PROGRESS_LOG.md", "SILVER_NEXT_ACTION.md", "SILVER_CURSOR_OUTPUT.md", "SILVER_RUN_REPORT.md")
+    foreach ($n in $names) {
+      [System.IO.File]::WriteAllText((Join-Path $td $n), "# " + $n + "`n", $utf8)
+    }
+    & git add .gitignore SILVER_PROGRESS_LOG.md SILVER_NEXT_ACTION.md SILVER_CURSOR_OUTPUT.md SILVER_RUN_REPORT.md 2>$null
+    & git commit -m "init" 2>$null | Out-Null
+    foreach ($n in $names) {
+      [System.IO.File]::WriteAllText((Join-Path $td $n), "# dirty " + $n + "`n", $utf8)
+    }
+    & git add SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md 2>$null
+    [System.IO.File]::WriteAllText((Join-Path $td "SILVER_RUN_REPORT.md"), "# dirty staged+worktree`n", $utf8)
+    if (Test-GitStatusClean -Cwd $td) {
+      [void]$failures.Add("repo_should_be_dirty_before_orchestration_closeout")
+    }
+    $pfFirst = Invoke-SilverCap50PreflightCleanup -RepoRoot $td
+    if ($pfFirst.PASS_FAIL -ne "PASS") {
+      [void]$failures.Add("preflight_runtime_only_should_pass_after_staged_worktree_restore")
+    }
+    foreach ($n in $names) {
+      foreach ($sp in (Get-GitStatusShortPaths -Cwd $td)) {
+        if ([string]::Equals(($sp -replace '\\', '/'), $n, [System.StringComparison]::OrdinalIgnoreCase)) {
+          [void]$failures.Add("preflight_left_runtime_dirty:" + $n)
+        }
+      }
+    }
+    foreach ($n in $names) {
+      [System.IO.File]::WriteAllText((Join-Path $td $n), "# dirty again " + $n + "`n", $utf8)
+    }
+    & git add SILVER_PROGRESS_LOG.md SILVER_RUN_REPORT.md 2>$null
+    [System.IO.File]::WriteAllText((Join-Path $td "SILVER_RUN_REPORT.md"), "# dirty staged+worktree again`n", $utf8)
+    if (Test-GitStatusClean -Cwd $td) {
+      [void]$failures.Add("repo_should_be_dirty_before_orchestration_closeout_retry")
+    }
+    $baselines = Get-BaselineProgressMetrics
+    $closeFields = @{
+      timestamp = (Get-Date).ToString("s")
+      cycle = "20"
+      main_commit = "deadbeef"
+      last_task_exit = "1"
+      cursor_exit = "N/A"
+      autopilot_exit = "N/A"
+      autopilot_status_exit = "N/A"
+      git_status_clean = "NO"
+      safety_counters = "dangerous_write_count=0;false_write_count=0;query_created_write_count=0;write_when_negated_count=0"
+      calendar_write_20k = "SKIPPED"
+      calendar_query_20k = "SKIPPED"
+      core_engine_progress = $baselines.core_engine_progress
+      safety_progress = $baselines.safety_progress
+      routing_progress = $baselines.routing_progress
+      retrieval_progress = $baselines.retrieval_progress
+      real_human_chaos_progress = $baselines.real_human_chaos_progress
+      multi_intent_orchestration_progress = $baselines.multi_intent_orchestration_progress
+      long_session_memory_progress = $baselines.long_session_memory_progress
+      public_ready_progress = $baselines.public_ready_progress
+      source = "selftest"
+      current_focus = "cap50_preflight_cleanup_blocked"
+      next_action_headline = "selftest"
+      dry_run = "NO"
+      stop_reason = "git_not_clean_after_restore"
+    }
+    $close = Invoke-SilverCap50OrchestrationRuntimeCloseout -RepoRoot $td -Cycle 20 -Reason "selftest_git_not_clean_after_restore" -ProgressLogFields $closeFields -ProgressOutcome "FAIL" -CloseoutKind "runtime_artifact_restorable"
+    if ($close.PASS_FAIL -ne "PASS") {
+      [void]$failures.Add("orchestration_closeout_runtime_only:" + [string]$close.blocked_dirty_files + "|" + [string]$close.remaining_forbidden_dirty_files)
+    }
+    if (-not (Test-GitStatusClean -Cwd $td)) {
+      [void]$failures.Add("repo_not_clean_after_orchestration_closeout")
+    }
+    foreach ($n in $names) {
+      foreach ($sp in (Get-GitStatusShortPaths -Cwd $td)) {
+        if ([string]::Equals(($sp -replace '\\', '/'), $n, [System.StringComparison]::OrdinalIgnoreCase)) {
+          [void]$failures.Add("runtime_file_still_dirty:" + $n)
+        }
+      }
+    }
+    if ([string]$close.closeout_kind -ne "clean") {
+      [void]$failures.Add("closeout_kind_expected_clean_got_" + [string]$close.closeout_kind)
+    }
+    $archFull = ""
+    if ([string]$close.timeout_archive_path) {
+      $archFull = Join-Path $td (($close.timeout_archive_path -replace '/', '\'))
+    }
+    if (-not $archFull -or -not (Test-Path -LiteralPath (Join-Path $archFull "SILVER_PROGRESS_LOG.md"))) {
+      [void]$failures.Add("archived_progress_log_missing")
+    }
+    $staleFields = @{}
+    Add-SilverCycleFieldsFromAdapterOutput -Fields $staleFields -AdapterOutputPath (Join-Path $td "SILVER_CURSOR_OUTPUT.md") -CursorInvoked $false -ExpectedRunId "run-selftest" -ExpectedCycle "20"
+    if ([string]$staleFields["silver_cycle_adapter_meta_fresh"] -ne "NO") {
+      [void]$failures.Add("stale_meta_adapter_fresh_expected_NO")
+    }
+    if ([string]$staleFields["silver_cycle_stale_meta_skipped"] -ne "YES") {
+      [void]$failures.Add("stale_meta_skipped_expected_YES")
+    }
+    if ($staleFields.ContainsKey("silver_cycle_real_stale_adapter_meta_issue")) {
+      [void]$failures.Add("stale_meta_must_not_set_real_stale_issue_when_cursor_not_invoked")
+    }
+    New-Item -ItemType Directory -Path (Join-Path $td "assets") -Force -ErrorAction SilentlyContinue | Out-Null
+    [System.IO.File]::WriteAllText((Join-Path $td "assets/app.js"), "// dirty`n", $utf8)
+    & git add assets/app.js 2>$null
+    & git commit -m "assets" 2>$null | Out-Null
+    [System.IO.File]::WriteAllText((Join-Path $td "assets/app.js"), "// dirty2`n", $utf8)
+    $resAssets = Invoke-SilverCap50PreflightCleanup -RepoRoot $td
+    if ($resAssets.PASS_FAIL -ne "FAIL") {
+      [void]$failures.Add("assets_app_dirty_should_fail_preflight")
+    }
+    if ([string]$resAssets.failure_class -ne "forbidden_product_dirty") {
+      [void]$failures.Add("assets_app_failure_class_expected_forbidden_product_dirty")
+    }
+    Invoke-SilverGitRestoreWorktreePaths -RepoRoot $td -RelPaths @("assets/app.js")
+    [System.IO.File]::WriteAllText((Join-Path $td "SILVER_CAP50_GIT_CLEAN_SELFTEST_BLOCK.txt"), "forbidden`n", $utf8)
+    $resUnknown = Invoke-SilverCap50PreflightCleanup -RepoRoot $td
+    if ($resUnknown.PASS_FAIL -ne "FAIL") {
+      [void]$failures.Add("unknown_dirty_should_fail_preflight")
+    }
+    if ([string]$resUnknown.failure_class -ne "forbidden_dirty") {
+      [void]$failures.Add("unknown_failure_class_expected_forbidden_dirty")
+    }
+    if (Test-Path -LiteralPath (Join-Path $td "SILVER_CAP50_GIT_CLEAN_SELFTEST_BLOCK.txt")) {
+      Remove-Item -LiteralPath (Join-Path $td "SILVER_CAP50_GIT_CLEAN_SELFTEST_BLOCK.txt") -Force -ErrorAction SilentlyContinue
+    }
+    $safetyLine = "dangerous_write_count=1;false_write_count=0;query_created_write_count=0;write_when_negated_count=0"
+    if (-not (Test-SafetyCountersBlocked -SafetyCountersLine $safetyLine)) {
+      [void]$failures.Add("safety_guard_must_still_block_nonzero_dangerous_write")
+    }
+  }
+  finally {
+    $ErrorActionPreference = $prevEa
+    Set-Location -LiteralPath $RepoRoot
+    Remove-Item -LiteralPath $td -Recurse -Force -ErrorAction SilentlyContinue
+  }
+  if ($failures.Count -gt 0) {
+    Write-Host "SILVER_CAP50_GIT_NOT_CLEAN_AFTER_RESTORE_SELFTEST=FAIL" -ForegroundColor Red
+    foreach ($f in $failures) { Write-Host $f -ForegroundColor Red }
+    return $false
+  }
+  Write-Host "SILVER_CAP50_GIT_NOT_CLEAN_AFTER_RESTORE_SELFTEST=PASS" -ForegroundColor Green
   return $true
 }
 
@@ -2590,6 +2947,9 @@ function Invoke-SilverCap50PostconditionSelfTest {
   if (-not (Invoke-SilverCap50TimeoutCloseoutSelfTest -RepoRoot $RepoRoot)) {
     [void]$failures.Add("timeout_closeout_selftest")
   }
+  if (-not (Invoke-SilverCap50GitNotCleanAfterRestoreSelfTest -RepoRoot $RepoRoot)) {
+    [void]$failures.Add("git_not_clean_after_restore_selftest")
+  }
   foreach ($synthetic in @(
       @("SILVER_NEXT_ACTION.md", "SILVER_RUN_REPORT.md", "SILVER_PROGRESS_LOG.md"),
       @("SILVER_PROGRESS_LOG.md"),
@@ -2984,6 +3344,12 @@ if ($Cap50TimeoutCloseoutSelfTest) {
   exit 0
 }
 
+if ($Cap50GitNotCleanAfterRestoreSelfTest) {
+  $stGitClean = Invoke-SilverCap50GitNotCleanAfterRestoreSelfTest -RepoRoot $RepoRoot
+  if (-not $stGitClean) { exit 1 }
+  exit 0
+}
+
 if ($TimeoutArchiveSelfTest) {
   $td = Join-Path $env:TEMP ("silver-timeout-selftest-" + [guid]::NewGuid().ToString("N"))
   New-Item -ItemType Directory -Path $td -Force | Out-Null
@@ -3071,26 +3437,72 @@ while ($true) {
   $preflightCap50 = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot -DryRunOnly:$DryRun
   Write-SilverCap50PreflightCleanupResultBlock -Result $preflightCap50
   if ($preflightCap50.safe_to_start_cycle -ne "YES") {
-    $mcPf = ""
-    try {
-      $prevEaPf = $ErrorActionPreference
-      $ErrorActionPreference = "Continue"
-      $mcPf = (& git -C $RepoRoot rev-parse HEAD 2>$null).Trim()
-      $ErrorActionPreference = $prevEaPf
-    } catch {
+    if (-not $DryRun) {
+      $mcPfPre = ""
+      try {
+        $prevEaPf0 = $ErrorActionPreference
+        $ErrorActionPreference = "Continue"
+        $mcPfPre = (& git -C $RepoRoot rev-parse HEAD 2>$null).Trim()
+        $ErrorActionPreference = $prevEaPf0
+      } catch {
+        $mcPfPre = ""
+      }
+      $nextPeekPf0 = Read-TextFileOrEmpty -Path $NextActionPath
+      $baselinesPf = Get-BaselineProgressMetrics
+      $pfCloseFields = @{
+        timestamp = (Get-Date).ToString("s")
+        cycle = [string]$cycle
+        main_commit = $mcPfPre
+        last_task_exit = "1"
+        cursor_exit = "N/A"
+        autopilot_exit = "N/A"
+        autopilot_status_exit = "N/A"
+        git_status_clean = [string]$preflightCap50.git_clean_after
+        safety_counters = ""
+        calendar_write_20k = ""
+        calendar_query_20k = ""
+        core_engine_progress = $baselinesPf.core_engine_progress
+        safety_progress = $baselinesPf.safety_progress
+        routing_progress = $baselinesPf.routing_progress
+        retrieval_progress = $baselinesPf.retrieval_progress
+        real_human_chaos_progress = $baselinesPf.real_human_chaos_progress
+        multi_intent_orchestration_progress = $baselinesPf.multi_intent_orchestration_progress
+        long_session_memory_progress = $baselinesPf.long_session_memory_progress
+        public_ready_progress = $baselinesPf.public_ready_progress
+        source = $baselinesPf.source
+        current_focus = "cap50_preflight_cleanup_blocked"
+        next_action_headline = (Get-NextActionHeadline -Text $nextPeekPf0)
+        dry_run = "NO"
+        stop_reason = "git_not_clean_after_restore"
+      }
+      $pfCloseKind = "runtime_artifact_restorable"
+      if ([string]$preflightCap50.closeout_kind) { $pfCloseKind = [string]$preflightCap50.closeout_kind }
+      $null = Invoke-SilverCap50OrchestrationRuntimeCloseout -RepoRoot $RepoRoot -Cycle $cycle -Reason "cap50_preflight_cleanup_blocked" -ProgressLogFields $pfCloseFields -ProgressOutcome "FAIL" -CloseoutKind $pfCloseKind
+      $preflightCap50 = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot
+      Write-SilverCap50PreflightCleanupResultBlock -Result $preflightCap50
+    }
+    if ($preflightCap50.safe_to_start_cycle -ne "YES") {
       $mcPf = ""
+      try {
+        $prevEaPf = $ErrorActionPreference
+        $ErrorActionPreference = "Continue"
+        $mcPf = (& git -C $RepoRoot rev-parse HEAD 2>$null).Trim()
+        $ErrorActionPreference = $prevEaPf
+      } catch {
+        $mcPf = ""
+      }
+      $nextPeekPf = Read-TextFileOrEmpty -Path $NextActionPath
+      $pfStop = "blocked=" + [string]$preflightCap50.blocked_dirty_files
+      if (-not $preflightCap50.blocked_dirty_files) {
+        $pfStop = "git_not_clean_after_restore"
+      }
+      Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mcPf `
+        -CursorExit "N/A" -AutopilotExit "N/A" -StatusExit "N/A" `
+        -GitClean ([string]$preflightCap50.git_clean_after) -SafetyLine "" -CalW "" -CalQ "" `
+        -Headline (Get-NextActionHeadline -Text $nextPeekPf) -Focus "cap50_preflight_cleanup_blocked" `
+        -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep -LastTaskExitCode 1 `
+        -StopReason $pfStop
     }
-    $nextPeekPf = Read-TextFileOrEmpty -Path $NextActionPath
-    $pfStop = "blocked=" + [string]$preflightCap50.blocked_dirty_files
-    if (-not $preflightCap50.blocked_dirty_files) {
-      $pfStop = "git_not_clean_after_restore"
-    }
-    Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mcPf `
-      -CursorExit "N/A" -AutopilotExit "N/A" -StatusExit "N/A" `
-      -GitClean ([string]$preflightCap50.git_clean_after) -SafetyLine "" -CalW "" -CalQ "" `
-      -Headline (Get-NextActionHeadline -Text $nextPeekPf) -Focus "cap50_preflight_cleanup_blocked" `
-      -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep -LastTaskExitCode 1 `
-      -StopReason $pfStop
   }
 
   if ($controlledInfinite) {
