@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-19T02:50:08.125097Z",
+  "ingestedAt": "2026-05-19T03:35:42.089846Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Investice do privátních trhů se otevírají běžným investorům. V Česku se spouští první fondy",
+      "url": "https://www.penize.cz/podilove-fondy/489745-investice-do-privatnich-trhu-se-oteviraji-beznym-investorum-v-cesku-se-spousti-prvni-fondy",
+      "dt": "2026-05-19T05:05:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "běžným",
+        "fondy",
+        "investice",
+        "investorům",
+        "otevírají",
+        "privátních",
+        "první",
+        "spouští",
+        "trhů",
+        "česku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Kurýr na IČO, nebo zaměstnanec? Zákon mění pravidla práce přes aplikace",
+      "url": "https://www.penize.cz/podnikani/489540-kuryr-na-ico-nebo-zamestnanec-zakon-meni-pravidla-prace-pres-aplikace",
+      "dt": "2026-05-19T05:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "aplikace",
+        "ičo",
+        "kurýr",
+        "mění",
+        "nebo",
+        "pravidla",
+        "práce",
+        "zaměstnanec",
+        "zákon"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -453,53 +506,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Maximální ceny benzinu a nafty na pátek 15. května",
-      "url": "https://www.penize.cz/doprava/489706-maximalni-ceny-benzinu-a-nafty-na-patek-15-kvetna",
-      "dt": "2026-05-14T13:58:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "benzinu",
-        "ceny",
-        "května",
-        "maximální",
-        "nafty",
-        "pátek"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Schillerová představila nové Dluhopisy republiky. Protiinflační jsou s háčkem",
-      "url": "https://www.penize.cz/dluhopisy/489665-schillerova-predstavila-dluhopisy-republiky-budou-i-protiinflacni-ale-s-hackem",
-      "dt": "2026-05-14T13:15:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "dluhopisy",
-        "háčkem",
-        "nové",
-        "protiinflační",
-        "představila",
-        "republiky",
-        "schillerová"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -510,7 +516,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18646,
+      "bytes": 18891,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -547,11 +553,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-19T02:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T05:05:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 14,
-          "zpravy": 6
+          "finance": 15,
+          "zpravy": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -563,6 +569,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Investice do privátních trhů se otevírají běžným investorům. V Česku se spouští první fondy",
+            "publishedAt": "2026-05-19T05:05:00Z"
+          },
+          {
+            "title": "Kurýr na IČO, nebo zaměstnanec? Zákon mění pravidla práce přes aplikace",
+            "publishedAt": "2026-05-19T05:00:00Z"
+          },
           {
             "title": "Udržitelnost a stabilní nájemné: Jak funguje moderní nemovitostní fond",
             "publishedAt": "2026-05-19T02:00:00Z"
@@ -586,14 +600,6 @@
           {
             "title": "Penzijní připojištění vás připravuje o úspory. Nové porovnání starých fondů",
             "publishedAt": "2026-05-18T05:05:00Z"
-          },
-          {
-            "title": "Skončí past na řidiče? Denní známka má fungovat tak, jak čekají",
-            "publishedAt": "2026-05-17T07:30:00Z"
-          },
-          {
-            "title": "Dejte si Dluhopis republiky za rámeček. Takhle vypadají certifikáty",
-            "publishedAt": "2026-05-17T07:00:00Z"
           }
         ]
       }
