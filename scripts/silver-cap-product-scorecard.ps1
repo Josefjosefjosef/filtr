@@ -10,8 +10,12 @@ function Get-SilverAuditRegistryRecommendedCap {
   param([string]$RepoRoot)
   $registryScript = Join-Path $RepoRoot "scripts\silver-audit-registry.cjs"
   if (-not (Test-Path -LiteralPath $registryScript)) { return "" }
+  $registryRequirePath = ($registryScript -replace '\\', '/')
+  if ($registryRequirePath.IndexOf("'") -ge 0) {
+    $registryRequirePath = $registryRequirePath.Replace("'", "\'")
+  }
   $probe = @"
-const m=require('./scripts/silver-audit-registry.cjs');
+const m=require('$registryRequirePath');
 const h=m.resolveCapRuntimeHandoff(process.cwd(),{});
 process.stdout.write(String(h.cap_label||''));
 "@
@@ -233,8 +237,38 @@ function Complete-SilverCapProductScorecard {
   return ($p.ExitCode -eq 0)
 }
 
+function Invoke-SilverCapLabelProbeFromTempSelfTest {
+  param([string]$RepoRoot)
+  if (-not $RepoRoot) {
+    Write-Host "SILVER_CAP_LABEL_PROBE_SELFTEST=FAIL missing_repo_root" -ForegroundColor Red
+    return $false
+  }
+  $label = Get-SilverAuditRegistryRecommendedCap -RepoRoot $RepoRoot
+  if ($label -ne "CAP15") {
+    Write-Host ("SILVER_CAP_LABEL_PROBE_SELFTEST=FAIL cap_label=" + $label) -ForegroundColor Red
+    return $false
+  }
+  $fallbackCap3 = Get-SilverCapRunLabel -ControlledInfinite $true -MaxCycles 0 -MaxAutonomousHardCycles 3 -RepoRoot $RepoRoot
+  if ($fallbackCap3 -ne "CAP15") {
+    Write-Host ("SILVER_CAP_LABEL_PROBE_SELFTEST=FAIL cap3_fallback_seen=" + $fallbackCap3) -ForegroundColor Red
+    return $false
+  }
+  $fallbackCap50 = Get-SilverCapRunLabel -ControlledInfinite $true -MaxCycles 0 -MaxAutonomousHardCycles 0 -RepoRoot $RepoRoot
+  if ($fallbackCap50 -ne "CAP15") {
+    Write-Host ("SILVER_CAP_LABEL_PROBE_SELFTEST=FAIL cap50_fallback_seen=" + $fallbackCap50) -ForegroundColor Red
+    return $false
+  }
+  Write-Host "SILVER_CAP_LABEL_PROBE_SELFTEST=PASS"
+  Write-Host "cap_label=CAP15"
+  Write-Host "temp_probe_absolute_require=YES"
+  return $true
+}
+
 function Invoke-SilverCapProductScorecardSelfTest {
   param([string]$RepoRoot)
+  if (-not (Invoke-SilverCapLabelProbeFromTempSelfTest -RepoRoot $RepoRoot)) {
+    return $false
+  }
   $scorecardScript = Join-Path $RepoRoot "scripts\silver-cap-product-scorecard.cjs"
   if (-not (Test-Path -LiteralPath $scorecardScript)) {
     Write-Host "SILVER_CAP_PRODUCT_SCORECARD_SELFTEST=FAIL missing_script" -ForegroundColor Red
