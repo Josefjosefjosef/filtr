@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-19T13:05:13.072070Z",
+  "ingestedAt": "2026-05-19T13:46:17.733394Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "U zmrzlinového stánku na Trutnovsku byla autem sražena chodkyně. Policisté hledají svědky",
+      "url": "https://tydenikpolicie.cz/u-zmrzlinoveho-stanku-na-trutnovsku-byla-autem-srazena-chodkyne-policiste-hledaji-svedky/",
+      "dt": "2026-05-19T13:10:33Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "autem",
+        "chodkyně",
+        "hledají",
+        "policisté",
+        "sražena",
+        "stánku",
+        "svědky",
+        "trutnovsku",
+        "zmrzlinového"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -245,31 +271,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Řidič kamionu naboural u Chebu do vozidla údržby. Nehodu nepřežil",
-      "url": "https://tydenikpolicie.cz/ridic-kamionu-naboural-u-chebu-do-vozidla-udrzby-nehodu-neprezil/",
-      "dt": "2026-05-19T07:13:21Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "chebu",
-        "kamionu",
-        "naboural",
-        "nehodu",
-        "nepřežil",
-        "vozidla",
-        "údržby",
-        "řidič"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +281,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16945,
+      "bytes": 16902,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +318,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-19T12:57:14Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T13:10:33Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -332,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "U zmrzlinového stánku na Trutnovsku byla autem sražena chodkyně. Policisté hledají svědky",
+            "publishedAt": "2026-05-19T13:10:33Z"
+          },
           {
             "title": "Policisté v Praze vyrazili na bleší trhy do Vysočan. Odvezli si čtyři cizince",
             "publishedAt": "2026-05-19T12:57:14Z"
@@ -359,10 +364,6 @@
           {
             "title": "Muž se zákazem řízení ujížděl na koloběžce policistům na Zlínsku až stokilometrovou rychlostí",
             "publishedAt": "2026-05-19T07:46:31Z"
-          },
-          {
-            "title": "Při napadení muže na Stodolní v Ostravě mělo dojít ke ztrátě, či odcizení řetízku v hodnotě několika stovek tisíc korun",
-            "publishedAt": "2026-05-19T07:24:49Z"
           }
         ]
       }
