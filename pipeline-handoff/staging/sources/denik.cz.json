@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-19T17:09:44.183459Z",
+  "ingestedAt": "2026-05-19T17:50:02.064939Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Knihovna Václava Havla v nejistotě. Končí sponzor Bakala i tým, píše server",
+      "url": "https://www.denik.cz/z_domova/knihovna-vaclava-havla-spory-bakala-sedlacek-havlova.html",
+      "dt": "2026-05-19T17:04:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bakala",
+        "havla",
+        "knihovna",
+        "končí",
+        "nejistotě",
+        "píše",
+        "server",
+        "sponzor",
+        "tým",
+        "václava"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -624,32 +651,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Hlídá klima a sám jezdí po louce. Na Olomoucku pořídili netradiční kurník",
-      "url": "https://www.denik.cz/regiony/mobilni-kurnik-hanackazemedelska-dolany-vejce-slepice.html",
-      "dt": "2026-05-19T08:40:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "hlídá",
-        "jezdí",
-        "klima",
-        "kurník",
-        "louce",
-        "netradiční",
-        "olomoucku",
-        "pořídili",
-        "sám"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -660,7 +661,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29163,
+      "bytes": 29373,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -697,7 +698,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-19T16:26:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T17:04:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -712,6 +713,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Knihovna Václava Havla v nejistotě. Končí sponzor Bakala i tým, píše server",
+            "publishedAt": "2026-05-19T17:04:00Z"
+          },
           {
             "title": "Putin přistál v Pekingu. Bude jednat se Si Ťin-pchingem",
             "publishedAt": "2026-05-19T16:26:00Z"
@@ -739,10 +744,6 @@
           {
             "title": "Česko zná Absurditu roku. Anketu ovládlo jednotné měsíční hlášení zaměstnavatelů",
             "publishedAt": "2026-05-19T14:13:00Z"
-          },
-          {
-            "title": "Slovák podezřelý z otrav dětských výživ zůstane ve vazbě, rozhodl rakouský soud",
-            "publishedAt": "2026-05-19T14:02:00Z"
           }
         ]
       }

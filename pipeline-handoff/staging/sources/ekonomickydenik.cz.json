@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-19T17:09:44.183459Z",
+  "ingestedAt": "2026-05-19T17:50:02.064939Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "Až budete chtít vzbudit soucit, vymažte fotky ze Sri Lanky a Brazílie. Vzkazuje Bartoš Mrázové",
+      "url": "https://ekonomickydenik.cz/az-budete-chtit-vzbudit-soucit-vymazte-fotky-ze-sri-lanky-bartos/",
+      "dt": "2026-05-19T17:14:48Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bartoš",
+        "brazílie",
+        "budete",
+        "chtít",
+        "fotky",
+        "lanky",
+        "mrázové",
+        "soucit",
+        "sri",
+        "vymažte",
+        "vzbudit",
+        "vzkazuje"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -750,33 +779,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "„Íránu se krátí čas, nic z nich nezbude“, Trump opět hrozí zničením",
-      "url": "https://ekonomickydenik.cz/iranu-se-krati-cas-nic-z-nich-nezbude-trump-opet-hrozi-znicenim/",
-      "dt": "2026-05-18T07:53:12Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "hrozí",
-        "krátí",
-        "nezbude",
-        "nic",
-        "nich",
-        "opět",
-        "trump",
-        "zničením",
-        "íránu",
-        "čas"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -787,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71394,
+      "bytes": 71277,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -824,11 +826,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T15:45:05Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T17:14:48Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 25,
-          "zpravy": 2,
+          "zpravy": 3,
+          "finance": 24,
           "zdravi": 2,
           "sport": 1
         },
@@ -842,6 +844,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Až budete chtít vzbudit soucit, vymažte fotky ze Sri Lanky a Brazílie. Vzkazuje Bartoš Mrázové",
+            "publishedAt": "2026-05-19T17:14:48Z"
+          },
           {
             "title": "Byrokratický propadák roku: Podnikatelé v anketě „ocenili“ jednotné měsíční hlášení",
             "publishedAt": "2026-05-19T15:45:05Z"
@@ -869,10 +875,6 @@
           {
             "title": "Zlaté vejce pro zbrojovku z Nového Jičína? Může vyrábět legendární obrněnce",
             "publishedAt": "2026-05-19T11:32:24Z"
-          },
-          {
-            "title": "Rozkol v rodině? John Mucha skončil v nadaci, spor o jméno pokračuje",
-            "publishedAt": "2026-05-19T10:41:25Z"
           }
         ]
       }
