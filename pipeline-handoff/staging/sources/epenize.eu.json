@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-19T23:14:47.566818Z",
+  "ingestedAt": "2026-05-19T23:55:18.559783Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zrazené jádro: Skalní voliči pláčou, Trumpa zajímá jen válka",
+      "url": "https://www.epenize.eu/zrazene-jadro-skalni-volici-placou-trumpa-zajima-jen-valka/",
+      "dt": "2026-05-19T23:00:19Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "jen",
+        "jádro",
+        "pláčou",
+        "skalní",
+        "trumpa",
+        "voliči",
+        "válka",
+        "zajímá",
+        "zrazené"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -498,36 +524,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "„Schytám za svou zemi kulku“: Trump přišel mluvit o zdraví matek. Mluvil ale hlavně o sobě",
-      "url": "https://www.epenize.eu/schytam-za-svou-zemi-kulku-trump-prisel-mluvit-o-zdravi-matek-mluvil-ale-hlavne-o-sobe/",
-      "dt": "2026-05-11T23:00:24Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "ale",
-        "hlavně",
-        "kulku",
-        "matek",
-        "mluvil",
-        "mluvit",
-        "přišel",
-        "schytám",
-        "sobě",
-        "svou",
-        "trump",
-        "zdraví",
-        "zemi"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -538,7 +534,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 125926,
+      "bytes": 124593,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -575,11 +571,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-19T06:26:44Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T23:00:19Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 18,
-          "zdravi": 2
+          "finance": 19,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -591,6 +587,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zrazené jádro: Skalní voliči pláčou, Trumpa zajímá jen válka",
+            "publishedAt": "2026-05-19T23:00:19Z"
+          },
           {
             "title": "Buranská politika. Redaktor ani nepoloží otázku a už ho premiér tepe",
             "publishedAt": "2026-05-19T06:26:44Z"
@@ -618,10 +618,6 @@
           {
             "title": "499 dolarů za telefon, který firma negarantuje, že vůbec vyrobí: Bratři Trumpovi v plné formě",
             "publishedAt": "2026-05-16T23:00:04Z"
-          },
-          {
-            "title": "Kde přišel Turek k penězům? On to neřekne, asi má strach",
-            "publishedAt": "2026-05-16T06:18:55Z"
           }
         ]
       }
