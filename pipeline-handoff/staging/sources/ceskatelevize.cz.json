@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-19T18:30:03.773598Z",
+  "ingestedAt": "2026-05-19T19:15:51.460302Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Sebevražd na železnicích neubývá, dráhy proto spouští preventivní kampaň",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/sebevrazd-na-zeleznicich-neubyva-drahy-proto-spousti-preventivni-kampan-373621",
+      "dt": "2026-05-19T18:29:25Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dráhy",
+        "kampaň",
+        "neubývá",
+        "preventivní",
+        "proto",
+        "sebevražd",
+        "spouští",
+        "železnicích"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -729,29 +754,6 @@
         "vede",
         "zjistili",
         "zákazu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ukrajina hlásí po ruských útocích mrtvé i raněné",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/rusky-utok-v-charkove-zabil-nejmene-jednoho-cloveka-a-dalsi-zranil-373592",
-      "dt": "2026-05-19T06:27:49Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "hlásí",
-        "mrtvé",
-        "raněné",
-        "ruských",
-        "ukrajina",
-        "útocích"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1516,7 +1518,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44642,
+      "bytes": 44916,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1576,11 +1578,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T18:16:35Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T18:29:25Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 1,
           "zpravy": 24,
+          "finance": 1,
           "other": 5
         },
         "drop_counts": {
@@ -1593,6 +1595,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sebevražd na železnicích neubývá, dráhy proto spouští preventivní kampaň",
+            "publishedAt": "2026-05-19T18:29:25Z"
+          },
           {
             "title": "„Malá čínská lavina.“ Nabídka elektromobilů roste, Češi je ale příliš nekupují",
             "publishedAt": "2026-05-19T18:16:35Z"
@@ -1620,10 +1626,6 @@
           {
             "title": "Reportéři ČT zjišťovali, proč fotbalové kluby nedokáží zajistit zákaz pyrotechniky",
             "publishedAt": "2026-05-19T14:17:25Z"
-          },
-          {
-            "title": "ICC na mě vydal zatykač, řekl krajně pravicový izraelský ministr Smotrič",
-            "publishedAt": "2026-05-19T12:55:23Z"
           }
         ]
       }
@@ -1729,7 +1731,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77686,
+      "bytes": 77613,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

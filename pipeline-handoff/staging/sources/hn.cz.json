@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-19T18:30:03.773598Z",
+  "ingestedAt": "2026-05-19T19:15:51.460302Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Google představil Gemini 3.5 a agenty pro běžné uživatele. Vyhledávání i Youtube mají být ještě víc řízené AI",
+      "url": "https://tech.hn.cz/c1-67879000-google-vsadil-budoucnost-na-ai-agenty-na-google-i-o-predstavil-gemini-3-5-flash-a-novy-system-gemini-omni",
+      "dt": "2026-05-19T18:57:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "agenty",
+        "být",
+        "běžné",
+        "gemini",
+        "google",
+        "ještě",
+        "mají",
+        "představil",
+        "uživatele",
+        "vyhledávání",
+        "víc",
+        "youtube",
+        "řízené"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1117,37 +1147,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Největší průšvih Česka, za který &bdquo;nikdo nemůže&ldquo;. Ničíme budoucnost tisíců dětí a mrháme jejich schopnostmi",
-      "url": "https://podcasty.hn.cz/c1-67877760-nejvetsi-prusvih-ceska-za-ktery-bdquo-nikdo-nemuze-ldquo-nicime-budoucnost-tisicu-deti-a-mrhame-jejich-schopnostmi",
-      "dt": "2026-05-19T04:51:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bdquo",
-        "budoucnost",
-        "dětí",
-        "jejich",
-        "ldquo",
-        "mrháme",
-        "největší",
-        "nemůže",
-        "nikdo",
-        "ničíme",
-        "průšvih",
-        "schopnostmi",
-        "tisíců",
-        "česka"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1158,7 +1157,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184251,
+      "bytes": 184298,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1195,11 +1194,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-19T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T18:57:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 35,
-          "zpravy": 3,
+          "zpravy": 4,
+          "finance": 34,
           "zdravi": 1,
           "sport": 1
         },
@@ -1213,6 +1212,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Google představil Gemini 3.5 a agenty pro běžné uživatele. Vyhledávání i Youtube mají být ještě víc řízené AI",
+            "publishedAt": "2026-05-19T18:57:00Z"
+          },
           {
             "title": "Babišova pravá ruka úřaduje. Popisujeme, jak vypadala schůzka, kde obhajovala rušení klíčových agend",
             "publishedAt": "2026-05-19T18:00:00Z"
@@ -1240,10 +1243,6 @@
           {
             "title": "Guvernér ČNB prý klidně zdrtí ekonomiku. Proč tak tvrdá slova, proč zrovna teď?",
             "publishedAt": "2026-05-19T14:51:00Z"
-          },
-          {
-            "title": "My za to nemůžeme, to se tak nějak děje! Česko je usměvavá společnost hrobařů vlastních dětí",
-            "publishedAt": "2026-05-19T14:50:00Z"
           }
         ]
       }
