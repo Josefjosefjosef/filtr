@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-19T15:05:56.135589Z",
+  "ingestedAt": "2026-05-19T15:45:48.780353Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Bus až před dům. Kraje našly zalíbení v poptávkové dopravě",
+      "url": "https://ekonomickydenik.cz/bus-pred-dum-poptavkova-doprava/",
+      "dt": "2026-05-19T15:05:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bus",
+        "dopravě",
+        "dům",
+        "kraje",
+        "našly",
+        "poptávkové",
+        "zalíbení"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -756,34 +780,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Vláda vypsala první soutěž na podporu biometanu. Zájem o účast mají innogy či EFG",
-      "url": "https://ekonomickydenik.cz/prvni-soutez-na-podporu-biometanu-zajem-innogy-a-efg/",
-      "dt": "2026-05-18T04:30:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "biometanu",
-        "efg",
-        "innogy",
-        "mají",
-        "podporu",
-        "první",
-        "soutěž",
-        "vláda",
-        "vypsala",
-        "zájem",
-        "účast"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71802,
+      "bytes": 71356,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T14:18:08Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T15:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -849,6 +845,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bus až před dům. Kraje našly zalíbení v poptávkové dopravě",
+            "publishedAt": "2026-05-19T15:05:00Z"
+          },
           {
             "title": "Ukrajina školí evropské zkostnatělé zbrojovky. Průmysl dohání po letech „spánku“ zpoždění",
             "publishedAt": "2026-05-19T14:18:08Z"
@@ -876,10 +876,6 @@
           {
             "title": "Nevidíme, ale slyšíme: Vojáci se učí identifikovat dronovou hrozbu podle bzučení rotorů",
             "publishedAt": "2026-05-19T10:37:22Z"
-          },
-          {
-            "title": "Bém jako tvář boje proti drogám skončí. Jeho funkce koordinátora se promění",
-            "publishedAt": "2026-05-19T10:05:21Z"
           }
         ]
       }

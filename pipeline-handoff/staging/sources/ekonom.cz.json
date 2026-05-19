@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonom.cz",
-  "ingestedAt": "2026-05-19T15:05:56.135589Z",
+  "ingestedAt": "2026-05-19T15:45:48.780353Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jak si udržet ty nejlepší zaměstnance, aniž byste je museli jen přeplácet",
+      "url": "https://podcasty.ekonom.cz/c1-67878870-jak-si-udrzet-ty-nejlepsi-zamestnance-aniz-byste-je-museli-jen-preplacet",
+      "dt": "2026-05-19T15:00:00Z",
+      "media_raw": "Ekonom (HN)",
+      "media_norm": "Ekonom (HN)",
+      "tokens": [
+        "aniž",
+        "byste",
+        "jen",
+        "museli",
+        "nejlepší",
+        "přeplácet",
+        "udržet",
+        "zaměstnance"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonom",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "ekonom.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -504,13 +529,13 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://ekonom.cz/?p=400000_rss",
-      "bytes": 21973,
+      "bytes": 23130,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 18,
-      "itemsKept": 18,
-      "accepted": 18,
+      "itemsParsed": 19,
+      "itemsKept": 19,
+      "accepted": 19,
       "status": "OK",
       "bozo_but_used": false,
       "registryId": "fin_ekonom",
@@ -540,11 +565,11 @@
         }
       ],
       "iuTelemetry": {
-        "raw_feed_new_item_count": 18,
-        "raw_feed_latest_publishedAt": "2026-05-14T10:13:00Z",
-        "valid_publishedAt_count": 18,
+        "raw_feed_new_item_count": 19,
+        "raw_feed_latest_publishedAt": "2026-05-19T15:00:00Z",
+        "valid_publishedAt_count": 19,
         "mapped_to_section_count": {
-          "finance": 16,
+          "finance": 17,
           "zdravi": 2
         },
         "drop_counts": {
@@ -557,6 +582,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jak si udržet ty nejlepší zaměstnance, aniž byste je museli jen přeplácet",
+            "publishedAt": "2026-05-19T15:00:00Z"
+          },
           {
             "title": "Jak se proměnila podoba války? A jak je na ni Česko připraveno? Odpovědi hledalo Ekonom Defence Forum",
             "publishedAt": "2026-05-14T10:13:00Z"
@@ -584,10 +613,6 @@
           {
             "title": "Letem světem",
             "publishedAt": "2026-05-13T22:00:00Z"
-          },
-          {
-            "title": "Sexy elektromobilita",
-            "publishedAt": "2026-05-13T16:00:00Z"
           }
         ]
       }

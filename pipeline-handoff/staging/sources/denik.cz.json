@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-19T15:05:56.135589Z",
+  "ingestedAt": "2026-05-19T15:45:48.780353Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Klimatické změny? Vědci upouští od nejhoršího scénáře. Trump oslavil vítězství",
+      "url": "https://www.denik.cz/ze_sveta/donald-trump-globalni-oteplovani-nova-studie.html",
+      "dt": "2026-05-19T15:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "klimatické",
+        "nejhoršího",
+        "oslavil",
+        "scénáře",
+        "trump",
+        "upouští",
+        "vítězství",
+        "vědci",
+        "změny"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -622,32 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zaměstnanci školy na Písecku podali hromadnou výpověď. Kvůli šikaně, zaznívá",
-      "url": "https://www.denik.cz/regiony/skola-zahori-pisecko-hromadna-vypoved-sikana-petice.html",
-      "dt": "2026-05-19T06:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "hromadnou",
-        "kvůli",
-        "podali",
-        "písecku",
-        "výpověď",
-        "zaměstnanci",
-        "zaznívá",
-        "šikaně",
-        "školy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -658,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28687,
+      "bytes": 28967,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -695,7 +695,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-19T14:13:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T15:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -710,6 +710,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Klimatické změny? Vědci upouští od nejhoršího scénáře. Trump oslavil vítězství",
+            "publishedAt": "2026-05-19T15:00:00Z"
+          },
           {
             "title": "Česko zná Absurditu roku. Anketu ovládlo jednotné měsíční hlášení zaměstnavatelů",
             "publishedAt": "2026-05-19T14:13:00Z"
@@ -737,10 +741,6 @@
           {
             "title": "Ředitelka školy na Písecku po hromadné výpovědi končí. Obec ji odvolala",
             "publishedAt": "2026-05-19T12:50:00Z"
-          },
-          {
-            "title": "Vytěžil z příměří maximum. Trump odložil nálety, Írán je ale na útoky připravený",
-            "publishedAt": "2026-05-19T12:25:00Z"
           }
         ]
       }
