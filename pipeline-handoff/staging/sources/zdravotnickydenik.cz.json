@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-19T10:20:19.865295Z",
+  "ingestedAt": "2026-05-19T11:00:18.192786Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Tři čtvrtiny úmrtí na železnici jsou sebevraždy. Stát spouští neobvyklou kampaň u tratí",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/sprava-zeleznic-cedule-sebevrazdy/",
+      "dt": "2026-05-19T10:34:32Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "kampaň",
+        "neobvyklou",
+        "sebevraždy",
+        "spouští",
+        "stát",
+        "tratí",
+        "tři",
+        "úmrtí",
+        "čtvrtiny",
+        "železnici"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -250,33 +277,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Velké stěhování z Úřadu vlády. Dvě stěžejní agendy se přesouvají na ministerstvo zdravotnictví",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/protidrogova-politika-na-ministerstvo-zdravotnictvi/",
-      "dt": "2026-05-18T15:21:48Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "agendy",
-        "dvě",
-        "ministerstvo",
-        "přesouvají",
-        "stěhování",
-        "stěžejní",
-        "velké",
-        "vlády",
-        "zdravotnictví",
-        "úřadu"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -287,7 +287,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 82578,
+      "bytes": 82750,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -324,10 +324,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-19T09:42:57Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T10:34:32Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 10
+          "zpravy": 1,
+          "zdravi": 9
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -339,6 +340,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tři čtvrtiny úmrtí na železnici jsou sebevraždy. Stát spouští neobvyklou kampaň u tratí",
+            "publishedAt": "2026-05-19T10:34:32Z"
+          },
           {
             "title": "Smrtící ebola se šíří mimořádně rychle. Světová zdravotnická organizace svolala krizový výbor",
             "publishedAt": "2026-05-19T09:42:57Z"
@@ -366,10 +371,6 @@
           {
             "title": "USA se uzavírají před ebolou. Kvůli smrtící nákaze vyhlásily okamžitý zákaz vstupu pro cizince",
             "publishedAt": "2026-05-18T20:15:12Z"
-          },
-          {
-            "title": "Ministerstvo protidrogovou politiku nezvládne. Bémův poradce kvůli rozhodnutí vlády končí",
-            "publishedAt": "2026-05-18T16:56:13Z"
           }
         ]
       }

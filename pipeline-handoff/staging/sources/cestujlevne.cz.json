@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-05-19T10:20:19.865295Z",
+  "ingestedAt": "2026-05-19T11:00:18.192786Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Albánie z Brna s all-inclusive na přelomu května a června. Zájezd od 8 890 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/albanie-z-brna-s-all-inclusive-na-prelomu-kvetna-a-cervna",
+      "dt": "2026-05-19T10:26:24Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "890",
+        "albánie",
+        "all",
+        "brna",
+        "inclusive",
+        "května",
+        "přelomu",
+        "zájezd",
+        "června"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -481,33 +507,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Z Prahy do švédského Göteborgu na jednu noc nebo pár dní. Letenky od 978 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/z-prahy-do-svedskeho-g-teborgu-na-jednu-noc-nebo-par-dni",
-      "dt": "2026-05-13T09:08:01Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "978",
-        "dní",
-        "göteborgu",
-        "jednu",
-        "letenky",
-        "nebo",
-        "noc",
-        "prahy",
-        "pár",
-        "švédského"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -518,7 +517,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 45362,
+      "bytes": 46930,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -555,7 +554,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-19T09:05:42Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T10:26:24Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -570,6 +569,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Albánie z Brna s all-inclusive na přelomu května a června. Zájezd od 8 890 Kč",
+            "publishedAt": "2026-05-19T10:26:24Z"
+          },
           {
             "title": "Gran Canaria z Prahy přímými lety s odbaveným zavazadlem. Letenky od 4 990 Kč",
             "publishedAt": "2026-05-19T09:05:42Z"
@@ -597,10 +600,6 @@
           {
             "title": "Z Prahy do italského Terstu na týden i prodloužené víkendy během léta. Letenky od 858 Kč",
             "publishedAt": "2026-05-18T08:24:56Z"
-          },
-          {
-            "title": "Z Pardubic do Albánie do 4* a 5* hotelů s all-inclusive. Zájezd od 9 490 Kč",
-            "publishedAt": "2026-05-15T18:29:20Z"
           }
         ]
       }
