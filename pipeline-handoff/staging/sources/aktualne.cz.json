@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-19T14:26:39.582922Z",
+  "ingestedAt": "2026-05-19T15:05:56.135589Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ukrajinci změnili strategii. Analytik hodnotí tvrdé údery, Kreml dopady tají",
+      "url": "https://zpravy.aktualne.cz/zahranici/ukrajinci-zmenili-strategii-analytik-hodnoti-tvrde-udery-kreml-dopady-taji/r~aaa29166e09ff6627b6de3d133466d00/",
+      "dt": "2026-05-19T14:38:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "analytik",
+        "dopady",
+        "hodnotí",
+        "kreml",
+        "strategii",
+        "tají",
+        "tvrdé",
+        "ukrajinci",
+        "změnili",
+        "údery"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -497,33 +524,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Sklář a designér Plesl poprvé vystavuje svou pestrou sbírku současného umění",
-      "url": "https://magazin.aktualne.cz/kultura/umeni/sklar-a-designer-plesl-poprve-vystavuje-svou-pestrou-sbirku-soucasneho-umeni/r~aaa29022e5c5a9a43e4f9291fcf72235/",
-      "dt": "2026-05-19T10:31:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "designér",
-        "pestrou",
-        "plesl",
-        "poprvé",
-        "sbírku",
-        "sklář",
-        "současného",
-        "svou",
-        "umění",
-        "vystavuje"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -534,7 +534,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22230,
+      "bytes": 22258,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -571,14 +571,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-19T13:51:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T14:38:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 14,
           "sport": 3,
-          "zpravy": 13,
           "finance": 2,
-          "zdravi": 1,
-          "other": 1
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -590,6 +589,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ukrajinci změnili strategii. Analytik hodnotí tvrdé údery, Kreml dopady tají",
+            "publishedAt": "2026-05-19T14:38:00Z"
+          },
           {
             "title": "„Nebylo to snadné rozhodnutí.“ Kliment nepojede na MS, šel na operaci",
             "publishedAt": "2026-05-19T13:51:00Z"
@@ -617,10 +620,6 @@
           {
             "title": "Konečně dostupné elektroauto pro masy? Škoda odhalila Epiq, vyrábět ho budou Španělé",
             "publishedAt": "2026-05-19T12:45:00Z"
-          },
-          {
-            "title": "Merkelová převzala evropské vyznamenání. Češi mají k oceněným výhrady",
-            "publishedAt": "2026-05-19T12:41:00Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-19T14:26:39.582922Z",
+  "ingestedAt": "2026-05-19T15:05:56.135589Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Fotbalové Budějovice údajně nedostaly licenci pro druhou ligu, klub to nepotvrdil",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/fotbalove-budejovice-udajne-nedostaly-licenci-pro-druhou-ligu-klub-to-nepotvrdil-156891",
+      "dt": "2026-05-19T14:45:37Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "budějovice",
+        "druhou",
+        "fotbalové",
+        "klub",
+        "licenci",
+        "ligu",
+        "nedostaly",
+        "nepotvrdil",
+        "údajně"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -719,33 +745,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "PGA Championship po víc než sto letech znovu vyhrál anglický golfista",
-      "url": "https://sport.ceskatelevize.cz/clanek/golf/druhy-major-sezony-pga-championship-vyhral-anglicky-golfista-rai-156862",
-      "dt": "2026-05-18T06:03:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "anglický",
-        "championship",
-        "golfista",
-        "letech",
-        "než",
-        "pga",
-        "sto",
-        "vyhrál",
-        "víc",
-        "znovu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -822,7 +821,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36290,
+      "bytes": 36714,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -859,7 +858,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T14:04:21Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T14:45:37Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -874,6 +873,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fotbalové Budějovice údajně nedostaly licenci pro druhou ligu, klub to nepotvrdil",
+            "publishedAt": "2026-05-19T14:45:37Z"
+          },
           {
             "title": "Kliment absolvoval operaci, o šampionát přijde",
             "publishedAt": "2026-05-19T14:04:21Z"
@@ -901,10 +904,6 @@
           {
             "title": "Pavla Šmídová se po sedmi letech vrací do volejbalové reprezentace",
             "publishedAt": "2026-05-19T08:57:28Z"
-          },
-          {
-            "title": "Černoch: Aspoň jeden gól mi zůstal. Měly ale být dva",
-            "publishedAt": "2026-05-19T07:54:17Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-19T14:26:39.582922Z",
+  "ingestedAt": "2026-05-19T15:05:56.135589Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Game Pass odhalil nabídku her pro druhou půlku května",
+      "url": "https://zing.cz/article/game-pass-odhalil-nabidku-her-pro-druhou-pulku-kvetna-4",
+      "dt": "2026-05-19T14:30:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "druhou",
+        "game",
+        "her",
+        "května",
+        "nabídku",
+        "odhalil",
+        "pass",
+        "půlku"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -937,31 +962,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Očekávané akční RPG Exodus ukázalo nové záběry z hraní",
-      "url": "https://zing.cz/article/ocekavane-akcni-rpg-exodus-ukazalo-nove-zabery-z-hrani",
-      "dt": "2026-05-15T10:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "akční",
-        "exodus",
-        "hraní",
-        "nové",
-        "očekávané",
-        "rpg",
-        "ukázalo",
-        "záběry"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -972,7 +972,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126718,
+      "bytes": 126689,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1009,7 +1009,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-19T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T14:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1025,6 +1025,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Game Pass odhalil nabídku her pro druhou půlku května",
+            "publishedAt": "2026-05-19T14:30:00Z"
+          },
           {
             "title": "Recenze Phonopolis – úchvatná pocta ručnímu řemeslu",
             "publishedAt": "2026-05-19T14:00:00Z"
@@ -1052,10 +1056,6 @@
           {
             "title": "Sony zdražuje předplatné PlayStation Plus",
             "publishedAt": "2026-05-18T17:00:00Z"
-          },
-          {
-            "title": "LEGO Batman: Legacy of the Dark Knight se povedl, shodují se první recenze",
-            "publishedAt": "2026-05-18T16:00:00Z"
           }
         ]
       }
