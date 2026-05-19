@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-19T00:05:35.342450Z",
+  "ingestedAt": "2026-05-19T00:45:58.112345Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Udržitelnost a stabilní nájemné: Jak funguje moderní nemovitostní fond",
+      "url": "https://www.penize.cz/investice/489013-udrzitelnost-a-stabilni-najemne-jak-funguje-moderni-nemovitostni-fond",
+      "dt": "2026-05-19T02:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "fond",
+        "funguje",
+        "moderní",
+        "nemovitostní",
+        "nájemné",
+        "stabilní",
+        "udržitelnost"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -476,31 +500,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "mBank přidala do aplikace nouzové tlačítko, má chránit peníze. Kde ho najdete?",
-      "url": "https://www.penize.cz/osobni-ucty/489682-mbank-pridava-do-aplikace-nouzove-tlacitko-muze-vam-zachranit-penize",
-      "dt": "2026-05-14T10:33:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "aplikace",
-        "chránit",
-        "mbank",
-        "najdete",
-        "nouzové",
-        "peníze",
-        "přidala",
-        "tlačítko"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -511,7 +510,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18599,
+      "bytes": 18646,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -548,11 +547,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-18T13:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T02:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 6,
-          "finance": 14
+          "finance": 14,
+          "zpravy": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -564,6 +563,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Udržitelnost a stabilní nájemné: Jak funguje moderní nemovitostní fond",
+            "publishedAt": "2026-05-19T02:00:00Z"
+          },
           {
             "title": "Maximální ceny benzinu a nafty na úterý 19. května",
             "publishedAt": "2026-05-18T13:59:00Z"
@@ -591,10 +594,6 @@
           {
             "title": "Dejte si Dluhopis republiky za rámeček. Takhle vypadají certifikáty",
             "publishedAt": "2026-05-17T07:00:00Z"
-          },
-          {
-            "title": "Česká pošta zavře devět poboček. Je mezi nimi i ta vaše?",
-            "publishedAt": "2026-05-16T07:45:00Z"
           }
         ]
       }
