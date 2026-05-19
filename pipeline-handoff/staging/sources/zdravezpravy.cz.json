@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-19T08:59:51.813215Z",
+  "ingestedAt": "2026-05-19T09:41:09.137636Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Premiér Babiš: Ukrajinci musí mít stejné podmínky jako čeští občané",
+      "url": "https://www.zdravezpravy.cz/2026/05/19/premier-babis-ukrajinci-musi-mit-stejne-podminky-jako-cesti-obcane/",
+      "dt": "2026-05-19T08:18:39Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "babiš",
+        "jako",
+        "musí",
+        "mít",
+        "občané",
+        "podmínky",
+        "premiér",
+        "stejné",
+        "ukrajinci",
+        "čeští"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -466,29 +493,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Farmaceutické firmy se na celkovém českém exportu podílejí 1,85 %",
-      "url": "https://www.zdravezpravy.cz/2026/05/10/farmaceuticke-firmy-se-na-celkovem-ceskem-exportu-podileji-185/",
-      "dt": "2026-05-10T04:17:19Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "celkovém",
-        "exportu",
-        "farmaceutické",
-        "firmy",
-        "podílejí",
-        "českém"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -499,7 +503,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 193554,
+      "bytes": 189741,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -536,7 +540,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-18T15:49:32Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T08:18:39Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -552,6 +556,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Premiér Babiš: Ukrajinci musí mít stejné podmínky jako čeští občané",
+            "publishedAt": "2026-05-19T08:18:39Z"
+          },
           {
             "title": "Cenu za ošetřovatelství získaly profesorka Jarošová a sestra Hošková",
             "publishedAt": "2026-05-18T15:49:32Z"
@@ -579,10 +587,6 @@
           {
             "title": "S nádorem mozku žijí pacienti i 15 let, ale nesmí jít o glioblastom",
             "publishedAt": "2026-05-15T09:12:06Z"
-          },
-          {
-            "title": "Interny jsou v minusu a lékaři se jim vyhýbají. Bez nich to ale nepůjde",
-            "publishedAt": "2026-05-14T13:52:03Z"
           }
         ]
       }

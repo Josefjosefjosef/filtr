@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-19T08:59:51.813215Z",
+  "ingestedAt": "2026-05-19T09:41:09.137636Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Čistky na Úřadu vlády zasáhly i Pavla Béma. Končí jako protidrogový koordinátor",
+      "url": "https://domaci.hn.cz/c1-67878460-cistky-na-uradu-vlady-zasahly-i-pavla-bema-konci-kanci-jako-protidrogovy-koordinator",
+      "dt": "2026-05-19T09:03:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "béma",
+        "jako",
+        "končí",
+        "koordinátor",
+        "pavla",
+        "protidrogový",
+        "vlády",
+        "zasáhly",
+        "úřadu",
+        "čistky"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1101,37 +1128,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Mladé lidi zasáhla &bdquo;brainrot&ldquo; epidemie. Kognitivní úpadek jich zaznamenává čím dál více, ukazuje studie",
-      "url": "https://archiv.hn.cz/c1-67877830-mlade-lidi-zasahla-bdquo-brainrot-ldquo-epidemie-kognitivni-upadek-jich-zaznamenava-cim-dal-vice-ukazuje-studie",
-      "dt": "2026-05-18T11:58:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bdquo",
-        "brainrot",
-        "epidemie",
-        "jich",
-        "kognitivní",
-        "ldquo",
-        "lidi",
-        "mladé",
-        "studie",
-        "ukazuje",
-        "zasáhla",
-        "zaznamenává",
-        "úpadek",
-        "čím"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1142,7 +1138,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183612,
+      "bytes": 183589,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1179,12 +1175,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-19T08:25:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T09:03:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 33,
+          "finance": 34,
           "zpravy": 3,
-          "zdravi": 3,
+          "zdravi": 2,
           "sport": 1
         },
         "drop_counts": {
@@ -1197,6 +1193,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Čistky na Úřadu vlády zasáhly i Pavla Béma. Končí jako protidrogový koordinátor",
+            "publishedAt": "2026-05-19T09:03:00Z"
+          },
           {
             "title": "Klempíř má přepracovat zákon o veřejnoprávních médiích. Obsahuje nedostatky a vytváří nové problémy, vadí ministerstvu financí",
             "publishedAt": "2026-05-19T08:25:00Z"
@@ -1224,10 +1224,6 @@
           {
             "title": "Internet buduje paralelní zpravodajské služby. Mezinárodní krizi může s předstihem odhalit i objednávka pizzy",
             "publishedAt": "2026-05-19T06:37:00Z"
-          },
-          {
-            "title": "Francie chystá masivní odklon od uhlí, ropy a plynu. Dočká se i Česko plánu na snížení fosilního dovozu?",
-            "publishedAt": "2026-05-19T06:26:00Z"
           }
         ]
       }

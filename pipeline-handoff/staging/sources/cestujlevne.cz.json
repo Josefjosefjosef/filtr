@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-05-19T08:59:51.813215Z",
+  "ingestedAt": "2026-05-19T09:41:09.137636Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Gran Canaria z Prahy přímými lety s odbaveným zavazadlem. Letenky od 4 990 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/gran-canaria-z-prahy-primymi-lety-s-odbavenym-zavazadlem",
+      "dt": "2026-05-19T09:05:42Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "990",
+        "canaria",
+        "gran",
+        "letenky",
+        "lety",
+        "odbaveným",
+        "prahy",
+        "přímými",
+        "zavazadlem"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -482,30 +508,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Týden na Krétě s all-inclusive z Brna. Zájezd od 6 990 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/tyden-na-krete-s-all-inclusive-z-brna",
-      "dt": "2026-05-13T07:54:35Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "990",
-        "all",
-        "brna",
-        "inclusive",
-        "krétě",
-        "týden",
-        "zájezd"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -516,7 +518,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 46918,
+      "bytes": 45362,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -553,7 +555,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-19T07:29:34Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T09:05:42Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -568,6 +570,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Gran Canaria z Prahy přímými lety s odbaveným zavazadlem. Letenky od 4 990 Kč",
+            "publishedAt": "2026-05-19T09:05:42Z"
+          },
           {
             "title": "Černá Hora z Prahy i Brna na týden v červnu s all-inclusive. Zájezd od 14 590 Kč",
             "publishedAt": "2026-05-19T07:29:34Z"
@@ -595,10 +601,6 @@
           {
             "title": "Z Pardubic do Albánie do 4* a 5* hotelů s all-inclusive. Zájezd od 9 490 Kč",
             "publishedAt": "2026-05-15T18:29:20Z"
-          },
-          {
-            "title": "Řecký Mykonos z Bratislavy v červnu. Letenky od 1 560 Kč",
-            "publishedAt": "2026-05-15T13:04:05Z"
           }
         ]
       }
