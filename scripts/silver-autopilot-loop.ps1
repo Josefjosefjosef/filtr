@@ -1678,6 +1678,18 @@ function Test-SilverCap50RuntimeEphemeralsClean {
   return $true
 }
 
+function Test-Cap50GitCleanExceptHandoffArtifacts {
+  param([string]$Cwd)
+  foreach ($rel in (Get-GitStatusShortPaths -Cwd $Cwd)) {
+    $n = ($rel -replace '\\', '/').Trim()
+    if (-not $n) { continue }
+    if ($n -eq 'SILVER_NEXT_ACTION.md' -or $n -eq 'SILVER_RUN_REPORT.md') { continue }
+    if (Test-SilverPathIsCap50RuntimeRestorable -RelPath $n) { continue }
+    return $false
+  }
+  return $true
+}
+
 function Invoke-SilverGitRestoreWorktreePaths {
   param([string]$RepoRoot, [string[]]$RelPaths)
   if (-not $RelPaths -or $RelPaths.Count -lt 1) { return }
@@ -1760,6 +1772,7 @@ function Invoke-SilverCap50PostCycleRuntimeCleanup {
     [string]$Reason,
     [switch]$DryRunOnly,
     [switch]$AllowForeignDirty,
+    [switch]$AllowHandoffDirty,
     [string[]]$ExcludeRestoreRelPaths = @()
   )
   $archivePath = ""
@@ -1769,7 +1782,7 @@ function Invoke-SilverCap50PostCycleRuntimeCleanup {
       $archivePath = [string]$arch.RelativePath
     }
   }
-  $cleanup = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot -DryRunOnly:$DryRunOnly -AllowForeignDirty:$AllowForeignDirty -ExcludeRestoreRelPaths $ExcludeRestoreRelPaths
+  $cleanup = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot -DryRunOnly:$DryRunOnly -AllowForeignDirty:$AllowForeignDirty -AllowHandoffDirty:$AllowHandoffDirty -ExcludeRestoreRelPaths $ExcludeRestoreRelPaths
   $cleanup.archive_path = $archivePath
   return $cleanup
 }
@@ -1779,6 +1792,7 @@ function Invoke-SilverCap50PreflightCleanup {
     [string]$RepoRoot,
     [switch]$DryRunOnly,
     [switch]$AllowForeignDirty,
+    [switch]$AllowHandoffDirty,
     [string[]]$ExcludeRestoreRelPaths = @()
   )
   $excludeNorm = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
@@ -1829,6 +1843,7 @@ function Invoke-SilverCap50PreflightCleanup {
   if ($blocked.Count -eq 0) {
     if ($cleanAfter -eq "YES") { $safe = "YES" }
     elseif ($DryRunOnly -and $toRestore.Count -gt 0 -and $dirtyBefore.Count -eq $toRestore.Count) { $safe = "YES" }
+    elseif ($AllowHandoffDirty -and (Test-Cap50GitCleanExceptHandoffArtifacts -Cwd $RepoRoot)) { $safe = "YES" }
   }
   elseif ($AllowForeignDirty -and $runtimeClean -eq "YES") {
     $safe = "YES"
@@ -2191,7 +2206,9 @@ function Invoke-SilverCap50EvaluateCyclePostcondition {
     $reason = "safety_counters_nonzero"
   }
   elseif ($gitCleanAfter -ne "YES") {
-    $reason = "git_not_clean_after_runtime_cleanup"
+    if (-not (Test-Cap50GitCleanExceptHandoffArtifacts -Cwd $RepoRoot)) {
+      $reason = "git_not_clean_after_runtime_cleanup"
+    }
   }
   elseif ($ControlledInfinite -and $nextMode -eq "MANUAL_REQUIRED") {
     $reason = "manual_next_action_required"
@@ -3201,7 +3218,7 @@ while ($true) {
         -Headline (Get-NextActionHeadline -Text $nextAfterAuto) -Focus "next_action_quality_post_guard" `
         -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1
     }
-    $postAutoCleanup = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $cycle -Reason "after_autopilot_full_auto_loop" -ExcludeRestoreRelPaths $autopilotHandoffPreserve
+    $postAutoCleanup = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $cycle -Reason "after_autopilot_full_auto_loop" -ExcludeRestoreRelPaths $autopilotHandoffPreserve -AllowHandoffDirty
     Write-Host ("silver-autopilot-loop: post_autopilot_cleanup_PASS_FAIL=" + [string]$postAutoCleanup.PASS_FAIL) -ForegroundColor DarkCyan
     if ($postAutoCleanup.PASS_FAIL -ne "PASS") {
       Write-Host ("silver-autopilot-loop: post_autopilot_blocked_dirty_files=" + [string]$postAutoCleanup.blocked_dirty_files) -ForegroundColor Red
