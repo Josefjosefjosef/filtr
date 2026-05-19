@@ -10,6 +10,28 @@ if (-not (Get-Variable -Name SilverCap50AutonomousEffectiveTimeoutSeconds -Scope
   $script:SilverCap50LegacyForbiddenTimeoutSeconds = 120
 }
 
+if (-not (Get-Variable -Name SilverCapRuntimeLabel -Scope Script -ErrorAction SilentlyContinue)) {
+  $script:SilverCapRuntimeLabel = "CAP50"
+}
+
+function Set-SilverCapRuntimeLabel {
+  param([string]$Label)
+  $norm = ([string]$Label).Trim().ToUpper()
+  if ($norm -match '^CAP\d+$') {
+    $script:SilverCapRuntimeLabel = $norm
+  }
+}
+
+function Get-SilverCapRuntimeBlockPrefix {
+  return ("SILVER_" + [string]$script:SilverCapRuntimeLabel)
+}
+
+function Get-SilverCapRuntimeSafeToStartFieldName {
+  $lbl = [string]$script:SilverCapRuntimeLabel
+  if ($lbl -eq "CAP50") { return "safe_to_start_product_cap50" }
+  return ("safe_to_start_product_" + $lbl.ToLower())
+}
+
 function Resolve-SilverAutonomousAdapterTimeoutSeconds {
   param(
     [int]$RequestedTimeoutSeconds,
@@ -509,8 +531,13 @@ function Invoke-SilverCap50HardPreflight {
 
 function Write-SilverCap50HardPreflightBlock {
   param([hashtable]$Result)
+  $pfx = Get-SilverCapRuntimeBlockPrefix
+  $safeField = Get-SilverCapRuntimeSafeToStartFieldName
+  $safeVal = [string]$Result.safe_to_start_product_cap50
+  if (-not $safeVal) { $safeVal = [string]$Result.safe_to_start_product_cap }
   Write-Host ""
-  Write-Host "=== SILVER_CAP50_HARD_PREFLIGHT ===" -ForegroundColor Cyan
+  Write-Host ("=== " + $pfx + "_HARD_PREFLIGHT ===") -ForegroundColor Cyan
+  Write-Host ("cap_runtime_label=" + [string]$script:SilverCapRuntimeLabel)
   Write-Host ("main_commit=" + [string]$Result.main_commit)
   Write-Host ("git_status_clean_before=" + [string]$Result.git_status_clean_before)
   Write-Host ("cursor_command_present=" + [string]$Result.cursor_command_present)
@@ -521,9 +548,12 @@ function Write-SilverCap50HardPreflightBlock {
   Write-Host ("mojibake_detector_regression=" + [string]$Result.mojibake_detector_regression)
   Write-Host ("runtime_cleanup_probe=" + [string]$Result.runtime_cleanup_probe)
   Write-Host ("three_cycle_orchestration_probe=" + [string]$Result.three_cycle_orchestration_probe)
-  Write-Host ("safe_to_start_product_cap50=" + [string]$Result.safe_to_start_product_cap50)
+  Write-Host ($safeField + "=" + $safeVal)
+  if ([string]$script:SilverCapRuntimeLabel -ne "CAP50") {
+    Write-Host ("safe_to_start_product_cap50=LEGACY_ALIAS cap_runtime_label=" + [string]$script:SilverCapRuntimeLabel)
+  }
   Write-Host ("PASS_FAIL=" + [string]$Result.PASS_FAIL) -ForegroundColor $(if ($Result.PASS_FAIL -eq "PASS") { "Green" } else { "Red" })
-  Write-Host "=== END_SILVER_CAP50_HARD_PREFLIGHT ===" -ForegroundColor Cyan
+  Write-Host ("=== END_" + $pfx + "_HARD_PREFLIGHT ===") -ForegroundColor Cyan
   Write-Host ""
 }
 
@@ -612,8 +642,10 @@ function Invoke-SilverCap50FinalPostcondition {
 
 function Write-SilverCap50FinalPostconditionBlock {
   param([hashtable]$Result)
+  $pfx = Get-SilverCapRuntimeBlockPrefix
   Write-Host ""
-  Write-Host "=== SILVER_CAP50_FINAL_POSTCONDITION ===" -ForegroundColor Cyan
+  Write-Host ("=== " + $pfx + "_FINAL_POSTCONDITION ===") -ForegroundColor Cyan
+  Write-Host ("cap_runtime_label=" + [string]$script:SilverCapRuntimeLabel)
   Write-Host ("cycles_completed=" + [string]$Result.cycles_completed)
   Write-Host ("stop_reason=" + [string]$Result.stop_reason)
   Write-Host ("utf8_mojibake_detected=" + [string]$Result.utf8_mojibake_detected)
@@ -626,6 +658,6 @@ function Write-SilverCap50FinalPostconditionBlock {
   Write-Host ("assets_app_changed=" + [string]$Result.assets_app_changed)
   Write-Host ("safe_final_state=" + [string]$Result.safe_final_state)
   Write-Host ("PASS_FAIL=" + [string]$Result.PASS_FAIL) -ForegroundColor $(if ($Result.PASS_FAIL -eq "PASS") { "Green" } else { "Red" })
-  Write-Host "=== END_SILVER_CAP50_FINAL_POSTCONDITION ===" -ForegroundColor Cyan
+  Write-Host ("=== END_" + $pfx + "_FINAL_POSTCONDITION ===") -ForegroundColor Cyan
   Write-Host ""
 }

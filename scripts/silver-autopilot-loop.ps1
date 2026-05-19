@@ -2825,8 +2825,15 @@ function Invoke-SilverCap50TimeoutUtf8OrchestrationSelfTest {
 
 function Write-SilverCap50CyclePostconditionBlock {
   param([hashtable]$Result)
+  $pfx = "SILVER_CAP50"
+  if (Get-Command -Name Get-SilverCapRuntimeBlockPrefix -ErrorAction SilentlyContinue) {
+    $pfx = Get-SilverCapRuntimeBlockPrefix
+  }
   Write-Host ""
-  Write-Host "=== SILVER_CAP50_CYCLE_POSTCONDITION ===" -ForegroundColor Cyan
+  Write-Host ("=== " + $pfx + "_CYCLE_POSTCONDITION ===") -ForegroundColor Cyan
+  if (Get-Command -Name Get-SilverCapRuntimeBlockPrefix -ErrorAction SilentlyContinue) {
+    Write-Host ("cap_runtime_label=" + [string]$script:SilverCapRuntimeLabel)
+  }
   Write-Host ("cycle=" + [string]$Result.cycle)
   Write-Host ("cursor_exit=" + [string]$Result.cursor_exit)
   Write-Host ("autopilot_exit=" + [string]$Result.autopilot_exit)
@@ -2846,7 +2853,7 @@ function Write-SilverCap50CyclePostconditionBlock {
   if ([string]$Result.postcondition_reason) {
     Write-Host ("postcondition_reason=" + [string]$Result.postcondition_reason)
   }
-  Write-Host "=== END_SILVER_CAP50_CYCLE_POSTCONDITION ===" -ForegroundColor Cyan
+  Write-Host ("=== END_" + $pfx + "_CYCLE_POSTCONDITION ===") -ForegroundColor Cyan
   Write-Host ""
 }
 
@@ -3573,7 +3580,11 @@ if ($controlledInfinite -and (-not $DryRun) -and (-not [string]::IsNullOrWhiteSp
 
 $capRunLabel = ""
 if (Get-Command -Name Get-SilverCapRunLabel -ErrorAction SilentlyContinue) {
-  $capRunLabel = Get-SilverCapRunLabel -ControlledInfinite $controlledInfinite -MaxCycles $MaxCycles
+  $capRunLabel = Get-SilverCapRunLabel -ControlledInfinite $controlledInfinite -MaxCycles $MaxCycles -MaxAutonomousHardCycles $MaxAutonomousHardCycles -RepoRoot $RepoRoot
+}
+if ($capRunLabel -and (Get-Command -Name Set-SilverCapRuntimeLabel -ErrorAction SilentlyContinue)) {
+  Set-SilverCapRuntimeLabel -Label $capRunLabel
+  Write-Host ("silver-autopilot-loop: cap_runtime_label=" + $capRunLabel) -ForegroundColor DarkCyan
 }
 if ($capRunLabel -and (Get-Command -Name Initialize-SilverCapProductScorecardSession -ErrorAction SilentlyContinue)) {
   $beforeOut = Initialize-SilverCapProductScorecardSession -CapLabel $capRunLabel

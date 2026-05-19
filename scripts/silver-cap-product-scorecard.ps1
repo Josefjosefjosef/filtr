@@ -6,12 +6,60 @@
 Set-StrictMode -Version 2
 $ErrorActionPreference = "Stop"
 
+function Get-SilverAuditRegistryRecommendedCap {
+  param([string]$RepoRoot)
+  $registryScript = Join-Path $RepoRoot "scripts\silver-audit-registry.cjs"
+  if (-not (Test-Path -LiteralPath $registryScript)) { return "" }
+  $probe = @"
+const m=require('./scripts/silver-audit-registry.cjs');
+const h=m.resolveCapRuntimeHandoff(process.cwd(),{});
+process.stdout.write(String(h.cap_label||''));
+"@
+  $probePath = Join-Path $env:TEMP ("silver-cap-label-probe-" + [guid]::NewGuid().ToString("N") + ".cjs")
+  try {
+    [System.IO.File]::WriteAllText($probePath, $probe, [System.Text.UTF8Encoding]::new($false))
+    $psi = New-Object System.Diagnostics.ProcessStartInfo
+    $psi.FileName = "node"
+    $psi.Arguments = ('"' + $probePath.Replace('"', '""') + '"')
+    $psi.WorkingDirectory = $RepoRoot
+    $psi.RedirectStandardOutput = $true
+    $psi.RedirectStandardError = $true
+    $psi.UseShellExecute = $false
+    $psi.CreateNoWindow = $true
+    $p = [System.Diagnostics.Process]::Start($psi)
+    $stdout = $p.StandardOutput.ReadToEnd().Trim()
+    $p.WaitForExit()
+    if ($p.ExitCode -ne 0) { return "" }
+    if ($stdout -match '^CAP\d+$') { return $stdout }
+    return ""
+  }
+  catch {
+    return ""
+  }
+  finally {
+    if (Test-Path -LiteralPath $probePath) {
+      Remove-Item -LiteralPath $probePath -Force -ErrorAction SilentlyContinue
+    }
+  }
+}
+
 function Get-SilverCapRunLabel {
   param(
     [bool]$ControlledInfinite,
-    [int]$MaxCycles
+    [int]$MaxCycles,
+    [int]$MaxAutonomousHardCycles = 0,
+    [string]$RepoRoot = ""
   )
-  if ($ControlledInfinite) { return "CAP50" }
+  if ($ControlledInfinite) {
+    if ($RepoRoot) {
+      $fromRegistry = Get-SilverAuditRegistryRecommendedCap -RepoRoot $RepoRoot
+      if ($fromRegistry) { return $fromRegistry }
+    }
+    if ($MaxAutonomousHardCycles -gt 0) {
+      return ("CAP" + [string]$MaxAutonomousHardCycles)
+    }
+    return "CAP50"
+  }
   if ($MaxCycles -ge 1) { return ("CAP" + [string]$MaxCycles) }
   return ""
 }

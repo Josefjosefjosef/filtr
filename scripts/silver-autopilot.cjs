@@ -34,6 +34,7 @@ const {
   prioritizeTrueEngineFail,
   selectNextCap,
   enforceCapOutcome,
+  resolveCapRuntimeHandoff,
 } = require("./silver-audit-registry.cjs");
 
 const REPO = path.resolve(__dirname, "..");
@@ -1277,9 +1278,17 @@ function buildPlannerRejectedBody(fallbackCtx) {
 }
 
 function writeClusterHandoffFile(mainCommit) {
+  let clusterDiag;
+  try {
+    const handoff = resolveCapRuntimeHandoff(REPO, {});
+    clusterDiag = handoff.cluster_diag || undefined;
+  } catch {
+    clusterDiag = undefined;
+  }
   const md = buildClusterHandoffForHealthyPlanner({
     mainCommit: mainCommit || "",
     queueReport: readOrchestratorReport(),
+    clusterDiag,
   });
   writeUtf8FileNoBom(NEXT_ACTION, md);
   return md;
