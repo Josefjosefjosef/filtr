@@ -2191,6 +2191,7 @@ function Invoke-SilverCap50EvaluateCyclePostcondition {
   }
   $nextMode = Get-SilverCap50NextActionMode -NextActionText $nextAfter -RecommendedNextTask $recommended -ControlledInfinite $ControlledInfinite
   $safetyBlocked = Test-SafetyCountersBlocked -SafetyCountersLine $SafetyCountersLine
+  $gitHandoffOk = ($gitCleanAfter -eq "YES") -or (Test-Cap50GitCleanExceptHandoffArtifacts -Cwd $RepoRoot)
   $safe = "NO"
   $passFail = "FAIL"
   $reason = ""
@@ -2206,10 +2207,8 @@ function Invoke-SilverCap50EvaluateCyclePostcondition {
   elseif ($safetyBlocked) {
     $reason = "safety_counters_nonzero"
   }
-  elseif ($gitCleanAfter -ne "YES") {
-    if (-not (Test-Cap50GitCleanExceptHandoffArtifacts -Cwd $RepoRoot)) {
-      $reason = "git_not_clean_after_runtime_cleanup"
-    }
+  elseif (-not $gitHandoffOk) {
+    $reason = "git_not_clean_after_runtime_cleanup"
   }
   elseif ($ControlledInfinite -and $nextMode -eq "MANUAL_REQUIRED") {
     $reason = "manual_next_action_required"
