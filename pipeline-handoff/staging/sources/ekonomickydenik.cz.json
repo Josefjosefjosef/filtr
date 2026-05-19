@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-19T05:35:16.177992Z",
+  "ingestedAt": "2026-05-19T06:15:07.105464Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Výjimka pro ruskou ropu se prodlužuje. Putinovi přinese další miliardy",
+      "url": "https://ekonomickydenik.cz/vyjimka-ruskou-ropu-putin-miliardy/",
+      "dt": "2026-05-19T05:40:57Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "další",
+        "miliardy",
+        "prodlužuje",
+        "putinovi",
+        "přinese",
+        "ropu",
+        "ruskou",
+        "výjimka"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -770,34 +795,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Vystřídá luxusní limuzíny zbrojní výroba? Šéf Mercedesu šokoval plány na novou éru",
-      "url": "https://ekonomickydenik.cz/vystrida-luxusni-limuziny-zbrojni-vyroba-sef-mercedesu-sokoval-plany-na-novou-eru/",
-      "dt": "2026-05-16T11:03:54Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "limuzíny",
-        "luxusní",
-        "mercedesu",
-        "novou",
-        "plány",
-        "vystřídá",
-        "výroba",
-        "zbrojní",
-        "éru",
-        "šokoval",
-        "šéf"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -808,7 +805,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70404,
+      "bytes": 71188,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -845,11 +842,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T04:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T05:40:57Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 2,
           "finance": 24,
+          "zdravi": 2,
           "zpravy": 3,
           "sport": 1
         },
@@ -863,6 +860,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Výjimka pro ruskou ropu se prodlužuje. Putinovi přinese další miliardy",
+            "publishedAt": "2026-05-19T05:40:57Z"
+          },
           {
             "title": "Energetický gigant žaluje regulační úřad. Pokud uspěje, cena elektřiny vzroste",
             "publishedAt": "2026-05-19T04:05:00Z"
@@ -890,10 +891,6 @@
           {
             "title": "Personální manévry ve Správě železnic. Mění se klíčové posty ve vedení",
             "publishedAt": "2026-05-18T14:08:53Z"
-          },
-          {
-            "title": "Řehku má vystřídat Hlaváč: Zůna byl proti. Nového náčelníka podpořila Černochová",
-            "publishedAt": "2026-05-18T13:24:39Z"
           }
         ]
       }

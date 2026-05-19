@@ -1,14 +1,64 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-19T05:35:16.177992Z",
+  "ingestedAt": "2026-05-19T06:15:07.105464Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Česko - Itálie v TV: kde sledovat zápas MS v hokeji 2026 živě",
+      "url": "https://www.idnes.cz/hokej/ms-2026/hokej-cesko-italie-v-tv.A260518_222426_ms-hokej-2026_ald",
+      "dt": "2026-05-19T05:59:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "2026",
+        "hokeji",
+        "itálie",
+        "sledovat",
+        "zápas",
+        "česko",
+        "živě"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Rulík: Podněty na rozhodčí nepodáme, ale vyloučení nás mohla stát zápas",
+      "url": "https://www.idnes.cz/hokej/ms-2026/radim-rulik-rozhovor-po-utkani-proti-svedsku.A260519_005732_ms-hokej-2026_hrj",
+      "dt": "2026-05-19T05:46:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "ale",
+        "nepodáme",
+        "nás",
+        "podněty",
+        "rozhodčí",
+        "rulík",
+        "stát",
+        "vyloučení",
+        "zápas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
       "title": "Dobeš slaví s Montrealem postup, prodloužení rozhodl Newhook",
       "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl.A260519_071114_nhl_mkr",
-      "dt": "2026-05-19T05:11:00Z",
+      "dt": "2026-05-19T05:44:45Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
@@ -727,58 +777,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Tolik? Šílený! Naplňte si peněženky, na MS se pivo i klobása pořádně prodraží",
-      "url": "https://www.idnes.cz/hokej/ms-2026/fanzona-ceny-obcerstveni-suveryny.A260518_154702_ms-hokej-2026_hrj",
-      "dt": "2026-05-18T14:26:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "klobása",
-        "naplňte",
-        "peněženky",
-        "pivo",
-        "pořádně",
-        "prodraží",
-        "tolik",
-        "šílený"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hvězdy Bayernu se nestačily divit. Slavící fanoušci nesli vulgární verzi znaku",
-      "url": "https://www.idnes.cz/sport/trendy/bayern-mnichov-oslavy-logo-tsv-1860-mnichov.A260518_104440_trendy_blah",
-      "dt": "2026-05-18T14:26:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bayernu",
-        "divit",
-        "fanoušci",
-        "hvězdy",
-        "nesli",
-        "nestačily",
-        "slavící",
-        "verzi",
-        "vulgární",
-        "znaku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +787,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 44485,
+      "bytes": 43979,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +824,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T05:11:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T05:59:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -842,8 +840,16 @@
         },
         "sample_titles": [
           {
+            "title": "Česko - Itálie v TV: kde sledovat zápas MS v hokeji 2026 živě",
+            "publishedAt": "2026-05-19T05:59:00Z"
+          },
+          {
+            "title": "Rulík: Podněty na rozhodčí nepodáme, ale vyloučení nás mohla stát zápas",
+            "publishedAt": "2026-05-19T05:46:00Z"
+          },
+          {
             "title": "Dobeš slaví s Montrealem postup, prodloužení rozhodl Newhook",
-            "publishedAt": "2026-05-19T05:11:00Z"
+            "publishedAt": "2026-05-19T05:44:45Z"
           },
           {
             "title": "Ščotka opět v hlavní roli. Tým oslabil, Rulík však říkal: Ví, že to přepískl. Ale to se stane",
@@ -864,14 +870,6 @@
           {
             "title": "Utrápená výhra Arsenalu, zareagovat musí City. Titul kanonýrům přiblížil Havertz",
             "publishedAt": "2026-05-18T21:19:07Z"
-          },
-          {
-            "title": "Česko - Švédsko 4:3. Divoký duel a velká výhra, hokejisté zapomněli na trapas",
-            "publishedAt": "2026-05-18T21:19:00Z"
-          },
-          {
-            "title": "Švýcaři rozstříleli Němce, Finové porazili USA. Oba celky jsou stále stoprocentní",
-            "publishedAt": "2026-05-18T21:10:00Z"
           }
         ]
       }

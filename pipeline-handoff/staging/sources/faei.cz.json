@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-19T05:35:16.177992Z",
+  "ingestedAt": "2026-05-19T06:15:07.105464Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zájem o hypotéky nepolevil ani v dubnu",
+      "url": "https://profitonline.cz/zajem-o-hypoteky-nepolevil-ani-v-dubnu/",
+      "dt": "2026-05-19T06:00:25Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dubnu",
+        "hypotéky",
+        "nepolevil",
+        "zájem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -265,30 +286,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Unie sází na jádro včetně malých reaktorů. Vyplatí se to?",
-      "url": "https://profitonline.cz/unie-sazi-na-jadro-vcetne-malych-reaktoru-vyplati-se-to/",
-      "dt": "2026-05-17T12:00:18Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "jádro",
-        "malých",
-        "reaktorů",
-        "sází",
-        "unie",
-        "vyplatí",
-        "včetně"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -299,7 +296,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18827,
+      "bytes": 18779,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -336,7 +333,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-19T04:00:02Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T06:00:25Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -351,6 +348,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zájem o hypotéky nepolevil ani v dubnu",
+            "publishedAt": "2026-05-19T06:00:25Z"
+          },
           {
             "title": "Cena prvního Čtyřlístku vyskočila za několik let o desítky tisíc",
             "publishedAt": "2026-05-19T04:00:02Z"
@@ -378,10 +379,6 @@
           {
             "title": "Uzavřený Hormuzský průliv sníží celosvětový růst HDP",
             "publishedAt": "2026-05-18T08:00:29Z"
-          },
-          {
-            "title": "Zlato z dovolené: Výhodný nákup, nebo drahý suvenýr?",
-            "publishedAt": "2026-05-18T06:00:35Z"
           }
         ]
       }

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-19T05:35:16.177992Z",
+  "ingestedAt": "2026-05-19T06:15:07.105464Z",
   "items": [
     {
       "section": "aktualne",
@@ -366,6 +366,33 @@
         "starostů",
         "voleb",
         "vyšle"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Ekman-Laršon? zarážejí se diváci. U Švédů běžné, říká Záruba. Souhlasí i expertka",
+      "url": "https://www.idnes.cz/hokej/ms-2026/cesko-svedsko-vyslovnost-robert-zaruba-ekman-larsson-larson.A260518_164141_ms-hokej-2026_drev",
+      "dt": "2026-05-18T19:03:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "běžné",
+        "diváci",
+        "ekman",
+        "expertka",
+        "laršon",
+        "souhlasí",
+        "zarážejí",
+        "záruba",
+        "říká",
+        "švédů"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -757,32 +784,6 @@
         "sjezd",
         "třaskavý",
         "záštitu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Restaurátoři dolovali lebku z betonu šestnáct hodin, výslech urychlil růženec",
-      "url": "https://www.idnes.cz/liberec/zpravy/kradez-lebka-svata-zdislava-dolovani-beton-restauratori.A260518_154653_liberec-zpravy_jape",
-      "dt": "2026-05-18T14:51:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "betonu",
-        "dolovali",
-        "hodin",
-        "lebku",
-        "restaurátoři",
-        "růženec",
-        "urychlil",
-        "výslech",
-        "šestnáct"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1579,7 +1580,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48184,
+      "bytes": 48104,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1619,9 +1620,9 @@
         "raw_feed_latest_publishedAt": "2026-05-19T05:02:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
+          "zpravy": 25,
           "finance": 3,
-          "sport": 1
+          "sport": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
