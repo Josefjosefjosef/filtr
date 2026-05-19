@@ -61,6 +61,7 @@ param(
   [int]$MaxCycleWallSeconds = 0,
   [int]$TotalWallSeconds = 0,
   [switch]$TimeoutArchiveSelfTest,
+  [switch]$Cap50TimeoutCloseoutSelfTest,
   [switch]$PreflightCleanupSelfTest,
   [switch]$Cap50TimeoutUtf8SelfTest,
   [switch]$Cap50PostconditionSelfTest,
@@ -324,6 +325,78 @@ function Archive-SilverTimeoutRuntimeArtifacts {
     $fullDir = ""
   }
   return @{ RelativePath = $relOut; Archived = $archived; FullPath = $fullDir }
+}
+
+function Update-SilverTimeoutArchiveManifestCloseout {
+  param(
+    [string]$ArchiveDir,
+    [hashtable]$ExtraFields = @{}
+  )
+  if (-not $ArchiveDir -or -not (Test-Path -LiteralPath $ArchiveDir)) { return }
+  $manifestPath = Join-Path $ArchiveDir "manifest.json"
+  if (-not (Test-Path -LiteralPath $manifestPath)) { return }
+  try {
+    $raw = [System.IO.File]::ReadAllText($manifestPath, [System.Text.UTF8Encoding]::new($false))
+    $obj = $raw | ConvertFrom-Json
+    $ht = @{}
+    $obj.PSObject.Properties | ForEach-Object { $ht[$_.Name] = $_.Value }
+    foreach ($k in $ExtraFields.Keys) {
+      $ht[$k] = $ExtraFields[$k]
+    }
+    $json = $ht | ConvertTo-Json -Depth 12
+    [System.IO.File]::WriteAllText($manifestPath, $json, [System.Text.UTF8Encoding]::new($false))
+  }
+  catch {
+  }
+}
+
+function Invoke-SilverCap50AdapterTimeoutCloseout {
+  param(
+    [string]$RepoRoot,
+    [string]$Reason,
+    [string]$CursorExit,
+    [string]$TimedOut,
+    [hashtable]$ProgressLogFields,
+    [string]$ProgressOutcome = "FAIL"
+  )
+  $archOut = Archive-SilverTimeoutRuntimeArtifacts -RepoRoot $RepoRoot -Reason $Reason -CursorExit $CursorExit -TimedOut $TimedOut
+  $timeoutArchiveRel = [string]$archOut.RelativePath
+  $timeoutArchivedFlag = [string]$archOut.Archived
+  if ($timeoutArchiveRel -and $timeoutArchiveRel.Trim().Length -gt 0) {
+    $env:SILVER_TIMEOUT_ARCHIVE_PATH = ($timeoutArchiveRel -replace "\\", "/")
+    $env:SILVER_TIMEOUT_ARTIFACTS_ARCHIVED = $timeoutArchivedFlag
+  }
+  $archProgressPath = ""
+  if ($archOut.FullPath -and (Test-Path -LiteralPath $archOut.FullPath)) {
+    $archProgressPath = Join-Path $archOut.FullPath "SILVER_PROGRESS_LOG.md"
+    if (-not (Test-Path -LiteralPath $archProgressPath)) {
+      $repoProgress = Join-Path $RepoRoot "SILVER_PROGRESS_LOG.md"
+      if (Test-Path -LiteralPath $repoProgress) {
+        Copy-Item -LiteralPath $repoProgress -Destination $archProgressPath -Force
+      }
+    }
+    Write-SilverProgressLogBlock -ProgressLogPath $archProgressPath -Outcome $ProgressOutcome -Fields $ProgressLogFields
+    Update-SilverTimeoutArchiveManifestCloseout -ArchiveDir $archOut.FullPath -ExtraFields @{
+      progress_log_fail_appended_to_archive = "YES"
+      closeout_kind                         = "adapter_timeout"
+    }
+  }
+  $closeoutCleanup = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot
+  Write-Host ("silver-autopilot-loop: timeout_closeout_preflight_PASS_FAIL=" + [string]$closeoutCleanup.PASS_FAIL) -ForegroundColor DarkYellow
+  if ([string]$closeoutCleanup.blocked_dirty_files) {
+    Write-Host ("silver-autopilot-loop: timeout_closeout_blocked_dirty_files=" + [string]$closeoutCleanup.blocked_dirty_files) -ForegroundColor Red
+  }
+  $gitCleanAfter = [string]$closeoutCleanup.git_clean_after
+  return @{
+    timeout_archive_path              = $timeoutArchiveRel
+    timeout_artifacts_archived        = $timeoutArchivedFlag
+    PASS_FAIL                         = [string]$closeoutCleanup.PASS_FAIL
+    safe_to_start_cycle               = [string]$closeoutCleanup.safe_to_start_cycle
+    blocked_dirty_files               = [string]$closeoutCleanup.blocked_dirty_files
+    git_status_clean_after_closeout   = $gitCleanAfter
+    closeout_kind                     = "adapter_timeout"
+    progress_log_written_to_archive   = $(if ($archProgressPath) { "YES" } else { "NO" })
+  }
 }
 
 function Test-GitStatusClean {
@@ -1211,7 +1284,10 @@ function Write-SilverProgressLogBlock {
     "silver_cycle_real_stale_adapter_meta_issue",
     "silver_cycle_adapter_meta_fresh",
     "timeout_archive_path",
-    "timeout_artifacts_archived"
+    "timeout_artifacts_archived",
+    "closeout_kind",
+    "git_status_clean_after_closeout",
+    "progress_log_written_to_archive"
   )
   foreach ($ck in $cycleExtraKeys) {
     if ($Fields.ContainsKey($ck)) {
@@ -1276,6 +1352,12 @@ function Write-SilverColoredCycleSummary {
   Write-Host ("next_action_headline=" + $Fields["next_action_headline"]) -ForegroundColor Cyan
   if ($Fields.ContainsKey("timeout_artifacts_archived")) {
     Write-Host ("timeout_artifacts_archived=" + [string]$Fields["timeout_artifacts_archived"]) -ForegroundColor Cyan
+  }
+  if ($Fields.ContainsKey("closeout_kind") -and [string]$Fields["closeout_kind"]) {
+    Write-Host ("closeout_kind=" + [string]$Fields["closeout_kind"]) -ForegroundColor Cyan
+  }
+  if ($Fields.ContainsKey("git_status_clean_after_closeout") -and [string]$Fields["git_status_clean_after_closeout"]) {
+    Write-Host ("git_status_clean_after_closeout=" + [string]$Fields["git_status_clean_after_closeout"]) -ForegroundColor Cyan
   }
   if ($Fields.ContainsKey("timeout_archive_path")) {
     $tap = [string]$Fields["timeout_archive_path"]
@@ -1370,23 +1452,7 @@ function Stop-LoopWithFail {
       Write-Host ("silver-autopilot-loop: utf8_failure_blocked_dirty_files=" + [string]$utf8Cleanup.blocked_dirty_files) -ForegroundColor Red
     }
   }
-  if ($isTimeoutStop) {
-    $archOut = Archive-SilverTimeoutRuntimeArtifacts -RepoRoot $RepoRoot -Reason $reasonLine -CursorExit $CursorExit -TimedOut $metaTimed
-    $timeoutArchiveRel = [string]$archOut.RelativePath
-    $timeoutArchivedFlag = [string]$archOut.Archived
-    if ($timeoutArchiveRel -and $timeoutArchiveRel.Trim().Length -gt 0) {
-      $env:SILVER_TIMEOUT_ARCHIVE_PATH = ($timeoutArchiveRel -replace "\\", "/")
-      $env:SILVER_TIMEOUT_ARTIFACTS_ARCHIVED = $timeoutArchivedFlag
-    }
-    $closeoutCleanup = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot
-    Write-Host ("silver-autopilot-loop: timeout_closeout_preflight_PASS_FAIL=" + [string]$closeoutCleanup.PASS_FAIL) -ForegroundColor DarkYellow
-    if ($closeoutCleanup.safe_to_start_cycle -eq "YES") {
-      $GitClean = "YES"
-    }
-    elseif ([string]$closeoutCleanup.blocked_dirty_files) {
-      Write-Host ("silver-autopilot-loop: timeout_closeout_blocked_dirty_files=" + [string]$closeoutCleanup.blocked_dirty_files) -ForegroundColor Red
-    }
-  }
+  $skipRepoProgressLogWrite = $false
   Write-Host ("SILVER_LOOP_SAFETY_STOP reason=" + $reasonLine) -ForegroundColor Red
   $baselines = Get-BaselineProgressMetrics
   $fields = @{
@@ -1429,7 +1495,28 @@ function Stop-LoopWithFail {
   $failRunCtx = Get-SilverAutonomousRunContext
   $failCursorInvoked = ($failProcStart -ne [datetime]::MinValue)
   Add-SilverCycleFieldsFromAdapterOutput -Fields $fields -AdapterOutputPath $adapterOutForCycle -ProcessStartUtc $failProcStart -ExpectedTaskDigest $failDigest -ExpectedTaskFile $failTaskFile -ExpectedRunId $failRunCtx.RunId -ExpectedCycle $failRunCtx.Cycle -ExpectedRunStartUtc $failRunCtx.RunStartUtc -CursorInvoked $failCursorInvoked
-  Write-SilverProgressLogBlock -ProgressLogPath $ProgressLogPath -Outcome "FAIL" -Fields $fields
+  if ($isTimeoutStop) {
+    $fields["closeout_kind"] = "adapter_timeout"
+    $timeoutCloseout = Invoke-SilverCap50AdapterTimeoutCloseout -RepoRoot $RepoRoot -Reason $reasonLine -CursorExit $CursorExit -TimedOut $metaTimed -ProgressLogFields $fields -ProgressOutcome "FAIL"
+    $timeoutArchiveRel = [string]$timeoutCloseout.timeout_archive_path
+    $timeoutArchivedFlag = [string]$timeoutCloseout.timeout_artifacts_archived
+    $fields["timeout_archive_path"] = $timeoutArchiveRel
+    $fields["timeout_artifacts_archived"] = $timeoutArchivedFlag
+    $fields["closeout_kind"] = [string]$timeoutCloseout.closeout_kind
+    $fields["git_status_clean_after_closeout"] = [string]$timeoutCloseout.git_status_clean_after_closeout
+    $fields["progress_log_written_to_archive"] = [string]$timeoutCloseout.progress_log_written_to_archive
+    if ($timeoutCloseout.safe_to_start_cycle -eq "YES") {
+      $GitClean = "YES"
+    }
+    else {
+      $GitClean = "NO"
+    }
+    $fields["git_status_clean"] = $GitClean
+    $skipRepoProgressLogWrite = $true
+  }
+  if (-not $skipRepoProgressLogWrite) {
+    Write-SilverProgressLogBlock -ProgressLogPath $ProgressLogPath -Outcome "FAIL" -Fields $fields
+  }
   Write-SilverColoredCycleSummary -Outcome "FAIL" -Fields $fields
   if ($controlledInfinite) {
     $reportFail = Read-TextFileOrEmpty -Path (Join-Path $RepoRoot "SILVER_RUN_REPORT.md")
@@ -1667,10 +1754,19 @@ function Test-SilverPathIsCap50RuntimeRestorable {
   return ($reason.Length -gt 0)
 }
 
+function Test-SilverPathIsCap50IgnorableUntrackedRuntime {
+  param([string]$RelPath)
+  $n = ([string]$RelPath).Trim() -replace '\\', '/'
+  if (-not $n) { return $false }
+  if ($n -cmatch '^\.silver-runtime(/|$)') { return $true }
+  return $false
+}
+
 function Test-SilverCap50RuntimeEphemeralsClean {
   param([string]$Cwd)
   foreach ($rel in (Get-GitStatusShortPaths -Cwd $Cwd)) {
     $n = ($rel -replace '\\', '/')
+    if (Test-SilverPathIsCap50IgnorableUntrackedRuntime -RelPath $n) { continue }
     if (Test-SilverPathIsCap50RuntimeRestorable -RelPath $n) {
       return $false
     }
@@ -1684,6 +1780,7 @@ function Test-Cap50GitCleanExceptHandoffArtifacts {
     $n = ($rel -replace '\\', '/').Trim()
     if (-not $n) { continue }
     if ($n -eq 'SILVER_NEXT_ACTION.md' -or $n -eq 'SILVER_RUN_REPORT.md' -or $n -eq 'SILVER_PROGRESS_LOG.md') { continue }
+    if (Test-SilverPathIsCap50IgnorableUntrackedRuntime -RelPath $n) { continue }
     if (Test-SilverPathIsCap50RuntimeRestorable -RelPath $n) { continue }
     return $false
   }
@@ -1811,6 +1908,7 @@ function Invoke-SilverCap50PreflightCleanup {
     [void]$dirtyBefore.Add($p)
     $pNorm = $p -replace '\\', '/'
     if ($excludeNorm.Contains($pNorm)) { continue }
+    if ($ent.untracked -and (Test-SilverPathIsCap50IgnorableUntrackedRuntime -RelPath $p)) { continue }
     $reason = Get-SilverCap50RuntimeRestoreAllowReason -RelPath $p
     if ($ent.untracked) {
       if ($reason) {
@@ -1963,6 +2061,128 @@ function Invoke-SilverCap50PreflightCleanupSelfTest {
     return $false
   }
   Write-Host "SILVER_CAP50_PREFLIGHT_CLEANUP_SELFTEST=PASS" -ForegroundColor Green
+  return $true
+}
+
+function Invoke-SilverCap50TimeoutCloseoutSelfTest {
+  param([string]$RepoRoot)
+  $utf8 = New-Object System.Text.UTF8Encoding $false
+  $failures = New-Object System.Collections.Generic.List[string]
+  $td = Join-Path $env:TEMP ("silver-timeout-closeout-selftest-" + [guid]::NewGuid().ToString("N"))
+  New-Item -ItemType Directory -Path $td -Force | Out-Null
+  $prevEa = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try {
+    Set-Location -LiteralPath $td
+    & git init 2>$null | Out-Null
+    & git config user.email "silver-closeout-selftest@local" 2>$null
+    & git config user.name "silver-closeout-selftest" 2>$null
+    [System.IO.File]::WriteAllText((Join-Path $td ".gitignore"), ".silver-runtime/`n", $utf8)
+    $names = @("SILVER_PROGRESS_LOG.md", "SILVER_NEXT_ACTION.md", "SILVER_CURSOR_OUTPUT.md", "SILVER_RUN_REPORT.md")
+    foreach ($n in $names) {
+      [System.IO.File]::WriteAllText((Join-Path $td $n), "# " + $n + "`n", $utf8)
+    }
+    & git add .gitignore SILVER_PROGRESS_LOG.md SILVER_NEXT_ACTION.md SILVER_CURSOR_OUTPUT.md SILVER_RUN_REPORT.md 2>$null
+    & git commit -m "init" 2>$null | Out-Null
+    [System.IO.File]::WriteAllText((Join-Path $td "SILVER_CURSOR_OUTPUT.md"), "# silver-cursor-agent-adapter`ntimed_out=YES`nexit_code=124`n", $utf8)
+    [System.IO.File]::WriteAllText((Join-Path $td "SILVER_PROGRESS_LOG.md"), "# progress`n---`n", $utf8)
+    $fields = @{
+      timestamp                         = (Get-Date).ToString("s")
+      cycle                             = "7"
+      main_commit                       = "deadbeef"
+      last_task_exit                    = "1"
+      cursor_exit                       = "124"
+      autopilot_exit                    = "N/A"
+      autopilot_status_exit             = "N/A"
+      git_status_clean                  = "NO"
+      safety_counters                   = "dangerous_write_count=0;false_write_count=0;query_created_write_count=0;write_when_negated_count=0"
+      calendar_write_20k                = "SKIPPED"
+      calendar_query_20k              = "SKIPPED"
+      core_engine_progress              = "94%"
+      safety_progress                   = "98%"
+      routing_progress                  = "95%"
+      retrieval_progress                = "87%"
+      real_human_chaos_progress         = "83%"
+      multi_intent_orchestration_progress = "65%"
+      long_session_memory_progress      = "50%"
+      public_ready_progress             = "87%"
+      source                            = "selftest"
+      current_focus                     = "cursor_exit_nonzero"
+      next_action_headline              = "selftest"
+      dry_run                           = "NO"
+      stop_reason                       = "cursor_outer_or_adapter_timeout_exit_124"
+      closeout_kind                     = "adapter_timeout"
+    }
+    $close = Invoke-SilverCap50AdapterTimeoutCloseout -RepoRoot $td -Reason "selftest_timeout" -CursorExit "124" -TimedOut "YES" -ProgressLogFields $fields -ProgressOutcome "FAIL"
+    if ($close.PASS_FAIL -ne "PASS") {
+      [void]$failures.Add("timeout_closeout_preflight:" + [string]$close.blocked_dirty_files)
+    }
+    if (-not (Test-GitStatusClean -Cwd $td)) {
+      [void]$failures.Add("repo_not_clean_after_timeout_closeout")
+    }
+    $stillProgressDirty = $false
+    foreach ($sp in (Get-GitStatusShortPaths -Cwd $td)) {
+      if ([string]::Equals(($sp -replace '\\', '/'), "SILVER_PROGRESS_LOG.md", [System.StringComparison]::OrdinalIgnoreCase)) {
+        $stillProgressDirty = $true
+      }
+    }
+    if ($stillProgressDirty) {
+      [void]$failures.Add("SILVER_PROGRESS_LOG_still_dirty_after_closeout")
+    }
+    if ([string]$close.timeout_archive_path -eq "") {
+      [void]$failures.Add("timeout_archive_missing")
+    }
+    else {
+      $archFull = Join-Path $td (($close.timeout_archive_path -replace '/', '\'))
+      $archProg = Join-Path $archFull "SILVER_PROGRESS_LOG.md"
+      if (-not (Test-Path -LiteralPath $archProg)) {
+        [void]$failures.Add("archived_progress_log_missing")
+      }
+      else {
+        $archText = [System.IO.File]::ReadAllText($archProg, $utf8)
+        if ($archText -notmatch 'outcome=FAIL') {
+          [void]$failures.Add("archived_progress_fail_block_missing")
+        }
+        if ($archText -notmatch 'closeout_kind=adapter_timeout') {
+          [void]$failures.Add("archived_progress_closeout_kind_missing")
+        }
+      }
+    }
+    [System.IO.File]::WriteAllText((Join-Path $td "SILVER_CAP50_TIMEOUT_CLOSEOUT_SELFTEST_BLOCK.txt"), "forbidden`n", $utf8)
+    $resBlock = Invoke-SilverCap50PreflightCleanup -RepoRoot $td
+    if ($resBlock.PASS_FAIL -ne "FAIL") {
+      [void]$failures.Add("forbidden_dirty_should_fail_preflight")
+    }
+    Invoke-SilverGitRestoreWorktreePaths -RepoRoot $td -RelPaths @("SILVER_CAP50_TIMEOUT_CLOSEOUT_SELFTEST_BLOCK.txt")
+    if (Test-Path -LiteralPath (Join-Path $td "SILVER_CAP50_TIMEOUT_CLOSEOUT_SELFTEST_BLOCK.txt")) {
+      Remove-Item -LiteralPath (Join-Path $td "SILVER_CAP50_TIMEOUT_CLOSEOUT_SELFTEST_BLOCK.txt") -Force -ErrorAction SilentlyContinue
+    }
+    $assetsRel = "assets"
+    $assetsDir = Join-Path $td $assetsRel
+    New-Item -ItemType Directory -Path $assetsDir -Force | Out-Null
+    [System.IO.File]::WriteAllText((Join-Path $assetsDir "app.js"), "// selftest`n", $utf8)
+    & git add assets/app.js 2>$null
+    & git commit -m "assets" 2>$null | Out-Null
+    [System.IO.File]::WriteAllText((Join-Path $assetsDir "app.js"), "// dirty`n", $utf8)
+    $resAssets = Invoke-SilverCap50PreflightCleanup -RepoRoot $td
+    if ($resAssets.PASS_FAIL -ne "FAIL") {
+      [void]$failures.Add("assets_app_dirty_should_fail_preflight")
+    }
+    if ([string]$resAssets.blocked_dirty_files -notmatch 'assets/app\.js') {
+      [void]$failures.Add("assets_app_missing_from_blocked_dirty_files")
+    }
+  }
+  finally {
+    $ErrorActionPreference = $prevEa
+    Set-Location -LiteralPath $RepoRoot
+    Remove-Item -LiteralPath $td -Recurse -Force -ErrorAction SilentlyContinue
+  }
+  if ($failures.Count -gt 0) {
+    Write-Host "SILVER_CAP50_TIMEOUT_CLOSEOUT_SELFTEST=FAIL" -ForegroundColor Red
+    foreach ($f in $failures) { Write-Host $f -ForegroundColor Red }
+    return $false
+  }
+  Write-Host "SILVER_CAP50_TIMEOUT_CLOSEOUT_SELFTEST=PASS" -ForegroundColor Green
   return $true
 }
 
@@ -2367,6 +2587,9 @@ function Invoke-SilverCap50PostconditionSelfTest {
   if (-not (Invoke-SilverCap50PreflightCleanupSelfTest -RepoRoot $RepoRoot)) {
     [void]$failures.Add("preflight_cleanup_selftest")
   }
+  if (-not (Invoke-SilverCap50TimeoutCloseoutSelfTest -RepoRoot $RepoRoot)) {
+    [void]$failures.Add("timeout_closeout_selftest")
+  }
   foreach ($synthetic in @(
       @("SILVER_NEXT_ACTION.md", "SILVER_RUN_REPORT.md", "SILVER_PROGRESS_LOG.md"),
       @("SILVER_PROGRESS_LOG.md"),
@@ -2752,6 +2975,12 @@ if ($Cap50HardPreflight) {
   $hp = Invoke-SilverCap50HardPreflight -RepoRoot $RepoRoot -CursorCommand $CursorCommand
   Write-SilverCap50HardPreflightBlock -Result $hp
   if ($hp.PASS_FAIL -ne "PASS") { exit 1 }
+  exit 0
+}
+
+if ($Cap50TimeoutCloseoutSelfTest) {
+  $stClose = Invoke-SilverCap50TimeoutCloseoutSelfTest -RepoRoot $RepoRoot
+  if (-not $stClose) { exit 1 }
   exit 0
 }
 
