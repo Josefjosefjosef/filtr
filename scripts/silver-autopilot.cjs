@@ -238,6 +238,46 @@ function cap50RuntimeRestoreReason(rel) {
   return "";
 }
 
+function classifyCap50CloseoutFromDirtyPaths(paths) {
+  const list = (Array.isArray(paths) ? paths.map((p) => normalizeRepoRel(p)).filter(Boolean) : []).filter(
+    (n) => !/^\.silver-runtime(\/|$)/i.test(n),
+  );
+  if (list.length === 0) {
+    return { closeout_kind: "clean", blocked_dirty_classification: "" };
+  }
+  for (const n of list) {
+    if (repoRelGuardKey(n) === repoRelGuardKey("assets/app.js")) {
+      return { closeout_kind: "forbidden_product_dirty", blocked_dirty_classification: n };
+    }
+    if (/^(assets\/|projects\/(?!data\/)|\.github\/workflows\/)/i.test(n)) {
+      return { closeout_kind: "forbidden_product_dirty", blocked_dirty_classification: n };
+    }
+  }
+  const restorableOnly = list.every((n) => Boolean(cap50RuntimeRestoreReason(n)));
+  if (restorableOnly) {
+    return {
+      closeout_kind: "runtime_artifact_restorable",
+      blocked_dirty_classification: list.join(";"),
+    };
+  }
+  return { closeout_kind: "forbidden_dirty", blocked_dirty_classification: list.join(";") };
+}
+
+function lastProgressLogCloseoutHint() {
+  const t = readTextSafe(path.join(REPO, "SILVER_PROGRESS_LOG.md"));
+  if (!t) return { stop_reason: "", closeout_kind: "" };
+  const blocks = t.split(/\n---\n/);
+  const tail = blocks.length ? blocks[blocks.length - 1] : t;
+  let stopReason = "";
+  let closeoutKind = "";
+  for (const raw of tail.split(/\r?\n/)) {
+    const line = String(raw || "").trim();
+    if (line.startsWith("stop_reason=")) stopReason = line.slice("stop_reason=".length).trim();
+    if (line.startsWith("closeout_kind=")) closeoutKind = line.slice("closeout_kind=".length).trim();
+  }
+  return { stop_reason: stopReason, closeout_kind: closeoutKind };
+}
+
 function cap50PreflightRuntimeCleanup(dryRunOnly) {
   const po = gitStatusPorcelain();
   const dirtyBefore = [];
@@ -259,6 +299,9 @@ function cap50PreflightRuntimeCleanup(dryRunOnly) {
       const p = porcelainPathToWorkingTree(extracted);
       if (!p) continue;
       dirtyBefore.push(p);
+      if (st === "??" && /^\.silver-runtime(\/|$)/i.test(p)) {
+        continue;
+      }
       const reason = cap50RuntimeRestoreReason(p);
       if (st === "??") {
         blocked.push(reason ? p + "(untracked_runtime_unknown)" : p + "(untracked_unknown)");
@@ -1710,6 +1753,18 @@ function cmdStatus(argvCommand) {
     : "git status; resolve dirty tree before verify/merge/auto";
 
   const priorReportSnapshot = summarizeLastReportBlock();
+  const dirtyPaths = gitChangedFilesList();
+  const closeoutClass = classifyCap50CloseoutFromDirtyPaths(dirtyPaths);
+  const progressHint = lastProgressLogCloseoutHint();
+  let cap50FailureClass = "none";
+  if (!clean) {
+    cap50FailureClass = closeoutClass.closeout_kind;
+  } else if (
+    progressHint.stop_reason === "cursor_outer_or_adapter_timeout_exit_124" ||
+    progressHint.closeout_kind === "adapter_timeout"
+  ) {
+    cap50FailureClass = "adapter_timeout_recovered";
+  }
 
   const corpusDataStatus = readJsonSafe(path.join(SCRIPTS, REALISTIC_MOBILE_CORPUS_REPORT));
   const authJsonStatus = parseAuthoritativeRealisticMobileFromCorpusReport(corpusDataStatus);
@@ -1798,6 +1853,11 @@ function cmdStatus(argvCommand) {
       "timeout_artifacts_archived=" +
         (String(process.env.SILVER_TIMEOUT_ARTIFACTS_ARCHIVED || "").trim() || "YES"),
     );
+  }
+  console.log("cap50_closeout_kind=" + closeoutClass.closeout_kind);
+  console.log("cap50_failure_class=" + cap50FailureClass);
+  if (closeoutClass.blocked_dirty_classification) {
+    console.log("blocked_dirty_classification=" + closeoutClass.blocked_dirty_classification);
   }
   printProofGateConsistencyResult({
     main_commit: commit,
