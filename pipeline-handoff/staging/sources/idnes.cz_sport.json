@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-19T04:55:09.098350Z",
+  "ingestedAt": "2026-05-19T05:35:16.177992Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Dobeš slaví s Montrealem postup, prodloužení rozhodl Newhook",
+      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl.A260519_071114_nhl_mkr",
+      "dt": "2026-05-19T05:11:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dobeš",
+        "montrealem",
+        "newhook",
+        "postup",
+        "prodloužení",
+        "rozhodl",
+        "slaví"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -755,33 +779,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Spory o fotbal v Budějovicích gradují. Padl přesun do Znojma, klub sází na výjimku",
-      "url": "https://www.idnes.cz/ceske-budejovice/zpravy/dynamo-spor-majitelka-znojmo-licence-novy-klub-maros-vyjimka.A260518_151615_budejovice-zpravy_khr",
-      "dt": "2026-05-18T14:19:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "budějovicích",
-        "fotbal",
-        "gradují",
-        "klub",
-        "padl",
-        "přesun",
-        "spory",
-        "sází",
-        "výjimku",
-        "znojma"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 44229,
+      "bytes": 44485,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T05:11:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -844,6 +841,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dobeš slaví s Montrealem postup, prodloužení rozhodl Newhook",
+            "publishedAt": "2026-05-19T05:11:00Z"
+          },
           {
             "title": "Ščotka opět v hlavní roli. Tým oslabil, Rulík však říkal: Ví, že to přepískl. Ale to se stane",
             "publishedAt": "2026-05-19T04:00:00Z"
@@ -871,10 +872,6 @@
           {
             "title": "Švýcaři rozstříleli Němce, Finové porazili USA. Oba celky jsou stále stoprocentní",
             "publishedAt": "2026-05-18T21:10:00Z"
-          },
-          {
-            "title": "Česko na MS v hokeji 2026: Program, výsledky, soupiska, bilance se soupeři",
-            "publishedAt": "2026-05-18T20:52:00Z"
           }
         ]
       }

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-19T04:55:09.098350Z",
+  "ingestedAt": "2026-05-19T05:35:16.177992Z",
   "items": [
     {
       "section": "sport",
@@ -20,6 +20,34 @@
         "velmi",
         "vychytal",
         "zápase"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Na ledě jsme nechali všechno, těšilo hokejisty. Voženílek tlačil očima každou vteřinu",
+      "url": "https://www.sport.cz/clanek/hokej-ms-na-lede-jsme-nechali-vsechno-tesilo-hokejisty-vozenilek-tlacil-ocima-kazdou-vterinu-5458159",
+      "dt": "2026-05-19T05:09:38Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "hokejisty",
+        "jsme",
+        "každou",
+        "ledě",
+        "nechali",
+        "očima",
+        "tlačil",
+        "těšilo",
+        "voženílek",
+        "vteřinu",
+        "všechno"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -757,31 +785,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Trenér Flick prodloužil s fotbalisty Barcelony smlouvu do roku 2028",
-      "url": "https://www.sport.cz/clanek/fotbal-la-liga-trener-flick-prodlouzil-s-fotbalisty-barcelony-smlouvu-do-roku-2028-5457499",
-      "dt": "2026-05-18T14:22:45Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "2028",
-        "barcelony",
-        "flick",
-        "fotbalisty",
-        "prodloužil",
-        "roku",
-        "smlouvu",
-        "trenér"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 46584,
+      "bytes": 47807,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T04:23:53Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T05:09:38Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -847,6 +850,10 @@
           {
             "title": "Dobeš slaví. Ve velmi dramatickém zápase vychytal Montrealu postup",
             "publishedAt": "2026-05-19T03:58:38Z"
+          },
+          {
+            "title": "Na ledě jsme nechali všechno, těšilo hokejisty. Voženílek tlačil očima každou vteřinu",
+            "publishedAt": "2026-05-19T05:09:38Z"
           },
           {
             "title": "Takový start jsem nečekal ani ve snu, přiznal Rulík. Stížnosti na rozhodčí už nepodává",
@@ -871,10 +878,6 @@
           {
             "title": "Zbrklý hvizd, podivná vysvětlení. Divočinu proti Švédům ovlivnil finský arbitr",
             "publishedAt": "2026-05-18T21:11:12Z"
-          },
-          {
-            "title": "Arsenal vyhrál v předposledním kole Premier League a má na dosah zisk titulu po 22 letech",
-            "publishedAt": "2026-05-18T21:07:10Z"
           }
         ]
       }
