@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-18T23:25:24.833194Z",
+  "ingestedAt": "2026-05-19T00:05:35.342450Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Češi vyvolali paniku. Odporné, úplný úpadek, děsí se ve Švédsku",
+      "url": "https://www.sport.cz/clanek/hokej-ms-cesi-vyvolali-paniku-odporne-uplny-upadek-desi-se-ve-svedsku-5458158",
+      "dt": "2026-05-18T23:43:38Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "děsí",
+        "odporné",
+        "paniku",
+        "vyvolali",
+        "úpadek",
+        "úplný",
+        "češi",
+        "švédsku"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -756,28 +781,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rakušané berou na MS i plzeňského brankáře Wiegeleho",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-rakusane-berou-na-ms-i-plzenskeho-brankare-wiegeleho-5457486",
-      "dt": "2026-05-18T13:50:42Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "berou",
-        "brankáře",
-        "plzeňského",
-        "rakušané",
-        "wiegeleho"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -788,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 46468,
+      "bytes": 47179,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -825,7 +828,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-18T22:33:57Z",
+        "raw_feed_latest_publishedAt": "2026-05-18T23:43:38Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -840,6 +843,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Češi vyvolali paniku. Odporné, úplný úpadek, děsí se ve Švédsku",
+            "publishedAt": "2026-05-18T23:43:38Z"
+          },
           {
             "title": "Ščotkův smolný start: tři minuty, faul a konec. U spoluhráčů našel útěchu",
             "publishedAt": "2026-05-18T22:33:57Z"
@@ -867,10 +874,6 @@
           {
             "title": "Česko proti Švédsku na MS v hokeji 2026 ve Fribourgu. Jaká je vzájemná bilance obou týmů na světových šampionátech",
             "publishedAt": "2026-05-18T05:03:00Z"
-          },
-          {
-            "title": "Kdy hraje Česko na MS v hokeji 2026: Ve třetím duelu se silným Švédskem",
-            "publishedAt": "2026-05-18T05:06:00Z"
           }
         ]
       }
