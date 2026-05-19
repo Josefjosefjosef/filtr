@@ -148,7 +148,8 @@ function fileStat(absPath) {
 
 function gitHead(repoRoot) {
   try {
-    return execSync("git", ["rev-parse", "HEAD"], { cwd: repoRoot, encoding: "utf8" }).trim();
+    return execSync("git rev-parse HEAD", { cwd: repoRoot, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] })
+      .trim();
   } catch {
     return "";
   }
@@ -225,6 +226,64 @@ function collectClustersFromReport(basename, data, auditId) {
     push(data.target_cluster, data.intent_fail_count, { from_target: true });
   }
   return out;
+}
+
+/**
+ * Fresh authoritative cluster passes from sibling harness reports (orchestration only).
+ * When on-disk public_ux report is stale but retrieval foundation shows 12000/12000 PASS,
+ * do not treat rcz2_retrieval intent_fail as authoritative engine work.
+ */
+function loadFreshAuthoritativeClusterPasses(repoRoot) {
+  const passes = [];
+  const retrievalPath = path.join(
+    repoRoot,
+    "scripts",
+    "silver-retrieval-stress-300k-foundation-diagnostic-report.json",
+  );
+  const retrieval = readJsonSafe(retrievalPath);
+  if (retrieval && retrieval.target_cluster) {
+    const total = Number(retrieval.total_rcz2_retrieval_cases);
+    const passN = Number(retrieval.retrieval_pass_count);
+    const intentFail = Number(retrieval.intent_fail_count);
+    if (total > 0 && passN >= total && (!Number.isFinite(intentFail) || intentFail === 0)) {
+      passes.push({
+        audit_id: "public_ux",
+        cluster: String(retrieval.target_cluster).trim(),
+        source_report: "silver-retrieval-stress-300k-foundation-diagnostic-report.json",
+        authoritative_pass: "YES",
+        pass_count: passN,
+        total_cases: total,
+      });
+    }
+  }
+  const freshDir = process.env.SILVER_AUDIT_FRESH_OVERLAY_DIR
+    ? path.resolve(process.env.SILVER_AUDIT_FRESH_OVERLAY_DIR)
+    : path.join(require("os").tmpdir(), "silver-audit-fresh-overlay");
+  try {
+    if (fs.existsSync(freshDir)) {
+      for (const fn of fs.readdirSync(freshDir)) {
+        if (!fn.endsWith(".json")) continue;
+        const data = readJsonSafe(path.join(freshDir, fn));
+        if (!data || !data.target_cluster) continue;
+        const total = Number(data.total_cases || data.total_rcz2_retrieval_cases);
+        const passN = Number(data.pass_count || data.retrieval_pass_count || data.pass);
+        const intentFail = Number(data.intent_fail_count);
+        if (total > 0 && passN >= total && (!Number.isFinite(intentFail) || intentFail === 0)) {
+          passes.push({
+            audit_id: String(data.audit_id || "public_ux"),
+            cluster: String(data.target_cluster).trim(),
+            source_report: "fresh_overlay:" + fn,
+            authoritative_pass: "YES",
+            pass_count: passN,
+            total_cases: total,
+          });
+        }
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+  return passes;
 }
 
 function loadClassifierMap(repoRoot) {
@@ -373,6 +432,7 @@ function classifyMaturity(entry, repoRoot, headCommit) {
     if (commitMismatch || (ageDays != null && ageDays > STALE_DAYS)) {
       maturity = MATURITY.STALE;
       stale = "YES";
+      if (hasHarness) foundation_only = "NO";
     } else if (acc && parseFloat(String(acc)) >= 99.5 && (!Number.isFinite(failN) || failN <= 20)) {
       maturity = MATURITY.STABLE;
       foundation_only = "NO";
@@ -406,6 +466,10 @@ function buildAuditRegistry(repoRoot) {
   const headCommit = gitHead(repoRoot);
   const classifierMap = loadClassifierMap(repoRoot);
   const safetyAgg = aggregateSafetyFromReports(repoRoot);
+  const freshAuthoritativePasses = loadFreshAuthoritativeClusterPasses(repoRoot);
+  const freshPassKey = new Set(
+    freshAuthoritativePasses.map((fp) => fp.audit_id + "\0" + fp.cluster),
+  );
   const audits = [];
 
   for (const spec of AUDIT_CATALOG) {
@@ -417,6 +481,7 @@ function buildAuditRegistry(repoRoot) {
     const clusterMap = {};
     for (const c of clusters) {
       const key = c.cluster;
+      if (freshPassKey.has(spec.id + "\0" + key)) continue;
       if (!clusterMap[key]) clusterMap[key] = Object.assign({}, c);
       else clusterMap[key].fail_count = Math.max(clusterMap[key].fail_count, c.fail_count);
     }
@@ -440,11 +505,15 @@ function buildAuditRegistry(repoRoot) {
 
     const topCluster = enrichedClusters.sort((a, b) => b.fail_count - a.fail_count)[0] || null;
 
+    const hasActionableClusters = enrichedClusters.some((c) => c.fail_count > 0);
     const usable =
-      (mat.maturity === MATURITY.ACTIVE || mat.maturity === MATURITY.STABLE || mat.maturity === MATURITY.PARTIAL) &&
+      (mat.maturity === MATURITY.ACTIVE ||
+        mat.maturity === MATURITY.STABLE ||
+        mat.maturity === MATURITY.PARTIAL ||
+        (mat.maturity === MATURITY.STALE && hasActionableClusters)) &&
       mat.foundation_only !== "YES" &&
-      mat.stale !== "YES" &&
-      (trueEngineClusters.length > 0 || (topCluster && topCluster.fail_count > 0));
+      (mat.stale !== "YES" || hasActionableClusters) &&
+      (trueEngineClusters.length > 0 || hasActionableClusters);
 
     let status = "planned";
     if (mat.maturity === MATURITY.PLANNED_ONLY) status = "not_created";
@@ -475,7 +544,14 @@ function buildAuditRegistry(repoRoot) {
     });
   }
 
-  return { repoRoot, headCommit, safetyAgg, audits, generated_at: new Date().toISOString() };
+  return {
+    repoRoot,
+    headCommit,
+    safetyAgg,
+    audits,
+    fresh_authoritative_passes: freshAuthoritativePasses,
+    generated_at: new Date().toISOString(),
+  };
 }
 
 function scoreClusterForPriority(c, audit) {
@@ -512,7 +588,7 @@ function prioritizeTrueEngineFail(registry) {
   const rows = [];
   const seen = new Set();
   for (const audit of registry.audits) {
-    if (audit.usable_for_cap_selection !== "YES" && audit.clusters.length === 0) continue;
+    if (audit.usable_for_cap_selection !== "YES") continue;
     for (const c of audit.clusters) {
       if (c.fail_count <= 0) continue;
       const dedupeKey = audit.audit_id + "\0" + c.cluster;
@@ -721,14 +797,70 @@ function renderCapOutcomeBlock(outcome) {
   ].join("\n");
 }
 
+function harnessCommandForAuditId(auditId) {
+  const spec = AUDIT_CATALOG.find((a) => a.id === auditId);
+  if (!spec || !spec.harness_scripts || !spec.harness_scripts.length) {
+    return "node scripts/silver-rhc3-cluster-classifier-v1.cjs";
+  }
+  return "node scripts/" + spec.harness_scripts[0];
+}
+
+/**
+ * Authoritative selector → execution runtime handoff (orchestration only).
+ * @param {string} repoRoot
+ * @param {{ max_autonomous_hard_cycles?: number }} [opts]
+ */
+function resolveCapRuntimeHandoff(repoRoot, opts) {
+  const registry = buildAuditRegistry(repoRoot);
+  const prioritized = prioritizeTrueEngineFail(registry);
+  const nextCap = selectNextCap(registry, prioritized);
+  let capLabel = String(nextCap.recommended_cap || "CAP50").toUpperCase();
+  const hardMax = Number(opts && opts.max_autonomous_hard_cycles) || 0;
+  if (hardMax > 0 && capLabel === "CAP50") {
+    capLabel = "CAP" + String(hardMax);
+  }
+  const topRow =
+    prioritized.find((p) => p.audit_id === nextCap.audit_id && p.cluster === nextCap.cluster) || prioritized[0];
+  const clusterDiag =
+    nextCap.cluster && nextCap.cluster !== "(žádný)"
+      ? {
+          source: "silver-audit-registry:" + String(nextCap.audit_id || ""),
+          cluster: nextCap.cluster,
+          count: topRow ? topRow.fail_count : 0,
+          audit_name: nextCap.audit_name,
+          harness_command: harnessCommandForAuditId(nextCap.audit_id),
+          recommended_cap: capLabel,
+        }
+      : null;
+  return {
+    cap_label: capLabel,
+    next_cap: nextCap,
+    prioritized,
+    registry,
+    cluster_diag: clusterDiag,
+    stale_audit_count: registry.audits.filter((a) => a.stale === "YES").length,
+  };
+}
+
 function runSelfTest() {
   const td = path.join(require("os").tmpdir(), "silver-audit-registry-selftest-" + Date.now());
   fs.mkdirSync(path.join(td, "scripts"), { recursive: true });
+  try {
+    execSync("git init", { cwd: td, encoding: "utf8", stdio: "ignore" });
+    execSync('git config user.email "selftest@local"', { cwd: td, encoding: "utf8", stdio: "ignore" });
+    execSync('git config user.name "selftest"', { cwd: td, encoding: "utf8", stdio: "ignore" });
+    fs.writeFileSync(path.join(td, "README.md"), "selftest\n", "utf8");
+    execSync("git add README.md", { cwd: td, encoding: "utf8", stdio: "ignore" });
+    execSync('git commit -m "selftest"', { cwd: td, encoding: "utf8", stdio: "ignore" });
+  } catch {
+    /* ignore */
+  }
 
+  const headSelf = gitHead(td) || "abc";
   const rcz2 = {
     harness_id: "test",
     generated_at: new Date().toISOString(),
-    main_commit: "abc",
+    main_commit: headSelf,
     total_cases: 1000,
     fail: 120,
     pass: 880,
@@ -743,7 +875,7 @@ function runSelfTest() {
   );
   const rhc3 = {
     generated_at: new Date().toISOString(),
-    main_commit: "abc",
+    main_commit: headSelf,
     total_cases: 5000,
     fail_count: 5,
     pass_count: 4995,
@@ -762,18 +894,52 @@ function runSelfTest() {
     cap_label: "CAP50",
   });
 
+  const headOk = gitHead(td).length >= 7;
   const checks = [];
   checks.push(reg.audits.length === AUDIT_CATALOG.length);
   checks.push(pri.length > 0);
   checks.push(next.recommended_cap && next.audit_name);
   checks.push(outcome.low_product_value_loop === "YES");
+  checks.push(headOk);
   const pub = reg.audits.find((a) => a.audit_id === "public_ux");
   checks.push(pub && pub.maturity === MATURITY.ACTIVE);
   const planned = reg.audits.find((a) => a.audit_id === "self_correction");
   checks.push(planned && planned.maturity === MATURITY.PLANNED_ONLY);
+  fs.writeFileSync(
+    path.join(td, "scripts", "silver-retrieval-stress-300k-foundation-diagnostic-report.json"),
+    JSON.stringify({
+      target_cluster: "rcz2_retrieval",
+      total_rcz2_retrieval_cases: 12000,
+      retrieval_pass_count: 12000,
+      intent_fail_count: 0,
+    }),
+    "utf8",
+  );
+  const reg2 = buildAuditRegistry(td);
+  const pri2 = prioritizeTrueEngineFail(reg2);
+  const rcz2Row = pri2.find((r) => r.cluster === "rcz2_retrieval");
+  checks.push(!rcz2Row);
+  const handoff = resolveCapRuntimeHandoff(td);
+  checks.push(handoff.cap_label && handoff.cluster_diag && handoff.cluster_diag.cluster !== "rcz2_retrieval");
 
   const pass = checks.every(Boolean);
   console.log("=== SILVER_AUDIT_REGISTRY_SELFTEST ===");
+  if (!pass) {
+    const labels = [
+      "catalog_count",
+      "priority_rows",
+      "next_cap",
+      "low_product_loop",
+      "git_head",
+      "pub_active",
+      "planned_only",
+      "fresh_rcz2_excluded",
+      "handoff_not_rcz2",
+    ];
+    labels.forEach((lbl, i) => {
+      if (!checks[i]) console.log("failed_check=" + lbl);
+    });
+  }
   console.log("SILVER_AUDIT_REGISTRY_SELFTEST=" + (pass ? "PASS" : "FAIL"));
   console.log("audits_catalog_count=" + reg.audits.length);
   console.log("priority_rows=" + pri.length);
@@ -880,6 +1046,10 @@ module.exports = {
   emitFullReport,
   renderCzechRegistryTable,
   renderCapOutcomeBlock,
+  harnessCommandForAuditId,
+  resolveCapRuntimeHandoff,
+  loadFreshAuthoritativeClusterPasses,
+  gitHead,
 };
 
 if (require.main === module) {

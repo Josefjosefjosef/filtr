@@ -13,6 +13,8 @@ const ORCHESTRATOR_REPORT = path.join(__dirname, "silver-pr-orchestrator-v1-repo
 const RHC3_REPORT = path.join(__dirname, "silver-real-human-chaos-v3-report.json");
 const REALISTIC_MOBILE_REPORT = path.join(__dirname, "silver-realistic-mobile-corpus-report.json");
 
+const { resolveCapRuntimeHandoff } = require("./silver-audit-registry.cjs");
+
 /** UTF-8 mis-decoded Czech (Latin-1/Windows-1252 read as UTF-8). */
 const SILVER_NEXT_ACTION_MOJIBAKE_RE =
   /Ă|â€|Ĺ|pĹ|Ä›|OtevĹ|ZprĂ|pĹ™ejdÄ|ĂşKOL|ÄŤ|Ĺ™|Ă­|Ăˇ|Ă©/;
@@ -55,7 +57,35 @@ function parseTopFailClustersFromReport(data) {
   return out;
 }
 
+function pickClusterFromAuditRegistry() {
+  try {
+    const handoff = resolveCapRuntimeHandoff(REPO, {});
+    const diag = handoff.cluster_diag;
+    if (!diag || !diag.cluster || diag.cluster === "(žádný)") return null;
+    return {
+      source: String(diag.source || "silver-audit-registry"),
+      cluster: String(diag.cluster),
+      count: Number(diag.count) || 0,
+      audit_name: String(diag.audit_name || ""),
+      harness_command: String(diag.harness_command || ""),
+      recommended_cap: String(diag.recommended_cap || handoff.cap_label || ""),
+      top_preview:
+        handoff.prioritized && handoff.prioritized.length
+          ? handoff.prioritized
+              .slice(0, 8)
+              .map((p) => p.cluster + ":" + p.fail_count)
+              .join(" | ")
+          : "",
+    };
+  } catch {
+    return null;
+  }
+}
+
 function pickTopClusterDiagnostic() {
+  const fromRegistry = pickClusterFromAuditRegistry();
+  if (fromRegistry) return fromRegistry;
+
   const rhc3 = readJsonFile(RHC3_REPORT);
   if (rhc3.ok && rhc3.data) {
     const tops = parseTopFailClustersFromReport(rhc3.data);
@@ -160,6 +190,8 @@ function buildHandoffMarkdown(ctx) {
     "",
     `- **Zdroj:** ${diag.source}`,
     `- **Top cluster:** \`${diag.cluster}\` (count=${diag.count})`,
+    diag.audit_name ? `- **Audit (registry):** ${diag.audit_name}` : "",
+    diag.recommended_cap ? `- **Doporučený CAP (registry):** ${diag.recommended_cap}` : "",
     `- **Náhled top:** ${diag.top_preview}`,
     "",
     "### Kroky (max 7)",
@@ -167,7 +199,9 @@ function buildHandoffMarkdown(ctx) {
     "1) `Set-Location C:\\\\projects\\\\filtr`",
     "2) `git status --short` — nesmí být neočekávané změny mimo výslovně povolené reporting soubory.",
     "3) `node scripts/silver-autopilot.cjs --status` — ověř safety/gate signály v konzoli a `SILVER_RUN_REPORT.md`.",
-    `4) Zaměř se na cluster **${diag.cluster}**: nejprve \`node scripts/silver-rhc3-cluster-classifier-v1.cjs\`, pak existující \`silver-*\` diagnostické skripty pro tento typ selhání (manifest v README autopilota; nevymýšlej nové cesty).`,
+    diag.harness_command && String(diag.harness_command).indexOf("silver-rhc3-cluster-classifier") < 0
+      ? `4) Zaměř se na cluster **${diag.cluster}**: nejprve \`${diag.harness_command}\`, pak cílené \`silver-*\` diagnostiky pro tento cluster (manifest v README; nevymýšlej nové cesty).`
+      : `4) Zaměř se na cluster **${diag.cluster}**: nejprve \`node scripts/silver-rhc3-cluster-classifier-v1.cjs\`, pak existující \`silver-*\` diagnostické skripty pro tento typ selhání (manifest v README autopilota; nevymýšlej nové cesty).`,
     "5) Pokud reporty JSON ukazují **harness-only** signály vs **true engine fail**, drž se pravidla: nejdřív důkaz z harness JSON (`true_engine_fail_count`, `must_fix_engine_count`, …).",
     "6) `npm run smoke` po jakékoli smysluplné změně skriptů (ne u čistého read-only průzkumu).",
     "7) Výstup vlož do chatu dle bloku níže.",
@@ -307,6 +341,7 @@ module.exports = {
   SILVER_NEXT_ACTION_MOJIBAKE_RE,
   SILVER_NEXT_ACTION_SILVER_WORKFLOW_RE,
   STALE_VERIFY_PR_IDS,
+  pickClusterFromAuditRegistry,
   pickTopClusterDiagnostic,
   buildHandoffMarkdown,
   buildClusterHandoffForHealthyPlanner,
