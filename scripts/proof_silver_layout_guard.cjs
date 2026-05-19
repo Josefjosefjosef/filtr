@@ -9,12 +9,14 @@
  * - button_gap_delta = |gap_input_to_buttons - gap_buttons_to_card_bottom| ≤ 8
  * - Calendar / Úkoly / Poznámky smoke; no mic; submit shows arrow only
  * - overflowX false; no console errors; no page errors; CLS cap after idle paint
+ * - Open-Meteo fetch stubbed in proof (see proofs/open_meteo_guard_stub.cjs) — external API CORS is not layout signal
  *
  * Env: SILVER_LAYOUT_GUARD_URL (default https://infouzel.cz/projects/)
  */
 "use strict";
 
 const { chromium } = require("playwright");
+const { installOpenMeteoStubRoute } = require("./proofs/open_meteo_guard_stub.cjs");
 
 const DEFAULT_URL = "https://infouzel.cz/projects/";
 const CLS_CAP = 0.02;
@@ -46,6 +48,7 @@ async function readCls(page) {
 }
 
 async function runViewport(page, w, h) {
+  await installOpenMeteoStubRoute(page);
   await page.setViewportSize({ width: w, height: h });
   const consoleErrors = [];
   let appErrors = 0;
