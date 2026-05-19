@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-19T07:39:47.329390Z",
+  "ingestedAt": "2026-05-19T08:21:03.640250Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Telefon, vlastní oblečení i vzduch za odměnu? Podmínky ochranné léčby se drasticky liší",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/ochranne-leceni-zastupce-ombudsmana-nejasna-pravidla/",
+      "dt": "2026-05-19T07:42:30Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "drasticky",
+        "liší",
+        "léčby",
+        "oblečení",
+        "ochranné",
+        "odměnu",
+        "podmínky",
+        "telefon",
+        "vlastní",
+        "vzduch"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -249,33 +276,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Konec obíhání lékařů kvůli prevenci. Ženy už nebudou potřebovat žádanku na mamograf",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/prevence-cervenec-zeny-zadanka-mamograf/",
-      "dt": "2026-05-18T11:15:35Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "konec",
-        "kvůli",
-        "lékařů",
-        "mamograf",
-        "nebudou",
-        "obíhání",
-        "potřebovat",
-        "prevenci",
-        "ženy",
-        "žádanku"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -286,7 +286,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 87191,
+      "bytes": 84726,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -323,7 +323,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-19T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T07:42:30Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -338,6 +338,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Telefon, vlastní oblečení i vzduch za odměnu? Podmínky ochranné léčby se drasticky liší",
+            "publishedAt": "2026-05-19T07:42:30Z"
+          },
           {
             "title": "Pojišťovny utrácejí více, než kolik vyberou. Data odhalila, kterým hrozí potíže",
             "publishedAt": "2026-05-19T07:00:00Z"
@@ -365,10 +369,6 @@
           {
             "title": "Velké stěhování z Úřadu vlády. Dvě stěžejní agendy se přesouvají na ministerstvo zdravotnictví",
             "publishedAt": "2026-05-18T15:21:48Z"
-          },
-          {
-            "title": "Cena za přínos ošetřovatelství má dvě vítězky. Převzaly ji profesorka z Ostravy a sestra z Prahy",
-            "publishedAt": "2026-05-18T14:22:34Z"
           }
         ]
       }

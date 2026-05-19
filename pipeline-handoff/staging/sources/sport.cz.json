@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-19T07:39:47.329390Z",
+  "ingestedAt": "2026-05-19T08:21:03.640250Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Brankář Gustavsson jde po vyřazení Minnesoty na operaci kyčle",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-brankar-gustavsson-jde-po-vyrazeni-minnesoty-na-operaci-kycle-5458170",
+      "dt": "2026-05-19T07:55:03Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "brankář",
+        "gustavsson",
+        "jde",
+        "kyčle",
+        "minnesoty",
+        "operaci",
+        "vyřazení"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -760,37 +784,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Maska, křupání ve zlomené čelisti, kaše. Moses to udělat nechtěl, po čtyřech zápasech mu trest odvolají, soudí Hodouš",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-maska-krupani-ve-zlomene-celisti-kase-moses-to-udelat-nechtel-po-ctyrech-zapasech-mu-trest-odvolaji-soudi-hodous-5457481",
-      "dt": "2026-05-18T16:52:51Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "hodouš",
-        "kaše",
-        "křupání",
-        "maska",
-        "moses",
-        "nechtěl",
-        "odvolají",
-        "soudí",
-        "trest",
-        "udělat",
-        "zlomené",
-        "zápasech",
-        "čelisti",
-        "čtyřech"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 48527,
+      "bytes": 47763,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T07:17:50Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T07:55:03Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -853,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Brankář Gustavsson jde po vyřazení Minnesoty na operaci kyčle",
+            "publishedAt": "2026-05-19T07:55:03Z"
+          },
           {
             "title": "Bláznivý zápas pro nejlepšího českého hráče. Sudího nejprve seřval, pak ho „oklamal“ radostí",
             "publishedAt": "2026-05-19T07:17:50Z"
@@ -880,10 +877,6 @@
           {
             "title": "Smutný a naštvaný? Takhle končit nechtěl. České eso se po bitvě generací vrátilo do reprezentace",
             "publishedAt": "2026-05-19T06:01:32Z"
-          },
-          {
-            "title": "Na ledě jsme nechali všechno, těšilo hokejisty. Voženílek tlačil očima každou vteřinu",
-            "publishedAt": "2026-05-19T05:09:38Z"
           }
         ]
       }

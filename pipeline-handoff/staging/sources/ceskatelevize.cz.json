@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-19T07:39:47.329390Z",
+  "ingestedAt": "2026-05-19T08:21:03.640250Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Resort financí požaduje přepracování zákona o veřejnoprávních médiích",
+      "url": "https://ct24.ceskatelevize.cz/clanek/media/resort-financi-pozaduje-prepracovani-zakona-o-verejnopravnich-mediich-373597",
+      "dt": "2026-05-19T08:13:29Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "financí",
+        "médiích",
+        "požaduje",
+        "přepracování",
+        "resort",
+        "veřejnoprávních",
+        "zákona"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -732,27 +756,27 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Počet nelegálních vstupů do EU loni klesl o 26 procent, míra návratů vzrostla",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/pocet-nelegalnich-vstupu-do-eu-loni-klesl-o-26-procent-mira-navratu-vzrostla-373564",
-      "dt": "2026-05-18T12:23:39Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Černoch: Aspoň jeden gól mi zůstal. Měly ale být dva",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/cernoch-aspon-jeden-gol-mi-zustal-mely-ale-byt-dva-156883",
+      "dt": "2026-05-19T07:54:17Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "klesl",
-        "loni",
-        "míra",
-        "nelegálních",
-        "návratů",
-        "počet",
-        "procent",
-        "vstupů",
-        "vzrostla"
+        "ale",
+        "aspoň",
+        "být",
+        "dva",
+        "gól",
+        "jeden",
+        "měly",
+        "zůstal",
+        "černoch"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1470,31 +1494,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Přindiš doplnil Krejčího a Prskavce, Hilgertová zahnala myšlenky na konec",
-      "url": "https://sport.ceskatelevize.cz/clanek/vodni-slalom/prindis-doplnil-krejciho-a-prskavce-hilgertova-zahnala-myslenky-na-konec-156856",
-      "dt": "2026-05-17T17:20:21Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "doplnil",
-        "hilgertová",
-        "konec",
-        "krejčího",
-        "myšlenky",
-        "prskavce",
-        "přindiš",
-        "zahnala"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1505,7 +1504,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42613,
+      "bytes": 42682,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1565,7 +1564,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T07:33:33Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T08:13:29Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1582,6 +1581,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Resort financí požaduje přepracování zákona o veřejnoprávních médiích",
+            "publishedAt": "2026-05-19T08:13:29Z"
+          },
           {
             "title": "Izrael nemůže žít v La La Landu, říká tamní bezpečnostní analytik",
             "publishedAt": "2026-05-19T07:33:33Z"
@@ -1609,10 +1612,6 @@
           {
             "title": "Stíhaný polský exministr dostal vízum do USA po zásahu diplomata, píše Reuters",
             "publishedAt": "2026-05-19T06:01:47Z"
-          },
-          {
-            "title": "Obrazem: „Holubička\" i královna. Čím vším byla oslavenkyně Iva Janžurová",
-            "publishedAt": "2026-05-19T06:00:00Z"
           }
         ]
       }
@@ -1624,7 +1623,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36662,
+      "bytes": 36442,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1661,7 +1660,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T06:17:21Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T07:54:17Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1676,6 +1675,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Černoch: Aspoň jeden gól mi zůstal. Měly ale být dva",
+            "publishedAt": "2026-05-19T07:54:17Z"
+          },
           {
             "title": "Wembanyamův účet se zastavil až na 41 bodech. San Antonio ale mělo proti Oklahomě namále",
             "publishedAt": "2026-05-19T06:17:21Z"
@@ -1703,10 +1706,6 @@
           {
             "title": "Brno vede nad Pardubicemi už 2:0, série se navíc stěhuje na jeho palubovku",
             "publishedAt": "2026-05-18T18:24:02Z"
-          },
-          {
-            "title": "Sdruženáři Vytrval a Daněk ukončili kariéru",
-            "publishedAt": "2026-05-18T17:28:52Z"
           }
         ]
       }
@@ -1718,7 +1717,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77415,
+      "bytes": 77482,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

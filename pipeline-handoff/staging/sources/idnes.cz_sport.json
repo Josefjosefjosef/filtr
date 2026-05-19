@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-19T07:39:47.329390Z",
+  "ingestedAt": "2026-05-19T08:21:03.640250Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
       "title": "Guardiola po sezoně skončí v City, píší v Anglii. Náhradníkem bude Maresca",
       "url": "https://www.idnes.cz/fotbal/zahranici/pep-guardiola-manchester-city-konec-trener-nahrada.A260519_083844_fot_zahranici_duff",
-      "dt": "2026-05-19T07:20:24Z",
+      "dt": "2026-05-19T07:40:30Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
@@ -20,6 +20,32 @@
         "píší",
         "sezoně",
         "skončí"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Před 30 lety se Češi stali poprvé mistry světa. Jak dnes vypadají hrdinové z Vídně?",
+      "url": "https://www.idnes.cz/sport/trendy/sampioni-z-vidne-1996-jak-dnes-vypadaji.A260514_114632_trendy_blah/foto",
+      "dt": "2026-05-19T07:39:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "hrdinové",
+        "lety",
+        "mistry",
+        "poprvé",
+        "stali",
+        "světa",
+        "vypadají",
+        "vídně",
+        "češi"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -742,33 +768,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Serena, jedině Serena! Současné hvězdy mají jasno o nejlepší hráčce všech dob",
-      "url": "https://www.idnes.cz/sport/tenis/anketa-nejlepsi-hracka-vsech-dob-serena-williamsova.A260517_150248_tenis_ikuc",
-      "dt": "2026-05-18T16:12:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dob",
-        "hráčce",
-        "hvězdy",
-        "jasno",
-        "jedině",
-        "mají",
-        "nejlepší",
-        "serena",
-        "současné",
-        "všech"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -779,7 +778,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 44318,
+      "bytes": 44360,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -816,7 +815,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T07:20:24Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T07:40:30Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -833,7 +832,11 @@
         "sample_titles": [
           {
             "title": "Guardiola po sezoně skončí v City, píší v Anglii. Náhradníkem bude Maresca",
-            "publishedAt": "2026-05-19T07:20:24Z"
+            "publishedAt": "2026-05-19T07:40:30Z"
+          },
+          {
+            "title": "Před 30 lety se Češi stali poprvé mistry světa. Jak dnes vypadají hrdinové z Vídně?",
+            "publishedAt": "2026-05-19T07:39:00Z"
           },
           {
             "title": "OBRAZEM: Dva a půl tisíce školáků na fotbale. V Ústí se fandilo nonstop",
@@ -858,10 +861,6 @@
           {
             "title": "Rulík: Podněty na rozhodčí nepodáme, ale vyloučení nás mohla stát zápas",
             "publishedAt": "2026-05-19T05:46:00Z"
-          },
-          {
-            "title": "Dobeš slaví s Montrealem postup, prodloužení rozhodl Newhook",
-            "publishedAt": "2026-05-19T05:44:45Z"
           }
         ]
       }
