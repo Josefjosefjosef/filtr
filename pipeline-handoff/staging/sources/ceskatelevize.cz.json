@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-19T16:29:39.299078Z",
+  "ingestedAt": "2026-05-19T17:09:44.183459Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "SOUHRN: Zásadní události úterý 19. května",
+      "url": "https://ct24.ceskatelevize.cz/clanek/media/souhrn-zasadni-udalosti-utery-19-kvetna-373618",
+      "dt": "2026-05-19T16:28:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "května",
+        "souhrn",
+        "události",
+        "zásadní",
+        "úterý"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -739,29 +761,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Polská ekonomika dál roste, pomáhají i firmy z ciziny",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/polska-ekonomika-dal-roste-pomahaji-i-firmy-z-ciziny-373573",
-      "dt": "2026-05-19T05:30:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "ciziny",
-        "ekonomika",
-        "firmy",
-        "polská",
-        "pomáhají",
-        "roste"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "sport",
       "contentType": "article",
       "title": "Klub fair play ocenil oddanost sportu i mimořádné lidské činy",
@@ -885,17 +884,20 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "MS v hokeji: Lotyšsko – Rakousko a Itálie – Norsko",
+      "title": "Rakušané prožívají skvělý start do turnaje, Norové si poradili s Italy",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/lotyssko-rakousko-a-italie-norsko-156889",
       "dt": "2026-05-19T14:00:16Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
-        "hokeji",
-        "itálie",
-        "lotyšsko",
-        "norsko",
-        "rakousko"
+        "italy",
+        "norové",
+        "poradili",
+        "prožívají",
+        "rakušané",
+        "skvělý",
+        "start",
+        "turnaje"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1513,7 +1515,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43906,
+      "bytes": 43645,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1573,11 +1575,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T14:57:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T16:28:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 7,
-          "zpravy": 23
+          "zpravy": 23,
+          "other": 7
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1589,6 +1591,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "SOUHRN: Zásadní události úterý 19. května",
+            "publishedAt": "2026-05-19T16:28:00Z"
+          },
           {
             "title": "Porozumění, nebo démonizace? O vraždě francouzského učitele vznikl film",
             "publishedAt": "2026-05-19T14:57:00Z"
@@ -1616,10 +1622,6 @@
           {
             "title": "Si řekl Trumpovi, že by Putin mohl invaze na Ukrajinu litovat, píší FT",
             "publishedAt": "2026-05-19T12:15:24Z"
-          },
-          {
-            "title": "Kde leží hranice medicíny? Odpovědi hledá nový pořad Daniela Stacha Na dosah",
-            "publishedAt": "2026-05-19T11:58:46Z"
           }
         ]
       }
@@ -1631,7 +1633,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36374,
+      "bytes": 36351,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1704,7 +1706,7 @@
             "publishedAt": "2026-05-19T14:04:21Z"
           },
           {
-            "title": "MS v hokeji: Lotyšsko – Rakousko a Itálie – Norsko",
+            "title": "Rakušané prožívají skvělý start do turnaje, Norové si poradili s Italy",
             "publishedAt": "2026-05-19T14:00:16Z"
           },
           {
@@ -1725,7 +1727,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77694,
+      "bytes": 77698,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

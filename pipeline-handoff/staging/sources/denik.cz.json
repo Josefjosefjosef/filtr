@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-19T16:29:39.299078Z",
+  "ingestedAt": "2026-05-19T17:09:44.183459Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Putin přistál v Pekingu. Bude jednat se Si Ťin-pchingem",
+      "url": "https://www.denik.cz/ze_sveta/putin-si-tin-pching-peking-navsteva.html",
+      "dt": "2026-05-19T16:26:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "jednat",
+        "pchingem",
+        "pekingu",
+        "putin",
+        "přistál",
+        "ťin"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -627,30 +650,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ministerstvo požaduje přepracovat Klempířův zákon o veřejnoprávních médiích",
-      "url": "https://www.denik.cz/z_domova/navrh-zakona-o-mediich-verejne-sluzby-ceska-televize-rozhlas-zmeny.html",
-      "dt": "2026-05-19T08:28:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "klempířův",
-        "ministerstvo",
-        "médiích",
-        "požaduje",
-        "přepracovat",
-        "veřejnoprávních",
-        "zákon"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -661,7 +660,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29176,
+      "bytes": 29163,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -698,7 +697,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-19T16:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T16:26:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -713,6 +712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Putin přistál v Pekingu. Bude jednat se Si Ťin-pchingem",
+            "publishedAt": "2026-05-19T16:26:00Z"
+          },
           {
             "title": "Nikomu jsem neslíbil, že letos dáme na obranu dvě procenta, řekl Babiš v debatě",
             "publishedAt": "2026-05-19T16:00:00Z"
@@ -740,10 +743,6 @@
           {
             "title": "Slovák podezřelý z otrav dětských výživ zůstane ve vazbě, rozhodl rakouský soud",
             "publishedAt": "2026-05-19T14:02:00Z"
-          },
-          {
-            "title": "Veřejnoprávní média? Babiš chce větší kontrolu, šetřit má hlavně Český rozhlas",
-            "publishedAt": "2026-05-19T13:56:00Z"
           }
         ]
       }
