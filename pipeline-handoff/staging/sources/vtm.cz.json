@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-19T11:00:18.192786Z",
+  "ingestedAt": "2026-05-19T11:39:56.635475Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "MacBook Pro M5 zlevnil o devět tisíc. Vyplatí se o něm přemýšlet místo Airu",
+      "url": "https://www.zive.cz/clanky/nejlevnejsi-apple-macbook-pro-m5-202605/sc-3-a-241247/default.aspx",
+      "dt": "2026-05-19T10:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "airu",
+        "devět",
+        "macbook",
+        "místo",
+        "něm",
+        "přemýšlet",
+        "tisíc",
+        "vyplatí",
+        "zlevnil"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -957,36 +983,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Návod na Feedly. Pomůže vám nezbláznit se z informačního přetlaku, dostane všechny oblíbené weby na jedno místo",
-      "url": "https://www.zive.cz/clanky/navod-na-feedly-pomuze-vam-nezblaznit-se-z-informacniho-pretlaku-dostane-vsechny-oblibene-weby-na-jedno-misto/sc-3-a-240748/default.aspx",
-      "dt": "2026-05-15T08:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "dostane",
-        "feedly",
-        "informačního",
-        "jedno",
-        "místo",
-        "nezbláznit",
-        "návod",
-        "oblíbené",
-        "pomůže",
-        "přetlaku",
-        "vám",
-        "všechny",
-        "weby"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -997,7 +993,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23053,
+      "bytes": 23083,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1034,7 +1030,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-19T08:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T10:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1049,6 +1045,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "MacBook Pro M5 zlevnil o devět tisíc. Vyplatí se o něm přemýšlet místo Airu",
+            "publishedAt": "2026-05-19T10:45:00Z"
+          },
           {
             "title": "Děti si je zamilují, dospělí ocení dohledové funkce. Dětské hodinky s kamerou od Huawei zamíří i do Česka",
             "publishedAt": "2026-05-19T08:45:00Z"
@@ -1076,10 +1076,6 @@
           {
             "title": "Jedny malé bedny pro televizi, Bluetooth i gramofon. Fyne Audio Cubitt 5 nahrazují celé domácí Hi-Fi",
             "publishedAt": "2026-05-18T08:45:00Z"
-          },
-          {
-            "title": "Květnový akční tarif T-Mobilu nabídne 150 minut, 150 SMS a 5 GB dat za 335 Kč měsíčně",
-            "publishedAt": "2026-05-18T17:45:00Z"
           }
         ]
       }

@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-19T11:00:18.192786Z",
+  "ingestedAt": "2026-05-19T11:39:56.635475Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Přehledně o ebole: Jak se přenáší a co se stane, když se nakazíte",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/prehledne-ebola-jak-se-siri-a-co-delat/",
+      "dt": "2026-05-19T11:19:02Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "ebole",
+        "když",
+        "nakazíte",
+        "přehledně",
+        "přenáší",
+        "stane"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -250,33 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Slovenský megaprojekt v troskách. Rozestavěnou nemocnici za miliardy jde zachraňovat česká firma",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/slovensko-presov-nemocnice-odstoupeni-od-smlouvy/",
-      "dt": "2026-05-18T15:45:02Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "firma",
-        "jde",
-        "megaprojekt",
-        "miliardy",
-        "nemocnici",
-        "rozestavěnou",
-        "slovenský",
-        "troskách",
-        "zachraňovat",
-        "česká"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -287,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 82750,
+      "bytes": 83649,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -324,11 +320,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-19T10:34:32Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T11:19:02Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "zdravi": 9
+          "zdravi": 9,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -340,6 +336,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Přehledně o ebole: Jak se přenáší a co se stane, když se nakazíte",
+            "publishedAt": "2026-05-19T11:19:02Z"
+          },
           {
             "title": "Tři čtvrtiny úmrtí na železnici jsou sebevraždy. Stát spouští neobvyklou kampaň u tratí",
             "publishedAt": "2026-05-19T10:34:32Z"
@@ -367,10 +367,6 @@
           {
             "title": "Generické léky na hubnutí jako další velký byznys? Patentovou situaci sledujeme, říká šéf Zentivy",
             "publishedAt": "2026-05-19T05:00:00Z"
-          },
-          {
-            "title": "USA se uzavírají před ebolou. Kvůli smrtící nákaze vyhlásily okamžitý zákaz vstupu pro cizince",
-            "publishedAt": "2026-05-18T20:15:12Z"
           }
         ]
       }

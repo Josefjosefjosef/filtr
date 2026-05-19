@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-05-19T11:00:18.192786Z",
+  "ingestedAt": "2026-05-19T11:39:56.635475Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Vězení, nebo léčba? O mobilu nebo vycházce rozhoduje náhoda",
+      "url": "https://www.ceska-justice.cz/2026/05/vezeni-nebo-lecba-o-mobilu-nebo-vychazce-rozhoduje-nahoda/",
+      "dt": "2026-05-19T10:56:25Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "léčba",
+        "mobilu",
+        "nebo",
+        "náhoda",
+        "rozhoduje",
+        "vycházce",
+        "vězení"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -241,34 +265,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Čapí hnízdo jako příklad soudního ping-pongu. Může odvolací soud přikázat odsouzení?",
-      "url": "https://www.ceska-justice.cz/2026/05/justicni-ping-pong-nebo-kradez-instance/",
-      "dt": "2026-05-18T04:30:00Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "hnízdo",
-        "jako",
-        "odsouzení",
-        "odvolací",
-        "ping",
-        "pongu",
-        "přikázat",
-        "příklad",
-        "soud",
-        "soudního",
-        "čapí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +275,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 109245,
+      "bytes": 107251,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +312,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-19T10:29:24Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T10:56:25Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -331,6 +327,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vězení, nebo léčba? O mobilu nebo vycházce rozhoduje náhoda",
+            "publishedAt": "2026-05-19T10:56:25Z"
+          },
           {
             "title": "Vnuk Alfonse Muchy skončil v nadaci. Soudní válka o značku se vyostřuje",
             "publishedAt": "2026-05-19T10:29:24Z"
@@ -358,10 +358,6 @@
           {
             "title": "Feri u soudu vyvázl: Styk bez kondomu nebyl trestným činem",
             "publishedAt": "2026-05-18T11:39:13Z"
-          },
-          {
-            "title": "Za lži o Pirátech a Ukrajině platí podmínka. Lisková u Ústavního soudu neuspěla",
-            "publishedAt": "2026-05-18T08:26:33Z"
           }
         ]
       }

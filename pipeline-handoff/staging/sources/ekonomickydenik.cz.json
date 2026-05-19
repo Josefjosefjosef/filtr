@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-19T11:00:18.192786Z",
+  "ingestedAt": "2026-05-19T11:39:56.635475Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zlaté vejce pro zbrojovku z Nového Jičína? Může vyrábět legendární obrněnce",
+      "url": "https://ekonomickydenik.cz/zbrojovka-vyrabet-legendarni-obrnence-bushmaster/",
+      "dt": "2026-05-19T11:32:24Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "jičína",
+        "legendární",
+        "nového",
+        "obrněnce",
+        "vejce",
+        "vyrábět",
+        "zbrojovku",
+        "zlaté"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -762,30 +787,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nabídky balkonových fotovoltaik přibývají. Vyplatí se? Odborníci jsou skeptičtí",
-      "url": "https://ekonomickydenik.cz/balkonove-fotovoltaiky-vyplati-se-lidem/",
-      "dt": "2026-05-17T08:05:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "balkonových",
-        "fotovoltaik",
-        "nabídky",
-        "odborníci",
-        "přibývají",
-        "skeptičtí",
-        "vyplatí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71340,
+      "bytes": 71664,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,7 +834,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T10:41:25Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T11:32:24Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -851,6 +852,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zlaté vejce pro zbrojovku z Nového Jičína? Může vyrábět legendární obrněnce",
+            "publishedAt": "2026-05-19T11:32:24Z"
+          },
           {
             "title": "Rozkol v rodině? John Mucha skončil v nadaci, spor o jméno pokračuje",
             "publishedAt": "2026-05-19T10:41:25Z"
@@ -878,10 +883,6 @@
           {
             "title": "Musk prohrál bitvu o vývoj umělé inteligence. Vedl spor o OpenAI",
             "publishedAt": "2026-05-19T06:42:19Z"
-          },
-          {
-            "title": "Výjimka pro ruskou ropu se prodlužuje. Putinovi přinese další miliardy",
-            "publishedAt": "2026-05-19T05:40:57Z"
           }
         ]
       }

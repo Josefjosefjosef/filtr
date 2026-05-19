@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vipzivot.cz",
-  "ingestedAt": "2026-05-19T11:00:18.192786Z",
+  "ingestedAt": "2026-05-19T11:39:56.635475Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Vilmu Cibulkovou po kolapsu vyhodili ze seriálu i divadla. Teď měla nastoupit na protialkoholní léčbu",
+      "url": "https://vipzivot.cz/p/vilmu-cibulkovou-vyhodili-serial-divadlo-protialkoholni-lecba/",
+      "dt": "2026-05-19T11:12:00Z",
+      "media_raw": "VIPživot",
+      "media_norm": "VIPživot",
+      "tokens": [
+        "cibulkovou",
+        "divadla",
+        "kolapsu",
+        "léčbu",
+        "měla",
+        "nastoupit",
+        "protialkoholní",
+        "seriálu",
+        "vilmu",
+        "vyhodili"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vipzivot",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "vipzivot.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -260,38 +287,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "vipzivot.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "video",
-      "title": "Manželku mu vzala letecká katastrofa, otec zastřelil matku a pak sebe. Herec z Policie Modravy měl těžký život",
-      "url": "https://vipzivot.cz/p/manzelku-zahynula-letecka-katastrofa-otec-zastrelil-matku-jan-pohan/",
-      "dt": "2026-05-19T04:07:00Z",
-      "media_raw": "VIPživot",
-      "media_norm": "VIPživot",
-      "tokens": [
-        "herec",
-        "katastrofa",
-        "letecká",
-        "manželku",
-        "matku",
-        "modravy",
-        "měl",
-        "otec",
-        "pak",
-        "policie",
-        "sebe",
-        "těžký",
-        "vzala",
-        "zastřelil",
-        "život"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vipzivot",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "vipzivot.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -302,7 +297,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://vipzivot.cz/feed/",
-      "bytes": 146054,
+      "bytes": 146225,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -339,11 +334,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-19T07:56:42Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T11:12:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "other": 9,
-          "zpravy": 1
+          "other": 10
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -355,6 +349,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vilmu Cibulkovou po kolapsu vyhodili ze seriálu i divadla. Teď měla nastoupit na protialkoholní léčbu",
+            "publishedAt": "2026-05-19T11:12:00Z"
+          },
           {
             "title": "Myslíte si, že znáte českou historii? Tenhle test dat rychle ukáže, jestli nepletete události, které zná každý",
             "publishedAt": "2026-05-19T07:56:42Z"
@@ -382,10 +380,6 @@
           {
             "title": "Rozvod Brzobohatých: Co bude s jejich bytem za 19 milionů v centru Prahy?",
             "publishedAt": "2026-05-19T04:18:00Z"
-          },
-          {
-            "title": "Klid a pohoda za Prahou: Burešová a Forejt žijí v luxusní novostavbě s vlastním jezírkem",
-            "publishedAt": "2026-05-19T04:14:00Z"
           }
         ]
       }

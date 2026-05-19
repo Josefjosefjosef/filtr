@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-19T11:00:18.192786Z",
+  "ingestedAt": "2026-05-19T11:39:56.635475Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kanadské hokejové hvězdy tleskaly českému záložníkovi",
+      "url": "https://www.sport.cz/clanek/hokej-ms-kanadske-hokejove-hvezdy-tleskaly-ceskemu-zaloznikovi-5458176",
+      "dt": "2026-05-19T11:25:19Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "hokejové",
+        "hvězdy",
+        "kanadské",
+        "tleskaly",
+        "záložníkovi",
+        "českému"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -760,36 +783,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "STUDIO MS HOKEJ: Sobota je zapomenuta. Strašně důležité vítězství, prohlásil Málek. Našel ale i velkou kaňku",
-      "url": "https://www.sport.cz/clanek/hokej-ms-studio-ms-hokej-po-historicke-blamazi-prvni-ostry-test-zapas-se-svedy-okomentuje-malek-5441398",
-      "dt": "2026-05-18T15:45:36Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "ale",
-        "důležité",
-        "hokej",
-        "kaňku",
-        "málek",
-        "našel",
-        "prohlásil",
-        "sobota",
-        "strašně",
-        "studio",
-        "velkou",
-        "vítězství",
-        "zapomenuta"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45352,
+      "bytes": 45538,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T10:47:47Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T11:25:19Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -852,6 +845,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kanadské hokejové hvězdy tleskaly českému záložníkovi",
+            "publishedAt": "2026-05-19T11:25:19Z"
+          },
           {
             "title": "A teď mu přisypeme! Philadelphia chystá Vladařovi novou tučnější smlouvu",
             "publishedAt": "2026-05-19T10:47:47Z"
@@ -879,10 +876,6 @@
           {
             "title": "Basketbalista Zídek změní ve Španělsku tým, z Burgosu se přesune do Ourense",
             "publishedAt": "2026-05-19T09:44:08Z"
-          },
-          {
-            "title": "Zlatou tretru rozzáří při velké premiéře hvězda, která nahání Kratochvílovou",
-            "publishedAt": "2026-05-19T09:38:48Z"
           }
         ]
       }
