@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-19T11:39:56.635475Z",
+  "ingestedAt": "2026-05-19T12:19:34.186746Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Dita Protopopová přebírá duševní a protidrogovou politiku",
+      "url": "https://www.zdravezpravy.cz/2026/05/19/dusevni-a-protidrogova-politika-se-vraci-pod-zdravotnictvi-povede-je-protopopova/",
+      "dt": "2026-05-19T10:48:26Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "dita",
+        "duševní",
+        "politiku",
+        "protidrogovou",
+        "protopopová",
+        "přebírá"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -470,29 +493,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Do diskuze se opět vrací pandemická dohoda WHO",
-      "url": "https://www.zdravezpravy.cz/2026/05/11/do-diskuze-se-opet-vraci-pandemicka-dohoda-who/",
-      "dt": "2026-05-11T06:21:05Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "diskuze",
-        "dohoda",
-        "opět",
-        "pandemická",
-        "vrací",
-        "who"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -503,7 +503,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 189741,
+      "bytes": 189422,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -540,7 +540,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-19T08:18:39Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T10:48:26Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -556,6 +556,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dita Protopopová přebírá duševní a protidrogovou politiku",
+            "publishedAt": "2026-05-19T10:48:26Z"
+          },
           {
             "title": "Premiér Babiš: Ukrajinci musí mít stejné podmínky jako čeští občané",
             "publishedAt": "2026-05-19T08:18:39Z"
@@ -583,10 +587,6 @@
           {
             "title": "Na severu Konga hasí epidemii eboly, zemřelo minimálně 65 lidí",
             "publishedAt": "2026-05-15T11:10:12Z"
-          },
-          {
-            "title": "S nádorem mozku žijí pacienti i 15 let, ale nesmí jít o glioblastom",
-            "publishedAt": "2026-05-15T09:12:06Z"
           }
         ]
       }

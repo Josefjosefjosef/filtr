@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-19T11:39:56.635475Z",
+  "ingestedAt": "2026-05-19T12:19:34.186746Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Maximální ceny benzinu a nafty na středu 20. května",
+      "url": "https://www.penize.cz/doprava/489954-maximalni-ceny-benzinu-a-nafty-na-stredu-20-kvetna",
+      "dt": "2026-05-19T13:59:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "benzinu",
+        "ceny",
+        "května",
+        "maximální",
+        "nafty",
+        "středu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -484,33 +507,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Vyplatí se nové dluhopisy od Schillerové? Lepší než spoření v bance, ukazuje porovnání",
-      "url": "https://www.penize.cz/terminovane-vklady/483454-dluhopis-republiky-vyplati-se-srovnani-se-sporenim-v-bance",
-      "dt": "2026-05-15T05:10:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "bance",
-        "dluhopisy",
-        "lepší",
-        "než",
-        "nové",
-        "porovnání",
-        "schillerové",
-        "spoření",
-        "ukazuje",
-        "vyplatí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -521,7 +517,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 19148,
+      "bytes": 19149,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -558,11 +554,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-19T10:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T13:59:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 14,
-          "zpravy": 6
+          "zpravy": 7,
+          "finance": 13
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -574,6 +570,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Maximální ceny benzinu a nafty na středu 20. května",
+            "publishedAt": "2026-05-19T13:59:00Z"
+          },
           {
             "title": "Košík končí s minimální hodnotou objednávky. Nově umožní i malé nákupy",
             "publishedAt": "2026-05-19T10:15:00Z"
@@ -601,10 +601,6 @@
           {
             "title": "Maximální ceny benzinu a nafty na úterý 19. května",
             "publishedAt": "2026-05-18T13:59:00Z"
-          },
-          {
-            "title": "Rodičovský příspěvek stoupne. Rozhodne rok narození",
-            "publishedAt": "2026-05-18T13:30:00Z"
           }
         ]
       }

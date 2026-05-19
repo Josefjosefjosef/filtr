@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-19T11:39:56.635475Z",
+  "ingestedAt": "2026-05-19T12:19:34.186746Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "video",
+      "title": "Herci, kteří se kvůli rolím museli naučit rozdávat rány. Dřeli jako zápasníci",
+      "url": "https://www.mmamag.cz/herci-kteri-trenovali-bojove-sporty/",
+      "dt": "2026-05-19T12:00:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "dřeli",
+        "herci",
+        "jako",
+        "kteří",
+        "kvůli",
+        "museli",
+        "naučit",
+        "rolím",
+        "rozdávat",
+        "rány",
+        "zápasníci"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1099,31 +1127,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Prohrával, pauzíroval, vydělává dál. McGregor je pro UFC pořád zlatý důl",
-      "url": "https://www.mmamag.cz/proc-mcgregor-porad-tolik-vydelava/",
-      "dt": "2026-05-17T21:15:47Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "důl",
-        "mcgregor",
-        "pauzíroval",
-        "pořád",
-        "prohrával",
-        "ufc",
-        "vydělává",
-        "zlatý"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1134,7 +1137,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 83430,
+      "bytes": 84154,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1171,7 +1174,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-19T11:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1186,6 +1189,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Herci, kteří se kvůli rolím museli naučit rozdávat rány. Dřeli jako zápasníci",
+            "publishedAt": "2026-05-19T12:00:00Z"
+          },
           {
             "title": "Ngannou má po návratu jasno. Po bleskovém KO mluví o Jonu Jonesovi, ve hře je i Jake Paul",
             "publishedAt": "2026-05-19T11:15:00Z"
@@ -1213,10 +1220,6 @@
           {
             "title": "Pukačovi leze drzý Ir na nervy. Poslal mu ostrý vzkaz",
             "publishedAt": "2026-05-19T08:53:13Z"
-          },
-          {
-            "title": "Irský ranař si doletěl pro Pukače až do Bratislavy. Organizace o akci nevěděla, cílem byla čistá provokace",
-            "publishedAt": "2026-05-19T08:44:20Z"
           }
         ]
       }

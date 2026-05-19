@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-19T11:39:56.635475Z",
+  "ingestedAt": "2026-05-19T12:19:34.186746Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Osmnáct zraněných po čelní srážce autobusu MHD s tramvají v Praze",
+      "url": "https://tydenikpolicie.cz/osmnact-zranenych-po-celni-srazce-autobusu-mhd-s-tramvaji-v-praze/",
+      "dt": "2026-05-19T12:04:42Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "autobusu",
+        "mhd",
+        "osmnáct",
+        "praze",
+        "srážce",
+        "tramvají",
+        "zraněných",
+        "čelní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -252,30 +277,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Policisté z Varnsdorfu zachránili muže, který chtěl skočit z okna",
-      "url": "https://tydenikpolicie.cz/policiste-z-varnsdorfu-zachranili-muze-ktery-chtel-skocit-z-okna/",
-      "dt": "2026-05-18T14:57:14Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "chtěl",
-        "muže",
-        "okna",
-        "policisté",
-        "skočit",
-        "varnsdorfu",
-        "zachránili"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -286,7 +287,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16479,
+      "bytes": 17115,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -323,7 +324,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-19T08:19:49Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T12:04:42Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -338,6 +339,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Osmnáct zraněných po čelní srážce autobusu MHD s tramvají v Praze",
+            "publishedAt": "2026-05-19T12:04:42Z"
+          },
           {
             "title": "Muž žádal strážníky v Olomouci aby ho zatkli a odvezli do vězení. Nebyl ani opilý, ani zfetovaný a k jeho smůle bohužel ani hledaný",
             "publishedAt": "2026-05-19T08:19:49Z"
@@ -365,10 +370,6 @@
           {
             "title": "Moravskoslezským psovodům se rozrostl tým jejich tlapkové patroly o čtyři nová štěňata",
             "publishedAt": "2026-05-19T07:10:18Z"
-          },
-          {
-            "title": "Řidič škodovky na D4 u Staré Huti nepřežil pád z dálničního mostu",
-            "publishedAt": "2026-05-19T07:04:10Z"
           }
         ]
       }

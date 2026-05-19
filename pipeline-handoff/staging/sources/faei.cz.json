@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-19T11:39:56.635475Z",
+  "ingestedAt": "2026-05-19T12:19:34.186746Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Čínské technologické firmě JD.com rostou tržby, problémem zůstává zisk",
+      "url": "https://profitonline.cz/cinske-technologicke-firme-jd-com-rostou-trzby-problemem-zustava-zisk/",
+      "dt": "2026-05-19T12:00:08Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "com",
+        "firmě",
+        "problémem",
+        "rostou",
+        "technologické",
+        "tržby",
+        "zisk",
+        "zůstává",
+        "čínské"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -261,34 +287,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "The Economist: Izraelský teror plodí teror palestinský, varuje bývalý poradce premiéra Perese",
-      "url": "https://profitonline.cz/the-economist-izraelsky-teror-plodi-teror-palestinsky-varuje-byvaly-poradce-premiera-perese/",
-      "dt": "2026-05-18T04:00:24Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "bývalý",
-        "economist",
-        "izraelský",
-        "palestinský",
-        "perese",
-        "plodí",
-        "poradce",
-        "premiéra",
-        "teror",
-        "the",
-        "varuje"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -299,7 +297,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18675,
+      "bytes": 18645,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -336,11 +334,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-19T10:00:01Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T12:00:08Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "zdravi": 1,
-          "finance": 11
+          "finance": 11,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -352,6 +350,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Čínské technologické firmě JD.com rostou tržby, problémem zůstává zisk",
+            "publishedAt": "2026-05-19T12:00:08Z"
+          },
           {
             "title": "V ordinacích přibývá zmatených seniorů. Neví, jaké léky berou a proč",
             "publishedAt": "2026-05-19T10:00:01Z"
@@ -379,10 +381,6 @@
           {
             "title": "Česko vládne evropské nezaměstnanosti. Ale je to důvod k oslavě?",
             "publishedAt": "2026-05-18T13:30:09Z"
-          },
-          {
-            "title": "Svět zachvátila obava z velké inflace",
-            "publishedAt": "2026-05-18T11:00:21Z"
           }
         ]
       }
