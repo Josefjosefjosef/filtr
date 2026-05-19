@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-19T13:46:17.733394Z",
+  "ingestedAt": "2026-05-19T14:26:39.582922Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Recenze Phonopolis – úchvatná pocta ručnímu řemeslu",
+      "url": "https://zing.cz/article/recenze-phonopolis-uchvatna-pocta-rucnimu-remeslu",
+      "dt": "2026-05-19T14:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "phonopolis",
+        "pocta",
+        "recenze",
+        "ručnímu",
+        "úchvatná",
+        "řemeslu"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -939,27 +962,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Společnost ADATA slaví 25. výročí",
-      "url": "https://zing.cz/article/spolecnost-adata-slavi-25-vyroci",
-      "dt": "2026-05-15T08:55:06Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "adata",
-        "slaví",
-        "společnost",
-        "výročí"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -970,7 +972,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126691,
+      "bytes": 126718,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1007,7 +1009,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-19T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T14:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1023,6 +1025,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Recenze Phonopolis – úchvatná pocta ručnímu řemeslu",
+            "publishedAt": "2026-05-19T14:00:00Z"
+          },
           {
             "title": "Nový horor Directive 8020 od autorů Until Dawn si budete moci zahrát v češtině",
             "publishedAt": "2026-05-19T10:00:00Z"
@@ -1050,10 +1056,6 @@
           {
             "title": "LEGO Batman: Legacy of the Dark Knight se povedl, shodují se první recenze",
             "publishedAt": "2026-05-18T16:00:00Z"
-          },
-          {
-            "title": "Game Pass na konci měsíce opustí několik známějších her",
-            "publishedAt": "2026-05-18T14:00:00Z"
           }
         ]
       }

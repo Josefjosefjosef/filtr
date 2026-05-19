@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-19T13:46:17.733394Z",
+  "ingestedAt": "2026-05-19T14:26:39.582922Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ukrajina školí evropské zkostnatělé zbrojovky. Průmysl dohání po letech „spánku“ zpoždění",
+      "url": "https://ekonomickydenik.cz/ukrajina-skoli-evropske-zbrojovky-zpozdeni/",
+      "dt": "2026-05-19T14:18:08Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dohání",
+        "evropské",
+        "letech",
+        "průmysl",
+        "spánku",
+        "ukrajina",
+        "zbrojovky",
+        "zkostnatělé",
+        "zpoždění",
+        "školí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -757,32 +784,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Čeká ČT a rozhlas drsný finanční pád? Babiš oznámil datum, kdy se rozhodne",
-      "url": "https://ekonomickydenik.cz/ceka-ct-a-rozhlas-drsny-financni-pad-babis/",
-      "dt": "2026-05-17T12:38:23Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "babiš",
-        "datum",
-        "drsný",
-        "finanční",
-        "oznámil",
-        "pád",
-        "rozhlas",
-        "rozhodne",
-        "čeká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71746,
+      "bytes": 71802,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,11 +831,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T13:32:14Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T14:18:08Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 3,
           "finance": 24,
+          "zpravy": 3,
           "zdravi": 2,
           "sport": 1
         },
@@ -848,6 +849,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ukrajina školí evropské zkostnatělé zbrojovky. Průmysl dohání po letech „spánku“ zpoždění",
+            "publishedAt": "2026-05-19T14:18:08Z"
+          },
           {
             "title": "Odkryté karty u soudu: Německý ThomasLloyd dluží českým investorům 1,2 miliardy",
             "publishedAt": "2026-05-19T13:32:14Z"
@@ -875,10 +880,6 @@
           {
             "title": "Bém jako tvář boje proti drogám skončí. Jeho funkce koordinátora se promění",
             "publishedAt": "2026-05-19T10:05:21Z"
-          },
-          {
-            "title": "100 kilometrů v hodině na koloběžce? Policisté zírali na ujíždějícího recidivistu",
-            "publishedAt": "2026-05-19T09:34:19Z"
           }
         ]
       }

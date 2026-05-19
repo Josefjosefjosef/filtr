@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-19T13:46:17.733394Z",
+  "ingestedAt": "2026-05-19T14:26:39.582922Z",
   "items": [
     {
       "section": "veda",
@@ -21,6 +21,34 @@
         "tisíc",
         "vyplatí",
         "zlevnil"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "PlayStation se údajně vrací k tvrdým exkluzivitám. Interně to měl potvrdit CEO Hermen Hulst",
+      "url": "https://doupe.zive.cz/playstation-se-udajne-vraci-k-tvrdym-exkluzivitam-s-pc-porty-se-nepocita-kvuli-slabym-prodejum-202605",
+      "dt": "2026-05-19T13:15:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "ceo",
+        "exkluzivitám",
+        "hermen",
+        "hulst",
+        "interně",
+        "měl",
+        "playstation",
+        "potvrdit",
+        "tvrdým",
+        "vrací",
+        "údajně"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -958,31 +986,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Aktualizace pro Windows 11 už odložíte bez omezení. Microsoft se kaje v programu Insider",
-      "url": "https://www.zive.cz/clanky/aktualizace-pro-windows-11-uz-odlozite-bez-omezeni-microsoft-se-kaje-v-programu-insider/sc-3-a-241145/default.aspx",
-      "dt": "2026-05-15T15:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "aktualizace",
-        "insider",
-        "kaje",
-        "microsoft",
-        "odložíte",
-        "omezení",
-        "programu",
-        "windows"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -993,7 +996,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22928,
+      "bytes": 22742,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1030,7 +1033,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-19T11:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T13:15:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1048,6 +1051,10 @@
           {
             "title": "MacBook Pro M5 zlevnil o devět tisíc. Vyplatí se o něm přemýšlet místo Airu",
             "publishedAt": "2026-05-19T10:45:00Z"
+          },
+          {
+            "title": "PlayStation se údajně vrací k tvrdým exkluzivitám. Interně to měl potvrdit CEO Hermen Hulst",
+            "publishedAt": "2026-05-19T13:15:00Z"
           },
           {
             "title": "Musk prohrál soud s Altmanem a OpenAI. Žalobu podal příliš pozdě",
@@ -1072,10 +1079,6 @@
           {
             "title": "Z Katovic do Vídně je to 1200 km a cesta vede přes Německo. Google nám už 16 let dluží cyklonavigaci",
             "publishedAt": "2026-05-18T12:45:00Z"
-          },
-          {
-            "title": "Nejlevnější klávesnici s magnetickými spínači má Alza. Tahle Rapture je za 800 Kč, dříve stála třikrát tolik",
-            "publishedAt": "2026-05-18T07:45:00Z"
           }
         ]
       }
