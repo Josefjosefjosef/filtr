@@ -23,7 +23,8 @@ function New-SilverCzechGoodCharString {
 }
 
 function New-SilverCzechBadCharString {
-  $codes = @(0x0102, 0x00C4, 0x017D, 0x00C2, 0x00C3)
+  # Do not list 0x017D (Ž): valid Czech; mojibake uses Ž only inside fragment markers below.
+  $codes = @(0x0102, 0x00C4, 0x00C2, 0x00C3)
   $sb = New-Object System.Text.StringBuilder
   foreach ($c in $codes) {
     [void]$sb.Append([char]$c)
@@ -245,13 +246,34 @@ function Get-SilverUtf8MojibakeFirstSample {
   return $Text.Substring($start, $len).Replace("`r", " ").Replace("`n", " ")
 }
 
+function Set-SilverProcessStartInfoUtf8Streams {
+  param([System.Diagnostics.ProcessStartInfo]$Psi)
+  if ($null -eq $Psi) { return }
+  $enc = $script:SilverUtf8NoBom
+  try {
+    $Psi.StandardOutputEncoding = $enc
+    $Psi.StandardErrorEncoding = $enc
+  }
+  catch { }
+}
+
 function Read-ProcessPipeUtf8 {
   param([System.IO.StreamReader]$Reader)
   if ($null -eq $Reader) { return "" }
   try {
+    $text = $Reader.ReadToEnd()
+    if (-not [string]::IsNullOrEmpty($text)) {
+      return $text
+    }
+  }
+  catch { }
+  try {
     $stream = $Reader.BaseStream
     if ($null -eq $stream) {
-      return $Reader.ReadToEnd()
+      return ""
+    }
+    if (-not $stream.CanRead) {
+      return ""
     }
     $ms = New-Object System.IO.MemoryStream
     try {
@@ -265,8 +287,67 @@ function Read-ProcessPipeUtf8 {
     }
   }
   catch {
-    return $Reader.ReadToEnd()
+    return ""
   }
+}
+
+function Read-CmdRedirectCaptureFileUtf8 {
+  param([string]$Path)
+  if (-not (Test-Path -LiteralPath $Path)) { return "" }
+  $bytes = [System.IO.File]::ReadAllBytes($Path)
+  if ($bytes.Length -eq 0) { return "" }
+  $utf8 = $script:SilverUtf8NoBom
+  $text = $utf8.GetString($bytes)
+  if (Test-SilverUtf8MojibakeMarkersCore -Text $text) {
+    $repairedFlag = "NO"
+    $text = Repair-SilverUtf8HandoffText -Text $text -Repaired ([ref]$repairedFlag)
+  }
+  return $text
+}
+
+function Get-SilverUtf8CaptureProbeRequiredPhrases {
+  return @(
+    ([string][char]0x00DA + "KOL PRO CURSOR"),
+    ("Aktu" + [char]0x00E1 + "ln" + [char]0x00ED),
+    ("Co jsem zm" + [char]0x011B + "nil"),
+    ("K" + [char]0x00F3 + "d jsem nem" + [char]0x011B + "nil"),
+    ("spou" + [char]0x0161 + "t" + [char]0x011B + "l existuj" + [char]0x00ED + "c" + [char]0x00ED),
+    ("diagnostick" + [char]0x00E9),
+    ("pracovn" + [char]0x00ED),
+    ("strom t" + [char]0x00ED + "m p" + [char]0x00E1 + "dem"),
+    ("P" + [char]0x0159 + [char]0x00ED + "kazy"),
+    ("prost" + [char]0x0159 + "ed" + [char]0x00ED),
+    ("n" + [char]0x00E1 + "hradn" + [char]0x00ED),
+    ([char]0x017D + [char]0x00E1 + "dn" + [char]0x00FD)
+  )
+}
+
+function Test-SilverRealUtf8CaptureProbeText {
+  param([string]$Text)
+  if ([string]::IsNullOrEmpty($Text)) { return $false }
+  if (Test-SilverUtf8MojibakeMarkersCore -Text $Text) { return $false }
+  foreach ($frag in (Get-SilverUtf8CaptureProbeRequiredPhrases)) {
+    if ($Text.IndexOf($frag, [System.StringComparison]::Ordinal) -lt 0) {
+      return $false
+    }
+  }
+  return $true
+}
+
+function Test-SilverPromptPreviewUtf8ProbeText {
+  param([string]$Text)
+  if ([string]::IsNullOrEmpty($Text)) { return $false }
+  if (Test-SilverUtf8MojibakeMarkersCore -Text $Text) { return $false }
+  $need = @(
+    ([string][char]0x00DA + "KOL PRO CURSOR"),
+    ("Aktu" + [char]0x00E1 + "ln" + [char]0x00ED)
+  )
+  foreach ($frag in $need) {
+    if ($Text.IndexOf($frag, [System.StringComparison]::Ordinal) -lt 0) {
+      return $false
+    }
+  }
+  return $true
 }
 
 function Set-SilverWslUtf8ProcessEnvironment {

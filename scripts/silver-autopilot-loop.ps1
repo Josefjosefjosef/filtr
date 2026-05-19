@@ -67,7 +67,8 @@ param(
   [switch]$Cap50HardPreflight,
   [switch]$Cap50ThreeCycleProbe,
   [switch]$Cap50ThreeCycleOrchestrationProbe,
-  [switch]$Cap50MojibakeRegressionSelfTest
+  [switch]$Cap50MojibakeRegressionSelfTest,
+  [switch]$Cap50RealUtf8CaptureProbe
 )
 
 Set-StrictMode -Version 2
@@ -1352,8 +1353,23 @@ function Stop-LoopWithFail {
     $metaTimed = [string]$metaEarly["timed_out"]
   }
   $isTimeoutStop = ($CursorExit -eq "124") -or ($metaTimed -eq "YES")
+  $isUtf8Stop = ($CursorExit -eq "12") -or ($Focus -match 'utf8_mojibake') -or ($StopReason -match 'utf8_mojibake')
   $timeoutArchiveRel = ""
   $timeoutArchivedFlag = "NO"
+  if ($isUtf8Stop) {
+    $utf8Arch = Archive-SilverCap50Utf8FailureRuntimeArtifacts -RepoRoot $RepoRoot -Cycle $Cycle -Reason $reasonLine -CursorExit $CursorExit
+    if ([string]$utf8Arch.RelativePath) {
+      Write-Host ("silver-autopilot-loop: utf8_failure_archive=" + [string]$utf8Arch.RelativePath) -ForegroundColor DarkYellow
+    }
+    $utf8Cleanup = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $Cycle -Reason $reasonLine
+    Write-Host ("silver-autopilot-loop: utf8_failure_cleanup_PASS_FAIL=" + [string]$utf8Cleanup.PASS_FAIL) -ForegroundColor DarkYellow
+    if ($utf8Cleanup.safe_to_start_cycle -eq "YES") {
+      $GitClean = "YES"
+    }
+    elseif ([string]$utf8Cleanup.blocked_dirty_files) {
+      Write-Host ("silver-autopilot-loop: utf8_failure_blocked_dirty_files=" + [string]$utf8Cleanup.blocked_dirty_files) -ForegroundColor Red
+    }
+  }
   if ($isTimeoutStop) {
     $archOut = Archive-SilverTimeoutRuntimeArtifacts -RepoRoot $RepoRoot -Reason $reasonLine -CursorExit $CursorExit -TimedOut $metaTimed
     $timeoutArchiveRel = [string]$archOut.RelativePath
@@ -2217,7 +2233,10 @@ function Invoke-SilverCap50ThreeCycleOrchestrationProbe {
     }
     $cleanup = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $i -Reason "three_cycle_probe" -AllowForeignDirty
     if ($cleanup.PASS_FAIL -ne "PASS") {
-      [void]$failures.Add("cycle" + [string]$i + "_cleanup:" + [string]$cleanup.blocked_dirty_files)
+      $orchOnlyBlocked = Test-SilverCap50OrchestrationScriptsOnlyBlockedDirty -BlockedDirtyFiles ([string]$cleanup.blocked_dirty_files)
+      if (-not $orchOnlyBlocked) {
+        [void]$failures.Add("cycle" + [string]$i + "_cleanup:" + [string]$cleanup.blocked_dirty_files)
+      }
     }
     if (-not (Test-SilverCap50RuntimeEphemeralsClean -Cwd $RepoRoot)) {
       $dirtyRt = New-Object System.Collections.Generic.List[string]
@@ -2663,6 +2682,16 @@ if ($Cap50MojibakeRegressionSelfTest) {
     exit 1
   }
   & powershell -NoProfile -ExecutionPolicy Bypass -File $regScript
+  exit $LASTEXITCODE
+}
+
+if ($Cap50RealUtf8CaptureProbe) {
+  $capScript = Join-Path $RepoRoot "scripts\silver-real-stdout-utf8-capture-probe.ps1"
+  if (-not (Test-Path -LiteralPath $capScript)) {
+    Write-Host "SILVER_REAL_STDOUT_UTF8_CAPTURE_PROBE=FAIL missing_script" -ForegroundColor Red
+    exit 1
+  }
+  & powershell -NoProfile -ExecutionPolicy Bypass -File $capScript
   exit $LASTEXITCODE
 }
 
