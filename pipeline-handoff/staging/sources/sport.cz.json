@@ -1,33 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-19T17:50:02.064939Z",
+  "ingestedAt": "2026-05-19T18:30:03.773598Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "HOKEJ ONLINE: Rakušané přidali pojistku do prázdné brány. Norové hladce zvládli další překážku. Slováci zabojují o třetí vítězství",
+      "title": "HOKEJ ONLINE: Slováci rychle otevírají skóre, vedou i Maďaři. Rakušané jistili body trefou do prázdné brány",
       "url": "https://www.sport.cz/clanek/hokej-ms-stoprocentni-rakusane-a-slovaci-zabojuji-o-dalsi-vyhru-dojde-i-na-dulezity-zachranarsky-duel-5457458",
       "dt": "2026-05-19T10:02:09Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
+        "body",
         "brány",
-        "další",
-        "hladce",
         "hokej",
-        "norové",
+        "jistili",
+        "maďaři",
         "online",
-        "pojistku",
+        "otevírají",
         "prázdné",
-        "překážku",
-        "přidali",
         "rakušané",
+        "rychle",
+        "skóre",
         "slováci",
-        "třetí",
-        "vítězství",
-        "zabojují",
-        "zvládli"
+        "trefou",
+        "vedou"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -39,7 +37,35 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Majitel Slavie Tykač se zastal Tvrdíka, nevyloučil návrat Chorého s Douděrou",
+      "title": "Zlaté tretře stát ubral miliony. Promotér zvažoval zrušení účasti zahraničních atletů",
+      "url": "https://www.sport.cz/clanek/atletika-zlate-tretre-stat-ubral-miliony-promoter-zvazoval-zruseni-ucasti-zahranicnich-atletu-5458521",
+      "dt": "2026-05-19T18:09:11Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "atletů",
+        "miliony",
+        "promotér",
+        "stát",
+        "tretře",
+        "ubral",
+        "zahraničních",
+        "zlaté",
+        "zrušení",
+        "zvažoval",
+        "účasti"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Majitel Slavie Tykač nevyloučil návrat Chorého s Douděrou",
       "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-majitel-slavie-tykac-se-zastal-tvrdika-nevyloucil-navrat-choreho-5458519",
       "dt": "2026-05-19T17:20:17Z",
       "media_raw": "Sport.cz",
@@ -51,9 +77,7 @@
         "nevyloučil",
         "návrat",
         "slavie",
-        "tvrdíka",
-        "tykač",
-        "zastal"
+        "tykač"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -115,7 +139,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Jízda Rakušanů pokračuje, zůstávají stoprocentně úspěšní",
+      "title": "SESTŘIH: Jízda Rakušanů pokračuje, zůstávají stoprocentně úspěšní",
       "url": "https://www.sport.cz/clanek/hokej-ms-rakouska-jizda-pokracuje-5458515",
       "dt": "2026-05-19T16:53:00Z",
       "media_raw": "Sport.cz",
@@ -124,6 +148,7 @@
         "jízda",
         "pokračuje",
         "rakušanů",
+        "sestřih",
         "stoprocentně",
         "zůstávají",
         "úspěšní"
@@ -733,29 +758,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kanadské hokejové hvězdy tleskaly českému záložníkovi",
-      "url": "https://www.sport.cz/clanek/hokej-ms-kanadske-hokejove-hvezdy-tleskaly-ceskemu-zaloznikovi-5458176",
-      "dt": "2026-05-19T11:25:19Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "hokejové",
-        "hvězdy",
-        "kanadské",
-        "tleskaly",
-        "záložníkovi",
-        "českému"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -766,7 +768,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43787,
+      "bytes": 43851,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -803,7 +805,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T17:30:35Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T18:09:11Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -819,11 +821,15 @@
         },
         "sample_titles": [
           {
-            "title": "HOKEJ ONLINE: Rakušané přidali pojistku do prázdné brány. Norové hladce zvládli další překážku. Slováci zabojují o třetí vítězství",
+            "title": "HOKEJ ONLINE: Slováci rychle otevírají skóre, vedou i Maďaři. Rakušané jistili body trefou do prázdné brány",
             "publishedAt": "2026-05-19T10:02:09Z"
           },
           {
-            "title": "Majitel Slavie Tykač se zastal Tvrdíka, nevyloučil návrat Chorého s Douděrou",
+            "title": "Zlaté tretře stát ubral miliony. Promotér zvažoval zrušení účasti zahraničních atletů",
+            "publishedAt": "2026-05-19T18:09:11Z"
+          },
+          {
+            "title": "Majitel Slavie Tykač nevyloučil návrat Chorého s Douděrou",
             "publishedAt": "2026-05-19T17:20:17Z"
           },
           {
@@ -835,7 +841,7 @@
             "publishedAt": "2026-05-19T17:01:43Z"
           },
           {
-            "title": "Jízda Rakušanů pokračuje, zůstávají stoprocentně úspěšní",
+            "title": "SESTŘIH: Jízda Rakušanů pokračuje, zůstávají stoprocentně úspěšní",
             "publishedAt": "2026-05-19T16:53:00Z"
           },
           {
@@ -845,10 +851,6 @@
           {
             "title": "Jsme kluci ze hřiště, politiku nevnímáme, říká trenér Karviné před finále poháru",
             "publishedAt": "2026-05-19T16:46:14Z"
-          },
-          {
-            "title": "SESTŘIH: Haukeland udržel znovu nulu, Norové mají druhou výhru",
-            "publishedAt": "2026-05-19T16:41:37Z"
           }
         ]
       }
