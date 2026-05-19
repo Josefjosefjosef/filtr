@@ -1,6 +1,6 @@
 {
   "date": "2026-05-12",
-  "generatedAt": "2026-05-19T12:22:13.645829Z",
+  "generatedAt": "2026-05-19T15:48:32.805293Z",
   "items": [
     {
       "topic": "sport",
@@ -553,6 +553,38 @@
       "duplicatePenalty": 1.0,
       "displayScore": 0.03641253557669916,
       "iuReleaseAt": "2026-05-19T12:22:21.645829Z",
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "veda",
+        "reason": "topic_field",
+        "confidence": 0.95,
+        "railSectionKey": "veda",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "veda",
+      "section": "veda",
+      "contentType": "article",
+      "title": "Před 100 lety přeletěla vzducholoď Norge severní pól",
+      "publishedAt": "2026-05-12T22:00:00Z",
+      "sources": [
+        {
+          "name": "iDNES / Technet",
+          "url": "https://www.idnes.cz/technet/pred-100-lety/pred-100-lety-vzducholod-norge-severni-pol.A260512_150832_pred-100-lety_vov"
+        }
+      ],
+      "primaryCategory": "veda",
+      "topicHash": "89fd14870d8a46d3",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.0,
+      "sectionPrimary": "veda",
+      "sourceLabel": "iDNES / Technet",
+      "feedId": "ved_technet",
+      "url": "https://www.idnes.cz/technet/pred-100-lety/pred-100-lety-vzducholod-norge-severni-pol.A260512_150832_pred-100-lety_vov",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.035669720754179284,
+      "iuReleaseAt": "2026-05-19T15:48:41.805293Z",
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "veda",
@@ -1635,8 +1667,8 @@
       }
     },
     {
-      "topic": "veda",
-      "section": "veda",
+      "topic": "aktualne",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Nejlevnější 32\" QD OLED se skvělým zvukem. Test monitoru Dell S3225QC",
       "publishedAt": "2026-05-12T14:45:00Z",
@@ -1655,14 +1687,14 @@
       "feedId": "ved_vtm",
       "url": "https://www.zive.cz/clanky/nejlevnejsi-32-qd-oled-se-skvelym-zvukem-test-monitoru-dell-s3225qc/sc-3-a-241129/default.aspx",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.04495781625452976,
+      "displayScore": 0.03248605605029812,
       "iuReleaseAt": "2026-05-17T15:08:51.805869Z",
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "tech",
         "reason": "tech_url_regex",
         "confidence": 0.9,
-        "railSectionKey": "veda",
+        "railSectionKey": "aktualne",
         "guardFlags": []
       }
     },
@@ -2070,6 +2102,37 @@
       }
     },
     {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Objevila štěpení atomu, Nobelovku nemá. Meitnerová čelila nacistům i zneuznání",
+      "publishedAt": "2026-05-12T14:00:00Z",
+      "sources": [
+        {
+          "name": "iDNES / Technet",
+          "url": "https://www.idnes.cz/technet/veda/objevila-stepeni-atomu-nobelovku-nema-meitnerova-celila-nacistum-i-zneuznani.A260507_135437_veda_bury"
+        }
+      ],
+      "primaryCategory": "veda",
+      "topicHash": "115d8f10b95030b5",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.0,
+      "sectionPrimary": "veda",
+      "sourceLabel": "iDNES / Technet",
+      "feedId": "ved_technet",
+      "url": "https://www.idnes.cz/technet/veda/objevila-stepeni-atomu-nobelovku-nema-meitnerova-celila-nacistum-i-zneuznani.A260507_135437_veda_bury",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.03405030110545941,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "veda",
+        "reason": "url_strong_vertical",
+        "confidence": 0.94,
+        "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
+    {
       "topic": "finance",
       "section": "finance",
       "contentType": "article",
@@ -2128,38 +2191,6 @@
         "reason": "topic_field",
         "confidence": 0.95,
         "railSectionKey": "finance",
-        "guardFlags": []
-      }
-    },
-    {
-      "topic": "veda",
-      "section": "veda",
-      "contentType": "article",
-      "title": "Objevila štěpení atomu, Nobelovku nemá. Meitnerová čelila nacistům i zneuznání",
-      "publishedAt": "2026-05-12T14:00:00Z",
-      "sources": [
-        {
-          "name": "iDNES / Technet",
-          "url": "https://www.idnes.cz/technet/veda/objevila-stepeni-atomu-nobelovku-nema-meitnerova-celila-nacistum-i-zneuznani.A260507_135437_veda_bury"
-        }
-      ],
-      "primaryCategory": "veda",
-      "topicHash": "115d8f10b95030b5",
-      "feedType": "rubric",
-      "sourceDisplayWeight": 1.0,
-      "sectionPrimary": "veda",
-      "sourceLabel": "iDNES / Technet",
-      "feedId": "ved_technet",
-      "url": "https://www.idnes.cz/technet/veda/objevila-stepeni-atomu-nobelovku-nema-meitnerova-celila-nacistum-i-zneuznani.A260507_135437_veda_bury",
-      "duplicatePenalty": 1.0,
-      "displayScore": 0.04120902283210118,
-      "iuReleaseAt": "2026-05-18T09:12:40.138871Z",
-      "iuFeedClassification": {
-        "v": 1,
-        "mediaTopicKey": "veda",
-        "reason": "url_strong_vertical",
-        "confidence": 0.94,
-        "railSectionKey": "veda",
         "guardFlags": []
       }
     },
@@ -2257,8 +2288,8 @@
       }
     },
     {
-      "topic": "hry",
-      "section": "hry",
+      "topic": "aktualne",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Temné akční soulslike RPG Lies of P 2 přechází do plnohodnotného vývoje - INDIAN",
       "publishedAt": "2026-05-12T13:46:53Z",
@@ -2277,14 +2308,14 @@
       "feedId": "hry_indian",
       "url": "https://indian-tv.cz/clanek/temne-akcni-soulslike-rpg-lies-of-p-2-plnohodnotny-vyvoj-whmj2c",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.0537868635072608,
+      "displayScore": 0.030607298691014313,
       "iuReleaseAt": "2026-05-16T11:47:34.837497Z",
       "iuFeedClassification": {
         "v": 1,
-        "mediaTopicKey": "hry",
-        "reason": "topic_field",
-        "confidence": 0.95,
-        "railSectionKey": "hry",
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
         "guardFlags": []
       }
     },
@@ -2534,7 +2565,7 @@
       "feedId": "zdr_zdravezpravy",
       "url": "https://www.zdravezpravy.cz/2026/05/12/komentar-proc-tolik-ridicu-jezdi-na-cervenou-protoze-mohou/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03635831382839442,
+      "displayScore": 0.03565227017357287,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -2801,8 +2832,8 @@
       }
     },
     {
-      "topic": "hry",
-      "section": "hry",
+      "topic": "aktualne",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Nailcrown je brutální retro střílečka od tvůrců Hatred. Hru vydá Bohemia Interactive - INDIAN",
       "publishedAt": "2026-05-12T13:00:00Z",
@@ -2821,14 +2852,14 @@
       "feedId": "hry_indian",
       "url": "https://indian-tv.cz/clanek/nailcrown-je-brutalni-retro-strilecka-od-tvurcu-hatred-hru-c2cxs7",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.06825664937021206,
+      "displayScore": 0.030472338939988082,
       "iuReleaseAt": "2026-05-15T13:43:22.752429Z",
       "iuFeedClassification": {
         "v": 1,
-        "mediaTopicKey": "hry",
-        "reason": "topic_field",
-        "confidence": 0.95,
-        "railSectionKey": "hry",
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
         "guardFlags": []
       }
     },
@@ -4318,7 +4349,7 @@
       "feedId": "fin_novinky_ekonomika",
       "url": "https://www.novinky.cz/clanek/bydleni-skladovy-areal-ferony-se-promenil-v-moderni-mestske-bydleni-s-lehce-industrialnimi-rysy-40575337",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03755439316076306,
+      "displayScore": 0.036835174859696646,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "bydleni",
@@ -4954,7 +4985,7 @@
       "feedId": "ved_novinky",
       "url": "https://www.novinky.cz/clanek/zahranicni-horska-sluzba-v-bosne-zachranovala-mladistve-cechy-40577708",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03564416350687129,
+      "displayScore": 0.03496532475707387,
       "iuReleaseAt": "2026-05-17T15:08:48.805869Z",
       "iuFeedClassification": {
         "v": 1,
@@ -4986,7 +5017,7 @@
       "feedId": "fin_faei",
       "url": "https://profitonline.cz/vymahani-prava-je-na-katastrofalni-urovni-fotbal-je-mementem/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.02715502531135594,
+      "displayScore": 0.026637906606094348,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "sport",
@@ -5048,7 +5079,7 @@
       "feedId": "fin_penize",
       "url": "https://www.penize.cz/zdravotnictvi/489551-zluty-kvitek-proti-rakovine-si-poprve-muzete-koupit-i-kartou-ale-jen-v-praze",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.028849675552582926,
+      "displayScore": 0.028300332698738027,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -5576,7 +5607,7 @@
       "feedId": "hry_novinky",
       "url": "https://www.novinky.cz/clanek/internet-a-pc-italie-ma-pravo-naridit-mete-odskodnit-media-rozhodl-soudni-dvur-eu-40577687",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.0354542130974961,
+      "displayScore": 0.034782522063141065,
       "iuReleaseAt": "2026-05-15T06:02:15.741746Z",
       "iuFeedClassification": {
         "v": 1,
@@ -5639,7 +5670,7 @@
       "feedId": "fin_novinky_ekonomika",
       "url": "https://www.novinky.cz/clanek/koktejl-sumavsky-rys-bardi-je-rekordman-v-migraci-40577677",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03713989632855418,
+      "displayScore": 0.03643631805989884,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -5678,7 +5709,7 @@
       "feedId": "zpr_novinky_domaci",
       "url": "https://www.novinky.cz/clanek/pocasi-vychod-zeme-dostal-vydatnou-sprchu-40577644",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03882091295647547,
+      "displayScore": 0.038085622559847376,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -5709,7 +5740,7 @@
       "feedId": "zpr_novinky_domaci",
       "url": "https://www.novinky.cz/clanek/internet-a-pc-texas-zaluje-netflix-za-spehovani-deti-a-dalsich-uzivatelu-40577684",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.038817212388841046,
+      "displayScore": 0.03808206083997526,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -6513,7 +6544,7 @@
       "feedId": "zpr_idnes_zpravy",
       "url": "https://www.idnes.cz/zpravy/domaci/pocasi-v-cesku-snih-zmena-ochlazeni-mapa.A260512_061836_domaci_ijan",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.0369792610118918,
+      "displayScore": 0.036281698578217995,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -6893,7 +6924,7 @@
       "feedId": "fin_sz_byznys",
       "url": "https://www.seznamzpravy.cz/clanek/magazin-jidlo-cechy-znovu-naucil-jist-chrest-s-jeho-pestovanim-ale-jiri-safar-zacal-nahodou-305315",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.038487622108245675,
+      "displayScore": 0.03776478541393073,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -7643,7 +7674,7 @@
       "feedId": "zpr_aktualne",
       "url": "https://zpravy.aktualne.cz/pocasi/na-horach-v-cesku-muze-v-utery-napadnout-snih/r~aaa29efa0f1fd2b91d54b687db10bca8/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.031391395881782504,
+      "displayScore": 0.0308091628366474,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -8116,7 +8147,7 @@
       "feedId": "ved_technet",
       "url": "https://www.idnes.cz/technet/technika/douglas-dc6.A260511_145802_tec_technika_alv",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.032916678061781196,
+      "displayScore": 0.032308456048030405,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
