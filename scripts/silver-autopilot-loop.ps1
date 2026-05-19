@@ -1678,6 +1678,18 @@ function Test-SilverCap50RuntimeEphemeralsClean {
   return $true
 }
 
+function Test-Cap50GitCleanExceptHandoffArtifacts {
+  param([string]$Cwd)
+  foreach ($rel in (Get-GitStatusShortPaths -Cwd $Cwd)) {
+    $n = ($rel -replace '\\', '/').Trim()
+    if (-not $n) { continue }
+    if ($n -eq 'SILVER_NEXT_ACTION.md' -or $n -eq 'SILVER_RUN_REPORT.md') { continue }
+    if (Test-SilverPathIsCap50RuntimeRestorable -RelPath $n) { continue }
+    return $false
+  }
+  return $true
+}
+
 function Invoke-SilverGitRestoreWorktreePaths {
   param([string]$RepoRoot, [string[]]$RelPaths)
   if (-not $RelPaths -or $RelPaths.Count -lt 1) { return }
@@ -1759,7 +1771,9 @@ function Invoke-SilverCap50PostCycleRuntimeCleanup {
     [int]$Cycle,
     [string]$Reason,
     [switch]$DryRunOnly,
-    [switch]$AllowForeignDirty
+    [switch]$AllowForeignDirty,
+    [switch]$AllowHandoffDirty,
+    [string[]]$ExcludeRestoreRelPaths = @()
   )
   $archivePath = ""
   if (-not $DryRunOnly) {
@@ -1768,7 +1782,7 @@ function Invoke-SilverCap50PostCycleRuntimeCleanup {
       $archivePath = [string]$arch.RelativePath
     }
   }
-  $cleanup = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot -DryRunOnly:$DryRunOnly -AllowForeignDirty:$AllowForeignDirty
+  $cleanup = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot -DryRunOnly:$DryRunOnly -AllowForeignDirty:$AllowForeignDirty -AllowHandoffDirty:$AllowHandoffDirty -ExcludeRestoreRelPaths $ExcludeRestoreRelPaths
   $cleanup.archive_path = $archivePath
   return $cleanup
 }
@@ -1777,8 +1791,15 @@ function Invoke-SilverCap50PreflightCleanup {
   param(
     [string]$RepoRoot,
     [switch]$DryRunOnly,
-    [switch]$AllowForeignDirty
+    [switch]$AllowForeignDirty,
+    [switch]$AllowHandoffDirty,
+    [string[]]$ExcludeRestoreRelPaths = @()
   )
+  $excludeNorm = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+  foreach ($ex in $ExcludeRestoreRelPaths) {
+    $exN = ([string]$ex).Trim() -replace '\\', '/'
+    if ($exN) { [void]$excludeNorm.Add($exN) }
+  }
   $entries = Get-GitStatusShortDirtyEntries -Cwd $RepoRoot
   $dirtyBefore = New-Object System.Collections.Generic.List[string]
   $toRestore = New-Object System.Collections.Generic.List[string]
@@ -1788,6 +1809,8 @@ function Invoke-SilverCap50PreflightCleanup {
     $p = [string]$ent.path
     if (-not $p) { continue }
     [void]$dirtyBefore.Add($p)
+    $pNorm = $p -replace '\\', '/'
+    if ($excludeNorm.Contains($pNorm)) { continue }
     $reason = Get-SilverCap50RuntimeRestoreAllowReason -RelPath $p
     if ($ent.untracked) {
       if ($reason) {
@@ -1820,6 +1843,7 @@ function Invoke-SilverCap50PreflightCleanup {
   if ($blocked.Count -eq 0) {
     if ($cleanAfter -eq "YES") { $safe = "YES" }
     elseif ($DryRunOnly -and $toRestore.Count -gt 0 -and $dirtyBefore.Count -eq $toRestore.Count) { $safe = "YES" }
+    elseif ($AllowHandoffDirty -and (Test-Cap50GitCleanExceptHandoffArtifacts -Cwd $RepoRoot)) { $safe = "YES" }
   }
   elseif ($AllowForeignDirty -and $runtimeClean -eq "YES") {
     $safe = "YES"
@@ -2157,7 +2181,7 @@ function Invoke-SilverCap50EvaluateCyclePostcondition {
   $cleanupDone = "NO"
   $gitCleanAfter = if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" }
   if (-not $DryRunOnly) {
-    $cleanupRes = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $Cycle -Reason "cap50_cycle_postcondition"
+    $cleanupRes = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $Cycle -Reason "cap50_cycle_postcondition" -ExcludeRestoreRelPaths @("SILVER_NEXT_ACTION.md", "SILVER_RUN_REPORT.md")
     $cleanupDone = if ($cleanupRes.PASS_FAIL -eq "PASS") { "YES" } else { "NO" }
     $gitCleanAfter = [string]$cleanupRes.git_clean_after
     if ([string]$cleanupRes.blocked_dirty_files) {
@@ -2182,7 +2206,9 @@ function Invoke-SilverCap50EvaluateCyclePostcondition {
     $reason = "safety_counters_nonzero"
   }
   elseif ($gitCleanAfter -ne "YES") {
-    $reason = "git_not_clean_after_runtime_cleanup"
+    if (-not (Test-Cap50GitCleanExceptHandoffArtifacts -Cwd $RepoRoot)) {
+      $reason = "git_not_clean_after_runtime_cleanup"
+    }
   }
   elseif ($ControlledInfinite -and $nextMode -eq "MANUAL_REQUIRED") {
     $reason = "manual_next_action_required"
@@ -3170,7 +3196,29 @@ while ($true) {
     $ae = $auto.ExitCode
     $script:LastAutopilotExit = [string]$ae
     $autoExitStr = [string]$ae
-    $postAutoCleanup = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $cycle -Reason "after_autopilot_full_auto_loop"
+    $autopilotHandoffPreserve = @("SILVER_NEXT_ACTION.md", "SILVER_RUN_REPORT.md")
+    $nextAfterAuto = Read-TextFileOrEmpty -Path $NextActionPath
+    if (-not (Test-SilverNextActionOutputQuality -Text $nextAfterAuto)) {
+      try {
+        $sanitizePreCleanup = Invoke-NodeScript -WorkingDirectory $RepoRoot -Arguments @($AutopilotScript, "--sanitize-next-action-md") -PassThruExit $true
+        if (($null -ne $sanitizePreCleanup) -and ($sanitizePreCleanup.ExitCode -eq 0)) {
+          $nextAfterAuto = Read-TextFileOrEmpty -Path $NextActionPath
+        }
+      }
+      catch {
+        Write-Host "silver-autopilot-loop: pre_cleanup_sanitize_invoke_failed continuing=STOP" -ForegroundColor DarkYellow
+      }
+    }
+    if (-not (Test-SilverNextActionOutputQuality -Text $nextAfterAuto)) {
+      Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+        -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit "N/A" `
+        -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine $safetyPre `
+        -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
+        -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
+        -Headline (Get-NextActionHeadline -Text $nextAfterAuto) -Focus "next_action_quality_post_guard" `
+        -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1
+    }
+    $postAutoCleanup = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $cycle -Reason "after_autopilot_full_auto_loop" -ExcludeRestoreRelPaths $autopilotHandoffPreserve -AllowHandoffDirty
     Write-Host ("silver-autopilot-loop: post_autopilot_cleanup_PASS_FAIL=" + [string]$postAutoCleanup.PASS_FAIL) -ForegroundColor DarkCyan
     if ($postAutoCleanup.PASS_FAIL -ne "PASS") {
       Write-Host ("silver-autopilot-loop: post_autopilot_blocked_dirty_files=" + [string]$postAutoCleanup.blocked_dirty_files) -ForegroundColor Red
@@ -3186,16 +3234,6 @@ while ($true) {
     }
     Restore-SilverAdapterDiagnosticReportJson -RepoRoot $RepoRoot
     Restore-SilverTransientGeneratedAuditReports -RepoRoot $RepoRoot
-    $nextAfterAuto = Read-TextFileOrEmpty -Path $NextActionPath
-    if (-not (Test-SilverNextActionOutputQuality -Text $nextAfterAuto)) {
-      Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
-        -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit "N/A" `
-        -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine $safetyPre `
-        -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
-        -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
-        -Headline (Get-NextActionHeadline -Text $nextAfterAuto) -Focus "next_action_quality_post_guard" `
-        -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1
-    }
   }
 
   $st = Invoke-NodeScript -WorkingDirectory $RepoRoot -Arguments @($AutopilotScript, "--status") -PassThruExit $false
