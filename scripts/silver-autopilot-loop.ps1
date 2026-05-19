@@ -71,7 +71,9 @@ param(
   [switch]$Cap50ThreeCycleOrchestrationProbe,
   [switch]$Cap50MojibakeRegressionSelfTest,
   [switch]$Cap50RealUtf8CaptureProbe,
-  [switch]$Cap50GitNotCleanAfterRestoreSelfTest
+  [switch]$Cap50GitNotCleanAfterRestoreSelfTest,
+  [switch]$CapProductScorecardSelfTest,
+  [switch]$AuditRegistrySelfTest
 )
 
 Set-StrictMode -Version 2
@@ -90,6 +92,8 @@ $AutopilotScript = Join-Path $RepoRoot "scripts\silver-autopilot.cjs"
 $EmergencyStopPath = Join-Path $RepoRoot "SILVER_STOP_AUTOPILOT"
 $SilverUtf8HandoffPath = Join-Path $PSScriptRoot "silver-utf8-handoff.ps1"
 $SilverCap50PolicyPath = Join-Path $PSScriptRoot "silver-cap50-orchestration-policy.ps1"
+$SilverCapScorecardPath = Join-Path $PSScriptRoot "silver-cap-product-scorecard.ps1"
+$SilverAuditRegistryPath = Join-Path $PSScriptRoot "silver-audit-registry.ps1"
 if (-not (Test-Path -LiteralPath $SilverUtf8HandoffPath)) {
   Write-Error ("Missing UTF-8 handoff module: " + $SilverUtf8HandoffPath)
   exit 2
@@ -100,7 +104,18 @@ if (-not (Test-Path -LiteralPath $SilverCap50PolicyPath)) {
 }
 . $SilverUtf8HandoffPath
 . $SilverCap50PolicyPath
+if (Test-Path -LiteralPath $SilverCapScorecardPath) {
+  . $SilverCapScorecardPath
+}
+if (Test-Path -LiteralPath $SilverAuditRegistryPath) {
+  . $SilverAuditRegistryPath
+}
+$script:SilverLastScorecardOrchestrationOnly = "NO"
 Initialize-SilverConsoleUtf8
+
+$script:SilverCapScorecardDir = ""
+$script:SilverCapScorecardBeforePath = ""
+$script:SilverCapScorecardCapLabel = ""
 
 $script:CycleIndex = 0
 $script:LastCursorExit = "N/A"
@@ -1623,6 +1638,9 @@ function Stop-LoopWithFail {
     $finalPost = Invoke-SilverCap50FinalPostcondition -RepoRoot $RepoRoot -CyclesCompleted $Cycle -StopReason $reasonLine -NextActionPath (Join-Path $RepoRoot "SILVER_NEXT_ACTION.md") -CursorOutputPath (Join-Path $RepoRoot "SILVER_CURSOR_OUTPUT.md") -SafetyCountersLine $safetyFail
     Write-SilverCap50FinalPostconditionBlock -Result $finalPost
   }
+  $cyclesForScorecard = $Cycle
+  if ($script:AutonomousCyclesCompleted -gt 0) { $cyclesForScorecard = $script:AutonomousCyclesCompleted }
+  Invoke-SilverCapProductScorecardIfActive -RepoRoot $RepoRoot -ProgressLogPath $ProgressLogPath -CyclesCompleted $cyclesForScorecard -StopReason $reasonLine
   Invoke-SilverBeepFail -NoBeep:$NoBeep
   exit 1
 }
@@ -3200,6 +3218,48 @@ function Normalize-SilverNextBodyForStreak {
   return $t
 }
 
+function Invoke-SilverCapProductScorecardIfActive {
+  param(
+    [string]$RepoRoot,
+    [string]$ProgressLogPath,
+    [int]$CyclesCompleted,
+    [string]$StopReason
+  )
+  if (-not (Get-Command -Name Complete-SilverCapProductScorecard -ErrorAction SilentlyContinue)) { return }
+  if (-not $script:SilverCapScorecardBeforePath) { return }
+  $reportText = Read-TextFileOrEmpty -Path (Join-Path $RepoRoot "SILVER_RUN_REPORT.md")
+  $engineCh = Get-RunReportLineValue -ReportText $reportText -Key "engine_changed"
+  $assetsCh = Get-RunReportLineValue -ReportText $reportText -Key "assets_app_changed"
+  $prUrlBefore = ""
+  if (Test-Path -LiteralPath $script:SilverCapScorecardBeforePath) {
+    try {
+      $beforeRaw = Get-Content -LiteralPath $script:SilverCapScorecardBeforePath -Raw -Encoding UTF8
+      if ($beforeRaw -match '"pr_url"\s*:\s*"([^"]*)"') {
+        $prUrlBefore = $Matches[1]
+      }
+    } catch { }
+  }
+  $prUrlAfter = Get-RunReportLineValue -ReportText $reportText -Key "pr_url"
+  if (-not $prUrlAfter) {
+    $openPrLine = Get-RunReportLineValue -ReportText $reportText -Key "open_pr"
+    if ($openPrLine -match 'https?://[^\s]+') {
+      $prUrlAfter = $Matches[0]
+    }
+  }
+  $prCreated = "0"
+  if ($prUrlAfter -and $prUrlAfter -ne $prUrlBefore) { $prCreated = "1" }
+  $productFix = "NO"
+  if ($engineCh -eq "YES" -or $assetsCh -eq "YES") { $productFix = "YES" }
+  $null = Complete-SilverCapProductScorecard -RepoRoot $RepoRoot -ProgressLogPath $ProgressLogPath -CyclesCompleted $CyclesCompleted -StopReason $StopReason -PrCreatedCount $prCreated -ProductFixCreated $productFix
+  if (Get-Command -Name Invoke-SilverCapOutcomeEnforcement -ErrorAction SilentlyContinue) {
+    $capLbl = [string]$script:SilverCapScorecardCapLabel
+    if (-not $capLbl) { $capLbl = "CAPX" }
+    $orch = [string]$script:SilverLastScorecardOrchestrationOnly
+    if (-not $orch) { $orch = "NO" }
+    $null = Invoke-SilverCapOutcomeEnforcement -RepoRoot $RepoRoot -ProgressLogPath $ProgressLogPath -CyclesCompleted $CyclesCompleted -CapLabel $capLbl -OrchestrationOnly $orch -PrCreatedCount ([int]$prCreated) -ProductFixCreated $productFix
+  }
+}
+
 function Write-SilverAutonomousRunSummary {
   param(
     [string]$RepoRoot,
@@ -3302,6 +3362,7 @@ function Write-SilverAutonomousBudgetExit {
   Write-SilverSafetyConsoleStop -Reason $Reason
   Write-SilverProgressLogBlock -ProgressLogPath $ProgressLogPath -Outcome "SAFETY_STOP" -Fields $fields
   Write-Host ("STATUS: SAFETY_STOP (" + $Reason + ")") -ForegroundColor Yellow
+  Invoke-SilverCapProductScorecardIfActive -RepoRoot $RepoRoot -ProgressLogPath $ProgressLogPath -CyclesCompleted $cyclesDone -StopReason $Reason
   Invoke-SilverBeepComplete -NoBeep:$NoBeep
   exit 0
 }
@@ -3386,6 +3447,26 @@ if ($controlledInfinite) {
   $newRunId = ([guid]::NewGuid().ToString("N"))
   Initialize-SilverAutonomousRunLifecycle -RunId $newRunId -RunStartUtc ((Get-Date).ToUniversalTime()) -CursorOutputPath $CursorOutputPath
   Write-Host ("silver-autopilot-loop: autonomous_run_id=" + $script:SilverAutonomousRunId + " runtime_cursor_output_invalidated=YES") -ForegroundColor DarkCyan
+}
+
+if ($CapProductScorecardSelfTest) {
+  if (-not (Get-Command -Name Invoke-SilverCapProductScorecardSelfTest -ErrorAction SilentlyContinue)) {
+    Write-Host "SILVER_CAP_PRODUCT_SCORECARD_SELFTEST=FAIL missing_scorecard_module" -ForegroundColor Red
+    exit 1
+  }
+  $stSc = Invoke-SilverCapProductScorecardSelfTest -RepoRoot $RepoRoot
+  if (-not $stSc) { exit 1 }
+  exit 0
+}
+
+if ($AuditRegistrySelfTest) {
+  if (-not (Get-Command -Name Invoke-SilverAuditRegistrySelfTest -ErrorAction SilentlyContinue)) {
+    Write-Host "SILVER_AUDIT_REGISTRY_SELFTEST=FAIL missing_registry_module" -ForegroundColor Red
+    exit 1
+  }
+  $stAr = Invoke-SilverAuditRegistrySelfTest -RepoRoot $RepoRoot
+  if (-not $stAr) { exit 1 }
+  exit 0
 }
 
 if ($PreflightCleanupSelfTest) {
@@ -3477,12 +3558,30 @@ if ($TimeoutArchiveSelfTest) {
   exit 0
 }
 
+if ($controlledInfinite -and (Get-Command -Name Invoke-SilverAuditRegistryReport -ErrorAction SilentlyContinue)) {
+  $null = Invoke-SilverAuditRegistryReport -RepoRoot $RepoRoot
+}
+
 if ($controlledInfinite -and (-not $DryRun) -and (-not [string]::IsNullOrWhiteSpace($CursorCommand))) {
   $hardPf = Invoke-SilverCap50HardPreflight -RepoRoot $RepoRoot -CursorCommand $CursorCommand
   Write-SilverCap50HardPreflightBlock -Result $hardPf
   if ($hardPf.PASS_FAIL -ne "PASS") {
     Write-SilverSafetyConsoleStop -Reason "cap50_hard_preflight_fail"
     exit 1
+  }
+}
+
+$capRunLabel = ""
+if (Get-Command -Name Get-SilverCapRunLabel -ErrorAction SilentlyContinue) {
+  $capRunLabel = Get-SilverCapRunLabel -ControlledInfinite $controlledInfinite -MaxCycles $MaxCycles
+}
+if ($capRunLabel -and (Get-Command -Name Initialize-SilverCapProductScorecardSession -ErrorAction SilentlyContinue)) {
+  $beforeOut = Initialize-SilverCapProductScorecardSession -CapLabel $capRunLabel
+  $capCapOk = Invoke-SilverCapProductScorecardCapture -RepoRoot $RepoRoot -CapLabel $capRunLabel -OutPath $beforeOut
+  if (-not $capCapOk) {
+    Write-Host ("silver-autopilot-loop: cap_scorecard_before_capture=WARN cap_label=" + $capRunLabel) -ForegroundColor DarkYellow
+  } else {
+    Write-Host ("silver-autopilot-loop: cap_scorecard_before_capture=OK cap_label=" + $capRunLabel) -ForegroundColor DarkCyan
   }
 }
 
@@ -4236,5 +4335,13 @@ if (-not $DryRun) {
     }
   }
 }
+
+$finalCyclesForScorecard = $cycle
+if ($script:AutonomousCyclesCompleted -gt 0) { $finalCyclesForScorecard = $script:AutonomousCyclesCompleted }
+Invoke-SilverCapProductScorecardIfActive -RepoRoot $RepoRoot -ProgressLogPath $ProgressLogPath -CyclesCompleted $finalCyclesForScorecard -StopReason "loop_exit"
+if (Get-Command -Name Invoke-SilverAuditRegistryReport -ErrorAction SilentlyContinue) {
+  $null = Invoke-SilverAuditRegistryReport -RepoRoot $RepoRoot
+}
+Invoke-SilverBeepComplete -NoBeep:$NoBeep
 
 exit 0

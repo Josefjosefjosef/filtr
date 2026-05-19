@@ -29,6 +29,12 @@ const {
   runOpenAiNextActionUtf8Selftest,
   printOpenAiRealNextActionUtf8Diagnostic,
 } = require("./silver-openai-utf8.cjs");
+const {
+  buildAuditRegistry,
+  prioritizeTrueEngineFail,
+  selectNextCap,
+  enforceCapOutcome,
+} = require("./silver-audit-registry.cjs");
 
 const REPO = path.resolve(__dirname, "..");
 const SCRIPTS = __dirname;
@@ -1919,8 +1925,32 @@ function cmdStatus(argvCommand) {
     git_status_clean: clean ? "YES" : "NO",
     recommended_next_task: nextCmd,
   });
+  try {
+    const reg = buildAuditRegistry(REPO);
+    const pri = prioritizeTrueEngineFail(reg);
+    const nextCap = selectNextCap(reg, pri);
+    const activeCount = reg.audits.filter((a) => a.usable_for_cap_selection === "YES").length;
+    console.log("audit_registry_audits=" + reg.audits.length);
+    console.log("audit_registry_cap_ready=" + activeCount);
+    console.log("audit_registry_next_cap=" + nextCap.recommended_cap);
+    console.log("audit_registry_next_audit=" + nextCap.audit_name);
+    console.log("audit_registry_next_cluster=" + nextCap.cluster);
+    console.log("audit_registry_expected_outcome=" + nextCap.expected_outcome);
+    if (String(process.env.SILVER_AUDIT_REGISTRY_VERBOSE || "").trim() === "1") {
+      const { emitFullReport } = require("./silver-audit-registry.cjs");
+      emitFullReport(REPO, {});
+    }
+  } catch (e) {
+    console.log("audit_registry_error=" + String(e.message || e));
+  }
   console.log("=== END_SILVER_AUTOPILOT_STATUS ===");
   return { status, branch, commit, clean };
+}
+
+function cmdAuditRegistry() {
+  const { emitFullReport } = require("./silver-audit-registry.cjs");
+  emitFullReport(REPO, {});
+  return 0;
 }
 
 function verifyPr(prNumber) {
@@ -3557,6 +3587,7 @@ function parseArgs(argv) {
   const out = { cmd: null, pr: "", maxSteps: "1" };
   for (const a of argv) {
     if (a === "--status") out.cmd = "status";
+    else if (a === "--audit-registry") out.cmd = "audit-registry";
     else if (a.startsWith("--verify-pr=")) {
       out.cmd = "verify-pr";
       out.pr = a.slice("--verify-pr=".length);
@@ -3583,7 +3614,9 @@ function parseArgs(argv) {
 (async function main() {
   const argv = process.argv.slice(2);
   if (argv.length === 0) {
-    console.log("Usage: node scripts/silver-autopilot.cjs --status | --verify-pr=NNNN | --full-auto-loop | ...");
+    console.log(
+      "Usage: node scripts/silver-autopilot.cjs --status | --audit-registry | --verify-pr=NNNN | --full-auto-loop | ...",
+    );
     process.exit(1);
   }
   const p = parseArgs(argv);
@@ -3593,6 +3626,7 @@ function parseArgs(argv) {
   }
   let exitCode = 0;
   if (p.cmd === "status") cmdStatus("--status");
+  else if (p.cmd === "audit-registry") exitCode = cmdAuditRegistry();
   else if (p.cmd === "verify-pr") verifyPr(p.pr);
   else if (p.cmd === "merge-pr") cmdMergePr(p.pr);
   else if (p.cmd === "post-merge-proof") exitCode = cmdPostMergeProof();

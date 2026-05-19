@@ -1,0 +1,210 @@
+#requires -Version 5.1
+<#
+.SYNOPSIS
+  PowerShell helpers for Silver CAP BEFORE/AFTER product scorecard (orchestration/metrics only).
+#>
+Set-StrictMode -Version 2
+$ErrorActionPreference = "Stop"
+
+function Get-SilverCapRunLabel {
+  param(
+    [bool]$ControlledInfinite,
+    [int]$MaxCycles
+  )
+  if ($ControlledInfinite) { return "CAP50" }
+  if ($MaxCycles -ge 1) { return ("CAP" + [string]$MaxCycles) }
+  return ""
+}
+
+function Initialize-SilverCapProductScorecardSession {
+  param(
+    [string]$CapLabel
+  )
+  $dir = Join-Path $env:TEMP ("silver-cap-scorecard-" + [guid]::NewGuid().ToString("N"))
+  New-Item -ItemType Directory -Path $dir -Force | Out-Null
+  $script:SilverCapScorecardDir = $dir
+  $script:SilverCapScorecardBeforePath = Join-Path $dir "before.json"
+  $script:SilverCapScorecardCapLabel = $CapLabel
+  return $script:SilverCapScorecardBeforePath
+}
+
+function Invoke-SilverCapProductScorecardCapture {
+  param(
+    [string]$RepoRoot,
+    [string]$CapLabel,
+    [string]$OutPath
+  )
+  $scorecardScript = Join-Path $RepoRoot "scripts\silver-cap-product-scorecard.cjs"
+  if (-not (Test-Path -LiteralPath $scorecardScript)) {
+    Write-Host "SILVER_CAP_PRODUCT_SCORECARD=FAIL missing_script" -ForegroundColor Red
+    return $false
+  }
+  $argList = @(
+    $scorecardScript,
+    "capture",
+    "--repo-root", $RepoRoot,
+    "--cap-label", $CapLabel,
+    "--out", $OutPath
+  )
+  $parts = New-Object System.Collections.ArrayList
+  foreach ($arg in $argList) {
+    $a = [string]$arg
+    if ($a.IndexOf(" ") -ge 0) {
+      [void]$parts.Add(('"' + $a.Replace('"', '""') + '"'))
+    } else {
+      [void]$parts.Add($a)
+    }
+  }
+  $argLine = [string]::Join(" ", $parts.ToArray())
+  $psi = New-Object System.Diagnostics.ProcessStartInfo
+  $psi.FileName = "node"
+  $psi.Arguments = $argLine
+  $psi.WorkingDirectory = $RepoRoot
+  $psi.RedirectStandardOutput = $true
+  $psi.RedirectStandardError = $true
+  $psi.UseShellExecute = $false
+  $psi.CreateNoWindow = $true
+  $p = [System.Diagnostics.Process]::Start($psi)
+  $stdout = $p.StandardOutput.ReadToEnd()
+  $stderr = $p.StandardError.ReadToEnd()
+  $p.WaitForExit()
+  if ($stdout) { Write-Host $stdout }
+  if ($stderr) { Write-Host $stderr -ForegroundColor DarkYellow }
+  return ($p.ExitCode -eq 0)
+}
+
+function Write-SilverCapScorecardToProgressLog {
+  param(
+    [string]$ProgressLogPath,
+    [string]$CzechText,
+    [string]$CapLabel,
+    [string]$StopReason,
+    [int]$CyclesCompleted
+  )
+  $sb = New-Object System.Text.StringBuilder
+  [void]$sb.AppendLine("")
+  [void]$sb.AppendLine("---")
+  [void]$sb.AppendLine("timestamp=" + (Get-Date).ToString("s"))
+  [void]$sb.AppendLine("outcome=CAP_SCORECARD")
+  [void]$sb.AppendLine(("cap_label=" + $CapLabel))
+  [void]$sb.AppendLine(("cycles_completed=" + [string]$CyclesCompleted))
+  [void]$sb.AppendLine(("stop_reason=" + $StopReason))
+  [void]$sb.AppendLine("")
+  foreach ($line in ($CzechText -split "`r?`n")) {
+    [void]$sb.AppendLine($line)
+  }
+  [void]$sb.AppendLine("---")
+  $block = $sb.ToString()
+  if (-not (Test-Path -LiteralPath $ProgressLogPath)) {
+    $header = "# SILVER progress log`n`nAppend-only entries from ``scripts/silver-autopilot-loop.ps1`` (V1). Do not paste secrets or API keys.`n`n"
+    [System.IO.File]::WriteAllText($ProgressLogPath, $header + $block, [System.Text.UTF8Encoding]::new($false))
+  } else {
+    [System.IO.File]::AppendAllText($ProgressLogPath, $block, [System.Text.UTF8Encoding]::new($false))
+  }
+}
+
+function Complete-SilverCapProductScorecard {
+  param(
+    [string]$RepoRoot,
+    [string]$ProgressLogPath,
+    [int]$CyclesCompleted,
+    [string]$StopReason,
+    [string]$PrCreatedCount = "0",
+    [string]$ProductFixCreated = "NO"
+  )
+  if (-not $script:SilverCapScorecardBeforePath) { return $false }
+  if (-not (Test-Path -LiteralPath $script:SilverCapScorecardBeforePath)) { return $false }
+
+  $scorecardScript = Join-Path $RepoRoot "scripts\silver-cap-product-scorecard.cjs"
+  if (-not (Test-Path -LiteralPath $scorecardScript)) {
+    Write-Host "SILVER_CAP_PRODUCT_SCORECARD=FAIL missing_script" -ForegroundColor Red
+    return $false
+  }
+
+  $capLabel = [string]$script:SilverCapScorecardCapLabel
+  if (-not $capLabel) { $capLabel = "CAPX" }
+
+  $argList = @(
+    $scorecardScript,
+    "finalize",
+    "--repo-root", $RepoRoot,
+    "--before", $script:SilverCapScorecardBeforePath,
+    "--cap-label", $capLabel,
+    "--cycles", [string]$CyclesCompleted,
+    "--stop-reason", $StopReason,
+    "--pr-created-count", $PrCreatedCount,
+    "--product-fix", $ProductFixCreated
+  )
+  $parts = New-Object System.Collections.ArrayList
+  foreach ($arg in $argList) {
+    $a = [string]$arg
+    if ($a.IndexOf(" ") -ge 0) {
+      [void]$parts.Add(('"' + $a.Replace('"', '""') + '"'))
+    } else {
+      [void]$parts.Add($a)
+    }
+  }
+  $argLine = [string]::Join(" ", $parts.ToArray())
+  $psi = New-Object System.Diagnostics.ProcessStartInfo
+  $psi.FileName = "node"
+  $psi.Arguments = $argLine
+  $psi.WorkingDirectory = $RepoRoot
+  $psi.RedirectStandardOutput = $true
+  $psi.RedirectStandardError = $true
+  $psi.UseShellExecute = $true
+  $psi.CreateNoWindow = $true
+  $p = [System.Diagnostics.Process]::Start($psi)
+  $stdout = $p.StandardOutput.ReadToEnd()
+  $stderr = $p.StandardError.ReadToEnd()
+  $p.WaitForExit()
+  if ($stderr) { Write-Host $stderr -ForegroundColor DarkYellow }
+
+  $czechBlock = ""
+  if ($stdout) {
+    $idxStart = $stdout.IndexOf("SILVER_CAP_BEFORE_AFTER_SCORECARD")
+    if ($idxStart -ge 0) {
+      $idxEnd = $stdout.IndexOf("=== SILVER_CAP_PRODUCT_SCORECARD_FINALIZE ===")
+      if ($idxEnd -gt $idxStart) {
+        $czechBlock = $stdout.Substring($idxStart, $idxEnd - $idxStart).Trim()
+      } else {
+        $czechBlock = $stdout.Trim()
+      }
+    }
+    Write-Host $stdout
+  }
+
+  if ($czechBlock) {
+    Write-SilverCapScorecardToProgressLog -ProgressLogPath $ProgressLogPath -CzechText $czechBlock -CapLabel $capLabel -StopReason $StopReason -CyclesCompleted $CyclesCompleted
+  }
+
+  $script:SilverLastScorecardOrchestrationOnly = "NO"
+  if ($stdout -match 'orchestration_only_run=YES') {
+    $script:SilverLastScorecardOrchestrationOnly = "YES"
+  }
+
+  return ($p.ExitCode -eq 0)
+}
+
+function Invoke-SilverCapProductScorecardSelfTest {
+  param([string]$RepoRoot)
+  $scorecardScript = Join-Path $RepoRoot "scripts\silver-cap-product-scorecard.cjs"
+  if (-not (Test-Path -LiteralPath $scorecardScript)) {
+    Write-Host "SILVER_CAP_PRODUCT_SCORECARD_SELFTEST=FAIL missing_script" -ForegroundColor Red
+    return $false
+  }
+  $psi = New-Object System.Diagnostics.ProcessStartInfo
+  $psi.FileName = "node"
+  $psi.Arguments = ($scorecardScript + " selftest")
+  $psi.WorkingDirectory = $RepoRoot
+  $psi.RedirectStandardOutput = $true
+  $psi.RedirectStandardError = $true
+  $psi.UseShellExecute = $false
+  $psi.CreateNoWindow = $true
+  $p = [System.Diagnostics.Process]::Start($psi)
+  $stdout = $p.StandardOutput.ReadToEnd()
+  $stderr = $p.StandardError.ReadToEnd()
+  $p.WaitForExit()
+  if ($stdout) { Write-Host $stdout }
+  if ($stderr) { Write-Host $stderr }
+  return ($p.ExitCode -eq 0)
+}
