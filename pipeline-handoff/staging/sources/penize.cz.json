@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-19T08:21:03.640250Z",
+  "ingestedAt": "2026-05-19T08:59:51.813215Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Košík končí s minimální hodnotou objednávky. Nově umožní i malé nákupy",
+      "url": "https://www.penize.cz/nakupy/489924-kosik-rusi-minimalni-hodnotu-objednavky-upravi-i-expresni-rozvoz",
+      "dt": "2026-05-19T10:15:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "hodnotou",
+        "končí",
+        "košík",
+        "malé",
+        "minimální",
+        "nově",
+        "nákupy",
+        "objednávky",
+        "umožní"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -485,31 +511,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Komerční banka dokončila převod klientů do KB+. Chystá další vylepšení",
-      "url": "https://www.penize.cz/osobni-ucty/489737-komercni-banka-dokoncila-prevod-klientu-do-kb-chysta-dalsi-vylepseni",
-      "dt": "2026-05-15T05:05:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "banka",
-        "chystá",
-        "další",
-        "dokončila",
-        "klientů",
-        "komerční",
-        "převod",
-        "vylepšení"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -520,7 +521,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 19176,
+      "bytes": 19148,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -557,7 +558,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-19T09:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T10:15:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 14,
@@ -573,6 +574,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Košík končí s minimální hodnotou objednávky. Nově umožní i malé nákupy",
+            "publishedAt": "2026-05-19T10:15:00Z"
+          },
           {
             "title": "Tříletá fixace, levnější první rok. E.ON láká na nový tarif plynu, má ale podmínku",
             "publishedAt": "2026-05-19T09:05:00Z"
@@ -600,10 +605,6 @@
           {
             "title": "Rodičovský příspěvek stoupne. Rozhodne rok narození",
             "publishedAt": "2026-05-18T13:30:00Z"
-          },
-          {
-            "title": "Privatbanka mění název a má velké plány. Penta ukázala, co chystá",
-            "publishedAt": "2026-05-18T12:15:00Z"
           }
         ]
       }

@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-19T08:21:03.640250Z",
+  "ingestedAt": "2026-05-19T08:59:51.813215Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Muž žádal strážníky v Olomouci aby ho zatkli a odvezli do vězení. Nebyl ani opilý, ani zfetovaný a k jeho smůle bohužel ani hledaný",
+      "url": "https://tydenikpolicie.cz/muz-zadal-strazniky-v-olomouci-aby-ho-zatkli-a-odvezli-do-vezeni-nebyl-ani-opily-ani-zfetovany-a-k-jeho-smule-bohuzel-ani-hledany/",
+      "dt": "2026-05-19T08:19:49Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "bohužel",
+        "hledaný",
+        "jeho",
+        "muž",
+        "nebyl",
+        "odvezli",
+        "olomouci",
+        "opilý",
+        "smůle",
+        "strážníky",
+        "vězení",
+        "zatkli",
+        "zfetovaný",
+        "žádal"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -245,31 +276,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Mladíka podezřelého z vloupání vypátrali kladenští strážníci pomocí dronu",
-      "url": "https://tydenikpolicie.cz/mladika-podezreleho-z-vloupani-vypatrali-kladensti-straznici-pomoci-dronu/",
-      "dt": "2026-05-18T14:53:33Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "dronu",
-        "kladenští",
-        "mladíka",
-        "podezřelého",
-        "pomocí",
-        "strážníci",
-        "vloupání",
-        "vypátrali"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +286,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16380,
+      "bytes": 16479,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +323,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-19T07:49:45Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T08:19:49Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -332,6 +338,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Muž žádal strážníky v Olomouci aby ho zatkli a odvezli do vězení. Nebyl ani opilý, ani zfetovaný a k jeho smůle bohužel ani hledaný",
+            "publishedAt": "2026-05-19T08:19:49Z"
+          },
           {
             "title": "Olomoučtí kriminalisté zadrželi a obvinili dva muže podezřelé z přepadení tří lidí",
             "publishedAt": "2026-05-19T07:49:45Z"
@@ -359,10 +369,6 @@
           {
             "title": "Řidič škodovky na D4 u Staré Huti nepřežil pád z dálničního mostu",
             "publishedAt": "2026-05-19T07:04:10Z"
-          },
-          {
-            "title": "Policisté pátrají po mladém cyklistovi, který se ve Vrchlabí srazil s peugeotem a z místa nehody ujel",
-            "publishedAt": "2026-05-19T02:02:27Z"
           }
         ]
       }
