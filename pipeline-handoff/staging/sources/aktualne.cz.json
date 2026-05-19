@@ -1,8 +1,56 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-19T21:15:37.739488Z",
+  "ingestedAt": "2026-05-19T21:55:29.617179Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Slovinci zatopili i Slovákům, ti vyhráli až po nájezdech",
+      "url": "https://sport.aktualne.cz/tenis/slovinci-zatopili-i-slovakum-ti-vyhrali-az-po-najezdech/r~aaa291c8a861a426a550ac84a1153bf9/",
+      "dt": "2026-05-19T21:41:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "nájezdech",
+        "slovinci",
+        "slovákům",
+        "vyhráli",
+        "zatopili"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kinský si musí na jistotu záchrany počkat, Arsenal slaví titul po 22 letech",
+      "url": "https://sport.aktualne.cz/kinsky-si-musi-na-jistotu-zachrany-pockat-arsenal-slavi-titul-po-22-letech/r~aaa2911ae8b59796c15745615fc6ba83/",
+      "dt": "2026-05-19T21:30:05Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "arsenal",
+        "jistotu",
+        "kinský",
+        "letech",
+        "musí",
+        "počkat",
+        "slaví",
+        "titul",
+        "záchrany"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -473,57 +521,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "„Nebylo to snadné rozhodnutí.“ Kliment nepojede na MS, šel na operaci",
-      "url": "https://sport.aktualne.cz/fotbal/nebylo-to-snadne-rozhodnuti-kliment-nepojede-na-ms-sel-na-operaci/r~aaa29212ec3e1cfd13df6a28b39f9e68/",
-      "dt": "2026-05-19T13:51:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "kliment",
-        "nebylo",
-        "nepojede",
-        "operaci",
-        "rozhodnutí",
-        "snadné",
-        "šel"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Zdrtím ekonomiku.“ Guvernér ČNB poslal vládě Andreje Babiše drsný vzkaz",
-      "url": "https://zpravy.aktualne.cz/domaci/zdrtim-ekonomiku-guverner-cnb-poslal-vlade-andreje-babise-drsny-vzkaz/r~aaa29467ff8800fb7f46ebee0faaef82/",
-      "dt": "2026-05-19T13:43:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "andreje",
-        "babiše",
-        "drsný",
-        "ekonomiku",
-        "guvernér",
-        "poslal",
-        "vládě",
-        "vzkaz",
-        "zdrtím",
-        "čnb"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -534,7 +531,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22200,
+      "bytes": 22288,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -571,11 +568,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-19T19:54:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T21:41:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 15,
-          "sport": 4,
+          "sport": 5,
+          "zpravy": 14,
           "other": 1
         },
         "drop_counts": {
@@ -588,6 +585,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Slovinci zatopili i Slovákům, ti vyhráli až po nájezdech",
+            "publishedAt": "2026-05-19T21:41:00Z"
+          },
+          {
+            "title": "Kinský si musí na jistotu záchrany počkat, Arsenal slaví titul po 22 letech",
+            "publishedAt": "2026-05-19T21:30:05Z"
+          },
           {
             "title": "Trump nevylučuje další útok na Írán. Teherán podle něj žádá o dohodu",
             "publishedAt": "2026-02-28T14:04:00Z"
@@ -611,14 +616,6 @@
           {
             "title": "Vojtěch má přesun protidrogové politiky, který čelí kritice, za logický krok",
             "publishedAt": "2026-05-19T18:14:00Z"
-          },
-          {
-            "title": "Norové smetli Itálii čtyřmi góly. Rakousko je nečekaně v euforii",
-            "publishedAt": "2026-05-19T18:09:00Z"
-          },
-          {
-            "title": "Cenu Jiřího Ortena si letos odnesla Nela Bártová za sbírku Házeliště granátů",
-            "publishedAt": "2026-05-19T18:01:00Z"
           }
         ]
       }
