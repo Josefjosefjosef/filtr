@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-19T06:15:07.105464Z",
+  "ingestedAt": "2026-05-19T07:01:56.826505Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "San Antonio vede, Oklahomu přetlačilo ve druhém prodloužení. Zářil Wembanyama",
+      "url": "https://www.idnes.cz/sport/basket/oklahoma-san-antonio-play-off-nba-zapadni-konference-wembanyama.A260519_075845_sport-basket_jrv",
+      "dt": "2026-05-19T06:09:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "antonio",
+        "druhém",
+        "oklahomu",
+        "prodloužení",
+        "přetlačilo",
+        "san",
+        "vede",
+        "wembanyama",
+        "zářil"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -751,32 +777,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Grand Départ se za dva roky vrátí do Francie. Tour odstartuje v Remeši",
-      "url": "https://www.idnes.cz/sport/cyklistika/tour-de-france-start-2028.A260518_163903_cyklistika_kazdt",
-      "dt": "2026-05-18T14:46:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dva",
-        "départ",
-        "francie",
-        "grand",
-        "odstartuje",
-        "remeši",
-        "roky",
-        "tour",
-        "vrátí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -787,7 +787,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 43979,
+      "bytes": 44021,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -824,7 +824,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T05:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T06:09:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -839,6 +839,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "San Antonio vede, Oklahomu přetlačilo ve druhém prodloužení. Zářil Wembanyama",
+            "publishedAt": "2026-05-19T06:09:00Z"
+          },
           {
             "title": "Česko - Itálie v TV: kde sledovat zápas MS v hokeji 2026 živě",
             "publishedAt": "2026-05-19T05:59:00Z"
@@ -866,10 +870,6 @@
           {
             "title": "Brno v koncovce urvalo druhý bod, Pardubicím v semifinále zavařil Olison",
             "publishedAt": "2026-05-18T21:19:45Z"
-          },
-          {
-            "title": "Utrápená výhra Arsenalu, zareagovat musí City. Titul kanonýrům přiblížil Havertz",
-            "publishedAt": "2026-05-18T21:19:07Z"
           }
         ]
       }

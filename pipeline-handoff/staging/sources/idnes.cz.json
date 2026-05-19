@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-19T06:15:07.105464Z",
+  "ingestedAt": "2026-05-19T07:01:56.826505Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Tragédie u Chebu. Kamionu se při střetu s dodávkou odtrhla kabina, jeden mrtvý",
+      "url": "https://www.idnes.cz/karlovy-vary/zpravy/nehoda-smrt-ridic-cheb-cetnov.A260518_085957_vary-zpravy_vb",
+      "dt": "2026-05-19T06:06:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "chebu",
+        "dodávkou",
+        "jeden",
+        "kabina",
+        "kamionu",
+        "mrtvý",
+        "odtrhla",
+        "při",
+        "střetu",
+        "tragédie"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Na D4 spadlo v noci osobní auto z dálničního mostu, řidič zemřel",
+      "url": "https://www.idnes.cz/praha/zpravy/nehoda-auto-pad-d4-dalnicni-most.A260519_075555_praha-zpravy_pp",
+      "dt": "2026-05-19T05:59:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "auto",
+        "dálničního",
+        "mostu",
+        "noci",
+        "osobní",
+        "spadlo",
+        "zemřel",
+        "řidič"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -732,58 +784,6 @@
         "vedení",
         "vláda",
         "ženách"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Polsko vydá do Česka tři podezřelé ze žhářského útoku v Pardubicích",
-      "url": "https://www.idnes.cz/zpravy/domaci/zhari-polsko-vydani-pardubice-cesko-drony-hala-lpp-holding.A260518_164431_domaci_sahu",
-      "dt": "2026-05-18T15:22:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "pardubicích",
-        "podezřelé",
-        "polsko",
-        "tři",
-        "vydá",
-        "útoku",
-        "česka",
-        "žhářského"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Podpora otevřeného prostředí.“ Pavel dal záštitu festivalu, který hostí třaskavý sjezd",
-      "url": "https://www.idnes.cz/zpravy/domaci/pavel-festival-meeting-brno-sudetsi-nemci.A260518_161237_domaci_aoc",
-      "dt": "2026-05-18T15:03:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "dal",
-        "festivalu",
-        "hostí",
-        "otevřeného",
-        "pavel",
-        "podpora",
-        "prostředí",
-        "sjezd",
-        "třaskavý",
-        "záštitu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1580,7 +1580,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48104,
+      "bytes": 47363,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1617,7 +1617,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T05:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T06:06:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1634,6 +1634,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tragédie u Chebu. Kamionu se při střetu s dodávkou odtrhla kabina, jeden mrtvý",
+            "publishedAt": "2026-05-19T06:06:00Z"
+          },
+          {
+            "title": "Na D4 spadlo v noci osobní auto z dálničního mostu, řidič zemřel",
+            "publishedAt": "2026-05-19T05:59:00Z"
+          },
           {
             "title": "Stíhaný polský exministr Ziobro odjel do USA díky pomoci amerického diplomata",
             "publishedAt": "2026-05-19T05:02:00Z"
@@ -1656,14 +1664,6 @@
           },
           {
             "title": "Dlužena mi říkají zoufalci, míní Schillerová. Zájem o dluhopisy ji dojímá k slzám",
-            "publishedAt": "2026-05-18T22:00:00Z"
-          },
-          {
-            "title": "Spotoví zákazníci těží ze záporných cen elektřiny. Vydělá, kdo spotřebu načasuje",
-            "publishedAt": "2026-05-18T22:00:00Z"
-          },
-          {
-            "title": "Řídit Británii? Zničující mise. Z šesti premiérů od brexitu neobstál nikdo",
             "publishedAt": "2026-05-18T22:00:00Z"
           }
         ]

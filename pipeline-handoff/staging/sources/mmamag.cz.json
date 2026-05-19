@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-19T06:15:07.105464Z",
+  "ingestedAt": "2026-05-19T07:01:56.826505Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vašek Sivák kývl na soupeře, který porazil Růžičku. V Žilině bude bránit status neporaženého krále",
+      "url": "https://www.mmamag.cz/vasek-sivak-kyvl-na-soupere-ktery-porazil-ruzicku/",
+      "dt": "2026-05-19T06:45:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "bránit",
+        "krále",
+        "kývl",
+        "neporaženého",
+        "porazil",
+        "růžičku",
+        "sivák",
+        "soupeře",
+        "status",
+        "vašek",
+        "žilině"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1069,35 +1097,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "UFC by se mělo bát. Netflix ukázal výplaty bojovníků, Ronda Rousey inkasovala skoro 50 milionů Kč",
-      "url": "https://www.mmamag.cz/mvp-mma-vyplaty-rousey-brala-pres-48-milionu-kc/",
-      "dt": "2026-05-17T11:15:24Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "bojovníků",
-        "bát",
-        "inkasovala",
-        "milionů",
-        "mělo",
-        "netflix",
-        "ronda",
-        "rousey",
-        "skoro",
-        "ufc",
-        "ukázal",
-        "výplaty"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1108,7 +1107,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 86479,
+      "bytes": 86413,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1145,7 +1144,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-19T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T06:45:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1160,6 +1159,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vašek Sivák kývl na soupeře, který porazil Růžičku. V Žilině bude bránit status neporaženého krále",
+            "publishedAt": "2026-05-19T06:45:00Z"
+          },
           {
             "title": "220 úderů a tři knockdowny nestačily. Mike Tyson zažil bolest jako nikdy předtím",
             "publishedAt": "2026-05-19T06:00:00Z"
@@ -1187,10 +1190,6 @@
           {
             "title": "UFC vytáhlo proti Netflixu McGregora. Rousey však lidé vyhledávali 11krát víc",
             "publishedAt": "2026-05-18T18:00:00Z"
-          },
-          {
-            "title": "Václav Sivák se chtěl srovnávat s Jiřím Procházkou. Fanoušci i bojovníci se mu vysmáli",
-            "publishedAt": "2026-05-18T16:30:00Z"
           }
         ]
       }
