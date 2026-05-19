@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-19T07:01:56.826505Z",
+  "ingestedAt": "2026-05-19T07:39:47.329390Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Z experimentu k miliardám. Farmář obešel supermarkety a vytvořil fenomén",
+      "url": "https://ekonomickydenik.cz/farmar-obesel-supermarkety-vytvoril-fenomen/",
+      "dt": "2026-05-19T07:16:51Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "experimentu",
+        "farmář",
+        "fenomén",
+        "miliardám",
+        "obešel",
+        "supermarkety",
+        "vytvořil"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -767,32 +791,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Myslel si, že ho Afrika skryje. 2 Islámského státu neunikla složité noční pasti",
-      "url": "https://ekonomickydenik.cz/myslel-si-ze-se-skryje-2-islamskeho-statu-past/",
-      "dt": "2026-05-16T11:33:49Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "afrika",
-        "islámského",
-        "myslel",
-        "neunikla",
-        "noční",
-        "pasti",
-        "skryje",
-        "složité",
-        "státu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -803,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71193,
+      "bytes": 70882,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -840,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T06:42:19Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T07:16:51Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -858,6 +856,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Z experimentu k miliardám. Farmář obešel supermarkety a vytvořil fenomén",
+            "publishedAt": "2026-05-19T07:16:51Z"
+          },
           {
             "title": "Musk prohrál bitvu o vývoj umělé inteligence. Vedl spor o OpenAI",
             "publishedAt": "2026-05-19T06:42:19Z"
@@ -885,10 +887,6 @@
           {
             "title": "Proti zneužívání dávek i SPZ. Babiš naznačil, jaké se chystá zpřísnění pro uprchlíky z Ukrajiny",
             "publishedAt": "2026-05-18T14:54:18Z"
-          },
-          {
-            "title": "Zákaz spalovacích motorů je chyba. Evropa musí vsadit i na vlastní paliva",
-            "publishedAt": "2026-05-18T14:22:43Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vlasta.cz",
-  "ingestedAt": "2026-05-19T07:01:56.826505Z",
+  "ingestedAt": "2026-05-19T07:39:47.329390Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Podvod v dokumentu o Marešovi: Moderátor oklamal diváky. Musel podepsat tajnou smlouvu",
+      "url": "https://www.vlasta.cz/celebrity/leos-mares-dokument-ai-priznani-oklamani-divaku/",
+      "dt": "2026-05-19T07:02:00Z",
+      "media_raw": "Vlasta",
+      "media_norm": "Vlasta",
+      "tokens": [
+        "diváky",
+        "dokumentu",
+        "marešovi",
+        "moderátor",
+        "musel",
+        "oklamal",
+        "podepsat",
+        "podvod",
+        "smlouvu",
+        "tajnou"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vlasta",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "vlasta.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -1105,35 +1132,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "vlasta.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "80 kg dole a slzy štěstí. Tomáš z Extrémních proměn dojal manželku. „Nejkrásnější dárek k výročí,“ říká",
-      "url": "https://www.vlasta.cz/inspirace/extremni-promeny-novy-dil-tomas-fremr-dnes-pred-a-po-manzelka/",
-      "dt": "2026-05-14T06:24:00Z",
-      "media_raw": "Vlasta",
-      "media_norm": "Vlasta",
-      "tokens": [
-        "dojal",
-        "dole",
-        "dárek",
-        "extrémních",
-        "manželku",
-        "nejkrásnější",
-        "proměn",
-        "slzy",
-        "tomáš",
-        "výročí",
-        "říká",
-        "štěstí"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vlasta",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "vlasta.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1144,8 +1142,8 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.vlasta.cz/rss/vse.xml",
-      "bytes": 63843,
-      "reason": "fetch_timeout",
+      "bytes": 63922,
+      "reason": "",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 50,
@@ -1181,11 +1179,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-19T06:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T07:02:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "other": 39
+          "other": 39,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1197,6 +1195,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Podvod v dokumentu o Marešovi: Moderátor oklamal diváky. Musel podepsat tajnou smlouvu",
+            "publishedAt": "2026-05-19T07:02:00Z"
+          },
           {
             "title": "Luděk z Extrémních proměn se zastal manželky Marie. Zesměšnil ji bratr slavného fotbalisty",
             "publishedAt": "2026-05-19T06:32:00Z"
@@ -1224,10 +1226,6 @@
           {
             "title": "Vlastní podcast o feminismu: Muži před sebou neumějí být zranitelní, říká influencerka a spisovatelka",
             "publishedAt": "2026-05-19T03:31:00Z"
-          },
-          {
-            "title": "To v TV nebylo! Tomáš z Extrémních proměn ukázal ploché břicho po plastice, teď si přeje břišáky",
-            "publishedAt": "2026-05-18T07:32:00Z"
           }
         ]
       }

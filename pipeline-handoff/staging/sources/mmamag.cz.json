@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-19T07:01:56.826505Z",
+  "ingestedAt": "2026-05-19T07:39:47.329390Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Jon Jones chce pryč z UFC. Láká ho box a zápas s mužem, kterého Dana White nenávidí",
+      "url": "https://www.mmamag.cz/jon-jones-chce-pryc-z-ufc-kvuli-ngannouovi/",
+      "dt": "2026-05-19T07:30:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "box",
+        "chce",
+        "dana",
+        "jon",
+        "jones",
+        "kterého",
+        "láká",
+        "mužem",
+        "nenávidí",
+        "pryč",
+        "ufc",
+        "white",
+        "zápas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1074,29 +1104,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bojovníci UFC reagují na návrat Conora McGregora",
-      "url": "https://www.mmamag.cz/souboj-mcgregor-vs-holloway-2-rozjel-reakce-ufc-bojovniku/",
-      "dt": "2026-05-17T11:32:41Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "bojovníci",
-        "conora",
-        "mcgregora",
-        "návrat",
-        "reagují",
-        "ufc"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1107,7 +1114,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 86413,
+      "bytes": 86425,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1144,7 +1151,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-19T06:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-19T07:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1159,6 +1166,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jon Jones chce pryč z UFC. Láká ho box a zápas s mužem, kterého Dana White nenávidí",
+            "publishedAt": "2026-05-19T07:30:00Z"
+          },
           {
             "title": "Vašek Sivák kývl na soupeře, který porazil Růžičku. V Žilině bude bránit status neporaženého krále",
             "publishedAt": "2026-05-19T06:45:00Z"
@@ -1186,10 +1197,6 @@
           {
             "title": "Svatba 16leté dcery Tysona Furyho skončila policejním zásahem",
             "publishedAt": "2026-05-18T18:45:00Z"
-          },
-          {
-            "title": "UFC vytáhlo proti Netflixu McGregora. Rousey však lidé vyhledávali 11krát víc",
-            "publishedAt": "2026-05-18T18:00:00Z"
           }
         ]
       }
