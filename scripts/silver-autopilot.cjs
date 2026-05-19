@@ -319,7 +319,10 @@ function cap50PreflightRuntimeCleanup(dryRunOnly) {
   if (!dryRunOnly) {
     for (const rel of toRestore) {
       try {
-        execFileSync("git", ["restore", "--worktree", "--", rel], { cwd: REPO, stdio: "pipe" });
+        execFileSync("git", ["restore", "--source=HEAD", "--staged", "--worktree", "--", rel], {
+          cwd: REPO,
+          stdio: "pipe",
+        });
         restored.push(rel);
       } catch {
         blocked.push(rel + "(restore_failed)");
@@ -328,13 +331,35 @@ function cap50PreflightRuntimeCleanup(dryRunOnly) {
   } else {
     for (const rel of toRestore) restored.push(rel + "(dry_run)");
   }
-  const cleanAfter = gitClean() ? "YES" : "NO";
+  let cleanAfter = gitClean() ? "YES" : "NO";
+  let remainingPaths = gitChangedFilesList();
+  let closeoutClass = classifyCap50CloseoutFromDirtyPaths(remainingPaths);
+  if (!dryRunOnly && blocked.length === 0 && cleanAfter === "NO" && closeoutClass.closeout_kind === "runtime_artifact_restorable") {
+    for (const rel of remainingPaths) {
+      if (!cap50RuntimeRestoreReason(rel)) continue;
+      try {
+        execFileSync("git", ["restore", "--source=HEAD", "--staged", "--worktree", "--", rel], {
+          cwd: REPO,
+          stdio: "pipe",
+        });
+        if (!restored.includes(rel)) restored.push(rel);
+      } catch {
+        blocked.push(rel + "(restore_failed)");
+      }
+    }
+    cleanAfter = gitClean() ? "YES" : "NO";
+    remainingPaths = gitChangedFilesList();
+    closeoutClass = classifyCap50CloseoutFromDirtyPaths(remainingPaths);
+  }
   let safe = "NO";
   if (blocked.length === 0) {
     if (cleanAfter === "YES") safe = "YES";
     else if (dryRunOnly && toRestore.length > 0 && dirtyBefore.length === toRestore.length) safe = "YES";
   }
   const passFail = safe === "YES" ? "PASS" : "FAIL";
+  const forbiddenRemaining = remainingPaths.filter(
+    (n) => !/^\.silver-runtime(\/|$)/i.test(n) && !cap50RuntimeRestoreReason(n),
+  );
   const result = {
     dirty_before: dirtyBefore.join(";"),
     allowlisted_runtime_dirty_count: String(allowCount),
@@ -343,6 +368,10 @@ function cap50PreflightRuntimeCleanup(dryRunOnly) {
     git_clean_after: cleanAfter,
     safe_to_start_cycle: safe,
     PASS_FAIL: passFail,
+    closeout_kind: closeoutClass.closeout_kind,
+    failure_class: cleanAfter === "YES" ? "none" : closeoutClass.closeout_kind,
+    blocked_dirty_classification: closeoutClass.blocked_dirty_classification || "",
+    remaining_forbidden_dirty_files: forbiddenRemaining.join(";"),
   };
   console.log("=== SILVER_CAP50_PREFLIGHT_CLEANUP_RESULT ===");
   console.log("dirty_before=" + result.dirty_before);
@@ -351,6 +380,14 @@ function cap50PreflightRuntimeCleanup(dryRunOnly) {
   console.log("blocked_dirty_files=" + result.blocked_dirty_files);
   console.log("git_clean_after=" + result.git_clean_after);
   console.log("safe_to_start_cycle=" + result.safe_to_start_cycle);
+  console.log("closeout_kind=" + result.closeout_kind);
+  console.log("failure_class=" + result.failure_class);
+  if (result.blocked_dirty_classification) {
+    console.log("blocked_dirty_classification=" + result.blocked_dirty_classification);
+  }
+  if (result.remaining_forbidden_dirty_files) {
+    console.log("remaining_forbidden_dirty_files=" + result.remaining_forbidden_dirty_files);
+  }
   console.log("PASS_FAIL=" + result.PASS_FAIL);
   console.log("=== END_SILVER_CAP50_PREFLIGHT_CLEANUP_RESULT ===");
   return { result, exitCode: passFail === "PASS" ? 0 : 1 };
