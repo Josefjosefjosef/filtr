@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-20T15:14:51.442868Z",
+  "ingestedAt": "2026-05-20T15:53:58.890586Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Oktagon má problém. V Bratislavě zatím zaplnil jen polovinu haly, Clash v Ostravě bude vyprodaný",
+      "url": "https://www.mmamag.cz/oktagon-ma-problem-v-bratislave-zaplnil-jen-polovinu-haly/",
+      "dt": "2026-05-20T15:45:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "bratislavě",
+        "clash",
+        "haly",
+        "jen",
+        "oktagon",
+        "ostravě",
+        "polovinu",
+        "problém",
+        "vyprodaný",
+        "zaplnil",
+        "zatím"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1113,34 +1141,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vašek Sivák kývl na soupeře, který porazil Růžičku. V Žilině bude bránit status neporaženého krále",
-      "url": "https://www.mmamag.cz/vasek-sivak-kyvl-na-soupere-ktery-porazil-ruzicku/",
-      "dt": "2026-05-19T06:45:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "bránit",
-        "krále",
-        "kývl",
-        "neporaženého",
-        "porazil",
-        "růžičku",
-        "sivák",
-        "soupeře",
-        "status",
-        "vašek",
-        "žilině"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1151,7 +1151,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 85425,
+      "bytes": 85400,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1188,7 +1188,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-20T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T15:45:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1203,6 +1203,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Oktagon má problém. V Bratislavě zatím zaplnil jen polovinu haly, Clash v Ostravě bude vyprodaný",
+            "publishedAt": "2026-05-20T15:45:00Z"
+          },
           {
             "title": "UFC v Bílém domě čelí tvrdému výsměchu. Slavný trenér nechápe, jak mohl někdo tak špatné zápasy vůbec vymyslet",
             "publishedAt": "2026-05-20T15:00:00Z"
@@ -1230,10 +1234,6 @@
           {
             "title": "Bývalá bojovnice UFC přišla na váhu v prádle, které toho moc nezakrývalo",
             "publishedAt": "2026-05-20T10:30:00Z"
-          },
-          {
-            "title": "Pyramidy v Gíze uvidí boxerský trhák. Usyk a Verhoeven se poprvé postavili tváří v tvář",
-            "publishedAt": "2026-05-20T10:17:10Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-05-20T15:14:51.442868Z",
+  "ingestedAt": "2026-05-20T15:53:58.890586Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Za smrtelnou nehodu pod vlivem až 10 let. Tejc navrhuje tvrdší tresty",
+      "url": "https://www.ceska-justice.cz/2026/05/smrtelna-nehoda-pod-vlivem-tejc/",
+      "dt": "2026-05-20T15:41:07Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "let",
+        "navrhuje",
+        "nehodu",
+        "smrtelnou",
+        "tejc",
+        "tresty",
+        "tvrdší",
+        "vlivem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -238,33 +263,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Oslabení a nezodpovědnost. Lidská práva nebo drogy mají řešit už jen ministerstva",
-      "url": "https://www.ceska-justice.cz/2026/05/oslabeni-nezodpovednost-lidska-prava-drogy-ministerstva/",
-      "dt": "2026-05-19T06:15:28Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "drogy",
-        "jen",
-        "lidská",
-        "mají",
-        "ministerstva",
-        "nebo",
-        "nezodpovědnost",
-        "oslabení",
-        "práva",
-        "řešit"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -275,7 +273,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 106377,
+      "bytes": 105407,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -312,7 +310,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-20T14:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T15:41:07Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -327,6 +325,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Za smrtelnou nehodu pod vlivem až 10 let. Tejc navrhuje tvrdší tresty",
+            "publishedAt": "2026-05-20T15:41:07Z"
+          },
           {
             "title": "Komunální politika se má otevřít teenagerům. Senátní návrh prošel první zkouškou",
             "publishedAt": "2026-05-20T14:15:00Z"
@@ -354,10 +356,6 @@
           {
             "title": "Vězení, nebo léčba? O mobilu nebo vycházce rozhoduje náhoda",
             "publishedAt": "2026-05-19T10:56:25Z"
-          },
-          {
-            "title": "Vnuk Alfonse Muchy skončil v nadaci. Soudní válka o značku se vyostřuje",
-            "publishedAt": "2026-05-19T10:29:24Z"
           }
         ]
       }
