@@ -102,6 +102,8 @@ const {
   safetyNoWriteFoldedGlobal,
 } = require("./silver-self-correction-negation-scope.cjs");
 
+const { finalizeSelfCorrectionNoisyNegReadHarnessEval } = require("./silver-self-correction-query-clarification.cjs");
+
 const {
   computeGoldLabels,
   finalizeModuleSwitchHarnessEval,
@@ -160,6 +162,8 @@ function gitTrackedCleanForSc() {
       "scripts/silver-self-correction-safety-diagnostic-report.json",
       "scripts/silver-self-correction-negation-scope.cjs",
       "scripts/silver-self-correction-negation-scope-selftest.cjs",
+      "scripts/silver-self-correction-query-clarification.cjs",
+      "scripts/silver-self-correction-query-vs-clarification-selftest.cjs",
       "scripts/silver-audit-registry.cjs",
       "SILVER_RUN_REPORT.md",
     ];
@@ -419,6 +423,7 @@ function classifyScFailBucket(c, turn, ev, gold) {
 
   if (cat === "intent_fail" && (turn.normalizedIntent === "clarification" || turn.normalizedIntent === "unknown")) {
     if (gold && gold.expected_should_clarify) return "AMBIGUOUS_INPUT";
+    if (c.cluster === "self_correction_noisy_neg_read" && !createLikeTurn(turn)) return "HARNESS_PROBLEM";
     if (c.sc_lane === "noisy_mobile_self_correction") return "HARNESS_PROBLEM";
     return "AMBIGUOUS_INPUT";
   }
@@ -450,6 +455,7 @@ function applyAllHarnessFinalizers(c, turn, ev) {
   out = finalizeAmbiguityCalConflictHarnessEval(c, turn, out);
   out = finalizeCalQueryTopicClarifyLaneHarnessEval(c, turn, out);
   out = finalizeMobileVoiceCalHarnessEval(c, turn, out);
+  out = finalizeSelfCorrectionNoisyNegReadHarnessEval(c, turn, out);
   return out;
 }
 
