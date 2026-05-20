@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-05-20T13:14:33.095402Z",
+  "ingestedAt": "2026-05-20T13:54:33.958331Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Proč je vaše stolice zelená? Někdy je to důvod ke strachu!",
+      "url": "https://www.prozeny.cz/clanek/proc-je-vase-stolice-zelena-na-vine-neni-pouze-jidlo-57761",
+      "dt": "2026-05-20T13:17:32Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "důvod",
+        "někdy",
+        "proč",
+        "stolice",
+        "strachu",
+        "vaše",
+        "zelená"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -817,32 +841,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Jak cvičit pro pevnější kosti po čtyřicítce? Čtyři jednoduché tipy, jak se vyhnout osteoporóze",
-      "url": "https://www.prozeny.cz/clanek/zdravi-a-zivotni-styl-diety-a-hubnuti-cviceni-jak-cvicit-pro-pevnejsi-kosti-po-ctyricitce-ctyri-jednoduche-tipy-jak-se-vyhnout-osteoporoze-103474",
-      "dt": "2026-05-19T03:00:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "cvičit",
-        "jednoduché",
-        "kosti",
-        "osteoporóze",
-        "pevnější",
-        "tipy",
-        "vyhnout",
-        "čtyři",
-        "čtyřicítce"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -853,7 +851,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 39907,
+      "bytes": 39555,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -890,7 +888,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T12:21:09Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T13:17:32Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 30
@@ -905,6 +903,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Proč je vaše stolice zelená? Někdy je to důvod ke strachu!",
+            "publishedAt": "2026-05-20T13:17:32Z"
+          },
           {
             "title": "Tloustnutí, vysoký cholesterol i rakovina. Nevěra neohrožuje jen lásku, ale i vaše zdraví",
             "publishedAt": "2026-05-20T12:21:09Z"
@@ -931,10 +933,6 @@
           },
           {
             "title": "Tajemství krásné pleti Michaely Badinkové. Na co spoléhá a z jakého trapasu se poučila?",
-            "publishedAt": "2026-05-20T03:00:00Z"
-          },
-          {
-            "title": "Milionářkou do čtyřiceti? Zatím bydlí u rodičů. Designérka Ingrit chce investovat, aby měla na vlastní byt",
             "publishedAt": "2026-05-20T03:00:00Z"
           }
         ]

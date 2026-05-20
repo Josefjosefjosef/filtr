@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-20T13:14:33.095402Z",
+  "ingestedAt": "2026-05-20T13:54:33.958331Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Ústí a další tři kluby nedostaly licenci na 2. ligu. Chrudim by hrála v Chomutově",
+      "url": "https://www.idnes.cz/fotbal/domaci-souteze/fotbal-usti-druholigova-licence-premysl-kuban-chrudim-chomutov.A260520_140212_fot_dsouteze_pbi",
+      "dt": "2026-05-20T13:22:51Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "chomutově",
+        "chrudim",
+        "další",
+        "hrála",
+        "kluby",
+        "licenci",
+        "ligu",
+        "nedostaly",
+        "tři",
+        "ústí"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -74,32 +101,6 @@
         "počtvrté",
         "vyráží",
         "česko"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ani Ústí nemá licenci na 2. ligu. Kubáň: Administrativní problém kvůli stadionu",
-      "url": "https://www.idnes.cz/fotbal/domaci-souteze/fotbal-usti-druholigova-licence-prema-kuban.A260520_140212_fot_dsouteze_pbi",
-      "dt": "2026-05-20T12:26:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "administrativní",
-        "kubáň",
-        "kvůli",
-        "licenci",
-        "ligu",
-        "nemá",
-        "problém",
-        "stadionu",
-        "ústí"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -804,7 +805,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48931,
+      "bytes": 48970,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,7 +842,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T13:04:13Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T13:22:51Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -857,6 +858,10 @@
         },
         "sample_titles": [
           {
+            "title": "Ústí a další tři kluby nedostaly licenci na 2. ligu. Chrudim by hrála v Chomutově",
+            "publishedAt": "2026-05-20T13:22:51Z"
+          },
+          {
             "title": "Bouzkové vzdala ve Štrasburku soupeřka. Menšík se v Hamburku loučí s kanárem",
             "publishedAt": "2026-05-20T13:04:13Z"
           },
@@ -867,10 +872,6 @@
           {
             "title": "ONLINE: Česko - Itálie. Osm beků, v brance Pavlát. Hokejisté počtvrté vyráží do akce",
             "publishedAt": "2026-05-20T12:52:00Z"
-          },
-          {
-            "title": "Ani Ústí nemá licenci na 2. ligu. Kubáň: Administrativní problém kvůli stadionu",
-            "publishedAt": "2026-05-20T12:26:00Z"
           },
           {
             "title": "Byla to úspěšná sezona, tvrdí Guardiola. Jeho poslední v City? K tomu nic neřeknu",
