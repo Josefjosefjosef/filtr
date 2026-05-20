@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-20T11:14:16.858652Z",
+  "ingestedAt": "2026-05-20T11:54:55.591330Z",
   "items": [
     {
       "section": "finance",
@@ -26,6 +26,39 @@
         "udělá",
         "zacílil",
         "zámořská"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Vyjde další díl Kingdom Come? Warhorse oznámil nové dobrodružství ze světa úspěšné hry, chystá i projekt inspirovaný Tolkienem",
+      "url": "https://tech.hn.cz/c1-67879350-vyjde-dalsi-dil-kingdom-come-warhorse-oznamil-nove-dobrodruzstvi-ze-sveta-uspesne-hry-chysta-i-projekt-inspirovany-tolkienem",
+      "dt": "2026-05-20T10:44:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "chystá",
+        "come",
+        "další",
+        "dobrodružství",
+        "díl",
+        "hry",
+        "inspirovaný",
+        "kingdom",
+        "nové",
+        "oznámil",
+        "projekt",
+        "světa",
+        "tolkienem",
+        "vyjde",
+        "warhorse",
+        "úspěšné"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1145,34 +1178,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Když nikdo nic neví. Co mají společného investoři, kteří dokážou na trhu uspět",
-      "url": "https://investice.hn.cz/c1-67878170-kdyz-nikdo-nic-nevi-co-maji-spoelcne-investori-kteri-dokazou-na-trhu-uspet",
-      "dt": "2026-05-19T11:57:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "dokážou",
-        "investoři",
-        "když",
-        "kteří",
-        "mají",
-        "neví",
-        "nic",
-        "nikdo",
-        "společného",
-        "trhu",
-        "uspět"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1183,7 +1188,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183387,
+      "bytes": 183359,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1223,8 +1228,8 @@
         "raw_feed_latest_publishedAt": "2026-05-20T11:03:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 34,
-          "zpravy": 5,
+          "finance": 33,
+          "zpravy": 6,
           "zdravi": 1
         },
         "drop_counts": {
@@ -1240,6 +1245,10 @@
           {
             "title": "Miliardář Pavel Tykač zacílil na nový obor. Zámořská transakce za miliardy z něj udělá texaského ropného magnáta",
             "publishedAt": "2026-05-20T11:03:00Z"
+          },
+          {
+            "title": "Vyjde další díl Kingdom Come? Warhorse oznámil nové dobrodružství ze světa úspěšné hry, chystá i projekt inspirovaný Tolkienem",
+            "publishedAt": "2026-05-20T10:44:00Z"
           },
           {
             "title": "Nejtišší Volvo historie? Nové ES90 je netradiční, láká však na komfort, výkon i rychlé dobíjení",
@@ -1264,10 +1273,6 @@
           {
             "title": "Nebýt odsunu Němců, mohli jsme se tu vraždit jako v bývalé Jugoslávii. Jejich sjezd v Brně ale odmítá jen jedna kategorie lidí",
             "publishedAt": "2026-05-20T07:55:00Z"
-          },
-          {
-            "title": "Spor o miliardy korun jde za mnou osobně, CSG ho minoritáři platit nebude, říká Strnad. Letos chce firma vyrobit 850 tisíc nábojů do děl a tanků",
-            "publishedAt": "2026-05-20T07:35:00Z"
           }
         ]
       }

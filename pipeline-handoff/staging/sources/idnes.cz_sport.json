@@ -1,14 +1,40 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-20T11:14:16.858652Z",
+  "ingestedAt": "2026-05-20T11:54:55.591330Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Giro ONLINE: Svižný úvod 11. etapy, o únik se vede tuhý boj",
+      "url": "https://www.idnes.cz/sport/cyklistika/giro-2026-11-etapa-online-zpravodajstvi-vysledky.A260520_110431_cyklistika_ipet",
+      "dt": "2026-05-20T11:29:18Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "boj",
+        "etapy",
+        "giro",
+        "online",
+        "svižný",
+        "tuhý",
+        "vede",
+        "únik",
+        "úvod"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
       "title": "Hluboká rána, natržená šlacha. Jsem motivovaný vrátit se na Tour, hlásí Bittner",
       "url": "https://www.idnes.cz/sport/cyklistika/pavel-bittner-zraneni-pad-tour-de-france.A260520_104716_cyklistika_ipet",
-      "dt": "2026-05-20T11:01:11Z",
+      "dt": "2026-05-20T11:01:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
@@ -76,32 +102,6 @@
         "trapas",
         "trofej",
         "zůstala"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Giro ONLINE: Den jako stvořený pro únik. Podaří se mu uspět před pelotonem?",
-      "url": "https://www.idnes.cz/sport/cyklistika/giro-2026-11-etapa-online-zpravodajstvi-vysledky.A260520_110431_cyklistika_ipet",
-      "dt": "2026-05-20T10:30:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "den",
-        "giro",
-        "jako",
-        "online",
-        "pelotonem",
-        "podaří",
-        "stvořený",
-        "uspět",
-        "únik"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -798,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48092,
+      "bytes": 48074,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,7 +835,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T11:01:11Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T11:29:18Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -851,8 +851,12 @@
         },
         "sample_titles": [
           {
+            "title": "Giro ONLINE: Svižný úvod 11. etapy, o únik se vede tuhý boj",
+            "publishedAt": "2026-05-20T11:29:18Z"
+          },
+          {
             "title": "Hluboká rána, natržená šlacha. Jsem motivovaný vrátit se na Tour, hlásí Bittner",
-            "publishedAt": "2026-05-20T11:01:11Z"
+            "publishedAt": "2026-05-20T11:01:00Z"
           },
           {
             "title": "Davy před stadionem, plné hospody i pes v dresu. Jak fanoušci Arsenalu slavili titul",
@@ -861,10 +865,6 @@
           {
             "title": "Další trapas Bayernu. Trofej zůstala doma v kuchyni, na oslavy ji dopravila policie",
             "publishedAt": "2026-05-20T10:37:00Z"
-          },
-          {
-            "title": "Giro ONLINE: Den jako stvořený pro únik. Podaří se mu uspět před pelotonem?",
-            "publishedAt": "2026-05-20T10:30:00Z"
           },
           {
             "title": "Bouzková postoupila ve Štrasburku do čtvrtfinále, Olijnykovová zápas skrečovala",

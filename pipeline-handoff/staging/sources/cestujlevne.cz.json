@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-05-20T11:14:16.858652Z",
+  "ingestedAt": "2026-05-20T11:54:55.591330Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Kréta s all-inclusive z Prahy nebo Ostravy na přelomu května a června. Zájezd od 6 490 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/kreta-s-all-inclusive-z-prahy-na-prelomu-kvetna-a-cervna",
+      "dt": "2026-05-20T11:18:40Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "490",
+        "all",
+        "inclusive",
+        "kréta",
+        "května",
+        "nebo",
+        "ostravy",
+        "prahy",
+        "přelomu",
+        "zájezd",
+        "června"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -487,28 +515,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Červnový Agadir z Vídně. Letenky od 1 462 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/cervnovy-agadir-z-vidne",
-      "dt": "2026-05-14T11:22:31Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "462",
-        "agadir",
-        "letenky",
-        "vídně",
-        "červnový"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -519,7 +525,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 48305,
+      "bytes": 50488,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -556,7 +562,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-20T09:13:06Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T11:18:40Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -571,6 +577,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kréta s all-inclusive z Prahy nebo Ostravy na přelomu května a června. Zájezd od 6 490 Kč",
+            "publishedAt": "2026-05-20T11:18:40Z"
+          },
           {
             "title": "Z Prahy do Litvy i přes letní prázdniny s Air Baltic. Letenky od 2 823 Kč",
             "publishedAt": "2026-05-20T09:13:06Z"
@@ -598,10 +608,6 @@
           {
             "title": "Gran Canaria z Prahy přímými lety s odbaveným zavazadlem. Letenky od 4 990 Kč",
             "publishedAt": "2026-05-19T09:05:42Z"
-          },
-          {
-            "title": "Černá Hora z Prahy i Brna na týden v červnu s all-inclusive. Zájezd od 14 590 Kč",
-            "publishedAt": "2026-05-19T07:29:34Z"
           }
         ]
       }
