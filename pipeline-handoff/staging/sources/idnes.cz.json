@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-20T16:35:20.705331Z",
+  "ingestedAt": "2026-05-20T17:15:45.508618Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
       "title": "USA vznesly obvinění vůči dlouholetému lídrovi Kuby Raúlu Castrovi",
       "url": "https://www.idnes.cz/zpravy/zahranicni/usa-obvineni-kuba-raul-castro.A260520_180533_zahranicni_rtn",
-      "dt": "2026-05-20T16:21:00Z",
+      "dt": "2026-05-20T17:08:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
@@ -21,6 +21,33 @@
         "usa",
         "vznesly",
         "vůči"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Okamura chce víc čínských turistů. Zmínil i, jak mít víc těch českých v Číně",
+      "url": "https://www.idnes.cz/zpravy/domaci/okamura-cina-turiste-vizova-povinnost-schuzka-spd-obcane-cesty-babis-predseda-snemovny.A260520_171523_domaci_fohl",
+      "dt": "2026-05-20T16:33:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "chce",
+        "mít",
+        "okamura",
+        "turistů",
+        "těch",
+        "víc",
+        "zmínil",
+        "českých",
+        "čínských",
+        "číně"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -754,30 +781,6 @@
         "prádle",
         "spodním",
         "vyhmátli"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Zemřela autorka knih pro děti Veronika Valentová. Bylo jí 52 let",
-      "url": "https://www.idnes.cz/kultura/literatura/ve-veku-52-let-zemrela-autorka-knih-pro-deti-i-jejich-rodice-veronika-valentova.A260520_150607_literatura_iluj",
-      "dt": "2026-05-20T13:15:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "autorka",
-        "děti",
-        "knih",
-        "let",
-        "valentová",
-        "veronika",
-        "zemřela"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1578,7 +1581,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49401,
+      "bytes": 49403,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1615,12 +1618,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T16:21:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T17:08:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
+          "zpravy": 26,
           "finance": 2,
-          "other": 3
+          "other": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1634,7 +1637,11 @@
         "sample_titles": [
           {
             "title": "USA vznesly obvinění vůči dlouholetému lídrovi Kuby Raúlu Castrovi",
-            "publishedAt": "2026-05-20T16:21:00Z"
+            "publishedAt": "2026-05-20T17:08:00Z"
+          },
+          {
+            "title": "Okamura chce víc čínských turistů. Zmínil i, jak mít víc těch českých v Číně",
+            "publishedAt": "2026-05-20T16:33:00Z"
           },
           {
             "title": "Berlínská nemocnice přijala Američana nakaženého ebolou, doprovázel ho konvoj",
@@ -1659,10 +1666,6 @@
           {
             "title": "Moravští aktivisté obarvili sochu Beneše „krví“, označili jej za nácka a škůdce",
             "publishedAt": "2026-05-20T15:10:18Z"
-          },
-          {
-            "title": "Američané chtěli v čele Íránu překvapivou figuru. Izraelský nálet vše zhatil",
-            "publishedAt": "2026-05-20T14:58:00Z"
           }
         ]
       }

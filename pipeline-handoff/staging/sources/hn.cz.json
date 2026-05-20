@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-20T16:35:20.705331Z",
+  "ingestedAt": "2026-05-20T17:15:45.508618Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "V Česku už se rýsuje třetí dálnice (skoro) do Německa. Na zrychlení stavby D7 teď tlačí ministr i šéf ŘSD",
+      "url": "https://art.hn.cz/c1-67878770-v-cesku-uz-se-rysuje-treti-dalnice-skoro-do-nemecka-na-zrychleni-stavby-d7-ted-tlaci-ministr-i-sef-rsd",
+      "dt": "2026-05-20T16:56:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "dálnice",
+        "ministr",
+        "německa",
+        "rýsuje",
+        "skoro",
+        "stavby",
+        "tlačí",
+        "třetí",
+        "zrychlení",
+        "česku",
+        "řsd",
+        "šéf"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1163,32 +1192,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Přemýšlíte pořád dokola nad jednou věcí bez výsledku? Možná trpíte ruminacemi",
-      "url": "https://nazory.hn.cz/c1-67878730-premyslite-porad-dokola-nad-jednou-veci-bez-vysledku-mozna-trpite-ruminacemi",
-      "dt": "2026-05-19T14:59:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "dokola",
-        "jednou",
-        "možná",
-        "pořád",
-        "přemýšlíte",
-        "ruminacemi",
-        "trpíte",
-        "výsledku",
-        "věcí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1199,7 +1202,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184073,
+      "bytes": 184263,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1236,11 +1239,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-20T16:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T16:56:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 30,
-          "zpravy": 8,
+          "zpravy": 9,
+          "finance": 29,
           "zdravi": 2
         },
         "drop_counts": {
@@ -1253,6 +1256,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Česku už se rýsuje třetí dálnice (skoro) do Německa. Na zrychlení stavby D7 teď tlačí ministr i šéf ŘSD",
+            "publishedAt": "2026-05-20T16:56:00Z"
+          },
           {
             "title": "Vepřo knedlo zelo z dovozu. Česko je soběstačné jen u tří ze sedmi skupin potravin",
             "publishedAt": "2026-05-20T16:00:00Z"
@@ -1280,10 +1287,6 @@
           {
             "title": "Exkluzivní průzkum: Češi a férové mzdy. Jak jsou spokojení se svou výplatou a pravidly odměňování",
             "publishedAt": "2026-05-20T14:30:00Z"
-          },
-          {
-            "title": "AI agenty nesmíme nechat nekontrolovaně instalovat vlastní software. Bezpečnost zatím pokulhává za funkcemi, říká expert z Genu",
-            "publishedAt": "2026-05-20T14:21:00Z"
           }
         ]
       }

@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-20T16:35:20.705331Z",
+  "ingestedAt": "2026-05-20T17:15:45.508618Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Přestřelka kvůli Izraeli. Levice žádá tvrdé sankce, Macinka hrozí jejich vetem",
+      "url": "https://ekonomickydenik.cz/prestrelka-kvuli-izraeli-sankce-macinka-hrozi/",
+      "dt": "2026-05-20T16:44:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "hrozí",
+        "izraeli",
+        "jejich",
+        "kvůli",
+        "levice",
+        "macinka",
+        "přestřelka",
+        "sankce",
+        "tvrdé",
+        "vetem",
+        "žádá"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -755,34 +783,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nevidíme, ale slyšíme: Vojáci se učí identifikovat dronovou hrozbu podle bzučení rotorů",
-      "url": "https://ekonomickydenik.cz/nevidime-ale-slysime-vojaci-drony-bzuceni/",
-      "dt": "2026-05-19T10:37:22Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "ale",
-        "bzučení",
-        "dronovou",
-        "hrozbu",
-        "identifikovat",
-        "nevidíme",
-        "podle",
-        "rotorů",
-        "slyšíme",
-        "učí",
-        "vojáci"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73514,
+      "bytes": 73389,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,11 +830,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T16:06:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T16:44:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 6,
-          "finance": 21,
+          "zpravy": 7,
+          "finance": 20,
           "cestovani": 1,
           "zdravi": 2
         },
@@ -848,6 +848,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Přestřelka kvůli Izraeli. Levice žádá tvrdé sankce, Macinka hrozí jejich vetem",
+            "publishedAt": "2026-05-20T16:44:00Z"
+          },
           {
             "title": "Konec se zpožděním vlaků? Chystá se revoluce na evropské železnici",
             "publishedAt": "2026-05-20T16:06:00Z"
@@ -875,10 +879,6 @@
           {
             "title": "Babiš není spokojen s vizí armády do roku 2040: Vadí mu málo vojáků i tempo změn",
             "publishedAt": "2026-05-20T12:35:59Z"
-          },
-          {
-            "title": "Volební právo od 16 let? Komunální politika se má otevřít teenagerům",
-            "publishedAt": "2026-05-20T12:03:50Z"
           }
         ]
       }
