@@ -1,26 +1,50 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-20T19:54:51.687706Z",
+  "ingestedAt": "2026-05-20T20:34:25.386549Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Freiburg - Aston Villa 0:2, finále Evropské ligy, vedení zvyšuje Buendia",
+      "title": "Nymburk se v semifinále nezdržel, Opavu porazil ve čtyřech zápasech",
+      "url": "https://www.idnes.cz/sport/basket/nymburk-opava-nbl.A260520_205915_sport-basket_kazdt",
+      "dt": "2026-05-20T20:25:47Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "nezdržel",
+        "nymburk",
+        "opavu",
+        "porazil",
+        "semifinále",
+        "zápasech",
+        "čtyřech"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Freiburg - Aston Villa 0:3, finále Evropské ligy, vedení navyšuje Rogers",
       "url": "https://www.idnes.cz/fotbal/pohary/evropska-liga-finale-freiburg-aston-villa-online-vysledek.A260520_124906_fot_pohary_tals",
-      "dt": "2026-05-20T19:49:41Z",
+      "dt": "2026-05-20T20:20:07Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
         "aston",
-        "buendia",
         "evropské",
         "finále",
         "freiburg",
         "ligy",
+        "navyšuje",
+        "rogers",
         "vedení",
-        "villa",
-        "zvyšuje"
+        "villa"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -97,30 +121,6 @@
         "slovinsko",
         "švédsko",
         "žně"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nymburk se v semifinále nezdržel, Opavu porazil ve čtyřech zápasech",
-      "url": "https://www.idnes.cz/sport/basket/nymburk-opava-nbl.A260520_205915_sport-basket_kazdt",
-      "dt": "2026-05-20T19:15:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "nezdržel",
-        "nymburk",
-        "opavu",
-        "porazil",
-        "semifinále",
-        "zápasech",
-        "čtyřech"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -791,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47245,
+      "bytes": 47265,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,7 +828,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T19:49:41Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T20:25:47Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -844,8 +844,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Freiburg - Aston Villa 0:2, finále Evropské ligy, vedení zvyšuje Buendia",
-            "publishedAt": "2026-05-20T19:49:41Z"
+            "title": "Nymburk se v semifinále nezdržel, Opavu porazil ve čtyřech zápasech",
+            "publishedAt": "2026-05-20T20:25:47Z"
+          },
+          {
+            "title": "ONLINE: Freiburg - Aston Villa 0:3, finále Evropské ligy, vedení navyšuje Rogers",
+            "publishedAt": "2026-05-20T20:20:07Z"
           },
           {
             "title": "ONLINE: USA - Německo 2:3. Otočka skóre, Michaelis posílá svůj tým do vedení",
@@ -858,10 +862,6 @@
           {
             "title": "ONLINE: Švédsko - Slovinsko 6:0. Seveřané dominují, gólové žně navyšuje Ekholm",
             "publishedAt": "2026-05-20T19:40:00Z"
-          },
-          {
-            "title": "Nymburk se v semifinále nezdržel, Opavu porazil ve čtyřech zápasech",
-            "publishedAt": "2026-05-20T19:15:00Z"
           },
           {
             "title": "Kousek od ostudy. Hlavní jsou tři body, říkají hokejisté. Červenka si vzal slovo",
