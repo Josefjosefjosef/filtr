@@ -3137,7 +3137,7 @@ function Invoke-SilverCap50EvaluateCyclePostcondition {
   $cleanupDone = "NO"
   $gitCleanAfter = if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" }
   if (-not $DryRunOnly) {
-    $cleanupRes = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $Cycle -Reason "cap50_cycle_postcondition" -ExcludeRestoreRelPaths @("SILVER_NEXT_ACTION.md", "SILVER_RUN_REPORT.md", "SILVER_PROGRESS_LOG.md") -AllowHandoffDirty
+    $cleanupRes = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $Cycle -Reason "cap50_cycle_postcondition" -ExcludeRestoreRelPaths @("SILVER_NEXT_ACTION.md", "SILVER_CURSOR_OUTPUT.md", "SILVER_RUN_REPORT.md", "SILVER_PROGRESS_LOG.md") -AllowHandoffDirty
     $cleanupDone = if ($cleanupRes.PASS_FAIL -eq "PASS") { "YES" } else { "NO" }
     $gitCleanAfter = [string]$cleanupRes.git_clean_after
     if ([string]$cleanupRes.blocked_dirty_files) {
@@ -4403,7 +4403,7 @@ while ($true) {
     $ae = $auto.ExitCode
     $script:LastAutopilotExit = [string]$ae
     $autoExitStr = [string]$ae
-    $autopilotHandoffPreserve = @("SILVER_NEXT_ACTION.md", "SILVER_RUN_REPORT.md", "SILVER_PROGRESS_LOG.md")
+    $autopilotHandoffPreserve = @("SILVER_NEXT_ACTION.md", "SILVER_CURSOR_OUTPUT.md", "SILVER_RUN_REPORT.md", "SILVER_PROGRESS_LOG.md")
     $nextAfterAuto = Read-TextFileOrEmpty -Path $NextActionPath
     if (-not (Test-SilverNextActionOutputQuality -Text $nextAfterAuto)) {
       try {
