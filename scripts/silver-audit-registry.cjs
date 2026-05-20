@@ -54,10 +54,18 @@ const AUDIT_CATALOG = [
     audit_name: "Self-Correction",
     audit_size: "240k",
     public_product_impact: "MEDIUM",
-    harness_scripts: [],
-    report_json: "",
+    harness_scripts: [
+      "silver-self-correction-audit.cjs",
+      "silver-self-correction-safety-diagnostic.cjs",
+    ],
+    foundation_scripts: [
+      "silver-self-correction-negation-scope-selftest.cjs",
+      "silver-self-correction-safety-cal-readonly-selftest.cjs",
+    ],
+    report_json: "silver-self-correction-audit-report.json",
+    diagnostic_report_json: "silver-self-correction-safety-diagnostic-report.json",
     cluster_prefix: "self_correction",
-    safety_sensitive: false,
+    safety_sensitive: true,
   },
   {
     id: "negative_no_write",
@@ -366,6 +374,7 @@ function aggregateSafetyFromReports(repoRoot) {
     "silver-quality-v2-report.json",
     "silver-real-human-chaos-v3-report.json",
     "silver-real-czech-public-ux-corpus-v2-report.json",
+    "silver-self-correction-audit-report.json",
   ];
   const agg = {
     dangerous_write_count: 0,
@@ -1068,7 +1077,13 @@ function runSelfTest() {
   const pub = reg.audits.find((a) => a.audit_id === "public_ux");
   checks.push(pub && pub.maturity === MATURITY.ACTIVE);
   const planned = reg.audits.find((a) => a.audit_id === "self_correction");
-  checks.push(planned && planned.maturity === MATURITY.PLANNED_ONLY);
+  checks.push(
+    planned &&
+      (planned.maturity === MATURITY.PLANNED_ONLY ||
+        planned.maturity === MATURITY.ACTIVE ||
+        planned.maturity === MATURITY.STABLE ||
+        planned.maturity === MATURITY.PARTIAL),
+  );
   fs.writeFileSync(
     path.join(td, "scripts", "silver-retrieval-stress-300k-foundation-diagnostic-report.json"),
     JSON.stringify({

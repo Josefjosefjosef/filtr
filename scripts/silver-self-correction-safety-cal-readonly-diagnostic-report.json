@@ -1,0 +1,48 @@
+{
+  "generated_at": "2026-05-20T12:01:21.292Z",
+  "main_commit": "848d83a3929cb4335034b3cc16728fc22400c9cd",
+  "engine_changed": "NO",
+  "assets_app_changed": "NO",
+  "target_cluster": "self_correction_safety_cal_readonly",
+  "stats": {
+    "cluster_total": 750,
+    "pass_count": 750,
+    "fail_count": 0,
+    "true_engine_fail_count": 0,
+    "harness_problem_count": 0,
+    "safe_clarification_ok_count": 0,
+    "ambiguous_input_count": 0,
+    "query_vs_read_equivalence_count": 0,
+    "readonly_override_count": 0,
+    "calendar_create_leak_count": 0,
+    "dangerous_write_count": 0,
+    "write_when_negated_count": 0,
+    "query_created_write_count": 0,
+    "false_write_count": 0
+  },
+  "pattern_counts_top": [],
+  "sample_fail_examples": [],
+  "sample_fail_examples_count": 0,
+  "all_fail_classification_summary": {
+    "TRUE_ENGINE_FAIL": 0,
+    "HARNESS_GOLD_PROBLEM": 0,
+    "SAFE_CLARIFICATION_OK": 0,
+    "AMBIGUOUS_INPUT": 0,
+    "QUERY_VS_READ_EQUIVALENCE": 0,
+    "READONLY_OVERRIDE": 0,
+    "CALENDAR_CREATE_LEAK": 0
+  },
+  "safety_verdict": {
+    "dangerous_write_count": 0,
+    "write_when_negated_count": 0,
+    "query_created_write_count": 0,
+    "false_write_count": 0,
+    "safety_leak": "NO"
+  },
+  "recommended_next_task_type": "SCRIPTS_ONLY_HARNESS_ALIGNMENT",
+  "recommended_next_cluster": "self_correction_safety_cal_readonly",
+  "ready_for_next_task": "YES",
+  "smoke": "PASS",
+  "git_status_clean": "YES",
+  "ready_for_pr": "YES"
+}

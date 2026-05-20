@@ -102,7 +102,10 @@ const {
   safetyNoWriteFoldedGlobal,
 } = require("./silver-self-correction-negation-scope.cjs");
 
-const { finalizeSelfCorrectionNoisyNegReadHarnessEval } = require("./silver-self-correction-query-clarification.cjs");
+const {
+  finalizeSelfCorrectionNoisyNegReadHarnessEval,
+  finalizeSelfCorrectionSafetyCalReadonlyHarnessEval,
+} = require("./silver-self-correction-query-clarification.cjs");
 
 const {
   computeGoldLabels,
@@ -164,6 +167,9 @@ function gitTrackedCleanForSc() {
       "scripts/silver-self-correction-negation-scope-selftest.cjs",
       "scripts/silver-self-correction-query-clarification.cjs",
       "scripts/silver-self-correction-query-vs-clarification-selftest.cjs",
+      "scripts/silver-self-correction-safety-cal-readonly-selftest.cjs",
+      "scripts/silver-self-correction-safety-cal-readonly-diagnostic.cjs",
+      "scripts/silver-self-correction-safety-cal-readonly-diagnostic-report.json",
       "scripts/silver-audit-registry.cjs",
       "SILVER_RUN_REPORT.md",
     ];
@@ -345,6 +351,8 @@ function buildScLaneCase(scLane, localIndex, seqSalt) {
     if (variant === 0) {
       baseInput = "Mrkni prosím do kalendáře na " + cal + ", nic neukládej.";
       cluster = "self_correction_safety_cal_readonly";
+      group = "calendar_query";
+      expectedIntent = "calendar.query";
     } else if (variant === 1) {
       baseInput = "Co mám za úkoly ohledně " + task.split(" ")[0] + "? Nic neukládej.";
       cluster = "self_correction_safety_task_readonly";
@@ -383,6 +391,17 @@ function buildScLaneCase(scLane, localIndex, seqSalt) {
   };
 }
 
+function harmonizeSafetyCalReadonlyExpectations(cases) {
+  for (let ci = 0; ci < cases.length; ci++) {
+    const c = cases[ci];
+    if (c.cluster !== "self_correction_safety_cal_readonly") continue;
+    c.group = "calendar_query";
+    if (String(c.expectedIntent || "").indexOf("create") >= 0) {
+      c.expectedIntent = "calendar.query";
+    }
+  }
+}
+
 function buildScCorpus(total) {
   const sizes = core.allocateFamilySizes(total, SC_LANES.length);
   const cases = [];
@@ -398,6 +417,7 @@ function buildScCorpus(total) {
       cases.push(row);
     }
   }
+  harmonizeSafetyCalReadonlyExpectations(cases);
   return cases;
 }
 
@@ -456,6 +476,7 @@ function applyAllHarnessFinalizers(c, turn, ev) {
   out = finalizeCalQueryTopicClarifyLaneHarnessEval(c, turn, out);
   out = finalizeMobileVoiceCalHarnessEval(c, turn, out);
   out = finalizeSelfCorrectionNoisyNegReadHarnessEval(c, turn, out);
+  out = finalizeSelfCorrectionSafetyCalReadonlyHarnessEval(c, turn, out);
   return out;
 }
 
@@ -799,5 +820,6 @@ module.exports = {
   SC_NORMAL_CAL_CREATE_GUARD,
   buildScCorpus,
   buildScLaneCase,
+  harmonizeSafetyCalReadonlyExpectations,
   TOTAL_CASES,
 };
