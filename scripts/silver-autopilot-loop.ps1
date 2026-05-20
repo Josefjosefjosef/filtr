@@ -1008,6 +1008,76 @@ function Test-SilverAdapterMetaFreshForCycle {
   return $true
 }
 
+function Test-SilverAutonomousAdapterCompletionBoundary {
+  param(
+    [string]$AdapterOutputPath,
+    [datetime]$ProcessStartUtc,
+    [string]$ExpectedTaskDigest = "",
+    [string]$ExpectedTaskFile = "",
+    [string]$ExpectedRunId = "",
+    [string]$ExpectedCycle = "",
+    [string]$ExpectedRunStartUtc = ""
+  )
+  $result = @{
+    PASS_FAIL                   = "FAIL"
+    adapter_output_valid        = "NO"
+    adapter_meta_fresh          = "NO"
+    adapter_output_state        = "(empty)"
+    lifecycle_block_reason      = "missing_output_file"
+    invalidated_awaiting_cycle  = "NO"
+  }
+  if (-not (Test-Path -LiteralPath $AdapterOutputPath)) {
+    $result.lifecycle_block_reason = "missing_output_file"
+    return $result
+  }
+  $meta = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $AdapterOutputPath
+  $state = ""
+  if ($meta.ContainsKey("adapter_output_state")) { $state = [string]$meta["adapter_output_state"] }
+  if ($state) { $result.adapter_output_state = $state }
+  if ($state -eq "INVALIDATED_AWAITING_CYCLE") {
+    $result.invalidated_awaiting_cycle = "YES"
+    $result.lifecycle_block_reason = "invalidated_awaiting_cycle_non_authoritative"
+    return $result
+  }
+  if ($state -ne "COMPLETED") {
+    $result.lifecycle_block_reason = "adapter_output_state_not_completed:" + $(if ($state) { $state } else { "(empty)" })
+    return $result
+  }
+  if (-not (Test-SilverCursorOutputHandoffValid -Path $AdapterOutputPath)) {
+    $result.lifecycle_block_reason = "cursor_output_handoff_invalid_or_empty"
+    return $result
+  }
+  $metaFresh = Test-SilverAdapterMetaFreshForCycle -Meta $meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc
+  if (-not $metaFresh) {
+    $result.adapter_meta_fresh = "NO"
+    $result.lifecycle_block_reason = "adapter_meta_not_fresh_for_cycle"
+    return $result
+  }
+  $procStart = ""
+  if ($meta.ContainsKey("process_start_utc")) { $procStart = [string]$meta["process_start_utc"] }
+  if ($procStart.Trim().Length -eq 0) {
+    $result.lifecycle_block_reason = "missing_process_start_utc"
+    return $result
+  }
+  $exitPresent = ""
+  if ($meta.ContainsKey("exit_code")) { $exitPresent = [string]$meta["exit_code"] }
+  if ($exitPresent.Trim().Length -eq 0) {
+    $result.lifecycle_block_reason = "missing_exit_code"
+    return $result
+  }
+  $digest = ""
+  if ($meta.ContainsKey("task_digest")) { $digest = [string]$meta["task_digest"] }
+  if ($digest.Trim().Length -eq 0) {
+    $result.lifecycle_block_reason = "missing_task_digest"
+    return $result
+  }
+  $result.adapter_meta_fresh = "YES"
+  $result.adapter_output_valid = "YES"
+  $result.PASS_FAIL = "PASS"
+  $result.lifecycle_block_reason = "(none)"
+  return $result
+}
+
 function Resolve-SilverCursorOuterExitFromAdapterMeta {
   param(
     [int]$OuterExit,
@@ -1020,6 +1090,19 @@ function Resolve-SilverCursorOuterExitFromAdapterMeta {
     [string]$ExpectedRunStartUtc = ""
   )
   if ($OuterExit -eq 0) {
+    if ($ExpectedRunId.Trim().Length -gt 0) {
+      if (-not (Test-Path -LiteralPath $AdapterOutputPath)) {
+        return @{ EffectiveExit = 0; Reconciled = $false; FreshMeta = $false }
+      }
+      $metaZero = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $AdapterOutputPath
+      $freshZero = Test-SilverAdapterMetaFreshForCycle -Meta $metaZero -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc
+      $stateZero = ""
+      if ($metaZero.ContainsKey("adapter_output_state")) { $stateZero = [string]$metaZero["adapter_output_state"] }
+      if (($stateZero -ne "COMPLETED") -or (-not $freshZero)) {
+        return @{ EffectiveExit = 0; Reconciled = $false; FreshMeta = $false }
+      }
+      return @{ EffectiveExit = 0; Reconciled = $false; FreshMeta = $true }
+    }
     return @{ EffectiveExit = 0; Reconciled = $false; FreshMeta = $false }
   }
   if (-not (Test-Path -LiteralPath $AdapterOutputPath)) {
@@ -1112,7 +1195,77 @@ function Test-NextActionHasBareSilverAutopilotNodeInvocation {
 
 function Test-SilverNextActionSilverWorkflowContext {
   param([string]$Text)
-  return ($Text -match '(?i)PRODUCT_CLUSTER|NEXT PRODUCT CLUSTER|silver-rhc3|scripts/silver-|cluster diagnostic|harness|audit_silver|SILVER_PRODUCT_CLUSTER|top_cluster=')
+  return ($Text -match '(?i)PRODUCT_CLUSTER|NEXT PRODUCT CLUSTER|silver-rhc3|scripts/silver-|cluster diagnostic|harness|audit_silver|SILVER_PRODUCT_CLUSTER|top_cluster=|rcz2_ultra_short_chaos|Public UX|public.ux')
+}
+
+function Test-SilverNextActionIsOrchestrationMaintenanceOnly {
+  param([string]$Text)
+  if (-not $Text) { return $false }
+  if (Test-SilverNextActionSilverWorkflowContext -Text $Text) { return $false }
+  $maint =
+    ($Text -match '(?i)\bgit\s+status\b') -or
+    ($Text -match '(?i)\bgit\s+restore\b') -or
+    ($Text -match '(?i)\bgit\s+add\b') -or
+    ($Text -match '(?i)\bgh\s+push\b') -or
+    ($Text -match '(?i)dirty\s+tree') -or
+    ($Text -match '(?i)orchestration\s+maintenance') -or
+    ($Text -match '(?i)resolve\s+dirty\s+tree')
+  return $maint
+}
+
+function Get-SilverAuthoritativeSelectorCluster {
+  param([string]$RepoRoot)
+  $registryScript = Join-Path $RepoRoot "scripts\silver-audit-registry.cjs"
+  if (-not (Test-Path -LiteralPath $registryScript)) { return "" }
+  $registryRequirePath = ($registryScript -replace '\\', '/')
+  if ($registryRequirePath.IndexOf("'") -ge 0) {
+    $registryRequirePath = $registryRequirePath.Replace("'", "\'")
+  }
+  $probe = @"
+const m=require('$registryRequirePath');
+const h=m.resolveCapRuntimeHandoff(process.cwd(),{});
+const c=h&&h.cluster_diag?String(h.cluster_diag.cluster||'').trim():'';
+process.stdout.write(c);
+"@
+  $probePath = Join-Path $env:TEMP ("silver-selector-cluster-probe-" + [guid]::NewGuid().ToString("N") + ".cjs")
+  try {
+    [System.IO.File]::WriteAllText($probePath, $probe, [System.Text.UTF8Encoding]::new($false))
+    $psi = New-Object System.Diagnostics.ProcessStartInfo
+    $psi.FileName = "node"
+    $psi.Arguments = ('"' + $probePath.Replace('"', '""') + '"')
+    $psi.WorkingDirectory = $RepoRoot
+    $psi.RedirectStandardOutput = $true
+    $psi.RedirectStandardError = $true
+    $psi.UseShellExecute = $false
+    $psi.CreateNoWindow = $true
+    $p = [System.Diagnostics.Process]::Start($psi)
+    $stdout = $p.StandardOutput.ReadToEnd().Trim()
+    $p.WaitForExit()
+    if ($p.ExitCode -ne 0) { return "" }
+    return $stdout
+  }
+  catch {
+    return ""
+  }
+  finally {
+    if (Test-Path -LiteralPath $probePath) {
+      Remove-Item -LiteralPath $probePath -Force -ErrorAction SilentlyContinue
+    }
+  }
+}
+
+function Test-SilverNextActionIsProductTaskHandoff {
+  param(
+    [string]$NextActionText,
+    [string]$SelectorCluster
+  )
+  $cluster = ([string]$SelectorCluster).Trim()
+  if (-not $cluster) { return $true }
+  if ($cluster -eq "rcz2_retrieval") { return $true }
+  if (Test-SilverNextActionIsOrchestrationMaintenanceOnly -Text $NextActionText) { return $false }
+  if (Test-SilverNextActionSilverWorkflowContext -Text $NextActionText) { return $true }
+  if ($cluster -match 'rcz2_ultra_short_chaos|public_ux|rhc3_') { return $false }
+  return $true
 }
 
 function Test-SilverNextActionOutputQuality {
@@ -1830,6 +1983,44 @@ function Get-SilverTransientGeneratedAuditReportRelPaths {
   )
 }
 
+function Restore-SilverTransientGeneratedDiagnosticReports {
+  param([string]$RepoRoot)
+  $scriptsDir = Join-Path $RepoRoot "scripts"
+  if (-not (Test-Path -LiteralPath $scriptsDir)) { return }
+  $rels = New-Object System.Collections.Generic.List[string]
+  $diag = Get-ChildItem -LiteralPath $scriptsDir -Filter "silver-*-diagnostic-report.json" -File -ErrorAction SilentlyContinue
+  foreach ($f in $diag) {
+    [void]$rels.Add(("scripts/" + $f.Name))
+  }
+  if ($rels.Count -lt 1) { return }
+  $argTail = ""
+  foreach ($rel in $rels) {
+    if ($argTail.Length -gt 0) { $argTail += " " }
+    $argTail += [string]$rel
+  }
+  $prev = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try {
+    $psi = New-Object System.Diagnostics.ProcessStartInfo
+    $psi.FileName = "git"
+    $psi.Arguments = "restore --worktree -- " + $argTail
+    $psi.WorkingDirectory = $RepoRoot
+    $psi.RedirectStandardOutput = $true
+    $psi.RedirectStandardError = $true
+    $psi.UseShellExecute = $false
+    $psi.CreateNoWindow = $true
+    $p = [System.Diagnostics.Process]::Start($psi)
+    $null = $p.StandardOutput.ReadToEnd()
+    $null = $p.StandardError.ReadToEnd()
+    $p.WaitForExit()
+  }
+  catch {
+  }
+  finally {
+    $ErrorActionPreference = $prev
+  }
+}
+
 function Restore-SilverTransientGeneratedAuditReports {
   param([string]$RepoRoot)
   $rels = Get-SilverTransientGeneratedAuditReportRelPaths
@@ -1894,6 +2085,13 @@ function Test-SilverPathIsTransientClusterClassifierReport {
   return ($n -cmatch '^scripts/silver-[a-z0-9][a-z0-9_-]*-cluster-classifier-v\d+-report\.json$')
 }
 
+function Test-SilverPathIsTransientDiagnosticReportJson {
+  param([string]$RelPath)
+  $n = ([string]$RelPath).Trim() -replace '\\', '/'
+  if (-not $n) { return $false }
+  return ($n -cmatch '^scripts/silver-[a-z0-9][a-z0-9_-]*-diagnostic-report\.json$')
+}
+
 function Get-SilverCap50RuntimeRestoreAllowReason {
   param([string]$RelPath)
   $n = ([string]$RelPath).Trim() -replace '\\', '/'
@@ -1913,6 +2111,9 @@ function Get-SilverCap50RuntimeRestoreAllowReason {
       }
       if (Test-SilverPathIsTransientClusterClassifierReport -RelPath $n) {
         return 'runtime_cluster_classifier_json'
+      }
+      if (Test-SilverPathIsTransientDiagnosticReportJson -RelPath $n) {
+        return 'runtime_transient_diagnostic_json'
       }
       return ''
     }
@@ -4117,6 +4318,33 @@ while ($true) {
           -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
           -StopReason $cursorStopReason
       }
+      if ($script:SilverAutonomousRunId) {
+        $runCtxBoundary = Get-SilverAutonomousRunContext
+        $boundaryProcStart = $script:SilverCycleCursorProcessStartUtc
+        if ($boundaryProcStart -eq [datetime]::MinValue) {
+          $boundaryProcStart = (Get-Date).ToUniversalTime()
+        }
+        $adapterBoundary = Test-SilverAutonomousAdapterCompletionBoundary `
+          -AdapterOutputPath $CursorOutputPath `
+          -ProcessStartUtc $boundaryProcStart `
+          -ExpectedTaskDigest $script:SilverCycleExpectedTaskDigest `
+          -ExpectedTaskFile $script:SilverCycleExpectedTaskFile `
+          -ExpectedRunId $runCtxBoundary.RunId `
+          -ExpectedCycle $runCtxBoundary.Cycle `
+          -ExpectedRunStartUtc $runCtxBoundary.RunStartUtc
+        Write-Host ("silver-autopilot-loop: adapter_completion_boundary_PASS_FAIL=" + [string]$adapterBoundary.PASS_FAIL + " adapter_output_valid=" + [string]$adapterBoundary.adapter_output_valid + " adapter_meta_fresh=" + [string]$adapterBoundary.adapter_meta_fresh + " reason=" + [string]$adapterBoundary.lifecycle_block_reason) -ForegroundColor DarkCyan
+        if ($adapterBoundary.PASS_FAIL -ne "PASS") {
+          $boundaryReason = "adapter_completion_boundary_fail|" + [string]$adapterBoundary.lifecycle_block_reason
+          Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+            -CursorExit $cursorExitStr -AutopilotExit "N/A" -StatusExit "N/A" `
+            -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine $safetyPre `
+            -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
+            -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
+            -Headline (Get-NextActionHeadline -Text $nextText) -Focus "adapter_completion_boundary_fail" `
+            -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
+            -StopReason $boundaryReason
+        }
+      }
       $utf8AfterCursor = Invoke-SilverCap50Utf8SurfacesHardGate -RepoRoot $RepoRoot -NextActionPath $NextActionPath -CursorOutputPath $CursorOutputPath
       if ($utf8AfterCursor.PASS_FAIL -ne "PASS") {
         Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
@@ -4169,6 +4397,8 @@ while ($true) {
       }
     }
     Restore-SilverProgressLogForAutopilotGuard -RepoRoot $RepoRoot -ProgressRel "SILVER_PROGRESS_LOG.md"
+    Restore-SilverTransientGeneratedDiagnosticReports -RepoRoot $RepoRoot
+    Restore-SilverTransientGeneratedAuditReports -RepoRoot $RepoRoot
     $auto = Invoke-NodeScript -WorkingDirectory $RepoRoot -Arguments @($AutopilotScript, "--full-auto-loop", "--max-steps=1") -PassThruExit $false
     $ae = $auto.ExitCode
     $script:LastAutopilotExit = [string]$ae
@@ -4195,6 +4425,22 @@ while ($true) {
         -Headline (Get-NextActionHeadline -Text $nextAfterAuto) -Focus "next_action_quality_post_guard" `
         -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1
     }
+    if ($controlledInfinite) {
+      $selectorCluster = Get-SilverAuthoritativeSelectorCluster -RepoRoot $RepoRoot
+      if ($selectorCluster) {
+        Write-Host ("silver-autopilot-loop: selector_cluster=" + $selectorCluster) -ForegroundColor DarkCyan
+      }
+      if (-not (Test-SilverNextActionIsProductTaskHandoff -NextActionText $nextAfterAuto -SelectorCluster $selectorCluster)) {
+        Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+          -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit "N/A" `
+          -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine $safetyPre `
+          -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
+          -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
+          -Headline (Get-NextActionHeadline -Text $nextAfterAuto) -Focus "product_task_handoff_missing" `
+          -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
+          -StopReason ("product_task_handoff_missing|selector_cluster=" + [string]$selectorCluster)
+      }
+    }
     $postAutoCleanup = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $cycle -Reason "after_autopilot_full_auto_loop" -ExcludeRestoreRelPaths $autopilotHandoffPreserve -AllowHandoffDirty
     Write-Host ("silver-autopilot-loop: post_autopilot_cleanup_PASS_FAIL=" + [string]$postAutoCleanup.PASS_FAIL) -ForegroundColor DarkCyan
     if ($postAutoCleanup.PASS_FAIL -ne "PASS") {
@@ -4210,6 +4456,7 @@ while ($true) {
         -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1
     }
     Restore-SilverAdapterDiagnosticReportJson -RepoRoot $RepoRoot
+    Restore-SilverTransientGeneratedDiagnosticReports -RepoRoot $RepoRoot
     Restore-SilverTransientGeneratedAuditReports -RepoRoot $RepoRoot
   }
 
@@ -4384,6 +4631,22 @@ while ($true) {
   $passRunCtx = Get-SilverAutonomousRunContext
   $passCursorInvoked = ($passProcStart -ne [datetime]::MinValue)
   Add-SilverCycleFieldsFromAdapterOutput -Fields $fieldsPass -AdapterOutputPath $CursorOutputPath -ProcessStartUtc $passProcStart -ExpectedTaskDigest $passDigest -ExpectedTaskFile $passTaskFile -ExpectedRunId $passRunCtx.RunId -ExpectedCycle $passRunCtx.Cycle -ExpectedRunStartUtc $passRunCtx.RunStartUtc -CursorInvoked $passCursorInvoked
+  if ($controlledInfinite -and $passCursorInvoked) {
+    if ([string]$fieldsPass["silver_cycle_adapter_meta_fresh"] -ne "YES") {
+      $staleReason = "adapter_meta_not_fresh_at_cycle_pass"
+      if ($fieldsPass.ContainsKey("silver_cycle_real_stale_adapter_meta_issue")) {
+        $staleReason = "adapter_meta_stale_cycle_scoped_mismatch"
+      }
+      Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+        -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit ([string]$se) `
+        -GitClean $gitCleanFinal -SafetyLine $safetyPost `
+        -CalW (Get-RunReportLineValue -ReportText $reportPost -Key "calendar_write_20k") `
+        -CalQ (Get-RunReportLineValue -ReportText $reportPost -Key "calendar_query_20k") `
+        -Headline (Get-NextActionHeadline -Text $nextAfter) -Focus "adapter_meta_fresh_cycle_pass_guard" `
+        -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep -LastTaskExitCode 1 `
+        -StopReason $staleReason
+    }
+  }
   if ($controlledInfinite) {
     $script:AutonomousCyclesCompleted++
     if ($se -eq 0) {
