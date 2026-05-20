@@ -37819,6 +37819,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const patterns = [
       /\bdej\s+mi\s+do\s+poznam\w*\b/i,
       /\buloz\w*\s+do\s+poznam\w*\b/i,
+      /\buloz\w*\s+poznamku\b/i,
       /\bpoznamenej\b/i,
       /\bzapis\w*\s+do\s+poznam\w*\b/i,
       /\bnapis\w*\s+si\s+do\s+poznam\w*\b/i,
@@ -39867,6 +39868,30 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P1 note_write_quality: úzký strip měkkého modulového ocasu „, ne kalendář“ jen z těla explicitního note-write.
+   */
+  function iuSilverStripExplicitNoteWriteSoftCalendarNegTailP1(restIn) {
+    return String(restIn || "")
+      .replace(/\s*,\s*ne\s+(?:v\s+)?kalend[aá]ř[e]?\.?\s*$/i, "")
+      .trim();
+  }
+
+  /**
+   * P1 note_write_quality: stejný strip na celé raw větě — jen explicitní note-write lead (ulož poznámku / zapiš si do poznámek / poznamenej si …).
+   */
+  function iuSilverStripSoftCalendarNegTailFromExplicitNoteWriteRawP1(rawIn, foldedOpt) {
+    const r0 = String(rawIn || "").trim();
+    if (!r0) return r0;
+    const f = String(foldedOpt != null ? foldedOpt : foldCs(r0));
+    const explicitLead =
+      /\buloz\w*\s+poznamku\b/.test(f) ||
+      /\bzapis\w*\s+si\s+do\s+poznam/.test(f) ||
+      /\bpoznamenej\s+si\b/.test(f);
+    if (!explicitLead) return r0;
+    return iuSilverStripExplicitNoteWriteSoftCalendarNegTailP1(r0);
+  }
+
+  /**
    * P0: explicit Czech note phrases only (no NLP). Returns { kind:"body", body } or { kind:"empty" } or null.
    */
   function iuSilverTryParseExplicitNoteCreate(rawIn) {
@@ -39916,6 +39941,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (zapisMiPozn) {
       let restZp = s.slice(zapisMiPozn[0].length).trim();
       restZp = restZp.replace(/^(že|ze)\b/i, "").trim();
+      restZp = iuSilverStripExplicitNoteWriteSoftCalendarNegTailP1(restZp);
       restZp = iuSilverNormalizeWs(restZp);
       if (!restZp) return { kind: "empty" };
       const bodyZp = iuSilverNormalizeCzechNumberWords(iuSilverNormalizeCzechPlaceWords(restZp));
@@ -39984,6 +40010,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (!m) continue;
       let rest = s.slice(m[0].length).trim();
       rest = rest.replace(/^(že|ze)\b/i, "").trim();
+      rest = iuSilverStripExplicitNoteWriteSoftCalendarNegTailP1(rest);
       rest = iuSilverNormalizeWs(rest);
       if (!rest) return { kind: "empty" };
       const bodyNorm = iuSilverNormalizeCzechNumberWords(iuSilverNormalizeCzechPlaceWords(rest));
@@ -40053,9 +40080,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
    * Tries write-cue slices from last to first so a trailing „ulož do poznámek …“ wins over an earlier task/calendar verb.
    */
   function iuSilverWriteSchedProbeRecoverExplicitNoteBodyP1(rawLine, foldedOpt) {
-    const rawFull = String(rawLine || "").trim();
-    if (!rawFull) return "";
-    const foldFull = String(foldedOpt != null ? foldedOpt : foldCs(rawFull));
+    const rawFull0 = String(rawLine || "").trim();
+    if (!rawFull0) return "";
+    const foldFull0 = String(foldedOpt != null ? foldedOpt : foldCs(rawFull0));
+    const rawFull = iuSilverStripSoftCalendarNegTailFromExplicitNoteWriteRawP1(rawFull0, foldFull0);
+    const foldFull = rawFull === rawFull0 ? foldFull0 : foldCs(rawFull);
     if (!iuSilverHasExplicitNotesTarget(foldFull)) return "";
     if (iuSilverExplicitNoteQueryAnchorP1Folded(foldFull)) return "";
     if (iuSilverRczNoteQueryAnchorVerbP1Folded(foldFull)) return "";
@@ -46808,8 +46837,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const now = ctx && ctx.now ? ctx.now : new Date();
     const raw0 = String(text || "").trim();
     /* v1.6: čísla slovy globálně; „Praha jedna“ normalizuj jen v read/entity/extract, ne zde (regrese „Praha jedna zítra“). */
-    const raw = iuSilverNormalizeCzechNumberWords(String(iuSilverResolveFollowupReference(raw0, prevDraft || createEmptyDraft(), now) || "").trim());
-    const folded = foldCs(raw);
+    let raw = iuSilverNormalizeCzechNumberWords(String(iuSilverResolveFollowupReference(raw0, prevDraft || createEmptyDraft(), now) || "").trim());
+    let folded = foldCs(raw);
+    {
+      const rawNoteSoftCal = iuSilverStripSoftCalendarNegTailFromExplicitNoteWriteRawP1(raw, folded);
+      if (rawNoteSoftCal !== raw) {
+        raw = rawNoteSoftCal;
+        folded = foldCs(raw);
+      }
+    }
     const empty = createEmptyDraft();
 
     function baseClarification(reason, normIntent) {
@@ -47063,7 +47099,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
      * cannot be safely extracted, return safe clarification(unknown). Cluster: rhc3_module_switch_cal_to_note.
      */
     if (iuSilverRhc3NegatedCalendarNoteTargetP1Folded(folded)) {
-      const rhc3NoteBody = iuSilverWriteSchedProbeRecoverExplicitNoteBodyP1(raw, folded);
+      const rhc3Raw = iuSilverStripSoftCalendarNegTailFromExplicitNoteWriteRawP1(raw, folded);
+      const rhc3NoteBody = iuSilverWriteSchedProbeRecoverExplicitNoteBodyP1(rhc3Raw, foldCs(rhc3Raw));
       if (rhc3NoteBody) {
         return iuSilverBuildNoteCreateTurn(rhc3NoteBody, now);
       }
