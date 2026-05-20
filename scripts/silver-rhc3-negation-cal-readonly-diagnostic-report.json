@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-05-11T20:03:20.657Z",
+  "generated_at": "2026-05-20T06:39:19.159Z",
   "pinned_main_commit": "76ab766d516c2d9e41ff1884681ff800f2a4e231",
-  "diag_runner_head": "90d00833f0e2f2c42e71f699b860f504554de68b",
+  "diag_runner_head": "31c71ea320531cf238b34bf3d017028c02fbe188",
   "target_cluster": "rhc3_negation_cal_readonly",
   "total_cases": 120000,
   "total_cluster_count": 7059,
-  "fail_count": 9,
-  "cluster_pass_in_full_scan": 7050,
+  "fail_count": 0,
+  "cluster_pass_in_full_scan": 7059,
   "inspected_count": 488,
   "inspected_bucket_counts": {
     "TRUE_ENGINE_FAIL_NEGATION": 0,
@@ -21,22 +21,22 @@
     "TRUE_ENGINE_FAIL_NEGATION": 0,
     "SAFE_READ_OK_BUT_HARNESS_FAIL": 0,
     "SAFE_CLARIFICATION_OK": 0,
-    "GOLD_LABEL_TOO_STRICT": 9,
+    "GOLD_LABEL_TOO_STRICT": 0,
     "TEMPLATE_DNA_BAD_INPUT": 0,
     "WRONG_MODULE_READ": 0,
     "OTHER": 0
   },
-  "dominant_root_cause": "GOLD_LABEL_TOO_STRICT",
+  "dominant_root_cause": "NONE",
   "ready_for_engine_fix": "NO",
-  "recommended_next_action": "Revisit RHC3 gold expected_should_clarify or harness clarification acceptance for mutated negation_no_write surfaces; no engine routing PR yet.",
+  "recommended_next_action": "Dominate troubleshooting: if SAFE_READ_OK_BUT_HARNESS_FAIL or GOLD_LABEL_TOO_STRICT wins, tune calendar_query harness semantics and gold tolerance before any engine change.",
   "recommended_batch_family": "negation_no_write",
   "negation_readonly_clarity_counts": {
-    "clarification_ok": 6280,
+    "clarification_ok": 6289,
     "broken_by_filler": 576,
     "noisy_read_request": 191,
-    "clear_read_request": 12
+    "clear_read_request": 3
   },
-  "safe_clarification_accepted_count": 6280,
+  "safe_clarification_accepted_count": 6289,
   "hard_no_write_fail_count": 0,
   "representative": {
     "true_engine_fail_negation": [],
@@ -12734,5 +12734,5 @@
       "diagnostic_bucket": "PASS"
     }
   ],
-  "text_block": "=== SILVER_RHC3_NEGATION_CAL_READONLY_DIAGNOSTIC_RESULT ===\n\nmain_commit=76ab766d516c2d9e41ff1884681ff800f2a4e231\nengine_changed=NO\nassets_app_changed=NO\nui_changed=NO\ncss_changed=NO\nbackend_changed=NO\n\ntarget_cluster=rhc3_negation_cal_readonly\ntotal_cluster_count=7059\nfail_count=9\ninspected_count=488\n\ntrue_engine_fail_negation_count=0\nsafe_read_ok_but_harness_fail_count=0\nsafe_clarification_ok_count=0\ngold_label_too_strict_count=9\ntemplate_dna_bad_input_count=0\nwrong_module_read_count=0\nother_count=0\n\nnegation_readonly_clarity_counts={\"clarification_ok\":6280,\"broken_by_filler\":576,\"noisy_read_request\":191,\"clear_read_request\":12}\nsafe_clarification_accepted_count=6280\nhard_no_write_fail_count=0\n\ndominant_root_cause=GOLD_LABEL_TOO_STRICT\n\nrepresentative_true_engine_fail_examples=\nrepresentative_safe_read_examples=\nrepresentative_safe_clarification_examples=\nrepresentative_gold_or_template_examples=\n\nready_for_engine_fix=NO\nrecommended_next_action=Revisit RHC3 gold expected_should_clarify or harness clarification acceptance for mutated negation_no_write surfaces; no engine routing PR yet.\nrecommended_batch_family=negation_no_write\n\ngit_status_clean=YES\n======= END_SILVER_RHC3_NEGATION_CAL_READONLY_DIAGNOSTIC_RESULT ==="
+  "text_block": "=== SILVER_RHC3_NEGATION_CAL_READONLY_DIAGNOSTIC_RESULT ===\n\nmain_commit=76ab766d516c2d9e41ff1884681ff800f2a4e231\nengine_changed=NO\nassets_app_changed=NO\nui_changed=NO\ncss_changed=NO\nbackend_changed=NO\n\ntarget_cluster=rhc3_negation_cal_readonly\ntotal_cluster_count=7059\nfail_count=0\ninspected_count=488\n\ntrue_engine_fail_negation_count=0\nsafe_read_ok_but_harness_fail_count=0\nsafe_clarification_ok_count=0\ngold_label_too_strict_count=0\ntemplate_dna_bad_input_count=0\nwrong_module_read_count=0\nother_count=0\n\nnegation_readonly_clarity_counts={\"clarification_ok\":6289,\"broken_by_filler\":576,\"noisy_read_request\":191,\"clear_read_request\":3}\nsafe_clarification_accepted_count=6289\nhard_no_write_fail_count=0\n\ndominant_root_cause=NONE\n\nrepresentative_true_engine_fail_examples=\nrepresentative_safe_read_examples=\nrepresentative_safe_clarification_examples=\nrepresentative_gold_or_template_examples=\n\nready_for_engine_fix=NO\nrecommended_next_action=Dominate troubleshooting: if SAFE_READ_OK_BUT_HARNESS_FAIL or GOLD_LABEL_TOO_STRICT wins, tune calendar_query harness semantics and gold tolerance before any engine change.\nrecommended_batch_family=negation_no_write\n\ngit_status_clean=YES\n======= END_SILVER_RHC3_NEGATION_CAL_READONLY_DIAGNOSTIC_RESULT ==="
 }

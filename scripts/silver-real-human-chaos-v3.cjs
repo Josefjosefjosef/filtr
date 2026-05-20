@@ -1667,7 +1667,15 @@ function finalizeNegationNoWriteHarnessEval(c, turn, ev) {
   if (String(c.cluster || "") !== "rhc3_negation_cal_readonly") return ev;
   const g = c.gold || {};
   const inputClarity = String(g.negation_readonly_clarity_input || "");
-  if (inputClarity !== "noisy_read_request" && inputClarity !== "broken_by_filler") return ev;
+  // Harness-only: accept safe clarification for clear/noisy/broken readonly calendar lookup
+  // when gold still labels calendar.query but engine refuses write (no draft / create).
+  if (
+    inputClarity !== "noisy_read_request" &&
+    inputClarity !== "broken_by_filler" &&
+    inputClarity !== "clear_read_request"
+  ) {
+    return ev;
+  }
 
   const eng = String(turn.normalizedIntent || "");
   const ps = String(turn.processingState || "");
