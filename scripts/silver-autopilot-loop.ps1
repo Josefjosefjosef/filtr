@@ -799,6 +799,60 @@ elapsed_ms=
   [System.IO.File]::WriteAllText($Path, $stub, [System.Text.UTF8Encoding]::new($false))
 }
 
+function Write-SilverCursorOutputOuterWallTimeoutTerminal {
+  param(
+    [string]$Path,
+    [string]$RunId,
+    [string]$RunStartUtcIso,
+    [string]$CycleState,
+    [string]$TaskDigest,
+    [string]$OuterStdout,
+    [string]$OuterStderr,
+    [int]$EffectiveTimeoutSeconds
+  )
+  $stdoutBody = $OuterStdout
+  if ([string]::IsNullOrWhiteSpace($stdoutBody)) {
+    $stdoutBody = "SILVER_OUTER_WALL_TIMEOUT terminal capture: cmd.exe wrapper exceeded outer wait; adapter_output_state forced to COMPLETED for cycle handoff."
+  }
+  $stderrBody = $OuterStderr
+  if ([string]::IsNullOrWhiteSpace($stderrBody)) {
+    $stderrBody = ""
+  }
+  $nowUtc = (Get-Date).ToUniversalTime().ToString("o")
+  $meta = [ordered]@{
+    autonomous_run_id = $RunId
+    autonomous_run_start_utc = $RunStartUtcIso
+    autonomous_cycle = $CycleState
+    adapter_output_state = "COMPLETED"
+    pipe_capture_mode = "cmd_redirect_file"
+    adapter_completion_path = "outer_wall_timeout_terminal"
+    process_start_utc = $nowUtc
+    process_end_utc = $nowUtc
+    exit_code = "124"
+    timed_out = "YES"
+    effective_timeout_seconds = [string]$EffectiveTimeoutSeconds
+    task_digest = $TaskDigest
+    stdout_nonempty = $(if ($stdoutBody.Trim().Length -gt 0) { "YES" } else { "NO" })
+    stderr_nonempty = $(if ($stderrBody.Trim().Length -gt 0) { "YES" } else { "NO" })
+    can_run_full_auto_loop_maxcycles_1 = "NO"
+  }
+  $sb = New-Object System.Text.StringBuilder
+  [void]$sb.AppendLine("# silver-cursor-agent-adapter")
+  foreach ($k in $meta.Keys) {
+    [void]$sb.AppendLine(($k + "=" + [string]$meta[$k]))
+  }
+  [void]$sb.AppendLine("")
+  [void]$sb.AppendLine("SILVER_OUTER_WALL_TIMEOUT_TERMINAL")
+  [void]$sb.AppendLine("")
+  [void]$sb.AppendLine("# stdout")
+  [void]$sb.Append($stdoutBody)
+  if (-not $stdoutBody.EndsWith("`n")) { [void]$sb.AppendLine("") }
+  [void]$sb.AppendLine("# stderr")
+  [void]$sb.Append($stderrBody)
+  if (-not $stderrBody.EndsWith("`n")) { [void]$sb.AppendLine("") }
+  [System.IO.File]::WriteAllText($Path, $sb.ToString(), [System.Text.UTF8Encoding]::new($false))
+}
+
 function Initialize-SilverAutonomousRunLifecycle {
   param(
     [string]$RunId,
@@ -3932,8 +3986,25 @@ while ($true) {
         $cursorProcStartUtc = (Get-Date).ToUniversalTime()
         $script:SilverCycleCursorProcessStartUtc = $cursorProcStartUtc
         $p = [System.Diagnostics.Process]::Start($psi)
-        $p.WaitForExit()
-        $ce = $p.ExitCode
+        $outerWaitMs = 0
+        if ($effectiveCap50TimeoutSeconds -gt 0) {
+          $outerWaitMs = ($effectiveCap50TimeoutSeconds + 180) * 1000
+        }
+        $outerWallTimedOut = $false
+        if ($outerWaitMs -gt 0) {
+          if (-not $p.WaitForExit($outerWaitMs)) {
+            $outerWallTimedOut = $true
+            try { Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue } catch { }
+            $ce = 124
+          }
+          else {
+            $ce = $p.ExitCode
+          }
+        }
+        else {
+          $p.WaitForExit()
+          $ce = $p.ExitCode
+        }
         $runCtxReconcile = Get-SilverAutonomousRunContext
         $reconcile = Resolve-SilverCursorOuterExitFromAdapterMeta -OuterExit $ce -AdapterOutputPath $CursorOutputPath -ProcessStartUtc $cursorProcStartUtc -ExpectedTaskDigest $expectedTaskDigest -ExpectedTaskFile $expectedTaskFile -ExpectedRunId $runCtxReconcile.RunId -ExpectedCycle $runCtxReconcile.Cycle -ExpectedRunStartUtc $runCtxReconcile.RunStartUtc
         if ($reconcile.Reconciled) {
@@ -3970,6 +4041,26 @@ while ($true) {
         }
         $so = [string]$soRes.Text
         $se = [string]$seRes.Text
+        if ($outerWallTimedOut) {
+          $writeOuterTerminal = $true
+          if (Test-Path -LiteralPath $CursorOutputPath) {
+            $metaOuterCheck = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $CursorOutputPath
+            if ($metaOuterCheck.ContainsKey("adapter_output_state")) {
+              if ([string]$metaOuterCheck["adapter_output_state"] -eq "COMPLETED") {
+                $writeOuterTerminal = $false
+              }
+            }
+          }
+          if ($writeOuterTerminal) {
+            $runCtxOuter = Get-SilverAutonomousRunContext
+            $digestOuter = $expectedTaskDigest
+            if ([string]::IsNullOrWhiteSpace($digestOuter)) { $digestOuter = "outer_wall_timeout" }
+            Write-SilverCursorOutputOuterWallTimeoutTerminal -Path $CursorOutputPath `
+              -RunId $runCtxOuter.RunId -RunStartUtcIso $runCtxOuter.RunStartUtc -CycleState $runCtxOuter.Cycle `
+              -TaskDigest $digestOuter -OuterStdout $so -OuterStderr $se -EffectiveTimeoutSeconds $effectiveCap50TimeoutSeconds
+            Write-Host ("silver-autopilot-loop: outer_wall_timeout=YES effective_timeout_seconds=" + [string]$effectiveCap50TimeoutSeconds) -ForegroundColor DarkYellow
+          }
+        }
         $handoffUtf8 = Join-Path $PSScriptRoot "silver-utf8-handoff.ps1"
         if (Test-Path -LiteralPath $handoffUtf8) {
           . $handoffUtf8

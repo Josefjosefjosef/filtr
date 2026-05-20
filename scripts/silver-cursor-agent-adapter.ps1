@@ -52,7 +52,8 @@ param(
   [int]$StagedWatchdogExtensionSeconds = 1800,
   [int]$StagedWatchdogMaxExtensions = 2,
   [int]$StagedWatchdogStallSeconds = 1200,
-  [string]$TimeoutClass = "WALL_CLOCK"
+  [string]$TimeoutClass = "WALL_CLOCK",
+  [switch]$WslPipeDrainSelfTest
 )
 
 Set-StrictMode -Version 2
@@ -178,13 +179,10 @@ function Resolve-RepoPath {
   return [System.IO.Path]::GetFullPath((Join-Path $RepoRoot $P))
 }
 
-function Invoke-WslAgentCapture {
+function Build-WslExeArgumentLine {
   param(
     [string]$Distro,
-    [string[]]$LinuxArgvAfterDoubleDash,
-    [string]$WorkDirWindows,
-    [int]$TimeoutMs,
-    [string]$StdinPayload = ""
+    [string[]]$LinuxArgvAfterDoubleDash
   )
   $argList = New-Object System.Collections.Generic.List[string]
   [void]$argList.Add("-d")
@@ -192,18 +190,6 @@ function Invoke-WslAgentCapture {
   [void]$argList.Add("--")
   foreach ($x in $LinuxArgvAfterDoubleDash) {
     [void]$argList.Add([string]$x)
-  }
-  $psi = New-Object System.Diagnostics.ProcessStartInfo
-  $psi.FileName = "wsl.exe"
-  $psi.UseShellExecute = $false
-  $psi.CreateNoWindow = $true
-  $psi.WorkingDirectory = $WorkDirWindows
-  $psi.RedirectStandardOutput = $true
-  $psi.RedirectStandardError = $true
-  Set-SilverProcessStartInfoUtf8Streams -Psi $psi
-  $useStdin = (-not [string]::IsNullOrEmpty($StdinPayload))
-  if ($useStdin) {
-    $psi.RedirectStandardInput = $true
   }
   $argLine = ""
   foreach ($a in $argList) {
@@ -215,7 +201,49 @@ function Invoke-WslAgentCapture {
       $argLine += $a
     }
   }
-  $psi.Arguments = $argLine
+  return $argLine
+}
+
+function Get-SilverWslCaptureRedirectSnapshot {
+  param(
+    [string]$RepoRoot,
+    [string]$StdoutFile,
+    [string]$StderrFile
+  )
+  $items = Get-SilverRepoProgressHeartbeatSnapshot -RepoRoot $RepoRoot
+  $stdoutLen = 0
+  $stderrLen = 0
+  if (Test-Path -LiteralPath $StdoutFile) {
+    $stdoutLen = (Get-Item -LiteralPath $StdoutFile).Length
+  }
+  if (Test-Path -LiteralPath $StderrFile) {
+    $stderrLen = (Get-Item -LiteralPath $StderrFile).Length
+  }
+  return ($items + "|wsl_stdout_bytes=" + [string]$stdoutLen + "|wsl_stderr_bytes=" + [string]$stderrLen)
+}
+
+function Invoke-WslAgentCapture {
+  param(
+    [string]$Distro,
+    [string[]]$LinuxArgvAfterDoubleDash,
+    [string]$WorkDirWindows,
+    [int]$TimeoutMs,
+    [string]$StdinPayload = ""
+  )
+  $useStdin = (-not [string]::IsNullOrEmpty($StdinPayload))
+  if ($useStdin) {
+    return Invoke-WslAgentCapturePipe -Distro $Distro -LinuxArgvAfterDoubleDash $LinuxArgvAfterDoubleDash -WorkDirWindows $WorkDirWindows -TimeoutMs $TimeoutMs -StdinPayload $StdinPayload
+  }
+  $outF = Join-Path $env:TEMP ("silver-wsl-o-" + [guid]::NewGuid().ToString() + ".txt")
+  $errF = Join-Path $env:TEMP ("silver-wsl-e-" + [guid]::NewGuid().ToString() + ".txt")
+  $wslArgLine = Build-WslExeArgumentLine -Distro $Distro -LinuxArgvAfterDoubleDash $LinuxArgvAfterDoubleDash
+  $inner = "wsl.exe " + $wslArgLine
+  $psi = New-Object System.Diagnostics.ProcessStartInfo
+  $psi.FileName = "cmd.exe"
+  $psi.Arguments = '/c ' + $inner + ' 1> "' + $outF.Replace('"', '""') + '" 2> "' + $errF.Replace('"', '""') + '"'
+  $psi.WorkingDirectory = $WorkDirWindows
+  $psi.UseShellExecute = $false
+  $psi.CreateNoWindow = $true
   $p = New-Object System.Diagnostics.Process
   $p.StartInfo = $psi
   $timedOut = $false
@@ -225,14 +253,6 @@ function Invoke-WslAgentCapture {
   $prevWslUtf8 = Set-SilverWslUtf8ProcessEnvironment
   try {
     [void]$p.Start()
-    if ($useStdin) {
-      $utf8NoBom = New-Object System.Text.UTF8Encoding $false
-      $bytes = $utf8NoBom.GetBytes($StdinPayload)
-      $bs = $p.StandardInput.BaseStream
-      $bs.Write($bytes, 0, $bytes.Length)
-      $bs.Flush()
-      $p.StandardInput.Close()
-    }
     if (-not $p.WaitForExit($TimeoutMs)) {
       try { $p.Kill() } catch { }
       $timedOut = $true
@@ -241,8 +261,8 @@ function Invoke-WslAgentCapture {
     else {
       $code = [int]$p.ExitCode
     }
-    $so = Read-ProcessPipeUtf8 -Reader $p.StandardOutput
-    $se = Read-ProcessPipeUtf8 -Reader $p.StandardError
+    if (Test-Path -LiteralPath $outF) { $so = Read-CmdRedirectCaptureFileUtf8 -Path $outF }
+    if (Test-Path -LiteralPath $errF) { $se = Read-CmdRedirectCaptureFileUtf8 -Path $errF }
   }
   catch {
     $se = "WSL_ADAPTER_EXCEPTION: " + $_.Exception.Message
@@ -250,11 +270,80 @@ function Invoke-WslAgentCapture {
   }
   finally {
     Restore-SilverWslUtf8ProcessEnvironment -PreviousValue $prevWslUtf8
+    if (Test-Path -LiteralPath $outF) { Remove-Item -LiteralPath $outF -Force -ErrorAction SilentlyContinue }
+    if (Test-Path -LiteralPath $errF) { Remove-Item -LiteralPath $errF -Force -ErrorAction SilentlyContinue }
     try { $p.Dispose() } catch { }
   }
   if ([string]::IsNullOrEmpty($so)) { $so = "" }
   if ([string]::IsNullOrEmpty($se)) { $se = "" }
-  return @{ exit = $code; timedOut = $timedOut; stdout = $so; stderr = $se }
+  return @{ exit = $code; timedOut = $timedOut; stdout = $so; stderr = $se; pipe_capture_mode = "cmd_redirect_file" }
+}
+
+function Invoke-WslAgentCapturePipe {
+  param(
+    [string]$Distro,
+    [string[]]$LinuxArgvAfterDoubleDash,
+    [string]$WorkDirWindows,
+    [int]$TimeoutMs,
+    [string]$StdinPayload
+  )
+  $argLine = Build-WslExeArgumentLine -Distro $Distro -LinuxArgvAfterDoubleDash $LinuxArgvAfterDoubleDash
+  $psi = New-Object System.Diagnostics.ProcessStartInfo
+  $psi.FileName = "wsl.exe"
+  $psi.UseShellExecute = $false
+  $psi.CreateNoWindow = $true
+  $psi.WorkingDirectory = $WorkDirWindows
+  $psi.RedirectStandardOutput = $true
+  $psi.RedirectStandardError = $true
+  $psi.RedirectStandardInput = $true
+  Set-SilverProcessStartInfoUtf8Streams -Psi $psi
+  $psi.Arguments = $argLine
+  $p = New-Object System.Diagnostics.Process
+  $p.StartInfo = $psi
+  $timedOut = $false
+  $code = 0
+  $so = ""
+  $se = ""
+  $prevWslUtf8 = Set-SilverWslUtf8ProcessEnvironment
+  $pipeCapture = $null
+  try {
+    [void]$p.Start()
+    $utf8NoBom = New-Object System.Text.UTF8Encoding $false
+    $bytes = $utf8NoBom.GetBytes($StdinPayload)
+    $bs = $p.StandardInput.BaseStream
+    $bs.Write($bytes, 0, $bytes.Length)
+    $bs.Flush()
+    $p.StandardInput.Close()
+    $pipeCapture = Start-SilverProcessAsyncPipeCapture -Process $p
+    if (-not $p.WaitForExit($TimeoutMs)) {
+      try { $p.Kill() } catch { }
+      $timedOut = $true
+      $code = 124
+    }
+    else {
+      $code = [int]$p.ExitCode
+    }
+    $drain = Complete-SilverProcessAsyncPipeCapture -Capture $pipeCapture -Process $p
+    $so = [string]$drain.stdout
+    $se = [string]$drain.stderr
+    $pipeCapture = $null
+  }
+  catch {
+    $se = "WSL_ADAPTER_EXCEPTION: " + $_.Exception.Message
+    $code = 255
+  }
+  finally {
+    if ($null -ne $pipeCapture) {
+      $drainFinally = Complete-SilverProcessAsyncPipeCapture -Capture $pipeCapture -Process $p
+      if ([string]::IsNullOrEmpty($so)) { $so = [string]$drainFinally.stdout }
+      if ([string]::IsNullOrEmpty($se)) { $se = [string]$drainFinally.stderr }
+    }
+    Restore-SilverWslUtf8ProcessEnvironment -PreviousValue $prevWslUtf8
+    try { $p.Dispose() } catch { }
+  }
+  if ([string]::IsNullOrEmpty($so)) { $so = "" }
+  if ([string]::IsNullOrEmpty($se)) { $se = "" }
+  return @{ exit = $code; timedOut = $timedOut; stdout = $so; stderr = $se; pipe_capture_mode = "stdin_pipe_async_drain" }
 }
 
 function Get-SilverRepoProgressHeartbeatSnapshot {
@@ -302,36 +391,20 @@ function Invoke-WslAgentCaptureStaged {
     [int]$StallMs,
     [string]$StdinPayload = ""
   )
-  $argList = New-Object System.Collections.Generic.List[string]
-  [void]$argList.Add("-d")
-  [void]$argList.Add($Distro)
-  [void]$argList.Add("--")
-  foreach ($x in $LinuxArgvAfterDoubleDash) {
-    [void]$argList.Add([string]$x)
-  }
-  $psi = New-Object System.Diagnostics.ProcessStartInfo
-  $psi.FileName = "wsl.exe"
-  $psi.UseShellExecute = $false
-  $psi.CreateNoWindow = $true
-  $psi.WorkingDirectory = $WorkDirWindows
-  $psi.RedirectStandardOutput = $true
-  $psi.RedirectStandardError = $true
-  Set-SilverProcessStartInfoUtf8Streams -Psi $psi
   $useStdin = (-not [string]::IsNullOrEmpty($StdinPayload))
   if ($useStdin) {
-    $psi.RedirectStandardInput = $true
+    return Invoke-WslAgentCapturePipe -Distro $Distro -LinuxArgvAfterDoubleDash $LinuxArgvAfterDoubleDash -WorkDirWindows $WorkDirWindows -TimeoutMs $TimeoutMs -StdinPayload $StdinPayload
   }
-  $argLine = ""
-  foreach ($a in $argList) {
-    if ($argLine.Length -gt 0) { $argLine += " " }
-    if ($a -match '[\s"]') {
-      $argLine += '"' + ($a.Replace('"', '\"')) + '"'
-    }
-    else {
-      $argLine += $a
-    }
-  }
-  $psi.Arguments = $argLine
+  $outF = Join-Path $env:TEMP ("silver-wsl-staged-o-" + [guid]::NewGuid().ToString() + ".txt")
+  $errF = Join-Path $env:TEMP ("silver-wsl-staged-e-" + [guid]::NewGuid().ToString() + ".txt")
+  $wslArgLine = Build-WslExeArgumentLine -Distro $Distro -LinuxArgvAfterDoubleDash $LinuxArgvAfterDoubleDash
+  $inner = "wsl.exe " + $wslArgLine
+  $psi = New-Object System.Diagnostics.ProcessStartInfo
+  $psi.FileName = "cmd.exe"
+  $psi.Arguments = '/c ' + $inner + ' 1> "' + $outF.Replace('"', '""') + '" 2> "' + $errF.Replace('"', '""') + '"'
+  $psi.WorkingDirectory = $WorkDirWindows
+  $psi.UseShellExecute = $false
+  $psi.CreateNoWindow = $true
   $p = New-Object System.Diagnostics.Process
   $p.StartInfo = $psi
   $timedOut = $false
@@ -342,20 +415,13 @@ function Invoke-WslAgentCaptureStaged {
   $progressEver = $false
   $lastProgressUtc = ""
   $stopReason = "completed"
+  $lastProgressUtcDt = [DateTime]::UtcNow
   $prevWslUtf8Staged = Set-SilverWslUtf8ProcessEnvironment
   try {
     [void]$p.Start()
-    if ($useStdin) {
-      $utf8NoBom = New-Object System.Text.UTF8Encoding $false
-      $bytes = $utf8NoBom.GetBytes($StdinPayload)
-      $bs = $p.StandardInput.BaseStream
-      $bs.Write($bytes, 0, $bytes.Length)
-      $bs.Flush()
-      $p.StandardInput.Close()
-    }
     $wallStart = [DateTime]::UtcNow
     $lastProgressUtcDt = $wallStart
-    $lastSnap = Get-SilverRepoProgressHeartbeatSnapshot -RepoRoot $WorkDirWindows
+    $lastSnap = Get-SilverWslCaptureRedirectSnapshot -RepoRoot $WorkDirWindows -StdoutFile $outF -StderrFile $errF
     $budgetMs = $TimeoutMs
     if ($MaxTimeoutMs -lt $budgetMs) { $MaxTimeoutMs = $budgetMs }
     if ($SliceMs -lt 1000) { $SliceMs = 1000 }
@@ -370,7 +436,7 @@ function Invoke-WslAgentCaptureStaged {
         $stopReason = "completed"
         break
       }
-      $snapNow = Get-SilverRepoProgressHeartbeatSnapshot -RepoRoot $WorkDirWindows
+      $snapNow = Get-SilverWslCaptureRedirectSnapshot -RepoRoot $WorkDirWindows -StdoutFile $outF -StderrFile $errF
       if ($snapNow -ne $lastSnap) {
         $progressEver = $true
         $lastSnap = $snapNow
@@ -400,8 +466,8 @@ function Invoke-WslAgentCaptureStaged {
         $stopReason = "extended_for_progress"
       }
     }
-    $so = Read-ProcessPipeUtf8 -Reader $p.StandardOutput
-    $se = Read-ProcessPipeUtf8 -Reader $p.StandardError
+    if (Test-Path -LiteralPath $outF) { $so = Read-CmdRedirectCaptureFileUtf8 -Path $outF }
+    if (Test-Path -LiteralPath $errF) { $se = Read-CmdRedirectCaptureFileUtf8 -Path $errF }
   }
   catch {
     $se = "WSL_ADAPTER_EXCEPTION: " + $_.Exception.Message
@@ -410,6 +476,8 @@ function Invoke-WslAgentCaptureStaged {
   }
   finally {
     Restore-SilverWslUtf8ProcessEnvironment -PreviousValue $prevWslUtf8Staged
+    if (Test-Path -LiteralPath $outF) { Remove-Item -LiteralPath $outF -Force -ErrorAction SilentlyContinue }
+    if (Test-Path -LiteralPath $errF) { Remove-Item -LiteralPath $errF -Force -ErrorAction SilentlyContinue }
     try { $p.Dispose() } catch { }
   }
   if ([string]::IsNullOrEmpty($so)) { $so = "" }
@@ -426,6 +494,7 @@ function Invoke-WslAgentCaptureStaged {
     progressEver = $progressEver
     lastProgressUtc = $lastProgressUtc
     watchdogStopReason = $stopReason
+    pipe_capture_mode = "cmd_redirect_file_staged"
   }
 }
 
@@ -973,7 +1042,7 @@ if ($Probe -and -not [string]::IsNullOrWhiteSpace($TaskFile)) {
   }
 }
 
-if (-not $Probe -and -not $Utf8CaptureProbe) {
+if (-not $Probe -and -not $Utf8CaptureProbe -and -not $WslPipeDrainSelfTest) {
   if ([string]::IsNullOrWhiteSpace($TaskFile)) {
     if (-not ($WslUbuntuAgent -and $DryRun)) {
       Write-Error "TaskFile is required unless -Probe or -Utf8CaptureProbe is set."
@@ -1081,6 +1150,30 @@ if ($Utf8CaptureProbe) {
   exit 1
 }
 
+if ($WslPipeDrainSelfTest) {
+  $drainBashCore = 'yes SILVER_PIPE_DRAIN_TEST | head -n 2500'
+  $drainBash = Add-SilverWslBashLocaleToScript -BashScript $drainBashCore
+  $swDrain = [System.Diagnostics.Stopwatch]::StartNew()
+  $rDrain = Invoke-WslAgentCapture -Distro $WslDistro -LinuxArgvAfterDoubleDash @("/bin/bash", "-c", $drainBash) -WorkDirWindows $RepoRoot -TimeoutMs 120000
+  $swDrain.Stop()
+  $stdoutLen = 0
+  if ($null -ne $rDrain.stdout) { $stdoutLen = $rDrain.stdout.Length }
+  $passDrain = "NO"
+  if ((-not $rDrain.timedOut) -and ($rDrain.exit -eq 0) -and ($stdoutLen -ge 30000) -and ($swDrain.Elapsed.TotalSeconds -lt 110)) {
+    $passDrain = "YES"
+  }
+  Write-Host "=== SILVER_WSL_ADAPTER_PIPE_DRAIN_SELFTEST ==="
+  Write-Host ("pipe_drain_selftest=" + $passDrain)
+  Write-Host ("stdout_chars=" + [string]$stdoutLen)
+  Write-Host ("elapsed_seconds=" + [string]([int]$swDrain.Elapsed.TotalSeconds))
+  Write-Host ("exit_code=" + [string]$rDrain.exit)
+  Write-Host ("timed_out=" + $(if ($rDrain.timedOut) { "YES" } else { "NO" }))
+  Write-Host ("pipe_capture_mode=" + [string]$rDrain.pipe_capture_mode)
+  Write-Host "=== END_SILVER_WSL_ADAPTER_PIPE_DRAIN_SELFTEST ==="
+  if ($passDrain -eq "YES") { exit 0 }
+  exit 1
+}
+
 if ($WslUbuntuAgent) {
   $wslAdapterReadyDisk = Read-WslAdapterReadyFromDisk
   $taskAbs = ""
@@ -1185,6 +1278,8 @@ if ($WslUbuntuAgent) {
   $processStartUtc = ""
   $processEndUtc = ""
   $elapsedMs = 0
+  $wslAdapterOutputWritten = $false
+  $wslCaptureException = ""
   try {
     $verR = Invoke-WslAgentCapture -Distro $WslDistro -LinuxArgvAfterDoubleDash @($WslAgentLinuxPath, "--version") -WorkDirWindows $RepoRoot -TimeoutMs 60000
     $verLine = ($verR.stdout + $verR.stderr).Trim()
@@ -1204,6 +1299,9 @@ if ($WslUbuntuAgent) {
     $wallSw.Stop()
     $processEndUtc = (Get-Date).ToUniversalTime().ToString("o")
     $elapsedMs = [int64]$wallSw.ElapsedMilliseconds
+  }
+  catch {
+    $wslCaptureException = $_.Exception.Message
   }
   finally {
     if (Test-Path -LiteralPath $tempPayloadWindows) {
@@ -1347,7 +1445,7 @@ streaming_output_supported=NO
 last_output_utc=$watchdogLastProgressUtc
 last_stdout_bytes=UNAVAILABLE
 last_stderr_bytes=UNAVAILABLE
-adapter_wall_clock_note=Staged watchdog polls allowed repo progress files between WaitForExit slices; stdout/stderr are still read only after the child process ends.
+adapter_wall_clock_note=Staged watchdog polls repo progress and WSL redirect file growth between WaitForExit slices; capture uses cmd_redirect_file (no pipe-buffer deadlock).
 timeout_semantics=$timeoutSemantics
 timeout_class=$TimeoutClass
 watchdog_max_timeout_seconds=$(if ($MaxTimeoutSeconds -gt 0) { [string]$MaxTimeoutSeconds } else { [string]$TimeoutSeconds })
@@ -1398,6 +1496,7 @@ watchdog_stop_reason=$watchdogStopReason
     autonomous_cycle = $autoRunMeta.cycle
     autonomous_run_start_utc = $autoRunMeta.run_start_utc
     adapter_output_state = "COMPLETED"
+    pipe_capture_mode = "cmd_redirect_file"
     adapter_mode = "wsl_agent_print_ask_trust_workspace"
     wsl_distro = $WslDistro
     wsl_agent_linux_path = $WslAgentLinuxPath
@@ -1466,6 +1565,7 @@ watchdog_stop_reason=$watchdogStopReason
   }
 
   Write-AdapterOutputFile -Path $outAbs -Meta $meta -Stdout $so -Stderr $se -ExtraBlock $extraWsl
+  $wslAdapterOutputWritten = $true
 
   $postWriteGate = Invoke-SilverCap50Utf8SurfacesHardGate -RepoRoot $RepoRoot -NextActionPath $taskAbs -CursorOutputPath $outAbs
   if ($postWriteGate.PASS_FAIL -ne "PASS") {
@@ -1486,6 +1586,51 @@ watchdog_stop_reason=$watchdogStopReason
     $meta["adapter_authoritative_exit_code"] = "12"
     $meta["exit_code"] = "12"
     Write-AdapterOutputFile -Path $outAbs -Meta $meta -Stdout $so -Stderr $se -ExtraBlock $extraWsl
+    $wslAdapterOutputWritten = $true
+  }
+
+  if (-not $wslAdapterOutputWritten) {
+    if ([string]::IsNullOrWhiteSpace($processStartUtc)) {
+      $processStartUtc = (Get-Date).ToUniversalTime().ToString("o")
+    }
+    if ([string]::IsNullOrWhiteSpace($processEndUtc)) {
+      $processEndUtc = (Get-Date).ToUniversalTime().ToString("o")
+    }
+    $termDigest = Get-TaskUtf8Sha256HexPrefix -Text $text -HexChars 16
+    $termAuto = Get-SilverAutonomousRunMetaFromEnv
+    $termExit = [string]$exitCode
+    if ([string]::IsNullOrWhiteSpace($termExit)) { $termExit = "255" }
+    $termStdout = $so
+    if ([string]::IsNullOrWhiteSpace($termStdout)) {
+      $termStdout = "SILVER_WSL_ADAPTER_TERMINAL_CAPTURE adapter did not complete normal Write-AdapterOutputFile."
+    }
+    $termStderr = $se
+    if (-not [string]::IsNullOrWhiteSpace($wslCaptureException)) {
+      $termStderr = ($termStderr + "`r`nWSL_CAPTURE_EXCEPTION: " + $wslCaptureException).Trim()
+    }
+    $termMeta = [ordered]@{
+      timestamp_local = $tsLocal
+      cwd_powershell = $cwdActual
+      repo_root = $RepoRoot
+      autonomous_run_id = $termAuto.run_id
+      autonomous_cycle = $termAuto.cycle
+      autonomous_run_start_utc = $termAuto.run_start_utc
+      adapter_output_state = "COMPLETED"
+      pipe_capture_mode = "cmd_redirect_file"
+      adapter_mode = "wsl_agent_print_ask_trust_workspace"
+      adapter_completion_path = "terminal_emergency_write"
+      task_digest = $termDigest
+      process_start_utc = $processStartUtc
+      process_end_utc = $processEndUtc
+      elapsed_ms = [string]$elapsedMs
+      exit_code = $termExit
+      timed_out = $(if ($toFlag) { "YES" } else { "NO" })
+      stdout_nonempty = $(if ($termStdout.Trim().Length -gt 0) { "YES" } else { "NO" })
+      stderr_nonempty = $(if ($termStderr.Trim().Length -gt 0) { "YES" } else { "NO" })
+      can_run_full_auto_loop_maxcycles_1 = "NO"
+    }
+    Write-AdapterOutputFile -Path $outAbs -Meta $termMeta -Stdout $termStdout -Stderr $termStderr -ExtraBlock "SILVER_WSL_ADAPTER_TERMINAL_CAPTURE"
+    $wslAdapterOutputWritten = $true
   }
 
   if ($Probe) {

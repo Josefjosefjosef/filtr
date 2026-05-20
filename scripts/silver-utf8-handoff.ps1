@@ -291,6 +291,97 @@ function Read-ProcessPipeUtf8 {
   }
 }
 
+function Start-SilverProcessAsyncPipeCapture {
+  param([System.Diagnostics.Process]$Process)
+  $stdoutState = @{ Process = $Process; Box = @{ V = "" } }
+  $stderrState = @{ Process = $Process; Box = @{ V = "" } }
+  $stdoutStart = [System.Threading.ParameterizedThreadStart]{
+    param($st)
+    try {
+      $proc = $st.Process
+      if ($null -eq $proc) { return }
+      $reader = $proc.StandardOutput
+      if ($null -eq $reader) { return }
+      $st.Box.V = $reader.ReadToEnd()
+    }
+    catch { }
+  }
+  $stderrStart = [System.Threading.ParameterizedThreadStart]{
+    param($st)
+    try {
+      $proc = $st.Process
+      if ($null -eq $proc) { return }
+      $reader = $proc.StandardError
+      if ($null -eq $reader) { return }
+      $st.Box.V = $reader.ReadToEnd()
+    }
+    catch { }
+  }
+  $stdoutThread = New-Object System.Threading.Thread($stdoutStart)
+  $stderrThread = New-Object System.Threading.Thread($stderrStart)
+  $stdoutThread.IsBackground = $true
+  $stderrThread.IsBackground = $true
+  $stdoutThread.Start($stdoutState)
+  $stderrThread.Start($stderrState)
+  return @{
+    StdoutThread = $stdoutThread
+    StderrThread = $stderrThread
+    StdoutBox = $stdoutState.Box
+    StderrBox = $stderrState.Box
+  }
+}
+
+function Complete-SilverProcessAsyncPipeCapture {
+  param(
+    $Capture,
+    [System.Diagnostics.Process]$Process,
+    [int]$JoinTimeoutMs = 300000
+  )
+  $so = ""
+  $se = ""
+  if ($null -ne $Capture) {
+    if ($null -ne $Capture.StdoutThread) {
+      try {
+        if (-not $Capture.StdoutThread.Join($JoinTimeoutMs)) {
+          $so = ""
+        }
+        else {
+          $so = [string]$Capture.StdoutBox.V
+        }
+      }
+      catch {
+        $so = ""
+      }
+    }
+    if ($null -ne $Capture.StderrThread) {
+      try {
+        if (-not $Capture.StderrThread.Join($JoinTimeoutMs)) {
+          $se = ""
+        }
+        else {
+          $se = [string]$Capture.StderrBox.V
+        }
+      }
+      catch {
+        $se = ""
+      }
+    }
+  }
+  if ([string]::IsNullOrEmpty($so)) {
+    if ($null -ne $Process) {
+      $so = Read-ProcessPipeUtf8 -Reader $Process.StandardOutput
+    }
+  }
+  if ([string]::IsNullOrEmpty($se)) {
+    if ($null -ne $Process) {
+      $se = Read-ProcessPipeUtf8 -Reader $Process.StandardError
+    }
+  }
+  if ([string]::IsNullOrEmpty($so)) { $so = "" }
+  if ([string]::IsNullOrEmpty($se)) { $se = "" }
+  return @{ stdout = $so; stderr = $se }
+}
+
 function Read-CmdRedirectCaptureFileUtf8 {
   param([string]$Path)
   if (-not (Test-Path -LiteralPath $Path)) { return "" }
