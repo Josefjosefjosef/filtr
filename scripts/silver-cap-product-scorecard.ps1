@@ -203,7 +203,7 @@ function Complete-SilverCapProductScorecard {
   $psi.WorkingDirectory = $RepoRoot
   $psi.RedirectStandardOutput = $true
   $psi.RedirectStandardError = $true
-  $psi.UseShellExecute = $true
+  $psi.UseShellExecute = $false
   $psi.CreateNoWindow = $true
   $p = [System.Diagnostics.Process]::Start($psi)
   $stdout = $p.StandardOutput.ReadToEnd()
