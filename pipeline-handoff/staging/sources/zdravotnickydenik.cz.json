@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-20T11:54:55.591330Z",
+  "ingestedAt": "2026-05-20T12:34:48.502937Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Lékařka, která ošetřovala Palacha, i špičky chirurgie. Koho Senát vybral na vyznamenání?",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/statni-vyznamemani-prehled-osobnosti-zdravotnictvi/",
+      "dt": "2026-05-20T12:25:36Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "chirurgie",
+        "koho",
+        "lékařka",
+        "ošetřovala",
+        "palacha",
+        "senát",
+        "vybral",
+        "vyznamenání",
+        "špičky"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,36 +268,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Šok v Německu: Dětský lékař čelí obžalobě ze 130 sexuálních činů, obětem byly i dva roky",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/nemecko-detsky-lekar-obzaloba-130-sexualnich-cinu/",
-      "dt": "2026-05-19T13:45:35Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "130",
-        "byly",
-        "dva",
-        "dětský",
-        "lékař",
-        "německu",
-        "obětem",
-        "obžalobě",
-        "roky",
-        "sexuálních",
-        "čelí",
-        "činů",
-        "šok"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +278,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 102898,
+      "bytes": 105832,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +315,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-20T11:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T12:25:36Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -335,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lékařka, která ošetřovala Palacha, i špičky chirurgie. Koho Senát vybral na vyznamenání?",
+            "publishedAt": "2026-05-20T12:25:36Z"
+          },
           {
             "title": "Máte spoustu času, odrazují lékaři ženy od léčby neplodnosti. Experti varují před alarmující chybou",
             "publishedAt": "2026-05-20T11:00:00Z"
@@ -362,10 +362,6 @@
           {
             "title": "Česko krev na Ukrajinu neposílá. Přednosta ÚVN vysvětluje, proč to nejde",
             "publishedAt": "2026-05-20T05:00:00Z"
-          },
-          {
-            "title": "„Nepřiměřená léčba“ místo „neadekvátní“: Senát upravuje pravidla paliativní péče",
-            "publishedAt": "2026-05-19T15:04:13Z"
           }
         ]
       }

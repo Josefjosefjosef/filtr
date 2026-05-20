@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-20T11:54:55.591330Z",
+  "ingestedAt": "2026-05-20T12:34:48.502937Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Benzin nejdražší od začátku regulace. Maximální ceny benzinu a nafty na čtvrtek 21. května",
+      "url": "https://www.penize.cz/doprava/490047-benzin-je-bude-nejdrazsi-od-zacatku-regulace-maximalni-ceny-benzinu-a-nafty-na-ctvrtek-21-kvetna",
+      "dt": "2026-05-20T14:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "benzin",
+        "benzinu",
+        "ceny",
+        "května",
+        "maximální",
+        "nafty",
+        "nejdražší",
+        "regulace",
+        "začátku",
+        "čtvrtek"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -478,30 +505,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Dejte si Dluhopis republiky za rámeček. Takhle vypadají certifikáty",
-      "url": "https://www.penize.cz/dluhopisy/489790-dejte-si-dluhopis-republiky-za-ramecek-takhle-vypadaji-certifikaty",
-      "dt": "2026-05-17T07:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "certifikáty",
-        "dejte",
-        "dluhopis",
-        "republiky",
-        "rámeček",
-        "takhle",
-        "vypadají"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -512,7 +515,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18845,
+      "bytes": 18972,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -549,11 +552,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-20T05:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T14:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 13,
-          "zpravy": 7
+          "zpravy": 8,
+          "finance": 12
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -565,6 +568,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Benzin nejdražší od začátku regulace. Maximální ceny benzinu a nafty na čtvrtek 21. května",
+            "publishedAt": "2026-05-20T14:00:00Z"
+          },
           {
             "title": "Kdy, kolik, na co a za co? Jak dětem nastavit kapesné očima expertů",
             "publishedAt": "2026-05-20T05:05:00Z"
@@ -592,10 +599,6 @@
           {
             "title": "Košík končí s minimální hodnotou objednávky. Nově umožní i malé nákupy",
             "publishedAt": "2026-05-19T10:15:00Z"
-          },
-          {
-            "title": "Tříletá fixace, levnější první rok. E.ON láká na nový tarif plynu, má ale podmínku",
-            "publishedAt": "2026-05-19T09:05:00Z"
           }
         ]
       }

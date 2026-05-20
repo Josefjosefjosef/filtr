@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-20T11:54:55.591330Z",
+  "ingestedAt": "2026-05-20T12:34:48.502937Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Týden na Steamu ve znamení cesty do Japonska a výpravy pod mořskou hladinu",
+      "url": "https://zing.cz/article/tyden-na-steamu-ve-znameni-cesty-do-japonska-a-vypravy-pod-morskou-hladinu",
+      "dt": "2026-05-20T12:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "cesty",
+        "hladinu",
+        "japonska",
+        "mořskou",
+        "steamu",
+        "týden",
+        "výpravy",
+        "znamení"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -961,31 +986,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Forza Horizon 6 je zatím nejlépe hodnocenou hrou roku 2026",
-      "url": "https://zing.cz/article/forza-horizon-6-je-zatim-nejlepe-hodnocenou-hrou-roku-2026",
-      "dt": "2026-05-16T07:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "2026",
-        "forza",
-        "hodnocenou",
-        "horizon",
-        "hrou",
-        "nejlépe",
-        "roku",
-        "zatím"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -996,7 +996,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 127343,
+      "bytes": 127394,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1033,7 +1033,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-20T11:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1049,6 +1049,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Týden na Steamu ve znamení cesty do Japonska a výpravy pod mořskou hladinu",
+            "publishedAt": "2026-05-20T12:00:00Z"
+          },
           {
             "title": "Komerční banka spouští herní soutěž Comerch. Hráči mohou vyhrát limitovaný merch Agraela a dalších českých streamerů a získat bonus až 4000 Kč",
             "publishedAt": "2026-05-20T11:00:00Z"
@@ -1076,10 +1080,6 @@
           {
             "title": "Forza Horizon 6 je oficiálně venku. Rekordy série byly okamžitě překonány",
             "publishedAt": "2026-05-19T18:00:00Z"
-          },
-          {
-            "title": "ARC Raiders dostalo jako součást nové aktualizace ochranu Denuvo",
-            "publishedAt": "2026-05-19T16:00:00Z"
           }
         ]
       }
