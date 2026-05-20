@@ -1736,6 +1736,11 @@ function gitTrackedClean() {
       "scripts/rhc-v3-deterministic-core.cjs",
       "scripts/silver-note-write-warranty-object-diagnostic.cjs",
       "scripts/silver-note-write-warranty-object-diagnostic-report.json",
+      "scripts/silver-self-correction-audit.cjs",
+      "scripts/silver-self-correction-safety-diagnostic.cjs",
+      "scripts/silver-self-correction-negation-scope.cjs",
+      "scripts/silver-audit-registry.cjs",
+      "SILVER_RUN_REPORT.md",
       "assets/app.js"
     ];
     const bad = tracked.filter((l) => {

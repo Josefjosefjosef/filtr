@@ -1,0 +1,104 @@
+{
+  "harness_id": "silver_self_correction_audit_v1",
+  "generated_at": "2026-05-20T10:33:13.752Z",
+  "main_commit": "0e36e2871ca297abfdb6afdfb1312b3c317586a4",
+  "engine_changed": "NO",
+  "assets_app_changed": "NO",
+  "total_cases": 21000,
+  "pass_count": 15791,
+  "fail_count": 5209,
+  "overall_accuracy": "75.20",
+  "family_breakdown": {
+    "correction_after_create_intent": {
+      "pass": 2760,
+      "fail": 240,
+      "accuracy": "92.00"
+    },
+    "correction_module_switch": {
+      "pass": 1852,
+      "fail": 1148,
+      "accuracy": "61.73"
+    },
+    "correction_temporal": {
+      "pass": 3000,
+      "fail": 0,
+      "accuracy": "100.00"
+    },
+    "correction_negation": {
+      "pass": 1963,
+      "fail": 1037,
+      "accuracy": "65.43"
+    },
+    "correction_update_vs_create": {
+      "pass": 1786,
+      "fail": 1214,
+      "accuracy": "59.53"
+    },
+    "noisy_mobile_self_correction": {
+      "pass": 2508,
+      "fail": 492,
+      "accuracy": "83.60"
+    },
+    "safety_regression": {
+      "pass": 1922,
+      "fail": 1078,
+      "accuracy": "64.07"
+    }
+  },
+  "top_fail_clusters": [
+    "self_correction_update_note:1000",
+    "self_correction_module_task_to_note:962",
+    "self_correction_safety_cal_readonly:750",
+    "self_correction_negation_readonly:565",
+    "self_correction_negation_flip:472",
+    "self_correction_noisy_neg_read:335",
+    "self_correction_safety_note_readonly:328",
+    "self_correction_after_create_task:184",
+    "self_correction_update_task:179",
+    "self_correction_noisy_cross:115",
+    "self_correction_module_note_to_cal:104",
+    "self_correction_module_cal_to_note:82",
+    "self_correction_after_create_note_task:56",
+    "self_correction_noisy_task:38",
+    "self_correction_update_cal:35",
+    "self_correction_noisy_cal:4",
+    "self_correction_after_create_cal:0",
+    "self_correction_temporal_cal:0",
+    "self_correction_negation_query:0",
+    "self_correction_negation_hard:0"
+  ],
+  "true_engine_fail_count": 502,
+  "harness_problem_count": 1484,
+  "ambiguous_input_count": 3223,
+  "safety_risk_count": 0,
+  "dangerous_write_count": 0,
+  "false_write_count": 0,
+  "query_created_write_count": 0,
+  "write_when_negated_count": 0,
+  "recommended_next_task_type": "audit_expansion",
+  "recommended_next_cluster": "self_correction_update_note:1000",
+  "self_correction_status": "PARTIAL",
+  "self_correction_next_action": "Expand clarification gold / harness tolerance for ambiguous self-correction surfaces.",
+  "safety": {
+    "dangerous_write_count": 0,
+    "false_write_count": 0,
+    "query_created_write_count": 0,
+    "write_when_negated_count": 0,
+    "safety_risk_count": 0,
+    "all_zero": "YES"
+  },
+  "sc_lanes": [
+    "correction_after_create_intent",
+    "correction_module_switch",
+    "correction_temporal",
+    "correction_negation",
+    "correction_update_vs_create",
+    "noisy_mobile_self_correction",
+    "safety_regression"
+  ],
+  "pinned_regression": {
+    "noisy_neg_read_cases": 22,
+    "normal_cal_create_guard_cases": 12,
+    "pin_fail_count": 0
+  }
+}
