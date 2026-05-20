@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "svetcestovatele.cz",
-  "ingestedAt": "2026-05-20T03:55:01.545859Z",
+  "ingestedAt": "2026-05-20T04:35:13.282824Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "„Ses zbláznila, babi? Nic jsem si od tebe nepůjčil.“ Nevděčný vnuk zavolal na babičku policii",
+      "url": "https://www.svetcestovatele.cz/ses-zblaznila-babi-nic-jsem-si-od-tebe-nepujcil-nevdecny-vnuk-zavolal-na-babicku-policii/",
+      "dt": "2026-05-20T04:00:02Z",
+      "media_raw": "SvětCestovatele",
+      "media_norm": "SvětCestovatele",
+      "tokens": [
+        "babi",
+        "babičku",
+        "jsem",
+        "nepůjčil",
+        "nevděčný",
+        "nic",
+        "policii",
+        "ses",
+        "tebe",
+        "vnuk",
+        "zavolal",
+        "zbláznila"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_svetcestovatele",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "svetcestovatele.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -496,29 +525,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "svetcestovatele.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Řidič: Kuřákům za volantem bych urazil ruce",
-      "url": "https://www.svetcestovatele.cz/ridic-kurakum-za-volantem-bych-urazil-ruce/",
-      "dt": "2026-05-08T10:01:18Z",
-      "media_raw": "SvětCestovatele",
-      "media_norm": "SvětCestovatele",
-      "tokens": [
-        "bych",
-        "kuřákům",
-        "ruce",
-        "urazil",
-        "volantem",
-        "řidič"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_svetcestovatele",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "svetcestovatele.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -529,7 +535,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.svetcestovatele.cz/feed/",
-      "bytes": 122014,
+      "bytes": 124407,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -566,7 +572,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-19T04:00:14Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T04:00:02Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -581,6 +587,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Ses zbláznila, babi? Nic jsem si od tebe nepůjčil.“ Nevděčný vnuk zavolal na babičku policii",
+            "publishedAt": "2026-05-20T04:00:02Z"
+          },
           {
             "title": "Tankování „po špunt“: Zlozvyk, který vám může provětrat peněženku i odrovnat motor",
             "publishedAt": "2026-05-19T04:00:14Z"
@@ -608,10 +618,6 @@
           {
             "title": "Jak se zbavit vos na zahradě: Využijte jejich teritoriálnost, půjde to i bez chemie",
             "publishedAt": "2026-05-16T04:00:24Z"
-          },
-          {
-            "title": "Zahrada zámku Ratměřice ukrývá poklad: dva obří sekvojovce",
-            "publishedAt": "2026-05-15T11:00:15Z"
           }
         ]
       }

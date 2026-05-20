@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-20T03:55:01.545859Z",
+  "ingestedAt": "2026-05-20T04:35:13.282824Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Přichází účetní revoluce. Odhalí skutečnou hodnotu majetku firem",
+      "url": "https://ekonomickydenik.cz/prichazi-ucetni-revoluce/",
+      "dt": "2026-05-20T04:05:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "firem",
+        "hodnotu",
+        "majetku",
+        "odhalí",
+        "přichází",
+        "revoluce",
+        "skutečnou",
+        "účetní"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -753,32 +778,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Výdejní boxy pro SPZ zůstávají. Automatické vyřazení vozidel se ale změní",
-      "url": "https://ekonomickydenik.cz/spz-vydejni-boxy-novela-zmeny/",
-      "dt": "2026-05-18T09:20:22Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "ale",
-        "automatické",
-        "boxy",
-        "spz",
-        "vozidel",
-        "vyřazení",
-        "výdejní",
-        "změní",
-        "zůstávají"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +788,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71278,
+      "bytes": 71526,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,13 +825,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T17:14:48Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T04:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "finance": 25,
           "zpravy": 3,
-          "finance": 24,
-          "zdravi": 2,
-          "sport": 1
+          "zdravi": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -844,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Přichází účetní revoluce. Odhalí skutečnou hodnotu majetku firem",
+            "publishedAt": "2026-05-20T04:05:00Z"
+          },
           {
             "title": "Až budete chtít vzbudit soucit, vymažte fotky ze Srí Lanky a Brazílie. Vzkazuje Bartoš Mrázové",
             "publishedAt": "2026-05-19T17:14:48Z"
@@ -871,10 +873,6 @@
           {
             "title": "Uplatnili jste slevu na manželku? Možná právě vás hledá finanční úřad",
             "publishedAt": "2026-05-19T11:55:29Z"
-          },
-          {
-            "title": "Zlaté vejce pro zbrojovku z Nového Jičína? Může vyrábět legendární obrněnce",
-            "publishedAt": "2026-05-19T11:32:24Z"
           }
         ]
       }

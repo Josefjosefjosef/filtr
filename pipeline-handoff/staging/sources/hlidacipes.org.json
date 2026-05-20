@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hlidacipes.org",
-  "ingestedAt": "2026-05-20T03:55:01.545859Z",
+  "ingestedAt": "2026-05-20T04:35:13.282824Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Telefonát jak z normalizace: Babiš žádal Němce, aby nejezdili do Brna",
+      "url": "https://hlidacipes.org/telefonat-jak-z-normalizace-babis-zadal-nemce-aby-nejezdili-do-brna/",
+      "dt": "2026-05-20T04:30:30Z",
+      "media_raw": "HlídacíPes",
+      "media_norm": "HlídacíPes",
+      "tokens": [
+        "babiš",
+        "brna",
+        "nejezdili",
+        "normalizace",
+        "němce",
+        "telefonát",
+        "žádal"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_hlidacipes",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "hlidacipes.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -236,30 +260,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "hlidacipes.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Jak chtěl Brusel ublížit mojí škodověnce… A jak to všechno dopadlo",
-      "url": "https://hlidacipes.org/jak-chtel-brusel-ublizit-moji-skodovence-a-jak-to-vsechno-dopadlo/",
-      "dt": "2026-05-15T04:30:30Z",
-      "media_raw": "HlídacíPes",
-      "media_norm": "HlídacíPes",
-      "tokens": [
-        "brusel",
-        "chtěl",
-        "dopadlo",
-        "mojí",
-        "ublížit",
-        "všechno",
-        "škodověnce"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_hlidacipes",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "hlidacipes.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -270,7 +270,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://hlidacipes.org/feed/",
-      "bytes": 17921,
+      "bytes": 17935,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -307,7 +307,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-19T09:30:12Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T04:30:30Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -322,6 +322,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Telefonát jak z normalizace: Babiš žádal Němce, aby nejezdili do Brna",
+            "publishedAt": "2026-05-20T04:30:30Z"
+          },
           {
             "title": "Už se tu zase roztahujete. Vládní protiněmecké řeči prosakují do společnosti",
             "publishedAt": "2026-05-19T09:30:12Z"
@@ -349,10 +353,6 @@
           {
             "title": "„Kdyby tak mě to letadlo vzalo s sebou,“ snila malá Dagmar. Letecký sen se jí splnil",
             "publishedAt": "2026-05-16T06:00:55Z"
-          },
-          {
-            "title": "Se střetem zájmů vstává, se střetem zájmů usíná. A platíte to vy…",
-            "publishedAt": "2026-05-16T05:30:41Z"
           }
         ]
       }

@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-20T03:55:01.545859Z",
+  "ingestedAt": "2026-05-20T04:35:13.282824Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "EU se chce vyhnout zvýšení amerických cel. Nová legislativa má zrušit tarify na průmyslové zboží z USA",
+      "url": "https://zahranicni.hn.cz/c1-67879050-eu-se-chce-vyhnout-zvyseni-americkych-cel-nova-legislativa-ma-zrusit-tarify-na-prumyslove-zbozi-z-usa",
+      "dt": "2026-05-20T03:57:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "amerických",
+        "cel",
+        "chce",
+        "legislativa",
+        "nová",
+        "průmyslové",
+        "tarify",
+        "usa",
+        "vyhnout",
+        "zboží",
+        "zrušit",
+        "zvýšení"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1125,31 +1154,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Živě: Konference Czech Investment Forum v rámci Czech Semicon Days 2026",
-      "url": "https://byznys.hn.cz/c1-67878230-zive-konference-czech-investment-forum-v-ramci-czech-semicon-days-2026",
-      "dt": "2026-05-19T06:45:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "2026",
-        "czech",
-        "days",
-        "forum",
-        "investment",
-        "konference",
-        "rámci",
-        "semicon"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1160,7 +1164,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183553,
+      "bytes": 183474,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1197,7 +1201,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-20T03:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T03:57:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 34,
@@ -1215,6 +1219,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "EU se chce vyhnout zvýšení amerických cel. Nová legislativa má zrušit tarify na průmyslové zboží z USA",
+            "publishedAt": "2026-05-20T03:57:00Z"
+          },
           {
             "title": "Založení firmy nebo danění zaměstnaneckých akcií má být mnohem jednodušší. Jak to pomůže byznysu?",
             "publishedAt": "2026-05-20T03:40:00Z"
@@ -1242,10 +1250,6 @@
           {
             "title": "Babišova pravá ruka úřaduje. Popisujeme, jak vypadala schůzka, kde obhajovala rušení klíčových agend",
             "publishedAt": "2026-05-19T18:00:00Z"
-          },
-          {
-            "title": "Knihovna Václava Havla je v ohrožení. Hlavní sponzor i celý tým instituce nesouhlasí s tím, jak knihovnu řídí Tomáš Sedláček",
-            "publishedAt": "2026-05-19T16:37:00Z"
           }
         ]
       }

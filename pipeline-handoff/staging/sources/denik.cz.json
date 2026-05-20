@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-20T03:55:01.545859Z",
+  "ingestedAt": "2026-05-20T04:35:13.282824Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nežádáme zrušení dekretů, ale Lex Beneš, říká László Gubík",
+      "url": "https://www.denik.cz/evropa-pro-cechy/laszlo-gubik-madarska-aliance.html",
+      "dt": "2026-05-20T04:05:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ale",
+        "beneš",
+        "dekretů",
+        "gubík",
+        "lex",
+        "lászló",
+        "nežádáme",
+        "zrušení",
+        "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -628,33 +654,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Sjezd sudetských Němců v Brně je nešťastný, může otevírat staré rány, řekl Babiš",
-      "url": "https://www.denik.cz/z_domova/andrej-babis-debata-sjezd-sudetsti-nemci-brno-20260519.html",
-      "dt": "2026-05-19T11:56:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "babiš",
-        "brně",
-        "nešťastný",
-        "němců",
-        "otevírat",
-        "rány",
-        "sjezd",
-        "staré",
-        "sudetských",
-        "řekl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -665,7 +664,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30243,
+      "bytes": 30041,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -702,7 +701,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-20T03:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T04:05:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -718,6 +717,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nežádáme zrušení dekretů, ale Lex Beneš, říká László Gubík",
+            "publishedAt": "2026-05-20T04:05:00Z"
+          },
           {
             "title": "Kopejte, křičte, palcem tlačte agresorovi při napadaní do oka, radí Pavel Houdek",
             "publishedAt": "2026-05-20T03:45:00Z"
@@ -745,10 +748,6 @@
           {
             "title": "Osoba s rizikem nákazy ebolou je na cestě do ČR, tvrdí americký institut",
             "publishedAt": "2026-05-19T19:45:00Z"
-          },
-          {
-            "title": "Guvernér Michl vyhlásil válku inflaci. I za cenu drcení ekonomiky, tvrdil",
-            "publishedAt": "2026-05-19T18:01:00Z"
           }
         ]
       }

@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-20T03:55:01.545859Z",
+  "ingestedAt": "2026-05-20T04:35:13.282824Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Po vzoru kolonialismu. Singapur zavede výprask i na školách",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/po-vzoru-kolonialismu-singapur-zavede-vyprask-i-na-skolach-373602",
+      "dt": "2026-05-20T04:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "kolonialismu",
+        "singapur",
+        "vzoru",
+        "výprask",
+        "zavede",
+        "školách"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -734,23 +757,27 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Český diplomat zahynul v chilských Andách",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/cesky-diplomat-zahynul-v-chilskych-andach-373600",
-      "dt": "2026-05-19T09:05:28Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Naváže národní tým na výkon proti Švédsku? Češi se střetnou s Italy",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/navaze-narodni-tym-na-vykon-proti-svedsku-cesi-se-stretnou-s-italy-156896",
+      "dt": "2026-05-20T04:00:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "andách",
-        "chilských",
-        "diplomat",
-        "zahynul",
-        "český"
+        "italy",
+        "naváže",
+        "národní",
+        "proti",
+        "střetnou",
+        "tým",
+        "výkon",
+        "češi",
+        "švédsku"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1476,30 +1503,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vstup českého týmu do MS v hokeji sledovalo 1,5 milionu lidí",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/vstup-ceskeho-tymu-do-ms-v-hokeji-sledovalo-15-milionu-lidi-156871",
-      "dt": "2026-05-18T13:24:23Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "hokeji",
-        "lidí",
-        "milionu",
-        "sledovalo",
-        "týmu",
-        "vstup",
-        "českého"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1510,7 +1513,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42561,
+      "bytes": 42917,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1570,7 +1573,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T04:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1587,6 +1590,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Po vzoru kolonialismu. Singapur zavede výprask i na školách",
+            "publishedAt": "2026-05-20T04:00:00Z"
+          },
           {
             "title": "Screening části typů nádorů se změní, čekání na kolonoskopii má být kratší",
             "publishedAt": "2026-05-20T03:30:00Z"
@@ -1614,10 +1621,6 @@
           {
             "title": "USA zabavily v Indickém oceánu tanker spojovaný s Íránem, píše WSJ",
             "publishedAt": "2026-05-19T19:37:11Z"
-          },
-          {
-            "title": "Trump nevylučuje nový útok na Írán. Podle Vance přinesly rozhovory pokrok",
-            "publishedAt": "2026-05-19T19:21:23Z"
           }
         ]
       }
@@ -1629,7 +1632,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36861,
+      "bytes": 36956,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1666,7 +1669,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T04:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1681,6 +1684,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Naváže národní tým na výkon proti Švédsku? Češi se střetnou s Italy",
+            "publishedAt": "2026-05-20T04:00:00Z"
+          },
           {
             "title": "Soutěž k MS v hokeji – 20. května",
             "publishedAt": "2026-05-19T22:00:00Z"
@@ -1708,10 +1715,6 @@
           {
             "title": "Ganna opanoval časovku na Giru, Vingegaard snížil náskok",
             "publishedAt": "2026-05-19T16:04:24Z"
-          },
-          {
-            "title": "Alcaraz kvůli zraněnému zápěstí vynechá i Wimbledon",
-            "publishedAt": "2026-05-19T15:29:02Z"
           }
         ]
       }
@@ -1723,7 +1726,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77294,
+      "bytes": 77276,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
