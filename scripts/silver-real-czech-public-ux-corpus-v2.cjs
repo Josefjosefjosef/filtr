@@ -89,6 +89,8 @@ function gitTrackedClean() {
       "scripts/silver-rcz2-mobile-voice-intent-fail-diagnostic.cjs",
       "scripts/silver-rcz2-mobile-voice-intent-fail-diagnostic-report.json",
       "scripts/silver-rcz2-ambiguity-intent-fail-diagnostic.cjs",
+      "scripts/silver-rcz2-ultra-short-chaos-diagnostic.cjs",
+      "scripts/silver-rcz2-ultra-short-chaos-diagnostic-report.json",
       "scripts/audit_silver_20000_routing_stable.cjs",
       "scripts/audit_silver_realistic_mobile_corpus.cjs",
       "scripts/silver-real-czech-corpus-v1.cjs",

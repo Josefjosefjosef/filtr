@@ -37199,6 +37199,37 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return false;
   }
 
+  /**
+   * P1 rcz2_ultra_short_chaos: „petr odpoledne“, „mamka vecer“ — jen entita + denní část / datum bez zápisu
+   * a bez kalendářní kotvy → neimplicitní calendar.create (gold/harness: unknown / clarify).
+   */
+  function iuSilverUltraShortTimeFragmentNoImplicitCreateFolded(f, raw) {
+    const x = String(f || "").trim();
+    const r = String(raw || "").trim();
+    if (!x || !r) return false;
+    const tokens = r.split(/\s+/).filter(Boolean);
+    if (tokens.length > 5 || tokens.length < 2) return false;
+    if (iuSilverHasWriteVerb(x)) return false;
+    if (iuSilverHasExplicitCalendarTarget(x) || iuSilverHasExplicitTasksTarget(x) || iuSilverHasExplicitNotesTarget(x)) {
+      return false;
+    }
+    if (/\b(uloz|zapis|pridej|vytvor|nahod|dej\s+mi\s+do|naplanuj)\b/.test(x)) return false;
+    if (/\b(kde|co\s+mam|co\s+jsem|najdi|mrkni|podivej|koukni|ukaz\s+mi)\b/.test(x)) return false;
+    if (!iuSilverLooksLikeSchedulingFragment(x, r)) return false;
+    if (/\bschuz|porad|meeting|udalost\b/.test(x)) return false;
+    if (/\bna\s+[a-z]{2,}\s+\d{1,4}\b/.test(x)) return false;
+    if (/\bv\s+\d{1,2}\s*[:.]\s*\d{1,2}\b/.test(x) || /\bve\s+\d{1,2}\s*[:.]\s*\d{1,2}\b/.test(x)) return false;
+    /** P0 calendar-create regression: „zítra v 18 právník“, „pondělí 9 doktor“ — keep implicit create. */
+    if (/\b(zitra|zejtra|dnes|pozitri)\b/.test(x) && (/\bv\s+\d{1,2}\b/.test(x) || /\b\d{1,2}\s*hod/.test(x))) return false;
+    if (iuSilverReWeekdayOnce().test(r) && /\b\d{1,2}\b/.test(x)) return false;
+    /** rcz2_ultra_short_chaos: jen denní část (ráno/večer/odpoledne) nebo datum bez strukturovaného času → clarify, ne create. */
+    const daypartOnly = /\b(rano|vecer|odpoledne|dopoledne|noc)\b/.test(x);
+    const dateAnchor = /\b(zitra|zejtra|dnes|pozitri)\b/.test(x) || iuSilverReWeekdayOnce().test(r);
+    if (daypartOnly && !dateAnchor) return true;
+    if (dateAnchor && !/\bv\s+\d{1,2}\b/.test(x) && !(iuSilverReWeekdayOnce().test(r) && /\b\d{1,2}\b/.test(x))) return true;
+    return false;
+  }
+
   function iuSilverLooksLikeSchedulingFragment(f, raw) {
     if (/\bz[ií]tra\b|\bzittra\b|\bdnes(?:ka|ek)?\b|\bpoz[ií]t[rř][ií]\b/.test(f)) return true;
     if (/\bpristi\b/.test(f)) return true;
@@ -37426,6 +37457,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         .filter(Boolean).length <= 10;
     const implicitCalCreate =
       !shortBareUlozNoExplicitCalendar &&
+      !iuSilverUltraShortTimeFragmentNoImplicitCreateFolded(folded, raw) &&
       (!iuSilverIsTargetAmbiguousStorageVerb(folded) || iuSilverP0CalendarWriteVsAmbiguousNoteFolded(folded, raw)) &&
       !iuSilverHasExplicitNotesTarget(folded) &&
       !iuSilverHasExplicitTasksTarget(folded) &&
