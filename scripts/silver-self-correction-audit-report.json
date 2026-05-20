@@ -1,13 +1,13 @@
 {
   "harness_id": "silver_self_correction_audit_v1",
-  "generated_at": "2026-05-20T10:33:13.752Z",
-  "main_commit": "0e36e2871ca297abfdb6afdfb1312b3c317586a4",
+  "generated_at": "2026-05-20T11:31:47.049Z",
+  "main_commit": "14621cbd943888e9dc86a3e1940167bd9ee5556c",
   "engine_changed": "NO",
   "assets_app_changed": "NO",
   "total_cases": 21000,
-  "pass_count": 15791,
-  "fail_count": 5209,
-  "overall_accuracy": "75.20",
+  "pass_count": 16126,
+  "fail_count": 4874,
+  "overall_accuracy": "76.79",
   "family_breakdown": {
     "correction_after_create_intent": {
       "pass": 2760,
@@ -35,9 +35,9 @@
       "accuracy": "59.53"
     },
     "noisy_mobile_self_correction": {
-      "pass": 2508,
-      "fail": 492,
-      "accuracy": "83.60"
+      "pass": 2843,
+      "fail": 157,
+      "accuracy": "94.77"
     },
     "safety_regression": {
       "pass": 1922,
@@ -51,7 +51,6 @@
     "self_correction_safety_cal_readonly:750",
     "self_correction_negation_readonly:565",
     "self_correction_negation_flip:472",
-    "self_correction_noisy_neg_read:335",
     "self_correction_safety_note_readonly:328",
     "self_correction_after_create_task:184",
     "self_correction_update_task:179",
@@ -65,10 +64,11 @@
     "self_correction_after_create_cal:0",
     "self_correction_temporal_cal:0",
     "self_correction_negation_query:0",
-    "self_correction_negation_hard:0"
+    "self_correction_negation_hard:0",
+    "self_correction_noisy_neg_read:0"
   ],
   "true_engine_fail_count": 502,
-  "harness_problem_count": 1484,
+  "harness_problem_count": 1149,
   "ambiguous_input_count": 3223,
   "safety_risk_count": 0,
   "dangerous_write_count": 0,
