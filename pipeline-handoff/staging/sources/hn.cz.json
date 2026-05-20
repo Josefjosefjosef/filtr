@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-20T13:54:33.958331Z",
+  "ingestedAt": "2026-05-20T14:34:37.316924Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "AI agenty nesmíme nechat nekontrolovaně instalovat vlastní software. Bezpečnost zatím pokulhává za funkcemi, říká expert z Genu",
+      "url": "https://archiv.hn.cz/c1-67879300-ai-agenty-nesmime-nechat-nekontrolovane-instalovat-vlastni-software-bezpecnost-zatim-pokulhava-za-funkcemi-rika-expert-z-genu",
+      "dt": "2026-05-20T14:21:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "agenty",
+        "bezpečnost",
+        "expert",
+        "funkcemi",
+        "genu",
+        "instalovat",
+        "nechat",
+        "nekontrolovaně",
+        "nesmíme",
+        "pokulhává",
+        "software",
+        "vlastní",
+        "zatím",
+        "říká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1167,32 +1198,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Přichází Epiq. Škoda představila detaily svého nejdostupnějšího elektrického modelu",
-      "url": "https://archiv.hn.cz/c1-67878450-prichazi-epiq-skoda-predstavila-detaily-sveho-nejdostupnejsiho-elektrickeho-modelu",
-      "dt": "2026-05-19T12:45:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "detaily",
-        "elektrického",
-        "epiq",
-        "modelu",
-        "nejdostupnějšího",
-        "představila",
-        "přichází",
-        "svého",
-        "škoda"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1203,7 +1208,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183894,
+      "bytes": 183831,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1240,11 +1245,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-20T13:13:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T14:21:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 31,
-          "zdravi": 2,
+          "finance": 32,
+          "zdravi": 1,
           "zpravy": 7
         },
         "drop_counts": {
@@ -1257,6 +1262,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "AI agenty nesmíme nechat nekontrolovaně instalovat vlastní software. Bezpečnost zatím pokulhává za funkcemi, říká expert z Genu",
+            "publishedAt": "2026-05-20T14:21:00Z"
+          },
           {
             "title": "Česko jako přestupní stanice? Zahraniční dělníci často mizí dál do Evropy, firmy ale platí náklady. Data o mzdách odhalují pravý důvod",
             "publishedAt": "2026-05-20T13:13:00Z"
@@ -1284,10 +1293,6 @@
           {
             "title": "Nejtišší Volvo historie? Nové ES90 je netradiční, láká však na komfort, výkon i rychlé dobíjení",
             "publishedAt": "2026-05-20T10:20:00Z"
-          },
-          {
-            "title": "Jak staré je naše přátelství se psy a proč byli v pravěku &bdquo;in&ldquo;? Nové studie – i s českou stopou – přinášejí zajímavé detaily",
-            "publishedAt": "2026-05-20T08:50:00Z"
           }
         ]
       }
