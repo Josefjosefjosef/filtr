@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-20T05:15:29.899979Z",
+  "ingestedAt": "2026-05-20T05:55:13.807094Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "FN Bulovka převezme amerického lékaře s podezřením na ebolu",
+      "url": "https://www.zdravezpravy.cz/2026/05/20/fn-bulovka-prevezme-americkeho-lekare-s-podezrenim-na-ebolu/",
+      "dt": "2026-05-20T04:19:11Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "amerického",
+        "bulovka",
+        "ebolu",
+        "lékaře",
+        "podezřením",
+        "převezme"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -472,29 +495,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Ministerstvo zdravotnictví se otevře veřejnosti. A na místě bude i ministr",
-      "url": "https://www.zdravezpravy.cz/2026/05/11/ministerstvo-zdravotnictvi-se-otevre-verejnosti-na-miste-bude-i-ministr/",
-      "dt": "2026-05-11T13:21:39Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "ministerstvo",
-        "ministr",
-        "místě",
-        "otevře",
-        "veřejnosti",
-        "zdravotnictví"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -505,7 +505,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 192452,
+      "bytes": 194763,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -542,7 +542,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-19T14:07:33Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T04:19:11Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -558,6 +558,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "FN Bulovka převezme amerického lékaře s podezřením na ebolu",
+            "publishedAt": "2026-05-20T04:19:11Z"
+          },
           {
             "title": "Na nově schválený lék evropskou agenturou čekají lidé v ČR skoro 2 roky",
             "publishedAt": "2026-05-19T14:07:33Z"
@@ -585,10 +589,6 @@
           {
             "title": "Na superdávce vyplatil stát 563 milionů. Na starých dávkách 7,8 miliardy",
             "publishedAt": "2026-05-17T07:26:39Z"
-          },
-          {
-            "title": "Hantaviry kolují i v ČR. Infektologové doporučují mokré smejčení",
-            "publishedAt": "2026-05-15T13:15:04Z"
           }
         ]
       }
