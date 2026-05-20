@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-20T04:35:13.282824Z",
+  "ingestedAt": "2026-05-20T05:15:29.899979Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Guardiola nepopřel zprávy o konci v Manchesteru City",
+      "url": "https://www.sport.cz/clanek/fotbal-premier-league-guardiola-nepoprel-zpravy-o-konci-v-manchesteru-city-5458873",
+      "dt": "2026-05-20T05:00:22Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "city",
+        "guardiola",
+        "konci",
+        "manchesteru",
+        "nepopřel",
+        "zprávy"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -743,33 +766,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hrdinou nejen ve sportu. Český olympijský medailista zachraňoval život předsedovi svazu",
-      "url": "https://www.sport.cz/clanek/ostatni-hrdinou-nejen-ve-sportu-cesky-olympijsky-medailista-zachranoval-zivot-predsedovi-svazu-5458190",
-      "dt": "2026-05-19T15:03:08Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "hrdinou",
-        "medailista",
-        "nejen",
-        "olympijský",
-        "předsedovi",
-        "sportu",
-        "svazu",
-        "zachraňoval",
-        "český",
-        "život"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -780,7 +776,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 47045,
+      "bytes": 47026,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -817,7 +813,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T04:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T05:00:22Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -832,6 +828,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Guardiola nepopřel zprávy o konci v Manchesteru City",
+            "publishedAt": "2026-05-20T05:00:22Z"
+          },
           {
             "title": "I se dvěma výhrami Češi v jedné disciplíně hoří. Čísla máme tristní, vědí hokejisté",
             "publishedAt": "2026-05-20T04:31:00Z"
@@ -859,10 +859,6 @@
           {
             "title": "Tottenham s Kinským padl v derby s Chelsea, v závěrečném kole bude bojovat o udržení",
             "publishedAt": "2026-05-19T21:23:54Z"
-          },
-          {
-            "title": "Slovensko na MS v hokeji 2026: Program hokejistů Slovenska na šampionátu ve Švýcarsku",
-            "publishedAt": "2026-05-14T07:12:00Z"
           }
         ]
       }
