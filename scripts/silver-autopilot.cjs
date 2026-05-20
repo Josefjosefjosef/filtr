@@ -3620,6 +3620,7 @@ function parseArgs(argv) {
   return out;
 }
 
+if (require.main === module) {
 (async function main() {
   const argv = process.argv.slice(2);
   if (argv.length === 0) {
@@ -3719,3 +3720,12 @@ function parseArgs(argv) {
   console.error(e);
   process.exit(1);
 });
+}
+
+module.exports = {
+  nextActionInnerQualityViolations,
+  nextActionHasBareSilverAutopilotNodeInvocation,
+  nextActionHasRunnableCatWindowsInvocation,
+  sanitizeBareSilverAutopilotInText,
+  cmdSanitizeNextActionMd,
+};

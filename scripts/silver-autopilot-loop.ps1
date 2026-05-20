@@ -73,7 +73,8 @@ param(
   [switch]$Cap50RealUtf8CaptureProbe,
   [switch]$Cap50GitNotCleanAfterRestoreSelfTest,
   [switch]$CapProductScorecardSelfTest,
-  [switch]$AuditRegistrySelfTest
+  [switch]$AuditRegistrySelfTest,
+  [switch]$NextActionQualityGateRegressionSelfTest
 )
 
 Set-StrictMode -Version 2
@@ -1201,6 +1202,7 @@ function Test-SilverNextActionSilverWorkflowContext {
 function Test-SilverNextActionIsOrchestrationMaintenanceOnly {
   param([string]$Text)
   if (-not $Text) { return $false }
+  if (Test-SilverNextActionSilverWorkflowContext -Text $Text) { return $false }
   $gitGhLead =
     ($Text -match '(?i)\bgit\s+status\b') -or
     ($Text -match '(?i)\bgit\s+push\s+-u\b') -or
@@ -1209,7 +1211,7 @@ function Test-SilverNextActionIsOrchestrationMaintenanceOnly {
   if (-not $gitGhLead) { return $false }
   $productHarness =
     ($Text -match '(?i)PRODUCT_CLUSTER|rcz2_ultra_short_chaos|NEXT PRODUCT CLUSTER') -and
-    ($Text -match '(?i)(?:node|npx)\s+scripts/silver-(?:real-czech-public|rhc3-cluster|audit_silver|rcz2)')
+    ($Text -match '(?i)(?:node|npx)\s+scripts/silver-(?:real-czech-public|rhc3-cluster|audit_silver|rcz2|real-human-chaos)')
   if ($productHarness) { return $false }
   return $true
 }
@@ -1272,36 +1274,99 @@ function Test-SilverNextActionIsProductTaskHandoff {
   return $true
 }
 
-function Test-SilverNextActionOutputQuality {
+function Get-SilverNextActionQualityForbiddenLineSample {
+  param(
+    [string]$Text,
+    [string[]]$Reasons
+  )
+  if (-not $Text -or -not $Reasons -or $Reasons.Count -eq 0) { return "" }
+  $lines = $Text -split "`r?`n"
+  foreach ($raw in $lines) {
+    $line = ([string]$raw).Trim()
+    if (-not $line) { continue }
+    if ($line.StartsWith("<!--")) { continue }
+    foreach ($reason in $Reasons) {
+      $r = [string]$reason
+      if ($r -eq "mojibake_utf8" -and (Test-SilverUtf8MojibakeMarkers -Text $line)) {
+        return $line
+      }
+      if ($r -eq "orchestration_maintenance_only") {
+        if ($line -match '(?i)\bgit\s+push\s+-u\b') { return $line }
+        if ($line -match '(?i)\bgh\s+auth\b') { return $line }
+        if ($line -match '(?i)chore/silver-audit-repo-state') { return $line }
+      }
+      if ($r -eq "bare_silver_autopilot_node_use_status_subcommand" -and ($line -match '(?i)\bnode(?:\.exe)?\s+.*silver-autopilot\.cjs\b')) {
+        if ($line -notmatch '(?i)silver-autopilot\.cjs\s+--') { return $line }
+      }
+      if ($r -eq "cat_windows_path" -and (Test-NextActionLineLooksLikeRunnableCatWindows -Line $line)) {
+        return $line
+      }
+      if ($r -match '^generic_' -and $line -match '(?i)git\s+push\s+-u|gh\s+auth|verify-pr|sudo\s+apt') {
+        return $line
+      }
+      if ($r -match '^banned_node_invocation' -and $line -match '(?i)\bnode\s+scripts/') {
+        return $line
+      }
+    }
+  }
+  return ""
+}
+
+function Get-SilverNextActionQualityFailureDetail {
   param([string]$Text)
-  if (-not $Text) { return $true }
-  if (Test-SilverUtf8MojibakeMarkers -Text $Text) { return $false }
-  if (Test-SilverNextActionIsOrchestrationMaintenanceOnly -Text $Text) { return $false }
+  $reasons = New-Object System.Collections.Generic.List[string]
+  if (-not $Text) { return @() }
+  if (Test-SilverUtf8MojibakeMarkers -Text $Text) {
+    [void]$reasons.Add("mojibake_utf8")
+  }
+  if (Test-SilverNextActionIsOrchestrationMaintenanceOnly -Text $Text) {
+    [void]$reasons.Add("orchestration_maintenance_only")
+  }
   $hasCluster = Test-SilverNextActionSilverWorkflowContext -Text $Text
   if ($Text -match '(?i)git\s+push\s+-u\s+origin') {
-    if (-not $hasCluster) { return $false }
+    if (-not $hasCluster) { [void]$reasons.Add("generic_git_push_upstream") }
   }
-  if ($Text -match 'chore/silver-audit-repo-state') { return $false }
+  if ($Text -match 'chore/silver-audit-repo-state') {
+    [void]$reasons.Add("generic_chore_silver_audit_push")
+  }
   if ($Text -match '(?i)(?:--verify-pr=\d+|\bverify-pr\b)') {
-    if (-not $hasCluster) { return $false }
+    if (-not $hasCluster) { [void]$reasons.Add("generic_verify_pr_not_cluster_workflow") }
   }
   if ($Text -match '(?i)(?:sudo\s+apt\s+(?:update|install)|gh\s+auth\s+login)') {
-    if (-not $hasCluster) { return $false }
+    if (-not $hasCluster) { [void]$reasons.Add("generic_gh_sudo_not_cluster_workflow") }
   }
-  if ($Text -match '(?i)--verify-pr=3794\b') { return $false }
+  if ($Text -match '(?i)--verify-pr=3794\b') {
+    [void]$reasons.Add("generic_stale_verify_pr_id:3794")
+  }
   if ($Text -match '(?i)full-auto-loop-openai' -and $Text -match '(?i)(?:sudo\s+apt|gh\s+auth|verify-pr)') {
-    if (-not $hasCluster) { return $false }
+    if (-not $hasCluster) { [void]$reasons.Add("generic_full_auto_infra_not_cluster_workflow") }
   }
   if (-not $hasCluster) {
     if ($Text -match '(?i)(?:sudo\s+apt|gh\s+auth|verify-pr|git\s+push\s+-u)') {
-      if ($Text -notmatch '(?i)INFRA_BLOCKER_REASON:\s*\S+') { return $false }
+      if ($Text -notmatch '(?i)INFRA_BLOCKER_REASON:\s*\S+') {
+        [void]$reasons.Add("generic_infra_without_blocker_reason")
+      }
     }
   }
-  if (Test-NextActionHasBareSilverAutopilotNodeInvocation -Inner $Text) { return $false }
-  if ($Text -match '(?i)\bnode\s+scripts/silver-diagnostic\.js\b') { return $false }
-  if ($Text -match '(?i)\bnode\s+scripts/silver-smoke-test-maxcycles-1\.js\b') { return $false }
-  if (Test-NextActionHasRunnableCatWindowsInvocation -Inner $Text) { return $false }
-  return $true
+  if (Test-NextActionHasBareSilverAutopilotNodeInvocation -Inner $Text) {
+    [void]$reasons.Add("bare_silver_autopilot_node_use_status_subcommand")
+  }
+  if ($Text -match '(?i)\bnode\s+scripts/silver-diagnostic\.js\b') {
+    [void]$reasons.Add("banned_hallucination:silver-diagnostic.js")
+  }
+  if ($Text -match '(?i)\bnode\s+scripts/silver-smoke-test-maxcycles-1\.js\b') {
+    [void]$reasons.Add("banned_hallucination:silver-smoke-test-maxcycles-1.js")
+  }
+  if (Test-NextActionHasRunnableCatWindowsInvocation -Inner $Text) {
+    [void]$reasons.Add("cat_windows_path")
+  }
+  return @($reasons.ToArray())
+}
+
+function Test-SilverNextActionOutputQuality {
+  param([string]$Text)
+  if (-not $Text) { return $true }
+  return (@(Get-SilverNextActionQualityFailureDetail -Text $Text).Count -eq 0)
 }
 
 function Test-SilverCursorOutputHandoffValid {
@@ -3253,6 +3318,86 @@ function Invoke-SilverCap50ThreeCycleOrchestrationProbe {
   return $true
 }
 
+function Invoke-SilverNextActionQualityGateRegressionSelfTest {
+  param([string]$RepoRoot)
+  $failures = New-Object System.Collections.Generic.List[string]
+  $archived = Join-Path $RepoRoot ".silver-runtime\cycles\20260520-044929Z-c1\SILVER_NEXT_ACTION.md"
+  if (Test-Path -LiteralPath $archived) {
+    $archText = Read-TextFileOrEmpty -Path $archived
+    if (-not (Test-SilverNextActionOutputQuality -Text $archText)) {
+      [void]$failures.Add("archived_rhc3_cluster_handoff_must_pass")
+    }
+    if (Test-SilverNextActionIsOrchestrationMaintenanceOnly -Text $archText) {
+      [void]$failures.Add("archived_rhc3_cluster_handoff_not_orch_maintenance")
+    }
+  }
+  else {
+    $ukolHeadline = ([string][char]0x00DA + "KOL PRO CURSOR") + " - infoUzel.cz / Silver - NEXT PRODUCT CLUSTER DIAGNOSTIC"
+    $syntheticCluster = @(
+      "<!-- SILVER_NEXT_ACTION: silver-auto-dev V1 deterministic handoff; not auto-applied -->"
+      ""
+      $ukolHeadline
+      ""
+      "### Diagnostika top clusteru (disk)"
+      ""
+      "- **Top cluster:** ``rhc3_negation_cal_readonly``"
+      ""
+      '1) git status --short'
+      '2) node scripts/silver-autopilot.cjs --status'
+      '3) node scripts/silver-real-human-chaos-v3.cjs'
+      ''
+      '```text'
+      'top_cluster=rhc3_negation_cal_readonly'
+      '```'
+    ) -join "`n"
+    if (-not (Test-SilverNextActionOutputQuality -Text $syntheticCluster)) {
+      [void]$failures.Add("synthetic_rhc3_cluster_handoff_must_pass")
+    }
+  }
+  $badGeneric = @"
+<!-- SILVER_NEXT_ACTION: full-auto-loop-openai -->
+
+git push -u origin chore/silver-audit-repo-state
+gh auth login
+"@
+  if (Test-SilverNextActionOutputQuality -Text $badGeneric) {
+    [void]$failures.Add("generic_git_gh_push_must_fail")
+  }
+  $badBare = @'
+Run autopilot:
+
+```powershell
+node scripts/silver-autopilot.cjs
+```
+'@
+  if (Test-SilverNextActionOutputQuality -Text $badBare) {
+    [void]$failures.Add("bare_autopilot_must_fail")
+  }
+  $badCat = @'
+```powershell
+cat C:\projects\filtr\SILVER_NEXT_ACTION.md
+```
+'@
+  if (Test-SilverNextActionOutputQuality -Text $badCat) {
+    [void]$failures.Add("cat_windows_must_fail")
+  }
+  $detail = @(Get-SilverNextActionQualityFailureDetail -Text $badGeneric)
+  if ($detail.Count -eq 0) {
+    [void]$failures.Add("generic_git_gh_must_emit_failure_detail")
+  }
+  $sample = Get-SilverNextActionQualityForbiddenLineSample -Text $badGeneric -Reasons $detail
+  if (-not $sample) {
+    [void]$failures.Add("generic_git_gh_must_emit_forbidden_line_sample")
+  }
+  if ($failures.Count -gt 0) {
+    Write-Host "SILVER_NEXT_ACTION_QUALITY_GATE_REGRESSION_SELFTEST=FAIL" -ForegroundColor Red
+    foreach ($f in $failures) { Write-Host $f -ForegroundColor Red }
+    return $false
+  }
+  Write-Host "SILVER_NEXT_ACTION_QUALITY_GATE_REGRESSION_SELFTEST=PASS" -ForegroundColor Green
+  return $true
+}
+
 function Invoke-SilverCap50PostconditionSelfTest {
   param([string]$RepoRoot)
   $utf8 = $script:SilverUtf8NoBom
@@ -3736,6 +3881,12 @@ if ($AuditRegistrySelfTest) {
   exit 0
 }
 
+if ($NextActionQualityGateRegressionSelfTest) {
+  $stNa = Invoke-SilverNextActionQualityGateRegressionSelfTest -RepoRoot $RepoRoot
+  if (-not $stNa) { exit 1 }
+  exit 0
+}
+
 if ($PreflightCleanupSelfTest) {
   $stOk = Invoke-SilverCap50PreflightCleanupSelfTest -RepoRoot $RepoRoot
   if (-not $stOk) { exit 1 }
@@ -4098,12 +4249,21 @@ while ($true) {
   }
 
   if ($controlledInfinite -and -not (Test-SilverNextActionOutputQuality -Text $nextText)) {
+    $qualityFailures = Get-SilverNextActionQualityFailureDetail -Text $nextText
+    $qualitySample = Get-SilverNextActionQualityForbiddenLineSample -Text $nextText -Reasons $qualityFailures
+    $qualityStop =
+      "SILVER_NEXT_ACTION.md failed quality gate (" +
+      ($qualityFailures -join "; ") +
+      ")"
+    if ($qualitySample) {
+      $qualityStop = $qualityStop + " | forbidden_line=" + $qualitySample
+    }
     Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
       -CursorExit "N/A" -AutopilotExit "N/A" -StatusExit "N/A" `
       -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine "" -CalW "" -CalQ "" `
       -Headline (Get-NextActionHeadline -Text $nextText) -Focus "autonomous_bad_next_action_quality_precycle" `
       -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep -LastTaskExitCode 1 `
-      -StopReason "SILVER_NEXT_ACTION.md failed quality gate (UTF-8/hallucination/cat-windows/bare node scripts/silver-autopilot.cjs)"
+      -StopReason $qualityStop
   }
 
   $reportPre = Read-TextFileOrEmpty -Path $RunReportPath
