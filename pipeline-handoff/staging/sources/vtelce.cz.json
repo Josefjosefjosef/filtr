@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-05-20T15:53:58.890586Z",
+  "ingestedAt": "2026-05-20T16:35:20.705331Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Hvězdná brána: Zastřihovač chloupků v roli pokročilé zbraně, lásky na place a utajená zpráva",
+      "url": "https://www.vtelce.cz/hvezdna-brana-zastrihovac-chloupku-v-roli-pokrocile-zbrane-lasky-na-place-a-utajena-zprava/",
+      "dt": "2026-05-20T16:12:19Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "brána",
+        "chloupků",
+        "hvězdná",
+        "lásky",
+        "place",
+        "pokročilé",
+        "roli",
+        "utajená",
+        "zastřihovač",
+        "zbraně",
+        "zpráva"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -257,36 +285,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Show Jana Krause: Kryštof Bartoš promluvil o dědicovi, Jan Vlasák protrpěl natáčení a zákulisí diagnóz",
-      "url": "https://www.vtelce.cz/show-jana-krause-krystof-bartos-promluvil-o-dedicovi-jan-vlasak-protrpel-nataceni-a-zakulisi-diagnoz/",
-      "dt": "2026-05-19T07:27:38Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "bartoš",
-        "diagnóz",
-        "dědicovi",
-        "jan",
-        "jana",
-        "krause",
-        "kryštof",
-        "natáčení",
-        "promluvil",
-        "protrpěl",
-        "show",
-        "vlasák",
-        "zákulisí"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -297,8 +295,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 75174,
-      "reason": "",
+      "bytes": 76050,
+      "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -334,7 +332,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-20T07:42:53Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T16:12:19Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "other": 9,
@@ -350,6 +348,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hvězdná brána: Zastřihovač chloupků v roli pokročilé zbraně, lásky na place a utajená zpráva",
+            "publishedAt": "2026-05-20T16:12:19Z"
+          },
           {
             "title": "Nová řada SuperStar láká na čtveřici známých porotců, hvězdného moderátora a moderní pojetí",
             "publishedAt": "2026-05-20T07:42:53Z"
@@ -377,10 +379,6 @@
           {
             "title": "Zmizelá: Spor o kšiltovku, drastické hubnutí hlavní hvězdy a nahota Bena Afflecka ve sprše",
             "publishedAt": "2026-05-19T16:12:02Z"
-          },
-          {
-            "title": "Seznámili se díky reality show, teď budou jednu u konkurenční stanice moderovat",
-            "publishedAt": "2026-05-19T09:40:00Z"
           }
         ]
       }

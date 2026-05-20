@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-20T15:53:58.890586Z",
+  "ingestedAt": "2026-05-20T16:35:20.705331Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Konec se zpožděním vlaků? Chystá se revoluce na evropské železnici",
+      "url": "https://ekonomickydenik.cz/konec-zpozdeni-vlaku-revoluce-zeleznice/",
+      "dt": "2026-05-20T16:06:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "chystá",
+        "evropské",
+        "konec",
+        "revoluce",
+        "vlaků",
+        "zpožděním",
+        "železnici"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -759,34 +783,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Bém jako tvář boje proti drogám skončí. Jeho funkce koordinátora se promění",
-      "url": "https://ekonomickydenik.cz/bem-drogy-skonci-funkce-koordinatora-zanikne/",
-      "dt": "2026-05-19T10:05:21Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "boje",
-        "bém",
-        "drogám",
-        "funkce",
-        "jako",
-        "jeho",
-        "koordinátora",
-        "promění",
-        "proti",
-        "skončí",
-        "tvář"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -797,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73417,
+      "bytes": 73514,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -834,11 +830,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T15:47:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T16:06:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 22,
-          "zpravy": 5,
+          "zpravy": 6,
+          "finance": 21,
           "cestovani": 1,
           "zdravi": 2
         },
@@ -852,6 +848,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec se zpožděním vlaků? Chystá se revoluce na evropské železnici",
+            "publishedAt": "2026-05-20T16:06:00Z"
+          },
           {
             "title": "Tykač ropným magnátem? Pustí se do těžby v Texasu",
             "publishedAt": "2026-05-20T15:47:00Z"
@@ -879,10 +879,6 @@
           {
             "title": "Volební právo od 16 let? Komunální politika se má otevřít teenagerům",
             "publishedAt": "2026-05-20T12:03:50Z"
-          },
-          {
-            "title": "Zájem o státní dluhopisy překvapil. Schillerová proto mění plány",
-            "publishedAt": "2026-05-20T11:38:26Z"
           }
         ]
       }

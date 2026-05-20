@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-20T15:53:58.890586Z",
+  "ingestedAt": "2026-05-20T16:35:20.705331Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Vepřo knedlo zelo z dovozu. Česko je soběstačné jen u tří ze sedmi skupin potravin",
+      "url": "https://ekonom.cz/c1-67878810-vepro-knedlo-zelo-z-dovozu-cesko-je-sobestacne-jen-u-tri-ze-sedmi-skupin-potravin",
+      "dt": "2026-05-20T16:00:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "dovozu",
+        "jen",
+        "knedlo",
+        "potravin",
+        "sedmi",
+        "skupin",
+        "soběstačné",
+        "tří",
+        "vepřo",
+        "zelo",
+        "česko"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -108,6 +136,39 @@
         "světě",
         "trhu",
         "změna"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Kolik hodin přesně spát, aby&nbsp; se člověk vyhnul demenci? Vědci dávají přesné číslo a popisují, které návyky k nemoci vedou",
+      "url": "https://domaci.hn.cz/c1-67879620-kolik-hodin-presne-spat-aby-se-clovek-vyhnul-demenci-vedci-davaji-presne-cislo-a-popisuji-ktere-navyky-k-nemoci-vedou",
+      "dt": "2026-05-20T14:32:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "demenci",
+        "dávají",
+        "hodin",
+        "kolik",
+        "nbsp",
+        "nemoci",
+        "návyky",
+        "popisují",
+        "přesné",
+        "přesně",
+        "spát",
+        "vedou",
+        "vyhnul",
+        "vědci",
+        "člověk",
+        "číslo"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1128,61 +1189,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Guvernér ČNB prý klidně zdrtí ekonomiku. Proč tak tvrdá slova, proč zrovna teď?",
-      "url": "https://archiv.hn.cz/c1-67878850-guverner-cnb-pry-klidne-zdrti-ekonomiku-proc-tak-tvrda-slova-proc-zrovna-ted",
-      "dt": "2026-05-19T14:51:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "ekonomiku",
-        "guvernér",
-        "klidně",
-        "proč",
-        "prý",
-        "slova",
-        "tak",
-        "tvrdá",
-        "zdrtí",
-        "zrovna",
-        "čnb"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "My za to nemůžeme, to se tak nějak děje! Česko je usměvavá společnost hrobařů vlastních dětí",
-      "url": "https://archiv.hn.cz/c1-67878840-politicka-nezodpovednost-a-falesne-rovnostarstvi-jak-muze-fungovat-spolecnost-ktera-necha-tisice-zaku-ve-vzdelanostnim-vakuu",
-      "dt": "2026-05-19T14:50:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "děje",
-        "dětí",
-        "hrobařů",
-        "nemůžeme",
-        "nějak",
-        "společnost",
-        "tak",
-        "usměvavá",
-        "vlastních",
-        "česko"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1193,7 +1199,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183531,
+      "bytes": 184073,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1230,12 +1236,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-20T15:19:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T16:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
+          "finance": 30,
           "zpravy": 8,
-          "finance": 31,
-          "zdravi": 1
+          "zdravi": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1247,6 +1253,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vepřo knedlo zelo z dovozu. Česko je soběstačné jen u tří ze sedmi skupin potravin",
+            "publishedAt": "2026-05-20T16:00:00Z"
+          },
           {
             "title": "Další trable ministryně Mrázové. Nepřiznaná půjčka a fotografie z drahých dovolených, v ANO se čeká jen na jednu věc",
             "publishedAt": "2026-05-20T15:19:00Z"
@@ -1264,20 +1274,16 @@
             "publishedAt": "2026-05-20T14:35:00Z"
           },
           {
+            "title": "Kolik hodin přesně spát, aby&nbsp; se člověk vyhnul demenci? Vědci dávají přesné číslo a popisují, které návyky k nemoci vedou",
+            "publishedAt": "2026-05-20T14:32:00Z"
+          },
+          {
             "title": "Exkluzivní průzkum: Češi a férové mzdy. Jak jsou spokojení se svou výplatou a pravidly odměňování",
             "publishedAt": "2026-05-20T14:30:00Z"
           },
           {
             "title": "AI agenty nesmíme nechat nekontrolovaně instalovat vlastní software. Bezpečnost zatím pokulhává za funkcemi, říká expert z Genu",
             "publishedAt": "2026-05-20T14:21:00Z"
-          },
-          {
-            "title": "Česko jako přestupní stanice? Zahraniční dělníci často mizí dál do Evropy, firmy ale platí náklady. Data o mzdách odhalují pravý důvod",
-            "publishedAt": "2026-05-20T13:13:00Z"
-          },
-          {
-            "title": "Amerika stahuje vojáky z Polska, Evropa by měla být ale nervózní spíš kvůli jiné &bdquo;díře&ldquo; v obraně",
-            "publishedAt": "2026-05-20T12:26:00Z"
           }
         ]
       }

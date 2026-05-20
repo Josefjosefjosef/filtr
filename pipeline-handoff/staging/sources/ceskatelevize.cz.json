@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-20T15:53:58.890586Z",
+  "ingestedAt": "2026-05-20T16:35:20.705331Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "SOUHRN: Zásadní události středy 20. května",
+      "url": "https://ct24.ceskatelevize.cz/clanek/media/souhrn-zasadni-udalosti-stredy-20-kvetna-373663",
+      "dt": "2026-05-20T16:28:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "května",
+        "souhrn",
+        "středy",
+        "události",
+        "zásadní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -357,7 +379,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Nepřipustíme žádné další obchodní sankce proti Izraeli, řekl Macinka po jednání se Sa'arem",
+      "title": "Nepřipustíme žádné další obchodní sankce proti Izraeli, řekl Macinka po jednání se Sa’arem",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/izraelsky-ministr-zahranici-saar-v-praze-jednal-s-macinkou-373644",
       "dt": "2026-05-20T09:33:52Z",
       "media_raw": "ČT24 / Domácí",
@@ -734,27 +756,25 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Senát USA postoupil návrh, který by omezil Trumpovy pravomoce ve válce s Íránem",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/senat-usa-postoupil-navrh-ktery-by-omezil-trumpovy-pravomoce-ve-valce-s-iranem-373635",
-      "dt": "2026-05-20T03:06:23Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Triumf číslo tři pro Narváeze. Tentokrát porazil Mase",
+      "url": "https://sport.ceskatelevize.cz/clanek/cyklistika/triumf-cislo-tri-pro-narvaeze-tentokrat-porazil-mase-156911",
+      "dt": "2026-05-20T16:22:19Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "návrh",
-        "omezil",
-        "postoupil",
-        "pravomoce",
-        "senát",
-        "trumpovy",
-        "usa",
-        "válce",
-        "íránem"
+        "mase",
+        "narváeze",
+        "porazil",
+        "tentokrát",
+        "triumf",
+        "tři",
+        "číslo"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1495,31 +1515,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vedení 3:0 jsem nečekal ani ve snu, hodnotil Rulík zápas se Švédy",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/vedeni-30-jsem-necekal-ani-ve-snu-hodnotil-rulik-zapas-se-svedy-156880",
-      "dt": "2026-05-19T06:05:11Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "hodnotil",
-        "jsem",
-        "nečekal",
-        "rulík",
-        "snu",
-        "vedení",
-        "zápas",
-        "švédy"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1530,7 +1525,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42538,
+      "bytes": 42112,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1590,11 +1585,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T15:02:39Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T16:28:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 5,
           "zpravy": 23,
+          "other": 5,
           "finance": 2
         },
         "drop_counts": {
@@ -1607,6 +1602,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "SOUHRN: Zásadní události středy 20. května",
+            "publishedAt": "2026-05-20T16:28:00Z"
+          },
           {
             "title": "S AI nemá smysl bojovat, míní Demi Mooreová. V Cannes se řeší, jak „kapitulovat“",
             "publishedAt": "2026-05-20T15:02:39Z"
@@ -1634,10 +1633,6 @@
           {
             "title": "České studio chystá videohru ze světa Pána prstenů",
             "publishedAt": "2026-05-20T12:18:16Z"
-          },
-          {
-            "title": "Ministerstvo financí zvýší objem emise státních dluhopisů, oznámila Schillerová",
-            "publishedAt": "2026-05-20T12:12:04Z"
           }
         ]
       }
@@ -1649,7 +1644,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38040,
+      "bytes": 38120,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1686,7 +1681,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T13:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T16:22:19Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1701,6 +1696,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Triumf číslo tři pro Narváeze. Tentokrát porazil Mase",
+            "publishedAt": "2026-05-20T16:22:19Z"
+          },
           {
             "title": "Van der Poel vs. Pidcock. Novoměstské závody horských kol lákají na hvězdný souboj",
             "publishedAt": "2026-05-20T13:00:00Z"
@@ -1728,10 +1727,6 @@
           {
             "title": "Ščotka po drsném krosčeku vyvázl s varováním bez dalšího trestu",
             "publishedAt": "2026-05-20T06:08:09Z"
-          },
-          {
-            "title": "Madison Square Garden ve varu. Knicks otočili téměř ztracený zápas",
-            "publishedAt": "2026-05-20T05:53:42Z"
           }
         ]
       }
@@ -1743,7 +1738,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77193,
+      "bytes": 77304,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
