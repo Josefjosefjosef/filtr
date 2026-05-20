@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-20T07:55:17.075023Z",
+  "ingestedAt": "2026-05-20T08:35:04.475605Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Strnadova CSG jede, zisk skupiny meziročně stoupl o 95 procent. V tržbách klesá význam Ukrajiny",
+      "url": "https://byznys.hn.cz/c1-67879130-strnadova-csg-jede-zisk-skupiny-mezirocne-stoupl-o-95-procent-v-trzbach-klesa-vyznam-ukrajiny-jihovychodni-asie-roste",
+      "dt": "2026-05-20T07:35:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "csg",
+        "jede",
+        "klesá",
+        "meziročně",
+        "procent",
+        "skupiny",
+        "stoupl",
+        "strnadova",
+        "tržbách",
+        "ukrajiny",
+        "význam",
+        "zisk"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -1129,33 +1158,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Čistky na Úřadu vlády zasáhly i Pavla Béma. Končí jako protidrogový koordinátor",
-      "url": "https://domaci.hn.cz/c1-67878460-cistky-na-uradu-vlady-zasahly-i-pavla-bema-konci-kanci-jako-protidrogovy-koordinator",
-      "dt": "2026-05-19T09:03:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "béma",
-        "jako",
-        "končí",
-        "koordinátor",
-        "pavla",
-        "protidrogový",
-        "vlády",
-        "zasáhly",
-        "úřadu",
-        "čistky"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1166,7 +1168,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 182981,
+      "bytes": 183183,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1203,11 +1205,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-20T07:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T07:35:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 5,
           "finance": 33,
+          "zpravy": 5,
           "zdravi": 1,
           "sport": 1
         },
@@ -1221,6 +1223,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Strnadova CSG jede, zisk skupiny meziročně stoupl o 95 procent. V tržbách klesá význam Ukrajiny",
+            "publishedAt": "2026-05-20T07:35:00Z"
+          },
           {
             "title": "Rajchlovy útoky na média jsou přes míru, píše novinářský institut. Okamuru žádá, aby šéfa PRO usměrnil",
             "publishedAt": "2026-05-20T07:15:00Z"
@@ -1248,10 +1254,6 @@
           {
             "title": "Založení firmy nebo danění zaměstnaneckých akcií má být mnohem jednodušší. Jak to pomůže byznysu?",
             "publishedAt": "2026-05-20T03:40:00Z"
-          },
-          {
-            "title": "Komu vezme práci AI? Jednu činnost určitě nenahradí, asi vás překvapí, o jakou jde",
-            "publishedAt": "2026-05-20T03:30:00Z"
           }
         ]
       }

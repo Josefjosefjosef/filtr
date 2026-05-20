@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-20T07:55:17.075023Z",
+  "ingestedAt": "2026-05-20T08:35:04.475605Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Experiment, který se nevydařil. Záruba se vrací k původní výslovnosti Švédů, nechce kazit divákům MS",
+      "url": "https://www.sport.cz/clanek/hokej-ms-experiment-ktery-se-nevydaril-zaruba-se-vraci-k-puvodni-vyslovnosti-svedu-nechce-kazit-divakum-ms-5458878",
+      "dt": "2026-05-20T08:16:23Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "divákům",
+        "experiment",
+        "kazit",
+        "nechce",
+        "nevydařil",
+        "původní",
+        "vrací",
+        "výslovnosti",
+        "záruba",
+        "švédů"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -747,34 +774,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zlaté tretře stát ubral miliony. Promotér zvažoval zrušení účasti zahraničních atletů",
-      "url": "https://www.sport.cz/clanek/atletika-zlate-tretre-stat-ubral-miliony-promoter-zvazoval-zruseni-ucasti-zahranicnich-atletu-5458521",
-      "dt": "2026-05-19T18:09:11Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "atletů",
-        "miliony",
-        "promotér",
-        "stát",
-        "tretře",
-        "ubral",
-        "zahraničních",
-        "zlaté",
-        "zrušení",
-        "zvažoval",
-        "účasti"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -785,7 +784,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45869,
+      "bytes": 46710,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -822,7 +821,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T07:50:32Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T08:16:23Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -837,6 +836,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Experiment, který se nevydařil. Záruba se vrací k původní výslovnosti Švédů, nechce kazit divákům MS",
+            "publishedAt": "2026-05-20T08:16:23Z"
+          },
           {
             "title": "Historie se opakuje? Česká cesta šampionátem připomíná zlatou jízdu z Německa",
             "publishedAt": "2026-05-20T07:50:32Z"
@@ -864,10 +867,6 @@
           {
             "title": "Program MS v hokeji 2026 ve Švýcarsku: Česko ve skupině B ve Fribourgu",
             "publishedAt": "2026-05-20T05:03:00Z"
-          },
-          {
-            "title": "Hokejisty čeká duel proti poslední Itálii. Jsme nohama na zemi, říkají",
-            "publishedAt": "2026-05-20T06:19:02Z"
           }
         ]
       }

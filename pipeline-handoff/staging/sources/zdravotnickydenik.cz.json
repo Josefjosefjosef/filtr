@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-20T07:55:17.075023Z",
+  "ingestedAt": "2026-05-20T08:35:04.475605Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Prymula varuje před ebolou: Sledovat by se měli všichni, kdo se teď vracejí z Konga a Ugandy",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/prymula-ebola-cestovatele-kongo-uganda/",
+      "dt": "2026-05-20T07:55:33Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "ebolou",
+        "konga",
+        "měli",
+        "prymula",
+        "sledovat",
+        "ugandy",
+        "varuje",
+        "vracejí",
+        "všichni"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -240,34 +266,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Smrtící ebola se šíří mimořádně rychle. Světová zdravotnická organizace svolala krizový výbor",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/ebola-se-siri-mimoradne-rychle-svetova-zdravotnicka-organizace/",
-      "dt": "2026-05-19T09:42:57Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "ebola",
-        "krizový",
-        "mimořádně",
-        "organizace",
-        "rychle",
-        "smrtící",
-        "svolala",
-        "světová",
-        "výbor",
-        "zdravotnická",
-        "šíří"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +276,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 95610,
+      "bytes": 98112,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +313,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-20T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T07:55:33Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 8,
@@ -332,6 +330,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Prymula varuje před ebolou: Sledovat by se měli všichni, kdo se teď vracejí z Konga a Ugandy",
+            "publishedAt": "2026-05-20T07:55:33Z"
+          },
           {
             "title": "Vakcína po infarktu může zachránit život. Pacienti ji ale často nedostanou, říká Chlíbek",
             "publishedAt": "2026-05-20T07:00:00Z"
@@ -359,10 +361,6 @@
           {
             "title": "Šok v Německu: Dětský lékař čelí obžalobě ze 130 sexuálních činů, obětem byly i dva roky",
             "publishedAt": "2026-05-19T13:45:35Z"
-          },
-          {
-            "title": "Přehledně o ebole: Jak se přenáší a co se stane, když se nakazíte",
-            "publishedAt": "2026-05-19T11:19:02Z"
           }
         ]
       }
