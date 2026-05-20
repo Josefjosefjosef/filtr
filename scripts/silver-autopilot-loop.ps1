@@ -1540,7 +1540,89 @@ function Test-SilverNextActionIsProductTaskHandoff {
   $hasExplicitProduct =
     ($NextActionText -match $clusterPat) -or
     ($NextActionText -match '(?i)PRODUCT_CLUSTER|NEXT PRODUCT CLUSTER|(?:node|npx)\s+scripts/silver-real-czech-public-ux|(?:node|npx)\s+scripts/silver-rhc3-cluster-classifier|audit_silver_')
+  if ($cluster -eq "self_correction_negation_flip") {
+    if ($NextActionText -match '(?i)silver-self-correction-audit|silver-self-correction-safety-diagnostic|self_correction_negation_flip') {
+      $hasExplicitProduct = $true
+    }
+  }
   if (-not $hasExplicitProduct) { return $false }
+  return $true
+}
+
+function Invoke-SilverEnsureRegistryClusterProductHandoff {
+  param(
+    [string]$RepoRoot,
+    [string]$AutopilotScript
+  )
+  $selectorCluster = Get-SilverAuthoritativeSelectorCluster -RepoRoot $RepoRoot
+  if (-not $selectorCluster) { return $true }
+  $nextPath = Join-Path $RepoRoot "SILVER_NEXT_ACTION.md"
+  $nextText = Read-TextFileOrEmpty -Path $nextPath
+  if (Test-SilverNextActionIsProductTaskHandoff -NextActionText $nextText -SelectorCluster $selectorCluster) {
+    return $true
+  }
+  $null = Invoke-SilverOrchestrationProductHandoffBridge -RepoRoot $RepoRoot -AutopilotScript $AutopilotScript
+  $nextText = Read-TextFileOrEmpty -Path $nextPath
+  return (Test-SilverNextActionIsProductTaskHandoff -NextActionText $nextText -SelectorCluster $selectorCluster)
+}
+
+function Test-SilverAutonomousCycleHadProductAdvance {
+  param(
+    [string]$ReportText,
+    [string]$NextActionText
+  )
+  $engineCh = Get-RunReportLineValue -ReportText $ReportText -Key "engine_changed"
+  $assetsCh = Get-RunReportLineValue -ReportText $ReportText -Key "assets_app_changed"
+  if ($engineCh -eq "YES" -or $assetsCh -eq "YES") { return $true }
+  $prUrl = Get-RunReportLineValue -ReportText $ReportText -Key "pr_url"
+  if ($prUrl -and $prUrl -match 'https?://') { return $true }
+  $openPr = Get-RunReportLineValue -ReportText $ReportText -Key "open_pr"
+  if ($openPr -and $openPr -match 'https?://github\.com/[^/]+/[^/]+/pull/\d+') { return $true }
+  if ($NextActionText -match '(?i)===\s*SILVER_PRODUCT_CLUSTER_DIAGNOSTIC_RESULT\s*===') {
+    if ($NextActionText -match '(?i)PASS_FAIL=PASS') { return $true }
+  }
+  return $false
+}
+
+function Invoke-SilverAutonomousProductOutcomeMidCycleGate {
+  param(
+    [string]$RepoRoot,
+    [string]$ProgressLogPath,
+    [int]$Cycle,
+    [string]$MainCommit,
+    [string]$ReportText,
+    [string]$NextActionText,
+    [string]$SelectorCluster,
+    [string]$CursorExit,
+    [string]$AutopilotExit,
+    [string]$StatusExit,
+    [string]$SafetyLine,
+    [string]$GitClean,
+    [switch]$NoBeep
+  )
+  if (Test-SilverAutonomousCycleHadProductAdvance -ReportText $ReportText -NextActionText $NextActionText) {
+    $script:AutonomousOrchestrationOnlyStreak = 0
+    return $true
+  }
+  $script:AutonomousOrchestrationOnlyStreak++
+  if ($SelectorCluster -and -not (Test-SilverNextActionIsProductTaskHandoff -NextActionText $NextActionText -SelectorCluster $SelectorCluster)) {
+    Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $Cycle -MainCommit $MainCommit `
+      -CursorExit $CursorExit -AutopilotExit $AutopilotExit -StatusExit $StatusExit `
+      -GitClean $GitClean -SafetyLine $SafetyLine -CalW "" -CalQ "" `
+      -Headline (Get-NextActionHeadline -Text $NextActionText) -Focus "product_handoff_not_cluster_specific" `
+      -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
+      -StopReason ("PRODUCT_HANDOFF_NOT_CLUSTER_SPECIFIC|selector_cluster=" + [string]$SelectorCluster + "|cycle=" + [string]$Cycle)
+    return $false
+  }
+  if ($script:AutonomousOrchestrationOnlyStreak -ge 2) {
+    Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $Cycle -MainCommit $MainCommit `
+      -CursorExit $CursorExit -AutopilotExit $AutopilotExit -StatusExit $StatusExit `
+      -GitClean $GitClean -SafetyLine $SafetyLine -CalW "" -CalQ "" `
+      -Headline (Get-NextActionHeadline -Text $NextActionText) -Focus "product_outcome_not_advancing" `
+      -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
+      -StopReason ("PRODUCT_OUTCOME_NOT_ADVANCING|orchestration_only_streak=" + [string]$script:AutonomousOrchestrationOnlyStreak + "|selector_cluster=" + [string]$SelectorCluster)
+    return $false
+  }
   return $true
 }
 
@@ -4336,6 +4418,7 @@ $script:SilverAutonomousRunId = ""
 $script:SilverAutonomousRunStartUtc = [datetime]::MinValue
 $script:AutonomousCyclesCompleted = 0
 $script:AutonomousCyclesPass = 0
+$script:AutonomousOrchestrationOnlyStreak = 0
 $script:AutonomousRealStaleMetaIssueSeen = "NO"
 $script:AutonomousStaleEmbeddedHintSeen = "NO"
 $script:AutonomousStaleEmbeddedNonAuth = "NO"
@@ -4738,6 +4821,22 @@ while ($true) {
       -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine "" -CalW "" -CalQ "" `
       -Headline (Get-NextActionHeadline -Text $nextText) -Focus "guard_engine_task_policy" `
       -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep -LastTaskExitCode 1
+  }
+
+  if ($controlledInfinite) {
+    $selectorPre = Get-SilverAuthoritativeSelectorCluster -RepoRoot $RepoRoot
+    if ($selectorPre) {
+      Write-Host ("silver-autopilot-loop: pre_cycle_selector_cluster=" + $selectorPre) -ForegroundColor DarkCyan
+      if (-not (Invoke-SilverEnsureRegistryClusterProductHandoff -RepoRoot $RepoRoot -AutopilotScript $AutopilotScript)) {
+        Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+          -CursorExit "N/A" -AutopilotExit "N/A" -StatusExit "N/A" `
+          -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine "" -CalW "" -CalQ "" `
+          -Headline (Get-NextActionHeadline -Text $nextText) -Focus "product_handoff_not_cluster_specific_precycle" `
+          -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep -LastTaskExitCode 1 `
+          -StopReason ("PRODUCT_HANDOFF_NOT_CLUSTER_SPECIFIC|selector_cluster=" + [string]$selectorPre)
+      }
+      $nextText = Read-TextFileOrEmpty -Path $NextActionPath
+    }
   }
 
   if ($controlledInfinite -and -not (Test-SilverNextActionOutputQuality -Text $nextText)) {
@@ -5344,6 +5443,11 @@ while ($true) {
       $script:AutonomousCyclesPass++
     }
     Update-SilverAutonomousReportingHygieneAccumulator -ReportText $reportPost -CycleFields $fieldsPass
+    $selectorMid = Get-SilverAuthoritativeSelectorCluster -RepoRoot $RepoRoot
+    $null = Invoke-SilverAutonomousProductOutcomeMidCycleGate -RepoRoot $RepoRoot -ProgressLogPath $ProgressLogPath `
+      -Cycle $cycle -MainCommit $mainCommit -ReportText $reportPost -NextActionText $nextAfter `
+      -SelectorCluster $selectorMid -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit ([string]$se) `
+      -SafetyLine $safetyPost -GitClean $gitCleanFinal -NoBeep:$NoBeep
   }
   $postCond = Invoke-SilverCap50EvaluateCyclePostcondition `
     -RepoRoot $RepoRoot -Cycle $cycle -CursorExit $cursorExitStr -AutopilotExit $autoExitStr `

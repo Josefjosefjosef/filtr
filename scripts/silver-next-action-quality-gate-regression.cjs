@@ -147,6 +147,14 @@ function main() {
     assert(!/\bgh\s+auth\s+login\b/i.test(after), "D_after_sanitize_no_generic_gh_auth");
     assert(!/^\s*cat\s+C:\\/im.test(after), "D_after_sanitize_no_cat_windows");
     assert(!/Ă|â€|Ĺ™ejdÄ/.test(after), "D_after_sanitize_no_mojibake_markers");
+
+    const { resolveCapRuntimeHandoff } = require("./silver-audit-registry.cjs");
+    const handoff = resolveCapRuntimeHandoff(REPO, {});
+    const selCluster = handoff && handoff.cluster_diag ? String(handoff.cluster_diag.cluster || "") : "";
+    if (selCluster === "self_correction_negation_flip") {
+      assert(/self_correction_negation_flip/.test(after), "E_sanitize_must_keep_selector_cluster");
+      assert(/silver-self-correction-audit/.test(after), "E_sanitize_must_include_self_correction_harness");
+    }
   } finally {
     if (backup != null) writeUtf8(NEXT_ACTION, backup);
     else {
