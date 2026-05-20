@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-20T12:34:48.502937Z",
+  "ingestedAt": "2026-05-20T13:14:33.095402Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hvězdný bojovník MMA byl zatčen nahý před strip klubem na Floridě. Policie ho viní ze sexuálního napadení",
+      "url": "https://www.mmamag.cz/hvezda-mma-byla-zatcena-naha-pred-strip-klubem-na-floride/",
+      "dt": "2026-05-20T12:45:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "bojovník",
+        "floridě",
+        "hvězdný",
+        "klubem",
+        "mma",
+        "nahý",
+        "napadení",
+        "policie",
+        "sexuálního",
+        "strip",
+        "viní",
+        "zatčen"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1107,36 +1136,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "MMA veterán s bilancí 16-112 konečně znovu zvítězil. Jay Ellis se dočkal výhry po více než 4 letech",
-      "url": "https://www.mmamag.cz/bojovnik-mma-vyhral-po-1651-dnech/",
-      "dt": "2026-05-18T20:15:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "112",
-        "bilancí",
-        "dočkal",
-        "ellis",
-        "jay",
-        "konečně",
-        "letech",
-        "mma",
-        "než",
-        "veterán",
-        "výhry",
-        "znovu",
-        "zvítězil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1147,7 +1146,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 86973,
+      "bytes": 87042,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1184,7 +1183,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-20T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T12:45:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1199,6 +1198,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hvězdný bojovník MMA byl zatčen nahý před strip klubem na Floridě. Policie ho viní ze sexuálního napadení",
+            "publishedAt": "2026-05-20T12:45:00Z"
+          },
           {
             "title": "McGregorův návrat do klece má problém. UFC 329 se kryje se čtvrtfinále mistrovství světa ve fotbale",
             "publishedAt": "2026-05-20T12:00:00Z"
@@ -1226,10 +1229,6 @@
           {
             "title": "Kincl ostře o zpackaném návratu legend: Diaz byl v kleci ubohý, bez kondice a už by do ní neměl lézt",
             "publishedAt": "2026-05-20T08:15:00Z"
-          },
-          {
-            "title": "UFC u Bílého domu řeší bizarní problém. Dana White neví, jak z klece vyhnat hmyz",
-            "publishedAt": "2026-05-20T07:30:00Z"
           }
         ]
       }

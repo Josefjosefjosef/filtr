@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-20T12:34:48.502937Z",
+  "ingestedAt": "2026-05-20T13:14:33.095402Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zemřela autorka knih pro děti i jejich rodiče Veronika Valentová. Bylo jí 52 let",
+      "url": "https://www.denik.cz/literatura/zemrela-spisovatelka-veronika-valentova.html",
+      "dt": "2026-05-20T12:25:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "autorka",
+        "děti",
+        "jejich",
+        "knih",
+        "let",
+        "rodiče",
+        "valentová",
+        "veronika",
+        "zemřela"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -267,7 +293,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Litva vyhlásila poplach kvůli dronu, obyvatele poslala do krytů. Zasahuje i NATO",
+      "title": "Litva vyhlásila poplach kvůli dronu, obyvatele poslala do krytů. Zasáhlo i NATO",
       "url": "https://www.denik.cz/staty-eu/dron-v-litve-poplach-nato.html",
       "dt": "2026-05-20T08:07:00Z",
       "media_raw": "Deník",
@@ -282,7 +308,7 @@
         "poplach",
         "poslala",
         "vyhlásila",
-        "zasahuje"
+        "zasáhlo"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -626,34 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Extrémní proměny: Šárka z rodinné farmy váží 122 kilo. Dobroty si kupuje tajně",
-      "url": "https://www.denik.cz/film-a-televize/extremni-promeny-sarka-lechanova-pred-promenou.html",
-      "dt": "2026-05-20T02:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "122",
-        "dobroty",
-        "extrémní",
-        "farmy",
-        "kilo",
-        "kupuje",
-        "proměny",
-        "rodinné",
-        "tajně",
-        "váží",
-        "šárka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -664,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28528,
+      "bytes": 28602,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -701,7 +699,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-20T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T12:25:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -718,6 +716,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zemřela autorka knih pro děti i jejich rodiče Veronika Valentová. Bylo jí 52 let",
+            "publishedAt": "2026-05-20T12:25:00Z"
+          },
           {
             "title": "Čína cvičí ruské vojáky. Učí je, jak pracovat s drony a výbušninami",
             "publishedAt": "2026-05-20T12:00:00Z"
@@ -745,10 +747,6 @@
           {
             "title": "Využití peněz z evropských fondů si komplikujeme sami, říká Kateřina Konečná",
             "publishedAt": "2026-05-20T10:00:00Z"
-          },
-          {
-            "title": "Drahé letecké palivo zdražuje letní zájezdy. Kdo s koupí váhá, zaplatí víc",
-            "publishedAt": "2026-05-20T09:00:00Z"
           }
         ]
       }
