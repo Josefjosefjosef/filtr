@@ -200,6 +200,8 @@ const FULL_AUTO_LOOP_ALLOWED_DIRTY = new Set(
     "scripts/silver-cursor-agent-adapter-diagnostic-report.json",
     "scripts/silver-rhc3-negation-cal-readonly-diagnostic-report.json",
     "scripts/silver-rhc3-cluster-classifier-v1-report.json",
+    /* Narrow harness alignment JSON (orchestration transient; not broad scripts/*-report.json) */
+    "scripts/silver-rhc3-mobile-voice-harness-alignment-report.json",
   ].map((s) => repoRelGuardKey(s)),
 );
 
@@ -233,6 +235,7 @@ const CAP50_RUNTIME_RESTORE_EXACT = new Set(
     "SILVER_RUN_REPORT.md",
     "scripts/silver-cursor-agent-adapter-diagnostic-report.json",
     "scripts/silver-rhc3-negation-cal-readonly-diagnostic-report.json",
+    "scripts/silver-rhc3-mobile-voice-harness-alignment-report.json",
   ].map((s) => repoRelGuardKey(s)),
 );
 
@@ -3592,6 +3595,108 @@ function cmdSanitizeNextActionMd(argvCommand) {
   return 0;
 }
 
+function sourceHasBroadScriptsReportAllowlistGlob(src) {
+  for (const raw of String(src || "").split(/\r?\n/)) {
+    const line = String(raw || "").trim();
+    if (!line || line.startsWith("//") || line.startsWith("*") || line.startsWith("/*")) continue;
+    if (/scripts\/\*-report\.json|scripts\/\*report\.json/i.test(line)) return true;
+  }
+  return false;
+}
+
+/** Regression: orchestration runtime harness-alignment JSON must not trip forbidden_dirty (exact path only). */
+function runCapDirtyReportLifecycleSelftest() {
+  const alignRel = "scripts/silver-rhc3-mobile-voice-harness-alignment-report.json";
+  const failures = [];
+  const src = readTextSafe(path.join(SCRIPTS, "silver-autopilot.cjs"));
+  if (sourceHasBroadScriptsReportAllowlistGlob(src)) {
+    failures.push("broad_scripts_report_glob_in_autopilot");
+  }
+  const classAlign = classifyCap50CloseoutFromDirtyPaths([alignRel]);
+  if (classAlign.closeout_kind !== "runtime_artifact_restorable") {
+    failures.push(
+      "alignment_closeout_kind=" +
+        classAlign.closeout_kind +
+        " expected=runtime_artifact_restorable",
+    );
+  }
+  const classUnknown = classifyCap50CloseoutFromDirtyPaths(["SILVER_CAP_DIRTY_LIFECYCLE_SELFTEST_BLOCK.txt"]);
+  if (classUnknown.closeout_kind !== "forbidden_dirty") {
+    failures.push("unknown_closeout_kind=" + classUnknown.closeout_kind + " expected=forbidden_dirty");
+  }
+  const utf8 = { encoding: "utf8" };
+  const td = path.join(require("os").tmpdir(), "silver-cap-dirty-lifecycle-" + Date.now());
+  try {
+    fs.mkdirSync(path.join(td, "scripts"), { recursive: true });
+    fs.writeFileSync(path.join(td, ".gitignore"), ".silver-runtime/\n", utf8);
+    fs.writeFileSync(path.join(td, alignRel), '{"seed":true}\n', utf8);
+    execFileSync("git", ["init"], { cwd: td, stdio: "pipe" });
+    execFileSync("git", ["config", "user.email", "cap-dirty-lifecycle@local"], { cwd: td, stdio: "pipe" });
+    execFileSync("git", ["config", "user.name", "cap-dirty-lifecycle"], { cwd: td, stdio: "pipe" });
+    execFileSync("git", ["add", ".gitignore", alignRel], { cwd: td, stdio: "pipe" });
+    execFileSync("git", ["commit", "-m", "init"], { cwd: td, stdio: "pipe" });
+    fs.writeFileSync(path.join(td, alignRel), '{"cap_dirty_report_lifecycle_selftest":true}\n', utf8);
+    const po = execFileSync("git", ["-c", "core.quotePath=false", "status", "--porcelain"], {
+      cwd: td,
+      encoding: "utf8",
+    }).trim();
+    const dirtyPaths = po
+      .split(/\r?\n/)
+      .map((l) => {
+        const line = String(l || "").replace(/\r$/, "");
+        if (!line) return "";
+        let extracted = "";
+        if (line.length >= 3 && line.charAt(2) === " ") extracted = line.slice(3).trim();
+        else {
+          const parts = line.trim().split(/\s+/);
+          if (parts.length >= 2) extracted = parts.slice(1).join(" ").trim();
+        }
+        return porcelainPathToWorkingTree(extracted);
+      })
+      .filter(Boolean);
+    const classIso = classifyCap50CloseoutFromDirtyPaths(dirtyPaths);
+    if (classIso.closeout_kind === "forbidden_dirty") {
+      failures.push("isolated_alignment_forbidden_dirty");
+    }
+    execFileSync("git", ["restore", "--source=HEAD", "--staged", "--worktree", "--", alignRel], {
+      cwd: td,
+      stdio: "pipe",
+    });
+    const cleanAfter = !execFileSync("git", ["-c", "core.quotePath=false", "status", "--porcelain"], {
+      cwd: td,
+      encoding: "utf8",
+    }).trim();
+    if (!cleanAfter) failures.push("isolated_alignment_not_clean_after_restore");
+    fs.writeFileSync(path.join(td, "SILVER_CAP_DIRTY_LIFECYCLE_SELFTEST_BLOCK.txt"), "forbidden\n", utf8);
+    const classBlock = classifyCap50CloseoutFromDirtyPaths([
+      alignRel,
+      "SILVER_CAP_DIRTY_LIFECYCLE_SELFTEST_BLOCK.txt",
+    ]);
+    if (classBlock.closeout_kind !== "forbidden_dirty") {
+      failures.push("mixed_unknown_closeout_kind=" + classBlock.closeout_kind);
+    }
+  } catch (e) {
+    failures.push("isolated_repo_error=" + String(e && e.message ? e.message : e));
+  } finally {
+    try {
+      fs.rmSync(td, { recursive: true, force: true });
+    } catch {
+      /* ignore */
+    }
+  }
+  let assetsDiff = "";
+  try {
+    assetsDiff = runGit(["diff", "--", "assets/app.js"]);
+  } catch {
+    assetsDiff = "";
+  }
+  if (assetsDiff.trim().length > 0) failures.push("assets_app_js_dirty");
+  const pass = failures.length === 0;
+  console.log("CAP_DIRTY_REPORT_LIFECYCLE_SELFTEST=" + (pass ? "PASS" : "FAIL"));
+  for (const f of failures) console.log("CAP_DIRTY_REPORT_LIFECYCLE_FAIL=" + f);
+  return pass;
+}
+
 function parseArgs(argv) {
   const out = { cmd: null, pr: "", maxSteps: "1" };
   for (const a of argv) {
@@ -3613,6 +3718,7 @@ function parseArgs(argv) {
     else if (a === "--cli-autonomous-adapter-diagnostic") out.cmd = "cli-autonomous-adapter-diagnostic";
     else if (a === "--preflight-runtime-cleanup") out.cmd = "preflight-runtime-cleanup";
     else if (a === "--preflight-runtime-cleanup-selftest") out.cmd = "preflight-runtime-cleanup-selftest";
+    else if (a === "--cap-dirty-report-lifecycle-selftest") out.cmd = "cap-dirty-report-lifecycle-selftest";
     else if (a === "--auto") out.cmd = "auto";
     else if (a === "--full-auto-loop" || a === "--loop-once") out.cmd = "full-auto-loop";
     else if (a.startsWith("--max-steps=")) out.maxSteps = a.slice("--max-steps=".length);
@@ -3656,11 +3762,14 @@ if (require.main === module) {
     const dryOnly = argv.indexOf("--dry-run") >= 0;
     const pf = cap50PreflightRuntimeCleanup(dryOnly);
     process.exit(pf.exitCode);
+  } else if (p.cmd === "cap-dirty-report-lifecycle-selftest") {
+    process.exit(runCapDirtyReportLifecycleSelftest() ? 0 : 1);
   } else if (p.cmd === "preflight-runtime-cleanup-selftest") {
     const cases = [
       { rel: "SILVER_RUN_REPORT.md", pass: true },
       { rel: "SILVER_NEXT_ACTION.md", pass: true },
       { rel: "scripts/silver-rhc3-cluster-classifier-v1-report.json", pass: true },
+      { rel: "scripts/silver-rhc3-mobile-voice-harness-alignment-report.json", pass: true },
     ];
     const failures = [];
     const utf8 = { encoding: "utf8" };
