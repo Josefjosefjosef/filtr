@@ -2301,7 +2301,8 @@ function Get-SilverTransientGeneratedAuditReportRelPaths {
     "scripts/silver-real-czech-corpus-v1-report.json",
     "scripts/silver-real-czech-public-ux-corpus-v2-report.json",
     "scripts/silver-deep-product-real-ux-v2-report.json",
-    "scripts/silver-real-human-chaos-v3-report.json"
+    "scripts/silver-real-human-chaos-v3-report.json",
+    "scripts/silver-self-correction-audit-report.json"
   )
 }
 
@@ -2426,6 +2427,7 @@ function Get-SilverCap50RuntimeRestoreAllowReason {
     '^scripts/silver-cursor-agent-adapter-diagnostic-report\.json$' { return 'runtime_adapter_diagnostic_json' }
     '^scripts/silver-rhc3-negation-cal-readonly-diagnostic-report\.json$' { return 'runtime_rhc3_diagnostic_json' }
     '^scripts/silver-rhc3-mobile-voice-harness-alignment-report\.json$' { return 'runtime_rhc3_harness_alignment_json' }
+    '^scripts/silver-self-correction-audit-report\.json$' { return 'runtime_self_correction_audit_json' }
     default {
       foreach ($auditRel in (Get-SilverTransientGeneratedAuditReportRelPaths)) {
         if ([string]::Equals($n, $auditRel, [System.StringComparison]::OrdinalIgnoreCase)) {
@@ -3457,6 +3459,9 @@ function Invoke-SilverCap50TimeoutUtf8OrchestrationSelfTest {
   }
   if (-not (Test-SilverPathIsCap50RuntimeRestorable -RelPath "scripts/silver-rhc3-cluster-classifier-v1-report.json")) {
     [void]$failures.Add("allowlist_missing_cluster_classifier_json")
+  }
+  if (-not (Test-SilverPathIsCap50RuntimeRestorable -RelPath "scripts/silver-self-correction-audit-report.json")) {
+    [void]$failures.Add("allowlist_missing_self_correction_audit_json")
   }
   if (Test-SilverPathIsCap50RuntimeRestorable -RelPath "assets/app.js") {
     [void]$failures.Add("allowlist_must_not_include_assets_app_js")
