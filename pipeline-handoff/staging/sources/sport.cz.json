@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-20T05:55:13.807094Z",
+  "ingestedAt": "2026-05-20T06:34:56.399752Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hokejisty čeká duel proti poslední Itálii. Jsme nohama na zemi, říkají",
+      "url": "https://www.sport.cz/clanek/hokej-ms-2026-cesko-italie-online-5458874",
+      "dt": "2026-05-20T06:19:02Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "duel",
+        "hokejisty",
+        "itálii",
+        "jsme",
+        "nohama",
+        "poslední",
+        "proti",
+        "zemi",
+        "čeká",
+        "říkají"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kongo by o fotbalové MS kvůli ebole přijít nemělo",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-kongo-by-o-fotbalove-ms-kvuli-ebole-prijit-nemelo-5458876",
+      "dt": "2026-05-20T06:07:32Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "ebole",
+        "fotbalové",
+        "kongo",
+        "kvůli",
+        "nemělo",
+        "přijít"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -721,56 +771,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Doživotní distanc! Český kouč, který nahrával nahé fotbalistky, si už nezatrénuje",
-      "url": "https://www.sport.cz/clanek/fotbal-dozivotni-distanc-cesky-kouc-ktery-nahraval-nahe-fotbalistky-si-uz-nezatrenuje-5458467",
-      "dt": "2026-05-19T16:36:15Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "distanc",
-        "doživotní",
-        "fotbalistky",
-        "kouč",
-        "nahrával",
-        "nahé",
-        "nezatrénuje",
-        "český"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Excelová tabulka s projekcí příjmů není nabídkou, vmetla extraliga Dědkovi",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-excelova-tabulka-s-projekci-prijmu-neni-nabidkou-vmetla-extraliga-dedkovi-5458453",
-      "dt": "2026-05-19T16:20:25Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dědkovi",
-        "excelová",
-        "extraliga",
-        "nabídkou",
-        "projekcí",
-        "příjmů",
-        "tabulka",
-        "vmetla"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -781,7 +781,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 47548,
+      "bytes": 46980,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -818,7 +818,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T05:33:16Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T06:19:02Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -833,6 +833,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hokejisty čeká duel proti poslední Itálii. Jsme nohama na zemi, říkají",
+            "publishedAt": "2026-05-20T06:19:02Z"
+          },
+          {
+            "title": "Kongo by o fotbalové MS kvůli ebole přijít nemělo",
+            "publishedAt": "2026-05-20T06:07:32Z"
+          },
           {
             "title": "Druhý největší obrat v dějinách. New York slaví první výhru",
             "publishedAt": "2026-05-20T05:33:16Z"
@@ -856,14 +864,6 @@
           {
             "title": "Flek se zapsal do elitní české společnosti",
             "publishedAt": "2026-05-20T04:12:28Z"
-          },
-          {
-            "title": "SESTŘIH: Horák opět čaroval a Slovinci zase trápili favorita. Slovensko neporazitelnost zachránilo až v nájezdech",
-            "publishedAt": "2026-05-19T21:05:06Z"
-          },
-          {
-            "title": "SESTŘIH: Maďaři nasázeli Britům bůra a získali první body na šampionátu",
-            "publishedAt": "2026-05-19T20:46:18Z"
           }
         ]
       }

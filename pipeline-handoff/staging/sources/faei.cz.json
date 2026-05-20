@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-20T05:55:13.807094Z",
+  "ingestedAt": "2026-05-20T06:34:56.399752Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Martin Kozár posiluje marketing platformy Investown",
+      "url": "https://profitonline.cz/martin-kozar-posiluje-marketing-platformy-investown/",
+      "dt": "2026-05-20T06:00:51Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "investown",
+        "kozár",
+        "marketing",
+        "martin",
+        "platformy",
+        "posiluje"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -264,30 +287,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Uzavřený Hormuzský průliv sníží celosvětový růst HDP",
-      "url": "https://profitonline.cz/uzavreny-hormuzsky-pruliv-snizi-celosvetovy-rust-hdp/",
-      "dt": "2026-05-18T08:00:29Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "celosvětový",
-        "hdp",
-        "hormuzský",
-        "průliv",
-        "růst",
-        "sníží",
-        "uzavřený"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -298,7 +297,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18586,
+      "bytes": 18380,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -335,11 +334,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-20T04:00:16Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T06:00:51Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "zpravy": 1,
           "finance": 10,
+          "zpravy": 1,
           "zdravi": 1
         },
         "drop_counts": {
@@ -352,6 +351,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Martin Kozár posiluje marketing platformy Investown",
+            "publishedAt": "2026-05-20T06:00:51Z"
+          },
           {
             "title": "Jak „oškubat“ zájemce o ojeté auto. Podvodníci mají osvědčený trik",
             "publishedAt": "2026-05-20T04:00:16Z"
@@ -379,10 +382,6 @@
           {
             "title": "Hypotéky nečekaně zdražují. Panika ale není na místě",
             "publishedAt": "2026-05-18T19:00:47Z"
-          },
-          {
-            "title": "Bitcoin po nedávném růstu koriguje",
-            "publishedAt": "2026-05-18T18:30:19Z"
           }
         ]
       }

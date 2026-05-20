@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-20T05:55:13.807094Z",
+  "ingestedAt": "2026-05-20T06:34:56.399752Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "ČEZ hledá dodavatele obřích baterií. Umístí je poblíž uhelných elektráren",
+      "url": "https://ekonomickydenik.cz/cez-hleda-dodavatele-obrich-baterii-umisti-je-pobliz-uhelnych-elektraren/",
+      "dt": "2026-05-20T06:18:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "baterií",
+        "dodavatele",
+        "elektráren",
+        "hledá",
+        "obřích",
+        "poblíž",
+        "uhelných",
+        "umístí",
+        "čez"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -753,31 +779,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Konec závislosti na Číně? EU chystá „pravidlo tří“ pro strategické nákupy",
-      "url": "https://ekonomickydenik.cz/konec-zavislosti-na-cine-eu-chysta-pravidlo-tri-pro-strategicke-nakupy/",
-      "dt": "2026-05-18T10:00:46Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "chystá",
-        "konec",
-        "nákupy",
-        "pravidlo",
-        "strategické",
-        "tří",
-        "závislosti",
-        "číně"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -788,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71526,
+      "bytes": 71456,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -825,12 +826,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T04:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T06:18:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 25,
-          "zpravy": 3,
-          "zdravi": 2
+          "zdravi": 3,
+          "finance": 24,
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -842,6 +843,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "ČEZ hledá dodavatele obřích baterií. Umístí je poblíž uhelných elektráren",
+            "publishedAt": "2026-05-20T06:18:00Z"
+          },
           {
             "title": "Přichází účetní revoluce. Odhalí skutečnou hodnotu majetku firem",
             "publishedAt": "2026-05-20T04:05:00Z"
@@ -869,10 +874,6 @@
           {
             "title": "Regiony „bez budoucnosti“? Evropě hrozí rozdělení a nárůst extremismu",
             "publishedAt": "2026-05-19T13:09:50Z"
-          },
-          {
-            "title": "Uplatnili jste slevu na manželku? Možná právě vás hledá finanční úřad",
-            "publishedAt": "2026-05-19T11:55:29Z"
           }
         ]
       }

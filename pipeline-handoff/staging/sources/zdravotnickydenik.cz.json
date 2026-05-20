@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-20T05:55:13.807094Z",
+  "ingestedAt": "2026-05-20T06:34:56.399752Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Hazard s odolnými bakteriemi: Tisíce českých praktiků dostaly varování kvůli antibiotikům",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/praktici-varovani-spatne-predepisovani-antibiotik/",
+      "dt": "2026-05-20T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "antibiotikům",
+        "bakteriemi",
+        "dostaly",
+        "hazard",
+        "kvůli",
+        "odolnými",
+        "praktiků",
+        "tisíce",
+        "varování",
+        "českých"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -243,33 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Telefon, vlastní oblečení i vzduch za odměnu? Podmínky ochranné léčby se drasticky liší",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/ochranne-leceni-zastupce-ombudsmana-nejasna-pravidla/",
-      "dt": "2026-05-19T07:42:30Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "drasticky",
-        "liší",
-        "léčby",
-        "oblečení",
-        "ochranné",
-        "odměnu",
-        "podmínky",
-        "telefon",
-        "vlastní",
-        "vzduch"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 67818,
+      "bytes": 84023,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,11 +317,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-20T05:29:56Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "sport": 1,
           "zdravi": 8,
+          "sport": 1,
           "zpravy": 1
         },
         "drop_counts": {
@@ -334,6 +334,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hazard s odolnými bakteriemi: Tisíce českých praktiků dostaly varování kvůli antibiotikům",
+            "publishedAt": "2026-05-20T06:00:00Z"
+          },
           {
             "title": "Podezření na ebolu v Česku: Na pražskou Bulovku míří Američan v izolačním boxu",
             "publishedAt": "2026-05-20T05:29:56Z"
@@ -361,10 +365,6 @@
           {
             "title": "Tři čtvrtiny úmrtí na železnici jsou sebevraždy. Stát spouští neobvyklou kampaň u tratí",
             "publishedAt": "2026-05-19T10:34:32Z"
-          },
-          {
-            "title": "Smrtící ebola se šíří mimořádně rychle. Světová zdravotnická organizace svolala krizový výbor",
-            "publishedAt": "2026-05-19T09:42:57Z"
           }
         ]
       }
