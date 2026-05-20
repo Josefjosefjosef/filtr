@@ -303,6 +303,7 @@ function Get-SilverCap50RuntimeGeneratedReportRelPaths {
   $out = New-Object System.Collections.Generic.List[string]
   [void]$out.Add("scripts/silver-cursor-agent-adapter-diagnostic-report.json")
   [void]$out.Add("scripts/silver-rhc3-negation-cal-readonly-diagnostic-report.json")
+  [void]$out.Add("scripts/silver-self-correction-audit-report.json")
   $scriptsDir = Join-Path $RepoRoot "scripts"
   if (Test-Path -LiteralPath $scriptsDir) {
     foreach ($f in [System.IO.Directory]::EnumerateFiles($scriptsDir, "silver-*-cluster-classifier-v*-report.json")) {

@@ -1508,6 +1508,25 @@ process.stdout.write(c);
   }
 }
 
+function Invoke-SilverOrchestrationProductHandoffBridge {
+  param(
+    [string]$RepoRoot,
+    [string]$AutopilotScript
+  )
+  try {
+    $bridge = Invoke-NodeScript -WorkingDirectory $RepoRoot -Arguments @($AutopilotScript, "--sanitize-next-action-md") -PassThruExit $true
+    if (($null -ne $bridge) -and ($bridge.ExitCode -eq 0)) {
+      Write-Host "silver-autopilot-loop: orchestration_product_handoff_bridge_sanitize=OK" -ForegroundColor DarkCyan
+      return $true
+    }
+    Write-Host ("silver-autopilot-loop: orchestration_product_handoff_bridge_sanitize_exit=" + [string]$bridge.ExitCode) -ForegroundColor DarkYellow
+  }
+  catch {
+    Write-Host "silver-autopilot-loop: orchestration_product_handoff_bridge_invoke_failed" -ForegroundColor DarkYellow
+  }
+  return $false
+}
+
 function Test-SilverNextActionIsProductTaskHandoff {
   param(
     [string]$NextActionText,
@@ -2127,6 +2146,7 @@ function Stop-LoopWithFail {
     $fields["git_status_clean"] = $GitClean
     $skipRepoProgressLogWrite = $true
   }
+  $skipScorecardAfterOrchestrationCloseout = $false
   if ((-not $skipRepoProgressLogWrite) -and (-not $isTimeoutStop) -and ($DryRunText -ne "YES")) {
     $closeKindOrch = "orchestration_fail"
     if ($StopReason -match "git_not_clean") {
@@ -2148,6 +2168,7 @@ function Stop-LoopWithFail {
       $GitClean = "YES"
       $fields["git_status_clean"] = "YES"
       $skipRepoProgressLogWrite = $true
+      $skipScorecardAfterOrchestrationCloseout = $true
     }
     else {
       $GitClean = "NO"
@@ -2169,7 +2190,15 @@ function Stop-LoopWithFail {
   }
   $cyclesForScorecard = $Cycle
   if ($script:AutonomousCyclesCompleted -gt 0) { $cyclesForScorecard = $script:AutonomousCyclesCompleted }
-  Invoke-SilverCapProductScorecardIfActive -RepoRoot $RepoRoot -ProgressLogPath $ProgressLogPath -CyclesCompleted $cyclesForScorecard -StopReason $reasonLine
+  if (-not $skipScorecardAfterOrchestrationCloseout) {
+    Invoke-SilverCapProductScorecardIfActive -RepoRoot $RepoRoot -ProgressLogPath $ProgressLogPath -CyclesCompleted $cyclesForScorecard -StopReason $reasonLine
+  }
+  else {
+    Write-Host "silver-autopilot-loop: scorecard_skipped_after_orchestration_closeout_restore=YES" -ForegroundColor DarkCyan
+    if (-not (Test-GitStatusClean -Cwd $RepoRoot)) {
+      $null = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot
+    }
+  }
   Invoke-SilverBeepFail -NoBeep:$NoBeep
   exit 1
 }
@@ -2301,7 +2330,8 @@ function Get-SilverTransientGeneratedAuditReportRelPaths {
     "scripts/silver-real-czech-corpus-v1-report.json",
     "scripts/silver-real-czech-public-ux-corpus-v2-report.json",
     "scripts/silver-deep-product-real-ux-v2-report.json",
-    "scripts/silver-real-human-chaos-v3-report.json"
+    "scripts/silver-real-human-chaos-v3-report.json",
+    "scripts/silver-self-correction-audit-report.json"
   )
 }
 
@@ -2426,6 +2456,7 @@ function Get-SilverCap50RuntimeRestoreAllowReason {
     '^scripts/silver-cursor-agent-adapter-diagnostic-report\.json$' { return 'runtime_adapter_diagnostic_json' }
     '^scripts/silver-rhc3-negation-cal-readonly-diagnostic-report\.json$' { return 'runtime_rhc3_diagnostic_json' }
     '^scripts/silver-rhc3-mobile-voice-harness-alignment-report\.json$' { return 'runtime_rhc3_harness_alignment_json' }
+    '^scripts/silver-self-correction-audit-report\.json$' { return 'runtime_self_correction_audit_json' }
     default {
       foreach ($auditRel in (Get-SilverTransientGeneratedAuditReportRelPaths)) {
         if ([string]::Equals($n, $auditRel, [System.StringComparison]::OrdinalIgnoreCase)) {
@@ -3220,6 +3251,58 @@ ok
   return $true
 }
 
+function Invoke-SilverCap50RealAutonomousLifecycleOrderingSelfTest {
+  $failures = New-Object System.Collections.Generic.List[string]
+  $loopPath = Join-Path $PSScriptRoot "silver-autopilot-loop.ps1"
+  if (-not (Test-Path -LiteralPath $loopPath)) {
+    [void]$failures.Add("loop_script_missing")
+  }
+  else {
+    $lines = Get-Content -LiteralPath $loopPath
+    $cleanupIdx = -1
+    $handoffIdx = -1
+    $bridgeIdx = -1
+    for ($i = 0; $i -lt $lines.Count; $i++) {
+      $line = [string]$lines[$i]
+      if ($line -match 'Reason = "after_autopilot_full_auto_loop"') { $cleanupIdx = $i }
+      if ($line -match 'Invoke-SilverOrchestrationProductHandoffBridge') { $bridgeIdx = $i }
+      if ($line -match 'product_task_handoff_missing') { $handoffIdx = $i }
+    }
+    if ($cleanupIdx -lt 0) {
+      [void]$failures.Add("post_autopilot_cleanup_marker_missing")
+    }
+    if ($handoffIdx -lt 0) {
+      [void]$failures.Add("product_task_handoff_marker_missing")
+    }
+    if (($cleanupIdx -ge 0) -and ($handoffIdx -ge 0) -and ($handoffIdx -lt $cleanupIdx)) {
+      [void]$failures.Add("handoff_guard_before_post_autopilot_cleanup")
+    }
+    if (($bridgeIdx -ge 0) -and ($handoffIdx -ge 0) -and ($bridgeIdx -gt $handoffIdx)) {
+      [void]$failures.Add("handoff_bridge_after_handoff_stop")
+    }
+    if (($bridgeIdx -ge 0) -and ($cleanupIdx -ge 0) -and ($bridgeIdx -lt $cleanupIdx)) {
+      [void]$failures.Add("handoff_bridge_before_post_autopilot_cleanup")
+    }
+    $policyPath = Join-Path $PSScriptRoot "silver-cap50-orchestration-policy.ps1"
+    if (-not (Test-Path -LiteralPath $policyPath)) {
+      [void]$failures.Add("orchestration_policy_missing")
+    }
+    else {
+      $policyText = Get-Content -LiteralPath $policyPath -Raw
+      if ($policyText -notmatch 'silver-self-correction-audit-report\.json') {
+        [void]$failures.Add("audit_report_not_in_runtime_generated_archive_list")
+      }
+    }
+  }
+  if ($failures.Count -gt 0) {
+    Write-Host "SILVER_CAP50_REAL_AUTONOMOUS_LIFECYCLE_ORDERING_SELFTEST=FAIL" -ForegroundColor Red
+    foreach ($f in $failures) { Write-Host $f -ForegroundColor Red }
+    return $false
+  }
+  Write-Host "SILVER_CAP50_REAL_AUTONOMOUS_LIFECYCLE_ORDERING_SELFTEST=PASS" -ForegroundColor Green
+  return $true
+}
+
 function Invoke-SilverCap50GitNotCleanAfterRestoreSelfTest {
   param([string]$RepoRoot)
   $utf8 = New-Object System.Text.UTF8Encoding $false
@@ -3457,6 +3540,9 @@ function Invoke-SilverCap50TimeoutUtf8OrchestrationSelfTest {
   }
   if (-not (Test-SilverPathIsCap50RuntimeRestorable -RelPath "scripts/silver-rhc3-cluster-classifier-v1-report.json")) {
     [void]$failures.Add("allowlist_missing_cluster_classifier_json")
+  }
+  if (-not (Test-SilverPathIsCap50RuntimeRestorable -RelPath "scripts/silver-self-correction-audit-report.json")) {
+    [void]$failures.Add("allowlist_missing_self_correction_audit_json")
   }
   if (Test-SilverPathIsCap50RuntimeRestorable -RelPath "assets/app.js") {
     [void]$failures.Add("allowlist_must_not_include_assets_app_js")
@@ -3868,6 +3954,9 @@ function Invoke-SilverCap50PostconditionSelfTest {
   }
   if (-not (Invoke-SilverCap50GitNotCleanAfterRestoreSelfTest -RepoRoot $RepoRoot)) {
     [void]$failures.Add("git_not_clean_after_restore_selftest")
+  }
+  if (-not (Invoke-SilverCap50RealAutonomousLifecycleOrderingSelfTest)) {
+    [void]$failures.Add("real_autonomous_lifecycle_ordering_selftest")
   }
   foreach ($synthetic in @(
       @("SILVER_NEXT_ACTION.md", "SILVER_RUN_REPORT.md", "SILVER_PROGRESS_LOG.md"),
@@ -5011,10 +5100,27 @@ while ($true) {
         -Headline (Get-NextActionHeadline -Text $nextAfterAuto) -Focus "next_action_quality_post_guard" `
         -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1
     }
+    $postAutoCleanup = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $cycle -Reason "after_autopilot_full_auto_loop" -ExcludeRestoreRelPaths $autopilotHandoffPreserve -AllowHandoffDirty
+    Write-Host ("silver-autopilot-loop: post_autopilot_cleanup_PASS_FAIL=" + [string]$postAutoCleanup.PASS_FAIL) -ForegroundColor DarkCyan
+    if ($postAutoCleanup.PASS_FAIL -ne "PASS") {
+      Write-Host ("silver-autopilot-loop: post_autopilot_blocked_dirty_files=" + [string]$postAutoCleanup.blocked_dirty_files) -ForegroundColor Red
+      Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+        -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit "N/A" `
+        -GitClean ([string]$postAutoCleanup.git_clean_after) -SafetyLine $safetyPre `
+        -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
+        -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
+        -Headline (Get-NextActionHeadline -Text $nextAfterAuto) -Focus "post_autopilot_runtime_cleanup_blocked" `
+        -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
+        -StopReason ("post_autopilot_runtime_cleanup_blocked|blocked=" + [string]$postAutoCleanup.blocked_dirty_files)
+    }
     if ($controlledInfinite) {
       $selectorCluster = Get-SilverAuthoritativeSelectorCluster -RepoRoot $RepoRoot
       if ($selectorCluster) {
         Write-Host ("silver-autopilot-loop: selector_cluster=" + $selectorCluster) -ForegroundColor DarkCyan
+      }
+      if (-not (Test-SilverNextActionIsProductTaskHandoff -NextActionText $nextAfterAuto -SelectorCluster $selectorCluster)) {
+        $null = Invoke-SilverOrchestrationProductHandoffBridge -RepoRoot $RepoRoot -AutopilotScript $AutopilotScript
+        $nextAfterAuto = Read-TextFileOrEmpty -Path $NextActionPath
       }
       if (-not (Test-SilverNextActionIsProductTaskHandoff -NextActionText $nextAfterAuto -SelectorCluster $selectorCluster)) {
         Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
@@ -5026,11 +5132,6 @@ while ($true) {
           -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
           -StopReason ("product_task_handoff_missing|selector_cluster=" + [string]$selectorCluster)
       }
-    }
-    $postAutoCleanup = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $cycle -Reason "after_autopilot_full_auto_loop" -ExcludeRestoreRelPaths $autopilotHandoffPreserve -AllowHandoffDirty
-    Write-Host ("silver-autopilot-loop: post_autopilot_cleanup_PASS_FAIL=" + [string]$postAutoCleanup.PASS_FAIL) -ForegroundColor DarkCyan
-    if ($postAutoCleanup.PASS_FAIL -ne "PASS") {
-      Write-Host ("silver-autopilot-loop: post_autopilot_blocked_dirty_files=" + [string]$postAutoCleanup.blocked_dirty_files) -ForegroundColor Red
     }
     if ($ae -ne 0) {
       Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
