@@ -2173,6 +2173,7 @@ function Get-SilverCap50RuntimeRestoreAllowReason {
     '^SILVER_RUN_REPORT\.md$' { return 'runtime_reporting_md' }
     '^scripts/silver-cursor-agent-adapter-diagnostic-report\.json$' { return 'runtime_adapter_diagnostic_json' }
     '^scripts/silver-rhc3-negation-cal-readonly-diagnostic-report\.json$' { return 'runtime_rhc3_diagnostic_json' }
+    '^scripts/silver-rhc3-mobile-voice-harness-alignment-report\.json$' { return 'runtime_rhc3_harness_alignment_json' }
     default {
       foreach ($auditRel in (Get-SilverTransientGeneratedAuditReportRelPaths)) {
         if ([string]::Equals($n, $auditRel, [System.StringComparison]::OrdinalIgnoreCase)) {
@@ -2593,6 +2594,7 @@ function Invoke-SilverCap50PreflightCleanupSelfTest {
   Test-OneCase -Name "dirty_SILVER_NEXT_ACTION" -RelPath "SILVER_NEXT_ACTION.md" -ExpectPass $true
   Test-OneCase -Name "dirty_SILVER_PROGRESS_LOG" -RelPath "SILVER_PROGRESS_LOG.md" -ExpectPass $true
   Test-OneCase -Name "dirty_cluster_classifier_json" -RelPath "scripts/silver-rhc3-cluster-classifier-v1-report.json" -ExpectPass $true
+  Test-OneCase -Name "dirty_mobile_voice_harness_alignment_json" -RelPath "scripts/silver-rhc3-mobile-voice-harness-alignment-report.json" -ExpectPass $true
   $blockRel = "SILVER_CAP50_PREFLIGHT_SELFTEST_BLOCK.txt"
   $blockFull = Join-Path $RepoRoot $blockRel
   try {
