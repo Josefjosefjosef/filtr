@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-20T09:54:28.212942Z",
+  "ingestedAt": "2026-05-20T10:35:00.810886Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "S politikou závislostí šlápl premiér Babiš vedle, tvrdí experti",
+      "url": "https://www.zdravezpravy.cz/2026/05/20/vlada-si-zahrava-uz-s-ted-tak-krehkou-politikou-zavislosti/",
+      "dt": "2026-05-20T09:14:27Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "babiš",
+        "experti",
+        "politikou",
+        "premiér",
+        "tvrdí",
+        "vedle",
+        "závislostí",
+        "šlápl"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -471,30 +496,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Hovory s AI chaty o zdraví mají být rozhodně anonymní",
-      "url": "https://www.zdravezpravy.cz/2026/05/12/hovory-s-ai-chaty-o-zdravi-maji-byt-rozhodne-anonymni/",
-      "dt": "2026-05-12T08:34:14Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "anonymní",
-        "být",
-        "chaty",
-        "hovory",
-        "mají",
-        "rozhodně",
-        "zdraví"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -505,7 +506,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 194763,
+      "bytes": 195223,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -542,7 +543,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-20T04:19:11Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T09:14:27Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -558,6 +559,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "S politikou závislostí šlápl premiér Babiš vedle, tvrdí experti",
+            "publishedAt": "2026-05-20T09:14:27Z"
+          },
           {
             "title": "FN Bulovka převezme amerického lékaře s podezřením na ebolu",
             "publishedAt": "2026-05-20T04:19:11Z"
@@ -585,10 +590,6 @@
           {
             "title": "Epidemie eboly se šíří z Konga do dalších zemí. Situace je vážná",
             "publishedAt": "2026-05-18T08:54:57Z"
-          },
-          {
-            "title": "Na superdávce vyplatil stát 563 milionů. Na starých dávkách 7,8 miliardy",
-            "publishedAt": "2026-05-17T07:26:39Z"
           }
         ]
       }

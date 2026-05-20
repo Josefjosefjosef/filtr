@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-20T09:54:28.212942Z",
+  "ingestedAt": "2026-05-20T10:35:00.810886Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Hra z univerza Dungeons & Dragons od veterána God of War a Star Wars byla zrušena",
+      "url": "https://zing.cz/article/hra-z-univerza-dungeons-dragons-od-veterana-god-of-war-a-star-wars-byla-zrusena",
+      "dt": "2026-05-20T10:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "dragons",
+        "dungeons",
+        "god",
+        "hra",
+        "star",
+        "univerza",
+        "veterána",
+        "war",
+        "wars",
+        "zrušena"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -949,31 +976,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Need for Seat: Závody na kancelářských křeslech jsou virálním hitem",
-      "url": "https://zing.cz/article/need-for-seat-zavody-na-kancelarskych-kreslech-jsou-viralnim-hitem",
-      "dt": "2026-05-16T05:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "for",
-        "hitem",
-        "kancelářských",
-        "křeslech",
-        "need",
-        "seat",
-        "virálním",
-        "závody"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -984,7 +986,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126740,
+      "bytes": 126697,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1021,7 +1023,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-20T08:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1037,6 +1039,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hra z univerza Dungeons & Dragons od veterána God of War a Star Wars byla zrušena",
+            "publishedAt": "2026-05-20T10:00:00Z"
+          },
           {
             "title": "Co skrývá opuštěná silnice? Mrazivý horor Pasažér vás nenechá spát",
             "publishedAt": "2026-05-20T08:30:00Z"
@@ -1064,10 +1070,6 @@
           {
             "title": "Lords of the Fallen 2 má otevřenou cestu na Steam, exkluzivita pro Epic je zřejmě minulostí",
             "publishedAt": "2026-05-19T15:00:00Z"
-          },
-          {
-            "title": "Game Pass odhalil nabídku her pro druhou půlku května",
-            "publishedAt": "2026-05-19T14:30:00Z"
           }
         ]
       }

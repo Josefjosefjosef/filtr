@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-05-20T09:54:28.212942Z",
+  "ingestedAt": "2026-05-20T10:35:00.810886Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Ebola v Praze? Lidé se bojí nákazy! Odborníci vysvětlují, jaká je realita",
+      "url": "https://www.prozeny.cz/clanek/zdravi-wiki-nemoci-ebola-v-cesku-lide-se-boji-nakazy-odbornici-ale-vysvetluji-jaka-je-realita-103562",
+      "dt": "2026-05-20T09:53:21Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "bojí",
+        "ebola",
+        "jaká",
+        "lidé",
+        "nákazy",
+        "odborníci",
+        "praze",
+        "realita",
+        "vysvětlují"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -815,36 +841,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Poruchy štítné žlázy trápí hlavně ženy a nevyhýbají se ani mladším lidem. Pomoci můžou tyto potraviny!",
-      "url": "https://www.prozeny.cz/clanek/zdravi-poruchy-stitne-zlazy-trapi-hlavne-zeny-a-nevyhybaji-se-ani-mladsim-lidem-pomoci-muzou-tyto-potraviny-98795",
-      "dt": "2026-05-18T14:15:14Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "hlavně",
-        "lidem",
-        "mladším",
-        "můžou",
-        "nevyhýbají",
-        "pomoci",
-        "poruchy",
-        "potraviny",
-        "trápí",
-        "tyto",
-        "štítné",
-        "ženy",
-        "žlázy"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -855,7 +851,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 39826,
+      "bytes": 40012,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -892,7 +888,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T09:00:35Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T09:53:21Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 30
@@ -907,6 +903,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ebola v Praze? Lidé se bojí nákazy! Odborníci vysvětlují, jaká je realita",
+            "publishedAt": "2026-05-20T09:53:21Z"
+          },
           {
             "title": "Lela Vémola chytá druhý dech: Objevila se v sexy červených šatech a s úsměvem na rtech",
             "publishedAt": "2026-05-20T09:00:35Z"
@@ -933,10 +933,6 @@
           },
           {
             "title": "Tchyně mě nemá ráda. Má smysl se snažit zavděčit, nebo raději omezit kontakt?",
-            "publishedAt": "2026-05-20T03:00:00Z"
-          },
-          {
-            "title": "Cher vážně slaví 80? Nevypadá na to! Její módní skandály i outfity psaly historii",
             "publishedAt": "2026-05-20T03:00:00Z"
           }
         ]

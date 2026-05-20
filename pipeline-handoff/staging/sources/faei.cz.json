@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-20T09:54:28.212942Z",
+  "ingestedAt": "2026-05-20T10:35:00.810886Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Skutečný šok ze summitu v Pekingu spočívá v ropě",
+      "url": "https://profitonline.cz/skutecny-sok-ze-summitu-v-pekingu-spociva-v-rope/",
+      "dt": "2026-05-20T10:00:21Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "pekingu",
+        "ropě",
+        "skutečný",
+        "spočívá",
+        "summitu",
+        "šok"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -265,28 +288,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Svět zachvátila obava z velké inflace",
-      "url": "https://profitonline.cz/svet-zachvatila-obava-z-velke-inflace/",
-      "dt": "2026-05-18T11:00:21Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "inflace",
-        "obava",
-        "svět",
-        "velké",
-        "zachvátila"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -297,7 +298,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18396,
+      "bytes": 18257,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -334,7 +335,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-20T08:00:41Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T10:00:21Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -351,6 +352,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Skutečný šok ze summitu v Pekingu spočívá v ropě",
+            "publishedAt": "2026-05-20T10:00:21Z"
+          },
           {
             "title": "Británie a Japonsko čelí masivnímu výprodeji vládního dluhu",
             "publishedAt": "2026-05-20T08:00:41Z"
@@ -378,10 +383,6 @@
           {
             "title": "Zájem o hypotéky nepolevil ani v dubnu",
             "publishedAt": "2026-05-19T06:00:25Z"
-          },
-          {
-            "title": "Cena prvního Čtyřlístku vyskočila za několik let o desítky tisíc",
-            "publishedAt": "2026-05-19T04:00:02Z"
           }
         ]
       }

@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-20T09:54:28.212942Z",
+  "ingestedAt": "2026-05-20T10:35:00.810886Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Lekce skromnosti z Budapešti: Magyar jezdí vlakem a škodovkou",
+      "url": "https://ekonomickydenik.cz/lekce-skromnosti-z-budapesti-magyar-jezdi-vlakem-skodovkou/",
+      "dt": "2026-05-20T10:07:29Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "budapešti",
+        "jezdí",
+        "lekce",
+        "magyar",
+        "skromnosti",
+        "vlakem",
+        "škodovkou"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Riziko nového zákona o účetnictví: Menší firmy se dostanou mimo kontrolu, varuje auditor",
+      "url": "https://ekonomickydenik.cz/riziko-zakona-ucetnictvi-firmy-kontrola-auditor/",
+      "dt": "2026-05-20T10:05:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "auditor",
+        "dostanou",
+        "firmy",
+        "kontrolu",
+        "menší",
+        "mimo",
+        "nového",
+        "riziko",
+        "varuje",
+        "zákona",
+        "účetnictví"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -733,57 +785,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zákaz spalovacích motorů je chyba. Evropa musí vsadit i na vlastní paliva",
-      "url": "https://ekonomickydenik.cz/zakaz-spalovacich-motoru-vlastni-paliva/",
-      "dt": "2026-05-18T14:22:43Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "chyba",
-        "evropa",
-        "motorů",
-        "musí",
-        "paliva",
-        "spalovacích",
-        "vlastní",
-        "vsadit",
-        "zákaz"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Personální manévry ve Správě železnic. Mění se klíčové posty ve vedení",
-      "url": "https://ekonomickydenik.cz/personalni-manevry-sprava-zeleznic/",
-      "dt": "2026-05-18T14:08:53Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "klíčové",
-        "manévry",
-        "mění",
-        "personální",
-        "posty",
-        "správě",
-        "vedení",
-        "železnic"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72326,
+      "bytes": 72289,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,12 +832,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T09:30:52Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T10:07:29Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 3,
+          "zpravy": 3,
           "finance": 24,
-          "zpravy": 3
+          "zdravi": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -848,6 +849,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lekce skromnosti z Budapešti: Magyar jezdí vlakem a škodovkou",
+            "publishedAt": "2026-05-20T10:07:29Z"
+          },
+          {
+            "title": "Riziko nového zákona o účetnictví: Menší firmy se dostanou mimo kontrolu, varuje auditor",
+            "publishedAt": "2026-05-20T10:05:00Z"
+          },
           {
             "title": "Znepokojivá zpráva: Spotřeba elektřiny roste, avšak průmysl odběr snižuje",
             "publishedAt": "2026-05-20T09:30:52Z"
@@ -871,14 +880,6 @@
           {
             "title": "ČEZ hledá dodavatele obřích baterií. Umístí je poblíž uhelných elektráren",
             "publishedAt": "2026-05-20T06:18:00Z"
-          },
-          {
-            "title": "Přichází účetní revoluce. Odhalí skutečnou hodnotu majetku firem",
-            "publishedAt": "2026-05-20T04:05:00Z"
-          },
-          {
-            "title": "Až budete chtít vzbudit soucit, vymažte fotky ze Srí Lanky a Brazílie. Vzkazuje Bartoš Mrázové",
-            "publishedAt": "2026-05-19T17:14:48Z"
           }
         ]
       }
