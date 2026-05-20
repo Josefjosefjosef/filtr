@@ -1201,19 +1201,16 @@ function Test-SilverNextActionSilverWorkflowContext {
 function Test-SilverNextActionIsOrchestrationMaintenanceOnly {
   param([string]$Text)
   if (-not $Text) { return $false }
-  $maint =
+  $gitGhLead =
     ($Text -match '(?i)\bgit\s+status\b') -or
-    ($Text -match '(?i)\bgit\s+restore\b') -or
-    ($Text -match '(?i)\bgit\s+add\b') -or
     ($Text -match '(?i)\bgit\s+push\s+-u\b') -or
     ($Text -match '(?i)\bgh\s+auth\b') -or
-    ($Text -match '(?i)\bgh\s+push\b') -or
-    ($Text -match '(?i)dirty\s+tree') -or
-    ($Text -match '(?i)orchestration\s+maintenance') -or
-    ($Text -match '(?i)resolve\s+dirty\s+tree') -or
     ($Text -match '(?i)chore/silver-audit-repo-state')
-  if (-not $maint) { return $false }
-  if (Test-SilverNextActionSilverWorkflowContext -Text $Text) { return $false }
+  if (-not $gitGhLead) { return $false }
+  $productHarness =
+    ($Text -match '(?i)PRODUCT_CLUSTER|rcz2_ultra_short_chaos|NEXT PRODUCT CLUSTER') -and
+    ($Text -match '(?i)(?:node|npx)\s+scripts/silver-(?:real-czech-public|rhc3-cluster|audit_silver|rcz2)')
+  if ($productHarness) { return $false }
   return $true
 }
 
