@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-20T10:35:00.810886Z",
+  "ingestedAt": "2026-05-20T11:14:16.858652Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Máte spoustu času, odrazují lékaři ženy od léčby neplodnosti. Experti varují před alarmující chybou",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/lecba-neplodnosti-zeny-odrazuji-lekari/",
+      "dt": "2026-05-20T11:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "alarmující",
+        "chybou",
+        "experti",
+        "lékaři",
+        "léčby",
+        "máte",
+        "neplodnosti",
+        "odrazují",
+        "spoustu",
+        "varují",
+        "času",
+        "ženy"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -243,29 +272,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Přehledně o ebole: Jak se přenáší a co se stane, když se nakazíte",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/prehledne-ebola-jak-se-siri-a-co-delat/",
-      "dt": "2026-05-19T11:19:02Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "ebole",
-        "když",
-        "nakazíte",
-        "přehledně",
-        "přenáší",
-        "stane"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -276,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 98864,
+      "bytes": 102898,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,7 +319,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-20T09:22:59Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T11:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -329,6 +335,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Máte spoustu času, odrazují lékaři ženy od léčby neplodnosti. Experti varují před alarmující chybou",
+            "publishedAt": "2026-05-20T11:00:00Z"
+          },
           {
             "title": "Kompletně oddělen od světa. Vojtěch odhalil detaily pobytu Američana s podezřením na ebolu",
             "publishedAt": "2026-05-20T09:22:59Z"
@@ -356,10 +366,6 @@
           {
             "title": "„Nepřiměřená léčba“ místo „neadekvátní“: Senát upravuje pravidla paliativní péče",
             "publishedAt": "2026-05-19T15:04:13Z"
-          },
-          {
-            "title": "Rozhodnuto: VZP musí rozdat 8 miliard konkurenci. Pavel podepsal novelu",
-            "publishedAt": "2026-05-19T14:15:48Z"
           }
         ]
       }

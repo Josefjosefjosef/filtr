@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-20T10:35:00.810886Z",
+  "ingestedAt": "2026-05-20T11:14:16.858652Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Babiš: Letenky na summit NATO drží v hrsti moje vláda. O delegaci rozhodne 8. června",
+      "url": "https://ekonomickydenik.cz/babis-letenky-summit-nato-vlada-pavel/",
+      "dt": "2026-05-20T10:38:53Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "babiš",
+        "delegaci",
+        "drží",
+        "hrsti",
+        "letenky",
+        "moje",
+        "nato",
+        "rozhodne",
+        "summit",
+        "vláda",
+        "června"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -757,34 +785,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Proti zneužívání dávek i SPZ. Babiš naznačil, jaké se chystá zpřísnění pro uprchlíky z Ukrajiny",
-      "url": "https://ekonomickydenik.cz/proti-zneuzivani-davek-spz-babis-uprchlici/",
-      "dt": "2026-05-18T14:54:18Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "babiš",
-        "chystá",
-        "dávek",
-        "jaké",
-        "naznačil",
-        "proti",
-        "spz",
-        "ukrajiny",
-        "uprchlíky",
-        "zneužívání",
-        "zpřísnění"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72289,
+      "bytes": 72099,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,11 +832,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T10:07:29Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T10:38:53Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "cestovani": 1,
           "zpravy": 3,
-          "finance": 24,
+          "finance": 23,
           "zdravi": 3
         },
         "drop_counts": {
@@ -849,6 +850,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Babiš: Letenky na summit NATO drží v hrsti moje vláda. O delegaci rozhodne 8. června",
+            "publishedAt": "2026-05-20T10:38:53Z"
+          },
           {
             "title": "Lekce skromnosti z Budapešti: Magyar jezdí vlakem a škodovkou",
             "publishedAt": "2026-05-20T10:07:29Z"
@@ -876,10 +881,6 @@
           {
             "title": "Konec u Pirátů? Známé tváři vadí bývalý komunista i směřování partaje",
             "publishedAt": "2026-05-20T06:54:33Z"
-          },
-          {
-            "title": "ČEZ hledá dodavatele obřích baterií. Umístí je poblíž uhelných elektráren",
-            "publishedAt": "2026-05-20T06:18:00Z"
           }
         ]
       }
