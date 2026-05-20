@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-20T09:14:42.944756Z",
+  "ingestedAt": "2026-05-20T09:54:28.212942Z",
   "items": [
     {
       "section": "finance",
@@ -55,6 +55,38 @@
         "vydal",
         "zelené",
         "čez"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Advokátovi dnes nestačí znát právo. Musí klientův byznys vnímat jako svůj vlastní, říká advokát Vít Stehlík",
+      "url": "https://byznys.hn.cz/c1-67876020-advokatovi-dnes-nestaci-znat-pravo-musi-klientuv-byznys-vnimat-jako-svuj-vlastni-rika-advokat-vit-stehlik",
+      "dt": "2026-05-20T08:17:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "advokát",
+        "advokátovi",
+        "byznys",
+        "jako",
+        "klientův",
+        "musí",
+        "nestačí",
+        "právo",
+        "stehlík",
+        "svůj",
+        "vlastní",
+        "vnímat",
+        "vít",
+        "znát",
+        "říká"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -127,24 +159,31 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Strnadova CSG jede, zisk skupiny meziročně stoupl o 95 procent. V tržbách klesá význam Ukrajiny",
+      "title": "Spor s minoritářem jde za mnou osobně, CSG ho platit nebude, řekl Strnad. Letos chce firma vyrobit 850 tisíc nábojů do děl a tanků",
       "url": "https://byznys.hn.cz/c1-67879130-strnadova-csg-jede-zisk-skupiny-mezirocne-stoupl-o-95-procent-v-trzbach-klesa-vyznam-ukrajiny-jihovychodni-asie-roste",
       "dt": "2026-05-20T07:35:00Z",
       "media_raw": "HN / Ekonomika",
       "media_norm": "HN / Ekonomika",
       "tokens": [
+        "850",
+        "chce",
         "csg",
-        "jede",
-        "klesá",
-        "meziročně",
-        "procent",
-        "skupiny",
-        "stoupl",
-        "strnadova",
-        "tržbách",
-        "ukrajiny",
-        "význam",
-        "zisk"
+        "děl",
+        "firma",
+        "jde",
+        "letos",
+        "minoritářem",
+        "mnou",
+        "nebude",
+        "nábojů",
+        "osobně",
+        "platit",
+        "spor",
+        "strnad",
+        "tanků",
+        "tisíc",
+        "vyrobit",
+        "řekl"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1128,38 +1167,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Maďaři se vlakem a s výraznou polskou pomocí rychle vracejí do Evropy. Proč z toho Babiš a Fico nemohou mít radost?",
-      "url": "https://archiv.hn.cz/c1-67878610-madari-se-vlakem-a-s-vyraznou-polskou-pomoci-rychle-vraceji-do-evropy-proc-z-toho-babis-a-fico-nemohou-mit-radost",
-      "dt": "2026-05-19T11:26:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "babiš",
-        "evropy",
-        "fico",
-        "maďaři",
-        "mít",
-        "nemohou",
-        "polskou",
-        "pomocí",
-        "proč",
-        "radost",
-        "rychle",
-        "toho",
-        "vlakem",
-        "vracejí",
-        "výraznou"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1170,7 +1177,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183309,
+      "bytes": 183405,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1210,8 +1217,8 @@
         "raw_feed_latest_publishedAt": "2026-05-20T08:50:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 33,
-          "zpravy": 6,
+          "finance": 34,
+          "zpravy": 5,
           "zdravi": 1
         },
         "drop_counts": {
@@ -1233,6 +1240,10 @@
             "publishedAt": "2026-05-20T08:26:00Z"
           },
           {
+            "title": "Advokátovi dnes nestačí znát právo. Musí klientův byznys vnímat jako svůj vlastní, říká advokát Vít Stehlík",
+            "publishedAt": "2026-05-20T08:17:00Z"
+          },
+          {
             "title": "Ochlokracie, vládnutí davu, je nuda, nechme raději zaznít malebnou češtinu",
             "publishedAt": "2026-05-20T08:09:00Z"
           },
@@ -1241,7 +1252,7 @@
             "publishedAt": "2026-05-20T07:55:00Z"
           },
           {
-            "title": "Strnadova CSG jede, zisk skupiny meziročně stoupl o 95 procent. V tržbách klesá význam Ukrajiny",
+            "title": "Spor s minoritářem jde za mnou osobně, CSG ho platit nebude, řekl Strnad. Letos chce firma vyrobit 850 tisíc nábojů do děl a tanků",
             "publishedAt": "2026-05-20T07:35:00Z"
           },
           {
@@ -1251,10 +1262,6 @@
           {
             "title": "Škoda zveřejnila ceník Epiqu. Na slibovanou nejlevnější verzi se bude čekat",
             "publishedAt": "2026-05-20T07:00:00Z"
-          },
-          {
-            "title": "V zahraničí budeme za osly. Hrozí fentanylová krize, varuje Bém po rozprášení protidrogového týmu z Úřadu vlády",
-            "publishedAt": "2026-05-20T06:45:00Z"
           }
         ]
       }

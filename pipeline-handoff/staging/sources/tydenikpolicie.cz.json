@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-20T09:14:42.944756Z",
+  "ingestedAt": "2026-05-20T09:54:28.212942Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Muž v Brně nechal psa zavřeného v autě a odešel do zoo",
+      "url": "https://tydenikpolicie.cz/muz-v-brne-nechal-psa-zavreneho-v-aute-a-odesel-do-zoo/",
+      "dt": "2026-05-20T09:30:48Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "autě",
+        "brně",
+        "muž",
+        "nechal",
+        "odešel",
+        "psa",
+        "zavřeného",
+        "zoo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -237,31 +262,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nenastoupil do vězení a před kriminalisty z pražské Palmovky se ukrýval v kuchyňské lince",
-      "url": "https://tydenikpolicie.cz/nenastoupil-do-vezeni-a-pred-kriminalisty-z-prazske-palmovky-se-ukryval-v-kuchynske-lince/",
-      "dt": "2026-05-20T07:22:58Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "kriminalisty",
-        "kuchyňské",
-        "lince",
-        "nenastoupil",
-        "palmovky",
-        "pražské",
-        "ukrýval",
-        "vězení"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -272,7 +272,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16518,
+      "bytes": 16267,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -309,7 +309,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-20T08:55:12Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T09:30:48Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -324,6 +324,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Muž v Brně nechal psa zavřeného v autě a odešel do zoo",
+            "publishedAt": "2026-05-20T09:30:48Z"
+          },
           {
             "title": "Mladík měl ve Valašském Meziříčí napadat svou přítelkyni. Kolemjdoucího, který se jí zastal, pobodal nožem",
             "publishedAt": "2026-05-20T08:55:12Z"
@@ -351,10 +355,6 @@
           {
             "title": "Brutální útok na benzínce v Trutnově málem skončil smrtí",
             "publishedAt": "2026-05-20T07:36:32Z"
-          },
-          {
-            "title": "Policista v době osobního volna zachránil peníze ženě, která je chtěla na popud podvodníků vložit do bitcoinmatu",
-            "publishedAt": "2026-05-20T07:34:26Z"
           }
         ]
       }

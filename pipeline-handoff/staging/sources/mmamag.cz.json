@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-20T09:14:42.944756Z",
+  "ingestedAt": "2026-05-20T09:54:28.212942Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Policista z Clashe přiznal sypání. Mluvil o minulosti i mrtvých kamarádech",
+      "url": "https://www.mmamag.cz/policista-z-clashe-priznal-sypani/",
+      "dt": "2026-05-20T09:45:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "clashe",
+        "kamarádech",
+        "minulosti",
+        "mluvil",
+        "mrtvých",
+        "policista",
+        "přiznal",
+        "sypání"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1105,36 +1130,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Čečenský MMA zápasník napadl dvě ženy. Kadyrovův klub ho okamžitě vyhodil a liga se od něj distancovala",
-      "url": "https://www.mmamag.cz/junusov-mel-napadnout-dve-zeny-achmat-ho-vyhodil/",
-      "dt": "2026-05-18T15:45:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "distancovala",
-        "dvě",
-        "kadyrovův",
-        "klub",
-        "liga",
-        "mma",
-        "napadl",
-        "něj",
-        "okamžitě",
-        "vyhodil",
-        "zápasník",
-        "čečenský",
-        "ženy"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1145,7 +1140,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 84650,
+      "bytes": 84603,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1182,7 +1177,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-20T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T09:45:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1197,6 +1192,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policista z Clashe přiznal sypání. Mluvil o minulosti i mrtvých kamarádech",
+            "publishedAt": "2026-05-20T09:45:00Z"
+          },
           {
             "title": "Trenér varuje Procházku před soubojem s Chimaevem. Na zemi by neměl šanci, musel by sakra přidat",
             "publishedAt": "2026-05-20T09:00:00Z"
@@ -1224,10 +1223,6 @@
           {
             "title": "Boxerka po výhře vylezla na provazy a vyhrnula top. Komentátoři v přímém přenosu jen zalapali po dechu",
             "publishedAt": "2026-05-20T05:47:13Z"
-          },
-          {
-            "title": "Nejrychlejší nokauty v dějinách MMA zná každý fanoušek. Jen 2 z 10 ale správně poznají, kdo padl za pár vteřin",
-            "publishedAt": "2026-05-20T04:55:00Z"
           }
         ]
       }

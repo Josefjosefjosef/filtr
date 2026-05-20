@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-20T09:14:42.944756Z",
+  "ingestedAt": "2026-05-20T09:54:28.212942Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Kompletně oddělen od světa. Vojtěch odhalil detaily pobytu Američana s podezřením na ebolu",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/vojtech-american-podezreni-na-ebolu/",
+      "dt": "2026-05-20T09:22:59Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "američana",
+        "detaily",
+        "ebolu",
+        "kompletně",
+        "oddělen",
+        "odhalil",
+        "pobytu",
+        "podezřením",
+        "světa",
+        "vojtěch"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -239,33 +266,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Tři čtvrtiny úmrtí na železnici jsou sebevraždy. Stát spouští neobvyklou kampaň u tratí",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/sprava-zeleznic-cedule-sebevrazdy/",
-      "dt": "2026-05-19T10:34:32Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "kampaň",
-        "neobvyklou",
-        "sebevraždy",
-        "spouští",
-        "stát",
-        "tratí",
-        "tři",
-        "úmrtí",
-        "čtvrtiny",
-        "železnici"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -276,7 +276,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 98112,
+      "bytes": 97785,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,12 +313,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-20T07:55:33Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T09:22:59Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 8,
-          "sport": 1,
-          "zpravy": 1
+          "zdravi": 9,
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -330,6 +329,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kompletně oddělen od světa. Vojtěch odhalil detaily pobytu Američana s podezřením na ebolu",
+            "publishedAt": "2026-05-20T09:22:59Z"
+          },
           {
             "title": "Prymula varuje před ebolou: Sledovat by se měli všichni, kdo se teď vracejí z Konga a Ugandy",
             "publishedAt": "2026-05-20T07:55:33Z"
@@ -357,10 +360,6 @@
           {
             "title": "Rozhodnuto: VZP musí rozdat 8 miliard konkurenci. Pavel podepsal novelu",
             "publishedAt": "2026-05-19T14:15:48Z"
-          },
-          {
-            "title": "Šok v Německu: Dětský lékař čelí obžalobě ze 130 sexuálních činů, obětem byly i dva roky",
-            "publishedAt": "2026-05-19T13:45:35Z"
           }
         ]
       }
