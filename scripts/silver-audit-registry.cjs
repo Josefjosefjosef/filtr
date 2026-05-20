@@ -678,7 +678,62 @@ function selectNextCap(registry, prioritized) {
   };
 }
 
+function harnessCommandsForCluster(auditId, cluster) {
+  const name = String(cluster || "").trim();
+  const id = String(auditId || "").trim();
+  if (id === "self_correction" && name === "self_correction_negation_flip") {
+    return [
+      "node scripts/silver-self-correction-audit.cjs",
+      "node scripts/silver-self-correction-safety-diagnostic.cjs",
+      "node scripts/silver-self-correction-negation-scope-selftest.cjs",
+    ];
+  }
+  const primary = harnessCommandForAuditId(id);
+  return primary ? [primary] : ["node scripts/silver-rhc3-cluster-classifier-v1.cjs"];
+}
+
 function resolveForcedOutcomeAfterLowProductLoop(registry, prioritized) {
+  const top = prioritized && prioritized[0];
+  if (top && top.cluster && top.cluster !== "(žádný)" && top.fail_count > 0) {
+    const cmds = harnessCommandsForCluster(top.audit_id, top.cluster);
+    const exp = expectedOutcomeFor(top);
+    if (top.harness_only === "YES" || exp === "harness alignment") {
+      return {
+        forced_task_type: "cluster_harness_alignment",
+        audit_name: top.audit_name,
+        audit_id: top.audit_id,
+        cluster: top.cluster,
+        command: cmds.join(" ; "),
+        rationale:
+          "CAP selector cluster — harness/gold alignment pro " + top.cluster + " (audit=" + top.audit_name + ").",
+      };
+    }
+    if (
+      top.true_engine_fail_confidence === "HIGH" ||
+      top.true_engine_fail_confidence === "MEDIUM" ||
+      exp.indexOf("engine PR") >= 0
+    ) {
+      return {
+        forced_task_type: "narrow_engine_diagnostic_fix",
+        audit_name: top.audit_name,
+        audit_id: top.audit_id,
+        cluster: top.cluster,
+        command: cmds.join(" ; "),
+        rationale:
+          "CAP selector cluster — úzký engine diagnostic/fix pro " + top.audit_name + " / " + top.cluster + ".",
+      };
+    }
+    return {
+      forced_task_type: "cluster_product_diagnostic",
+      audit_name: top.audit_name,
+      audit_id: top.audit_id,
+      cluster: top.cluster,
+      command: cmds.join(" ; "),
+      rationale:
+        "CAP selector cluster — produktová diagnostika pro " + top.cluster + " před dalším orchestration CAP.",
+    };
+  }
+
   const staleAudits = registry.audits.filter(
     (a) => a.stale === "YES" && (a.usable_for_cap_selection === "YES" || a.maturity === MATURITY.STALE),
   );
@@ -717,18 +772,6 @@ function resolveForcedOutcomeAfterLowProductLoop(registry, prioritized) {
       cluster: foundation.top_cluster || "(žádný)",
       command: "node scripts/silver-audit-registry.cjs report",
       rationale: "Foundation-only audit — dokončit audit expansion místo dalšího CAP běhu.",
-    };
-  }
-  const top = prioritized[0];
-  if (top && top.true_engine_fail_confidence === "HIGH" && top.harness_only !== "YES") {
-    return {
-      forced_task_type: "narrow_engine_diagnostic_fix",
-      audit_name: top.audit_name,
-      audit_id: top.audit_id,
-      cluster: top.cluster,
-      command: harnessCommandForAuditId(top.audit_id),
-      rationale:
-        "TRUE_ENGINE_FAIL cluster — úzký engine diagnostic/fix task pro " + top.audit_name + " / " + top.cluster,
     };
   }
   return {
@@ -784,10 +827,10 @@ function enforceCapOutcome(meta, registry, prioritized) {
   let forcedRationale = "";
 
   if (!prCreated && !productFix && !trueEngineFound && !clearExplanation) {
-    if (orchestrationOnly || cycles >= 2) {
+    if (orchestrationOnly || cycles >= 1) {
       lowProductLoop = "YES";
       recommendation =
-        "Zastavit dlouhé CAP50 bez produktu; přepnout audit/cluster dle SILVER_AUDIT_PRIORITY_MATRIX nebo rozšířit audit.";
+        "Zastavit CAP bez produktového posunu; spustit cluster-specific diagnostiku dle selectoru (ne orchestration-only smyčka).";
     }
   }
   if (lowProductLoop === "YES" && capLabel === "CAP50") {
@@ -979,7 +1022,10 @@ function resolveCapRuntimeHandoff(repoRoot, opts) {
           cluster: nextCap.cluster,
           count: topRow ? topRow.fail_count : 0,
           audit_name: nextCap.audit_name,
-          harness_command: harnessCommandForAuditId(nextCap.audit_id),
+          audit_id: nextCap.audit_id,
+          expected_outcome: nextCap.expected_outcome,
+          harness_command: harnessCommandsForCluster(nextCap.audit_id, nextCap.cluster)[0],
+          harness_commands: harnessCommandsForCluster(nextCap.audit_id, nextCap.cluster),
           recommended_cap: capLabel,
         }
       : null;
@@ -1060,6 +1106,11 @@ function runSelfTest() {
   checks.push(outcome.hard_stop_forced_outcome_required === "YES");
   checks.push(outcome.next_cap_blind_retry_blocked === "YES");
   checks.push(String(outcome.recommendation || "").indexOf("HARD_STOP_FORCED_OUTCOME_REQUIRED") >= 0);
+  const forced = resolveForcedOutcomeAfterLowProductLoop(reg, pri);
+  const topPri = pri[0];
+  if (topPri && topPri.cluster) {
+    checks.push(forced.cluster === topPri.cluster || String(forced.rationale || "").indexOf(topPri.cluster) >= 0);
+  }
   const scorecardCrash = enforceCapOutcome(
     {
       scorecard_runtime_error: "YES",
@@ -1240,6 +1291,7 @@ module.exports = {
   renderCzechRegistryTable,
   renderCapOutcomeBlock,
   harnessCommandForAuditId,
+  harnessCommandsForCluster,
   resolveCapRuntimeHandoff,
   loadFreshAuthoritativeClusterPasses,
   gitHead,
