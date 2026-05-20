@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-05-20T17:54:34.035515Z",
+  "ingestedAt": "2026-05-20T18:33:59.771688Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Občanský průkaz: Obsazení neherců, cigarety z mechu a lahvová piva rozdělená na samičky a samečky",
+      "url": "https://www.vtelce.cz/obcansky-prukaz-obsazeni-nehercu-cigarety-z-mechu-a-lahvova-piva-rozdelena-na-samicky-a-samecky/",
+      "dt": "2026-05-20T17:55:36Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "cigarety",
+        "lahvová",
+        "mechu",
+        "neherců",
+        "obsazení",
+        "občanský",
+        "piva",
+        "průkaz",
+        "rozdělená",
+        "samečky",
+        "samičky"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -262,31 +290,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Seznámili se díky reality show, teď budou jednu u konkurenční stanice moderovat",
-      "url": "https://www.vtelce.cz/seznamili-se-diky-reality-show-ted-budou-jednu-u-konkurencni-stanice-moderovat/",
-      "dt": "2026-05-19T09:40:00Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "díky",
-        "jednu",
-        "konkurenční",
-        "moderovat",
-        "reality",
-        "seznámili",
-        "show",
-        "stanice"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -297,8 +300,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 83130,
-      "reason": "fetch_timeout",
+      "bytes": 84345,
+      "reason": "",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -334,7 +337,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-20T16:58:11Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T17:55:36Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "other": 9,
@@ -350,6 +353,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Občanský průkaz: Obsazení neherců, cigarety z mechu a lahvová piva rozdělená na samičky a samečky",
+            "publishedAt": "2026-05-20T17:55:36Z"
+          },
           {
             "title": "Fotři jsou lotři: Choulostivá scéna De Nira, tvrdé podmínky Barbry Streisand a ostuda Jessicy Alby",
             "publishedAt": "2026-05-20T16:58:11Z"
@@ -377,10 +384,6 @@
           {
             "title": "Zlaté rybky: Nelogický kiks kriminalistů, známá pražská postavička a osudové rozhodnutí v kuchyni",
             "publishedAt": "2026-05-19T16:44:30Z"
-          },
-          {
-            "title": "Nevidím zlo, neslyším zlo: Odpor ke scénáři, tajená nemoc Richarda Pryora a soudní spor o 10 milionů dolarů",
-            "publishedAt": "2026-05-19T16:28:05Z"
           }
         ]
       }
