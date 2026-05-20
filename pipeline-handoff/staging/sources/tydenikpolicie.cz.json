@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-20T01:55:58.465129Z",
+  "ingestedAt": "2026-05-20T02:34:43.890508Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Důvěra se může změnit v noční můru. Přes mobil přítelkyně si měl sjednat půjčku i převod peněz",
+      "url": "https://tydenikpolicie.cz/duvera-se-muze-zmenit-v-nocni-muru-pres-mobil-pritelkyne-si-mel-sjednat-pujcku-i-prevod-penez/",
+      "dt": "2026-05-20T02:02:59Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "důvěra",
+        "mobil",
+        "měl",
+        "můru",
+        "noční",
+        "peněz",
+        "převod",
+        "přítelkyně",
+        "půjčku",
+        "sjednat",
+        "změnit"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -229,37 +257,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Muž žádal strážníky v Olomouci aby ho zatkli a odvezli do vězení. Nebyl ani opilý, ani zfetovaný a k jeho smůle bohužel ani hledaný",
-      "url": "https://tydenikpolicie.cz/muz-zadal-strazniky-v-olomouci-aby-ho-zatkli-a-odvezli-do-vezeni-nebyl-ani-opily-ani-zfetovany-a-k-jeho-smule-bohuzel-ani-hledany/",
-      "dt": "2026-05-19T08:19:49Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "bohužel",
-        "hledaný",
-        "jeho",
-        "muž",
-        "nebyl",
-        "odvezli",
-        "olomouci",
-        "opilý",
-        "smůle",
-        "strážníky",
-        "vězení",
-        "zatkli",
-        "zfetovaný",
-        "žádal"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -270,7 +267,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16858,
+      "bytes": 16974,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -307,7 +304,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-19T22:02:50Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T02:02:59Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -322,6 +319,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Důvěra se může změnit v noční můru. Přes mobil přítelkyně si měl sjednat půjčku i převod peněz",
+            "publishedAt": "2026-05-20T02:02:59Z"
+          },
           {
             "title": "Zadržený muž vyhrožoval na služebně v Litvínově policistovi kvůli sundání pout",
             "publishedAt": "2026-05-19T22:02:50Z"
@@ -349,10 +350,6 @@
           {
             "title": "Motorkářka na Uherskohradišťsku nepřežila srážku s kamionem",
             "publishedAt": "2026-05-19T12:49:51Z"
-          },
-          {
-            "title": "Kriminalisté z pražské Palmovky zadrželi podezřelého z přepadení kurýra",
-            "publishedAt": "2026-05-19T12:32:40Z"
           }
         ]
       }

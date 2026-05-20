@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-20T01:55:58.465129Z",
+  "ingestedAt": "2026-05-20T02:34:43.890508Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Poslouchám svůj židovský instinkt, říká Vopěnka ke sporu s Macinkou",
+      "url": "https://www.denik.cz/z_domova/martin-vopenka-rozhovor-reakce-petr-macinka.html",
+      "dt": "2026-05-20T02:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "instinkt",
+        "macinkou",
+        "poslouchám",
+        "sporu",
+        "svůj",
+        "vopěnka",
+        "říká",
+        "židovský"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -628,30 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nákup s překvapením. Obchod s nedoručenými balíčky zavítal do Olomouce",
-      "url": "https://www.denik.cz/regiony/ztracene-baliky-king-colis-olomouc-santovka.html",
-      "dt": "2026-05-19T10:10:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "balíčky",
-        "nedoručenými",
-        "nákup",
-        "obchod",
-        "olomouce",
-        "překvapením",
-        "zavítal"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29463,
+      "bytes": 30103,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,7 +700,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-19T19:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T02:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -715,6 +716,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Poslouchám svůj židovský instinkt, říká Vopěnka ke sporu s Macinkou",
+            "publishedAt": "2026-05-20T02:00:00Z"
+          },
           {
             "title": "Osoba s rizikem nákazy ebolou je na cestě do ČR, tvrdí americký institut",
             "publishedAt": "2026-05-19T19:45:00Z"
@@ -742,10 +747,6 @@
           {
             "title": "Zmrazí cenu, výhody nechají. Ministerstvo změnilo novelu k dálničním známkám",
             "publishedAt": "2026-05-19T15:45:00Z"
-          },
-          {
-            "title": "Přežila sama v prázdném bytě. Majitelé fenky se odstěhovali, ta nyní hledá domov",
-            "publishedAt": "2026-05-19T15:30:00Z"
           }
         ]
       }

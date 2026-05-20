@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-05-20T01:55:58.465129Z",
+  "ingestedAt": "2026-05-20T02:34:43.890508Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Modrý měsíc 2026: Vzácný úplněk 31. května provází slavný omyl",
+      "url": "https://www.idnes.cz/technet/vesmir/co-je-to-modry-mesic-kdy-bude-kalendar.A260512_183112_tec_vesmir_vanky",
+      "dt": "2026-05-20T02:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "2026",
+        "května",
+        "modrý",
+        "měsíc",
+        "omyl",
+        "provází",
+        "slavný",
+        "vzácný",
+        "úplněk"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -737,28 +763,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Poznáte lokomotivy ČSD a ČD na modelovém kolejišti?",
-      "url": "https://www.idnes.cz/technet/poznate-lokomotivy-csd-a-cd-na-modelovem-kolejisti.Q260506_162736_technet_erp",
-      "dt": "2026-05-08T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "kolejišti",
-        "lokomotivy",
-        "modelovém",
-        "poznáte",
-        "čsd"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -769,7 +773,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 46925,
+      "bytes": 47261,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -806,11 +810,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T02:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 17,
-          "zpravy": 13
+          "other": 18,
+          "zpravy": 12
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -822,6 +826,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Modrý měsíc 2026: Vzácný úplněk 31. května provází slavný omyl",
+            "publishedAt": "2026-05-20T02:00:00Z"
+          },
           {
             "title": "Starý zvětšovák nevyhazujte. Propojte jej s mobilem a ulehčete si práci",
             "publishedAt": "2026-05-19T22:00:00Z"
@@ -849,10 +857,6 @@
           {
             "title": "Dorůstání končetin a orgánů? Regenerace u lidí jen usnula, vědci ji umí probudit",
             "publishedAt": "2026-05-17T16:00:00Z"
-          },
-          {
-            "title": "„S našimi zatracenými loděmi je dnes něco špatně.“ Sto deset let od Jutska",
-            "publishedAt": "2026-05-16T22:00:00Z"
           }
         ]
       }
