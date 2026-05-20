@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-20T01:14:52.813249Z",
+  "ingestedAt": "2026-05-20T01:55:58.465129Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Babiš se Zůnou projednají novou koncepci armády",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/babis-se-zunou-projednaji-novou-koncepci-armady-373633",
+      "dt": "2026-05-20T01:27:53Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "armády",
+        "babiš",
+        "koncepci",
+        "novou",
+        "projednají",
+        "zůnou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -725,32 +748,6 @@
         "teenagery",
         "upozorňuje",
         "vážné"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Po týdnu tréninku se lidský mozek naučí přijmout nemožné. Včetně létání",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/po-tydnu-treninku-se-lidsky-mozek-nauci-prijmout-nemozne-vcetne-letani-373593",
-      "dt": "2026-05-19T08:19:59Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "lidský",
-        "létání",
-        "mozek",
-        "naučí",
-        "nemožné",
-        "přijmout",
-        "tréninku",
-        "týdnu",
-        "včetně"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1514,7 +1511,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43942,
+      "bytes": 43877,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1574,12 +1571,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-19T22:18:11Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T01:27:53Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 24,
+          "zpravy": 25,
           "finance": 1,
-          "other": 5
+          "other": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1591,6 +1588,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Babiš se Zůnou projednají novou koncepci armády",
+            "publishedAt": "2026-05-20T01:27:53Z"
+          },
           {
             "title": "Izrael udeřil na jihu Libanonu, útoky provedl i Hizballáh",
             "publishedAt": "2026-05-19T22:18:11Z"
@@ -1618,10 +1619,6 @@
           {
             "title": "„Malá čínská lavina.“ Nabídka elektromobilů roste, Češi je ale příliš nekupují",
             "publishedAt": "2026-05-19T18:16:35Z"
-          },
-          {
-            "title": "V létě se částečně otevřou nové úseky D7 ve středních Čechách. Staví se i jinde",
-            "publishedAt": "2026-05-19T18:05:25Z"
           }
         ]
       }
