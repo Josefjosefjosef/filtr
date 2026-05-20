@@ -1,13 +1,13 @@
 {
   "harness_id": "silver_self_correction_audit_v1",
-  "generated_at": "2026-05-20T11:31:47.049Z",
-  "main_commit": "14621cbd943888e9dc86a3e1940167bd9ee5556c",
+  "generated_at": "2026-05-20T11:59:13.456Z",
+  "main_commit": "848d83a3929cb4335034b3cc16728fc22400c9cd",
   "engine_changed": "NO",
   "assets_app_changed": "NO",
   "total_cases": 21000,
-  "pass_count": 16126,
-  "fail_count": 4874,
-  "overall_accuracy": "76.79",
+  "pass_count": 17441,
+  "fail_count": 3559,
+  "overall_accuracy": "83.05",
   "family_breakdown": {
     "correction_after_create_intent": {
       "pass": 2760,
@@ -25,9 +25,9 @@
       "accuracy": "100.00"
     },
     "correction_negation": {
-      "pass": 1963,
-      "fail": 1037,
-      "accuracy": "65.43"
+      "pass": 2528,
+      "fail": 472,
+      "accuracy": "84.27"
     },
     "correction_update_vs_create": {
       "pass": 1786,
@@ -40,16 +40,14 @@
       "accuracy": "94.77"
     },
     "safety_regression": {
-      "pass": 1922,
-      "fail": 1078,
-      "accuracy": "64.07"
+      "pass": 2672,
+      "fail": 328,
+      "accuracy": "89.07"
     }
   },
   "top_fail_clusters": [
     "self_correction_update_note:1000",
     "self_correction_module_task_to_note:962",
-    "self_correction_safety_cal_readonly:750",
-    "self_correction_negation_readonly:565",
     "self_correction_negation_flip:472",
     "self_correction_safety_note_readonly:328",
     "self_correction_after_create_task:184",
@@ -63,13 +61,15 @@
     "self_correction_noisy_cal:4",
     "self_correction_after_create_cal:0",
     "self_correction_temporal_cal:0",
+    "self_correction_negation_readonly:0",
     "self_correction_negation_query:0",
     "self_correction_negation_hard:0",
-    "self_correction_noisy_neg_read:0"
+    "self_correction_noisy_neg_read:0",
+    "self_correction_safety_cal_readonly:0"
   ],
-  "true_engine_fail_count": 502,
+  "true_engine_fail_count": 314,
   "harness_problem_count": 1149,
-  "ambiguous_input_count": 3223,
+  "ambiguous_input_count": 2096,
   "safety_risk_count": 0,
   "dangerous_write_count": 0,
   "false_write_count": 0,
