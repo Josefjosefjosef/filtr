@@ -7,6 +7,11 @@
 
 const fs = require("fs");
 const path = require("path");
+const {
+  buildAuditRegistry,
+  prioritizeTrueEngineFail,
+  resolveForcedOutcomeAfterLowProductLoop,
+} = require("./silver-audit-registry.cjs");
 const { execSync } = require("child_process");
 
 const SCRIPT_DIR = __dirname;
@@ -479,15 +484,36 @@ function classifyRun(before, after, runMeta) {
   };
 }
 
-function recommendNext(classification, runMeta, safetyFail) {
+function recommendNext(classification, runMeta, safetyFail, repoRoot) {
   if (safetyFail) return "nejdřív fix orchestrace (safety counters)";
   if (runMeta.pr_created_count > 0 && classification.shift === "product") return "nejdřív merge PR";
+  const lowProductOrchestration =
+    (classification.orchestration_only_run === "YES" || classification.shift === "orchestration_only" || classification.shift === "none") &&
+    classification.product_fix_created === "NO" &&
+    classification.verified_product_shift === "NO";
+  if (lowProductOrchestration) {
+    const reg = buildAuditRegistry(repoRoot || path.join(SCRIPT_DIR, ".."));
+    const pri = prioritizeTrueEngineFail(reg);
+    const forced = resolveForcedOutcomeAfterLowProductLoop(reg, pri);
+    return (
+      "HARD_STOP_FORCED_OUTCOME_REQUIRED — " +
+      forced.forced_task_type +
+      ": " +
+      forced.audit_name +
+      " / " +
+      forced.cluster +
+      " — " +
+      forced.command +
+      " — " +
+      forced.rationale
+    );
+  }
   if (classification.shift === "orchestration_only" || classification.shift === "none") {
     if (runMeta.cycles_completed >= 3) return "nejdřív audit-driven cluster";
-    return "pokračovat dalším CAP během";
+    return "nejdřív audit-driven cluster (bez dalšího CAP naslepo)";
   }
   if (classification.shift === "regression") return "nejdřív audit-driven cluster";
-  return "pokračovat dalším CAP během";
+  return "nejdřív audit-driven cluster";
 }
 
 function productionRisk(safetyFail, classification, worsenedList) {
@@ -497,7 +523,7 @@ function productionRisk(safetyFail, classification, worsenedList) {
   return "nízké";
 }
 
-function renderCzechScorecard(before, after, runMeta) {
+function renderCzechScorecard(before, after, runMeta, repoRoot) {
   const lines = [];
   const safetyFail =
     after.safety_counters.dangerous_write_count > 0 ||
@@ -576,7 +602,15 @@ function renderCzechScorecard(before, after, runMeta) {
     lines.push(classification.guard_message);
   }
   lines.push("- Klasifikace posunu: " + classification.shift);
-  lines.push("- Doporučení: " + recommendNext(classification, runMeta, safetyFail));
+  lines.push("- Doporučení: " + recommendNext(classification, runMeta, safetyFail, repoRoot));
+  if (
+    classification.orchestration_only_run === "YES" &&
+    classification.product_fix_created === "NO" &&
+    classification.verified_product_shift === "NO"
+  ) {
+    lines.push("- HARD_STOP_FORCED_OUTCOME_REQUIRED=YES");
+    lines.push("- next_cap_blind_retry_blocked=YES");
+  }
 
   return { text: lines.join("\n"), classification, safetyFail, worsened };
 }
@@ -620,7 +654,7 @@ function runSelfTest() {
   const after = captureSnapshot(repo, "CAP10", {});
 
   const runMeta = { cycles_completed: 10, stop_reason: "loop_exit", pr_created_count: 0, product_fix_created: "NO" };
-  const rendered = renderCzechScorecard(before, after, runMeta);
+  const rendered = renderCzechScorecard(before, after, runMeta, repo);
 
   const checks = [];
   checks.push(rendered.text.indexOf("SILVER_CAP_BEFORE_AFTER_SCORECARD") >= 0);
@@ -696,7 +730,7 @@ function main() {
     }
     if (after.pr_url && !before.pr_url) runMeta.pr_created_count = Math.max(1, runMeta.pr_created_count);
 
-    const rendered = renderCzechScorecard(before, after, runMeta);
+    const rendered = renderCzechScorecard(before, after, runMeta, repo);
     const outDir = path.dirname(beforePath);
     const afterPath = path.join(outDir, "after.json");
     const deltaPath = path.join(outDir, "delta.json");

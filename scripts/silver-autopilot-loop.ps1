@@ -74,7 +74,8 @@ param(
   [switch]$Cap50GitNotCleanAfterRestoreSelfTest,
   [switch]$CapProductScorecardSelfTest,
   [switch]$AuditRegistrySelfTest,
-  [switch]$NextActionQualityGateRegressionSelfTest
+  [switch]$NextActionQualityGateRegressionSelfTest,
+  [switch]$AdapterMetaFreshnessSelfTest
 )
 
 Set-StrictMode -Version 2
@@ -112,6 +113,7 @@ if (Test-Path -LiteralPath $SilverAuditRegistryPath) {
   . $SilverAuditRegistryPath
 }
 $script:SilverLastScorecardOrchestrationOnly = "NO"
+$script:SilverLastScorecardVerifiedProductShift = "NO"
 Initialize-SilverConsoleUtf8
 
 $script:SilverCapScorecardDir = ""
@@ -774,13 +776,46 @@ function Get-SilverAutonomousRunContext {
   }
 }
 
+function Archive-SilverAdapterMetaBeforeCycleInvalidation {
+  param(
+    [string]$RepoRoot,
+    [string]$AdapterOutputPath,
+    [string]$RunId,
+    [string]$CycleState
+  )
+  if (-not (Test-Path -LiteralPath $AdapterOutputPath)) { return "" }
+  $meta = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $AdapterOutputPath
+  if ($meta.Count -eq 0) { return "" }
+  $state = ""
+  if ($meta.ContainsKey("adapter_output_state")) { $state = [string]$meta["adapter_output_state"] }
+  if ($state -eq "INVALIDATED_AWAITING_CYCLE") { return "" }
+  $archRoot = Join-Path $RepoRoot ".silver-runtime\adapter-meta-archive"
+  New-Item -ItemType Directory -Path $archRoot -Force -ErrorAction SilentlyContinue | Out-Null
+  $tok = [guid]::NewGuid().ToString("N").Substring(0, 8)
+  $runTok = if ($RunId.Trim().Length -gt 0) { $RunId.Trim().Substring(0, [Math]::Min(12, $RunId.Trim().Length)) } else { "norun" }
+  $cycTok = if ($CycleState.Trim().Length -gt 0) { $CycleState.Trim() } else { "pending" }
+  $archName = "cycle-" + $cycTok + "-" + $runTok + "-" + $tok + ".md"
+  $archPath = Join-Path $archRoot $archName
+  try {
+    Copy-Item -LiteralPath $AdapterOutputPath -Destination $archPath -Force
+    return $archPath
+  }
+  catch {
+    return ""
+  }
+}
+
 function Write-SilverCursorOutputInvalidatedStub {
   param(
     [string]$Path,
     [string]$RunId,
     [string]$RunStartUtcIso,
-    [string]$CycleState
+    [string]$CycleState,
+    [string]$RepoRoot = ""
   )
+  if ($RepoRoot -and (Test-Path -LiteralPath $Path)) {
+    $null = Archive-SilverAdapterMetaBeforeCycleInvalidation -RepoRoot $RepoRoot -AdapterOutputPath $Path -RunId $RunId -CycleState $CycleState
+  }
   $stub = @"
 # silver-cursor-agent-adapter
 autonomous_run_id=$RunId
@@ -858,7 +893,8 @@ function Initialize-SilverAutonomousRunLifecycle {
   param(
     [string]$RunId,
     [datetime]$RunStartUtc,
-    [string]$CursorOutputPath
+    [string]$CursorOutputPath,
+    [string]$RepoRoot
   )
   $runStartIso = $RunStartUtc.ToString("o")
   $script:SilverAutonomousRunId = $RunId
@@ -866,39 +902,68 @@ function Initialize-SilverAutonomousRunLifecycle {
   $env:SILVER_AUTONOMOUS_RUN_ID = $RunId
   $env:SILVER_AUTONOMOUS_RUN_START_UTC = $runStartIso
   Remove-Item Env:\SILVER_AUTONOMOUS_CYCLE -ErrorAction SilentlyContinue
-  Write-SilverCursorOutputInvalidatedStub -Path $CursorOutputPath -RunId $RunId -RunStartUtcIso $runStartIso -CycleState "pending"
+  Write-SilverCursorOutputInvalidatedStub -Path $CursorOutputPath -RunId $RunId -RunStartUtcIso $runStartIso -CycleState "pending" -RepoRoot $RepoRoot
 }
 
-function Test-SilverAdapterMetaCycleScoped {
+function Get-SilverAdapterMetaMismatchDiagnostics {
   param(
     [hashtable]$Meta,
     [datetime]$ProcessStartUtc,
     [string]$AdapterOutputPath,
     [string]$ExpectedTaskDigest = "",
     [string]$ExpectedTaskFile = "",
+    [string]$ExpectedOutputFile = "",
     [string]$ExpectedRunId = "",
     [string]$ExpectedCycle = "",
     [string]$ExpectedRunStartUtc = ""
   )
-  if ($null -eq $Meta -or $Meta.Count -eq 0) { return $false }
-  if (-not (Test-Path -LiteralPath $AdapterOutputPath)) { return $false }
+  $reasons = New-Object System.Collections.Generic.List[string]
+  $actualTask = ""
+  $actualOutput = ""
+  $actualRun = ""
+  $metaTs = ""
+  $outTs = ""
+  $staleSec = ""
+  $state = ""
+
+  if ($Meta.ContainsKey("task_file")) { $actualTask = [string]$Meta["task_file"] }
+  if ($Meta.ContainsKey("output_file")) { $actualOutput = [string]$Meta["output_file"] }
+  if ($Meta.ContainsKey("autonomous_run_id")) { $actualRun = [string]$Meta["autonomous_run_id"] }
+  if ($Meta.ContainsKey("adapter_output_state")) { $state = [string]$Meta["adapter_output_state"] }
+
+  if ($null -eq $Meta -or $Meta.Count -eq 0) {
+    [void]$reasons.Add("missing_adapter_meta_block")
+  }
+  if (-not (Test-Path -LiteralPath $AdapterOutputPath)) {
+    [void]$reasons.Add("missing_output_file_on_disk")
+  }
+  else {
+    try {
+      $outTs = ([System.IO.File]::GetLastWriteTimeUtc($AdapterOutputPath)).ToString("o")
+    }
+    catch {
+      $outTs = ""
+    }
+  }
 
   $wantRunId = $ExpectedRunId.Trim()
   if ($wantRunId.Length -gt 0) {
-    $metaState = ""
-    if ($Meta.ContainsKey("adapter_output_state")) { $metaState = [string]$Meta["adapter_output_state"] }
-    if ($metaState -eq "INVALIDATED_AWAITING_CYCLE") { return $false }
-    $metaRun = ""
-    if ($Meta.ContainsKey("autonomous_run_id")) { $metaRun = [string]$Meta["autonomous_run_id"] }
-    if ($metaRun.Trim().Length -gt 0) {
-      if ($metaRun.Trim() -ne $wantRunId) { return $false }
+    if ($state -eq "INVALIDATED_AWAITING_CYCLE") {
+      [void]$reasons.Add("adapter_output_state_invalidated_awaiting_cycle")
+    }
+    if ($actualRun.Trim().Length -gt 0) {
+      if ($actualRun.Trim() -ne $wantRunId) {
+        [void]$reasons.Add("autonomous_run_id_mismatch")
+      }
     }
     $wantCycle = $ExpectedCycle.Trim()
     if ($wantCycle.Length -gt 0) {
       $metaCycle = ""
       if ($Meta.ContainsKey("autonomous_cycle")) { $metaCycle = [string]$Meta["autonomous_cycle"] }
       if ($metaCycle.Trim().Length -gt 0) {
-        if ($metaCycle.Trim() -ne $wantCycle) { return $false }
+        if ($metaCycle.Trim() -ne $wantCycle) {
+          [void]$reasons.Add("autonomous_cycle_mismatch")
+        }
       }
     }
     $wantRunStart = $ExpectedRunStartUtc.Trim()
@@ -914,35 +979,88 @@ function Test-SilverAdapterMetaCycleScoped {
         }
         catch {
         }
-        if ($metaNorm -ne $wantNorm) { return $false }
+        if ($metaNorm -ne $wantNorm) {
+          [void]$reasons.Add("autonomous_run_start_utc_mismatch")
+        }
       }
     }
   }
 
-  try {
-    $mtimeUtc = ([System.IO.File]::GetLastWriteTimeUtc($AdapterOutputPath))
-    if ($mtimeUtc -lt $ProcessStartUtc.AddSeconds(-2)) { return $false }
-  }
-  catch {
-    return $false
-  }
-
   $procStartMeta = ""
   if ($Meta.ContainsKey("process_start_utc")) { $procStartMeta = [string]$Meta["process_start_utc"] }
-  if ($wantRunId.Length -gt 0) {
-    if ($procStartMeta.Trim().Length -eq 0) { return $false }
-  }
-  if ($procStartMeta.Trim().Length -gt 0) {
+  $metaTs = $procStartMeta
+  $procEndMeta = ""
+  if ($Meta.ContainsKey("process_end_utc")) { $procEndMeta = [string]$Meta["process_end_utc"] }
+
+  $freshnessUtc = [datetime]::MinValue
+  if ($procEndMeta.Trim().Length -gt 0) {
     try {
-      $psMeta = [datetime]::Parse(
-        $procStartMeta,
+      $freshnessUtc = [datetime]::Parse(
+        $procEndMeta,
         [System.Globalization.CultureInfo]::InvariantCulture,
         [System.Globalization.DateTimeStyles]::RoundtripKind
       ).ToUniversalTime()
-      if ($psMeta -lt $ProcessStartUtc.AddSeconds(-5)) { return $false }
     }
     catch {
-      return $false
+      $freshnessUtc = [datetime]::MinValue
+    }
+  }
+  if ($freshnessUtc -eq [datetime]::MinValue -and $outTs) {
+    try {
+      $freshnessUtc = [datetime]::Parse(
+        $outTs,
+        [System.Globalization.CultureInfo]::InvariantCulture,
+        [System.Globalization.DateTimeStyles]::RoundtripKind
+      ).ToUniversalTime()
+    }
+    catch {
+      $freshnessUtc = [datetime]::MinValue
+    }
+  }
+
+  if ($ProcessStartUtc -ne [datetime]::MinValue) {
+    if ($freshnessUtc -ne [datetime]::MinValue) {
+      $delta = ($ProcessStartUtc - $freshnessUtc).TotalSeconds
+      if ($delta -gt 2) {
+        $staleSec = [string][int][Math]::Round($delta)
+        [void]$reasons.Add("output_or_process_end_before_cycle_start")
+      }
+    }
+    elseif (Test-Path -LiteralPath $AdapterOutputPath) {
+      try {
+        $mtimeUtc = ([System.IO.File]::GetLastWriteTimeUtc($AdapterOutputPath))
+        $deltaM = ($ProcessStartUtc - $mtimeUtc).TotalSeconds
+        if ($deltaM -gt 2) {
+          $staleSec = [string][int][Math]::Round($deltaM)
+          [void]$reasons.Add("output_file_mtime_before_cycle_start")
+        }
+      }
+      catch {
+        [void]$reasons.Add("output_file_mtime_unreadable")
+      }
+    }
+  }
+
+  if ($wantRunId.Length -gt 0) {
+    if ($procStartMeta.Trim().Length -eq 0) {
+      [void]$reasons.Add("missing_process_start_utc")
+    }
+    elseif ($ProcessStartUtc -ne [datetime]::MinValue) {
+      try {
+        $psMeta = [datetime]::Parse(
+          $procStartMeta,
+          [System.Globalization.CultureInfo]::InvariantCulture,
+          [System.Globalization.DateTimeStyles]::RoundtripKind
+        ).ToUniversalTime()
+        $deltaPs = ($ProcessStartUtc - $psMeta).TotalSeconds
+        if ($deltaPs -gt 8) {
+          if (-not $staleSec) { $staleSec = [string][int][Math]::Round($deltaPs) }
+          [void]$reasons.Add("process_start_utc_before_cycle_start")
+        }
+      }
+      catch {
+        [void]$reasons.Add("process_start_utc_unparseable")
+      }
     }
   }
   elseif ($Meta.ContainsKey("timestamp_local")) {
@@ -952,14 +1070,20 @@ function Test-SilverAdapterMetaCycleScoped {
         $null,
         [System.Globalization.DateTimeStyles]::AssumeLocal
       )
-      if ($tsLocal.ToUniversalTime() -lt $ProcessStartUtc.AddMinutes(-2)) { return $false }
+      if ($ProcessStartUtc -ne [datetime]::MinValue) {
+        if ($tsLocal.ToUniversalTime() -lt $ProcessStartUtc.AddMinutes(-2)) {
+          [void]$reasons.Add("timestamp_local_before_cycle_start")
+        }
+      }
     }
     catch {
-      if ($ExpectedTaskDigest.Trim().Length -gt 0) { return $false }
+      if ($ExpectedTaskDigest.Trim().Length -gt 0) {
+        [void]$reasons.Add("timestamp_local_unparseable_with_digest_required")
+      }
     }
   }
   elseif ($ExpectedTaskDigest.Trim().Length -gt 0) {
-    return $false
+    [void]$reasons.Add("missing_process_start_utc_and_timestamp_local")
   }
 
   if ($ExpectedTaskDigest.Trim().Length -gt 0) {
@@ -970,19 +1094,99 @@ function Test-SilverAdapterMetaCycleScoped {
     }
     $metaDigest = $metaDigest.Trim().ToLowerInvariant()
     $want = $ExpectedTaskDigest.Trim().ToLowerInvariant()
-    if ((-not $metaDigest) -or ($metaDigest -ne $want)) { return $false }
-  }
-
-  if ($ExpectedTaskFile.Trim().Length -gt 0) {
-    $metaTask = ""
-    if ($Meta.ContainsKey("task_file")) { $metaTask = [string]$Meta["task_file"] }
-    if ($metaTask -and ($metaTask -ne "(probe_inline)")) {
-      $nMeta = Normalize-SilverPathForCompare -Path $metaTask
-      $nWant = Normalize-SilverPathForCompare -Path $ExpectedTaskFile
-      if (($nMeta.Length -gt 0) -and ($nWant.Length -gt 0) -and ($nMeta -ne $nWant)) { return $false }
+    if ((-not $metaDigest) -or ($metaDigest -ne $want)) {
+      [void]$reasons.Add("task_digest_mismatch")
     }
   }
 
+  if ($ExpectedTaskFile.Trim().Length -gt 0) {
+    if ($actualTask -and ($actualTask -ne "(probe_inline)")) {
+      $nMeta = Normalize-SilverPathForCompare -Path $actualTask
+      $nWant = Normalize-SilverPathForCompare -Path $ExpectedTaskFile
+      if (($nMeta.Length -gt 0) -and ($nWant.Length -gt 0) -and ($nMeta -ne $nWant)) {
+        [void]$reasons.Add("task_file_path_mismatch")
+      }
+    }
+    elseif (-not $actualTask) {
+      [void]$reasons.Add("missing_task_file_in_meta")
+    }
+  }
+
+  if ($ExpectedOutputFile.Trim().Length -gt 0) {
+    if ($actualOutput) {
+      $nOutMeta = Normalize-SilverPathForCompare -Path $actualOutput
+      $nOutWant = Normalize-SilverPathForCompare -Path $ExpectedOutputFile
+      if (($nOutMeta.Length -gt 0) -and ($nOutWant.Length -gt 0) -and ($nOutMeta -ne $nOutWant)) {
+        [void]$reasons.Add("output_file_path_mismatch")
+      }
+    }
+    else {
+      [void]$reasons.Add("missing_output_file_in_meta")
+    }
+  }
+
+  $exact = if ($reasons.Count -gt 0) { [string]::Join("|", $reasons) } else { "(none)" }
+  return @{
+    expected_task_file          = $ExpectedTaskFile
+    actual_meta_task_file       = $actualTask
+    expected_output_file        = $ExpectedOutputFile
+    actual_meta_output_file     = $actualOutput
+    expected_run_id             = $ExpectedRunId
+    actual_meta_run_id          = $actualRun
+    meta_timestamp              = $metaTs
+    output_timestamp            = $outTs
+    stale_by_seconds            = $staleSec
+    exact_mismatch_reason       = $exact
+    cycle_scoped_ok             = $(if ($reasons.Count -eq 0) { "YES" } else { "NO" })
+    adapter_output_state        = $state
+  }
+}
+
+function Test-SilverAdapterMetaCycleScoped {
+  param(
+    [hashtable]$Meta,
+    [datetime]$ProcessStartUtc,
+    [string]$AdapterOutputPath,
+    [string]$ExpectedTaskDigest = "",
+    [string]$ExpectedTaskFile = "",
+    [string]$ExpectedOutputFile = "",
+    [string]$ExpectedRunId = "",
+    [string]$ExpectedCycle = "",
+    [string]$ExpectedRunStartUtc = ""
+  )
+  $diag = Get-SilverAdapterMetaMismatchDiagnostics -Meta $Meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedOutputFile $ExpectedOutputFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc
+  return ($diag.cycle_scoped_ok -eq "YES")
+}
+
+function Test-SilverAdapterMetaReconcileEligible {
+  param(
+    [hashtable]$Meta,
+    [datetime]$ProcessStartUtc,
+    [string]$AdapterOutputPath,
+    [string]$ExpectedTaskDigest = "",
+    [string]$ExpectedTaskFile = "",
+    [string]$ExpectedOutputFile = "",
+    [string]$ExpectedRunId = "",
+    [string]$ExpectedCycle = "",
+    [string]$ExpectedRunStartUtc = ""
+  )
+  if (-not (Test-SilverAdapterMetaCycleScoped -Meta $Meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedOutputFile $ExpectedOutputFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc)) {
+    return $false
+  }
+  $state = ""
+  if ($Meta.ContainsKey("adapter_output_state")) { $state = [string]$Meta["adapter_output_state"] }
+  if ($state -ne "COMPLETED") { return $false }
+  $completionPath = ""
+  if ($Meta.ContainsKey("adapter_completion_path")) { $completionPath = [string]$Meta["adapter_completion_path"] }
+  $to = ""
+  if ($Meta.ContainsKey("timed_out")) { $to = [string]$Meta["timed_out"] }
+  if ($to -eq "YES") {
+    $allowTimeoutReconcile = $false
+    if ($completionPath -match 'outer_wall_timeout_terminal|terminal_emergency_write') {
+      $allowTimeoutReconcile = $true
+    }
+    if (-not $allowTimeoutReconcile) { return $false }
+  }
   return $true
 }
 
@@ -993,20 +1197,45 @@ function Test-SilverAdapterMetaFreshForCycle {
     [string]$AdapterOutputPath,
     [string]$ExpectedTaskDigest = "",
     [string]$ExpectedTaskFile = "",
+    [string]$ExpectedOutputFile = "",
     [string]$ExpectedRunId = "",
     [string]$ExpectedCycle = "",
     [string]$ExpectedRunStartUtc = ""
   )
-  if (-not (Test-SilverAdapterMetaCycleScoped -Meta $Meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc)) {
+  if (-not (Test-SilverAdapterMetaCycleScoped -Meta $Meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedOutputFile $ExpectedOutputFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc)) {
     return $false
   }
+  $state = ""
+  if ($Meta.ContainsKey("adapter_output_state")) { $state = [string]$Meta["adapter_output_state"] }
+  if ($state -ne "COMPLETED") { return $false }
   $to = ""
   $sen = ""
   if ($Meta.ContainsKey("timed_out")) { $to = [string]$Meta["timed_out"] }
   if ($Meta.ContainsKey("stderr_nonempty")) { $sen = [string]$Meta["stderr_nonempty"] }
-  if ($to -eq "YES") { return $false }
+  $completionPath = ""
+  if ($Meta.ContainsKey("adapter_completion_path")) { $completionPath = [string]$Meta["adapter_completion_path"] }
+  if ($to -eq "YES") {
+    if ($completionPath -notmatch 'outer_wall_timeout_terminal|terminal_emergency_write') {
+      return $false
+    }
+  }
   if ($sen -eq "YES") { return $false }
   return $true
+}
+
+function Write-SilverAdapterMetaMismatchDiagnosticBlock {
+  param([hashtable]$Diag)
+  if ($null -eq $Diag) { return }
+  Write-Host ("adapter_meta_diag_expected_task_file=" + [string]$Diag.expected_task_file) -ForegroundColor DarkYellow
+  Write-Host ("adapter_meta_diag_actual_meta_task_file=" + [string]$Diag.actual_meta_task_file) -ForegroundColor DarkYellow
+  Write-Host ("adapter_meta_diag_expected_output_file=" + [string]$Diag.expected_output_file) -ForegroundColor DarkYellow
+  Write-Host ("adapter_meta_diag_actual_meta_output_file=" + [string]$Diag.actual_meta_output_file) -ForegroundColor DarkYellow
+  Write-Host ("adapter_meta_diag_expected_run_id=" + [string]$Diag.expected_run_id) -ForegroundColor DarkYellow
+  Write-Host ("adapter_meta_diag_actual_meta_run_id=" + [string]$Diag.actual_meta_run_id) -ForegroundColor DarkYellow
+  Write-Host ("adapter_meta_diag_meta_timestamp=" + [string]$Diag.meta_timestamp) -ForegroundColor DarkYellow
+  Write-Host ("adapter_meta_diag_output_timestamp=" + [string]$Diag.output_timestamp) -ForegroundColor DarkYellow
+  Write-Host ("adapter_meta_diag_stale_by_seconds=" + [string]$Diag.stale_by_seconds) -ForegroundColor DarkYellow
+  Write-Host ("adapter_meta_diag_exact_mismatch_reason=" + [string]$Diag.exact_mismatch_reason) -ForegroundColor DarkYellow
 }
 
 function Test-SilverAutonomousAdapterCompletionBoundary {
@@ -1015,6 +1244,7 @@ function Test-SilverAutonomousAdapterCompletionBoundary {
     [datetime]$ProcessStartUtc,
     [string]$ExpectedTaskDigest = "",
     [string]$ExpectedTaskFile = "",
+    [string]$ExpectedOutputFile = "",
     [string]$ExpectedRunId = "",
     [string]$ExpectedCycle = "",
     [string]$ExpectedRunStartUtc = ""
@@ -1048,10 +1278,14 @@ function Test-SilverAutonomousAdapterCompletionBoundary {
     $result.lifecycle_block_reason = "cursor_output_handoff_invalid_or_empty"
     return $result
   }
-  $metaFresh = Test-SilverAdapterMetaFreshForCycle -Meta $meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc
+  $metaFresh = Test-SilverAdapterMetaFreshForCycle -Meta $meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedOutputFile $ExpectedOutputFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc
   if (-not $metaFresh) {
     $result.adapter_meta_fresh = "NO"
     $result.lifecycle_block_reason = "adapter_meta_not_fresh_for_cycle"
+    $diagBoundary = Get-SilverAdapterMetaMismatchDiagnostics -Meta $meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedOutputFile $ExpectedOutputFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc
+    if ($diagBoundary.exact_mismatch_reason -and ([string]$diagBoundary.exact_mismatch_reason -ne "(none)")) {
+      $result.lifecycle_block_reason = "adapter_meta_not_fresh_for_cycle:" + [string]$diagBoundary.exact_mismatch_reason
+    }
     return $result
   }
   $procStart = ""
@@ -1086,32 +1320,41 @@ function Resolve-SilverCursorOuterExitFromAdapterMeta {
     [datetime]$ProcessStartUtc,
     [string]$ExpectedTaskDigest = "",
     [string]$ExpectedTaskFile = "",
+    [string]$ExpectedOutputFile = "",
     [string]$ExpectedRunId = "",
     [string]$ExpectedCycle = "",
     [string]$ExpectedRunStartUtc = ""
   )
+  $emptyDiag = @{
+    expected_task_file = $ExpectedTaskFile
+    expected_output_file = $ExpectedOutputFile
+    expected_run_id = $ExpectedRunId
+    exact_mismatch_reason = "missing_output_file_on_disk"
+    cycle_scoped_ok = "NO"
+  }
   if ($OuterExit -eq 0) {
     if ($ExpectedRunId.Trim().Length -gt 0) {
       if (-not (Test-Path -LiteralPath $AdapterOutputPath)) {
-        return @{ EffectiveExit = 0; Reconciled = $false; FreshMeta = $false }
+        return @{ EffectiveExit = 0; Reconciled = $false; FreshMeta = $false; MismatchDiagnostics = $emptyDiag }
       }
       $metaZero = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $AdapterOutputPath
-      $freshZero = Test-SilverAdapterMetaFreshForCycle -Meta $metaZero -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc
-      $stateZero = ""
-      if ($metaZero.ContainsKey("adapter_output_state")) { $stateZero = [string]$metaZero["adapter_output_state"] }
-      if (($stateZero -ne "COMPLETED") -or (-not $freshZero)) {
-        return @{ EffectiveExit = 0; Reconciled = $false; FreshMeta = $false }
+      $diagZero = Get-SilverAdapterMetaMismatchDiagnostics -Meta $metaZero -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedOutputFile $ExpectedOutputFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc
+      $reconcileZero = Test-SilverAdapterMetaReconcileEligible -Meta $metaZero -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedOutputFile $ExpectedOutputFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc
+      $freshZero = Test-SilverAdapterMetaFreshForCycle -Meta $metaZero -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedOutputFile $ExpectedOutputFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc
+      if (-not $reconcileZero) {
+        return @{ EffectiveExit = 0; Reconciled = $false; FreshMeta = $false; MismatchDiagnostics = $diagZero }
       }
-      return @{ EffectiveExit = 0; Reconciled = $false; FreshMeta = $true }
+      return @{ EffectiveExit = 0; Reconciled = $false; FreshMeta = $(if ($freshZero) { $true } else { $false }); MismatchDiagnostics = $diagZero }
     }
-    return @{ EffectiveExit = 0; Reconciled = $false; FreshMeta = $false }
+    return @{ EffectiveExit = 0; Reconciled = $false; FreshMeta = $false; MismatchDiagnostics = $emptyDiag }
   }
   if (-not (Test-Path -LiteralPath $AdapterOutputPath)) {
-    return @{ EffectiveExit = $OuterExit; Reconciled = $false; FreshMeta = $false }
+    return @{ EffectiveExit = $OuterExit; Reconciled = $false; FreshMeta = $false; MismatchDiagnostics = $emptyDiag }
   }
   $meta = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $AdapterOutputPath
-  if (-not (Test-SilverAdapterMetaFreshForCycle -Meta $meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc)) {
-    return @{ EffectiveExit = $OuterExit; Reconciled = $false; FreshMeta = $false }
+  $diag = Get-SilverAdapterMetaMismatchDiagnostics -Meta $meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedOutputFile $ExpectedOutputFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc
+  if (-not (Test-SilverAdapterMetaReconcileEligible -Meta $meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedOutputFile $ExpectedOutputFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc)) {
+    return @{ EffectiveExit = $OuterExit; Reconciled = $false; FreshMeta = $false; MismatchDiagnostics = $diag }
   }
   $adapterEx = ""
   if ($meta.ContainsKey("adapter_authoritative_exit_code")) {
@@ -1125,16 +1368,22 @@ function Resolve-SilverCursorOuterExitFromAdapterMeta {
     $shellNoise = [string]$meta["shell_exit_noise_reconciled"]
   }
   if ($adapterEx -eq "0") {
-    return @{ EffectiveExit = 0; Reconciled = $true; FreshMeta = $true }
+    return @{ EffectiveExit = 0; Reconciled = $true; FreshMeta = $true; MismatchDiagnostics = $diag }
   }
   if (($shellNoise -eq "YES") -and ($meta.ContainsKey("stdout_nonempty")) -and ([string]$meta["stdout_nonempty"] -eq "YES")) {
     $to = ""
     if ($meta.ContainsKey("timed_out")) { $to = [string]$meta["timed_out"] }
+    $completionPath = ""
+    if ($meta.ContainsKey("adapter_completion_path")) { $completionPath = [string]$meta["adapter_completion_path"] }
     if ($to -ne "YES") {
-      return @{ EffectiveExit = 0; Reconciled = $true; FreshMeta = $true }
+      return @{ EffectiveExit = 0; Reconciled = $true; FreshMeta = $true; MismatchDiagnostics = $diag }
+    }
+    if ($completionPath -match 'outer_wall_timeout_terminal|terminal_emergency_write') {
+      return @{ EffectiveExit = 0; Reconciled = $true; FreshMeta = $true; MismatchDiagnostics = $diag }
     }
   }
-  return @{ EffectiveExit = $OuterExit; Reconciled = $false; FreshMeta = $true }
+  $freshMeta = Test-SilverAdapterMetaFreshForCycle -Meta $meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedOutputFile $ExpectedOutputFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc
+  return @{ EffectiveExit = $OuterExit; Reconciled = $false; FreshMeta = $freshMeta; MismatchDiagnostics = $diag }
 }
 
 function Test-NextActionHasBareSilverAutopilotNodeInvocation {
@@ -1475,6 +1724,7 @@ function Add-SilverCycleFieldsFromAdapterOutput {
     [datetime]$ProcessStartUtc = [datetime]::MinValue,
     [string]$ExpectedTaskDigest = "",
     [string]$ExpectedTaskFile = "",
+    [string]$ExpectedOutputFile = "",
     [string]$ExpectedRunId = "",
     [string]$ExpectedCycle = "",
     [string]$ExpectedRunStartUtc = "",
@@ -1501,8 +1751,8 @@ function Add-SilverCycleFieldsFromAdapterOutput {
     }
   }
   if ($ProcessStartUtc -ne [datetime]::MinValue) {
-    $metaCycleScoped = Test-SilverAdapterMetaCycleScoped -Meta $meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc
-    $metaFresh = Test-SilverAdapterMetaFreshForCycle -Meta $meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc
+    $metaCycleScoped = Test-SilverAdapterMetaCycleScoped -Meta $meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedOutputFile $ExpectedOutputFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc
+    $metaFresh = Test-SilverAdapterMetaFreshForCycle -Meta $meta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedOutputFile $ExpectedOutputFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc
     if ($metaFresh) {
       $Fields["silver_cycle_adapter_meta_fresh"] = "YES"
     }
@@ -2834,6 +3084,140 @@ read_before_git_restore_or_clean=YES
   return $true
 }
 
+function Invoke-SilverAdapterMetaFreshnessSelfTest {
+  param([string]$RepoRoot)
+  $utf8 = New-Object System.Text.UTF8Encoding $false
+  $failures = New-Object System.Collections.Generic.List[string]
+  $td = Join-Path $env:TEMP ("silver-adapter-meta-freshness-selftest-" + [guid]::NewGuid().ToString("N"))
+  New-Item -ItemType Directory -Path $td -Force | Out-Null
+  try {
+    $taskPath = Join-Path $td "SILVER_NEXT_ACTION.md"
+    $outPath = Join-Path $td "SILVER_CURSOR_OUTPUT.md"
+    [System.IO.File]::WriteAllText($taskPath, "# task selftest`n", $utf8)
+    [System.IO.File]::WriteAllText($outPath, "# placeholder`n", $utf8)
+    $taskDigest = Get-SilverTaskUtf8Sha256HexPrefix -Text "# task selftest`n"
+    $taskAbs = (Resolve-Path -LiteralPath $taskPath).Path
+    $outAbs = (Resolve-Path -LiteralPath $outPath).Path
+    $runId = "adapter-meta-selftest-run"
+    $cycle = "7"
+    $runStart = (Get-Date).ToUniversalTime().ToString("o")
+    $procStart = (Get-Date).ToUniversalTime()
+
+    function Write-TestAdapterMeta {
+      param(
+        [string]$Path,
+        [string]$State,
+        [string]$TaskFile,
+        [string]$OutputFile,
+        [string]$Digest,
+        [string]$ProcStartIso,
+        [string]$ProcEndIso
+      )
+      $body = @"
+# silver-cursor-agent-adapter
+autonomous_run_id=$runId
+autonomous_run_start_utc=$runStart
+autonomous_cycle=$cycle
+adapter_output_state=$State
+task_file=$TaskFile
+output_file=$OutputFile
+task_digest=$Digest
+process_start_utc=$ProcStartIso
+process_end_utc=$ProcEndIso
+adapter_authoritative_exit_code=0
+exit_code=0
+timed_out=NO
+stderr_nonempty=NO
+stdout_nonempty=YES
+
+# stdout
+ok
+
+# stderr
+
+"@
+      [System.IO.File]::WriteAllText($Path, $body, $utf8)
+    }
+
+    $endIso = $procStart.AddSeconds(30).ToString("o")
+    $startIso = $procStart.ToString("o")
+    Write-TestAdapterMeta -Path $outAbs -State "COMPLETED" -TaskFile $taskAbs -OutputFile $outAbs -Digest $taskDigest -ProcStartIso $startIso -ProcEndIso $endIso
+    $metaFresh = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $outAbs
+    if (-not (Test-SilverAdapterMetaReconcileEligible -Meta $metaFresh -ProcessStartUtc $procStart -AdapterOutputPath $outAbs -ExpectedTaskDigest $taskDigest -ExpectedTaskFile $taskAbs -ExpectedOutputFile $outAbs -ExpectedRunId $runId -ExpectedCycle $cycle -ExpectedRunStartUtc $runStart)) {
+      [void]$failures.Add("A_fresh_meta_reconcile_expected_PASS")
+    }
+    $reconFresh = Resolve-SilverCursorOuterExitFromAdapterMeta -OuterExit 1 -AdapterOutputPath $outAbs -ProcessStartUtc $procStart -ExpectedTaskDigest $taskDigest -ExpectedTaskFile $taskAbs -ExpectedOutputFile $outAbs -ExpectedRunId $runId -ExpectedCycle $cycle -ExpectedRunStartUtc $runStart
+    if (-not $reconFresh.Reconciled) {
+      [void]$failures.Add("A_fresh_outer_exit1_should_reconcile_to_0")
+    }
+
+    $staleStart = $procStart.AddHours(-2).ToString("o")
+    $staleEnd = $procStart.AddHours(-1).ToString("o")
+    Write-TestAdapterMeta -Path $outAbs -State "COMPLETED" -TaskFile $taskAbs -OutputFile $outAbs -Digest $taskDigest -ProcStartIso $staleStart -ProcEndIso $staleEnd
+    $metaStale = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $outAbs
+    $diagStale = Get-SilverAdapterMetaMismatchDiagnostics -Meta $metaStale -ProcessStartUtc $procStart -AdapterOutputPath $outAbs -ExpectedTaskDigest $taskDigest -ExpectedTaskFile $taskAbs -ExpectedOutputFile $outAbs -ExpectedRunId $runId -ExpectedCycle $cycle -ExpectedRunStartUtc $runStart
+    if ($diagStale.cycle_scoped_ok -eq "YES") {
+      [void]$failures.Add("B_stale_meta_expected_FAIL")
+    }
+    if ([string]$diagStale.exact_mismatch_reason -eq "(none)") {
+      [void]$failures.Add("B_stale_meta_expected_exact_reason")
+    }
+
+    Write-TestAdapterMeta -Path $outAbs -State "COMPLETED" -TaskFile $taskAbs -OutputFile $outAbs -Digest "deadbeef00000000" -ProcStartIso $startIso -ProcEndIso $endIso
+    $metaDigestBad = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $outAbs
+    $diagDigest = Get-SilverAdapterMetaMismatchDiagnostics -Meta $metaDigestBad -ProcessStartUtc $procStart -AdapterOutputPath $outAbs -ExpectedTaskDigest $taskDigest -ExpectedTaskFile $taskAbs -ExpectedOutputFile $outAbs -ExpectedRunId $runId -ExpectedCycle $cycle -ExpectedRunStartUtc $runStart
+    if ($diagDigest.exact_mismatch_reason -notmatch "task_digest_mismatch") {
+      [void]$failures.Add("C_task_digest_mismatch_reason_expected")
+    }
+
+    $wrongOut = Join-Path $td "OTHER_OUTPUT.md"
+    [System.IO.File]::WriteAllText($wrongOut, "# other`n", $utf8)
+    $wrongOutAbs = (Resolve-Path -LiteralPath $wrongOut).Path
+    Write-TestAdapterMeta -Path $outAbs -State "COMPLETED" -TaskFile $taskAbs -OutputFile $wrongOutAbs -Digest $taskDigest -ProcStartIso $startIso -ProcEndIso $endIso
+    $metaOutBad = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $outAbs
+    $diagOut = Get-SilverAdapterMetaMismatchDiagnostics -Meta $metaOutBad -ProcessStartUtc $procStart -AdapterOutputPath $outAbs -ExpectedTaskDigest $taskDigest -ExpectedTaskFile $taskAbs -ExpectedOutputFile $outAbs -ExpectedRunId $runId -ExpectedCycle $cycle -ExpectedRunStartUtc $runStart
+    if ($diagOut.exact_mismatch_reason -notmatch "output_file_path_mismatch") {
+      [void]$failures.Add("C_output_file_mismatch_reason_expected")
+    }
+
+    Write-SilverCursorOutputInvalidatedStub -Path $outAbs -RunId $runId -RunStartUtcIso $runStart -CycleState $cycle -RepoRoot $td
+    $invMeta = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $outAbs
+    if (-not $invMeta.ContainsKey("adapter_output_state")) {
+      [void]$failures.Add("D_invalidated_stub_missing_state")
+    }
+    elseif ([string]$invMeta["adapter_output_state"] -ne "INVALIDATED_AWAITING_CYCLE") {
+      [void]$failures.Add("D_invalidated_stub_state_expected")
+    }
+    Write-TestAdapterMeta -Path $outAbs -State "COMPLETED" -TaskFile $taskAbs -OutputFile $outAbs -Digest $taskDigest -ProcStartIso $startIso -ProcEndIso $endIso
+    $metaAfterInv = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $outAbs
+    if (-not (Test-SilverAdapterMetaReconcileEligible -Meta $metaAfterInv -ProcessStartUtc $procStart -AdapterOutputPath $outAbs -ExpectedTaskDigest $taskDigest -ExpectedTaskFile $taskAbs -ExpectedOutputFile $outAbs -ExpectedRunId $runId -ExpectedCycle $cycle -ExpectedRunStartUtc $runStart)) {
+      [void]$failures.Add("D_post_invalidation_fresh_meta_expected_PASS")
+    }
+
+    $archDir = Join-Path $td ".silver-runtime\adapter-meta-archive"
+    if (-not (Test-Path -LiteralPath $archDir)) {
+      Write-TestAdapterMeta -Path $outAbs -State "COMPLETED" -TaskFile $taskAbs -OutputFile $outAbs -Digest $taskDigest -ProcStartIso $startIso -ProcEndIso $endIso
+      $null = Archive-SilverAdapterMetaBeforeCycleInvalidation -RepoRoot $td -AdapterOutputPath $outAbs -RunId $runId -CycleState $cycle
+      Write-SilverCursorOutputInvalidatedStub -Path $outAbs -RunId $runId -RunStartUtcIso $runStart -CycleState $cycle -RepoRoot $td
+      if (-not (Test-Path -LiteralPath $archDir)) {
+        [void]$failures.Add("D_archive_dir_expected_after_invalidation_with_prior_completed_meta")
+      }
+    }
+  }
+  finally {
+    Remove-Item -LiteralPath $td -Recurse -Force -ErrorAction SilentlyContinue
+  }
+  if ($failures.Count -gt 0) {
+    Write-Host "SILVER_ADAPTER_META_FRESHNESS_SELFTEST=FAIL" -ForegroundColor Red
+    foreach ($f in $failures) { Write-Host $f -ForegroundColor Red }
+    return $false
+  }
+  Write-Host "SILVER_ADAPTER_META_FRESHNESS_SELFTEST=PASS" -ForegroundColor Green
+  Write-Host "engine_changed=NO"
+  Write-Host "assets_app_changed=NO"
+  return $true
+}
+
 function Invoke-SilverCap50GitNotCleanAfterRestoreSelfTest {
   param([string]$RepoRoot)
   $utf8 = New-Object System.Text.UTF8Encoding $false
@@ -3670,7 +4054,11 @@ function Invoke-SilverCapProductScorecardIfActive {
     if (-not $capLbl) { $capLbl = "CAPX" }
     $orch = [string]$script:SilverLastScorecardOrchestrationOnly
     if (-not $orch) { $orch = "NO" }
-    $null = Invoke-SilverCapOutcomeEnforcement -RepoRoot $RepoRoot -ProgressLogPath $ProgressLogPath -CyclesCompleted $CyclesCompleted -CapLabel $capLbl -OrchestrationOnly $orch -PrCreatedCount ([int]$prCreated) -ProductFixCreated $productFix
+    $verifiedShift = "NO"
+    if ($script:SilverLastScorecardVerifiedProductShift) {
+      $verifiedShift = [string]$script:SilverLastScorecardVerifiedProductShift
+    }
+    $null = Invoke-SilverCapOutcomeEnforcement -RepoRoot $RepoRoot -ProgressLogPath $ProgressLogPath -CyclesCompleted $CyclesCompleted -CapLabel $capLbl -OrchestrationOnly $orch -PrCreatedCount ([int]$prCreated) -ProductFixCreated $productFix -VerifiedProductShift $verifiedShift
   }
 }
 
@@ -3859,7 +4247,7 @@ $script:AutonomousAuthoritativeRuntimePass = "NO"
 
 if ($controlledInfinite) {
   $newRunId = ([guid]::NewGuid().ToString("N"))
-  Initialize-SilverAutonomousRunLifecycle -RunId $newRunId -RunStartUtc ((Get-Date).ToUniversalTime()) -CursorOutputPath $CursorOutputPath
+  Initialize-SilverAutonomousRunLifecycle -RunId $newRunId -RunStartUtc ((Get-Date).ToUniversalTime()) -CursorOutputPath $CursorOutputPath -RepoRoot $RepoRoot
   Write-Host ("silver-autopilot-loop: autonomous_run_id=" + $script:SilverAutonomousRunId + " runtime_cursor_output_invalidated=YES") -ForegroundColor DarkCyan
 }
 
@@ -3880,6 +4268,12 @@ if ($AuditRegistrySelfTest) {
   }
   $stAr = Invoke-SilverAuditRegistrySelfTest -RepoRoot $RepoRoot
   if (-not $stAr) { exit 1 }
+  exit 0
+}
+
+if ($AdapterMetaFreshnessSelfTest) {
+  $stMeta = Invoke-SilverAdapterMetaFreshnessSelfTest -RepoRoot $RepoRoot
+  if (-not $stMeta) { exit 1 }
   exit 0
 }
 
@@ -4309,7 +4703,7 @@ while ($true) {
   } else {
     if (-not $DryRun) {
       $taskAbs = (Resolve-Path -LiteralPath $NextActionPath).Path
-      $outAbs = $CursorOutputPath
+      $outAbs = (Resolve-Path -LiteralPath $CursorOutputPath).Path
       $quotedTask = '"' + $taskAbs.Replace('"', '""') + '"'
       $quotedOut = '"' + $outAbs.Replace('"', '""') + '"'
       $resolvedCmd = $cursorCommandEffective.Replace("{TASK_FILE}", $quotedTask).Replace("{OUTPUT_FILE}", $quotedOut)
@@ -4341,7 +4735,7 @@ while ($true) {
       $script:SilverCycleExpectedTaskFile = $expectedTaskFile
       if ($script:SilverAutonomousRunId) {
         $runStartIsoInv = [string]$env:SILVER_AUTONOMOUS_RUN_START_UTC
-        Write-SilverCursorOutputInvalidatedStub -Path $CursorOutputPath -RunId $script:SilverAutonomousRunId -RunStartUtcIso $runStartIsoInv -CycleState ([string]$cycle)
+        Write-SilverCursorOutputInvalidatedStub -Path $CursorOutputPath -RunId $script:SilverAutonomousRunId -RunStartUtcIso $runStartIsoInv -CycleState ([string]$cycle) -RepoRoot $RepoRoot
       }
 
       $psi = New-Object System.Diagnostics.ProcessStartInfo
@@ -4374,20 +4768,33 @@ while ($true) {
           $ce = $p.ExitCode
         }
         $runCtxReconcile = Get-SilverAutonomousRunContext
-        $reconcile = Resolve-SilverCursorOuterExitFromAdapterMeta -OuterExit $ce -AdapterOutputPath $CursorOutputPath -ProcessStartUtc $cursorProcStartUtc -ExpectedTaskDigest $expectedTaskDigest -ExpectedTaskFile $expectedTaskFile -ExpectedRunId $runCtxReconcile.RunId -ExpectedCycle $runCtxReconcile.Cycle -ExpectedRunStartUtc $runCtxReconcile.RunStartUtc
+        $reconcile = Resolve-SilverCursorOuterExitFromAdapterMeta -OuterExit $ce -AdapterOutputPath $outAbs -ProcessStartUtc $cursorProcStartUtc -ExpectedTaskDigest $expectedTaskDigest -ExpectedTaskFile $expectedTaskFile -ExpectedOutputFile $outAbs -ExpectedRunId $runCtxReconcile.RunId -ExpectedCycle $runCtxReconcile.Cycle -ExpectedRunStartUtc $runCtxReconcile.RunStartUtc
         if ($reconcile.Reconciled) {
-          Write-Host ("silver-autopilot-loop: outer_cmd_exit=" + [string]$ce + " reconciled_to_adapter_exit_code=0 (fresh_meta=YES)") -ForegroundColor DarkYellow
+          Write-Host ("silver-autopilot-loop: outer_cmd_exit=" + [string]$ce + " reconciled_to_adapter_exit_code=0 (reconcile_eligible=YES)") -ForegroundColor DarkYellow
           $ce = [int]$reconcile.EffectiveExit
         }
-        elseif (($ce -ne 0) -and (-not $reconcile.FreshMeta)) {
+        elseif (($ce -ne 0) -and (-not $reconcile.Reconciled)) {
           $reconcileNote = "adapter_meta_stale_or_mismatch"
-          if (Test-Path -LiteralPath $CursorOutputPath) {
-            $metaReconcile = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $CursorOutputPath
+          if ($reconcile.MismatchDiagnostics) {
+            $diagReason = [string]$reconcile.MismatchDiagnostics.exact_mismatch_reason
+            if ($diagReason -and ($diagReason -ne "(none)")) {
+              $reconcileNote = "adapter_meta_stale_or_mismatch:" + $diagReason
+            }
+          }
+          if (Test-Path -LiteralPath $outAbs) {
+            $metaReconcile = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $outAbs
             if ($metaReconcile.ContainsKey("timed_out") -and ([string]$metaReconcile["timed_out"] -eq "YES")) {
-              $reconcileNote = "adapter_meta_timeout_blocks_reconcile"
+              $completionRec = ""
+              if ($metaReconcile.ContainsKey("adapter_completion_path")) { $completionRec = [string]$metaReconcile["adapter_completion_path"] }
+              if ($completionRec -notmatch 'outer_wall_timeout_terminal|terminal_emergency_write') {
+                $reconcileNote = "adapter_meta_timeout_blocks_reconcile"
+              }
             }
           }
           Write-Host ("silver-autopilot-loop: outer_cmd_exit=" + [string]$ce + " not_reconciled (" + $reconcileNote + ")") -ForegroundColor DarkYellow
+          if ($reconcile.MismatchDiagnostics) {
+            Write-SilverAdapterMetaMismatchDiagnosticBlock -Diag $reconcile.MismatchDiagnostics
+          }
         }
         $script:LastCursorExit = [string]$ce
         $cursorExitStr = [string]$ce
@@ -4491,11 +4898,16 @@ while ($true) {
         if ($boundaryProcStart -eq [datetime]::MinValue) {
           $boundaryProcStart = (Get-Date).ToUniversalTime()
         }
+        $boundaryOutAbs = $CursorOutputPath
+        if (Test-Path -LiteralPath $CursorOutputPath) {
+          $boundaryOutAbs = (Resolve-Path -LiteralPath $CursorOutputPath).Path
+        }
         $adapterBoundary = Test-SilverAutonomousAdapterCompletionBoundary `
-          -AdapterOutputPath $CursorOutputPath `
+          -AdapterOutputPath $boundaryOutAbs `
           -ProcessStartUtc $boundaryProcStart `
           -ExpectedTaskDigest $script:SilverCycleExpectedTaskDigest `
           -ExpectedTaskFile $script:SilverCycleExpectedTaskFile `
+          -ExpectedOutputFile $boundaryOutAbs `
           -ExpectedRunId $runCtxBoundary.RunId `
           -ExpectedCycle $runCtxBoundary.Cycle `
           -ExpectedRunStartUtc $runCtxBoundary.RunStartUtc
@@ -4797,7 +5209,11 @@ while ($true) {
   }
   $passRunCtx = Get-SilverAutonomousRunContext
   $passCursorInvoked = ($passProcStart -ne [datetime]::MinValue)
-  Add-SilverCycleFieldsFromAdapterOutput -Fields $fieldsPass -AdapterOutputPath $CursorOutputPath -ProcessStartUtc $passProcStart -ExpectedTaskDigest $passDigest -ExpectedTaskFile $passTaskFile -ExpectedRunId $passRunCtx.RunId -ExpectedCycle $passRunCtx.Cycle -ExpectedRunStartUtc $passRunCtx.RunStartUtc -CursorInvoked $passCursorInvoked
+  $passOutAbs = $CursorOutputPath
+  if (Test-Path -LiteralPath $CursorOutputPath) {
+    $passOutAbs = (Resolve-Path -LiteralPath $CursorOutputPath).Path
+  }
+  Add-SilverCycleFieldsFromAdapterOutput -Fields $fieldsPass -AdapterOutputPath $passOutAbs -ProcessStartUtc $passProcStart -ExpectedTaskDigest $passDigest -ExpectedTaskFile $passTaskFile -ExpectedOutputFile $passOutAbs -ExpectedRunId $passRunCtx.RunId -ExpectedCycle $passRunCtx.Cycle -ExpectedRunStartUtc $passRunCtx.RunStartUtc -CursorInvoked $passCursorInvoked
   if ($controlledInfinite -and $passCursorInvoked) {
     if ([string]$fieldsPass["silver_cycle_adapter_meta_fresh"] -ne "YES") {
       $staleReason = "adapter_meta_not_fresh_at_cycle_pass"

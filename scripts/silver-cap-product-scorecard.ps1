@@ -230,8 +230,15 @@ function Complete-SilverCapProductScorecard {
   }
 
   $script:SilverLastScorecardOrchestrationOnly = "NO"
+  $script:SilverLastScorecardVerifiedProductShift = "NO"
   if ($stdout -match 'orchestration_only_run=YES') {
     $script:SilverLastScorecardOrchestrationOnly = "YES"
+  }
+  if ($stdout -match 'verified_product_shift=YES') {
+    $script:SilverLastScorecardVerifiedProductShift = "YES"
+  }
+  elseif ($stdout -match 'verified_product_shift=PARTIAL') {
+    $script:SilverLastScorecardVerifiedProductShift = "PARTIAL"
   }
 
   return ($p.ExitCode -eq 0)

@@ -669,17 +669,90 @@ function selectNextCap(registry, prioritized) {
   };
 }
 
-function enforceCapOutcome(meta) {
+function resolveForcedOutcomeAfterLowProductLoop(registry, prioritized) {
+  const staleAudits = registry.audits.filter(
+    (a) => a.stale === "YES" && (a.usable_for_cap_selection === "YES" || a.maturity === MATURITY.STALE),
+  );
+  if (staleAudits.length) {
+    const topStale = staleAudits.sort((a, b) => (b.fail_count || 0) - (a.fail_count || 0))[0];
+    return {
+      forced_task_type: "audit_refresh_proof",
+      audit_name: topStale.audit_name,
+      audit_id: topStale.audit_id,
+      cluster: topStale.top_cluster || "(žádný)",
+      command: harnessCommandForAuditId(topStale.audit_id),
+      rationale:
+        "Stale audit report — obnovit harness/report a doložit PASS před dalším CAP; audit=" + topStale.audit_name,
+    };
+  }
+  const planned = registry.audits.find((a) => a.maturity === MATURITY.PLANNED_ONLY);
+  if (planned) {
+    return {
+      forced_task_type: "audit_expansion",
+      audit_name: planned.audit_name,
+      audit_id: planned.audit_id,
+      cluster: planned.top_cluster || "(žádný)",
+      command: "node scripts/silver-audit-registry.cjs report",
+      rationale:
+        "Planned-only audit — rozšířit Self-Correction / foundation audit před dalším orchestration CAP.",
+    };
+  }
+  const foundation = registry.audits.find(
+    (a) => a.maturity === MATURITY.FOUNDATION_ONLY && a.foundation_only === "YES",
+  );
+  if (foundation) {
+    return {
+      forced_task_type: "audit_expansion",
+      audit_name: foundation.audit_name,
+      audit_id: foundation.audit_id,
+      cluster: foundation.top_cluster || "(žádný)",
+      command: "node scripts/silver-audit-registry.cjs report",
+      rationale: "Foundation-only audit — dokončit audit expansion místo dalšího CAP běhu.",
+    };
+  }
+  const top = prioritized[0];
+  if (top && top.true_engine_fail_confidence === "HIGH" && top.harness_only !== "YES") {
+    return {
+      forced_task_type: "narrow_engine_diagnostic_fix",
+      audit_name: top.audit_name,
+      audit_id: top.audit_id,
+      cluster: top.cluster,
+      command: harnessCommandForAuditId(top.audit_id),
+      rationale:
+        "TRUE_ENGINE_FAIL cluster — úzký engine diagnostic/fix task pro " + top.audit_name + " / " + top.cluster,
+    };
+  }
+  return {
+    forced_task_type: "no_safe_fix_stale_audit_proof",
+    audit_name: "(žádný)",
+    audit_id: "",
+    cluster: "(žádný)",
+    command: "node scripts/silver-rhc3-negation-cal-readonly-hard-outcome.cjs",
+    rationale:
+      "Žádný bezpečný produktový cluster — vytvořit no-safe-fix/stale-audit proof; NEspouštět další CAP naslepo.",
+  };
+}
+
+function enforceCapOutcome(meta, registry, prioritized) {
   const cycles = Number(meta.cycles_completed) || 0;
   const prCreated = Number(meta.pr_created_count) > 0 || meta.pr_created === "YES";
   const productFix = meta.product_fix_created === "YES" || meta.engine_changed === "YES";
   const trueEngineFound = meta.true_engine_fail_found === "YES";
   const clearExplanation = meta.clear_no_fix_explanation === "YES";
   const orchestrationOnly = meta.orchestration_only_run === "YES";
+  const verifiedNo = String(meta.verified_product_shift || "NO").toUpperCase() === "NO";
+  const productFixCreatedNo = meta.product_fix_created !== "YES" && !productFix;
   const capLabel = String(meta.cap_label || "").toUpperCase();
 
   let lowProductLoop = "NO";
   let recommendation = "pokračovat doporučeným CAP během dle priority matrix";
+  let hardStopForced = "NO";
+  let nextCapBlindBlocked = "NO";
+  let forcedTaskType = "";
+  let forcedAuditName = "";
+  let forcedCluster = "";
+  let forcedCommand = "";
+  let forcedRationale = "";
 
   if (!prCreated && !productFix && !trueEngineFound && !clearExplanation) {
     if (orchestrationOnly || cycles >= 2) {
@@ -692,10 +765,44 @@ function enforceCapOutcome(meta) {
     recommendation = "STOP CAP50 — LOW_PRODUCT_VALUE_LOOP; použít CAP10–CAP25 na konkrétní TRUE_ENGINE_FAIL cluster.";
   }
 
+  if (
+    orchestrationOnly &&
+    productFixCreatedNo &&
+    verifiedNo &&
+    lowProductLoop === "YES"
+  ) {
+    hardStopForced = "YES";
+    nextCapBlindBlocked = "YES";
+    const reg = registry || { audits: [] };
+    const pri = prioritized || [];
+    const forced = resolveForcedOutcomeAfterLowProductLoop(reg, pri);
+    forcedTaskType = forced.forced_task_type;
+    forcedAuditName = forced.audit_name;
+    forcedCluster = forced.cluster;
+    forcedCommand = forced.command;
+    forcedRationale = forced.rationale;
+    recommendation =
+      "HARD_STOP_FORCED_OUTCOME_REQUIRED — " +
+      forced.forced_task_type +
+      ": " +
+      forced.audit_name +
+      " / " +
+      forced.cluster +
+      " — " +
+      forced.rationale;
+  }
+
   return {
     low_product_value_loop: lowProductLoop,
     cap_outcome_class: lowProductLoop === "YES" ? "LOW_PRODUCT_VALUE_LOOP" : prCreated || productFix ? "PRODUCT" : "DIAGNOSTIC",
     recommendation,
+    hard_stop_forced_outcome_required: hardStopForced,
+    next_cap_blind_retry_blocked: nextCapBlindBlocked,
+    forced_outcome_task_type: forcedTaskType,
+    forced_outcome_audit_name: forcedAuditName,
+    forced_outcome_cluster: forcedCluster,
+    forced_outcome_command: forcedCommand,
+    forced_outcome_rationale: forcedRationale,
   };
 }
 
@@ -788,13 +895,23 @@ function renderNextCapBlock(nextCap) {
 }
 
 function renderCapOutcomeBlock(outcome) {
-  return [
+  const lines = [
     "SILVER_CAP_OUTCOME_ENFORCEMENT",
     "",
     "low_product_value_loop=" + outcome.low_product_value_loop,
     "cap_outcome_class=" + outcome.cap_outcome_class,
+    "HARD_STOP_FORCED_OUTCOME_REQUIRED=" + (outcome.hard_stop_forced_outcome_required || "NO"),
+    "next_cap_blind_retry_blocked=" + (outcome.next_cap_blind_retry_blocked || "NO"),
     "doporučení=" + outcome.recommendation,
-  ].join("\n");
+  ];
+  if (outcome.hard_stop_forced_outcome_required === "YES") {
+    lines.push("forced_outcome_task_type=" + (outcome.forced_outcome_task_type || ""));
+    lines.push("forced_outcome_audit_name=" + (outcome.forced_outcome_audit_name || ""));
+    lines.push("forced_outcome_cluster=" + (outcome.forced_outcome_cluster || ""));
+    lines.push("forced_outcome_command=" + (outcome.forced_outcome_command || ""));
+    lines.push("forced_outcome_rationale=" + (outcome.forced_outcome_rationale || ""));
+  }
+  return lines.join("\n");
 }
 
 function harnessCommandForAuditId(auditId) {
@@ -887,12 +1004,18 @@ function runSelfTest() {
   const reg = buildAuditRegistry(td);
   const pri = prioritizeTrueEngineFail(reg);
   const next = selectNextCap(reg, pri);
-  const outcome = enforceCapOutcome({
-    cycles_completed: 3,
-    pr_created_count: 0,
-    orchestration_only_run: "YES",
-    cap_label: "CAP50",
-  });
+  const outcome = enforceCapOutcome(
+    {
+      cycles_completed: 3,
+      pr_created_count: 0,
+      orchestration_only_run: "YES",
+      product_fix_created: "NO",
+      verified_product_shift: "NO",
+      cap_label: "CAP25",
+    },
+    reg,
+    pri,
+  );
 
   const headOk = gitHead(td).length >= 7;
   const checks = [];
@@ -900,6 +1023,9 @@ function runSelfTest() {
   checks.push(pri.length > 0);
   checks.push(next.recommended_cap && next.audit_name);
   checks.push(outcome.low_product_value_loop === "YES");
+  checks.push(outcome.hard_stop_forced_outcome_required === "YES");
+  checks.push(outcome.next_cap_blind_retry_blocked === "YES");
+  checks.push(String(outcome.recommendation || "").indexOf("HARD_STOP_FORCED_OUTCOME_REQUIRED") >= 0);
   checks.push(headOk);
   const pub = reg.audits.find((a) => a.audit_id === "public_ux");
   checks.push(pub && pub.maturity === MATURITY.ACTIVE);
@@ -930,6 +1056,9 @@ function runSelfTest() {
       "priority_rows",
       "next_cap",
       "low_product_loop",
+      "hard_stop_forced",
+      "next_cap_blind_blocked",
+      "hard_stop_recommendation",
       "git_head",
       "pub_active",
       "planned_only",
@@ -967,6 +1096,8 @@ function parseArgs(argv) {
     else if (a === "--orchestration-only") out.capMeta.orchestration_only_run = "YES";
     else if (a === "--pr-created") out.capMeta.pr_created_count = 1;
     else if (a === "--product-fix") out.capMeta.product_fix_created = "YES";
+    else if (a === "--verified-product-shift-no") out.capMeta.verified_product_shift = "NO";
+    else if (a === "--verified-product-shift-yes") out.capMeta.verified_product_shift = "YES";
     else if (a === "--true-engine-fail") out.capMeta.true_engine_fail_found = "YES";
     else if (a === "--clear-explanation") out.capMeta.clear_no_fix_explanation = "YES";
   }
@@ -1000,7 +1131,7 @@ function emitFullReport(repoRoot, capMeta) {
   const registry = buildAuditRegistry(repoRoot);
   const prioritized = prioritizeTrueEngineFail(registry);
   const nextCap = selectNextCap(registry, prioritized);
-  const outcome = enforceCapOutcome(capMeta || {});
+  const outcome = enforceCapOutcome(capMeta || {}, registry, prioritized);
   const trend = silverProductTrend(registry, prioritized);
 
   const matrixLines = renderCzechPriorityMatrix(prioritized, 6);
@@ -1029,7 +1160,9 @@ function main() {
     return;
   }
   if (args.cmd === "cap-outcome") {
-    const o = enforceCapOutcome(args.capMeta);
+    const registry = buildAuditRegistry(args.repoRoot);
+    const prioritized = prioritizeTrueEngineFail(registry);
+    const o = enforceCapOutcome(args.capMeta, registry, prioritized);
     console.log(renderCapOutcomeBlock(o));
     return;
   }
@@ -1043,6 +1176,7 @@ module.exports = {
   prioritizeTrueEngineFail,
   selectNextCap,
   enforceCapOutcome,
+  resolveForcedOutcomeAfterLowProductLoop,
   emitFullReport,
   renderCzechRegistryTable,
   renderCapOutcomeBlock,
