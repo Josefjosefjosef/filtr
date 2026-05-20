@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-20T21:54:20.451606Z",
+  "ingestedAt": "2026-05-20T22:33:52.934108Z",
   "items": [
     {
       "section": "aktualne",
@@ -748,6 +748,26 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Soutěž k MS v hokeji – 21. května",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/soutez-k-ms-v-hokeji-21-kvetna-156742",
+      "dt": "2026-05-20T22:00:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "hokeji",
+        "května",
+        "soutěž"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Je to pro mě nepopsatelné. Čekám, jestli se probudím, uvedl Kačor",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/cekam-jestli-se-treba-probudim-uvedl-kacor-je-to-pro-me-nepopsatelne-156919",
       "dt": "2026-05-20T21:42:00Z",
@@ -1482,29 +1502,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Alcaraz kvůli zraněnému zápěstí vynechá i Wimbledon",
-      "url": "https://sport.ceskatelevize.cz/clanek/tenis/alcaraz-kvuli-zranenemu-zapesti-prijde-i-o-wimbledon-156892",
-      "dt": "2026-05-19T15:29:02Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "alcaraz",
-        "kvůli",
-        "vynechá",
-        "wimbledon",
-        "zraněnému",
-        "zápěstí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1634,7 +1631,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38390,
+      "bytes": 38160,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1671,7 +1668,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T21:42:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1686,6 +1683,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Soutěž k MS v hokeji – 21. května",
+            "publishedAt": "2026-05-20T22:00:00Z"
+          },
           {
             "title": "Je to pro mě nepopsatelné. Čekám, jestli se probudím, uvedl Kačor",
             "publishedAt": "2026-05-20T21:42:00Z"
@@ -1713,10 +1714,6 @@
           {
             "title": "Jsme strašně rádi za ten obrat. Spadl mi kámen ze srdce, hlásil střelec vítězné branky Flek",
             "publishedAt": "2026-05-20T18:49:23Z"
-          },
-          {
-            "title": "Karviná porazila ve finále Jablonec a poprvé ovládla domácí pohár",
-            "publishedAt": "2026-05-20T18:07:56Z"
           }
         ]
       }
@@ -1728,7 +1725,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77145,
+      "bytes": 77100,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

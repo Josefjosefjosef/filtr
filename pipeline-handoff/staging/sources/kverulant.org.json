@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kverulant.org",
-  "ingestedAt": "2026-05-20T21:54:20.451606Z",
+  "ingestedAt": "2026-05-20T22:33:52.934108Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Metropolitní plán Prahy ignoruje důležité usnesení zastupitelstva",
+      "url": "https://www.kverulant.org/article/metropolitni-plan-prahy-ignoruje-dulezite-usneseni-zastupitelstva/",
+      "dt": "2026-05-20T22:07:00Z",
+      "media_raw": "Kverulant",
+      "media_norm": "Kverulant",
+      "tokens": [
+        "důležité",
+        "ignoruje",
+        "metropolitní",
+        "plán",
+        "prahy",
+        "usnesení",
+        "zastupitelstva"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_kverulant",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "kverulant.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -223,28 +247,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "kverulant.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zkouška sirén připomíná📢podpořte Kverulanta",
-      "url": "https://www.kverulant.org/article/podporte-kverulanta-pripominaji-sireny-kveten-2026/",
-      "dt": "2026-05-05T22:07:00Z",
-      "media_raw": "Kverulant",
-      "media_norm": "Kverulant",
-      "tokens": [
-        "kverulanta",
-        "podpořte",
-        "připomíná",
-        "sirén",
-        "zkouška"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_kverulant",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "kverulant.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -255,7 +257,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.kverulant.org/feed/",
-      "bytes": 139323,
+      "bytes": 125862,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -292,7 +294,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-19T22:07:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T22:07:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -307,6 +309,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Metropolitní plán Prahy ignoruje důležité usnesení zastupitelstva",
+            "publishedAt": "2026-05-20T22:07:00Z"
+          },
           {
             "title": "Českým příspěvkem ke společné obraně NATO je i Vojenský umělecký soubor Ondráš",
             "publishedAt": "2026-05-19T22:07:00Z"
@@ -334,10 +340,6 @@
           {
             "title": "Ke stovkám českých generálů zase přibyli další, včetně bývalého estébáka",
             "publishedAt": "2026-05-11T22:07:00Z"
-          },
-          {
-            "title": "Kverulant prověřil hospodaření sněmovny za rok 2025 i poslanecké cesty",
-            "publishedAt": "2026-05-10T22:07:00Z"
           }
         ]
       }

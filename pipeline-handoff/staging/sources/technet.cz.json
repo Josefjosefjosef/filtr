@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-05-20T21:54:20.451606Z",
+  "ingestedAt": "2026-05-20T22:33:52.934108Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Lži a manipulace o druhé světové válce. Jak to bylo doopravdy",
+      "url": "https://www.idnes.cz/technet/vojenstvi/druha-svetova-valka-lzi-dezinformace.A260519_233928_vojenstvi_erp",
+      "dt": "2026-05-20T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "doopravdy",
+        "druhé",
+        "lži",
+        "manipulace",
+        "světové",
+        "válce"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -332,7 +355,7 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Jak obstál repráček Ikea ve srovnání? Toto dostanete za svých 129 korun",
       "url": "https://www.idnes.cz/technet/audio-foto-video/ikea-kallsup-xiaomi-sund-outdoor-srovnani-video.A260513_132006_audio-foto-video_nyv",
@@ -358,7 +381,7 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Zrod diktátora v rukavičkách. Piłsudski provedl před 100 lety krvavý puč v Polsku",
       "url": "https://www.idnes.cz/technet/pred-100-lety/diktator-pi-sudski-pred-100-puc-v-polsku.A260513_112234_pred-100-lety_vov",
@@ -740,30 +763,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Astronomové zachytili nejostřejší snímky exoplanety, která se podobá Merkuru",
-      "url": "https://www.idnes.cz/technet/vesmir/astronomove-ziskali-pomoci-webbova-teleskopu-dosud-nejlepsi-pohled-na-exoplanetu.A260509_083228_zahranicni_tty",
-      "dt": "2026-05-09T08:18:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "astronomové",
-        "exoplanety",
-        "merkuru",
-        "nejostřejší",
-        "podobá",
-        "snímky",
-        "zachytili"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -774,7 +773,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 46652,
+      "bytes": 46978,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -811,11 +810,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T10:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 15,
-          "zpravy": 15
+          "other": 14,
+          "zpravy": 16
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -827,6 +826,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lži a manipulace o druhé světové válce. Jak to bylo doopravdy",
+            "publishedAt": "2026-05-20T22:00:00Z"
+          },
           {
             "title": "Za tajemstvím ultračistých krystalů. Fyzik prozrazuje, že výzkum v Česku si nezadá s tím na Západě",
             "publishedAt": "2026-05-20T10:30:00Z"
@@ -853,10 +856,6 @@
           },
           {
             "title": "Přípravy na Artemis III běží, bude to poslední krok před letem na Měsíc",
-            "publishedAt": "2026-05-17T22:00:00Z"
-          },
-          {
-            "title": "Železnice zpřístupnila davům ztracené město Inků Machu Picchu",
             "publishedAt": "2026-05-17T22:00:00Z"
           }
         ]
