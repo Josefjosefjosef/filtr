@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-20T19:14:49.855383Z",
+  "ingestedAt": "2026-05-20T19:54:51.687706Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Růst výrobních cen v dubnu pokračoval rychlým tempem",
+      "url": "https://profitonline.cz/rust-vyrobnich-cen-v-dubnu-pokracoval-rychlym-tempem/",
+      "dt": "2026-05-20T19:40:30Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "cen",
+        "dubnu",
+        "pokračoval",
+        "rychlým",
+        "růst",
+        "tempem",
+        "výrobních"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -264,30 +288,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Česko vládne evropské nezaměstnanosti. Ale je to důvod k oslavě?",
-      "url": "https://profitonline.cz/cesko-vladne-evropske-nezamestnanosti-ale-je-to-duvod-k-oslave/",
-      "dt": "2026-05-18T13:30:09Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "ale",
-        "důvod",
-        "evropské",
-        "nezaměstnanosti",
-        "oslavě",
-        "vládne",
-        "česko"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -298,7 +298,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18257,
+      "bytes": 18585,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -335,7 +335,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-20T10:00:21Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T19:40:30Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -352,6 +352,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Růst výrobních cen v dubnu pokračoval rychlým tempem",
+            "publishedAt": "2026-05-20T19:40:30Z"
+          },
           {
             "title": "Skutečný šok ze summitu v Pekingu spočívá v ropě",
             "publishedAt": "2026-05-20T10:00:21Z"
@@ -379,10 +383,6 @@
           {
             "title": "Banga vydává nový videoklip. Kombinuje virtuální realitu se skutečností",
             "publishedAt": "2026-05-19T08:00:55Z"
-          },
-          {
-            "title": "Zájem o hypotéky nepolevil ani v dubnu",
-            "publishedAt": "2026-05-19T06:00:25Z"
           }
         ]
       }
