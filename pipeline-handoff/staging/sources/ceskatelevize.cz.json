@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-20T17:15:45.508618Z",
+  "ingestedAt": "2026-05-20T17:54:34.035515Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Řada zemí odsoudila chování izraelského ministra, urážel aktivisty z flotily",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/italie-a-kanada-odsoudily-izraelskeho-ministra-urazel-aktivisty-z-flotily-373669",
+      "dt": "2026-05-20T17:22:25Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "aktivisty",
+        "chování",
+        "flotily",
+        "izraelského",
+        "ministra",
+        "odsoudila",
+        "urážel",
+        "zemí",
+        "řada"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -721,32 +747,6 @@
         "výprask",
         "zavede",
         "školách"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Screening části typů nádorů se změní, čekání na kolonoskopii má být kratší",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/screening-casti-typu-nadoru-se-zmeni-cekani-na-kolonoskopii-ma-byt-kratsi-373626",
-      "dt": "2026-05-20T03:30:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "být",
-        "kolonoskopii",
-        "kratší",
-        "nádorů",
-        "screening",
-        "typů",
-        "změní",
-        "čekání",
-        "části"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1524,7 +1524,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42112,
+      "bytes": 42416,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1584,7 +1584,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T16:28:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T17:22:25Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -1601,6 +1601,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Řada zemí odsoudila chování izraelského ministra, urážel aktivisty z flotily",
+            "publishedAt": "2026-05-20T17:22:25Z"
+          },
           {
             "title": "SOUHRN: Zásadní události středy 20. května",
             "publishedAt": "2026-05-20T16:28:00Z"
@@ -1628,10 +1632,6 @@
           {
             "title": "Trump prolomil tabu. Řešit zbraně pro Tchaj-wan s Čínou zakázal Reagan",
             "publishedAt": "2026-05-20T12:25:00Z"
-          },
-          {
-            "title": "České studio chystá videohru ze světa Pána prstenů",
-            "publishedAt": "2026-05-20T12:18:16Z"
           }
         ]
       }
