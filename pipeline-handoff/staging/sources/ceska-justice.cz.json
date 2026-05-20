@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-05-20T07:15:36.502893Z",
+  "ingestedAt": "2026-05-20T07:55:17.075023Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Štrasburk se ptá vlády: Proč Česko nepotrestalo soudce Švaňhala za domácí násilí?",
+      "url": "https://www.ceska-justice.cz/2026/05/strasburk-se-pta-vlady-proc-cesko-nepotrestalo-soudce-svanhala-za-domaci-nasili/",
+      "dt": "2026-05-20T07:22:59Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "domácí",
+        "nepotrestalo",
+        "násilí",
+        "proč",
+        "ptá",
+        "soudce",
+        "vlády",
+        "česko",
+        "štrasburk",
+        "švaňhala"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -240,31 +267,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Feri u soudu vyvázl: Styk bez kondomu nebyl trestným činem",
-      "url": "https://www.ceska-justice.cz/2026/05/feri-znovu-u-soudu-vyslech-bez-verejnosti-neprosel/",
-      "dt": "2026-05-18T11:39:13Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "feri",
-        "kondomu",
-        "nebyl",
-        "soudu",
-        "styk",
-        "trestným",
-        "vyvázl",
-        "činem"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -275,7 +277,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 100002,
+      "bytes": 106503,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -312,7 +314,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-20T04:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T07:22:59Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -327,6 +329,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Štrasburk se ptá vlády: Proč Česko nepotrestalo soudce Švaňhala za domácí násilí?",
+            "publishedAt": "2026-05-20T07:22:59Z"
+          },
           {
             "title": "Malé firmy budou úplně mimo kontrolu. Auditor popsal riziko nového zákona o účetnictví",
             "publishedAt": "2026-05-20T04:15:00Z"
@@ -354,10 +360,6 @@
           {
             "title": "Odvolací soudy mají přijít o silnou páku. Ministerstvo reaguje i na Čapí hnízdo",
             "publishedAt": "2026-05-19T04:30:00Z"
-          },
-          {
-            "title": "Nejenom trestat, ale hlavně napravit. Prezident promluvil o roli vězeňství",
-            "publishedAt": "2026-05-18T18:41:48Z"
           }
         ]
       }

@@ -1,26 +1,53 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-20T07:15:36.502893Z",
+  "ingestedAt": "2026-05-20T07:55:17.075023Z",
   "items": [
     {
-      "section": "zdravi",
+      "section": "krimi",
       "contentType": "article",
-      "title": "Za kolik se dá pořídit nejdostupnější elektromobil Škody? Automobilka zveřejnila ceník Epiqu",
+      "title": "Rajchlovy útoky na média jsou přes míru, píše novinářský institut. Okamuru žádá, aby šéfa PRO usměrnil",
+      "url": "https://domaci.hn.cz/c1-67879110-rajchlovy-utoky-na-media-jsou-pres-miru-pise-novinarsky-institut-okamuru-zada-aby-sefa-pro-usmernil",
+      "dt": "2026-05-20T07:15:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "institut",
+        "média",
+        "míru",
+        "novinářský",
+        "okamuru",
+        "píše",
+        "rajchlovy",
+        "usměrnil",
+        "útoky",
+        "šéfa",
+        "žádá"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Škoda zveřejnila ceník Epiqu. Na slibovanou nejlevnější verzi se bude čekat",
       "url": "https://auto.hn.cz/c1-67878580-za-kolik-se-da-poridit-nejdostupnejsi-elektromobil-skody-automobilka-zverejnila-cenik-epiqu",
       "dt": "2026-05-20T07:00:00Z",
       "media_raw": "HN / Ekonomika",
       "media_norm": "HN / Ekonomika",
       "tokens": [
-        "automobilka",
         "ceník",
-        "elektromobil",
         "epiqu",
-        "kolik",
-        "nejdostupnější",
-        "pořídit",
+        "nejlevnější",
+        "slibovanou",
+        "verzi",
         "zveřejnila",
-        "škody"
+        "čekat",
+        "škoda"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1129,36 +1156,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Klempíř má přepracovat zákon o veřejnoprávních médiích. Obsahuje nedostatky a vytváří nové problémy, vadí ministerstvu financí",
-      "url": "https://domaci.hn.cz/c1-67878410-klempir-ma-prepracovat-zakon-o-verejnopravnich-mediich-obsahuje-nedostatky-a-vytvari-nove-problemy-vadi-ministerstvu-financi",
-      "dt": "2026-05-19T08:25:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "financí",
-        "klempíř",
-        "ministerstvu",
-        "médiích",
-        "nedostatky",
-        "nové",
-        "obsahuje",
-        "problémy",
-        "přepracovat",
-        "vadí",
-        "veřejnoprávních",
-        "vytváří",
-        "zákon"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1169,7 +1166,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183140,
+      "bytes": 182981,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1206,12 +1203,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-20T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T07:15:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zdravi": 2,
+          "zpravy": 5,
           "finance": 33,
-          "zpravy": 4,
+          "zdravi": 1,
           "sport": 1
         },
         "drop_counts": {
@@ -1225,7 +1222,11 @@
         },
         "sample_titles": [
           {
-            "title": "Za kolik se dá pořídit nejdostupnější elektromobil Škody? Automobilka zveřejnila ceník Epiqu",
+            "title": "Rajchlovy útoky na média jsou přes míru, píše novinářský institut. Okamuru žádá, aby šéfa PRO usměrnil",
+            "publishedAt": "2026-05-20T07:15:00Z"
+          },
+          {
+            "title": "Škoda zveřejnila ceník Epiqu. Na slibovanou nejlevnější verzi se bude čekat",
             "publishedAt": "2026-05-20T07:00:00Z"
           },
           {
@@ -1251,10 +1252,6 @@
           {
             "title": "Komu vezme práci AI? Jednu činnost určitě nenahradí, asi vás překvapí, o jakou jde",
             "publishedAt": "2026-05-20T03:30:00Z"
-          },
-          {
-            "title": "Obchodníci jsou nervózní, tlak na zemědělce stoupá. Kdy se válka proti Íránu propíše do cen potravin?",
-            "publishedAt": "2026-05-19T22:00:00Z"
           }
         ]
       }
