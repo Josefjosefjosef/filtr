@@ -114,6 +114,8 @@ if (Test-Path -LiteralPath $SilverAuditRegistryPath) {
 }
 $script:SilverLastScorecardOrchestrationOnly = "NO"
 $script:SilverLastScorecardVerifiedProductShift = "NO"
+$script:SilverScorecardRuntimeError = "NO"
+$script:SilverScorecardExactError = ""
 Initialize-SilverConsoleUtf8
 
 $script:SilverCapScorecardDir = ""
@@ -4048,7 +4050,7 @@ function Invoke-SilverCapProductScorecardIfActive {
   if ($prUrlAfter -and $prUrlAfter -ne $prUrlBefore) { $prCreated = "1" }
   $productFix = "NO"
   if ($engineCh -eq "YES" -or $assetsCh -eq "YES") { $productFix = "YES" }
-  $null = Complete-SilverCapProductScorecard -RepoRoot $RepoRoot -ProgressLogPath $ProgressLogPath -CyclesCompleted $CyclesCompleted -StopReason $StopReason -PrCreatedCount $prCreated -ProductFixCreated $productFix
+  $scOk = Complete-SilverCapProductScorecard -RepoRoot $RepoRoot -ProgressLogPath $ProgressLogPath -CyclesCompleted $CyclesCompleted -StopReason $StopReason -PrCreatedCount $prCreated -ProductFixCreated $productFix
   if (Get-Command -Name Invoke-SilverCapOutcomeEnforcement -ErrorAction SilentlyContinue) {
     $capLbl = [string]$script:SilverCapScorecardCapLabel
     if (-not $capLbl) { $capLbl = "CAPX" }
@@ -4058,7 +4060,12 @@ function Invoke-SilverCapProductScorecardIfActive {
     if ($script:SilverLastScorecardVerifiedProductShift) {
       $verifiedShift = [string]$script:SilverLastScorecardVerifiedProductShift
     }
-    $null = Invoke-SilverCapOutcomeEnforcement -RepoRoot $RepoRoot -ProgressLogPath $ProgressLogPath -CyclesCompleted $CyclesCompleted -CapLabel $capLbl -OrchestrationOnly $orch -PrCreatedCount ([int]$prCreated) -ProductFixCreated $productFix -VerifiedProductShift $verifiedShift
+    $scorecardErr = "NO"
+    $exactErr = ""
+    if (-not $scOk) { $scorecardErr = "YES" }
+    if ($script:SilverScorecardRuntimeError -eq "YES") { $scorecardErr = "YES" }
+    if ($script:SilverScorecardExactError) { $exactErr = [string]$script:SilverScorecardExactError }
+    $null = Invoke-SilverCapOutcomeEnforcement -RepoRoot $RepoRoot -ProgressLogPath $ProgressLogPath -CyclesCompleted $CyclesCompleted -CapLabel $capLbl -OrchestrationOnly $orch -PrCreatedCount ([int]$prCreated) -ProductFixCreated $productFix -VerifiedProductShift $verifiedShift -ScorecardRuntimeError $scorecardErr -ExactError $exactErr
   }
 }
 

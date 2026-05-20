@@ -734,6 +734,26 @@ function resolveForcedOutcomeAfterLowProductLoop(registry, prioritized) {
 }
 
 function enforceCapOutcome(meta, registry, prioritized) {
+  if (meta && meta.scorecard_runtime_error === "YES") {
+    const exact = String(meta.exact_error || meta.scorecard_exact_error || "scorecard runtime error");
+    return {
+      low_product_value_loop: "YES",
+      cap_outcome_class: "SCORECARD_RUNTIME_ERROR",
+      scorecard_runtime_error: "YES",
+      recommendation:
+        "HARD_STOP_SCORECARD_RUNTIME_ERROR — fix scorecard runtime error before any CAP retry — " + exact,
+      recommended_next_task: "fix scorecard runtime error before any CAP retry",
+      hard_stop_forced_outcome_required: "YES",
+      next_cap_blind_retry_blocked: "YES",
+      exact_error: exact,
+      forced_outcome_task_type: "scorecard_runtime_fix",
+      forced_outcome_audit_name: "(scorecard)",
+      forced_outcome_cluster: "(runtime)",
+      forced_outcome_command: "node scripts/silver-cap-product-scorecard.cjs selftest",
+      forced_outcome_rationale: "Scorecard finalize spadl — opravit orchestration před dalším CAP.",
+    };
+  }
+
   const cycles = Number(meta.cycles_completed) || 0;
   const prCreated = Number(meta.pr_created_count) > 0 || meta.pr_created === "YES";
   const productFix = meta.product_fix_created === "YES" || meta.engine_changed === "YES";
@@ -900,10 +920,15 @@ function renderCapOutcomeBlock(outcome) {
     "",
     "low_product_value_loop=" + outcome.low_product_value_loop,
     "cap_outcome_class=" + outcome.cap_outcome_class,
+    "SCORECARD_RUNTIME_ERROR=" + (outcome.scorecard_runtime_error || "NO"),
     "HARD_STOP_FORCED_OUTCOME_REQUIRED=" + (outcome.hard_stop_forced_outcome_required || "NO"),
     "next_cap_blind_retry_blocked=" + (outcome.next_cap_blind_retry_blocked || "NO"),
     "doporučení=" + outcome.recommendation,
   ];
+  if (outcome.scorecard_runtime_error === "YES") {
+    lines.push("exact_error=" + (outcome.exact_error || ""));
+    lines.push("recommended_next_task=" + (outcome.recommended_next_task || "fix scorecard runtime error before any CAP retry"));
+  }
   if (outcome.hard_stop_forced_outcome_required === "YES") {
     lines.push("forced_outcome_task_type=" + (outcome.forced_outcome_task_type || ""));
     lines.push("forced_outcome_audit_name=" + (outcome.forced_outcome_audit_name || ""));
@@ -1026,6 +1051,19 @@ function runSelfTest() {
   checks.push(outcome.hard_stop_forced_outcome_required === "YES");
   checks.push(outcome.next_cap_blind_retry_blocked === "YES");
   checks.push(String(outcome.recommendation || "").indexOf("HARD_STOP_FORCED_OUTCOME_REQUIRED") >= 0);
+  const scorecardCrash = enforceCapOutcome(
+    {
+      scorecard_runtime_error: "YES",
+      exact_error: "repo is not defined",
+      cap_label: "CAP25",
+    },
+    reg,
+    pri,
+  );
+  checks.push(scorecardCrash.scorecard_runtime_error === "YES");
+  checks.push(scorecardCrash.hard_stop_forced_outcome_required === "YES");
+  checks.push(String(scorecardCrash.recommendation || "").indexOf("HARD_STOP_SCORECARD_RUNTIME_ERROR") >= 0);
+  checks.push(String(scorecardCrash.recommendation || "").indexOf("pokračovat doporučeným CAP během") < 0);
   checks.push(headOk);
   const pub = reg.audits.find((a) => a.audit_id === "public_ux");
   checks.push(pub && pub.maturity === MATURITY.ACTIVE);
@@ -1059,6 +1097,10 @@ function runSelfTest() {
       "hard_stop_forced",
       "next_cap_blind_blocked",
       "hard_stop_recommendation",
+      "scorecard_runtime_hard_stop",
+      "scorecard_runtime_hard_stop_forced",
+      "scorecard_runtime_hard_stop_recommendation",
+      "scorecard_no_blind_cap",
       "git_head",
       "pub_active",
       "planned_only",
@@ -1100,6 +1142,8 @@ function parseArgs(argv) {
     else if (a === "--verified-product-shift-yes") out.capMeta.verified_product_shift = "YES";
     else if (a === "--true-engine-fail") out.capMeta.true_engine_fail_found = "YES";
     else if (a === "--clear-explanation") out.capMeta.clear_no_fix_explanation = "YES";
+    else if (a === "--scorecard-runtime-error") out.capMeta.scorecard_runtime_error = "YES";
+    else if (a.startsWith("--exact-error=")) out.capMeta.exact_error = a.slice(14);
   }
   return out;
 }
