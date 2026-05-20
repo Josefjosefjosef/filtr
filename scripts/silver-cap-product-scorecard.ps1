@@ -211,6 +211,31 @@ function Complete-SilverCapProductScorecard {
   $p.WaitForExit()
   if ($stderr) { Write-Host $stderr -ForegroundColor DarkYellow }
 
+  $script:SilverScorecardRuntimeError = "NO"
+  $script:SilverScorecardExactError = ""
+  if ($p.ExitCode -ne 0) {
+    $script:SilverScorecardRuntimeError = "YES"
+    $exactErr = ""
+    if ($stderr -match 'ReferenceError:\s*(.+)$') {
+      $exactErr = $Matches[1].Trim()
+    }
+    elseif ($stderr -match 'Error:\s*(.+)$') {
+      $exactErr = $Matches[1].Trim()
+    }
+    elseif ($stdout -match 'exact_error=(.+)') {
+      $exactErr = $Matches[1].Trim()
+    }
+    if (-not $exactErr) { $exactErr = "scorecard finalize exit " + [string]$p.ExitCode }
+    $script:SilverScorecardExactError = $exactErr
+    Write-Host "=== SILVER_SCORECARD_RUNTIME_HARD_STOP ===" -ForegroundColor Red
+    Write-Host "SCORECARD_RUNTIME_ERROR=YES"
+    Write-Host "HARD_STOP_FORCED_OUTCOME_REQUIRED=YES"
+    Write-Host "next_cap_blind_retry_blocked=YES"
+    Write-Host ("exact_error=" + $exactErr)
+    Write-Host "recommended_next_task=fix scorecard runtime error before any CAP retry"
+    Write-Host "=== END_SILVER_SCORECARD_RUNTIME_HARD_STOP ===" -ForegroundColor Red
+  }
+
   $czechBlock = ""
   if ($stdout) {
     $idxStart = $stdout.IndexOf("SILVER_CAP_BEFORE_AFTER_SCORECARD")

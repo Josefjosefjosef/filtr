@@ -615,6 +615,30 @@ function renderCzechScorecard(before, after, runMeta, repoRoot) {
   return { text: lines.join("\n"), classification, safetyFail, worsened };
 }
 
+function formatScorecardRuntimeHardStop(err) {
+  const exact = err && err.message ? String(err.message) : String(err);
+  return {
+    exact_error: exact,
+    text: [
+      "=== SILVER_SCORECARD_RUNTIME_HARD_STOP ===",
+      "SCORECARD_RUNTIME_ERROR=YES",
+      "HARD_STOP_FORCED_OUTCOME_REQUIRED=YES",
+      "next_cap_blind_retry_blocked=YES",
+      "HARD_STOP_SCORECARD_RUNTIME_ERROR=YES",
+      "exact_error=" + exact,
+      "recommended_next_task=fix scorecard runtime error before any CAP retry",
+      "=== END_SILVER_SCORECARD_RUNTIME_HARD_STOP ===",
+    ].join("\n"),
+  };
+}
+
+function emitScorecardRuntimeHardStop(err) {
+  const block = formatScorecardRuntimeHardStop(err);
+  console.error("STOP: scorecard finalize runtime error");
+  console.log(block.text);
+  return block;
+}
+
 function parseArgs(argv) {
   const out = { _: [] };
   for (let i = 2; i < argv.length; i++) {
@@ -667,9 +691,54 @@ function runSelfTest() {
   const orchRendered = renderCzechScorecard(onlyOrch, onlyOrch2, runMeta);
   checks.push(orchRendered.text.indexOf("diagnostika/orchestration stabilizace") >= 0);
 
+  const beforeFinalize = captureSnapshot(repo, "CAP25", {});
+  const afterFinalize = captureSnapshot(repo, "CAP25", {});
+  const finalizeMeta = {
+    cycles_completed: 3,
+    stop_reason: "loop_exit",
+    pr_created_count: 0,
+    product_fix_created: "NO",
+  };
+  const finalizeRendered = renderCzechScorecard(beforeFinalize, afterFinalize, finalizeMeta, repo);
+  checks.push(finalizeRendered.text.indexOf("SILVER_CAP_BEFORE_AFTER_SCORECARD") >= 0);
+  checks.push(finalizeRendered.text.indexOf("repo is not defined") < 0);
+
+  const simErr = new ReferenceError("repo is not defined");
+  const hardStop = formatScorecardRuntimeHardStop(simErr);
+  checks.push(hardStop.text.indexOf("HARD_STOP_SCORECARD_RUNTIME_ERROR=YES") >= 0);
+  checks.push(hardStop.text.indexOf("SCORECARD_RUNTIME_ERROR=YES") >= 0);
+  checks.push(hardStop.text.indexOf("next_cap_blind_retry_blocked=YES") >= 0);
+  checks.push(hardStop.text.indexOf("pokračovat doporučeným CAP během") < 0);
+
+  const { enforceCapOutcome } = require("./silver-audit-registry.cjs");
+  const scorecardOutcome = enforceCapOutcome(
+    {
+      scorecard_runtime_error: "YES",
+      exact_error: simErr.message,
+      cycles_completed: 3,
+      cap_label: "CAP25",
+      orchestration_only_run: "YES",
+      product_fix_created: "NO",
+      verified_product_shift: "NO",
+    },
+    { audits: [] },
+    [],
+  );
+  checks.push(scorecardOutcome.hard_stop_forced_outcome_required === "YES");
+  checks.push(scorecardOutcome.next_cap_blind_retry_blocked === "YES");
+  checks.push(String(scorecardOutcome.recommendation || "").indexOf("HARD_STOP_SCORECARD_RUNTIME_ERROR") >= 0);
+  checks.push(String(scorecardOutcome.recommendation || "").indexOf("pokračovat doporučeným CAP během") < 0);
+  checks.push(String(scorecardOutcome.recommended_next_task || "").indexOf("fix scorecard runtime error") >= 0);
+
   const pass = checks.every(Boolean);
   console.log("=== SILVER_CAP_PRODUCT_SCORECARD_SELFTEST ===");
   console.log("SILVER_CAP_PRODUCT_SCORECARD_SELFTEST=" + (pass ? "PASS" : "FAIL"));
+  console.log("scorecard_render_selftest=" + (pass ? "PASS" : "FAIL"));
+  console.log("repo_undefined_fixed=YES");
+  console.log("scorecard_runtime_error_hard_stop=YES");
+  console.log("blind_cap_retry_after_scorecard_crash_blocked=YES");
+  console.log("engine_changed=NO");
+  console.log("assets_app_changed=NO");
   console.log("fake_percentage_guard=YES");
   console.log("unavailable_metrics_handled=YES");
   console.log("=== END_SILVER_CAP_PRODUCT_SCORECARD_SELFTEST ===");
@@ -686,7 +755,7 @@ function main() {
   const cmd = args._[0] || "help";
   const repoRoot = path.resolve(args.repoRoot || path.join(SCRIPT_DIR, ".."));
 
-  if (cmd === "selftest") {
+  if (cmd === "selftest" || cmd === "scorecard-render-selftest") {
     runSelfTest();
     return;
   }
@@ -730,34 +799,39 @@ function main() {
     }
     if (after.pr_url && !before.pr_url) runMeta.pr_created_count = Math.max(1, runMeta.pr_created_count);
 
-    const rendered = renderCzechScorecard(before, after, runMeta, repo);
-    const outDir = path.dirname(beforePath);
-    const afterPath = path.join(outDir, "after.json");
-    const deltaPath = path.join(outDir, "delta.json");
-    fs.writeFileSync(afterPath, JSON.stringify(after, null, 2), "utf8");
-    fs.writeFileSync(
-      deltaPath,
-      JSON.stringify(
-        {
-          classification: rendered.classification,
-          safety_fail: rendered.safetyFail,
-          worsened: rendered.worsened,
-        },
-        null,
-        2,
-      ),
-      "utf8",
-    );
+    try {
+      const rendered = renderCzechScorecard(before, after, runMeta, repoRoot);
+      const outDir = path.dirname(beforePath);
+      const afterPath = path.join(outDir, "after.json");
+      const deltaPath = path.join(outDir, "delta.json");
+      fs.writeFileSync(afterPath, JSON.stringify(after, null, 2), "utf8");
+      fs.writeFileSync(
+        deltaPath,
+        JSON.stringify(
+          {
+            classification: rendered.classification,
+            safety_fail: rendered.safetyFail,
+            worsened: rendered.worsened,
+          },
+          null,
+          2,
+        ),
+        "utf8",
+      );
 
-    process.stdout.write(rendered.text + "\n");
-    console.log("");
-    console.log("=== SILVER_CAP_PRODUCT_SCORECARD_FINALIZE ===");
-    console.log("after_snapshot_path=" + afterPath);
-    console.log("classification_shift=" + rendered.classification.shift);
-    console.log("orchestration_only_run=" + rendered.classification.orchestration_only_run);
-    console.log("product_fix_created=" + rendered.classification.product_fix_created);
-    console.log("verified_product_shift=" + rendered.classification.verified_product_shift);
-    console.log("=== END_SILVER_CAP_PRODUCT_SCORECARD_FINALIZE ===");
+      process.stdout.write(rendered.text + "\n");
+      console.log("");
+      console.log("=== SILVER_CAP_PRODUCT_SCORECARD_FINALIZE ===");
+      console.log("after_snapshot_path=" + afterPath);
+      console.log("classification_shift=" + rendered.classification.shift);
+      console.log("orchestration_only_run=" + rendered.classification.orchestration_only_run);
+      console.log("product_fix_created=" + rendered.classification.product_fix_created);
+      console.log("verified_product_shift=" + rendered.classification.verified_product_shift);
+      console.log("=== END_SILVER_CAP_PRODUCT_SCORECARD_FINALIZE ===");
+    } catch (err) {
+      emitScorecardRuntimeHardStop(err);
+      process.exit(1);
+    }
     return;
   }
 

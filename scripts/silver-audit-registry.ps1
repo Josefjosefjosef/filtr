@@ -65,7 +65,9 @@ function Invoke-SilverCapOutcomeEnforcement {
     [string]$OrchestrationOnly,
     [int]$PrCreatedCount,
     [string]$ProductFixCreated,
-    [string]$VerifiedProductShift = "NO"
+    [string]$VerifiedProductShift = "NO",
+    [string]$ScorecardRuntimeError = "NO",
+    [string]$ExactError = ""
   )
   $registryScript = Join-Path $RepoRoot "scripts\silver-audit-registry.cjs"
   if (-not (Test-Path -LiteralPath $registryScript)) { return $false }
@@ -81,6 +83,12 @@ function Invoke-SilverCapOutcomeEnforcement {
   if ($ProductFixCreated -eq "YES") { $argList += "--product-fix" }
   if ($VerifiedProductShift -eq "YES") { $argList += "--verified-product-shift-yes" }
   else { $argList += "--verified-product-shift-no" }
+  if ($ScorecardRuntimeError -eq "YES") {
+    $argList += "--scorecard-runtime-error"
+    if ($ExactError) {
+      $argList += ("--exact-error=" + $ExactError)
+    }
+  }
   $parts = New-Object System.Collections.ArrayList
   foreach ($arg in $argList) {
     $a = [string]$arg
