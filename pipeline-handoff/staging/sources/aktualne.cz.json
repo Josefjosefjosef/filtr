@@ -1,12 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-20T21:14:32.327963Z",
+  "ingestedAt": "2026-05-20T21:54:20.451606Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pacient s podezřením na ebolu dorazil do Prahy. Zuří Okamura i někteří Američané",
+      "url": "https://zpravy.aktualne.cz/domaci/american-s-podezrenim-na-ebolu-prileti-do-prahy-kritiku-vyvolalo-ze-nemiri-do-usa/r~aaa2944dc620c369948a6c92969ec791/",
+      "dt": "2026-05-20T13:52:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "američané",
+        "dorazil",
+        "ebolu",
+        "někteří",
+        "okamura",
+        "pacient",
+        "podezřením",
+        "prahy",
+        "zuří"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Rekordman Emery vyhrál popáté Evropskou ligu. Tentokrát s Aston Villou",
+      "title": "Rekordman Emery vyhrál popáté Evropskou ligu. Aston Villa má trofej po 30 letech",
       "url": "https://sport.aktualne.cz/rekordman-emery-vyhral-popate-evropskou-ligu-tentokrat-s-aston-villou/r~aaa29ccf31a3c0dc1d352656ac45b17c/",
       "dt": "2026-05-20T21:05:00Z",
       "media_raw": "Aktuálně",
@@ -15,11 +41,12 @@
         "aston",
         "emery",
         "evropskou",
+        "letech",
         "ligu",
         "popáté",
         "rekordman",
-        "tentokrát",
-        "villou",
+        "trofej",
+        "villa",
         "vyhrál"
       ],
       "feedCategory": "zpravy",
@@ -506,34 +533,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Pétere, příteli, jsme všichni dojati.“ Tusk si notoval s Magyarem, státy posílí spolupráci",
-      "url": "https://zpravy.aktualne.cz/zahranici/polsko-a-madarsko-mohou-spolupracovat-na-energeticke-bezpecnosti-rekli-lidri/r~aaa2940ce53dc5af9ec4c842f5f8b269/",
-      "dt": "2026-05-20T11:42:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dojati",
-        "jsme",
-        "magyarem",
-        "notoval",
-        "posílí",
-        "pétere",
-        "příteli",
-        "spolupráci",
-        "státy",
-        "tusk",
-        "všichni"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -544,7 +543,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21646,
+      "bytes": 21710,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -584,8 +583,8 @@
         "raw_feed_latest_publishedAt": "2026-05-20T21:05:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 8,
-          "zpravy": 12
+          "zpravy": 12,
+          "sport": 8
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -598,7 +597,11 @@
         },
         "sample_titles": [
           {
-            "title": "Rekordman Emery vyhrál popáté Evropskou ligu. Tentokrát s Aston Villou",
+            "title": "Pacient s podezřením na ebolu dorazil do Prahy. Zuří Okamura i někteří Američané",
+            "publishedAt": "2026-05-20T13:52:00Z"
+          },
+          {
+            "title": "Rekordman Emery vyhrál popáté Evropskou ligu. Aston Villa má trofej po 30 letech",
             "publishedAt": "2026-05-20T21:05:00Z"
           },
           {
@@ -624,10 +627,6 @@
           {
             "title": "Rusko chystá ofenzivu na Kyjev. Mají připravených pět scénářů, upozornil Zelenskyj",
             "publishedAt": "2026-01-21T06:45:00Z"
-          },
-          {
-            "title": "Spojené státy obvinily Raúla Castra ze čtyřnásobné vraždy. K incidentu došlo před 30 lety",
-            "publishedAt": "2026-05-20T18:32:00Z"
           }
         ]
       }

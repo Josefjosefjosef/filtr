@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-20T21:14:32.327963Z",
+  "ingestedAt": "2026-05-20T21:54:20.451606Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Právě přistál v Praze. Američana s podezřením na ebolu vezou v bioboxu a skafandrech na Bulovku",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/podezreni-ebola-american-praha/",
+      "dt": "2026-05-20T21:34:43Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "američana",
+        "bioboxu",
+        "bulovku",
+        "ebolu",
+        "podezřením",
+        "praze",
+        "právě",
+        "přistál",
+        "skafandrech",
+        "vezou"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -245,32 +272,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Česko krev na Ukrajinu neposílá. Přednosta ÚVN vysvětluje, proč to nejde",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/cesko-krev-ukrajina-primar-uvn/",
-      "dt": "2026-05-20T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "krev",
-        "nejde",
-        "neposílá",
-        "proč",
-        "přednosta",
-        "ukrajinu",
-        "vysvětluje",
-        "úvn",
-        "česko"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 106483,
+      "bytes": 105795,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,11 +319,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-20T15:08:16Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T21:34:43Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 9,
-          "sport": 1
+          "sport": 2,
+          "zdravi": 8
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -334,6 +335,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Právě přistál v Praze. Američana s podezřením na ebolu vezou v bioboxu a skafandrech na Bulovku",
+            "publishedAt": "2026-05-20T21:34:43Z"
+          },
           {
             "title": "Lepší komfort pro pacienty i personál. Nemocnice v Plzeňském kraji čeká obří proměna",
             "publishedAt": "2026-05-20T15:08:16Z"
@@ -361,10 +366,6 @@
           {
             "title": "Vakcína po infarktu může zachránit život. Pacienti ji ale často nedostanou, říká Chlíbek",
             "publishedAt": "2026-05-20T07:00:00Z"
-          },
-          {
-            "title": "Hazard s odolnými bakteriemi: Tisíce českých praktiků dostaly varování kvůli antibiotikům",
-            "publishedAt": "2026-05-20T06:00:00Z"
           }
         ]
       }
