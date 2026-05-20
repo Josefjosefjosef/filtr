@@ -1195,22 +1195,26 @@ function Test-NextActionHasBareSilverAutopilotNodeInvocation {
 
 function Test-SilverNextActionSilverWorkflowContext {
   param([string]$Text)
-  return ($Text -match '(?i)PRODUCT_CLUSTER|NEXT PRODUCT CLUSTER|silver-rhc3|scripts/silver-|cluster diagnostic|harness|audit_silver|SILVER_PRODUCT_CLUSTER|top_cluster=|rcz2_ultra_short_chaos|Public UX|public.ux')
+  return ($Text -match '(?i)PRODUCT_CLUSTER|NEXT PRODUCT CLUSTER|silver-rhc3|(?:node|npx)\s+scripts/silver-|cluster diagnostic|harness|audit_silver|SILVER_PRODUCT_CLUSTER|top_cluster=|rcz2_ultra_short_chaos|Public UX|public.ux')
 }
 
 function Test-SilverNextActionIsOrchestrationMaintenanceOnly {
   param([string]$Text)
   if (-not $Text) { return $false }
-  if (Test-SilverNextActionSilverWorkflowContext -Text $Text) { return $false }
   $maint =
     ($Text -match '(?i)\bgit\s+status\b') -or
     ($Text -match '(?i)\bgit\s+restore\b') -or
     ($Text -match '(?i)\bgit\s+add\b') -or
+    ($Text -match '(?i)\bgit\s+push\s+-u\b') -or
+    ($Text -match '(?i)\bgh\s+auth\b') -or
     ($Text -match '(?i)\bgh\s+push\b') -or
     ($Text -match '(?i)dirty\s+tree') -or
     ($Text -match '(?i)orchestration\s+maintenance') -or
-    ($Text -match '(?i)resolve\s+dirty\s+tree')
-  return $maint
+    ($Text -match '(?i)resolve\s+dirty\s+tree') -or
+    ($Text -match '(?i)chore/silver-audit-repo-state')
+  if (-not $maint) { return $false }
+  if (Test-SilverNextActionSilverWorkflowContext -Text $Text) { return $false }
+  return $true
 }
 
 function Get-SilverAuthoritativeSelectorCluster {
@@ -1263,8 +1267,11 @@ function Test-SilverNextActionIsProductTaskHandoff {
   if (-not $cluster) { return $true }
   if ($cluster -eq "rcz2_retrieval") { return $true }
   if (Test-SilverNextActionIsOrchestrationMaintenanceOnly -Text $NextActionText) { return $false }
-  if (Test-SilverNextActionSilverWorkflowContext -Text $NextActionText) { return $true }
-  if ($cluster -match 'rcz2_ultra_short_chaos|public_ux|rhc3_') { return $false }
+  $clusterPat = [regex]::Escape($cluster)
+  $hasExplicitProduct =
+    ($NextActionText -match $clusterPat) -or
+    ($NextActionText -match '(?i)PRODUCT_CLUSTER|NEXT PRODUCT CLUSTER|(?:node|npx)\s+scripts/silver-real-czech-public-ux|(?:node|npx)\s+scripts/silver-rhc3-cluster-classifier|audit_silver_')
+  if (-not $hasExplicitProduct) { return $false }
   return $true
 }
 
@@ -1272,6 +1279,7 @@ function Test-SilverNextActionOutputQuality {
   param([string]$Text)
   if (-not $Text) { return $true }
   if (Test-SilverUtf8MojibakeMarkers -Text $Text) { return $false }
+  if (Test-SilverNextActionIsOrchestrationMaintenanceOnly -Text $Text) { return $false }
   $hasCluster = Test-SilverNextActionSilverWorkflowContext -Text $Text
   if ($Text -match '(?i)git\s+push\s+-u\s+origin') {
     if (-not $hasCluster) { return $false }
