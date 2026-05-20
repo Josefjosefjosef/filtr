@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-20T20:34:25.386549Z",
+  "ingestedAt": "2026-05-20T21:14:32.327963Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Syn zakladatele značky Mango čelí podezření z vraždy svého otce",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/syn-zakladatele-znacky-mango-celi-podezreni-z-vrazdy-sveho-otce-373670",
+      "dt": "2026-05-20T20:37:26Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "mango",
+        "otce",
+        "podezření",
+        "svého",
+        "syn",
+        "vraždy",
+        "zakladatele",
+        "značky",
+        "čelí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -720,27 +746,27 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Nová koncepce armády je otázkou financí, zaznělo v debatě Zůny a Fleka",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/nova-koncepce-armady-je-otazkou-financi-zaznelo-v-debate-zuny-a-fleka-373636",
-      "dt": "2026-05-20T07:34:42Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Jsme zklamaní, hodnotil Kozel po finále. Naděje na start v pohárech se nevzdává",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/jsme-zklamani-hodnotil-kozel-po-finale-nadeje-na-start-v-poharech-se-nevzdava-156918",
+      "dt": "2026-05-20T21:05:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "armády",
-        "debatě",
-        "financí",
-        "fleka",
-        "koncepce",
-        "nová",
-        "otázkou",
-        "zaznělo",
-        "zůny"
+        "finále",
+        "hodnotil",
+        "jsme",
+        "kozel",
+        "naděje",
+        "nevzdává",
+        "pohárech",
+        "start",
+        "zklamaní"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -928,21 +954,21 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "MS v hokeji: USA – Německo a Švédsko – Slovinsko. Švýcaři nasázeli Rakousku devět gólů",
+      "title": "Švýcaři a Švédové slaví vysoké výhry. Američané se proti Němcům radovali až po nájezdech",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/ms-v-hokeji-rakousko-svycarsko-156910",
       "dt": "2026-05-20T14:10:00Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
-        "devět",
-        "gólů",
-        "hokeji",
-        "nasázeli",
-        "německo",
-        "rakousku",
-        "slovinsko",
-        "usa",
-        "švédsko",
+        "američané",
+        "nájezdech",
+        "němcům",
+        "proti",
+        "radovali",
+        "slaví",
+        "vysoké",
+        "výhry",
+        "švédové",
         "švýcaři"
       ],
       "feedCategory": "sport",
@@ -1475,32 +1501,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Slovinsko obralo o bod Slováky. Rakušané výhrou nad Lotyšskem nakročili do čtvrtfinále",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/lotyssko-rakousko-a-italie-norsko-156889",
-      "dt": "2026-05-19T14:00:16Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "bod",
-        "lotyšskem",
-        "nakročili",
-        "obralo",
-        "rakušané",
-        "slovinsko",
-        "slováky",
-        "výhrou",
-        "čtvrtfinále"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1511,7 +1511,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42040,
+      "bytes": 41699,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1571,7 +1571,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T19:42:25Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T20:37:26Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -1588,6 +1588,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Syn zakladatele značky Mango čelí podezření z vraždy svého otce",
+            "publishedAt": "2026-05-20T20:37:26Z"
+          },
           {
             "title": "Evropa si zvykla na komfort a bezpečnost. Spoléhala na USA, řekl Pavel",
             "publishedAt": "2026-05-20T19:42:25Z"
@@ -1615,10 +1619,6 @@
           {
             "title": "Řada zemí odsoudila chování izraelského ministra k aktivistům z flotily",
             "publishedAt": "2026-05-20T17:22:25Z"
-          },
-          {
-            "title": "SOUHRN: Zásadní události středy 20. května",
-            "publishedAt": "2026-05-20T16:28:00Z"
           }
         ]
       }
@@ -1630,7 +1630,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38754,
+      "bytes": 38430,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1667,7 +1667,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T19:22:13Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T21:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1682,6 +1682,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jsme zklamaní, hodnotil Kozel po finále. Naděje na start v pohárech se nevzdává",
+            "publishedAt": "2026-05-20T21:05:00Z"
+          },
           {
             "title": "Házenkářky Kynžvartu vyrovnaly ve finálové sérii, Most získal bronz",
             "publishedAt": "2026-05-20T19:22:13Z"
@@ -1709,10 +1713,6 @@
           {
             "title": "Triumf číslo tři pro Narváeze. Tentokrát porazil Mase",
             "publishedAt": "2026-05-20T16:22:19Z"
-          },
-          {
-            "title": "MS v hokeji: USA – Německo a Švédsko – Slovinsko. Švýcaři nasázeli Rakousku devět gólů",
-            "publishedAt": "2026-05-20T14:10:00Z"
           }
         ]
       }
@@ -1724,7 +1724,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77076,
+      "bytes": 77139,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-20T20:34:25.386549Z",
+  "ingestedAt": "2026-05-20T21:14:32.327963Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Odklepat submisi není slabost. V MMA to může zachránit kariéru",
+      "url": "https://www.mmamag.cz/co-je-tapout-v-mma-a-proc-bojovnik-odklepe/",
+      "dt": "2026-05-20T21:00:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "kariéru",
+        "mma",
+        "odklepat",
+        "slabost",
+        "submisi",
+        "zachránit"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1106,36 +1129,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bellator, šampioni, zlomové chvíle. Tenhle kvíz z historie slavné MMA organizace nachytá i skalní fanoušky",
-      "url": "https://www.mmamag.cz/bellator-sampioni-zlomove-chvile-tenhle-kviz-z-historie-slavne-mma-organizace-nachyta-i-skalni-fanousky/",
-      "dt": "2026-05-19T08:55:58Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "bellator",
-        "chvíle",
-        "fanoušky",
-        "historie",
-        "kvíz",
-        "mma",
-        "nachytá",
-        "organizace",
-        "skalní",
-        "slavné",
-        "tenhle",
-        "zlomové",
-        "šampioni"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1146,7 +1139,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 85172,
+      "bytes": 85101,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1183,7 +1176,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-20T20:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T21:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1198,6 +1191,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Odklepat submisi není slabost. V MMA to může zachránit kariéru",
+            "publishedAt": "2026-05-20T21:00:00Z"
+          },
           {
             "title": "Procházka před dalším zápasem mění nastavení své hlavy. Jednu věc si už nemůže dovolit zopakovat",
             "publishedAt": "2026-05-20T20:15:00Z"
@@ -1225,10 +1222,6 @@
           {
             "title": "UFC v Bílém domě čelí tvrdému výsměchu. Slavný trenér nechápe, jak mohl někdo tak špatné zápasy vůbec vymyslet",
             "publishedAt": "2026-05-20T15:00:00Z"
-          },
-          {
-            "title": "Khabib na sparingu válcoval úplně každého. Jen jeden muž ho donutil jít na maximum, přiznal jeho trenér",
-            "publishedAt": "2026-05-20T14:15:00Z"
           }
         ]
       }

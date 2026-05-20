@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-20T20:34:25.386549Z",
+  "ingestedAt": "2026-05-20T21:14:32.327963Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pavel: Rusko zůstane největší hrozbou pro Evropu i v příštích dekádách",
+      "url": "https://www.denik.cz/z_domova/pavel-rusko-zustane-nejvetsi-hrozbou-pro-evropu-i-v-pristich-dekadach.html",
+      "dt": "2026-05-20T20:16:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dekádách",
+        "evropu",
+        "hrozbou",
+        "největší",
+        "pavel",
+        "příštích",
+        "rusko",
+        "zůstane"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "V domě v Praze se zabarikádoval muž a hrozil zbraní, policie ho zadržela",
+      "url": "https://prazsky.denik.cz/krimi/krimi-policie-vyjednavac-praha-muz-vyhrozuje-zbrani-a-vybusninami.html",
+      "dt": "2026-05-20T20:08:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "domě",
+        "hrozil",
+        "muž",
+        "policie",
+        "praze",
+        "zabarikádoval",
+        "zadržela",
+        "zbraní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -601,57 +651,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Litva vyhlásila poplach kvůli dronu, obyvatele poslala do krytů. Zasáhlo i NATO",
-      "url": "https://www.denik.cz/staty-eu/dron-v-litve-poplach-nato.html",
-      "dt": "2026-05-20T08:07:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dronu",
-        "krytů",
-        "kvůli",
-        "litva",
-        "nato",
-        "obyvatele",
-        "poplach",
-        "poslala",
-        "vyhlásila",
-        "zasáhlo"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Pod autobusem s dětmi se na Rokycansku utrhla krajnice. Zranilo se 14 lidí",
-      "url": "https://www.denik.cz/nehody/u-oseka-na-rokycansku-havaroval-autobus-ktery-vezl-33-deti-20260520.html",
-      "dt": "2026-05-20T07:50:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "autobusem",
-        "dětmi",
-        "krajnice",
-        "lidí",
-        "rokycansku",
-        "utrhla",
-        "zranilo"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +661,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28985,
+      "bytes": 29004,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,7 +698,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-20T18:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T20:16:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -715,6 +714,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pavel: Rusko zůstane největší hrozbou pro Evropu i v příštích dekádách",
+            "publishedAt": "2026-05-20T20:16:00Z"
+          },
+          {
+            "title": "V domě v Praze se zabarikádoval muž a hrozil zbraní, policie ho zadržela",
+            "publishedAt": "2026-05-20T20:08:00Z"
+          },
           {
             "title": "Aktivisté v Brně natřeli ruce sochy E. Beneše rudou barvou. Nazvali ho náckem",
             "publishedAt": "2026-05-20T18:31:00Z"
@@ -738,14 +745,6 @@
           {
             "title": "USA evropským členům NATO sníží vojenskou podporu pro případ velké krize",
             "publishedAt": "2026-05-20T14:58:00Z"
-          },
-          {
-            "title": "Rusko údajně nasadilo dron s uranem. Kyjev varuje před radioaktivními troskami",
-            "publishedAt": "2026-05-20T14:47:00Z"
-          },
-          {
-            "title": "Na krajanský spolek v Chebu někdo nastříkal hákové kříže. Město čin odsoudilo",
-            "publishedAt": "2026-05-20T14:25:00Z"
           }
         ]
       }
