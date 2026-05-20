@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-20T14:34:37.316924Z",
+  "ingestedAt": "2026-05-20T15:14:51.442868Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Prohlédněte si: Vítězné návrhy trojice mostů pro rychlovlaky",
+      "url": "https://ekonomickydenik.cz/vitezne-navrhy-trojice-mostu-rychlovlaky/",
+      "dt": "2026-05-20T14:48:09Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "mostů",
+        "návrhy",
+        "prohlédněte",
+        "rychlovlaky",
+        "trojice",
+        "vítězné"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -762,30 +785,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Z experimentu k miliardám. Farmář obešel supermarkety a vytvořil fenomén",
-      "url": "https://ekonomickydenik.cz/farmar-obesel-supermarkety-vytvoril-fenomen/",
-      "dt": "2026-05-19T07:16:51Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "experimentu",
-        "farmář",
-        "fenomén",
-        "miliardám",
-        "obešel",
-        "supermarkety",
-        "vytvořil"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73017,
+      "bytes": 73425,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,11 +832,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T14:15:43Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T14:48:09Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 23,
-          "zpravy": 4,
+          "zpravy": 5,
+          "finance": 22,
           "cestovani": 1,
           "zdravi": 2
         },
@@ -851,6 +850,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Prohlédněte si: Vítězné návrhy trojice mostů pro rychlovlaky",
+            "publishedAt": "2026-05-20T14:48:09Z"
+          },
           {
             "title": "Slovensko o krok blíž ke zmrazení evropských peněz. Důvodů je stále víc",
             "publishedAt": "2026-05-20T14:15:43Z"
@@ -878,10 +881,6 @@
           {
             "title": "Babiš: Letenky na summit NATO drží v hrsti moje vláda. O delegaci rozhodne 8. června",
             "publishedAt": "2026-05-20T10:38:53Z"
-          },
-          {
-            "title": "Lekce skromnosti z Budapešti: Magyar jezdí vlakem a škodovkou",
-            "publishedAt": "2026-05-20T10:07:29Z"
           }
         ]
       }

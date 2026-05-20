@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-20T14:34:37.316924Z",
+  "ingestedAt": "2026-05-20T15:14:51.442868Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Lepší komfort pro pacienty i personál. Nemocnice v Plzeňském kraji čeká obří proměna",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/d-energy-dve-nemocnice-plzensko/",
+      "dt": "2026-05-20T15:08:16Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "komfort",
+        "kraji",
+        "lepší",
+        "nemocnice",
+        "obří",
+        "pacienty",
+        "personál",
+        "plzeňském",
+        "proměna",
+        "čeká"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -244,32 +271,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "„Nepřiměřená léčba“ místo „neadekvátní“: Senát upravuje pravidla paliativní péče",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/novela-paliativni-pece-senat-uprava/",
-      "dt": "2026-05-19T15:04:13Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "léčba",
-        "místo",
-        "neadekvátní",
-        "nepřiměřená",
-        "paliativní",
-        "pravidla",
-        "péče",
-        "senát",
-        "upravuje"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +281,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 106513,
+      "bytes": 106483,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +318,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-20T13:56:33Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T15:08:16Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -333,6 +334,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lepší komfort pro pacienty i personál. Nemocnice v Plzeňském kraji čeká obří proměna",
+            "publishedAt": "2026-05-20T15:08:16Z"
+          },
           {
             "title": "Okamura se kvůli ebole pustil do vlády: Cizinec s podezřením na nákazu nemá v Česku co dělat",
             "publishedAt": "2026-05-20T13:56:33Z"
@@ -360,10 +365,6 @@
           {
             "title": "Hazard s odolnými bakteriemi: Tisíce českých praktiků dostaly varování kvůli antibiotikům",
             "publishedAt": "2026-05-20T06:00:00Z"
-          },
-          {
-            "title": "Podezření na ebolu v Česku: Na pražskou Bulovku míří Američan v izolačním boxu",
-            "publishedAt": "2026-05-20T05:29:56Z"
           }
         ]
       }
