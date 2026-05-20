@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "plnezdravi.cz",
-  "ingestedAt": "2026-05-20T06:34:56.399752Z",
+  "ingestedAt": "2026-05-20T07:15:36.502893Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zdraví střev: Druhý mozek v našem břiše",
+      "url": "https://www.plnezdravi.cz/zdravi-strev-druhy-mozek-v-nasem-brise/",
+      "dt": "2026-05-20T07:00:40Z",
+      "media_raw": "Plné zdraví",
+      "media_norm": "Plné zdraví",
+      "tokens": [
+        "břiše",
+        "druhý",
+        "mozek",
+        "našem",
+        "střev",
+        "zdraví"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_plnezdravi",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "plnezdravi.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -445,30 +468,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "plnezdravi.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Bouře v trávicím traktu: Skryté příčiny nadměrné plynatosti",
-      "url": "https://www.plnezdravi.cz/boure-v-travicim-traktu-skryte-priciny-nadmerne-plynatosti/",
-      "dt": "2026-05-09T07:00:26Z",
-      "media_raw": "Plné zdraví",
-      "media_norm": "Plné zdraví",
-      "tokens": [
-        "bouře",
-        "nadměrné",
-        "plynatosti",
-        "příčiny",
-        "skryté",
-        "traktu",
-        "trávicím"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_plnezdravi",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "plnezdravi.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -479,7 +478,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.plnezdravi.cz/feed/",
-      "bytes": 154564,
+      "bytes": 154789,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -516,7 +515,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-19T07:07:53Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T07:00:40Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -531,6 +530,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zdraví střev: Druhý mozek v našem břiše",
+            "publishedAt": "2026-05-20T07:00:40Z"
+          },
           {
             "title": "Nedostatek očních ambulancí v Česku: krizi začínají řešit soukromé kliniky",
             "publishedAt": "2026-05-19T07:07:53Z"
@@ -558,10 +561,6 @@
           {
             "title": "Cukrovka 2. typu: Jak zkrotit glykémii včas?",
             "publishedAt": "2026-05-15T07:00:23Z"
-          },
-          {
-            "title": "Perfekcionismus pod palbou – Když „dobře“ nestačí",
-            "publishedAt": "2026-05-14T14:00:45Z"
           }
         ]
       }

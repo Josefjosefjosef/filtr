@@ -1,14 +1,40 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-20T06:34:56.399752Z",
+  "ingestedAt": "2026-05-20T07:15:36.502893Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vítej, mistře! Kubalík vkročil mezi nóbl střelce. I když má legenda námitky",
+      "url": "https://www.idnes.cz/hokej/ms-2026/domink-kubalik-kral-strelcu-mf-dnes.A260519_182414_ms-hokej-2026_czo",
+      "dt": "2026-05-20T07:05:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "když",
+        "kubalík",
+        "legenda",
+        "mistře",
+        "námitky",
+        "nóbl",
+        "střelce",
+        "vkročil",
+        "vítej"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
       "title": "Madison Square Garden na nohou. Rekordní obrat přinesl Knicks první výhru",
       "url": "https://www.idnes.cz/sport/basket/finale-vychodni-konference-play-off-nba-1-zapas-new-york-knicks-cleveland-cavaliers-xx115-104-po-pro.A260520_070527_sport-basket_ten",
-      "dt": "2026-05-20T06:24:15Z",
+      "dt": "2026-05-20T07:03:29Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
@@ -22,6 +48,33 @@
         "rekordní",
         "square",
         "výhru"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "O Marcolina stojí velcí hráči. A Vaclík? Jen spekulace, tvrdí ústecký Dobiáš",
+      "url": "https://www.idnes.cz/fotbal/domaci-souteze/o-marcolina-stoji-velci-hraci-a-vaclik-jen-spekulace.A260519_163822_fot_dsouteze_pbi",
+      "dt": "2026-05-20T06:34:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dobiáš",
+        "hráči",
+        "jen",
+        "marcolina",
+        "spekulace",
+        "stojí",
+        "tvrdí",
+        "vaclík",
+        "velcí",
+        "ústecký"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -732,59 +785,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Majitel Slavie Pavel Tykač: o budoucnosti Tvrdíka, Tribuně Sever i o kamerách",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/rozstrel-pavel-tykac-slavia-tvrdik.A260519_170028_fotbal_vov",
-      "dt": "2026-05-19T15:44:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "budoucnosti",
-        "kamerách",
-        "majitel",
-        "pavel",
-        "sever",
-        "slavie",
-        "tribuně",
-        "tvrdíka",
-        "tykač"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Michael Jordan udělal radost své bývalé učitelce. Splnil jí poslední přání",
-      "url": "https://www.idnes.cz/sport/trendy/michael-jordan-udelal-radost-sve-byvale-ucitelce-splnil-ji-posledni-prani.A260519_120408_trendy_blah",
-      "dt": "2026-05-19T15:30:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bývalé",
-        "jordan",
-        "michael",
-        "poslední",
-        "přání",
-        "radost",
-        "splnil",
-        "své",
-        "udělal",
-        "učitelce"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48630,
+      "bytes": 48509,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T06:24:15Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T07:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -848,8 +848,16 @@
         },
         "sample_titles": [
           {
+            "title": "Vítej, mistře! Kubalík vkročil mezi nóbl střelce. I když má legenda námitky",
+            "publishedAt": "2026-05-20T07:05:00Z"
+          },
+          {
             "title": "Madison Square Garden na nohou. Rekordní obrat přinesl Knicks první výhru",
-            "publishedAt": "2026-05-20T06:24:15Z"
+            "publishedAt": "2026-05-20T07:03:29Z"
+          },
+          {
+            "title": "O Marcolina stojí velcí hráči. A Vaclík? Jen spekulace, tvrdí ústecký Dobiáš",
+            "publishedAt": "2026-05-20T06:34:00Z"
           },
           {
             "title": "Guardiola chystá změnu, v pětapadesáti je stále na špici. V čem mezi trenéry vyniká?",
@@ -870,14 +878,6 @@
           {
             "title": "MS ve fotbale 2026: program, výsledky, skupiny, s kým hrají Češi",
             "publishedAt": "2026-05-19T22:17:00Z"
-          },
-          {
-            "title": "Nejsem jako Gudas. Alscher vypráví o životě a pověsti: Vím, že mě lidé neznají",
-            "publishedAt": "2026-05-19T22:00:00Z"
-          },
-          {
-            "title": "MS v hokeji 2026 ONLINE: Čechy ve středu čeká Itálie. Ščotka vyvázl bez trestu",
-            "publishedAt": "2026-05-19T21:46:00Z"
           }
         ]
       }

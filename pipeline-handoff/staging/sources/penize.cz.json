@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-20T06:34:56.399752Z",
+  "ingestedAt": "2026-05-20T07:15:36.502893Z",
   "items": [
     {
       "section": "finance",
@@ -44,6 +44,26 @@
         "spolucestující",
         "vlaku",
         "zmůže"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Co je Prop Trading a jak funguje",
+      "url": "https://www.penize.cz/investice/490006-co-je-prop-trading-a-jak-funguje",
+      "dt": "2026-05-20T00:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "funguje",
+        "prop",
+        "trading"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -482,30 +502,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Česká pošta zavře devět poboček. Je mezi nimi i ta vaše?",
-      "url": "https://www.penize.cz/spotrebitel/489785-ceska-posta-zavre-devet-pobocek-je-mezi-nimi-i-ta-vase",
-      "dt": "2026-05-16T07:45:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "devět",
-        "nimi",
-        "poboček",
-        "pošta",
-        "vaše",
-        "zavře",
-        "česká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -516,7 +512,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18851,
+      "bytes": 18855,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -578,6 +574,10 @@
             "publishedAt": "2026-05-20T05:00:00Z"
           },
           {
+            "title": "Co je Prop Trading a jak funguje",
+            "publishedAt": "2026-05-20T00:00:00Z"
+          },
+          {
             "title": "Dálniční známka nezdraží. Zrušíme automatické zvyšování ceny, říká ministr",
             "publishedAt": "2026-05-19T15:15:00Z"
           },
@@ -596,10 +596,6 @@
           {
             "title": "Tříletá fixace, levnější první rok. E.ON láká na nový tarif plynu, má ale podmínku",
             "publishedAt": "2026-05-19T09:05:00Z"
-          },
-          {
-            "title": "Fitness, nebo hazard? Aplikace Steppa vám platí za pohyb, ale trestá lenost",
-            "publishedAt": "2026-05-19T08:33:00Z"
           }
         ]
       }

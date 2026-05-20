@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-20T06:34:56.399752Z",
+  "ingestedAt": "2026-05-20T07:15:36.502893Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zmocněnec pro urážky. Zvykám si, že jsem méněcenný",
+      "url": "https://www.epenize.eu/zmocnenec-pro-urazky-zvykam-si-ze-jsem-menecenny/",
+      "dt": "2026-05-20T06:58:41Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "jsem",
+        "méněcenný",
+        "urážky",
+        "zmocněnec",
+        "zvykám"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -498,32 +520,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nepřipravený premiér se ztrapnil. V debatě o haldě se lidé neměli ptát na haldu",
-      "url": "https://www.epenize.eu/nepripraveny-premier-se-ztrapnil-v-debate-o-halde-se-lide-nemeli-ptat-na-haldu/",
-      "dt": "2026-05-12T07:02:03Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "debatě",
-        "haldu",
-        "haldě",
-        "lidé",
-        "neměli",
-        "nepřipravený",
-        "premiér",
-        "ptát",
-        "ztrapnil"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -534,7 +530,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 124593,
+      "bytes": 124184,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -571,7 +567,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-19T23:00:19Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T06:58:41Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 19,
@@ -587,6 +583,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zmocněnec pro urážky. Zvykám si, že jsem méněcenný",
+            "publishedAt": "2026-05-20T06:58:41Z"
+          },
           {
             "title": "Zrazené jádro: Skalní voliči pláčou, Trumpa zajímá jen válka",
             "publishedAt": "2026-05-19T23:00:19Z"
@@ -614,10 +614,6 @@
           {
             "title": "Babiš na síti: Opozice připravila past na nás i na vás",
             "publishedAt": "2026-05-17T09:16:38Z"
-          },
-          {
-            "title": "499 dolarů za telefon, který firma negarantuje, že vůbec vyrobí: Bratři Trumpovi v plné formě",
-            "publishedAt": "2026-05-16T23:00:04Z"
           }
         ]
       }

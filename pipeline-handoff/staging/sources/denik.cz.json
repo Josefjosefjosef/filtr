@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-20T06:34:56.399752Z",
+  "ingestedAt": "2026-05-20T07:15:36.502893Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nepřehlédnutelný kos okouzlil Liberec. Za netradičním zbarvením stojí porucha",
+      "url": "https://www.denik.cz/regiony/kos-kosak-liberec-bila-hlavicka-liberec-jerab-centrum.html",
+      "dt": "2026-05-20T07:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "kos",
+        "liberec",
+        "nepřehlédnutelný",
+        "netradičním",
+        "okouzlil",
+        "porucha",
+        "stojí",
+        "zbarvením"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Příjetí muže s možnou nákazou ebolou? Vojtěch rozhodl po konzultaci s vládou",
+      "url": "https://www.denik.cz/zdravotnictvi/ebola-nakaza-pacient-adam-vojtech.html",
+      "dt": "2026-05-20T06:39:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ebolou",
+        "konzultaci",
+        "možnou",
+        "muže",
+        "nákazou",
+        "příjetí",
+        "rozhodl",
+        "vládou",
+        "vojtěch"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -599,60 +650,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Slovák podezřelý z otrav dětských výživ zůstane ve vazbě, rozhodl rakouský soud",
-      "url": "https://www.denik.cz/staty-eu/rakousko-otrava-detske-vyzivy-vysetrovani-vazba.html",
-      "dt": "2026-05-19T14:02:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dětských",
-        "otrav",
-        "podezřelý",
-        "rakouský",
-        "rozhodl",
-        "slovák",
-        "soud",
-        "vazbě",
-        "výživ",
-        "zůstane"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Veřejnoprávní média? Babiš chce větší kontrolu, šetřit má hlavně Český rozhlas",
-      "url": "https://www.denik.cz/z_domova/debata-babis-verejnopravni-media-ceska-televize-rozhlas-kontrola-penize-setreni.html",
-      "dt": "2026-05-19T13:56:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "babiš",
-        "chce",
-        "hlavně",
-        "kontrolu",
-        "média",
-        "rozhlas",
-        "veřejnoprávní",
-        "větší",
-        "český",
-        "šetřit"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -663,7 +660,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30214,
+      "bytes": 30007,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -700,10 +697,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-20T06:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T07:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 24,
+          "zpravy": 23,
+          "zdravi": 1,
           "finance": 1
         },
         "drop_counts": {
@@ -716,6 +714,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nepřehlédnutelný kos okouzlil Liberec. Za netradičním zbarvením stojí porucha",
+            "publishedAt": "2026-05-20T07:00:00Z"
+          },
+          {
+            "title": "Příjetí muže s možnou nákazou ebolou? Vojtěch rozhodl po konzultaci s vládou",
+            "publishedAt": "2026-05-20T06:39:00Z"
+          },
           {
             "title": "Kopy a údery při zákroku. Zásah policie v Budějovicích řeší vedení",
             "publishedAt": "2026-05-20T06:02:00Z"
@@ -739,14 +745,6 @@
           {
             "title": "Nežádáme zrušení dekretů, ale Lex Beneš, říká László Gubík",
             "publishedAt": "2026-05-20T04:05:00Z"
-          },
-          {
-            "title": "Kopejte, křičte, palcem tlačte agresorovi při napadaní do oka, radí Pavel Houdek",
-            "publishedAt": "2026-05-20T03:45:00Z"
-          },
-          {
-            "title": "FOTO: Parní kráska „Šlechtična“ znovu okouzlila jižní Moravu",
-            "publishedAt": "2026-05-20T03:44:00Z"
           }
         ]
       }

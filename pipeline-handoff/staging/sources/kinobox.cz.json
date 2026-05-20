@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-20T06:34:56.399752Z",
+  "ingestedAt": "2026-05-20T07:15:36.502893Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Děsivé monstrum zaútočilo na festival v Cannes. Horor Hope děsí atmosférickým trailerem",
+      "url": "https://www.kinobox.cz/clanky/filmy/53891-na-odlehlou-vesnici-zautoci-monstrum-horor-hope",
+      "dt": "2026-05-20T07:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "atmosférickým",
+        "cannes",
+        "děsivé",
+        "děsí",
+        "festival",
+        "hope",
+        "horor",
+        "monstrum",
+        "trailerem",
+        "zaútočilo"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -530,33 +557,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Kinobox Daily: V současné hororové produkci se snímek Neutečeš těší unikátnímu postavení",
-      "url": "https://www.kinobox.cz/clanky/daily/53818-kinobox-daily-v-soudobem-hororove-produkci-se-film-neuteces-tesi-unikatnimu-postaveni",
-      "dt": "2026-05-17T10:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "daily",
-        "hororové",
-        "kinobox",
-        "neutečeš",
-        "postavení",
-        "produkci",
-        "snímek",
-        "současné",
-        "těší",
-        "unikátnímu"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -567,7 +567,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28763,
+      "bytes": 28517,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -604,7 +604,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-19T17:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T07:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -619,6 +619,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Děsivé monstrum zaútočilo na festival v Cannes. Horor Hope děsí atmosférickým trailerem",
+            "publishedAt": "2026-05-20T07:00:00Z"
+          },
           {
             "title": "Komediální legenda s temnými životními výkony. Iva Janžurová slaví 85. narozeniny",
             "publishedAt": "2026-05-19T17:00:00Z"
@@ -646,10 +650,6 @@
           {
             "title": "Trump si Křižovatku smrti 4 prosadí. Zakázaný režisér odletěl hledat lokace na palubě Air Force One",
             "publishedAt": "2026-05-19T09:00:00Z"
-          },
-          {
-            "title": "Akční peklo v Olomouci. Český nářez Stav odpojen láká slibným trailerem první diváky",
-            "publishedAt": "2026-05-19T07:00:00Z"
           }
         ]
       }

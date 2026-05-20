@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-20T06:34:56.399752Z",
+  "ingestedAt": "2026-05-20T07:15:36.502893Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Konec u Pirátů? Známé tváři vadí bývalý komunista i směřování partaje",
+      "url": "https://ekonomickydenik.cz/konec-u-piratu-zname-tvari-vadi-komunista-i-smerovani-partaje/",
+      "dt": "2026-05-20T06:54:33Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bývalý",
+        "komunista",
+        "konec",
+        "partaje",
+        "pirátů",
+        "směřování",
+        "tváři",
+        "vadí",
+        "známé"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -755,30 +781,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Průzkum o prezidentech překvapil: Klaus těsně přeskočil Pavla",
-      "url": "https://ekonomickydenik.cz/pruzkum-prezidenti-havel-klaus-pavel/",
-      "dt": "2026-05-18T11:24:51Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "klaus",
-        "pavla",
-        "prezidentech",
-        "průzkum",
-        "překvapil",
-        "přeskočil",
-        "těsně"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71456,
+      "bytes": 71974,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,11 +828,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T06:18:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-20T06:54:33Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 3,
           "finance": 24,
+          "zdravi": 3,
           "zpravy": 3
         },
         "drop_counts": {
@@ -843,6 +845,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec u Pirátů? Známé tváři vadí bývalý komunista i směřování partaje",
+            "publishedAt": "2026-05-20T06:54:33Z"
+          },
           {
             "title": "ČEZ hledá dodavatele obřích baterií. Umístí je poblíž uhelných elektráren",
             "publishedAt": "2026-05-20T06:18:00Z"
@@ -870,10 +876,6 @@
           {
             "title": "Odkryté karty u soudu: Německý ThomasLloyd dluží českým investorům 1,2 miliardy",
             "publishedAt": "2026-05-19T13:32:14Z"
-          },
-          {
-            "title": "Regiony „bez budoucnosti“? Evropě hrozí rozdělení a nárůst extremismu",
-            "publishedAt": "2026-05-19T13:09:50Z"
           }
         ]
       }
