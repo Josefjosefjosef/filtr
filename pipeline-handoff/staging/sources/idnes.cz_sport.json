@@ -1,14 +1,41 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-21T06:34:28.770167Z",
+  "ingestedAt": "2026-05-21T07:14:39.681865Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Těžký podprůměr. Čtenáři ocenili Fleka, na chvost dali hráče Pardubic i s Červenkou",
+      "url": "https://www.idnes.cz/hokej/ms-2026/cesko-italie-znamkovani-ctenari-vysledky.A260521_082323_ms-hokej-2026_drev",
+      "dt": "2026-05-21T07:06:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "chvost",
+        "dali",
+        "fleka",
+        "hráče",
+        "ocenili",
+        "pardubic",
+        "podprůměr",
+        "těžký",
+        "červenkou",
+        "čtenáři"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
       "title": "Wembanyama zbrzděn, SGA se rozjel. Obhájce vrátil úder a udržel naději",
       "url": "https://www.idnes.cz/sport/basket/finale-zapadni-konference-play-off-nba-2-zapas-oklahoma-city-san-antonio-122-113.A260521_071915_sport-basket_ten",
-      "dt": "2026-05-21T06:27:25Z",
+      "dt": "2026-05-21T06:53:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
@@ -21,6 +48,36 @@
         "wembanyama",
         "zbrzděn",
         "úder"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Italové cítí křivdu: Druhý gól Čechů padl po faulu. Hráli jsme proti přísným rozhodčím",
+      "url": "https://www.idnes.cz/hokej/ms-2026/cesko-italie-rozhodci-krivda-chyby.A260520_221218_ms-hokej-2026_hrj",
+      "dt": "2026-05-21T06:30:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "cítí",
+        "druhý",
+        "faulu",
+        "gól",
+        "hráli",
+        "italové",
+        "jsme",
+        "křivdu",
+        "padl",
+        "proti",
+        "přísným",
+        "rozhodčím",
+        "čechů"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -726,54 +783,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Menšík se v Hamburku loučí s kanárem. Plíšková Roland Garros nevybojovala",
-      "url": "https://www.idnes.cz/sport/tenis/turnaj-zen-strasburk-zeneva-hamburk-rabat-zpravodajstvi.A260520_120035_tenis_ten",
-      "dt": "2026-05-20T16:09:16Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "garros",
-        "hamburku",
-        "kanárem",
-        "loučí",
-        "menšík",
-        "nevybojovala",
-        "plíšková",
-        "roland"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Oznámkujte hokejisty za výkon na MS 2026 proti Itálii",
-      "url": "https://www.idnes.cz/hokej/oznamkujte-hokejisty-za-vykon-na-ms-2026-proti-italii.Sz820",
-      "dt": "2026-05-20T16:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "2026",
-        "hokejisty",
-        "itálii",
-        "oznámkujte",
-        "proti",
-        "výkon"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -784,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46013,
+      "bytes": 47488,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -821,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-21T06:27:25Z",
+        "raw_feed_latest_publishedAt": "2026-05-21T07:06:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -837,8 +846,16 @@
         },
         "sample_titles": [
           {
+            "title": "Těžký podprůměr. Čtenáři ocenili Fleka, na chvost dali hráče Pardubic i s Červenkou",
+            "publishedAt": "2026-05-21T07:06:00Z"
+          },
+          {
             "title": "Wembanyama zbrzděn, SGA se rozjel. Obhájce vrátil úder a udržel naději",
-            "publishedAt": "2026-05-21T06:27:25Z"
+            "publishedAt": "2026-05-21T06:53:00Z"
+          },
+          {
+            "title": "Italové cítí křivdu: Druhý gól Čechů padl po faulu. Hráli jsme proti přísným rozhodčím",
+            "publishedAt": "2026-05-21T06:30:00Z"
           },
           {
             "title": "Reichel: Já a trenér? Nemůžu říct. Kašovi snad v Litvínově dohrají kariéry",
@@ -859,14 +876,6 @@
           {
             "title": "Budiž světlo! Jak se Arsenal rozzářil a Arteta našel cestu, kritice navzdory",
             "publishedAt": "2026-05-21T05:00:00Z"
-          },
-          {
-            "title": "Rulík po trápení: Pro hráče máme návody, ale na ledě nejsme. Musí se dobře nastavit",
-            "publishedAt": "2026-05-21T04:00:00Z"
-          },
-          {
-            "title": "Další lehké zaváhání Američanů, vyhráli až po nájezdech. Švýcaři rozstříleli Rakousko",
-            "publishedAt": "2026-05-20T22:47:38Z"
           }
         ]
       }

@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-21T06:34:28.770167Z",
+  "ingestedAt": "2026-05-21T07:14:39.681865Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Zvrat v kauze exšéfky zlínské hygieny: Přiznala se ke sražení motorkáře. K soudu ale nemusí",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/exsefka-zlinske-hygieny-priznala-srazeni-motorkare/",
+      "dt": "2026-05-21T06:52:02Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "ale",
+        "exšéfky",
+        "hygieny",
+        "kauze",
+        "motorkáře",
+        "nemusí",
+        "přiznala",
+        "soudu",
+        "sražení",
+        "zlínské",
+        "zvrat"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -59,24 +87,24 @@
       "_dt_serialized": true
     },
     {
-      "section": "sport",
+      "section": "zdravi",
       "contentType": "article",
-      "title": "Právě přistál v Praze. Američana s podezřením na ebolu vezou v bioboxu a skafandrech na Bulovku",
+      "title": "Noční manévry v Praze: Konvoj s Američanem podezřelým z nákazy ebolou dorazil na Bulovku",
       "url": "https://www.zdravotnickydenik.cz/2026/05/podezreni-ebola-american-praha/",
       "dt": "2026-05-20T21:34:43Z",
       "media_raw": "Zdravotnický deník",
       "media_norm": "Zdravotnický deník",
       "tokens": [
-        "američana",
-        "bioboxu",
+        "američanem",
         "bulovku",
-        "ebolu",
-        "podezřením",
-        "praze",
-        "právě",
-        "přistál",
-        "skafandrech",
-        "vezou"
+        "dorazil",
+        "ebolou",
+        "konvoj",
+        "manévry",
+        "noční",
+        "nákazy",
+        "podezřelým",
+        "praze"
       ],
       "feedCategory": "zdravi",
       "feedType": "rss",
@@ -247,33 +275,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Vakcína po infarktu může zachránit život. Pacienti ji ale často nedostanou, říká Chlíbek",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/vakcinu-po-infarktu-pacienti-casto-nedostanou-roman-chlibek/",
-      "dt": "2026-05-20T07:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "ale",
-        "chlíbek",
-        "infarktu",
-        "nedostanou",
-        "pacienti",
-        "vakcína",
-        "zachránit",
-        "často",
-        "říká",
-        "život"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -284,7 +285,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 100016,
+      "bytes": 90630,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -321,11 +322,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-21T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-21T06:52:02Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 9,
-          "sport": 1
+          "zpravy": 1,
+          "zdravi": 9
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -338,6 +339,10 @@
         },
         "sample_titles": [
           {
+            "title": "Zvrat v kauze exšéfky zlínské hygieny: Přiznala se ke sražení motorkáře. K soudu ale nemusí",
+            "publishedAt": "2026-05-21T06:52:02Z"
+          },
+          {
             "title": "Starají se nonstop, sami bez pomoci. Co se stane, když vyhoří armáda neformálních pečujících?",
             "publishedAt": "2026-05-21T06:00:00Z"
           },
@@ -346,7 +351,7 @@
             "publishedAt": "2026-05-21T05:00:00Z"
           },
           {
-            "title": "Právě přistál v Praze. Američana s podezřením na ebolu vezou v bioboxu a skafandrech na Bulovku",
+            "title": "Noční manévry v Praze: Konvoj s Američanem podezřelým z nákazy ebolou dorazil na Bulovku",
             "publishedAt": "2026-05-20T21:34:43Z"
           },
           {
@@ -364,10 +369,6 @@
           {
             "title": "Máte spoustu času, odrazují lékaři ženy od léčby neplodnosti. Experti varují před alarmující chybou",
             "publishedAt": "2026-05-20T11:00:00Z"
-          },
-          {
-            "title": "Kompletně oddělen od světa. Vojtěch odhalil detaily pobytu Američana s podezřením na ebolu",
-            "publishedAt": "2026-05-20T09:22:59Z"
           }
         ]
       }
