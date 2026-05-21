@@ -971,23 +971,86 @@ function isHealthyPlannerContext(ctx) {
  * @returns {string}
  */
 function buildClusterHandoffForHealthyPlanner(ctx) {
+  return generateAutonomousPlannedHandoff(ctx).body;
+}
+
+/**
+ * Canonical autonomous planner: cluster-specific product handoff OR SAFE_BLOCKED — never generic chore/git/gh.
+ * @param {{
+ *   mainCommit?: string,
+ *   repoRoot?: string,
+ *   clusterDiag?: object,
+ *   blockReason?: string,
+ *   stopReason?: string,
+ *   plannerContext?: { guardBlocked?: boolean, safetyBlocked?: boolean, dirtyBlocked?: boolean },
+ *   preferRuntimeBlocked?: boolean,
+ * }} ctx
+ * @returns {{ body: string, mode: string, cluster: string }}
+ */
+function generateAutonomousPlannedHandoff(ctx) {
   const repoRoot = (ctx && ctx.repoRoot) || REPO;
+  const main = String((ctx && ctx.mainCommit) || "").trim();
+  const pctx = (ctx && ctx.plannerContext) || {};
+  const unhealthy =
+    !!(pctx.guardBlocked || pctx.safetyBlocked || pctx.dirtyBlocked) || !!(ctx && ctx.preferRuntimeBlocked);
+  const blockReason = String((ctx && ctx.blockReason) || "NO_SAFE_PRODUCT_CLUSTER").trim();
+  const stop = String((ctx && ctx.stopReason) || "").trim();
+
+  if (unhealthy) {
+    if (/stale_cursor_invoke|stale_invoke|cursor_exit.?125|CURSOR_PROCESS_ALIVE_BUT_NO_OUTPUT/i.test(stop)) {
+      return {
+        body: buildStaleCursorInvokeRuntimeBlockedHandoff({
+          mainCommit: main,
+          blockReason: blockReason || "NO_SAFE_RUNTIME_PROGRESS",
+          stopReason: stop || "STALE_CURSOR_INVOKE_NO_PROGRESS",
+        }),
+        mode: "SAFE_BLOCKED_RUNTIME",
+        cluster: "",
+      };
+    }
+    return {
+      body: buildNoSafeProductClusterBlockedHandoff({
+        mainCommit: main,
+        blockReason: blockReason || "NO_SAFE_RUNTIME_PROGRESS",
+      }),
+      mode: "SAFE_BLOCKED",
+      cluster: "",
+    };
+  }
+
   const locked = readClusterLock(repoRoot);
-  let clusterDiag = (ctx && ctx.clusterDiag) || pickClusterFromAuditRegistry(repoRoot) || pickTopClusterDiagnostic();
+  let clusterDiag =
+    (ctx && ctx.clusterDiag) || pickClusterFromAuditRegistry(repoRoot) || pickTopClusterDiagnostic();
   if (locked && clusterDiag && clusterDiag.cluster !== locked.authoritative_cluster) {
     clusterDiag = pickClusterFromAuditRegistry(repoRoot) || clusterDiag;
   }
   if (isValidProductClusterName(clusterDiag && clusterDiag.cluster)) {
-    return buildCapDiagnosticProductHandoff({
-      repoRoot: (ctx && ctx.repoRoot) || REPO,
-      mainCommit: ctx && ctx.mainCommit,
-      clusterDiag,
-    });
+    return {
+      body: buildCapDiagnosticProductHandoff({
+        repoRoot,
+        mainCommit: main,
+        clusterDiag,
+      }),
+      mode: "CLUSTER_PRODUCT_HANDOFF",
+      cluster: String(clusterDiag.cluster),
+    };
   }
-  return buildNoSafeProductClusterBlockedHandoff({
-    mainCommit: ctx && ctx.mainCommit,
-    blockReason: "NO_SAFE_PRODUCT_CLUSTER",
-  });
+  return {
+    body: buildNoSafeProductClusterBlockedHandoff({
+      mainCommit: main,
+      blockReason: blockReason || "NO_SAFE_PRODUCT_CLUSTER",
+    }),
+    mode: "NO_SAFE_PRODUCT_CLUSTER",
+    cluster: "",
+  };
+}
+
+/** @returns {boolean} */
+function plannedHandoffPassesQualityGate(body, opts) {
+  const t = String(body || "");
+  if (!t) return false;
+  if (isGenericRepoGitMaintenanceWorkflow(t) || isGenericOrchestrationHandoff(t)) return false;
+  return silverNextActionQualityViolations(t, opts).length === 0;
 }
 
 function runPlannerClusterPreferenceSelftest() {
@@ -1197,6 +1260,114 @@ function runPlannerProductHandoffSelftest() {
   return ok;
 }
 
+function runPlannerQualityContractSelftest() {
+  let ok = true;
+  const fail = (msg) => {
+    console.error("PLANNER_QUALITY_CONTRACT_SELFTEST_FAIL " + msg);
+    ok = false;
+  };
+  const capCtx = {
+    clusterDiag: {
+      cluster: "self_correction_negation_flip",
+      audit_id: "self_correction",
+      audit_name: "Self-Correction",
+      count: 472,
+      expected_outcome: "engine PR",
+    },
+    requireProductCluster: true,
+  };
+  const planned = generateAutonomousPlannedHandoff({
+    mainCommit: "abc123",
+    clusterDiag: capCtx.clusterDiag,
+    plannerContext: { guardBlocked: false, safetyBlocked: false, dirtyBlocked: false },
+  });
+  if (planned.mode !== "CLUSTER_PRODUCT_HANDOFF") fail("healthy_cluster_mode");
+  if (!/self_correction_negation_flip/.test(planned.body)) fail("cluster_in_body");
+  if (!plannedHandoffPassesQualityGate(planned.body, {
+    selectorCluster: "self_correction_negation_flip",
+    clusterDiag: capCtx.clusterDiag,
+    requireProductCluster: true,
+  })) {
+    fail("cluster_handoff_quality");
+  }
+  const noCluster = generateAutonomousPlannedHandoff({
+    mainCommit: "abc",
+    clusterDiag: { cluster: "(unknown)", count: 0 },
+    plannerContext: { guardBlocked: false, safetyBlocked: false, dirtyBlocked: false },
+  });
+  if (noCluster.mode !== "NO_SAFE_PRODUCT_CLUSTER") fail("missing_cluster_mode");
+  if (!/expected_outcome=SAFE_BLOCKED/.test(noCluster.body)) fail("missing_cluster_safe_blocked");
+  if (!plannedHandoffPassesQualityGate(noCluster.body, capCtx)) fail("no_cluster_handoff_quality");
+  if (ok) console.log("PLANNER_QUALITY_CONTRACT_SELFTEST_PASS");
+  return ok;
+}
+
+function runGenericChoreGenerationBlockSelftest() {
+  let ok = true;
+  const fail = (msg) => {
+    console.error("GENERIC_CHORE_GENERATION_BLOCK_SELFTEST_FAIL " + msg);
+    ok = false;
+  };
+  const capCtx = { requireProductCluster: true };
+  const samples = [
+    [
+      "generic_chore_silver_audit_push",
+      "<!-- SILVER_NEXT_ACTION: full-auto-loop-openai -->\ngit status\ngh auth login\ngit push -u origin chore/silver-audit-repo-state\n",
+    ],
+    [
+      "generic_repo_maintenance",
+      "git status --short\ngit stash push\ngh auth login\ngit push -u origin chore/silver-audit-repo-state\n",
+    ],
+    ["generic_git_push", "git push -u origin chore/silver-audit-repo-state\n"],
+    ["generic_gh_auth", "gh auth login\n"],
+  ];
+  for (const [label, sample] of samples) {
+    const v = silverNextActionQualityViolations(sample, capCtx);
+    if (!v.length) fail(label + "_must_violate");
+  }
+  const planned = generateAutonomousPlannedHandoff({
+    mainCommit: "def",
+    plannerContext: { guardBlocked: false, safetyBlocked: false, dirtyBlocked: false },
+  });
+  if (isGenericRepoGitMaintenanceWorkflow(planned.body)) fail("planner_generic_repo");
+  if (
+    /git\s+push\s+-u\s+origin\s+chore\/silver-audit-repo-state/i.test(planned.body) &&
+    !/NE\s+`git push/i.test(planned.body)
+  ) {
+    fail("planner_chore_push_actionable");
+  }
+  if (!plannedHandoffPassesQualityGate(planned.body, capCtx)) fail("planner_output_quality");
+  if (ok) console.log("GENERIC_CHORE_GENERATION_BLOCK_SELFTEST_PASS");
+  return ok;
+}
+
+function runSafeBlockedHandoffContractSelftest() {
+  let ok = true;
+  const fail = (msg) => {
+    console.error("SAFE_BLOCKED_HANDOFF_CONTRACT_SELFTEST_FAIL " + msg);
+    ok = false;
+  };
+  const blocked = generateAutonomousPlannedHandoff({
+    mainCommit: "ghi",
+    clusterDiag: { cluster: "(unknown)", count: 0 },
+    blockReason: "NO_SAFE_PRODUCT_CLUSTER",
+    plannerContext: { guardBlocked: false, safetyBlocked: false, dirtyBlocked: false },
+  });
+  if (!/expected_outcome=SAFE_BLOCKED/.test(blocked.body)) fail("safe_blocked_outcome");
+  if (isGenericRepoGitMaintenanceWorkflow(blocked.body)) fail("safe_blocked_not_generic_workflow");
+  const v = silverNextActionQualityViolations(blocked.body, { requireProductCluster: true });
+  if (v.length) fail("safe_blocked_violations " + v.join(";"));
+  const runtimeBlk = generateAutonomousPlannedHandoff({
+    mainCommit: "jkl",
+    blockReason: "GENERIC_DRIFT_REGRESSION_BLOCKED",
+    stopReason: "STALE_CURSOR_INVOKE_NO_PROGRESS",
+    plannerContext: { guardBlocked: true, safetyBlocked: false, dirtyBlocked: false },
+  });
+  if (!/expected_outcome=SAFE_BLOCKED/.test(runtimeBlk.body)) fail("runtime_safe_blocked");
+  if (ok) console.log("SAFE_BLOCKED_HANDOFF_CONTRACT_SELFTEST_PASS");
+  return ok;
+}
+
 module.exports = {
   REPO,
   SILVER_NEXT_ACTION_MOJIBAKE_RE,
@@ -1207,6 +1378,8 @@ module.exports = {
   buildHandoffMarkdown,
   buildCapDiagnosticProductHandoff,
   buildClusterHandoffForHealthyPlanner,
+  generateAutonomousPlannedHandoff,
+  plannedHandoffPassesQualityGate,
   clusterProductSpecFor,
   loadClusterDiagnosticEvidence,
   resolveProductHandoffOutcome,
@@ -1225,4 +1398,7 @@ module.exports = {
   readOrchestratorReport,
   runPlannerClusterPreferenceSelftest,
   runPlannerProductHandoffSelftest,
+  runPlannerQualityContractSelftest,
+  runGenericChoreGenerationBlockSelftest,
+  runSafeBlockedHandoffContractSelftest,
 };
