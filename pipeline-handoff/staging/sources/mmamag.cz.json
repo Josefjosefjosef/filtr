@@ -1,8 +1,41 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-21T02:35:27.584864Z",
+  "ingestedAt": "2026-05-21T03:14:22.335598Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Boxeři, kteří přešli do MMA, zná každý fanoušek jen zdánlivě. Víc než polovinu správně nedá skoro nikdo",
+      "url": "https://www.mmamag.cz/boxeri-kteri-presli-do-mma-zna-kazdy-fanousek-jen-zdanlive-vic-nez-polovinu-spravne-neda-skoro-nikdo/",
+      "dt": "2026-05-21T03:04:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "boxeři",
+        "fanoušek",
+        "jen",
+        "každý",
+        "kteří",
+        "mma",
+        "nedá",
+        "než",
+        "nikdo",
+        "polovinu",
+        "přešli",
+        "skoro",
+        "správně",
+        "víc",
+        "zdánlivě",
+        "zná"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1098,37 +1131,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "McGregorovy urážky i hlášky Khabiba. Kdo přiřadí 10 výroků ke správným jménům, zná UFC líp než 90 % fanoušků v Česku",
-      "url": "https://www.mmamag.cz/mcgregorovy-urazky-i-hlasky-khabiba-kdo-priradi-10-vyroku-ke-spravnym-jmenum-zna-ufc-lip-nez-90-fanousku-v-cesku/",
-      "dt": "2026-05-19T08:58:27Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "fanoušků",
-        "hlášky",
-        "jménům",
-        "khabiba",
-        "líp",
-        "mcgregorovy",
-        "než",
-        "přiřadí",
-        "správným",
-        "ufc",
-        "urážky",
-        "výroků",
-        "zná",
-        "česku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1139,7 +1141,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 85101,
+      "bytes": 85152,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1176,7 +1178,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-20T21:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-21T03:04:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1191,6 +1193,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Boxeři, kteří přešli do MMA, zná každý fanoušek jen zdánlivě. Víc než polovinu správně nedá skoro nikdo",
+            "publishedAt": "2026-05-21T03:04:00Z"
+          },
           {
             "title": "Odklepat submisi není slabost. V MMA to může zachránit kariéru",
             "publishedAt": "2026-05-20T21:00:00Z"
@@ -1218,10 +1224,6 @@
           {
             "title": "Oktagon má problém. V Bratislavě zatím zaplnil jen polovinu haly, Clash v Ostravě bude vyprodaný",
             "publishedAt": "2026-05-20T15:45:00Z"
-          },
-          {
-            "title": "UFC v Bílém domě čelí tvrdému výsměchu. Slavný trenér nechápe, jak mohl někdo tak špatné zápasy vůbec vymyslet",
-            "publishedAt": "2026-05-20T15:00:00Z"
           }
         ]
       }

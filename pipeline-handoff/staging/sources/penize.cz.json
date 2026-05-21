@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-21T02:35:27.584864Z",
+  "ingestedAt": "2026-05-21T03:14:22.335598Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Průvodce nejistotou. Jak ochránit majetek, když přichází jedna krize za druhou",
+      "url": "https://www.penize.cz/investice/489825-pruvodce-nejistotou-jak-ochranit-majetek-kdyz-prichazi-jedna-krize-za-druhou",
+      "dt": "2026-05-21T05:05:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "druhou",
+        "jedna",
+        "když",
+        "krize",
+        "majetek",
+        "nejistotou",
+        "ochránit",
+        "průvodce",
+        "přichází"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Pozor na žluté ceny v aplikaci Rohlíku. Kvůli chybě jste mohli zaplatit víc",
+      "url": "https://www.penize.cz/nakupy/489748-pozor-na-zlute-ceny-v-aplikaci-rohliku-kvuli-chybe-jste-mohli-zaplatit-vic",
+      "dt": "2026-05-21T05:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "aplikaci",
+        "ceny",
+        "chybě",
+        "jste",
+        "kvůli",
+        "mohli",
+        "pozor",
+        "rohlíku",
+        "víc",
+        "zaplatit",
+        "žluté"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -456,56 +510,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Privatbanka mění název a má velké plány. Penta ukázala, co chystá",
-      "url": "https://www.penize.cz/osobni-ucty/487482-penta-bank-byvala-privatbanka-ma-velke-plany-co-chysta",
-      "dt": "2026-05-18T12:15:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "chystá",
-        "mění",
-        "název",
-        "penta",
-        "plány",
-        "privatbanka",
-        "ukázala",
-        "velké"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Spořitelna přestává trestat drobné investory, ruší minimální poplatek",
-      "url": "https://www.penize.cz/akcie/489824-sporitelna-prestava-trestat-drobne-investory-rusi-minimalni-poplatek",
-      "dt": "2026-05-18T10:40:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "drobné",
-        "investory",
-        "minimální",
-        "poplatek",
-        "přestává",
-        "ruší",
-        "spořitelna",
-        "trestat"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -516,7 +520,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 19090,
+      "bytes": 19254,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -553,11 +557,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-20T16:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-21T05:05:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 13,
-          "zpravy": 7
+          "finance": 14,
+          "zpravy": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -569,6 +573,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Průvodce nejistotou. Jak ochránit majetek, když přichází jedna krize za druhou",
+            "publishedAt": "2026-05-21T05:05:00Z"
+          },
+          {
+            "title": "Pozor na žluté ceny v aplikaci Rohlíku. Kvůli chybě jste mohli zaplatit víc",
+            "publishedAt": "2026-05-21T05:00:00Z"
+          },
           {
             "title": "Zájem o Dluhopisy republiky je obrovský, hlásí Schillerová. Nabídne jich víc",
             "publishedAt": "2026-05-20T16:30:00Z"
@@ -592,14 +604,6 @@
           {
             "title": "Co je Prop Trading a jak funguje",
             "publishedAt": "2026-05-20T00:00:00Z"
-          },
-          {
-            "title": "Dálniční známka nezdraží. Zrušíme automatické zvyšování ceny, říká ministr",
-            "publishedAt": "2026-05-19T15:15:00Z"
-          },
-          {
-            "title": "Nemáte chybu v daňové slevě na manžela? Finanční úřad osloví tisíce lidí",
-            "publishedAt": "2026-05-19T14:30:00Z"
           }
         ]
       }
