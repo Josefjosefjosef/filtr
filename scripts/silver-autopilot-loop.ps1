@@ -27,6 +27,12 @@
 .PARAMETER MaxAutonomousHardCycles
   Hard ceiling for autonomous iterations when -MaxCycles 0 (0 = use env SILVER_AUTONOMOUS_HARD_MAX_CYCLES or default 512).
 
+.PARAMETER ControlledCapProfile
+  Budget guard profile id (CAP10_SAFE default lane). CAP10_SAFE coerces controlled autonomous mode when used with -MaxAutonomousHardCycles.
+
+.PARAMETER Cap10SafeEntrypointSelfTest
+  Orchestration-only selftest: CursorCommand builder, token validation, and missing-command resolution (no agent invoke).
+
 .PARAMETER SameNextActionStopAfter
   Consecutive identical normalized next-action bodies before autonomous stop (default 5).
 
@@ -54,6 +60,8 @@ param(
   [switch]$AllowInfinite,
   [switch]$AutonomousMode,
   [int]$MaxAutonomousHardCycles = 0,
+  [string]$ControlledCapProfile = "",
+  [switch]$Cap10SafeEntrypointSelfTest,
   [int]$SameNextActionStopAfter = 5,
   [int]$NoProgressStopAfter = 8,
   [int]$RepeatedFailureStopAfter = 3,
@@ -4715,6 +4723,46 @@ function Invoke-SilverCap50GitNotCleanAfterRestoreSelfTest {
   return $true
 }
 
+function Invoke-SilverCap10SafeEntrypointSelfTest {
+  param([string]$RepoRoot)
+  $failures = New-Object System.Collections.Generic.List[string]
+  $defaultWsl = Build-SilverDefaultWslCursorCommandTemplate
+  $chkDefault = Test-SilverCursorCommandTemplateValid -CursorCommand $defaultWsl
+  if (-not $chkDefault.valid) {
+    [void]$failures.Add("default_wsl_template_invalid:" + [string]$chkDefault.reason)
+  }
+  if ($chkDefault.has_task_file_token -ne "YES" -or $chkDefault.has_output_file_token -ne "YES") {
+    [void]$failures.Add("default_wsl_template_missing_tokens")
+  }
+  $resolvedEmpty = Resolve-SilverCursorCommandForControlledEntrypoint -RepoRoot $RepoRoot -CursorCommand "" -PreferWslLane
+  if ([string]::IsNullOrWhiteSpace([string]$resolvedEmpty.command)) {
+    [void]$failures.Add("resolve_empty_cursor_command_failed:" + [string]$resolvedEmpty.validation.reason)
+  }
+  $malformed = 'powershell -File scripts/silver-cursor-agent-adapter.ps1 -TaskFile {TASK_FILE}'
+  $chkBad = Test-SilverCursorCommandTemplateValid -CursorCommand $malformed
+  if ($chkBad.valid) {
+    [void]$failures.Add("malformed_cursor_command_should_fail_validation")
+  }
+  $loopRecurse = 'powershell -File scripts/silver-autopilot-loop.ps1 -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE}'
+  $chkLoop = Test-SilverCursorCommandTemplateValid -CursorCommand $loopRecurse
+  if ($chkLoop.valid) {
+    [void]$failures.Add("recursive_loop_command_should_fail_validation")
+  }
+  $explicitGood = Resolve-SilverCursorCommandForControlledEntrypoint -RepoRoot $RepoRoot -CursorCommand $defaultWsl -PreferWslLane
+  if ([string]$explicitGood.source -ne "explicit_parameter") {
+    [void]$failures.Add("explicit_good_command_source_expected_explicit_parameter")
+  }
+  if ($failures.Count -gt 0) {
+    Write-Host "SILVER_CAP10_SAFE_ENTRYPOINT_SELFTEST=FAIL" -ForegroundColor Red
+    foreach ($f in $failures) { Write-Host $f -ForegroundColor Red }
+    return $false
+  }
+  Write-Host "SILVER_CAP10_SAFE_ENTRYPOINT_SELFTEST=PASS" -ForegroundColor Green
+  Write-Host ("cursor_command_builder_default=" + $defaultWsl)
+  Write-Host ("cursor_command_resolved_empty_source=" + [string]$resolvedEmpty.source)
+  return $true
+}
+
 function Invoke-SilverCap50TimeoutUtf8OrchestrationSelfTest {
   param([string]$RepoRoot)
   $utf8 = $script:SilverUtf8NoBom
@@ -5519,11 +5567,15 @@ function Initialize-SilverControlledBudgetGuardSession {
   param(
     [string]$RepoRoot,
     [string]$CapLabel,
-    [string]$RunId
+    [string]$RunId,
+    [string]$ProfileIdOverride = ""
   )
   if (-not $CapLabel) { return $true }
   $profileId = ""
-  if ($CapLabel -eq "CAP25") { $profileId = "CAP25_SAFE" }
+  if (-not [string]::IsNullOrWhiteSpace($ProfileIdOverride)) {
+    $profileId = ([string]$ProfileIdOverride).Trim().ToUpper()
+  }
+  elseif ($CapLabel -eq "CAP25") { $profileId = "CAP25_SAFE" }
   elseif ($CapLabel -eq "CAP50") { $profileId = "CAP50_SAFE" }
   else { $profileId = "CAP10_SAFE" }
   $r = Invoke-SilverControlledBudgetGuardNode -SubCommand "init" -RepoRoot $RepoRoot -RunId $RunId -CapLabel $CapLabel -ProfileId $profileId
@@ -5675,9 +5727,49 @@ if ($MaxCycles -eq 0 -and -not $autonomousOptIn) {
   Write-SilverSafetyConsoleStop -Reason "maxcycles_zero_requires_allowinfinite_or_autonomousmode"
   exit 1
 }
+$controlledCapProfileNorm = ([string]$ControlledCapProfile).Trim().ToUpper()
+if ($controlledCapProfileNorm -eq "CAP10_SAFE") {
+  if ($MaxAutonomousHardCycles -lt 1) {
+    Write-Host "STOP: CAP10_SAFE requires -MaxAutonomousHardCycles >= 1 (recommended 10)." -ForegroundColor Red
+    exit 1
+  }
+  if (-not $autonomousOptIn) {
+    Write-Host "silver-autopilot-loop: ControlledCapProfile=CAP10_SAFE coerced MaxCycles=0 AllowInfinite" -ForegroundColor DarkCyan
+    $AllowInfinite = $true
+    $MaxCycles = 0
+    $autonomousOptIn = $true
+  }
+}
+elseif ($controlledCapProfileNorm -match '^(CAP25_SAFE|CAP50_SAFE)$') {
+  Write-Host ("STOP: forbidden ControlledCapProfile=" + $controlledCapProfileNorm + " (CAP10_SAFE entrypoint only).") -ForegroundColor Red
+  exit 1
+}
+elseif (-not [string]::IsNullOrWhiteSpace($controlledCapProfileNorm)) {
+  Write-Host ("STOP: unknown ControlledCapProfile=" + $controlledCapProfileNorm) -ForegroundColor Red
+  exit 1
+}
 $controlledInfinite = ($MaxCycles -eq 0 -and $autonomousOptIn)
 $infinite = $controlledInfinite
 $hardCap = if ($controlledInfinite) { Get-SilverAutonomousHardMax -ParamMax $MaxAutonomousHardCycles } else { [int32]::MaxValue }
+if ($controlledInfinite) {
+  $cursorEntryResolve = Resolve-SilverCursorCommandForControlledEntrypoint -RepoRoot $RepoRoot -CursorCommand $CursorCommand -PreferWslLane
+  if ([string]::IsNullOrWhiteSpace($CursorCommand) -and (-not [string]::IsNullOrWhiteSpace([string]$cursorEntryResolve.command))) {
+    $CursorCommand = [string]$cursorEntryResolve.command
+    Write-Host ("silver-autopilot-loop: cursor_command_resolved=YES source=" + [string]$cursorEntryResolve.source) -ForegroundColor DarkCyan
+    Write-Host ("silver-autopilot-loop: cursor_command_lane wsl_ready=" + [string]$cursorEntryResolve.wsl_lane_ready + " adapter_ready=" + [string]$cursorEntryResolve.adapter_ready) -ForegroundColor DarkCyan
+  }
+  elseif ([string]::IsNullOrWhiteSpace($CursorCommand)) {
+    Write-Host ("silver-autopilot-loop: cursor_command_resolved=NO reason=" + [string]$cursorEntryResolve.validation.reason) -ForegroundColor Yellow
+  }
+  else {
+    $cursorExplicitChk = Test-SilverCursorCommandTemplateValid -CursorCommand $CursorCommand
+    if (-not $cursorExplicitChk.valid) {
+      Write-Host ("STOP: explicit -CursorCommand rejected: " + [string]$cursorExplicitChk.reason) -ForegroundColor Red
+      exit 1
+    }
+    Write-Host ("silver-autopilot-loop: cursor_command_explicit=YES tokens task=" + [string]$cursorExplicitChk.has_task_file_token + " output=" + [string]$cursorExplicitChk.has_output_file_token) -ForegroundColor DarkCyan
+  }
+}
 $cycleWallCapAuto = if ($controlledInfinite) { Get-SilverAutonomousCycleWallCap -ParamWall $MaxCycleWallSeconds } else { 0 }
 $totalWallCapAuto = if ($controlledInfinite) { Get-SilverAutonomousTotalWallCap -ParamWall $TotalWallSeconds } else { 0 }
 $autonomousRunStart = if ($controlledInfinite) { Get-Date } else { $null }
@@ -5769,6 +5861,12 @@ if ($ControlledBudgetGuardSelfTest) {
   if ($null -ne $LASTEXITCODE) { $bgExit = [int]$LASTEXITCODE }
   $ErrorActionPreference = $prevEaBg
   if ($bgExit -ne 0) { exit 1 }
+  exit 0
+}
+
+if ($Cap10SafeEntrypointSelfTest) {
+  $stCap10Ep = Invoke-SilverCap10SafeEntrypointSelfTest -RepoRoot $RepoRoot
+  if (-not $stCap10Ep) { exit 1 }
   exit 0
 }
 
@@ -5930,7 +6028,9 @@ $script:SilverControlledBudgetGuardActive = $false
 if ($capRunLabel) {
   $budgetRunId = Get-SilverControlledBudgetGuardRunId
   $script:SilverControlledBudgetGuardRunId = $budgetRunId
-  $script:SilverControlledBudgetGuardActive = Initialize-SilverControlledBudgetGuardSession -RepoRoot $RepoRoot -CapLabel $capRunLabel -RunId $budgetRunId
+  $profileForGuard = ""
+  if ($controlledCapProfileNorm) { $profileForGuard = $controlledCapProfileNorm }
+  $script:SilverControlledBudgetGuardActive = Initialize-SilverControlledBudgetGuardSession -RepoRoot $RepoRoot -CapLabel $capRunLabel -RunId $budgetRunId -ProfileIdOverride $profileForGuard
   if (-not $script:SilverControlledBudgetGuardActive) {
     Write-SilverSafetyConsoleStop -Reason "controlled_budget_guard_init_fail"
     exit 2

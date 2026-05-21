@@ -638,6 +638,22 @@ if ($verFirstLine -match '^Cursor\s+3\b' -or $verFirstLine -match '^3\.\d+') {
 else {
   $report.cursor3_detected = "NO"
 }
+$diagMajor = ""
+if ($report.cursor3_detected -eq "YES") {
+  if ($verFirstLine -match '^Cursor\s+(\d+)') {
+    $diagMajor = $Matches[1]
+  }
+  else {
+    $diagMajor = "3"
+  }
+}
+elseif ($verFirstLine -match '^Cursor\s+(\d+)') {
+  $diagMajor = $Matches[1]
+}
+elseif ($verFirstLine -match '^(\d+)\.') {
+  $diagMajor = $Matches[1]
+}
+$report["diagnostic_cursor_major"] = $diagMajor
 
 $h = Invoke-ExternalCapture -FileName $cursorExe -Arguments @("--help") -WorkingDirectory $RepoRoot -TimeoutMs 60000
 $report.cursor_help_exit = $h.exit
