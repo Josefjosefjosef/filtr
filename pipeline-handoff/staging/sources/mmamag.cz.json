@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-21T03:14:22.335598Z",
+  "ingestedAt": "2026-05-21T03:54:57.072745Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Techniky stoje v MMA vypadají jednoduše. Ale správně je pojmenuje jen 2 z 10 lidí, co ten sport sledují roky",
+      "url": "https://www.mmamag.cz/techniky-stoje-v-mma-vypadaji-jednoduse-ale-spravne-je-pojmenuje-jen-2-z-10-lidi-co-ten-sport-sleduji-roky/",
+      "dt": "2026-05-21T03:39:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "ale",
+        "jednoduše",
+        "jen",
+        "lidí",
+        "mma",
+        "pojmenuje",
+        "roky",
+        "sledují",
+        "sport",
+        "správně",
+        "stoje",
+        "techniky",
+        "ten",
+        "vypadají"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1102,35 +1133,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "UFC zažilo historicky nejslabší sledovanost. Ve stejný večer Rousey na Netflixu válcovala celou Ameriku",
-      "url": "https://www.mmamag.cz/netflix-porazil-ufc-v-cislech-rousey-byla-prvni/",
-      "dt": "2026-05-19T09:00:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "ameriku",
-        "celou",
-        "historicky",
-        "nejslabší",
-        "netflixu",
-        "rousey",
-        "sledovanost",
-        "stejný",
-        "ufc",
-        "večer",
-        "válcovala",
-        "zažilo"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1141,7 +1143,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 85152,
+      "bytes": 85181,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1178,7 +1180,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-21T03:04:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-21T03:39:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1193,6 +1195,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Techniky stoje v MMA vypadají jednoduše. Ale správně je pojmenuje jen 2 z 10 lidí, co ten sport sledují roky",
+            "publishedAt": "2026-05-21T03:39:00Z"
+          },
           {
             "title": "Boxeři, kteří přešli do MMA, zná každý fanoušek jen zdánlivě. Víc než polovinu správně nedá skoro nikdo",
             "publishedAt": "2026-05-21T03:04:00Z"
@@ -1220,10 +1226,6 @@
           {
             "title": "Z rekordmana v silovém trojboji se stala žena. Konečně je sama sebou",
             "publishedAt": "2026-05-20T16:30:00Z"
-          },
-          {
-            "title": "Oktagon má problém. V Bratislavě zatím zaplnil jen polovinu haly, Clash v Ostravě bude vyprodaný",
-            "publishedAt": "2026-05-20T15:45:00Z"
           }
         ]
       }
