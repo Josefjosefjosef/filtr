@@ -2184,6 +2184,9 @@ function Test-SilverNextActionIsProductTaskHandoff {
   $clusterPat = [regex]::Escape($cluster)
   $hasExplicitProduct =
     ($NextActionText -match $clusterPat) -or
+    ($NextActionText -match '(?i)PRODUCT_HANDOFF_CONTRACT') -or
+    ($NextActionText -match '(?i)target_cluster=') -or
+    ($NextActionText -match '(?i)expected_outcome=(?:ENGINE_FIX_TASK_READY|HARNESS_ALIGNMENT_TASK_READY|PLANNER_ALIGNMENT_TASK_READY|NO_SAFE_FIX|SAFE_BLOCKED|NEED_HUMAN_INPUT)') -or
     ($NextActionText -match '(?i)PRODUCT_CLUSTER|NEXT PRODUCT CLUSTER|(?:node|npx)\s+scripts/silver-real-czech-public-ux|(?:node|npx)\s+scripts/silver-rhc3-cluster-classifier|audit_silver_')
   if ($cluster -eq "self_correction_negation_flip") {
     if ($NextActionText -match '(?i)silver-self-correction-audit|silver-self-correction-safety-diagnostic|self_correction_negation_flip') {
@@ -2318,6 +2321,9 @@ function Get-SilverNextActionQualityFailureDetail {
   }
   if (Test-SilverNextActionIsOrchestrationMaintenanceOnly -Text $Text) {
     [void]$reasons.Add("orchestration_maintenance_only")
+  }
+  if ($Text -match '(?i)PRODUCT_HANDOFF_CONTRACT' -and (Test-SilverNextActionIsOrchestrationMaintenanceOnly -Text $Text)) {
+    [void]$reasons.Add("generic_orchestration_blocked_after_cap_diagnostic")
   }
   $hasCluster = Test-SilverNextActionSilverWorkflowContext -Text $Text
   if ($Text -match '(?i)git\s+push\s+-u\s+origin') {
