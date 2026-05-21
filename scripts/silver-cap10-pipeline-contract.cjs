@@ -28,7 +28,7 @@ const {
 } = require("./silver-controlled-budget-guard.cjs");
 
 const RECOMMENDED_REAL_CAP10_COMMAND =
-  "powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\silver-autopilot-loop.ps1 -ControlledCapProfile CAP10_SAFE -MaxAutonomousHardCycles 10";
+  "powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\silver-autopilot-loop.ps1 -AutonomousMode -ControlledCapProfile CAP10_SAFE -MaxAutonomousHardCycles 10 -TotalWallSeconds 900";
 
 /** CAP10 lifecycle may end only with one of these (deterministic contract). */
 const CAP10_LIFECYCLE_FINAL_OUTCOMES = new Set([

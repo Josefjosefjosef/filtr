@@ -30,8 +30,11 @@
 .PARAMETER ControlledCapProfile
   Budget guard profile id (CAP10_SAFE default lane). CAP10_SAFE coerces controlled autonomous mode when used with -MaxAutonomousHardCycles.
 
+.PARAMETER Cap10Safe
+  Legacy alias guard only. Does NOT run CAP10_SAFE runtime. Use -ControlledCapProfile CAP10_SAFE with -MaxAutonomousHardCycles and -TotalWallSeconds for a real run.
+
 .PARAMETER Cap10SafeEntrypointSelfTest
-  Orchestration-only selftest: CursorCommand builder, token validation, and missing-command resolution (no agent invoke).
+  Orchestration-only selftest: CursorCommand builder, token validation, and missing-command resolution (no agent invoke). Must be spelled in full (do not use -Cap10Safe alone).
 
 .PARAMETER SameNextActionStopAfter
   Consecutive identical normalized next-action bodies before autonomous stop (default 5).
@@ -61,6 +64,7 @@ param(
   [switch]$AutonomousMode,
   [int]$MaxAutonomousHardCycles = 0,
   [string]$ControlledCapProfile = "",
+  [switch]$Cap10Safe,
   [switch]$Cap10SafeEntrypointSelfTest,
   [int]$SameNextActionStopAfter = 5,
   [int]$NoProgressStopAfter = 8,
@@ -1278,8 +1282,63 @@ function Invoke-SilverStaleCursorInvokeCloseout {
   if ($closeout.git_clean_after -ne "YES") {
     $closeout.git_clean_after = if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" }
   }
+  $null = Invoke-SilverStaleCursorInvokeRuntimeFinalize -RepoRoot $RepoRoot -StopReason "STALE_CURSOR_INVOKE_NO_PROGRESS"
+  if (Test-GitStatusClean -Cwd $RepoRoot) {
+    $closeout.git_clean_after = "YES"
+    $closeout.runtime_dirty_restored = "YES"
+  }
   Write-SilverAutopilotStaleInvokeCloseoutBlock -Result $closeout
   return $closeout
+}
+
+function Invoke-SilverStaleCursorInvokeRuntimeFinalize {
+  param(
+    [string]$RepoRoot,
+    [string]$StopReason = "STALE_CURSOR_INVOKE_NO_PROGRESS"
+  )
+  $autopilotScript = Join-Path $RepoRoot "scripts\silver-autopilot.cjs"
+  if (-not (Test-Path -LiteralPath $autopilotScript)) {
+    Write-Host "silver-autopilot-loop: stale_runtime_finalize_skipped=missing_autopilot_script" -ForegroundColor DarkYellow
+    return @{ PASS_FAIL = "SKIP" }
+  }
+  if (Get-Command -Name Invoke-SilverCap50PreflightCleanup -ErrorAction SilentlyContinue) {
+    $pf = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot
+    Write-Host ("silver-autopilot-loop: stale_runtime_preflight_cleanup_PASS_FAIL=" + [string]$pf.PASS_FAIL) -ForegroundColor DarkYellow
+  }
+  $prevStopEnv = [Environment]::GetEnvironmentVariable("SILVER_RUNTIME_STOP_REASON", "Process")
+  [Environment]::SetEnvironmentVariable("SILVER_RUNTIME_STOP_REASON", $StopReason, "Process")
+  try {
+    $enforceArgs = @(
+      $autopilotScript,
+      "--enforce-runtime-next-action-md",
+      ("--stop-reason=" + $StopReason)
+    )
+    $enforceRes = Invoke-NodeScript -WorkingDirectory $RepoRoot -Arguments $enforceArgs -PassThruExit $true
+    Write-Host ("silver-autopilot-loop: enforce_runtime_next_action_exit=" + [string]$enforceRes.ExitCode) -ForegroundColor DarkCyan
+    $null = Invoke-SilverOrchestrationProductHandoffBridge -RepoRoot $RepoRoot -AutopilotScript $autopilotScript
+    $sanitizeRes = Invoke-NodeScript -WorkingDirectory $RepoRoot -Arguments @($autopilotScript, "--sanitize-next-action-md") -PassThruExit $true
+    Write-Host ("silver-autopilot-loop: stale_runtime_sanitize_exit=" + [string]$sanitizeRes.ExitCode) -ForegroundColor DarkCyan
+  }
+  finally {
+    if ($null -ne $prevStopEnv) {
+      [Environment]::SetEnvironmentVariable("SILVER_RUNTIME_STOP_REASON", $prevStopEnv, "Process")
+    }
+    else {
+      Remove-Item Env:\SILVER_RUNTIME_STOP_REASON -ErrorAction SilentlyContinue
+    }
+  }
+  $nextPath = Join-Path $RepoRoot "SILVER_NEXT_ACTION.md"
+  $nextText = Read-TextFileOrEmpty -Path $nextPath
+  $genericStill = Test-SilverNextActionIsOrchestrationMaintenanceOnly -Text $nextText
+  if ($genericStill) {
+    Write-Host "silver-autopilot-loop: stale_runtime_finalize_generic_next_action_still_present=YES" -ForegroundColor Red
+    return @{ PASS_FAIL = "FAIL"; generic_next_action_remaining = "YES" }
+  }
+  return @{
+    PASS_FAIL = "PASS"
+    git_clean_after = $(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })
+    generic_next_action_remaining = "NO"
+  }
 }
 
 function New-SilverStaleInvokeProgressSnapshot {
@@ -2986,6 +3045,11 @@ function Stop-LoopWithFail {
   $skipRepoProgressLogWrite = $false
   Write-Host ("SILVER_LOOP_SAFETY_STOP reason=" + $reasonLine) -ForegroundColor Red
   $isRuntimeFailureStop = Test-SilverCap50StopReasonIsRuntimeFailure -StopReason $StopReason -Focus $Focus
+  if ($isRuntimeFailureStop -and ($DryRunText -ne "YES")) {
+    $staleStop = $StopReason
+    if ([string]::IsNullOrWhiteSpace($staleStop)) { $staleStop = $Focus }
+    $null = Invoke-SilverStaleCursorInvokeRuntimeFinalize -RepoRoot $RepoRoot -StopReason $staleStop
+  }
   $baselines = if ($isRuntimeFailureStop) { Get-SilverRuntimeFailureProgressMetrics } else { Get-BaselineProgressMetrics }
   $fields = @{
     timestamp = (Get-Date).ToString("s")
@@ -6218,6 +6282,15 @@ if ($MaxCycles -eq 0 -and -not $autonomousOptIn) {
   exit 1
 }
 $controlledCapProfileNorm = ([string]$ControlledCapProfile).Trim().ToUpper()
+if ($Cap10Safe -and $controlledCapProfileNorm -ne "CAP10_SAFE") {
+  Write-Host "CAP10_SAFE_RUNTIME_REQUIRES_CONTROLLED_PROFILE=YES" -ForegroundColor Red
+  Write-Host "STOP: -Cap10Safe is a legacy alias and does NOT run CAP10_SAFE entrypoint selftest or full CAP10 runtime." -ForegroundColor Red
+  Write-Host "recommended_command=powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\silver-autopilot-loop.ps1 -AutonomousMode -ControlledCapProfile CAP10_SAFE -MaxAutonomousHardCycles 10 -TotalWallSeconds 900" -ForegroundColor Yellow
+  exit 2
+}
+if ($Cap10Safe -and $controlledCapProfileNorm -eq "CAP10_SAFE") {
+  Write-Host "silver-autopilot-loop: Cap10Safe_legacy_alias_ok ControlledCapProfile=CAP10_SAFE (use -ControlledCapProfile explicitly in automation)" -ForegroundColor DarkCyan
+}
 if ($controlledCapProfileNorm -eq "CAP10_SAFE") {
   if ($MaxAutonomousHardCycles -lt 1) {
     Write-Host "STOP: CAP10_SAFE requires -MaxAutonomousHardCycles >= 1 (recommended 10)." -ForegroundColor Red
