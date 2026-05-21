@@ -704,8 +704,18 @@ function silverNextActionMatchesSelectorCluster(text, selectorCluster) {
   const t = String(text || "");
   if (new RegExp(cluster.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i").test(t)) return true;
   if (/top_cluster=/i.test(t) && t.indexOf(cluster) >= 0) return true;
+  if (/audit_registry_next_cluster=/i.test(t) && t.indexOf(cluster) >= 0) return true;
+  if (/cap_diagnostic_product_handoff:/i.test(t) && t.indexOf(cluster) >= 0) return true;
+  if (cluster === "self_correction_update_note" && /silver-self-correction|HARNESS_ALIGNMENT_TASK_READY/i.test(t)) {
+    return true;
+  }
   const spec = CLUSTER_PRODUCT_TASK_SPEC[cluster];
   if (spec && spec.harness_commands.some((cmd) => t.indexOf(cmd) >= 0)) return true;
+  const diagCmds = [
+    "node scripts/silver-self-correction-audit.cjs",
+    "node scripts/silver-self-correction-safety-diagnostic.cjs",
+  ];
+  if (cluster === "self_correction_update_note" && diagCmds.some((cmd) => t.indexOf(cmd) >= 0)) return true;
   return false;
 }
 

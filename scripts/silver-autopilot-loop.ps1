@@ -2381,12 +2381,82 @@ function Invoke-SilverOrchestrationProductHandoffBridge {
   return $false
 }
 
+function Get-SilverHandoffClusterFromNextActionText {
+  param([string]$Text)
+  $t = [string]$Text
+  if (-not $t) { return "" }
+  if ($t -match '(?i)audit_registry_next_cluster=([^\s\r\n;]+)') { return ([string]$Matches[1]).Trim() }
+  if ($t -match '(?i)target_cluster=([^\s\r\n;]+)') {
+    $c = ([string]$Matches[1]).Trim()
+    if ($c -and $c -ne '(none)' -and $c -ne '(unknown)') { return $c }
+  }
+  if ($t -match '(?i)recommended_next_task=cap_diagnostic_product_handoff:([^;\s\r\n]+)') { return ([string]$Matches[1]).Trim() }
+  if ($t -match '(?i)SILVER_NEXT_ACTION_PLANNER_ENFORCE=cap_diagnostic_product_handoff\s+cluster=([^\s\r\n]+)') { return ([string]$Matches[1]).Trim() }
+  if ($t -match '(?i)top_cluster=([^\s\r\n;]+)') { return ([string]$Matches[1]).Trim() }
+  return ""
+}
+
+function Invoke-SilverProductHandoffContinuationEval {
+  param(
+    [string]$RepoRoot,
+    [string]$AutopilotScript,
+    [string]$NextActionText = "",
+    [string]$CursorOutputPath = "",
+    [string]$RunReportPath = "",
+    [string]$SafetyCounters = "",
+    [string]$AuthoritativeCluster = "",
+    [string]$ControlledCapProfile = ""
+  )
+  $args = @($AutopilotScript, "--product-handoff-continuation-eval")
+  if ($NextActionText) { $args += ("--next-action-text=" + $NextActionText) }
+  if ($CursorOutputPath -and (Test-Path -LiteralPath $CursorOutputPath)) {
+    $args += ("--cursor-output-file=" + $CursorOutputPath)
+  }
+  if ($RunReportPath -and (Test-Path -LiteralPath $RunReportPath)) {
+    $args += ("--run-report-file=" + $RunReportPath)
+  }
+  if ($AuthoritativeCluster) { $args += ("--authoritative-cluster=" + $AuthoritativeCluster) }
+  if ($ControlledCapProfile) { $args += ("--controlled-cap-profile=" + $ControlledCapProfile) }
+  $r = Invoke-NodeScript -WorkingDirectory $RepoRoot -Arguments $args -PassThruExit $true
+  $out = @{
+    PASS_FAIL = "FAIL"
+    continuation_ready = "NO"
+    product_task_handoff_missing = "YES"
+    continuation_kind = ""
+    selector_cluster = ""
+    expected_outcome = ""
+    reason = ""
+    forbidden_generic = "NO"
+    stdout = ""
+  }
+  if ($null -ne $r) {
+    $out.stdout = [string]$r.StdOut
+    if ($r.ExitCode -eq 0) { $out.PASS_FAIL = "PASS" }
+  }
+  $txt = [string]$out.stdout
+  foreach ($line in ($txt -split "`r?`n")) {
+    $trim = $line.Trim()
+    if ($trim -match '^continuation_ready=(.+)$') { $out.continuation_ready = $Matches[1] }
+    if ($trim -match '^product_task_handoff_missing=(.+)$') { $out.product_task_handoff_missing = $Matches[1] }
+    if ($trim -match '^continuation_kind=(.+)$') { $out.continuation_kind = $Matches[1] }
+    if ($trim -match '^selector_cluster=(.+)$') { $out.selector_cluster = $Matches[1] }
+    if ($trim -match '^expected_outcome=(.+)$') { $out.expected_outcome = $Matches[1] }
+    if ($trim -match '^reason=(.+)$') { $out.reason = $Matches[1] }
+    if ($trim -match '^forbidden_generic=(.+)$') { $out.forbidden_generic = $Matches[1] }
+    if ($trim -match '^PASS_FAIL=(.+)$') { $out.PASS_FAIL = $Matches[1] }
+  }
+  return $out
+}
+
 function Test-SilverNextActionIsProductTaskHandoff {
   param(
     [string]$NextActionText,
     [string]$SelectorCluster
   )
   $cluster = ([string]$SelectorCluster).Trim()
+  if (-not $cluster) {
+    $cluster = Get-SilverHandoffClusterFromNextActionText -Text $NextActionText
+  }
   if (Test-SilverNextActionIsOrchestrationMaintenanceOnly -Text $NextActionText) { return $false }
   if (-not $cluster) { return $false }
   if ($cluster -eq "rcz2_retrieval") { return $true }
@@ -2406,6 +2476,15 @@ function Test-SilverNextActionIsProductTaskHandoff {
     if ($NextActionText -match '(?i)silver-self-correction-audit|silver-self-correction-safety-note-readonly|self_correction_safety_note_readonly') {
       $hasExplicitProduct = $true
     }
+  }
+  if ($cluster -eq "self_correction_update_note") {
+    if ($NextActionText -match '(?i)silver-self-correction|self_correction_update_note|HARNESS_ALIGNMENT_TASK_READY|cap_diagnostic_product_handoff') {
+      $hasExplicitProduct = $true
+    }
+  }
+  if (-not $hasExplicitProduct) {
+    if ($NextActionText -match '(?i)expected_outcome=HARNESS_ALIGNMENT_TASK_READY') { $hasExplicitProduct = $true }
+    if ($NextActionText -match '(?i)recommended_next_task=cap_diagnostic_product_handoff:') { $hasExplicitProduct = $true }
   }
   if (-not $hasExplicitProduct) { return $false }
   return $true
@@ -7468,22 +7547,37 @@ while ($true) {
     }
     if ($controlledInfinite) {
       $selectorCluster = Get-SilverAuthoritativeSelectorCluster -RepoRoot $RepoRoot
+      $capProfileHandoff = ""
+      if ($ControlledCapProfile) { $capProfileHandoff = [string]$ControlledCapProfile }
+      $handoffEval = Invoke-SilverProductHandoffContinuationEval -RepoRoot $RepoRoot -AutopilotScript $AutopilotScript `
+        -NextActionText $nextAfterAuto -CursorOutputPath $CursorOutputPath -RunReportPath $RunReportPath `
+        -AuthoritativeCluster $selectorCluster -ControlledCapProfile $capProfileHandoff
+      if ($handoffEval.selector_cluster) {
+        $selectorCluster = [string]$handoffEval.selector_cluster
+      }
       if ($selectorCluster) {
         Write-Host ("silver-autopilot-loop: selector_cluster=" + $selectorCluster) -ForegroundColor DarkCyan
       }
-      if (-not (Test-SilverNextActionIsProductTaskHandoff -NextActionText $nextAfterAuto -SelectorCluster $selectorCluster)) {
+      Write-Host ("silver-autopilot-loop: product_handoff_continuation_ready=" + [string]$handoffEval.continuation_ready + " kind=" + [string]$handoffEval.continuation_kind) -ForegroundColor DarkCyan
+      if ([string]$handoffEval.continuation_ready -ne "YES") {
         $null = Invoke-SilverOrchestrationProductHandoffBridge -RepoRoot $RepoRoot -AutopilotScript $AutopilotScript
         $nextAfterAuto = Read-TextFileOrEmpty -Path $NextActionPath
+        $handoffEval = Invoke-SilverProductHandoffContinuationEval -RepoRoot $RepoRoot -AutopilotScript $AutopilotScript `
+          -NextActionText $nextAfterAuto -CursorOutputPath $CursorOutputPath -RunReportPath $RunReportPath `
+          -AuthoritativeCluster $selectorCluster -ControlledCapProfile $capProfileHandoff
+        if ($handoffEval.selector_cluster) { $selectorCluster = [string]$handoffEval.selector_cluster }
       }
-      if (-not (Test-SilverNextActionIsProductTaskHandoff -NextActionText $nextAfterAuto -SelectorCluster $selectorCluster)) {
+      if ([string]$handoffEval.continuation_ready -ne "YES") {
+        $handoffReason = [string]$handoffEval.reason
+        if (-not $handoffReason) { $handoffReason = "product_task_handoff_missing" }
         Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
           -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit "N/A" `
           -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine $safetyPre `
           -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
           -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
-          -Headline (Get-NextActionHeadline -Text $nextAfterAuto) -Focus "product_task_handoff_missing" `
+          -Headline (Get-NextActionHeadline -Text $nextAfterAuto) -Focus $handoffReason `
           -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
-          -StopReason ("product_task_handoff_missing|selector_cluster=" + [string]$selectorCluster)
+          -StopReason ($handoffReason + "|selector_cluster=" + [string]$selectorCluster + "|continuation_kind=" + [string]$handoffEval.continuation_kind)
       }
     }
     if ($ae -ne 0) {
