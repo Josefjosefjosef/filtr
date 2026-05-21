@@ -823,6 +823,17 @@ function runScorecardFinalizeRuntimeSelftest() {
   const scResolved = resolveProductCloseoutPath(scClass, { dryRun: true });
   assert(scResolved.scripts_only_product_work === "YES", "closeout_scripts_only_yes");
 
+  const partialClass = classifyValidProductWork({
+    dirtyPaths: [
+      "scripts/silver-self-correction-audit.cjs",
+      "scripts/silver-self-correction-query-clarification.cjs",
+    ],
+    selectorCluster: "self_correction_safety_note_readonly",
+    productWorkComplete: false,
+  });
+  assert(partialClass.classification === "PARTIAL_PRODUCT_WORK", "partial_product_dirty_classified");
+  assert(partialClass.closeout_kind === "partial_product_work_dirty", "partial_not_forbidden_dirty");
+
   const { assertNoClusterDrift, establishClusterLock, readClusterLock } = require("./silver-cluster-consistency-lock.cjs");
   const cluster = "self_correction_safety_note_readonly";
   establishClusterLock(td, {
@@ -1078,4 +1089,6 @@ module.exports = {
   renderCzechScorecard,
   runScorecardFinalizeRuntimeSelftest,
   runSelfTest,
+  formatScorecardRuntimeHardStop,
+  emitScorecardRuntimeHardStop,
 };

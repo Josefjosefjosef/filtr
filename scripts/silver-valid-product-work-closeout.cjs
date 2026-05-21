@@ -282,6 +282,29 @@ function classifyValidProductWork(opts) {
     };
   }
 
+  const partialProductWork =
+    o.productWorkComplete === false ||
+    o.markPartialProductWork === true ||
+    o.hasUntrackedProductFiles === true;
+  if (partialProductWork) {
+    const partialOutcome = safetyCountersBlocked(safety)
+      ? "SAFE_BLOCKED_PARTIAL_PRODUCT_WORK_DIRTY"
+      : "HARD_STOP_PARTIAL_PRODUCT_WORK_DIRTY";
+    return {
+      classification: "PARTIAL_PRODUCT_WORK",
+      closeout_kind: "partial_product_work_dirty",
+      selector_cluster: selectorCluster,
+      blocked_dirty_classification: productPaths.join(";"),
+      product_scope_match: "YES",
+      proof_path_present: "YES",
+      proof_commands: proofCommands,
+      branch_prefix: scope.branchPrefix,
+      pr_title: scope.prTitle,
+      final_outcome: partialOutcome,
+      true_engine_fail: trueEngineFail ? "YES" : "NO",
+    };
+  }
+
   return {
     classification: "VALID_PRODUCT_WORK",
     closeout_kind: "valid_product_work",
@@ -345,6 +368,9 @@ function classifyCap50CloseoutWithProductWork(paths, opts) {
     repoRoot: o.repoRoot,
     safetyCounters: o.safetyCounters,
     trueEngineFail: o.trueEngineFail,
+    productWorkComplete: o.productWorkComplete,
+    markPartialProductWork: o.markPartialProductWork,
+    hasUntrackedProductFiles: o.hasUntrackedProductFiles,
   });
   if (vpw.classification === "VALID_PRODUCT_WORK") {
     return {
@@ -359,6 +385,14 @@ function classifyCap50CloseoutWithProductWork(paths, opts) {
       closeout_kind: "forbidden_product_dirty",
       blocked_dirty_classification: vpw.blocked_dirty_classification,
       failure_class: "forbidden_product_dirty",
+      valid_product_work: vpw,
+    };
+  }
+  if (vpw.classification === "PARTIAL_PRODUCT_WORK") {
+    return {
+      closeout_kind: "partial_product_work_dirty",
+      blocked_dirty_classification: vpw.blocked_dirty_classification || list.join(";"),
+      failure_class: "partial_product_work_dirty",
       valid_product_work: vpw,
     };
   }
@@ -471,6 +505,20 @@ function resolveProductCloseoutPath(classification, opts) {
       closeout_action: "revert_dirty",
       PASS_FAIL: "PASS",
       product_fix_created: "NO",
+    };
+  }
+
+  if (c.classification === "PARTIAL_PRODUCT_WORK") {
+    releaseClusterLockForOutcome(repoRoot, c.final_outcome || "HARD_STOP_PARTIAL_PRODUCT_WORK_DIRTY");
+    return {
+      final_outcome: c.final_outcome || "HARD_STOP_PARTIAL_PRODUCT_WORK_DIRTY",
+      closeout_action: "partial_product_work_dirty",
+      PASS_FAIL: "FAIL",
+      product_fix_created: "NO",
+      scripts_only_product_work: "PARTIAL",
+      blocked_dirty_classification: c.blocked_dirty_classification || "",
+      generic_handoff_blocked: "YES",
+      next_cap_blind_retry_blocked: "YES",
     };
   }
 
@@ -643,6 +691,27 @@ function runValidProductWorkCloseoutSelftest() {
     selectorCluster: "self_correction_safety_note_readonly",
   });
   assert(cap50Unknown.closeout_kind === "forbidden_dirty", "cap50_unknown_forbidden");
+
+  const partialDirty = classifyValidProductWork({
+    dirtyPaths: [
+      "scripts/silver-self-correction-audit.cjs",
+      "scripts/silver-self-correction-safety-diagnostic.cjs",
+      "scripts/silver-self-correction-update-note-selftest.cjs",
+    ],
+    selectorCluster: "self_correction_safety_note_readonly",
+    productWorkComplete: false,
+    hasUntrackedProductFiles: true,
+  });
+  assert(partialDirty.classification === "PARTIAL_PRODUCT_WORK", "partial_product_work_class");
+  assert(partialDirty.closeout_kind === "partial_product_work_dirty", "partial_closeout_kind");
+  const cap50Partial = classifyCap50CloseoutWithProductWork(
+    [
+      "scripts/silver-self-correction-audit.cjs",
+      "scripts/silver-self-correction-safety-diagnostic.cjs",
+    ],
+    { selectorCluster: "self_correction_safety_note_readonly", productWorkComplete: false },
+  );
+  assert(cap50Partial.closeout_kind === "partial_product_work_dirty", "cap50_partial_not_forbidden");
 
   const generic =
     "git push -u origin chore/silver-audit-repo-state\ngh auth login\n";

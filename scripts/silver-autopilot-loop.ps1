@@ -3577,6 +3577,14 @@ function Get-SilverCap50CloseoutClassificationFromDirtyPaths {
         failure_class                  = "forbidden_product_dirty"
       }
     }
+    if ($cls -eq "PARTIAL_PRODUCT_WORK") {
+      return @{
+        closeout_kind                  = "partial_product_work_dirty"
+        blocked_dirty_classification   = [string]$vpw.blocked_dirty_classification
+        failure_class                  = "partial_product_work_dirty"
+        valid_product_work             = $vpw
+      }
+    }
     if ($cls -eq "RUNTIME_ONLY") {
       return @{
         closeout_kind                  = "runtime_artifact_restorable"
