@@ -79,7 +79,8 @@ param(
   [switch]$Cap50RealAutonomousLifecycleOrderingSelfTest,
   [switch]$AutonomousRearmSelfTest,
   [switch]$WslAgentModelAutoHandoffSelfTest,
-  [switch]$RearmInvokeEdgeCaseSelfTest
+  [switch]$RearmInvokeEdgeCaseSelfTest,
+  [switch]$StaleInvokeWatchdogSelfTest
 )
 
 Set-StrictMode -Version 2
@@ -902,6 +903,409 @@ function Write-SilverCursorOutputOuterWallTimeoutTerminal {
   [void]$sb.Append($stderrBody)
   if (-not $stderrBody.EndsWith("`n")) { [void]$sb.AppendLine("") }
   [System.IO.File]::WriteAllText($Path, $sb.ToString(), [System.Text.UTF8Encoding]::new($false))
+}
+
+function Test-SilverStaleInvokeStartedMetaState {
+  param([string]$AdapterOutputPath)
+  if (-not (Test-Path -LiteralPath $AdapterOutputPath)) { return $false }
+  $meta = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $AdapterOutputPath
+  if ($meta.Count -eq 0) { return $false }
+  $state = ""
+  if ($meta.ContainsKey("adapter_output_state")) { $state = [string]$meta["adapter_output_state"] }
+  if ($state -ne "INVOKE_STARTED") { return $false }
+  $exitPresent = ""
+  if ($meta.ContainsKey("exit_code")) { $exitPresent = [string]$meta["exit_code"] }
+  $elapsedPresent = ""
+  if ($meta.ContainsKey("elapsed_ms")) { $elapsedPresent = [string]$meta["elapsed_ms"] }
+  if ($exitPresent.Trim().Length -gt 0) { return $false }
+  if ($elapsedPresent.Trim().Length -gt 0) { return $false }
+  return $true
+}
+
+function Get-SilverFileProgressSnapshot {
+  param([string]$Path)
+  if (-not $Path) { return "" }
+  if (-not (Test-Path -LiteralPath $Path)) { return "" }
+  $fi = Get-Item -LiteralPath $Path
+  return ([string]$Path + ":" + [string]$fi.Length + ":" + [string]$fi.LastWriteTimeUtc.Ticks)
+}
+
+function Get-SilverOuterInvokeProgressSnapshot {
+  param(
+    [string]$StdoutTmp,
+    [string]$StderrTmp,
+    [string]$AdapterOutputPath
+  )
+  $items = New-Object System.Collections.Generic.List[string]
+  foreach ($p in @($StdoutTmp, $StderrTmp, $AdapterOutputPath)) {
+    $snap = Get-SilverFileProgressSnapshot -Path $p
+    if ($snap) { [void]$items.Add($snap) }
+  }
+  $arr = $items.ToArray()
+  [Array]::Sort($arr)
+  return ($arr -join "|")
+}
+
+function Get-SilverNodeProcessProgressFingerprint {
+  $items = New-Object System.Collections.Generic.List[string]
+  $procs = Get-Process -Name "node" -ErrorAction SilentlyContinue
+  if ($null -eq $procs) { return "" }
+  foreach ($proc in $procs) {
+    $cpu = 0
+    try { $cpu = [int][math]::Round($proc.CPU, 0) } catch { $cpu = 0 }
+    [void]$items.Add([string]$proc.Id + ":" + [string]$cpu + ":" + [string]$proc.WorkingSet64)
+  }
+  $arr = $items.ToArray()
+  [Array]::Sort($arr)
+  return ($arr -join "|")
+}
+
+function Test-SilverWslAgentWorkloadPresent {
+  $names = @("wsl.exe", "wslhost.exe")
+  foreach ($n in $names) {
+    $hits = Get-Process -Name $n -ErrorAction SilentlyContinue
+    if ($null -ne $hits -and @($hits).Count -gt 0) { return $true }
+  }
+  return $false
+}
+
+function Get-SilverStaleInvokeWatchdogSliceMs {
+  $fromEnv = Get-SilverEnvIntOrEmpty -Name "SILVER_STALE_INVOKE_SLICE_SECONDS"
+  $sec = 30
+  if ($null -ne $fromEnv -and $fromEnv -gt 0) { $sec = $fromEnv }
+  return ([Math]::Max(5, $sec) * 1000)
+}
+
+function Get-SilverStaleInvokeWatchdogStallMs {
+  $fromEnv = Get-SilverEnvIntOrEmpty -Name "SILVER_STALE_INVOKE_STALL_SECONDS"
+  $sec = 120
+  if ($null -ne $fromEnv -and $fromEnv -gt 0) { $sec = $fromEnv }
+  return ([Math]::Max(30, $sec) * 1000)
+}
+
+function Write-SilverCursorOutputStaleInvokeTerminal {
+  param(
+    [string]$Path,
+    [string]$RunId,
+    [string]$RunStartUtcIso,
+    [string]$CycleState,
+    [string]$TaskDigest,
+    [string]$ProcessStartUtcIso = "",
+    [string]$TaskFile = "",
+    [string]$OutputFile = "",
+    [string]$OuterStdout = "",
+    [string]$OuterStderr = ""
+  )
+  $stdoutBody = $OuterStdout
+  if ([string]::IsNullOrWhiteSpace($stdoutBody)) {
+    $stdoutBody = "SILVER_STALE_INVOKE_CLOSEOUT: orchestration detected INVOKE_STARTED with no exit_code/elapsed_ms and no adapter progress; invoke terminated safely."
+  }
+  $stderrBody = $OuterStderr
+  if ([string]::IsNullOrWhiteSpace($stderrBody)) { $stderrBody = "" }
+  $nowUtc = (Get-Date).ToUniversalTime().ToString("o")
+  $procStartIso = $ProcessStartUtcIso.Trim()
+  if ($procStartIso.Length -eq 0) { $procStartIso = $nowUtc }
+  $meta = [ordered]@{
+    timestamp_local = (Get-Date).ToString("s")
+    autonomous_run_id = $RunId
+    autonomous_run_start_utc = $RunStartUtcIso
+    autonomous_cycle = $CycleState
+    adapter_output_state = "COMPLETED"
+    pipe_capture_mode = "cmd_redirect_file"
+    adapter_completion_path = "stale_invoke_orchestration_closeout"
+    process_start_utc = $procStartIso
+    process_end_utc = $nowUtc
+    exit_code = "125"
+    elapsed_ms = ""
+    timed_out = "YES"
+    task_digest = $TaskDigest
+    stdout_nonempty = $(if ($stdoutBody.Trim().Length -gt 0) { "YES" } else { "NO" })
+    stderr_nonempty = $(if ($stderrBody.Trim().Length -gt 0) { "YES" } else { "NO" })
+    can_run_full_auto_loop_maxcycles_1 = "NO"
+    stale_invoke_closeout = "YES"
+  }
+  if ($TaskFile.Trim().Length -gt 0) { $meta["task_file"] = $TaskFile.Trim() }
+  if ($OutputFile.Trim().Length -gt 0) { $meta["output_file"] = $OutputFile.Trim() }
+  $sb = New-Object System.Text.StringBuilder
+  [void]$sb.AppendLine("# silver-cursor-agent-adapter")
+  foreach ($k in $meta.Keys) {
+    [void]$sb.AppendLine(($k + "=" + [string]$meta[$k]))
+  }
+  [void]$sb.AppendLine("")
+  [void]$sb.AppendLine("SILVER_STALE_INVOKE_ORCHESTRATION_CLOSEOUT")
+  [void]$sb.AppendLine("")
+  [void]$sb.AppendLine("# stdout")
+  [void]$sb.Append($stdoutBody)
+  if (-not $stdoutBody.EndsWith("`n")) { [void]$sb.AppendLine("") }
+  [void]$sb.AppendLine("# stderr")
+  [void]$sb.Append($stderrBody)
+  if (-not $stderrBody.EndsWith("`n")) { [void]$sb.AppendLine("") }
+  [System.IO.File]::WriteAllText($Path, $sb.ToString(), [System.Text.UTF8Encoding]::new($false))
+}
+
+function Write-SilverAutopilotStaleInvokeCloseoutBlock {
+  param([hashtable]$Result)
+  Write-Host ""
+  Write-Host "=== SILVER_AUTOPILOT_STALE_INVOKE_CLOSEOUT ===" -ForegroundColor Red
+  Write-Host ("stale_invoke_detected=" + [string]$Result.stale_invoke_detected)
+  Write-Host ("adapter_output_state=" + [string]$Result.adapter_output_state)
+  Write-Host ("output_last_write_before=" + [string]$Result.output_last_write_before)
+  Write-Host ("output_last_write_after=" + [string]$Result.output_last_write_after)
+  Write-Host ("output_length_before=" + [string]$Result.output_length_before)
+  Write-Host ("output_length_after=" + [string]$Result.output_length_after)
+  Write-Host ("process_progress_detected=" + [string]$Result.process_progress_detected)
+  Write-Host ("wsl_agent_progress_detected=" + [string]$Result.wsl_agent_progress_detected)
+  Write-Host ("terminated_processes=" + [string]$Result.terminated_processes)
+  Write-Host ("runtime_dirty_restored=" + [string]$Result.runtime_dirty_restored)
+  Write-Host ("git_clean_after=" + [string]$Result.git_clean_after)
+  Write-Host ("stop_reason=" + [string]$Result.stop_reason)
+  Write-Host ("PASS_FAIL=" + [string]$Result.PASS_FAIL) -ForegroundColor Red
+  Write-Host "=== END_SILVER_AUTOPILOT_STALE_INVOKE_CLOSEOUT ===" -ForegroundColor Red
+  Write-Host ""
+}
+
+function Get-SilverRuntimeFailureProgressMetrics {
+  return [ordered]@{
+    core_engine_progress = "NOT_EVALUATED_RUNTIME_FAILURE"
+    safety_progress = "NOT_EVALUATED_RUNTIME_FAILURE"
+    routing_progress = "NOT_EVALUATED_RUNTIME_FAILURE"
+    retrieval_progress = "NOT_EVALUATED_RUNTIME_FAILURE"
+    real_human_chaos_progress = "NOT_EVALUATED_RUNTIME_FAILURE"
+    multi_intent_orchestration_progress = "NOT_EVALUATED_RUNTIME_FAILURE"
+    long_session_memory_progress = "NOT_EVALUATED_RUNTIME_FAILURE"
+    public_ready_progress = "NOT_EVALUATED_RUNTIME_FAILURE"
+    source = "runtime_failure_not_product_evaluated"
+  }
+}
+
+function Test-SilverCap50StopReasonIsRuntimeFailure {
+  param([string]$StopReason, [string]$Focus = "")
+  $blob = ([string]$StopReason + "|" + [string]$Focus).ToLowerInvariant()
+  if ($blob -match 'stale_cursor_invoke|stale_invoke|adapter_invoke_startup|adapter_invoke_process|adapter_invoke_never|cursor_exit_nonzero|cursor_outer_or_adapter_timeout|utf8_mojibake|adapter_meta_not_fresh|adapter_invoke_started_but_not_completed|cap50_postcondition_fail|cursor_temp_capture') {
+    return $true
+  }
+  return $false
+}
+
+function Invoke-SilverStaleCursorInvokeCloseout {
+  param(
+    [string]$RepoRoot,
+    [string]$AdapterOutputPath,
+    [System.Diagnostics.Process]$Process,
+    [string]$StdoutTmp,
+    [string]$StderrTmp,
+    [string]$TaskDigest,
+    [string]$TaskFile,
+    [string]$OutputFile,
+    [datetime]$ProcessStartUtc,
+    [hashtable]$ProgressSnapshotBefore
+  )
+  $terminated = ""
+  if ($null -ne $Process) {
+    if (-not $Process.HasExited) {
+      try {
+        Stop-Process -Id $Process.Id -Force -ErrorAction SilentlyContinue
+        $terminated = "pid=" + [string]$Process.Id
+      }
+      catch {
+        $terminated = "pid=" + [string]$Process.Id + "(stop_failed)"
+      }
+    }
+    else {
+      $terminated = "pid=" + [string]$Process.Id + "(already_exited)"
+    }
+  }
+  $so = ""
+  $se = ""
+  if ($StdoutTmp -and (Test-Path -LiteralPath $StdoutTmp)) {
+    $soRes = Read-SilverLoopTempCaptureFileWithRetry -Path $StdoutTmp
+    if ($soRes.Success) { $so = [string]$soRes.Text }
+  }
+  if ($StderrTmp -and (Test-Path -LiteralPath $StderrTmp)) {
+    $seRes = Read-SilverLoopTempCaptureFileWithRetry -Path $StderrTmp
+    if ($seRes.Success) { $se = [string]$seRes.Text }
+  }
+  $runCtx = Get-SilverAutonomousRunContext
+  $digestClose = $TaskDigest
+  if ([string]::IsNullOrWhiteSpace($digestClose)) { $digestClose = "stale_invoke_orchestration" }
+  $procIso = ""
+  if ($ProcessStartUtc -and ($ProcessStartUtc -ne [datetime]::MinValue)) {
+    $procIso = $ProcessStartUtc.ToString("o")
+  }
+  Write-SilverCursorOutputStaleInvokeTerminal -Path $AdapterOutputPath `
+    -RunId $runCtx.RunId -RunStartUtcIso $runCtx.RunStartUtc -CycleState $runCtx.Cycle `
+    -TaskDigest $digestClose -ProcessStartUtcIso $procIso -TaskFile $TaskFile -OutputFile $OutputFile `
+    -OuterStdout $so -OuterStderr $se
+  $runtimeDirtyRestored = "NO"
+  $gitCleanAfter = "NO"
+  $metaAfter = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $AdapterOutputPath
+  $stateAfter = ""
+  if ($metaAfter.ContainsKey("adapter_output_state")) { $stateAfter = [string]$metaAfter["adapter_output_state"] }
+  $outLenAfter = ""
+  $outLwtAfter = ""
+  if (Test-Path -LiteralPath $AdapterOutputPath) {
+    $fiAfter = Get-Item -LiteralPath $AdapterOutputPath
+    $outLenAfter = [string]$fiAfter.Length
+    $outLwtAfter = $fiAfter.LastWriteTimeUtc.ToString("o")
+  }
+  $closeout = @{
+    stale_invoke_detected = "YES"
+    adapter_output_state = $(if ($stateAfter) { $stateAfter } else { "COMPLETED" })
+    output_last_write_before = [string]$ProgressSnapshotBefore.output_last_write_before
+    output_last_write_after = $outLwtAfter
+    output_length_before = [string]$ProgressSnapshotBefore.output_length_before
+    output_length_after = $outLenAfter
+    process_progress_detected = [string]$ProgressSnapshotBefore.process_progress_detected
+    wsl_agent_progress_detected = [string]$ProgressSnapshotBefore.wsl_agent_progress_detected
+    terminated_processes = $terminated
+    runtime_dirty_restored = $runtimeDirtyRestored
+    git_clean_after = $gitCleanAfter
+    stop_reason = "STALE_CURSOR_INVOKE_NO_PROGRESS"
+    PASS_FAIL = "FAIL"
+  }
+  $archiveCycle = 0
+  if ($env:SILVER_AUTONOMOUS_CYCLE) {
+    $parsedCycle = 0
+    if ([int]::TryParse([string]$env:SILVER_AUTONOMOUS_CYCLE, [ref]$parsedCycle)) {
+      $archiveCycle = $parsedCycle
+    }
+  }
+  if (Get-Command -Name Archive-SilverCap50Utf8FailureRuntimeArtifacts -ErrorAction SilentlyContinue) {
+    $archStale = Archive-SilverCap50Utf8FailureRuntimeArtifacts -RepoRoot $RepoRoot -Cycle $archiveCycle -Reason "STALE_CURSOR_INVOKE_NO_PROGRESS" -CursorExit "125"
+    if ([string]$archStale.RelativePath) {
+      Write-Host ("silver-autopilot-loop: stale_invoke_failure_archive=" + [string]$archStale.RelativePath) -ForegroundColor DarkYellow
+    }
+  }
+  if (Get-Command -Name Invoke-SilverCap50PreflightCleanup -ErrorAction SilentlyContinue) {
+    $cleanupAfterArchive = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot
+    if ([string]$cleanupAfterArchive.PASS_FAIL -eq "PASS") {
+      $closeout.runtime_dirty_restored = "YES"
+      $closeout.git_clean_after = "YES"
+    }
+    elseif ([string]$cleanupAfterArchive.restored_runtime_files) {
+      $closeout.runtime_dirty_restored = "YES"
+      $closeout.git_clean_after = [string]$cleanupAfterArchive.git_clean_after
+    }
+  }
+  if ($closeout.git_clean_after -ne "YES") {
+    $closeout.git_clean_after = if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" }
+  }
+  Write-SilverAutopilotStaleInvokeCloseoutBlock -Result $closeout
+  return $closeout
+}
+
+function Wait-SilverCursorInvokeWithStaleWatchdog {
+  param(
+    [System.Diagnostics.Process]$Process,
+    [string]$AdapterOutputPath,
+    [string]$StdoutTmp,
+    [string]$StderrTmp,
+    [int]$OuterWaitMs,
+    [string]$RepoRoot
+  )
+  $sliceMs = Get-SilverStaleInvokeWatchdogSliceMs
+  $stallMs = Get-SilverStaleInvokeWatchdogStallMs
+  $wallStart = [DateTime]::UtcNow
+  $lastProgressUtc = $wallStart
+  $lastOuterSnap = Get-SilverOuterInvokeProgressSnapshot -StdoutTmp $StdoutTmp -StderrTmp $StderrTmp -AdapterOutputPath $AdapterOutputPath
+  $lastNodeSnap = Get-SilverNodeProcessProgressFingerprint
+  $wslSeenEver = Test-SilverWslAgentWorkloadPresent
+  $progressEver = $false
+  $outLenBefore = ""
+  $outLwtBefore = ""
+  if (Test-Path -LiteralPath $AdapterOutputPath) {
+    $fi0 = Get-Item -LiteralPath $AdapterOutputPath
+    $outLenBefore = [string]$fi0.Length
+    $outLwtBefore = $fi0.LastWriteTimeUtc.ToString("o")
+  }
+  while ($true) {
+    if ($Process.HasExited) {
+      return @{
+        ExitCode = [int]$Process.ExitCode
+        StaleInvokeDetected = $false
+        ProgressSnapshotBefore = @{
+          output_last_write_before = $outLwtBefore
+          output_length_before = $outLenBefore
+          process_progress_detected = $(if ($progressEver) { "YES" } else { "NO" })
+          wsl_agent_progress_detected = $(if ($wslSeenEver) { "YES" } else { "NO" })
+        }
+      }
+    }
+    $remainMs = $OuterWaitMs
+    if ($OuterWaitMs -gt 0) {
+      $elapsedWall = [int64](([DateTime]::UtcNow - $wallStart).TotalMilliseconds)
+      $remainMs = $OuterWaitMs - $elapsedWall
+      if ($remainMs -lt 1) { $remainMs = 1 }
+    }
+    $waitSlice = $sliceMs
+    if ($OuterWaitMs -gt 0 -and $waitSlice -gt $remainMs) { $waitSlice = [int]$remainMs }
+    $exited = $Process.WaitForExit([int]$waitSlice)
+    if ($exited) {
+      return @{
+        ExitCode = [int]$Process.ExitCode
+        StaleInvokeDetected = $false
+        ProgressSnapshotBefore = @{
+          output_last_write_before = $outLwtBefore
+          output_length_before = $outLenBefore
+          process_progress_detected = $(if ($progressEver) { "YES" } else { "NO" })
+          wsl_agent_progress_detected = $(if ($wslSeenEver) { "YES" } else { "NO" })
+        }
+      }
+    }
+    $progressThisSlice = $false
+    if (-not (Test-SilverStaleInvokeStartedMetaState -AdapterOutputPath $AdapterOutputPath)) {
+      $progressThisSlice = $true
+    }
+    $snapNow = Get-SilverOuterInvokeProgressSnapshot -StdoutTmp $StdoutTmp -StderrTmp $StderrTmp -AdapterOutputPath $AdapterOutputPath
+    if ($snapNow -ne $lastOuterSnap) {
+      $progressThisSlice = $true
+      $lastOuterSnap = $snapNow
+    }
+    $nodeNow = Get-SilverNodeProcessProgressFingerprint
+    if ($nodeNow -ne $lastNodeSnap) {
+      $progressThisSlice = $true
+      $lastNodeSnap = $nodeNow
+    }
+    if (Test-SilverWslAgentWorkloadPresent) {
+      $wslSeenEver = $true
+      $progressThisSlice = $true
+    }
+    if ($progressThisSlice) {
+      $progressEver = $true
+      $lastProgressUtc = [DateTime]::UtcNow
+    }
+    if (Test-SilverStaleInvokeStartedMetaState -AdapterOutputPath $AdapterOutputPath) {
+      $stallAgeMs = [int64](([DateTime]::UtcNow - $lastProgressUtc).TotalMilliseconds)
+      if ((-not $progressEver) -and ($stallAgeMs -ge $stallMs)) {
+        return @{
+          ExitCode = 125
+          StaleInvokeDetected = $true
+          ProgressSnapshotBefore = @{
+            output_last_write_before = $outLwtBefore
+            output_length_before = $outLenBefore
+            process_progress_detected = "NO"
+            wsl_agent_progress_detected = $(if ($wslSeenEver) { "YES" } else { "NO" })
+          }
+        }
+      }
+    }
+    if ($OuterWaitMs -gt 0) {
+      $elapsedWall2 = [int64](([DateTime]::UtcNow - $wallStart).TotalMilliseconds)
+      if ($elapsedWall2 -ge $OuterWaitMs) {
+        try { Stop-Process -Id $Process.Id -Force -ErrorAction SilentlyContinue } catch { }
+        return @{
+          ExitCode = 124
+          StaleInvokeDetected = $false
+          ProgressSnapshotBefore = @{
+            output_last_write_before = $outLwtBefore
+            output_length_before = $outLenBefore
+            process_progress_detected = $(if ($progressEver) { "YES" } else { "NO" })
+            wsl_agent_progress_detected = $(if ($wslSeenEver) { "YES" } else { "NO" })
+          }
+        }
+      }
+    }
+  }
 }
 
 function Initialize-SilverAutonomousRunLifecycle {
@@ -2412,7 +2816,8 @@ function Stop-LoopWithFail {
   }
   $skipRepoProgressLogWrite = $false
   Write-Host ("SILVER_LOOP_SAFETY_STOP reason=" + $reasonLine) -ForegroundColor Red
-  $baselines = Get-BaselineProgressMetrics
+  $isRuntimeFailureStop = Test-SilverCap50StopReasonIsRuntimeFailure -StopReason $StopReason -Focus $Focus
+  $baselines = if ($isRuntimeFailureStop) { Get-SilverRuntimeFailureProgressMetrics } else { Get-BaselineProgressMetrics }
   $fields = @{
     timestamp = (Get-Date).ToString("s")
     cycle = [string]$Cycle
@@ -2517,7 +2922,9 @@ function Stop-LoopWithFail {
   $cyclesForScorecard = $Cycle
   if ($script:AutonomousCyclesCompleted -gt 0) { $cyclesForScorecard = $script:AutonomousCyclesCompleted }
   if (-not $skipScorecardAfterOrchestrationCloseout) {
-    Invoke-SilverCapProductScorecardIfActive -RepoRoot $RepoRoot -ProgressLogPath $ProgressLogPath -CyclesCompleted $cyclesForScorecard -StopReason $reasonLine
+    $runtimeFailScore = "NO"
+    if (Test-SilverCap50StopReasonIsRuntimeFailure -StopReason $StopReason -Focus $Focus) { $runtimeFailScore = "YES" }
+    Invoke-SilverCapProductScorecardIfActive -RepoRoot $RepoRoot -ProgressLogPath $ProgressLogPath -CyclesCompleted $cyclesForScorecard -StopReason $reasonLine -RuntimeFailure $runtimeFailScore
   }
   else {
     Write-Host "silver-autopilot-loop: scorecard_skipped_after_orchestration_closeout_restore=YES" -ForegroundColor DarkCyan
@@ -3897,6 +4304,100 @@ selftest adapter flush ok
   return $true
 }
 
+function Invoke-SilverStaleInvokeWatchdogSelfTest {
+  param([string]$RepoRoot)
+  $utf8 = New-Object System.Text.UTF8Encoding $false
+  $failures = New-Object System.Collections.Generic.List[string]
+  $td = Join-Path $env:TEMP ("silver-stale-invoke-watchdog-selftest-" + [guid]::NewGuid().ToString("N"))
+  New-Item -ItemType Directory -Path $td -Force | Out-Null
+  $prevEa = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try {
+    Set-Location -LiteralPath $td
+    & git init 2>$null | Out-Null
+    & git config user.email "silver-stale-invoke-selftest@local" 2>$null
+    & git config user.name "silver-stale-invoke-selftest" 2>$null
+    [System.IO.File]::WriteAllText((Join-Path $td ".gitignore"), ".silver-runtime/`n", $utf8)
+    foreach ($n in @("SILVER_PROGRESS_LOG.md", "SILVER_NEXT_ACTION.md", "SILVER_CURSOR_OUTPUT.md", "SILVER_RUN_REPORT.md")) {
+      [System.IO.File]::WriteAllText((Join-Path $td $n), "# " + $n + "`n", $utf8)
+    }
+    & git add .gitignore SILVER_PROGRESS_LOG.md SILVER_NEXT_ACTION.md SILVER_CURSOR_OUTPUT.md SILVER_RUN_REPORT.md 2>$null
+    & git commit -m "init" 2>$null | Out-Null
+    $cursorOut = Join-Path $td "SILVER_CURSOR_OUTPUT.md"
+    $taskPath = Join-Path $td "SILVER_NEXT_ACTION.md"
+    $taskAbs = (Resolve-Path -LiteralPath $taskPath).Path
+    $outAbs = (Resolve-Path -LiteralPath $cursorOut).Path
+    $digest = Get-SilverTaskUtf8Sha256HexPrefix -Text "# SILVER_NEXT_ACTION.md`n"
+    $invokeIso = (Get-Date).ToUniversalTime().ToString("o")
+    $env:SILVER_AUTONOMOUS_RUN_ID = "stale-watchdog-run"
+    $env:SILVER_AUTONOMOUS_RUN_START_UTC = $invokeIso
+    $env:SILVER_AUTONOMOUS_CYCLE = "1"
+    Write-SilverCursorOutputAdapterInvokeStartedMeta -Path $cursorOut `
+      -RunId "stale-watchdog-run" -RunStartUtcIso $invokeIso -CycleState "1" `
+      -TaskFile $taskAbs -OutputFile $outAbs -TaskDigest $digest -ProcessStartUtcIso $invokeIso
+    if (-not (Test-SilverStaleInvokeStartedMetaState -AdapterOutputPath $cursorOut)) {
+      [void]$failures.Add("stale_meta_state_expected_INVOKE_STARTED_empty_exit_elapsed")
+    }
+    $fi0 = Get-Item -LiteralPath $cursorOut
+    $snap = @{
+      output_last_write_before = $fi0.LastWriteTimeUtc.ToString("o")
+      output_length_before = [string]$fi0.Length
+      process_progress_detected = "NO"
+      wsl_agent_progress_detected = "NO"
+    }
+    $close = Invoke-SilverStaleCursorInvokeCloseout -RepoRoot $td -AdapterOutputPath $outAbs -Process $null `
+      -StdoutTmp "" -StderrTmp "" -TaskDigest $digest -TaskFile $taskAbs -OutputFile $outAbs `
+      -ProcessStartUtc ([datetime]::Parse($invokeIso, [System.Globalization.CultureInfo]::InvariantCulture, [System.Globalization.DateTimeStyles]::RoundtripKind)) `
+      -ProgressSnapshotBefore $snap
+    if ([string]$close.PASS_FAIL -ne "FAIL") {
+      [void]$failures.Add("closeout_PASS_FAIL_expected_FAIL")
+    }
+    if ([string]$close.stop_reason -ne "STALE_CURSOR_INVOKE_NO_PROGRESS") {
+      [void]$failures.Add("closeout_stop_reason_expected_STALE_CURSOR_INVOKE_NO_PROGRESS")
+    }
+    if ([string]$close.adapter_output_state -ne "COMPLETED") {
+      [void]$failures.Add("closeout_adapter_output_state_expected_COMPLETED")
+    }
+    if (-not (Test-GitStatusClean -Cwd $td)) {
+      [void]$failures.Add("repo_not_clean_after_stale_closeout")
+    }
+    $archHit = Get-ChildItem -LiteralPath (Join-Path $td ".silver-runtime\failures") -Recurse -Filter "SILVER_CURSOR_OUTPUT.md" -File -ErrorAction SilentlyContinue | Select-Object -First 1
+    if (-not $archHit) {
+      [void]$failures.Add("stale_invoke_archive_missing_cursor_output")
+    }
+    else {
+      $archMeta = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $archHit.FullName
+      if ([string]$archMeta["exit_code"] -ne "125") {
+        [void]$failures.Add("archived_closeout_exit_code_expected_125")
+      }
+    }
+    $mojibakeSample = ([string][char]0x0102 + [char]0x0161 + "KOL PRO CURSOR")
+    [System.IO.File]::WriteAllText($taskPath, $mojibakeSample + "`n", $utf8)
+    $gate = Invoke-SilverCap50Utf8SurfacesHardGate -RepoRoot $td -NextActionPath $taskPath -CursorOutputPath $cursorOut
+    if ($gate.PASS_FAIL -ne "FAIL") {
+      [void]$failures.Add("mojibake_pre_invoke_gate_expected_FAIL")
+    }
+    & git restore --source=HEAD --worktree -- SILVER_NEXT_ACTION.md 2>$null
+  }
+  finally {
+    $ErrorActionPreference = $prevEa
+    Set-Location -LiteralPath $RepoRoot
+    Remove-Item -LiteralPath $td -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item Env:\SILVER_AUTONOMOUS_RUN_ID -ErrorAction SilentlyContinue
+    Remove-Item Env:\SILVER_AUTONOMOUS_RUN_START_UTC -ErrorAction SilentlyContinue
+    Remove-Item Env:\SILVER_AUTONOMOUS_CYCLE -ErrorAction SilentlyContinue
+  }
+  if ($failures.Count -gt 0) {
+    Write-Host "SILVER_STALE_INVOKE_WATCHDOG_SELFTEST=FAIL" -ForegroundColor Red
+    foreach ($f in $failures) { Write-Host $f -ForegroundColor Red }
+    return $false
+  }
+  Write-Host "SILVER_STALE_INVOKE_WATCHDOG_SELFTEST=PASS" -ForegroundColor Green
+  Write-Host "engine_changed=NO"
+  Write-Host "assets_app_changed=NO"
+  return $true
+}
+
 function Invoke-SilverRearmInvokeEdgeCaseSelfTest {
   param([string]$RepoRoot)
   $utf8 = New-Object System.Text.UTF8Encoding $false
@@ -4841,7 +5342,8 @@ function Invoke-SilverCapProductScorecardIfActive {
     [string]$RepoRoot,
     [string]$ProgressLogPath,
     [int]$CyclesCompleted,
-    [string]$StopReason
+    [string]$StopReason,
+    [string]$RuntimeFailure = "NO"
   )
   if (-not (Get-Command -Name Complete-SilverCapProductScorecard -ErrorAction SilentlyContinue)) { return }
   if (-not $script:SilverCapScorecardBeforePath) { return }
@@ -4868,7 +5370,13 @@ function Invoke-SilverCapProductScorecardIfActive {
   if ($prUrlAfter -and $prUrlAfter -ne $prUrlBefore) { $prCreated = "1" }
   $productFix = "NO"
   if ($engineCh -eq "YES" -or $assetsCh -eq "YES") { $productFix = "YES" }
-  $scOk = Complete-SilverCapProductScorecard -RepoRoot $RepoRoot -ProgressLogPath $ProgressLogPath -CyclesCompleted $CyclesCompleted -StopReason $StopReason -PrCreatedCount $prCreated -ProductFixCreated $productFix
+  $runtimeFailFlag = [string]$RuntimeFailure
+  if ($runtimeFailFlag -ne "YES") {
+    if (Test-SilverCap50StopReasonIsRuntimeFailure -StopReason $StopReason) {
+      $runtimeFailFlag = "YES"
+    }
+  }
+  $scOk = Complete-SilverCapProductScorecard -RepoRoot $RepoRoot -ProgressLogPath $ProgressLogPath -CyclesCompleted $CyclesCompleted -StopReason $StopReason -PrCreatedCount $prCreated -ProductFixCreated $productFix -RuntimeFailure $runtimeFailFlag
   if (Get-Command -Name Invoke-SilverCapOutcomeEnforcement -ErrorAction SilentlyContinue) {
     $capLbl = [string]$script:SilverCapScorecardCapLabel
     if (-not $capLbl) { $capLbl = "CAPX" }
@@ -5123,6 +5631,12 @@ if ($AutonomousRearmSelfTest) {
 if ($RearmInvokeEdgeCaseSelfTest) {
   $stRearmInvoke = Invoke-SilverRearmInvokeEdgeCaseSelfTest -RepoRoot $RepoRoot
   if (-not $stRearmInvoke) { exit 1 }
+  exit 0
+}
+
+if ($StaleInvokeWatchdogSelfTest) {
+  $stStaleWd = Invoke-SilverStaleInvokeWatchdogSelfTest -RepoRoot $RepoRoot
+  if (-not $stStaleWd) { exit 1 }
   exit 0
 }
 
@@ -5595,6 +6109,58 @@ while ($true) {
     $cursorExitStr = "SKIPPED_DRY_RUN_NO_CURSOR_COMMAND"
   } else {
     if (-not $DryRun) {
+      if (Test-SilverStaleInvokeStartedMetaState -AdapterOutputPath $CursorOutputPath) {
+        $outAbsStale = $CursorOutputPath
+        if (Test-Path -LiteralPath $CursorOutputPath) {
+          $outAbsStale = (Resolve-Path -LiteralPath $CursorOutputPath).Path
+        }
+        $fiStale = $null
+        $snapStale = @{
+          output_last_write_before = ""
+          output_length_before = ""
+          process_progress_detected = "NO"
+          wsl_agent_progress_detected = "NO"
+        }
+        if (Test-Path -LiteralPath $outAbsStale) {
+          $fiStale = Get-Item -LiteralPath $outAbsStale
+          $snapStale.output_last_write_before = $fiStale.LastWriteTimeUtc.ToString("o")
+          $snapStale.output_length_before = [string]$fiStale.Length
+        }
+        $digestStale = ""
+        if (Test-Path -LiteralPath $NextActionPath) {
+          $digestStale = Get-SilverTaskUtf8Sha256HexPrefix -Text ([System.IO.File]::ReadAllText($NextActionPath, [System.Text.UTF8Encoding]::new($false)))
+        }
+        $taskAbsStale = ""
+        if (Test-Path -LiteralPath $NextActionPath) {
+          $taskAbsStale = (Resolve-Path -LiteralPath $NextActionPath).Path
+        }
+        $procStale = [datetime]::MinValue
+        if ($script:SilverCycleCursorProcessStartUtc -and ($script:SilverCycleCursorProcessStartUtc -ne [datetime]::MinValue)) {
+          $procStale = $script:SilverCycleCursorProcessStartUtc
+        }
+        $null = Invoke-SilverStaleCursorInvokeCloseout -RepoRoot $RepoRoot -AdapterOutputPath $outAbsStale -Process $null `
+          -StdoutTmp "" -StderrTmp "" -TaskDigest $digestStale -TaskFile $taskAbsStale -OutputFile $outAbsStale `
+          -ProcessStartUtc $procStale -ProgressSnapshotBefore $snapStale
+        Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+          -CursorExit "125" -AutopilotExit "N/A" -StatusExit "N/A" `
+          -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine $safetyPre `
+          -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
+          -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
+          -Headline (Get-NextActionHeadline -Text $nextText) -Focus "stale_cursor_invoke_precycle" `
+          -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
+          -StopReason "STALE_CURSOR_INVOKE_NO_PROGRESS"
+      }
+      $utf8PreInvoke = Invoke-SilverCap50Utf8SurfacesHardGate -RepoRoot $RepoRoot -NextActionPath $NextActionPath -CursorOutputPath $CursorOutputPath
+      if ($utf8PreInvoke.PASS_FAIL -ne "PASS") {
+        Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+          -CursorExit "N/A" -AutopilotExit "N/A" -StatusExit "N/A" `
+          -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine $safetyPre `
+          -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
+          -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
+          -Headline (Get-NextActionHeadline -Text $nextText) -Focus "utf8_mojibake_hard_fail_pre_adapter_invoke" `
+          -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
+          -StopReason "utf8_mojibake_detected_pre_adapter_invoke"
+      }
       $taskAbs = (Resolve-Path -LiteralPath $NextActionPath).Path
       $outAbs = (Resolve-Path -LiteralPath $CursorOutputPath).Path
       $quotedTask = '"' + $taskAbs.Replace('"', '""') + '"'
@@ -5665,19 +6231,44 @@ while ($true) {
           $outerWaitMs = ($effectiveCap50TimeoutSeconds + 180) * 1000
         }
         $outerWallTimedOut = $false
+        $staleInvokeDetected = $false
+        $staleSnapBefore = @{
+          output_last_write_before = ""
+          output_length_before = ""
+          process_progress_detected = "NO"
+          wsl_agent_progress_detected = "NO"
+        }
         if ($outerWaitMs -gt 0) {
-          if (-not $p.WaitForExit($outerWaitMs)) {
-            $outerWallTimedOut = $true
-            try { Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue } catch { }
-            $ce = 124
+          $watchWait = Wait-SilverCursorInvokeWithStaleWatchdog -Process $p -AdapterOutputPath $outAbs -StdoutTmp $stdoutTmp -StderrTmp $stderrTmp -OuterWaitMs $outerWaitMs -RepoRoot $RepoRoot
+          $ce = [int]$watchWait.ExitCode
+          $staleInvokeDetected = [bool]$watchWait.StaleInvokeDetected
+          if ($watchWait.ContainsKey("ProgressSnapshotBefore")) {
+            $staleSnapBefore = $watchWait.ProgressSnapshotBefore
           }
-          else {
-            $ce = $p.ExitCode
-          }
+          if ($ce -eq 124) { $outerWallTimedOut = $true }
         }
         else {
-          $p.WaitForExit()
-          $ce = $p.ExitCode
+          $watchWait = Wait-SilverCursorInvokeWithStaleWatchdog -Process $p -AdapterOutputPath $outAbs -StdoutTmp $stdoutTmp -StderrTmp $stderrTmp -OuterWaitMs 0 -RepoRoot $RepoRoot
+          $ce = [int]$watchWait.ExitCode
+          $staleInvokeDetected = [bool]$watchWait.StaleInvokeDetected
+          if ($watchWait.ContainsKey("ProgressSnapshotBefore")) {
+            $staleSnapBefore = $watchWait.ProgressSnapshotBefore
+          }
+        }
+        if ($staleInvokeDetected) {
+          $null = Invoke-SilverStaleCursorInvokeCloseout -RepoRoot $RepoRoot -AdapterOutputPath $outAbs -Process $p `
+            -StdoutTmp $stdoutTmp -StderrTmp $stderrTmp -TaskDigest $expectedTaskDigest -TaskFile $expectedTaskFile `
+            -OutputFile $outAbs -ProcessStartUtc $cursorProcStartUtc -ProgressSnapshotBefore $staleSnapBefore
+          $script:LastCursorExit = "125"
+          $cursorExitStr = "125"
+          Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+            -CursorExit $cursorExitStr -AutopilotExit "N/A" -StatusExit "N/A" `
+            -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine $safetyPre `
+            -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
+            -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
+            -Headline (Get-NextActionHeadline -Text $nextText) -Focus "stale_cursor_invoke_no_progress" `
+            -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
+            -StopReason "STALE_CURSOR_INVOKE_NO_PROGRESS"
         }
         $runCtxReconcile = Get-SilverAutonomousRunContext
         $soRes = Read-SilverLoopTempCaptureFileWithRetry -Path $stdoutTmp
@@ -6187,7 +6778,8 @@ while ($true) {
   }
   if ($controlledInfinite) {
     $script:AutonomousCyclesCompleted++
-    if ($se -eq 0) {
+    $cycleProductPass = ($se -eq 0) -and ($cursorExitStr -eq "0") -and ([string]$fieldsPass["silver_cycle_adapter_meta_fresh"] -eq "YES")
+    if ($cycleProductPass) {
       $script:AutonomousCyclesPass++
     }
     Update-SilverAutonomousReportingHygieneAccumulator -ReportText $reportPost -CycleFields $fieldsPass
@@ -6246,7 +6838,13 @@ if (-not $DryRun) {
 
 $finalCyclesForScorecard = $cycle
 if ($script:AutonomousCyclesCompleted -gt 0) { $finalCyclesForScorecard = $script:AutonomousCyclesCompleted }
-Invoke-SilverCapProductScorecardIfActive -RepoRoot $RepoRoot -ProgressLogPath $ProgressLogPath -CyclesCompleted $finalCyclesForScorecard -StopReason "loop_exit"
+$finalScorecardRuntimeFailure = "NO"
+if ($controlledInfinite -and $script:AutonomousCyclesCompleted -gt 0) {
+  if ($script:AutonomousCyclesPass -lt $script:AutonomousCyclesCompleted) {
+    $finalScorecardRuntimeFailure = "YES"
+  }
+}
+Invoke-SilverCapProductScorecardIfActive -RepoRoot $RepoRoot -ProgressLogPath $ProgressLogPath -CyclesCompleted $finalCyclesForScorecard -StopReason "loop_exit" -RuntimeFailure $finalScorecardRuntimeFailure
 if (Get-Command -Name Invoke-SilverAuditRegistryReport -ErrorAction SilentlyContinue) {
   $null = Invoke-SilverAuditRegistryReport -RepoRoot $RepoRoot
 }

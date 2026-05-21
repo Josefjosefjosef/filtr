@@ -1888,6 +1888,8 @@ function cmdStatus(argvCommand) {
     ),
   );
 
+  const cleanupAfterStatus = cap50PreflightRuntimeCleanup(false);
+
   console.log("=== SILVER_AUTOPILOT_STATUS ===");
   console.log("timestamp=" + nowIso());
   console.log("command=" + (argvCommand || "--status"));
@@ -1971,7 +1973,24 @@ function cmdStatus(argvCommand) {
     console.log("audit_registry_error=" + String(e.message || e));
   }
   console.log("=== END_SILVER_AUTOPILOT_STATUS ===");
-  return { status, branch, commit, clean };
+  const cleanAfterStatus = gitClean();
+  if (cleanupAfterStatus.result.git_clean_after === "YES") {
+    console.log("status_runtime_cleanup=PASS restored=" + cleanupAfterStatus.result.restored_runtime_files);
+  } else {
+    console.log(
+      "status_runtime_cleanup=FAIL git_clean_after=" +
+        cleanupAfterStatus.result.git_clean_after +
+        " blocked=" +
+        cleanupAfterStatus.result.blocked_dirty_files,
+    );
+  }
+  const cleanReturn =
+    cleanupAfterStatus.result.git_clean_after === "YES"
+      ? true
+      : cleanupAfterStatus.result.PASS_FAIL === "PASS"
+        ? true
+        : clean;
+  return { status, branch, commit, clean: cleanReturn };
 }
 
 function cmdAuditRegistry() {

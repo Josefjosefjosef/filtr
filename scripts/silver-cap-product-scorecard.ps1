@@ -162,7 +162,8 @@ function Complete-SilverCapProductScorecard {
     [int]$CyclesCompleted,
     [string]$StopReason,
     [string]$PrCreatedCount = "0",
-    [string]$ProductFixCreated = "NO"
+    [string]$ProductFixCreated = "NO",
+    [string]$RuntimeFailure = "NO"
   )
   if (-not $script:SilverCapScorecardBeforePath) { return $false }
   if (-not (Test-Path -LiteralPath $script:SilverCapScorecardBeforePath)) { return $false }
@@ -185,7 +186,8 @@ function Complete-SilverCapProductScorecard {
     "--cycles", [string]$CyclesCompleted,
     "--stop-reason", $StopReason,
     "--pr-created-count", $PrCreatedCount,
-    "--product-fix", $ProductFixCreated
+    "--product-fix", $ProductFixCreated,
+    "--runtime-failure", $RuntimeFailure
   )
   $parts = New-Object System.Collections.ArrayList
   foreach ($arg in $argList) {
