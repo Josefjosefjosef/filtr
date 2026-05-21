@@ -922,42 +922,35 @@ function Test-SilverStaleInvokeStartedMetaState {
   return $true
 }
 
-function Get-SilverFileProgressSnapshot {
-  param([string]$Path)
-  if (-not $Path) { return "" }
-  if (-not (Test-Path -LiteralPath $Path)) { return "" }
-  $fi = Get-Item -LiteralPath $Path
-  return ([string]$Path + ":" + [string]$fi.Length + ":" + [string]$fi.LastWriteTimeUtc.Ticks)
-}
-
-function Get-SilverOuterInvokeProgressSnapshot {
-  param(
-    [string]$StdoutTmp,
-    [string]$StderrTmp,
-    [string]$AdapterOutputPath
+function Get-SilverAdapterInvokeStallFingerprint {
+  param([string]$AdapterOutputPath)
+  if (-not (Test-Path -LiteralPath $AdapterOutputPath)) { return "" }
+  $meta = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $AdapterOutputPath
+  $keys = @(
+    "adapter_output_state",
+    "adapter_completion_path",
+    "exit_code",
+    "elapsed_ms",
+    "process_end_utc",
+    "timed_out",
+    "task_digest",
+    "stdout_nonempty",
+    "stderr_nonempty"
   )
-  $items = New-Object System.Collections.Generic.List[string]
-  foreach ($p in @($StdoutTmp, $StderrTmp, $AdapterOutputPath)) {
-    $snap = Get-SilverFileProgressSnapshot -Path $p
-    if ($snap) { [void]$items.Add($snap) }
+  $parts = New-Object System.Collections.Generic.List[string]
+  foreach ($k in $keys) {
+    $v = ""
+    if ($meta.ContainsKey($k)) { $v = [string]$meta[$k] }
+    [void]$parts.Add($k + "=" + $v.Trim())
   }
-  $arr = $items.ToArray()
-  [Array]::Sort($arr)
-  return ($arr -join "|")
-}
-
-function Get-SilverNodeProcessProgressFingerprint {
-  $items = New-Object System.Collections.Generic.List[string]
-  $procs = Get-Process -Name "node" -ErrorAction SilentlyContinue
-  if ($null -eq $procs) { return "" }
-  foreach ($proc in $procs) {
-    $cpu = 0
-    try { $cpu = [int][math]::Round($proc.CPU, 0) } catch { $cpu = 0 }
-    [void]$items.Add([string]$proc.Id + ":" + [string]$cpu + ":" + [string]$proc.WorkingSet64)
+  try {
+    $fi = Get-Item -LiteralPath $AdapterOutputPath
+    [void]$parts.Add("file_bytes=" + [string]$fi.Length)
   }
-  $arr = $items.ToArray()
-  [Array]::Sort($arr)
-  return ($arr -join "|")
+  catch {
+    [void]$parts.Add("file_bytes=0")
+  }
+  return ($parts.ToArray() -join "|")
 }
 
 function Test-SilverWslAgentWorkloadPresent {
@@ -1206,11 +1199,10 @@ function Wait-SilverCursorInvokeWithStaleWatchdog {
   $sliceMs = Get-SilverStaleInvokeWatchdogSliceMs
   $stallMs = Get-SilverStaleInvokeWatchdogStallMs
   $wallStart = [DateTime]::UtcNow
-  $lastProgressUtc = $wallStart
-  $lastOuterSnap = Get-SilverOuterInvokeProgressSnapshot -StdoutTmp $StdoutTmp -StderrTmp $StderrTmp -AdapterOutputPath $AdapterOutputPath
-  $lastNodeSnap = Get-SilverNodeProcessProgressFingerprint
+  $lastAdapterFinger = Get-SilverAdapterInvokeStallFingerprint -AdapterOutputPath $AdapterOutputPath
+  $lastAdapterProgressUtc = $wallStart
+  $adapterProgressEver = $false
   $wslSeenEver = Test-SilverWslAgentWorkloadPresent
-  $progressEver = $false
   $outLenBefore = ""
   $outLwtBefore = ""
   if (Test-Path -LiteralPath $AdapterOutputPath) {
@@ -1226,7 +1218,7 @@ function Wait-SilverCursorInvokeWithStaleWatchdog {
         ProgressSnapshotBefore = @{
           output_last_write_before = $outLwtBefore
           output_length_before = $outLenBefore
-          process_progress_detected = $(if ($progressEver) { "YES" } else { "NO" })
+          process_progress_detected = $(if ($adapterProgressEver) { "YES" } else { "NO" })
           wsl_agent_progress_detected = $(if ($wslSeenEver) { "YES" } else { "NO" })
         }
       }
@@ -1247,43 +1239,37 @@ function Wait-SilverCursorInvokeWithStaleWatchdog {
         ProgressSnapshotBefore = @{
           output_last_write_before = $outLwtBefore
           output_length_before = $outLenBefore
-          process_progress_detected = $(if ($progressEver) { "YES" } else { "NO" })
+          process_progress_detected = $(if ($adapterProgressEver) { "YES" } else { "NO" })
           wsl_agent_progress_detected = $(if ($wslSeenEver) { "YES" } else { "NO" })
         }
       }
     }
-    $progressThisSlice = $false
+    $adapterFingerNow = Get-SilverAdapterInvokeStallFingerprint -AdapterOutputPath $AdapterOutputPath
+    $adapterProgressThisSlice = $false
+    if ($adapterFingerNow -ne $lastAdapterFinger) {
+      $adapterProgressThisSlice = $true
+      $lastAdapterFinger = $adapterFingerNow
+    }
     if (-not (Test-SilverStaleInvokeStartedMetaState -AdapterOutputPath $AdapterOutputPath)) {
-      $progressThisSlice = $true
+      $adapterProgressThisSlice = $true
     }
-    $snapNow = Get-SilverOuterInvokeProgressSnapshot -StdoutTmp $StdoutTmp -StderrTmp $StderrTmp -AdapterOutputPath $AdapterOutputPath
-    if ($snapNow -ne $lastOuterSnap) {
-      $progressThisSlice = $true
-      $lastOuterSnap = $snapNow
-    }
-    $nodeNow = Get-SilverNodeProcessProgressFingerprint
-    if ($nodeNow -ne $lastNodeSnap) {
-      $progressThisSlice = $true
-      $lastNodeSnap = $nodeNow
+    if ($adapterProgressThisSlice) {
+      $adapterProgressEver = $true
+      $lastAdapterProgressUtc = [DateTime]::UtcNow
     }
     if (Test-SilverWslAgentWorkloadPresent) {
       $wslSeenEver = $true
-      $progressThisSlice = $true
-    }
-    if ($progressThisSlice) {
-      $progressEver = $true
-      $lastProgressUtc = [DateTime]::UtcNow
     }
     if (Test-SilverStaleInvokeStartedMetaState -AdapterOutputPath $AdapterOutputPath) {
-      $stallAgeMs = [int64](([DateTime]::UtcNow - $lastProgressUtc).TotalMilliseconds)
-      if ((-not $progressEver) -and ($stallAgeMs -ge $stallMs)) {
+      $stallAgeMs = [int64](([DateTime]::UtcNow - $lastAdapterProgressUtc).TotalMilliseconds)
+      if ($stallAgeMs -ge $stallMs) {
         return @{
           ExitCode = 125
           StaleInvokeDetected = $true
           ProgressSnapshotBefore = @{
             output_last_write_before = $outLwtBefore
             output_length_before = $outLenBefore
-            process_progress_detected = "NO"
+            process_progress_detected = $(if ($adapterProgressEver) { "YES" } else { "NO" })
             wsl_agent_progress_detected = $(if ($wslSeenEver) { "YES" } else { "NO" })
           }
         }
@@ -1299,7 +1285,7 @@ function Wait-SilverCursorInvokeWithStaleWatchdog {
           ProgressSnapshotBefore = @{
             output_last_write_before = $outLwtBefore
             output_length_before = $outLenBefore
-            process_progress_detected = $(if ($progressEver) { "YES" } else { "NO" })
+            process_progress_detected = $(if ($adapterProgressEver) { "YES" } else { "NO" })
             wsl_agent_progress_detected = $(if ($wslSeenEver) { "YES" } else { "NO" })
           }
         }
@@ -4371,6 +4357,47 @@ function Invoke-SilverStaleInvokeWatchdogSelfTest {
         [void]$failures.Add("archived_closeout_exit_code_expected_125")
       }
     }
+    $prevSlice = $env:SILVER_STALE_INVOKE_SLICE_SECONDS
+    $prevStall = $env:SILVER_STALE_INVOKE_STALL_SECONDS
+    $env:SILVER_STALE_INVOKE_SLICE_SECONDS = "2"
+    $env:SILVER_STALE_INVOKE_STALL_SECONDS = "4"
+    $watchOut = Join-Path $td "SILVER_CURSOR_OUTPUT_watchdog.md"
+    $watchDigest = Get-SilverTaskUtf8Sha256HexPrefix -Text "# SILVER_NEXT_ACTION.md`nwatchdog`n"
+    $watchIso = (Get-Date).ToUniversalTime().ToString("o")
+    Write-SilverCursorOutputAdapterInvokeStartedMeta -Path $watchOut `
+      -RunId "stale-watchdog-run" -RunStartUtcIso $watchIso -CycleState "1" `
+      -TaskFile $taskAbs -OutputFile $watchOut -TaskDigest $watchDigest -ProcessStartUtcIso $watchIso
+    $psiWatch = New-Object System.Diagnostics.ProcessStartInfo
+    $psiWatch.FileName = "powershell.exe"
+    $psiWatch.Arguments = "-NoProfile -Command Start-Sleep -Seconds 600"
+    $psiWatch.UseShellExecute = $false
+    $psiWatch.CreateNoWindow = $true
+    $pWatch = [System.Diagnostics.Process]::Start($psiWatch)
+    if ($null -eq $pWatch) {
+      [void]$failures.Add("watchdog_hung_process_start_failed")
+    }
+    else {
+      try {
+        $watchWait = Wait-SilverCursorInvokeWithStaleWatchdog -Process $pWatch -AdapterOutputPath $watchOut `
+          -StdoutTmp "" -StderrTmp "" -OuterWaitMs 120000 -RepoRoot $td
+        if (-not [bool]$watchWait.StaleInvokeDetected) {
+          [void]$failures.Add("watchdog_wait_expected_StaleInvokeDetected_with_wsl_present")
+        }
+        if ([int]$watchWait.ExitCode -ne 125) {
+          [void]$failures.Add("watchdog_wait_exit_code_expected_125")
+        }
+        if ($pWatch -and (-not $pWatch.HasExited)) {
+          try { Stop-Process -Id $pWatch.Id -Force -ErrorAction SilentlyContinue } catch { }
+        }
+      }
+      finally {
+        if ($pWatch -and (-not $pWatch.HasExited)) {
+          try { Stop-Process -Id $pWatch.Id -Force -ErrorAction SilentlyContinue } catch { }
+        }
+      }
+    }
+    if ($null -ne $prevSlice) { $env:SILVER_STALE_INVOKE_SLICE_SECONDS = $prevSlice } else { Remove-Item Env:\SILVER_STALE_INVOKE_SLICE_SECONDS -ErrorAction SilentlyContinue }
+    if ($null -ne $prevStall) { $env:SILVER_STALE_INVOKE_STALL_SECONDS = $prevStall } else { Remove-Item Env:\SILVER_STALE_INVOKE_STALL_SECONDS -ErrorAction SilentlyContinue }
     $mojibakeSample = ([string][char]0x0102 + [char]0x0161 + "KOL PRO CURSOR")
     [System.IO.File]::WriteAllText($taskPath, $mojibakeSample + "`n", $utf8)
     $gate = Invoke-SilverCap50Utf8SurfacesHardGate -RepoRoot $td -NextActionPath $taskPath -CursorOutputPath $cursorOut
@@ -6259,6 +6286,7 @@ while ($true) {
           $null = Invoke-SilverStaleCursorInvokeCloseout -RepoRoot $RepoRoot -AdapterOutputPath $outAbs -Process $p `
             -StdoutTmp $stdoutTmp -StderrTmp $stderrTmp -TaskDigest $expectedTaskDigest -TaskFile $expectedTaskFile `
             -OutputFile $outAbs -ProcessStartUtc $cursorProcStartUtc -ProgressSnapshotBefore $staleSnapBefore
+          Invoke-SilverBeepComplete -NoBeep:$NoBeep
           $script:LastCursorExit = "125"
           $cursorExitStr = "125"
           Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
