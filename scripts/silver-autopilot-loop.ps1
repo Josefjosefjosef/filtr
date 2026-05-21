@@ -2328,9 +2328,9 @@ function Test-SilverNextActionIsProductTaskHandoff {
     [string]$SelectorCluster
   )
   $cluster = ([string]$SelectorCluster).Trim()
-  if (-not $cluster) { return $true }
-  if ($cluster -eq "rcz2_retrieval") { return $true }
   if (Test-SilverNextActionIsOrchestrationMaintenanceOnly -Text $NextActionText) { return $false }
+  if (-not $cluster) { return $false }
+  if ($cluster -eq "rcz2_retrieval") { return $true }
   $clusterPat = [regex]::Escape($cluster)
   $hasExplicitProduct =
     ($NextActionText -match $clusterPat) -or
@@ -2358,9 +2358,16 @@ function Invoke-SilverEnsureRegistryClusterProductHandoff {
     [string]$AutopilotScript
   )
   $selectorCluster = Get-SilverAuthoritativeSelectorCluster -RepoRoot $RepoRoot
-  if (-not $selectorCluster) { return $true }
   $nextPath = Join-Path $RepoRoot "SILVER_NEXT_ACTION.md"
   $nextText = Read-TextFileOrEmpty -Path $nextPath
+  if (-not $selectorCluster) {
+    if (Test-SilverNextActionIsOrchestrationMaintenanceOnly -Text $nextText) {
+      $null = Invoke-SilverOrchestrationProductHandoffBridge -RepoRoot $RepoRoot -AutopilotScript $AutopilotScript
+      $nextText = Read-TextFileOrEmpty -Path $nextPath
+      return (-not (Test-SilverNextActionIsOrchestrationMaintenanceOnly -Text $nextText))
+    }
+    return $true
+  }
   if (Test-SilverNextActionIsProductTaskHandoff -NextActionText $nextText -SelectorCluster $selectorCluster) {
     return $true
   }
@@ -2476,6 +2483,10 @@ function Get-SilverNextActionQualityFailureDetail {
   }
   if (Test-SilverNextActionIsOrchestrationMaintenanceOnly -Text $Text) {
     [void]$reasons.Add("orchestration_maintenance_only")
+    [void]$reasons.Add("generic_repo_git_workflow_drift")
+  }
+  if ($Text -match '(?i)\bgit\s+stash\b' -and $Text -match '(?i)\bgit\s+status\b' -and -not (Test-SilverNextActionSilverWorkflowContext -Text $Text)) {
+    [void]$reasons.Add("generic_repo_git_workflow_drift")
   }
   if ($Text -match '(?i)PRODUCT_HANDOFF_CONTRACT' -and (Test-SilverNextActionIsOrchestrationMaintenanceOnly -Text $Text)) {
     [void]$reasons.Add("generic_orchestration_blocked_after_cap_diagnostic")
@@ -7240,6 +7251,30 @@ while ($true) {
         }
       }
       $utf8AfterCursor = Invoke-SilverCap50Utf8SurfacesHardGate -RepoRoot $RepoRoot -NextActionPath $NextActionPath -CursorOutputPath $CursorOutputPath
+      $nextAfterCursor = Read-TextFileOrEmpty -Path $NextActionPath
+      if (-not (Test-SilverNextActionOutputQuality -Text $nextAfterCursor)) {
+        try {
+          $sanitizePostCursor = Invoke-NodeScript -WorkingDirectory $RepoRoot -Arguments @($AutopilotScript, "--sanitize-next-action-md") -PassThruExit $true
+          if (($null -ne $sanitizePostCursor) -and ($sanitizePostCursor.ExitCode -eq 0)) {
+            $nextAfterCursor = Read-TextFileOrEmpty -Path $NextActionPath
+            Write-Host "silver-autopilot-loop: post_cursor_next_action_sanitize=OK" -ForegroundColor DarkCyan
+          }
+        }
+        catch {
+          Write-Host "silver-autopilot-loop: post_cursor_next_action_sanitize_invoke_failed" -ForegroundColor DarkYellow
+        }
+      }
+      if (-not (Test-SilverNextActionOutputQuality -Text $nextAfterCursor)) {
+        $postCursorFailures = Get-SilverNextActionQualityFailureDetail -Text $nextAfterCursor
+        Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+          -CursorExit $cursorExitStr -AutopilotExit "N/A" -StatusExit "N/A" `
+          -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine $safetyPre `
+          -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
+          -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
+          -Headline (Get-NextActionHeadline -Text $nextAfterCursor) -Focus "next_action_quality_post_cursor" `
+          -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
+          -StopReason ("next_action_quality_post_cursor|failures=" + ($postCursorFailures -join ";"))
+      }
       if ($utf8AfterCursor.PASS_FAIL -ne "PASS") {
         Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
           -CursorExit $cursorExitStr -AutopilotExit "N/A" -StatusExit "N/A" `
@@ -7645,6 +7680,12 @@ if (-not $DryRun) {
   if ($finalCycle -lt 1) { $finalCycle = 1 }
   $null = Stop-LoopOnHandoffPersistenceGuard -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $finalCycle -MainCommit $mainCommit -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep
   if ($controlledInfinite) {
+    $null = Invoke-SilverEnsureRegistryClusterProductHandoff -RepoRoot $RepoRoot -AutopilotScript $AutopilotScript
+    $nextExit = Read-TextFileOrEmpty -Path $NextActionPath
+    if (-not (Test-SilverNextActionOutputQuality -Text $nextExit)) {
+      $null = Invoke-SilverOrchestrationProductHandoffBridge -RepoRoot $RepoRoot -AutopilotScript $AutopilotScript
+      $nextExit = Read-TextFileOrEmpty -Path $NextActionPath
+    }
     $null = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $finalCycle -Reason "loop_exit_final_runtime_restore"
     $reportEnd = Read-TextFileOrEmpty -Path $RunReportPath
     $safetyEnd = Get-RunReportLineValue -ReportText $reportEnd -Key "safety_counters"

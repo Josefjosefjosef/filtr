@@ -62,6 +62,10 @@ const SILVER_NEXT_ACTION_SILVER_WORKFLOW_RE =
 const GENERIC_ORCHESTRATION_HANDOFF_RE =
   /(?:\bgit\s+push\s+-u\b|\bgh\s+auth\b|chore\/silver-audit-repo-state|(?:--verify-pr=\d+|\bverify-pr\b)|sudo\s+apt\s+(?:update|install))/i;
 
+/** Generic repo/git workflow (status → commit/stash → gh auth → push) without product cluster task. */
+const GENERIC_REPO_GIT_WORKFLOW_RE =
+  /(?:\bgit\s+status\b[\s\S]{0,1200}?(?:\bgit\s+stash\b|\bgit\s+commit\b)[\s\S]{0,1200}?(?:\bgh\s+auth\b|\bgit\s+push\s+-u\b)|(?:\bgit\s+status\b[\s\S]{0,800}?\bgit\s+push\s+-u\b))/i;
+
 /** Cluster-specific product steps (orchestration/scripts only). */
 const CLUSTER_PRODUCT_TASK_SPEC = {
   self_correction_negation_flip: {
@@ -472,15 +476,35 @@ function resolveProductHandoffOutcome(evidence) {
   };
 }
 
+function isGenericRepoGitMaintenanceWorkflow(text) {
+  const t = String(text || "");
+  if (!t || silverNextActionHasClusterWorkflow(t)) return false;
+  if (GENERIC_REPO_GIT_WORKFLOW_RE.test(t)) return true;
+  if (
+    /\bgit\s+status\b/i.test(t) &&
+    (/\bgit\s+stash\b/i.test(t) || /\bgit\s+commit\b/i.test(t)) &&
+    (/\bgh\s+auth\b/i.test(t) || /\bgit\s+push\s+-u\b/i.test(t))
+  ) {
+    return true;
+  }
+  return false;
+}
+
 function isGenericOrchestrationHandoff(text) {
   const t = String(text || "");
   if (!t) return false;
   if (silverNextActionHasClusterWorkflow(t)) return false;
+  if (isGenericRepoGitMaintenanceWorkflow(t)) return true;
   if (!GENERIC_ORCHESTRATION_HANDOFF_RE.test(t)) return false;
   const productHarness =
     /PRODUCT_CLUSTER|PRODUCT_HANDOFF_CONTRACT|target_cluster=/i.test(t) &&
     /(?:node|npx)\s+scripts\/silver-/i.test(t);
   return !productHarness;
+}
+
+function isValidProductClusterName(cluster) {
+  const c = String(cluster || "").trim();
+  return !!(c && c !== "(žádný)" && c !== "(unknown)" && c !== "(none)");
 }
 
 function capDiagnosticFlowActive(opts) {
@@ -777,12 +801,65 @@ function extractStaleVerifyPrIds(text) {
  * @param {string} text
  * @returns {string[]}
  */
+function buildNoSafeProductClusterBlockedHandoff(ctx) {
+  const main = String((ctx && ctx.mainCommit) || "").trim();
+  const reason = String((ctx && ctx.blockReason) || "NO_SAFE_PRODUCT_CLUSTER").trim();
+  return [
+    "<!-- SILVER_NEXT_ACTION: planner-no-safe-product-cluster; not auto-applied -->",
+    "",
+    "ÚKOL PRO CURSOR — infoUzel.cz / Silver — SAFE_BLOCKED — NO_SAFE_PRODUCT_TASK",
+    "",
+    "### PRODUCT_HANDOFF_CONTRACT",
+    "",
+    "target_cluster=(none)",
+    "source_audit=(none)",
+    "diagnostic_result=" + reason,
+    "recommended_scope=orchestration_only_stop",
+    "expected_outcome=SAFE_BLOCKED",
+    "engine_change_allowed=NO",
+    "assets_app_change_allowed=NO",
+    "product_cluster_required=YES",
+    "generic_git_workflow_blocked=YES",
+    "",
+    "### Kontext",
+    "",
+    "- **Aktuální main commit:** `" + (main || "(unknown)") + "`",
+    "- **Důvod:** Po CAP10/CAP diagnostice není k dispozici autoritativní product cluster — generic git/gh/stash/push handoff je zakázán.",
+    "",
+    "### Kroky (orchestration only)",
+    "",
+    "1) `Set-Location C:\\\\projects\\\\filtr`",
+    "2) `node scripts/silver-autopilot.cjs --status`",
+    "3) `node scripts/silver-rhc3-cluster-classifier-v1.cjs` — obnov selector cluster z disk reportů.",
+    "4) **NE** `git push -u`, **NE** `gh auth login`, **NE** `chore/silver-audit-repo-state` jako „úkol“.",
+    "5) Po PASS cluster diagnostice znovu spusť řízený CAP10_SAFE cyklus (bez ručního generic workflow).",
+    "",
+    "### Povinný výsledek",
+    "",
+    "```text",
+    "=== SILVER_NO_SAFE_PRODUCT_CLUSTER_RESULT ===",
+    "main_commit=" + (main || "(unknown)") + "",
+    "block_reason=" + reason + "",
+    "expected_outcome=SAFE_BLOCKED",
+    "generic_git_workflow_attempted=NO",
+    "=== END_SILVER_NO_SAFE_PRODUCT_CLUSTER_RESULT ===",
+    "```",
+    "",
+  ].join("\n");
+}
+
 function silverNextActionQualityViolations(text, opts) {
   const t = String(text || "");
   const v = [];
   const clusterWorkflow = silverNextActionHasClusterWorkflow(t);
+  if (isGenericRepoGitMaintenanceWorkflow(t)) {
+    v.push("generic_repo_git_workflow_drift");
+  }
   if (capDiagnosticFlowActive(opts) && isGenericOrchestrationHandoff(t)) {
     v.push("generic_orchestration_blocked_after_cap_diagnostic");
+  }
+  if ((opts && opts.requireProductCluster) && !clusterWorkflow && isGenericOrchestrationHandoff(t)) {
+    v.push("generic_next_action_drift_blocked");
   }
   const repoRoot = (opts && opts.repoRoot) || REPO;
   const effectiveSelector =
@@ -845,17 +922,16 @@ function buildClusterHandoffForHealthyPlanner(ctx) {
   if (locked && clusterDiag && clusterDiag.cluster !== locked.authoritative_cluster) {
     clusterDiag = pickClusterFromAuditRegistry(repoRoot) || clusterDiag;
   }
-  if (clusterDiag && clusterDiag.cluster && clusterDiag.cluster !== "(žádný)" && clusterDiag.cluster !== "(unknown)") {
+  if (isValidProductClusterName(clusterDiag && clusterDiag.cluster)) {
     return buildCapDiagnosticProductHandoff({
       repoRoot: (ctx && ctx.repoRoot) || REPO,
       mainCommit: ctx && ctx.mainCommit,
       clusterDiag,
     });
   }
-  return buildHandoffMarkdown({
+  return buildNoSafeProductClusterBlockedHandoff({
     mainCommit: ctx && ctx.mainCommit,
-    queueReport: (ctx && ctx.queueReport) || readOrchestratorReport(),
-    clusterDiag,
+    blockReason: "NO_SAFE_PRODUCT_CLUSTER",
   });
 }
 
@@ -923,6 +999,13 @@ function runPlannerProductHandoffSelftest() {
   const genericGit =
     "<!-- SILVER_NEXT_ACTION: full-auto-loop-openai -->\n" +
     "git status\ngh auth login\ngit push -u origin chore/silver-audit-repo-state\n";
+  const genericWorkflow =
+    "<!-- SILVER_NEXT_ACTION: full-auto-loop-openai -->\n" +
+    "git status --short\n" +
+    "git stash push\n" +
+    "git commit -m test\n" +
+    "gh auth login\n" +
+    "git push -u origin chore/silver-audit-repo-state\n";
   const capCtx = {
     clusterDiag: {
       cluster: "self_correction_negation_flip",
@@ -931,10 +1014,30 @@ function runPlannerProductHandoffSelftest() {
       count: 472,
       expected_outcome: "engine PR",
     },
+    requireProductCluster: true,
   };
   const genericViolations = silverNextActionQualityViolations(genericGit, capCtx);
   if (!genericViolations.includes("generic_orchestration_blocked_after_cap_diagnostic")) {
     fail("generic_git_gh_blocker_after_cap_diagnostic");
+  }
+  const workflowViolations = silverNextActionQualityViolations(genericWorkflow, capCtx);
+  if (!workflowViolations.includes("generic_repo_git_workflow_drift")) {
+    fail("generic_repo_git_workflow_drift_blocked");
+  }
+  if (!workflowViolations.includes("generic_chore_silver_audit_push")) {
+    fail("chore_silver_audit_repo_state_blocked");
+  }
+
+  const noClusterHandoff = buildNoSafeProductClusterBlockedHandoff({ mainCommit: "abc" });
+  if (!/expected_outcome=SAFE_BLOCKED/.test(noClusterHandoff)) {
+    fail("no_safe_product_cluster_SAFE_BLOCKED");
+  }
+  if (isGenericOrchestrationHandoff(noClusterHandoff) || isGenericRepoGitMaintenanceWorkflow(noClusterHandoff)) {
+    fail("no_safe_product_cluster_must_not_contain_generic_git");
+  }
+  const noClusterViolations = silverNextActionQualityViolations(noClusterHandoff, capCtx);
+  if (noClusterViolations.length) {
+    fail("no_safe_product_cluster_handoff_rejected " + noClusterViolations.join(";"));
   }
 
   const negFlipHandoff = buildCapDiagnosticProductHandoff({
@@ -1053,6 +1156,9 @@ module.exports = {
   loadClusterDiagnosticEvidence,
   resolveProductHandoffOutcome,
   isGenericOrchestrationHandoff,
+  isGenericRepoGitMaintenanceWorkflow,
+  isValidProductClusterName,
+  buildNoSafeProductClusterBlockedHandoff,
   capDiagnosticFlowActive,
   silverNextActionMatchesSelectorCluster,
   silverNextActionHasClusterWorkflow,
