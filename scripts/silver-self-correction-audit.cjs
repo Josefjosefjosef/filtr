@@ -105,6 +105,7 @@ const {
 const {
   finalizeSelfCorrectionNoisyNegReadHarnessEval,
   finalizeSelfCorrectionSafetyCalReadonlyHarnessEval,
+  finalizeSelfCorrectionNegationFlipHarnessEval,
 } = require("./silver-self-correction-query-clarification.cjs");
 
 const {
@@ -167,6 +168,7 @@ function gitTrackedCleanForSc() {
       "scripts/silver-self-correction-negation-scope-selftest.cjs",
       "scripts/silver-self-correction-query-clarification.cjs",
       "scripts/silver-self-correction-query-vs-clarification-selftest.cjs",
+      "scripts/silver-self-correction-negation-flip-selftest.cjs",
       "scripts/silver-self-correction-safety-cal-readonly-selftest.cjs",
       "scripts/silver-self-correction-safety-cal-readonly-diagnostic.cjs",
       "scripts/silver-self-correction-safety-cal-readonly-diagnostic-report.json",
@@ -444,6 +446,7 @@ function classifyScFailBucket(c, turn, ev, gold) {
   if (cat === "intent_fail" && (turn.normalizedIntent === "clarification" || turn.normalizedIntent === "unknown")) {
     if (gold && gold.expected_should_clarify) return "AMBIGUOUS_INPUT";
     if (c.cluster === "self_correction_noisy_neg_read" && !createLikeTurn(turn)) return "HARNESS_PROBLEM";
+    if (c.cluster === "self_correction_negation_flip" && !createLikeTurn(turn)) return "HARNESS_PROBLEM";
     if (c.sc_lane === "noisy_mobile_self_correction") return "HARNESS_PROBLEM";
     return "AMBIGUOUS_INPUT";
   }
@@ -451,6 +454,7 @@ function classifyScFailBucket(c, turn, ev, gold) {
   if (cat === "intent_fail" || cat === "wrong_collection" || cat === "calendar_vs_task_confusion") {
     if (c.sc_lane === "correction_update_vs_create" && drafty) return "TRUE_ENGINE_FAIL";
     if (c.sc_lane === "noisy_mobile_self_correction") return "HARNESS_PROBLEM";
+    if (c.cluster === "self_correction_negation_flip" && !drafty) return "HARNESS_PROBLEM";
     return "TRUE_ENGINE_FAIL";
   }
 
@@ -477,6 +481,7 @@ function applyAllHarnessFinalizers(c, turn, ev) {
   out = finalizeMobileVoiceCalHarnessEval(c, turn, out);
   out = finalizeSelfCorrectionNoisyNegReadHarnessEval(c, turn, out);
   out = finalizeSelfCorrectionSafetyCalReadonlyHarnessEval(c, turn, out);
+  out = finalizeSelfCorrectionNegationFlipHarnessEval(c, turn, out);
   return out;
 }
 

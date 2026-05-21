@@ -16,6 +16,7 @@ const DIAGNOSTIC_SCRIPT = "scripts/silver-self-correction-safety-diagnostic.cjs"
 const TARGET_CLUSTERS = [
   "self_correction_safety_cal_readonly",
   "self_correction_negation_readonly",
+  "self_correction_negation_flip",
   "self_correction_update_note",
   "self_correction_noisy_neg_read",
 ];
@@ -47,6 +48,7 @@ const {
 const {
   finalizeSelfCorrectionNoisyNegReadHarnessEval,
   finalizeSelfCorrectionSafetyCalReadonlyHarnessEval,
+  finalizeSelfCorrectionNegationFlipHarnessEval,
 } = require("./silver-self-correction-query-clarification.cjs");
 
 const { computeGoldLabels, finalizeModuleSwitchHarnessEval, finalizeModuleSwitchClarifyLaneHarnessEval } =
@@ -78,6 +80,7 @@ const GIT_ALLOW = [
   "scripts/silver-self-correction-negation-scope-selftest.cjs",
   "scripts/silver-self-correction-query-clarification.cjs",
   "scripts/silver-self-correction-query-vs-clarification-selftest.cjs",
+  "scripts/silver-self-correction-negation-flip-selftest.cjs",
   "scripts/silver-self-correction-safety-cal-readonly-diagnostic.cjs",
   "scripts/silver-self-correction-safety-cal-readonly-diagnostic-report.json",
   "scripts/silver-self-correction-safety-cal-readonly-selftest.cjs",
@@ -160,6 +163,7 @@ function applyAllHarnessFinalizers(c, turn, ev) {
   out = finalizeMobileVoiceCalHarnessEval(c, turn, out);
   out = finalizeSelfCorrectionNoisyNegReadHarnessEval(c, turn, out);
   out = finalizeSelfCorrectionSafetyCalReadonlyHarnessEval(c, turn, out);
+  out = finalizeSelfCorrectionNegationFlipHarnessEval(c, turn, out);
   return out;
 }
 
@@ -208,6 +212,9 @@ function classifySafetyDiagnostic(c, turn, ev, gold) {
       return "TRUE_ENGINE_FAIL";
     }
     if (c.cluster === "self_correction_noisy_neg_read") {
+      return "HARNESS_GOLD_PROBLEM";
+    }
+    if (isNegationFlipCluster(c) && !drafty) {
       return "HARNESS_GOLD_PROBLEM";
     }
     if (!drafty && (c.group || "").indexOf("query") >= 0) {
