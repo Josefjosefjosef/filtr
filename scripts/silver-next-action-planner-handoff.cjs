@@ -848,6 +848,61 @@ function buildNoSafeProductClusterBlockedHandoff(ctx) {
   ].join("\n");
 }
 
+/**
+ * Runtime failure closeout handoff (stale Cursor invoke / no safe progress).
+ * @param {{ mainCommit?: string, blockReason?: string, stopReason?: string }} ctx
+ * @returns {string}
+ */
+function buildStaleCursorInvokeRuntimeBlockedHandoff(ctx) {
+  const main = String((ctx && ctx.mainCommit) || "").trim();
+  const reason = String((ctx && ctx.blockReason) || "NO_SAFE_RUNTIME_PROGRESS").trim();
+  const stop = String((ctx && ctx.stopReason) || "STALE_CURSOR_INVOKE_NO_PROGRESS").trim();
+  return [
+    "<!-- SILVER_NEXT_ACTION: stale-cursor-invoke-runtime-closeout; not auto-applied -->",
+    "",
+    "ÚKOL PRO CURSOR — infoUzel.cz / Silver — SAFE_BLOCKED — NO_SAFE_RUNTIME_PROGRESS",
+    "",
+    "### PRODUCT_HANDOFF_CONTRACT",
+    "",
+    "target_cluster=(none)",
+    "source_audit=(none)",
+    "diagnostic_result=" + reason,
+    "stop_reason=" + stop,
+    "recommended_scope=orchestration_only_stop",
+    "expected_outcome=SAFE_BLOCKED",
+    "engine_change_allowed=NO",
+    "assets_app_change_allowed=NO",
+    "product_cluster_required=YES",
+    "generic_git_workflow_blocked=YES",
+    "",
+    "### Kontext",
+    "",
+    "- **Aktuální main commit:** `" + (main || "(unknown)") + "`",
+    "- **Důvod:** Runtime selhal (`" + stop + "`) — generic git/gh/stash/push handoff je zakázán.",
+    "",
+    "### Kroky (orchestration only)",
+    "",
+    "1) `Set-Location C:\\\\projects\\\\filtr`",
+    "2) `node scripts/silver-autopilot.cjs --status`",
+    "3) Ověř Cursor/WSL adapter: `powershell -ExecutionPolicy Bypass -File scripts\\\\silver-cursor-agent-adapter-diagnostic.ps1`",
+    "4) **NE** `git push -u`, **NE** `gh auth login`, **NE** `chore/silver-audit-repo-state`.",
+    "5) Po čistém main a PASS selftestech spusť řízený CAP10_SAFE (viz doporučený příkaz v SILVER_RUN_REPORT / cap10 pipeline map).",
+    "",
+    "### Povinný výsledek",
+    "",
+    "```text",
+    "=== SILVER_STALE_CURSOR_INVOKE_RUNTIME_CLOSEOUT_RESULT ===",
+    "main_commit=" + (main || "(unknown)") + "",
+    "block_reason=" + reason + "",
+    "stop_reason=" + stop + "",
+    "expected_outcome=SAFE_BLOCKED",
+    "generic_git_workflow_attempted=NO",
+    "=== END_SILVER_STALE_CURSOR_INVOKE_RUNTIME_CLOSEOUT_RESULT ===",
+    "```",
+    "",
+  ].join("\n");
+}
+
 function silverNextActionQualityViolations(text, opts) {
   const t = String(text || "");
   const v = [];
@@ -1159,6 +1214,7 @@ module.exports = {
   isGenericRepoGitMaintenanceWorkflow,
   isValidProductClusterName,
   buildNoSafeProductClusterBlockedHandoff,
+  buildStaleCursorInvokeRuntimeBlockedHandoff,
   capDiagnosticFlowActive,
   silverNextActionMatchesSelectorCluster,
   silverNextActionHasClusterWorkflow,
