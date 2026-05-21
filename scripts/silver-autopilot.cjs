@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Silver Autopilot V1 — local orchestration only (no runtime Silver changes).
- * Commands: --status | --verify-pr= | --merge-pr= | --post-merge-proof | --refresh-rhc3 | --ask-model | --sanitize-next-action-md | --auto | --full-auto-loop | --loop-once | --cli-autonomous-adapter-diagnostic | --cursor3-execution-status | --cursor3-execution-bridge-selftest
+ * Commands: --status | --verify-pr= | --merge-pr= | --post-merge-proof | --refresh-rhc3 | --ask-model | --sanitize-next-action-md | --auto | --full-auto-loop | --loop-once | --cli-autonomous-adapter-diagnostic | --cursor3-execution-status | --cursor3-execution-bridge-selftest | --controlled-budget-guard-selftest
  */
 /* eslint-disable no-console */
 "use strict";
@@ -3852,6 +3852,7 @@ function parseArgs(argv) {
     else if (a === "--cli-autonomous-adapter-diagnostic") out.cmd = "cli-autonomous-adapter-diagnostic";
     else if (a === "--cursor3-execution-status") out.cmd = "cursor3-execution-status";
     else if (a === "--cursor3-execution-bridge-selftest") out.cmd = "cursor3-execution-bridge-selftest";
+    else if (a === "--controlled-budget-guard-selftest") out.cmd = "controlled-budget-guard-selftest";
     else if (a === "--preflight-runtime-cleanup") out.cmd = "preflight-runtime-cleanup";
     else if (a === "--preflight-runtime-cleanup-selftest") out.cmd = "preflight-runtime-cleanup-selftest";
     else if (a === "--cap-dirty-report-lifecycle-selftest") out.cmd = "cap-dirty-report-lifecycle-selftest";
@@ -3898,6 +3899,9 @@ if (require.main === module) {
     process.exit(printCursor3ExecutionStatus(REPO));
   } else if (p.cmd === "cursor3-execution-bridge-selftest") {
     process.exit(runCursor3ExecutionBridgeSelftest(REPO) ? 0 : 1);
+  } else if (p.cmd === "controlled-budget-guard-selftest") {
+    const { runSelftest } = require("./silver-controlled-budget-guard.cjs");
+    process.exit(runSelftest() ? 0 : 1);
   } else if (p.cmd === "preflight-runtime-cleanup") {
     const dryOnly = argv.indexOf("--dry-run") >= 0;
     const pf = cap50PreflightRuntimeCleanup(dryOnly);

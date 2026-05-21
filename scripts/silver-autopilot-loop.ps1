@@ -80,8 +80,9 @@ param(
   [switch]$AutonomousRearmSelfTest,
   [switch]$WslAgentModelAutoHandoffSelfTest,
   [switch]$RearmInvokeEdgeCaseSelfTest,
-  [switch]$StaleInvokeWatchdogSelfTest
-  [switch]$Cursor3ExecutionBridgeSelfTest
+  [switch]$StaleInvokeWatchdogSelfTest,
+  [switch]$Cursor3ExecutionBridgeSelfTest,
+  [switch]$ControlledBudgetGuardSelfTest
 )
 
 Set-StrictMode -Version 2
@@ -102,6 +103,7 @@ $SilverUtf8HandoffPath = Join-Path $PSScriptRoot "silver-utf8-handoff.ps1"
 $SilverCap50PolicyPath = Join-Path $PSScriptRoot "silver-cap50-orchestration-policy.ps1"
 $SilverCapScorecardPath = Join-Path $PSScriptRoot "silver-cap-product-scorecard.ps1"
 $SilverAuditRegistryPath = Join-Path $PSScriptRoot "silver-audit-registry.ps1"
+$SilverControlledBudgetGuardScript = Join-Path $RepoRoot "scripts\silver-controlled-budget-guard.cjs"
 if (-not (Test-Path -LiteralPath $SilverUtf8HandoffPath)) {
   Write-Error ("Missing UTF-8 handoff module: " + $SilverUtf8HandoffPath)
   exit 2
@@ -5470,6 +5472,92 @@ function Write-SilverAutonomousRunSummary {
   Write-Host ""
 }
 
+function Get-SilverControlledBudgetGuardRunId {
+  if ($script:SilverAutonomousRunId) {
+    return [string]$script:SilverAutonomousRunId
+  }
+  return "cap-loop-" + [string](Get-Date -Format "yyyyMMddHHmmss")
+}
+
+function Invoke-SilverControlledBudgetGuardNode {
+  param(
+    [string]$SubCommand,
+    [string]$RepoRoot,
+    [string]$RunId,
+    [string]$CapLabel = "",
+    [string]$ProfileId = "",
+    [string]$FinalOutcome = "",
+    [string]$TextFile = "",
+    [string]$StopReason = "",
+    [string]$Cluster = "",
+    [string]$OutputHash = "",
+    [string]$CounterName = ""
+  )
+  if (-not (Test-Path -LiteralPath $SilverControlledBudgetGuardScript)) {
+    Write-Host "CONTROLLED_BUDGET_GUARD_STOP=SCRIPT_MISSING" -ForegroundColor Red
+    return @{ exit = 2; stdout = "" }
+  }
+  $nodeArgs = @($SilverControlledBudgetGuardScript, $SubCommand, "--repo", $RepoRoot, "--run-id", $RunId)
+  if ($CapLabel) { $nodeArgs += @("--cap-label", $CapLabel) }
+  if ($ProfileId) { $nodeArgs += @("--profile", $ProfileId) }
+  if ($FinalOutcome) { $nodeArgs += @("--final-outcome", $FinalOutcome) }
+  if ($TextFile) { $nodeArgs += @("--text-file", $TextFile) }
+  if ($StopReason) { $nodeArgs += @("--stop-reason", $StopReason) }
+  if ($Cluster) { $nodeArgs += @("--cluster", $Cluster) }
+  if ($OutputHash) { $nodeArgs += @("--output-hash", $OutputHash) }
+  if ($CounterName) { $nodeArgs += @("--counter", $CounterName) }
+  $prevEa = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  $stdout = & node @nodeArgs 2>&1 | Out-String
+  $exit = 0
+  if ($null -ne $LASTEXITCODE) { $exit = [int]$LASTEXITCODE }
+  $ErrorActionPreference = $prevEa
+  return @{ exit = $exit; stdout = $stdout }
+}
+
+function Initialize-SilverControlledBudgetGuardSession {
+  param(
+    [string]$RepoRoot,
+    [string]$CapLabel,
+    [string]$RunId
+  )
+  if (-not $CapLabel) { return $true }
+  $profileId = ""
+  if ($CapLabel -eq "CAP25") { $profileId = "CAP25_SAFE" }
+  elseif ($CapLabel -eq "CAP50") { $profileId = "CAP50_SAFE" }
+  else { $profileId = "CAP10_SAFE" }
+  $r = Invoke-SilverControlledBudgetGuardNode -SubCommand "init" -RepoRoot $RepoRoot -RunId $RunId -CapLabel $CapLabel -ProfileId $profileId
+  if ($r.exit -ne 0) {
+    Write-Host "=== CONTROLLED_BUDGET_GUARD_INIT ===" -ForegroundColor Red
+    Write-Host $r.stdout
+    Write-Host "=== END_CONTROLLED_BUDGET_GUARD_INIT ===" -ForegroundColor Red
+    return $false
+  }
+  Write-Host ("silver-autopilot-loop: controlled_budget_guard_init=OK profile=" + $profileId + " cap=" + $CapLabel) -ForegroundColor DarkCyan
+  return $true
+}
+
+function Test-SilverControlledBudgetGuardInvokeAllowed {
+  param(
+    [string]$RepoRoot,
+    [string]$RunId,
+    [string]$NextActionPath
+  )
+  if ($NextActionPath -and (Test-Path -LiteralPath $NextActionPath)) {
+    $chkText = Invoke-SilverControlledBudgetGuardNode -SubCommand "check-text" -RepoRoot $RepoRoot -RunId $RunId -TextFile $NextActionPath
+    if ($chkText.exit -ne 0) {
+      Write-Host $chkText.stdout -ForegroundColor Red
+      return $false
+    }
+  }
+  $rec = Invoke-SilverControlledBudgetGuardNode -SubCommand "record-invoke" -RepoRoot $RepoRoot -RunId $RunId
+  if ($rec.exit -ne 0) {
+    Write-Host $rec.stdout -ForegroundColor Red
+    return $false
+  }
+  return $true
+}
+
 function Write-SilverAutonomousBudgetExit {
   param(
     [string]$ProgressLogPath,
@@ -5673,6 +5761,17 @@ if ($Cursor3ExecutionBridgeSelfTest) {
   exit 0
 }
 
+if ($ControlledBudgetGuardSelfTest) {
+  $prevEaBg = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  & node (Join-Path $RepoRoot "scripts\silver-autopilot.cjs") --controlled-budget-guard-selftest
+  $bgExit = 1
+  if ($null -ne $LASTEXITCODE) { $bgExit = [int]$LASTEXITCODE }
+  $ErrorActionPreference = $prevEaBg
+  if ($bgExit -ne 0) { exit 1 }
+  exit 0
+}
+
 if ($StaleInvokeWatchdogSelfTest) {
   $stStaleWd = Invoke-SilverStaleInvokeWatchdogSelfTest -RepoRoot $RepoRoot
   if (-not $stStaleWd) { exit 1 }
@@ -5825,6 +5924,16 @@ if ($capRunLabel -and (Get-Command -Name Initialize-SilverCapProductScorecardSes
     Write-Host ("silver-autopilot-loop: cap_scorecard_before_capture=WARN cap_label=" + $capRunLabel) -ForegroundColor DarkYellow
   } else {
     Write-Host ("silver-autopilot-loop: cap_scorecard_before_capture=OK cap_label=" + $capRunLabel) -ForegroundColor DarkCyan
+  }
+}
+$script:SilverControlledBudgetGuardActive = $false
+if ($capRunLabel) {
+  $budgetRunId = Get-SilverControlledBudgetGuardRunId
+  $script:SilverControlledBudgetGuardRunId = $budgetRunId
+  $script:SilverControlledBudgetGuardActive = Initialize-SilverControlledBudgetGuardSession -RepoRoot $RepoRoot -CapLabel $capRunLabel -RunId $budgetRunId
+  if (-not $script:SilverControlledBudgetGuardActive) {
+    Write-SilverSafetyConsoleStop -Reason "controlled_budget_guard_init_fail"
+    exit 2
   }
 }
 
@@ -6276,6 +6385,20 @@ while ($true) {
         $script:SilverCycleCursorProcessStartUtc = $cursorProcStartUtc
         $runCtxInvoke = Get-SilverAutonomousRunContext
         $invokeStartIso = $cursorProcStartUtc.ToString("o")
+        if ($script:SilverControlledBudgetGuardActive) {
+          $budgetRunIdInvoke = [string]$script:SilverControlledBudgetGuardRunId
+          if (-not (Test-SilverControlledBudgetGuardInvokeAllowed -RepoRoot $RepoRoot -RunId $budgetRunIdInvoke -NextActionPath $NextActionPath)) {
+            Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+              -CursorExit "BUDGET_GUARD" -AutopilotExit "N/A" -StatusExit "N/A" `
+              -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine $safetyPre `
+              -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
+              -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
+              -Headline (Get-NextActionHeadline -Text $nextText) -Focus "controlled_budget_guard_invoke_blocked" `
+              -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 2 `
+              -StopReason "CONTROLLED_BUDGET_GUARD_STOP"
+          }
+          $null = Invoke-SilverControlledBudgetGuardNode -SubCommand "record-counter" -RepoRoot $RepoRoot -RunId $budgetRunIdInvoke -CounterName "autonomous_decisions"
+        }
         Write-SilverCursorOutputAdapterInvokeStartedMeta -Path $CursorOutputPath `
           -RunId $runCtxInvoke.RunId -RunStartUtcIso $runCtxInvoke.RunStartUtc -CycleState $runCtxInvoke.Cycle `
           -TaskFile $expectedTaskFile -OutputFile $outAbs -TaskDigest $expectedTaskDigest -ProcessStartUtcIso $invokeStartIso
@@ -6857,6 +6980,27 @@ while ($true) {
     }
     Update-SilverAutonomousReportingHygieneAccumulator -ReportText $reportPost -CycleFields $fieldsPass
     $selectorMid = Get-SilverAuthoritativeSelectorCluster -RepoRoot $RepoRoot
+    if ($script:SilverControlledBudgetGuardActive) {
+      $outHashMid = ""
+      if (Test-Path -LiteralPath $CursorOutputPath) {
+        $outHashMid = (Get-FileHash -LiteralPath $CursorOutputPath -Algorithm SHA256).Hash
+      }
+      $auditSumMid = ""
+      $reportMid = Read-TextFileOrEmpty -Path $RunReportPath
+      if ($reportMid -match 'PASS_FAIL=([A-Z_]+)') { $auditSumMid = $Matches[1] }
+      $stagMid = Invoke-SilverControlledBudgetGuardNode -SubCommand "record-stagnation" -RepoRoot $RepoRoot `
+        -RunId ([string]$script:SilverControlledBudgetGuardRunId) -Cluster $selectorMid -OutputHash $outHashMid -AuditSummary $auditSumMid
+      if ($stagMid.exit -ne 0) {
+        Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+          -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit ([string]$se) `
+          -GitClean $gitCleanFinal -SafetyLine $safetyPost `
+          -CalW (Get-RunReportLineValue -ReportText $reportPost -Key "calendar_write_20k") `
+          -CalQ (Get-RunReportLineValue -ReportText $reportPost -Key "calendar_query_20k") `
+          -Headline (Get-NextActionHeadline -Text $nextAfter) -Focus "controlled_budget_guard_stagnation" `
+          -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep -LastTaskExitCode 2 `
+          -StopReason "CONTROLLED_BUDGET_GUARD_STAGNATION"
+      }
+    }
     $null = Invoke-SilverAutonomousProductOutcomeMidCycleGate -RepoRoot $RepoRoot -ProgressLogPath $ProgressLogPath `
       -Cycle $cycle -MainCommit $mainCommit -ReportText $reportPost -NextActionText $nextAfter `
       -SelectorCluster $selectorMid -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit ([string]$se) `
@@ -6918,6 +7062,18 @@ if ($controlledInfinite -and $script:AutonomousCyclesCompleted -gt 0) {
   }
 }
 Invoke-SilverCapProductScorecardIfActive -RepoRoot $RepoRoot -ProgressLogPath $ProgressLogPath -CyclesCompleted $finalCyclesForScorecard -StopReason "loop_exit" -RuntimeFailure $finalScorecardRuntimeFailure
+if ($script:SilverControlledBudgetGuardActive) {
+  $finalOutcome = "NO_CHANGE"
+  if ($script:AutonomousCyclesPass -gt 0 -and $finalScorecardRuntimeFailure -ne "YES") { $finalOutcome = "PR_READY" }
+  if ($finalScorecardRuntimeFailure -eq "YES") { $finalOutcome = "SAFE_BLOCKED" }
+  $finBg = Invoke-SilverControlledBudgetGuardNode -SubCommand "finalize" -RepoRoot $RepoRoot `
+    -RunId ([string]$script:SilverControlledBudgetGuardRunId) -FinalOutcome $finalOutcome
+  if ($finBg.exit -ne 0) {
+    Write-Host $finBg.stdout -ForegroundColor Yellow
+  } else {
+    Write-Host ("silver-autopilot-loop: controlled_budget_guard_finalize=OK outcome=" + $finalOutcome) -ForegroundColor DarkCyan
+  }
+}
 if (Get-Command -Name Invoke-SilverAuditRegistryReport -ErrorAction SilentlyContinue) {
   $null = Invoke-SilverAuditRegistryReport -RepoRoot $RepoRoot
 }
