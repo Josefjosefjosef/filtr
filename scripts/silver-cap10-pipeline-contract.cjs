@@ -82,6 +82,7 @@ const GENERIC_FALLBACK_PATTERNS = [
   { id: "generic_gh_push", re: /gh\s+pr\s+create|gh\s+auth/i },
   { id: "generic_verify_pr", re: /(?:--verify-pr=\d+|\bverify-pr\b)/i },
   { id: "generic_repo_maintenance", re: /chore\/silver-audit-repo-state/i },
+  { id: "generic_git_stash", re: /\bgit\s+stash\b/i },
   { id: "generic_merge_reminder", re: /merge\s+pull\s+request\s+manually/i },
 ];
 
@@ -664,14 +665,27 @@ function runGenericFallbackBlockerSelftest() {
     "gh auth login",
     "node scripts/silver-autopilot.cjs --verify-pr=3794",
     "sudo apt update && gh pr create",
+    "git status --short\ngit stash push\ngh auth login\ngit push -u origin chore/silver-audit-repo-state",
   ];
 
   for (const sample of genericSamples) {
     const hits = detectGenericFallbackAttempt(sample, true);
     assert(hits.length > 0, "blocked:" + sample.slice(0, 40));
-    const v = silverNextActionQualityViolations(sample, capCtx);
+    const v = silverNextActionQualityViolations(sample, Object.assign({}, capCtx, { requireProductCluster: true }));
     assert(v.length > 0, "violations:" + sample.slice(0, 30));
   }
+
+  const {
+    buildNoSafeProductClusterBlockedHandoff,
+    isGenericRepoGitMaintenanceWorkflow,
+  } = require("./silver-next-action-planner-handoff.cjs");
+  const cap10GenericWorkflow =
+    "<!-- SILVER_NEXT_ACTION: full-auto-loop-openai -->\n" +
+    "git status\ncommit/stash\ngh auth login\ngit push -u origin chore/silver-audit-repo-state\n";
+  assert(isGenericRepoGitMaintenanceWorkflow(cap10GenericWorkflow), "cap10_generic_workflow_detected");
+  const noCluster = buildNoSafeProductClusterBlockedHandoff({ mainCommit: "cap10test" });
+  assert(/expected_outcome=SAFE_BLOCKED/.test(noCluster), "missing_cluster_safe_blocked");
+  assert(!isGenericOrchestrationHandoff(noCluster), "safe_blocked_not_generic");
 
   const product = buildCapDiagnosticProductHandoff({
     mainCommit: "test",

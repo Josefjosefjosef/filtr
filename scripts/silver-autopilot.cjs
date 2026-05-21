@@ -18,6 +18,9 @@ const {
   runPlannerClusterPreferenceSelftest,
   runPlannerProductHandoffSelftest,
   buildCapDiagnosticProductHandoff,
+  buildNoSafeProductClusterBlockedHandoff,
+  isValidProductClusterName,
+  pickClusterFromAuditRegistry,
   capDiagnosticFlowActive,
 } = require("./silver-next-action-planner-handoff.cjs");
 const {
@@ -1320,6 +1323,23 @@ function writeNextActionUtf8Safe(absPath, text) {
   return body;
 }
 
+function buildPlannerQualityOpts(fallbackCtx) {
+  let clusterDiagForReject = null;
+  try {
+    const h = resolveCapRuntimeHandoff(REPO, {});
+    clusterDiagForReject = h && h.cluster_diag ? h.cluster_diag : null;
+  } catch {
+    clusterDiagForReject = null;
+  }
+  const selectorCluster = pickSelectorCluster(REPO, "");
+  return Object.assign({}, fallbackCtx || {}, {
+    clusterDiag: clusterDiagForReject,
+    selectorCluster: selectorCluster || "",
+    repoRoot: REPO,
+    requireProductCluster: true,
+  });
+}
+
 function resolveNextActionModelBody(rawBody, fallbackCtx) {
   let body = repairSilverOpenAiUtf8Text(
     stripSilverAutopilotUkolHeaderLine(String(rawBody || "").trim()),
@@ -1329,15 +1349,8 @@ function resolveNextActionModelBody(rawBody, fallbackCtx) {
     body = sanitizeBareSilverAutopilotInText(body);
     console.log("SILVER_NEXT_ACTION_BARE_AUTOPILOT=sanitized_to_status");
   }
-  const q = nextActionInnerQualityViolations(body);
-  let clusterDiagForReject = null;
-  try {
-    const h = resolveCapRuntimeHandoff(REPO, {});
-    clusterDiagForReject = h && h.cluster_diag ? h.cluster_diag : null;
-  } catch {
-    clusterDiagForReject = null;
-  }
-  const rejectCtx = Object.assign({}, fallbackCtx || {}, { clusterDiag: clusterDiagForReject });
+  const rejectCtx = buildPlannerQualityOpts(fallbackCtx);
+  const q = nextActionInnerQualityViolations(body, rejectCtx);
   const tagProbeViolations = silverNextActionQualityViolations(
     wrapNextActionDoc(body, "full-auto-loop-openai"),
     rejectCtx,
@@ -1376,17 +1389,19 @@ function buildPlannerRejectedBody(fallbackCtx) {
     } catch {
       clusterDiag = null;
     }
-    if (clusterDiag && clusterDiag.cluster && clusterDiag.cluster !== "(žádný)") {
+    if (!clusterDiag || !isValidProductClusterName(clusterDiag.cluster)) {
+      clusterDiag = pickClusterFromAuditRegistry(REPO) || null;
+    }
+    if (clusterDiag && isValidProductClusterName(clusterDiag.cluster)) {
       return buildCapDiagnosticProductHandoff({
         repoRoot: REPO,
         mainCommit: fallbackCtx && fallbackCtx.mainCommit,
         clusterDiag,
       });
     }
-    return buildClusterHandoffForHealthyPlanner({
+    return buildNoSafeProductClusterBlockedHandoff({
       mainCommit: fallbackCtx && fallbackCtx.mainCommit,
-      queueReport: readOrchestratorReport(),
-      clusterDiag,
+      blockReason: "NO_SAFE_PRODUCT_CLUSTER",
     });
   }
   return buildFullAutoQualityFallbackBody(fallbackCtx || {});
@@ -1400,25 +1415,25 @@ function writeClusterHandoffFile(mainCommit) {
   } catch {
     clusterDiag = undefined;
   }
-  const md =
-    clusterDiag && clusterDiag.cluster && clusterDiag.cluster !== "(žádný)"
-      ? buildCapDiagnosticProductHandoff({
-          repoRoot: REPO,
-          mainCommit: mainCommit || "",
-          clusterDiag,
-        })
-      : buildClusterHandoffForHealthyPlanner({
-          mainCommit: mainCommit || "",
-          queueReport: readOrchestratorReport(),
-          clusterDiag,
-        });
+  const md = isValidProductClusterName(clusterDiag && clusterDiag.cluster)
+    ? buildCapDiagnosticProductHandoff({
+        repoRoot: REPO,
+        mainCommit: mainCommit || "",
+        clusterDiag,
+      })
+    : buildClusterHandoffForHealthyPlanner({
+        mainCommit: mainCommit || "",
+        queueReport: readOrchestratorReport(),
+        clusterDiag,
+        repoRoot: REPO,
+      });
   writeUtf8FileNoBom(NEXT_ACTION, md);
   return md;
 }
 
-function nextActionInnerQualityViolations(inner) {
+function nextActionInnerQualityViolations(inner, opts) {
   const t = String(inner || "");
-  const violations = [...silverNextActionQualityViolations(t)];
+  const violations = [...silverNextActionQualityViolations(t, opts)];
   if (nextActionHasBareSilverAutopilotNodeInvocation(t)) {
     violations.push("bare_silver_autopilot_node_use_status_subcommand");
   }
@@ -3333,6 +3348,7 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
     clusterDiag: capClusterDiag,
     selectorCluster: pickSelectorCluster(REPO, ""),
     repoRoot: REPO,
+    requireProductCluster: true,
   };
 
   function writeGuardedNext(inner, tag) {
@@ -3698,19 +3714,27 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
 
   let utf8MojibakeDetected = "NO";
   let readyForProductCap50 = loopExit === 0 && prReady === "YES" ? "YES" : "NO";
-  if (nextActionWritten === "YES") {
-    const nextOnDisk = readTextSafe(NEXT_ACTION);
-    if (hasSilverUtf8MojibakeMarkers(nextOnDisk)) {
+  const nextOnDiskFinal = readTextSafe(NEXT_ACTION).trim();
+  if (nextOnDiskFinal) {
+    if (hasSilverUtf8MojibakeMarkers(nextOnDiskFinal)) {
       utf8MojibakeDetected = "YES";
       readyForProductCap50 = "NO";
       if (loopExit === 0) loopExit = 1;
     }
-    const qualityViolations = silverNextActionQualityViolations(nextOnDisk);
-    if (qualityViolations.length && loopExit === 0) {
+    const qualityViolations = [
+      ...new Set([
+        ...silverNextActionQualityViolations(nextOnDiskFinal, plannerCtxBase),
+        ...nextActionInnerQualityViolations(nextOnDiskFinal, plannerCtxBase),
+      ]),
+    ];
+    if (qualityViolations.length) {
       cmdSanitizeNextActionMd("--full-auto-loop-end-sanitize");
       console.log(
         "SILVER_NEXT_ACTION_END_SANITIZE=YES violations=" + qualityViolations.join("; "),
       );
+      if (loopExit === 0 && nextActionWritten !== "YES") {
+        nextActionWritten = "YES";
+      }
     }
   }
 
@@ -3770,22 +3794,36 @@ function cmdSanitizeNextActionMd(argvCommand) {
     dirtyBlocked: !dirtyD.pass,
     selectorCluster: pickSelectorCluster(REPO, ""),
     repoRoot: REPO,
+    requireProductCluster: true,
+    clusterDiag: null,
   };
+  try {
+    const capHandoff = resolveCapRuntimeHandoff(REPO, {});
+    plannerCtx.clusterDiag = capHandoff && capHandoff.cluster_diag ? capHandoff.cluster_diag : null;
+  } catch {
+    plannerCtx.clusterDiag = null;
+  }
   let wroteCluster = false;
   if (!safetyBlocked && !assetsBlocked) {
-    try {
-      const capHandoff = resolveCapRuntimeHandoff(REPO, {});
-      if (capHandoff && capHandoff.cluster_diag && capHandoff.cluster_diag.cluster) {
-        writeClusterHandoffFile(commit);
-        wroteCluster = true;
-      }
-    } catch {
-      /* fall through */
-    }
-    if (!wroteCluster && isHealthyPlannerContext(plannerCtx)) {
+    if (isHealthyPlannerContext(plannerCtx)) {
       writeClusterHandoffFile(commit);
       wroteCluster = true;
+    } else {
+      writeUtf8FileNoBom(
+        NEXT_ACTION,
+        wrapNextActionDoc(buildFullAutoQualityFallbackBody(plannerCtx), "sanitize-next-action-md"),
+      );
+      wroteCluster = true;
     }
+  } else if (isHealthyPlannerContext(plannerCtx)) {
+    writeUtf8FileNoBom(
+      NEXT_ACTION,
+      buildNoSafeProductClusterBlockedHandoff({
+        mainCommit: commit,
+        blockReason: safetyBlocked ? "SAFE_BLOCKED" : "NO_SAFE_PRODUCT_CLUSTER",
+      }),
+    );
+    wroteCluster = true;
   }
   if (wroteCluster) {
     console.log(
