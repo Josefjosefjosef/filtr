@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Silver Autopilot V1 — local orchestration only (no runtime Silver changes).
- * Commands: --status | --verify-pr= | --merge-pr= | --post-merge-proof | --refresh-rhc3 | --ask-model | --sanitize-next-action-md | --auto | --full-auto-loop | --loop-once | --cli-autonomous-adapter-diagnostic
+ * Commands: --status | --verify-pr= | --merge-pr= | --post-merge-proof | --refresh-rhc3 | --ask-model | --sanitize-next-action-md | --auto | --full-auto-loop | --loop-once | --cli-autonomous-adapter-diagnostic | --cursor3-execution-status | --cursor3-execution-bridge-selftest
  */
 /* eslint-disable no-console */
 "use strict";
@@ -36,6 +36,11 @@ const {
   enforceCapOutcome,
   resolveCapRuntimeHandoff,
 } = require("./silver-audit-registry.cjs");
+const {
+  collectCursor3ExecutionStatus,
+  printCursor3ExecutionStatus,
+  runCursor3ExecutionBridgeSelftest,
+} = require("./silver-cursor3-execution.cjs");
 
 const REPO = path.resolve(__dirname, "..");
 const SCRIPTS = __dirname;
@@ -198,6 +203,7 @@ const FULL_AUTO_LOOP_ALLOWED_DIRTY = new Set(
     "scripts/silver-cursor-agent-adapter-diagnostic.ps1",
     /* Adapter diagnostic JSON is regenerated/read during WSL agent flows; narrow runtime noise */
     "scripts/silver-cursor-agent-adapter-diagnostic-report.json",
+    "scripts/silver-cursor3-execution.cjs",
     "scripts/silver-rhc3-negation-cal-readonly-diagnostic-report.json",
     "scripts/silver-rhc3-cluster-classifier-v1-report.json",
     /* Narrow harness alignment JSON (orchestration transient; not broad scripts/*-report.json) */
@@ -3817,6 +3823,8 @@ function parseArgs(argv) {
     else if (a === "--cli-openai-next-action-utf8-selftest") out.cmd = "openai-next-action-utf8-selftest";
     else if (a === "--cli-openai-real-next-action-utf8-diagnostic") out.cmd = "openai-real-next-action-utf8-diagnostic";
     else if (a === "--cli-autonomous-adapter-diagnostic") out.cmd = "cli-autonomous-adapter-diagnostic";
+    else if (a === "--cursor3-execution-status") out.cmd = "cursor3-execution-status";
+    else if (a === "--cursor3-execution-bridge-selftest") out.cmd = "cursor3-execution-bridge-selftest";
     else if (a === "--preflight-runtime-cleanup") out.cmd = "preflight-runtime-cleanup";
     else if (a === "--preflight-runtime-cleanup-selftest") out.cmd = "preflight-runtime-cleanup-selftest";
     else if (a === "--cap-dirty-report-lifecycle-selftest") out.cmd = "cap-dirty-report-lifecycle-selftest";
@@ -3832,7 +3840,7 @@ if (require.main === module) {
   const argv = process.argv.slice(2);
   if (argv.length === 0) {
     console.log(
-      "Usage: node scripts/silver-autopilot.cjs --status | --audit-registry | --verify-pr=NNNN | --full-auto-loop | ...",
+      "Usage: node scripts/silver-autopilot.cjs --status | --cursor3-execution-status | --audit-registry | --verify-pr=NNNN | --full-auto-loop | ...",
     );
     process.exit(1);
   }
@@ -3859,6 +3867,10 @@ if (require.main === module) {
     return;
   } else if (p.cmd === "cli-autonomous-adapter-diagnostic") {
     process.exit(cmdCliAutonomousAdapterDiagnostic());
+  } else if (p.cmd === "cursor3-execution-status") {
+    process.exit(printCursor3ExecutionStatus(REPO));
+  } else if (p.cmd === "cursor3-execution-bridge-selftest") {
+    process.exit(runCursor3ExecutionBridgeSelftest(REPO) ? 0 : 1);
   } else if (p.cmd === "preflight-runtime-cleanup") {
     const dryOnly = argv.indexOf("--dry-run") >= 0;
     const pf = cap50PreflightRuntimeCleanup(dryOnly);

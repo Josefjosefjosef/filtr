@@ -163,6 +163,21 @@ function Get-WhereCursorLines {
   return @{ exit = $p.ExitCode; text = $o }
 }
 
+function Get-WhereCursorAgentLines {
+  $psi = New-Object System.Diagnostics.ProcessStartInfo
+  $psi.FileName = "where.exe"
+  $psi.Arguments = "cursor-agent"
+  $psi.RedirectStandardOutput = $true
+  $psi.RedirectStandardError = $true
+  $psi.UseShellExecute = $false
+  $psi.CreateNoWindow = $true
+  $p = [System.Diagnostics.Process]::Start($psi)
+  $o = $p.StandardOutput.ReadToEnd()
+  $null = $p.StandardError.ReadToEnd()
+  $p.WaitForExit()
+  return @{ exit = $p.ExitCode; text = $o }
+}
+
 function Get-GitDiffSnapshot {
   param([string]$Root)
   $psi = New-Object System.Diagnostics.ProcessStartInfo
@@ -510,6 +525,12 @@ $report = [ordered]@{
   cursor_where_text = ""
   cursor_exe_path = ""
   cursor_cli_found = "NO"
+  cursor_agent_where_exit = $null
+  cursor_agent_where_text = ""
+  cursor_agent_standalone_available = "NO"
+  legacy_agent_bridge_available = "NO"
+  cursor3_detected = "NO"
+  cursor_agent_subcommand_documented = "NO"
   cursor_version = ""
   cursor_version_exit = $null
   cursor_help_exit = $null
@@ -605,6 +626,19 @@ $cv = Invoke-ExternalCapture -FileName $cursorExe -Arguments @("--version") -Wor
 $report.cursor_version_exit = $cv.exit
 $report.cursor_version = ($cv.stdout + $cv.stderr).Trim()
 
+$caWhere = Get-WhereCursorAgentLines
+$report.cursor_agent_where_exit = $caWhere.exit
+$report.cursor_agent_where_text = ($caWhere.text.TrimEnd())
+$report.cursor_agent_standalone_available = if ($caWhere.exit -eq 0 -and -not [string]::IsNullOrWhiteSpace($caWhere.text)) { "YES" } else { "NO" }
+$report.legacy_agent_bridge_available = $report.cursor_agent_standalone_available
+$verFirstLine = ($report.cursor_version -split "`r?`n" | Select-Object -First 1).Trim()
+if ($verFirstLine -match '^Cursor\s+3\b' -or $verFirstLine -match '^3\.\d+') {
+  $report.cursor3_detected = "YES"
+}
+else {
+  $report.cursor3_detected = "NO"
+}
+
 $h = Invoke-ExternalCapture -FileName $cursorExe -Arguments @("--help") -WorkingDirectory $RepoRoot -TimeoutMs 60000
 $report.cursor_help_exit = $h.exit
 $helpMain = $h.stdout + "`n" + $h.stderr
@@ -613,6 +647,9 @@ $report.cursor_help_bytes = [System.Text.Encoding]::UTF8.GetByteCount($helpMain)
 
 if ($helpMain.Contains("append '-'") -or $helpMain.Contains("cursor.exe -") -or $helpMain.Contains("| cursor")) {
   $report.main_help_pipe_dash_mentioned = "YES"
+}
+if ($helpMain -match 'agent\s+Start the Cursor agent') {
+  $report.cursor_agent_subcommand_documented = "YES"
 }
 
 $ah = Invoke-ExternalCapture -FileName $cursorExe -Arguments @("agent", "--help") -WorkingDirectory $RepoRoot -TimeoutMs 60000
@@ -944,6 +981,9 @@ Write-Host "=== SILVER_CURSOR_AGENT_ADAPTER_DIAGNOSTIC ==="
 Write-Host ("report_path=" + $ReportPath)
 Write-Host ("adapter_ready=" + $report.adapter_ready)
 Write-Host ("adapter_ready_reason=" + $report.adapter_ready_reason)
+Write-Host ("cursor3_detected=" + $report.cursor3_detected)
+Write-Host ("cursor_agent_standalone_available=" + $report.cursor_agent_standalone_available)
+Write-Host ("cursor_agent_subcommand_documented=" + $report.cursor_agent_subcommand_documented)
 Write-Host ("preferred_headless_variant_id=" + $(if ($null -eq $preferredId -and $null -eq $preferredStdinRowId) { "" } elseif ($null -ne $preferredId) { [string]$preferredId } else { $preferredStdinRowId }))
 Write-Host ("preferred_invocation_kind=" + $report.preferred_invocation_kind)
 Write-Host "=== END_SILVER_CURSOR_AGENT_ADAPTER_DIAGNOSTIC ==="

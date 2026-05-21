@@ -81,6 +81,7 @@ param(
   [switch]$WslAgentModelAutoHandoffSelfTest,
   [switch]$RearmInvokeEdgeCaseSelfTest,
   [switch]$StaleInvokeWatchdogSelfTest
+  [switch]$Cursor3ExecutionBridgeSelfTest
 )
 
 Set-StrictMode -Version 2
@@ -5661,6 +5662,17 @@ if ($RearmInvokeEdgeCaseSelfTest) {
   exit 0
 }
 
+if ($Cursor3ExecutionBridgeSelfTest) {
+  $prevEaC3 = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  & node (Join-Path $RepoRoot "scripts\silver-autopilot.cjs") --cursor3-execution-bridge-selftest
+  $c3Exit = 1
+  if ($null -ne $LASTEXITCODE) { $c3Exit = [int]$LASTEXITCODE }
+  $ErrorActionPreference = $prevEaC3
+  if ($c3Exit -ne 0) { exit 1 }
+  exit 0
+}
+
 if ($StaleInvokeWatchdogSelfTest) {
   $stStaleWd = Invoke-SilverStaleInvokeWatchdogSelfTest -RepoRoot $RepoRoot
   if (-not $stStaleWd) { exit 1 }
@@ -5773,6 +5785,23 @@ if ($controlledInfinite -and (Get-Command -Name Invoke-SilverAuditRegistryReport
 }
 
 if ($controlledInfinite -and (-not $DryRun) -and (-not [string]::IsNullOrWhiteSpace($CursorCommand))) {
+  $prevEaC3Pf = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  $c3StatusOut = & node (Join-Path $RepoRoot "scripts\silver-autopilot.cjs") --cursor3-execution-status 2>&1 | Out-String
+  $c3BridgeUsable = "NO"
+  if ($c3StatusOut -match 'powershell_execution_bridge_usable=YES') { $c3BridgeUsable = "YES" }
+  $ErrorActionPreference = $prevEaC3Pf
+  if ($c3BridgeUsable -ne "YES") {
+    Write-Host "=== SILVER_CURSOR3_EXECUTION_BRIDGE_GUARD ===" -ForegroundColor Red
+    Write-Host "powershell_execution_bridge_usable=NO" -ForegroundColor Red
+    Write-Host "STOP=CURSOR3_EXECUTION_BRIDGE_UNAVAILABLE controlled CAP blocked" -ForegroundColor Red
+    Write-Host "recommended=node scripts/silver-autopilot.cjs --cursor3-execution-status" -ForegroundColor Yellow
+    Write-Host "=== END_SILVER_CURSOR3_EXECUTION_BRIDGE_GUARD ===" -ForegroundColor Red
+    if (-not $NoBeep) {
+      try { [console]::beep(440, 400) } catch { }
+    }
+    exit 2
+  }
   $hardPf = Invoke-SilverCap50HardPreflight -RepoRoot $RepoRoot -CursorCommand $CursorCommand
   Write-SilverCap50HardPreflightBlock -Result $hardPf
   if ($hardPf.PASS_FAIL -ne "PASS") {
@@ -6136,6 +6165,22 @@ while ($true) {
     $cursorExitStr = "SKIPPED_DRY_RUN_NO_CURSOR_COMMAND"
   } else {
     if (-not $DryRun) {
+      $c3BridgeUsableCycle = "NO"
+      $prevEaC3Cy = $ErrorActionPreference
+      $ErrorActionPreference = "Continue"
+      $c3CyOut = & node (Join-Path $RepoRoot "scripts\silver-autopilot.cjs") --cursor3-execution-status 2>&1 | Out-String
+      if ($c3CyOut -match 'powershell_execution_bridge_usable=YES') { $c3BridgeUsableCycle = "YES" }
+      $ErrorActionPreference = $prevEaC3Cy
+      if ($c3BridgeUsableCycle -ne "YES") {
+        Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+          -CursorExit "BRIDGE_UNAVAILABLE" -AutopilotExit "N/A" -StatusExit "N/A" `
+          -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine $safetyPre `
+          -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
+          -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
+          -Headline (Get-NextActionHeadline -Text $nextText) -Focus "cursor3_execution_bridge_unavailable" `
+          -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 2 `
+          -StopReason "CURSOR3_EXECUTION_BRIDGE_UNAVAILABLE"
+      }
       if (Test-SilverStaleInvokeStartedMetaState -AdapterOutputPath $CursorOutputPath) {
         $outAbsStale = $CursorOutputPath
         if (Test-Path -LiteralPath $CursorOutputPath) {

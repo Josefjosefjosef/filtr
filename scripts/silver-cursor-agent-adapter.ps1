@@ -833,6 +833,89 @@ function Read-PreferredInvocationKindFromDisk {
   }
 }
 
+function Get-SilverCursor3ExecutionBridgeMeta {
+  param([string]$RepoRoot)
+  $meta = @{
+    powershell_execution_bridge_usable = "UNKNOWN"
+    execution_bridge_status          = "UNKNOWN"
+    reason                           = ""
+    cursor3_detected                 = "UNKNOWN"
+    legacy_adapter_usable            = "UNKNOWN"
+    cursor_cli_available             = "UNKNOWN"
+    cursor_agent_available           = "UNKNOWN"
+    safe_to_start_controlled_cap10   = "UNKNOWN"
+  }
+  $nodeScript = Join-Path $RepoRoot "scripts\silver-cursor3-execution.cjs"
+  if (-not (Test-Path -LiteralPath $nodeScript)) {
+    $meta.reason = "silver-cursor3-execution.cjs_missing"
+    return $meta
+  }
+  $psi = New-Object System.Diagnostics.ProcessStartInfo
+  $psi.FileName = "node"
+  $psi.Arguments = '"' + ($nodeScript.Replace('"', '""')) + '" --json'
+  $psi.WorkingDirectory = $RepoRoot
+  $psi.RedirectStandardOutput = $true
+  $psi.RedirectStandardError = $true
+  $psi.UseShellExecute = $false
+  $psi.CreateNoWindow = $true
+  $p = [System.Diagnostics.Process]::Start($psi)
+  $stdout = $p.StandardOutput.ReadToEnd()
+  $null = $p.StandardError.ReadToEnd()
+  $p.WaitForExit()
+  if ($p.ExitCode -ne 0 -and [string]::IsNullOrWhiteSpace($stdout)) {
+    $meta.execution_bridge_status = "CURSOR3_EXECUTION_BRIDGE_UNAVAILABLE"
+    $meta.reason = "cursor3_status_probe_failed_exit=" + [string]$p.ExitCode
+    return $meta
+  }
+  try {
+    $j = $stdout | ConvertFrom-Json
+    foreach ($k in $meta.Keys) {
+      if ($null -ne $j.$k) {
+        $meta[$k] = [string]$j.$k
+      }
+    }
+  }
+  catch {
+    $meta.execution_bridge_status = "CURSOR3_EXECUTION_BRIDGE_UNAVAILABLE"
+    $meta.reason = "cursor3_status_json_parse_failed"
+  }
+  return $meta
+}
+
+function Write-SilverCursor3BridgeUnavailableOutput {
+  param(
+    [string]$Path,
+    [string]$TaskFile,
+    [hashtable]$BridgeMeta
+  )
+  $bm = $BridgeMeta
+  if ($null -eq $bm) { $bm = @{} }
+  $meta = [ordered]@{
+    timestamp_local              = (Get-Date).ToString("o")
+    adapter_output_state         = "COMPLETED"
+    adapter_completion_path      = "cursor3_execution_bridge_unavailable"
+    execution_bridge_status      = [string]$bm.execution_bridge_status
+    cursor3_detected             = [string]$bm.cursor3_detected
+    cursor_cli_available         = [string]$bm.cursor_cli_available
+    cursor_agent_available       = [string]$bm.cursor_agent_available
+    legacy_adapter_usable        = [string]$bm.legacy_adapter_usable
+    powershell_execution_bridge_usable = [string]$bm.powershell_execution_bridge_usable
+    safe_to_start_controlled_cap10     = [string]$bm.safe_to_start_controlled_cap10
+    bridge_block_reason          = [string]$bm.reason
+    task_file                    = $TaskFile
+    output_file                  = $Path
+    exit_code                    = "2"
+    can_run_full_auto_loop_maxcycles_1 = "NO"
+  }
+  $extra = @"
+CURSOR3_EXECUTION_BRIDGE_UNAVAILABLE
+fallback=manual Cursor UI task only / no autonomous CAP
+recommended_diagnostic=node scripts/silver-autopilot.cjs --cursor3-execution-status
+recommended_wsl_probe=powershell -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -WslUbuntuAgent -Probe -OutputFile SILVER_CURSOR_OUTPUT.md -TimeoutSeconds 120
+"@
+  Write-AdapterOutputFile -Path $Path -Meta $meta -Stdout "" -Stderr $extra -ExtraBlock $extra
+}
+
 function Invoke-CursorAgentHeadlessCapture {
   param(
     [string]$CursorExe,
@@ -1811,6 +1894,12 @@ if ($DryRun) {
 }
 
 if (-not $Probe) {
+  $c3Bridge = Get-SilverCursor3ExecutionBridgeMeta -RepoRoot $RepoRoot
+  if ([string]$c3Bridge.powershell_execution_bridge_usable -ne "YES") {
+    Write-SilverCursor3BridgeUnavailableOutput -Path $outAbs -TaskFile $(if ($taskAbs) { $taskAbs } else { $TaskFile }) -BridgeMeta $c3Bridge
+    Write-Error ("STOP: CURSOR3_EXECUTION_BRIDGE_UNAVAILABLE reason=" + [string]$c3Bridge.reason + " - use -WslUbuntuAgent when WSL lane is ready, or manual Cursor UI only.")
+    exit 2
+  }
   if (-not (Test-DiagnosticAdapterReady)) {
     Write-Error "STOP: scripts/silver-cursor-agent-adapter-diagnostic-report.json reports adapter_ready=NO. Run scripts/silver-cursor-agent-adapter-diagnostic.ps1 or use -Probe."
     exit 2
