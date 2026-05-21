@@ -1778,6 +1778,10 @@ watchdog_stop_reason=$watchdogStopReason
 
   if ($Probe) {
     if ($probePass -eq "YES") {
+      $persistScriptWsl = Join-Path $RepoRoot "scripts\silver-cursor3-execution.cjs"
+      if (Test-Path -LiteralPath $persistScriptWsl) {
+        & node $persistScriptWsl --persist-probe-handshake $RepoRoot 2>$null | Out-Null
+      }
       exit 0
     }
     exit 1
@@ -2072,6 +2076,10 @@ possible_causes=
 
   if ($Probe) {
     if ($probePass -eq "YES") {
+      $persistScript = Join-Path $RepoRoot "scripts\silver-cursor3-execution.cjs"
+      if (Test-Path -LiteralPath $persistScript) {
+        & node $persistScript --persist-probe-handshake $RepoRoot 2>$null | Out-Null
+      }
       exit 0
     }
     exit 1

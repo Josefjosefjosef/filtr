@@ -220,6 +220,95 @@ function isProbeControlledRuntimeFresh(meta) {
   return true;
 }
 
+const PROBE_HANDSHAKE_SCHEMA = "silver-cursor3-probe-handshake-v1";
+const PROBE_HANDSHAKE_TTL_MS = 7 * 24 * 3600 * 1000;
+
+function probeHandshakePath(repoRoot) {
+  return path.join(path.resolve(repoRoot || path.join(__dirname, "..")), ".silver-runtime", "cursor3-probe-handshake.json");
+}
+
+function readProbeHandshakePersistence(repoRoot) {
+  const abs = probeHandshakePath(repoRoot);
+  const j = readJsonSafe(abs);
+  if (!j || String(j.schema || "") !== PROBE_HANDSHAKE_SCHEMA) return null;
+  const recorded = String(j.recorded_utc || "").trim();
+  if (!recorded) return null;
+  const ageMs = Date.now() - Date.parse(recorded);
+  if (!Number.isFinite(ageMs) || ageMs < 0 || ageMs > PROBE_HANDSHAKE_TTL_MS) return null;
+  const meta = {
+    adapter_output_state: String(j.adapter_output_state || ""),
+    adapter_probe_pass: String(j.adapter_probe_pass || ""),
+    exit_code: String(j.exit_code || ""),
+    process_start_utc: String(j.process_start_utc || ""),
+    task_file: String(j.task_file || ""),
+  };
+  if (!isProbeControlledRuntimeFresh(meta)) return null;
+  return { valid: true, meta, recorded_utc: recorded, age_ms: ageMs };
+}
+
+function writeProbeHandshakePersistence(repoRoot, meta) {
+  if (!isProbeControlledRuntimeFresh(meta || {})) return false;
+  const root = path.resolve(repoRoot || path.join(__dirname, ".."));
+  const dir = path.join(root, ".silver-runtime");
+  try {
+    fs.mkdirSync(dir, { recursive: true });
+  } catch {
+    return false;
+  }
+  const payload = {
+    schema: PROBE_HANDSHAKE_SCHEMA,
+    recorded_utc: new Date().toISOString(),
+    adapter_output_state: String(meta.adapter_output_state || "COMPLETED"),
+    adapter_probe_pass: String(meta.adapter_probe_pass || "YES"),
+    exit_code: String(meta.exit_code || "0"),
+    process_start_utc: String(meta.process_start_utc || ""),
+    task_file: String(meta.task_file || "(probe_inline)"),
+  };
+  try {
+    fs.writeFileSync(probeHandshakePath(root), JSON.stringify(payload, null, 2) + "\n", "utf8");
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function recordProbeHandshakeFromCursorOutput(repoRoot) {
+  const root = path.resolve(repoRoot || path.join(__dirname, ".."));
+  const cursorText = readTextSafe(path.join(root, "SILVER_CURSOR_OUTPUT.md"));
+  const meta = parseAdapterMeta(cursorText);
+  return writeProbeHandshakePersistence(root, meta);
+}
+
+function isPersistenceProbeHandshakeFresh(repoRoot) {
+  const p = readProbeHandshakePersistence(repoRoot);
+  return Boolean(p && p.valid);
+}
+
+function shouldSkipCap50RuntimeRestore(rel, repoRoot) {
+  const key = String(rel || "")
+    .replace(/\\/g, "/")
+    .replace(/^\.\/+/, "")
+    .trim()
+    .toLowerCase();
+  const root = path.resolve(repoRoot || path.join(__dirname, ".."));
+  if (key === "silver_cursor_output.md") {
+    const cursorText = readTextSafe(path.join(root, "SILVER_CURSOR_OUTPUT.md"));
+    if (isProbeControlledRuntimeFresh(parseAdapterMeta(cursorText))) return true;
+    if (isPersistenceProbeHandshakeFresh(root)) return true;
+    return false;
+  }
+  if (key === "scripts/silver-cursor-agent-adapter-diagnostic-report.json") {
+    const diagPath = path.join(root, "scripts", "silver-cursor-agent-adapter-diagnostic-report.json");
+    const j = readJsonSafe(diagPath);
+    if (!j) return false;
+    const ver = String(j.cursor_version || "").split(/\r?\n/)[0].trim();
+    const diagMajor = (ver.match(/^Cursor\s+(\d+)/i) || ver.match(/^(\d+)\./) || [])[1] || "";
+    const liveMajor = parseCursorMajor(probeCursorVersion("", root).version);
+    return Boolean(diagMajor && liveMajor && diagMajor === liveMajor);
+  }
+  return false;
+}
+
 function evaluateRuntimeFreshness(cursorText, repoRoot) {
   const meta = parseAdapterMeta(cursorText);
   const state = String(meta.adapter_output_state || "").trim();
@@ -227,6 +316,9 @@ function evaluateRuntimeFreshness(cursorText, repoRoot) {
     return { fresh: "NO", hint: "adapter_invoke_in_progress" };
   }
   if (isProbeControlledRuntimeFresh(meta)) {
+    return { fresh: "YES", hint: "probe_controlled_runtime_fresh" };
+  }
+  if (isPersistenceProbeHandshakeFresh(repoRoot)) {
     return { fresh: "YES", hint: "probe_controlled_runtime_fresh" };
   }
   if (state === "INVALIDATED_AWAITING_CYCLE") {
@@ -316,7 +408,7 @@ function readDiagnosticLanes(repoRoot) {
   };
 }
 
-function deriveCurrentState(cursorText, runtimeFresh, repoClean) {
+function deriveCurrentState(cursorText, runtimeFresh, repoClean, repoRoot) {
   if (repoClean === false) return "NOT_READY";
   const meta = parseAdapterMeta(cursorText);
   const state = String(meta.adapter_output_state || "").trim();
@@ -326,7 +418,7 @@ function deriveCurrentState(cursorText, runtimeFresh, repoClean) {
     if (/timeout|not_terminal/i.test(runtimeFresh.hint)) return "STALE";
     return "STALE";
   }
-  if (isProbeControlledRuntimeFresh(meta)) return "READY";
+  if (isProbeControlledRuntimeFresh(meta) || isPersistenceProbeHandshakeFresh(repoRoot)) return "READY";
   if (state === "COMPLETED" || state === "COMPLETE") {
     const exitCode = String(meta.exit_code || "").trim();
     if (exitCode && exitCode !== "0") return "FAILED";
@@ -377,7 +469,7 @@ function collectCursor3ExecutionStatus(repoRoot) {
   const silverRuntimeFilesFresh = runtimeFresh.fresh;
   const cleanStrict = gitClean(root);
   const clean = gitCleanForControlledCap10(root, runtimeFresh);
-  const currentState = deriveCurrentState(cursorText, runtimeFresh, clean);
+  const currentState = deriveCurrentState(cursorText, runtimeFresh, clean, root);
   let executionBridgeStatus = "FAIL";
   let reason = "";
   if (cursorCliAvailable !== "YES") {
@@ -496,18 +588,46 @@ function runRuntimeFreshnessHandshakeSelftest(repoRoot) {
   if (probeEval.hint !== "probe_controlled_runtime_fresh") {
     failures.push("probe_completed_expected_hint_probe_controlled_runtime_fresh");
   }
-  const probeState = deriveCurrentState(probeFreshStub, probeEval, true);
+  const probeState = deriveCurrentState(probeFreshStub, probeEval, true, root);
   if (probeState !== "READY") failures.push("probe_completed_expected_current_state_READY");
 
   const stubStale =
     "# silver-cursor-agent-adapter\nadapter_output_state=INVALIDATED_AWAITING_CYCLE\n# stdout\n\n";
   const staleEval = evaluateRuntimeFreshness(stubStale, root);
   if (staleEval.fresh !== "NO") failures.push("stale_invalidated_expected_NO_fresh");
-  const staleState = deriveCurrentState(stubStale, staleEval, true);
+  const staleState = deriveCurrentState(stubStale, staleEval, true, root);
   if (staleState !== "STALE") failures.push("stale_invalidated_expected_current_state_STALE");
 
-  const dirtyState = deriveCurrentState(probeFreshStub, probeEval, false);
+  const dirtyState = deriveCurrentState(probeFreshStub, probeEval, false, root);
   if (dirtyState !== "NOT_READY") failures.push("dirty_repo_expected_current_state_NOT_READY");
+
+  const handshakePath = probeHandshakePath(root);
+  let handshakeBackup = null;
+  try {
+    if (fs.existsSync(handshakePath)) handshakeBackup = fs.readFileSync(handshakePath, "utf8");
+    writeProbeHandshakePersistence(root, parseAdapterMeta(probeFreshStub));
+    const staleWithPersist = evaluateRuntimeFreshness(stubStale, root);
+    if (staleWithPersist.fresh !== "YES") {
+      failures.push("persistence_handshake_expected_fresh_YES_over_invalidated_stub");
+    }
+    if (staleWithPersist.hint !== "probe_controlled_runtime_fresh") {
+      failures.push("persistence_handshake_expected_hint_probe_controlled_runtime_fresh");
+    }
+    const readyWithPersist = deriveCurrentState(stubStale, staleWithPersist, true, root);
+    if (readyWithPersist !== "READY") {
+      failures.push("persistence_handshake_expected_current_state_READY");
+    }
+    if (!shouldSkipCap50RuntimeRestore("SILVER_CURSOR_OUTPUT.md", root)) {
+      failures.push("cleanup_skip_expected_SILVER_CURSOR_OUTPUT_when_persistence_fresh");
+    }
+  } finally {
+    try {
+      if (handshakeBackup != null) fs.writeFileSync(handshakePath, handshakeBackup, "utf8");
+      else if (fs.existsSync(handshakePath)) fs.unlinkSync(handshakePath);
+    } catch {
+      /* ignore */
+    }
+  }
 
   return failures;
 }
@@ -628,6 +748,11 @@ module.exports = {
   evaluateRuntimeFreshness,
   isProbeControlledRuntimeFresh,
   isInvalidatedHandshakeStub,
+  isPersistenceProbeHandshakeFresh,
+  shouldSkipCap50RuntimeRestore,
+  writeProbeHandshakePersistence,
+  recordProbeHandshakeFromCursorOutput,
+  readProbeHandshakePersistence,
   detectCursor3,
 };
 
@@ -636,6 +761,9 @@ if (require.main === module) {
   const repo = process.argv[3] || path.join(__dirname, "..");
   if (cmd === "--selftest") {
     process.exit(runCursor3ExecutionBridgeSelftest(repo) ? 0 : 1);
+  }
+  if (cmd === "--persist-probe-handshake") {
+    process.exit(recordProbeHandshakeFromCursorOutput(repo) ? 0 : 1);
   }
   if (cmd === "--json") {
     const s = collectCursor3ExecutionStatus(repo);
