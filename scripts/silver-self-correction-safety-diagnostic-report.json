@@ -1,12 +1,13 @@
 {
-  "generated_at": "2026-05-20T12:00:29.796Z",
-  "main_commit": "848d83a3929cb4335034b3cc16728fc22400c9cd",
+  "generated_at": "2026-05-21T18:05:14.203Z",
+  "main_commit": "d741fe662c1064964300117f3a192d3f0844dd19",
   "engine_changed": "NO",
   "assets_app_changed": "NO",
   "diagnostic_script": "scripts/silver-self-correction-safety-diagnostic.cjs",
   "clusters_analyzed": [
     "self_correction_safety_cal_readonly",
     "self_correction_negation_readonly",
+    "self_correction_negation_flip",
     "self_correction_update_note",
     "self_correction_noisy_neg_read"
   ],
@@ -28,6 +29,22 @@
       "update_vs_create_fail_count": 0
     },
     "self_correction_negation_readonly": {
+      "total_cases": 750,
+      "fail_count": 0,
+      "pass_count": 750,
+      "dangerous_write_count": 0,
+      "write_when_negated_count": 0,
+      "true_engine_fail_count": 0,
+      "harness_problem_count": 0,
+      "ambiguous_input_count": 0,
+      "safe_clarification_ok_count": 0,
+      "template_dna_noise_count": 0,
+      "readonly_override_fail_count": 0,
+      "module_switch_fail_count": 0,
+      "negation_flip_fail_count": 0,
+      "update_vs_create_fail_count": 0
+    },
+    "self_correction_negation_flip": {
       "total_cases": 750,
       "fail_count": 0,
       "pass_count": 750,
@@ -77,7 +94,7 @@
     }
   },
   "aggregate": {
-    "total_cases": 3250,
+    "total_cases": 4000,
     "fail_count": 1000,
     "pass_count": 0,
     "dangerous_write_count": 0,
