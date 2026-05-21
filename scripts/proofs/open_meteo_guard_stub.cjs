@@ -94,4 +94,41 @@ async function installOpenMeteoStubRoute(page) {
   });
 }
 
-module.exports = { buildGuardOpenMeteoMockBody, installOpenMeteoStubRoute };
+/** 1×1 GIF — proof-only; stale YouTube thumb 404s are not layout/UI signal. */
+const TINY_GIF = Buffer.from(
+  "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+  "base64"
+);
+
+async function installYtimgThumbnailStubRoute(page) {
+  await page.route(/^https:\/\/i\.ytimg\.com\//, async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "image/gif",
+      body: TINY_GIF,
+    });
+  });
+}
+
+async function installProofGuardNetworkStubs(page) {
+  await installOpenMeteoStubRoute(page);
+  await installYtimgThumbnailStubRoute(page);
+}
+
+/** Align with smoke.mjs — ignore known third-party resource noise in guards. */
+function isIgnorableGuardConsoleError(text) {
+  const s = String(text || "");
+  if (!s) return true;
+  if (/\/favicon\.ico/i.test(s)) return true;
+  if (/i\.ytimg\.com|thumbnail/i.test(s)) return true;
+  if (/Failed to load resource/i.test(s) && /ytimg|favicon|open-meteo/i.test(s)) return true;
+  return false;
+}
+
+module.exports = {
+  buildGuardOpenMeteoMockBody,
+  installOpenMeteoStubRoute,
+  installYtimgThumbnailStubRoute,
+  installProofGuardNetworkStubs,
+  isIgnorableGuardConsoleError,
+};
