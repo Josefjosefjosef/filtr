@@ -2555,7 +2555,7 @@ function Get-SilverNextActionQualityFailureDetail {
     if (-not $hasCluster) { [void]$reasons.Add("generic_git_push_upstream") }
   }
   if ($Text -match 'chore/silver-audit-repo-state') {
-    [void]$reasons.Add("generic_chore_silver_audit_push")
+    if (-not $hasCluster) { [void]$reasons.Add("generic_chore_silver_audit_push") }
   }
   if ($Text -match '(?i)(?:--verify-pr=\d+|\bverify-pr\b)') {
     if (-not $hasCluster) { [void]$reasons.Add("generic_verify_pr_not_cluster_workflow") }

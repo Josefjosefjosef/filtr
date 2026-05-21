@@ -13,10 +13,14 @@ const {
   silverNextActionQualityViolations,
   silverNextActionHasClusterWorkflow,
   buildClusterHandoffForHealthyPlanner,
+  generateAutonomousPlannedHandoff,
   isHealthyPlannerContext,
   readOrchestratorReport,
   runPlannerClusterPreferenceSelftest,
   runPlannerProductHandoffSelftest,
+  runPlannerQualityContractSelftest,
+  runGenericChoreGenerationBlockSelftest,
+  runSafeBlockedHandoffContractSelftest,
   buildCapDiagnosticProductHandoff,
   buildNoSafeProductClusterBlockedHandoff,
   buildStaleCursorInvokeRuntimeBlockedHandoff,
@@ -1361,7 +1365,9 @@ function resolveNextActionModelBody(rawBody, fallbackCtx) {
   if (allViolations.length) {
     return {
       ok: false,
-      body: buildPlannerRejectedBody(fallbackCtx || {}),
+      body: buildPlannerRejectedBody(
+        Object.assign({}, fallbackCtx || {}, { violations: allViolations }),
+      ),
       violations: allViolations,
       bareSanitized: hadBare,
       clusterHandoff: isHealthyPlannerContext(normalizePlannerContext(rejectCtx)),
@@ -1403,34 +1409,29 @@ function buildPlannerRejectedBody(fallbackCtx) {
     return buildAdapterInvalidFailSafeStopBody(fallbackCtx.adapterEval);
   }
   const plannerCtx = normalizePlannerContext(fallbackCtx || {});
-  if (isHealthyPlannerContext(plannerCtx)) {
-    let clusterDiag = null;
-    try {
-      const h = resolveCapRuntimeHandoff(REPO, {});
-      clusterDiag = h && h.cluster_diag ? h.cluster_diag : null;
-    } catch {
-      clusterDiag = null;
-    }
-    if (!clusterDiag || !isValidProductClusterName(clusterDiag.cluster)) {
-      clusterDiag = pickClusterFromAuditRegistry(REPO) || null;
-    }
-    if (clusterDiag && isValidProductClusterName(clusterDiag.cluster)) {
-      return buildCapDiagnosticProductHandoff({
-        repoRoot: REPO,
-        mainCommit: fallbackCtx && fallbackCtx.mainCommit,
-        clusterDiag,
-      });
-    }
-    return buildNoSafeProductClusterBlockedHandoff({
-      mainCommit: fallbackCtx && fallbackCtx.mainCommit,
-      blockReason: "NO_SAFE_PRODUCT_CLUSTER",
-    });
+  let clusterDiag = null;
+  try {
+    const h = resolveCapRuntimeHandoff(REPO, {});
+    clusterDiag = h && h.cluster_diag ? h.cluster_diag : null;
+  } catch {
+    clusterDiag = null;
   }
-  return buildRuntimeFailureBlockedHandoff({
+  if (!clusterDiag || !isValidProductClusterName(clusterDiag.cluster)) {
+    clusterDiag = pickClusterFromAuditRegistry(REPO) || null;
+  }
+  return generateAutonomousPlannedHandoff({
+    repoRoot: REPO,
     mainCommit: fallbackCtx && fallbackCtx.mainCommit,
+    clusterDiag: clusterDiag || undefined,
+    blockReason: isHealthyPlannerContext(plannerCtx)
+      ? "NO_SAFE_PRODUCT_CLUSTER"
+      : violationsIncludeGenericWorkflow((fallbackCtx && fallbackCtx.violations) || [])
+        ? "GENERIC_DRIFT_REGRESSION_BLOCKED"
+        : "NO_SAFE_RUNTIME_PROGRESS",
     stopReason: (fallbackCtx && fallbackCtx.stopReason) || "",
-    blockReason: "NO_SAFE_RUNTIME_PROGRESS",
-  });
+    plannerContext: plannerCtx,
+    preferRuntimeBlocked: !isHealthyPlannerContext(plannerCtx),
+  }).body;
 }
 
 function writeClusterHandoffFile(mainCommit) {
@@ -1441,18 +1442,12 @@ function writeClusterHandoffFile(mainCommit) {
   } catch {
     clusterDiag = undefined;
   }
-  const md = isValidProductClusterName(clusterDiag && clusterDiag.cluster)
-    ? buildCapDiagnosticProductHandoff({
-        repoRoot: REPO,
-        mainCommit: mainCommit || "",
-        clusterDiag,
-      })
-    : buildClusterHandoffForHealthyPlanner({
-        mainCommit: mainCommit || "",
-        queueReport: readOrchestratorReport(),
-        clusterDiag,
-        repoRoot: REPO,
-      });
+  const md = generateAutonomousPlannedHandoff({
+    repoRoot: REPO,
+    mainCommit: mainCommit || "",
+    clusterDiag,
+    plannerContext: { guardBlocked: false, safetyBlocked: false, dirtyBlocked: false },
+  }).body;
   writeUtf8FileNoBom(NEXT_ACTION, md);
   return md;
 }
@@ -3597,20 +3592,30 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
     }
     let finalViolations = silverNextActionQualityViolations(outDoc, plannerCtxBase);
     if (finalViolations.length) {
+      const planned = generateAutonomousPlannedHandoff({
+        repoRoot: REPO,
+        mainCommit: commit,
+        clusterDiag: plannerCtxBase.clusterDiag,
+        stopReason: process.env.SILVER_RUNTIME_STOP_REASON || "",
+        blockReason: violationsIncludeGenericWorkflow(finalViolations)
+          ? "GENERIC_DRIFT_REGRESSION_BLOCKED"
+          : "NO_SAFE_RUNTIME_PROGRESS",
+        plannerContext: {
+          guardBlocked: plannerCtxBase.guardBlocked,
+          safetyBlocked: plannerCtxBase.safetyBlocked,
+          dirtyBlocked: plannerCtxBase.dirtyBlocked,
+        },
+        preferRuntimeBlocked: !isHealthyPlannerContext(plannerCtxBase),
+      });
       if (isHealthyPlannerContext(plannerCtxBase)) {
-        outDoc = writeClusterHandoffFile(commit);
-        outTag = "planner-cap-diagnostic-handoff-enforced";
+        outDoc = planned.body;
+        outTag =
+          planned.mode === "CLUSTER_PRODUCT_HANDOFF"
+            ? "planner-cap-diagnostic-handoff-enforced"
+            : "planner-no-safe-product-cluster-enforced";
       } else {
         outDoc = wrapNextActionDoc(
-          stripSilverAutopilotUkolHeaderLine(
-            buildRuntimeFailureBlockedHandoff({
-              mainCommit: commit,
-              stopReason: process.env.SILVER_RUNTIME_STOP_REASON || "",
-              blockReason: violationsIncludeGenericWorkflow(finalViolations)
-                ? "GENERIC_DRIFT_REGRESSION_BLOCKED"
-                : "NO_SAFE_RUNTIME_PROGRESS",
-            }),
-          ),
+          stripSilverAutopilotUkolHeaderLine(planned.body),
           "runtime-failure-blocked-handoff-enforced",
         );
         outTag = "planner-quality-fallback-enforced";
@@ -3752,7 +3757,9 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
         "If state is ambiguous, output diagnostic-only steps (node scripts/silver-…, audits from manifest). " +
         "Never instruct a direct engine or assets/app.js edit without explicit diagnostics-first framing. " +
         "For healthy Silver CAP workflow prefer PRODUCT CLUSTER diagnostics (silver-rhc3-cluster-classifier-v1.cjs, harness, audit_silver). " +
-        "Never output generic infra (sudo apt, gh auth login, verify-pr=NNNN, git push -u) unless the task starts with INFRA_BLOCKER_REASON: and a concrete blocker. " +
+        "Never output generic infra (sudo apt, gh auth login, verify-pr=NNNN, git push -u, chore/silver-audit-repo-state) or generic repo chores (git status → commit/stash → gh auth → push). " +
+        "If no cluster-specific product task is available, output SAFE_BLOCKED / NO_SAFE_PRODUCT_TASK with PRODUCT_HANDOFF_CONTRACT — never a generic git/gh workflow. " +
+        "Never output generic infra unless the task starts with INFRA_BLOCKER_REASON: and a concrete blocker. " +
         "Never hardcode stale PR numbers; use node scripts/silver-autopilot.cjs --status for current state.";
 
       const userContent =
@@ -4003,18 +4010,39 @@ function cmdSanitizeNextActionMd(argvCommand) {
   }
   let wroteCluster = false;
   let sanitizeMode = "CLUSTER_HANDOFF";
-  if (genericDrift || safetyBlocked || assetsBlocked || !isHealthyPlannerContext(plannerCtx)) {
-    const blockedBody = genericDrift
-      ? buildRuntimeFailureBlockedHandoff({
-          mainCommit: commit,
-          stopReason: stopReason || "GENERIC_DRIFT_REGRESSION_BLOCKED",
-          blockReason: "GENERIC_DRIFT_REGRESSION_BLOCKED",
-        })
-      : buildRuntimeFailureBlockedHandoff({
-          mainCommit: commit,
-          stopReason: stopReason,
-          blockReason: safetyBlocked ? "SAFE_BLOCKED" : "NO_SAFE_RUNTIME_PROGRESS",
-        });
+  if (genericDrift && isHealthyPlannerContext(plannerCtx) && !safetyBlocked && !assetsBlocked) {
+    const planned = generateAutonomousPlannedHandoff({
+      repoRoot: REPO,
+      mainCommit: commit,
+      clusterDiag: plannerCtx.clusterDiag,
+      blockReason: "NO_SAFE_PRODUCT_CLUSTER",
+      plannerContext: {
+        guardBlocked: plannerCtx.guardBlocked,
+        safetyBlocked: plannerCtx.safetyBlocked,
+        dirtyBlocked: plannerCtx.dirtyBlocked,
+      },
+    });
+    writeUtf8FileNoBom(NEXT_ACTION, planned.body);
+    wroteCluster = true;
+    sanitizeMode = planned.mode;
+  } else if (genericDrift || safetyBlocked || assetsBlocked || !isHealthyPlannerContext(plannerCtx)) {
+    const blockedBody = generateAutonomousPlannedHandoff({
+      repoRoot: REPO,
+      mainCommit: commit,
+      clusterDiag: plannerCtx.clusterDiag,
+      stopReason: stopReason || "GENERIC_DRIFT_REGRESSION_BLOCKED",
+      blockReason: genericDrift
+        ? "GENERIC_DRIFT_REGRESSION_BLOCKED"
+        : safetyBlocked
+          ? "SAFE_BLOCKED"
+          : "NO_SAFE_RUNTIME_PROGRESS",
+      plannerContext: {
+        guardBlocked: plannerCtx.guardBlocked || assetsBlocked || !dirtyD.pass,
+        safetyBlocked,
+        dirtyBlocked: plannerCtx.dirtyBlocked,
+      },
+      preferRuntimeBlocked: genericDrift && !isHealthyPlannerContext(plannerCtx),
+    }).body;
     writeUtf8FileNoBom(NEXT_ACTION, blockedBody);
     wroteCluster = true;
     sanitizeMode = "RUNTIME_BLOCKED_HANDOFF";
@@ -4064,15 +4092,23 @@ function cmdEnforceRuntimeNextActionAfterFailure(argv) {
   }
   const full = readTextSafe(NEXT_ACTION).trim();
   const commit = runGit(["rev-parse", "HEAD"]);
-  const plannerCtx = {
+  let clusterDiag = null;
+  try {
+    const capHandoff = resolveCapRuntimeHandoff(REPO, {});
+    clusterDiag = capHandoff && capHandoff.cluster_diag ? capHandoff.cluster_diag : null;
+  } catch {
+    clusterDiag = null;
+  }
+  const qualityOpts = {
     mainCommit: commit,
     repoRoot: REPO,
     requireProductCluster: true,
     selectorCluster: pickSelectorCluster(REPO, ""),
+    clusterDiag,
   };
   const v = [
     ...new Set([
-      ...silverNextActionQualityViolations(full, plannerCtx),
+      ...silverNextActionQualityViolations(full, qualityOpts),
       ...nextActionInnerQualityViolations(full),
     ]),
   ];
@@ -4081,14 +4117,27 @@ function cmdEnforceRuntimeNextActionAfterFailure(argv) {
     console.log("SILVER_RUNTIME_NEXT_ACTION_ENFORCE=SKIP no_generic_violations");
     return 0;
   }
-  const blockedBody = buildRuntimeFailureBlockedHandoff({
+  const dirtyD = dirtyGitUnexpectedForFullAutoLoop(gitChangedFilesList().map(normalizeRepoRel).filter(Boolean));
+  const runReportText = readTextSafe(RUN_REPORT);
+  const safetyInfo = safetyBlockFromRunReportMd(runReportText);
+  const assetsBlocked = assetsAppJsDirty(gitChangedFilesList().map(normalizeRepoRel).filter(Boolean));
+  const plannerCtx = {
+    guardBlocked: assetsBlocked || !dirtyD.pass,
+    safetyBlocked: safetyInfo.blocked,
+    dirtyBlocked: !dirtyD.pass,
+  };
+  const blockedBody = generateAutonomousPlannedHandoff({
+    repoRoot: REPO,
     mainCommit: commit,
+    clusterDiag,
     stopReason: stop || "STALE_CURSOR_INVOKE_NO_PROGRESS",
     blockReason: genericDrift ? "GENERIC_DRIFT_REGRESSION_BLOCKED" : "NO_SAFE_RUNTIME_PROGRESS",
-  });
+    plannerContext: plannerCtx,
+    preferRuntimeBlocked: !isHealthyPlannerContext(plannerCtx),
+  }).body;
   writeUtf8FileNoBom(NEXT_ACTION, blockedBody);
   const afterViolations = [
-    ...silverNextActionQualityViolations(blockedBody, plannerCtx),
+    ...silverNextActionQualityViolations(blockedBody, qualityOpts),
     ...nextActionInnerQualityViolations(blockedBody),
   ];
   if (afterViolations.length) {
@@ -4253,6 +4302,9 @@ function parseArgs(argv) {
     else if (a === "--cap10-replay-lifecycle-selftest") out.cmd = "cap10-replay-lifecycle-selftest";
     else if (a === "--metric-delta-contract-selftest") out.cmd = "metric-delta-contract-selftest";
     else if (a === "--generic-fallback-blocker-selftest") out.cmd = "generic-fallback-blocker-selftest";
+    else if (a === "--planner-quality-contract-selftest") out.cmd = "planner-quality-contract-selftest";
+    else if (a === "--generic-chore-generation-block-selftest") out.cmd = "generic-chore-generation-block-selftest";
+    else if (a === "--safe-blocked-handoff-contract-selftest") out.cmd = "safe-blocked-handoff-contract-selftest";
     else if (a === "--stale-cursor-invoke-hardening-selftest") out.cmd = "stale-cursor-invoke-hardening-selftest";
     else if (a === "--valid-product-work-closeout-selftest") out.cmd = "valid-product-work-closeout-selftest";
     else if (a === "--cluster-consistency-lock-selftest") out.cmd = "cluster-consistency-lock-selftest";
@@ -4329,6 +4381,12 @@ if (require.main === module) {
   } else if (p.cmd === "generic-fallback-blocker-selftest") {
     const { runGenericFallbackBlockerSelftest } = require("./silver-cap10-pipeline-contract.cjs");
     process.exit(runGenericFallbackBlockerSelftest() ? 0 : 1);
+  } else if (p.cmd === "planner-quality-contract-selftest") {
+    process.exit(runPlannerQualityContractSelftest() ? 0 : 1);
+  } else if (p.cmd === "generic-chore-generation-block-selftest") {
+    process.exit(runGenericChoreGenerationBlockSelftest() ? 0 : 1);
+  } else if (p.cmd === "safe-blocked-handoff-contract-selftest") {
+    process.exit(runSafeBlockedHandoffContractSelftest() ? 0 : 1);
   } else if (p.cmd === "stale-cursor-invoke-hardening-selftest") {
     process.exit(runStaleCursorInvokeHardeningSelftest(REPO) ? 0 : 1);
   } else if (p.cmd === "valid-product-work-closeout-selftest") {
