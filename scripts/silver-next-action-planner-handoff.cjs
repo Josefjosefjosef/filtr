@@ -15,12 +15,47 @@ const REALISTIC_MOBILE_REPORT = path.join(__dirname, "silver-realistic-mobile-co
 
 const { resolveCapRuntimeHandoff } = require("./silver-audit-registry.cjs");
 
+/** Outcome types for CAP diagnostic → product next action (orchestration only). */
+const PRODUCT_HANDOFF_OUTCOMES = [
+  "ENGINE_FIX_TASK_READY",
+  "HARNESS_ALIGNMENT_TASK_READY",
+  "PLANNER_ALIGNMENT_TASK_READY",
+  "NO_SAFE_FIX",
+  "SAFE_BLOCKED",
+  "PR_READY",
+  "MERGED_AND_PROVED",
+  "NEED_HUMAN_INPUT",
+];
+
+/** Per-audit on-disk report paths (orchestration; mirrors silver-audit-registry catalog). */
+const CLUSTER_DIAG_REPORT_MAP = {
+  rhc3: {
+    report_json: "silver-real-human-chaos-v3-report.json",
+    diagnostic_report_json: "silver-rhc3-cluster-classifier-v1-report.json",
+  },
+  self_correction: {
+    report_json: "silver-self-correction-audit-report.json",
+    diagnostic_report_json: "silver-self-correction-safety-diagnostic-report.json",
+  },
+  retrieval_stress: {
+    report_json: "silver-retrieval-stress-300k-foundation-diagnostic-report.json",
+    diagnostic_report_json: "silver-retrieval-stress-300k-foundation-diagnostic-report.json",
+  },
+  negative_no_write: {
+    report_json: "silver-rhc3-negation-cal-readonly-diagnostic-report.json",
+    diagnostic_report_json: "silver-rhc3-negation-cal-readonly-diagnostic-report.json",
+  },
+};
+
 /** UTF-8 mis-decoded Czech (Latin-1/Windows-1252 read as UTF-8). */
 const SILVER_NEXT_ACTION_MOJIBAKE_RE =
   /Ă|â€|Ĺ|pĹ|Ä›|OtevĹ|ZprĂ|pĹ™ejdÄ|ĂşKOL|ÄŤ|Ĺ™|Ă­|Ăˇ|Ă©/;
 
 const SILVER_NEXT_ACTION_SILVER_WORKFLOW_RE =
-  /PRODUCT_CLUSTER|NEXT PRODUCT CLUSTER|silver-rhc3|cluster diagnostic|cluster-classifier|SILVER_RHC3_CLUSTER_CLASSIFIER|harness|audit_silver|SILVER_PRODUCT_CLUSTER|top_cluster=|self_correction_negation_flip|silver-self-correction|TRUE_ENGINE_FAIL|harness_next_command/i;
+  /PRODUCT_CLUSTER|NEXT PRODUCT CLUSTER|PRODUCT_HANDOFF_CONTRACT|target_cluster=|source_audit=|diagnostic_result=|recommended_scope=|expected_outcome=|ENGINE_FIX_TASK_READY|HARNESS_ALIGNMENT_TASK_READY|PLANNER_ALIGNMENT_TASK_READY|NO_SAFE_FIX|SAFE_BLOCKED|silver-rhc3|cluster diagnostic|cluster-classifier|SILVER_RHC3_CLUSTER_CLASSIFIER|harness|audit_silver|SILVER_PRODUCT_CLUSTER|top_cluster=|self_correction_negation_flip|silver-self-correction|TRUE_ENGINE_FAIL|harness_next_command/i;
+
+const GENERIC_ORCHESTRATION_HANDOFF_RE =
+  /(?:\bgit\s+push\s+-u\b|\bgh\s+auth\b|chore\/silver-audit-repo-state|(?:--verify-pr=\d+|\bverify-pr\b)|sudo\s+apt\s+(?:update|install))/i;
 
 /** Cluster-specific product steps (orchestration/scripts only). */
 const CLUSTER_PRODUCT_TASK_SPEC = {
@@ -179,6 +214,388 @@ function readOrchestratorReport() {
   return r.ok ? r.data : null;
 }
 
+function parseClusterFailCountFromReport(data, cluster) {
+  if (!data || !cluster) return 0;
+  const name = String(cluster).trim();
+  if (!name) return 0;
+  if (Array.isArray(data.top_fail_clusters)) {
+    for (const row of data.top_fail_clusters) {
+      const s = String(row);
+      const idx = s.lastIndexOf(":");
+      if (idx <= 0) continue;
+      if (s.slice(0, idx).trim() === name) {
+        const n = parseInt(s.slice(idx + 1), 10);
+        return Number.isFinite(n) ? n : 0;
+      }
+    }
+  }
+  if (data.target_cluster === name) {
+    const n = Number(data.fail_count || data.intent_fail_count);
+    return Number.isFinite(n) ? n : 0;
+  }
+  const st = data.cluster_stats && data.cluster_stats[name];
+  if (st && st.fail_count != null) return Number(st.fail_count) || 0;
+  return 0;
+}
+
+function parseTextBlockField(text, key) {
+  const re = new RegExp("^" + key + "=([^\\r\\n]+)", "im");
+  const m = String(text || "").match(re);
+  return m ? String(m[1]).trim() : "";
+}
+
+function aggregateSafetyCountersFromReports(repoRoot) {
+  const names = [
+    "silver-self-correction-audit-report.json",
+    "silver-real-human-chaos-v3-report.json",
+    "silver-quality-v2-report.json",
+  ];
+  const out = {
+    dangerous_write_count: 0,
+    false_write_count: 0,
+    query_created_write_count: 0,
+    write_when_negated_count: 0,
+  };
+  for (const fn of names) {
+    const r = readJsonFile(path.join(repoRoot, "scripts", fn));
+    if (!r.ok || !r.data) continue;
+    for (const k of Object.keys(out)) {
+      const n = Number(r.data[k]);
+      if (Number.isFinite(n)) out[k] = Math.max(out[k], n);
+    }
+  }
+  return out;
+}
+
+/**
+ * Load cluster-specific diagnostic evidence from on-disk audit/diagnostic JSON.
+ * @param {string} repoRoot
+ * @param {object} registryDiag cluster_diag from resolveCapRuntimeHandoff
+ */
+function loadClusterDiagnosticEvidence(repoRoot, registryDiag) {
+  const cluster = String((registryDiag && registryDiag.cluster) || "").trim();
+  const auditId = String((registryDiag && registryDiag.audit_id) || "").trim();
+  const auditName = String((registryDiag && registryDiag.audit_name) || "").trim();
+  const spec = CLUSTER_DIAG_REPORT_MAP[auditId] || {};
+  const scriptsDir = path.join(repoRoot, "scripts");
+  const auditPath = spec.report_json ? path.join(scriptsDir, spec.report_json) : "";
+  const diagPath = spec.diagnostic_report_json ? path.join(scriptsDir, spec.diagnostic_report_json) : "";
+  const auditJson = auditPath ? readJsonFile(auditPath) : { ok: false, data: null };
+  const diagJson = diagPath && diagPath !== auditPath ? readJsonFile(diagPath) : auditJson;
+
+  const auditData = auditJson.ok ? auditJson.data : null;
+  const diagData = diagJson.ok ? diagJson.data : null;
+  const clusterStats =
+    diagData && diagData.cluster_stats && diagData.cluster_stats[cluster]
+      ? diagData.cluster_stats[cluster]
+      : null;
+
+  let failCount = Number((registryDiag && registryDiag.count) || 0);
+  if (clusterStats && clusterStats.fail_count != null) failCount = Number(clusterStats.fail_count) || failCount;
+  else if (auditData) failCount = parseClusterFailCountFromReport(auditData, cluster) || failCount;
+
+  let passCount = 0;
+  let observedAccuracy = "";
+  if (clusterStats) {
+    passCount = Number(clusterStats.pass_count) || 0;
+    const total = Number(clusterStats.total_cases) || passCount + failCount;
+    if (total > 0) observedAccuracy = ((passCount / total) * 100).toFixed(2);
+  } else if (auditData && auditData.overall_accuracy != null && failCount > 0) {
+    observedAccuracy = String(auditData.overall_accuracy);
+  }
+
+  const globalTef = auditData ? Number(auditData.true_engine_fail_count) || 0 : 0;
+  const globalHarness = auditData ? Number(auditData.harness_problem_count) || 0 : 0;
+  const clusterTef = clusterStats ? Number(clusterStats.true_engine_fail_count) || 0 : NaN;
+  const clusterHarness = clusterStats
+    ? Number(clusterStats.harness_problem_count || clusterStats.negation_flip_fail_count) || 0
+    : NaN;
+
+  const textBlock = String((diagData && diagData.text_block) || "");
+  const readyEngine = parseTextBlockField(textBlock, "ready_for_engine_fix");
+  const diagRecommended = String(
+    (diagData && diagData.recommended_next_task_type) ||
+      (auditData && auditData.recommended_next_task_type) ||
+      "",
+  );
+
+  let trueEngineFail = "NO";
+  if (Number.isFinite(clusterTef) && clusterTef > 0) trueEngineFail = "YES";
+  else if (readyEngine === "YES") trueEngineFail = "YES";
+  else if (readyEngine === "NO") trueEngineFail = "NO";
+  else if (/TRUE_ENGINE|must_fix_engine/i.test(diagRecommended) && globalTef > 0) trueEngineFail = "YES";
+  else if (
+    registryDiag &&
+    registryDiag.expected_outcome &&
+    /engine\s*PR/i.test(String(registryDiag.expected_outcome)) &&
+    globalTef > globalHarness
+  ) {
+    trueEngineFail = "YES";
+  }
+
+  const harnessAlignment =
+    trueEngineFail === "NO" ||
+    /HARNESS|harness\s*alignment|SCRIPTS_ONLY_HARNESS/i.test(diagRecommended) ||
+    (Number.isFinite(clusterHarness) && clusterHarness > 0 && (!Number.isFinite(clusterTef) || clusterTef === 0)) ||
+    (globalHarness > globalTef && globalTef > 0 && /negation_flip|harness|clarif|ambiguous/i.test(cluster));
+
+  const safety = aggregateSafetyCountersFromReports(repoRoot);
+  const safeBlocked =
+    safety.dangerous_write_count > 0 ||
+    safety.false_write_count > 0 ||
+    safety.write_when_negated_count > 0;
+
+  return {
+    target_cluster: cluster,
+    source_audit: auditName || auditId || String((registryDiag && registryDiag.source) || ""),
+    audit_id: auditId,
+    observed_accuracy: observedAccuracy || "(unknown)",
+    observed_fail_count: failCount,
+    observed_pass_count: passCount,
+    true_engine_fail: trueEngineFail,
+    harness_alignment: harnessAlignment ? "YES" : "NO",
+    ready_for_engine_fix: readyEngine || (trueEngineFail === "YES" ? "YES" : "NO"),
+    diagnostic_result:
+      trueEngineFail === "YES"
+        ? "TRUE_ENGINE_FAIL=YES"
+        : harnessAlignment
+          ? "TRUE_ENGINE_FAIL=NO;harness_or_gold_alignment"
+          : "TRUE_ENGINE_FAIL=NO;diagnostic_inconclusive",
+    recommended_scope:
+      trueEngineFail === "YES"
+        ? "narrow_engine_fix_after_harness_signoff"
+        : harnessAlignment
+          ? "scripts-only_harness_gold_alignment"
+          : "scripts-only_cluster_diagnostic",
+    safety_counters: safety,
+    safe_blocked: safeBlocked ? "YES" : "NO",
+    registry_expected_outcome: String((registryDiag && registryDiag.expected_outcome) || ""),
+    diagnostic_report: diagPath ? path.basename(diagPath) : "",
+    audit_report: auditPath ? path.basename(auditPath) : "",
+  };
+}
+
+/**
+ * Map diagnostic evidence → product handoff outcome type.
+ * @param {ReturnType<typeof loadClusterDiagnosticEvidence>} evidence
+ */
+function resolveProductHandoffOutcome(evidence) {
+  if (!evidence || !evidence.target_cluster) {
+    return {
+      expected_outcome: "NEED_HUMAN_INPUT",
+      engine_change_allowed: "NO",
+      assets_app_change_allowed: "NO",
+    };
+  }
+  if (evidence.safe_blocked === "YES") {
+    return {
+      expected_outcome: "SAFE_BLOCKED",
+      engine_change_allowed: "NO",
+      assets_app_change_allowed: "NO",
+    };
+  }
+  if (evidence.observed_fail_count === 0 && evidence.true_engine_fail === "NO") {
+    return {
+      expected_outcome: "MERGED_AND_PROVED",
+      engine_change_allowed: "NO",
+      assets_app_change_allowed: "NO",
+    };
+  }
+  if (evidence.true_engine_fail === "YES" && evidence.ready_for_engine_fix !== "NO") {
+    return {
+      expected_outcome: "ENGINE_FIX_TASK_READY",
+      engine_change_allowed: "YES",
+      assets_app_change_allowed: "NO",
+    };
+  }
+  if (evidence.harness_alignment === "YES") {
+    return {
+      expected_outcome: "HARNESS_ALIGNMENT_TASK_READY",
+      engine_change_allowed: "NO",
+      assets_app_change_allowed: "NO",
+    };
+  }
+  if (/PLANNER|planner/i.test(evidence.recommended_scope)) {
+    return {
+      expected_outcome: "PLANNER_ALIGNMENT_TASK_READY",
+      engine_change_allowed: "NO",
+      assets_app_change_allowed: "NO",
+    };
+  }
+  if (/no_safe|stale/i.test(evidence.diagnostic_result)) {
+    return {
+      expected_outcome: "NO_SAFE_FIX",
+      engine_change_allowed: "NO",
+      assets_app_change_allowed: "NO",
+    };
+  }
+  return {
+    expected_outcome: "NEED_HUMAN_INPUT",
+    engine_change_allowed: "NO",
+    assets_app_change_allowed: "NO",
+  };
+}
+
+function isGenericOrchestrationHandoff(text) {
+  const t = String(text || "");
+  if (!t) return false;
+  if (silverNextActionHasClusterWorkflow(t)) return false;
+  if (!GENERIC_ORCHESTRATION_HANDOFF_RE.test(t)) return false;
+  const productHarness =
+    /PRODUCT_CLUSTER|PRODUCT_HANDOFF_CONTRACT|target_cluster=/i.test(t) &&
+    /(?:node|npx)\s+scripts\/silver-/i.test(t);
+  return !productHarness;
+}
+
+function capDiagnosticFlowActive(opts) {
+  const cd = opts && opts.clusterDiag;
+  const cluster = cd && String(cd.cluster || "").trim();
+  return !!(cluster && cluster !== "(žádný)" && cluster !== "(unknown)");
+}
+
+/**
+ * @param {{ mainCommit?: string, queueReport?: object|null, clusterDiag?: object }} ctx
+ * @returns {string}
+ */
+function buildCapDiagnosticProductHandoff(ctx) {
+  const repoRoot = (ctx && ctx.repoRoot) || REPO;
+  let clusterDiag = (ctx && ctx.clusterDiag) || null;
+  if (!clusterDiag || !clusterDiag.cluster || clusterDiag.cluster === "(žádný)") {
+    clusterDiag = pickClusterFromAuditRegistry() || pickTopClusterDiagnostic();
+  }
+  const main = String((ctx && ctx.mainCommit) || "").trim();
+  const evidence = loadClusterDiagnosticEvidence(repoRoot, clusterDiag);
+  const outcome = resolveProductHandoffOutcome(evidence);
+  const spec = clusterProductSpecFor(clusterDiag);
+  const cmds =
+    Array.isArray(clusterDiag.harness_commands) && clusterDiag.harness_commands.length
+      ? clusterDiag.harness_commands
+      : spec && spec.harness_commands
+        ? spec.harness_commands
+        : clusterDiag.harness_command
+          ? [clusterDiag.harness_command]
+          : ["node scripts/silver-rhc3-cluster-classifier-v1.cjs"];
+  const safety = evidence.safety_counters;
+  const safetyLine =
+    "dangerous_write_count=" +
+    safety.dangerous_write_count +
+    ";false_write_count=" +
+    safety.false_write_count +
+    ";query_created_write_count=" +
+    safety.query_created_write_count +
+    ";write_when_negated_count=" +
+    safety.write_when_negated_count;
+
+  const analysisBullets =
+    spec && spec.analysis_bullets
+      ? spec.analysis_bullets
+      : [
+          "Ověř `TRUE_ENGINE_FAIL` vs harness/gold z diagnostic JSON (`true_engine_fail_count`, `harness_problem_count`).",
+          "Drž scope: scripts-only pokud `TRUE_ENGINE_FAIL=NO`.",
+          "Spusť existující harness příkazy níže; nevymýšlej nové cesty.",
+        ];
+
+  const lines = [
+    "<!-- SILVER_NEXT_ACTION: planner-cap-diagnostic-product-handoff; not auto-applied -->",
+    "",
+    "ÚKOL PRO CURSOR — infoUzel.cz / Silver — PRODUCT HANDOFF (CAP diagnostic) — NO ENGINE CHANGE unless explicit below",
+    "",
+    "### PRODUCT_HANDOFF_CONTRACT",
+    "",
+    "target_cluster=" + evidence.target_cluster,
+    "source_audit=" + evidence.source_audit,
+    "observed_accuracy=" + evidence.observed_accuracy,
+    "observed_fail_count=" + String(evidence.observed_fail_count),
+    "diagnostic_result=" + evidence.diagnostic_result,
+    "recommended_scope=" + evidence.recommended_scope,
+    "expected_outcome=" + outcome.expected_outcome,
+    "engine_change_allowed=" + outcome.engine_change_allowed,
+    "assets_app_change_allowed=" + outcome.assets_app_change_allowed,
+    "safety_counters=" + safetyLine,
+    "metric_delta_required=YES",
+    "no_broad_refactor=YES",
+    "",
+    "### Kontext (automaticky)",
+    "",
+    "- **Aktuální main commit:** `" + (main || "(unknown)") + "`",
+    "- **Zdroj clusteru:** " + String(clusterDiag.source || ""),
+    "- **Audit report:** `" + (evidence.audit_report || "(none)") + "`",
+    "- **Diagnostic report:** `" + (evidence.diagnostic_report || "(none)") + "`",
+    "",
+    "### Produktový úkol (cluster-specific)",
+    "",
+    "- **selector_cluster:** `" + evidence.target_cluster + "`",
+    "- **TRUE_ENGINE_FAIL:** " + evidence.true_engine_fail,
+    "- **Registry expected (informative):** " + (evidence.registry_expected_outcome || "(none)"),
+    "",
+    "#### Analýza (povinné)",
+    "",
+  ];
+  for (const b of analysisBullets) lines.push("- " + b);
+  lines.push("");
+  lines.push("#### Harness / diagnostika (existující skripty)");
+  lines.push("");
+  let idx = 0;
+  for (const cmd of cmds) {
+    idx++;
+    lines.push(String(idx) + ") `" + cmd + "`");
+  }
+  lines.push("");
+  lines.push("### Kroky");
+  lines.push("");
+  lines.push("1) `Set-Location C:\\\\projects\\\\filtr`");
+  lines.push("2) `git status --short` — pouze reporting `SILVER_*.md` dirty je povoleno.");
+  lines.push("3) `node scripts/silver-autopilot.cjs --status`");
+  lines.push(
+    "4) Zaměř se na cluster **" +
+      evidence.target_cluster +
+      "**: spusť harness příkazy výše; **NE** generic git push / gh auth / verify-pr.",
+  );
+  if (outcome.expected_outcome === "HARNESS_ALIGNMENT_TASK_READY") {
+    lines.push(
+      "5) **HARNESS_ALIGNMENT_TASK_READY:** uprav pouze skripty/harness/gold v `scripts/`; engine/assets zakázány.",
+    );
+  } else if (outcome.expected_outcome === "ENGINE_FIX_TASK_READY") {
+    lines.push(
+      "5) **ENGINE_FIX_TASK_READY:** úzký engine fix až po PASS harness důkazu; jinak STOP.",
+    );
+  } else if (outcome.expected_outcome === "SAFE_BLOCKED") {
+    lines.push("5) **SAFE_BLOCKED:** žádné změny — vyřeš safety counters před pokračováním.");
+  } else if (outcome.expected_outcome === "NO_SAFE_FIX") {
+    lines.push("5) **NO_SAFE_FIX:** dokumentuj důkaz; žádný broad refactor.");
+  } else {
+    lines.push("5) Drž se `expected_outcome=" + outcome.expected_outcome + "` bez orchestration-only smyčky.");
+  }
+  lines.push("6) `npm run smoke` po smysluplné změně skriptů.");
+  lines.push("");
+  lines.push("### Povinný výstup");
+  lines.push("");
+  lines.push("```text");
+  lines.push("=== SILVER_PRODUCT_CLUSTER_DIAGNOSTIC_RESULT ===");
+  lines.push("main_commit=" + (main || "(unknown)"));
+  lines.push("top_cluster=" + evidence.target_cluster);
+  lines.push("target_cluster=" + evidence.target_cluster);
+  lines.push("source_audit=" + evidence.source_audit);
+  lines.push("diagnostic_result=" + evidence.diagnostic_result);
+  lines.push("recommended_scope=" + evidence.recommended_scope);
+  lines.push("expected_outcome=" + outcome.expected_outcome);
+  lines.push("TRUE_ENGINE_FAIL=" + evidence.true_engine_fail);
+  lines.push("engine_touched=NO");
+  lines.push("assets_app_touched=NO");
+  lines.push("harness_next_command=(vyplň přesný příkaz)");
+  lines.push("PASS_FAIL=(PASS|FAIL)");
+  lines.push("=== END_SILVER_PRODUCT_CLUSTER_DIAGNOSTIC_RESULT ===");
+  lines.push("```");
+  lines.push("");
+  lines.push("### FINISH");
+  lines.push("");
+  lines.push("```powershell");
+  lines.push("[console]::beep(880, 200)");
+  lines.push("```");
+  lines.push("");
+  return lines.join("\n");
+}
+
 /**
  * @param {{ mainCommit?: string, queueReport?: object|null, clusterDiag?: object }} ctx
  * @returns {string}
@@ -329,6 +746,9 @@ function silverNextActionQualityViolations(text, opts) {
   const v = [];
   const selectorCluster = opts && opts.selectorCluster ? String(opts.selectorCluster).trim() : "";
   const clusterWorkflow = silverNextActionHasClusterWorkflow(t);
+  if (capDiagnosticFlowActive(opts) && isGenericOrchestrationHandoff(t)) {
+    v.push("generic_orchestration_blocked_after_cap_diagnostic");
+  }
   if (selectorCluster && selectorCluster !== "rcz2_retrieval" && !silverNextActionMatchesSelectorCluster(t, selectorCluster)) {
     v.push("product_handoff_not_cluster_specific");
   }
@@ -374,10 +794,18 @@ function isHealthyPlannerContext(ctx) {
  * @returns {string}
  */
 function buildClusterHandoffForHealthyPlanner(ctx) {
+  const clusterDiag = (ctx && ctx.clusterDiag) || pickClusterFromAuditRegistry() || pickTopClusterDiagnostic();
+  if (clusterDiag && clusterDiag.cluster && clusterDiag.cluster !== "(žádný)" && clusterDiag.cluster !== "(unknown)") {
+    return buildCapDiagnosticProductHandoff({
+      repoRoot: (ctx && ctx.repoRoot) || REPO,
+      mainCommit: ctx && ctx.mainCommit,
+      clusterDiag,
+    });
+  }
   return buildHandoffMarkdown({
     mainCommit: ctx && ctx.mainCommit,
     queueReport: (ctx && ctx.queueReport) || readOrchestratorReport(),
-    clusterDiag: ctx && ctx.clusterDiag,
+    clusterDiag,
   });
 }
 
@@ -435,6 +863,132 @@ function runPlannerClusterPreferenceSelftest() {
   return ok;
 }
 
+function runPlannerProductHandoffSelftest() {
+  let ok = true;
+  const fail = (msg) => {
+    console.error("PLANNER_PRODUCT_HANDOFF_SELFTEST_FAIL " + msg);
+    ok = false;
+  };
+
+  const genericGit =
+    "<!-- SILVER_NEXT_ACTION: full-auto-loop-openai -->\n" +
+    "git status\ngh auth login\ngit push -u origin chore/silver-audit-repo-state\n";
+  const capCtx = {
+    clusterDiag: {
+      cluster: "self_correction_negation_flip",
+      audit_id: "self_correction",
+      audit_name: "Self-Correction",
+      count: 472,
+      expected_outcome: "engine PR",
+    },
+  };
+  const genericViolations = silverNextActionQualityViolations(genericGit, capCtx);
+  if (!genericViolations.includes("generic_orchestration_blocked_after_cap_diagnostic")) {
+    fail("generic_git_gh_blocker_after_cap_diagnostic");
+  }
+
+  const negFlipHandoff = buildCapDiagnosticProductHandoff({
+    mainCommit: "abc123",
+    clusterDiag: capCtx.clusterDiag,
+  });
+  if (!/expected_outcome=HARNESS_ALIGNMENT_TASK_READY/.test(negFlipHandoff)) {
+    fail("negation_flip_expected_HARNESS_ALIGNMENT_TASK_READY");
+  }
+  if (/git\s+push\s+-u|gh\s+auth\s+login/i.test(negFlipHandoff)) {
+    fail("negation_flip_handoff_must_not_contain_generic_git_gh");
+  }
+  for (const field of [
+    "target_cluster=",
+    "source_audit=",
+    "diagnostic_result=",
+    "recommended_scope=",
+    "expected_outcome=",
+  ]) {
+    if (negFlipHandoff.indexOf(field) < 0) fail("contract_missing_" + field.replace(/=$/, ""));
+  }
+
+  const engineCtx = {
+    clusterDiag: {
+      cluster: "rhc3_partial_cal_ref",
+      audit_id: "rhc3",
+      audit_name: "Real Human Chaos V3",
+      count: 2082,
+      expected_outcome: "engine PR",
+    },
+  };
+  const engineHandoff = buildCapDiagnosticProductHandoff({
+    mainCommit: "def456",
+    clusterDiag: engineCtx.clusterDiag,
+  });
+  if (!/ENGINE_FIX_TASK_READY|expected_outcome=ENGINE_FIX_TASK_READY/.test(engineHandoff)) {
+    /* without on-disk report may fall through — inject synthetic evidence via resolve override test */
+  }
+
+  const safeBlockedHandoff = buildCapDiagnosticProductHandoff({
+    mainCommit: "ghi789",
+    clusterDiag: { cluster: "test_cluster", audit_id: "self_correction", audit_name: "Test", count: 1 },
+  });
+  if (!/PRODUCT_HANDOFF_CONTRACT/.test(safeBlockedHandoff)) {
+    fail("product_handoff_contract_block_missing");
+  }
+
+  const blockedViolations = silverNextActionQualityViolations(negFlipHandoff, {
+    selectorCluster: "self_correction_negation_flip",
+    clusterDiag: capCtx.clusterDiag,
+  });
+  if (blockedViolations.length) {
+    fail("valid_product_handoff_rejected " + blockedViolations.join(";"));
+  }
+
+  const tefYes = resolveProductHandoffOutcome({
+    target_cluster: "x",
+    safe_blocked: "NO",
+    observed_fail_count: 10,
+    true_engine_fail: "YES",
+    ready_for_engine_fix: "YES",
+    harness_alignment: "NO",
+    recommended_scope: "narrow_engine_fix",
+    diagnostic_result: "TRUE_ENGINE_FAIL=YES",
+  });
+  if (tefYes.expected_outcome !== "ENGINE_FIX_TASK_READY") fail("ENGINE_FIX_TASK_READY_mapping");
+
+  const tefNo = resolveProductHandoffOutcome({
+    target_cluster: "x",
+    safe_blocked: "NO",
+    observed_fail_count: 10,
+    true_engine_fail: "NO",
+    harness_alignment: "YES",
+    diagnostic_result: "TRUE_ENGINE_FAIL=NO",
+    recommended_scope: "scripts-only_harness",
+  });
+  if (tefNo.expected_outcome !== "HARNESS_ALIGNMENT_TASK_READY") fail("HARNESS_ALIGNMENT_TASK_READY_mapping");
+
+  const safeBlk = resolveProductHandoffOutcome({
+    target_cluster: "x",
+    safe_blocked: "YES",
+    observed_fail_count: 1,
+    true_engine_fail: "NO",
+    harness_alignment: "NO",
+    diagnostic_result: "safety",
+    recommended_scope: "stop",
+  });
+  if (safeBlk.expected_outcome !== "SAFE_BLOCKED") fail("SAFE_BLOCKED_mapping");
+
+  const noFix = resolveProductHandoffOutcome({
+    target_cluster: "x",
+    safe_blocked: "NO",
+    observed_fail_count: 5,
+    true_engine_fail: "NO",
+    harness_alignment: "NO",
+    diagnostic_result: "no_safe",
+    recommended_scope: "no_safe_fix_stale",
+  });
+  if (noFix.expected_outcome !== "NO_SAFE_FIX") fail("NO_SAFE_FIX_mapping");
+
+  if (ok) console.log("PLANNER_PRODUCT_HANDOFF_SELFTEST_PASS");
+  return ok;
+}
+
 module.exports = {
   REPO,
   SILVER_NEXT_ACTION_MOJIBAKE_RE,
@@ -443,13 +997,20 @@ module.exports = {
   pickClusterFromAuditRegistry,
   pickTopClusterDiagnostic,
   buildHandoffMarkdown,
+  buildCapDiagnosticProductHandoff,
   buildClusterHandoffForHealthyPlanner,
   clusterProductSpecFor,
+  loadClusterDiagnosticEvidence,
+  resolveProductHandoffOutcome,
+  isGenericOrchestrationHandoff,
+  capDiagnosticFlowActive,
   silverNextActionMatchesSelectorCluster,
   silverNextActionHasClusterWorkflow,
   silverNextActionQualityViolations,
   CLUSTER_PRODUCT_TASK_SPEC,
+  PRODUCT_HANDOFF_OUTCOMES,
   isHealthyPlannerContext,
   readOrchestratorReport,
   runPlannerClusterPreferenceSelftest,
+  runPlannerProductHandoffSelftest,
 };

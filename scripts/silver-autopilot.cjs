@@ -16,6 +16,9 @@ const {
   isHealthyPlannerContext,
   readOrchestratorReport,
   runPlannerClusterPreferenceSelftest,
+  runPlannerProductHandoffSelftest,
+  buildCapDiagnosticProductHandoff,
+  capDiagnosticFlowActive,
 } = require("./silver-next-action-planner-handoff.cjs");
 const {
   coerceOpenAiChatCompletionText,
@@ -1290,8 +1293,17 @@ function resolveNextActionModelBody(rawBody, fallbackCtx) {
     console.log("SILVER_NEXT_ACTION_BARE_AUTOPILOT=sanitized_to_status");
   }
   const q = nextActionInnerQualityViolations(body);
+  let clusterDiagForReject = null;
+  try {
+    const h = resolveCapRuntimeHandoff(REPO, {});
+    clusterDiagForReject = h && h.cluster_diag ? h.cluster_diag : null;
+  } catch {
+    clusterDiagForReject = null;
+  }
+  const rejectCtx = Object.assign({}, fallbackCtx || {}, { clusterDiag: clusterDiagForReject });
   const tagProbeViolations = silverNextActionQualityViolations(
     wrapNextActionDoc(body, "full-auto-loop-openai"),
+    rejectCtx,
   );
   const allViolations = [...new Set([...q, ...tagProbeViolations])];
   if (allViolations.length) {
@@ -1300,7 +1312,7 @@ function resolveNextActionModelBody(rawBody, fallbackCtx) {
       body: buildPlannerRejectedBody(fallbackCtx || {}),
       violations: allViolations,
       bareSanitized: hadBare,
-      clusterHandoff: isHealthyPlannerContext(normalizePlannerContext(fallbackCtx || {})),
+      clusterHandoff: isHealthyPlannerContext(normalizePlannerContext(rejectCtx)),
     };
   }
   return { ok: true, body, violations: [], bareSanitized: hadBare };
@@ -1320,9 +1332,24 @@ function buildPlannerRejectedBody(fallbackCtx) {
   }
   const plannerCtx = normalizePlannerContext(fallbackCtx || {});
   if (isHealthyPlannerContext(plannerCtx)) {
+    let clusterDiag = null;
+    try {
+      const h = resolveCapRuntimeHandoff(REPO, {});
+      clusterDiag = h && h.cluster_diag ? h.cluster_diag : null;
+    } catch {
+      clusterDiag = null;
+    }
+    if (clusterDiag && clusterDiag.cluster && clusterDiag.cluster !== "(žádný)") {
+      return buildCapDiagnosticProductHandoff({
+        repoRoot: REPO,
+        mainCommit: fallbackCtx && fallbackCtx.mainCommit,
+        clusterDiag,
+      });
+    }
     return buildClusterHandoffForHealthyPlanner({
       mainCommit: fallbackCtx && fallbackCtx.mainCommit,
       queueReport: readOrchestratorReport(),
+      clusterDiag,
     });
   }
   return buildFullAutoQualityFallbackBody(fallbackCtx || {});
@@ -1336,11 +1363,18 @@ function writeClusterHandoffFile(mainCommit) {
   } catch {
     clusterDiag = undefined;
   }
-  const md = buildClusterHandoffForHealthyPlanner({
-    mainCommit: mainCommit || "",
-    queueReport: readOrchestratorReport(),
-    clusterDiag,
-  });
+  const md =
+    clusterDiag && clusterDiag.cluster && clusterDiag.cluster !== "(žádný)"
+      ? buildCapDiagnosticProductHandoff({
+          repoRoot: REPO,
+          mainCommit: mainCommit || "",
+          clusterDiag,
+        })
+      : buildClusterHandoffForHealthyPlanner({
+          mainCommit: mainCommit || "",
+          queueReport: readOrchestratorReport(),
+          clusterDiag,
+        });
   writeUtf8FileNoBom(NEXT_ACTION, md);
   return md;
 }
@@ -3234,18 +3268,27 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
   let loopExit = 0;
   let innerNext = "";
 
+  let capClusterDiag = null;
+  try {
+    const capHandoffProbe = resolveCapRuntimeHandoff(REPO, {});
+    capClusterDiag = capHandoffProbe && capHandoffProbe.cluster_diag ? capHandoffProbe.cluster_diag : null;
+  } catch {
+    capClusterDiag = null;
+  }
+
   const plannerCtxBase = {
     mainCommit: commit,
     guardBlocked: false,
     safetyBlocked: safetyGuard === "FAIL",
     dirtyBlocked: !dirtyD.pass,
+    clusterDiag: capClusterDiag,
   };
 
   function writeGuardedNext(inner, tag) {
     let body = repairSilverOpenAiUtf8Text(stripSilverAutopilotUkolHeaderLine(String(inner || "").trim()));
     let finalTag = String(tag || "silver-autopilot");
     const probeDoc = wrapNextActionDoc(body, finalTag);
-    const plannerViolations = silverNextActionQualityViolations(probeDoc);
+    const plannerViolations = silverNextActionQualityViolations(probeDoc, plannerCtxBase);
     if (plannerViolations.length) {
       if (isHealthyPlannerContext(plannerCtxBase)) {
         body = writeClusterHandoffFile(commit);
@@ -3291,11 +3334,11 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
     } else {
       outDoc = wrapNextActionDoc(outBody, outTag);
     }
-    let finalViolations = silverNextActionQualityViolations(outDoc);
+    let finalViolations = silverNextActionQualityViolations(outDoc, plannerCtxBase);
     if (finalViolations.length) {
       if (isHealthyPlannerContext(plannerCtxBase)) {
         outDoc = writeClusterHandoffFile(commit);
-        outTag = "planner-cluster-handoff-enforced";
+        outTag = "planner-cap-diagnostic-handoff-enforced";
       } else {
         outDoc = wrapNextActionDoc(
           stripSilverAutopilotUkolHeaderLine(
@@ -3372,25 +3415,24 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
     try {
       const capHandoff = resolveCapRuntimeHandoff(REPO, {});
       const cd = capHandoff && capHandoff.cluster_diag;
-      const exp = cd && capHandoff.next_cap ? String(capHandoff.next_cap.expected_outcome || "") : "";
       if (
         cd &&
         cd.cluster &&
         cd.cluster !== "(žádný)" &&
-        isHealthyPlannerContext(plannerCtxBase) &&
-        /engine PR|harness alignment|diagnostic/i.test(exp)
+        isHealthyPlannerContext(plannerCtxBase)
       ) {
-        writeClusterHandoffFile(commit);
+        const md = writeClusterHandoffFile(commit);
+        innerNext = md;
+        const expMatch = String(md || "").match(/expected_outcome=([A-Z_]+)/);
+        const expOut = expMatch ? expMatch[1] : String(cd.expected_outcome || "");
         recommended =
-          "registry_cluster_product_handoff:" +
-          cd.cluster +
-          ";expected_outcome=" +
-          exp;
+          "cap_diagnostic_product_handoff:" + cd.cluster + ";expected_outcome=" + expOut;
         console.log(
-          "SILVER_NEXT_ACTION_PLANNER_ENFORCE=registry_cluster_handoff cluster=" +
+          "SILVER_NEXT_ACTION_PLANNER_ENFORCE=cap_diagnostic_product_handoff cluster=" +
             cd.cluster +
             " expected_outcome=" +
-            exp,
+            expOut +
+            " openai_skipped=YES",
         );
         nextActionWritten = "YES";
         loopExit = 0;
@@ -3847,6 +3889,7 @@ function parseArgs(argv) {
     else if (a === "--ask-model") out.cmd = "ask-model";
     else if (a === "--sanitize-next-action-md") out.cmd = "sanitize-next-action-md";
     else if (a === "--cli-planner-cluster-preference-selftest") out.cmd = "planner-cluster-selftest";
+    else if (a === "--cli-planner-product-handoff-selftest") out.cmd = "planner-product-handoff-selftest";
     else if (a === "--cli-openai-next-action-utf8-selftest") out.cmd = "openai-next-action-utf8-selftest";
     else if (a === "--cli-openai-real-next-action-utf8-diagnostic") out.cmd = "openai-real-next-action-utf8-diagnostic";
     else if (a === "--cli-autonomous-adapter-diagnostic") out.cmd = "cli-autonomous-adapter-diagnostic";
@@ -3888,6 +3931,8 @@ if (require.main === module) {
   else if (p.cmd === "sanitize-next-action-md") exitCode = cmdSanitizeNextActionMd("--sanitize-next-action-md");
   else if (p.cmd === "planner-cluster-selftest") {
     process.exit(runPlannerClusterPreferenceSelftest() ? 0 : 1);
+  } else if (p.cmd === "planner-product-handoff-selftest") {
+    process.exit(runPlannerProductHandoffSelftest() ? 0 : 1);
   } else if (p.cmd === "openai-next-action-utf8-selftest") {
     process.exit(runOpenAiNextActionUtf8Selftest() ? 0 : 1);
   } else if (p.cmd === "openai-real-next-action-utf8-diagnostic") {
