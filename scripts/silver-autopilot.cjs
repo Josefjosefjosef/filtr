@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Silver Autopilot V1 — local orchestration only (no runtime Silver changes).
- * Commands: --status | --verify-pr= | --merge-pr= | --post-merge-proof | --refresh-rhc3 | --ask-model | --sanitize-next-action-md | --enforce-runtime-next-action-md | --auto | --full-auto-loop | --loop-once | --cli-autonomous-adapter-diagnostic | --cursor3-execution-status | --cursor3-execution-bridge-selftest | --controlled-budget-guard-selftest | --cap10-pipeline-contract-selftest | --cap10-replay-lifecycle-selftest | --metric-delta-contract-selftest | --generic-fallback-blocker-selftest | --stale-cursor-invoke-hardening-selftest | --stale-cursor-invoke-runtime-closeout-selftest | --cap10-safe-invocation-contract-selftest | --generic-next-action-runtime-enforcement-selftest | --valid-product-work-closeout-selftest | --cluster-consistency-lock-selftest | --scorecard-finalize-runtime-selftest
+ * Commands: --status | --verify-pr= | --merge-pr= | --post-merge-proof | --refresh-rhc3 | --ask-model | --sanitize-next-action-md | --enforce-runtime-next-action-md | --auto | --full-auto-loop | --loop-once | --cli-autonomous-adapter-diagnostic | --cursor3-execution-status | --cursor3-execution-bridge-selftest | --controlled-budget-guard-selftest | --cap10-pipeline-contract-selftest | --cap10-replay-lifecycle-selftest | --metric-delta-contract-selftest | --generic-fallback-blocker-selftest | --stale-cursor-invoke-hardening-selftest | --stale-cursor-invoke-runtime-closeout-selftest | --runtime-enforce-safe-blocked-contract-selftest | --stale-runtime-closeout-hardening-selftest | --cap10-safe-invocation-contract-selftest | --generic-next-action-runtime-enforcement-selftest | --valid-product-work-closeout-selftest | --cluster-consistency-lock-selftest | --scorecard-finalize-runtime-selftest
  */
 /* eslint-disable no-console */
 "use strict";
@@ -2102,6 +2102,130 @@ function runGenericNextActionRuntimeEnforcementSelftest(repoRoot) {
   return pass;
 }
 
+function runRuntimeEnforceSafeBlockedContractSelftest(repoRoot) {
+  const failures = [];
+  const assert = (cond, msg) => {
+    if (!cond) failures.push(msg);
+  };
+  const autopilotSrc = readTextSafe(path.join(repoRoot, "scripts", "silver-autopilot.cjs"));
+  const enforceFnIdx = autopilotSrc.indexOf("function cmdEnforceRuntimeNextActionAfterFailure(argv)");
+  assert(enforceFnIdx >= 0, "enforce_fn_missing");
+  const enforceFnSlice = enforceFnIdx >= 0 ? autopilotSrc.slice(enforceFnIdx, enforceFnIdx + 4000) : "";
+  assert(/preferRuntimeBlocked:\s*true\b/.test(enforceFnSlice), "enforce_prefer_runtime_blocked_forced_true");
+  assert(
+    !/preferRuntimeBlocked:\s*!isHealthyPlannerContext/.test(enforceFnSlice),
+    "enforce_must_not_gate_on_healthy_planner",
+  );
+  const healthyCtx = { guardBlocked: false, safetyBlocked: false, dirtyBlocked: false };
+  assert(isHealthyPlannerContext(healthyCtx), "fixture_healthy_planner");
+  const commit = runGit(["rev-parse", "HEAD"]);
+  let clusterDiag = null;
+  try {
+    const capHandoff = resolveCapRuntimeHandoff(repoRoot, {});
+    clusterDiag = capHandoff && capHandoff.cluster_diag ? capHandoff.cluster_diag : null;
+  } catch {
+    clusterDiag = null;
+  }
+  const planned = generateAutonomousPlannedHandoff({
+    repoRoot,
+    mainCommit: commit,
+    clusterDiag,
+    stopReason: "STALE_CURSOR_INVOKE_NO_PROGRESS",
+    blockReason: "NO_SAFE_RUNTIME_PROGRESS",
+    plannerContext: healthyCtx,
+    preferRuntimeBlocked: true,
+  });
+  assert(planned.mode !== "CLUSTER_PRODUCT_HANDOFF", "healthy_main_no_product_handoff_when_forced_blocked");
+  assert(/expected_outcome=SAFE_BLOCKED/.test(planned.body), "planned_safe_blocked_outcome");
+  const utf8 = { encoding: "utf8" };
+  const nextPath = path.join(repoRoot, "SILVER_NEXT_ACTION.md");
+  const genericDoc = "git status --short\ngit stash push\ngh auth login\n";
+  let backup = null;
+  try {
+    backup = fs.existsSync(nextPath) ? fs.readFileSync(nextPath, utf8) : null;
+    fs.writeFileSync(nextPath, genericDoc, utf8);
+    const r = spawnSync(
+      "node",
+      [path.join(repoRoot, "scripts", "silver-autopilot.cjs"), "--enforce-runtime-next-action-md", "--stop-reason=STALE_CURSOR_INVOKE_NO_PROGRESS"],
+      { cwd: repoRoot, encoding: "utf8" },
+    );
+    assert(r.status === 0, "enforce_exit_" + String(r.status));
+    const after = fs.readFileSync(nextPath, utf8);
+    assert(/expected_outcome=SAFE_BLOCKED/.test(after), "enforce_safe_blocked_outcome");
+    assert(!/CLUSTER_PRODUCT_HANDOFF/.test(after), "enforce_no_cluster_product_handoff");
+    assert(!isGenericRepoGitMaintenanceWorkflow(after), "enforce_not_generic");
+  } finally {
+    if (backup != null) {
+      fs.writeFileSync(nextPath, backup, utf8);
+    } else {
+      try {
+        execFileSync("git", ["restore", "--worktree", "--", "SILVER_NEXT_ACTION.md"], { cwd: repoRoot, stdio: "pipe" });
+      } catch {
+        try {
+          fs.unlinkSync(nextPath);
+        } catch {
+          /* best-effort */
+        }
+      }
+    }
+  }
+  const pass = failures.length === 0;
+  console.log("=== RUNTIME_ENFORCE_SAFE_BLOCKED_CONTRACT_SELFTEST ===");
+  console.log("RUNTIME_ENFORCE_SAFE_BLOCKED_CONTRACT_SELFTEST=" + (pass ? "PASS" : "FAIL"));
+  if (!pass) {
+    for (const f of failures) console.log("FAIL_DETAIL=" + f);
+  }
+  console.log("=== END_RUNTIME_ENFORCE_SAFE_BLOCKED_CONTRACT_SELFTEST ===");
+  return pass;
+}
+
+function runStaleRuntimeCloseoutHardeningSelftest(repoRoot) {
+  const failures = [];
+  const assert = (cond, msg) => {
+    if (!cond) failures.push(msg);
+  };
+  const commit = runGit(["rev-parse", "HEAD"]);
+  const healthyCtx = { guardBlocked: false, safetyBlocked: false, dirtyBlocked: false };
+  const stopReasons = [
+    "STALE_CURSOR_INVOKE_NO_PROGRESS",
+    "CURSOR_PROCESS_ALIVE_BUT_NO_OUTPUT",
+    "NO_SAFE_RUNTIME_PROGRESS",
+  ];
+  for (const stop of stopReasons) {
+    const planned = generateAutonomousPlannedHandoff({
+      repoRoot,
+      mainCommit: commit,
+      stopReason: stop,
+      blockReason: "NO_SAFE_RUNTIME_PROGRESS",
+      plannerContext: healthyCtx,
+      preferRuntimeBlocked: true,
+    });
+    assert(planned.mode !== "CLUSTER_PRODUCT_HANDOFF", "stop_" + stop + "_no_product_handoff");
+    assert(/expected_outcome=SAFE_BLOCKED/.test(planned.body), "stop_" + stop + "_safe_blocked");
+  }
+  const genericPlanned = generateAutonomousPlannedHandoff({
+    repoRoot,
+    mainCommit: commit,
+    stopReason: "STALE_CURSOR_INVOKE_NO_PROGRESS",
+    blockReason: "GENERIC_DRIFT_REGRESSION_BLOCKED",
+    plannerContext: healthyCtx,
+    preferRuntimeBlocked: true,
+  });
+  assert(genericPlanned.mode !== "CLUSTER_PRODUCT_HANDOFF", "generic_drift_no_product_handoff");
+  assert(/expected_outcome=SAFE_BLOCKED/.test(genericPlanned.body), "generic_drift_safe_blocked");
+  assert(runPlannerQualityContractSelftest(), "planner_quality_contract_delegate");
+  assert(runGenericChoreGenerationBlockSelftest(), "generic_chore_block_delegate");
+  assert(runSafeBlockedHandoffContractSelftest(), "safe_blocked_handoff_delegate");
+  const pass = failures.length === 0;
+  console.log("=== STALE_RUNTIME_CLOSEOUT_HARDENING_SELFTEST ===");
+  console.log("STALE_RUNTIME_CLOSEOUT_HARDENING_SELFTEST=" + (pass ? "PASS" : "FAIL"));
+  if (!pass) {
+    for (const f of failures) console.log("FAIL_DETAIL=" + f);
+  }
+  console.log("=== END_STALE_RUNTIME_CLOSEOUT_HARDENING_SELFTEST ===");
+  return pass;
+}
+
 function runStaleCursorInvokeHardeningSelftest(repoRoot) {
   const loopScript = path.join(repoRoot, "scripts", "silver-autopilot-loop.ps1");
   const r = spawnSync(
@@ -4133,7 +4257,7 @@ function cmdEnforceRuntimeNextActionAfterFailure(argv) {
     stopReason: stop || "STALE_CURSOR_INVOKE_NO_PROGRESS",
     blockReason: genericDrift ? "GENERIC_DRIFT_REGRESSION_BLOCKED" : "NO_SAFE_RUNTIME_PROGRESS",
     plannerContext: plannerCtx,
-    preferRuntimeBlocked: !isHealthyPlannerContext(plannerCtx),
+    preferRuntimeBlocked: true,
   }).body;
   writeUtf8FileNoBom(NEXT_ACTION, blockedBody);
   const afterViolations = [
@@ -4287,6 +4411,10 @@ function parseArgs(argv) {
     else if (a === "--enforce-runtime-next-action-md") out.cmd = "enforce-runtime-next-action-md";
     else if (a === "--stale-cursor-invoke-runtime-closeout-selftest")
       out.cmd = "stale-cursor-invoke-runtime-closeout-selftest";
+    else if (a === "--runtime-enforce-safe-blocked-contract-selftest")
+      out.cmd = "runtime-enforce-safe-blocked-contract-selftest";
+    else if (a === "--stale-runtime-closeout-hardening-selftest")
+      out.cmd = "stale-runtime-closeout-hardening-selftest";
     else if (a === "--cap10-safe-invocation-contract-selftest") out.cmd = "cap10-safe-invocation-contract-selftest";
     else if (a === "--generic-next-action-runtime-enforcement-selftest")
       out.cmd = "generic-next-action-runtime-enforcement-selftest";
@@ -4346,6 +4474,10 @@ if (require.main === module) {
   else if (p.cmd === "enforce-runtime-next-action-md") exitCode = cmdEnforceRuntimeNextActionAfterFailure(argv);
   else if (p.cmd === "stale-cursor-invoke-runtime-closeout-selftest") {
     process.exit(runStaleCursorInvokeRuntimeCloseoutSelftest(REPO) ? 0 : 1);
+  } else if (p.cmd === "runtime-enforce-safe-blocked-contract-selftest") {
+    process.exit(runRuntimeEnforceSafeBlockedContractSelftest(REPO) ? 0 : 1);
+  } else if (p.cmd === "stale-runtime-closeout-hardening-selftest") {
+    process.exit(runStaleRuntimeCloseoutHardeningSelftest(REPO) ? 0 : 1);
   } else if (p.cmd === "cap10-safe-invocation-contract-selftest") {
     process.exit(runCap10SafeInvocationContractSelftest(REPO) ? 0 : 1);
   } else if (p.cmd === "generic-next-action-runtime-enforcement-selftest") {
