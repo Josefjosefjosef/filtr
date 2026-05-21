@@ -34546,6 +34546,28 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return !!calFrag;
   }
 
+  /**
+   * P0 narrow: self_correction_negation_flip — „jen se podívej na …, nic neukládej, [correction tail]“.
+   * Correction tail (ne vlastně / oprav to na / změň ten úkol na / …) nesmí spustit AMBIGUOUS_WRITE ani calendar.create.
+   */
+  function iuSilverSelfCorrectionNegationFlipGuardFolded(f) {
+    const x = String(f || "");
+    if (!x || x.length < 12) return false;
+    const readLead =
+      /\bjen\s+se\s+podivej\b/.test(x) ||
+      (/\bpodivej\s+se\s+na\b/.test(x) && !/\bpodivej\s+se\s+do\s+ukol/.test(x));
+    if (!readLead) return false;
+    if (/\bjen\s+se\s+podivej\s+do\s+ukol/.test(x) || /\bpodivej\s+se\s+do\s+ukol/.test(x)) return false;
+    if (!/\bnic\s+neuklad\w*\b/.test(x)) return false;
+    if (iuSilverExplicitCalendarCreateAnchorP1Folded(x)) return false;
+    if (/\buloz\s+do\s+kalend/.test(x) || /\bzapis\s+do\s+kalend/.test(x) || /\bpridej\s+do\s+kalend/.test(x)) return false;
+    const calFrag =
+      iuSilverCalendarEntityContextFolded(x) ||
+      /\b(zitra|zittra|pozitr|dnes|patek|pondel|uterk|stred|ctvrt|sobot|nedel|tyden|vikend)\b/.test(x) ||
+      /\b(rano|vecer|dopoledne|odpoledne)\b/.test(x);
+    return !!calFrag;
+  }
+
   function iuSilverImplicitCalendarOnlyWriteHardNoCreateFolded(x) {
     const s = String(x || "");
     if (!s) return false;
@@ -37417,6 +37439,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverBrainCalendarWantedInternal(raw, now, prev, folded) {
     const fGate = String(folded || "");
     if (iuSilverSelfCorrectionNoisyNegReadGuardFolded(fGate)) return false;
+    if (iuSilverSelfCorrectionNegationFlipGuardFolded(fGate)) return false;
     if (iuSilverIsPastRecallReadQueryV1(raw, fGate)) return false;
     if (iuSilverP1PartialTemporalCalendarScopedReadQueryFolded(fGate)) return false;
     if (
@@ -38329,6 +38352,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverP0NoWriteNegationBeatsWriteLikeCueFolded(f) {
     const x = String(f || "").trim();
     if (!x) return false;
+    if (iuSilverSelfCorrectionNegationFlipGuardFolded(x)) return false;
     if (iuSilverP1ReadOnlyTaskQueryUnderNegationP1Folded(x)) return false;
 
     function earliestNegIdx() {
@@ -40392,6 +40416,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bcesta\s*:/.test(x) && /\bodjezd\b/.test(x) && /\bkalendar\b/.test(x)) return false;
     /* Bez holého „jen zjisti“ na konci vět — 20k šablony calendar_write ho používají i u create. */
     if (iuSilverSelfCorrectionNoisyNegReadGuardFolded(x)) return true;
+    if (iuSilverSelfCorrectionNegationFlipGuardFolded(x)) return true;
     const neg =
       /\bnic\s+neuklad\w*\b/.test(x) ||
       /\bnic\s+neukladej\b/.test(x) ||
@@ -41002,7 +41027,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       ""
     ).trim();
     const rUse = rCalReadLeadStrip.length >= 4 ? rCalReadLeadStrip : r;
-    if (iuSilverSelfCorrectionNoisyNegReadGuardFolded(f)) {
+    if (iuSilverSelfCorrectionNoisyNegReadGuardFolded(f) || iuSilverSelfCorrectionNegationFlipGuardFolded(f)) {
       const messyNoisy = iuSilverTryMessyShortColloquialCalendarReadSpecFolded(rUse, f, now);
       if (messyNoisy) return messyNoisy;
       if (/\bz[ií]tra\b|\bzittra\b/.test(f)) {
@@ -41021,6 +41046,23 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
             queryFolded: canVj.queryFolded || foldCs(String(canVj.query || "")),
             preferFuture: true
           };
+        }
+      }
+      if (iuSilverSelfCorrectionNegationFlipGuardFolded(f)) {
+        const mNa = f.match(/\bpodivej\s+se\s+na\s+([a-z0-9\s]{2,48}?)(?:\s*,\s*nic\s+neuklad|\s+nic\s+neuklad)/);
+        if (mNa && mNa[1]) {
+          const tailNa = String(mNa[1] || "").trim();
+          const canNa = iuSilverCanonicalCalendarEntityTitleFromPersonFragment(tailNa);
+          if (canNa && canNa.query) {
+            return {
+              intent: "find_by_title",
+              query: canNa.query,
+              normalizedQuery: canNa.query,
+              diacriticInsensitive: true,
+              queryFolded: canNa.queryFolded || foldCs(String(canNa.query || "")),
+              preferFuture: true
+            };
+          }
         }
       }
       return { intent: "agenda_for_day", dateRange: "today", filter: null };
@@ -42977,6 +43019,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const x = String(f || "");
     if (!x) return false;
     if (iuSilverSelfCorrectionNoisyNegReadGuardFolded(x)) return true;
+    if (iuSilverSelfCorrectionNegationFlipGuardFolded(x)) return true;
     const r0 = String(rawOpt != null ? rawOpt : "");
     if (iuSilverCalendarCorrectionWriteSafeFolded(x, r0 || x)) return false;
     /**
