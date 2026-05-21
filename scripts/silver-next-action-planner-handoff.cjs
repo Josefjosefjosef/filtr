@@ -14,6 +14,11 @@ const RHC3_REPORT = path.join(__dirname, "silver-real-human-chaos-v3-report.json
 const REALISTIC_MOBILE_REPORT = path.join(__dirname, "silver-realistic-mobile-corpus-report.json");
 
 const { resolveCapRuntimeHandoff } = require("./silver-audit-registry.cjs");
+const {
+  resolveAuthoritativeSelectorCluster,
+  readClusterLock,
+  blockGenericHandoffUnderLock,
+} = require("./silver-cluster-consistency-lock.cjs");
 
 /** Outcome types for CAP diagnostic → product next action (orchestration only). */
 const PRODUCT_HANDOFF_OUTCOMES = [
@@ -125,11 +130,28 @@ function parseTopFailClustersFromReport(data) {
   return out;
 }
 
-function pickClusterFromAuditRegistry() {
+function pickClusterFromAuditRegistry(repoRoot) {
+  const root = repoRoot || REPO;
   try {
-    const handoff = resolveCapRuntimeHandoff(REPO, {});
+    const lockedCluster = resolveAuthoritativeSelectorCluster(root, "");
+    const handoff = resolveCapRuntimeHandoff(root, {});
     const diag = handoff.cluster_diag;
     if (!diag || !diag.cluster || diag.cluster === "(žádný)") return null;
+    if (lockedCluster && diag.cluster !== lockedCluster) {
+      const lock = readClusterLock(root);
+      return {
+        source: "silver-cluster-consistency-lock:" + String((lock && lock.lock_reason) || "locked"),
+        cluster: lockedCluster,
+        count: Number(diag.count) || 0,
+        audit_name: String(diag.audit_name || ""),
+        audit_id: String((lock && lock.audit_id) || diag.audit_id || ""),
+        expected_outcome: String(diag.expected_outcome || ""),
+        harness_command: String(diag.harness_command || ""),
+        harness_commands: Array.isArray(diag.harness_commands) ? diag.harness_commands : [],
+        recommended_cap: String(diag.recommended_cap || handoff.cap_label || ""),
+        top_preview: lockedCluster + ":locked",
+      };
+    }
     return {
       source: String(diag.source || "silver-audit-registry"),
       cluster: String(diag.cluster),
@@ -758,14 +780,23 @@ function extractStaleVerifyPrIds(text) {
 function silverNextActionQualityViolations(text, opts) {
   const t = String(text || "");
   const v = [];
-  const selectorCluster = opts && opts.selectorCluster ? String(opts.selectorCluster).trim() : "";
   const clusterWorkflow = silverNextActionHasClusterWorkflow(t);
   if (capDiagnosticFlowActive(opts) && isGenericOrchestrationHandoff(t)) {
     v.push("generic_orchestration_blocked_after_cap_diagnostic");
   }
-  if (selectorCluster && selectorCluster !== "rcz2_retrieval" && !silverNextActionMatchesSelectorCluster(t, selectorCluster)) {
+  const repoRoot = (opts && opts.repoRoot) || REPO;
+  const effectiveSelector =
+    (opts && opts.selectorCluster) ||
+    resolveAuthoritativeSelectorCluster(repoRoot, "") ||
+    "";
+  if (
+    effectiveSelector &&
+    effectiveSelector !== "rcz2_retrieval" &&
+    !silverNextActionMatchesSelectorCluster(t, effectiveSelector)
+  ) {
     v.push("product_handoff_not_cluster_specific");
   }
+  v.push(...blockGenericHandoffUnderLock(t, repoRoot));
   if (SILVER_NEXT_ACTION_MOJIBAKE_RE.test(t)) v.push("mojibake_utf8");
   if (!clusterWorkflow) {
     if (/git\s+push\s+-u\s+origin/i.test(t)) v.push("generic_git_push_upstream");
@@ -808,7 +839,12 @@ function isHealthyPlannerContext(ctx) {
  * @returns {string}
  */
 function buildClusterHandoffForHealthyPlanner(ctx) {
-  const clusterDiag = (ctx && ctx.clusterDiag) || pickClusterFromAuditRegistry() || pickTopClusterDiagnostic();
+  const repoRoot = (ctx && ctx.repoRoot) || REPO;
+  const locked = readClusterLock(repoRoot);
+  let clusterDiag = (ctx && ctx.clusterDiag) || pickClusterFromAuditRegistry(repoRoot) || pickTopClusterDiagnostic();
+  if (locked && clusterDiag && clusterDiag.cluster !== locked.authoritative_cluster) {
+    clusterDiag = pickClusterFromAuditRegistry(repoRoot) || clusterDiag;
+  }
   if (clusterDiag && clusterDiag.cluster && clusterDiag.cluster !== "(žádný)" && clusterDiag.cluster !== "(unknown)") {
     return buildCapDiagnosticProductHandoff({
       repoRoot: (ctx && ctx.repoRoot) || REPO,

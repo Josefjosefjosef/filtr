@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Silver Autopilot V1 — local orchestration only (no runtime Silver changes).
- * Commands: --status | --verify-pr= | --merge-pr= | --post-merge-proof | --refresh-rhc3 | --ask-model | --sanitize-next-action-md | --auto | --full-auto-loop | --loop-once | --cli-autonomous-adapter-diagnostic | --cursor3-execution-status | --cursor3-execution-bridge-selftest | --controlled-budget-guard-selftest | --cap10-pipeline-contract-selftest | --cap10-replay-lifecycle-selftest | --metric-delta-contract-selftest | --generic-fallback-blocker-selftest | --stale-cursor-invoke-hardening-selftest | --valid-product-work-closeout-selftest
+ * Commands: --status | --verify-pr= | --merge-pr= | --post-merge-proof | --refresh-rhc3 | --ask-model | --sanitize-next-action-md | --auto | --full-auto-loop | --loop-once | --cli-autonomous-adapter-diagnostic | --cursor3-execution-status | --cursor3-execution-bridge-selftest | --controlled-budget-guard-selftest | --cap10-pipeline-contract-selftest | --cap10-replay-lifecycle-selftest | --metric-delta-contract-selftest | --generic-fallback-blocker-selftest | --stale-cursor-invoke-hardening-selftest | --valid-product-work-closeout-selftest | --cluster-consistency-lock-selftest
  */
 /* eslint-disable no-console */
 "use strict";
@@ -3331,6 +3331,8 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
     safetyBlocked: safetyGuard === "FAIL",
     dirtyBlocked: !dirtyD.pass,
     clusterDiag: capClusterDiag,
+    selectorCluster: pickSelectorCluster(REPO, ""),
+    repoRoot: REPO,
   };
 
   function writeGuardedNext(inner, tag) {
@@ -3766,6 +3768,8 @@ function cmdSanitizeNextActionMd(argvCommand) {
     guardBlocked: assetsBlocked || !dirtyD.pass,
     safetyBlocked: safetyBlocked,
     dirtyBlocked: !dirtyD.pass,
+    selectorCluster: pickSelectorCluster(REPO, ""),
+    repoRoot: REPO,
   };
   let wroteCluster = false;
   if (!safetyBlocked && !assetsBlocked) {
@@ -3953,6 +3957,7 @@ function parseArgs(argv) {
     else if (a === "--generic-fallback-blocker-selftest") out.cmd = "generic-fallback-blocker-selftest";
     else if (a === "--stale-cursor-invoke-hardening-selftest") out.cmd = "stale-cursor-invoke-hardening-selftest";
     else if (a === "--valid-product-work-closeout-selftest") out.cmd = "valid-product-work-closeout-selftest";
+    else if (a === "--cluster-consistency-lock-selftest") out.cmd = "cluster-consistency-lock-selftest";
     else if (a === "--valid-product-work-closeout-eval") out.cmd = "valid-product-work-closeout-eval";
     else if (a === "--preflight-runtime-cleanup") out.cmd = "preflight-runtime-cleanup";
     else if (a === "--preflight-runtime-cleanup-selftest") out.cmd = "preflight-runtime-cleanup-selftest";
@@ -4021,6 +4026,9 @@ if (require.main === module) {
     process.exit(runStaleCursorInvokeHardeningSelftest(REPO) ? 0 : 1);
   } else if (p.cmd === "valid-product-work-closeout-selftest") {
     process.exit(runValidProductWorkCloseoutSelftest() ? 0 : 1);
+  } else if (p.cmd === "cluster-consistency-lock-selftest") {
+    const { runClusterConsistencyLockSelftest } = require("./silver-cluster-consistency-lock.cjs");
+    process.exit(runClusterConsistencyLockSelftest() ? 0 : 1);
   } else if (p.cmd === "valid-product-work-closeout-eval") {
     process.exit(cmdValidProductWorkCloseoutEval(argv));
   } else if (p.cmd === "preflight-runtime-cleanup") {

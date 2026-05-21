@@ -2268,11 +2268,13 @@ function Get-SilverAuthoritativeSelectorCluster {
   if ($registryRequirePath.IndexOf("'") -ge 0) {
     $registryRequirePath = $registryRequirePath.Replace("'", "\'")
   }
+  $lockRequirePath = (Join-Path $RepoRoot "scripts\silver-cluster-consistency-lock.cjs") -replace '\\', '/'
+  if ($lockRequirePath.IndexOf("'") -ge 0) {
+    $lockRequirePath = $lockRequirePath.Replace("'", "\'")
+  }
   $probe = @"
-const m=require('$registryRequirePath');
-const h=m.resolveCapRuntimeHandoff(process.cwd(),{});
-const c=h&&h.cluster_diag?String(h.cluster_diag.cluster||'').trim():'';
-process.stdout.write(c);
+const lock=require('$lockRequirePath');
+process.stdout.write(lock.resolveAuthoritativeSelectorCluster(process.cwd(),''));
 "@
   $probePath = Join-Path $env:TEMP ("silver-selector-cluster-probe-" + [guid]::NewGuid().ToString("N") + ".cjs")
   try {

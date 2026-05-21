@@ -12,6 +12,7 @@ const {
   prioritizeTrueEngineFail,
   resolveForcedOutcomeAfterLowProductLoop,
 } = require("./silver-audit-registry.cjs");
+const { resolveAuthoritativeSelectorCluster, readClusterLock } = require("./silver-cluster-consistency-lock.cjs");
 const { execSync } = require("child_process");
 
 const SCRIPT_DIR = __dirname;
@@ -505,16 +506,22 @@ function recommendNext(classification, runMeta, safetyFail, repoRoot) {
     classification.product_fix_created === "NO" &&
     classification.verified_product_shift === "NO";
   if (lowProductOrchestration) {
-    const reg = buildAuditRegistry(repoRoot || path.join(SCRIPT_DIR, ".."));
+    const root = repoRoot || path.join(SCRIPT_DIR, "..");
+    const lockedCluster = resolveAuthoritativeSelectorCluster(root, "");
+    const lock = readClusterLock(root);
+    const reg = buildAuditRegistry(root);
     const pri = prioritizeTrueEngineFail(reg);
     const forced = resolveForcedOutcomeAfterLowProductLoop(reg, pri);
+    const clusterLabel =
+      lock && lock.authoritative_cluster ? lock.authoritative_cluster : forced.cluster;
     return (
       "HARD_STOP_FORCED_OUTCOME_REQUIRED — " +
       forced.forced_task_type +
       ": " +
       forced.audit_name +
       " / " +
-      forced.cluster +
+      clusterLabel +
+      (lockedCluster && lockedCluster !== forced.cluster ? " (cluster_lock_active)" : "") +
       " — " +
       forced.command +
       " — " +

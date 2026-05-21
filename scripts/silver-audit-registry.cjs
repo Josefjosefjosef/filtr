@@ -688,6 +688,12 @@ function harnessCommandsForCluster(auditId, cluster) {
       "node scripts/silver-self-correction-negation-scope-selftest.cjs",
     ];
   }
+  if (id === "self_correction" && name === "self_correction_safety_note_readonly") {
+    return [
+      "node scripts/silver-self-correction-audit.cjs",
+      "node scripts/silver-self-correction-safety-note-readonly-selftest.cjs",
+    ];
+  }
   const primary = harnessCommandForAuditId(id);
   return primary ? [primary] : ["node scripts/silver-rhc3-cluster-classifier-v1.cjs"];
 }
@@ -1029,7 +1035,7 @@ function resolveCapRuntimeHandoff(repoRoot, opts) {
           recommended_cap: capLabel,
         }
       : null;
-  return {
+  const handoff = {
     cap_label: capLabel,
     next_cap: nextCap,
     prioritized,
@@ -1037,6 +1043,13 @@ function resolveCapRuntimeHandoff(repoRoot, opts) {
     cluster_diag: clusterDiag,
     stale_audit_count: registry.audits.filter((a) => a.stale === "YES").length,
   };
+  if (opts && opts.skipClusterLock) return handoff;
+  try {
+    const { applyClusterLockToHandoff } = require("./silver-cluster-consistency-lock.cjs");
+    return applyClusterLockToHandoff(handoff, repoRoot);
+  } catch {
+    return handoff;
+  }
 }
 
 function runSelfTest() {
