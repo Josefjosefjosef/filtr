@@ -16,7 +16,11 @@
 "use strict";
 
 const { chromium } = require("playwright");
-const { installOpenMeteoStubRoute } = require("./proofs/open_meteo_guard_stub.cjs");
+const {
+  installProofGuardNetworkStubs,
+  createIgnorableResourceTracker,
+  isIgnorableGuardConsoleError,
+} = require("./proofs/open_meteo_guard_stub.cjs");
 
 const DEFAULT_URL = "https://infouzel.cz/projects/";
 const CLS_CAP = 0.02;
@@ -48,19 +52,23 @@ async function readCls(page) {
 }
 
 async function runViewport(page, w, h) {
-  await installOpenMeteoStubRoute(page);
+  await installProofGuardNetworkStubs(page);
+  const ignorableTracker = createIgnorableResourceTracker();
+  ignorableTracker.attachToPage(page);
   await page.setViewportSize({ width: w, height: h });
-  const consoleErrors = [];
+  const rawConsoleErrors = [];
   let appErrors = 0;
   const onConsole = (msg) => {
     try {
-      if (msg.type() === "error") consoleErrors.push(String(msg.text()));
+      if (msg.type() === "error") rawConsoleErrors.push(String(msg.text()));
     } catch (_) {}
   };
   const onPageError = (err) => {
     try {
+      const t = String(err && err.message ? err.message : err);
+      if (isIgnorableGuardConsoleError(t)) return;
       appErrors += 1;
-      consoleErrors.push(String(err && err.message ? err.message : err));
+      rawConsoleErrors.push(t);
     } catch (_) {}
   };
   page.on("console", onConsole);
@@ -190,6 +198,13 @@ async function runViewport(page, w, h) {
 
   page.off("console", onConsole);
   page.off("pageerror", onPageError);
+
+  const ignorableOpts = {
+    hadRecentIgnorableFailure: ignorableTracker.hadRecentIgnorableFailure.bind(ignorableTracker),
+  };
+  const consoleErrors = rawConsoleErrors.filter(
+    (t) => !isIgnorableGuardConsoleError(t, ignorableOpts)
+  );
 
   const g = geom;
   const imageGapPass =
