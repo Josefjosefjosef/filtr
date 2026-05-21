@@ -440,10 +440,13 @@ function classifyRun(before, after, runMeta) {
     }
   }
 
+  const scriptsOnlyProduct =
+    String(runReport.scripts_only_product_work || metaExtra.scripts_only_product_work || "").toUpperCase() === "YES";
   const productFix =
     after.engine_changed === "YES" ||
     after.assets_app_changed === "YES" ||
-    runMeta.product_fix_created === "YES";
+    runMeta.product_fix_created === "YES" ||
+    scriptsOnlyProduct;
   const prCreated = runMeta.pr_created_count > 0;
 
   if (productFix || (prCreated && (auditedImproved > 0 || progressImproved > 0))) {

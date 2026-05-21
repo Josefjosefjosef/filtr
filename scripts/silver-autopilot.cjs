@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Silver Autopilot V1 — local orchestration only (no runtime Silver changes).
- * Commands: --status | --verify-pr= | --merge-pr= | --post-merge-proof | --refresh-rhc3 | --ask-model | --sanitize-next-action-md | --auto | --full-auto-loop | --loop-once | --cli-autonomous-adapter-diagnostic | --cursor3-execution-status | --cursor3-execution-bridge-selftest | --controlled-budget-guard-selftest | --cap10-pipeline-contract-selftest | --cap10-replay-lifecycle-selftest | --metric-delta-contract-selftest | --generic-fallback-blocker-selftest | --stale-cursor-invoke-hardening-selftest
+ * Commands: --status | --verify-pr= | --merge-pr= | --post-merge-proof | --refresh-rhc3 | --ask-model | --sanitize-next-action-md | --auto | --full-auto-loop | --loop-once | --cli-autonomous-adapter-diagnostic | --cursor3-execution-status | --cursor3-execution-bridge-selftest | --controlled-budget-guard-selftest | --cap10-pipeline-contract-selftest | --cap10-replay-lifecycle-selftest | --metric-delta-contract-selftest | --generic-fallback-blocker-selftest | --stale-cursor-invoke-hardening-selftest | --valid-product-work-closeout-selftest
  */
 /* eslint-disable no-console */
 "use strict";
@@ -45,6 +45,14 @@ const {
   runCursor3ExecutionBridgeSelftest,
   shouldSkipCap50RuntimeRestore,
 } = require("./silver-cursor3-execution.cjs");
+const {
+  classifyValidProductWork,
+  classifyCap50CloseoutWithProductWork,
+  pathAllowedForFullAutoLoop,
+  pickSelectorCluster,
+  runValidProductWorkCloseoutSelftest,
+  cmdValidProductWorkCloseoutEval,
+} = require("./silver-valid-product-work-closeout.cjs");
 
 const REPO = path.resolve(__dirname, "..");
 const SCRIPTS = __dirname;
@@ -272,29 +280,48 @@ function cap50RuntimeRestoreReason(rel) {
   return "";
 }
 
-function classifyCap50CloseoutFromDirtyPaths(paths) {
+function classifyCap50CloseoutFromDirtyPaths(paths, opts) {
+  const o = opts || {};
   const list = (Array.isArray(paths) ? paths.map((p) => normalizeRepoRel(p)).filter(Boolean) : []).filter(
     (n) => !/^\.silver-runtime(\/|$)/i.test(n),
   );
   if (list.length === 0) {
-    return { closeout_kind: "clean", blocked_dirty_classification: "" };
+    return { closeout_kind: "clean", blocked_dirty_classification: "", failure_class: "none" };
   }
-  for (const n of list) {
-    if (repoRelGuardKey(n) === repoRelGuardKey("assets/app.js")) {
-      return { closeout_kind: "forbidden_product_dirty", blocked_dirty_classification: n };
-    }
-    if (/^(assets\/|projects\/(?!data\/)|\.github\/workflows\/)/i.test(n)) {
-      return { closeout_kind: "forbidden_product_dirty", blocked_dirty_classification: n };
-    }
+  const vpwClass = classifyCap50CloseoutWithProductWork(list, {
+    selectorCluster: o.selectorCluster || pickSelectorCluster(REPO, o.selectorCluster),
+    repoRoot: REPO,
+    safetyCounters: o.safetyCounters,
+    trueEngineFail: o.trueEngineFail,
+  });
+  if (vpwClass.closeout_kind === "valid_product_work" || vpwClass.closeout_kind === "forbidden_product_dirty") {
+    return {
+      closeout_kind: vpwClass.closeout_kind,
+      blocked_dirty_classification: vpwClass.blocked_dirty_classification || "",
+      failure_class: vpwClass.failure_class || vpwClass.closeout_kind,
+      valid_product_work: vpwClass.valid_product_work || null,
+    };
+  }
+  if (vpwClass.closeout_kind === "runtime_artifact_restorable" || vpwClass.closeout_kind === "forbidden_dirty") {
+    return {
+      closeout_kind: vpwClass.closeout_kind,
+      blocked_dirty_classification: vpwClass.blocked_dirty_classification || "",
+      failure_class: vpwClass.failure_class || vpwClass.closeout_kind,
+    };
   }
   const restorableOnly = list.every((n) => Boolean(cap50RuntimeRestoreReason(n)));
   if (restorableOnly) {
     return {
       closeout_kind: "runtime_artifact_restorable",
       blocked_dirty_classification: list.join(";"),
+      failure_class: "runtime_artifact_restorable",
     };
   }
-  return { closeout_kind: "forbidden_dirty", blocked_dirty_classification: list.join(";") };
+  return {
+    closeout_kind: "forbidden_dirty",
+    blocked_dirty_classification: list.join(";"),
+    failure_class: "forbidden_dirty",
+  };
 }
 
 function lastProgressLogCloseoutHint() {
@@ -684,6 +711,15 @@ function safetyBlockFromRunReportMd(text) {
 
 function dirtyGitUnexpectedForFullAutoLoop(changedList) {
   const list = Array.isArray(changedList) ? changedList : [];
+  const selectorCluster = pickSelectorCluster(REPO, "");
+  const vpwProbe = classifyValidProductWork({
+    dirtyPaths: list.map((rel) => normalizeRepoRel(rel)).filter(Boolean),
+    selectorCluster,
+    repoRoot: REPO,
+  });
+  if (vpwProbe.classification === "VALID_PRODUCT_WORK") {
+    return { pass: true, firstUnexpected: "", valid_product_work: "YES", selector_cluster: selectorCluster };
+  }
   for (const rel of list) {
     const n = normalizeRepoRel(rel);
     if (!n) continue;
@@ -692,9 +728,10 @@ function dirtyGitUnexpectedForFullAutoLoop(changedList) {
     if (isTransientSelfCorrectionAuditReportRel(n)) continue;
     if (isTransientGeneratedAuditReportRel(n)) continue;
     if (isTransientGeneratedClusterClassifierReportRel(n)) continue;
-    return { pass: false, firstUnexpected: n };
+    if (pathAllowedForFullAutoLoop(n, selectorCluster, REPO)) continue;
+    return { pass: false, firstUnexpected: n, valid_product_work: "NO", selector_cluster: selectorCluster };
   }
-  return { pass: true, firstUnexpected: "" };
+  return { pass: true, firstUnexpected: "", valid_product_work: "NO", selector_cluster: selectorCluster };
 }
 
 function assetsAppJsDirty(changedList) {
@@ -3375,7 +3412,9 @@ async function cmdFullAutoLoop(argvSlice, maxStepsArg) {
     return outTag;
   }
 
-  const guardBlocked = !dirtyD.pass || assetsAppGuard === "FAIL" || safetyGuard === "FAIL";
+  const validProductDirty = dirtyD.valid_product_work === "YES";
+  const guardBlocked =
+    ((!dirtyD.pass && !validProductDirty) || assetsAppGuard === "FAIL" || safetyGuard === "FAIL");
   plannerCtxBase.guardBlocked = guardBlocked;
 
   if (guardBlocked) {
@@ -3913,6 +3952,8 @@ function parseArgs(argv) {
     else if (a === "--metric-delta-contract-selftest") out.cmd = "metric-delta-contract-selftest";
     else if (a === "--generic-fallback-blocker-selftest") out.cmd = "generic-fallback-blocker-selftest";
     else if (a === "--stale-cursor-invoke-hardening-selftest") out.cmd = "stale-cursor-invoke-hardening-selftest";
+    else if (a === "--valid-product-work-closeout-selftest") out.cmd = "valid-product-work-closeout-selftest";
+    else if (a === "--valid-product-work-closeout-eval") out.cmd = "valid-product-work-closeout-eval";
     else if (a === "--preflight-runtime-cleanup") out.cmd = "preflight-runtime-cleanup";
     else if (a === "--preflight-runtime-cleanup-selftest") out.cmd = "preflight-runtime-cleanup-selftest";
     else if (a === "--cap-dirty-report-lifecycle-selftest") out.cmd = "cap-dirty-report-lifecycle-selftest";
@@ -3978,6 +4019,10 @@ if (require.main === module) {
     process.exit(runGenericFallbackBlockerSelftest() ? 0 : 1);
   } else if (p.cmd === "stale-cursor-invoke-hardening-selftest") {
     process.exit(runStaleCursorInvokeHardeningSelftest(REPO) ? 0 : 1);
+  } else if (p.cmd === "valid-product-work-closeout-selftest") {
+    process.exit(runValidProductWorkCloseoutSelftest() ? 0 : 1);
+  } else if (p.cmd === "valid-product-work-closeout-eval") {
+    process.exit(cmdValidProductWorkCloseoutEval(argv));
   } else if (p.cmd === "preflight-runtime-cleanup") {
     const dryOnly = argv.indexOf("--dry-run") >= 0;
     const pf = cap50PreflightRuntimeCleanup(dryOnly);
