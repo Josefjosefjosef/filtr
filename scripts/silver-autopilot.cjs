@@ -40,6 +40,7 @@ const {
   collectCursor3ExecutionStatus,
   printCursor3ExecutionStatus,
   runCursor3ExecutionBridgeSelftest,
+  shouldSkipCap50RuntimeRestore,
 } = require("./silver-cursor3-execution.cjs");
 
 const REPO = path.resolve(__dirname, "..");
@@ -308,6 +309,27 @@ function lastProgressLogCloseoutHint() {
   return { stop_reason: stopReason, closeout_kind: closeoutKind };
 }
 
+function gitCleanExceptSkippableRuntimeArtifacts() {
+  const po = gitStatusPorcelain();
+  if (!po || po === "DIRTY_UNKNOWN") return po === "";
+  for (const raw of po.split(/\r?\n/)) {
+    const line = String(raw || "").replace(/\r$/, "").trim();
+    if (!line) continue;
+    let extracted = "";
+    if (line.length >= 3 && line.charAt(2) === " ") extracted = line.slice(3).trim();
+    else {
+      const parts = line.trim().split(/\s+/);
+      if (parts.length >= 2) extracted = parts.slice(1).join(" ").trim();
+      else extracted = line.trim();
+    }
+    const p = porcelainPathToWorkingTree(extracted);
+    if (!p) continue;
+    if (shouldSkipCap50RuntimeRestore(p, REPO)) continue;
+    return false;
+  }
+  return true;
+}
+
 function cap50PreflightRuntimeCleanup(dryRunOnly) {
   const po = gitStatusPorcelain();
   const dirtyBefore = [];
@@ -338,6 +360,10 @@ function cap50PreflightRuntimeCleanup(dryRunOnly) {
         continue;
       }
       if (reason) {
+        if (shouldSkipCap50RuntimeRestore(p, REPO)) {
+          allowCount++;
+          continue;
+        }
         allowCount++;
         toRestore.push(p);
       } else {
@@ -361,12 +387,13 @@ function cap50PreflightRuntimeCleanup(dryRunOnly) {
   } else {
     for (const rel of toRestore) restored.push(rel + "(dry_run)");
   }
-  let cleanAfter = gitClean() ? "YES" : "NO";
+  let cleanAfter = gitCleanExceptSkippableRuntimeArtifacts() ? "YES" : "NO";
   let remainingPaths = gitChangedFilesList();
   let closeoutClass = classifyCap50CloseoutFromDirtyPaths(remainingPaths);
   if (!dryRunOnly && blocked.length === 0 && cleanAfter === "NO" && closeoutClass.closeout_kind === "runtime_artifact_restorable") {
     for (const rel of remainingPaths) {
       if (!cap50RuntimeRestoreReason(rel)) continue;
+      if (shouldSkipCap50RuntimeRestore(rel, REPO)) continue;
       try {
         execFileSync("git", ["restore", "--source=HEAD", "--staged", "--worktree", "--", rel], {
           cwd: REPO,
@@ -377,7 +404,7 @@ function cap50PreflightRuntimeCleanup(dryRunOnly) {
         blocked.push(rel + "(restore_failed)");
       }
     }
-    cleanAfter = gitClean() ? "YES" : "NO";
+    cleanAfter = gitCleanExceptSkippableRuntimeArtifacts() ? "YES" : "NO";
     remainingPaths = gitChangedFilesList();
     closeoutClass = classifyCap50CloseoutFromDirtyPaths(remainingPaths);
   }
