@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-21T03:54:57.072745Z",
+  "ingestedAt": "2026-05-21T04:34:35.179407Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Rulík po trápení: Pro hráče máme návody, ale na ledě nejsme. Musí se dobře nastavit",
+      "url": "https://www.idnes.cz/hokej/ms-2026/radim-rulik-trener-cesko-italie.A260520_195621_ms-hokej-2026_ivt",
+      "dt": "2026-05-21T04:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "ale",
+        "dobře",
+        "hráče",
+        "ledě",
+        "musí",
+        "máme",
+        "nastavit",
+        "nejsme",
+        "návody",
+        "rulík",
+        "trápení"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -752,33 +780,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Další trapas Bayernu. Trofej zůstala doma v kuchyni, na oslavy ji dopravila policie",
-      "url": "https://www.idnes.cz/sport/trendy/dalsi-trapas-bayernu-trofej-zustala-doma-v-kuchyni-na-oslavy-ji-dopravila-policie.A260520_101003_trendy_blah",
-      "dt": "2026-05-20T10:37:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bayernu",
-        "další",
-        "doma",
-        "dopravila",
-        "kuchyni",
-        "oslavy",
-        "policie",
-        "trapas",
-        "trofej",
-        "zůstala"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45957,
+      "bytes": 46250,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T22:47:38Z",
+        "raw_feed_latest_publishedAt": "2026-05-21T04:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -841,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rulík po trápení: Pro hráče máme návody, ale na ledě nejsme. Musí se dobře nastavit",
+            "publishedAt": "2026-05-21T04:00:00Z"
+          },
           {
             "title": "Další lehké zaváhání Američanů, vyhráli až po nájezdech. Švýcaři rozstříleli Rakousko",
             "publishedAt": "2026-05-20T22:47:38Z"
@@ -868,10 +873,6 @@
           {
             "title": "MS v hokeji 2026: Program, tabulky skupin, kdy hrají Češi?",
             "publishedAt": "2026-05-20T21:09:00Z"
-          },
-          {
-            "title": "Německo na MS v hokeji 2026: program, výsledky, soupiska, bilance s Čechy",
-            "publishedAt": "2026-05-20T21:07:00Z"
           }
         ]
       }

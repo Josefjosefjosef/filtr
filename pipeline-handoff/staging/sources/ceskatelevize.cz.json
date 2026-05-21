@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-21T03:54:57.072745Z",
+  "ingestedAt": "2026-05-21T04:34:35.179407Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nájemní bydlení se týká pětiny domácností. Na co si dát pozor?",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/najemni-bydleni-se-tyka-petiny-domacnosti-na-co-si-dat-pozor-373563",
+      "dt": "2026-05-21T04:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "bydlení",
+        "domácností",
+        "dát",
+        "nájemní",
+        "pozor",
+        "pětiny",
+        "týká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -723,27 +747,26 @@
       "_dt_serialized": true
     },
     {
-      "section": "kultura",
+      "section": "sport",
       "contentType": "article",
-      "title": "„Něco, co české poezii chybělo.\" Ortenovu cenu zasáhlo Házeliště granátů",
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/neco-co-ceske-poezii-chybelo-ortenovu-cenu-zasahlo-hazeliste-granatu-373640",
-      "dt": "2026-05-20T08:35:35Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Rulík: Italové? Nic lehkého, byli houževnatí. Musíme se poučit",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/rulik-italove-nic-lehkeho-byli-houzevnati-musime-se-poucit-156921",
+      "dt": "2026-05-21T04:00:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "cenu",
-        "chybělo",
-        "granátů",
-        "házeliště",
-        "něco",
-        "ortenovu",
-        "poezii",
-        "zasáhlo",
-        "české"
+        "byli",
+        "houževnatí",
+        "italové",
+        "lehkého",
+        "musíme",
+        "nic",
+        "poučit",
+        "rulík"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1481,30 +1504,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ganna opanoval časovku na Giru, Vingegaard snížil náskok",
-      "url": "https://sport.ceskatelevize.cz/clanek/cyklistika/ganna-opanoval-casovku-na-giru-vingegaard-snizil-naskok-156894",
-      "dt": "2026-05-19T16:04:24Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "ganna",
-        "giru",
-        "náskok",
-        "opanoval",
-        "snížil",
-        "vingegaard",
-        "časovku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1515,7 +1514,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41790,
+      "bytes": 42085,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1575,11 +1574,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-21T03:32:16Z",
+        "raw_feed_latest_publishedAt": "2026-05-21T04:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "other": 6,
+          "zpravy": 23,
+          "other": 5,
           "finance": 2
         },
         "drop_counts": {
@@ -1592,6 +1591,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nájemní bydlení se týká pětiny domácností. Na co si dát pozor?",
+            "publishedAt": "2026-05-21T04:00:00Z"
+          },
           {
             "title": "Česko se zdrželo v hlasování o rezoluci VS OSN o právním závazku v ochraně klimatu",
             "publishedAt": "2026-05-21T03:32:16Z"
@@ -1619,10 +1622,6 @@
           {
             "title": "Retenční nádrž v Karlíně bude chránit před povodněmi i znečištěním",
             "publishedAt": "2026-05-20T19:12:50Z"
-          },
-          {
-            "title": "Manévrů na Slovensku se zúčastní prapor z Tábora",
-            "publishedAt": "2026-05-20T18:48:09Z"
           }
         ]
       }
@@ -1634,7 +1633,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38160,
+      "bytes": 38320,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1671,7 +1670,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-21T04:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1686,6 +1685,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rulík: Italové? Nic lehkého, byli houževnatí. Musíme se poučit",
+            "publishedAt": "2026-05-21T04:00:00Z"
+          },
           {
             "title": "Soutěž k MS v hokeji – 21. května",
             "publishedAt": "2026-05-20T22:00:00Z"
@@ -1713,10 +1716,6 @@
           {
             "title": "Inspirující sokolka oslavila stovku, s nadšením cvičí dvakrát týdně",
             "publishedAt": "2026-05-20T18:50:16Z"
-          },
-          {
-            "title": "Jsme strašně rádi za ten obrat. Spadl mi kámen ze srdce, hlásil střelec vítězné branky Flek",
-            "publishedAt": "2026-05-20T18:49:23Z"
           }
         ]
       }
@@ -1728,7 +1727,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77133,
+      "bytes": 77100,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

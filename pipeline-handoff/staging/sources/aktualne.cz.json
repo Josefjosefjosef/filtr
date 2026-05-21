@@ -1,8 +1,64 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-21T03:54:57.072745Z",
+  "ingestedAt": "2026-05-21T04:34:35.179407Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vidíme, jak moc špatné to může být, tepe expert sudí. Výslovnost Laršon ho udivuje",
+      "url": "https://sport.aktualne.cz/hokej/vidime-jak-moc-spatne-to-muze-byt-tepe-expert-sudi-vyslovnost-larson-ho-udivuje/r~aaa2949819f96c8b36083048768ee8a1/",
+      "dt": "2026-05-21T04:20:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "být",
+        "expert",
+        "laršon",
+        "moc",
+        "sudí",
+        "tepe",
+        "udivuje",
+        "vidíme",
+        "výslovnost",
+        "špatné"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "„Místa, kam zasazuji děj, si fotím či kreslím,“ říká známý autor krimi Bernard Minier",
+      "url": "https://magazin.aktualne.cz/kultura/literatura/mista-kam-zasazuji-dej-si-fotim-ci-kreslim-rika-znamy-autor-krimi-bernard-minier/r~aaa29df96a001da34c564fb80b2c444a/",
+      "dt": "2026-05-21T04:00:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "autor",
+        "bernard",
+        "děj",
+        "fotím",
+        "kam",
+        "kreslím",
+        "krimi",
+        "minier",
+        "místa",
+        "zasazuji",
+        "známý",
+        "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -485,60 +541,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "O stříbrnou mísu Davis Cupu ho málem připravil průjem. Šmíd měl v záloze bizarní řešení",
-      "url": "https://sport.aktualne.cz/tenis/o-stribrnou-misu-davis-cupu-ho-malem-pripravil-prujem-smid-mel-v-zaloze-bizarni-reseni/r~aaa290fb2098acdd2214165c131c9e05/",
-      "dt": "2026-05-20T17:50:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "bizarní",
-        "cupu",
-        "davis",
-        "málem",
-        "mísu",
-        "měl",
-        "průjem",
-        "připravil",
-        "stříbrnou",
-        "záloze",
-        "řešení",
-        "šmíd"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trump dokonal pomstu nad svým rivalem a potvrdil svoji moc",
-      "url": "https://zpravy.aktualne.cz/zahranici/trump-jasa-nad-porazkou-arcirivala-potvrdil-ze-ma-mezi-republikany-navrch/r~aaa29846c76b3550b2c0b8b77d469275/",
-      "dt": "2026-05-20T17:35:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dokonal",
-        "moc",
-        "pomstu",
-        "potvrdil",
-        "rivalem",
-        "svoji",
-        "svým",
-        "trump"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -549,7 +551,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21934,
+      "bytes": 22116,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -586,11 +588,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-21T03:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-21T04:20:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 13,
-          "sport": 7
+          "sport": 7,
+          "other": 1,
+          "zpravy": 12
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -602,6 +605,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vidíme, jak moc špatné to může být, tepe expert sudí. Výslovnost Laršon ho udivuje",
+            "publishedAt": "2026-05-21T04:20:00Z"
+          },
+          {
+            "title": "„Místa, kam zasazuji děj, si fotím či kreslím,“ říká známý autor krimi Bernard Minier",
+            "publishedAt": "2026-05-21T04:00:00Z"
+          },
           {
             "title": "Zadlužili se kvůli chátrající ikoně. Ve věži bydlel bezdomovec, ze sálu tahali stromy bagrem",
             "publishedAt": "2026-05-21T03:40:00Z"
@@ -625,14 +636,6 @@
           {
             "title": "Rekordman Emery vyhrál popáté Evropskou ligu. Aston Villa má trofej po 30 letech",
             "publishedAt": "2026-05-20T21:05:00Z"
-          },
-          {
-            "title": "Švýcaři dosud stoprocentního rivala zesměšnili debaklem, Švédové smetli Slovinsko",
-            "publishedAt": "2026-05-20T17:05:00Z"
-          },
-          {
-            "title": "Zcela nepřijatelné. Itálii s Kanadou naštval izraelský ministr, urážel aktivisty z flotily",
-            "publishedAt": "2026-05-20T13:39:00Z"
           }
         ]
       }

@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-21T03:54:57.072745Z",
+  "ingestedAt": "2026-05-21T04:34:35.179407Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Kriminalisté z tachovského toxi týmu zadrželi pět lidí, které podezírají z výroby a distribuce drog",
+      "url": "https://tydenikpolicie.cz/kriminaliste-z-tachovskeho-toxi-tymu-zadrzeli-pet-lidi-ktere-podeziraji-z-vyroby-a-distribuce-drog/",
+      "dt": "2026-05-21T04:02:56Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "distribuce",
+        "drog",
+        "kriminalisté",
+        "lidí",
+        "podezírají",
+        "pět",
+        "tachovského",
+        "toxi",
+        "týmu",
+        "výroby",
+        "zadrželi"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -241,36 +269,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Policisté znovu zastavili řidiče škodovky se třemi zákazy řízení, který jim před nedávnem ujížděl. Skončil ve vazbě",
-      "url": "https://tydenikpolicie.cz/policiste-znovu-zastavili-ridice-skodovky-se-tremi-zakazy-rizeni-ktery-jim-pred-nedavnem-ujizdel-skoncil-ve-vazbe/",
-      "dt": "2026-05-20T13:24:43Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "jim",
-        "nedávnem",
-        "policisté",
-        "skončil",
-        "třemi",
-        "ujížděl",
-        "vazbě",
-        "zastavili",
-        "znovu",
-        "zákazy",
-        "řidiče",
-        "řízení",
-        "škodovky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16859,
+      "bytes": 16550,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-21T02:02:43Z",
+        "raw_feed_latest_publishedAt": "2026-05-21T04:02:56Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -333,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kriminalisté z tachovského toxi týmu zadrželi pět lidí, které podezírají z výroby a distribuce drog",
+            "publishedAt": "2026-05-21T04:02:56Z"
+          },
           {
             "title": "Během tří hodin se měli na Karvinsku vloupat do tří objektů",
             "publishedAt": "2026-05-21T02:02:43Z"
@@ -360,10 +362,6 @@
           {
             "title": "Muž, který měl stání u plzeňského soudu, měl navést svou partnerku, aby tam oznámila uložení bomby",
             "publishedAt": "2026-05-20T14:05:36Z"
-          },
-          {
-            "title": "Roztěkaný muž v Brně schovával plynovou pistoli v nohavici. Skončil v poutech",
-            "publishedAt": "2026-05-20T13:55:18Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-21T03:54:57.072745Z",
+  "ingestedAt": "2026-05-21T04:34:35.179407Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Hitlera neuposlechl. Sudetský Němec zachránil most v Ústí nad Labem",
+      "url": "https://profitonline.cz/hitlera-neuposlechl-sudetsky-nemec-zachranil-most-v-usti-nad-labem/",
+      "dt": "2026-05-21T04:00:29Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "hitlera",
+        "labem",
+        "most",
+        "neuposlechl",
+        "němec",
+        "sudetský",
+        "zachránil",
+        "ústí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -267,27 +292,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Bitcoin po nedávném růstu koriguje",
-      "url": "https://profitonline.cz/bitcoin-po-nedavnem-rustu-koriguje/",
-      "dt": "2026-05-18T18:30:19Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "bitcoin",
-        "koriguje",
-        "nedávném",
-        "růstu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -298,7 +302,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18585,
+      "bytes": 18875,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -335,11 +339,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-20T19:40:30Z",
+        "raw_feed_latest_publishedAt": "2026-05-21T04:00:29Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 10,
-          "zpravy": 1,
+          "zpravy": 2,
+          "finance": 9,
           "zdravi": 1
         },
         "drop_counts": {
@@ -352,6 +356,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hitlera neuposlechl. Sudetský Němec zachránil most v Ústí nad Labem",
+            "publishedAt": "2026-05-21T04:00:29Z"
+          },
           {
             "title": "Růst výrobních cen v dubnu pokračoval rychlým tempem",
             "publishedAt": "2026-05-20T19:40:30Z"
@@ -379,10 +387,6 @@
           {
             "title": "V ordinacích přibývá zmatených seniorů. Neví, jaké léky berou a proč",
             "publishedAt": "2026-05-19T10:00:01Z"
-          },
-          {
-            "title": "Banga vydává nový videoklip. Kombinuje virtuální realitu se skutečností",
-            "publishedAt": "2026-05-19T08:00:55Z"
           }
         ]
       }

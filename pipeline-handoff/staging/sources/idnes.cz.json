@@ -1,25 +1,25 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-21T03:54:57.072745Z",
+  "ingestedAt": "2026-05-21T04:34:35.179407Z",
   "items": [
     {
-      "section": "finance",
+      "section": "aktualne",
       "contentType": "article",
-      "title": "ANALÝZA: U soudu Musk prohrál, ale v něčem pravdu má. Ideály AI se drolí",
-      "url": "https://www.idnes.cz/ekonomika/zahranicni/musk-openai-soud.A260520_150051_eko-zahranicni_ven",
-      "dt": "2026-05-20T22:00:00Z",
+      "title": "Američan s podezřením na ebolu je v Praze. Na Bulovce stráví 21 dní v karanténě",
+      "url": "https://www.idnes.cz/zpravy/domaci/ebola-american-lekar-bulovka-nakaza-karantena-letiste.A260520_173825_domaci_sahu",
+      "dt": "2026-05-21T04:10:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
-        "ale",
-        "drolí",
-        "ideály",
-        "musk",
-        "něčem",
-        "pravdu",
-        "prohrál",
-        "soudu"
+        "američan",
+        "bulovce",
+        "dní",
+        "ebolu",
+        "karanténě",
+        "podezřením",
+        "praze",
+        "stráví"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -58,6 +58,31 @@
     {
       "section": "finance",
       "contentType": "article",
+      "title": "ANALÝZA: U soudu Musk prohrál, ale v něčem pravdu má. Ideály AI se drolí",
+      "url": "https://www.idnes.cz/ekonomika/zahranicni/musk-openai-soud.A260520_150051_eko-zahranicni_ven",
+      "dt": "2026-05-20T22:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "ale",
+        "drolí",
+        "ideály",
+        "musk",
+        "něčem",
+        "pravdu",
+        "prohrál",
+        "soudu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
       "title": "Investice do čističek katastrofálních 400 miliard stát nebudou",
       "url": "https://www.idnes.cz/ekonomika/domaci/voda-ceny-cov-zemedelstvi.A260520_172005_ekonomika_drh",
       "dt": "2026-05-20T22:00:00Z",
@@ -71,31 +96,6 @@
         "nebudou",
         "stát",
         "čističek"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Američan s podezřením na ebolu je v Praze. Na Bulovce stráví 21 dní v karanténě",
-      "url": "https://www.idnes.cz/zpravy/domaci/ebola-american-lekar-bulovka-nakaza-karantena-letiste.A260520_173825_domaci_sahu",
-      "dt": "2026-05-20T21:16:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "američan",
-        "bulovce",
-        "dní",
-        "ebolu",
-        "karanténě",
-        "podezřením",
-        "praze",
-        "stráví"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1568,7 +1568,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47540,
+      "bytes": 47668,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1605,11 +1605,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-20T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-21T04:10:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 3,
-          "zpravy": 27
+          "zpravy": 27,
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1622,20 +1622,20 @@
         },
         "sample_titles": [
           {
-            "title": "ANALÝZA: U soudu Musk prohrál, ale v něčem pravdu má. Ideály AI se drolí",
-            "publishedAt": "2026-05-20T22:00:00Z"
+            "title": "Američan s podezřením na ebolu je v Praze. Na Bulovce stráví 21 dní v karanténě",
+            "publishedAt": "2026-05-21T04:10:00Z"
           },
           {
             "title": "Stát přispěl na film o Milionu chvilek. Ministr Klempíř chce změnit zákon",
             "publishedAt": "2026-05-20T22:00:00Z"
           },
           {
-            "title": "Investice do čističek katastrofálních 400 miliard stát nebudou",
+            "title": "ANALÝZA: U soudu Musk prohrál, ale v něčem pravdu má. Ideály AI se drolí",
             "publishedAt": "2026-05-20T22:00:00Z"
           },
           {
-            "title": "Američan s podezřením na ebolu je v Praze. Na Bulovce stráví 21 dní v karanténě",
-            "publishedAt": "2026-05-20T21:16:00Z"
+            "title": "Investice do čističek katastrofálních 400 miliard stát nebudou",
+            "publishedAt": "2026-05-20T22:00:00Z"
           },
           {
             "title": "Bradáčová žádá přísnější trest pro žalobkyni Lastoveckou v bitcoinové kauze",
