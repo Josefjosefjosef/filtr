@@ -77,7 +77,8 @@ param(
   [switch]$NextActionQualityGateRegressionSelfTest,
   [switch]$AdapterMetaFreshnessSelfTest,
   [switch]$Cap50RealAutonomousLifecycleOrderingSelfTest,
-  [switch]$AutonomousRearmSelfTest
+  [switch]$AutonomousRearmSelfTest,
+  [switch]$WslAgentModelAutoHandoffSelfTest
 )
 
 Set-StrictMode -Version 2
@@ -3593,6 +3594,118 @@ function Invoke-SilverCap50RealAutonomousLifecycleOrderingSelfTest {
   return $true
 }
 
+function Invoke-SilverWslAgentModelAutoHandoffSelfTest {
+  param([string]$RepoRoot)
+  $failures = New-Object System.Collections.Generic.List[string]
+  $adapterScript = Join-Path $RepoRoot "scripts\silver-cursor-agent-adapter.ps1"
+  if (-not (Test-Path -LiteralPath $adapterScript)) {
+    [void]$failures.Add("missing_adapter_script")
+  }
+  else {
+    $adapterSrc = [System.IO.File]::ReadAllText($adapterScript, (New-Object System.Text.UTF8Encoding $false))
+    if ($adapterSrc -notmatch '--model\s') {
+      [void]$failures.Add("adapter_wsl_bash_script_missing_model_flag")
+    }
+    if ($adapterSrc -notmatch 'WslAgentModel\s*=\s*"auto"') {
+      [void]$failures.Add("adapter_default_wsl_agent_model_not_auto")
+    }
+  }
+  $dryOut = Join-Path $env:TEMP ("silver-wsl-model-handoff-dry-" + [guid]::NewGuid().ToString("N") + ".md")
+  $prevEa = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try {
+    $dry = & powershell -NoProfile -ExecutionPolicy Bypass -File $adapterScript -WslUbuntuAgent -DryRun -TaskFile "SILVER_NEXT_ACTION.md" -OutputFile $dryOut -WslAgentModel auto 2>&1
+    $dryText = ($dry | ForEach-Object { [string]$_ }) -join "`n"
+    if ($dryText -notmatch 'wsl_agent_model=auto') {
+      [void]$failures.Add("dry_run_missing_wsl_agent_model_auto")
+    }
+  }
+  catch {
+    [void]$failures.Add("dry_run_exception:" + $_.Exception.Message)
+  }
+  finally {
+    $ErrorActionPreference = $prevEa
+    if (Test-Path -LiteralPath $dryOut) {
+      Remove-Item -LiteralPath $dryOut -Force -ErrorAction SilentlyContinue
+    }
+  }
+  $diagPath = Join-Path $RepoRoot "scripts\silver-cursor-agent-adapter-diagnostic-report.json"
+  $liveOk = "SKIPPED"
+  if (Test-Path -LiteralPath $diagPath) {
+    try {
+      $diagJson = [System.IO.File]::ReadAllText($diagPath, (New-Object System.Text.UTF8Encoding $false)) | ConvertFrom-Json
+      $wslReady = [string]$diagJson.wsl_cursor_agent_print_ask_trust.adapter_ready
+      if ($wslReady -eq "YES") {
+        $utf8 = $script:SilverUtf8NoBom
+        if ($null -eq $utf8) {
+          $utf8 = New-Object System.Text.UTF8Encoding $false
+        }
+        $taskPath = Join-Path $env:TEMP ("silver-wsl-model-handoff-live-task-" + [guid]::NewGuid().ToString("N") + ".md")
+        $outPath = Join-Path $env:TEMP ("silver-wsl-model-handoff-live-out-" + [guid]::NewGuid().ToString("N") + ".md")
+        $taskBody = "Print exactly: SILVER_WSL_MODEL_AUTO_HANDOFF_OK`r`nDo not modify files.`r`n"
+        [System.IO.File]::WriteAllText($taskPath, $taskBody, $utf8)
+        $prevEa2 = $ErrorActionPreference
+        $ErrorActionPreference = "Continue"
+        try {
+          $liveExit = 255
+          & powershell -NoProfile -ExecutionPolicy Bypass -File $adapterScript -WslUbuntuAgent -TaskFile $taskPath -OutputFile $outPath -TimeoutSeconds 180 -WslAgentModel auto 2>$null
+          if ($null -ne $LASTEXITCODE) { $liveExit = [int]$LASTEXITCODE }
+          $liveMeta = @{}
+          if (Test-Path -LiteralPath $outPath) {
+            $liveMeta = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $outPath
+          }
+          $liveBody = ""
+          if (Test-Path -LiteralPath $outPath) {
+            $liveBody = [System.IO.File]::ReadAllText($outPath, $utf8)
+          }
+          if ($liveExit -ne 0) {
+            [void]$failures.Add("live_handoff_exit_expected_0_got_" + [string]$liveExit)
+          }
+          if ($liveBody -notmatch 'SILVER_WSL_MODEL_AUTO_HANDOFF_OK') {
+            [void]$failures.Add("live_handoff_stdout_missing_marker")
+          }
+          if ($liveBody -match 'Named models unavailable|Free plans can only use Auto') {
+            [void]$failures.Add("live_handoff_stderr_plan_model_restriction")
+          }
+          if ([string]$liveMeta["wsl_agent_model"] -ne "auto") {
+            [void]$failures.Add("live_handoff_meta_wsl_agent_model_not_auto")
+          }
+          if ([string]$liveMeta["adapter_output_state"] -ne "COMPLETED") {
+            [void]$failures.Add("live_handoff_meta_not_completed")
+          }
+          $liveOk = "PASS"
+        }
+        catch {
+          [void]$failures.Add("live_handoff_exception:" + $_.Exception.Message)
+          $liveOk = "FAIL"
+        }
+        finally {
+          $ErrorActionPreference = $prevEa2
+          foreach ($p in @($taskPath, $outPath)) {
+            if ($p -and (Test-Path -LiteralPath $p)) {
+              Remove-Item -LiteralPath $p -Force -ErrorAction SilentlyContinue
+            }
+          }
+        }
+      }
+    }
+    catch {
+      [void]$failures.Add("diag_json_read_failed")
+    }
+  }
+  if ($failures.Count -gt 0) {
+    Write-Host "SILVER_WSL_AGENT_MODEL_AUTO_HANDOFF_SELFTEST=FAIL" -ForegroundColor Red
+    foreach ($f in $failures) {
+      Write-Host ("failure=" + [string]$f) -ForegroundColor Red
+    }
+    Write-Host ("live_probe=" + $liveOk) -ForegroundColor Red
+    return $false
+  }
+  Write-Host "SILVER_WSL_AGENT_MODEL_AUTO_HANDOFF_SELFTEST=PASS" -ForegroundColor Green
+  Write-Host ("live_probe=" + $liveOk) -ForegroundColor Green
+  return $true
+}
+
 function Invoke-SilverAutonomousRearmSelfTest {
   param([string]$RepoRoot)
   $utf8 = New-Object System.Text.UTF8Encoding $false
@@ -4780,6 +4893,12 @@ if ($Cap50RealAutonomousLifecycleOrderingSelfTest) {
 if ($AutonomousRearmSelfTest) {
   $stRearm = Invoke-SilverAutonomousRearmSelfTest -RepoRoot $RepoRoot
   if (-not $stRearm) { exit 1 }
+  exit 0
+}
+
+if ($WslAgentModelAutoHandoffSelfTest) {
+  $stWslModel = Invoke-SilverWslAgentModelAutoHandoffSelfTest -RepoRoot $RepoRoot
+  if (-not $stWslModel) { exit 1 }
   exit 0
 }
 
