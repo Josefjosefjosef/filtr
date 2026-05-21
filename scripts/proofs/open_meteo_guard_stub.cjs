@@ -115,13 +115,62 @@ async function installProofGuardNetworkStubs(page) {
   await installYtimgThumbnailStubRoute(page);
 }
 
+/** URLs whose 404/CORS noise is not Silver layout/UI signal in production guards. */
+function isIgnorableGuardResourceUrl(url) {
+  const u = String(url || "");
+  if (!u) return false;
+  if (/api\.open-meteo\.com/i.test(u)) return true;
+  if (/i\.ytimg\.com/i.test(u)) return true;
+  if (/\/favicon\.ico/i.test(u)) return true;
+  return false;
+}
+
+/**
+ * Correlate bare "Failed to load resource" console lines (no URL in text) with
+ * recent ignorable network failures only.
+ */
+function createIgnorableResourceTracker() {
+  const recentIgnorableFailures = [];
+  const remember = (url) => {
+    if (!isIgnorableGuardResourceUrl(url)) return;
+    recentIgnorableFailures.push(Date.now());
+    if (recentIgnorableFailures.length > 48) recentIgnorableFailures.shift();
+  };
+  const hadRecentIgnorableFailure = () => {
+    const cutoff = Date.now() - 8000;
+    for (let i = recentIgnorableFailures.length - 1; i >= 0; i--) {
+      if (recentIgnorableFailures[i] >= cutoff) return true;
+    }
+    return false;
+  };
+  const attachToPage = (page) => {
+    page.on("response", (res) => {
+      try {
+        const st = res.status();
+        if (st >= 400) remember(res.url());
+      } catch (_) {}
+    });
+    page.on("requestfailed", (req) => {
+      try {
+        remember(req.url());
+      } catch (_) {}
+    });
+  };
+  return { attachToPage, hadRecentIgnorableFailure };
+}
+
 /** Align with smoke.mjs — ignore known third-party resource noise in guards. */
-function isIgnorableGuardConsoleError(text) {
+function isIgnorableGuardConsoleError(text, opts) {
   const s = String(text || "");
   if (!s) return true;
   if (/\/favicon\.ico/i.test(s)) return true;
   if (/i\.ytimg\.com|thumbnail/i.test(s)) return true;
-  if (/Failed to load resource/i.test(s) && /ytimg|favicon|open-meteo/i.test(s)) return true;
+  if (/Failed to load resource/i.test(s)) {
+    if (/ytimg|favicon|open-meteo/i.test(s)) return true;
+    if (/status of 404/i.test(s) && opts && typeof opts.hadRecentIgnorableFailure === "function") {
+      if (opts.hadRecentIgnorableFailure()) return true;
+    }
+  }
   return false;
 }
 
@@ -130,5 +179,7 @@ module.exports = {
   installOpenMeteoStubRoute,
   installYtimgThumbnailStubRoute,
   installProofGuardNetworkStubs,
+  isIgnorableGuardResourceUrl,
+  createIgnorableResourceTracker,
   isIgnorableGuardConsoleError,
 };
