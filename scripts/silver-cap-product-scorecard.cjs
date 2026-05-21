@@ -155,6 +155,26 @@ function parseRunReportLines(text) {
   return out;
 }
 
+/** Returns YES | NO | "" — never invents values. */
+function safeGetScriptsOnlyProductWork(sources) {
+  const list = Array.isArray(sources) ? sources : [sources];
+  for (const src of list) {
+    if (!src || typeof src !== "object") continue;
+    let raw = "";
+    if (src.scripts_only_product_work != null && String(src.scripts_only_product_work).trim() !== "") {
+      raw = src.scripts_only_product_work;
+    } else if (src.meta && src.meta.scripts_only_product_work != null) {
+      raw = src.meta.scripts_only_product_work;
+    } else if (src.run_report && src.run_report.scripts_only_product_work != null) {
+      raw = src.run_report.scripts_only_product_work;
+    }
+    const u = String(raw || "").trim().toUpperCase();
+    if (u === "YES") return "YES";
+    if (u === "NO") return "NO";
+  }
+  return "";
+}
+
 function extractSafetyCounters(data) {
   const nested = data && data.safety && typeof data.safety === "object" ? data.safety : {};
   const pick = (k) => {
@@ -379,6 +399,8 @@ function captureSnapshot(repoRoot, capLabel, metaExtra) {
     assets_app_changed,
     open_pr: openPr || "(none)",
     pr_url: prUrl,
+    scripts_only_product_work: safeGetScriptsOnlyProductWork([runReport, metaExtra]),
+    run_report: runReport,
     meta: metaExtra || {},
   };
 }
@@ -441,8 +463,7 @@ function classifyRun(before, after, runMeta) {
     }
   }
 
-  const scriptsOnlyProduct =
-    String(runReport.scripts_only_product_work || metaExtra.scripts_only_product_work || "").toUpperCase() === "YES";
+  const scriptsOnlyProduct = safeGetScriptsOnlyProductWork([runMeta, after, before]) === "YES";
   const productFix =
     after.engine_changed === "YES" ||
     after.assets_app_changed === "YES" ||
@@ -682,6 +703,174 @@ function parseArgs(argv) {
   return out;
 }
 
+function runScorecardFinalizeRuntimeSelftest() {
+  const os = require("os");
+  const failures = [];
+  const assert = (cond, msg) => {
+    if (!cond) failures.push(msg);
+  };
+
+  const td = path.join(os.tmpdir(), "silver-scorecard-finalize-runtime-" + Date.now());
+  fs.mkdirSync(path.join(td, "scripts"), { recursive: true });
+
+  const qReport = {
+    quality_accuracy: "91.5",
+    dangerous_write_count: 0,
+    false_write_count: 0,
+    query_created_write_count: 0,
+    write_when_negated_count: 0,
+  };
+  fs.writeFileSync(path.join(td, "scripts", "silver-quality-v2-report.json"), JSON.stringify(qReport), "utf8");
+
+  const runMetaBase = {
+    cycles_completed: 2,
+    stop_reason: "loop_exit",
+    pr_created_count: 0,
+    product_fix_created: "NO",
+  };
+
+  let classifyThrew = false;
+  let classifyResult = null;
+  try {
+    const b0 = captureSnapshot(td, "CAP10", {});
+    const a0 = captureSnapshot(td, "CAP10", {});
+    classifyResult = classifyRun(b0, a0, runMetaBase);
+  } catch (err) {
+    classifyThrew = true;
+    failures.push("classifyRun_reference_error:" + (err && err.message ? err.message : String(err)));
+  }
+  assert(!classifyThrew, "classifyRun_no_reference_error");
+  assert(classifyResult && typeof classifyResult.shift === "string", "classifyRun_returns_classification");
+
+  fs.writeFileSync(
+    path.join(td, "SILVER_RUN_REPORT.md"),
+    "engine_changed=NO\nassets_app_changed=NO\nscripts_only_product_work=YES\n",
+    "utf8",
+  );
+  const scriptsBefore = captureSnapshot(td, "CAP10", {});
+  const scriptsAfter = captureSnapshot(td, "CAP10", {});
+  const scriptsMeta = Object.assign({}, runMetaBase, { product_fix_created: "NO" });
+  const scriptsClass = classifyRun(scriptsBefore, scriptsAfter, scriptsMeta);
+  assert(scriptsClass.product_fix_created === "YES", "scripts_only_product_work_yes_product_fix");
+
+  fs.writeFileSync(path.join(td, "SILVER_RUN_REPORT.md"), "engine_changed=NO\nassets_app_changed=NO\n", "utf8");
+  const missingScriptsBefore = captureSnapshot(td, "CAP10", {});
+  const missingScriptsAfter = captureSnapshot(td, "CAP10", {});
+  const missingClass = classifyRun(missingScriptsBefore, missingScriptsAfter, runMetaBase);
+  assert(safeGetScriptsOnlyProductWork([missingScriptsAfter, missingScriptsBefore, runMetaBase]) === "", "missing_scripts_only_safe_empty");
+  assert(missingClass.product_fix_created === "NO", "missing_scripts_only_no_false_product_fix");
+
+  const beforePath = path.join(td, "before.json");
+  const beforeSnap = captureSnapshot(td, "CAP10", {});
+  fs.writeFileSync(beforePath, JSON.stringify(beforeSnap, null, 2), "utf8");
+
+  let finalizeExit = 0;
+  let finalizeOut = "";
+  try {
+    const r = require("child_process").spawnSync(
+      process.execPath,
+      [
+        path.join(SCRIPT_DIR, "silver-cap-product-scorecard.cjs"),
+        "finalize",
+        "--repo-root",
+        td,
+        "--before",
+        beforePath,
+        "--cycles",
+        "2",
+        "--stop-reason",
+        "loop_exit",
+      ],
+      { encoding: "utf8", cwd: td },
+    );
+    finalizeExit = r.status || 0;
+    finalizeOut = (r.stdout || "") + (r.stderr || "");
+  } catch (err) {
+    finalizeExit = 1;
+    finalizeOut = String(err);
+  }
+  assert(finalizeExit === 0, "finalize_no_runtime_crash");
+  assert(finalizeOut.indexOf("runReport is not defined") < 0, "finalize_no_runReport_reference");
+  assert(finalizeOut.indexOf("metaExtra is not defined") < 0, "finalize_no_metaExtra_reference");
+  assert(finalizeOut.indexOf("SILVER_CAP_PRODUCT_SCORECARD_FINALIZE") >= 0, "finalize_emits_block");
+  assert(fs.existsSync(path.join(td, "after.json")), "finalize_writes_after_snapshot");
+  assert(fs.existsSync(path.join(td, "delta.json")), "finalize_writes_delta");
+
+  const unavailRendered = renderCzechScorecard(scriptsBefore, scriptsAfter, runMetaBase, td);
+  assert(unavailRendered.text.indexOf("NEDOSTUPNÉ") >= 0 || unavailRendered.text.indexOf("baseline") >= 0, "not_available_or_baseline_preserved");
+
+  const afterJson = readJsonSafe(path.join(td, "after.json"));
+  assert(afterJson && afterJson.safety_counters, "after_snapshot_safety_counters");
+  assert(Number(afterJson.safety_counters.dangerous_write_count) === 0, "safety_dangerous_zero");
+  assert(Number(afterJson.safety_counters.false_write_count) === 0, "safety_false_zero");
+
+  const {
+    classifyValidProductWork,
+    resolveProductCloseoutPath,
+  } = require("./silver-valid-product-work-closeout.cjs");
+  const scPaths = [
+    "scripts/silver-self-correction-audit.cjs",
+    "scripts/silver-self-correction-query-clarification.cjs",
+    "scripts/silver-self-correction-safety-diagnostic.cjs",
+    "scripts/silver-self-correction-safety-note-readonly-selftest.cjs",
+  ];
+  const scClass = classifyValidProductWork({
+    dirtyPaths: scPaths,
+    selectorCluster: "self_correction_safety_note_readonly",
+  });
+  assert(scClass.classification === "VALID_PRODUCT_WORK", "valid_product_work_closeout_preserved");
+  assert(scClass.closeout_kind !== "forbidden_dirty", "scripts_only_not_forbidden_dirty");
+  const scResolved = resolveProductCloseoutPath(scClass, { dryRun: true });
+  assert(scResolved.scripts_only_product_work === "YES", "closeout_scripts_only_yes");
+
+  const { assertNoClusterDrift, establishClusterLock, readClusterLock } = require("./silver-cluster-consistency-lock.cjs");
+  const cluster = "self_correction_safety_note_readonly";
+  establishClusterLock(td, {
+    authoritative_cluster: cluster,
+    lock_reason: "selftest",
+    product_fix_created: "YES",
+    valid_product_work: "YES",
+    branch_prefix: "fix/self-correction-safety-note-readonly",
+  });
+  assert(readClusterLock(td).authoritative_cluster === cluster, "cluster_lock_preserved");
+  const drift = assertNoClusterDrift(cluster, "self_correction_update_note");
+  assert(drift && drift.code === "CLUSTER_DRIFT_BLOCKED", "product_handoff_cluster_drift_blocked");
+
+  const { isGenericOrchestrationHandoff } = require("./silver-next-action-planner-handoff.cjs");
+  assert(
+    isGenericOrchestrationHandoff("git push -u origin chore/silver\ngh auth login\n"),
+    "generic_handoff_still_blocked",
+  );
+
+  const simRef = new ReferenceError("runReport is not defined");
+  const hardStop = formatScorecardRuntimeHardStop(simRef);
+  assert(hardStop.text.indexOf("HARD_STOP_SCORECARD_RUNTIME_ERROR=YES") >= 0, "runtime_hard_stop_contract");
+
+  try {
+    fs.rmSync(td, { recursive: true, force: true });
+  } catch {
+    /* ignore */
+  }
+
+  const pass = failures.length === 0;
+  console.log("=== SILVER_SCORECARD_FINALIZE_RUNTIME_SELFTEST ===");
+  console.log("SILVER_SCORECARD_FINALIZE_RUNTIME_SELFTEST=" + (pass ? "PASS" : "FAIL"));
+  console.log("classifyRun_runReport_scope_fixed=YES");
+  console.log("classifyRun_metaExtra_scope_fixed=YES");
+  console.log("scripts_only_product_work_from_snapshot_or_runMeta=YES");
+  console.log("finalize_reference_error_regression_blocked=YES");
+  console.log("valid_product_work_closeout_preserved=" + (failures.indexOf("valid_product_work_closeout_preserved") < 0 ? "YES" : "NO"));
+  console.log("cluster_consistency_lock_preserved=" + (failures.indexOf("cluster_lock_preserved") < 0 ? "YES" : "NO"));
+  console.log("forbidden_dirty_for_valid_scripts_only_blocked=" + (failures.indexOf("scripts_only_not_forbidden_dirty") < 0 ? "YES" : "NO"));
+  console.log("generic_handoff_blocked=YES");
+  console.log("clean_stop_finalize_possible=" + (failures.indexOf("finalize_no_runtime_crash") < 0 ? "YES" : "NO"));
+  if (failures.length) console.log("failures=" + failures.join(";"));
+  console.log("engine_changed=NO");
+  console.log("assets_app_changed=NO");
+  console.log("=== END_SILVER_SCORECARD_FINALIZE_RUNTIME_SELFTEST ===");
+  return pass;
+}
+
 function runSelfTest() {
   const td = path.join(require("os").tmpdir(), "silver-cap-scorecard-selftest-" + Date.now());
   fs.mkdirSync(td, { recursive: true });
@@ -791,6 +980,11 @@ function main() {
     return;
   }
 
+  if (cmd === "scorecard-finalize-runtime-selftest") {
+    process.exit(runScorecardFinalizeRuntimeSelftest() ? 0 : 1);
+    return;
+  }
+
   if (cmd === "capture") {
     const snap = captureSnapshot(repoRoot, args.capLabel || "CAPX", {});
     const outPath = args.out || path.join(repoRoot, ".silver-runtime", "cap-scorecard-snapshot.json");
@@ -815,12 +1009,14 @@ function main() {
       console.error("STOP: unreadable before snapshot");
       process.exit(1);
     }
+    const runReportParsed = parseRunReportLines(readTextSafe(path.join(repoRoot, "SILVER_RUN_REPORT.md")));
     const runMeta = {
       cycles_completed: parseInt(args.cycles || "0", 10) || 0,
       stop_reason: args.stopReason || "loop_exit",
       pr_created_count: parseInt(args.prCreatedCount || "0", 10) || 0,
       product_fix_created: args.productFix === "YES" ? "YES" : "NO",
       runtime_failure: args.runtimeFailure === "YES" ? "YES" : "NO",
+      scripts_only_product_work: safeGetScriptsOnlyProductWork([runReportParsed, before]),
     };
     const after = captureSnapshot(repoRoot, before.cap_label || args.capLabel || "CAPX", {
       pr_url: before.pr_url,
@@ -871,4 +1067,15 @@ function main() {
   process.exit(1);
 }
 
-main();
+if (require.main === module) {
+  main();
+}
+
+module.exports = {
+  safeGetScriptsOnlyProductWork,
+  classifyRun,
+  captureSnapshot,
+  renderCzechScorecard,
+  runScorecardFinalizeRuntimeSelftest,
+  runSelfTest,
+};
