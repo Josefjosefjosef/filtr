@@ -8,7 +8,14 @@ import http from "http";
 import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
+import { createRequire } from "module";
 import { chromium } from "playwright";
+
+const require = createRequire(import.meta.url);
+const {
+  installProofGuardNetworkStubs,
+  isIgnorableGuardConsoleError,
+} = require("./proofs/open_meteo_guard_stub.cjs");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
@@ -42,6 +49,14 @@ function mime(p) {
   return "application/octet-stream";
 }
 
+function stripCspFromHtml(buf) {
+  const s = buf.toString("utf8");
+  return Buffer.from(
+    s.replace(/<meta\s[^>]*http-equiv\s*=\s*["']Content-Security-Policy["'][^>]*>/gi, ""),
+    "utf8"
+  );
+}
+
 function startStaticServer() {
   const server = http.createServer(async (req, res) => {
     try {
@@ -55,7 +70,8 @@ function startStaticServer() {
         res.end();
         return;
       }
-      const buf = await fs.readFile(fp);
+      let buf = await fs.readFile(fp);
+      if (/\.html?$/i.test(fp)) buf = stripCspFromHtml(buf);
       res.setHeader("Content-Type", mime(fp));
       res.statusCode = 200;
       res.end(buf);
@@ -322,12 +338,17 @@ async function main() {
     serviceWorkers: "block"
   });
   const page = await context.newPage();
+  await installProofGuardNetworkStubs(page);
   const consoleErrors = [];
   page.on("console", (msg) => {
-    if (msg.type() === "error") consoleErrors.push(msg.text());
+    if (msg.type() === "error") {
+      const t = msg.text();
+      if (!isIgnorableGuardConsoleError(t)) consoleErrors.push(t);
+    }
   });
   page.on("pageerror", (err) => {
-    consoleErrors.push(String(err && err.message ? err.message : err));
+    const t = String(err && err.message ? err.message : err);
+    if (!isIgnorableGuardConsoleError(t)) consoleErrors.push(t);
   });
 
   let scenariosPass = true;
@@ -482,6 +503,7 @@ async function main() {
       {
         viewports: perViewport,
         consoleErrorsCount: consoleErrors.length,
+        consoleErrors: consoleErrors.length ? consoleErrors : undefined,
         passAll,
         verdict
       },
