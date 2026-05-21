@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-21T05:15:45.761142Z",
+  "ingestedAt": "2026-05-21T05:54:40.511075Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Mlýnková získala s hokejistkami Montrealu Walter Cup",
+      "url": "https://www.sport.cz/clanek/hokej-mlynkova-ziskala-s-hokejistkami-montrealu-walter-cup-5459835",
+      "dt": "2026-05-21T05:12:50Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "cup",
+        "hokejistkami",
+        "mlýnková",
+        "montrealu",
+        "walter",
+        "získala"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -767,31 +790,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kdy hraje Česko na MS v hokeji 2026: Čtvrtý zápas proti Itálii",
-      "url": "https://www.sport.cz/clanek/hokej-ms-2026-kdy-hraji-cesi-program-vysledky-5429699",
-      "dt": "2026-05-18T05:06:00Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "2026",
-        "hokeji",
-        "hraje",
-        "itálii",
-        "proti",
-        "zápas",
-        "česko",
-        "čtvrtý"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 48989,
+      "bytes": 49024,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,7 +837,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-21T04:54:30Z",
+        "raw_feed_latest_publishedAt": "2026-05-21T05:12:50Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -854,6 +852,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mlýnková získala s hokejistkami Montrealu Walter Cup",
+            "publishedAt": "2026-05-21T05:12:50Z"
+          },
           {
             "title": "Koubek oznámí nominaci na mistrovství světa",
             "publishedAt": "2026-05-21T04:54:30Z"
@@ -881,10 +883,6 @@
           {
             "title": "Jarolím to schytal pivem a pak chválil: Umí za to vzít. Teď jsou z nich legendy",
             "publishedAt": "2026-05-20T20:16:37Z"
-          },
-          {
-            "title": "SESTŘIH: Američané unikli krachu až v nájezdech",
-            "publishedAt": "2026-05-20T21:18:41Z"
           }
         ]
       }

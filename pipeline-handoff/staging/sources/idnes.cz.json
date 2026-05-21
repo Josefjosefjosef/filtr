@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-21T05:15:45.761142Z",
+  "ingestedAt": "2026-05-21T05:54:40.511075Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Střet motorkáře s chodcem na Chebsku. Oba při nehodě zemřeli",
+      "url": "https://www.idnes.cz/karlovy-vary/zpravy/nehoda-motocykl-stret-s-chodcem-chebsko-oba-zemreli.A260521_073432_vary-zpravy_slv",
+      "dt": "2026-05-21T05:39:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "chebsku",
+        "chodcem",
+        "motorkáře",
+        "nehodě",
+        "oba",
+        "při",
+        "střet",
+        "zemřeli"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "Do Česka dorazí tropy: Meteorologové o víkendu očekávají i překonání hranice 30 °C",
+      "url": "https://www.idnes.cz/zpravy/domaci/pocasi.A260521_055517_domaci_fohl",
+      "dt": "2026-05-21T05:31:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dorazí",
+        "hranice",
+        "meteorologové",
+        "očekávají",
+        "překonání",
+        "tropy",
+        "víkendu",
+        "česka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -728,59 +778,6 @@
         "záchranu",
         "zájemci",
         "šanci"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rožnovský výrobce polovodičů onsemi propustil 300 lidí. Odbory to nekomentují",
-      "url": "https://www.idnes.cz/zlin/zpravy/e15-onsemi-roznov-pod-radhostem-propousteni-300-lidi-ekonomika.A260520_161219_zlin-zpravy_jfuk",
-      "dt": "2026-05-20T14:31:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "300",
-        "lidí",
-        "nekomentují",
-        "odbory",
-        "onsemi",
-        "polovodičů",
-        "propustil",
-        "rožnovský",
-        "výrobce"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ševčík opět neuspěl s žalobou proti odvolání z funkce děkana, podá stížnost",
-      "url": "https://www.idnes.cz/zpravy/domaci/nf-vse-sevcik-odvolani-zaloba-dvorak-zamitnout-vyhazov-soud.A260520_153724_domaci_sahu",
-      "dt": "2026-05-20T14:24:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "děkana",
-        "funkce",
-        "neuspěl",
-        "odvolání",
-        "opět",
-        "podá",
-        "proti",
-        "stížnost",
-        "ševčík",
-        "žalobou"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1580,7 +1577,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47825,
+      "bytes": 47267,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1617,7 +1614,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-21T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-21T05:39:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1633,6 +1630,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Střet motorkáře s chodcem na Chebsku. Oba při nehodě zemřeli",
+            "publishedAt": "2026-05-21T05:39:00Z"
+          },
+          {
+            "title": "Do Česka dorazí tropy: Meteorologové o víkendu očekávají i překonání hranice 30 °C",
+            "publishedAt": "2026-05-21T05:31:00Z"
+          },
           {
             "title": "Česko se zdrželo hlasování o rezoluci OSN k ochraně klimatu. Jako jediný stát EU",
             "publishedAt": "2026-05-21T05:00:00Z"
@@ -1656,14 +1661,6 @@
           {
             "title": "ANALÝZA: U soudu Musk prohrál, ale v něčem pravdu má. Ideály AI se drolí",
             "publishedAt": "2026-05-20T22:00:00Z"
-          },
-          {
-            "title": "Investice do čističek katastrofálních 400 miliard stát nebudou",
-            "publishedAt": "2026-05-20T22:00:00Z"
-          },
-          {
-            "title": "Bradáčová žádá přísnější trest pro žalobkyni Lastoveckou v bitcoinové kauze",
-            "publishedAt": "2026-05-20T20:47:00Z"
           }
         ]
       }

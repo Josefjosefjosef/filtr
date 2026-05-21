@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-21T05:15:45.761142Z",
+  "ingestedAt": "2026-05-21T05:54:40.511075Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "6 metrů od nebezpečné eskalace. Ruské stíhačky ohrožovaly letadlo NATO",
+      "url": "https://ekonomickydenik.cz/6-metru-eskalace-ruske-letouny-nato/",
+      "dt": "2026-05-21T05:50:35Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "eskalace",
+        "letadlo",
+        "metrů",
+        "nato",
+        "nebezpečné",
+        "ohrožovaly",
+        "ruské",
+        "stíhačky"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -760,30 +785,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Regiony „bez budoucnosti“? Evropě hrozí rozdělení a nárůst extremismu",
-      "url": "https://ekonomickydenik.cz/rozpad-unie-kvuli-vylidnovani-chudych-oblasti/",
-      "dt": "2026-05-19T13:09:50Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "budoucnosti",
-        "evropě",
-        "extremismu",
-        "hrozí",
-        "nárůst",
-        "regiony",
-        "rozdělení"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72824,
+      "bytes": 73288,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,11 +832,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-21T04:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-21T05:50:35Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 19,
-          "zpravy": 8,
+          "zpravy": 9,
+          "finance": 18,
           "cestovani": 1,
           "zdravi": 2
         },
@@ -849,6 +850,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "6 metrů od nebezpečné eskalace. Ruské stíhačky ohrožovaly letadlo NATO",
+            "publishedAt": "2026-05-21T05:50:35Z"
+          },
           {
             "title": "Řehkův nástupce „na grilu“. Hlaváče si proklepnou poslanci z klíčového výboru",
             "publishedAt": "2026-05-21T04:05:00Z"
@@ -876,10 +881,6 @@
           {
             "title": "Sjezd sudetských Němců míří do Brna. Vnitro vysvětluje, proč akci nemůže zakázat",
             "publishedAt": "2026-05-20T15:29:29Z"
-          },
-          {
-            "title": "Prohlédněte si: Vítězné návrhy trojice mostů pro rychlovlaky",
-            "publishedAt": "2026-05-20T14:48:09Z"
           }
         ]
       }
