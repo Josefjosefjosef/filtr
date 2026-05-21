@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Silver Autopilot V1 — local orchestration only (no runtime Silver changes).
- * Commands: --status | --verify-pr= | --merge-pr= | --post-merge-proof | --refresh-rhc3 | --ask-model | --sanitize-next-action-md | --auto | --full-auto-loop | --loop-once | --cli-autonomous-adapter-diagnostic | --cursor3-execution-status | --cursor3-execution-bridge-selftest | --controlled-budget-guard-selftest | --cap10-pipeline-contract-selftest | --cap10-replay-lifecycle-selftest | --metric-delta-contract-selftest | --generic-fallback-blocker-selftest
+ * Commands: --status | --verify-pr= | --merge-pr= | --post-merge-proof | --refresh-rhc3 | --ask-model | --sanitize-next-action-md | --auto | --full-auto-loop | --loop-once | --cli-autonomous-adapter-diagnostic | --cursor3-execution-status | --cursor3-execution-bridge-selftest | --controlled-budget-guard-selftest | --cap10-pipeline-contract-selftest | --cap10-replay-lifecycle-selftest | --metric-delta-contract-selftest | --generic-fallback-blocker-selftest | --stale-cursor-invoke-hardening-selftest
  */
 /* eslint-disable no-console */
 "use strict";
@@ -1861,6 +1861,18 @@ function openPrForCurrentBranch() {
   } catch {
     return { summary: "(gh unavailable or no PR)", url: "", number: "" };
   }
+}
+
+function runStaleCursorInvokeHardeningSelftest(repoRoot) {
+  const loopScript = path.join(repoRoot, "scripts", "silver-autopilot-loop.ps1");
+  const r = spawnSync(
+    "powershell.exe",
+    ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", loopScript, "-StaleCursorInvokeHardeningSelfTest"],
+    { cwd: repoRoot, encoding: "utf8", maxBuffer: 16 * 1024 * 1024 },
+  );
+  if (r.stdout) process.stdout.write(r.stdout);
+  if (r.stderr) process.stderr.write(r.stderr);
+  return r.status === 0;
 }
 
 function cmdStatus(argvCommand) {
@@ -3900,6 +3912,7 @@ function parseArgs(argv) {
     else if (a === "--cap10-replay-lifecycle-selftest") out.cmd = "cap10-replay-lifecycle-selftest";
     else if (a === "--metric-delta-contract-selftest") out.cmd = "metric-delta-contract-selftest";
     else if (a === "--generic-fallback-blocker-selftest") out.cmd = "generic-fallback-blocker-selftest";
+    else if (a === "--stale-cursor-invoke-hardening-selftest") out.cmd = "stale-cursor-invoke-hardening-selftest";
     else if (a === "--preflight-runtime-cleanup") out.cmd = "preflight-runtime-cleanup";
     else if (a === "--preflight-runtime-cleanup-selftest") out.cmd = "preflight-runtime-cleanup-selftest";
     else if (a === "--cap-dirty-report-lifecycle-selftest") out.cmd = "cap-dirty-report-lifecycle-selftest";
@@ -3963,6 +3976,8 @@ if (require.main === module) {
   } else if (p.cmd === "generic-fallback-blocker-selftest") {
     const { runGenericFallbackBlockerSelftest } = require("./silver-cap10-pipeline-contract.cjs");
     process.exit(runGenericFallbackBlockerSelftest() ? 0 : 1);
+  } else if (p.cmd === "stale-cursor-invoke-hardening-selftest") {
+    process.exit(runStaleCursorInvokeHardeningSelftest(REPO) ? 0 : 1);
   } else if (p.cmd === "preflight-runtime-cleanup") {
     const dryOnly = argv.indexOf("--dry-run") >= 0;
     const pf = cap50PreflightRuntimeCleanup(dryOnly);
