@@ -44,6 +44,43 @@ function gitClean(repoRoot) {
   }
 }
 
+const CONTROLLED_RUNTIME_DIRTY_ALLOWLIST = new Set([
+  "silver_cursor_output.md",
+  "scripts/silver-cursor-agent-adapter-diagnostic-report.json",
+]);
+
+function repoRelKeyFromPorcelain(line) {
+  const t = String(line || "").trim();
+  if (!t) return "";
+  let rel = t;
+  if (t.startsWith("?? ")) rel = t.slice(3).trim();
+  else if (t.length >= 3 && t.charAt(2) === " ") rel = t.slice(3).trim();
+  else {
+    const sp = t.indexOf(" ");
+    if (sp >= 0) rel = t.slice(sp + 1).trim();
+  }
+  return rel.replace(/\\/g, "/").toLowerCase();
+}
+
+/** CAP50-aligned: probe-fresh handshake may leave only allowlisted runtime files dirty. */
+function gitCleanForControlledCap10(repoRoot, runtimeFresh) {
+  if (runtimeFresh.fresh !== "YES" || runtimeFresh.hint !== "probe_controlled_runtime_fresh") {
+    return gitClean(repoRoot);
+  }
+  try {
+    const po = runGit(repoRoot, ["-c", "core.quotePath=false", "status", "--porcelain"]);
+    if (po === "") return true;
+    for (const line of po.split(/\r?\n/)) {
+      const key = repoRelKeyFromPorcelain(line);
+      if (!key) continue;
+      if (!CONTROLLED_RUNTIME_DIRTY_ALLOWLIST.has(key)) return false;
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function whereExe(name) {
   try {
     const out = execFileSync("where.exe", [name], {
@@ -162,11 +199,35 @@ function parseAdapterMeta(text) {
   return out;
 }
 
+function isInvalidatedHandshakeStub(meta) {
+  const state = String(meta.adapter_output_state || "").trim();
+  if (state !== "INVALIDATED_AWAITING_CYCLE") return false;
+  const procStart = String(meta.process_start_utc || "").trim();
+  const exitCode = String(meta.exit_code || "").trim();
+  return !procStart && !exitCode;
+}
+
+/** Successful -Probe capture is authoritative for controlled-runtime handshake (orchestration only). */
+function isProbeControlledRuntimeFresh(meta) {
+  const state = String(meta.adapter_output_state || "").trim();
+  if (state !== "COMPLETED" && state !== "COMPLETE") return false;
+  if (String(meta.adapter_probe_pass || "").toUpperCase() !== "YES") return false;
+  const exitCode = String(meta.exit_code || "").trim();
+  if (exitCode && exitCode !== "0") return false;
+  if (!String(meta.process_start_utc || "").trim()) return false;
+  const taskFile = String(meta.task_file || "").trim();
+  if (taskFile && !/probe_inline/i.test(taskFile)) return false;
+  return true;
+}
+
 function evaluateRuntimeFreshness(cursorText, repoRoot) {
   const meta = parseAdapterMeta(cursorText);
   const state = String(meta.adapter_output_state || "").trim();
   if (state === "INVOKE_STARTED") {
     return { fresh: "NO", hint: "adapter_invoke_in_progress" };
+  }
+  if (isProbeControlledRuntimeFresh(meta)) {
+    return { fresh: "YES", hint: "probe_controlled_runtime_fresh" };
   }
   if (state === "INVALIDATED_AWAITING_CYCLE") {
     return { fresh: "NO", hint: "invalidated_awaiting_cycle" };
@@ -255,7 +316,8 @@ function readDiagnosticLanes(repoRoot) {
   };
 }
 
-function deriveCurrentState(cursorText, runtimeFresh) {
+function deriveCurrentState(cursorText, runtimeFresh, repoClean) {
+  if (repoClean === false) return "NOT_READY";
   const meta = parseAdapterMeta(cursorText);
   const state = String(meta.adapter_output_state || "").trim();
   if (state === "INVOKE_STARTED") return "RUNNING";
@@ -264,6 +326,7 @@ function deriveCurrentState(cursorText, runtimeFresh) {
     if (/timeout|not_terminal/i.test(runtimeFresh.hint)) return "STALE";
     return "STALE";
   }
+  if (isProbeControlledRuntimeFresh(meta)) return "READY";
   if (state === "COMPLETED" || state === "COMPLETE") {
     const exitCode = String(meta.exit_code || "").trim();
     if (exitCode && exitCode !== "0") return "FAILED";
@@ -312,8 +375,9 @@ function collectCursor3ExecutionStatus(repoRoot) {
   const cursorText = readTextSafe(path.join(root, "SILVER_CURSOR_OUTPUT.md"));
   const runtimeFresh = evaluateRuntimeFreshness(cursorText, root);
   const silverRuntimeFilesFresh = runtimeFresh.fresh;
-  const clean = gitClean(root);
-  const currentState = deriveCurrentState(cursorText, runtimeFresh);
+  const cleanStrict = gitClean(root);
+  const clean = gitCleanForControlledCap10(root, runtimeFresh);
+  const currentState = deriveCurrentState(cursorText, runtimeFresh, clean);
   let executionBridgeStatus = "FAIL";
   let reason = "";
   if (cursorCliAvailable !== "YES") {
@@ -352,7 +416,7 @@ function collectCursor3ExecutionStatus(repoRoot) {
     powershellBridgeUsable === "YES" &&
     silverRuntimeFilesFresh === "YES" &&
     executionBridgeStatus === "PASS" &&
-    (currentState === "STOPPED" || currentState === "SAFE_TO_START");
+    (currentState === "READY" || currentState === "STOPPED" || currentState === "SAFE_TO_START");
   const safeToStart = safeToStartBool ? "YES" : "NO";
   if (safeToStart === "NO" && executionBridgeStatus === "PASS" && reason.indexOf("ready") >= 0) {
     if (!clean) reason = "repo_not_clean";
@@ -415,10 +479,45 @@ function printCursor3ExecutionStatus(repoRoot) {
   return s.execution_bridge_status === "PASS" ? 0 : 1;
 }
 
+function runRuntimeFreshnessHandshakeSelftest(repoRoot) {
+  const failures = [];
+  const root = path.resolve(repoRoot || path.join(__dirname, ".."));
+  const probeFreshStub =
+    "# silver-cursor-agent-adapter\n" +
+    "adapter_output_state=COMPLETED\n" +
+    "adapter_probe_pass=YES\n" +
+    "exit_code=0\n" +
+    "process_start_utc=2026-05-21T12:00:00.0000000Z\n" +
+    "task_file=(probe_inline)\n" +
+    "# stdout\n" +
+    "CURSOR_AGENT_STDIN_OK\n\n";
+  const probeEval = evaluateRuntimeFreshness(probeFreshStub, root);
+  if (probeEval.fresh !== "YES") failures.push("probe_completed_expected_fresh_YES");
+  if (probeEval.hint !== "probe_controlled_runtime_fresh") {
+    failures.push("probe_completed_expected_hint_probe_controlled_runtime_fresh");
+  }
+  const probeState = deriveCurrentState(probeFreshStub, probeEval, true);
+  if (probeState !== "READY") failures.push("probe_completed_expected_current_state_READY");
+
+  const stubStale =
+    "# silver-cursor-agent-adapter\nadapter_output_state=INVALIDATED_AWAITING_CYCLE\n# stdout\n\n";
+  const staleEval = evaluateRuntimeFreshness(stubStale, root);
+  if (staleEval.fresh !== "NO") failures.push("stale_invalidated_expected_NO_fresh");
+  const staleState = deriveCurrentState(stubStale, staleEval, true);
+  if (staleState !== "STALE") failures.push("stale_invalidated_expected_current_state_STALE");
+
+  const dirtyState = deriveCurrentState(probeFreshStub, probeEval, false);
+  if (dirtyState !== "NOT_READY") failures.push("dirty_repo_expected_current_state_NOT_READY");
+
+  return failures;
+}
+
 function runCursor3ExecutionBridgeSelftest(repoRoot) {
   const failures = [];
   const root = path.resolve(repoRoot || path.join(__dirname, ".."));
   const s = collectCursor3ExecutionStatus(root);
+
+  for (const f of runRuntimeFreshnessHandshakeSelftest(root)) failures.push(f);
 
   if (s.cursor_cli_available !== "YES") failures.push("cursor_cli_available_expected_YES");
   if (s.cursor_agent_available !== "NO") failures.push("cursor_agent_available_expected_NO");
@@ -426,11 +525,6 @@ function runCursor3ExecutionBridgeSelftest(repoRoot) {
   if (!fs.existsSync(path.join(root, "scripts", "silver-cursor-agent-adapter.ps1"))) {
     failures.push("adapter_script_missing");
   }
-
-  const stubStale =
-    "# silver-cursor-agent-adapter\nadapter_output_state=INVALIDATED_AWAITING_CYCLE\n# stdout\n\n";
-  const freshEval = evaluateRuntimeFreshness(stubStale, root);
-  if (freshEval.fresh !== "NO") failures.push("stale_invalidated_expected_NO_fresh");
 
   const stubRunning = "# silver-cursor-agent-adapter\nadapter_output_state=INVOKE_STARTED\n# stdout\n\n";
   const runEval = evaluateRuntimeFreshness(stubRunning, root);
@@ -530,7 +624,10 @@ module.exports = {
   collectCursor3ExecutionStatus,
   printCursor3ExecutionStatus,
   runCursor3ExecutionBridgeSelftest,
+  runRuntimeFreshnessHandshakeSelftest,
   evaluateRuntimeFreshness,
+  isProbeControlledRuntimeFresh,
+  isInvalidatedHandshakeStub,
   detectCursor3,
 };
 

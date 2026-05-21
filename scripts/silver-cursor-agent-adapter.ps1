@@ -1199,7 +1199,7 @@ if ($StagedWatchdogMaxExtensions -lt 0) {
 
 $productTaskRun = (-not $Probe) -and (-not $Utf8CaptureProbe) -and (-not [string]::IsNullOrWhiteSpace($TaskFile))
 $autoMetaForTimeout = Get-SilverAutonomousRunMetaFromEnv
-if ($autoMetaForTimeout.run_id.Trim().Length -gt 0) {
+if ($autoMetaForTimeout.run_id.Trim().Length -gt 0 -and -not $Probe -and -not $Utf8CaptureProbe) {
   $productTaskRun = $true
 }
 $timeoutResolve = Resolve-SilverAutonomousAdapterTimeoutSeconds -RequestedTimeoutSeconds $TimeoutSeconds -Probe:($Probe -or $Utf8CaptureProbe) -ProductTaskRun:$productTaskRun
@@ -1400,7 +1400,9 @@ if ($WslUbuntuAgent) {
 
   $processStartUtcEarly = (Get-Date).ToUniversalTime().ToString("o")
   $taskDigestEarly = Get-TaskUtf8Sha256HexPrefix -Text $text -HexChars 16
-  Write-SilverAdapterCycleStartedEarlyMeta -Path $outAbs -TaskFile $taskAbs -OutputFile $outAbs -TaskDigest $taskDigestEarly -ProcessStartUtcIso $processStartUtcEarly
+  if (-not ($Probe -and [string]::IsNullOrWhiteSpace($taskAbs))) {
+    Write-SilverAdapterCycleStartedEarlyMeta -Path $outAbs -TaskFile $taskAbs -OutputFile $outAbs -TaskDigest $taskDigestEarly -ProcessStartUtcIso $processStartUtcEarly
+  }
 
   $tempPayloadWindows = Join-Path $env:TEMP ("silver-wsl-agent-payload-" + [guid]::NewGuid().ToString() + ".md")
   [System.IO.File]::WriteAllText($tempPayloadWindows, $text, $SilverUtf8NoBom)
@@ -1704,7 +1706,11 @@ watchdog_stop_reason=$watchdogStopReason
   Write-AdapterOutputFile -Path $outAbs -Meta $meta -Stdout $so -Stderr $se -ExtraBlock $extraWsl
   $wslAdapterOutputWritten = $true
 
-  $postWriteGate = Invoke-SilverCap50Utf8SurfacesHardGate -RepoRoot $RepoRoot -NextActionPath $taskAbs -CursorOutputPath $outAbs
+  $nextActionGatePath = $taskAbs
+  if ([string]::IsNullOrWhiteSpace($nextActionGatePath)) {
+    $nextActionGatePath = $outAbs
+  }
+  $postWriteGate = Invoke-SilverCap50Utf8SurfacesHardGate -RepoRoot $RepoRoot -NextActionPath $nextActionGatePath -CursorOutputPath $outAbs
   if ($postWriteGate.PASS_FAIL -ne "PASS") {
     $utf8HardFail = "YES"
     $utf8HardFailLocations = [string]$postWriteGate.utf8_mojibake_locations
