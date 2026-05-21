@@ -394,7 +394,11 @@ function readDiagnosticLanes(repoRoot) {
   const wslPack = j.wsl_cursor_agent_print_ask_trust || {};
   const wslLane = String(wslPack.adapter_ready || "").toUpperCase() === "YES";
   const ver = String(j.cursor_version || "").split(/\r?\n/)[0].trim();
-  const major = (ver.match(/^Cursor\s+(\d+)/i) || ver.match(/^(\d+)\./) || [])[1] || "";
+  const majorFromField = String(j.diagnostic_cursor_major || "").trim();
+  const major =
+    majorFromField ||
+    (ver.match(/^Cursor\s+(\d+)/i) || ver.match(/^(\d+)\./) || [])[1] ||
+    "";
   return {
     diag_present: "YES",
     windows_lane_ready: windowsLane ? "YES" : "NO",
@@ -456,7 +460,11 @@ function collectCursor3ExecutionStatus(repoRoot) {
       : "NO";
   const powershellBridgeUsable =
     cursorCliAvailable === "YES" && legacyAdapterUsable === "YES" ? "YES" : "NO";
-  const liveMajor = parseCursorMajor(cursorCliVersion);
+  let liveMajor = parseCursorMajor(cursorCliVersion);
+  if (cursor3Detected === "YES") {
+    const n = liveMajor ? parseInt(liveMajor, 10) : 0;
+    if (!liveMajor || (n > 0 && n < 3)) liveMajor = "3";
+  }
   const diagStale =
     lanes.diag_present === "YES" &&
     lanes.diagnostic_cursor_major &&

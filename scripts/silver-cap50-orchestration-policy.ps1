@@ -103,6 +103,176 @@ function Resolve-SilverCursorCommandAutonomousTimeout {
   }
 }
 
+function Get-SilverAdapterDiagnosticReportPath {
+  param([string]$RepoRoot)
+  return (Join-Path $RepoRoot "scripts\silver-cursor-agent-adapter-diagnostic-report.json")
+}
+
+function Read-SilverAdapterDiagnosticReportJson {
+  param([string]$RepoRoot)
+  $diagPath = Get-SilverAdapterDiagnosticReportPath -RepoRoot $RepoRoot
+  if (-not (Test-Path -LiteralPath $diagPath)) {
+    return $null
+  }
+  try {
+    $raw = [System.IO.File]::ReadAllText($diagPath)
+    return ($raw | ConvertFrom-Json)
+  }
+  catch {
+    return $null
+  }
+}
+
+function Get-SilverDiagnosticCursorMajorFromVersionText {
+  param(
+    [string]$VersionText,
+    [string]$Cursor3Detected = "NO"
+  )
+  $first = ($VersionText -split "`r?`n" | Select-Object -First 1).Trim()
+  if ($Cursor3Detected -eq "YES") {
+    if ($first -match '^Cursor\s+(\d+)') { return $Matches[1] }
+    return "3"
+  }
+  if ($first -match '^Cursor\s+(\d+)') { return $Matches[1] }
+  if ($first -match '^(\d+)\.') { return $Matches[1] }
+  return ""
+}
+
+function Build-SilverDefaultWslCursorCommandTemplate {
+  return 'powershell -NoProfile -ExecutionPolicy Bypass -File scripts/silver-cursor-agent-adapter.ps1 -WslUbuntuAgent -TaskFile {TASK_FILE} -OutputFile {OUTPUT_FILE} -TimeoutSeconds 120'
+}
+
+function Test-SilverCursorCommandTemplateValid {
+  param([string]$CursorCommand)
+  $cmd = ([string]$CursorCommand).Trim()
+  if ([string]::IsNullOrWhiteSpace($cmd)) {
+    return @{
+      valid = $false
+      reason = "cursor_command_empty"
+      has_task_file_token = "NO"
+      has_output_file_token = "NO"
+    }
+  }
+  $hasTask = if ($cmd.Contains("{TASK_FILE}")) { "YES" } else { "NO" }
+  $hasOut = if ($cmd.Contains("{OUTPUT_FILE}")) { "YES" } else { "NO" }
+  if ($hasTask -ne "YES" -or $hasOut -ne "YES") {
+    return @{
+      valid = $false
+      reason = "cursor_command_missing_task_or_output_token"
+      has_task_file_token = $hasTask
+      has_output_file_token = $hasOut
+    }
+  }
+  if ($cmd -notmatch '(?i)silver-cursor-agent-adapter\.ps1') {
+    return @{
+      valid = $false
+      reason = "cursor_command_must_invoke_silver_cursor_agent_adapter"
+      has_task_file_token = $hasTask
+      has_output_file_token = $hasOut
+    }
+  }
+  if ($cmd -match '(?i)silver-autopilot-loop\.ps1') {
+    return @{
+      valid = $false
+      reason = "cursor_command_must_not_invoke_silver_autopilot_loop"
+      has_task_file_token = $hasTask
+      has_output_file_token = $hasOut
+    }
+  }
+  if ($cmd -match '(?i)-ControlledCapProfile\s+(CAP25|CAP50)') {
+    return @{
+      valid = $false
+      reason = "cursor_command_forbidden_cap_profile"
+      has_task_file_token = $hasTask
+      has_output_file_token = $hasOut
+    }
+  }
+  return @{
+    valid = $true
+    reason = "ok"
+    has_task_file_token = $hasTask
+    has_output_file_token = $hasOut
+  }
+}
+
+function Resolve-SilverCursorCommandForControlledEntrypoint {
+  param(
+    [string]$RepoRoot,
+    [string]$CursorCommand,
+    [switch]$PreferWslLane
+  )
+  $explicit = ([string]$CursorCommand).Trim()
+  if (-not [string]::IsNullOrWhiteSpace($explicit)) {
+    $chkExplicit = Test-SilverCursorCommandTemplateValid -CursorCommand $explicit
+    if ($chkExplicit.valid) {
+      return @{
+        command = $explicit
+        source = "explicit_parameter"
+        adapter_ready = "UNKNOWN"
+        wsl_lane_ready = "UNKNOWN"
+        validation = $chkExplicit
+      }
+    }
+    return @{
+      command = ""
+      source = "explicit_parameter_rejected"
+      adapter_ready = "UNKNOWN"
+      wsl_lane_ready = "UNKNOWN"
+      validation = $chkExplicit
+    }
+  }
+  $diag = Read-SilverAdapterDiagnosticReportJson -RepoRoot $RepoRoot
+  $adapterReady = "UNKNOWN"
+  $wslReady = "NO"
+  $fromDiag = ""
+  if ($null -ne $diag) {
+    if ($null -ne $diag.adapter_ready) { $adapterReady = [string]$diag.adapter_ready }
+    if ($null -ne $diag.wsl_cursor_agent_print_ask_trust -and $null -ne $diag.wsl_cursor_agent_print_ask_trust.adapter_ready) {
+      $wslReady = [string]$diag.wsl_cursor_agent_print_ask_trust.adapter_ready
+    }
+    if (-not [string]::IsNullOrWhiteSpace([string]$diag.recommended_cursor_command_full_loop)) {
+      $fromDiag = [string]$diag.recommended_cursor_command_full_loop
+    }
+  }
+  $resolved = ""
+  $source = ""
+  if ($PreferWslLane -or ($wslReady -eq "YES")) {
+    if ($fromDiag -match '(?i)-WslUbuntuAgent') {
+      $resolved = $fromDiag
+      $source = "diagnostic_recommended_full_loop_wsl"
+    }
+    else {
+      $resolved = Build-SilverDefaultWslCursorCommandTemplate
+      $source = "default_wsl_template"
+    }
+  }
+  elseif (-not [string]::IsNullOrWhiteSpace($fromDiag)) {
+    $resolved = $fromDiag
+    $source = "diagnostic_recommended_full_loop"
+  }
+  else {
+    $resolved = Build-SilverDefaultWslCursorCommandTemplate
+    $source = "default_wsl_template_fallback"
+  }
+  $chk = Test-SilverCursorCommandTemplateValid -CursorCommand $resolved
+  if (-not $chk.valid) {
+    return @{
+      command = ""
+      source = $source
+      adapter_ready = $adapterReady
+      wsl_lane_ready = $wslReady
+      validation = $chk
+    }
+  }
+  return @{
+    command = $resolved
+    source = $source
+    adapter_ready = $adapterReady
+    wsl_lane_ready = $wslReady
+    validation = $chk
+  }
+}
+
 function Test-SilverCap50Utf8ProbeStrings {
   param([string]$Text)
   if ([string]::IsNullOrEmpty($Text)) { return $false }
