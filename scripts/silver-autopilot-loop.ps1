@@ -22,7 +22,7 @@
   With -MaxCycles 0, opts into controlled autonomous mode (still capped by hard max + other breakers).
 
 .PARAMETER AutonomousMode
-  Alias intent for -MaxCycles 0 (same as -AllowInfinite; both enable controlled autonomous mode).
+  Enables controlled autonomous mode; coerces -MaxCycles to 0 (same safety stack as -AllowInfinite with -MaxCycles 0).
 
 .PARAMETER MaxAutonomousHardCycles
   Hard ceiling for autonomous iterations when -MaxCycles 0 (0 = use env SILVER_AUTONOMOUS_HARD_MAX_CYCLES or default 512).
@@ -76,7 +76,8 @@ param(
   [switch]$AuditRegistrySelfTest,
   [switch]$NextActionQualityGateRegressionSelfTest,
   [switch]$AdapterMetaFreshnessSelfTest,
-  [switch]$Cap50RealAutonomousLifecycleOrderingSelfTest
+  [switch]$Cap50RealAutonomousLifecycleOrderingSelfTest,
+  [switch]$AutonomousRearmSelfTest
 )
 
 Set-StrictMode -Version 2
@@ -915,6 +916,76 @@ function Initialize-SilverAutonomousRunLifecycle {
   $env:SILVER_AUTONOMOUS_RUN_START_UTC = $runStartIso
   Remove-Item Env:\SILVER_AUTONOMOUS_CYCLE -ErrorAction SilentlyContinue
   Write-SilverCursorOutputInvalidatedStub -Path $CursorOutputPath -RunId $RunId -RunStartUtcIso $runStartIso -CycleState "pending" -RepoRoot $RepoRoot
+}
+
+function Test-SilverAutonomousAdapterOutputNeedsLifecycleRearm {
+  param(
+    [string]$CursorOutputPath,
+    [string]$ExpectedRunId
+  )
+  if ($ExpectedRunId.Trim().Length -eq 0) { return $false }
+  if (-not (Test-Path -LiteralPath $CursorOutputPath)) { return $true }
+  $meta = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $CursorOutputPath
+  if ($meta.Count -eq 0) { return $true }
+  $state = ""
+  if ($meta.ContainsKey("adapter_output_state")) { $state = [string]$meta["adapter_output_state"] }
+  $metaRun = ""
+  if ($meta.ContainsKey("autonomous_run_id")) { $metaRun = [string]$meta["autonomous_run_id"] }
+  if ($metaRun.Trim().Length -gt 0) {
+    if ($metaRun.Trim() -ne $ExpectedRunId.Trim()) { return $true }
+  }
+  $procStart = ""
+  if ($meta.ContainsKey("process_start_utc")) { $procStart = [string]$meta["process_start_utc"] }
+  if ($state -eq "INVALIDATED_AWAITING_CYCLE") {
+    if ($procStart.Trim().Length -eq 0) { return $true }
+  }
+  return $false
+}
+
+function Invoke-SilverAutonomousCycleRearm {
+  param(
+    [string]$RepoRoot,
+    [string]$CursorOutputPath,
+    [int]$Cycle
+  )
+  $wantRunId = [string]$script:SilverAutonomousRunId
+  if ($wantRunId.Trim().Length -eq 0) {
+    $wantRunId = ([guid]::NewGuid().ToString("N"))
+    Initialize-SilverAutonomousRunLifecycle -RunId $wantRunId -RunStartUtc ((Get-Date).ToUniversalTime()) -CursorOutputPath $CursorOutputPath -RepoRoot $RepoRoot
+  }
+  elseif (Test-SilverAutonomousAdapterOutputNeedsLifecycleRearm -CursorOutputPath $CursorOutputPath -ExpectedRunId $wantRunId) {
+    $wantRunId = ([guid]::NewGuid().ToString("N"))
+    Initialize-SilverAutonomousRunLifecycle -RunId $wantRunId -RunStartUtc ((Get-Date).ToUniversalTime()) -CursorOutputPath $CursorOutputPath -RepoRoot $RepoRoot
+  }
+  $env:SILVER_AUTONOMOUS_CYCLE = [string]$Cycle
+  $runStartIso = ""
+  if ($script:SilverAutonomousRunStartUtc -and ($script:SilverAutonomousRunStartUtc -ne [datetime]::MinValue)) {
+    $runStartIso = $script:SilverAutonomousRunStartUtc.ToString("o")
+  }
+  elseif ($env:SILVER_AUTONOMOUS_RUN_START_UTC) {
+    $runStartIso = [string]$env:SILVER_AUTONOMOUS_RUN_START_UTC
+  }
+  Write-SilverCursorOutputInvalidatedStub -Path $CursorOutputPath -RunId $script:SilverAutonomousRunId -RunStartUtcIso $runStartIso -CycleState ([string]$Cycle) -RepoRoot $RepoRoot
+  return @{
+    PASS_FAIL               = "PASS"
+    autonomous_run_id       = [string]$script:SilverAutonomousRunId
+    autonomous_cycle        = [string]$Cycle
+    adapter_output_state    = "INVALIDATED_AWAITING_CYCLE"
+    rearm_reason            = "post_preflight_cycle_handoff"
+  }
+}
+
+function Write-SilverAutonomousCycleRearmResultBlock {
+  param([hashtable]$Result)
+  Write-Host ""
+  Write-Host "=== SILVER_AUTONOMOUS_CYCLE_REARM ===" -ForegroundColor Cyan
+  Write-Host ("autonomous_run_id=" + [string]$Result.autonomous_run_id)
+  Write-Host ("autonomous_cycle=" + [string]$Result.autonomous_cycle)
+  Write-Host ("adapter_output_state=" + [string]$Result.adapter_output_state)
+  Write-Host ("rearm_reason=" + [string]$Result.rearm_reason)
+  Write-Host ("PASS_FAIL=" + [string]$Result.PASS_FAIL) -ForegroundColor $(if ([string]$Result.PASS_FAIL -eq "PASS") { "Green" } else { "Red" })
+  Write-Host "=== END_SILVER_AUTONOMOUS_CYCLE_REARM ===" -ForegroundColor Cyan
+  Write-Host ""
 }
 
 function Get-SilverAdapterMetaMismatchDiagnostics {
@@ -3459,6 +3530,7 @@ function Invoke-SilverCap50RealAutonomousLifecycleOrderingSelfTest {
   else {
     $lines = Get-Content -LiteralPath $loopPath
     $cleanupIdx = -1
+    $rearmIdx = -1
     $handoffIdx = -1
     $bridgeIdx = -1
     $outerTerminalIdx = -1
@@ -3467,6 +3539,7 @@ function Invoke-SilverCap50RealAutonomousLifecycleOrderingSelfTest {
     for ($i = 0; $i -lt $lines.Count; $i++) {
       $line = [string]$lines[$i]
       if ($line -match 'Reason = "after_autopilot_full_auto_loop"') { $cleanupIdx = $i }
+      if ($line -match 'Invoke-SilverAutonomousCycleRearm -RepoRoot \$RepoRoot') { $rearmIdx = $i }
       if ($line -match 'Invoke-SilverOrchestrationProductHandoffBridge') { $bridgeIdx = $i }
       if ($line -match 'product_task_handoff_missing') { $handoffIdx = $i }
       if ($line -match 'Write-SilverCursorOutputOuterWallTimeoutTerminal -Path \$CursorOutputPath') { $outerTerminalIdx = $i }
@@ -3475,6 +3548,9 @@ function Invoke-SilverCap50RealAutonomousLifecycleOrderingSelfTest {
     }
     if ($cleanupIdx -lt 0) {
       [void]$failures.Add("post_autopilot_cleanup_marker_missing")
+    }
+    if ($rearmIdx -lt 0) {
+      [void]$failures.Add("post_preflight_autonomous_rearm_marker_missing")
     }
     if ($handoffIdx -lt 0) {
       [void]$failures.Add("product_task_handoff_marker_missing")
@@ -3514,6 +3590,110 @@ function Invoke-SilverCap50RealAutonomousLifecycleOrderingSelfTest {
     return $false
   }
   Write-Host "SILVER_CAP50_REAL_AUTONOMOUS_LIFECYCLE_ORDERING_SELFTEST=PASS" -ForegroundColor Green
+  return $true
+}
+
+function Invoke-SilverAutonomousRearmSelfTest {
+  param([string]$RepoRoot)
+  $utf8 = New-Object System.Text.UTF8Encoding $false
+  $failures = New-Object System.Collections.Generic.List[string]
+  $td = Join-Path $env:TEMP ("silver-autonomous-rearm-selftest-" + [guid]::NewGuid().ToString("N"))
+  New-Item -ItemType Directory -Path $td -Force | Out-Null
+  $prevEa = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try {
+    Set-Location -LiteralPath $td
+    & git init 2>$null | Out-Null
+    & git config user.email "silver-rearm-selftest@local" 2>$null
+    & git config user.name "silver-rearm-selftest" 2>$null
+    [System.IO.File]::WriteAllText((Join-Path $td ".gitignore"), ".silver-runtime/`n", $utf8)
+    foreach ($n in @("SILVER_PROGRESS_LOG.md", "SILVER_NEXT_ACTION.md", "SILVER_CURSOR_OUTPUT.md", "SILVER_RUN_REPORT.md")) {
+      [System.IO.File]::WriteAllText((Join-Path $td $n), "# " + $n + "`n", $utf8)
+    }
+    & git add .gitignore SILVER_PROGRESS_LOG.md SILVER_NEXT_ACTION.md SILVER_CURSOR_OUTPUT.md SILVER_RUN_REPORT.md 2>$null
+    & git commit -m "init" 2>$null | Out-Null
+    $staleRun = "stale-run-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    $staleStart = "2026-05-18T09:48:28.3854633Z"
+    Write-SilverCursorOutputInvalidatedStub -Path (Join-Path $td "SILVER_CURSOR_OUTPUT.md") -RunId $staleRun -RunStartUtcIso $staleStart -CycleState "38" -RepoRoot $td
+    $script:SilverAutonomousRunId = ""
+    $script:SilverAutonomousRunStartUtc = [datetime]::MinValue
+    Remove-Item Env:\SILVER_AUTONOMOUS_RUN_ID -ErrorAction SilentlyContinue
+    Remove-Item Env:\SILVER_AUTONOMOUS_RUN_START_UTC -ErrorAction SilentlyContinue
+    Remove-Item Env:\SILVER_AUTONOMOUS_CYCLE -ErrorAction SilentlyContinue
+    $pf = Invoke-SilverCap50PreflightCleanup -RepoRoot $td
+    if ($pf.safe_to_start_cycle -ne "YES") {
+      [void]$failures.Add("preflight_safe_to_start_expected_YES")
+    }
+    $cursorOut = Join-Path $td "SILVER_CURSOR_OUTPUT.md"
+    $rearm = Invoke-SilverAutonomousCycleRearm -RepoRoot $td -CursorOutputPath $cursorOut -Cycle 1
+    if ([string]$rearm.PASS_FAIL -ne "PASS") {
+      [void]$failures.Add("rearm_PASS_FAIL_expected_PASS")
+    }
+    $metaRearm = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $cursorOut
+    if ([string]$metaRearm["adapter_output_state"] -ne "INVALIDATED_AWAITING_CYCLE") {
+      [void]$failures.Add("rearm_state_expected_INVALIDATED_AWAITING_CYCLE")
+    }
+    if ([string]$metaRearm["autonomous_cycle"] -ne "1") {
+      [void]$failures.Add("rearm_cycle_expected_1")
+    }
+    if ([string]$metaRearm["autonomous_run_id"] -eq $staleRun) {
+      [void]$failures.Add("rearm_run_id_must_not_remain_stale")
+    }
+    if ([string]$metaRearm["process_start_utc"].Trim().Length -gt 0) {
+      [void]$failures.Add("rearm_stub_process_start_must_be_empty_before_adapter")
+    }
+    $procStart = (Get-Date).ToUniversalTime()
+    $taskPath = Join-Path $td "SILVER_NEXT_ACTION.md"
+    $taskAbs = (Resolve-Path -LiteralPath $taskPath).Path
+    $outAbs = (Resolve-Path -LiteralPath $cursorOut).Path
+    $digest = Get-SilverTaskUtf8Sha256HexPrefix -Text "# SILVER_NEXT_ACTION.md`n"
+    $startIso = $procStart.ToString("o")
+    $endIso = $procStart.AddSeconds(5).ToString("o")
+    $completedBody = @"
+# silver-cursor-agent-adapter
+autonomous_run_id=$([string]$metaRearm["autonomous_run_id"])
+autonomous_run_start_utc=$([string]$metaRearm["autonomous_run_start_utc"])
+autonomous_cycle=1
+adapter_output_state=COMPLETED
+task_file=$taskAbs
+output_file=$outAbs
+task_digest=$digest
+process_start_utc=$startIso
+process_end_utc=$endIso
+exit_code=0
+timed_out=NO
+stdout_nonempty=YES
+
+# stdout
+selftest adapter flush ok
+
+# stderr
+
+"@
+    [System.IO.File]::WriteAllText($cursorOut, $completedBody, $utf8)
+    $boundary = Test-SilverAutonomousAdapterCompletionBoundary -AdapterOutputPath $outAbs -ProcessStartUtc $procStart -ExpectedTaskDigest $digest -ExpectedTaskFile $taskAbs -ExpectedOutputFile $outAbs -ExpectedRunId ([string]$metaRearm["autonomous_run_id"]) -ExpectedCycle "1" -ExpectedRunStartUtc ([string]$metaRearm["autonomous_run_start_utc"])
+    if ($boundary.PASS_FAIL -ne "PASS") {
+      [void]$failures.Add("post_flush_boundary_expected_PASS:" + [string]$boundary.lifecycle_block_reason)
+    }
+  }
+  finally {
+    $ErrorActionPreference = $prevEa
+    Set-Location -LiteralPath $RepoRoot
+    Remove-Item -LiteralPath $td -Recurse -Force -ErrorAction SilentlyContinue
+    $script:SilverAutonomousRunId = ""
+    $script:SilverAutonomousRunStartUtc = [datetime]::MinValue
+    Remove-Item Env:\SILVER_AUTONOMOUS_RUN_ID -ErrorAction SilentlyContinue
+    Remove-Item Env:\SILVER_AUTONOMOUS_RUN_START_UTC -ErrorAction SilentlyContinue
+    Remove-Item Env:\SILVER_AUTONOMOUS_CYCLE -ErrorAction SilentlyContinue
+  }
+  if ($failures.Count -gt 0) {
+    Write-Host "SILVER_AUTONOMOUS_REARM_SELFTEST=FAIL" -ForegroundColor Red
+    foreach ($f in $failures) { Write-Host $f -ForegroundColor Red }
+    return $false
+  }
+  Write-Host "SILVER_AUTONOMOUS_REARM_SELFTEST=PASS" -ForegroundColor Green
+  Write-Host "engine_changed=NO"
+  Write-Host "assets_app_changed=NO"
   return $true
 }
 
@@ -4524,6 +4704,10 @@ if (-not (Test-Path -LiteralPath $NextActionPath)) {
 }
 
 $autonomousOptIn = ($AllowInfinite -or $AutonomousMode)
+if ($AutonomousMode -and $MaxCycles -ne 0) {
+  Write-Host ("silver-autopilot-loop: AutonomousMode_implies_MaxCycles_0 coerced_from=" + [string]$MaxCycles) -ForegroundColor DarkCyan
+  $MaxCycles = 0
+}
 if ($MaxCycles -lt 0) {
   Write-Host "STOP: MaxCycles must be >= 0." -ForegroundColor Red
   exit 1
@@ -4590,6 +4774,12 @@ if ($AdapterMetaFreshnessSelfTest) {
 
 if ($Cap50RealAutonomousLifecycleOrderingSelfTest) {
   if (-not (Invoke-SilverCap50RealAutonomousLifecycleOrderingSelfTest)) { exit 1 }
+  exit 0
+}
+
+if ($AutonomousRearmSelfTest) {
+  $stRearm = Invoke-SilverAutonomousRearmSelfTest -RepoRoot $RepoRoot
+  if (-not $stRearm) { exit 1 }
   exit 0
 }
 
@@ -4868,6 +5058,11 @@ while ($true) {
     }
   }
 
+  if ($controlledInfinite -and ($preflightCap50.safe_to_start_cycle -eq "YES") -and (-not $DryRun)) {
+    $rearmPostPf = Invoke-SilverAutonomousCycleRearm -RepoRoot $RepoRoot -CursorOutputPath $CursorOutputPath -Cycle $cycle
+    Write-SilverAutonomousCycleRearmResultBlock -Result $rearmPostPf
+  }
+
   $cycleT0 = Get-Date
 
   $mainCommit = ""
@@ -5065,11 +5260,6 @@ while ($true) {
       $script:SilverCycleCursorProcessStartUtc = [datetime]::MinValue
       $script:SilverCycleExpectedTaskDigest = $expectedTaskDigest
       $script:SilverCycleExpectedTaskFile = $expectedTaskFile
-      if ($script:SilverAutonomousRunId) {
-        $runStartIsoInv = [string]$env:SILVER_AUTONOMOUS_RUN_START_UTC
-        Write-SilverCursorOutputInvalidatedStub -Path $CursorOutputPath -RunId $script:SilverAutonomousRunId -RunStartUtcIso $runStartIsoInv -CycleState ([string]$cycle) -RepoRoot $RepoRoot
-      }
-
       $psi = New-Object System.Diagnostics.ProcessStartInfo
       $psi.FileName = "cmd.exe"
       $psi.Arguments = "/c " + $resolvedCmd + " 1> """ + $stdoutTmp + """ 2> """ + $stderrTmp + """"
@@ -5240,12 +5430,9 @@ while ($true) {
           -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
           -StopReason $cursorStopReason
       }
-      if ($script:SilverAutonomousRunId) {
+      if ($script:SilverCycleCursorProcessStartUtc -ne [datetime]::MinValue) {
         $runCtxBoundary = Get-SilverAutonomousRunContext
         $boundaryProcStart = $script:SilverCycleCursorProcessStartUtc
-        if ($boundaryProcStart -eq [datetime]::MinValue) {
-          $boundaryProcStart = (Get-Date).ToUniversalTime()
-        }
         $boundaryOutAbs = $CursorOutputPath
         if (Test-Path -LiteralPath $CursorOutputPath) {
           $boundaryOutAbs = (Resolve-Path -LiteralPath $CursorOutputPath).Path
@@ -5262,6 +5449,9 @@ while ($true) {
         Write-Host ("silver-autopilot-loop: adapter_completion_boundary_PASS_FAIL=" + [string]$adapterBoundary.PASS_FAIL + " adapter_output_valid=" + [string]$adapterBoundary.adapter_output_valid + " adapter_meta_fresh=" + [string]$adapterBoundary.adapter_meta_fresh + " reason=" + [string]$adapterBoundary.lifecycle_block_reason) -ForegroundColor DarkCyan
         if ($adapterBoundary.PASS_FAIL -ne "PASS") {
           $boundaryReason = "adapter_completion_boundary_fail|" + [string]$adapterBoundary.lifecycle_block_reason
+          if ([string]$adapterBoundary.invalidated_awaiting_cycle -eq "YES") {
+            $boundaryReason = $boundaryReason + "|hint=adapter_never_flushed_after_rearm"
+          }
           Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
             -CursorExit $cursorExitStr -AutopilotExit "N/A" -StatusExit "N/A" `
             -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine $safetyPre `
