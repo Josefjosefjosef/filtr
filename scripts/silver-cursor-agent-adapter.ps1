@@ -970,6 +970,31 @@ function Invoke-CursorAgentCmdPipe {
   return @{ exit = $code; timedOut = $timedOut; stdout = $so; stderr = $se; inner_cmd = $inner; mode = $modeTok }
 }
 
+function Write-SilverAdapterCycleStartedEarlyMeta {
+  param(
+    [string]$Path,
+    [string]$TaskFile,
+    [string]$OutputFile,
+    [string]$TaskDigest,
+    [string]$ProcessStartUtcIso
+  )
+  $autoRunMeta = Get-SilverAutonomousRunMetaFromEnv
+  $meta = [ordered]@{
+    autonomous_run_id = $autoRunMeta.run_id
+    autonomous_cycle = $autoRunMeta.cycle
+    autonomous_run_start_utc = $autoRunMeta.run_start_utc
+    adapter_output_state = "INVOKE_STARTED"
+    adapter_completion_path = "adapter_process_started"
+    process_start_utc = $ProcessStartUtcIso
+    task_digest = $TaskDigest
+    task_file = $TaskFile
+    output_file = $OutputFile
+    exit_code = ""
+    elapsed_ms = ""
+  }
+  Write-AdapterOutputFile -Path $Path -Meta $meta -Stdout "" -Stderr "" -ExtraBlock ""
+}
+
 function Write-AdapterOutputFile {
   param(
     [string]$Path,
@@ -1289,6 +1314,10 @@ if ($WslUbuntuAgent) {
       exit 2
     }
   }
+
+  $processStartUtcEarly = (Get-Date).ToUniversalTime().ToString("o")
+  $taskDigestEarly = Get-TaskUtf8Sha256HexPrefix -Text $text -HexChars 16
+  Write-SilverAdapterCycleStartedEarlyMeta -Path $outAbs -TaskFile $taskAbs -OutputFile $outAbs -TaskDigest $taskDigestEarly -ProcessStartUtcIso $processStartUtcEarly
 
   $tempPayloadWindows = Join-Path $env:TEMP ("silver-wsl-agent-payload-" + [guid]::NewGuid().ToString() + ".md")
   [System.IO.File]::WriteAllText($tempPayloadWindows, $text, $SilverUtf8NoBom)
