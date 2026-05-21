@@ -47,6 +47,7 @@ param(
   [string]$WslDistro = "Ubuntu",
   [string]$WslAgentLinuxPath = "/home/spedk/.local/bin/agent",
   [string]$WslWorkspaceLinuxPath = "/mnt/c/projects/filtr",
+  [string]$WslAgentModel = "auto",
   [int]$MaxTimeoutSeconds = 0,
   [int]$StagedWatchdogSliceSeconds = 0,
   [int]$StagedWatchdogExtensionSeconds = 1800,
@@ -164,11 +165,31 @@ function Build-WslBashCExecRedirectScript {
   param(
     [string]$AgentPath,
     [string]$WorkspacePath,
-    [string]$TaskPathWsl
+    [string]$TaskPathWsl,
+    [string]$Model = "auto"
   )
+  $modelTok = ([string]$Model).Trim()
+  if ([string]::IsNullOrWhiteSpace($modelTok)) { $modelTok = "auto" }
+  if ($modelTok -match '[\s"''\\]') {
+    Write-Error ("WslAgentModel contains unsafe shell characters: " + $modelTok)
+    exit 4
+  }
   $tq = '"' + ($TaskPathWsl.Replace('"', '\"')) + '"'
-  $core = 'exec ' + $AgentPath + ' --print --trust --force --workspace ' + $WorkspacePath + ' <' + $tq
+  $core = 'exec ' + $AgentPath + ' --print --trust --force --model ' + $modelTok + ' --workspace ' + $WorkspacePath + ' <' + $tq
   return Add-SilverWslBashLocaleToScript -BashScript $core
+}
+
+function Get-WslCursorAgentFailureClassFromStderr {
+  param(
+    [string]$Stderr,
+    [int]$ExitCode
+  )
+  if ($ExitCode -eq 0) { return "" }
+  $s = ([string]$Stderr).ToLowerInvariant()
+  if ($s.Contains("named models unavailable") -or $s.Contains("free plans can only use auto")) {
+    return "cursor_plan_model_restriction"
+  }
+  return "cursor_agent_runtime"
 }
 
 function Resolve-RepoPath {
@@ -1240,6 +1261,7 @@ if ($WslUbuntuAgent) {
     Write-Host ("wsl_distro=" + $WslDistro)
     Write-Host ("wsl_agent_path=" + $WslAgentLinuxPath)
     Write-Host ("wsl_workspace=" + $WslWorkspaceLinuxPath)
+    Write-Host ("wsl_agent_model=" + $WslAgentModel)
     Write-Host ("invocation_mode=wsl_bash_c_file_redirect")
     Write-Host ("argv_mode=wsl_bash_c_exec_redirect")
     Write-Host ("wsl_prompt_delivery=bash_file_redirect")
@@ -1271,7 +1293,7 @@ if ($WslUbuntuAgent) {
   $tempPayloadWindows = Join-Path $env:TEMP ("silver-wsl-agent-payload-" + [guid]::NewGuid().ToString() + ".md")
   [System.IO.File]::WriteAllText($tempPayloadWindows, $text, $SilverUtf8NoBom)
   $wslTaskUnix = Convert-WindowsPathToWslPath -WindowsPath $tempPayloadWindows
-  $bashScript = Build-WslBashCExecRedirectScript -AgentPath $WslAgentLinuxPath -WorkspacePath $WslWorkspaceLinuxPath -TaskPathWsl $wslTaskUnix
+  $bashScript = Build-WslBashCExecRedirectScript -AgentPath $WslAgentLinuxPath -WorkspacePath $WslWorkspaceLinuxPath -TaskPathWsl $wslTaskUnix -Model $WslAgentModel
   $linuxArgv = @("/bin/bash", "-c", $bashScript)
   $r = @{ exit = 255; timedOut = $false; stdout = ""; stderr = "" }
   $verLine = ""
@@ -1331,6 +1353,7 @@ if ($WslUbuntuAgent) {
   $shellExitNoise = Test-WslAdapterShellExitNoise -WslExit $wslShellExit -TimedOut $toFlag -StdoutBytes $stdoutBytes -StderrBytes $stderrBytes -StderrShellLeak $stderrShellLeak
   $authoritativeExit = Resolve-WslAdapterAuthoritativeExitCode -WslExit $wslShellExit -ShellExitNoise $shellExitNoise -TimedOut $toFlag
   $exitCode = $authoritativeExit
+  $cursorAgentFailureClass = Get-WslCursorAgentFailureClassFromStderr -Stderr $se -ExitCode $exitCode
   $shellNoiseReconciled = $(if ($shellExitNoise) { "YES" } else { "NO" })
   $stdoutNonempty = $(if ($stdoutBytes -gt 0) { "YES" } else { "NO" })
   $stderrNonempty = $(if ($stderrBytes -gt 0) { "YES" } else { "NO" })
@@ -1501,6 +1524,8 @@ watchdog_stop_reason=$watchdogStopReason
     wsl_distro = $WslDistro
     wsl_agent_linux_path = $WslAgentLinuxPath
     wsl_workspace_linux_path = $WslWorkspaceLinuxPath
+    wsl_agent_model = ([string]$WslAgentModel).Trim()
+    cursor_agent_failure_class = $cursorAgentFailureClass
     cursor_agent_exe = "wsl.exe"
     cursor_version_exe = $WslAgentLinuxPath
     cursor_version = $verLine
