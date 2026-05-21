@@ -10,6 +10,12 @@ const path = require("path");
 const { execFileSync, spawnSync } = require("child_process");
 const { resolveCapRuntimeHandoff } = require("./silver-audit-registry.cjs");
 const { isGenericOrchestrationHandoff, CLUSTER_PRODUCT_TASK_SPEC } = require("./silver-next-action-planner-handoff.cjs");
+const {
+  resolveAuthoritativeSelectorCluster,
+  establishClusterLock,
+  releaseClusterLockForOutcome,
+  branchMatchesLockedCluster,
+} = require("./silver-cluster-consistency-lock.cjs");
 
 const REPO = path.resolve(__dirname, "..");
 
@@ -75,19 +81,7 @@ function isRuntimeTransientReport(n) {
 }
 
 function pickSelectorCluster(repoRoot, explicit) {
-  if (arguments.length >= 2 && explicit !== undefined && explicit !== null) {
-    const c = String(explicit).trim();
-    if (c === "(žádný)" || c === "(unknown)") return "";
-    return c;
-  }
-  try {
-    const handoff = resolveCapRuntimeHandoff(repoRoot || REPO, {});
-    const cd = handoff && handoff.cluster_diag;
-    if (cd && cd.cluster) return String(cd.cluster).trim();
-  } catch {
-    /* ignore */
-  }
-  return "";
+  return resolveAuthoritativeSelectorCluster(repoRoot || REPO, explicit);
 }
 
 function defaultSafetyCounters() {
@@ -427,6 +421,7 @@ function resolveProductCloseoutPath(classification, opts) {
       if (!pr.ok) proofOk = false;
     }
     if (!proofOk && !dryRun) {
+      releaseClusterLockForOutcome(repoRoot, "NO_SAFE_FIX");
       return {
         final_outcome: "NO_SAFE_FIX",
         closeout_action: "revert_dirty",
@@ -435,6 +430,25 @@ function resolveProductCloseoutPath(classification, opts) {
         product_fix_created: "NO",
         scripts_only_product_work: "NO",
       };
+    }
+    if (!dryRun) {
+      const branchCheck = branchMatchesLockedCluster(repoRoot, null);
+      if (!branchCheck.ok) {
+        return {
+          final_outcome: "SAFE_BLOCKED",
+          closeout_action: "branch_cluster_mismatch",
+          PASS_FAIL: "PASS",
+          product_fix_created: "NO",
+          cluster_lock_branch_mismatch: "YES",
+        };
+      }
+      establishClusterLock(repoRoot, {
+        authoritative_cluster: c.selector_cluster,
+        lock_reason: "product_fix_created",
+        branch_prefix: c.branch_prefix,
+        product_fix_created: "YES",
+        valid_product_work: "YES",
+      });
     }
     return {
       final_outcome: "PR_READY",
@@ -446,10 +460,12 @@ function resolveProductCloseoutPath(classification, opts) {
       branch_prefix: c.branch_prefix || "fix/cluster-harness",
       pr_title: c.pr_title || "fix: cluster harness alignment",
       generic_handoff_blocked: "YES",
+      cluster_lock_active: "YES",
     };
   }
 
   if (c.classification === "SAFE_BLOCKED") {
+    releaseClusterLockForOutcome(repoRoot, "SAFE_BLOCKED");
     return {
       final_outcome: "SAFE_BLOCKED",
       closeout_action: "revert_dirty",
@@ -459,6 +475,7 @@ function resolveProductCloseoutPath(classification, opts) {
   }
 
   if (c.classification === "FORBIDDEN_DIRTY") {
+    releaseClusterLockForOutcome(repoRoot, "HARD_FAIL");
     return {
       final_outcome: "HARD_FAIL",
       closeout_action: "blocked",
