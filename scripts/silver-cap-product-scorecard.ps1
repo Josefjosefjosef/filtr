@@ -236,6 +236,42 @@ function Complete-SilverCapProductScorecard {
     Write-Host ("exact_error=" + $exactErr)
     Write-Host "recommended_next_task=fix scorecard runtime error before any CAP retry"
     Write-Host "=== END_SILVER_SCORECARD_RUNTIME_HARD_STOP ===" -ForegroundColor Red
+    $autopilotScript = Join-Path $RepoRoot "scripts\silver-autopilot.cjs"
+    if (Test-Path -LiteralPath $autopilotScript) {
+      $enforceArgs = @(
+        $autopilotScript,
+        "--enforce-scorecard-runtime-next-action-md",
+        ("--exact-error=" + $exactErr)
+      )
+      $enforcePsi = New-Object System.Diagnostics.ProcessStartInfo
+      $enforcePsi.FileName = "node"
+      $parts = New-Object System.Collections.ArrayList
+      foreach ($arg in $enforceArgs) {
+        $a = [string]$arg
+        if ($a.IndexOf(" ") -ge 0) {
+          [void]$parts.Add(('"' + $a.Replace('"', '""') + '"'))
+        } else {
+          [void]$parts.Add($a)
+        }
+      }
+      $enforcePsi.Arguments = [string]::Join(" ", $parts.ToArray())
+      $enforcePsi.WorkingDirectory = $RepoRoot
+      $enforcePsi.RedirectStandardOutput = $true
+      $enforcePsi.RedirectStandardError = $true
+      $enforcePsi.UseShellExecute = $false
+      $enforcePsi.CreateNoWindow = $true
+      $ep = [System.Diagnostics.Process]::Start($enforcePsi)
+      $enforceOut = $ep.StandardOutput.ReadToEnd()
+      $enforceErr = $ep.StandardError.ReadToEnd()
+      $ep.WaitForExit()
+      if ($enforceOut) { Write-Host $enforceOut }
+      if ($enforceErr) { Write-Host $enforceErr -ForegroundColor DarkYellow }
+      if ($ep.ExitCode -ne 0) {
+        Write-Host "silver-cap-scorecard: scorecard_runtime_next_action_enforce=FAIL" -ForegroundColor Red
+      } else {
+        Write-Host "silver-cap-scorecard: scorecard_runtime_next_action_enforce=PASS" -ForegroundColor DarkCyan
+      }
+    }
   }
 
   $czechBlock = ""

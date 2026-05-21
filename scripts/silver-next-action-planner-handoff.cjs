@@ -987,6 +987,49 @@ function buildClusterHandoffForHealthyPlanner(ctx) {
  * }} ctx
  * @returns {{ body: string, mode: string, cluster: string }}
  */
+function buildScorecardRuntimeErrorNextAction(opts) {
+  const exact = String((opts && opts.exact_error) || "scorecard runtime error").trim();
+  const forcedCmd = String(
+    (opts && opts.forced_command) || "node scripts/silver-cap-product-scorecard.cjs selftest",
+  ).trim();
+  const header =
+    "<!-- SILVER_NEXT_ACTION: scorecard-runtime-error-forced-outcome; copy-paste for Cursor; not auto-applied -->\n\n" +
+    "ÚKOL PRO CURSOR — infoUzel.cz / Silver — SCORECARD RUNTIME FIX\n\n";
+  const body = [
+    "### STOP — scorecard finalize runtime error (deterministic forced outcome)",
+    "",
+    "- SCORECARD_RUNTIME_ERROR=YES",
+    "- HARD_STOP_FORCED_OUTCOME_REQUIRED=YES",
+    "- next_cap_blind_retry_blocked=YES",
+    "- exact_error=" + exact,
+    "- forced_outcome_task_type=scorecard_runtime_fix",
+    "",
+    "### Povinný důkaz (bez CAP běhu)",
+    "",
+    "```",
+    forcedCmd,
+    "node scripts/silver-autopilot.cjs --scorecard-finalize-runtime-selftest",
+    "node scripts/silver-autopilot.cjs --scorecard-runreport-regression-selftest",
+    "node scripts/silver-autopilot.cjs --forced-scorecard-runtime-error-outcome-selftest",
+    "node scripts/silver-autopilot.cjs --generic-handoff-after-scorecard-error-blocker-selftest",
+    "```",
+    "",
+    "### Scope guard",
+    "- Žádný CAP10/CAP15/CAP25/CAP50 běh před PASS selftestů.",
+    "- Zakázáno: obecný git/gh workflow (repo audit push, gh přihlášení) jako hlavní úkol.",
+    "- engine_changed=NO; assets_app_changed=NO.",
+    "",
+    "### Povinný výsledek",
+    "",
+    "```",
+    "SCORECARD_RUNTIME_FIX_PASS=YES/NO",
+    "repo_clean=YES/NO",
+    "=== END_SCORECARD_RUNTIME_FIX_RESULT ===",
+    "```",
+  ].join("\n");
+  return header + body;
+}
+
 function generateAutonomousPlannedHandoff(ctx) {
   const repoRoot = (ctx && ctx.repoRoot) || REPO;
   const main = String((ctx && ctx.mainCommit) || "").trim();
@@ -995,6 +1038,17 @@ function generateAutonomousPlannedHandoff(ctx) {
     !!(pctx.guardBlocked || pctx.safetyBlocked || pctx.dirtyBlocked) || !!(ctx && ctx.preferRuntimeBlocked);
   const blockReason = String((ctx && ctx.blockReason) || "NO_SAFE_PRODUCT_CLUSTER").trim();
   const stop = String((ctx && ctx.stopReason) || "").trim();
+
+  if (/SCORECARD_RUNTIME|scorecard_runtime/i.test(blockReason)) {
+    return {
+      body: buildScorecardRuntimeErrorNextAction({
+        exact_error: (ctx && ctx.exact_error) || stop || "scorecard runtime error",
+        forced_command: (ctx && ctx.forced_command) || undefined,
+      }),
+      mode: "SCORECARD_RUNTIME_FIX",
+      cluster: "(runtime)",
+    };
+  }
 
   if (unhealthy) {
     if (/stale_cursor_invoke|stale_invoke|cursor_exit.?125|CURSOR_PROCESS_ALIVE_BUT_NO_OUTPUT/i.test(stop)) {
@@ -1388,6 +1442,7 @@ module.exports = {
   isValidProductClusterName,
   buildNoSafeProductClusterBlockedHandoff,
   buildStaleCursorInvokeRuntimeBlockedHandoff,
+  buildScorecardRuntimeErrorNextAction,
   capDiagnosticFlowActive,
   silverNextActionMatchesSelectorCluster,
   silverNextActionHasClusterWorkflow,

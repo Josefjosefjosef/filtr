@@ -24,6 +24,8 @@ const {
   buildCapDiagnosticProductHandoff,
   buildNoSafeProductClusterBlockedHandoff,
   buildStaleCursorInvokeRuntimeBlockedHandoff,
+  buildScorecardRuntimeErrorNextAction,
+  isGenericOrchestrationHandoff,
   isGenericRepoGitMaintenanceWorkflow,
   isValidProductClusterName,
   pickClusterFromAuditRegistry,
@@ -303,7 +305,11 @@ function classifyCap50CloseoutFromDirtyPaths(paths, opts) {
     safetyCounters: o.safetyCounters,
     trueEngineFail: o.trueEngineFail,
   });
-  if (vpwClass.closeout_kind === "valid_product_work" || vpwClass.closeout_kind === "forbidden_product_dirty") {
+  if (
+    vpwClass.closeout_kind === "valid_product_work" ||
+    vpwClass.closeout_kind === "forbidden_product_dirty" ||
+    vpwClass.closeout_kind === "partial_product_work_dirty"
+  ) {
     return {
       closeout_kind: vpwClass.closeout_kind,
       blocked_dirty_classification: vpwClass.blocked_dirty_classification || "",
@@ -4207,6 +4213,27 @@ function cmdSanitizeNextActionMd(argvCommand) {
   return 0;
 }
 
+function cmdEnforceScorecardRuntimeNextActionMd(argv) {
+  const exactArg = (argv || []).find((a) => String(a).startsWith("--exact-error="));
+  const exact = exactArg ? String(exactArg).slice("--exact-error=".length).trim() : "scorecard runtime error";
+  const body = buildScorecardRuntimeErrorNextAction({ exact_error: exact });
+  writeUtf8FileNoBom(NEXT_ACTION, body);
+  const afterViolations = [
+    ...silverNextActionQualityViolations(body, { requireProductCluster: false }),
+    ...nextActionInnerQualityViolations(body),
+  ];
+  if (afterViolations.length) {
+    console.log("SILVER_SCORECARD_RUNTIME_NEXT_ACTION_ENFORCE=FAIL " + afterViolations.join(";"));
+    return 1;
+  }
+  if (isGenericRepoGitMaintenanceWorkflow(body) || isGenericOrchestrationHandoff(body)) {
+    console.log("SILVER_SCORECARD_RUNTIME_NEXT_ACTION_ENFORCE=FAIL still_generic");
+    return 1;
+  }
+  console.log("SILVER_SCORECARD_RUNTIME_NEXT_ACTION_ENFORCE=PASS exact_error=" + exact);
+  return 0;
+}
+
 function cmdEnforceRuntimeNextActionAfterFailure(argv) {
   const stopReason =
     (argv || []).find((a) => String(a).startsWith("--stop-reason=")) || "";
@@ -4409,6 +4436,15 @@ function parseArgs(argv) {
     else if (a === "--ask-model") out.cmd = "ask-model";
     else if (a === "--sanitize-next-action-md") out.cmd = "sanitize-next-action-md";
     else if (a === "--enforce-runtime-next-action-md") out.cmd = "enforce-runtime-next-action-md";
+    else if (a === "--enforce-scorecard-runtime-next-action-md") out.cmd = "enforce-scorecard-runtime-next-action-md";
+    else if (a === "--scorecard-runreport-regression-selftest")
+      out.cmd = "scorecard-runreport-regression-selftest";
+    else if (a === "--forced-scorecard-runtime-error-outcome-selftest")
+      out.cmd = "forced-scorecard-runtime-error-outcome-selftest";
+    else if (a === "--partial-product-dirty-closeout-selftest")
+      out.cmd = "partial-product-dirty-closeout-selftest";
+    else if (a === "--generic-handoff-after-scorecard-error-blocker-selftest")
+      out.cmd = "generic-handoff-after-scorecard-error-blocker-selftest";
     else if (a === "--stale-cursor-invoke-runtime-closeout-selftest")
       out.cmd = "stale-cursor-invoke-runtime-closeout-selftest";
     else if (a === "--runtime-enforce-safe-blocked-contract-selftest")
@@ -4472,7 +4508,21 @@ if (require.main === module) {
   else if (p.cmd === "ask-model") await cmdAskModel();
   else if (p.cmd === "sanitize-next-action-md") exitCode = cmdSanitizeNextActionMd("--sanitize-next-action-md");
   else if (p.cmd === "enforce-runtime-next-action-md") exitCode = cmdEnforceRuntimeNextActionAfterFailure(argv);
-  else if (p.cmd === "stale-cursor-invoke-runtime-closeout-selftest") {
+  else if (p.cmd === "enforce-scorecard-runtime-next-action-md") {
+    process.exit(cmdEnforceScorecardRuntimeNextActionMd(argv));
+  } else if (p.cmd === "scorecard-runreport-regression-selftest") {
+    const { runScorecardRunreportRegressionSelftest } = require("./silver-scorecard-runtime-governance.cjs");
+    process.exit(runScorecardRunreportRegressionSelftest() ? 0 : 1);
+  } else if (p.cmd === "forced-scorecard-runtime-error-outcome-selftest") {
+    const { runForcedScorecardRuntimeErrorOutcomeSelftest } = require("./silver-scorecard-runtime-governance.cjs");
+    process.exit(runForcedScorecardRuntimeErrorOutcomeSelftest() ? 0 : 1);
+  } else if (p.cmd === "partial-product-dirty-closeout-selftest") {
+    const { runPartialProductDirtyCloseoutSelftest } = require("./silver-scorecard-runtime-governance.cjs");
+    process.exit(runPartialProductDirtyCloseoutSelftest() ? 0 : 1);
+  } else if (p.cmd === "generic-handoff-after-scorecard-error-blocker-selftest") {
+    const { runGenericHandoffAfterScorecardErrorBlockerSelftest } = require("./silver-scorecard-runtime-governance.cjs");
+    process.exit(runGenericHandoffAfterScorecardErrorBlockerSelftest() ? 0 : 1);
+  } else if (p.cmd === "stale-cursor-invoke-runtime-closeout-selftest") {
     process.exit(runStaleCursorInvokeRuntimeCloseoutSelftest(REPO) ? 0 : 1);
   } else if (p.cmd === "runtime-enforce-safe-blocked-contract-selftest") {
     process.exit(runRuntimeEnforceSafeBlockedContractSelftest(REPO) ? 0 : 1);
