@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-21T05:54:40.511075Z",
+  "ingestedAt": "2026-05-21T06:34:28.770167Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Čistý zisk společnosti Nvidia se za uplynulé čtvrtletí ztrojnásobil",
+      "url": "https://byznys.hn.cz/c1-67879850-cisty-zisk-spolecnosti-nvidia-se-za-uplynule-ctvrtleti-ztrojnasobil",
+      "dt": "2026-05-21T05:50:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "nvidia",
+        "společnosti",
+        "uplynulé",
+        "zisk",
+        "ztrojnásobil",
+        "čistý",
+        "čtvrtletí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -120,7 +144,7 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Muskův SpaceX oficiálně míří na burzu, OpenAI jej údajně chce následovat během velmi krátké doby",
+      "title": "Muskova SpaceX oficiálně míří na burzu, OpenAI ji údajně chce následovat během velmi krátké doby",
       "url": "https://byznys.hn.cz/c1-67879760-muskuv-spacex-oficialne-miri-na-burzu-openai-jej-udajne-chce-nasledovat-behem-velmi-kratke-doby",
       "dt": "2026-05-21T03:08:00Z",
       "media_raw": "HN / Ekonomika",
@@ -130,9 +154,8 @@
         "během",
         "chce",
         "doby",
-        "jej",
         "krátké",
-        "muskův",
+        "muskova",
         "míří",
         "následovat",
         "oficiálně",
@@ -1139,36 +1162,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "V zahraničí budeme za osly. Hrozí fentanylová krize, varuje Bém po rozprášení protidrogového týmu z Úřadu vlády",
-      "url": "https://domaci.hn.cz/c1-67879080-v-zahranici-budeme-za-osly-hrozi-fentanylova-krize-varuje-bem-po-rozpraseni-protidrogoveho-tymu-z-uradu-vlady",
-      "dt": "2026-05-20T06:45:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "budeme",
-        "bém",
-        "fentanylová",
-        "hrozí",
-        "krize",
-        "osly",
-        "protidrogového",
-        "rozprášení",
-        "týmu",
-        "varuje",
-        "vlády",
-        "zahraničí",
-        "úřadu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1179,7 +1172,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183041,
+      "bytes": 182762,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1216,11 +1209,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-21T05:43:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-21T05:50:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 7,
           "finance": 31,
+          "zpravy": 7,
           "zdravi": 2
         },
         "drop_counts": {
@@ -1233,6 +1226,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Čistý zisk společnosti Nvidia se za uplynulé čtvrtletí ztrojnásobil",
+            "publishedAt": "2026-05-21T05:50:00Z"
+          },
           {
             "title": "Bez eskalace se to neobejde, říká Trump. Spojené státy obvinily dlouholetého lídra Kuby Raúla Castra ze čtyřnásobné vraždy",
             "publishedAt": "2026-05-21T05:43:00Z"
@@ -1250,7 +1247,7 @@
             "publishedAt": "2026-05-21T04:46:00Z"
           },
           {
-            "title": "Muskův SpaceX oficiálně míří na burzu, OpenAI jej údajně chce následovat během velmi krátké doby",
+            "title": "Muskova SpaceX oficiálně míří na burzu, OpenAI ji údajně chce následovat během velmi krátké doby",
             "publishedAt": "2026-05-21T03:08:00Z"
           },
           {
@@ -1259,10 +1256,6 @@
           },
           {
             "title": "Bankovní asociace zhoršila odhad růstu české ekonomiky",
-            "publishedAt": "2026-05-20T22:00:00Z"
-          },
-          {
-            "title": "Lidé už objednali víc dluhopisů, než ministerstvo čekalo",
             "publishedAt": "2026-05-20T22:00:00Z"
           }
         ]

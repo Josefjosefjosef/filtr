@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-21T05:54:40.511075Z",
+  "ingestedAt": "2026-05-21T06:34:28.770167Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Starají se nonstop, sami bez pomoci. Co se stane, když vyhoří armáda neformálních pečujících?",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/neformalni-pecujici-podcast/",
+      "dt": "2026-05-21T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "armáda",
+        "když",
+        "neformálních",
+        "nonstop",
+        "pečujících",
+        "pomoci",
+        "sami",
+        "stane",
+        "starají",
+        "vyhoří"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -247,33 +274,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Hazard s odolnými bakteriemi: Tisíce českých praktiků dostaly varování kvůli antibiotikům",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/praktici-varovani-spatne-predepisovani-antibiotik/",
-      "dt": "2026-05-20T06:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "antibiotikům",
-        "bakteriemi",
-        "dostaly",
-        "hazard",
-        "kvůli",
-        "odolnými",
-        "praktiků",
-        "tisíce",
-        "varování",
-        "českých"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -284,7 +284,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 108931,
+      "bytes": 100016,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -321,7 +321,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-21T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-21T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -337,6 +337,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Starají se nonstop, sami bez pomoci. Co se stane, když vyhoří armáda neformálních pečujících?",
+            "publishedAt": "2026-05-21T06:00:00Z"
+          },
           {
             "title": "Přidají zinek a napíšou „imunita“. U doplňků stravy se řiďte selským rozumem, radí Suchopár",
             "publishedAt": "2026-05-21T05:00:00Z"
@@ -364,10 +368,6 @@
           {
             "title": "Kompletně oddělen od světa. Vojtěch odhalil detaily pobytu Američana s podezřením na ebolu",
             "publishedAt": "2026-05-20T09:22:59Z"
-          },
-          {
-            "title": "Prymula varuje před ebolou: Sledovat by se měli všichni, kdo se teď vracejí z Konga a Ugandy",
-            "publishedAt": "2026-05-20T07:55:33Z"
           }
         ]
       }

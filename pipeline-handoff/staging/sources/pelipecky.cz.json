@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "pelipecky.cz",
-  "ingestedAt": "2026-05-21T05:54:40.511075Z",
+  "ingestedAt": "2026-05-21T06:34:28.770167Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "LAST MINUTE: Korfu s All Inclusive a odletem z Prahy za 7 990 Kč",
+      "url": "https://pelipecky.cz/pobyt-letenky-last-minute-korfu-s-all-inclusive/",
+      "dt": "2026-05-21T06:26:03Z",
+      "media_raw": "Pelipecky",
+      "media_norm": "Pelipecky",
+      "tokens": [
+        "990",
+        "all",
+        "inclusive",
+        "korfu",
+        "last",
+        "minute",
+        "odletem",
+        "prahy"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_pelipecky",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "pelipecky.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -238,30 +263,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "pelipecky.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "POBYT DNE: Kanárská Fuerteventura ve 4* resortu s polopenzí za 10 490 Kč",
-      "url": "https://pelipecky.cz/pobyt-letenky-fuerteventura-r2-calma-hotel/",
-      "dt": "2026-05-12T16:16:38Z",
-      "media_raw": "Pelipecky",
-      "media_norm": "Pelipecky",
-      "tokens": [
-        "490",
-        "dne",
-        "fuerteventura",
-        "kanárská",
-        "pobyt",
-        "polopenzí",
-        "resortu"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_pelipecky",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "pelipecky.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -272,7 +273,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://pelipecky.cz/feed/",
-      "bytes": 109963,
+      "bytes": 109323,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -309,7 +310,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-20T13:08:31Z",
+        "raw_feed_latest_publishedAt": "2026-05-21T06:26:03Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "cestovani": 10
@@ -324,6 +325,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "LAST MINUTE: Korfu s All Inclusive a odletem z Prahy za 7 990 Kč",
+            "publishedAt": "2026-05-21T06:26:03Z"
+          },
           {
             "title": "Leť s 5* Qatar Airways! Letenky z Prahy od 14 290 Kč: Thajsko, Indonésie, Filipíny, Maledivy a další!",
             "publishedAt": "2026-05-20T13:08:31Z"
@@ -351,10 +356,6 @@
           {
             "title": "Konec značky Asiana Airlines. Korean Air dokončí historickou fúzi po šesti letech.",
             "publishedAt": "2026-05-15T16:30:00Z"
-          },
-          {
-            "title": "Co nevynechat při návštěvě Miami? Letenky za 12 490 Kč",
-            "publishedAt": "2026-05-15T11:13:44Z"
           }
         ]
       }

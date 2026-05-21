@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-21T05:54:40.511075Z",
+  "ingestedAt": "2026-05-21T06:34:28.770167Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jen vyšší finanční dávky porodnost v Česku nezvýší",
+      "url": "https://profitonline.cz/jen-vyssi-financni-davky-porodnost-v-cesku-nezvysi/",
+      "dt": "2026-05-21T06:00:58Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dávky",
+        "finanční",
+        "jen",
+        "nezvýší",
+        "porodnost",
+        "vyšší",
+        "česku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -269,29 +293,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Hypotéky nečekaně zdražují. Panika ale není na místě",
-      "url": "https://profitonline.cz/hypoteky-necekane-zdrazuji-panika-ale-neni-na-miste/",
-      "dt": "2026-05-18T19:00:47Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "ale",
-        "hypotéky",
-        "místě",
-        "nečekaně",
-        "panika",
-        "zdražují"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -302,7 +303,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18875,
+      "bytes": 18891,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -339,11 +340,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-21T04:00:29Z",
+        "raw_feed_latest_publishedAt": "2026-05-21T06:00:58Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "zpravy": 2,
           "finance": 9,
+          "zpravy": 2,
           "zdravi": 1
         },
         "drop_counts": {
@@ -356,6 +357,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jen vyšší finanční dávky porodnost v Česku nezvýší",
+            "publishedAt": "2026-05-21T06:00:58Z"
+          },
           {
             "title": "Hitlera neuposlechl. Sudetský Němec zachránil most v Ústí nad Labem",
             "publishedAt": "2026-05-21T04:00:29Z"
@@ -383,10 +388,6 @@
           {
             "title": "Čínské technologické firmě JD.com rostou tržby, problémem zůstává zisk",
             "publishedAt": "2026-05-19T12:00:08Z"
-          },
-          {
-            "title": "V ordinacích přibývá zmatených seniorů. Neví, jaké léky berou a proč",
-            "publishedAt": "2026-05-19T10:00:01Z"
           }
         ]
       }

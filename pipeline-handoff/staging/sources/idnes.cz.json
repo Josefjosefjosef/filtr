@@ -1,14 +1,40 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-21T05:54:40.511075Z",
+  "ingestedAt": "2026-05-21T06:34:28.770167Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ruské stíhačky se nad Černým mořem přiblížily k letounu Británie na pár metrů",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/letoun-rusko-priblizeni-nebezpeci-nouzovy-system-cerne-more-mezinarodni-vzdusny-prostor-ministerstvo.A260521_073934_zahranicni_fohl",
+      "dt": "2026-05-21T06:07:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "británie",
+        "letounu",
+        "metrů",
+        "mořem",
+        "pár",
+        "přiblížily",
+        "ruské",
+        "stíhačky",
+        "černým"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
-      "title": "Střet motorkáře s chodcem na Chebsku. Oba při nehodě zemřeli",
+      "title": "Tragický střet motorkáře s chodcem na Chebsku. Oba při nehodě zemřeli",
       "url": "https://www.idnes.cz/karlovy-vary/zpravy/nehoda-motocykl-stret-s-chodcem-chebsko-oba-zemreli.A260521_073432_vary-zpravy_slv",
-      "dt": "2026-05-21T05:39:00Z",
+      "dt": "2026-05-21T05:52:34Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
@@ -19,6 +45,7 @@
         "oba",
         "při",
         "střet",
+        "tragický",
         "zemřeli"
       ],
       "feedCategory": "zpravy",
@@ -751,33 +778,6 @@
         "vezl",
         "zraněných",
         "čtrnáct"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Už volají první zájemci. Knihovna Václava Havla má po konci Bakaly šanci na záchranu",
-      "url": "https://www.idnes.cz/zpravy/domaci/knihovna-vaclava-havla-zajem-novi-darci-spravni-rada-david-dusek-tomas-sedlacek-reditel.A260520_155352_domaci_linh",
-      "dt": "2026-05-20T14:39:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bakaly",
-        "havla",
-        "knihovna",
-        "konci",
-        "první",
-        "volají",
-        "václava",
-        "záchranu",
-        "zájemci",
-        "šanci"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1577,7 +1577,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47267,
+      "bytes": 47523,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1614,7 +1614,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-21T05:39:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-21T06:07:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1631,8 +1631,12 @@
         },
         "sample_titles": [
           {
-            "title": "Střet motorkáře s chodcem na Chebsku. Oba při nehodě zemřeli",
-            "publishedAt": "2026-05-21T05:39:00Z"
+            "title": "Ruské stíhačky se nad Černým mořem přiblížily k letounu Británie na pár metrů",
+            "publishedAt": "2026-05-21T06:07:00Z"
+          },
+          {
+            "title": "Tragický střet motorkáře s chodcem na Chebsku. Oba při nehodě zemřeli",
+            "publishedAt": "2026-05-21T05:52:34Z"
           },
           {
             "title": "Do Česka dorazí tropy: Meteorologové o víkendu očekávají i překonání hranice 30 °C",
@@ -1656,10 +1660,6 @@
           },
           {
             "title": "Stát přispěl na film o Milionu chvilek. Ministr Klempíř chce změnit zákon",
-            "publishedAt": "2026-05-20T22:00:00Z"
-          },
-          {
-            "title": "ANALÝZA: U soudu Musk prohrál, ale v něčem pravdu má. Ideály AI se drolí",
             "publishedAt": "2026-05-20T22:00:00Z"
           }
         ]
