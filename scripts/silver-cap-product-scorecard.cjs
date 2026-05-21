@@ -382,7 +382,17 @@ function captureSnapshot(repoRoot, capLabel, metaExtra) {
   };
 }
 
-function deltaEntry(before, after) {
+function deltaEntry(before, after, runtimeFailure) {
+  if (runtimeFailure) {
+    return {
+      delta: null,
+      display: "NOT_EVALUATED_RUNTIME_FAILURE",
+      worsened: false,
+      improved: false,
+      skipped: true,
+      runtime_failure: true,
+    };
+  }
   if (before.kind === "unavailable" && after.kind === "unavailable") {
     return { delta: null, display: "—", worsened: false, improved: false };
   }
@@ -525,6 +535,7 @@ function productionRisk(safetyFail, classification, worsenedList) {
 
 function renderCzechScorecard(before, after, runMeta, repoRoot) {
   const lines = [];
+  const runtimeFailure = runMeta.runtime_failure === "YES";
   const safetyFail =
     after.safety_counters.dangerous_write_count > 0 ||
     after.safety_counters.false_write_count > 0 ||
@@ -550,7 +561,7 @@ function renderCzechScorecard(before, after, runMeta, repoRoot) {
   for (const spec of PROGRESS_SPECS) {
     const b = before.progress[spec.key];
     const a = after.progress[spec.key];
-    const d = deltaEntry(b, a);
+    const d = deltaEntry(b, a, runtimeFailure);
     if (d.improved && !d.skipped) totalImproved++;
     if (d.worsened) worsened.push(spec.labelCs + " " + d.display);
     lines.push("- " + spec.labelCs + ": " + a.display + " " + d.display);
@@ -561,7 +572,7 @@ function renderCzechScorecard(before, after, runMeta, repoRoot) {
   for (const spec of AUDIT_SPECS) {
     const b = before.audit_metrics[spec.key];
     const a = after.audit_metrics[spec.key];
-    const d = deltaEntry(b, a);
+    const d = deltaEntry(b, a, runtimeFailure);
     if (b.kind === "audited" && a.kind === "audited" && d.delta != null && !d.skipped) {
       totalAuditedDelta += d.delta;
       auditedDeltaCount++;
@@ -581,11 +592,15 @@ function renderCzechScorecard(before, after, runMeta, repoRoot) {
   lines.push("- PR URL: " + (after.pr_url || "(žádný)"));
   lines.push("- Počet cyklů: " + String(runMeta.cycles_completed || 0));
   lines.push("- stop_reason: " + (runMeta.stop_reason || "(neuvedeno)"));
+  lines.push("- runtime_failure: " + (runtimeFailure ? "YES" : "NO"));
 
   const avgDelta = auditedDeltaCount > 0 ? totalAuditedDelta / auditedDeltaCount : null;
   lines.push("");
   lines.push("Shrnutí:");
-  if (avgDelta != null) {
+  if (runtimeFailure) {
+    lines.push("- Celkové zlepšení: NOT_EVALUATED_RUNTIME_FAILURE");
+    lines.push("- Metrická delta: NOT_EVALUATED_RUNTIME_FAILURE (runtime/orchestration selhání — bez falešného produktového PASS)");
+  } else if (avgDelta != null) {
     const sign = avgDelta >= 0 ? "+" : "";
     lines.push("- Celkové zlepšení (průměr auditů): " + sign + avgDelta.toFixed(1) + " %");
   } else {
@@ -651,6 +666,7 @@ function parseArgs(argv) {
     else if (a === "--stop-reason") out.stopReason = argv[++i];
     else if (a === "--pr-created-count") out.prCreatedCount = argv[++i];
     else if (a === "--product-fix") out.productFix = argv[++i];
+    else if (a === "--runtime-failure") out.runtimeFailure = argv[++i];
     else out._.push(a);
   }
   return out;
@@ -702,6 +718,11 @@ function runSelfTest() {
   const finalizeRendered = renderCzechScorecard(beforeFinalize, afterFinalize, finalizeMeta, repo);
   checks.push(finalizeRendered.text.indexOf("SILVER_CAP_BEFORE_AFTER_SCORECARD") >= 0);
   checks.push(finalizeRendered.text.indexOf("repo is not defined") < 0);
+
+  const runtimeFailMeta = Object.assign({}, finalizeMeta, { runtime_failure: "YES", stop_reason: "STALE_CURSOR_INVOKE_NO_PROGRESS" });
+  const runtimeFailRendered = renderCzechScorecard(beforeFinalize, afterFinalize, runtimeFailMeta, repo);
+  checks.push(runtimeFailRendered.text.indexOf("NOT_EVALUATED_RUNTIME_FAILURE") >= 0);
+  checks.push(runtimeFailRendered.text.indexOf("runtime_failure: YES") >= 0);
 
   const simErr = new ReferenceError("repo is not defined");
   const hardStop = formatScorecardRuntimeHardStop(simErr);
@@ -789,6 +810,7 @@ function main() {
       stop_reason: args.stopReason || "loop_exit",
       pr_created_count: parseInt(args.prCreatedCount || "0", 10) || 0,
       product_fix_created: args.productFix === "YES" ? "YES" : "NO",
+      runtime_failure: args.runtimeFailure === "YES" ? "YES" : "NO",
     };
     const after = captureSnapshot(repoRoot, before.cap_label || args.capLabel || "CAPX", {
       pr_url: before.pr_url,
