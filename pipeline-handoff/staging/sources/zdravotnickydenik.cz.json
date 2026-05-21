@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-21T04:34:35.179407Z",
+  "ingestedAt": "2026-05-21T05:15:45.761142Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Přidají zinek a napíšou „imunita“. U doplňků stravy se řiďte selským rozumem, radí Suchopár",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/vyrobci-spotrebitel-doplnky-stravy-suchopar/",
+      "dt": "2026-05-21T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "doplňků",
+        "imunita",
+        "napíšou",
+        "přidají",
+        "radí",
+        "rozumem",
+        "selským",
+        "stravy",
+        "suchopár",
+        "zinek",
+        "řiďte"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -246,32 +274,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Podezření na ebolu v Česku: Na pražskou Bulovku míří Američan v izolačním boxu",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/podezreni-na-ebolu-bulovka-american/",
-      "dt": "2026-05-20T05:29:56Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "američan",
-        "boxu",
-        "bulovku",
-        "ebolu",
-        "izolačním",
-        "míří",
-        "podezření",
-        "pražskou",
-        "česku"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +284,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 105795,
+      "bytes": 108931,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,11 +321,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-20T21:34:43Z",
+        "raw_feed_latest_publishedAt": "2026-05-21T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "sport": 2,
-          "zdravi": 8
+          "zdravi": 9,
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -335,6 +337,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Přidají zinek a napíšou „imunita“. U doplňků stravy se řiďte selským rozumem, radí Suchopár",
+            "publishedAt": "2026-05-21T05:00:00Z"
+          },
           {
             "title": "Právě přistál v Praze. Američana s podezřením na ebolu vezou v bioboxu a skafandrech na Bulovku",
             "publishedAt": "2026-05-20T21:34:43Z"
@@ -362,10 +368,6 @@
           {
             "title": "Prymula varuje před ebolou: Sledovat by se měli všichni, kdo se teď vracejí z Konga a Ugandy",
             "publishedAt": "2026-05-20T07:55:33Z"
-          },
-          {
-            "title": "Vakcína po infarktu může zachránit život. Pacienti ji ale často nedostanou, říká Chlíbek",
-            "publishedAt": "2026-05-20T07:00:00Z"
           }
         ]
       }

@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-21T04:34:35.179407Z",
+  "ingestedAt": "2026-05-21T05:15:45.761142Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Budiž světlo! Jak se Arsenal rozzářil a Arteta našel cestu, kritice navzdory",
+      "url": "https://www.idnes.cz/fotbal/zahranici/arsenal-titul-arteta.A260520_173447_fot_zahranici_kazdt",
+      "dt": "2026-05-21T05:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "arsenal",
+        "arteta",
+        "budiž",
+        "cestu",
+        "kritice",
+        "navzdory",
+        "našel",
+        "rozzářil",
+        "světlo"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hertl si prodloužil bodovou sérii, Vegas uspělo na ledě Colorada",
+      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-hertl-necas.A260521_065342_nhl_mkr",
+      "dt": "2026-05-21T04:53:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bodovou",
+        "colorada",
+        "hertl",
+        "ledě",
+        "prodloužil",
+        "sérii",
+        "uspělo",
+        "vegas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -726,60 +777,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hluboká rána, natržená šlacha. Jsem motivovaný vrátit se na Tour, hlásí Bittner",
-      "url": "https://www.idnes.cz/sport/cyklistika/pavel-bittner-zraneni-pad-tour-de-france.A260520_104716_cyklistika_ipet",
-      "dt": "2026-05-20T11:01:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bittner",
-        "hluboká",
-        "hlásí",
-        "jsem",
-        "motivovaný",
-        "natržená",
-        "rána",
-        "tour",
-        "vrátit",
-        "šlacha"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Davy před stadionem, plné hospody i pes v dresu. Jak fanoušci Arsenalu slavili titul",
-      "url": "https://www.idnes.cz/fotbal/zahranici/premier-league-arsenal-titul-oslavy-fanousci-londyn.A260520_104522_fot_zahranici_tals/foto",
-      "dt": "2026-05-20T11:01:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "arsenalu",
-        "davy",
-        "dresu",
-        "fanoušci",
-        "hospody",
-        "pes",
-        "plné",
-        "slavili",
-        "stadionem",
-        "titul"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +787,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46250,
+      "bytes": 45838,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,7 +824,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-21T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-21T05:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -842,6 +839,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Budiž světlo! Jak se Arsenal rozzářil a Arteta našel cestu, kritice navzdory",
+            "publishedAt": "2026-05-21T05:00:00Z"
+          },
+          {
+            "title": "Hertl si prodloužil bodovou sérii, Vegas uspělo na ledě Colorada",
+            "publishedAt": "2026-05-21T04:53:00Z"
+          },
           {
             "title": "Rulík po trápení: Pro hráče máme návody, ale na ledě nejsme. Musí se dobře nastavit",
             "publishedAt": "2026-05-21T04:00:00Z"
@@ -865,14 +870,6 @@
           {
             "title": "Švédsko na MS v hokeji 2026: program, výsledky, soupiska, bilance s Čechy",
             "publishedAt": "2026-05-20T21:13:00Z"
-          },
-          {
-            "title": "USA na MS v hokeji 2026: program, výsledky, soupiska, bilance s Čechy",
-            "publishedAt": "2026-05-20T21:11:00Z"
-          },
-          {
-            "title": "MS v hokeji 2026: Program, tabulky skupin, kdy hrají Češi?",
-            "publishedAt": "2026-05-20T21:09:00Z"
           }
         ]
       }
