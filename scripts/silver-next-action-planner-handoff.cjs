@@ -74,6 +74,20 @@ const CLUSTER_PRODUCT_TASK_SPEC = {
       "Vytvoř PR pokud repo CLEAN/PASS a změny jsou jen v povoleném scope.",
     ],
   },
+  self_correction_safety_note_readonly: {
+    expected_outcome: "harness PR",
+    harness_commands: [
+      "node scripts/silver-self-correction-audit.cjs",
+      "node scripts/silver-self-correction-safety-note-readonly-selftest.cjs",
+    ],
+    analysis_bullets: [
+      "Cluster `self_correction_safety_note_readonly`: note query + safety cue „Nic nevytvářej“ musí zůstat read-only (žádný notes.create leak).",
+      "Změny pouze v `scripts/silver-self-correction-*` (audit, query-clarification, safety-diagnostic, safety-note-readonly-selftest).",
+      "Spusť `node scripts/silver-self-correction-audit.cjs` a `node scripts/silver-self-correction-safety-note-readonly-selftest.cjs` — oba PASS.",
+      "Bez změny `assets/app.js` pokud diagnostika nepotvrdí TRUE_ENGINE_FAIL.",
+      "Vytvoř úzký PR (orchestration/scripts only) po PASS proof.",
+    ],
+  },
 };
 
 /** Known stale verify-pr IDs from old backlog / selftest fixtures — never valid cluster tasks. */

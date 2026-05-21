@@ -2341,6 +2341,11 @@ function Test-SilverNextActionIsProductTaskHandoff {
       $hasExplicitProduct = $true
     }
   }
+  if ($cluster -eq "self_correction_safety_note_readonly") {
+    if ($NextActionText -match '(?i)silver-self-correction-audit|silver-self-correction-safety-note-readonly|self_correction_safety_note_readonly') {
+      $hasExplicitProduct = $true
+    }
+  }
   if (-not $hasExplicitProduct) { return $false }
   return $true
 }
@@ -3364,8 +3369,102 @@ function Test-SilverPathIsCap50RuntimeRestorable {
   return ($reason.Length -gt 0)
 }
 
+function Invoke-SilverValidProductWorkCloseoutClassify {
+  param(
+    [string]$RepoRoot,
+    [string[]]$Paths,
+    [string]$SelectorCluster = "",
+    [string]$SafetyCounters = ""
+  )
+  $vpwScript = Join-Path $RepoRoot "scripts\silver-valid-product-work-closeout.cjs"
+  if (-not (Test-Path -LiteralPath $vpwScript)) { return $null }
+  $pathsJson = ($Paths | ForEach-Object { ([string]$_).Trim() -replace '\\', '/' }) -join "|"
+  $cluster = [string]$SelectorCluster
+  if (-not $cluster) {
+    $cluster = Get-SilverAuthoritativeSelectorCluster -RepoRoot $RepoRoot
+  }
+  $scEsc = $cluster.Replace("'", "\'")
+  $pathsEsc = $pathsJson.Replace("'", "\'")
+  $safetyEsc = ([string]$SafetyCounters).Replace("'", "\'")
+  $probe = @"
+const m=require('./silver-valid-product-work-closeout.cjs');
+const paths='$pathsEsc'.split('|').filter(Boolean);
+const c=m.classifyValidProductWork({dirtyPaths:paths,selectorCluster:'$scEsc',repoRoot:process.cwd(),safetyCounters:'$safetyEsc'});
+process.stdout.write(JSON.stringify(c));
+"@
+  $probePath = Join-Path $env:TEMP ("silver-vpw-classify-" + [guid]::NewGuid().ToString("N") + ".cjs")
+  try {
+    [System.IO.File]::WriteAllText($probePath, $probe, [System.Text.UTF8Encoding]::new($false))
+    $psi = New-Object System.Diagnostics.ProcessStartInfo
+    $psi.FileName = "node"
+    $psi.Arguments = ('"' + $probePath.Replace('"', '""') + '"')
+    $psi.WorkingDirectory = $RepoRoot
+    $psi.RedirectStandardOutput = $true
+    $psi.RedirectStandardError = $true
+    $psi.UseShellExecute = $false
+    $psi.CreateNoWindow = $true
+    $p = [System.Diagnostics.Process]::Start($psi)
+    $stdout = $p.StandardOutput.ReadToEnd().Trim()
+    $p.WaitForExit()
+    if ($p.ExitCode -ne 0 -or -not $stdout) { return $null }
+    return ($stdout | ConvertFrom-Json)
+  }
+  catch {
+    return $null
+  }
+  finally {
+    if (Test-Path -LiteralPath $probePath) {
+      Remove-Item -LiteralPath $probePath -Force -ErrorAction SilentlyContinue
+    }
+  }
+}
+
+function Invoke-SilverValidProductWorkCloseoutEval {
+  param(
+    [string]$RepoRoot,
+    [string]$AutopilotScript,
+    [string]$SafetyCounters = "",
+    [switch]$RevertOnNoSafeFix
+  )
+  $args = @($AutopilotScript, "--valid-product-work-closeout-eval")
+  if ($SafetyCounters) { $args += ("--safety-counters=" + $SafetyCounters) }
+  if ($RevertOnNoSafeFix) { $args += "--revert-on-no-safe-fix" }
+  $r = Invoke-NodeScript -WorkingDirectory $RepoRoot -Arguments $args -PassThruExit $true
+  $out = @{
+    PASS_FAIL = "FAIL"
+    final_outcome = "HARD_FAIL"
+    classification = ""
+    closeout_kind = "forbidden_dirty"
+    product_fix_created = "NO"
+    scripts_only_product_work = "NO"
+    stdout = ""
+  }
+  if ($null -ne $r) {
+    $out.stdout = [string]$r.StdOut
+    if ($r.ExitCode -eq 0) { $out.PASS_FAIL = "PASS" }
+  }
+  $txt = [string]$out.stdout
+  foreach ($line in ($txt -split "`r?`n")) {
+    $t = $line.Trim()
+    if ($t -match '^classification=(.+)$') { $out.classification = $Matches[1] }
+    if ($t -match '^closeout_kind=(.+)$') { $out.closeout_kind = $Matches[1] }
+    if ($t -match '^final_outcome=(.+)$') { $out.final_outcome = $Matches[1] }
+    if ($t -match '^product_fix_created=(.+)$') { $out.product_fix_created = $Matches[1] }
+    if ($t -match '^scripts_only_product_work=(.+)$') { $out.scripts_only_product_work = $Matches[1] }
+    if ($t -match '^PASS_FAIL=(.+)$') { $out.PASS_FAIL = $Matches[1] }
+    if ($t -match '^branch_prefix=(.+)$') { $out.branch_prefix = $Matches[1] }
+    if ($t -match '^pr_title=(.+)$') { $out.pr_title = $Matches[1] }
+  }
+  return $out
+}
+
 function Get-SilverCap50CloseoutClassificationFromDirtyPaths {
-  param([string[]]$Paths)
+  param(
+    [string[]]$Paths,
+    [string]$RepoRoot = "",
+    [string]$SelectorCluster = "",
+    [string]$SafetyCounters = ""
+  )
   $list = New-Object System.Collections.Generic.List[string]
   foreach ($p in $Paths) {
     $n = ([string]$p).Trim() -replace '\\', '/'
@@ -3378,6 +3477,42 @@ function Get-SilverCap50CloseoutClassificationFromDirtyPaths {
       closeout_kind                  = "clean"
       blocked_dirty_classification   = ""
       failure_class                  = "none"
+    }
+  }
+  $repo = $RepoRoot
+  if (-not $repo) { $repo = (Get-Location).Path }
+  $vpw = Invoke-SilverValidProductWorkCloseoutClassify -RepoRoot $repo -Paths $list.ToArray() -SelectorCluster $SelectorCluster -SafetyCounters $SafetyCounters
+  if ($null -ne $vpw) {
+    $cls = [string]$vpw.classification
+    $kind = [string]$vpw.closeout_kind
+    if ($cls -eq "VALID_PRODUCT_WORK") {
+      return @{
+        closeout_kind                  = "valid_product_work"
+        blocked_dirty_classification   = [string]$vpw.blocked_dirty_classification
+        failure_class                  = "valid_product_work"
+        valid_product_work             = $vpw
+      }
+    }
+    if ($cls -eq "SAFE_BLOCKED") {
+      return @{
+        closeout_kind                  = "forbidden_product_dirty"
+        blocked_dirty_classification   = [string]$vpw.blocked_dirty_classification
+        failure_class                  = "forbidden_product_dirty"
+      }
+    }
+    if ($cls -eq "RUNTIME_ONLY") {
+      return @{
+        closeout_kind                  = "runtime_artifact_restorable"
+        blocked_dirty_classification   = ($list -join ";")
+        failure_class                  = "runtime_artifact_restorable"
+      }
+    }
+    if ($cls -eq "FORBIDDEN_DIRTY") {
+      return @{
+        closeout_kind                  = "forbidden_dirty"
+        blocked_dirty_classification   = [string]$vpw.blocked_dirty_classification
+        failure_class                  = "forbidden_dirty"
+      }
     }
   }
   foreach ($n in $list) {
@@ -3533,6 +3668,9 @@ function Invoke-SilverCap50PostCycleRuntimeCleanup {
     [switch]$DryRunOnly,
     [switch]$AllowForeignDirty,
     [switch]$AllowHandoffDirty,
+    [switch]$AllowValidProductWork,
+    [string]$SelectorCluster = "",
+    [string]$SafetyCounters = "",
     [string[]]$ExcludeRestoreRelPaths = @()
   )
   $archivePath = ""
@@ -3542,7 +3680,7 @@ function Invoke-SilverCap50PostCycleRuntimeCleanup {
       $archivePath = [string]$arch.RelativePath
     }
   }
-  $cleanup = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot -DryRunOnly:$DryRunOnly -AllowForeignDirty:$AllowForeignDirty -AllowHandoffDirty:$AllowHandoffDirty -ExcludeRestoreRelPaths $ExcludeRestoreRelPaths
+  $cleanup = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot -DryRunOnly:$DryRunOnly -AllowForeignDirty:$AllowForeignDirty -AllowHandoffDirty:$AllowHandoffDirty -AllowValidProductWork:$AllowValidProductWork -SelectorCluster $SelectorCluster -SafetyCounters $SafetyCounters -ExcludeRestoreRelPaths $ExcludeRestoreRelPaths
   $cleanup.archive_path = $archivePath
   return $cleanup
 }
@@ -3553,6 +3691,9 @@ function Invoke-SilverCap50PreflightCleanup {
     [switch]$DryRunOnly,
     [switch]$AllowForeignDirty,
     [switch]$AllowHandoffDirty,
+    [switch]$AllowValidProductWork,
+    [string]$SelectorCluster = "",
+    [string]$SafetyCounters = "",
     [string[]]$ExcludeRestoreRelPaths = @()
   )
   $excludeNorm = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
@@ -3600,7 +3741,7 @@ function Invoke-SilverCap50PreflightCleanup {
   }
   $cleanAfter = if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" }
   $remainingPaths = Get-GitStatusShortPaths -Cwd $RepoRoot
-  $classAfter = Get-SilverCap50CloseoutClassificationFromDirtyPaths -Paths $remainingPaths
+  $classAfter = Get-SilverCap50CloseoutClassificationFromDirtyPaths -Paths $remainingPaths -RepoRoot $RepoRoot -SelectorCluster $SelectorCluster -SafetyCounters $SafetyCounters
   $closeoutKind = [string]$classAfter.closeout_kind
   $failureClass = [string]$classAfter.failure_class
   $blockedClass = [string]$classAfter.blocked_dirty_classification
@@ -3626,7 +3767,7 @@ function Invoke-SilverCap50PreflightCleanup {
       }
       $cleanAfter = if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" }
       $remainingPaths = Get-GitStatusShortPaths -Cwd $RepoRoot
-      $classAfter = Get-SilverCap50CloseoutClassificationFromDirtyPaths -Paths $remainingPaths
+      $classAfter = Get-SilverCap50CloseoutClassificationFromDirtyPaths -Paths $remainingPaths -RepoRoot $RepoRoot -SelectorCluster $SelectorCluster -SafetyCounters $SafetyCounters
       $closeoutKind = [string]$classAfter.closeout_kind
       $failureClass = [string]$classAfter.failure_class
       $blockedClass = [string]$classAfter.blocked_dirty_classification
@@ -3638,8 +3779,12 @@ function Invoke-SilverCap50PreflightCleanup {
     if ($cleanAfter -eq "YES") { $safe = "YES" }
     elseif ($DryRunOnly -and $toRestore.Count -gt 0 -and $dirtyBefore.Count -eq $toRestore.Count) { $safe = "YES" }
     elseif ($AllowHandoffDirty -and (Test-Cap50GitCleanExceptHandoffArtifacts -Cwd $RepoRoot)) { $safe = "YES" }
+    elseif ($AllowValidProductWork -and $closeoutKind -eq "valid_product_work") { $safe = "YES" }
   }
   elseif ($AllowForeignDirty -and $runtimeClean -eq "YES") {
+    $safe = "YES"
+  }
+  elseif ($AllowValidProductWork -and $closeoutKind -eq "valid_product_work") {
     $safe = "YES"
   }
   $passFail = if ($safe -eq "YES") { "PASS" } else { "FAIL" }
@@ -7172,18 +7317,36 @@ while ($true) {
         -Headline (Get-NextActionHeadline -Text $nextAfterAuto) -Focus "next_action_quality_post_guard" `
         -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1
     }
-    $postAutoCleanup = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $cycle -Reason "after_autopilot_full_auto_loop" -ExcludeRestoreRelPaths $autopilotHandoffPreserve -AllowHandoffDirty
+    $selectorForCloseout = Get-SilverAuthoritativeSelectorCluster -RepoRoot $RepoRoot
+    $postAutoCleanup = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $cycle -Reason "after_autopilot_full_auto_loop" -ExcludeRestoreRelPaths $autopilotHandoffPreserve -AllowHandoffDirty -AllowValidProductWork -SelectorCluster $selectorForCloseout -SafetyCounters $safetyPre
     Write-Host ("silver-autopilot-loop: post_autopilot_cleanup_PASS_FAIL=" + [string]$postAutoCleanup.PASS_FAIL) -ForegroundColor DarkCyan
+    Write-Host ("silver-autopilot-loop: post_autopilot_closeout_kind=" + [string]$postAutoCleanup.closeout_kind) -ForegroundColor DarkCyan
     if ($postAutoCleanup.PASS_FAIL -ne "PASS") {
-      Write-Host ("silver-autopilot-loop: post_autopilot_blocked_dirty_files=" + [string]$postAutoCleanup.blocked_dirty_files) -ForegroundColor Red
-      Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
-        -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit "N/A" `
-        -GitClean ([string]$postAutoCleanup.git_clean_after) -SafetyLine $safetyPre `
-        -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
-        -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
-        -Headline (Get-NextActionHeadline -Text $nextAfterAuto) -Focus "post_autopilot_runtime_cleanup_blocked" `
-        -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
-        -StopReason ("post_autopilot_runtime_cleanup_blocked|blocked=" + [string]$postAutoCleanup.blocked_dirty_files)
+      $vpwEval = Invoke-SilverValidProductWorkCloseoutEval -RepoRoot $RepoRoot -AutopilotScript $AutopilotScript -SafetyCounters $safetyPre
+      Write-Host ("silver-autopilot-loop: valid_product_work_closeout_PASS_FAIL=" + [string]$vpwEval.PASS_FAIL) -ForegroundColor DarkCyan
+      Write-Host ("silver-autopilot-loop: valid_product_work_final_outcome=" + [string]$vpwEval.final_outcome) -ForegroundColor DarkCyan
+      if ([string]$vpwEval.PASS_FAIL -eq "PASS" -and [string]$vpwEval.final_outcome -eq "PR_READY") {
+        $postAutoCleanup.PASS_FAIL = "PASS"
+        $postAutoCleanup.closeout_kind = "valid_product_work"
+        $postAutoCleanup.failure_class = "valid_product_work"
+        Write-Host "silver-autopilot-loop: post_autopilot_valid_product_work_closeout=PR_READY" -ForegroundColor Green
+      }
+      elseif ([string]$vpwEval.PASS_FAIL -eq "PASS" -and ([string]$vpwEval.final_outcome -eq "NO_SAFE_FIX" -or [string]$vpwEval.final_outcome -eq "SAFE_BLOCKED")) {
+        $postAutoCleanup.PASS_FAIL = "PASS"
+        $postAutoCleanup.closeout_kind = [string]$vpwEval.final_outcome
+        Write-Host ("silver-autopilot-loop: post_autopilot_valid_product_work_closeout=" + [string]$vpwEval.final_outcome) -ForegroundColor DarkYellow
+      }
+      else {
+        Write-Host ("silver-autopilot-loop: post_autopilot_blocked_dirty_files=" + [string]$postAutoCleanup.blocked_dirty_files) -ForegroundColor Red
+        Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+          -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit "N/A" `
+          -GitClean ([string]$postAutoCleanup.git_clean_after) -SafetyLine $safetyPre `
+          -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
+          -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
+          -Headline (Get-NextActionHeadline -Text $nextAfterAuto) -Focus "post_autopilot_runtime_cleanup_blocked" `
+          -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
+          -StopReason ("post_autopilot_runtime_cleanup_blocked|closeout_kind=" + [string]$postAutoCleanup.closeout_kind + "|blocked=" + [string]$postAutoCleanup.blocked_dirty_files)
+      }
     }
     if ($controlledInfinite) {
       $selectorCluster = Get-SilverAuthoritativeSelectorCluster -RepoRoot $RepoRoot
