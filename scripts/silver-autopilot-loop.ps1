@@ -78,7 +78,8 @@ param(
   [switch]$AdapterMetaFreshnessSelfTest,
   [switch]$Cap50RealAutonomousLifecycleOrderingSelfTest,
   [switch]$AutonomousRearmSelfTest,
-  [switch]$WslAgentModelAutoHandoffSelfTest
+  [switch]$WslAgentModelAutoHandoffSelfTest,
+  [switch]$RearmInvokeEdgeCaseSelfTest
 )
 
 Set-StrictMode -Version 2
@@ -976,6 +977,73 @@ function Invoke-SilverAutonomousCycleRearm {
   }
 }
 
+function Write-SilverCursorOutputAdapterInvokeStartedMeta {
+  param(
+    [string]$Path,
+    [string]$RunId,
+    [string]$RunStartUtcIso,
+    [string]$CycleState,
+    [string]$TaskFile,
+    [string]$OutputFile,
+    [string]$TaskDigest,
+    [string]$ProcessStartUtcIso
+  )
+  $body = @"
+# silver-cursor-agent-adapter
+autonomous_run_id=$RunId
+autonomous_run_start_utc=$RunStartUtcIso
+autonomous_cycle=$CycleState
+adapter_output_state=INVOKE_STARTED
+adapter_completion_path=orchestration_invoke_started
+process_start_utc=$ProcessStartUtcIso
+task_digest=$TaskDigest
+task_file=$TaskFile
+output_file=$OutputFile
+exit_code=
+elapsed_ms=
+
+# stdout
+
+# stderr
+
+"@
+  [System.IO.File]::WriteAllText($Path, $body, [System.Text.UTF8Encoding]::new($false))
+}
+
+function Test-SilverAdapterInvokeStartedEvidence {
+  param([string]$AdapterOutputPath)
+  if (-not (Test-Path -LiteralPath $AdapterOutputPath)) { return $false }
+  $meta = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $AdapterOutputPath
+  if ($meta.Count -eq 0) { return $false }
+  $state = ""
+  if ($meta.ContainsKey("adapter_output_state")) { $state = [string]$meta["adapter_output_state"] }
+  if ($state -eq "INVALIDATED_AWAITING_CYCLE") { return $false }
+  $procStart = ""
+  if ($meta.ContainsKey("process_start_utc")) { $procStart = [string]$meta["process_start_utc"] }
+  if ($procStart.Trim().Length -eq 0) { return $false }
+  return $true
+}
+
+function Wait-SilverAdapterInvokeStartupEvidence {
+  param(
+    [string]$AdapterOutputPath,
+    [int]$MaxWaitMs = 45000,
+    [int]$PollMs = 200
+  )
+  $attempts = 0
+  $maxAttempts = [Math]::Max(1, [int]([Math]::Ceiling($MaxWaitMs / [double]$PollMs)))
+  for ($i = 0; $i -lt $maxAttempts; $i++) {
+    $attempts++
+    if (Test-SilverAdapterInvokeStartedEvidence -AdapterOutputPath $AdapterOutputPath) {
+      return @{ PASS_FAIL = "PASS"; attempts = $attempts }
+    }
+    if ($i -lt ($maxAttempts - 1)) {
+      Start-Sleep -Milliseconds $PollMs
+    }
+  }
+  return @{ PASS_FAIL = "FAIL"; attempts = $attempts }
+}
+
 function Write-SilverAutonomousCycleRearmResultBlock {
   param([hashtable]$Result)
   Write-Host ""
@@ -1369,6 +1437,13 @@ function Wait-SilverAdapterMetaReadyForReconcile {
       }
       return @{ Meta = $lastMeta; ReconcileEligible = $false; Attempts = ($attempt + 1) }
     }
+    if ($stateWait -eq "INVOKE_STARTED") {
+      if ($attempt -lt ($MaxAttempts - 1)) {
+        Start-Sleep -Milliseconds $SleepMilliseconds
+        continue
+      }
+      return @{ Meta = $lastMeta; ReconcileEligible = $false; Attempts = ($attempt + 1) }
+    }
     $eligible = Test-SilverAdapterMetaReconcileEligible -Meta $lastMeta -ProcessStartUtc $ProcessStartUtc -AdapterOutputPath $AdapterOutputPath -ExpectedTaskDigest $ExpectedTaskDigest -ExpectedTaskFile $ExpectedTaskFile -ExpectedOutputFile $ExpectedOutputFile -ExpectedRunId $ExpectedRunId -ExpectedCycle $ExpectedCycle -ExpectedRunStartUtc $ExpectedRunStartUtc
     if ($eligible) {
       return @{ Meta = $lastMeta; ReconcileEligible = $true; Attempts = ($attempt + 1) }
@@ -1429,6 +1504,10 @@ function Test-SilverAutonomousAdapterCompletionBoundary {
   if ($state -eq "INVALIDATED_AWAITING_CYCLE") {
     $result.invalidated_awaiting_cycle = "YES"
     $result.lifecycle_block_reason = "invalidated_awaiting_cycle_non_authoritative"
+    return $result
+  }
+  if ($state -eq "INVOKE_STARTED") {
+    $result.lifecycle_block_reason = "adapter_invoke_started_but_not_completed"
     return $result
   }
   if ($state -ne "COMPLETED") {
@@ -3532,6 +3611,7 @@ function Invoke-SilverCap50RealAutonomousLifecycleOrderingSelfTest {
     $lines = Get-Content -LiteralPath $loopPath
     $cleanupIdx = -1
     $rearmIdx = -1
+    $invokeIdx = -1
     $handoffIdx = -1
     $bridgeIdx = -1
     $outerTerminalIdx = -1
@@ -3541,6 +3621,7 @@ function Invoke-SilverCap50RealAutonomousLifecycleOrderingSelfTest {
       $line = [string]$lines[$i]
       if ($line -match 'Reason = "after_autopilot_full_auto_loop"') { $cleanupIdx = $i }
       if ($line -match 'Invoke-SilverAutonomousCycleRearm -RepoRoot \$RepoRoot') { $rearmIdx = $i }
+      if ($line -match 'Write-SilverCursorOutputAdapterInvokeStartedMeta') { $invokeIdx = $i }
       if ($line -match 'Invoke-SilverOrchestrationProductHandoffBridge') { $bridgeIdx = $i }
       if ($line -match 'product_task_handoff_missing') { $handoffIdx = $i }
       if ($line -match 'Write-SilverCursorOutputOuterWallTimeoutTerminal -Path \$CursorOutputPath') { $outerTerminalIdx = $i }
@@ -3552,6 +3633,12 @@ function Invoke-SilverCap50RealAutonomousLifecycleOrderingSelfTest {
     }
     if ($rearmIdx -lt 0) {
       [void]$failures.Add("post_preflight_autonomous_rearm_marker_missing")
+    }
+    if ($invokeIdx -lt 0) {
+      [void]$failures.Add("adapter_invoke_started_meta_marker_missing")
+    }
+    if (($rearmIdx -ge 0) -and ($invokeIdx -ge 0) -and ($invokeIdx -lt $rearmIdx)) {
+      [void]$failures.Add("invoke_started_meta_before_post_preflight_rearm")
     }
     if ($handoffIdx -lt 0) {
       [void]$failures.Add("product_task_handoff_marker_missing")
@@ -3805,6 +3892,141 @@ selftest adapter flush ok
     return $false
   }
   Write-Host "SILVER_AUTONOMOUS_REARM_SELFTEST=PASS" -ForegroundColor Green
+  Write-Host "engine_changed=NO"
+  Write-Host "assets_app_changed=NO"
+  return $true
+}
+
+function Invoke-SilverRearmInvokeEdgeCaseSelfTest {
+  param([string]$RepoRoot)
+  $utf8 = New-Object System.Text.UTF8Encoding $false
+  $failures = New-Object System.Collections.Generic.List[string]
+  $loopPath = Join-Path $RepoRoot "scripts\silver-autopilot-loop.ps1"
+  if (-not (Test-Path -LiteralPath $loopPath)) {
+    [void]$failures.Add("loop_script_missing")
+  }
+  else {
+    $loopText = [System.IO.File]::ReadAllText($loopPath, $utf8)
+    if ($loopText -notmatch 'Write-SilverCursorOutputAdapterInvokeStartedMeta') {
+      [void]$failures.Add("invoke_started_meta_writer_missing")
+    }
+    if ($loopText -notmatch 'adapter_invoke_blocked_cursor_command_missing_after_rearm') {
+      [void]$failures.Add("post_rearm_cursor_command_guard_missing")
+    }
+    if ($loopText -notmatch 'SilverCycleAutonomousRearmPassed') {
+      [void]$failures.Add("rearm_pass_cycle_flag_missing")
+    }
+    $invokeIdx = -1
+    $startIdx = -1
+    $lines = Get-Content -LiteralPath $loopPath
+    for ($i = 0; $i -lt $lines.Count; $i++) {
+      $line = [string]$lines[$i]
+      if ($line -match 'Write-SilverCursorOutputAdapterInvokeStartedMeta') { $invokeIdx = $i }
+      if ($line -match '\$p = \[System\.Diagnostics\.Process\]::Start\(\$psi\)') { $startIdx = $i }
+    }
+    if (($invokeIdx -lt 0) -or ($startIdx -lt 0) -or ($invokeIdx -gt $startIdx)) {
+      [void]$failures.Add("invoke_started_meta_must_precede_process_start")
+    }
+  }
+  $adapterPath = Join-Path $RepoRoot "scripts\silver-cursor-agent-adapter.ps1"
+  if (-not (Test-Path -LiteralPath $adapterPath)) {
+    [void]$failures.Add("adapter_script_missing")
+  }
+  else {
+    $adapterText = [System.IO.File]::ReadAllText($adapterPath, $utf8)
+    if ($adapterText -notmatch 'Write-SilverAdapterCycleStartedEarlyMeta') {
+      [void]$failures.Add("adapter_early_invoke_started_meta_missing")
+    }
+  }
+  $td = Join-Path $env:TEMP ("silver-rearm-invoke-edgecase-selftest-" + [guid]::NewGuid().ToString("N"))
+  New-Item -ItemType Directory -Path $td -Force | Out-Null
+  $prevEa = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try {
+    Set-Location -LiteralPath $td
+    & git init 2>$null | Out-Null
+    & git config user.email "silver-rearm-invoke-edgecase@local" 2>$null
+    & git config user.name "silver-rearm-invoke-edgecase" 2>$null
+    [System.IO.File]::WriteAllText((Join-Path $td ".gitignore"), ".silver-runtime/`n", $utf8)
+    foreach ($n in @("SILVER_PROGRESS_LOG.md", "SILVER_NEXT_ACTION.md", "SILVER_CURSOR_OUTPUT.md")) {
+      [System.IO.File]::WriteAllText((Join-Path $td $n), "# " + $n + "`n", $utf8)
+    }
+    & git add .gitignore SILVER_PROGRESS_LOG.md SILVER_NEXT_ACTION.md SILVER_CURSOR_OUTPUT.md 2>$null
+    & git commit -m "init" 2>$null | Out-Null
+    $cursorOut = Join-Path $td "SILVER_CURSOR_OUTPUT.md"
+    $script:SilverAutonomousRunId = "rearm-invoke-edge-run"
+    $script:SilverAutonomousRunStartUtc = (Get-Date).ToUniversalTime()
+    $env:SILVER_AUTONOMOUS_RUN_ID = $script:SilverAutonomousRunId
+    $env:SILVER_AUTONOMOUS_RUN_START_UTC = $script:SilverAutonomousRunStartUtc.ToString("o")
+    $env:SILVER_AUTONOMOUS_CYCLE = "1"
+    $pf = Invoke-SilverCap50PreflightCleanup -RepoRoot $td
+    if ([string]$pf.safe_to_start_cycle -ne "YES") {
+      [void]$failures.Add("preflight_safe_to_start_expected_YES")
+    }
+    $rearm = Invoke-SilverAutonomousCycleRearm -RepoRoot $td -CursorOutputPath $cursorOut -Cycle 1
+    if ([string]$rearm.PASS_FAIL -ne "PASS") {
+      [void]$failures.Add("rearm_PASS_FAIL_expected_PASS")
+    }
+    $metaRearm = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $cursorOut
+    if ([string]$metaRearm["adapter_output_state"] -ne "INVALIDATED_AWAITING_CYCLE") {
+      [void]$failures.Add("post_rearm_state_expected_INVALIDATED_AWAITING_CYCLE")
+    }
+    if ([string]$metaRearm["process_start_utc"].Trim().Length -gt 0) {
+      [void]$failures.Add("post_rearm_process_start_must_be_empty")
+    }
+    $taskPath = Join-Path $td "SILVER_NEXT_ACTION.md"
+    $taskAbs = (Resolve-Path -LiteralPath $taskPath).Path
+    $outAbs = (Resolve-Path -LiteralPath $cursorOut).Path
+    $digest = Get-SilverTaskUtf8Sha256HexPrefix -Text "# SILVER_NEXT_ACTION.md`n"
+    $invokeIso = (Get-Date).ToUniversalTime().ToString("o")
+    $runCtx = Get-SilverAutonomousRunContext
+    Write-SilverCursorOutputAdapterInvokeStartedMeta -Path $cursorOut `
+      -RunId $runCtx.RunId -RunStartUtcIso $runCtx.RunStartUtc -CycleState $runCtx.Cycle `
+      -TaskFile $taskAbs -OutputFile $outAbs -TaskDigest $digest -ProcessStartUtcIso $invokeIso
+    if (-not (Test-SilverAdapterInvokeStartedEvidence -AdapterOutputPath $cursorOut)) {
+      [void]$failures.Add("invoke_started_evidence_expected_PASS")
+    }
+    $metaInvoke = Get-SilverAdapterMetaKeyValuesFromMarkdown -Path $cursorOut
+    if ([string]$metaInvoke["adapter_output_state"] -ne "INVOKE_STARTED") {
+      [void]$failures.Add("invoke_started_state_expected_INVOKE_STARTED")
+    }
+    if ([string]$metaInvoke["process_start_utc"].Trim().Length -eq 0) {
+      [void]$failures.Add("invoke_started_process_start_utc_missing")
+    }
+    if ([string]$metaInvoke["task_digest"] -ne $digest) {
+      [void]$failures.Add("invoke_started_task_digest_mismatch")
+    }
+    $boundaryPending = Test-SilverAutonomousAdapterCompletionBoundary -AdapterOutputPath $outAbs -ProcessStartUtc ([datetime]::Parse($invokeIso, [System.Globalization.CultureInfo]::InvariantCulture, [System.Globalization.DateTimeStyles]::RoundtripKind)) -ExpectedTaskDigest $digest -ExpectedTaskFile $taskAbs -ExpectedOutputFile $outAbs -ExpectedRunId $runCtx.RunId -ExpectedCycle "1" -ExpectedRunStartUtc $runCtx.RunStartUtc
+    if ($boundaryPending.PASS_FAIL -eq "PASS") {
+      [void]$failures.Add("invoke_started_boundary_must_not_PASS_before_adapter_completion")
+    }
+    if ([string]$boundaryPending.lifecycle_block_reason -notmatch 'adapter_invoke_started_but_not_completed') {
+      [void]$failures.Add("invoke_started_boundary_reason_expected_not_completed")
+    }
+    $capLabel = ""
+    if (Get-Command -Name Get-SilverCapRunLabel -ErrorAction SilentlyContinue) {
+      $capLabel = Get-SilverCapRunLabel -ControlledInfinite $true -MaxCycles 0 -MaxAutonomousHardCycles 10 -RepoRoot $td
+    }
+    if ($capLabel -ne "CAP10") {
+      [void]$failures.Add("product_cap_path_label_expected_CAP10_got_" + [string]$capLabel)
+    }
+  }
+  finally {
+    $ErrorActionPreference = $prevEa
+    Set-Location -LiteralPath $RepoRoot
+    Remove-Item -LiteralPath $td -Recurse -Force -ErrorAction SilentlyContinue
+    $script:SilverAutonomousRunId = ""
+    $script:SilverAutonomousRunStartUtc = [datetime]::MinValue
+    Remove-Item Env:\SILVER_AUTONOMOUS_RUN_ID -ErrorAction SilentlyContinue
+    Remove-Item Env:\SILVER_AUTONOMOUS_RUN_START_UTC -ErrorAction SilentlyContinue
+    Remove-Item Env:\SILVER_AUTONOMOUS_CYCLE -ErrorAction SilentlyContinue
+  }
+  if ($failures.Count -gt 0) {
+    Write-Host "SILVER_REARM_INVOKE_EDGECASE_SELFTEST=FAIL" -ForegroundColor Red
+    foreach ($f in $failures) { Write-Host $f -ForegroundColor Red }
+    return $false
+  }
+  Write-Host "SILVER_REARM_INVOKE_EDGECASE_SELFTEST=PASS" -ForegroundColor Green
   Write-Host "engine_changed=NO"
   Write-Host "assets_app_changed=NO"
   return $true
@@ -4845,6 +5067,8 @@ $script:LastCoreProgress = ""
 $script:LastSafetyMap = $null
 $script:SilverAutonomousRunId = ""
 $script:SilverAutonomousRunStartUtc = [datetime]::MinValue
+$script:SilverCycleAutonomousRearmPassed = $false
+$script:SilverCycleAdapterInvokeCommitted = $false
 $script:AutonomousCyclesCompleted = 0
 $script:AutonomousCyclesPass = 0
 $script:AutonomousOrchestrationOnlyStreak = 0
@@ -4893,6 +5117,12 @@ if ($Cap50RealAutonomousLifecycleOrderingSelfTest) {
 if ($AutonomousRearmSelfTest) {
   $stRearm = Invoke-SilverAutonomousRearmSelfTest -RepoRoot $RepoRoot
   if (-not $stRearm) { exit 1 }
+  exit 0
+}
+
+if ($RearmInvokeEdgeCaseSelfTest) {
+  $stRearmInvoke = Invoke-SilverRearmInvokeEdgeCaseSelfTest -RepoRoot $RepoRoot
+  if (-not $stRearmInvoke) { exit 1 }
   exit 0
 }
 
@@ -5032,6 +5262,8 @@ $cycle = 0
 while ($true) {
   $cycle++
   $script:CycleIndex = $cycle
+  $script:SilverCycleAutonomousRearmPassed = $false
+  $script:SilverCycleAdapterInvokeCommitted = $false
   $script:LastCursorExit = "N/A"
   $script:LastAutopilotExit = "N/A"
   $script:LastStatusExit = "N/A"
@@ -5180,6 +5412,9 @@ while ($true) {
   if ($controlledInfinite -and ($preflightCap50.safe_to_start_cycle -eq "YES") -and (-not $DryRun)) {
     $rearmPostPf = Invoke-SilverAutonomousCycleRearm -RepoRoot $RepoRoot -CursorOutputPath $CursorOutputPath -Cycle $cycle
     Write-SilverAutonomousCycleRearmResultBlock -Result $rearmPostPf
+    if ([string]$rearmPostPf.PASS_FAIL -eq "PASS") {
+      $script:SilverCycleAutonomousRearmPassed = $true
+    }
   }
 
   $cycleT0 = Get-Date
@@ -5322,6 +5557,18 @@ while ($true) {
   $cursorExitStr = "SKIPPED"
   $cursorCommandEffective = $CursorCommand
   $effectiveCap50TimeoutSeconds = 0
+  if ($controlledInfinite -and $script:SilverCycleAutonomousRearmPassed -and (-not $DryRun)) {
+    if ([string]::IsNullOrWhiteSpace($CursorCommand)) {
+      Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+        -CursorExit "MISSING" -AutopilotExit "N/A" -StatusExit "N/A" `
+        -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine $safetyPre `
+        -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
+        -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
+        -Headline (Get-NextActionHeadline -Text $nextText) -Focus "adapter_invoke_blocked_after_rearm" `
+        -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
+        -StopReason "adapter_invoke_blocked_cursor_command_missing_after_rearm"
+    }
+  }
   if (-not [string]::IsNullOrWhiteSpace($CursorCommand)) {
     $tokCmd = Resolve-SilverCursorCommandAutonomousTimeout -CursorCommand $CursorCommand -AutonomousOrCap50 ($controlledInfinite -or ($MaxCycles -ge 1))
     $cursorCommandEffective = [string]$tokCmd.Command
@@ -5379,6 +5626,7 @@ while ($true) {
       $script:SilverCycleCursorProcessStartUtc = [datetime]::MinValue
       $script:SilverCycleExpectedTaskDigest = $expectedTaskDigest
       $script:SilverCycleExpectedTaskFile = $expectedTaskFile
+      $ce = -1
       $psi = New-Object System.Diagnostics.ProcessStartInfo
       $psi.FileName = "cmd.exe"
       $psi.Arguments = "/c " + $resolvedCmd + " 1> """ + $stdoutTmp + """ 2> """ + $stderrTmp + """"
@@ -5388,7 +5636,30 @@ while ($true) {
       try {
         $cursorProcStartUtc = (Get-Date).ToUniversalTime()
         $script:SilverCycleCursorProcessStartUtc = $cursorProcStartUtc
+        $runCtxInvoke = Get-SilverAutonomousRunContext
+        $invokeStartIso = $cursorProcStartUtc.ToString("o")
+        Write-SilverCursorOutputAdapterInvokeStartedMeta -Path $CursorOutputPath `
+          -RunId $runCtxInvoke.RunId -RunStartUtcIso $runCtxInvoke.RunStartUtc -CycleState $runCtxInvoke.Cycle `
+          -TaskFile $expectedTaskFile -OutputFile $outAbs -TaskDigest $expectedTaskDigest -ProcessStartUtcIso $invokeStartIso
+        $script:SilverCycleAdapterInvokeCommitted = $true
+        Write-Host ("silver-autopilot-loop: adapter_invoke_started=YES process_start_utc=" + $invokeStartIso) -ForegroundColor DarkCyan
         $p = [System.Diagnostics.Process]::Start($psi)
+        if ($null -eq $p) {
+          throw [System.InvalidOperationException]::new("Process.Start returned null for cursor adapter wrapper")
+        }
+        $startupWait = Wait-SilverAdapterInvokeStartupEvidence -AdapterOutputPath $outAbs -MaxWaitMs 45000 -PollMs 200
+        Write-Host ("silver-autopilot-loop: adapter_invoke_startup_wait_PASS_FAIL=" + [string]$startupWait.PASS_FAIL + " attempts=" + [string]$startupWait.attempts) -ForegroundColor DarkCyan
+        if ([string]$startupWait.PASS_FAIL -ne "PASS") {
+          try { Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue } catch { }
+          Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+            -CursorExit "STARTUP" -AutopilotExit "N/A" -StatusExit "N/A" `
+            -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine $safetyPre `
+            -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
+            -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
+            -Headline (Get-NextActionHeadline -Text $nextText) -Focus "adapter_invoke_startup_evidence_missing" `
+            -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
+            -StopReason "adapter_invoke_startup_evidence_missing_after_rearm"
+        }
         $outerWaitMs = 0
         if ($effectiveCap50TimeoutSeconds -gt 0) {
           $outerWaitMs = ($effectiveCap50TimeoutSeconds + 180) * 1000
@@ -5531,7 +5802,22 @@ while ($true) {
             [System.IO.File]::AppendAllText($CursorOutputPath, $closeBlk, $utf8Log)
           }
         }
-      } finally {
+      }
+      catch {
+        $invokeFailReason = "adapter_invoke_process_exception|" + $_.Exception.Message
+        if (-not $script:SilverCycleAdapterInvokeCommitted) {
+          $invokeFailReason = "adapter_invoke_never_committed_after_rearm|" + $_.Exception.Message
+        }
+        Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+          -CursorExit "EXCEPTION" -AutopilotExit "N/A" -StatusExit "N/A" `
+          -GitClean ($(if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" })) -SafetyLine $safetyPre `
+          -CalW (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_write_20k") `
+          -CalQ (Get-RunReportLineValue -ReportText $reportPre -Key "calendar_query_20k") `
+          -Headline (Get-NextActionHeadline -Text $nextText) -Focus "adapter_invoke_process_exception" `
+          -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
+          -StopReason $invokeFailReason
+      }
+      finally {
         if (Test-Path -LiteralPath $stdoutTmp) { Remove-Item -LiteralPath $stdoutTmp -Force -ErrorAction SilentlyContinue }
         if (Test-Path -LiteralPath $stderrTmp) { Remove-Item -LiteralPath $stderrTmp -Force -ErrorAction SilentlyContinue }
       }
