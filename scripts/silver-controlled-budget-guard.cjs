@@ -67,10 +67,13 @@ const PROFILES = {
 };
 
 const FINAL_OUTCOMES = new Set([
+  "ENGINE_FIX_TASK_READY",
+  "HARNESS_ALIGNMENT_TASK_READY",
+  "PLANNER_ALIGNMENT_TASK_READY",
   "PR_READY",
   "MERGED_AND_PROVED",
-  "SAFE_BLOCKED",
   "NO_SAFE_FIX",
+  "SAFE_BLOCKED",
   "HARD_FAIL",
   "NEED_HUMAN_INPUT",
   "NO_CHANGE",
@@ -747,6 +750,8 @@ if (require.main === module) {
 module.exports = {
   CONTROLLED_CAP_PROFILE_DEFAULT,
   PROFILES,
+  FINAL_OUTCOMES,
+  METRIC_KEYS,
   resolveProfileId,
   createState,
   loadState,
@@ -755,6 +760,7 @@ module.exports = {
   evaluateAll,
   detectSelfExpandingGoal,
   buildMetricDeltaBlock,
+  captureMetricSnapshot,
   finalizeCap,
   runSelftest,
 };

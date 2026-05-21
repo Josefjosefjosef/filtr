@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Silver Autopilot V1 — local orchestration only (no runtime Silver changes).
- * Commands: --status | --verify-pr= | --merge-pr= | --post-merge-proof | --refresh-rhc3 | --ask-model | --sanitize-next-action-md | --auto | --full-auto-loop | --loop-once | --cli-autonomous-adapter-diagnostic | --cursor3-execution-status | --cursor3-execution-bridge-selftest | --controlled-budget-guard-selftest
+ * Commands: --status | --verify-pr= | --merge-pr= | --post-merge-proof | --refresh-rhc3 | --ask-model | --sanitize-next-action-md | --auto | --full-auto-loop | --loop-once | --cli-autonomous-adapter-diagnostic | --cursor3-execution-status | --cursor3-execution-bridge-selftest | --controlled-budget-guard-selftest | --cap10-pipeline-contract-selftest | --cap10-replay-lifecycle-selftest | --metric-delta-contract-selftest | --generic-fallback-blocker-selftest
  */
 /* eslint-disable no-console */
 "use strict";
@@ -3896,6 +3896,10 @@ function parseArgs(argv) {
     else if (a === "--cursor3-execution-status") out.cmd = "cursor3-execution-status";
     else if (a === "--cursor3-execution-bridge-selftest") out.cmd = "cursor3-execution-bridge-selftest";
     else if (a === "--controlled-budget-guard-selftest") out.cmd = "controlled-budget-guard-selftest";
+    else if (a === "--cap10-pipeline-contract-selftest") out.cmd = "cap10-pipeline-contract-selftest";
+    else if (a === "--cap10-replay-lifecycle-selftest") out.cmd = "cap10-replay-lifecycle-selftest";
+    else if (a === "--metric-delta-contract-selftest") out.cmd = "metric-delta-contract-selftest";
+    else if (a === "--generic-fallback-blocker-selftest") out.cmd = "generic-fallback-blocker-selftest";
     else if (a === "--preflight-runtime-cleanup") out.cmd = "preflight-runtime-cleanup";
     else if (a === "--preflight-runtime-cleanup-selftest") out.cmd = "preflight-runtime-cleanup-selftest";
     else if (a === "--cap-dirty-report-lifecycle-selftest") out.cmd = "cap-dirty-report-lifecycle-selftest";
@@ -3947,6 +3951,18 @@ if (require.main === module) {
   } else if (p.cmd === "controlled-budget-guard-selftest") {
     const { runSelftest } = require("./silver-controlled-budget-guard.cjs");
     process.exit(runSelftest() ? 0 : 1);
+  } else if (p.cmd === "cap10-pipeline-contract-selftest") {
+    const { runCap10PipelineContractSelftest } = require("./silver-cap10-pipeline-contract.cjs");
+    process.exit(runCap10PipelineContractSelftest() ? 0 : 1);
+  } else if (p.cmd === "cap10-replay-lifecycle-selftest") {
+    const { runCap10ReplayLifecycleSelftest } = require("./silver-cap10-pipeline-contract.cjs");
+    process.exit(runCap10ReplayLifecycleSelftest() ? 0 : 1);
+  } else if (p.cmd === "metric-delta-contract-selftest") {
+    const { runMetricDeltaContractSelftest } = require("./silver-cap10-pipeline-contract.cjs");
+    process.exit(runMetricDeltaContractSelftest() ? 0 : 1);
+  } else if (p.cmd === "generic-fallback-blocker-selftest") {
+    const { runGenericFallbackBlockerSelftest } = require("./silver-cap10-pipeline-contract.cjs");
+    process.exit(runGenericFallbackBlockerSelftest() ? 0 : 1);
   } else if (p.cmd === "preflight-runtime-cleanup") {
     const dryOnly = argv.indexOf("--dry-run") >= 0;
     const pf = cap50PreflightRuntimeCleanup(dryOnly);
