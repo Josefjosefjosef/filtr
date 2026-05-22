@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-05-22T07:29:39.146778Z",
+  "ingestedAt": "2026-05-22T08:10:05.795715Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Legenda je zpět! Dustin Hoffman po dlouhé době vyšel na červený koberec, a dokonce ukázal rodinu",
+      "url": "https://www.prozeny.cz/clanek/zdravi-a-zivotni-styl-zaujalo-nas-legenda-je-zpet-dustin-hoffman-po-dlouhe-dobe-vysel-na-cerveny-koberec-a-dokonce-ukazal-rodinu-103602",
+      "dt": "2026-05-22T07:58:18Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "dlouhé",
+        "době",
+        "dokonce",
+        "dustin",
+        "hoffman",
+        "koberec",
+        "legenda",
+        "rodinu",
+        "ukázal",
+        "vyšel",
+        "zpět",
+        "červený"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -817,32 +846,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Ebola v Praze? Lidé se bojí nákazy! Odborníci vysvětlují, jaká je realita",
-      "url": "https://www.prozeny.cz/clanek/zdravi-wiki-nemoci-ebola-v-cesku-lide-se-boji-nakazy-odbornici-ale-vysvetluji-jaka-je-realita-103562",
-      "dt": "2026-05-20T09:53:21Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "bojí",
-        "ebola",
-        "jaká",
-        "lidé",
-        "nákazy",
-        "odborníci",
-        "praze",
-        "realita",
-        "vysvětlují"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -853,7 +856,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 40203,
+      "bytes": 40111,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -890,7 +893,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T07:58:18Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 30
@@ -905,6 +908,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Legenda je zpět! Dustin Hoffman po dlouhé době vyšel na červený koberec, a dokonce ukázal rodinu",
+            "publishedAt": "2026-05-22T07:58:18Z"
+          },
           {
             "title": "Nejkrásnější interiéry Česka a Slovenska. Podívejte se do fotogalerie na vítěze za rok 2025",
             "publishedAt": "2026-05-22T06:00:00Z"
@@ -931,10 +938,6 @@
           },
           {
             "title": "Jedna fotka bývalého na sítích a den je zkažený. Studie popisuje, proč to samy sobě děláme",
-            "publishedAt": "2026-05-22T03:00:00Z"
-          },
-          {
-            "title": "Kamarádka Michaela Jacksona a Beyoncé své doby. Diana Ross poprvé míří do Česka: Znáte její příběh?",
             "publishedAt": "2026-05-22T03:00:00Z"
           }
         ]

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-22T07:29:39.146778Z",
+  "ingestedAt": "2026-05-22T08:10:05.795715Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Služba PlayStation Plus nakonec zdražuje plošně napříč všemi variantami",
+      "url": "https://zing.cz/article/sluzba-playstation-plus-nakonec-zdrazuje-plosne-napric-vsemi-variantami",
+      "dt": "2026-05-22T08:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "nakonec",
+        "napříč",
+        "playstation",
+        "plošně",
+        "plus",
+        "služba",
+        "variantami",
+        "všemi",
+        "zdražuje"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1000,28 +1026,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Capcom překonává vlastní prodejní rekordy",
-      "url": "https://zing.cz/article/capcom-prekonava-vlastni-prodejni-rekordy",
-      "dt": "2026-05-17T16:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "capcom",
-        "prodejní",
-        "překonává",
-        "rekordy",
-        "vlastní"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1032,7 +1036,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 127111,
+      "bytes": 127038,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1069,7 +1073,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-22T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T08:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1085,6 +1089,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Služba PlayStation Plus nakonec zdražuje plošně napříč všemi variantami",
+            "publishedAt": "2026-05-22T08:00:00Z"
+          },
           {
             "title": "Těšíte se na The Elder Scrolls VI? RPG Fatekeeper může zkrátit vaše čekání",
             "publishedAt": "2026-05-22T06:00:00Z"
@@ -1112,10 +1120,6 @@
           {
             "title": "Službu PlayStation Plus brzy opustí několik her v čele s hitem od Rockstaru",
             "publishedAt": "2026-05-21T10:00:00Z"
-          },
-          {
-            "title": "Končí další live service hra. V silné konkurenci neuspělo ani studio Quantic Dream",
-            "publishedAt": "2026-05-21T08:00:00Z"
           }
         ]
       }

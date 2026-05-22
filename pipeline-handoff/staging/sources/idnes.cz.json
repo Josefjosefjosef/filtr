@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-22T07:29:39.146778Z",
+  "ingestedAt": "2026-05-22T08:10:05.795715Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Bůzek je novým členem představenstva MAFRA, Horáková Tykačová míří do dozorčí rady",
+      "url": "https://www.idnes.cz/zpravy/mediahub/buzek-je-novym-clenem-predstavenstva-mafra-tykacova-miri-do-dozorci-rady.A260522_094703_mediahub_maka",
+      "dt": "2026-05-22T07:47:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "bůzek",
+        "dozorčí",
+        "horáková",
+        "mafra",
+        "míří",
+        "novým",
+        "představenstva",
+        "rady",
+        "tykačová",
+        "členem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -768,33 +795,6 @@
         "stejný",
         "čas",
         "řekl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Bavorské strany podpořily sudetský sjezd v Brně, AfD žádá zrušení dekretů",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/sjezdu-sudetskych-nemcu.A260521_163822_zahranicni_bro",
-      "dt": "2026-05-21T14:46:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "afd",
-        "bavorské",
-        "brně",
-        "dekretů",
-        "podpořily",
-        "sjezd",
-        "strany",
-        "sudetský",
-        "zrušení",
-        "žádá"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1594,7 +1594,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49508,
+      "bytes": 49361,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1631,7 +1631,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T07:14:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T07:47:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1648,6 +1648,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bůzek je novým členem představenstva MAFRA, Horáková Tykačová míří do dozorčí rady",
+            "publishedAt": "2026-05-22T07:47:00Z"
+          },
           {
             "title": "Moskva osázela náměstí umělou levandulí. Smrdí a za tepla ztrácí tvar, stěžují si lidé",
             "publishedAt": "2026-05-22T07:14:00Z"
@@ -1675,10 +1679,6 @@
           {
             "title": "Trump dosadil nového šéfa centrální banky. Warsh má za úkol snížit úroky",
             "publishedAt": "2026-05-22T04:22:00Z"
-          },
-          {
-            "title": "USA zadržely sestru šéfky konglomerátu Gaesa, který ovládají Castrovi lidé",
-            "publishedAt": "2026-05-22T04:14:00Z"
           }
         ]
       }
