@@ -38116,6 +38116,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   /**
    * P1 note_write_roi: „ulož do poznámek … ne jako událost / nepleť s kalendářem“ — nesmí force calendar composite.
+   * Úzké povrchy jen — bez „ne do kalendáře + do poznámek“ (self_correction module_switch clarify lane).
    */
   function iuSilverExplicitNoteWriteDominatesCalendarCompositeFolded(f) {
     const x = String(f || "");
@@ -38124,8 +38125,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return (
       /\bne\s+jako\s+udalost\b/.test(x) ||
       /\bne\s+jako\s+ukol/.test(x) ||
-      /\bneplet\b.*\bkalend/.test(x) ||
-      (/\bne\s+do\s+kalend/.test(x) && /\bdo\s+poznam/.test(x))
+      /\bneplet\b.*\bkalend/.test(x)
     );
   }
 
