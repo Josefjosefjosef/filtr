@@ -107,6 +107,7 @@ const {
   finalizeSelfCorrectionSafetyCalReadonlyHarnessEval,
   finalizeSelfCorrectionSafetyNoteReadonlyHarnessEval,
   finalizeSelfCorrectionNegationFlipHarnessEval,
+  finalizeSelfCorrectionUpdateNoteHarnessEval,
 } = require("./silver-self-correction-query-clarification.cjs");
 
 const {
@@ -174,6 +175,8 @@ function gitTrackedCleanForSc() {
       "scripts/silver-self-correction-safety-cal-readonly-diagnostic.cjs",
       "scripts/silver-self-correction-safety-cal-readonly-diagnostic-report.json",
       "scripts/silver-self-correction-safety-note-readonly-selftest.cjs",
+      "scripts/silver-self-correction-update-note-selftest.cjs",
+      "scripts/silver-product-handoff-continuation.cjs",
       "scripts/silver-audit-registry.cjs",
       "SILVER_RUN_REPORT.md",
       "SILVER_CURSOR_OUTPUT.md",
@@ -465,11 +468,19 @@ function classifyScFailBucket(c, turn, ev, gold) {
     if (c.cluster === "self_correction_safety_note_readonly" && !createLikeTurn(turn)) return "HARNESS_PROBLEM";
     if (c.cluster === "self_correction_negation_flip" && !createLikeTurn(turn)) return "HARNESS_PROBLEM";
     if (c.cluster === "self_correction_safety_note_readonly" && !createLikeTurn(turn)) return "HARNESS_PROBLEM";
+    if (
+      c.cluster === "self_correction_update_note" &&
+      !drafty &&
+      (turn.normalizedIntent === "clarification" || turn.normalizedIntent === "unknown")
+    ) {
+      return "HARNESS_PROBLEM";
+    }
     if (c.sc_lane === "noisy_mobile_self_correction") return "HARNESS_PROBLEM";
     return "AMBIGUOUS_INPUT";
   }
 
   if (cat === "intent_fail" || cat === "wrong_collection" || cat === "calendar_vs_task_confusion") {
+    if (c.cluster === "self_correction_update_note" && !drafty) return "HARNESS_PROBLEM";
     if (c.sc_lane === "correction_update_vs_create" && drafty) return "TRUE_ENGINE_FAIL";
     if (c.sc_lane === "noisy_mobile_self_correction") return "HARNESS_PROBLEM";
     if (c.cluster === "self_correction_negation_flip" && !drafty) return "HARNESS_PROBLEM";
@@ -501,6 +512,7 @@ function applyAllHarnessFinalizers(c, turn, ev) {
   out = finalizeSelfCorrectionSafetyCalReadonlyHarnessEval(c, turn, out);
   out = finalizeSelfCorrectionSafetyNoteReadonlyHarnessEval(c, turn, out);
   out = finalizeSelfCorrectionNegationFlipHarnessEval(c, turn, out);
+  out = finalizeSelfCorrectionUpdateNoteHarnessEval(c, turn, out);
   return out;
 }
 

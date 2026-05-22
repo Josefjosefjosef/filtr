@@ -37,6 +37,7 @@ const DIAGNOSTIC_CLUSTER_COMMANDS = {
   self_correction_update_note: [
     "node scripts/silver-self-correction-audit.cjs",
     "node scripts/silver-self-correction-safety-diagnostic.cjs",
+    "node scripts/silver-self-correction-update-note-selftest.cjs",
   ],
   self_correction_negation_flip: [
     "node scripts/silver-self-correction-audit.cjs",

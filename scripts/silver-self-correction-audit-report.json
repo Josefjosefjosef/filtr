@@ -1,13 +1,13 @@
 {
   "harness_id": "silver_self_correction_audit_v1",
-  "generated_at": "2026-05-22T09:36:50.790Z",
-  "main_commit": "df56ca07a579e24a0cd227df6827f1cfe627c46b",
+  "generated_at": "2026-05-22T10:14:55.005Z",
+  "main_commit": "f8abf6f403ef731cdeffc5e983668a0be06a7dd2",
   "engine_changed": "NO",
   "assets_app_changed": "NO",
   "total_cases": 21000,
-  "pass_count": 18241,
-  "fail_count": 2759,
-  "overall_accuracy": "86.86",
+  "pass_count": 19241,
+  "fail_count": 1759,
+  "overall_accuracy": "91.62",
   "family_breakdown": {
     "correction_after_create_intent": {
       "pass": 2760,
@@ -30,9 +30,9 @@
       "accuracy": "100.00"
     },
     "correction_update_vs_create": {
-      "pass": 1786,
-      "fail": 1214,
-      "accuracy": "59.53"
+      "pass": 2786,
+      "fail": 214,
+      "accuracy": "92.87"
     },
     "noisy_mobile_self_correction": {
       "pass": 2843,
@@ -46,7 +46,6 @@
     }
   },
   "top_fail_clusters": [
-    "self_correction_update_note:1000",
     "self_correction_module_task_to_note:962",
     "self_correction_after_create_task:184",
     "self_correction_update_task:179",
@@ -63,22 +62,23 @@
     "self_correction_negation_query:0",
     "self_correction_negation_hard:0",
     "self_correction_negation_flip:0",
+    "self_correction_update_note:0",
     "self_correction_noisy_neg_read:0",
     "self_correction_safety_cal_readonly:0",
     "self_correction_safety_task_readonly:0"
   ],
   "true_engine_fail_count": 314,
   "harness_problem_count": 1149,
-  "ambiguous_input_count": 1296,
+  "ambiguous_input_count": 296,
   "safety_risk_count": 0,
   "dangerous_write_count": 0,
   "false_write_count": 0,
   "query_created_write_count": 0,
   "write_when_negated_count": 0,
   "recommended_next_task_type": "audit_expansion",
-  "recommended_next_cluster": "self_correction_update_note:1000",
+  "recommended_next_cluster": "self_correction_module_task_to_note:962",
   "self_correction_status": "PARTIAL",
-  "self_correction_next_action": "Expand clarification gold / harness tolerance for ambiguous self-correction surfaces.",
+  "self_correction_next_action": "Tune Self-Correction harness gold labels and lane templates before engine changes.",
   "safety": {
     "dangerous_write_count": 0,
     "false_write_count": 0,

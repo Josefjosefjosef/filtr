@@ -7,6 +7,7 @@ const harness = require("./audit_silver_realistic_mobile_corpus.cjs");
 const rhc3 = require("./silver-real-human-chaos-v3.cjs");
 const {
   isGlobalNoWriteNegation,
+  isScopedUpdateNegation,
   safetyNoWriteFoldedGlobal,
   countsAsSafetyNegationWriteLeak,
 } = require("./silver-self-correction-negation-scope.cjs");
@@ -18,6 +19,7 @@ const SC_NOISY_NEG_READ_CLUSTER = "self_correction_noisy_neg_read";
 const SC_SAFETY_CAL_READONLY_CLUSTER = "self_correction_safety_cal_readonly";
 const SC_SAFETY_NOTE_READONLY_CLUSTER = "self_correction_safety_note_readonly";
 const SC_NEGATION_FLIP_CLUSTER = "self_correction_negation_flip";
+const SC_UPDATE_NOTE_CLUSTER = "self_correction_update_note";
 
 function selfCorrectionPhraseFolded(f) {
   const fold = String(f || "");
@@ -203,6 +205,36 @@ function safeSafetyNoteReadonlyOutcome(turn) {
 function safeNegationFlipOutcome(turn) {
   const eng = String(turn.normalizedIntent || "");
   return safeNoisyNegReadOutcome(turn) || eng === "tasks.read";
+}
+
+function updateNoteEditLeadFolded(fold) {
+  const f = String(fold || "");
+  return (
+    (/\b(zmen|změn|uprav|oprav)\b/i.test(f) && /\bpoznam/i.test(f)) ||
+    (/\b(zmen|změn|uprav|oprav)\b/i.test(f) && /\bo\s+poznam/i.test(f))
+  );
+}
+
+/**
+ * Update-vs-create note surface: scoped anti-create + edit existing note (not blind create).
+ */
+function updateNoteHarnessCueFolded(fold) {
+  const f = String(fold || "");
+  if (!updateNoteEditLeadFolded(f)) return false;
+  if (!isScopedUpdateNegation(f) && !/\bjen\s+uprav\b/i.test(f)) return false;
+  if (/\b(kalendar|schuz|udalost|ukol)\b/i.test(f) && !/\bpoznam|poznám|poznamk\b/i.test(f)) {
+    return false;
+  }
+  return true;
+}
+
+function isSelfCorrectionUpdateNoteHarnessCase(c) {
+  return String(c.cluster || "") === SC_UPDATE_NOTE_CLUSTER;
+}
+
+function safeUpdateNoteOutcome(turn) {
+  const eng = String(turn.normalizedIntent || "");
+  return eng === "clarification" || eng === "unknown";
 }
 
 /**
@@ -413,11 +445,59 @@ function finalizeSelfCorrectionNegationFlipHarnessEval(c, turn, ev) {
   });
 }
 
+/**
+ * Harness-only: accept safe clarification when user asks to update an existing note
+ * without creating a duplicate (scoped anti-create); no draft / create / write leak.
+ */
+function finalizeSelfCorrectionUpdateNoteHarnessEval(c, turn, ev) {
+  if (ev.pass) return ev;
+
+  const cat = String(ev.cat || "");
+  if (cat === "query_created_write" || cat === "negative_instruction_fail" || cat === "write_when_negated") {
+    return ev;
+  }
+  if (createLikeTurn(turn)) return ev;
+
+  const fold = foldCs(c.input);
+  if (countsAsSafetyNegationWriteLeak(fold, c) && createLikeTurn(turn)) return ev;
+  if (hasNegWrite(fold) && createLikeTurn(turn)) return ev;
+
+  const clusterOk = isSelfCorrectionUpdateNoteHarnessCase(c);
+  const cueOk = updateNoteHarnessCueFolded(fold);
+  if (!clusterOk && !cueOk) return ev;
+
+  const harnessAlignableCat =
+    cat === "intent_fail" ||
+    cat === "false_negative" ||
+    cat === "unnecessary_disambiguation" ||
+    cat === "wrong_collection";
+  if (!harnessAlignableCat) return ev;
+  if (!safeUpdateNoteOutcome(turn)) return ev;
+  if (!cueOk) return ev;
+
+  if (c.gold) {
+    c.gold.sc_update_note_harness = "update_clarify_or_safe_no_write_ok";
+    c.gold.expected_should_clarify =
+      turn.normalizedIntent === "clarification" || turn.normalizedIntent === "unknown";
+    if (c.gold.expected_should_write) {
+      c.gold.expected_should_write = false;
+    }
+  }
+  c._sc_update_note_harness_pass = true;
+  return Object.assign({}, ev, {
+    pass: true,
+    cat: "sc_update_note_harness_ok",
+    auditIntent: ev.auditIntent,
+    raw: ev.raw,
+  });
+}
+
 module.exports = {
   SC_NOISY_NEG_READ_CLUSTER,
   SC_SAFETY_CAL_READONLY_CLUSTER,
   SC_SAFETY_NOTE_READONLY_CLUSTER,
   SC_NEGATION_FLIP_CLUSTER,
+  SC_UPDATE_NOTE_CLUSTER,
   selfCorrectionPhraseFolded,
   calendarQueryReadLeadFolded,
   hasKdeUlozeneCueFolded,
@@ -433,6 +513,10 @@ module.exports = {
   isSelfCorrectionSafetyCalReadonlyHarnessCase,
   isSelfCorrectionSafetyNoteReadonlyHarnessCase,
   isSelfCorrectionNegationFlipHarnessCase,
+  isSelfCorrectionUpdateNoteHarnessCase,
+  updateNoteEditLeadFolded,
+  updateNoteHarnessCueFolded,
+  safeUpdateNoteOutcome,
   safeNoisyNegReadOutcome,
   safeSafetyNoteReadonlyOutcome,
   safeNegationFlipOutcome,
@@ -440,4 +524,5 @@ module.exports = {
   finalizeSelfCorrectionSafetyCalReadonlyHarnessEval,
   finalizeSelfCorrectionSafetyNoteReadonlyHarnessEval,
   finalizeSelfCorrectionNegationFlipHarnessEval,
+  finalizeSelfCorrectionUpdateNoteHarnessEval,
 };
