@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-22T15:36:21.162330Z",
+  "ingestedAt": "2026-05-22T16:14:38.174104Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Pro lehčí elektrické vlaky. Pod dráty půjde 590 kilometrů tratí, kde si počkáme?",
+      "url": "https://ekonomickydenik.cz/draty-590-kilometru-trati-elektrizace/",
+      "dt": "2026-05-22T16:03:25Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "590",
+        "dráty",
+        "elektrické",
+        "kilometrů",
+        "lehčí",
+        "počkáme",
+        "půjde",
+        "tratí",
+        "vlaky"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Startuje boj o kontrolu nad tříděním. Zálohování PET lahví jde stranou",
+      "url": "https://ekonomickydenik.cz/boj-kontrola-trideni-zalohovani-pet-stranou/",
+      "dt": "2026-05-22T15:32:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "boj",
+        "jde",
+        "kontrolu",
+        "lahví",
+        "pet",
+        "startuje",
+        "stranou",
+        "tříděním",
+        "zálohování"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -738,59 +790,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Drony nad Litvou jsou hrozbou pro celou Evropu, varuje von der Leyenová",
-      "url": "https://ekonomickydenik.cz/drony-nad-litvou-hrozba-evropa/",
-      "dt": "2026-05-20T17:29:01Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "celou",
-        "der",
-        "drony",
-        "evropu",
-        "hrozbou",
-        "leyenová",
-        "litvou",
-        "varuje",
-        "von"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "400 tisíc řidičů si musí vyměnit doklady. On-line teď žádají častěji i senioři",
-      "url": "https://ekonomickydenik.cz/400-tisic-ridicu-vymenit-doklady/",
-      "dt": "2026-05-20T17:20:45Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "400",
-        "doklady",
-        "line",
-        "musí",
-        "senioři",
-        "tisíc",
-        "vyměnit",
-        "častěji",
-        "řidičů",
-        "žádají"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73836,
+      "bytes": 73929,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,13 +837,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T15:02:12Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T16:03:25Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "zpravy": 3,
           "finance": 22,
           "zdravi": 4,
-          "sport": 1,
-          "zpravy": 3
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -856,6 +855,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pro lehčí elektrické vlaky. Pod dráty půjde 590 kilometrů tratí, kde si počkáme?",
+            "publishedAt": "2026-05-22T16:03:25Z"
+          },
+          {
+            "title": "Startuje boj o kontrolu nad tříděním. Zálohování PET lahví jde stranou",
+            "publishedAt": "2026-05-22T15:32:00Z"
+          },
           {
             "title": "Nebezpečné a nekompetentní. Nápad Babiše prodat Explosii strhala Černochová",
             "publishedAt": "2026-05-22T15:02:12Z"
@@ -879,14 +886,6 @@
           {
             "title": "Stopka pro „obalovou vyhlášku“? Česko iniciuje celoevropskou výzvu za odklad",
             "publishedAt": "2026-05-22T10:30:00Z"
-          },
-          {
-            "title": "Polská vláda jde ve stopách Stanjury. Chce uvalit mimořádnou daň na Orlen",
-            "publishedAt": "2026-05-22T09:42:59Z"
-          },
-          {
-            "title": "Levné iPhony či hodinky Garmin od státu? Ve hře je opět dražba zabavené elektroniky za miliony",
-            "publishedAt": "2026-05-22T09:10:20Z"
           }
         ]
       }

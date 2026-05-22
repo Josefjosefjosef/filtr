@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-22T15:36:21.162330Z",
+  "ingestedAt": "2026-05-22T16:14:38.174104Z",
   "items": [
     {
       "section": "veda",
@@ -24,6 +24,35 @@
         "vybrali",
         "wireless",
         "úplně"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Dělá se vám špatně v autě? Skrytá funkce v iPhonu a skvělá aplikace pro Android to vyřeší i bez léků",
+      "url": "https://mobilmania.zive.cz/clanky/dela-se-vam-spatne-v-aute-skryta-funkce-v-iphonu-a-skvela-aplikace-pro-android-to-vyresi-i-bez-leku/sc-3-a-1364780/default.aspx",
+      "dt": "2026-05-22T15:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "android",
+        "aplikace",
+        "autě",
+        "dělá",
+        "funkce",
+        "iphonu",
+        "léků",
+        "skrytá",
+        "skvělá",
+        "vyřeší",
+        "vám",
+        "špatně"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -942,34 +971,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Google utahuje opasky. Gemini zavádí týdenní limity, na této stránce je můžete sledovat",
-      "url": "https://www.zive.cz/clanky/google-utahuje-opasky-gemini-zavadi-tydenni-limity-na-teto-strance-je-muzete-sledovat/sc-3-a-241245/default.aspx",
-      "dt": "2026-05-19T07:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "gemini",
-        "google",
-        "limity",
-        "můžete",
-        "opasky",
-        "sledovat",
-        "stránce",
-        "této",
-        "týdenní",
-        "utahuje",
-        "zavádí"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -980,7 +981,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23114,
+      "bytes": 22961,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1017,7 +1018,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-22T14:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T15:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1035,6 +1036,10 @@
           {
             "title": "Vybrali jsme nejlepší sluchátka True Wireless. Jsou malá, úplně bez drátů a levnější než dřív",
             "publishedAt": "2026-05-22T11:45:00Z"
+          },
+          {
+            "title": "Dělá se vám špatně v autě? Skrytá funkce v iPhonu a skvělá aplikace pro Android to vyřeší i bez léků",
+            "publishedAt": "2026-05-22T15:45:00Z"
           },
           {
             "title": "Porsche mezi PC stoly. Herman Miller Coyl má motor, pegboard a stojí průměrnou mzdu",
@@ -1059,10 +1064,6 @@
           {
             "title": "Apple schytal za Liquid Glass posměch. Dnes stejný směr přebírá i Google a další výrobci telefonů s Androidem",
             "publishedAt": "2026-05-22T07:45:00Z"
-          },
-          {
-            "title": "Na optice už surfuje více Čechů než na VDSL. Tento rok pokoří i Wi-Fi",
-            "publishedAt": "2026-05-22T06:45:00Z"
           }
         ]
       }

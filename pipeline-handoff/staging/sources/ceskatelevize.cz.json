@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-22T15:36:21.162330Z",
+  "ingestedAt": "2026-05-22T16:14:38.174104Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Celosvětový výskyt duševních poruch se od roku 1990 téměř zdvojnásobil, ukazuje studie",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/celosvetovy-vyskyt-dusevnich-poruch-se-od-roku-1990-temer-zdvojnasobil-ukazuje-studie-373741",
+      "dt": "2026-05-22T15:52:59Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "1990",
+        "celosvětový",
+        "duševních",
+        "poruch",
+        "roku",
+        "studie",
+        "téměř",
+        "ukazuje",
+        "výskyt",
+        "zdvojnásobil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -735,27 +762,28 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "USA vyšlou do Polska dalších pět tisíc vojáků, oznámil Trump",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/usa-vyslou-do-polska-dalsich-pet-tisic-vojaku-oznamil-trump-373722",
-      "dt": "2026-05-21T21:09:51Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Bettiol se po pěti letech dočkal etapového vítězství, 13. etapu Gira vyhrál po úniku",
+      "url": "https://sport.ceskatelevize.cz/clanek/cyklistika/bettiol-se-po-peti-letech-dockal-etapoveho-vitezstvi-13-etapu-gira-vyhral-po-uniku-156949",
+      "dt": "2026-05-22T15:45:43Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "dalších",
-        "oznámil",
-        "polska",
-        "pět",
-        "tisíc",
-        "trump",
-        "usa",
-        "vojáků",
-        "vyšlou"
+        "bettiol",
+        "dočkal",
+        "etapového",
+        "etapu",
+        "gira",
+        "letech",
+        "pěti",
+        "vyhrál",
+        "vítězství",
+        "úniku"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1477,26 +1505,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Soutěž k MS v hokeji – 21. května",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/soutez-k-ms-v-hokeji-21-kvetna-156742",
-      "dt": "2026-05-20T22:00:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "hokeji",
-        "května",
-        "soutěž"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1507,7 +1515,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43881,
+      "bytes": 43830,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1567,11 +1575,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T15:27:54Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T15:52:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 5,
-          "zpravy": 25
+          "zpravy": 25,
+          "other": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1583,6 +1591,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Celosvětový výskyt duševních poruch se od roku 1990 téměř zdvojnásobil, ukazuje studie",
+            "publishedAt": "2026-05-22T15:52:59Z"
+          },
           {
             "title": "„Lidé se nemění,“ říká Radůza k singlu o současné době",
             "publishedAt": "2026-05-22T15:27:54Z"
@@ -1610,10 +1622,6 @@
           {
             "title": "Muž, který útočil v obchodním domě v Hradci Králové, půjde před soud",
             "publishedAt": "2026-05-22T12:53:23Z"
-          },
-          {
-            "title": "Rakousko bude dál kontrolovat hranice, dopravu to nezdrží, řekl Metnar",
-            "publishedAt": "2026-05-22T12:29:10Z"
           }
         ]
       }
@@ -1625,7 +1633,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36141,
+      "bytes": 36610,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1662,7 +1670,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T13:58:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T15:45:43Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1677,6 +1685,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bettiol se po pěti letech dočkal etapového vítězství, 13. etapu Gira vyhrál po úniku",
+            "publishedAt": "2026-05-22T15:45:43Z"
+          },
           {
             "title": "MS v hokeji: Kanada – Slovinsko a Německo – Maďarsko",
             "publishedAt": "2026-05-22T13:58:00Z"
@@ -1704,10 +1716,6 @@
           {
             "title": "Soutěž k MS v hokeji – 22. května",
             "publishedAt": "2026-05-21T22:00:00Z"
-          },
-          {
-            "title": "Ronaldo slaví s an-Nasrem první titul, v posledním kole zvítězili nad Damacem",
-            "publishedAt": "2026-05-21T20:41:01Z"
           }
         ]
       }
@@ -1719,7 +1727,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78419,
+      "bytes": 78399,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

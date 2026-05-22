@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-22T15:36:21.162330Z",
+  "ingestedAt": "2026-05-22T16:14:38.174104Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Assassin's Creed Black Flag Resynced ukázal dosud nejdetailnější záběry z hraní",
+      "url": "https://zing.cz/article/assassin-s-creed-black-flag-resynced-ukazal-dosud-nejdetailnejsi-zabery-z-hrani",
+      "dt": "2026-05-22T16:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "assassin",
+        "black",
+        "creed",
+        "dosud",
+        "flag",
+        "hraní",
+        "nejdetailnější",
+        "resynced",
+        "ukázal",
+        "záběry"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1006,30 +1033,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Aliens: Fireteam Elite 2 ukázalo premiérové záběry z hraní",
-      "url": "https://zing.cz/article/aliens-fireteam-elite-2-ukazalo-premierove-zabery-z-hrani",
-      "dt": "2026-05-18T10:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "aliens",
-        "elite",
-        "fireteam",
-        "hraní",
-        "premiérové",
-        "ukázalo",
-        "záběry"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1040,7 +1043,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126838,
+      "bytes": 126823,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1077,11 +1080,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-22T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T16:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "other": 39,
-          "zpravy": 1
+          "other": 40
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1093,6 +1095,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Assassin's Creed Black Flag Resynced ukázal dosud nejdetailnější záběry z hraní",
+            "publishedAt": "2026-05-22T16:00:00Z"
+          },
           {
             "title": "Fable obdrželo rating ve dvou zemích, datum vydání může následovat",
             "publishedAt": "2026-05-22T15:00:00Z"
@@ -1120,10 +1126,6 @@
           {
             "title": "Aktivujte si zdarma na Steamu dvě kladně hodnocené hry",
             "publishedAt": "2026-05-22T04:00:00Z"
-          },
-          {
-            "title": "Subnautica 2 se měla stát zatím nejrychleji prodávanou hrou na Steamu za rok 2026",
-            "publishedAt": "2026-05-21T18:00:00Z"
           }
         ]
       }

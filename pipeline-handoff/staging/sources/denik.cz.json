@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-22T15:36:21.162330Z",
+  "ingestedAt": "2026-05-22T16:14:38.174104Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zavázali jim oči a odešli. Matka a otčím nechali děti v lese napospas osudu",
+      "url": "https://www.denik.cz/staty-eu/portugalsko-opustene-francouzske-deti-v-lese-matka-a-otcim-dopadeni-v-kavarne.html",
+      "dt": "2026-05-22T15:42:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "děti",
+        "jim",
+        "lese",
+        "matka",
+        "napospas",
+        "nechali",
+        "odešli",
+        "osudu",
+        "otčím",
+        "oči",
+        "zavázali"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -613,31 +641,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Katalánsko pohrozilo sprejerům. Prudce zvýšilo pokuty za graffiti na vlacích",
-      "url": "https://www.denik.cz/staty-eu/katalansko-vlaky-graffiti-pokuty.html",
-      "dt": "2026-05-22T05:04:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "graffiti",
-        "katalánsko",
-        "pohrozilo",
-        "pokuty",
-        "prudce",
-        "sprejerům",
-        "vlacích",
-        "zvýšilo"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -648,7 +651,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28460,
+      "bytes": 28422,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -685,7 +688,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-22T14:43:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T15:42:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -703,6 +706,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zavázali jim oči a odešli. Matka a otčím nechali děti v lese napospas osudu",
+            "publishedAt": "2026-05-22T15:42:00Z"
+          },
           {
             "title": "Móda z Cannes: Královnou je Demi Moore, šokoval šperk přes ňadra",
             "publishedAt": "2026-05-22T14:43:00Z"
@@ -730,10 +737,6 @@
           {
             "title": "Stát uvažuje o prodeji Explosie, řekl Babiš. Zájem už projevila Francie",
             "publishedAt": "2026-05-22T11:55:00Z"
-          },
-          {
-            "title": "Tragédie na D6 u Řevničova. Uvolněné kolo zabilo dva lidi",
-            "publishedAt": "2026-05-22T11:37:00Z"
           }
         ]
       }
