@@ -1,11 +1,11 @@
 {
   "harness_id": "silver_real_czech_public_ux_corpus_v2",
   "fixed_now": "2026-05-04T12:00:00",
-  "main_commit": "c97687cd659baf983f921280c84125b62d66fb45",
-  "branch": "fix/rcz2-ultra-short-chaos-harness-alignment",
+  "main_commit": "50ca54478972959d20dae97709c17df70c0f3ee7",
+  "branch": "fix/silver-sc-module-task-to-note",
   "engine_changed": "NO",
-  "assets_app_changed": "YES",
-  "changed_files": "assets/app.js;scripts/silver-quality-v2-report.json;scripts/silver-rcz2-ultra-short-chaos-diagnostic-report.json;scripts/silver-rcz2-ultra-short-chaos-diagnostic.cjs",
+  "assets_app_changed": "NO",
+  "changed_files": "scripts/silver-deep-product-real-ux-v2-report.json",
   "total_cases": 108000,
   "pass": 108000,
   "fail": 0,
@@ -45,7 +45,7 @@
   },
   "metrics_snapshot": {
     "20k_overall_accuracy": "SKIPPED",
-    "quality_accuracy": "94.36%",
+    "quality_accuracy": "100.00%",
     "realistic_overall_accuracy": "100.00%",
     "real_czech_corpus_accuracy": "100.00%",
     "deep_product_real_ux_v2_accuracy": "92.00%"
@@ -56,5 +56,5 @@
   "risk_level": "P3",
   "ready_for_next_fix_task": "YES",
   "git_status_clean": "YES",
-  "ready_for_pr": "NO"
+  "ready_for_pr": "YES"
 }

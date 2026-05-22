@@ -114,6 +114,7 @@ const {
   computeGoldLabels,
   finalizeModuleSwitchHarnessEval,
   finalizeModuleSwitchClarifyLaneHarnessEval,
+  finalizeModuleSwitchTaskToNoteHarnessEval,
   finalizeModuleSwitchNegJakoCalToNoteHarnessEval,
   finalizeNegationNoWriteHarnessEval,
   finalizeNoteQueryKdeHarnessEval,
@@ -176,6 +177,8 @@ function gitTrackedCleanForSc() {
       "scripts/silver-self-correction-safety-cal-readonly-diagnostic-report.json",
       "scripts/silver-self-correction-safety-note-readonly-selftest.cjs",
       "scripts/silver-self-correction-update-note-selftest.cjs",
+      "scripts/silver-self-correction-task-to-note-selftest.cjs",
+      "scripts/silver-real-human-chaos-v3.cjs",
       "scripts/silver-product-handoff-continuation.cjs",
       "scripts/silver-audit-registry.cjs",
       "SILVER_RUN_REPORT.md",
@@ -496,6 +499,7 @@ function applyAllHarnessFinalizers(c, turn, ev) {
   let out = ev;
   out = finalizeModuleSwitchHarnessEval(c, turn, out);
   out = finalizeModuleSwitchClarifyLaneHarnessEval(c, turn, out);
+  out = finalizeModuleSwitchTaskToNoteHarnessEval(c, turn, out);
   out = finalizeModuleSwitchNegJakoCalToNoteHarnessEval(c, turn, out);
   out = finalizeNegationNoWriteHarnessEval(c, turn, out);
   out = finalizeNoteQueryKdeHarnessEval(c, turn, out);
