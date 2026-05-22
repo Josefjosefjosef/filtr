@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-22T11:34:54.403520Z",
+  "ingestedAt": "2026-05-22T12:14:41.462859Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "CSG staví nový zbrojní podnik. Na Slovensku bude s partnerem vyrábět zapalovače pro dělostřelectvo",
+      "url": "https://www.e15.cz/byznys/obrana-a-zbrojni-prumysl/csg-stavi-novy-zbrojni-podnik-na-slovensku-bude-s-partnerem-vyrabet-zapalovace-pro-delostrelectvo-1433004",
+      "dt": "2026-05-22T11:21:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "csg",
+        "dělostřelectvo",
+        "nový",
+        "partnerem",
+        "podnik",
+        "slovensku",
+        "staví",
+        "vyrábět",
+        "zapalovače",
+        "zbrojní"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1071,34 +1098,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Západní sen selhává? V Rakousku ani Itálii důchod na život nestačí. Česko je v Evropě anomálií",
-      "url": "https://www.e15.cz/ekonomika/zapadni-sen-selhava-v-rakousku-ani-italii-duchod-na-zivot-nestaci-cesko-je-v-evrope-anomalii-1432927",
-      "dt": "2026-05-20T15:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "anomálií",
-        "důchod",
-        "evropě",
-        "itálii",
-        "nestačí",
-        "rakousku",
-        "selhává",
-        "sen",
-        "západní",
-        "česko",
-        "život"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1109,7 +1108,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 55106,
+      "bytes": 55037,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1146,7 +1145,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-22T10:17:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T11:21:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 35,
@@ -1164,6 +1163,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "CSG staví nový zbrojní podnik. Na Slovensku bude s partnerem vyrábět zapalovače pro dělostřelectvo",
+            "publishedAt": "2026-05-22T11:21:00Z"
+          },
           {
             "title": "EU narychlo ruší cla na dovoz hnojiv. Chce ulevit zemědělcům, Rusko a Bělorusko mají utrum",
             "publishedAt": "2026-05-22T10:17:00Z"
@@ -1191,10 +1194,6 @@
           {
             "title": "Nejmocnější centrální banka světa má nového šéfa. Jeho tchán vysoudil na Česku miliardy",
             "publishedAt": "2026-05-22T08:25:00Z"
-          },
-          {
-            "title": "Kam utéct před světovou válkou? Dvě nejbezpečnější místa mají Češi blízko",
-            "publishedAt": "2026-05-22T08:00:00Z"
           }
         ]
       }

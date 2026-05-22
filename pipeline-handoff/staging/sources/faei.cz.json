@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-22T11:34:54.403520Z",
+  "ingestedAt": "2026-05-22T12:14:41.462859Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Dražší letenky a méně spojů. I to jsou důsledky blokády Hormuzu",
+      "url": "https://profitonline.cz/drazsi-letenky-a-mene-spoju-i-to-jsou-dusledky-blokady-hormuzu/",
+      "dt": "2026-05-22T12:00:27Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "blokády",
+        "dražší",
+        "důsledky",
+        "hormuzu",
+        "letenky",
+        "spojů"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -262,29 +285,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Skutečný šok ze summitu v Pekingu spočívá v ropě",
-      "url": "https://profitonline.cz/skutecny-sok-ze-summitu-v-pekingu-spociva-v-rope/",
-      "dt": "2026-05-20T10:00:21Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "pekingu",
-        "ropě",
-        "skutečný",
-        "spočívá",
-        "summitu",
-        "šok"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -295,7 +295,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18705,
+      "bytes": 19021,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -332,11 +332,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-22T10:00:06Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T12:00:27Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 10,
-          "cestovani": 1,
+          "cestovani": 2,
+          "finance": 9,
           "zpravy": 1
         },
         "drop_counts": {
@@ -349,6 +349,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dražší letenky a méně spojů. I to jsou důsledky blokády Hormuzu",
+            "publishedAt": "2026-05-22T12:00:27Z"
+          },
           {
             "title": "Vzali jste si, co jste našli? Může vás to stát víc, než čekáte",
             "publishedAt": "2026-05-22T10:00:06Z"
@@ -376,10 +380,6 @@
           {
             "title": "Inflace sebrala Čechům z „mrtvých peněz“ více než 29 miliard",
             "publishedAt": "2026-05-21T10:00:33Z"
-          },
-          {
-            "title": "Eurostat: Česko mezi evropskými premianty",
-            "publishedAt": "2026-05-21T08:00:33Z"
           }
         ]
       }

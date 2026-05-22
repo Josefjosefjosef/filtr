@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-22T11:34:54.403520Z",
+  "ingestedAt": "2026-05-22T12:14:41.462859Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Maximální ceny benzinu a nafty na víkend a pondělí",
+      "url": "https://www.penize.cz/doprava/490195-maximalni-ceny-benzinu-a-nafty-na-vikend-a-pondeli",
+      "dt": "2026-05-22T13:58:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "benzinu",
+        "ceny",
+        "maximální",
+        "nafty",
+        "pondělí",
+        "víkend"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -482,32 +505,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Košík končí s minimální hodnotou objednávky. Nově umožní i malé nákupy",
-      "url": "https://www.penize.cz/nakupy/489924-kosik-rusi-minimalni-hodnotu-objednavky-upravi-i-expresni-rozvoz",
-      "dt": "2026-05-19T10:15:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "hodnotou",
-        "končí",
-        "košík",
-        "malé",
-        "minimální",
-        "nově",
-        "nákupy",
-        "objednávky",
-        "umožní"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -518,7 +515,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18971,
+      "bytes": 19121,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -555,11 +552,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-22T05:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T13:58:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 13,
-          "zpravy": 7
+          "zpravy": 8,
+          "finance": 12
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -571,6 +568,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Maximální ceny benzinu a nafty na víkend a pondělí",
+            "publishedAt": "2026-05-22T13:58:00Z"
+          },
           {
             "title": "Kupujeme Dluhopisy republiky krok za krokem. Návod i pro úplné amatéry",
             "publishedAt": "2026-05-22T05:05:00Z"
@@ -598,10 +599,6 @@
           {
             "title": "Nábytek, masové kuličky a svatba. IKEA zájemce oddá v obchodních domech",
             "publishedAt": "2026-05-21T09:12:00Z"
-          },
-          {
-            "title": "Sítě plné finančních pastí: Projekt Partners učí mladé odhalit podvodníky",
-            "publishedAt": "2026-05-21T07:30:00Z"
           }
         ]
       }

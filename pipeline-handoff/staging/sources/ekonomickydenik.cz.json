@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-22T11:34:54.403520Z",
+  "ingestedAt": "2026-05-22T12:14:41.462859Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nebe nad Evropou prořídne. Další aerolinka oznámila rušení letů",
+      "url": "https://ekonomickydenik.cz/airbaltic-lety-letecke-palivo/",
+      "dt": "2026-05-22T11:44:20Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "aerolinka",
+        "další",
+        "evropou",
+        "letů",
+        "nebe",
+        "oznámila",
+        "prořídne",
+        "rušení"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -764,34 +789,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Sjezd sudetských Němců míří do Brna. Vnitro vysvětluje, proč akci nemůže zakázat",
-      "url": "https://ekonomickydenik.cz/sjezd-sudetskych-nemcu-brno-vnitro-zakaz/",
-      "dt": "2026-05-20T15:29:29Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "akci",
-        "brna",
-        "míří",
-        "nemůže",
-        "němců",
-        "proč",
-        "sjezd",
-        "sudetských",
-        "vnitro",
-        "vysvětluje",
-        "zakázat"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +799,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73411,
+      "bytes": 72846,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,7 +836,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T10:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T11:44:20Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 20,
@@ -857,6 +854,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nebe nad Evropou prořídne. Další aerolinka oznámila rušení letů",
+            "publishedAt": "2026-05-22T11:44:20Z"
+          },
           {
             "title": "Bohatí bohatnou, chudí to vzdávají. Tak vypadá byrokratická džungle na podporu vědy",
             "publishedAt": "2026-05-22T10:33:00Z"
@@ -884,10 +885,6 @@
           {
             "title": "Na ČVUT skončil bezpečnostní ředitel. Přichází posila z „velké čtyřky“",
             "publishedAt": "2026-05-22T05:55:00Z"
-          },
-          {
-            "title": "Fixní, flexi, nebo protiinflační? Experti radí, jak vybrat ten správný Dluhopis republiky",
-            "publishedAt": "2026-05-22T04:30:00Z"
           }
         ]
       }

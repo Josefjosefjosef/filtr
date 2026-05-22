@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-22T11:34:54.403520Z",
+  "ingestedAt": "2026-05-22T12:14:41.462859Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Steam hostí další tematický výprodej",
+      "url": "https://zing.cz/article/steam-hosti-dalsi-tematicky-vyprodej",
+      "dt": "2026-05-22T12:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "další",
+        "hostí",
+        "steam",
+        "tematický",
+        "výprodej"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1005,30 +1027,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Další licencovaná hra od 2K bude již zítra stažena z prodeje",
-      "url": "https://zing.cz/article/dalsi-licencovana-hra-od-2k-bude-jiz-zitra-stazena-z-prodeje",
-      "dt": "2026-05-18T04:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "další",
-        "hra",
-        "již",
-        "licencovaná",
-        "prodeje",
-        "stažena",
-        "zítra"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1039,7 +1037,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126983,
+      "bytes": 126851,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1076,7 +1074,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-22T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1092,6 +1090,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Steam hostí další tematický výprodej",
+            "publishedAt": "2026-05-22T12:00:00Z"
+          },
           {
             "title": "Končí jeden velký herní příběh. Podpora Destiny 2 bude již brzy ukončena",
             "publishedAt": "2026-05-22T10:00:00Z"
@@ -1119,10 +1121,6 @@
           {
             "title": "Epic nabízí zdarma čtyři hry v čele s dobrodružstvím Lary Croft",
             "publishedAt": "2026-05-21T15:00:00Z"
-          },
-          {
-            "title": "Bondovka 007 First Light odhalila přesný čas vydání",
-            "publishedAt": "2026-05-21T14:00:00Z"
           }
         ]
       }
