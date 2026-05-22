@@ -34378,8 +34378,17 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverExplicitCalendarWriteOverridesSoftModuleNegationFolded(f) {
     const x = String(f || "");
     if (!x) return false;
-    if (iuSilverHasExplicitCalendarTarget(x)) return true;
-    if (iuSilverExplicitCalendarWriteBeatsReadQueryFolded(x)) return true;
+    if (/\bnic\s+neuklad\w*\b/.test(x) || /\bne\s+do\s+kalend/i.test(x) || /\bnic\s+nevytvarej\b/.test(x)) return false;
+    if (iuSilverHasWriteVerb(x) && /\bdo\s+kalend/i.test(x)) return true;
+    if (/\bnahod\w*\b/.test(x) && /\bdo\s+kalend/i.test(x)) return true;
+    if (
+      /\b(?:uloz|zapis|pridej|vloz|naplanuj|vytvor|zaloz|napis|zaznamenej|eviduj|dopln|zanes)(?:\s+(?:mi|nam|si))?\s+do\s+kalend/.test(
+        x
+      )
+    )
+      return true;
+    if (/\bdo\s+kalendare\b/.test(x) || /\bv\s+kalendare\b/.test(x)) return true;
+    if (/\bdo\s+diare\b/.test(x) || /\bdo\s+planovace\b/.test(x) || /\bdo\s+rozvrhu\b/.test(x)) return true;
     return false;
   }
 
@@ -38577,7 +38586,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
    */
   function iuSilverRhc3NegCalNoteTargetCueFolded(x) {
     if (iuSilverHasExplicitNotesTarget(x)) return true;
-    if (/\bdo\s+(?:\S+\s+){0,2}poznam/.test(x)) return true;
+    if (/\bdo\s+(?:\S+\s+){0,2}poznam/.test(x) && !/\bne\s+do\s+poznam/.test(x)) return true;
     if (/[,.;:]\s*poznamk\w*\s+ze\b/.test(x)) return true;
     if (/^\s*poznamk\w*\s+ze\b/.test(x)) return true;
     if (/\bjen\s+poznamk\w*\b/.test(x)) return true;
@@ -38603,6 +38612,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverRhc3NegatedCalendarNoteTargetP1Folded(folded) {
     const x = String(folded || "");
     if (!x) return false;
+    if (iuSilverSoftCalendarModuleNegationClauseFolded(x) && iuSilverExplicitCalendarWriteOverridesSoftModuleNegationFolded(x)) {
+      return false;
+    }
     if (iuSilverP0NoWriteNegationBeatsWriteLikeCueFolded(x)) return false;
     if (iuSilverHasExplicitTasksTarget(x)) return false;
     if (iuSilverCalendarQuerySignalFolded(x)) return false;
