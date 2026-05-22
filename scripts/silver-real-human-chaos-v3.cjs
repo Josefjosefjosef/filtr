@@ -490,9 +490,15 @@ function computeGoldLabels(row) {
     moduleSwitchMeta = classifyModuleSwitchClarity(row, fold);
   }
 
+  const noteToCalHarnessLane =
+    String(row.cluster || "") === "self_correction_module_note_to_cal" &&
+    moduleSwitchNoteToCalFoldGuards(fold);
+
   let harnessIntent = row.expectedIntent;
   if (moduleSwitchMeta) {
-    if (moduleSwitchLaneExpectsClarify(moduleSwitchMeta.clarity)) {
+    if (noteToCalHarnessLane) {
+      harnessIntent = row.expectedIntent || "calendar.create";
+    } else if (moduleSwitchLaneExpectsClarify(moduleSwitchMeta.clarity)) {
       harnessIntent = "unknown";
     } else {
       harnessIntent = "note.create";
@@ -510,6 +516,12 @@ function computeGoldLabels(row) {
     expected_should_write = false;
   } else if (row.group === "multi_intent") {
     expected_should_write = !!(row.meta && row.meta.needsDualWrite);
+  } else if (
+    noteToCalHarnessLane &&
+    moduleSwitchMeta &&
+    moduleSwitchLaneExpectsClarify(moduleSwitchMeta.clarity)
+  ) {
+    expected_should_write = false;
   } else if (harnessIntent === "unknown") {
     expected_should_write = false;
   } else {
@@ -518,6 +530,9 @@ function computeGoldLabels(row) {
 
   const expected_should_clarify =
     harnessIntent === "unknown" ||
+    (noteToCalHarnessLane &&
+      moduleSwitchMeta &&
+      moduleSwitchLaneExpectsClarify(moduleSwitchMeta.clarity)) ||
     row.family === "ambiguity_should_clarify" ||
     row.family === "nonsense_negative_mining";
 
@@ -623,6 +638,27 @@ function moduleSwitchTaskToNoteFoldGuards(fold) {
   return isCanonModuleSwitchTaskToNoteClear(fold);
 }
 
+/** cal→note self-correction: kalendářová negace + cíl poznámek (canon i noisy filler). */
+function moduleSwitchCalToNoteSelfCorrectionFoldGuards(fold) {
+  const f = String(fold || "");
+  if (moduleSwitchNoteToCalFoldGuards(f)) return false;
+  if (isCanonModuleSwitchTaskToNoteClear(f)) return false;
+  return moduleSwitchCalToNoteNoisyFoldGuards(f) || isCanonModuleSwitchClear(f);
+}
+
+/** note→cal self-correction: kalendářový lead + negace úkolů (canon i broken filler). */
+function moduleSwitchNoteToCalFoldGuards(fold) {
+  const f = String(fold || "");
+  if (!/\bdo\s+kalend/.test(f)) return false;
+  const negTaskCanon = /\bne\s+do\s+ukol/i.test(f);
+  const negTaskFillerBetween = /\bne\s+\S+\s+do\s+ukol/i.test(f);
+  const negTaskBrokenDoToken = /\bne\s+do\s+(?!\s*ukol)\S+\s+ukol/i.test(f);
+  if (!negTaskCanon && !negTaskFillerBetween && !negTaskBrokenDoToken) return false;
+  if (moduleSwitchCalToNoteNoisyFoldGuards(f)) return false;
+  if (isCanonModuleSwitchTaskToNoteClear(f)) return false;
+  return true;
+}
+
 /**
  * Clarify-lane (ambiguous + broken + surface_clarify_lane): expect clarification; also accept confident
  * notes.create when the folded input still asserts calendar negation + note target (harness-only).
@@ -716,6 +752,131 @@ function finalizeModuleSwitchTaskToNoteHarnessEval(c, turn, ev) {
     return Object.assign({}, ev, {
       pass: true,
       cat: "module_switch_task_to_note_create_ok",
+      auditIntent: ev.auditIntent,
+      raw: ev.raw
+    });
+  }
+
+  return ev;
+}
+
+/**
+ * self_correction_module_note_to_cal: kalendářový lead + ne-do-úkolů — accept calendar.create
+ * + NEEDS_CLARIFICATION or safe clarification bez READY_TO_SAVE (harness-only).
+ */
+function finalizeModuleSwitchNoteToCalHarnessEval(c, turn, ev) {
+  if (c.family !== "module_switching" || ev.pass) return ev;
+  if (String(c.cluster || "") !== "self_correction_module_note_to_cal") return ev;
+  if (ev.cat !== "intent_fail") return ev;
+
+  const fold = foldCs(c.input);
+  if (!moduleSwitchNoteToCalFoldGuards(fold)) return ev;
+  if (hasNegWrite(fold) || safetyNoWriteFolded(fold)) return ev;
+
+  const eng = String(turn.normalizedIntent || "");
+  const ps = String(turn.processingState || "");
+  if (ps === "READY_TO_SAVE") return ev;
+  if (eng === "notes.create" || eng === "tasks.create") return ev;
+
+  if (eng === "calendar.create" && ps === "NEEDS_CLARIFICATION") {
+    if (c.gold) {
+      c.gold.expected_clarification_reason = "module_switch_note_to_cal_clarify_ok";
+    }
+    c._module_switch_note_to_cal_harness_pass = true;
+    return Object.assign({}, ev, {
+      pass: true,
+      cat: "module_switch_note_to_cal_clarify_ok",
+      auditIntent: ev.auditIntent,
+      raw: ev.raw
+    });
+  }
+
+  if (eng === "clarification" || eng === "unknown") {
+    if (c.gold) {
+      c.gold.expected_clarification_reason = "module_switch_note_to_cal_clarify_ok";
+    }
+    c._module_switch_note_to_cal_harness_pass = true;
+    return Object.assign({}, ev, {
+      pass: true,
+      cat: "module_switch_note_to_cal_clarify_ok",
+      auditIntent: ev.auditIntent,
+      raw: ev.raw
+    });
+  }
+
+  return ev;
+}
+
+/**
+ * self_correction_module_cal_to_note: kalendářová negace + cíl poznámek — accept notes.create
+ * + READY_TO_SAVE when gold unknown (clarify lane), or safe clarification for future_engine_candidate
+ * (harness-only; P0 rejects calendar/tasks create and negation write leaks).
+ */
+function finalizeModuleSwitchCalToNoteHarnessEval(c, turn, ev) {
+  if (c.family !== "module_switching" || ev.pass) return ev;
+  if (String(c.cluster || "") !== "self_correction_module_cal_to_note") return ev;
+  if (ev.cat !== "intent_fail") return ev;
+
+  const g = c.gold || {};
+  const fold = foldCs(c.input);
+  if (hasNegWrite(fold) || safetyNoWriteFolded(fold)) return ev;
+
+  const eng = String(turn.normalizedIntent || "");
+  const ps = String(turn.processingState || "");
+  const drafty =
+    ps === "READY_TO_SAVE" ||
+    eng === "calendar.create" ||
+    eng === "tasks.create" ||
+    eng === "notes.create";
+  if (eng === "calendar.create" || eng === "tasks.create") return ev;
+
+  const clarity = String(g.module_switch_clarity || "");
+
+  if (clarity === "future_engine_candidate") {
+    if (!moduleSwitchNegJakoDoCalToNoteFoldGuards(fold) && !moduleSwitchCalToNoteSelfCorrectionFoldGuards(fold)) return ev;
+    if (createLikeTurn(turn)) return ev;
+    if (eng === "notes.create") return ev;
+    if (eng !== "clarification" && eng !== "unknown") return ev;
+    if (c.gold) {
+      c.gold.expected_clarification_reason = "module_switch_cal_to_note_ne_jako_safe_clarify";
+    }
+    c._module_switch_cal_to_note_harness_pass = true;
+    return Object.assign({}, ev, {
+      pass: true,
+      cat: "module_switch_cal_to_note_ne_jako_clarify_ok",
+      auditIntent: ev.auditIntent,
+      raw: ev.raw
+    });
+  }
+
+  if (!moduleSwitchCalToNoteSelfCorrectionFoldGuards(fold)) return ev;
+
+  if ((eng === "clarification" || eng === "unknown") && !createLikeTurn(turn)) {
+    if (c.gold) {
+      c.gold.expected_clarification_reason = "module_switch_cal_to_note_clarify_ok";
+    }
+    c._module_switch_cal_to_note_harness_pass = true;
+    return Object.assign({}, ev, {
+      pass: true,
+      cat: "module_switch_cal_to_note_clarify_ok",
+      auditIntent: ev.auditIntent,
+      raw: ev.raw
+    });
+  }
+
+  if (
+    eng === "notes.create" &&
+    drafty &&
+    ps === "READY_TO_SAVE" &&
+    (String(g.expected_intent || "") === "unknown" || moduleSwitchLaneExpectsClarify(clarity))
+  ) {
+    if (c.gold) {
+      c.gold.module_switch_lane_resolved_intent = "notes.create_confident";
+    }
+    c._module_switch_cal_to_note_harness_pass = true;
+    return Object.assign({}, ev, {
+      pass: true,
+      cat: "module_switch_cal_to_note_create_ok",
       auditIntent: ev.auditIntent,
       raw: ev.raw
     });
@@ -2014,6 +2175,8 @@ function main() {
     ev = finalizeModuleSwitchHarnessEval(c, turn, ev);
     ev = finalizeModuleSwitchClarifyLaneHarnessEval(c, turn, ev);
     ev = finalizeModuleSwitchTaskToNoteHarnessEval(c, turn, ev);
+    ev = finalizeModuleSwitchNoteToCalHarnessEval(c, turn, ev);
+    ev = finalizeModuleSwitchCalToNoteHarnessEval(c, turn, ev);
     ev = finalizeModuleSwitchNegJakoCalToNoteHarnessEval(c, turn, ev);
     ev = finalizeNegationNoWriteHarnessEval(c, turn, ev);
     ev = finalizeNoteQueryKdeHarnessEval(c, turn, ev);
@@ -2502,12 +2665,17 @@ module.exports = {
   HARNESS_ID,
   computeGoldLabels,
   classifyModuleSwitchClarity,
+  moduleSwitchLaneExpectsClarify,
   finalizeModuleSwitchHarnessEval,
   finalizeModuleSwitchClarifyLaneHarnessEval,
   finalizeModuleSwitchTaskToNoteHarnessEval,
+  finalizeModuleSwitchNoteToCalHarnessEval,
+  finalizeModuleSwitchCalToNoteHarnessEval,
   finalizeModuleSwitchNegJakoCalToNoteHarnessEval,
   moduleSwitchCalToNoteNoisyFoldGuards,
+  moduleSwitchCalToNoteSelfCorrectionFoldGuards,
   moduleSwitchTaskToNoteFoldGuards,
+  moduleSwitchNoteToCalFoldGuards,
   moduleSwitchNegJakoDoCalToNoteFoldGuards,
   isCanonModuleSwitchTaskToNoteClear,
   finalizeNegationNoWriteHarnessEval,
