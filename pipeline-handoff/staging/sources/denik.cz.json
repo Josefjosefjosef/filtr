@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-22T02:51:02.736306Z",
+  "ingestedAt": "2026-05-22T03:31:15.693249Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Sudetoněmecké krajanské sdružení: historie Sudet, třecí plochy a cesta k smíření",
+      "url": "https://www.denik.cz/historie/sudetonemecke-krajanske-sdruzeni-landsmansaft-historie-sudet-treci-plochy.html",
+      "dt": "2026-05-22T03:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "cesta",
+        "historie",
+        "krajanské",
+        "plochy",
+        "sdružení",
+        "smíření",
+        "sudet",
+        "sudetoněmecké",
+        "třecí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -614,33 +640,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Bílý dům bránil návratu lékaře s ebolou do Spojených států, píší média",
-      "url": "https://www.denik.cz/ze_sveta/usa-lekar-ebola-nakaza-prevoz.html",
-      "dt": "2026-05-21T10:07:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bránil",
-        "bílý",
-        "dům",
-        "ebolou",
-        "lékaře",
-        "média",
-        "návratu",
-        "píší",
-        "spojených",
-        "států"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -651,7 +650,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29225,
+      "bytes": 29245,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -688,7 +687,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-22T02:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T03:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -704,6 +703,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sudetoněmecké krajanské sdružení: historie Sudet, třecí plochy a cesta k smíření",
+            "publishedAt": "2026-05-22T03:00:00Z"
+          },
           {
             "title": "MAPA: Do Česka o víkendu dorazí léto. Teploty mohou překonat tropickou třicítku",
             "publishedAt": "2026-05-22T02:30:00Z"
@@ -731,10 +734,6 @@
           {
             "title": "Ukrajinci decimují rafinerie nepřítele. Ve středním Rusku jich většinu ochromili",
             "publishedAt": "2026-05-21T16:00:00Z"
-          },
-          {
-            "title": "V Brně uctili oběti holokaustu. Předáka sudetských Němců Posselta vypískali",
-            "publishedAt": "2026-05-21T15:54:00Z"
           }
         ]
       }
