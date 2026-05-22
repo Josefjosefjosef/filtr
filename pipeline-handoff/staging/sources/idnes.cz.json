@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-22T18:14:25.377400Z",
+  "ingestedAt": "2026-05-22T18:54:50.404609Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Ivu Janžurovou zrazuje zdraví. Představení se ruší, předtím byla v nemocnici tři dny",
+      "url": "https://www.idnes.cz/kultura/divadlo/iva-janzurova-kolaps-divadlo-predstaveni-zruseno.A260522_201418_divadlo_remy",
+      "dt": "2026-05-22T18:31:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dny",
+        "ivu",
+        "janžurovou",
+        "nemocnici",
+        "představení",
+        "předtím",
+        "ruší",
+        "tři",
+        "zdraví",
+        "zrazuje"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -755,32 +782,6 @@
         "umí",
         "zálohování",
         "červený"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rafinerií v Maďarsku otřásl výbuch. Na místě je jeden mrtvý, oznámil Magyar",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/rafinerii-v-madarsku-otrasl-vybuch-na-miste-je-jeden-mrtvy-oznamil-magyar.A260522_111033_zahranicni_bro",
-      "dt": "2026-05-22T12:57:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "jeden",
-        "magyar",
-        "maďarsku",
-        "mrtvý",
-        "místě",
-        "otřásl",
-        "oznámil",
-        "rafinerií",
-        "výbuch"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1581,7 +1582,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49242,
+      "bytes": 48927,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1618,10 +1619,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T18:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T18:31:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
+          "other": 1,
+          "zpravy": 24,
           "finance": 5
         },
         "drop_counts": {
@@ -1634,6 +1636,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ivu Janžurovou zrazuje zdraví. Představení se ruší, předtím byla v nemocnici tři dny",
+            "publishedAt": "2026-05-22T18:31:00Z"
+          },
           {
             "title": "Příkořím neutrpěli jen Češi, k usmíření zbývá mnoho práce, říká německý ministr",
             "publishedAt": "2026-05-22T18:01:00Z"
@@ -1661,10 +1667,6 @@
           {
             "title": "Dvě sochy orlů a zlato. Komise schválila návrh Trumpova vítězného oblouku",
             "publishedAt": "2026-05-22T17:21:00Z"
-          },
-          {
-            "title": "Kevin Warsh se stal šéfem americké centrální banky, úspěšně složil přísahu",
-            "publishedAt": "2026-05-22T17:07:00Z"
           }
         ]
       }

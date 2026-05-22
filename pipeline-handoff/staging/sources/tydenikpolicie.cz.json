@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-22T18:14:25.377400Z",
+  "ingestedAt": "2026-05-22T18:54:50.404609Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Motorkář na dálnici D11 naboural zezadu do kamionu. Na místě zemřel",
+      "url": "https://tydenikpolicie.cz/motorkar-na-dalnici-d11-naboural-zezadu-do-kamionu-na-miste-zemrel/",
+      "dt": "2026-05-22T18:30:30Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "d11",
+        "dálnici",
+        "kamionu",
+        "motorkář",
+        "místě",
+        "naboural",
+        "zemřel",
+        "zezadu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -247,31 +272,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Kriminalisté obvinili chlapce, který měl ubodat dívku v Pardubicích, z vraždy",
-      "url": "https://tydenikpolicie.cz/kriminaliste-obvinili-chlapce-ktery-mel-ubodat-divku-v-pardubicich-z-vrazdy/",
-      "dt": "2026-05-22T13:31:04Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "chlapce",
-        "dívku",
-        "kriminalisté",
-        "měl",
-        "obvinili",
-        "pardubicích",
-        "ubodat",
-        "vraždy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16900,
+      "bytes": 17031,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +319,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-22T15:32:48Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T18:30:30Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -334,6 +334,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Motorkář na dálnici D11 naboural zezadu do kamionu. Na místě zemřel",
+            "publishedAt": "2026-05-22T18:30:30Z"
+          },
           {
             "title": "Od muže upoutaného na invalidní vozík vylákal přes 170 tisíc korun. Kvůli penězům neváhal „pohřbít“ vlastní matku",
             "publishedAt": "2026-05-22T15:32:48Z"
@@ -361,10 +365,6 @@
           {
             "title": "Autu na dálnici D6 upadlo za jízdy kolo, v protisměru narazilo do projíždějící škodovky. Dva mrtví",
             "publishedAt": "2026-05-22T14:07:27Z"
-          },
-          {
-            "title": "Podezřelého z vloupání do benzínky v Karviné vypátral služební pes Willy",
-            "publishedAt": "2026-05-22T13:43:21Z"
           }
         ]
       }

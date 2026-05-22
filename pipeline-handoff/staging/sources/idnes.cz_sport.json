@@ -1,25 +1,25 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-22T18:14:25.377400Z",
+  "ingestedAt": "2026-05-22T18:54:50.404609Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Finsko - Velká Británie. Favorit chce udržet stoprocentní bilanci",
-      "url": "https://www.idnes.cz/hokej/ms-2026/skupina-a-nemecko-madarsko-finsko-britanie-online-zpravodajstvi.A260522_083418_ms-hokej-2026_huda",
-      "dt": "2026-05-22T16:57:34Z",
+      "title": "ONLINE: Švédsko - Itálie 1:0. Trefil se Grundström, už druhý gól Seveřanů neplatí",
+      "url": "https://www.idnes.cz/hokej/ms-2026/skupina-b-kanada-slovinsko-svedsko-italie-online-zpravodajstvi.A260522_083919_ms-hokej-2026_huda",
+      "dt": "2026-05-22T18:50:19Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "bilanci",
-        "británie",
-        "chce",
-        "favorit",
-        "finsko",
-        "stoprocentní",
-        "udržet",
-        "velká"
+        "druhý",
+        "grundström",
+        "gól",
+        "itálie",
+        "neplatí",
+        "seveřanů",
+        "trefil",
+        "švédsko"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -31,20 +31,47 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Švédsko - Itálie. Seveřané chtějí zapsat další povinné vítězství",
-      "url": "https://www.idnes.cz/hokej/ms-2026/skupina-b-kanada-slovinsko-svedsko-italie-online-zpravodajstvi.A260522_083919_ms-hokej-2026_huda",
-      "dt": "2026-05-22T16:52:47Z",
+      "title": "Antonelli byl nejrychlejší v jediném tréninku F1 v Kanadě, Albon srazil sviště",
+      "url": "https://www.idnes.cz/sport/formule/trenink-velka-cena-kanady-albon-srazil-sviste.A260522_202930_formule_ten",
+      "dt": "2026-05-22T18:30:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "chtějí",
-        "další",
-        "itálie",
-        "povinné",
-        "seveřané",
-        "vítězství",
-        "zapsat",
-        "švédsko"
+        "albon",
+        "antonelli",
+        "jediném",
+        "kanadě",
+        "nejrychlejší",
+        "srazil",
+        "sviště",
+        "tréninku"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Finsko - Velká Británie 1:0. Rychlý gól favorita, v první minutě jásá Heinola",
+      "url": "https://www.idnes.cz/hokej/ms-2026/skupina-a-nemecko-madarsko-finsko-britanie-online-zpravodajstvi.A260522_083418_ms-hokej-2026_huda",
+      "dt": "2026-05-22T18:23:15Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "británie",
+        "favorita",
+        "finsko",
+        "gól",
+        "heinola",
+        "jásá",
+        "minutě",
+        "první",
+        "rychlý",
+        "velká"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -749,32 +776,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rallye Český Krumlov 2026: program, výsledky, startovní listina, trasa",
-      "url": "https://www.idnes.cz/sport/motorsport/rallye-cesky-krumlov-2026.A260522_083221_motorsport_ald",
-      "dt": "2026-05-22T07:49:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "2026",
-        "krumlov",
-        "listina",
-        "program",
-        "rallye",
-        "startovní",
-        "trasa",
-        "výsledky",
-        "český"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -785,7 +786,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48369,
+      "bytes": 48692,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -822,7 +823,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T16:57:34Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T18:50:19Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -838,12 +839,16 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Finsko - Velká Británie. Favorit chce udržet stoprocentní bilanci",
-            "publishedAt": "2026-05-22T16:57:34Z"
+            "title": "ONLINE: Švédsko - Itálie 1:0. Trefil se Grundström, už druhý gól Seveřanů neplatí",
+            "publishedAt": "2026-05-22T18:50:19Z"
           },
           {
-            "title": "ONLINE: Švédsko - Itálie. Seveřané chtějí zapsat další povinné vítězství",
-            "publishedAt": "2026-05-22T16:52:47Z"
+            "title": "Antonelli byl nejrychlejší v jediném tréninku F1 v Kanadě, Albon srazil sviště",
+            "publishedAt": "2026-05-22T18:30:00Z"
+          },
+          {
+            "title": "ONLINE: Finsko - Velká Británie 1:0. Rychlý gól favorita, v první minutě jásá Heinola",
+            "publishedAt": "2026-05-22T18:23:15Z"
           },
           {
             "title": "Největší hradecké slabině je konec. Do Evropy půjdou fotbalisté s hybridem",
@@ -864,10 +869,6 @@
           {
             "title": "V derby na druhé straně? Kempný mohl hrát za Slovensko: Přišlo to úplně náhodou",
             "publishedAt": "2026-05-22T14:01:00Z"
-          },
-          {
-            "title": "Dobeš dál oslňuje. Je podivín, popichují ho v týmu. Jako první ale vychytal suveréna",
-            "publishedAt": "2026-05-22T13:45:00Z"
           }
         ]
       }
