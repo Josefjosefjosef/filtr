@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-22T19:35:24.723132Z",
+  "ingestedAt": "2026-05-22T20:14:42.477727Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "I čtvrtý zápas pro hosty. Jelínkovi to pálilo, ale koncovka patřila Pardubicím",
+      "url": "https://www.idnes.cz/sport/basket/semifinale-play-off-maxa-nbl-4-zapas-brno-pardubice-90-94-david-jelinek.A260522_213428_sport-basket_ten",
+      "dt": "2026-05-22T19:43:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "ale",
+        "hosty",
+        "jelínkovi",
+        "koncovka",
+        "pardubicím",
+        "patřila",
+        "pálilo",
+        "zápas",
+        "čtvrtý"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -749,31 +775,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Medaile i vynucený odjezd domů. Jak si vedli Češi na mistrovstvích ve Švýcarsku?",
-      "url": "https://www.idnes.cz/sport/trendy/medaile-i-vynuceny-odjezd-domu-jak-si-vedli-cesi-na-mistrovstvich-ve-svycarsku.A260520_102413_trendy_blah/foto",
-      "dt": "2026-05-22T08:20:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "domů",
-        "medaile",
-        "mistrovstvích",
-        "odjezd",
-        "vedli",
-        "vynucený",
-        "češi",
-        "švýcarsku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -784,7 +785,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48838,
+      "bytes": 48301,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -821,7 +822,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T19:28:03Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T19:43:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -836,6 +837,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "I čtvrtý zápas pro hosty. Jelínkovi to pálilo, ale koncovka patřila Pardubicím",
+            "publishedAt": "2026-05-22T19:43:00Z"
+          },
           {
             "title": "ONLINE: Švédsko - Itálie 3:0. Další gól pro favorita, podruhé se raduje Stenberg",
             "publishedAt": "2026-05-22T19:28:03Z"
@@ -863,10 +868,6 @@
           {
             "title": "Legenda Grand Prix v Česku. Räikkönen doprovází syna a o současné F1 má jasno",
             "publishedAt": "2026-05-22T15:49:00Z"
-          },
-          {
-            "title": "Favorité se na Giru šetřili. Slaví uprchlík Bettiol po drtivém nástupu v závěru",
-            "publishedAt": "2026-05-22T15:47:35Z"
           }
         ]
       }

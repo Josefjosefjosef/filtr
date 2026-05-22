@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-22T19:35:24.723132Z",
+  "ingestedAt": "2026-05-22T20:14:42.477727Z",
   "items": [
     {
       "section": "sport",
@@ -23,6 +23,56 @@
         "tlaku",
         "trefu",
         "švédové"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Češi na mistrovství světa uzavřeli soupisku",
+      "url": "https://www.sport.cz/clanek/hokej-ms-dalsi-hokejista-uz-nedorazi-cesi-na-mistrovstvi-sveta-uzavreli-soupisku-5458168",
+      "dt": "2026-05-22T19:40:14Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "mistrovství",
+        "soupisku",
+        "světa",
+        "uzavřeli",
+        "češi"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hradec Králové ohlásil velkou novinku, kterou se v Česku pyšní jen Sparta, Slavia a Plzeň",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-hradec-kralove-ohlasil-velkou-novinku-kterou-se-v-cesku-pysni-jen-sparta-slavia-a-plzen-5461073",
+      "dt": "2026-05-22T18:14:08Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "hradec",
+        "jen",
+        "králové",
+        "novinku",
+        "ohlásil",
+        "plzeň",
+        "pyšní",
+        "slavia",
+        "sparta",
+        "velkou",
+        "česku"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -75,34 +125,6 @@
         "zámoří",
         "získal",
         "česka"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hradec Králové ohlásil velkou novinku, kterou se v Česku pyšní jen Sparta, Slavia a Plzeň",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-hradec-kralove-ohlasil-velkou-novinku-kterou-se-v-cesku-pysni-jen-sparta-slavia-a-plzen-5461073",
-      "dt": "2026-05-22T18:14:08Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "hradec",
-        "jen",
-        "králové",
-        "novinku",
-        "ohlásil",
-        "plzeň",
-        "pyšní",
-        "slavia",
-        "sparta",
-        "velkou",
-        "česku"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -738,31 +760,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Extraliga chystá pro příští sezonu novinku. Ocení ji fanoušci na stadionech",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-extraliga-chysta-pro-pristi-sezonu-novinku-oceni-ji-fanousci-na-stadionech-5460720",
-      "dt": "2026-05-22T09:30:26Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "chystá",
-        "extraliga",
-        "fanoušci",
-        "novinku",
-        "ocení",
-        "příští",
-        "sezonu",
-        "stadionech"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -773,7 +770,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43816,
+      "bytes": 43753,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -810,7 +807,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T19:10:09Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T19:40:14Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 28,
@@ -831,16 +828,20 @@
             "publishedAt": "2026-05-22T06:40:17Z"
           },
           {
+            "title": "Češi na mistrovství světa uzavřeli soupisku",
+            "publishedAt": "2026-05-22T19:40:14Z"
+          },
+          {
+            "title": "Hradec Králové ohlásil velkou novinku, kterou se v Česku pyšní jen Sparta, Slavia a Plzeň",
+            "publishedAt": "2026-05-22T18:14:08Z"
+          },
+          {
             "title": "Golfistka Kousková je na turnaji LET v Rabatu před finálovým kolem dvanáctá",
             "publishedAt": "2026-05-22T19:10:09Z"
           },
           {
             "title": "Pondělní soupeř Česka na hokejovém mistrovství světa získal obrovskou posilu ze zámoří",
             "publishedAt": "2026-05-22T17:25:55Z"
-          },
-          {
-            "title": "Hradec Králové ohlásil velkou novinku, kterou se v Česku pyšní jen Sparta, Slavia a Plzeň",
-            "publishedAt": "2026-05-22T18:14:08Z"
           },
           {
             "title": "Bednář zářil, ale sám sen o medaili pro český tým naplnit nemohl",
@@ -853,10 +854,6 @@
           {
             "title": "Bikerka Spěšná byla na Vysočině sedmá v short tracku závodnic do 23 let",
             "publishedAt": "2026-05-22T17:47:18Z"
-          },
-          {
-            "title": "SESTŘIH: Němci přejeli Maďary a pořád mají naději na postup",
-            "publishedAt": "2026-05-22T16:36:31Z"
           }
         ]
       }
