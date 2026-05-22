@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-22T17:34:38.380304Z",
+  "ingestedAt": "2026-05-22T18:14:25.377400Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Vyzkoušejte si zdarma na Steamu čtyři hry",
+      "url": "https://zing.cz/article/vyzkousejte-si-zdarma-na-steamu-ctyri-hry-4",
+      "dt": "2026-05-22T18:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "hry",
+        "steamu",
+        "vyzkoušejte",
+        "zdarma",
+        "čtyři"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1008,31 +1030,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Forza Horizon 6 dosáhla na milion hráčů ještě před oficiálním vydáním",
-      "url": "https://zing.cz/article/forza-horizon-6-dosahla-na-milion-hracu-jeste-pred-oficialnim-vydanim",
-      "dt": "2026-05-18T12:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "dosáhla",
-        "forza",
-        "horizon",
-        "hráčů",
-        "ještě",
-        "milion",
-        "oficiálním",
-        "vydáním"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1043,7 +1040,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126823,
+      "bytes": 126733,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1080,7 +1077,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-22T16:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T18:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1095,6 +1092,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vyzkoušejte si zdarma na Steamu čtyři hry",
+            "publishedAt": "2026-05-22T18:00:00Z"
+          },
           {
             "title": "Assassin's Creed Black Flag Resynced ukázal dosud nejdetailnější záběry z hraní",
             "publishedAt": "2026-05-22T16:00:00Z"
@@ -1122,10 +1123,6 @@
           {
             "title": "Těšíte se na The Elder Scrolls VI? RPG Fatekeeper může zkrátit vaše čekání",
             "publishedAt": "2026-05-22T06:00:00Z"
-          },
-          {
-            "title": "Aktivujte si zdarma na Steamu dvě kladně hodnocené hry",
-            "publishedAt": "2026-05-22T04:00:00Z"
           }
         ]
       }

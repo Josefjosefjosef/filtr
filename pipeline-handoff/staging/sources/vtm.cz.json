@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-22T17:34:38.380304Z",
+  "ingestedAt": "2026-05-22T18:14:25.377400Z",
   "items": [
     {
       "section": "veda",
@@ -24,6 +24,34 @@
         "vybrali",
         "wireless",
         "úplně"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Netflix a další na víkend: Ranč Duttonových z Yellowstonu, S.W.A.T., The Boroughs. Nebo hororová Nevěsta!",
+      "url": "https://avmania.zive.cz/netflix-a-dalsi-na-vikend-ranc-duttonovych-z-yellowstonu-swat-the-boroughs-nebo-hororova-nevesta",
+      "dt": "2026-05-22T17:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "boroughs",
+        "další",
+        "duttonových",
+        "hororová",
+        "nebo",
+        "netflix",
+        "nevěsta",
+        "ranč",
+        "the",
+        "víkend",
+        "yellowstonu"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -944,33 +972,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Letitý kolos za pomoci Čechů ukazuje, že i v Evropě lze vyvíjet AI na světové úrovni",
-      "url": "https://www.zive.cz/clanky/letity-kolos-za-pomoci-cechu-ukazuje-ze-i-v-evrope-lze-vyvijet-ai-na-svetove-urovni/sc-3-a-241227/default.aspx",
-      "dt": "2026-05-19T15:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "evropě",
-        "kolos",
-        "letitý",
-        "lze",
-        "pomoci",
-        "světové",
-        "ukazuje",
-        "vyvíjet",
-        "úrovni",
-        "čechů"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -981,7 +982,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22973,
+      "bytes": 22752,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1018,7 +1019,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-22T16:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T17:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1036,6 +1037,10 @@
           {
             "title": "Vybrali jsme nejlepší sluchátka True Wireless. Jsou malá, úplně bez drátů a levnější než dřív",
             "publishedAt": "2026-05-22T11:45:00Z"
+          },
+          {
+            "title": "Netflix a další na víkend: Ranč Duttonových z Yellowstonu, S.W.A.T., The Boroughs. Nebo hororová Nevěsta!",
+            "publishedAt": "2026-05-22T17:45:00Z"
           },
           {
             "title": "Chat Control vyhodíte oknem, ale vrátí se komínem, říká pirátka Gregorová (Podcast Živě)",
@@ -1060,10 +1065,6 @@
           {
             "title": "Nvidia vydělala jako Apple a Microsoft dohromady. O herních grafikách už ani nemluví",
             "publishedAt": "2026-05-22T10:45:00Z"
-          },
-          {
-            "title": "S jakou navigací na dovolenou v roce 2026? Vybrali jsme 12 nejlepších aplikací, které vám ukážou cestu",
-            "publishedAt": "2026-05-21T16:45:00Z"
           }
         ]
       }

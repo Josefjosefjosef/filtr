@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-22T17:34:38.380304Z",
+  "ingestedAt": "2026-05-22T18:14:25.377400Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Putin slibuje odvetu za údajný ukrajinský nálet na internát. Ukrajina ho popírá",
+      "url": "https://www.denik.cz/staty-mimo-eu/nalet-na-rusky-internat-vladimir-putin-odveta.html",
+      "dt": "2026-05-22T17:22:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "internát",
+        "nálet",
+        "odvetu",
+        "popírá",
+        "putin",
+        "slibuje",
+        "ukrajina",
+        "ukrajinský",
+        "údajný"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "U Příbrami začala hořet vlaková souprava. Nikdo se nezranil",
+      "url": "https://www.denik.cz/pozary/u-pribrami-zasahuji-hasici-u-pozaru-vlakove-soupravy-nikdo-se-nezranil-20260522.html",
+      "dt": "2026-05-22T17:18:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "hořet",
+        "nezranil",
+        "nikdo",
+        "příbrami",
+        "souprava",
+        "vlaková",
+        "začala"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -589,58 +639,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Tragédie u Prahy: Auto v Ondřejově narazilo do domu, spolujezdkyně zemřela",
-      "url": "https://www.denik.cz/nehody/v-ondrejove-u-prahy-narazilo-auto-do-domu-spolujezdkyne-nehodu-neprezila-2026052.html",
-      "dt": "2026-05-22T07:08:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "auto",
-        "domu",
-        "narazilo",
-        "ondřejově",
-        "prahy",
-        "spolujezdkyně",
-        "tragédie",
-        "zemřela"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Wintonovy děti se vrátily do Brna. Syn i dcera si město zamilovali, říká žena",
-      "url": "https://www.denik.cz/regiony/brno-pieta-nadrazi-grenfell-baines-paddock-winton-deti-meeting-brno.html",
-      "dt": "2026-05-22T06:40:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "brna",
-        "dcera",
-        "děti",
-        "město",
-        "syn",
-        "vrátily",
-        "wintonovy",
-        "zamilovali",
-        "říká",
-        "žena"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -651,7 +649,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28858,
+      "bytes": 28803,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -688,11 +686,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-22T17:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T17:22:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 2,
           "zpravy": 21,
+          "finance": 2,
           "zdravi": 1,
           "cestovani": 1
         },
@@ -706,6 +704,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Putin slibuje odvetu za údajný ukrajinský nálet na internát. Ukrajina ho popírá",
+            "publishedAt": "2026-05-22T17:22:00Z"
+          },
+          {
+            "title": "U Příbrami začala hořet vlaková souprava. Nikdo se nezranil",
+            "publishedAt": "2026-05-22T17:18:00Z"
+          },
           {
             "title": "Stačí přiložit kartu k mobilu a peníze jsou pryč. Podvodů s NFC přibývá",
             "publishedAt": "2026-05-22T17:00:00Z"
@@ -729,14 +735,6 @@
           {
             "title": "Ecce Homo Šternberk láká fanoušky rychlých aut i v letošním roce",
             "publishedAt": "2026-05-22T13:00:00Z"
-          },
-          {
-            "title": "K VZP se přidají další pojišťovny. Na mamograf půjde jít i bez žádanky",
-            "publishedAt": "2026-05-22T12:40:00Z"
-          },
-          {
-            "title": "Palivové stropy před víkendem klesly. Vláda ubrala haléře",
-            "publishedAt": "2026-05-22T12:25:00Z"
           }
         ]
       }
