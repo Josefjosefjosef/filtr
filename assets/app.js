@@ -37684,6 +37684,133 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return tailClean.length >= 3 ? { tail: tailClean } : null;
   }
 
+  /**
+   * P1 self_correction_after_create_note_task: poznámkový create lead + korekční pivot do úkolů
+   * (cluster self_correction_after_create_note_task). Úzký deterministic routing pivot — bez broad NLP.
+   */
+  function iuSilverSelfCorrectionAfterCreateNoteToTaskTargetSignalFolded(x) {
+    const s = String(x || "");
+    if (!s) return false;
+    if (/\bdo\s+(?:\S+\s+){0,4}ukol/.test(s)) return true;
+    if (/\b(?:na|jako|mistrem)\s+(?:\S+\s+){0,2}ukol/.test(s)) return true;
+    if (
+      /\bjen\s+(?:\S+\s+){0,8}(?:zavolat|poslat|objednat|vyzvednout|zaplatit|pripravit|doplnit|pripsat|odeslat|domluvit|kontaktovat|vyzkouset)\b/.test(
+        s
+      )
+    )
+      return true;
+    return false;
+  }
+
+  function iuSilverSelfCorrectionAfterCreateNoteToTaskPivotCueFolded(x) {
+    const s = String(x || "");
+    if (!s) return false;
+    if (/\b(?:zmen|uprav)\s+(?:\S+\s+){0,3}ten\s+(?:\S+\s+){0,3}ukol\s+na\b/.test(s)) return true;
+    if (/\boprav\s+to\s+na\b/.test(s)) return true;
+    if (/\bspatne\s+prepis\w*\s+na\b/.test(s)) return true;
+    if (/\bmyslel\s+jsem\b/.test(s)) return true;
+    if (/\bne\s+vlastne\b/.test(s)) return true;
+    if (/\bvlastne\s+(?:\S+\s+){0,6}ne\s+(?:\S+\s+){0,4}(?:dnes|dneska)\b/.test(s)) return true;
+    if (/\bvlastne\s+\S+\s+ne\s+\S+/.test(s)) return true;
+    if (/\bto\s+ne\b/.test(s)) return true;
+    return false;
+  }
+
+  function iuSilverSelfCorrectionAfterCreateNoteToTaskPivotResP1() {
+    return [
+      /\b(?:zmen|uprav)\s+(?:\S+\s+){0,3}ten\s+(?:\S+\s+){0,3}ukol\s+na\b/g,
+      /\boprav\s+to\s+na\b/g,
+      /\bspatne\s+prepis\w*\s+na\b/g,
+      /\bmyslel\s+jsem\b/g,
+      /\bne\s+vlastne\b/g,
+      /\bvlastne\s+(?:\S+\s+){0,6}ne\s+(?:\S+\s+){0,4}(?:dnes|dneska)\b/g,
+      /\bvlastne\s+\S+\s+ne\s+\S+/g,
+      /\bto\s+ne\b/g
+    ];
+  }
+
+  function iuSilverSelfCorrectionAfterCreateNoteToTaskPivotAfterNoteLeadFolded(folded) {
+    const x = String(folded || "");
+    const noteMatch = x.match(/\bdo\s+(?:\S+\s+){0,6}poznam/);
+    if (!noteMatch || noteMatch.index < 0) return null;
+    const pivotRes = iuSilverSelfCorrectionAfterCreateNoteToTaskPivotResP1();
+    let bestIdx = -1;
+    let bestLen = 0;
+    for (let pi = 0; pi < pivotRes.length; pi++) {
+      const re = pivotRes[pi];
+      re.lastIndex = 0;
+      let m;
+      while ((m = re.exec(x)) !== null) {
+        if (m.index > noteMatch.index && m.index >= bestIdx) {
+          bestIdx = m.index;
+          bestLen = m[0].length;
+        }
+      }
+    }
+    return bestIdx >= 0 ? { idx: bestIdx, len: bestLen } : null;
+  }
+
+  function iuSilverSelfCorrectionAfterCreateNoteToTaskP1Folded(folded) {
+    const x = String(folded || "");
+    if (!x) return false;
+    if (iuSilverSelfCorrectionNoisyCrossNoteToTaskP1Folded(x)) return false;
+    if (iuSilverP0NoWriteNegationBeatsWriteLikeCueFolded(x)) return false;
+    if (!iuSilverSelfCorrectionNoisyCrossNoteFalseLeadFolded(x)) return false;
+    if (!iuSilverSelfCorrectionAfterCreateNoteToTaskPivotCueFolded(x)) return false;
+    if (!iuSilverSelfCorrectionAfterCreateNoteToTaskTargetSignalFolded(x)) return false;
+    return !!iuSilverSelfCorrectionAfterCreateNoteToTaskPivotAfterNoteLeadFolded(x);
+  }
+
+  function iuSilverTryPickSelfCorrectionAfterCreateNoteToTaskTailP1(rawIn, foldedIn) {
+    const raw = String(rawIn || "").trim();
+    const f = String(foldedIn != null ? foldedIn : foldCs(raw));
+    if (!iuSilverSelfCorrectionAfterCreateNoteToTaskP1Folded(f)) return null;
+    const pivotF = iuSilverSelfCorrectionAfterCreateNoteToTaskPivotAfterNoteLeadFolded(f);
+    if (!pivotF) return null;
+    let tailF = f.slice(pivotF.idx + pivotF.len).trim();
+    tailF = tailF.replace(/^\s*jen\s+/, "").trim();
+    if (tailF.length < 3) return null;
+    if (
+      !iuSilverSelfCorrectionAfterCreateNoteToTaskTargetSignalFolded(tailF) &&
+      !iuSilverSelfCorrectionAfterCreateNoteToTaskTargetSignalFolded(f.slice(pivotF.idx))
+    ) {
+      return null;
+    }
+    const rawPivotRes = [
+      /\b(?:zmen|uprav)\s+(?:\S+\s+){0,3}ten\s+(?:\S+\s+){0,3}[uú]kol\s+na\b/gi,
+      /\boprav\s+to\s+na\b/gi,
+      /\bspatn[eě]\s+prep[ií]s\w*\s+na\b/gi,
+      /\bmyslel\s+jsem\b/gi,
+      /\bne\s+vlastn[eě]\b/gi,
+      /\bvlastn[eě]\s+(?:\S+\s+){0,6}ne\s+(?:\S+\s+){0,4}(?:dnes|dneska)\b/gi,
+      /\bvlastn[eě]\s+\S+\s+ne\s+\S+/gi,
+      /\bto\s+ne\b/gi
+    ];
+    let rawIdx = -1;
+    let rawLen = 0;
+    for (let ri = 0; ri < rawPivotRes.length; ri++) {
+      const re = rawPivotRes[ri];
+      re.lastIndex = 0;
+      let m;
+      while ((m = re.exec(raw)) !== null) {
+        if (m.index >= rawIdx) {
+          rawIdx = m.index;
+          rawLen = m[0].length;
+        }
+      }
+    }
+    if (rawIdx >= 0) {
+      let tailRaw = raw.slice(rawIdx + rawLen).trim();
+      tailRaw = tailRaw.replace(/^\s*jen\s+/i, "").trim();
+      tailRaw = tailRaw
+        .replace(/\s*[,—–-]\s*(?:diky|děkuji|prosim|honem|no\s+stress|spěchám)\b[\s\S]*$/iu, "")
+        .trim();
+      if (tailRaw.length >= 3) return { tail: tailRaw };
+    }
+    const tailClean = tailF.replace(/\s*(?:prosim|diky|honem|no\s+stress)\b[\s\S]*$/i, "").trim();
+    return tailClean.length >= 3 ? { tail: tailClean } : null;
+  }
+
   /** Kalendářový anchor pro update intent — „ne do kalendáře“ samo o sobě nepočítá. */
   function iuSilverCalendarUpdateIntentPositiveCalAnchorFolded(x) {
     const s = String(x || "");
@@ -39016,6 +39143,31 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         }
       }
     }
+    {
+      const afterCreateNoteTaskP1 = iuSilverTryPickSelfCorrectionAfterCreateNoteToTaskTailP1(raw, folded);
+      if (afterCreateNoteTaskP1 && afterCreateNoteTaskP1.tail) {
+        const tailWorkAcnt = String(afterCreateNoteTaskP1.tail || "").trim();
+        if (tailWorkAcnt) {
+          const foldedTailAcnt = foldCs(tailWorkAcnt);
+          const calOverAcnt = iuSilverCalendarEventOverridesTask(tailWorkAcnt, foldedTailAcnt);
+          return {
+            intent: "task.create",
+            confidence: 0.99,
+            route: "tasks",
+            reason: "self_correction_after_create_note_to_task_p1",
+            kind: "TASK_TRY",
+            taskRaw: tailWorkAcnt,
+            taskOpts: {
+              skipTargetStrip: true,
+              calendarOverridesTask: !!calOverAcnt,
+              fromExplicitTarget: true,
+              titleCleanupFullRawGate: raw
+            },
+            calendarFallbackWanted: calWanted
+          };
+        }
+      }
+    }
     if (iuSilverExplicitTaskCreateAnchorP1Folded(folded)) {
       const strippedT = iuSilverStripTaskTargetPhrases(raw);
       const foldedStrip = foldCs(strippedT);
@@ -40323,6 +40475,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     s = iuSilverStripRcz2MobVoiceNoteParseLeadP1(s);
     const fEarly = foldCs(s);
     if (iuSilverSelfCorrectionNoisyCrossNoteToTaskP1Folded(fEarly)) return null;
+    if (iuSilverSelfCorrectionAfterCreateNoteToTaskP1Folded(fEarly)) return null;
     const pinKeKartNotesTailP0 =
       /\bpin\s+ke\s+kart/i.test(fEarly) &&
       /\bdo\s+poznam/i.test(fEarly) &&
@@ -40839,6 +40992,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return true;
     }
     if (/\bcesta\s*:/.test(fProbe) && /\bodjezd\b/.test(fProbe) && /\bkalendar\b/.test(fProbe)) return true;
+    if (iuSilverSelfCorrectionAfterCreateNoteToTaskP1Folded(f)) return true;
     return false;
   }
 
@@ -41493,6 +41647,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (iuSilverExplicitCalendarCreateAnchorP1Folded(f)) return null;
     if (iuSilverIsNoteRetrievalIntentV1(String(rawIn || "").trim())) return null;
     if (iuSilverTryParseExplicitNoteCreate(String(rawIn || "").trim())) return null;
+    if (iuSilverSelfCorrectionAfterCreateNoteToTaskP1Folded(f)) return null;
     /** P0: dotaz na konec záruky / TV v poznámkách — nesmí spadnout na calendar.read před notes.read. */
     if (
       /\b(kdy|do\s+kdy|jak\s+dlouho|konci|vyprsi)\b/.test(f) &&
@@ -47550,6 +47705,26 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         titleCleanupFullRawGate: raw
       });
       if (taskTurnNc) return taskTurnNc;
+      return baseClarification("ambiguous_write", "unknown");
+    }
+
+    /**
+     * P1 self_correction_after_create_note_task (early): poznámkový lead + korekční pivot do úkolů
+     * → tasks.create (ne notes.create / calendar.read misroute).
+     */
+    if (iuSilverSelfCorrectionAfterCreateNoteToTaskP1Folded(folded)) {
+      const afterCreateNotePick = iuSilverTryPickSelfCorrectionAfterCreateNoteToTaskTailP1(raw, folded);
+      const taskRawAcnt =
+        afterCreateNotePick && afterCreateNotePick.tail
+          ? String(afterCreateNotePick.tail).trim()
+          : iuSilverStripTaskTargetPhrases(raw);
+      const taskTurnAcnt = iuSilverBuildTaskCreateTurn(taskRawAcnt || raw, now, {
+        skipTargetStrip: true,
+        calendarOverridesTask: false,
+        fromExplicitTarget: true,
+        titleCleanupFullRawGate: raw
+      });
+      if (taskTurnAcnt) return taskTurnAcnt;
       return baseClarification("ambiguous_write", "unknown");
     }
 
