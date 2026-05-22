@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-22T05:29:44.159496Z",
+  "ingestedAt": "2026-05-22T06:11:25.413201Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Na ČVUT skončil bezpečnostní ředitel. Přichází posila z „velké čtyřky“",
+      "url": "https://ekonomickydenik.cz/cvut-skoncil-bezpecnostni-reditel-kpmg/",
+      "dt": "2026-05-22T05:55:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bezpečnostní",
+        "posila",
+        "přichází",
+        "skončil",
+        "velké",
+        "čtyřky",
+        "čvut",
+        "ředitel"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -758,33 +783,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Tikající bomba? Evropská energetická síť roste pomaleji než zelené zdroje",
-      "url": "https://ekonomickydenik.cz/evropska-energeticka-sit-roste-pomaleji-nez-zelene-zdroje/",
-      "dt": "2026-05-20T11:22:23Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "bomba",
-        "energetická",
-        "evropská",
-        "než",
-        "pomaleji",
-        "roste",
-        "síť",
-        "tikající",
-        "zdroje",
-        "zelené"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 75156,
+      "bytes": 75129,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T04:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T05:55:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 19,
@@ -850,6 +848,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na ČVUT skončil bezpečnostní ředitel. Přichází posila z „velké čtyřky“",
+            "publishedAt": "2026-05-22T05:55:00Z"
+          },
           {
             "title": "Fixní, flexi, nebo protiinflační? Experti radí, jak vybrat ten správný Dluhopis republiky",
             "publishedAt": "2026-05-22T04:30:00Z"
@@ -877,10 +879,6 @@
           {
             "title": "Poslanec Krutílek varuje před pastí, která ničí evropský průmysl i naše peněženky",
             "publishedAt": "2026-05-21T12:43:49Z"
-          },
-          {
-            "title": "Krize v zemědělství: pomrzlé ovoce, drahá hnojiva a mléko se nevyplácí. Pomůže Babiš?",
-            "publishedAt": "2026-05-21T11:57:27Z"
           }
         ]
       }

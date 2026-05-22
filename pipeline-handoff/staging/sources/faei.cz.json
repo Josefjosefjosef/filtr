@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-22T05:29:44.159496Z",
+  "ingestedAt": "2026-05-22T06:11:25.413201Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Vítězové burzovní rallye? Polovodiče a překvapivě měď",
+      "url": "https://profitonline.cz/vitezove-burzovni-rallye-polovodice-a-prekvapive-med/",
+      "dt": "2026-05-22T06:00:35Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "burzovní",
+        "měď",
+        "polovodiče",
+        "překvapivě",
+        "rallye",
+        "vítězové"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -260,31 +283,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Jak „oškubat“ zájemce o ojeté auto. Podvodníci mají osvědčený trik",
-      "url": "https://profitonline.cz/jak-oskubat-zajemce-o-ojete-auto-podvodnici-maji-osvedceny-trik/",
-      "dt": "2026-05-20T04:00:16Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "auto",
-        "mají",
-        "ojeté",
-        "osvědčený",
-        "oškubat",
-        "podvodníci",
-        "trik",
-        "zájemce"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -295,7 +293,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18670,
+      "bytes": 18706,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -332,12 +330,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-22T04:00:48Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T06:00:35Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 9,
+          "finance": 10,
           "cestovani": 1,
-          "zpravy": 2
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -349,6 +347,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vítězové burzovní rallye? Polovodiče a překvapivě měď",
+            "publishedAt": "2026-05-22T06:00:35Z"
+          },
           {
             "title": "Ministři Zůna, Klempíř… A kdo opustí vládu z hnutí ANO?",
             "publishedAt": "2026-05-22T04:00:48Z"
@@ -376,10 +378,6 @@
           {
             "title": "Hitlera neuposlechl. Sudetský Němec zachránil most v Ústí nad Labem",
             "publishedAt": "2026-05-21T04:00:29Z"
-          },
-          {
-            "title": "Růst výrobních cen v dubnu pokračoval rychlým tempem",
-            "publishedAt": "2026-05-20T19:40:30Z"
           }
         ]
       }

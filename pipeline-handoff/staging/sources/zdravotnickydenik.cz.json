@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-22T05:29:44.159496Z",
+  "ingestedAt": "2026-05-22T06:11:25.413201Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Místo resuscitace mají telefonovat lékaři. Odboráři varují před nebezpečnými změnami u záchranářů",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/13-platova-trida-zachranari/",
+      "dt": "2026-05-22T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "lékaři",
+        "mají",
+        "místo",
+        "nebezpečnými",
+        "odboráři",
+        "resuscitace",
+        "telefonovat",
+        "varují",
+        "změnami",
+        "záchranářů"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -253,34 +280,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Zvrat v kauze exšéfky zlínské hygieny: Přiznala se ke sražení motorkáře. K soudu ale nemusí",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/exsefka-zlinske-hygieny-priznala-srazeni-motorkare/",
-      "dt": "2026-05-21T06:52:02Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "ale",
-        "exšéfky",
-        "hygieny",
-        "kauze",
-        "motorkáře",
-        "nemusí",
-        "přiznala",
-        "soudu",
-        "sražení",
-        "zlínské",
-        "zvrat"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -291,7 +290,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 88181,
+      "bytes": 90720,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -328,11 +327,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-22T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 9,
-          "zpravy": 1
+          "zdravi": 10
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -344,6 +342,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Místo resuscitace mají telefonovat lékaři. Odboráři varují před nebezpečnými změnami u záchranářů",
+            "publishedAt": "2026-05-22T06:00:00Z"
+          },
           {
             "title": "Na nové léky proti rakovině čekají Češi přes 800 dní. Evropa nám utíká, ukázala nová data",
             "publishedAt": "2026-05-22T05:00:00Z"
@@ -371,10 +373,6 @@
           {
             "title": "Máme volná lůžka pro ebolu, ale jen pro Čechy. Vojtěch utnul spekulace o dalších cizincích",
             "publishedAt": "2026-05-21T09:36:54Z"
-          },
-          {
-            "title": "Výsměch, nebo pomoc? Žitníková hájí virtuální realitu pro zdravotníky",
-            "publishedAt": "2026-05-21T09:02:00Z"
           }
         ]
       }

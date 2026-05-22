@@ -1,12 +1,41 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-22T05:29:44.159496Z",
+  "ingestedAt": "2026-05-22T06:11:25.413201Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Rozjetý Montreal roznesl Carolinu, Dobeš pochytal 25 střel soupeře",
+      "title": "Knicks dál sviští Východem. Druhý bod jim zajistil Hart, Cleveland musí zabrat doma",
+      "url": "https://www.idnes.cz/sport/basket/finale-vychodni-konference-knicks-cleveland-nba.A260522_074040_sport-basket_kazdt",
+      "dt": "2026-05-22T05:54:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bod",
+        "cleveland",
+        "doma",
+        "druhý",
+        "hart",
+        "jim",
+        "knicks",
+        "musí",
+        "sviští",
+        "východem",
+        "zabrat",
+        "zajistil"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Rozjetý Montreal roznesl Carolinu. Dobeš pochytal 25 střel, zářil Slafkovský",
       "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-dobes-montreal.A260522_065230_nhl_mkr",
       "dt": "2026-05-22T05:22:09Z",
       "media_raw": "iDNES / Sport",
@@ -18,8 +47,9 @@
         "pochytal",
         "rozjetý",
         "roznesl",
-        "soupeře",
-        "střel"
+        "slafkovský",
+        "střel",
+        "zářil"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -745,33 +775,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zapsali jsme se do historie! Emeryho Aston Villa ukončila třicetileté čekání na trofej",
-      "url": "https://www.idnes.cz/fotbal/pohary/aston-villa-evropska-liga-unai-emery.A260521_122611_fot_pohary_hora",
-      "dt": "2026-05-21T13:01:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "aston",
-        "emeryho",
-        "historie",
-        "jsme",
-        "trofej",
-        "třicetileté",
-        "ukončila",
-        "villa",
-        "zapsali",
-        "čekání"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -782,7 +785,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46205,
+      "bytes": 45845,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -819,7 +822,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T05:22:09Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T05:54:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -835,7 +838,11 @@
         },
         "sample_titles": [
           {
-            "title": "Rozjetý Montreal roznesl Carolinu, Dobeš pochytal 25 střel soupeře",
+            "title": "Knicks dál sviští Východem. Druhý bod jim zajistil Hart, Cleveland musí zabrat doma",
+            "publishedAt": "2026-05-22T05:54:00Z"
+          },
+          {
+            "title": "Rozjetý Montreal roznesl Carolinu. Dobeš pochytal 25 střel, zářil Slafkovský",
             "publishedAt": "2026-05-22T05:22:09Z"
           },
           {
@@ -861,10 +868,6 @@
           {
             "title": "MS v hokeji 2026 ONLINE: Reprezentace má volné dny, v sobotu vyzve Slováky",
             "publishedAt": "2026-05-21T21:07:00Z"
-          },
-          {
-            "title": "Slováci slaví čtvrtou výhru na MS, Dánsku dali pět gólů. Kanada se nadřela",
-            "publishedAt": "2026-05-21T21:02:00Z"
           }
         ]
       }
