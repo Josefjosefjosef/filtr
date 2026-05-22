@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-22T18:54:50.404609Z",
+  "ingestedAt": "2026-05-22T19:35:24.723132Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Jon Jones odmítl životní výplatu. UFC mu za zápas s Aspinallem nabízelo přes 600 milionů Kč",
+      "url": "https://www.mmamag.cz/jones-mel-odmitnout-30-milionu-dolaru-od-ufc/",
+      "dt": "2026-05-22T18:52:06Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "600",
+        "aspinallem",
+        "jon",
+        "jones",
+        "milionů",
+        "nabízelo",
+        "odmítl",
+        "ufc",
+        "výplatu",
+        "zápas",
+        "životní"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1069,37 +1097,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Techniky stoje v MMA vypadají jednoduše. Ale správně je pojmenuje jen 2 z 10 lidí, co ten sport sledují roky",
-      "url": "https://www.mmamag.cz/techniky-stoje-v-mma-vypadaji-jednoduse-ale-spravne-je-pojmenuje-jen-2-z-10-lidi-co-ten-sport-sleduji-roky/",
-      "dt": "2026-05-21T03:39:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "ale",
-        "jednoduše",
-        "jen",
-        "lidí",
-        "mma",
-        "pojmenuje",
-        "roky",
-        "sledují",
-        "sport",
-        "správně",
-        "stoje",
-        "techniky",
-        "ten",
-        "vypadají"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1110,7 +1107,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 93758,
+      "bytes": 93787,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1147,7 +1144,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-22T18:37:50Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T18:52:06Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1162,6 +1159,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jon Jones odmítl životní výplatu. UFC mu za zápas s Aspinallem nabízelo přes 600 milionů Kč",
+            "publishedAt": "2026-05-22T18:52:06Z"
+          },
           {
             "title": "Zranění i velká překvapení. Zápasy, které ukázaly krutost MMA",
             "publishedAt": "2026-05-22T18:37:50Z"
@@ -1189,10 +1190,6 @@
           {
             "title": "Pirát Krištofič plivl po zápase na bodového rozhodčího. Za pár sekund toho litoval",
             "publishedAt": "2026-05-22T13:36:17Z"
-          },
-          {
-            "title": "Will Fleury má soupeře pro Štvanici. Reinders prozradil, co neměl",
-            "publishedAt": "2026-05-22T11:40:00Z"
           }
         ]
       }
