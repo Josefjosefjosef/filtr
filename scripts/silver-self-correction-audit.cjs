@@ -112,9 +112,12 @@ const {
 
 const {
   computeGoldLabels,
+  moduleSwitchLaneExpectsClarify,
   finalizeModuleSwitchHarnessEval,
   finalizeModuleSwitchClarifyLaneHarnessEval,
   finalizeModuleSwitchTaskToNoteHarnessEval,
+  finalizeModuleSwitchNoteToCalHarnessEval,
+  finalizeModuleSwitchCalToNoteHarnessEval,
   finalizeModuleSwitchNegJakoCalToNoteHarnessEval,
   finalizeNegationNoWriteHarnessEval,
   finalizeNoteQueryKdeHarnessEval,
@@ -494,6 +497,31 @@ function classifyScFailBucket(c, turn, ev, gold) {
 
   if (cat === "intent_fail" || cat === "wrong_collection" || cat === "calendar_vs_task_confusion") {
     if (c.cluster === "self_correction_update_note" && !drafty) return "HARNESS_PROBLEM";
+    if (
+      c.cluster === "self_correction_module_note_to_cal" &&
+      turn.normalizedIntent === "calendar.create" &&
+      String(turn.processingState || "") === "NEEDS_CLARIFICATION"
+    ) {
+      return "HARNESS_PROBLEM";
+    }
+    if (
+      c.cluster === "self_correction_module_cal_to_note" &&
+      turn.normalizedIntent === "notes.create" &&
+      String(turn.processingState || "") === "READY_TO_SAVE" &&
+      gold &&
+      (gold.expected_intent === "unknown" || moduleSwitchLaneExpectsClarify(gold.module_switch_clarity))
+    ) {
+      return "HARNESS_PROBLEM";
+    }
+    if (
+      c.cluster === "self_correction_module_cal_to_note" &&
+      !drafty &&
+      (turn.normalizedIntent === "clarification" || turn.normalizedIntent === "unknown") &&
+      gold &&
+      String(gold.module_switch_clarity || "") === "future_engine_candidate"
+    ) {
+      return "HARNESS_PROBLEM";
+    }
     if (c.sc_lane === "correction_update_vs_create" && drafty) return "TRUE_ENGINE_FAIL";
     if (c.sc_lane === "noisy_mobile_self_correction") return "HARNESS_PROBLEM";
     if (c.cluster === "self_correction_negation_flip" && !drafty) return "HARNESS_PROBLEM";
@@ -510,6 +538,8 @@ function applyAllHarnessFinalizers(c, turn, ev) {
   out = finalizeModuleSwitchHarnessEval(c, turn, out);
   out = finalizeModuleSwitchClarifyLaneHarnessEval(c, turn, out);
   out = finalizeModuleSwitchTaskToNoteHarnessEval(c, turn, out);
+  out = finalizeModuleSwitchNoteToCalHarnessEval(c, turn, out);
+  out = finalizeModuleSwitchCalToNoteHarnessEval(c, turn, out);
   out = finalizeModuleSwitchNegJakoCalToNoteHarnessEval(c, turn, out);
   out = finalizeNegationNoWriteHarnessEval(c, turn, out);
   out = finalizeNoteQueryKdeHarnessEval(c, turn, out);
