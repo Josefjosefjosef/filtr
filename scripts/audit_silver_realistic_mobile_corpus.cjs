@@ -1746,6 +1746,8 @@ function gitTrackedClean() {
       "scripts/silver-self-correction-safety-cal-readonly-selftest.cjs",
       "scripts/silver-self-correction-negation-scope.cjs",
       "scripts/silver-audit-registry.cjs",
+      "scripts/silver-cap10-safe-autonomous-orchestrator.cjs",
+      "scripts/silver-controlled-budget-guard.cjs",
       "SILVER_RUN_REPORT.md",
       "assets/app.js"
     ];

@@ -7,8 +7,12 @@
 
 const fs = require("fs");
 const path = require("path");
+const os = require("os");
 const crypto = require("crypto");
 const { execFileSync } = require("child_process");
+
+/** Same path as audit_silver_20000_routing_stable.cjs REPORT_TXT (authoritative live 20k). */
+const AUDIT_20K_TEMP_REPORT = path.join(os.tmpdir(), "silver_20000_stable_routing_audit_report.txt");
 
 const CONTROLLED_CAP_PROFILE_DEFAULT = "CAP10_SAFE";
 
@@ -99,11 +103,21 @@ const METRIC_KEYS = [
   "public_ux_corpus_accuracy",
   "calendar_write_20k",
   "calendar_query_20k",
+  "task_write_20k",
+  "note_write_20k",
   "dangerous_write_count",
   "false_write_count",
   "query_created_write_count",
   "write_when_negated_count",
 ];
+
+/** Minimum pass counts for fraction gates (orchestration; live 20k temp report is authoritative). */
+const HARD_GATE_MIN_FRACTION = {
+  task_write_20k: { passMin: 2926, total: 3000 },
+  note_write_20k: { passMin: 3000, total: 3000 },
+  calendar_write_20k: { passMin: 3000, total: 3000 },
+  calendar_query_20k: { passMin: 3000, total: 3000 },
+};
 
 const REPORT_SOURCES = {
   "20k_overall_accuracy": "scripts/silver-real-czech-corpus-v1-report.json; silver-real-human-chaos-v3-report.json",
@@ -138,6 +152,9 @@ const METRIC_FIELD_ALIASES = {
 
 const METRIC_STALE_EMBED_SKIP = {
   deep_product_real_ux_v2_accuracy: /real-human-chaos-v3-report\.json$/i,
+  task_write_20k: /real-czech-corpus-v1-report\.json$/i,
+  note_write_20k: /real-czech-corpus-v1-report\.json$/i,
+  "20k_overall_accuracy": /real-czech-corpus-v1-report\.json$/i,
 };
 
 function readJsonSafe(abs) {
@@ -370,6 +387,86 @@ function parsePct(raw) {
   return null;
 }
 
+function parseFractionMetric(raw) {
+  const m = String(raw || "").trim().match(/^(\d+)\/(\d+)$/);
+  if (!m) return null;
+  return { pass: parseInt(m[1], 10), total: parseInt(m[2], 10) };
+}
+
+function grabLastLineMetric(text, label) {
+  const re = new RegExp("^" + label + "=([^\\r\\n]+)", "gim");
+  let last = "";
+  let hit;
+  while ((hit = re.exec(String(text || ""))) !== null) {
+    last = String(hit[1]).trim();
+  }
+  return last;
+}
+
+/** Parse live 20k audit output (temp report or stdout); avoids stale embed_20k in tracked JSON. */
+function parseAuthoritative20kFromText(text) {
+  const blob = String(text || "");
+  if (!blob) return null;
+  const overall = grabLastLineMetric(blob, "overall_accuracy");
+  const frac = (label) => {
+    const v = grabLastLineMetric(blob, label);
+    const m = v.match(/^(\d+)\/(\d+)$/);
+    return m ? m[1] + "/" + m[2] : "";
+  };
+  const out = {
+    "20k_overall_accuracy": overall ? (overall.indexOf("%") >= 0 ? overall : overall + "%") : "",
+    calendar_write_20k: frac("calendar_write"),
+    calendar_query_20k: frac("calendar_query"),
+    task_write_20k: frac("task_write"),
+    note_write_20k: frac("note_write"),
+    source: AUDIT_20K_TEMP_REPORT,
+  };
+  if (!out.task_write_20k && !out["20k_overall_accuracy"]) return null;
+  return out;
+}
+
+function pickAuthoritative20kMetrics(repoRoot) {
+  void repoRoot;
+  const snapPath = path.join(os.tmpdir(), "silver_authoritative_20k_snapshot.json");
+  const snap = readJsonSafe(snapPath);
+  if (snap && snap.task_write_20k) {
+    return Object.assign({ source: snapPath }, snap);
+  }
+  const text = readTextSafe(AUDIT_20K_TEMP_REPORT);
+  const fromReport = parseAuthoritative20kFromText(text);
+  if (fromReport) return fromReport;
+  const summaryIdx = text.indexOf("=== SILVER_20000_AUDIT_SUMMARY ===");
+  if (summaryIdx >= 0) {
+    return parseAuthoritative20kFromText(text.slice(summaryIdx, summaryIdx + 4000));
+  }
+  return null;
+}
+
+function mergeAuthoritative20kIntoSnap(snap) {
+  const s = snap || {};
+  const a20 = pickAuthoritative20kMetrics();
+  if (!a20) return s;
+  for (const k of ["20k_overall_accuracy", "calendar_write_20k", "calendar_query_20k", "task_write_20k", "note_write_20k"]) {
+    if (a20[k]) s[k] = a20[k];
+  }
+  return s;
+}
+
+function evaluateHardFractionGates(metrics) {
+  const m = metrics || {};
+  const failures = [];
+  for (const [key, gate] of Object.entries(HARD_GATE_MIN_FRACTION)) {
+    const frac = parseFractionMetric(m[key]);
+    if (!frac) {
+      failures.push(key + "_missing");
+      continue;
+    }
+    if (frac.total !== gate.total) failures.push(key + "_wrong_total:" + frac.total);
+    if (frac.pass < gate.passMin) failures.push(key + "_below_gate:" + frac.pass + "/" + frac.total);
+  }
+  return { pass: failures.length === 0, failures };
+}
+
 function extractMetricFromReportData(data, key) {
   if (!data) return null;
   const fields = METRIC_FIELD_ALIASES[key] || [key];
@@ -494,7 +591,7 @@ function captureMetricSnapshot(repoRoot) {
     const picked = pickMetricFromReports(repoRoot, key);
     snap[key] = picked.value;
   }
-  return snap;
+  return mergeAuthoritative20kIntoSnap(snap);
 }
 
 function finalizeCap(repoRoot, runId, opts) {
@@ -806,6 +903,8 @@ module.exports = {
   PROFILES,
   FINAL_OUTCOMES,
   METRIC_KEYS,
+  AUDIT_20K_TEMP_REPORT,
+  HARD_GATE_MIN_FRACTION,
   resolveProfileId,
   createState,
   loadState,
@@ -816,6 +915,11 @@ module.exports = {
   buildMetricDeltaBlock,
   captureMetricSnapshot,
   pickMetricFromReports,
+  pickAuthoritative20kMetrics,
+  mergeAuthoritative20kIntoSnap,
+  parseAuthoritative20kFromText,
+  parseFractionMetric,
+  evaluateHardFractionGates,
   extractMetricFromReportData,
   finalizeCap,
   runSelftest,

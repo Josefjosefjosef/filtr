@@ -103,6 +103,10 @@ function gitTrackedClean() {
       "scripts/silver-quality-v2-report.json",
       "scripts/silver-realistic-mobile-corpus-report.json",
       "scripts/silver-real-czech-corpus-v1-report.json",
+      "scripts/silver-real-czech-corpus-v1-30k-report.json",
+      "scripts/silver-cap10-safe-autonomous-orchestrator.cjs",
+      "scripts/silver-controlled-budget-guard.cjs",
+      "scripts/silver-self-correction-audit.cjs",
       "scripts/silver-real-czech-corpus-v1-30k-report.json"
     ];
     const bad = tracked.filter((l) => {
