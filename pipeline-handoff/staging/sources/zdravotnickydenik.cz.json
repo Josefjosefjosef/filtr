@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-22T14:54:52.430440Z",
+  "ingestedAt": "2026-05-22T15:36:21.162330Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nestárneme postupně, ale ve skocích. Ve kterých dvou letech tělo prudce selhává?",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/lidske-telo-nestarne-plynule-2-kriticke-zlomy/",
+      "dt": "2026-05-22T14:58:57Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "ale",
+        "dvou",
+        "kterých",
+        "letech",
+        "nestárneme",
+        "postupně",
+        "prudce",
+        "selhává",
+        "skocích",
+        "tělo"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -246,33 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Místo resuscitace mají telefonovat lékaři. Odboráři varují před nebezpečnými změnami u záchranářů",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/13-platova-trida-zachranari/",
-      "dt": "2026-05-22T06:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "lékaři",
-        "mají",
-        "místo",
-        "nebezpečnými",
-        "odboráři",
-        "resuscitace",
-        "telefonovat",
-        "varují",
-        "změnami",
-        "záchranářů"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -283,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 84269,
+      "bytes": 84536,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -320,11 +320,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-22T14:16:15Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T14:58:57Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "zdravi": 9
+          "zdravi": 9,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -336,6 +336,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nestárneme postupně, ale ve skocích. Ve kterých dvou letech tělo prudce selhává?",
+            "publishedAt": "2026-05-22T14:58:57Z"
+          },
           {
             "title": "Model zdravotní péče v Evropě je neudržitelný, varuje eurokomisař. Ujíždí nám vlak, přiznal",
             "publishedAt": "2026-05-22T14:16:15Z"
@@ -363,10 +367,6 @@
           {
             "title": "V zahraničí léčí a píší recepty, v Česku jsme na začátku. Sestrám se mají radikálně změnit role",
             "publishedAt": "2026-05-22T08:30:00Z"
-          },
-          {
-            "title": "Bitva o miliardy míří do finále: Laboratoře a radiodiagnostika chtějí konec tvrdých regulací",
-            "publishedAt": "2026-05-22T07:30:00Z"
           }
         ]
       }

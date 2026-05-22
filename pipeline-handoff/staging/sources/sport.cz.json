@@ -1,25 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-22T14:54:52.430440Z",
+  "ingestedAt": "2026-05-22T15:36:21.162330Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "HOKEJ ONLINE: Kanada se proti outsiderovi prosadila. Vedou i Němci",
+      "title": "HOKEJ ONLINE: Outsider proti Kanadě zahrozil. Němci poprvé na MS využili přesilovku",
       "url": "https://www.sport.cz/clanek/hokej-ms-kanada-muze-navysit-naskok-v-cele-ceske-skupiny-nemci-maji-posledni-sanci-na-restart-5460345",
       "dt": "2026-05-22T06:40:17Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
         "hokej",
-        "kanada",
+        "kanadě",
         "němci",
         "online",
-        "outsiderovi",
-        "prosadila",
+        "outsider",
+        "poprvé",
         "proti",
-        "vedou"
+        "přesilovku",
+        "využili",
+        "zahrozil"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Ital Bettiol po samostatném úniku triumfoval ve 13. etapě Gira d'Italia",
+      "url": "https://www.sport.cz/clanek/cyklistika-ital-bettiol-po-samostatnem-uniku-triumfoval-ve-13-etape-gira-d-italia-5460890",
+      "dt": "2026-05-22T15:16:11Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bettiol",
+        "etapě",
+        "gira",
+        "ital",
+        "italia",
+        "samostatném",
+        "triumfoval",
+        "úniku"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -721,32 +748,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Útočník Anaheimu Terry možná zmešká start nové sezony NHL",
-      "url": "https://www.sport.cz/clanek/hokej-nhl-utocnik-anaheimu-terry-mozna-zmeska-start-nove-sezony-nhl-5460705",
-      "dt": "2026-05-22T06:05:33Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "anaheimu",
-        "možná",
-        "nhl",
-        "nové",
-        "sezony",
-        "start",
-        "terry",
-        "zmešká",
-        "útočník"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -757,7 +758,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43888,
+      "bytes": 43913,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -794,11 +795,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T14:28:06Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T15:16:11Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 28,
-          "zpravy": 1,
+          "sport": 27,
+          "zpravy": 2,
           "finance": 1
         },
         "drop_counts": {
@@ -812,8 +813,12 @@
         },
         "sample_titles": [
           {
-            "title": "HOKEJ ONLINE: Kanada se proti outsiderovi prosadila. Vedou i Němci",
+            "title": "HOKEJ ONLINE: Outsider proti Kanadě zahrozil. Němci poprvé na MS využili přesilovku",
             "publishedAt": "2026-05-22T06:40:17Z"
+          },
+          {
+            "title": "Ital Bettiol po samostatném úniku triumfoval ve 13. etapě Gira d'Italia",
+            "publishedAt": "2026-05-22T15:16:11Z"
           },
           {
             "title": "Po vítězství v kvalifikaci přišlo selhání. Česká mistryně světa znovu nezvládla evropský šampionát",
@@ -838,10 +843,6 @@
           {
             "title": "Finsku se na hokejovém MS zranil útočník Erholtz. Nahradí jej Päivärinta",
             "publishedAt": "2026-05-22T12:57:37Z"
-          },
-          {
-            "title": "Obří dopingový podvod v Liberci? Českou legendu možná připravil o zlato",
-            "publishedAt": "2026-05-22T12:12:09Z"
           }
         ]
       }

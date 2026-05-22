@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-22T14:54:52.430440Z",
+  "ingestedAt": "2026-05-22T15:36:21.162330Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Inspekce pátrá po zlých policistech. Seriál ale zatím spíš hledá sám sebe",
+      "url": "https://www.kinobox.cz/clanky/recenze/54020-inspekce-patra-po-zlych-policistech-serial-ale-zatim-spis-hleda-sam-sebe",
+      "dt": "2026-05-22T15:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "ale",
+        "hledá",
+        "inspekce",
+        "policistech",
+        "pátrá",
+        "sebe",
+        "seriál",
+        "spíš",
+        "sám",
+        "zatím",
+        "zlých"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -520,32 +548,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Legendární show se vrací. Návrat Superstar odhalil moderátora i nečekanou porotu",
-      "url": "https://www.kinobox.cz/clanky/serialy/53985-superstar-hlasi-velky-navrat-nova-sazi-na-rappera-calina-a-leose-marese",
-      "dt": "2026-05-20T11:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "legendární",
-        "moderátora",
-        "nečekanou",
-        "návrat",
-        "odhalil",
-        "porotu",
-        "show",
-        "superstar",
-        "vrací"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -556,7 +558,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28915,
+      "bytes": 28908,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -593,7 +595,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-22T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T15:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -608,6 +610,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Inspekce pátrá po zlých policistech. Seriál ale zatím spíš hledá sám sebe",
+            "publishedAt": "2026-05-22T15:00:00Z"
+          },
           {
             "title": "Jako Nesmiřitelní s epickými bitvami. Arnold se vrací jako Král Conan a inspiruje se Eastwoodem",
             "publishedAt": "2026-05-22T14:00:00Z"
@@ -635,10 +641,6 @@
           {
             "title": "Kdy se dočkáme dalších dvou Avatarů? Cameron potřebuje splnit dvě důležité podmínky",
             "publishedAt": "2026-05-22T07:00:00Z"
-          },
-          {
-            "title": "Filmové dojmy z Cannes: Režijní pokus Johna Travolty, moderní vztahy i šílená vyvražďovačka",
-            "publishedAt": "2026-05-21T17:00:00Z"
           }
         ]
       }
