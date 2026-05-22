@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-22T02:09:46.911482Z",
+  "ingestedAt": "2026-05-22T02:51:02.736306Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "MAPA: Do Česka o víkendu dorazí léto. Teploty mohou překonat tropickou třicítku",
+      "url": "https://www.denik.cz/pocasi/predpoved-pocasi-vikend-patek-sobota-nedele-do-ceska-dorazi-leto-20260522.html",
+      "dt": "2026-05-22T02:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dorazí",
+        "léto",
+        "mapa",
+        "překonat",
+        "teploty",
+        "tropickou",
+        "třicítku",
+        "víkendu",
+        "česka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -615,31 +641,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "Jak bude v červnu? Meteorologové očekávají letní počasí, ale i mírné ochlazení",
-      "url": "https://www.denik.cz/pocasi/pocasi-cerven-2026-dlouhodoba-predpoved.html",
-      "dt": "2026-05-21T10:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ale",
-        "letní",
-        "meteorologové",
-        "mírné",
-        "ochlazení",
-        "očekávají",
-        "počasí",
-        "červnu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -650,7 +651,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28923,
+      "bytes": 29225,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -687,7 +688,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-22T02:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T02:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -703,6 +704,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "MAPA: Do Česka o víkendu dorazí léto. Teploty mohou překonat tropickou třicítku",
+            "publishedAt": "2026-05-22T02:30:00Z"
+          },
           {
             "title": "Strašit zadlužováním nemá cenu, říká ekonom Miroslav Singer",
             "publishedAt": "2026-05-22T02:00:00Z"
@@ -730,10 +735,6 @@
           {
             "title": "V Brně uctili oběti holokaustu. Předáka sudetských Němců Posselta vypískali",
             "publishedAt": "2026-05-21T15:54:00Z"
-          },
-          {
-            "title": "Vypuštěná Labská přehrada nabízí neobyčejný pohled. Čeká ji velké čištění",
-            "publishedAt": "2026-05-21T15:40:00Z"
           }
         ]
       }
