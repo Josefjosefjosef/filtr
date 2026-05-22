@@ -34623,6 +34623,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     /** P0 note_write: „neukládej … ne úkol“ = modulová negace vůči úkolům, ne globální zákaz zápisu poznámky. */
     if (/\bneukladej\b/.test(x) && /\bne\s+ukol\b/.test(x)) return true;
     if (/\bneukladej\b/.test(x) && (/\bjako\s+ukol/.test(x) || /\bdo\s+ukol/.test(x))) return true;
+    if (/\bnic\s+neukladej\b/.test(x) && /\bpridej\w*\s+ukol/.test(x)) return true;
     if (/\bneukladat\b/.test(x) && /\bjako\s+ukol/.test(x)) return true;
     if ((/\bnedavej\b/.test(x) || /\bnedej\b/.test(x)) && /\bdo\s+ukol/.test(x)) return true;
     if (/\bnezapis\b/.test(x) && /\bjako\s+ukol/.test(x)) return true;
@@ -35088,7 +35089,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (
       /^\s*ne\s+do\s+(?:ukol\w*|task\w*|tasks)\b/i.test(foldCs(String(rawStr || "").trim())) &&
       iuSilverHasExplicitTasksTarget(foldUse) &&
-      (iuSilverHasWriteVerb(foldUse) || iuSilverCzechMobileTaskWriteBasicCueFolded(foldUse))
+      (iuSilverHasWriteVerb(foldUse) ||
+        iuSilverCzechMobileTaskWriteBasicCueFolded(foldUse) ||
+        /\bpracovn\w*\s*:/.test(foldUse) ||
+        /\bpriorit\w*/.test(foldUse) ||
+        /\b,\s*az\b.*\bdo\s+ukol/.test(foldUse))
     )
       return false;
     if (/nechci\s+to\s+do\s+kalend/.test(foldUse)) return true;
@@ -35764,6 +35769,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     const wi = earliestWriteIdx();
     if (wi < 0 || !(pick.start < wi)) return false;
+    if (/\b(pridej|vytvor)\w*\s+ukol\w*\b/.test(x) && (/\bjen\s+zjist\w*\b/.test(x) || /\bjen\s+se\s+podivej\b/.test(x))) {
+      return false;
+    }
+    if (/\bimplicitn\w*\s+ukol/i.test(x) && /\b(nezapomen|pripomenout)\b/i.test(x) && iuSilverHasTaskActionVerb(x)) {
+      return false;
+    }
     const gap = x.slice(pick.end, wi);
     if (/\.\s+/.test(gap) || /[!?]\s+/.test(gap)) return false;
     return true;
@@ -35995,6 +36006,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverTryTaskQueryReadPriorityTurn(raw, now, folded, ctx, empty) {
     const f = String(folded || "");
     const r0 = String(raw || "").trim();
+    if (/\b(pridej|vytvor)\w*\s+ukol\w*\b/.test(f) && (iuSilverHasWriteVerb(f) || iuSilverHasTaskActionVerb(f))) return null;
     if (!r0 || !iuSilverTaskReadContextFolded(f, r0)) return null;
     /**
      * P0 task_write_router_split: stejná pojistka jako u TryTaskReadListQueryEarly — konflikt read-only + „jen úkol“
@@ -36667,6 +36679,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverCalendarReadWinsOverTaskReadFolded(f) {
     const x = String(f || "");
     if (!x) return false;
+    if (/\b(pridej|hod)\w*\s+ukol/.test(x) && (/\bneplet\s+.*\b(kalend|schuz)/.test(x) || /\bnic\s+neukladej\b/.test(x))) return false;
     if (iuSilverRelationshipCoMamSPravnikTaskQueryTieBreakFolded(x)) return false;
     if (iuSilverRhc3TaskQueryReadVsCreateP1Folded(x)) return false;
     if (iuSilverExplicitTaskListQuerySignalP1Folded(x)) return false;
@@ -38051,7 +38064,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       (/\b(pridej|napis|uloz|vytvor)\w*\s+ukol\w*\b/.test(f) && iuSilverHasWriteVerb(f));
     if (explicitTask) {
       const taskIdx = iuSilverEarliestExplicitTaskWriteCueIndexFolded(f);
-      if (taskIdx >= 0 && negIdx < taskIdx) return true;
+      if (taskIdx >= 0 && negIdx < taskIdx) {
+        if (/\b(pridej|vytvor)\w*\s+ukol\w*\b/.test(f)) return false;
+        return true;
+      }
     }
 
     if (iuSilverTryParseExplicitNoteCreate(r)) {
@@ -38682,6 +38698,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!x) return false;
     if (/\bzmen\b/.test(x) || /\buprav\b/.test(x) || /\bprepis\b/.test(x) || /\bodskrtn/.test(x)) return false;
     if (/\boznac\w*\s+.*\bhotov/.test(x)) return false;
+    if (/\b(pridej|vytvor)\w*\s+ukol\w*\b/.test(x)) return true;
     if (/\buloz\s+mi\s+ukoly\b/.test(x) || /\buloz\s+mi\s+ukol\b/.test(x)) return true;
     if (/\buloz\s+mi\s+task\b/.test(x) || /\bdej\s+mi\s+task\b/.test(x)) return true;
     if (/^\s*task\s+\S/.test(x)) return true;
