@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-22T12:14:41.462859Z",
+  "ingestedAt": "2026-05-22T12:54:41.406417Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Palivové stropy před víkendem klesly. Vláda ubrala haléře",
+      "url": "https://www.denik.cz/ekonomika/ceny-paliva-strop-vikend.html",
+      "dt": "2026-05-22T12:25:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "haléře",
+        "klesly",
+        "palivové",
+        "stropy",
+        "ubrala",
+        "vláda",
+        "víkendem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -612,32 +636,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V Hulicích oslaví Světový den včel hravou i voňavou formou. Bude i šifra",
-      "url": "https://www.denik.cz/ctenar-reporter/hulice-vcelii-svet-oslava-svetovy-den-vcela-pozvanka-20260520.html",
-      "dt": "2026-05-22T03:29:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "den",
-        "formou",
-        "hravou",
-        "hulicích",
-        "oslaví",
-        "světový",
-        "voňavou",
-        "včel",
-        "šifra"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -648,7 +646,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 27845,
+      "bytes": 27904,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -685,10 +683,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-22T11:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T12:25:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 24,
+          "finance": 1,
+          "zpravy": 23,
           "cestovani": 1
         },
         "drop_counts": {
@@ -701,6 +700,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Palivové stropy před víkendem klesly. Vláda ubrala haléře",
+            "publishedAt": "2026-05-22T12:25:00Z"
+          },
           {
             "title": "Stát uvažuje o prodeji Explosie, řekl Babiš. Zájem už projevila Francie",
             "publishedAt": "2026-05-22T11:55:00Z"
@@ -728,10 +731,6 @@
           {
             "title": "V maďarském petrochemickém závodu hoří. Jeden člověk zemřel, oznámil premiér",
             "publishedAt": "2026-05-22T09:47:00Z"
-          },
-          {
-            "title": "U školy v Pardubicích vzniklo pietní místo. Navštívil jej i premiér Babiš",
-            "publishedAt": "2026-05-22T09:46:00Z"
           }
         ]
       }

@@ -1,25 +1,53 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-22T12:14:41.462859Z",
+  "ingestedAt": "2026-05-22T12:54:41.406417Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Giro ONLINE: Souboj o únik nekončí, očekává se náročné finále",
+      "title": "Giro ONLINE: Peloton zvolnil. Na čele patnáct uprchlíků, očekává se velké finále",
       "url": "https://www.idnes.cz/sport/cyklistika/giro-online-velka-prilezitost-pro-unik-ocekava-se-velke-finale.A260522_113427_cyklistika_mrg",
-      "dt": "2026-05-22T11:42:42Z",
+      "dt": "2026-05-22T12:16:27Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
         "finále",
         "giro",
-        "nekončí",
-        "náročné",
         "online",
         "očekává",
-        "souboj",
-        "únik"
+        "patnáct",
+        "peloton",
+        "uprchlíků",
+        "velké",
+        "zvolnil",
+        "čele"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Na chlapa dobrej výkon. Kajakář Dostál se pochlubil novým životním úspěchem",
+      "url": "https://www.idnes.cz/sport/trendy/na-chlapa-dobrej-vykon-kajakar-dostal-se-pochlubil-novym-zivotnim-uspechem.A260522_100115_trendy_subt",
+      "dt": "2026-05-22T12:01:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "chlapa",
+        "dobrej",
+        "dostál",
+        "kajakář",
+        "novým",
+        "pochlubil",
+        "výkon",
+        "úspěchem",
+        "životním"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -749,32 +777,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bacha, jdou Kanaďani! Jak Jágr utekl ze záchodu a Reichela srovnávali s Gretzkým",
-      "url": "https://www.idnes.cz/hokej/ms-2026/ms-1990-retro-vzpominky-jagr-reichel-holik-hostak.A260521_153236_ms-hokej-2026_czo",
-      "dt": "2026-05-21T22:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bacha",
-        "gretzkým",
-        "jdou",
-        "jágr",
-        "kanaďani",
-        "reichela",
-        "srovnávali",
-        "utekl",
-        "záchodu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -785,7 +787,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46691,
+      "bytes": 47025,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -822,7 +824,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T11:42:42Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T12:16:27Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -838,8 +840,12 @@
         },
         "sample_titles": [
           {
-            "title": "Giro ONLINE: Souboj o únik nekončí, očekává se náročné finále",
-            "publishedAt": "2026-05-22T11:42:42Z"
+            "title": "Giro ONLINE: Peloton zvolnil. Na čele patnáct uprchlíků, očekává se velké finále",
+            "publishedAt": "2026-05-22T12:16:27Z"
+          },
+          {
+            "title": "Na chlapa dobrej výkon. Kajakář Dostál se pochlubil novým životním úspěchem",
+            "publishedAt": "2026-05-22T12:01:00Z"
           },
           {
             "title": "Vlna ano, pokřik ne. Mexiko před MS zbrojí proti homofobnímu skandování",
@@ -864,10 +870,6 @@
           {
             "title": "Guardiola potvrdil spekulace, po deseti letech končí u Manchesteru City",
             "publishedAt": "2026-05-22T10:51:11Z"
-          },
-          {
-            "title": "Slováci si vymohli bizarní gól. Puk našli při komerční pauze, šťoucháním do branky",
-            "publishedAt": "2026-05-22T10:40:00Z"
           }
         ]
       }
