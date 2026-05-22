@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-22T09:30:03.335933Z",
+  "ingestedAt": "2026-05-22T10:09:33.738225Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Vzali jste si, co jste našli? Může vás to stát víc, než čekáte",
+      "url": "https://profitonline.cz/vzali-jste-si-co-jste-nasli-muze-vas-to-stat-vic-nez-cekate/",
+      "dt": "2026-05-22T10:00:06Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "jste",
+        "našli",
+        "než",
+        "stát",
+        "vzali",
+        "vás",
+        "víc",
+        "čekáte"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -260,30 +285,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Británie a Japonsko čelí masivnímu výprodeji vládního dluhu",
-      "url": "https://profitonline.cz/britanie-a-japonsko-celi-masivnimu-vyprodeji-vladniho-dluhu/",
-      "dt": "2026-05-20T08:00:41Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "británie",
-        "dluhu",
-        "japonsko",
-        "masivnímu",
-        "vládního",
-        "výprodeji",
-        "čelí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -294,7 +295,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18682,
+      "bytes": 18705,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -331,7 +332,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-22T08:00:41Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T10:00:06Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -348,6 +349,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vzali jste si, co jste našli? Může vás to stát víc, než čekáte",
+            "publishedAt": "2026-05-22T10:00:06Z"
+          },
           {
             "title": "Colt CZ hlásí historická čísla a vysoký růst marže",
             "publishedAt": "2026-05-22T08:00:41Z"
@@ -375,10 +380,6 @@
           {
             "title": "Eurostat: Česko mezi evropskými premianty",
             "publishedAt": "2026-05-21T08:00:33Z"
-          },
-          {
-            "title": "Jen vyšší finanční dávky porodnost v Česku nezvýší",
-            "publishedAt": "2026-05-21T06:00:58Z"
           }
         ]
       }

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-05-22T09:30:03.335933Z",
+  "ingestedAt": "2026-05-22T10:09:33.738225Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Prodloužené víkendy v Lyonu během září. Letenky od 1 435 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/prodlouzene-vikendy-v-lyonu-behem-zari",
+      "dt": "2026-05-22T09:32:04Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "435",
+        "během",
+        "letenky",
+        "lyonu",
+        "prodloužené",
+        "víkendy",
+        "září"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -499,31 +523,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Buy & Fly: Týden na Madeiře se snídaní z Brna. Zájezd od 8 990 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/buy-fly-tyden-na-madeire-se-snidani-z-brna",
-      "dt": "2026-05-18T09:58:05Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "990",
-        "brna",
-        "buy",
-        "fly",
-        "madeiře",
-        "snídaní",
-        "týden",
-        "zájezd"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -534,7 +533,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 50344,
+      "bytes": 50330,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -571,7 +570,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-22T07:12:23Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T09:32:04Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -586,6 +585,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Prodloužené víkendy v Lyonu během září. Letenky od 1 435 Kč",
+            "publishedAt": "2026-05-22T09:32:04Z"
+          },
           {
             "title": "Cala Gonone na Sardinii: all-inclusive dovolená v jednom z nejkrásnějších koutů Středomoří. Zájezd od 13 890 Kč",
             "publishedAt": "2026-05-22T07:12:23Z"
@@ -613,10 +616,6 @@
           {
             "title": "Levné letenky z Vídně do Bangkoku se Salam Air. Letenky od 6 380 Kč",
             "publishedAt": "2026-05-20T12:21:14Z"
-          },
-          {
-            "title": "Kréta s all-inclusive z Prahy nebo Ostravy na přelomu května a června. Zájezd od 6 490 Kč",
-            "publishedAt": "2026-05-20T11:18:40Z"
           }
         ]
       }

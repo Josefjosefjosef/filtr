@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-22T09:30:03.335933Z",
+  "ingestedAt": "2026-05-22T10:09:33.738225Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Polská vláda jde ve stopách Stanjury. Chce uvalit mimořádnou daň na Orlen",
+      "url": "https://ekonomickydenik.cz/polska-vladachce-uvalit-dan-na-orlen/",
+      "dt": "2026-05-22T09:42:59Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "chce",
+        "daň",
+        "jde",
+        "mimořádnou",
+        "orlen",
+        "polská",
+        "stanjury",
+        "stopách",
+        "uvalit",
+        "vláda"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -762,32 +789,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Až 10 let za smrtelnou nehodu pod vlivem. Proč jen tvrdší tresty nestačí?",
-      "url": "https://ekonomickydenik.cz/10-let-nehoda-tvrdsi-tresty-ridici/",
-      "dt": "2026-05-20T12:59:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "jen",
-        "let",
-        "nehodu",
-        "nestačí",
-        "proč",
-        "smrtelnou",
-        "tresty",
-        "tvrdší",
-        "vlivem"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +799,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74118,
+      "bytes": 73861,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,13 +836,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T09:10:20Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T09:42:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "finance": 19,
           "zdravi": 4,
-          "finance": 18,
           "sport": 1,
-          "zpravy": 7
+          "zpravy": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -853,6 +854,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Polská vláda jde ve stopách Stanjury. Chce uvalit mimořádnou daň na Orlen",
+            "publishedAt": "2026-05-22T09:42:59Z"
+          },
           {
             "title": "Levné iPhony či hodinky Garmin od státu? Ve hře je opět dražba zabavené elektroniky za miliony",
             "publishedAt": "2026-05-22T09:10:20Z"
@@ -880,10 +885,6 @@
           {
             "title": "Havlíček: Česko má v energetickém tažení proti povolenkám dalšího spoluhráče",
             "publishedAt": "2026-05-21T15:48:44Z"
-          },
-          {
-            "title": "„Kybernetická krvavá lázeň.“ Evropa není připravena na útoky na nemocnice a elektrárny",
-            "publishedAt": "2026-05-21T15:15:00Z"
           }
         ]
       }

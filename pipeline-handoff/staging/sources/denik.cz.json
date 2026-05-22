@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-22T09:30:03.335933Z",
+  "ingestedAt": "2026-05-22T10:09:33.738225Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Neočkované dítě z Ostravska zemřelo na záškrt, hygiena apeluje na očkování",
+      "url": "https://www.denik.cz/regiony/dite-ostravsko-zemrelo-onemocneni-zaskrt-hygiena-ockovani-2026.html",
+      "dt": "2026-05-22T09:11:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "apeluje",
+        "dítě",
+        "hygiena",
+        "neočkované",
+        "ostravska",
+        "očkování",
+        "zemřelo",
+        "záškrt"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -83,7 +108,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Večírek Micka Jaggera na Stromboli ukončila policie. Sousedi si něj stěžovali",
+      "title": "Večírek Micka Jaggera na Stromboli ukončila policie. Sousedi si stěžovali",
       "url": "https://www.denik.cz/staty-eu/stromboli-vecirek-policie-mick-jagger.html",
       "dt": "2026-05-22T08:45:00Z",
       "media_raw": "Deník",
@@ -91,7 +116,6 @@
       "tokens": [
         "jaggera",
         "micka",
-        "něj",
         "policie",
         "sousedi",
         "stromboli",
@@ -621,32 +645,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V Brně uctili oběti holokaustu. Předáka sudetských Němců Posselta vypískali",
-      "url": "https://www.denik.cz/regiony/pietni-akt-nadrazi-winton-deti-holokaust-meeting-brno-sjezd-sudetskych-nemcu.html",
-      "dt": "2026-05-21T15:54:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "brně",
-        "holokaustu",
-        "němců",
-        "oběti",
-        "posselta",
-        "předáka",
-        "sudetských",
-        "uctili",
-        "vypískali"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -657,7 +655,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28414,
+      "bytes": 28481,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -694,7 +692,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-22T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T09:11:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -711,6 +709,10 @@
         },
         "sample_titles": [
           {
+            "title": "Neočkované dítě z Ostravska zemřelo na záškrt, hygiena apeluje na očkování",
+            "publishedAt": "2026-05-22T09:11:00Z"
+          },
+          {
             "title": "Stephen Colbert moderoval poslední The Late Show. Pozval Paula McCartneyho",
             "publishedAt": "2026-05-22T09:00:00Z"
           },
@@ -723,7 +725,7 @@
             "publishedAt": "2026-05-22T08:48:00Z"
           },
           {
-            "title": "Večírek Micka Jaggera na Stromboli ukončila policie. Sousedi si něj stěžovali",
+            "title": "Večírek Micka Jaggera na Stromboli ukončila policie. Sousedi si stěžovali",
             "publishedAt": "2026-05-22T08:45:00Z"
           },
           {
@@ -737,10 +739,6 @@
           {
             "title": "Tragédie u Prahy: Auto v Ondřejově narazilo do domu, spolujezdkyně zemřela",
             "publishedAt": "2026-05-22T07:08:00Z"
-          },
-          {
-            "title": "Wintonovy děti se vrátily do Brna. Syn i dcera si město zamilovaly, říká žena",
-            "publishedAt": "2026-05-22T06:40:00Z"
           }
         ]
       }
