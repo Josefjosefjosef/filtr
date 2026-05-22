@@ -51,6 +51,7 @@ const {
   finalizeSelfCorrectionSafetyCalReadonlyHarnessEval,
   finalizeSelfCorrectionSafetyNoteReadonlyHarnessEval,
   finalizeSelfCorrectionNegationFlipHarnessEval,
+  finalizeSelfCorrectionUpdateNoteHarnessEval,
 } = require("./silver-self-correction-query-clarification.cjs");
 
 const { computeGoldLabels, finalizeModuleSwitchHarnessEval, finalizeModuleSwitchClarifyLaneHarnessEval } =
@@ -87,6 +88,8 @@ const GIT_ALLOW = [
   "scripts/silver-self-correction-safety-cal-readonly-diagnostic-report.json",
   "scripts/silver-self-correction-safety-cal-readonly-selftest.cjs",
   "scripts/silver-self-correction-safety-note-readonly-selftest.cjs",
+  "scripts/silver-self-correction-update-note-selftest.cjs",
+  "scripts/silver-product-handoff-continuation.cjs",
   "SILVER_RUN_REPORT.md",
   "SILVER_CURSOR_OUTPUT.md",
   "SILVER_NEXT_ACTION.md",
@@ -170,6 +173,7 @@ function applyAllHarnessFinalizers(c, turn, ev) {
   out = finalizeSelfCorrectionSafetyCalReadonlyHarnessEval(c, turn, out);
   out = finalizeSelfCorrectionSafetyNoteReadonlyHarnessEval(c, turn, out);
   out = finalizeSelfCorrectionNegationFlipHarnessEval(c, turn, out);
+  out = finalizeSelfCorrectionUpdateNoteHarnessEval(c, turn, out);
   return out;
 }
 
