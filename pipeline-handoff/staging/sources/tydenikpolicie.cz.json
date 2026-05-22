@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-22T14:14:25.561933Z",
+  "ingestedAt": "2026-05-22T14:54:52.430440Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Splašení koně nabourali v Rožnově pod Radhoštěm s povozem do stromu. Tři zranění",
+      "url": "https://tydenikpolicie.cz/splaseni-kone-nabourali-v-roznove-pod-radhostem-s-povozem-do-stromu-tri-zraneni/",
+      "dt": "2026-05-22T14:15:35Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "koně",
+        "nabourali",
+        "povozem",
+        "radhoštěm",
+        "rožnově",
+        "splašení",
+        "stromu",
+        "tři",
+        "zranění"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -246,32 +272,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Opilý muž, který měl v Brně napadnout jiného, o sobě tvrdil, že je Ježíš",
-      "url": "https://tydenikpolicie.cz/opily-muz-ktery-mel-v-brne-napadnout-jineho-o-sobe-tvrdil-ze-je-jezis/",
-      "dt": "2026-05-21T14:13:05Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "brně",
-        "ježíš",
-        "jiného",
-        "muž",
-        "měl",
-        "napadnout",
-        "opilý",
-        "sobě",
-        "tvrdil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 17003,
+      "bytes": 17080,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +319,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-22T14:07:27Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T14:15:35Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -334,6 +334,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Splašení koně nabourali v Rožnově pod Radhoštěm s povozem do stromu. Tři zranění",
+            "publishedAt": "2026-05-22T14:15:35Z"
+          },
           {
             "title": "Autu na dálnici D6 upadlo za jízdy kolo, v protisměru narazilo do projíždějící škodovky. Dva mrtví",
             "publishedAt": "2026-05-22T14:07:27Z"
@@ -361,10 +365,6 @@
           {
             "title": "Na devadesátce naměřili policisté řidiči jaguaru rychlost 147 km/hod",
             "publishedAt": "2026-05-22T06:16:05Z"
-          },
-          {
-            "title": "Realizace na Vysočině odhalila podvody s řidičáky. Policisté zadrželi osm cizinců",
-            "publishedAt": "2026-05-22T06:13:07Z"
           }
         ]
       }
