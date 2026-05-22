@@ -397,6 +397,29 @@ function isCanonModuleSwitchClear(fold) {
   );
 }
 
+/** Self-correction / module_switch: falešný úkolový lead + ne-do-kalend + do-poznamek (poznámka vyhrává). */
+function isCanonModuleSwitchTaskToNoteClear(fold) {
+  const f = String(fold || "");
+  if (!f) return false;
+  const taskLead = /\bdo\s+ukol/.test(f) || ((/\bho[dď]\s+mi\b/.test(f) || /\bhod\s+mi\b/.test(f)) && /\bukol/.test(f));
+  if (!taskLead) return false;
+  if (!/\bdo\s+(?:\S+\s+){0,2}poznam/.test(f)) return false;
+  if (!moduleSwitchCalToNoteNoisyFoldGuards(f) && !/\bne\s+do\s+kalend/.test(f)) return false;
+  let negIdx = f.search(/\bne\s+do\s+kalend/);
+  if (negIdx < 0) {
+    const mFiller = f.match(/\bne\s+\S+\s+do\s+kalend/);
+    negIdx = mFiller ? mFiller.index : -1;
+  }
+  if (negIdx < 0) {
+    const mBroken = f.match(/\bne\s+do\s+(?!\s*kalend)\S+\s+kalend/);
+    negIdx = mBroken ? mBroken.index : -1;
+  }
+  if (negIdx < 0) return false;
+  const noteMatch = f.match(/\bdo\s+(?:\S+\s+){0,2}poznam/);
+  const noteIdx = noteMatch ? noteMatch.index : -1;
+  return noteIdx > negIdx;
+}
+
 function classifyModuleSwitchClarity(row, fold) {
   const mask = (row.mutation_mask || 0) >>> 0;
   const appliedSurface = moduleSwitchAppliedSurfaceNoiseMask();
@@ -411,6 +434,13 @@ function classifyModuleSwitchClarity(row, fold) {
 
   if (/\bne\s+jako\s+do\s+kalend/i.test(fold)) {
     return { clarity: "future_engine_candidate", reason: "spoken_czech_ne_jako_do_cal" };
+  }
+
+  if (isCanonModuleSwitchTaskToNoteClear(fold)) {
+    const pinSurface = /\bpin\b/i.test(fold);
+    const strictPristine = pinSurface && (mask & appliedSurface) === 0;
+    if (strictPristine) return { clarity: "clear", reason: "task_to_note_switch" };
+    return { clarity: "surface_clarify_lane", reason: "task_to_note_switch_surface" };
   }
 
   const fillerBetweenNeAndDoCal = /\bne\s+\S+\s+do\s+kalend/i.test(fold);
@@ -571,7 +601,7 @@ function finalizeModuleSwitchHarnessEval(c, turn, ev) {
  */
 function moduleSwitchCalToNoteNoisyFoldGuards(fold) {
   const f = String(fold || "");
-  if (!/\b(do\s+poznam|poznamk)/i.test(f)) return false;
+  if (!/\b(do\s+(?:\S+\s+){0,2}poznam|poznamk)/i.test(f)) return false;
   if (/\bne\s+do\s+kalend/i.test(f)) return true;
   if (/\bne\s+\S+\s+do\s+kalend/i.test(f)) return true;
   if (/\bne\s+do\s+(?!\s*kalend)\S+\s+kalend/i.test(f)) return true;
@@ -586,6 +616,11 @@ function moduleSwitchNegJakoDoCalToNoteFoldGuards(fold) {
 
 function moduleSwitchClarifyLaneFoldGuards(fold) {
   return moduleSwitchCalToNoteNoisyFoldGuards(fold);
+}
+
+/** task→note self-correction: do-ukol lead + ne-do-kalend + do-poznamek. */
+function moduleSwitchTaskToNoteFoldGuards(fold) {
+  return isCanonModuleSwitchTaskToNoteClear(fold);
 }
 
 /**
@@ -630,6 +665,57 @@ function finalizeModuleSwitchClarifyLaneHarnessEval(c, turn, ev) {
     return Object.assign({}, ev, {
       pass: true,
       cat: "module_switch_lane_create_ok",
+      auditIntent: ev.auditIntent,
+      raw: ev.raw
+    });
+  }
+
+  return ev;
+}
+
+/**
+ * self_correction_module_task_to_note: úkolový lead + kalendářová negace + cíl poznámky — accept notes.create
+ * nebo safe clarification bez create-like draftu (harness-only).
+ */
+function finalizeModuleSwitchTaskToNoteHarnessEval(c, turn, ev) {
+  if (c.family !== "module_switching" || ev.pass) return ev;
+  if (String(c.cluster || "") !== "self_correction_module_task_to_note") return ev;
+  if (ev.cat !== "intent_fail" && ev.cat !== "note_vs_task_confusion") return ev;
+
+  const fold = foldCs(c.input);
+  if (!moduleSwitchTaskToNoteFoldGuards(fold)) return ev;
+  if (hasNegWrite(fold) || safetyNoWriteFolded(fold)) return ev;
+
+  const eng = String(turn.normalizedIntent || "");
+  const ps = String(turn.processingState || "");
+  const drafty =
+    ps === "READY_TO_SAVE" ||
+    eng === "calendar.create" ||
+    eng === "tasks.create" ||
+    eng === "notes.create";
+  if (eng === "calendar.create" || eng === "tasks.create") return ev;
+
+  if ((eng === "clarification" || eng === "unknown" || eng === "calendar.read") && !createLikeTurn(turn)) {
+    if (c.gold) {
+      c.gold.expected_clarification_reason = "module_switch_task_to_note_clarify_ok";
+    }
+    c._module_switch_task_to_note_harness_pass = true;
+    return Object.assign({}, ev, {
+      pass: true,
+      cat: "module_switch_task_to_note_clarify_ok",
+      auditIntent: ev.auditIntent,
+      raw: ev.raw
+    });
+  }
+
+  if (eng === "notes.create" && drafty && ps === "READY_TO_SAVE") {
+    if (c.gold) {
+      c.gold.module_switch_lane_resolved_intent = "notes.create_confident";
+    }
+    c._module_switch_task_to_note_harness_pass = true;
+    return Object.assign({}, ev, {
+      pass: true,
+      cat: "module_switch_task_to_note_create_ok",
       auditIntent: ev.auditIntent,
       raw: ev.raw
     });
@@ -1927,6 +2013,7 @@ function main() {
     let ev = evaluateOne(c, turn);
     ev = finalizeModuleSwitchHarnessEval(c, turn, ev);
     ev = finalizeModuleSwitchClarifyLaneHarnessEval(c, turn, ev);
+    ev = finalizeModuleSwitchTaskToNoteHarnessEval(c, turn, ev);
     ev = finalizeModuleSwitchNegJakoCalToNoteHarnessEval(c, turn, ev);
     ev = finalizeNegationNoWriteHarnessEval(c, turn, ev);
     ev = finalizeNoteQueryKdeHarnessEval(c, turn, ev);
@@ -2417,9 +2504,12 @@ module.exports = {
   classifyModuleSwitchClarity,
   finalizeModuleSwitchHarnessEval,
   finalizeModuleSwitchClarifyLaneHarnessEval,
+  finalizeModuleSwitchTaskToNoteHarnessEval,
   finalizeModuleSwitchNegJakoCalToNoteHarnessEval,
   moduleSwitchCalToNoteNoisyFoldGuards,
+  moduleSwitchTaskToNoteFoldGuards,
   moduleSwitchNegJakoDoCalToNoteFoldGuards,
+  isCanonModuleSwitchTaskToNoteClear,
   finalizeNegationNoWriteHarnessEval,
   finalizeNoteQueryKdeHarnessEval,
   finalizeFillerNoteQueryHarnessEval,
