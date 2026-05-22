@@ -34,10 +34,13 @@ const CONTINUATION_TERMINAL = new Set([
 ]);
 
 const DIAGNOSTIC_CLUSTER_COMMANDS = {
-  self_correction_update_note: [
+  self_correction_module_note_to_cal: [
     "node scripts/silver-self-correction-audit.cjs",
     "node scripts/silver-self-correction-safety-diagnostic.cjs",
-    "node scripts/silver-self-correction-update-note-selftest.cjs",
+  ],
+  self_correction_module_cal_to_note: [
+    "node scripts/silver-self-correction-audit.cjs",
+    "node scripts/silver-self-correction-safety-diagnostic.cjs",
   ],
   self_correction_negation_flip: [
     "node scripts/silver-self-correction-audit.cjs",

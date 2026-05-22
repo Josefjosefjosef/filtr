@@ -104,6 +104,10 @@ function gitTrackedClean() {
       "scripts/silver-real-human-chaos-v3.cjs",
       "scripts/silver-real-human-chaos-v3-report.json",
       "scripts/rhc-v3-deterministic-core.cjs",
+      "scripts/silver-cap10-safe-autonomous-orchestrator.cjs",
+      "scripts/silver-controlled-budget-guard.cjs",
+      "scripts/silver-real-czech-public-ux-corpus-v2.cjs",
+      "scripts/silver-self-correction-audit.cjs",
       "assets/app.js"
     ];
     const bad = tracked.filter((l) => {
@@ -193,7 +197,22 @@ function parse20kStdout(out) {
   return r;
 }
 
+function tryEmbed20kFromAuthoritativeTemp() {
+  const os = require("os");
+  const reportPath = path.join(os.tmpdir(), "silver_20000_stable_routing_audit_report.txt");
+  try {
+    const text = fs.readFileSync(reportPath, "utf8");
+    const parsed = parse20kStdout(text);
+    if (parsed && parsed.task_write) return parsed;
+  } catch (e1) {
+    void e1;
+  }
+  return null;
+}
+
 function tryEmbed20k() {
+  const fromTemp = tryEmbed20kFromAuthoritativeTemp();
+  if (fromTemp) return fromTemp;
   if (process.env.SILVER_REAL_CZECH_EMBED_20K !== "1") return null;
   try {
     const out = execSync('node "' + path.join(REPO, "scripts", "audit_silver_20000_routing_stable.cjs") + '"', {

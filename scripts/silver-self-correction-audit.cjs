@@ -181,12 +181,22 @@ function gitTrackedCleanForSc() {
       "scripts/silver-real-human-chaos-v3.cjs",
       "scripts/silver-product-handoff-continuation.cjs",
       "scripts/silver-audit-registry.cjs",
+      "scripts/silver-cap10-safe-autonomous-orchestrator.cjs",
+      "scripts/silver-controlled-budget-guard.cjs",
+      "scripts/audit_silver_20000_routing_stable.cjs",
+      "scripts/audit_silver_realistic_mobile_corpus.cjs",
+      "scripts/silver-real-czech-corpus-v1.cjs",
+      "scripts/silver-real-czech-corpus-v1-report.json",
+      "scripts/silver-real-czech-corpus-v1-30k-report.json",
+      "scripts/silver-real-czech-public-ux-corpus-v2.cjs",
+      "scripts/silver-real-czech-public-ux-corpus-v2-report.json",
+      "scripts/silver-deep-product-real-ux-v2-report.json",
       "SILVER_RUN_REPORT.md",
       "SILVER_CURSOR_OUTPUT.md",
       "SILVER_NEXT_ACTION.md",
     ];
     const bad = tracked.filter((l) => {
-      const pathPart = (l.length >= 4 ? l.slice(3) : l).trim().replace(/\\/g, "/");
+      const pathPart = l.replace(/^\s*\S+\s+/, "").trim().replace(/\\/g, "/");
       for (let ai = 0; ai < allow.length; ai++) {
         if (pathPart.indexOf(allow[ai].replace(/\\/g, "/")) >= 0) return false;
       }

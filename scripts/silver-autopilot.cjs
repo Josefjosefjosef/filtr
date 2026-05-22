@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Silver Autopilot V1 — local orchestration only (no runtime Silver changes).
- * Commands: --status | --verify-pr= | --merge-pr= | --post-merge-proof | --refresh-rhc3 | --ask-model | --sanitize-next-action-md | --enforce-runtime-next-action-md | --auto | --full-auto-loop | --loop-once | --cli-autonomous-adapter-diagnostic | --cursor3-execution-status | --cursor3-execution-bridge-selftest | --controlled-budget-guard-selftest | --cap10-pipeline-contract-selftest | --cap10-replay-lifecycle-selftest | --metric-delta-contract-selftest | --generic-fallback-blocker-selftest | --stale-cursor-invoke-hardening-selftest | --stale-cursor-invoke-runtime-closeout-selftest | --runtime-enforce-safe-blocked-contract-selftest | --stale-runtime-closeout-hardening-selftest | --cap10-safe-invocation-contract-selftest | --generic-next-action-runtime-enforcement-selftest | --valid-product-work-closeout-selftest | --cluster-consistency-lock-selftest | --scorecard-finalize-runtime-selftest
+ * Commands: --status | --verify-pr= | --merge-pr= | --post-merge-proof | --fresh-tier-a-proof | --cap10-safe-autonomous-orchestrator-phase | --cap10-safe-autonomous-orchestrator-selftest | --refresh-rhc3 | --ask-model | --sanitize-next-action-md | --enforce-runtime-next-action-md | --auto | --full-auto-loop | --loop-once | --cli-autonomous-adapter-diagnostic | --cursor3-execution-status | --cursor3-execution-bridge-selftest | --controlled-budget-guard-selftest | --cap10-pipeline-contract-selftest | --cap10-replay-lifecycle-selftest | --metric-delta-contract-selftest | --generic-fallback-blocker-selftest | --stale-cursor-invoke-hardening-selftest | --stale-cursor-invoke-runtime-closeout-selftest | --runtime-enforce-safe-blocked-contract-selftest | --stale-runtime-closeout-hardening-selftest | --cap10-safe-invocation-contract-selftest | --generic-next-action-runtime-enforcement-selftest | --valid-product-work-closeout-selftest | --cluster-consistency-lock-selftest | --scorecard-finalize-runtime-selftest
  */
 /* eslint-disable no-console */
 "use strict";
@@ -80,6 +80,12 @@ const {
   runProductArtifactClassifierSelftest,
   cmdProductArtifactClassifierEval,
 } = require("./silver-product-artifact-classifier.cjs");
+const {
+  FRESH_TIER_A_PROOF_STEPS,
+  runCap10SafeAutonomousOrchestratorPhase,
+  runCap10SafeAutonomousOrchestratorSelftest,
+  runFreshTierAProof,
+} = require("./silver-cap10-safe-autonomous-orchestrator.cjs");
 
 const REPO = path.resolve(__dirname, "..");
 const SCRIPTS = __dirname;
@@ -101,16 +107,8 @@ const HARNESS_SAFE_EXCLUDE = {
 
 const PREFERRED_NEXT = ["rhc3_ambiguity_cal_conflict", "rhc3_cal_query_topic"];
 
-const POST_MERGE_STEPS = [
-  { kind: "npm", args: ["run", "smoke"] },
-  { kind: "node", file: "silver-calendar-create-regression.mjs" },
-  { kind: "node", file: "audit_silver_20000_routing_stable.cjs" },
-  { kind: "node", file: "audit_silver_quality_v2.cjs" },
-  { kind: "node", file: "audit_silver_realistic_mobile_corpus.cjs" },
-  { kind: "node", file: "silver-real-czech-corpus-v1.cjs" },
-  { kind: "node", file: "silver-real-czech-public-ux-corpus-v2.cjs" },
-  { kind: "node", file: "silver-deep-product-real-ux-v2.cjs" },
-];
+/** Authoritative fresh Tier A proof chain (CAP10_SAFE); shared with orchestrator. */
+const POST_MERGE_STEPS = FRESH_TIER_A_PROOF_STEPS;
 
 const SAFETY_REPORT_JSON = [
   "silver-quality-v2-report.json",
@@ -4612,6 +4610,9 @@ function parseArgs(argv) {
     else if (a === "--stale-runtime-closeout-hardening-selftest")
       out.cmd = "stale-runtime-closeout-hardening-selftest";
     else if (a === "--cap10-safe-invocation-contract-selftest") out.cmd = "cap10-safe-invocation-contract-selftest";
+    else if (a === "--cap10-safe-autonomous-orchestrator-phase") out.cmd = "cap10-safe-autonomous-orchestrator-phase";
+    else if (a === "--cap10-safe-autonomous-orchestrator-selftest") out.cmd = "cap10-safe-autonomous-orchestrator-selftest";
+    else if (a === "--fresh-tier-a-proof") out.cmd = "fresh-tier-a-proof";
     else if (a === "--generic-next-action-runtime-enforcement-selftest")
       out.cmd = "generic-next-action-runtime-enforcement-selftest";
     else if (a === "--cli-planner-cluster-preference-selftest") out.cmd = "planner-cluster-selftest";
@@ -4701,6 +4702,15 @@ if (require.main === module) {
     process.exit(runStaleRuntimeCloseoutHardeningSelftest(REPO) ? 0 : 1);
   } else if (p.cmd === "cap10-safe-invocation-contract-selftest") {
     process.exit(runCap10SafeInvocationContractSelftest(REPO) ? 0 : 1);
+  } else if (p.cmd === "cap10-safe-autonomous-orchestrator-phase") {
+    const dryOnly = argv.indexOf("--dry-run") >= 0;
+    const r = runCap10SafeAutonomousOrchestratorPhase({ repoRoot: REPO, dryRun: dryOnly });
+    process.exit(r.PASS_FAIL === "PASS" ? 0 : 1);
+  } else if (p.cmd === "cap10-safe-autonomous-orchestrator-selftest") {
+    process.exit(runCap10SafeAutonomousOrchestratorSelftest() ? 0 : 1);
+  } else if (p.cmd === "fresh-tier-a-proof") {
+    const r = runFreshTierAProof(REPO, { priorTierAReused: "NO" });
+    process.exit(r.pass ? 0 : 1);
   } else if (p.cmd === "generic-next-action-runtime-enforcement-selftest") {
     process.exit(runGenericNextActionRuntimeEnforcementSelftest(REPO) ? 0 : 1);
   }

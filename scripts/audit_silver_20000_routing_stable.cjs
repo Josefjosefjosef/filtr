@@ -1871,6 +1871,10 @@ function gitTrackedClean() {
       "scripts/silver-self-correction-safety-cal-readonly-selftest.cjs",
       "scripts/silver-self-correction-negation-scope.cjs",
       "scripts/silver-audit-registry.cjs",
+      "scripts/silver-cap10-safe-autonomous-orchestrator.cjs",
+      "scripts/silver-controlled-budget-guard.cjs",
+      "scripts/silver-real-czech-public-ux-corpus-v2.cjs",
+      "scripts/silver-real-czech-corpus-v1-30k-report.json",
       "SILVER_RUN_REPORT.md",
       "assets/app.js"
     ];
@@ -2564,7 +2568,11 @@ function main() {
   console.log("\n" + titleCleaningClusterAudit);
   console.log("\n" + silverTitleCleaningClusterAuditResult);
 
-  fs.writeFileSync(REPORT_TXT, lines.join("\n\n") + "\n\n" + titleCleaningClusterAudit + "\n", "utf8");
+  fs.writeFileSync(
+    REPORT_TXT,
+    lines.join("\n\n") + "\n\n" + summary + "\n\n" + titleCleaningClusterAudit + "\n",
+    "utf8",
+  );
 }
 
 main();

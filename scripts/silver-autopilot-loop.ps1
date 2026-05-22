@@ -95,7 +95,8 @@ param(
   [switch]$StaleInvokeWatchdogSelfTest,
   [switch]$StaleCursorInvokeHardeningSelfTest,
   [switch]$Cursor3ExecutionBridgeSelfTest,
-  [switch]$ControlledBudgetGuardSelfTest
+  [switch]$ControlledBudgetGuardSelfTest,
+  [switch]$Cap10SafeAutonomousOrchestratorSelfTest
 )
 
 Set-StrictMode -Version 2
@@ -2396,6 +2397,35 @@ function Get-SilverHandoffClusterFromNextActionText {
   return ""
 }
 
+function Invoke-SilverCap10SafeAutonomousOrchestratorPhase {
+  param(
+    [string]$RepoRoot,
+    [string]$AutopilotScript,
+    [switch]$DryRunOnly
+  )
+  $args = @($AutopilotScript, "--cap10-safe-autonomous-orchestrator-phase")
+  if ($DryRunOnly) { $args += "--dry-run" }
+  $r = Invoke-NodeScript -WorkingDirectory $RepoRoot -Arguments $args -PassThruExit $true
+  $out = @{
+    PASS_FAIL = "FAIL"
+    autonomous_continue = "NO"
+    stop_reason = ""
+    stdout = ""
+  }
+  if ($null -ne $r) {
+    $out.stdout = [string]$r.StdOut
+    if ($r.ExitCode -eq 0) { $out.PASS_FAIL = "PASS" }
+  }
+  $txt = [string]$out.stdout
+  foreach ($line in ($txt -split "`r?`n")) {
+    $trim = $line.Trim()
+    if ($trim -match '^autonomous_continue=(.+)$') { $out.autonomous_continue = $Matches[1] }
+    if ($trim -match '^stop_reason_if_any=(.+)$') { $out.stop_reason = $Matches[1] }
+    if ($trim -match '^PASS_FAIL=(.+)$') { $out.PASS_FAIL = $Matches[1] }
+  }
+  return $out
+}
+
 function Invoke-SilverProductHandoffContinuationEval {
   param(
     [string]$RepoRoot,
@@ -4648,6 +4678,7 @@ function Invoke-SilverCap50RealAutonomousLifecycleOrderingSelfTest {
     $invokeIdx = -1
     $handoffIdx = -1
     $bridgeIdx = -1
+    $orchIdx = -1
     $outerTerminalIdx = -1
     $metaWaitIdx = -1
     $reconcileIdx = -1
@@ -4656,8 +4687,13 @@ function Invoke-SilverCap50RealAutonomousLifecycleOrderingSelfTest {
       if ($line -match 'Reason = "after_autopilot_full_auto_loop"') { $cleanupIdx = $i }
       if ($line -match 'Invoke-SilverAutonomousCycleRearm -RepoRoot \$RepoRoot') { $rearmIdx = $i }
       if ($line -match 'Write-SilverCursorOutputAdapterInvokeStartedMeta') { $invokeIdx = $i }
-      if ($line -match 'Invoke-SilverOrchestrationProductHandoffBridge') { $bridgeIdx = $i }
-      if ($line -match 'product_task_handoff_missing') { $handoffIdx = $i }
+      if ($line -match 'Invoke-SilverCap10SafeAutonomousOrchestratorPhase -RepoRoot') { $orchIdx = $i }
+      if ($line -match '\$null = Invoke-SilverOrchestrationProductHandoffBridge') {
+        if ($cleanupIdx -ge 0 -and $i -gt $cleanupIdx -and ($orchIdx -lt 0 -or $i -lt $orchIdx)) {
+          $bridgeIdx = $i
+        }
+      }
+      if ($line -match '\$handoffReason = "product_task_handoff_missing"') { $handoffIdx = $i }
       if ($line -match 'Write-SilverCursorOutputOuterWallTimeoutTerminal -Path \$CursorOutputPath') { $outerTerminalIdx = $i }
       if ($line -match 'Wait-SilverAdapterMetaReadyForReconcile -AdapterOutputPath \$outAbs') { $metaWaitIdx = $i }
       if ($line -match '\$reconcile = Resolve-SilverCursorOuterExitFromAdapterMeta -OuterExit \$ce') { $reconcileIdx = $i }
@@ -4677,11 +4713,14 @@ function Invoke-SilverCap50RealAutonomousLifecycleOrderingSelfTest {
     if ($handoffIdx -lt 0) {
       [void]$failures.Add("product_task_handoff_marker_missing")
     }
+    if ($orchIdx -lt 0) {
+      [void]$failures.Add("cap10_safe_autonomous_orchestrator_phase_marker_missing")
+    }
     if (($cleanupIdx -ge 0) -and ($handoffIdx -ge 0) -and ($handoffIdx -lt $cleanupIdx)) {
       [void]$failures.Add("handoff_guard_before_post_autopilot_cleanup")
     }
     if (($bridgeIdx -ge 0) -and ($handoffIdx -ge 0) -and ($bridgeIdx -gt $handoffIdx)) {
-      [void]$failures.Add("handoff_bridge_after_handoff_stop")
+      [void]$failures.Add("handoff_bridge_after_in_cycle_handoff_stop")
     }
     if (($bridgeIdx -ge 0) -and ($cleanupIdx -ge 0) -and ($bridgeIdx -lt $cleanupIdx)) {
       [void]$failures.Add("handoff_bridge_before_post_autopilot_cleanup")
@@ -6688,6 +6727,17 @@ if ($Cursor3ExecutionBridgeSelfTest) {
   exit 0
 }
 
+if ($Cap10SafeAutonomousOrchestratorSelfTest) {
+  $prevEaOrch = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  & node (Join-Path $RepoRoot "scripts\silver-autopilot.cjs") --cap10-safe-autonomous-orchestrator-selftest
+  $orchExit = 1
+  if ($null -ne $LASTEXITCODE) { $orchExit = [int]$LASTEXITCODE }
+  $ErrorActionPreference = $prevEaOrch
+  if ($orchExit -ne 0) { exit 1 }
+  exit 0
+}
+
 if ($ControlledBudgetGuardSelfTest) {
   $prevEaBg = $ErrorActionPreference
   $ErrorActionPreference = "Continue"
@@ -8043,6 +8093,28 @@ while ($true) {
   Write-SilverProgressLogBlock -ProgressLogPath $ProgressLogPath -Outcome "PASS" -Fields $fieldsPass
   Write-SilverColoredCycleSummary -Outcome "PASS" -Fields $fieldsPass
   Invoke-SilverBeepPass -NoBeep:$NoBeep
+
+  if ($controlledCapProfileNorm -eq "CAP10_SAFE" -and (-not $DryRun)) {
+    Write-Host "silver-autopilot-loop: cap10_safe_autonomous_orchestrator_phase=START" -ForegroundColor DarkCyan
+    $orchPhase = Invoke-SilverCap10SafeAutonomousOrchestratorPhase -RepoRoot $RepoRoot -AutopilotScript $AutopilotScript
+    Write-Host ("silver-autopilot-loop: cap10_safe_orchestrator_PASS_FAIL=" + [string]$orchPhase.PASS_FAIL + " autonomous_continue=" + [string]$orchPhase.autonomous_continue) -ForegroundColor DarkCyan
+    if ([string]$orchPhase.PASS_FAIL -ne "PASS") {
+      $orchStop = [string]$orchPhase.stop_reason
+      if (-not $orchStop -or $orchStop -eq "(none)") { $orchStop = "cap10_safe_orchestrator_fail" }
+      Stop-LoopWithFail -ProgressLogPath $ProgressLogPath -RepoRoot $RepoRoot -Cycle $cycle -MainCommit $mainCommit `
+        -CursorExit $cursorExitStr -AutopilotExit $autoExitStr -StatusExit ([string]$se) `
+        -GitClean $gitCleanFinal -SafetyLine $safetyPost `
+        -CalW (Get-RunReportLineValue -ReportText $reportPost -Key "calendar_write_20k") `
+        -CalQ (Get-RunReportLineValue -ReportText $reportPost -Key "calendar_query_20k") `
+        -Headline (Get-NextActionHeadline -Text $nextAfter) -Focus "cap10_safe_orchestrator_stop" `
+        -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1 `
+        -StopReason ("cap10_safe_orchestrator|" + $orchStop)
+    }
+    if ([string]$orchPhase.autonomous_continue -eq "YES") {
+      $fieldsPass["cap10_autonomous_continue"] = "YES"
+      Write-Host "silver-autopilot-loop: cap10_safe_autonomous_continue=YES next_cluster_handoff_ready" -ForegroundColor Green
+    }
+  }
 
   if (-not $infinite -and $cycle -ge $MaxCycles) { break }
   if ($infinite -or $cycle -lt $MaxCycles) {
