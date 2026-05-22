@@ -105,6 +105,7 @@ const {
 const {
   finalizeSelfCorrectionNoisyNegReadHarnessEval,
   finalizeSelfCorrectionSafetyCalReadonlyHarnessEval,
+  finalizeSelfCorrectionSafetyNoteReadonlyHarnessEval,
   finalizeSelfCorrectionNegationFlipHarnessEval,
 } = require("./silver-self-correction-query-clarification.cjs");
 
@@ -172,8 +173,11 @@ function gitTrackedCleanForSc() {
       "scripts/silver-self-correction-safety-cal-readonly-selftest.cjs",
       "scripts/silver-self-correction-safety-cal-readonly-diagnostic.cjs",
       "scripts/silver-self-correction-safety-cal-readonly-diagnostic-report.json",
+      "scripts/silver-self-correction-safety-note-readonly-selftest.cjs",
       "scripts/silver-audit-registry.cjs",
       "SILVER_RUN_REPORT.md",
+      "SILVER_CURSOR_OUTPUT.md",
+      "SILVER_NEXT_ACTION.md",
     ];
     const bad = tracked.filter((l) => {
       const pathPart = (l.length >= 4 ? l.slice(3) : l).trim().replace(/\\/g, "/");
@@ -404,6 +408,17 @@ function harmonizeSafetyCalReadonlyExpectations(cases) {
   }
 }
 
+function harmonizeSafetyNoteReadonlyExpectations(cases) {
+  for (let ci = 0; ci < cases.length; ci++) {
+    const c = cases[ci];
+    if (c.cluster !== "self_correction_safety_note_readonly") continue;
+    c.group = "note_query";
+    if (String(c.expectedIntent || "").indexOf("create") >= 0) {
+      c.expectedIntent = "note.query";
+    }
+  }
+}
+
 function buildScCorpus(total) {
   const sizes = core.allocateFamilySizes(total, SC_LANES.length);
   const cases = [];
@@ -420,6 +435,7 @@ function buildScCorpus(total) {
     }
   }
   harmonizeSafetyCalReadonlyExpectations(cases);
+  harmonizeSafetyNoteReadonlyExpectations(cases);
   return cases;
 }
 
@@ -446,7 +462,9 @@ function classifyScFailBucket(c, turn, ev, gold) {
   if (cat === "intent_fail" && (turn.normalizedIntent === "clarification" || turn.normalizedIntent === "unknown")) {
     if (gold && gold.expected_should_clarify) return "AMBIGUOUS_INPUT";
     if (c.cluster === "self_correction_noisy_neg_read" && !createLikeTurn(turn)) return "HARNESS_PROBLEM";
+    if (c.cluster === "self_correction_safety_note_readonly" && !createLikeTurn(turn)) return "HARNESS_PROBLEM";
     if (c.cluster === "self_correction_negation_flip" && !createLikeTurn(turn)) return "HARNESS_PROBLEM";
+    if (c.cluster === "self_correction_safety_note_readonly" && !createLikeTurn(turn)) return "HARNESS_PROBLEM";
     if (c.sc_lane === "noisy_mobile_self_correction") return "HARNESS_PROBLEM";
     return "AMBIGUOUS_INPUT";
   }
@@ -481,6 +499,7 @@ function applyAllHarnessFinalizers(c, turn, ev) {
   out = finalizeMobileVoiceCalHarnessEval(c, turn, out);
   out = finalizeSelfCorrectionNoisyNegReadHarnessEval(c, turn, out);
   out = finalizeSelfCorrectionSafetyCalReadonlyHarnessEval(c, turn, out);
+  out = finalizeSelfCorrectionSafetyNoteReadonlyHarnessEval(c, turn, out);
   out = finalizeSelfCorrectionNegationFlipHarnessEval(c, turn, out);
   return out;
 }
@@ -826,5 +845,6 @@ module.exports = {
   buildScCorpus,
   buildScLaneCase,
   harmonizeSafetyCalReadonlyExpectations,
+  harmonizeSafetyNoteReadonlyExpectations,
   TOTAL_CASES,
 };

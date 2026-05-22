@@ -830,6 +830,9 @@ function buildNoSafeProductClusterBlockedHandoff(ctx) {
     "assets_app_change_allowed=NO",
     "product_cluster_required=YES",
     "generic_git_workflow_blocked=YES",
+    "NO_VALID_PRODUCT_NEXT_ACTION=YES",
+    (/GENERIC|NO_SAFE_PRODUCT/i.test(reason) ? "HARD_STOP_FORCED_OUTCOME_REQUIRED=YES" : "HARD_STOP_FORCED_OUTCOME_REQUIRED=NO"),
+    "next_cap_blind_retry_blocked=YES",
     "",
     "### Kontext",
     "",
@@ -884,6 +887,9 @@ function buildStaleCursorInvokeRuntimeBlockedHandoff(ctx) {
     "assets_app_change_allowed=NO",
     "product_cluster_required=YES",
     "generic_git_workflow_blocked=YES",
+    "NO_VALID_PRODUCT_NEXT_ACTION=YES",
+    (/GENERIC/i.test(reason) ? "HARD_STOP_FORCED_OUTCOME_REQUIRED=YES" : "HARD_STOP_FORCED_OUTCOME_REQUIRED=NO"),
+    "next_cap_blind_retry_blocked=YES",
     "",
     "### Kontext",
     "",
@@ -941,6 +947,10 @@ function silverNextActionQualityViolations(text, opts) {
   v.push(...blockGenericHandoffUnderLock(t, repoRoot));
   if (SILVER_NEXT_ACTION_MOJIBAKE_RE.test(t)) v.push("mojibake_utf8");
   if (!clusterWorkflow) {
+    if (/\bgit\s+stash\b/i.test(t)) v.push("generic_git_stash_task");
+    if (/commit\s+nebo\s+stash|commit\s+or\s+stash/i.test(t)) {
+      v.push("generic_commit_or_stash_instruction");
+    }
     if (/git\s+push\s+-u\s+origin/i.test(t)) v.push("generic_git_push_upstream");
     if (/chore\/silver-audit-repo-state/i.test(t)) v.push("generic_chore_silver_audit_push");
     if (/(?:--verify-pr=\d+|\bverify-pr\b)/i.test(t)) {
@@ -1418,6 +1428,7 @@ function runSafeBlockedHandoffContractSelftest() {
     plannerContext: { guardBlocked: false, safetyBlocked: false, dirtyBlocked: false },
   });
   if (!/expected_outcome=SAFE_BLOCKED/.test(blocked.body)) fail("safe_blocked_outcome");
+  if (!/NO_VALID_PRODUCT_NEXT_ACTION=YES/.test(blocked.body)) fail("no_valid_product_next_action_marker");
   if (isGenericRepoGitMaintenanceWorkflow(blocked.body)) fail("safe_blocked_not_generic_workflow");
   const v = silverNextActionQualityViolations(blocked.body, { requireProductCluster: true });
   if (v.length) fail("safe_blocked_violations " + v.join(";"));
@@ -1428,7 +1439,135 @@ function runSafeBlockedHandoffContractSelftest() {
     plannerContext: { guardBlocked: true, safetyBlocked: false, dirtyBlocked: false },
   });
   if (!/expected_outcome=SAFE_BLOCKED/.test(runtimeBlk.body)) fail("runtime_safe_blocked");
+  if (!/HARD_STOP_FORCED_OUTCOME_REQUIRED=YES/.test(runtimeBlk.body)) fail("generic_drift_hard_stop");
   if (ok) console.log("SAFE_BLOCKED_HANDOFF_CONTRACT_SELFTEST_PASS");
+  return ok;
+}
+
+function runPlannerContaminationCloseoutSelftest() {
+  let ok = true;
+  const fail = (msg) => {
+    console.error("PLANNER_CONTAMINATION_CLOSEOUT_SELFTEST_FAIL " + msg);
+    ok = false;
+  };
+  const capCtx = { requireProductCluster: true };
+  const contaminatedStash =
+    "<!-- SILVER_NEXT_ACTION: full-auto-loop-openai -->\n" +
+    "1. git status --short\n2. git stash push -m test\n3. gh auth login\n";
+  const contaminatedGh =
+    "<!-- SILVER_NEXT_ACTION: full-auto-loop-openai -->\ngh auth login\nnode scripts/silver-autopilot.cjs --status\n";
+  const contaminatedChore =
+    "<!-- SILVER_NEXT_ACTION: full-auto-loop-openai -->\ngit push -u origin chore/silver-audit-repo-state\n";
+  const contaminatedMojibake =
+    "<!-- SILVER_NEXT_ACTION: full-auto-loop-openai -->\nĂšKOL PRO CURSOR â€” git push -u origin chore/silver-audit-repo-state\n";
+  const contaminatedMaintenance =
+    "ÚKOL PRO CURSOR\n3. Pokud jsou změny, proveďte commit nebo stash:\n" +
+    "git stash push\ngh auth login\ngit push -u origin chore/silver-audit-repo-state\n";
+
+  const stashV = silverNextActionQualityViolations(contaminatedStash, capCtx);
+  if (!stashV.includes("generic_git_stash_task")) fail("git_stash_hard_fail");
+  if (plannedHandoffPassesQualityGate(contaminatedStash, capCtx)) fail("git_stash_must_not_pass_gate");
+
+  const ghV = silverNextActionQualityViolations(contaminatedGh, capCtx);
+  if (!ghV.some((x) => /generic_gh|generic_orchestration|generic_infra/.test(x))) fail("gh_auth_hard_fail");
+
+  const choreV = silverNextActionQualityViolations(contaminatedChore, capCtx);
+  if (!choreV.includes("generic_chore_silver_audit_push")) fail("chore_audit_repo_state_hard_fail");
+
+  const mojiV = silverNextActionQualityViolations(contaminatedMojibake, capCtx);
+  if (!mojiV.includes("mojibake_utf8")) fail("mojibake_hard_fail");
+
+  const maintV = silverNextActionQualityViolations(contaminatedMaintenance, capCtx);
+  if (
+    !maintV.includes("generic_repo_git_workflow_drift") &&
+    !maintV.includes("generic_commit_or_stash_instruction")
+  ) {
+    fail("generic_repo_maintenance_hard_fail");
+  }
+
+  const validHandoff = buildCapDiagnosticProductHandoff({
+    mainCommit: "abc",
+    clusterDiag: {
+      cluster: "self_correction_safety_note_readonly",
+      audit_id: "self_correction",
+      audit_name: "Self-Correction",
+      count: 12,
+      expected_outcome: "harness PR",
+    },
+  });
+  if (
+    !plannedHandoffPassesQualityGate(validHandoff, {
+      selectorCluster: "self_correction_safety_note_readonly",
+      clusterDiag: { cluster: "self_correction_safety_note_readonly" },
+      requireProductCluster: true,
+    })
+  ) {
+    fail("valid_self_correction_handoff_must_pass");
+  }
+
+  let classifyOk = false;
+  try {
+    const { classifyValidProductWork } = require("./silver-valid-product-work-closeout.cjs");
+    const scClass = classifyValidProductWork({
+      dirtyPaths: [
+        "scripts/silver-self-correction-audit.cjs",
+        "scripts/silver-self-correction-query-clarification.cjs",
+        "scripts/silver-self-correction-safety-diagnostic.cjs",
+        "scripts/silver-self-correction-safety-note-readonly-selftest.cjs",
+      ],
+      selectorCluster: "self_correction_safety_note_readonly",
+    });
+    classifyOk = scClass.classification === "VALID_PRODUCT_WORK";
+  } catch (e) {
+    fail("dirty_sc_classify=" + String(e && e.message));
+  }
+  if (!classifyOk) fail("dirty_self_correction_scripts_only_safe");
+
+  let unknownDirtyFail = false;
+  try {
+    const { classifyValidProductWork } = require("./silver-valid-product-work-closeout.cjs");
+    const unk = classifyValidProductWork({
+      dirtyPaths: ["SILVER_UNKNOWN_ROOT_BLOCK.txt"],
+      selectorCluster: "self_correction_safety_note_readonly",
+    });
+    unknownDirtyFail = unk.classification === "FORBIDDEN_DIRTY";
+  } catch (e) {
+    fail("unknown_dirty=" + String(e && e.message));
+  }
+  if (!unknownDirtyFail) fail("unknown_dirty_root_hard_fail");
+
+  let classifierPass = false;
+  try {
+    const { runProductArtifactClassifierSelftest } = require("./silver-product-artifact-classifier.cjs");
+    classifierPass = runProductArtifactClassifierSelftest();
+  } catch (e) {
+    fail("product_artifact_classifier=" + String(e && e.message));
+  }
+  if (!classifierPass) fail("product_artifact_governance");
+
+  const noCluster = generateAutonomousPlannedHandoff({
+    mainCommit: "xyz",
+    clusterDiag: { cluster: "(unknown)", count: 0 },
+    plannerContext: { guardBlocked: false, safetyBlocked: false, dirtyBlocked: false },
+  });
+  if (isGenericRepoGitMaintenanceWorkflow(noCluster.body) || isGenericOrchestrationHandoff(noCluster.body)) {
+    fail("planner_no_generic_fallback_on_missing_cluster");
+  }
+  if (!/NO_VALID_PRODUCT_NEXT_ACTION=YES|expected_outcome=SAFE_BLOCKED/.test(noCluster.body)) {
+    fail("missing_cluster_forced_outcome");
+  }
+
+  if (ok) console.log("PLANNER_CONTAMINATION_CLOSEOUT_SELFTEST_PASS");
+  console.log("=== PLANNER_CONTAMINATION_CLOSEOUT_SELFTEST ===");
+  console.log("PLANNER_CONTAMINATION_CLOSEOUT_SELFTEST=" + (ok ? "PASS" : "FAIL"));
+  console.log("git_stash_task_blocked=" + (ok ? "YES" : "NO"));
+  console.log("gh_auth_task_blocked=" + (ok ? "YES" : "NO"));
+  console.log("chore_audit_repo_state_blocked=" + (ok ? "YES" : "NO"));
+  console.log("mojibake_next_action_blocked=" + (ok ? "YES" : "NO"));
+  console.log("generic_repo_maintenance_blocked=" + (ok ? "YES" : "NO"));
+  console.log("product_handoff_preserved=" + (ok ? "YES" : "NO"));
+  console.log("blind_retry_blocked=" + (ok ? "YES" : "NO"));
+  console.log("=== END_PLANNER_CONTAMINATION_CLOSEOUT_SELFTEST ===");
   return ok;
 }
 
@@ -1466,4 +1605,5 @@ module.exports = {
   runPlannerQualityContractSelftest,
   runGenericChoreGenerationBlockSelftest,
   runSafeBlockedHandoffContractSelftest,
+  runPlannerContaminationCloseoutSelftest,
 };
