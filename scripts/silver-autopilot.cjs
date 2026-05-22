@@ -21,6 +21,7 @@ const {
   runPlannerQualityContractSelftest,
   runGenericChoreGenerationBlockSelftest,
   runSafeBlockedHandoffContractSelftest,
+  runPlannerContaminationCloseoutSelftest,
   buildCapDiagnosticProductHandoff,
   buildNoSafeProductClusterBlockedHandoff,
   buildStaleCursorInvokeRuntimeBlockedHandoff,
@@ -4628,6 +4629,7 @@ function parseArgs(argv) {
     else if (a === "--planner-quality-contract-selftest") out.cmd = "planner-quality-contract-selftest";
     else if (a === "--generic-chore-generation-block-selftest") out.cmd = "generic-chore-generation-block-selftest";
     else if (a === "--safe-blocked-handoff-contract-selftest") out.cmd = "safe-blocked-handoff-contract-selftest";
+    else if (a === "--planner-contamination-closeout-selftest") out.cmd = "planner-contamination-closeout-selftest";
     else if (a === "--stale-cursor-invoke-hardening-selftest") out.cmd = "stale-cursor-invoke-hardening-selftest";
     else if (a === "--valid-product-work-closeout-selftest") out.cmd = "valid-product-work-closeout-selftest";
     else if (a === "--product-artifact-classifier-selftest") out.cmd = "product-artifact-classifier-selftest";
@@ -4738,6 +4740,8 @@ if (require.main === module) {
     process.exit(runGenericChoreGenerationBlockSelftest() ? 0 : 1);
   } else if (p.cmd === "safe-blocked-handoff-contract-selftest") {
     process.exit(runSafeBlockedHandoffContractSelftest() ? 0 : 1);
+  } else if (p.cmd === "planner-contamination-closeout-selftest") {
+    process.exit(runPlannerContaminationCloseoutSelftest() ? 0 : 1);
   } else if (p.cmd === "stale-cursor-invoke-hardening-selftest") {
     process.exit(runStaleCursorInvokeHardeningSelftest(REPO) ? 0 : 1);
   } else if (p.cmd === "valid-product-work-closeout-selftest") {
