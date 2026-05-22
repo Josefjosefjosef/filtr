@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-22T20:14:42.477727Z",
+  "ingestedAt": "2026-05-22T20:54:14.026898Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Týden na akciových trzích: Silná výsledková sezona podporuje růst akcií doma i v zahraničí",
+      "url": "https://profitonline.cz/tyden-na-akciovych-trzich-silna-vysledkova-sezona-podporuje-rust-akcii-doma-i-v-zahranici/",
+      "dt": "2026-05-22T20:35:30Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "akciových",
+        "akcií",
+        "doma",
+        "podporuje",
+        "růst",
+        "sezona",
+        "silná",
+        "trzích",
+        "týden",
+        "výsledková",
+        "zahraničí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -261,31 +289,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Hitlera neuposlechl. Sudetský Němec zachránil most v Ústí nad Labem",
-      "url": "https://profitonline.cz/hitlera-neuposlechl-sudetsky-nemec-zachranil-most-v-usti-nad-labem/",
-      "dt": "2026-05-21T04:00:29Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "hitlera",
-        "labem",
-        "most",
-        "neuposlechl",
-        "němec",
-        "sudetský",
-        "zachránil",
-        "ústí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -296,7 +299,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18865,
+      "bytes": 18830,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -333,12 +336,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-22T20:00:12Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T20:35:30Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 9,
-          "cestovani": 2,
-          "zpravy": 1
+          "finance": 10,
+          "cestovani": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -350,6 +352,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Týden na akciových trzích: Silná výsledková sezona podporuje růst akcií doma i v zahraničí",
+            "publishedAt": "2026-05-22T20:35:30Z"
+          },
           {
             "title": "Muniční iluze: Proč se prodej Explosie může stát strategickou pastí",
             "publishedAt": "2026-05-22T20:00:12Z"
@@ -377,10 +383,6 @@
           {
             "title": "Dolar i ropa mírně v plusu",
             "publishedAt": "2026-05-21T17:30:47Z"
-          },
-          {
-            "title": "Letošní letní dovolená? Drahé letenky vracejí Čechy za volant",
-            "publishedAt": "2026-05-21T12:00:27Z"
           }
         ]
       }

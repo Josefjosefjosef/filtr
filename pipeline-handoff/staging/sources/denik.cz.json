@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-22T20:14:42.477727Z",
+  "ingestedAt": "2026-05-22T20:54:14.026898Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ve zlínské zoo uhynula samice slona afrického, napadl ji samec. Oblast uzavřou",
+      "url": "https://www.denik.cz/regiony/zlin-zoologicka-zahrada-slon-africky-samice-utok-samce-uhyn-karibuni.html",
+      "dt": "2026-05-22T19:55:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "afrického",
+        "napadl",
+        "oblast",
+        "samec",
+        "samice",
+        "slona",
+        "uhynula",
+        "uzavřou",
+        "zlínské",
+        "zoo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -612,31 +639,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Večírek Micka Jaggera na Stromboli ukončila policie. Sousedi si stěžovali",
-      "url": "https://www.denik.cz/staty-eu/stromboli-vecirek-policie-mick-jagger.html",
-      "dt": "2026-05-22T08:45:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "jaggera",
-        "micka",
-        "policie",
-        "sousedi",
-        "stromboli",
-        "stěžovali",
-        "ukončila",
-        "večírek"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -647,7 +649,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28822,
+      "bytes": 28927,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -684,7 +686,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-22T19:53:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T19:55:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -702,6 +704,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ve zlínské zoo uhynula samice slona afrického, napadl ji samec. Oblast uzavřou",
+            "publishedAt": "2026-05-22T19:55:00Z"
+          },
           {
             "title": "Jako Gisèle Pelicotová. Němka obvinila expartnera, že ji drogoval a znásilňoval",
             "publishedAt": "2026-05-22T19:53:00Z"
@@ -729,10 +735,6 @@
           {
             "title": "Móda z Cannes: Královnou je Demi Moore, šokoval šperk přes ňadra",
             "publishedAt": "2026-05-22T14:43:00Z"
-          },
-          {
-            "title": "Jen léčba nestačí. Lidé s rakovinou potřebují podpořit i duši. Kde hledat pomoc",
-            "publishedAt": "2026-05-22T14:00:00Z"
           }
         ]
       }
