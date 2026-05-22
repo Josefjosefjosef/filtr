@@ -72,6 +72,7 @@ const {
 } = require("./silver-product-handoff-continuation.cjs");
 const {
   classifyProductArtifactGovernance,
+  governanceAllowsProductArtifactPath,
   classifyCap50CloseoutWithProductArtifacts,
   pathAllowedAsAutonomousProductArtifact,
   resolveProductArtifactContextFromRepo,
@@ -478,21 +479,19 @@ function cap50PreflightRuntimeCleanup(dryRunOnly, opts) {
         continue;
       }
       const reason = cap50RuntimeRestoreReason(p);
-      if (st === "??") {
-        if (allowProductArtifact) {
-          const pacOne = classifyProductArtifactGovernance(
-            Object.assign({ dirtyPaths: [p], repoRoot: REPO }, pacCtx, {
-              autonomousMode: pacCtx.autonomousMode ? "YES" : "NO",
-              capRuntime: pacCtx.capRuntime ? "YES" : "NO",
-              productHandoffContinuation: pacCtx.productHandoffContinuation ? "YES" : "NO",
-            }),
-          );
-          if (pacOne.classification === "SAFE_PRODUCT_SCRIPT_ONLY") {
-            productArtifactPendingCount++;
-            allowCount++;
-            continue;
-          }
+      if (allowProductArtifact) {
+        const pacOpts = Object.assign({ repoRoot: REPO }, pacCtx, {
+          autonomousMode: pacCtx.autonomousMode ? "YES" : "NO",
+          capRuntime: pacCtx.capRuntime ? "YES" : "NO",
+          productHandoffContinuation: pacCtx.productHandoffContinuation ? "YES" : "NO",
+        });
+        if (governanceAllowsProductArtifactPath(p, pacOpts)) {
+          productArtifactPendingCount++;
+          allowCount++;
+          continue;
         }
+      }
+      if (st === "??") {
         blocked.push(reason ? p + "(untracked_runtime_unknown)" : p + "(untracked_unknown)");
         continue;
       }
@@ -580,6 +579,12 @@ function cap50PreflightRuntimeCleanup(dryRunOnly, opts) {
     } else if (o.allowValidProductWork && closeoutClass.closeout_kind === "valid_product_work") {
       safe = "YES";
     }
+  } else if (
+    allowProductArtifact &&
+    closeoutClass.closeout_kind === "product_artifact_runtime_pending" &&
+    closeoutClass.safe_to_continue === "YES"
+  ) {
+    safe = "YES";
   }
   const passFail = safe === "YES" ? "PASS" : "FAIL";
   const forbiddenRemaining = remainingPaths.filter(
