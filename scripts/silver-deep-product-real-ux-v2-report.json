@@ -1,17 +1,17 @@
 {
   "harness_id": "silver_deep_product_real_ux_v2",
   "user_reference_main_commit": "326bf6be040a14178b0231c00f0d6789b7802434",
-  "main_commit": "5e16a0c6bbb5a0bac91466914267365243d0fc4a",
+  "main_commit": "c365e3fe639f1b43f5b40aff5905a568f35ed12e",
   "fixed_now_iso": "2026-05-04T12:00:00",
   "deep_product_cases_total": 100,
-  "deep_product_pass": 92,
-  "deep_product_fail": 8,
-  "deep_product_accuracy": "92.00",
-  "retrieval_relevance_accuracy": "83.33",
+  "deep_product_pass": 93,
+  "deep_product_fail": 7,
+  "deep_product_accuracy": "93.00",
+  "retrieval_relevance_accuracy": "100.00",
   "update_vs_create_accuracy": "100.00",
   "clarification_quality_accuracy": "100.00",
   "cross_module_accuracy": "100.00",
-  "timeline_reasoning_accuracy": "100.00",
+  "timeline_reasoning_accuracy": "87.50",
   "dirty_czech_accuracy": "75.00",
   "title_cleanliness_accuracy": "100.00",
   "long_chaotic_czech_accuracy": "66.67",
@@ -22,13 +22,22 @@
   "top_clusters": [
     {
       "key": "general_intent_mismatch",
-      "count": 7,
+      "count": 5,
       "severity": 60,
       "root_cause": "classifier_gap_on_colloquial_or_multi_clause_czech",
       "replay": [
-        "Kdy jsem byl u doktora?",
-        "Kdy jsem byl u doktora?",
-        "vole hele já potřebuju vědět jestli mám zítra toho zubaře nebo jestli je to až pozítří protože mi to mamka říkala a já si to nepamatuju a je"
+        "vole hele já potřebuju vědět jestli mám zítra toho zubaře nebo jestli je to až pozítří protože mi to mamka říkala a já si to nepamatuju a je",
+        "vole hele ja potrebuju vedet jestli mam zitra toho zubare nebo jestli je to az pozitri protoze mi to mamka rikala a ja si to nepamatuju a je",
+        "hele vole hele já potřebuju vědět jestli mám zítra toho zubaře nebo jestli je to až pozítří protože mi to mamka říkala a já si to nepamatuju"
+      ]
+    },
+    {
+      "key": "retrieval_summary_missing_entity_signals",
+      "count": 1,
+      "severity": 82,
+      "root_cause": "read_answer_template_or_ranking_drops_seed_tokens",
+      "replay": [
+        "Kdy jsem mel kuryra?"
       ]
     },
     {
@@ -43,22 +52,50 @@
   ],
   "cluster_1_retrieval_deepen": {
     "cluster": "retrieval_summary_missing_entity_signals",
-    "cluster_total": 0,
-    "inspected_examples": 0,
+    "cluster_total": 1,
+    "inspected_examples": 1,
     "subcluster_counts": {
       "route_wrong": 0,
       "route_correct_summary_weak": 0,
       "ranking_wrong": 0,
       "harness_too_strict": 0,
       "ambiguous_user_input": 0,
-      "timeline_scope_problem": 0,
+      "timeline_scope_problem": 1,
       "entity_alias_problem": 0
     },
-    "dominant_subcluster": "route_wrong",
-    "dominant_subcluster_count": 0,
-    "true_product_fail_count": 0,
+    "dominant_subcluster": "timeline_scope_problem",
+    "dominant_subcluster_count": 1,
+    "true_product_fail_count": 1,
     "harness_problem_count": 0,
-    "examples": []
+    "examples": [
+      {
+        "id": "tl_kdy_jsem_mel_m1",
+        "subcluster": "timeline_scope_problem",
+        "input": "Kdy jsem mel kuryra?",
+        "expectedIntent": "calendar.query",
+        "auditIntent": "calendar.query",
+        "normalizedIntent": "calendar.read",
+        "processingState": "READ_OK",
+        "cardKind": "read_card",
+        "needles": [
+          "kuryr",
+          "ostrava",
+          "12:30",
+          "12"
+        ],
+        "missing": [
+          "kuryr",
+          "ostrava",
+          "12:30",
+          "12"
+        ],
+        "response_snippet": "Nic jsem k tomu nenašel.",
+        "route_ok": true,
+        "storage_read_ok": true,
+        "true_product_fail": "YES",
+        "harness_failure_cat": "retrieval_content_miss"
+      }
+    ]
   },
   "gates": {
     "smoke": "PASS",
@@ -68,26 +105,10 @@
     "audit_20k": "FAIL",
     "quality_v2": "PASS",
     "realistic_mobile": "FAIL",
-    "real_czech_corpus": "PASS",
+    "real_czech_corpus": "FAIL",
     "deep_product_real_ux_v2": "PASS"
   },
   "fails": [
-    {
-      "id": "rr_doktor_kdy_byl_m0",
-      "base_id": "rr_doktor_kdy_byl",
-      "slice": "retrieval_relevance",
-      "cat": "intent_fail",
-      "input": "Kdy jsem byl u doktora?",
-      "replay": "Kdy jsem byl u doktora?"
-    },
-    {
-      "id": "rr_doktor_kdy_byl_m1",
-      "base_id": "rr_doktor_kdy_byl",
-      "slice": "retrieval_relevance",
-      "cat": "intent_fail",
-      "input": "Kdy jsem byl u doktora?",
-      "replay": "Kdy jsem byl u doktora?"
-    },
     {
       "id": "lcc_dlouhe_souveti_kalendar_m0",
       "base_id": "lcc_dlouhe_souveti_kalendar",
@@ -127,6 +148,14 @@
       "cat": "intent_fail",
       "input": "vole hele ja potrebuju vedet jestli mam zitra toho zubare nebo jestli je to az pozitri protoze mi to mamka rikala a ja si to nepamatuju a jeste k tomu mi kuryr volal takze se v tom ztracim díky",
       "replay": "vole hele ja potrebuju vedet jestli mam zitra toho zubare nebo jestli je to az pozitri protoze mi to mamka rikala a ja si to nepamatuju a jeste k tomu mi kuryr volal takze se v tom ztracim díky"
+    },
+    {
+      "id": "tl_kdy_jsem_mel_m1",
+      "base_id": "tl_kdy_jsem_mel",
+      "slice": "timeline_reasoning",
+      "cat": "retrieval_content_miss",
+      "input": "Kdy jsem mel kuryra?",
+      "replay": "Kdy jsem mel kuryra?"
     },
     {
       "id": "dc_pravnik_typo_m0",

@@ -788,21 +788,92 @@ function main() {
     }
   }
 
-  const qj = readJsonReport(path.join(REPO, "scripts", "silver-quality-v2-report.json"));
-  const rj = readJsonReport(path.join(REPO, "scripts", "silver-realistic-mobile-corpus-report.json"));
-  const rcj = readJsonReport(path.join(REPO, "scripts", "silver-real-czech-corpus-v1-report.json"));
-  const dpj = readJsonReport(path.join(REPO, "scripts", "silver-deep-product-real-ux-v2-report.json"));
+  const assetsAppChangedEarly = (() => {
+    try {
+      const st = execSync("git status --porcelain", { cwd: REPO, encoding: "utf8" });
+      return /\bassets\/app\.js\b/.test(st);
+    } catch (e0) {
+      void e0;
+      return false;
+    }
+  })();
 
-  const qualityAccRaw = qj && qj.quality_accuracy ? String(qj.quality_accuracy) : "SKIPPED";
-  const qualityAcc = qualityAccRaw !== "SKIPPED" && qualityAccRaw.indexOf("%") < 0 ? qualityAccRaw + "%" : qualityAccRaw;
-  const realisticAccRaw = rj && rj.overall_accuracy_realistic ? String(rj.overall_accuracy_realistic) : "SKIPPED";
-  const realisticAcc =
-    realisticAccRaw !== "SKIPPED" && realisticAccRaw.indexOf("%") < 0 ? realisticAccRaw + "%" : realisticAccRaw;
-  const realCzechAccRaw = rcj && rcj.corpus_accuracy ? String(rcj.corpus_accuracy) : "SKIPPED";
-  const realCzechAcc =
-    realCzechAccRaw !== "SKIPPED" && realCzechAccRaw.indexOf("%") < 0 ? realCzechAccRaw + "%" : realCzechAccRaw;
-  let deepUxAcc = "SKIPPED";
-  if (dpj && dpj.deep_product_accuracy != null) deepUxAcc = String(dpj.deep_product_accuracy) + "%";
+  function runFreshTierAScriptStdout(scriptBase, pattern) {
+    try {
+      const out = execSync('node "' + path.join(REPO, "scripts", scriptBase) + '"', {
+        cwd: REPO,
+        encoding: "utf8",
+        maxBuffer: 64 * 1024 * 1024,
+        timeout: 900000
+      });
+      const m = String(out || "").match(pattern);
+      if (!m || !m[1]) return { val: "NESPUSTENO", ok: false, reason: "stdout_missing_metric" };
+      let v = String(m[1]).trim();
+      if (v.indexOf("%") < 0) v = v + "%";
+      return { val: v, ok: true, reason: "" };
+    } catch (eRun) {
+      void eRun;
+      return { val: "NESPUSTENO", ok: false, reason: "script_exec_failed" };
+    }
+  }
+
+  function tierAMetricFromReportOrFresh(opts) {
+    const reportPath = opts.reportPath;
+    const jsonField = opts.jsonField;
+    const stdoutPattern = opts.stdoutPattern;
+    const scriptBase = opts.scriptBase;
+    if (assetsAppChangedEarly) {
+      try {
+        const appMt = fs.statSync(path.join(REPO, "assets", "app.js")).mtimeMs;
+        const repMt = fs.statSync(reportPath).mtimeMs;
+        if (repMt < appMt) {
+          const fr = runFreshTierAScriptStdout(scriptBase, stdoutPattern);
+          return fr;
+        }
+      } catch (eStale) {
+        void eStale;
+        const fr2 = runFreshTierAScriptStdout(scriptBase, stdoutPattern);
+        return fr2;
+      }
+    }
+    const j = readJsonReport(reportPath);
+    if (!j || j[jsonField] == null) return { val: "NESPUSTENO", ok: false, reason: "report_json_missing" };
+    let v = String(j[jsonField]).trim();
+    if (v.indexOf("%") < 0) v = v + "%";
+    return { val: v, ok: true, reason: "report_json" };
+  }
+
+  const qTier = tierAMetricFromReportOrFresh({
+    reportPath: path.join(REPO, "scripts", "silver-quality-v2-report.json"),
+    jsonField: "quality_accuracy",
+    stdoutPattern: /quality_accuracy=([\d.]+%?)/,
+    scriptBase: "audit_silver_quality_v2.cjs"
+  });
+  const rTier = tierAMetricFromReportOrFresh({
+    reportPath: path.join(REPO, "scripts", "silver-realistic-mobile-corpus-report.json"),
+    jsonField: "overall_accuracy_realistic",
+    stdoutPattern: /overall_accuracy_realistic=([\d.]+%?)/,
+    scriptBase: "audit_silver_realistic_mobile_corpus.cjs"
+  });
+  const rcTier = tierAMetricFromReportOrFresh({
+    reportPath: path.join(REPO, "scripts", "silver-real-czech-corpus-v1-report.json"),
+    jsonField: "corpus_accuracy",
+    stdoutPattern: /corpus_accuracy=([\d.]+%?)/,
+    scriptBase: "silver-real-czech-corpus-v1.cjs"
+  });
+  const dpTier = tierAMetricFromReportOrFresh({
+    reportPath: path.join(REPO, "scripts", "silver-deep-product-real-ux-v2-report.json"),
+    jsonField: "deep_product_accuracy",
+    stdoutPattern: /deep_product_accuracy=([\d.]+%?)/,
+    scriptBase: "silver-deep-product-real-ux-v2.cjs"
+  });
+
+  const qualityAcc = qTier.val;
+  const realisticAcc = rTier.val;
+  const realCzechAcc = rcTier.val;
+  const deepUxAcc = dpTier.val;
+  const freshTierAProofAfterEngineChange =
+    !assetsAppChangedEarly || (qTier.ok && rTier.ok && rcTier.ok && dpTier.ok) ? "YES" : "NO";
 
   let mainCommit = "";
   try {
@@ -969,6 +1040,11 @@ function main() {
     "realistic_overall_accuracy=" + escapeField(realisticAcc),
     "real_czech_corpus_accuracy=" + escapeField(realCzechAcc),
     "deep_product_real_ux_v2_accuracy=" + escapeField(deepUxAcc),
+    "fresh_tier_a_proof_after_engine_change=" + escapeField(freshTierAProofAfterEngineChange),
+    "quality_accuracy_source=" + escapeField(qTier.reason || "report_json"),
+    "realistic_accuracy_source=" + escapeField(rTier.reason || "report_json"),
+    "real_czech_accuracy_source=" + escapeField(rcTier.reason || "report_json"),
+    "deep_product_accuracy_source=" + escapeField(dpTier.reason || "report_json"),
     "",
     "dangerous_write_count=" + dangerousWriteCount,
     "false_write_count=" + falseWriteCount,
