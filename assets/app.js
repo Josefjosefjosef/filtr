@@ -37589,6 +37589,65 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return false;
   }
 
+  /**
+   * P1 self_correction_noisy_cross: falešný poznámkový lead + „ne vlastně úkol“ — úkol po korekci
+   * musí vyhrát nad počátečním „ulož … do poznámek“ (notes.create / calendar.read misroute).
+   */
+  function iuSilverSelfCorrectionNoisyCrossNoteFalseLeadFolded(x) {
+    const s = String(x || "");
+    if (!s) return false;
+    const noteMatch = s.match(/\bdo\s+(?:\S+\s+){0,6}poznam/);
+    if (!noteMatch || noteMatch.index < 0) return false;
+    const head = s.slice(0, noteMatch.index);
+    return /\b(?:uloz|ulozit|dej|zapis|pridej|vytvor|hod|napis)\w*\b/.test(head);
+  }
+
+  function iuSilverSelfCorrectionNoisyCrossNoteToTaskP1Folded(folded) {
+    const x = String(folded || "");
+    if (!x) return false;
+    if (iuSilverP0NoWriteNegationBeatsWriteLikeCueFolded(x)) return false;
+    if (iuSilverCalendarQuerySignalFolded(x)) return false;
+    if (!iuSilverSelfCorrectionNoisyCrossNoteFalseLeadFolded(x)) return false;
+    const noteMatch = x.match(/\bdo\s+(?:\S+\s+){0,6}poznam/);
+    const negMatch = x.match(/\bne\s+(?:\S+\s+){0,5}vlastne\s+(?:\S+\s+){0,4}ukol\b/);
+    if (!noteMatch || !negMatch) return false;
+    return negMatch.index > noteMatch.index;
+  }
+
+  function iuSilverTryPickSelfCorrectionNoisyCrossNoteToTaskTailP1(rawIn, foldedIn) {
+    const raw = String(rawIn || "").trim();
+    const f = String(foldedIn != null ? foldedIn : foldCs(raw));
+    if (!iuSilverSelfCorrectionNoisyCrossNoteToTaskP1Folded(f)) return null;
+    const reFold = /\bne\s+(?:\S+\s+){0,5}vlastne\s+(?:\S+\s+){0,4}ukol\b/gi;
+    let mFold;
+    let foldIdx = -1;
+    let foldLen = 0;
+    while ((mFold = reFold.exec(f)) !== null) {
+      foldIdx = mFold.index;
+      foldLen = mFold[0].length;
+    }
+    if (foldIdx < 0) return null;
+    const tailF = f.slice(foldIdx + foldLen).trim();
+    if (tailF.length < 3) return null;
+    const reRaw = /\bne\s+(?:\S+\s+){0,5}vlastn[eě]\s+(?:\S+\s+){0,4}[uú]kol\b/gi;
+    let mRaw;
+    let rawIdx = -1;
+    let rawLen = 0;
+    while ((mRaw = reRaw.exec(raw)) !== null) {
+      rawIdx = mRaw.index;
+      rawLen = mRaw[0].length;
+    }
+    if (rawIdx >= 0) {
+      let tailRaw = raw.slice(rawIdx + rawLen).trim();
+      tailRaw = tailRaw
+        .replace(/\s*[,—–-]\s*(?:diky|děkuji|prosim|honem|no\s+stress|spěchám)\b[\s\S]*$/iu, "")
+        .trim();
+      if (tailRaw.length >= 3) return { tail: tailRaw };
+    }
+    const tailClean = tailF.replace(/\s*(?:prosim|diky|honem|no\s+stress)\b[\s\S]*$/i, "").trim();
+    return tailClean.length >= 3 ? { tail: tailClean } : null;
+  }
+
   /** Kalendářový anchor pro update intent — „ne do kalendáře“ samo o sobě nepočítá. */
   function iuSilverCalendarUpdateIntentPositiveCalAnchorFolded(x) {
     const s = String(x || "");
@@ -38798,6 +38857,31 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
             taskOpts: {
               skipTargetStrip: true,
               calendarOverridesTask: !!calOverJen,
+              fromExplicitTarget: true,
+              titleCleanupFullRawGate: raw
+            },
+            calendarFallbackWanted: calWanted
+          };
+        }
+      }
+    }
+    {
+      const noisyCrossTaskP1 = iuSilverTryPickSelfCorrectionNoisyCrossNoteToTaskTailP1(raw, folded);
+      if (noisyCrossTaskP1 && noisyCrossTaskP1.tail) {
+        const tailWorkNc = String(noisyCrossTaskP1.tail || "").trim();
+        if (tailWorkNc) {
+          const foldedTailNc = foldCs(tailWorkNc);
+          const calOverNc = iuSilverCalendarEventOverridesTask(tailWorkNc, foldedTailNc);
+          return {
+            intent: "task.create",
+            confidence: 0.99,
+            route: "tasks",
+            reason: "self_correction_noisy_cross_note_to_task_p1",
+            kind: "TASK_TRY",
+            taskRaw: tailWorkNc,
+            taskOpts: {
+              skipTargetStrip: true,
+              calendarOverridesTask: !!calOverNc,
               fromExplicitTarget: true,
               titleCleanupFullRawGate: raw
             },
@@ -40105,6 +40189,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     s = iuSilverScopedTaskNegationStripPrefixFromRawForNoteParseP0(s);
     s = iuSilverStripRcz2MobVoiceNoteParseLeadP1(s);
     const fEarly = foldCs(s);
+    if (iuSilverSelfCorrectionNoisyCrossNoteToTaskP1Folded(fEarly)) return null;
     const pinKeKartNotesTailP0 =
       /\bpin\s+ke\s+kart/i.test(fEarly) &&
       /\bdo\s+poznam/i.test(fEarly) &&
@@ -47161,6 +47246,25 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         titleCleanupFullRawGate: raw
       });
       if (taskTurnScUpd) return taskTurnScUpd;
+      return baseClarification("ambiguous_write", "unknown");
+    }
+
+    /**
+     * P1 self_correction_noisy_cross (early): poznámkový lead + „ne vlastně úkol“ → tasks.create.
+     */
+    if (iuSilverSelfCorrectionNoisyCrossNoteToTaskP1Folded(folded)) {
+      const noisyCrossPick = iuSilverTryPickSelfCorrectionNoisyCrossNoteToTaskTailP1(raw, folded);
+      const taskRawNc =
+        noisyCrossPick && noisyCrossPick.tail
+          ? String(noisyCrossPick.tail).trim()
+          : iuSilverStripTaskTargetPhrases(raw);
+      const taskTurnNc = iuSilverBuildTaskCreateTurn(taskRawNc || raw, now, {
+        skipTargetStrip: true,
+        calendarOverridesTask: false,
+        fromExplicitTarget: true,
+        titleCleanupFullRawGate: raw
+      });
+      if (taskTurnNc) return taskTurnNc;
       return baseClarification("ambiguous_write", "unknown");
     }
 
