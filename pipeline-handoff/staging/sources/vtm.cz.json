@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-22T08:49:39.002253Z",
+  "ingestedAt": "2026-05-22T09:30:03.335933Z",
   "items": [
     {
       "section": "veda",
@@ -24,6 +24,34 @@
         "ukážou",
         "vybrali",
         "vám"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Cenový masakr applovských produktů na Allegru. Rekordně zlevnily iPhony, iPady, Watch i Macy",
+      "url": "https://www.zive.cz/clanky/cenovy-masakr-applovskych-produktu-na-allegru-rekordne-zlevnily-iphony-ipady-watch-i-macy/sc-3-a-241320/default.aspx",
+      "dt": "2026-05-22T08:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "allegru",
+        "applovských",
+        "cenový",
+        "ipady",
+        "iphony",
+        "macy",
+        "masakr",
+        "produktů",
+        "rekordně",
+        "watch",
+        "zlevnily"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -941,35 +969,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Oneplay a 30 nejoblíbenějších filmů a seriálů v květnu 2026. Tohle Češi na bývalém Voyo nejvíc sledují",
-      "url": "https://avmania.zive.cz/oneplay-nejoblibenejsi-filmy-a-serialy-202605",
-      "dt": "2026-05-19T14:15:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "2026",
-        "bývalém",
-        "filmů",
-        "květnu",
-        "nejoblíbenějších",
-        "nejvíc",
-        "oneplay",
-        "seriálů",
-        "sledují",
-        "tohle",
-        "voyo",
-        "češi"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -980,7 +979,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23011,
+      "bytes": 23052,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1017,7 +1016,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-22T07:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T08:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1035,6 +1034,10 @@
           {
             "title": "S jakou navigací na dovolenou v roce 2026? Vybrali jsme 12 nejlepších aplikací, které vám ukážou cestu",
             "publishedAt": "2026-05-21T16:45:00Z"
+          },
+          {
+            "title": "Cenový masakr applovských produktů na Allegru. Rekordně zlevnily iPhony, iPady, Watch i Macy",
+            "publishedAt": "2026-05-22T08:45:00Z"
           },
           {
             "title": "Apple schytal za Liquid Glass posměch. Dnes stejný směr přebírá i Google a další výrobci telefonů s Androidem",
@@ -1059,10 +1062,6 @@
           {
             "title": "Recenze sluchátek Sony 1000X The Collexion: Luxusní verze legendární řady se povedla",
             "publishedAt": "2026-05-21T17:45:00Z"
-          },
-          {
-            "title": "Chlapík se namontoval do nejslavnějších filmových scén. Tady uvidíte, co všechno zvládne AI",
-            "publishedAt": "2026-05-21T07:45:00Z"
           }
         ]
       }

@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-22T08:49:39.002253Z",
+  "ingestedAt": "2026-05-22T09:30:03.335933Z",
   "items": [
     {
       "section": "finance",
       "contentType": "article",
-      "title": "V Brně se sešli odpůrci sjezdu sudetských Němců, postavili &bdquo;barikádu&ldquo; z krabic",
+      "title": "V Brně se sešli odpůrci sjezdu sudetských Němců, postavili &bdquo;barikádu&ldquo; z krabic. Protestu se zúčastnila i Konečná",
       "url": "https://domaci.hn.cz/c1-67880810-v-brne-se-sesli-odpurci-sjezdu-sudetskych-nemcu-postavili-bdquo-barikadu-ldquo-z-krabic",
       "dt": "2026-05-22T07:51:00Z",
       "media_raw": "HN / Ekonomika",
@@ -15,14 +15,17 @@
         "barikádu",
         "bdquo",
         "brně",
+        "konečná",
         "krabic",
         "ldquo",
         "němců",
         "odpůrci",
         "postavili",
+        "protestu",
         "sešli",
         "sjezdu",
-        "sudetských"
+        "sudetských",
+        "zúčastnila"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -83,6 +86,34 @@
         "trhů",
         "výsledky",
         "žijí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Stát mění pravidla pro posuzování švarcsystému. Slibuje pořádek, firmy se bojí chaosu a nejistoty",
+      "url": "https://archiv.hn.cz/c1-67878300-stat-meni-pravidla-pro-posuzovani-svarcsystemu-slibuje-poradek-firmy-se-boji-chaosu-a-nejistoty",
+      "dt": "2026-05-22T06:40:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bojí",
+        "chaosu",
+        "firmy",
+        "mění",
+        "nejistoty",
+        "posuzování",
+        "pořádek",
+        "pravidla",
+        "slibuje",
+        "stát",
+        "švarcsystému"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -680,14 +711,24 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Kreativní laboratoř",
+      "title": "Kreativní laboratoř. Ve studiu Krištofa Kintery se restauruje, svařuje, natírá, montuje, řeže, pájí, lakuje...",
       "url": "https://procne.hn.cz/c1-67878320-kreativni-laborator",
       "dt": "2026-05-21T22:00:00Z",
       "media_raw": "HN / Ekonomika",
       "media_norm": "HN / Ekonomika",
       "tokens": [
+        "kintery",
         "kreativní",
-        "laboratoř"
+        "krištofa",
+        "laboratoř",
+        "lakuje",
+        "montuje",
+        "natírá",
+        "pájí",
+        "restauruje",
+        "studiu",
+        "svařuje",
+        "řeže"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -959,35 +1000,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Každý osobní vlak je na mapě vidět, ty nákladní jsou utajené. Správa železnic teď zvažuje zásadní změny",
-      "url": "https://archiv.hn.cz/c1-67880110-kazdy-osobni-vlak-je-na-mape-videt-ty-nakladni-jsou-utajene-sprava-zeleznic-ted-zvazuje-zasadni-zmeny",
-      "dt": "2026-05-21T14:57:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "každý",
-        "mapě",
-        "nákladní",
-        "osobní",
-        "správa",
-        "utajené",
-        "vidět",
-        "vlak",
-        "změny",
-        "zvažuje",
-        "zásadní",
-        "železnic"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -998,7 +1010,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 179608,
+      "bytes": 179797,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1038,9 +1050,9 @@
         "raw_feed_latest_publishedAt": "2026-05-22T07:51:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 36,
+          "finance": 37,
           "zdravi": 2,
-          "zpravy": 2
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1053,7 +1065,7 @@
         },
         "sample_titles": [
           {
-            "title": "V Brně se sešli odpůrci sjezdu sudetských Němců, postavili &bdquo;barikádu&ldquo; z krabic",
+            "title": "V Brně se sešli odpůrci sjezdu sudetských Němců, postavili &bdquo;barikádu&ldquo; z krabic. Protestu se zúčastnila i Konečná",
             "publishedAt": "2026-05-22T07:51:00Z"
           },
           {
@@ -1063,6 +1075,10 @@
           {
             "title": "Teorie efektivních trhů: Finanční trhy &bdquo;neodměňují&ldquo; automaticky dobré výsledky, žijí v budoucnosti",
             "publishedAt": "2026-05-22T06:43:00Z"
+          },
+          {
+            "title": "Stát mění pravidla pro posuzování švarcsystému. Slibuje pořádek, firmy se bojí chaosu a nejistoty",
+            "publishedAt": "2026-05-22T06:40:00Z"
           },
           {
             "title": "Desítky procent ročně a nezávislost na akciích. Jak fungují investice, o kterých většina lidí neslyšela",
@@ -1079,10 +1095,6 @@
           {
             "title": "Kde bydlí bohatí a kde chudí Pražané. Mapy ukazují, jak jsou promíchané různé sociální třídy",
             "publishedAt": "2026-05-22T04:00:00Z"
-          },
-          {
-            "title": "Firmy teď investicemi do AI spíš pálí peníze. Nikdo neví, jestli je levnější než lidé, říká globální HR expertka",
-            "publishedAt": "2026-05-21T22:00:00Z"
           }
         ]
       }

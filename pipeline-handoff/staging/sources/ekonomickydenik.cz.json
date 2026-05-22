@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-22T08:49:39.002253Z",
+  "ingestedAt": "2026-05-22T09:30:03.335933Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Levné iPhony či hodinky Garmin od státu? Ve hře je opět dražba zabavené elektroniky za miliony",
+      "url": "https://ekonomickydenik.cz/levne-iphony-ci-hodinky-garmin-od-statu-ve-hre-je-opet-drazba-zabavene-elektroniky-za-miliony/",
+      "dt": "2026-05-22T09:10:20Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dražba",
+        "elektroniky",
+        "garmin",
+        "hodinky",
+        "hře",
+        "iphony",
+        "levné",
+        "miliony",
+        "opět",
+        "státu",
+        "zabavené"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -760,34 +788,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Babiš není spokojen s vizí armády do roku 2040: Vadí mu málo vojáků i tempo změn",
-      "url": "https://ekonomickydenik.cz/babis-neni-spokojen-s-vizi-armady-do-roku-2040/",
-      "dt": "2026-05-20T12:35:59Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "2040",
-        "armády",
-        "babiš",
-        "málo",
-        "roku",
-        "spokojen",
-        "tempo",
-        "vadí",
-        "vizí",
-        "vojáků",
-        "změn"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74489,
+      "bytes": 74118,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,11 +835,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T07:39:44Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T09:10:20Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 19,
-          "zdravi": 3,
+          "zdravi": 4,
+          "finance": 18,
           "sport": 1,
           "zpravy": 7
         },
@@ -853,6 +853,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Levné iPhony či hodinky Garmin od státu? Ve hře je opět dražba zabavené elektroniky za miliony",
+            "publishedAt": "2026-05-22T09:10:20Z"
+          },
           {
             "title": "Sociální sítě vydělávají na finančních šmejdech. Test odhalil selhání TikToku, Mety i Googlu",
             "publishedAt": "2026-05-22T07:39:44Z"
@@ -880,10 +884,6 @@
           {
             "title": "„Kybernetická krvavá lázeň.“ Evropa není připravena na útoky na nemocnice a elektrárny",
             "publishedAt": "2026-05-21T15:15:00Z"
-          },
-          {
-            "title": "Tři možnosti, a jen jedna je schůdná. Zdanění zaměstnaneckých akcií je jako úniková hra",
-            "publishedAt": "2026-05-21T14:11:55Z"
           }
         ]
       }

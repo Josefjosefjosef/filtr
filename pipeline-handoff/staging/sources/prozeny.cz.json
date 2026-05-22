@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-05-22T08:49:39.002253Z",
+  "ingestedAt": "2026-05-22T09:30:03.335933Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Záškrt není banalita, tato nemoc umí udusit miminko i dospělého. A zabíjí i dnes! Jak se bránit?",
+      "url": "https://www.prozeny.cz/clanek/zaskrt-nebyl-nikdy-banalita-umi-udusit-miminko-i-dospeleho-70609",
+      "dt": "2026-05-22T09:21:54Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "banalita",
+        "bránit",
+        "dospělého",
+        "miminko",
+        "nemoc",
+        "tato",
+        "udusit",
+        "umí",
+        "zabíjí",
+        "záškrt"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -822,30 +849,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Proč je vaše stolice zelená? Někdy je to důvod ke strachu!",
-      "url": "https://www.prozeny.cz/clanek/proc-je-vase-stolice-zelena-na-vine-neni-pouze-jidlo-57761",
-      "dt": "2026-05-20T13:17:32Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "důvod",
-        "někdy",
-        "proč",
-        "stolice",
-        "strachu",
-        "vaše",
-        "zelená"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -856,7 +859,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 40173,
+      "bytes": 40329,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -893,7 +896,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T08:34:26Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T09:21:54Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 30
@@ -908,6 +911,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Záškrt není banalita, tato nemoc umí udusit miminko i dospělého. A zabíjí i dnes! Jak se bránit?",
+            "publishedAt": "2026-05-22T09:21:54Z"
+          },
           {
             "title": "Postava snů navzdory knedlíkům a zmrzlině. Diana Kobzanová bez filtrů zvedá ženám sebevědomí!",
             "publishedAt": "2026-05-22T08:34:26Z"
@@ -934,10 +941,6 @@
           },
           {
             "title": "Nosí je úplně každý: Jak se z „obyčejných“ džínů stal největší módní fenomén?",
-            "publishedAt": "2026-05-22T03:00:00Z"
-          },
-          {
-            "title": "„Umím být něžná a holčičí.“ Sabina Remundová je velká romantička. O rolích, milovaných dětech i pejscích",
             "publishedAt": "2026-05-22T03:00:00Z"
           }
         ]

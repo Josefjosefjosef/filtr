@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-22T08:49:39.002253Z",
+  "ingestedAt": "2026-05-22T09:30:03.335933Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Tragédie na Ostravsku. Neočkovaný předškolák zemřel na záškrt, hygienici naléhavě varují rodiče",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/neockovany-skolak-ostravsko-smrt-zaskrt/",
+      "dt": "2026-05-22T09:06:01Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "hygienici",
+        "naléhavě",
+        "neočkovaný",
+        "ostravsku",
+        "předškolák",
+        "rodiče",
+        "tragédie",
+        "varují",
+        "zemřel",
+        "záškrt"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -253,32 +280,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Masopust končí v čele ÚVN. Děje se tak krátce po skandálu s posudky",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/masopust-konci-v-cele-uvn/",
-      "dt": "2026-05-21T10:09:51Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "děje",
-        "končí",
-        "krátce",
-        "masopust",
-        "posudky",
-        "skandálu",
-        "tak",
-        "úvn",
-        "čele"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -289,7 +290,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 92364,
+      "bytes": 92675,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -326,7 +327,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-22T08:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T09:06:01Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -341,6 +342,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tragédie na Ostravsku. Neočkovaný předškolák zemřel na záškrt, hygienici naléhavě varují rodiče",
+            "publishedAt": "2026-05-22T09:06:01Z"
+          },
           {
             "title": "V zahraničí léčí a píší recepty, v Česku jsme na začátku. Sestrám se mají radikálně změnit role",
             "publishedAt": "2026-05-22T08:30:00Z"
@@ -368,10 +373,6 @@
           {
             "title": "Zemřel šéf nemocnic Královéhradeckého kraje Tomáš Halajčuk. Bylo mu pouhých 45 let",
             "publishedAt": "2026-05-21T12:55:42Z"
-          },
-          {
-            "title": "Čtvrt milionu za novou ordinaci. VZP tasí statisíce, aby do regionů dostala chybějící specialisty",
-            "publishedAt": "2026-05-21T12:40:36Z"
           }
         ]
       }

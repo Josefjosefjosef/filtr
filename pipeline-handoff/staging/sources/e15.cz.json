@@ -1,8 +1,63 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-22T08:49:39.002253Z",
+  "ingestedAt": "2026-05-22T09:30:03.335933Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jaký bude svět po válce na Blízkém východě? Téměř jistě horší než před ní",
+      "url": "https://www.e15.cz/nazory-a-analyzy/jaky-bude-svet-po-valce-na-blizkem-vychode-temer-jiste-horsi-nez-pred-ni-1432984",
+      "dt": "2026-05-22T09:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "blízkém",
+        "horší",
+        "jaký",
+        "jistě",
+        "než",
+        "svět",
+        "téměř",
+        "válce",
+        "východě"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Kuba zažívá svou nejhorší ekonomickou krizi, mluví se o kolapsu. Fotky z ostrova bez jídla a elektřiny",
+      "url": "https://www.e15.cz/zahranicni/kuba-zaziva-svou-nejhorsi-ekonomickou-krizi-mluvi-se-o-kolapsu-fotky-z-ostrova-bez-jidla-a-elektriny-1430099",
+      "dt": "2026-05-22T08:40:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "ekonomickou",
+        "elektřiny",
+        "fotky",
+        "jídla",
+        "kolapsu",
+        "krizi",
+        "kuba",
+        "mluví",
+        "nejhorší",
+        "ostrova",
+        "svou",
+        "zažívá"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1040,60 +1095,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Tykačova skupina Sev.en kupuje ropné vrty v Texasu a vstupuje do nového byznysu",
-      "url": "https://www.e15.cz/byznys/tykacova-skupina-sev-en-kupuje-ropne-vrty-v-texasu-a-vstupuje-do-noveho-byznysu-1432949",
-      "dt": "2026-05-20T11:49:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "byznysu",
-        "kupuje",
-        "nového",
-        "ropné",
-        "sev",
-        "skupina",
-        "texasu",
-        "tykačova",
-        "vrty",
-        "vstupuje"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "Opce na americké akcie i TradingView. XTB zpřístupňuje profi nástroje drobným investorům",
-      "url": "https://www.e15.cz/finexpert/banky-a-ucty/opce-na-americke-akcie-i-tradingview-xtb-zpristupnuje-profi-nastroje-drobnym-investorum-1432947",
-      "dt": "2026-05-20T11:39:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "akcie",
-        "americké",
-        "drobným",
-        "investorům",
-        "nástroje",
-        "opce",
-        "profi",
-        "tradingview",
-        "xtb",
-        "zpřístupňuje"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1104,7 +1105,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 54513,
+      "bytes": 54414,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1141,12 +1142,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-22T08:25:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T09:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 35,
+          "zdravi": 1,
           "sport": 1,
-          "zpravy": 4
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1158,6 +1160,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jaký bude svět po válce na Blízkém východě? Téměř jistě horší než před ní",
+            "publishedAt": "2026-05-22T09:00:00Z"
+          },
+          {
+            "title": "Kuba zažívá svou nejhorší ekonomickou krizi, mluví se o kolapsu. Fotky z ostrova bez jídla a elektřiny",
+            "publishedAt": "2026-05-22T08:40:00Z"
+          },
           {
             "title": "Nejmocnější centrální banka světa má nového šéfa. Jeho tchán vysoudil na Česku miliardy",
             "publishedAt": "2026-05-22T08:25:00Z"
@@ -1181,14 +1191,6 @@
           {
             "title": "Ošetřovné na starší dítě v roce 2026: Kdy máte nárok a kolik peněz dostanete?",
             "publishedAt": "2026-05-22T07:20:00Z"
-          },
-          {
-            "title": "Trump překvapil spojence. Do Polska pošle dalších pět tisíc amerických vojáků",
-            "publishedAt": "2026-05-22T04:57:00Z"
-          },
-          {
-            "title": "O headlinery soupeří tisíce festivalů, ceny rostou o stovky procent, říká ředitel Beats for Love",
-            "publishedAt": "2026-05-22T04:30:00Z"
           }
         ]
       }
