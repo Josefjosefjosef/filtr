@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-22T12:54:41.406417Z",
+  "ingestedAt": "2026-05-22T13:35:03.816202Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Komentář: Když stát přestane rozumět politice závislostí",
+      "url": "https://www.zdravezpravy.cz/2026/05/22/komentar-kdyz-stat-prestane-rozumet-politice-zavislosti-ohrozi-nas-vsechny/",
+      "dt": "2026-05-22T13:15:08Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "když",
+        "komentář",
+        "politice",
+        "přestane",
+        "rozumět",
+        "stát",
+        "závislostí"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -473,29 +497,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "EK doporučí unijním zemím zakázat léčbu homosexuality",
-      "url": "https://www.zdravezpravy.cz/2026/05/14/ek-doporuci-unijnim-zemim-zakazat-lecbu-homosexuality/",
-      "dt": "2026-05-14T11:00:50Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "doporučí",
-        "homosexuality",
-        "léčbu",
-        "unijním",
-        "zakázat",
-        "zemím"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -506,7 +507,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 198333,
+      "bytes": 203397,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -543,7 +544,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-22T09:10:30Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T13:15:08Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -558,6 +559,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Komentář: Když stát přestane rozumět politice závislostí",
+            "publishedAt": "2026-05-22T13:15:08Z"
+          },
           {
             "title": "Pět minut cvičení nikoho nezabije. Naopak zkvalitní a prodlouží život",
             "publishedAt": "2026-05-22T09:10:30Z"
@@ -585,10 +590,6 @@
           {
             "title": "S politikou závislostí šlápl premiér Babiš vedle, tvrdí experti",
             "publishedAt": "2026-05-20T09:14:27Z"
-          },
-          {
-            "title": "FN Bulovka převezme amerického lékaře s podezřením na ebolu",
-            "publishedAt": "2026-05-20T04:19:11Z"
           }
         ]
       }

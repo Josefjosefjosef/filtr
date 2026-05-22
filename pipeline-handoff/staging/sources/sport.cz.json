@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-22T12:54:41.406417Z",
+  "ingestedAt": "2026-05-22T13:35:03.816202Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Fruhvirtová zvládla kvalifikaci a rozšířila kontingent českých tenistů v Paříži",
+      "url": "https://www.sport.cz/clanek/tenis-french-open-fruhvirtova-zvladla-kvalifikaci-a-rozsirila-kontingent-ceskych-tenistu-v-parizi-5460747",
+      "dt": "2026-05-22T13:17:07Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "fruhvirtová",
+        "kontingent",
+        "kvalifikaci",
+        "paříži",
+        "rozšířila",
+        "tenistů",
+        "zvládla",
+        "českých"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Finsku se na hokejovém MS zranil útočník Erholtz. Nahradí jej Päivärinta",
+      "url": "https://www.sport.cz/clanek/hokej-ms-finsku-se-na-hokejovem-ms-zranil-utocnik-erholtz-nahradi-jej-paivarinta-5460743",
+      "dt": "2026-05-22T12:57:37Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "erholtz",
+        "finsku",
+        "hokejovém",
+        "jej",
+        "nahradí",
+        "päivärinta",
+        "zranil",
+        "útočník"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -700,53 +750,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dobeš vychytal výhru v úvodním finále konference",
-      "url": "https://www.sport.cz/clanek/hokej-nhl-dobes-vychytal-vyhru-v-uvodnim-finale-konference-5460701",
-      "dt": "2026-05-22T04:00:08Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dobeš",
-        "finále",
-        "konference",
-        "vychytal",
-        "výhru",
-        "úvodním"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "SESTŘIH: Švýcaři zůstávají stoprocentní, smlsli si na Velké Británii",
-      "url": "https://www.sport.cz/clanek/hokej-ms-svycari-zustavaji-stoprocentni-5460614",
-      "dt": "2026-05-21T20:42:38Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "británii",
-        "sestřih",
-        "smlsli",
-        "stoprocentní",
-        "velké",
-        "zůstávají",
-        "švýcaři"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -757,7 +760,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44134,
+      "bytes": 43931,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -794,11 +797,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T12:12:09Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T13:17:07Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 2,
           "sport": 27,
+          "zpravy": 2,
           "finance": 1
         },
         "drop_counts": {
@@ -811,6 +814,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fruhvirtová zvládla kvalifikaci a rozšířila kontingent českých tenistů v Paříži",
+            "publishedAt": "2026-05-22T13:17:07Z"
+          },
+          {
+            "title": "Finsku se na hokejovém MS zranil útočník Erholtz. Nahradí jej Päivärinta",
+            "publishedAt": "2026-05-22T12:57:37Z"
+          },
           {
             "title": "Obří dopingový podvod v Liberci? Českou legendu možná připravil o zlato",
             "publishedAt": "2026-05-22T12:12:09Z"
@@ -834,14 +845,6 @@
           {
             "title": "Kaut v prvním útoku, velký propad Galvase. Reprezentace se chystá na Slováky",
             "publishedAt": "2026-05-22T08:33:34Z"
-          },
-          {
-            "title": "Německá sabotáž! Angličané hořekují nad týmem pro MS, stěžuje si i matka opory",
-            "publishedAt": "2026-05-22T09:53:43Z"
-          },
-          {
-            "title": "Dostal jsem 200 tisíc před nádražím. Rozhodčí Petřík popsal policii převzetí úplatku",
-            "publishedAt": "2026-05-22T09:26:58Z"
           }
         ]
       }

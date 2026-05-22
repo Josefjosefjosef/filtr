@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-22T12:54:41.406417Z",
+  "ingestedAt": "2026-05-22T13:35:03.816202Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nemáme vakcínu ani lék. WHO varuje před vzácným kmenem eboly, obětí rychle přibývá",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/svetova-zdravotnicka-organizace-ebola-varovani/",
+      "dt": "2026-05-22T13:16:45Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "eboly",
+        "kmenem",
+        "lék",
+        "nemáme",
+        "obětí",
+        "přibývá",
+        "rychle",
+        "vakcínu",
+        "varuje",
+        "vzácným",
+        "who"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -248,34 +276,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Očkování i léky na předpis bez receptu přímo v lékárně. Najde Česko vzor v německé reformě?",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/ockovani-leky-na-predpis-bez-receptu-lekarnik-nemecko/",
-      "dt": "2026-05-21T14:10:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "léky",
-        "lékárně",
-        "najde",
-        "německé",
-        "očkování",
-        "předpis",
-        "přímo",
-        "receptu",
-        "reformě",
-        "vzor",
-        "česko"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -286,7 +286,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 92720,
+      "bytes": 89970,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -323,7 +323,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-22T12:26:42Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T13:16:45Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -338,6 +338,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nemáme vakcínu ani lék. WHO varuje před vzácným kmenem eboly, obětí rychle přibývá",
+            "publishedAt": "2026-05-22T13:16:45Z"
+          },
           {
             "title": "Problémy před startem Sanatoria Pálava. Úřad stopnul zakázku na nábytek za miliony",
             "publishedAt": "2026-05-22T12:26:42Z"
@@ -365,10 +369,6 @@
           {
             "title": "Pohlavních nemocí je nejvíce za 10 let, kapavka vyletěla o 303 %. Mohou za to 2 věci",
             "publishedAt": "2026-05-22T06:18:20Z"
-          },
-          {
-            "title": "Místo resuscitace mají telefonovat lékaři. Odboráři varují před nebezpečnými změnami u záchranářů",
-            "publishedAt": "2026-05-22T06:00:00Z"
           }
         ]
       }
