@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-22T20:54:14.026898Z",
+  "ingestedAt": "2026-05-22T21:35:12.902460Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Dálnici D11 uzavřela nehoda. Motorkář ve zúžení narazil do kamionu a zemřel",
+      "url": "https://www.idnes.cz/praha/zpravy/dalnice-d11-podebrady-nehoda-motorka-nakladni-auto-smrt.A260522_202742_praha-zpravy_herp",
+      "dt": "2026-05-22T20:50:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "d11",
+        "dálnici",
+        "kamionu",
+        "motorkář",
+        "narazil",
+        "nehoda",
+        "uzavřela",
+        "zemřel",
+        "zúžení"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -97,32 +123,6 @@
         "služeb",
         "tajných",
         "šéfka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Dálnici D11 uzavřela nehoda. Motorkář ve zúžení narazil do kamionu a zemřel",
-      "url": "https://www.idnes.cz/praha/zpravy/dalnice-d11-podebrady-nehoda-motorka-nakladni-auto-smrt.A260522_202742_praha-zpravy_herp",
-      "dt": "2026-05-22T18:54:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "d11",
-        "dálnici",
-        "kamionu",
-        "motorkář",
-        "narazil",
-        "nehoda",
-        "uzavřela",
-        "zemřel",
-        "zúžení"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1580,7 +1580,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49006,
+      "bytes": 49008,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1617,7 +1617,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T19:54:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T20:50:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1635,6 +1635,10 @@
         },
         "sample_titles": [
           {
+            "title": "Dálnici D11 uzavřela nehoda. Motorkář ve zúžení narazil do kamionu a zemřel",
+            "publishedAt": "2026-05-22T20:50:00Z"
+          },
+          {
             "title": "Na brněnském náměstí se hodovalo, tancovalo, ale i uráželo",
             "publishedAt": "2026-05-22T19:54:00Z"
           },
@@ -1649,10 +1653,6 @@
           {
             "title": "Šéfka amerických tajných služeb odstoupí z funkce. Její manžel má rakovinu",
             "publishedAt": "2026-05-22T18:57:00Z"
-          },
-          {
-            "title": "Dálnici D11 uzavřela nehoda. Motorkář ve zúžení narazil do kamionu a zemřel",
-            "publishedAt": "2026-05-22T18:54:00Z"
           },
           {
             "title": "Ivu Janžurovou zrazuje zdraví. Představení se ruší, předtím byla v nemocnici tři dny",
