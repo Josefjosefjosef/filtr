@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-22T16:54:17.305078Z",
+  "ingestedAt": "2026-05-22T17:34:38.380304Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Stačí přiložit kartu k mobilu a peníze jsou pryč. Podvodů s NFC přibývá",
+      "url": "https://www.denik.cz/ekonomika/staci-prilozit-kartu-k-mobilu-a-penize-jsou-pryc-nebezpecnych-aplikaci-pribyva-2.html",
+      "dt": "2026-05-22T17:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "kartu",
+        "mobilu",
+        "nfc",
+        "peníze",
+        "podvodů",
+        "pryč",
+        "přibývá",
+        "přiložit",
+        "stačí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -615,32 +641,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vyhlášená restaurace v Blansku dočasně zavřela. Jeden z pracovníků měl žloutenku",
-      "url": "https://www.denik.cz/regiony/restaurace-na-prazci-blansko-zavrela-zloutenka-nakaza-pracovnik-u-nadrazi.html",
-      "dt": "2026-05-22T05:42:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "blansku",
-        "dočasně",
-        "jeden",
-        "měl",
-        "pracovníků",
-        "restaurace",
-        "vyhlášená",
-        "zavřela",
-        "žloutenku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -651,7 +651,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28422,
+      "bytes": 28858,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -688,12 +688,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-22T15:42:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T17:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 22,
+          "finance": 2,
+          "zpravy": 21,
           "zdravi": 1,
-          "finance": 1,
           "cestovani": 1
         },
         "drop_counts": {
@@ -706,6 +706,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Stačí přiložit kartu k mobilu a peníze jsou pryč. Podvodů s NFC přibývá",
+            "publishedAt": "2026-05-22T17:00:00Z"
+          },
           {
             "title": "Zavázali jim oči a odešli. Matka a otčím nechali děti v lese napospas osudu",
             "publishedAt": "2026-05-22T15:42:00Z"
@@ -733,10 +737,6 @@
           {
             "title": "Palivové stropy před víkendem klesly. Vláda ubrala haléře",
             "publishedAt": "2026-05-22T12:25:00Z"
-          },
-          {
-            "title": "Stát uvažuje o prodeji Explosie, řekl Babiš. Zájem už projevila Francie",
-            "publishedAt": "2026-05-22T11:55:00Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-22T16:54:17.305078Z",
+  "ingestedAt": "2026-05-22T17:34:38.380304Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "USA brzdí prodej zbraní Tchaj-wanu. Ustupuje Trump po jednání v Číně?",
+      "url": "https://ekonomickydenik.cz/usa-brzdi-prodej-zbrani-tchaj-wanu/",
+      "dt": "2026-05-22T17:14:43Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "brzdí",
+        "jednání",
+        "prodej",
+        "tchaj",
+        "trump",
+        "usa",
+        "ustupuje",
+        "wanu",
+        "zbraní",
+        "číně"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -765,31 +792,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Řehkův nástupce „na grilu“. Hlaváče si proklepnou poslanci z klíčového výboru",
-      "url": "https://ekonomickydenik.cz/rehkuv-nastupce-grilovani-hlavac-poslanci-vybor/",
-      "dt": "2026-05-21T04:05:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "grilu",
-        "hlaváče",
-        "klíčového",
-        "nástupce",
-        "poslanci",
-        "proklepnou",
-        "výboru",
-        "řehkův"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73929,
+      "bytes": 73999,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,11 +839,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T16:03:25Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T17:14:43Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 3,
           "finance": 22,
+          "zpravy": 3,
           "zdravi": 4,
           "sport": 1
         },
@@ -855,6 +857,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "USA brzdí prodej zbraní Tchaj-wanu. Ustupuje Trump po jednání v Číně?",
+            "publishedAt": "2026-05-22T17:14:43Z"
+          },
           {
             "title": "Pro lehčí elektrické vlaky. Pod dráty půjde 590 kilometrů tratí, kde si počkáme?",
             "publishedAt": "2026-05-22T16:03:25Z"
@@ -882,10 +888,6 @@
           {
             "title": "Bohatí bohatnou, chudí to vzdávají. Tak vypadá byrokratická džungle na podporu vědy",
             "publishedAt": "2026-05-22T10:33:00Z"
-          },
-          {
-            "title": "Stopka pro „obalovou vyhlášku“? Česko iniciuje celoevropskou výzvu za odklad",
-            "publishedAt": "2026-05-22T10:30:00Z"
           }
         ]
       }

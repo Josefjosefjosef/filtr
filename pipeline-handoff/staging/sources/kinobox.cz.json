@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-22T16:54:17.305078Z",
+  "ingestedAt": "2026-05-22T17:34:38.380304Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "VOD tipy: Nespoutaná Frankensteinova nevěsta, nástupce Yellowstonu i česká kriminálka",
+      "url": "https://www.kinobox.cz/clanky/vod/54023-vod-tipy-nespoutana-frankensteinova-nevesta-nastupce-yellowstonu-i-ceska-kriminalka",
+      "dt": "2026-05-22T17:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "frankensteinova",
+        "kriminálka",
+        "nespoutaná",
+        "nevěsta",
+        "nástupce",
+        "tipy",
+        "vod",
+        "yellowstonu",
+        "česká"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -518,36 +544,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Prima chystá vlastní Love Island. Konkurenční boj přitvrzuje, novou show odmoderují hvězdy Novy",
-      "url": "https://www.kinobox.cz/clanky/vod/53983-prima-chysta-vlastni-love-island-konkurencni-boj-pritvrzuje-novou-show-odmoderuji-pitr-a-gabina",
-      "dt": "2026-05-20T13:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "boj",
-        "chystá",
-        "hvězdy",
-        "island",
-        "konkurenční",
-        "love",
-        "novou",
-        "novy",
-        "odmoderují",
-        "prima",
-        "přitvrzuje",
-        "show",
-        "vlastní"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -558,7 +554,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28908,
+      "bytes": 28653,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -595,7 +591,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-22T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T17:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -610,6 +606,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "VOD tipy: Nespoutaná Frankensteinova nevěsta, nástupce Yellowstonu i česká kriminálka",
+            "publishedAt": "2026-05-22T17:00:00Z"
+          },
           {
             "title": "Inspekce pátrá po zlých policistech. Seriál ale zatím spíš hledá sám sebe",
             "publishedAt": "2026-05-22T15:00:00Z"
@@ -637,10 +637,6 @@
           {
             "title": "Rick a Morty míří do kin. Na připravovaném filmu chtěl pracovat i Zack Snyder",
             "publishedAt": "2026-05-22T09:00:00Z"
-          },
-          {
-            "title": "Kdy se dočkáme dalších dvou Avatarů? Cameron potřebuje splnit dvě důležité podmínky",
-            "publishedAt": "2026-05-22T07:00:00Z"
           }
         ]
       }
