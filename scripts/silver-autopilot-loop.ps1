@@ -3575,6 +3575,97 @@ process.stdout.write(JSON.stringify(c));
   }
 }
 
+function Invoke-SilverProductArtifactClassifierClassify {
+  param(
+    [string]$RepoRoot,
+    [string[]]$Paths,
+    [string]$SelectorCluster = "",
+    [string]$ExpectedOutcome = "",
+    [string]$SafetyCounters = "",
+    [string]$AutonomousMode = "YES",
+    [string]$CapRuntime = "YES",
+    [string]$ProductHandoffContinuation = "YES",
+    [string]$EngineChanged = "NO",
+    [string]$AssetsAppChanged = "NO"
+  )
+  $pacScript = Join-Path $RepoRoot "scripts\silver-product-artifact-classifier.cjs"
+  if (-not (Test-Path -LiteralPath $pacScript)) { return $null }
+  $pathsJson = ($Paths | ForEach-Object { ([string]$_).Trim() -replace '\\', '/' }) -join "|"
+  $cluster = [string]$SelectorCluster
+  if (-not $cluster) {
+    $cluster = Get-SilverAuthoritativeSelectorCluster -RepoRoot $RepoRoot
+  }
+  $scEsc = $cluster.Replace("'", "\'")
+  $pathsEsc = $pathsJson.Replace("'", "\'")
+  $safetyEsc = ([string]$SafetyCounters).Replace("'", "\'")
+  $eoEsc = ([string]$ExpectedOutcome).Replace("'", "\'")
+  $probe = @"
+const m=require('./silver-product-artifact-classifier.cjs');
+const paths='$pathsEsc'.split('|').filter(Boolean);
+const c=m.classifyProductArtifactGovernance({
+  dirtyPaths:paths,
+  selectorCluster:'$scEsc',
+  expectedOutcome:'$eoEsc',
+  repoRoot:process.cwd(),
+  safetyCounters:'$safetyEsc',
+  autonomousMode:'$AutonomousMode',
+  capRuntime:'$CapRuntime',
+  productHandoffContinuation:'$ProductHandoffContinuation',
+  engineChanged:'$EngineChanged',
+  assetsAppChanged:'$AssetsAppChanged'
+});
+process.stdout.write(JSON.stringify(c));
+"@
+  $probePath = Join-Path $env:TEMP ("silver-pac-classify-" + [guid]::NewGuid().ToString("N") + ".cjs")
+  try {
+    [System.IO.File]::WriteAllText($probePath, $probe, [System.Text.UTF8Encoding]::new($false))
+    $psi = New-Object System.Diagnostics.ProcessStartInfo
+    $psi.FileName = "node"
+    $psi.Arguments = ('"' + $probePath.Replace('"', '""') + '"')
+    $psi.WorkingDirectory = $RepoRoot
+    $psi.RedirectStandardOutput = $true
+    $psi.RedirectStandardError = $true
+    $psi.UseShellExecute = $false
+    $psi.CreateNoWindow = $true
+    $p = [System.Diagnostics.Process]::Start($psi)
+    $stdout = $p.StandardOutput.ReadToEnd().Trim()
+    $p.WaitForExit()
+    if ($p.ExitCode -ne 0 -or -not $stdout) { return $null }
+    return ($stdout | ConvertFrom-Json)
+  }
+  catch {
+    return $null
+  }
+  finally {
+    if (Test-Path -LiteralPath $probePath) {
+      Remove-Item -LiteralPath $probePath -Force -ErrorAction SilentlyContinue
+    }
+  }
+}
+
+function Get-SilverExpectedOutcomeFromNextAction {
+  param([string]$NextActionText)
+  if (-not $NextActionText) { return "" }
+  if ($NextActionText -match '(?im)^expected_outcome=(.+)$') { return ([string]$Matches[1]).Trim() }
+  if ($NextActionText -match '(?i)expected_outcome=([^\s\r\n;]+)') { return ([string]$Matches[1]).Trim() }
+  return ""
+}
+
+function Test-SilverPathIsAutonomousSafeProductArtifact {
+  param(
+    [string]$RelPath,
+    [string]$RepoRoot,
+    [string]$SelectorCluster = "",
+    [string]$ExpectedOutcome = "",
+    [string]$SafetyCounters = ""
+  )
+  $pac = Invoke-SilverProductArtifactClassifierClassify -RepoRoot $RepoRoot -Paths @($RelPath) `
+    -SelectorCluster $SelectorCluster -ExpectedOutcome $ExpectedOutcome -SafetyCounters $SafetyCounters `
+    -AutonomousMode "YES" -CapRuntime "YES" -ProductHandoffContinuation "YES"
+  if ($null -eq $pac) { return $false }
+  return ([string]$pac.classification -eq "SAFE_PRODUCT_SCRIPT_ONLY")
+}
+
 function Invoke-SilverValidProductWorkCloseoutEval {
   param(
     [string]$RepoRoot,
@@ -3619,7 +3710,11 @@ function Get-SilverCap50CloseoutClassificationFromDirtyPaths {
     [string[]]$Paths,
     [string]$RepoRoot = "",
     [string]$SelectorCluster = "",
-    [string]$SafetyCounters = ""
+    [string]$SafetyCounters = "",
+    [string]$ExpectedOutcome = "",
+    [string]$AutonomousMode = "",
+    [string]$CapRuntime = "",
+    [string]$ProductHandoffContinuation = ""
   )
   $list = New-Object System.Collections.Generic.List[string]
   foreach ($p in $Paths) {
@@ -3672,11 +3767,41 @@ function Get-SilverCap50CloseoutClassificationFromDirtyPaths {
       }
     }
     if ($cls -eq "FORBIDDEN_DIRTY") {
+      $pac = Invoke-SilverProductArtifactClassifierClassify -RepoRoot $repo -Paths $list.ToArray() `
+        -SelectorCluster $SelectorCluster -ExpectedOutcome $ExpectedOutcome -SafetyCounters $SafetyCounters `
+        -AutonomousMode $(if ($AutonomousMode) { $AutonomousMode } else { "YES" }) `
+        -CapRuntime $(if ($CapRuntime) { $CapRuntime } else { "YES" }) `
+        -ProductHandoffContinuation $(if ($ProductHandoffContinuation) { $ProductHandoffContinuation } else { "YES" })
+      if ($null -ne $pac -and [string]$pac.classification -eq "SAFE_PRODUCT_SCRIPT_ONLY") {
+        return @{
+          closeout_kind                  = "product_artifact_runtime_pending"
+          blocked_dirty_classification   = [string]$pac.blocked_dirty_classification
+          failure_class                  = "product_artifact_runtime_pending"
+          product_artifact               = $pac
+          git_status_clean               = "NO"
+          safe_to_continue               = "YES"
+        }
+      }
       return @{
         closeout_kind                  = "forbidden_dirty"
         blocked_dirty_classification   = [string]$vpw.blocked_dirty_classification
         failure_class                  = "forbidden_dirty"
       }
+    }
+  }
+  $pacFallback = Invoke-SilverProductArtifactClassifierClassify -RepoRoot $repo -Paths $list.ToArray() `
+    -SelectorCluster $SelectorCluster -ExpectedOutcome $ExpectedOutcome -SafetyCounters $SafetyCounters `
+    -AutonomousMode $(if ($AutonomousMode) { $AutonomousMode } else { "YES" }) `
+    -CapRuntime $(if ($CapRuntime) { $CapRuntime } else { "YES" }) `
+    -ProductHandoffContinuation $(if ($ProductHandoffContinuation) { $ProductHandoffContinuation } else { "YES" })
+  if ($null -ne $pacFallback -and [string]$pacFallback.classification -eq "SAFE_PRODUCT_SCRIPT_ONLY") {
+    return @{
+      closeout_kind                  = "product_artifact_runtime_pending"
+      blocked_dirty_classification   = [string]$pacFallback.blocked_dirty_classification
+      failure_class                  = "product_artifact_runtime_pending"
+      product_artifact               = $pacFallback
+      git_status_clean               = "NO"
+      safe_to_continue               = "YES"
     }
   }
   foreach ($n in $list) {
@@ -3833,7 +3958,9 @@ function Invoke-SilverCap50PostCycleRuntimeCleanup {
     [switch]$AllowForeignDirty,
     [switch]$AllowHandoffDirty,
     [switch]$AllowValidProductWork,
+    [switch]$AllowProductArtifactRuntimePending,
     [string]$SelectorCluster = "",
+    [string]$ExpectedOutcome = "",
     [string]$SafetyCounters = "",
     [string[]]$ExcludeRestoreRelPaths = @()
   )
@@ -3844,7 +3971,7 @@ function Invoke-SilverCap50PostCycleRuntimeCleanup {
       $archivePath = [string]$arch.RelativePath
     }
   }
-  $cleanup = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot -DryRunOnly:$DryRunOnly -AllowForeignDirty:$AllowForeignDirty -AllowHandoffDirty:$AllowHandoffDirty -AllowValidProductWork:$AllowValidProductWork -SelectorCluster $SelectorCluster -SafetyCounters $SafetyCounters -ExcludeRestoreRelPaths $ExcludeRestoreRelPaths
+  $cleanup = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot -DryRunOnly:$DryRunOnly -AllowForeignDirty:$AllowForeignDirty -AllowHandoffDirty:$AllowHandoffDirty -AllowValidProductWork:$AllowValidProductWork -AllowProductArtifactRuntimePending:$AllowProductArtifactRuntimePending -SelectorCluster $SelectorCluster -ExpectedOutcome $ExpectedOutcome -SafetyCounters $SafetyCounters -ExcludeRestoreRelPaths $ExcludeRestoreRelPaths
   $cleanup.archive_path = $archivePath
   return $cleanup
 }
@@ -3856,7 +3983,9 @@ function Invoke-SilverCap50PreflightCleanup {
     [switch]$AllowForeignDirty,
     [switch]$AllowHandoffDirty,
     [switch]$AllowValidProductWork,
+    [switch]$AllowProductArtifactRuntimePending,
     [string]$SelectorCluster = "",
+    [string]$ExpectedOutcome = "",
     [string]$SafetyCounters = "",
     [string[]]$ExcludeRestoreRelPaths = @()
   )
@@ -3870,6 +3999,11 @@ function Invoke-SilverCap50PreflightCleanup {
   $toRestore = New-Object System.Collections.Generic.List[string]
   $blocked = New-Object System.Collections.Generic.List[string]
   $allowCount = 0
+  $productArtifactPendingCount = 0
+  $eoPreflight = [string]$ExpectedOutcome
+  if (-not $eoPreflight -and $AllowProductArtifactRuntimePending) {
+    $eoPreflight = Get-SilverExpectedOutcomeFromNextAction -NextActionText (Read-TextFileOrEmpty -Path (Join-Path $RepoRoot "SILVER_NEXT_ACTION.md"))
+  }
   foreach ($ent in $entries) {
     $p = [string]$ent.path
     if (-not $p) { continue }
@@ -3879,6 +4013,11 @@ function Invoke-SilverCap50PreflightCleanup {
     if ($ent.untracked -and (Test-SilverPathIsCap50IgnorableUntrackedRuntime -RelPath $p)) { continue }
     $reason = Get-SilverCap50RuntimeRestoreAllowReason -RelPath $p
     if ($ent.untracked) {
+      if ($AllowProductArtifactRuntimePending -and (Test-SilverPathIsAutonomousSafeProductArtifact -RelPath $pNorm -RepoRoot $RepoRoot -SelectorCluster $SelectorCluster -ExpectedOutcome $eoPreflight -SafetyCounters $SafetyCounters)) {
+        $productArtifactPendingCount++
+        $allowCount++
+        continue
+      }
       if ($reason) {
         [void]$blocked.Add($p + '(untracked_runtime_unknown)')
       }
@@ -3905,7 +4044,7 @@ function Invoke-SilverCap50PreflightCleanup {
   }
   $cleanAfter = if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" }
   $remainingPaths = Get-GitStatusShortPaths -Cwd $RepoRoot
-  $classAfter = Get-SilverCap50CloseoutClassificationFromDirtyPaths -Paths $remainingPaths -RepoRoot $RepoRoot -SelectorCluster $SelectorCluster -SafetyCounters $SafetyCounters
+  $classAfter = Get-SilverCap50CloseoutClassificationFromDirtyPaths -Paths $remainingPaths -RepoRoot $RepoRoot -SelectorCluster $SelectorCluster -SafetyCounters $SafetyCounters -ExpectedOutcome $eoPreflight -AutonomousMode $(if ($AllowProductArtifactRuntimePending) { "YES" } else { "NO" }) -CapRuntime $(if ($AllowProductArtifactRuntimePending) { "YES" } else { "NO" }) -ProductHandoffContinuation $(if ($AllowProductArtifactRuntimePending) { "YES" } else { "NO" })
   $closeoutKind = [string]$classAfter.closeout_kind
   $failureClass = [string]$classAfter.failure_class
   $blockedClass = [string]$classAfter.blocked_dirty_classification
@@ -3931,7 +4070,7 @@ function Invoke-SilverCap50PreflightCleanup {
       }
       $cleanAfter = if (Test-GitStatusClean -Cwd $RepoRoot) { "YES" } else { "NO" }
       $remainingPaths = Get-GitStatusShortPaths -Cwd $RepoRoot
-      $classAfter = Get-SilverCap50CloseoutClassificationFromDirtyPaths -Paths $remainingPaths -RepoRoot $RepoRoot -SelectorCluster $SelectorCluster -SafetyCounters $SafetyCounters
+      $classAfter = Get-SilverCap50CloseoutClassificationFromDirtyPaths -Paths $remainingPaths -RepoRoot $RepoRoot -SelectorCluster $SelectorCluster -SafetyCounters $SafetyCounters -ExpectedOutcome $eoPreflight -AutonomousMode $(if ($AllowProductArtifactRuntimePending) { "YES" } else { "NO" }) -CapRuntime $(if ($AllowProductArtifactRuntimePending) { "YES" } else { "NO" }) -ProductHandoffContinuation $(if ($AllowProductArtifactRuntimePending) { "YES" } else { "NO" })
       $closeoutKind = [string]$classAfter.closeout_kind
       $failureClass = [string]$classAfter.failure_class
       $blockedClass = [string]$classAfter.blocked_dirty_classification
@@ -3944,11 +4083,15 @@ function Invoke-SilverCap50PreflightCleanup {
     elseif ($DryRunOnly -and $toRestore.Count -gt 0 -and $dirtyBefore.Count -eq $toRestore.Count) { $safe = "YES" }
     elseif ($AllowHandoffDirty -and (Test-Cap50GitCleanExceptHandoffArtifacts -Cwd $RepoRoot)) { $safe = "YES" }
     elseif ($AllowValidProductWork -and $closeoutKind -eq "valid_product_work") { $safe = "YES" }
+    elseif ($AllowProductArtifactRuntimePending -and $closeoutKind -eq "product_artifact_runtime_pending") { $safe = "YES" }
   }
   elseif ($AllowForeignDirty -and $runtimeClean -eq "YES") {
     $safe = "YES"
   }
   elseif ($AllowValidProductWork -and $closeoutKind -eq "valid_product_work") {
+    $safe = "YES"
+  }
+  elseif ($AllowProductArtifactRuntimePending -and $closeoutKind -eq "product_artifact_runtime_pending") {
     $safe = "YES"
   }
   $passFail = if ($safe -eq "YES") { "PASS" } else { "FAIL" }
@@ -3964,10 +4107,12 @@ function Invoke-SilverCap50PreflightCleanup {
   return @{
     dirty_before                      = ($dirtyBefore -join $sep)
     allowlisted_runtime_dirty_count   = [string]$allowCount
+    product_artifact_runtime_pending_count = [string]$productArtifactPendingCount
     restored_runtime_files            = ($restored -join $sep)
     blocked_dirty_files               = ($blocked -join $sep)
     git_clean_after                   = $cleanAfter
     safe_to_start_cycle               = $safe
+    safe_to_continue                  = $safe
     PASS_FAIL                         = $passFail
     closeout_kind                     = $closeoutKind
     failure_class                     = $failureClass
@@ -5639,7 +5784,17 @@ function Invoke-SilverCap50EvaluateCyclePostcondition {
   }
   $nextMode = Get-SilverCap50NextActionMode -NextActionText $nextAfter -RecommendedNextTask $recommended -ControlledInfinite $ControlledInfinite
   $safetyBlocked = Test-SafetyCountersBlocked -SafetyCountersLine $SafetyCountersLine
-  $gitHandoffOk = ($gitCleanAfter -eq "YES") -or (Test-Cap50GitCleanExceptHandoffArtifacts -Cwd $RepoRoot)
+  $productArtifactHandoffOk = $false
+  if ($gitCleanAfter -ne "YES") {
+    $remainingDirty = Get-GitStatusShortPaths -Cwd $RepoRoot
+    $selectorPost = Get-SilverAuthoritativeSelectorCluster -RepoRoot $RepoRoot
+    $expectedPost = Get-SilverExpectedOutcomeFromNextAction -NextActionText $nextAfter
+    $pacPost = Invoke-SilverProductArtifactClassifierClassify -RepoRoot $RepoRoot -Paths $remainingDirty -SelectorCluster $selectorPost -ExpectedOutcome $expectedPost -SafetyCounters $SafetyCountersLine
+    if ($null -ne $pacPost -and [string]$pacPost.classification -eq "SAFE_PRODUCT_SCRIPT_ONLY") {
+      $productArtifactHandoffOk = $true
+    }
+  }
+  $gitHandoffOk = ($gitCleanAfter -eq "YES") -or (Test-Cap50GitCleanExceptHandoffArtifacts -Cwd $RepoRoot) -or $productArtifactHandoffOk
   $safe = "NO"
   $passFail = "FAIL"
   $reason = ""
@@ -5993,12 +6148,20 @@ function Test-AutonomousUnexpectedDirtyTree {
   foreach ($p in (Get-SilverTransientGeneratedAuditReportRelPaths)) {
     [void]$allowed.Add($p)
   }
+  $selectorCluster = Get-SilverAuthoritativeSelectorCluster -RepoRoot $Cwd
+  $nextText = Read-TextFileOrEmpty -Path (Join-Path $Cwd "SILVER_NEXT_ACTION.md")
+  $expectedOutcome = Get-SilverExpectedOutcomeFromNextAction -NextActionText $nextText
+  $reportText = Read-TextFileOrEmpty -Path (Join-Path $Cwd "SILVER_RUN_REPORT.md")
+  $safetyLine = Get-RunReportLineValue -ReportText $reportText -Key "safety_counters"
   $paths = Get-GitStatusShortPaths -Cwd $Cwd
   foreach ($rel in $paths) {
     $n = ($rel -replace "\\", "/").Trim()
     if (-not $n) { continue }
     if ($allowed.Contains($n)) { continue }
     if (Test-SilverPathIsCap50RuntimeRestorable -RelPath $n) { continue }
+    if (Test-SilverPathIsAutonomousSafeProductArtifact -RelPath $n -RepoRoot $Cwd -SelectorCluster $selectorCluster -ExpectedOutcome $expectedOutcome -SafetyCounters $safetyLine) {
+      continue
+    }
     return @{ pass = $false; firstUnexpected = $n }
   }
   return @{ pass = $true; firstUnexpected = "" }
@@ -6750,7 +6913,13 @@ while ($true) {
       -Reason "emergency_stop_file_present" -DryRunText ($(if ($DryRun) { "YES" } else { "NO" })) -NoBeep:$NoBeep
   }
 
-  $preflightCap50 = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot -DryRunOnly:$DryRun
+  $selectorPreflight = ""
+  $expectedPreflight = ""
+  if ($controlledInfinite) {
+    $selectorPreflight = Get-SilverAuthoritativeSelectorCluster -RepoRoot $RepoRoot
+    $expectedPreflight = Get-SilverExpectedOutcomeFromNextAction -NextActionText (Read-TextFileOrEmpty -Path $NextActionPath)
+  }
+  $preflightCap50 = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot -DryRunOnly:$DryRun -AllowProductArtifactRuntimePending:$controlledInfinite -SelectorCluster $selectorPreflight -ExpectedOutcome $expectedPreflight
   Write-SilverCap50PreflightCleanupResultBlock -Result $preflightCap50
   if ($preflightCap50.safe_to_start_cycle -ne "YES") {
     if (-not $DryRun) {
@@ -7515,7 +7684,8 @@ while ($true) {
         -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1
     }
     $selectorForCloseout = Get-SilverAuthoritativeSelectorCluster -RepoRoot $RepoRoot
-    $postAutoCleanup = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $cycle -Reason "after_autopilot_full_auto_loop" -ExcludeRestoreRelPaths $autopilotHandoffPreserve -AllowHandoffDirty -AllowValidProductWork -SelectorCluster $selectorForCloseout -SafetyCounters $safetyPre
+    $expectedForCloseout = Get-SilverExpectedOutcomeFromNextAction -NextActionText $nextAfterAuto
+    $postAutoCleanup = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $cycle -Reason "after_autopilot_full_auto_loop" -ExcludeRestoreRelPaths $autopilotHandoffPreserve -AllowHandoffDirty -AllowValidProductWork -AllowProductArtifactRuntimePending:$controlledInfinite -SelectorCluster $selectorForCloseout -ExpectedOutcome $expectedForCloseout -SafetyCounters $safetyPre
     Write-Host ("silver-autopilot-loop: post_autopilot_cleanup_PASS_FAIL=" + [string]$postAutoCleanup.PASS_FAIL) -ForegroundColor DarkCyan
     Write-Host ("silver-autopilot-loop: post_autopilot_closeout_kind=" + [string]$postAutoCleanup.closeout_kind) -ForegroundColor DarkCyan
     if ($postAutoCleanup.PASS_FAIL -ne "PASS") {
@@ -7532,6 +7702,11 @@ while ($true) {
         $postAutoCleanup.PASS_FAIL = "PASS"
         $postAutoCleanup.closeout_kind = [string]$vpwEval.final_outcome
         Write-Host ("silver-autopilot-loop: post_autopilot_valid_product_work_closeout=" + [string]$vpwEval.final_outcome) -ForegroundColor DarkYellow
+      }
+      elseif ([string]$postAutoCleanup.closeout_kind -eq "product_artifact_runtime_pending") {
+        $postAutoCleanup.PASS_FAIL = "PASS"
+        $postAutoCleanup.failure_class = "product_artifact_runtime_pending"
+        Write-Host "silver-autopilot-loop: post_autopilot_product_artifact_runtime_pending=YES git_status_clean=NO safe_to_continue=YES" -ForegroundColor DarkCyan
       }
       else {
         Write-Host ("silver-autopilot-loop: post_autopilot_blocked_dirty_files=" + [string]$postAutoCleanup.blocked_dirty_files) -ForegroundColor Red
