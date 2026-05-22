@@ -8,6 +8,10 @@
 const fs = require("fs");
 const path = require("path");
 const { pickSelectorCluster } = require("./silver-valid-product-work-closeout.cjs");
+const {
+  parseProductHandoffContract,
+  extractSelectorClusterFromSources,
+} = require("./silver-product-handoff-continuation.cjs");
 
 const REPO = path.resolve(__dirname, "..");
 
@@ -36,6 +40,7 @@ const SAFE_SCRIPT_PATH_RES = [/^scripts\/[^/]+\.cjs$/i, /^scripts\/[^/]+-report\
 
 const SAFE_SCRIPT_NAME_RES = [
   /^silver-/i,
+  /^silver-self-correction-/i,
   /^audit-/i,
   /-diagnostic/i,
   /-selftest/i,
@@ -139,15 +144,65 @@ function lineValue(text, key) {
   return "";
 }
 
+function normalizeExpectedOutcomeForArtifact(raw) {
+  const e = String(raw || "").trim();
+  if (!e) return "";
+  if (/^HARNESS_ALIGNMENT_TASK_READY$/i.test(e)) return "HARNESS_ALIGNMENT_TASK_READY";
+  if (/engine\s*pr\s*or\s*harness/i.test(e)) return "HARNESS_ALIGNMENT_TASK_READY";
+  return e;
+}
+
 function resolveExpectedOutcomeFromTexts(nextActionText, runReportText, cursorOutputText) {
   const sources = [nextActionText, runReportText, cursorOutputText];
   for (const t of sources) {
     const v = lineValue(t, "expected_outcome");
-    if (v) return v;
+    if (v) return normalizeExpectedOutcomeForArtifact(v);
     const m = String(t || "").match(/expected_outcome=([^\s\r\n;]+)/i);
-    if (m) return m[1].trim();
+    if (m) return normalizeExpectedOutcomeForArtifact(m[1].trim());
   }
+  const combined = sources.join("\n");
+  const handoff = parseProductHandoffContract(combined);
+  if (handoff.expected_outcome) return normalizeExpectedOutcomeForArtifact(handoff.expected_outcome);
+  if (/HARNESS_ALIGNMENT_TASK_READY/i.test(combined)) return "HARNESS_ALIGNMENT_TASK_READY";
   return "";
+}
+
+function resolveSelectorClusterForGovernance(root, overrides, nextText, reportText, cursorText) {
+  const o = overrides || {};
+  if (o.selectorCluster !== undefined) {
+    return String(o.selectorCluster || "").trim();
+  }
+  const handoff = parseProductHandoffContract([nextText, reportText, cursorText].join("\n"));
+  const fromSources = extractSelectorClusterFromSources({
+    nextActionText: nextText,
+    cursorOutputText: cursorText,
+    runReportText: reportText,
+    authoritativeCluster: o.authoritativeCluster || "",
+  });
+  if (fromSources) return fromSources;
+  if (handoff.cluster) return String(handoff.cluster).trim();
+  return pickSelectorCluster(root, o.authoritativeCluster || "");
+}
+
+function productHandoffContinuationFromContext(ctx, nextText, reportText, cursorText) {
+  const combined = [nextText, reportText, cursorText].join("\n");
+  const handoff = parseProductHandoffContract(combined);
+  const exp = ctx.expectedOutcome || "";
+  const harnessReady =
+    exp === "HARNESS_ALIGNMENT_TASK_READY" ||
+    /HARNESS_ALIGNMENT_TASK_READY/i.test(exp) ||
+    handoff.recommended_task_type === "cap_diagnostic_product_handoff";
+  return Boolean(
+    ctx.selectorCluster &&
+      exp &&
+      (/PRODUCT_HANDOFF_CONTRACT/i.test(nextText) ||
+        /PRODUCT_HANDOFF_CONTRACT/i.test(combined) ||
+        /cap_diagnostic_product_handoff/i.test(nextText) ||
+        /cap_diagnostic_product_handoff/i.test(combined) ||
+        handoff.contract_present ||
+        handoff.recommended_task_type === "cap_diagnostic_product_handoff" ||
+        harnessReady),
+  );
 }
 
 /**
@@ -161,14 +216,11 @@ function resolveProductArtifactContextFromRepo(repoRoot, overrides) {
   const cursorText =
     o.cursorOutputText != null ? o.cursorOutputText : readTextSafe(path.join(root, "SILVER_CURSOR_OUTPUT.md"));
 
-  const selectorCluster =
-    o.selectorCluster !== undefined
-      ? String(o.selectorCluster || "").trim()
-      : pickSelectorCluster(root, o.authoritativeCluster || "");
+  const selectorCluster = resolveSelectorClusterForGovernance(root, o, nextText, reportText, cursorText);
 
   const expectedOutcome =
     o.expectedOutcome !== undefined
-      ? String(o.expectedOutcome || "").trim()
+      ? normalizeExpectedOutcomeForArtifact(o.expectedOutcome)
       : resolveExpectedOutcomeFromTexts(nextText, reportText, cursorText);
 
   const autonomousMode =
@@ -177,7 +229,9 @@ function resolveProductArtifactContextFromRepo(repoRoot, overrides) {
       : Boolean(
           String(process.env.SILVER_AUTONOMOUS_CYCLE || "").trim() ||
             String(process.env.SILVER_AUTONOMOUS_RUN_ID || "").trim() ||
-            yn(process.env.SILVER_AUTONOMOUS_MODE) === "YES",
+            yn(process.env.SILVER_AUTONOMOUS_MODE) === "YES" ||
+            /SILVER_AUTONOMOUS/i.test(reportText) ||
+            /controlledInfinite/i.test(reportText),
         );
 
   const capRuntime =
@@ -186,19 +240,17 @@ function resolveProductArtifactContextFromRepo(repoRoot, overrides) {
       : Boolean(
           String(process.env.SILVER_CAP_RUNTIME_LABEL || "").trim() ||
             /CAP\d+/i.test(reportText) ||
+            /cap_runtime_label=/i.test(reportText) ||
             /ControlledCapProfile=/i.test(reportText),
         );
 
+  const ctxDraft = { selectorCluster, expectedOutcome };
   const productHandoffContinuation =
     o.productHandoffContinuation !== undefined
       ? yn(o.productHandoffContinuation) === "YES"
-      : Boolean(
-          selectorCluster &&
-            expectedOutcome &&
-            (/PRODUCT_HANDOFF_CONTRACT/i.test(nextText) ||
-              /cap_diagnostic_product_handoff/i.test(nextText) ||
-              /HARNESS_ALIGNMENT_TASK_READY/i.test(expectedOutcome)),
-        );
+        ? Boolean(selectorCluster && expectedOutcome)
+        : false
+      : productHandoffContinuationFromContext(ctxDraft, nextText, reportText, cursorText);
 
   const engineChanged =
     o.engineChanged !== undefined
@@ -376,6 +428,10 @@ function pathAllowedAsAutonomousProductArtifact(rel, opts) {
   return pac.classification === "SAFE_PRODUCT_SCRIPT_ONLY";
 }
 
+function governanceAllowsProductArtifactPath(rel, opts) {
+  return pathAllowedAsAutonomousProductArtifact(rel, opts);
+}
+
 function printEvalBlock(result) {
   console.log("=== SILVER_PRODUCT_ARTIFACT_CLASSIFIER_EVAL ===");
   console.log("classification=" + (result.classification || ""));
@@ -491,6 +547,13 @@ function runProductArtifactClassifierSelftest() {
     "scripts/silver-product-handoff-continuation.cjs",
     "scripts/silver-self-correction-audit.cjs",
     "scripts/silver-self-correction-negation-scope.cjs",
+    "scripts/silver-self-correction-query-clarification.cjs",
+    "scripts/silver-self-correction-safety-diagnostic.cjs",
+    "scripts/silver-self-correction-update-note-selftest.cjs",
+  ];
+
+  const cap15BlockedPaths = [
+    "scripts/silver-self-correction-audit.cjs",
     "scripts/silver-self-correction-query-clarification.cjs",
     "scripts/silver-self-correction-safety-diagnostic.cjs",
     "scripts/silver-self-correction-update-note-selftest.cjs",
@@ -624,6 +687,89 @@ function runProductArtifactClassifierSelftest() {
   );
 
   cases.push(
+    runSelftestCase("cap15_real_blocked_list_now_passes", () => {
+      const handoffNext = [
+        "recommended_next_task=cap_diagnostic_product_handoff:self_correction_update_note;expected_outcome=HARNESS_ALIGNMENT_TASK_READY",
+        "SILVER_NEXT_ACTION_PLANNER_ENFORCE=cap_diagnostic_product_handoff cluster=self_correction_update_note expected_outcome=HARNESS_ALIGNMENT_TASK_READY openai_skipped=YES",
+        "target_cluster=self_correction_update_note",
+        "engine_changed=NO",
+        "assets_app_changed=NO",
+      ].join("\n");
+      const r = classifyProductArtifactGovernance({
+        dirtyPaths: cap15BlockedPaths,
+        autonomousMode: "YES",
+        capRuntime: "YES",
+        productHandoffContinuation: "YES",
+        selectorCluster: "self_correction_update_note",
+        nextActionText: handoffNext,
+        runReportText: "cap_runtime_label=CAP15\nControlledCapProfile=CAP10_SAFE\nengine_changed=NO\nassets_app_changed=NO",
+        engineChanged: "NO",
+        assetsAppChanged: "NO",
+      });
+      assert(r.classification === "SAFE_PRODUCT_SCRIPT_ONLY", "classification");
+      assert(r.closeout_kind === "product_artifact_runtime_pending", "closeout");
+      assert(r.safe_to_continue === "YES", "safe");
+      assert(r.git_status_clean === "NO", "git_dirty_ok");
+    }),
+  );
+
+  cases.push(
+    runSelftestCase("handoff_contract_resolves_outcome_without_plain_line", () => {
+      const nextOnly = [
+        "recommended_next_task=cap_diagnostic_product_handoff:self_correction_update_note;expected_outcome=HARNESS_ALIGNMENT_TASK_READY",
+        "audit_registry_next_cluster=self_correction_update_note",
+      ].join("\n");
+      const ctx = resolveProductArtifactContextFromRepo(REPO, {
+        nextActionText: nextOnly,
+        runReportText: "cap_runtime_label=CAP15",
+        autonomousMode: "YES",
+        capRuntime: "YES",
+        productHandoffContinuation: "YES",
+      });
+      assert(ctx.expectedOutcome === "HARNESS_ALIGNMENT_TASK_READY", "expected_outcome");
+      assert(ctx.selectorCluster === "self_correction_update_note", "selector_cluster");
+      assert(ctx.productHandoffContinuation === true, "continuation");
+      const r = classifyProductArtifactGovernance({
+        dirtyPaths: cap15BlockedPaths,
+        nextActionText: nextOnly,
+        runReportText: "cap_runtime_label=CAP15",
+        autonomousMode: "YES",
+        capRuntime: "YES",
+        productHandoffContinuation: "YES",
+      });
+      assert(r.safe_to_continue === "YES", "safe_without_explicit_outcome_arg");
+    }),
+  );
+
+  cases.push(
+    runSelftestCase("continuation_yes_without_outcome_arg_still_requires_resolved_outcome", () => {
+      const r = classifyProductArtifactGovernance(
+        Object.assign({}, baseCtx({ expectedOutcome: "" }), {
+          dirtyPaths: cap15BlockedPaths,
+          productHandoffContinuation: "YES",
+        }),
+      );
+      assert(r.closeout_kind === "forbidden_dirty", "closeout");
+      assert(
+        r.context_gate === "expected_outcome_required" || r.context_gate === "product_handoff_continuation_required",
+        "gate",
+      );
+    }),
+  );
+
+  cases.push(
+    runSelftestCase("forbidden_dirty_guard_unknown_script_still_blocks", () => {
+      const r = classifyProductArtifactGovernance(
+        Object.assign({}, baseCtx(), {
+          dirtyPaths: cap15BlockedPaths.concat(["scripts/not-allowed-helper.cjs"]),
+        }),
+      );
+      assert(r.closeout_kind === "forbidden_dirty", "closeout");
+      assert(r.safe_to_continue === "NO", "safe");
+    }),
+  );
+
+  cases.push(
     runSelftestCase("path_shape_rejects_non_matching_name", () => {
       assert(!isSafeProductScriptPathShape("scripts/random-helper.cjs"), "random_name");
       assert(isSafeProductScriptPathShape("scripts/silver-foo.cjs"), "silver_name");
@@ -661,7 +807,10 @@ module.exports = {
   classifyProductArtifactGovernance,
   classifyCap50CloseoutWithProductArtifacts,
   pathAllowedAsAutonomousProductArtifact,
+  governanceAllowsProductArtifactPath,
   resolveProductArtifactContextFromRepo,
+  resolveExpectedOutcomeFromTexts,
+  normalizeExpectedOutcomeForArtifact,
   isSafeProductScriptPathShape,
   isForbiddenProductArtifactZone,
   runProductArtifactClassifierSelftest,

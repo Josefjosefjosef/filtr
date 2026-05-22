@@ -3648,6 +3648,23 @@ function Get-SilverExpectedOutcomeFromNextAction {
   if (-not $NextActionText) { return "" }
   if ($NextActionText -match '(?im)^expected_outcome=(.+)$') { return ([string]$Matches[1]).Trim() }
   if ($NextActionText -match '(?i)expected_outcome=([^\s\r\n;]+)') { return ([string]$Matches[1]).Trim() }
+  if ($NextActionText -match '(?i)recommended_next_task=[^;\r\n]*;[^\r\n]*expected_outcome=([^;\s\r\n]+)') {
+    return ([string]$Matches[1]).Trim()
+  }
+  if ($NextActionText -match '(?i)SILVER_NEXT_ACTION_PLANNER_ENFORCE=[^\r\n]*expected_outcome=([^\s\r\n]+)') {
+    return ([string]$Matches[1]).Trim()
+  }
+  return ""
+}
+
+function Get-SilverExpectedOutcomeForProductArtifact {
+  param([string]$RepoRoot)
+  $na = Read-TextFileOrEmpty -Path (Join-Path $RepoRoot "SILVER_NEXT_ACTION.md")
+  $rr = Read-TextFileOrEmpty -Path (Join-Path $RepoRoot "SILVER_RUN_REPORT.md")
+  $co = Read-TextFileOrEmpty -Path (Join-Path $RepoRoot "SILVER_CURSOR_OUTPUT.md")
+  $combined = ($na + "`n" + $rr + "`n" + $co)
+  $eo = Get-SilverExpectedOutcomeFromNextAction -NextActionText $combined
+  if ($eo) { return $eo }
   return ""
 }
 
@@ -4002,7 +4019,7 @@ function Invoke-SilverCap50PreflightCleanup {
   $productArtifactPendingCount = 0
   $eoPreflight = [string]$ExpectedOutcome
   if (-not $eoPreflight -and $AllowProductArtifactRuntimePending) {
-    $eoPreflight = Get-SilverExpectedOutcomeFromNextAction -NextActionText (Read-TextFileOrEmpty -Path (Join-Path $RepoRoot "SILVER_NEXT_ACTION.md"))
+    $eoPreflight = Get-SilverExpectedOutcomeForProductArtifact -RepoRoot $RepoRoot
   }
   foreach ($ent in $entries) {
     $p = [string]$ent.path
@@ -4031,6 +4048,11 @@ function Invoke-SilverCap50PreflightCleanup {
       [void]$toRestore.Add($p)
     }
     else {
+      if ($AllowProductArtifactRuntimePending -and (Test-SilverPathIsAutonomousSafeProductArtifact -RelPath $pNorm -RepoRoot $RepoRoot -SelectorCluster $SelectorCluster -ExpectedOutcome $eoPreflight -SafetyCounters $SafetyCounters)) {
+        $productArtifactPendingCount++
+        $allowCount++
+        continue
+      }
       [void]$blocked.Add($p)
     }
   }
@@ -6917,7 +6939,7 @@ while ($true) {
   $expectedPreflight = ""
   if ($controlledInfinite) {
     $selectorPreflight = Get-SilverAuthoritativeSelectorCluster -RepoRoot $RepoRoot
-    $expectedPreflight = Get-SilverExpectedOutcomeFromNextAction -NextActionText (Read-TextFileOrEmpty -Path $NextActionPath)
+    $expectedPreflight = Get-SilverExpectedOutcomeForProductArtifact -RepoRoot $RepoRoot
   }
   $preflightCap50 = Invoke-SilverCap50PreflightCleanup -RepoRoot $RepoRoot -DryRunOnly:$DryRun -AllowProductArtifactRuntimePending:$controlledInfinite -SelectorCluster $selectorPreflight -ExpectedOutcome $expectedPreflight
   Write-SilverCap50PreflightCleanupResultBlock -Result $preflightCap50
@@ -7684,7 +7706,10 @@ while ($true) {
         -DryRunText "NO" -NoBeep:$NoBeep -LastTaskExitCode 1
     }
     $selectorForCloseout = Get-SilverAuthoritativeSelectorCluster -RepoRoot $RepoRoot
-    $expectedForCloseout = Get-SilverExpectedOutcomeFromNextAction -NextActionText $nextAfterAuto
+    $expectedForCloseout = Get-SilverExpectedOutcomeForProductArtifact -RepoRoot $RepoRoot
+    if (-not $expectedForCloseout) {
+      $expectedForCloseout = Get-SilverExpectedOutcomeFromNextAction -NextActionText $nextAfterAuto
+    }
     $postAutoCleanup = Invoke-SilverCap50PostCycleRuntimeCleanup -RepoRoot $RepoRoot -Cycle $cycle -Reason "after_autopilot_full_auto_loop" -ExcludeRestoreRelPaths $autopilotHandoffPreserve -AllowHandoffDirty -AllowValidProductWork -AllowProductArtifactRuntimePending:$controlledInfinite -SelectorCluster $selectorForCloseout -ExpectedOutcome $expectedForCloseout -SafetyCounters $safetyPre
     Write-Host ("silver-autopilot-loop: post_autopilot_cleanup_PASS_FAIL=" + [string]$postAutoCleanup.PASS_FAIL) -ForegroundColor DarkCyan
     Write-Host ("silver-autopilot-loop: post_autopilot_closeout_kind=" + [string]$postAutoCleanup.closeout_kind) -ForegroundColor DarkCyan
