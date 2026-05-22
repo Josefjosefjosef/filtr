@@ -64,6 +64,12 @@ const {
   runValidProductWorkCloseoutSelftest,
   cmdValidProductWorkCloseoutEval,
 } = require("./silver-valid-product-work-closeout.cjs");
+const {
+  cmdProductHandoffContinuationEval,
+  runProductHandoffContinuationSelftestMatrix,
+  runSimulatedProductHandoffContinuation,
+  CLI_SELFTEST_MAP,
+} = require("./silver-product-handoff-continuation.cjs");
 
 const REPO = path.resolve(__dirname, "..");
 const SCRIPTS = __dirname;
@@ -4421,7 +4427,7 @@ function runCapDirtyReportLifecycleSelftest() {
 }
 
 function parseArgs(argv) {
-  const out = { cmd: null, pr: "", maxSteps: "1" };
+  const out = { cmd: null, pr: "", maxSteps: "1", handoffSelftestCase: "" };
   for (const a of argv) {
     if (a === "--status") out.cmd = "status";
     else if (a === "--audit-registry") out.cmd = "audit-registry";
@@ -4474,6 +4480,14 @@ function parseArgs(argv) {
     else if (a === "--cluster-consistency-lock-selftest") out.cmd = "cluster-consistency-lock-selftest";
     else if (a === "--scorecard-finalize-runtime-selftest") out.cmd = "scorecard-finalize-runtime-selftest";
     else if (a === "--valid-product-work-closeout-eval") out.cmd = "valid-product-work-closeout-eval";
+    else if (a === "--product-handoff-continuation-eval") out.cmd = "product-handoff-continuation-eval";
+    else if (a === "--product-handoff-continuation-simulate") out.cmd = "product-handoff-continuation-simulate";
+    else if (a === "--product-handoff-continuation-selftest") out.cmd = "product-handoff-continuation-selftest";
+    else if (CLI_SELFTEST_MAP[a] !== undefined) {
+      out.cmd = "product-handoff-case-selftest";
+      out.handoffSelftestCase = CLI_SELFTEST_MAP[a] || "";
+      out.handoffSelftestFlag = a;
+    }
     else if (a === "--preflight-runtime-cleanup") out.cmd = "preflight-runtime-cleanup";
     else if (a === "--preflight-runtime-cleanup-selftest") out.cmd = "preflight-runtime-cleanup-selftest";
     else if (a === "--cap-dirty-report-lifecycle-selftest") out.cmd = "cap-dirty-report-lifecycle-selftest";
@@ -4581,6 +4595,14 @@ if (require.main === module) {
     process.exit(runScorecardFinalizeRuntimeSelftest() ? 0 : 1);
   } else if (p.cmd === "valid-product-work-closeout-eval") {
     process.exit(cmdValidProductWorkCloseoutEval(argv));
+  } else if (p.cmd === "product-handoff-continuation-eval") {
+    process.exit(cmdProductHandoffContinuationEval(argv));
+  } else if (p.cmd === "product-handoff-continuation-simulate") {
+    process.exit(runSimulatedProductHandoffContinuation() ? 0 : 1);
+  } else if (p.cmd === "product-handoff-continuation-selftest") {
+    process.exit(runProductHandoffContinuationSelftestMatrix(null) ? 0 : 1);
+  } else if (p.cmd === "product-handoff-case-selftest") {
+    process.exit(runProductHandoffContinuationSelftestMatrix(p.handoffSelftestCase || null) ? 0 : 1);
   } else if (p.cmd === "preflight-runtime-cleanup") {
     const dryOnly = argv.indexOf("--dry-run") >= 0;
     const pf = cap50PreflightRuntimeCleanup(dryOnly);
