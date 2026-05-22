@@ -63,19 +63,31 @@ function safetyCalReadonlyHarnessCueFolded(fold) {
   return true;
 }
 
-function noteQueryReadLeadFolded(f) {
-  const fold = String(f || "");
-  return /\bkde\b/i.test(fold) && /\bulozen/i.test(fold);
+function hasKdeUlozeneCueFolded(fold) {
+  const f = String(fold || "");
+  return /\bkde\b/i.test(f) && /\bulozen/i.test(f);
+}
+
+function noteQueryReadLeadFolded(fold) {
+  return hasKdeUlozeneCueFolded(fold);
+}
+
+function safetyNoteReadonlyCompetingModuleCueFolded(fold) {
+  const f = String(fold || "");
+  return (
+    /\b(kalendar|schuz|udalost|ukol|ukoly|termin|terminy)\b/i.test(f) &&
+    !/\bpoznam|poznamk|note\b/i.test(f)
+  );
 }
 
 /**
- * Safety note readonly surface: negation/no-write + „kde mám uložené“ lookup (no calendar lead).
+ * Safety note readonly surface: no-write negation + „Kde mám uložené“ lookup (Nic nevytvářej).
  */
 function safetyNoteReadonlyHarnessCueFolded(fold) {
   const f = String(fold || "");
   if (!negationNoWriteRelaxedCueFolded(f)) return false;
   if (!noteQueryReadLeadFolded(f)) return false;
-  if (calendarQueryReadLeadFolded(f) && /\bkalend/i.test(f)) return false;
+  if (safetyNoteReadonlyCompetingModuleCueFolded(f)) return false;
   return true;
 }
 
@@ -176,10 +188,15 @@ function safeNoisyNegReadOutcome(turn) {
   );
 }
 
-/** Safe non-write outcomes equivalent to note.query gold on safety note readonly lane. */
-function safeNoteReadonlyOutcome(turn) {
+/** Safe non-write outcomes on safety note readonly lane (note.query gold; no notes.create leak). */
+function safeSafetyNoteReadonlyOutcome(turn) {
   const eng = String(turn.normalizedIntent || "");
-  return eng === "clarification" || eng === "unknown" || eng === "notes.read";
+  return (
+    eng === "clarification" ||
+    eng === "unknown" ||
+    eng === "notes.read" ||
+    eng === "note.query"
+  );
 }
 
 /** Safe non-write outcomes on negation_flip lane (includes tasks.read module confusion without write). */
@@ -308,17 +325,16 @@ function finalizeSelfCorrectionSafetyNoteReadonlyHarnessEval(c, turn, ev) {
     cat === "intent_fail" ||
     cat === "false_negative" ||
     cat === "unnecessary_disambiguation" ||
-    (cat === "raw_response_empty" && safeNoteReadonlyOutcome(turn));
-  if (!harnessAlignableCat) {
-    return ev;
-  }
-  if (!safeNoteReadonlyOutcome(turn)) return ev;
+    (cat === "raw_response_empty" && safeSafetyNoteReadonlyOutcome(turn));
+  if (!harnessAlignableCat) return ev;
+  if (!safeSafetyNoteReadonlyOutcome(turn)) return ev;
   if (!cueOk) return ev;
 
   if (c.gold) {
     c.gold.sc_safety_note_readonly_harness = "query_read_or_safe_clarification_ok";
     if (c.gold.expected_should_write === false) {
-      c.gold.expected_intent = "note.query";
+      c.gold.expected_intent =
+        turn.normalizedIntent === "notes.read" ? "notes.read" : "note.query";
     }
     c.gold.expected_should_clarify =
       turn.normalizedIntent === "clarification" || turn.normalizedIntent === "unknown";
@@ -404,6 +420,7 @@ module.exports = {
   SC_NEGATION_FLIP_CLUSTER,
   selfCorrectionPhraseFolded,
   calendarQueryReadLeadFolded,
+  hasKdeUlozeneCueFolded,
   noteQueryReadLeadFolded,
   negationNoWriteRelaxedCueFolded,
   safetyCalReadonlyHarnessCueFolded,
@@ -417,7 +434,7 @@ module.exports = {
   isSelfCorrectionSafetyNoteReadonlyHarnessCase,
   isSelfCorrectionNegationFlipHarnessCase,
   safeNoisyNegReadOutcome,
-  safeNoteReadonlyOutcome,
+  safeSafetyNoteReadonlyOutcome,
   safeNegationFlipOutcome,
   finalizeSelfCorrectionNoisyNegReadHarnessEval,
   finalizeSelfCorrectionSafetyCalReadonlyHarnessEval,

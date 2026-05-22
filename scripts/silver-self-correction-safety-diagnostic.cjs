@@ -15,6 +15,7 @@ const DIAGNOSTIC_SCRIPT = "scripts/silver-self-correction-safety-diagnostic.cjs"
 
 const TARGET_CLUSTERS = [
   "self_correction_safety_cal_readonly",
+  "self_correction_safety_note_readonly",
   "self_correction_negation_readonly",
   "self_correction_negation_flip",
   "self_correction_update_note",

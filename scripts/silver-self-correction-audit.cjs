@@ -464,6 +464,7 @@ function classifyScFailBucket(c, turn, ev, gold) {
     if (c.cluster === "self_correction_noisy_neg_read" && !createLikeTurn(turn)) return "HARNESS_PROBLEM";
     if (c.cluster === "self_correction_safety_note_readonly" && !createLikeTurn(turn)) return "HARNESS_PROBLEM";
     if (c.cluster === "self_correction_negation_flip" && !createLikeTurn(turn)) return "HARNESS_PROBLEM";
+    if (c.cluster === "self_correction_safety_note_readonly" && !createLikeTurn(turn)) return "HARNESS_PROBLEM";
     if (c.sc_lane === "noisy_mobile_self_correction") return "HARNESS_PROBLEM";
     return "AMBIGUOUS_INPUT";
   }

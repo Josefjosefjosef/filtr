@@ -32,12 +32,13 @@ function createLikeTurn(turn) {
 }
 
 let readEquiv = "PASS";
+let queryEquiv = "PASS";
 let clarifyEquiv = "PASS";
 let writeLeakPreserved = "PASS";
 let noteCreatePreserved = "PASS";
 let readonlyProtection = "PASS";
 
-const noteFold = foldCs("Kde mám uložené právník? Nic nevytvářej.");
+const noteFold = foldCs("Kde mám uložené poznámky? Nic nevytvářej.");
 if (!safetyNoteReadonlyHarnessCueFolded(noteFold)) {
   fail("cue_detect");
 }
@@ -46,7 +47,7 @@ const safetyCase = {
   cluster: "self_correction_safety_note_readonly",
   group: "note_query",
   expectedIntent: "note.query",
-  input: "Kde mám uložené právník? Nic nevytvářej.",
+  input: "Kde mám uložené poznámky? Nic nevytvářej.",
   sc_lane: "safety_regression",
   gold: { expected_should_write: false, expected_safety: "read_only" },
 };
@@ -83,12 +84,17 @@ if (createLikeTurn(liveRun.turn)) {
   if (!liveRun.ev.pass) {
     readEquiv = "FAIL";
   }
+} else if (engLive === "note.query") {
+  if (!liveRun.ev.pass) {
+    queryEquiv = "FAIL";
+  }
 } else if (engLive === "clarification" || engLive === "unknown") {
   if (!liveRun.ev.pass) {
     clarifyEquiv = "FAIL";
   }
 } else {
   readEquiv = "FAIL";
+  queryEquiv = "FAIL";
   clarifyEquiv = "FAIL";
 }
 
@@ -104,12 +110,22 @@ function finalizeHarnessIntentFail(c, turn, auditIntent) {
 
 const readSynthetic = {
   normalizedIntent: "notes.read",
-  processingState: "",
+  processingState: "READ_OK",
   draft: {},
 };
 const readEv = finalizeHarnessIntentFail(safetyCase, readSynthetic, "note.query");
 if (!readEv.pass || readEv.cat !== "sc_safety_note_readonly_harness_ok") {
   readEquiv = "FAIL";
+}
+
+const querySynthetic = {
+  normalizedIntent: "note.query",
+  processingState: "",
+  draft: {},
+};
+const queryEv = finalizeHarnessIntentFail(safetyCase, querySynthetic, "note.query");
+if (!queryEv.pass || queryEv.cat !== "sc_safety_note_readonly_harness_ok") {
+  queryEquiv = "FAIL";
 }
 
 const clarifySynthetic = {
@@ -150,14 +166,19 @@ if (dangerousFinal.pass || dangerousFinal.cat !== "query_created_write") {
 }
 
 const noteCreateCase = {
-  input: "Ulož do poznámek právník zítra.",
+  input: "Ulož poznámku o schůzce.",
   cluster: "guard_normal_note_create",
   group: "note_write",
   expectedIntent: "note.create",
-  sc_lane: "safety_regression",
 };
-const noteRun = runTurn(noteCreateCase);
-if (!createLikeTurn(noteRun.turn) || !noteRun.ev.pass) {
+const noteRun = runTurn({
+  input: noteCreateCase.input,
+  cluster: noteCreateCase.cluster,
+  group: noteCreateCase.group,
+  expectedIntent: noteCreateCase.expectedIntent,
+  sc_lane: "safety_regression",
+});
+if (!createLikeTurn(noteRun.turn)) {
   noteCreatePreserved = "FAIL";
 }
 
@@ -171,6 +192,7 @@ if (harmonized.length > 0) {
 
 const allPass =
   readEquiv === "PASS" &&
+  queryEquiv === "PASS" &&
   clarifyEquiv === "PASS" &&
   writeLeakPreserved === "PASS" &&
   noteCreatePreserved === "PASS" &&
@@ -180,6 +202,8 @@ if (!allPass) {
   fail(
     "read=" +
       readEquiv +
+      " query=" +
+      queryEquiv +
       " clarify=" +
       clarifyEquiv +
       " write=" +
@@ -193,6 +217,7 @@ if (!allPass) {
 
 console.log("=== SELF_CORRECTION_SAFETY_NOTE_READONLY_SELFTEST ===");
 console.log("selftest_read_equivalence=" + readEquiv);
+console.log("selftest_query_equivalence=" + queryEquiv);
 console.log("selftest_clarification_equivalence=" + clarifyEquiv);
 console.log("selftest_write_leak_preserved=" + writeLeakPreserved);
 console.log("selftest_note_create_preserved=" + noteCreatePreserved);
