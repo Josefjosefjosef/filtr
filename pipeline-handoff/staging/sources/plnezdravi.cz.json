@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "plnezdravi.cz",
-  "ingestedAt": "2026-05-22T06:49:34.220082Z",
+  "ingestedAt": "2026-05-22T07:29:39.146778Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Rakovina tlustého střeva: Nepodceňujte screening",
+      "url": "https://www.plnezdravi.cz/rakovina-tlusteho-streva-nepodcenujte-screening/",
+      "dt": "2026-05-22T07:00:07Z",
+      "media_raw": "Plné zdraví",
+      "media_norm": "Plné zdraví",
+      "tokens": [
+        "nepodceňujte",
+        "rakovina",
+        "screening",
+        "střeva",
+        "tlustého"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_plnezdravi",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "plnezdravi.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -446,31 +468,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "plnezdravi.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Chodím, abych mohl chodit, říká rekordman pochodu Praha-Prčice",
-      "url": "https://www.plnezdravi.cz/chodim-abych-mohl-chodit-rika-rekordman-pochodu-praha-prcice/",
-      "dt": "2026-05-11T15:25:59Z",
-      "media_raw": "Plné zdraví",
-      "media_norm": "Plné zdraví",
-      "tokens": [
-        "abych",
-        "chodit",
-        "chodím",
-        "pochodu",
-        "praha",
-        "prčice",
-        "rekordman",
-        "říká"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_plnezdravi",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "plnezdravi.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -481,7 +478,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.plnezdravi.cz/feed/",
-      "bytes": 155979,
+      "bytes": 155079,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -518,7 +515,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-21T07:00:47Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T07:00:07Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -533,6 +530,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rakovina tlustého střeva: Nepodceňujte screening",
+            "publishedAt": "2026-05-22T07:00:07Z"
+          },
           {
             "title": "Dna a kyselina močová: Jak zkrotit nemoc králů?",
             "publishedAt": "2026-05-21T07:00:47Z"
@@ -560,10 +561,6 @@
           {
             "title": "Slábnoucí sluch: Jak zůstat v kontaktu s okolím?",
             "publishedAt": "2026-05-18T07:00:13Z"
-          },
-          {
-            "title": "Zvětšená prostata: Kdy je třeba zpozornět?",
-            "publishedAt": "2026-05-17T07:00:37Z"
           }
         ]
       }

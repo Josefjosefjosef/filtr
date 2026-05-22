@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-22T06:49:34.220082Z",
+  "ingestedAt": "2026-05-22T07:29:39.146778Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Vítejte drogy! Odvolání Béma nedává logiku",
+      "url": "https://www.epenize.eu/vitejte-drogy-odvolani-bema-nedava-logiku/",
+      "dt": "2026-05-22T06:15:38Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "béma",
+        "drogy",
+        "logiku",
+        "nedává",
+        "odvolání",
+        "vítejte"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -493,31 +516,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Klasická politická obrátka. Tvrdík oslavy zakázal a nyní je povolil",
-      "url": "https://www.epenize.eu/klasicka-politicka-obratka-tvrdik-oslavy-zakazal-a-nyni-je-povolil/",
-      "dt": "2026-05-14T07:13:48Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "klasická",
-        "nyní",
-        "obrátka",
-        "oslavy",
-        "politická",
-        "povolil",
-        "tvrdík",
-        "zakázal"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -528,7 +526,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 126509,
+      "bytes": 125134,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -565,10 +563,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-21T23:00:30Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T06:15:38Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 19,
+          "zpravy": 1,
+          "finance": 18,
           "zdravi": 1
         },
         "drop_counts": {
@@ -581,6 +580,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vítejte drogy! Odvolání Béma nedává logiku",
+            "publishedAt": "2026-05-22T06:15:38Z"
+          },
           {
             "title": "Peníze na benzín, prosím: Pokrytectví aljašského senátora v plné kráse",
             "publishedAt": "2026-05-21T23:00:30Z"
@@ -608,10 +611,6 @@
           {
             "title": "Buranská politika. Redaktor ani nepoloží otázku a už ho premiér tepe",
             "publishedAt": "2026-05-19T06:26:44Z"
-          },
-          {
-            "title": "Trumpovo rodné město mu uspořádalo memoriál: S Epsteinem a 24 hodin v kuse",
-            "publishedAt": "2026-05-18T23:00:30Z"
           }
         ]
       }

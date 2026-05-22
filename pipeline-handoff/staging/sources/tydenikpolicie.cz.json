@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-22T06:49:34.220082Z",
+  "ingestedAt": "2026-05-22T07:29:39.146778Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Kriminalisté sestavili identikit kurýra, kterému žena na popud falešného kriminalisty předala stovky tisíc korun",
+      "url": "https://tydenikpolicie.cz/kriminaliste-sestavili-identikit-kuryra-kteremu-zena-na-popud-falesneho-kriminalisty-predala-stovky-tisic-korun/",
+      "dt": "2026-05-22T06:46:42Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "falešného",
+        "identikit",
+        "korun",
+        "kriminalisty",
+        "kriminalisté",
+        "kterému",
+        "kurýra",
+        "popud",
+        "předala",
+        "sestavili",
+        "stovky",
+        "tisíc",
+        "žena"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -242,35 +272,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Žena v Praze spadla nešťastnou náhodou pod soupravu metra. Lidé zastavili provoz nouzovým tlačítkem",
-      "url": "https://tydenikpolicie.cz/zena-v-praze-spadla-nestastnou-nahodou-pod-soupravu-metra-lide-zastavili-provoz-nouzovym-tlacitkem/",
-      "dt": "2026-05-21T12:11:28Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "lidé",
-        "metra",
-        "nešťastnou",
-        "nouzovým",
-        "náhodou",
-        "praze",
-        "provoz",
-        "soupravu",
-        "spadla",
-        "tlačítkem",
-        "zastavili",
-        "žena"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16142,
+      "bytes": 16070,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,7 +319,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-22T06:42:07Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T06:46:42Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -333,6 +334,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kriminalisté sestavili identikit kurýra, kterému žena na popud falešného kriminalisty předala stovky tisíc korun",
+            "publishedAt": "2026-05-22T06:46:42Z"
+          },
           {
             "title": "Žena naletěla falešnému kriminalistovi. Stovky tisíc korun v obálce předala podvodníkovi",
             "publishedAt": "2026-05-22T06:42:07Z"
@@ -360,10 +365,6 @@
           {
             "title": "Kriminalisté prověřují napadení u střední školy v Pardubicích. Pobodaná dívka zemřela v nemocnici",
             "publishedAt": "2026-05-21T12:32:57Z"
-          },
-          {
-            "title": "Náchodští kriminalisté rozbili síť distributorů drog. Zadrželi tři podezřelé",
-            "publishedAt": "2026-05-21T12:23:25Z"
           }
         ]
       }

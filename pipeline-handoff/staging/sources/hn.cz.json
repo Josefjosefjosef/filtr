@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-22T06:49:34.220082Z",
+  "ingestedAt": "2026-05-22T07:29:39.146778Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Lenovo zdvojnásobilo čtvrtletní zisk, zaznamenalo taky rekordní tržby. Firmě pomohl strach ze zdražování čipů",
+      "url": "https://byznys.hn.cz/c1-67880780-lenovo-zdvojnasobilo-ctvrtletni-zisk-zaznamenalo-taky-rekordni-trzby-firme-pomohl-strach-ze-zdrazovani-cipu",
+      "dt": "2026-05-22T06:47:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "firmě",
+        "lenovo",
+        "pomohl",
+        "rekordní",
+        "strach",
+        "taky",
+        "tržby",
+        "zaznamenalo",
+        "zdražování",
+        "zdvojnásobilo",
+        "zisk",
+        "čipů",
+        "čtvrtletní"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -891,36 +921,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Andrej Babiš a spol. vaří českou společnost jako žábu. Neschopnost a všehoschopnost se začínají považovat za standard",
-      "url": "https://archiv.hn.cz/c1-67880160-andrej-babis-a-spol-vari-ceskou-spolecnost-jako-zabu-neschopnost-a-vsehoschopnost-se-zacinaji-povazovat-za-standard",
-      "dt": "2026-05-21T14:02:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "andrej",
-        "babiš",
-        "jako",
-        "neschopnost",
-        "považovat",
-        "spol",
-        "společnost",
-        "standard",
-        "vaří",
-        "všehoschopnost",
-        "začínají",
-        "českou",
-        "žábu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -931,7 +931,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 178713,
+      "bytes": 178785,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -968,7 +968,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-22T06:23:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T06:47:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 36,
@@ -985,6 +985,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lenovo zdvojnásobilo čtvrtletní zisk, zaznamenalo taky rekordní tržby. Firmě pomohl strach ze zdražování čipů",
+            "publishedAt": "2026-05-22T06:47:00Z"
+          },
           {
             "title": "Desítky procent ročně a nezávislost na akciích. Jak fungují investice, o kterých většina lidí neslyšela",
             "publishedAt": "2026-05-22T06:23:00Z"
@@ -1011,10 +1015,6 @@
           },
           {
             "title": "Kurátor",
-            "publishedAt": "2026-05-21T22:00:00Z"
-          },
-          {
-            "title": "Kosmetické tahy",
             "publishedAt": "2026-05-21T22:00:00Z"
           }
         ]

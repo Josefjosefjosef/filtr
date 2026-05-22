@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-22T06:49:34.220082Z",
+  "ingestedAt": "2026-05-22T07:29:39.146778Z",
   "items": [
     {
       "section": "veda",
@@ -24,6 +24,31 @@
         "ukážou",
         "vybrali",
         "vám"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Na optice už surfuje více Čechů než na VDSL. Tento rok pokoří i Wi-Fi",
+      "url": "https://www.zive.cz/clanky/na-optice-uz-surfuje-vice-cechu-nez-na-vdsl-tento-rok-pokori-i-wi-fi/sc-3-a-241319/default.aspx",
+      "dt": "2026-05-22T06:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "než",
+        "optice",
+        "pokoří",
+        "rok",
+        "surfuje",
+        "tento",
+        "vdsl",
+        "čechů"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -943,32 +968,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Musk prohrál soud s Altmanem a OpenAI. Žalobu podal příliš pozdě",
-      "url": "https://www.zive.cz/clanky/musk-prohral-soud-s-altmanem-a-openai-zalobu-podal-prilis-pozde/sc-3-a-241244/default.aspx",
-      "dt": "2026-05-19T11:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "altmanem",
-        "musk",
-        "openai",
-        "podal",
-        "pozdě",
-        "prohrál",
-        "příliš",
-        "soud",
-        "žalobu"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -979,7 +978,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22734,
+      "bytes": 22728,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1016,7 +1015,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-22T05:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T06:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1034,6 +1033,10 @@
           {
             "title": "S jakou navigací na dovolenou v roce 2026? Vybrali jsme 12 nejlepších aplikací, které vám ukážou cestu",
             "publishedAt": "2026-05-21T16:45:00Z"
+          },
+          {
+            "title": "Na optice už surfuje více Čechů než na VDSL. Tento rok pokoří i Wi-Fi",
+            "publishedAt": "2026-05-22T06:45:00Z"
           },
           {
             "title": "Hry zadarmo, nebo se slevou: Alan Wake za dvacku a tři díly série Tomb Raider zdarma",
@@ -1058,10 +1061,6 @@
           {
             "title": "AlzaPlus+ slaví čtyři roky. Nejaktivnější zákazník s tímto programem udělá dvě objednávky denně",
             "publishedAt": "2026-05-21T11:45:00Z"
-          },
-          {
-            "title": "Recenze filmu Mandalorian a Grogu: Star Wars konečně zase baví dobrodružstvím. Jen připomíná zkrácenou sérii",
-            "publishedAt": "2026-05-21T12:45:00Z"
           }
         ]
       }

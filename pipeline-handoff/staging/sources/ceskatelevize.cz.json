@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-22T06:49:34.220082Z",
+  "ingestedAt": "2026-05-22T07:29:39.146778Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Evropa bude svou roli v NATO dál posilovat, řekl Rutte",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/evropa-bude-svou-roli-v-nato-dal-posilovat-rekl-rutte-373729",
+      "dt": "2026-05-22T07:20:05Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "evropa",
+        "nato",
+        "posilovat",
+        "roli",
+        "rutte",
+        "svou",
+        "řekl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -737,25 +761,27 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Masopust končí ve funci ředitele Ústřední vojenské nemocnice",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/masopust-konci-ve-funci-reditele-ustredni-vojenske-nemocnice-373696",
-      "dt": "2026-05-21T10:37:07Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Rada věří Dukle a dodává: Pořád je v českém fotbale skrytý červíček",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/rada-veri-dukle-a-dodava-porad-je-v-ceskem-fotbale-skryty-cervicek-156938",
+      "dt": "2026-05-22T07:00:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "funci",
-        "končí",
-        "masopust",
-        "nemocnice",
-        "vojenské",
-        "ústřední",
-        "ředitele"
+        "dodává",
+        "dukle",
+        "fotbale",
+        "pořád",
+        "rada",
+        "skrytý",
+        "věří",
+        "červíček",
+        "českém"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1475,31 +1501,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Házenkářky Kynžvartu vyrovnaly ve finálové sérii, Most získal bronz",
-      "url": "https://sport.ceskatelevize.cz/clanek/hazena/hazenkarky-kynzvartu-vyrovnaly-ve-finalove-serii-most-ziskal-bronz-156917",
-      "dt": "2026-05-20T19:22:13Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "bronz",
-        "finálové",
-        "házenkářky",
-        "kynžvartu",
-        "most",
-        "sérii",
-        "vyrovnaly",
-        "získal"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1510,7 +1511,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43015,
+      "bytes": 43003,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1570,7 +1571,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T06:06:51Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T07:20:05Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1587,6 +1588,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Evropa bude svou roli v NATO dál posilovat, řekl Rutte",
+            "publishedAt": "2026-05-22T07:20:05Z"
+          },
           {
             "title": "USA chtějí vyhostit sestru šéfky kubánského konglomerátu, tlak na Havanu sílí",
             "publishedAt": "2026-05-22T06:06:51Z"
@@ -1614,10 +1619,6 @@
           {
             "title": "USA vyšlou do Polska dalších pět tisíc vojáků, oznámil Trump",
             "publishedAt": "2026-05-21T21:09:51Z"
-          },
-          {
-            "title": "Ozbrojenci zabili v Hondurasu nejméně šestnáct lidí",
-            "publishedAt": "2026-05-21T21:01:21Z"
           }
         ]
       }
@@ -1629,7 +1630,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36445,
+      "bytes": 36487,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1666,7 +1667,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T06:01:54Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T07:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1681,6 +1682,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rada věří Dukle a dodává: Pořád je v českém fotbale skrytý červíček",
+            "publishedAt": "2026-05-22T07:00:00Z"
+          },
           {
             "title": "Knicks porazili Cleveland v semifinále i podruhé",
             "publishedAt": "2026-05-22T06:01:54Z"
@@ -1708,10 +1713,6 @@
           {
             "title": "První varování na MS pro Kanadu. Norové hráli hodně fyzicky, řekl Scheifele. Úleva, přidal Cozens",
             "publishedAt": "2026-05-21T18:45:06Z"
-          },
-          {
-            "title": "Sochůrek: Kdybych se dostal na mistrovství světa, byl by to splněný sen",
-            "publishedAt": "2026-05-21T16:50:59Z"
           }
         ]
       }
@@ -1723,7 +1724,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77783,
+      "bytes": 77866,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-22T06:49:34.220082Z",
+  "ingestedAt": "2026-05-22T07:29:39.146778Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Moskva osázela náměstí umělou levandulí. Smrdí a za tepla ztrácí tvar, stěžují si lidé",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/rusko-moskva-plastova-levandule-kritika-zapach.A260522_085443_zahranicni_dtt",
+      "dt": "2026-05-22T07:14:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "levandulí",
+        "lidé",
+        "moskva",
+        "náměstí",
+        "osázela",
+        "smrdí",
+        "stěžují",
+        "tepla",
+        "tvar",
+        "umělou",
+        "ztrácí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -767,34 +795,6 @@
         "sudetský",
         "zrušení",
         "žádá"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Jak dal van der Poel za pravdu Štybarovi. Vyjížďku s MAFRA ozdobily cyklistické legendy",
-      "url": "https://www.idnes.cz/zpravy/mediahub/social-ride-mafra-zdenek-stybar-jan-svorada.A260521_155048_mediahub_ber",
-      "dt": "2026-05-21T14:30:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "cyklistické",
-        "dal",
-        "der",
-        "legendy",
-        "mafra",
-        "ozdobily",
-        "poel",
-        "pravdu",
-        "van",
-        "vyjížďku",
-        "štybarovi"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1594,7 +1594,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48888,
+      "bytes": 49508,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1631,7 +1631,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T06:41:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T07:14:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1648,6 +1648,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Moskva osázela náměstí umělou levandulí. Smrdí a za tepla ztrácí tvar, stěžují si lidé",
+            "publishedAt": "2026-05-22T07:14:00Z"
+          },
           {
             "title": "GIBS zajistila přes deset litrů tekuté extáze. Část doma užíval pražský policista",
             "publishedAt": "2026-05-22T06:41:00Z"
@@ -1675,10 +1679,6 @@
           {
             "title": "USA zadržely sestru šéfky konglomerátu Gaesa, který ovládají Castrovi lidé",
             "publishedAt": "2026-05-22T04:14:00Z"
-          },
-          {
-            "title": "Komfort jako u plynu, ale za polovic. Moderní kotle vytopí dům i firmu",
-            "publishedAt": "2026-05-22T03:00:00Z"
           }
         ]
       }
