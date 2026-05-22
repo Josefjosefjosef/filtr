@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-05-22T08:10:05.795715Z",
+  "ingestedAt": "2026-05-22T08:49:39.002253Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Ledovec soudného dne praská. Jeho úlomek má mít 1500 čtverečních kilometrů",
+      "url": "https://www.lidovky.cz/orientace/thwaitesuv-ledovec-soudneho-dne-antarktida-globalni-oteplovani-ocean-teni-zemetreseni-vychodni-ledov.A260519_105937_ln-orientace_lrj",
+      "dt": "2026-05-22T08:02:03Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "1500",
+        "dne",
+        "jeho",
+        "kilometrů",
+        "ledovec",
+        "mít",
+        "praská",
+        "soudného",
+        "úlomek",
+        "čtverečních"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -739,30 +766,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Bizarní dopravní prostředky, které předběhly dobu či zabloudily v čase",
-      "url": "https://www.idnes.cz/technet/technika/bizarni-dopravni-prostredky.A260511_100526_tec_technika_alv/foto",
-      "dt": "2026-05-11T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "bizarní",
-        "dobu",
-        "dopravní",
-        "prostředky",
-        "předběhly",
-        "zabloudily",
-        "čase"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -773,7 +776,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 46341,
+      "bytes": 45921,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -810,11 +813,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T00:08:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T08:02:03Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 17,
-          "zpravy": 13
+          "other": 18,
+          "zpravy": 12
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -826,6 +829,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ledovec soudného dne praská. Jeho úlomek má mít 1500 čtverečních kilometrů",
+            "publishedAt": "2026-05-22T08:02:03Z"
+          },
           {
             "title": "Start megarakety Starship V3 byl z technických důvodů o den odložen",
             "publishedAt": "2026-05-22T00:08:00Z"
@@ -853,10 +860,6 @@
           {
             "title": "Modrý měsíc 2026: Vzácný úplněk 31. května provází slavný omyl",
             "publishedAt": "2026-05-20T02:00:00Z"
-          },
-          {
-            "title": "Starý zvětšovák nevyhazujte. Propojte jej s mobilem a ulehčete si práci",
-            "publishedAt": "2026-05-19T22:00:00Z"
           }
         ]
       }

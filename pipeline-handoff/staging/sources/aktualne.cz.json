@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-22T08:10:05.795715Z",
+  "ingestedAt": "2026-05-22T08:49:39.002253Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Prezidenti Česka a Německa věří, že se události v Brně ponesou v duchu porozumění",
+      "url": "https://zpravy.aktualne.cz/domaci/prezidenti-ceska-a-nemecka-veri-ze-se-udalosti-v-brne-ponesou-v-duchu-porozumeni/r~aaa29f46813406c6ecbbfcccd6862ed6/",
+      "dt": "2026-05-22T08:28:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "brně",
+        "duchu",
+        "německa",
+        "ponesou",
+        "porozumění",
+        "prezidenti",
+        "události",
+        "věří",
+        "česka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Dobeš se znovu zapsal do historie Montrealu a zlomil neporazitelnost Caroliny",
+      "url": "https://sport.aktualne.cz/hokej/dobes-se-znovu-zapsal-do-historie-montrealu-a-zlomil-domaci-neporazitelnost-caroliny/r~aaa2901d0091ea4658c4b9f73ae13b01/",
+      "dt": "2026-05-22T08:06:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "caroliny",
+        "dobeš",
+        "historie",
+        "montrealu",
+        "neporazitelnost",
+        "zapsal",
+        "zlomil",
+        "znovu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -476,62 +527,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kdo slevil nejvíc? Cenová válka automobilek v Česku pokračuje, někdo „dává“ až půl milionu",
-      "url": "https://zpravy.aktualne.cz/ekonomika/auto/nove-automobily/kdo-slevil-nejvic-cenova-valka-automobilek-v-cesku-pokracuje-nekdo-dava-az-pul-milionu/r~aaa29988cb4c493ad79204ffe3d9e79c/",
-      "dt": "2026-05-22T03:45:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "automobilek",
-        "cenová",
-        "dává",
-        "milionu",
-        "nejvíc",
-        "někdo",
-        "pokračuje",
-        "půl",
-        "slevil",
-        "válka",
-        "česku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nechtěli, aby lidé věděli, co se v lesích stalo. Velikonoční masakr patří k nejtemnějším událostem Jizerek",
-      "url": "https://magazin.aktualne.cz/nechteli-aby-lide-vedeli-co-se-v-lesich-stalo-velikonocni-masakr-patri-k-nejtemnejsim-udalostem-jizerek/r~aaa29888acf894f520c8cca7c307d318/",
-      "dt": "2026-05-22T03:45:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "jizerek",
-        "lesích",
-        "lidé",
-        "masakr",
-        "nechtěli",
-        "nejtemnějším",
-        "patří",
-        "stalo",
-        "událostem",
-        "velikonoční",
-        "věděli"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -542,7 +537,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22548,
+      "bytes": 22206,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -579,14 +574,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-22T07:52:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T08:28:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 12,
-          "sport": 4,
+          "sport": 5,
           "other": 2,
-          "zdravi": 1,
-          "finance": 1
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -598,6 +592,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Prezidenti Česka a Německa věří, že se události v Brně ponesou v duchu porozumění",
+            "publishedAt": "2026-05-22T08:28:00Z"
+          },
+          {
+            "title": "Dobeš se znovu zapsal do historie Montrealu a zlomil neporazitelnost Caroliny",
+            "publishedAt": "2026-05-22T08:06:00Z"
+          },
           {
             "title": "Odpůrci sjezdu sudetských Němců na výstavišti v Brně postavili barikádu z krabic",
             "publishedAt": "2026-05-22T07:52:00Z"
@@ -621,14 +623,6 @@
           {
             "title": "GIBS při razii zajistila litry tekuté extáze, obviněn je i policista",
             "publishedAt": "2026-05-22T07:00:00Z"
-          },
-          {
-            "title": "„Nejhorší možný konec.“ Co se stalo v Pardubicích?",
-            "publishedAt": "2026-05-22T07:06:00Z"
-          },
-          {
-            "title": "Rubio poděkoval Česku za přijetí Američana, který byl v kontaktu s ebolou. Babiš mlčí",
-            "publishedAt": "2026-05-22T05:53:00Z"
           }
         ]
       }

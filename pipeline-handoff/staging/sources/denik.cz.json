@@ -1,12 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-22T08:10:05.795715Z",
+  "ingestedAt": "2026-05-22T08:49:39.002253Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Mnich i vozová hradba proti sudetoněmeckému sjezdu v Brně: Je to směšné, zaznívá",
+      "title": "Śéf americké diplomacie ocenil přijetí lékaře ohroženého ebolou Českem",
+      "url": "https://www.denik.cz/ze_sveta/marco-rubio-ebola-cesko-podekovani.html",
+      "dt": "2026-05-22T08:04:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "americké",
+        "diplomacie",
+        "ebolou",
+        "lékaře",
+        "ocenil",
+        "ohroženého",
+        "přijetí",
+        "českem",
+        "śéf"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Protest proti sjezdu sudetských Němců v Brně: U výstaviště vznikla vozová hradba",
       "url": "https://www.denik.cz/regiony/brno-sjezd-sudetskych-nemcu-protest-vystaviste-mnich-vozova-hradba.html",
       "dt": "2026-05-22T07:42:00Z",
       "media_raw": "Deník",
@@ -14,13 +40,14 @@
       "tokens": [
         "brně",
         "hradba",
-        "mnich",
+        "němců",
+        "protest",
         "proti",
         "sjezdu",
-        "směšné",
-        "sudetoněmeckému",
+        "sudetských",
         "vozová",
-        "zaznívá"
+        "vznikla",
+        "výstaviště"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -32,7 +59,7 @@
     {
       "section": "doprava",
       "contentType": "article",
-      "title": "V Ondřejově u Prahy narazilo auto do domu, spolujezdkyně nehodu nepřežila",
+      "title": "Tragédie u Prahy: Auto v Ondřejově narazilo do domu, spolujezdkyně zemřela",
       "url": "https://www.denik.cz/nehody/v-ondrejove-u-prahy-narazilo-auto-do-domu-spolujezdkyne-nehodu-neprezila-2026052.html",
       "dt": "2026-05-22T07:08:00Z",
       "media_raw": "Deník",
@@ -41,11 +68,11 @@
         "auto",
         "domu",
         "narazilo",
-        "nehodu",
-        "nepřežila",
         "ondřejově",
         "prahy",
-        "spolujezdkyně"
+        "spolujezdkyně",
+        "tragédie",
+        "zemřela"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -619,32 +646,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Americký lékař na izolaci v ČR: Hrozí šíření eboly? Odborníci uklidňují obavy",
-      "url": "https://www.denik.cz/zdravotnictvi/ebola-pacient-cesko-izolace-nakaza-rizika-sireni-otazky-odpovedi.html",
-      "dt": "2026-05-21T14:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "americký",
-        "eboly",
-        "hrozí",
-        "izolaci",
-        "lékař",
-        "obavy",
-        "odborníci",
-        "uklidňují",
-        "šíření"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -655,7 +656,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29401,
+      "bytes": 28960,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -692,11 +693,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-22T07:42:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T08:04:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 24,
-          "zdravi": 1
+          "zpravy": 25
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -709,11 +709,15 @@
         },
         "sample_titles": [
           {
-            "title": "Mnich i vozová hradba proti sudetoněmeckému sjezdu v Brně: Je to směšné, zaznívá",
+            "title": "Śéf americké diplomacie ocenil přijetí lékaře ohroženého ebolou Českem",
+            "publishedAt": "2026-05-22T08:04:00Z"
+          },
+          {
+            "title": "Protest proti sjezdu sudetských Němců v Brně: U výstaviště vznikla vozová hradba",
             "publishedAt": "2026-05-22T07:42:00Z"
           },
           {
-            "title": "V Ondřejově u Prahy narazilo auto do domu, spolujezdkyně nehodu nepřežila",
+            "title": "Tragédie u Prahy: Auto v Ondřejově narazilo do domu, spolujezdkyně zemřela",
             "publishedAt": "2026-05-22T07:08:00Z"
           },
           {
@@ -735,10 +739,6 @@
           {
             "title": "Hřebejk o smrti sestry i Havlovi s nahou studentkou. Kniha odhaluje jeho život",
             "publishedAt": "2026-05-22T05:00:00Z"
-          },
-          {
-            "title": "Trump oznámil vyslání více vojáků do Polska. Nawrocki poděkoval",
-            "publishedAt": "2026-05-22T04:44:00Z"
           }
         ]
       }
