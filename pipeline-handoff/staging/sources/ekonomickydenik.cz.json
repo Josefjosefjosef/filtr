@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-22T04:10:01.804168Z",
+  "ingestedAt": "2026-05-22T04:49:55.152780Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Fixní, flexi, nebo protiinflační? Experti radí, jak vybrat ten správný Dluhopis republiky",
+      "url": "https://ekonomickydenik.cz/dluhopisy-republiky-pohledem-expertu/",
+      "dt": "2026-05-22T04:30:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dluhopis",
+        "experti",
+        "fixní",
+        "flexi",
+        "nebo",
+        "protiinflační",
+        "radí",
+        "republiky",
+        "správný",
+        "ten",
+        "vybrat"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -757,34 +785,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Babiš: Letenky na summit NATO drží v hrsti moje vláda. O delegaci rozhodne 8. června",
-      "url": "https://ekonomickydenik.cz/babis-letenky-summit-nato-vlada-pavel/",
-      "dt": "2026-05-20T10:38:53Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "babiš",
-        "delegaci",
-        "drží",
-        "hrsti",
-        "letenky",
-        "moje",
-        "nato",
-        "rozhodne",
-        "summit",
-        "vláda",
-        "června"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 75051,
+      "bytes": 75156,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,14 +832,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-21T18:01:43Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T04:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 18,
+          "finance": 19,
           "zdravi": 3,
           "sport": 1,
-          "zpravy": 7,
-          "cestovani": 1
+          "zpravy": 7
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -851,6 +850,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fixní, flexi, nebo protiinflační? Experti radí, jak vybrat ten správný Dluhopis republiky",
+            "publishedAt": "2026-05-22T04:30:00Z"
+          },
           {
             "title": "„Lukašenkova vyjádření nemají žádnou váhu,“ zní z Kyjeva. Ukrajina dál opevňuje hranice",
             "publishedAt": "2026-05-21T18:01:43Z"
@@ -878,10 +881,6 @@
           {
             "title": "Krize v zemědělství: pomrzlé ovoce, drahá hnojiva a mléko se nevyplácí. Pomůže Babiš?",
             "publishedAt": "2026-05-21T11:57:27Z"
-          },
-          {
-            "title": "Tenhle nákup se státu vyplatil. Plynové zásobníky přinášejí miliardové zisky",
-            "publishedAt": "2026-05-21T11:52:40Z"
           }
         ]
       }

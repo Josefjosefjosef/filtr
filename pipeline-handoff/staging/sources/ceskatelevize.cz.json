@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-22T04:10:01.804168Z",
+  "ingestedAt": "2026-05-22T04:49:55.152780Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Válka USA s Íránem má výrazný dopad na srílanský čajový průmysl",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/valka-usa-s-iranem-ma-vyrazny-dopad-na-srilansky-cajovy-prumysl-373714",
+      "dt": "2026-05-22T04:30:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dopad",
+        "průmysl",
+        "srílanský",
+        "usa",
+        "válka",
+        "výrazný",
+        "íránem",
+        "čajový"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -729,31 +754,6 @@
         "ohledně",
         "policie",
         "zakázek"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "SpaceX míří na burzu a chce výrazně překonat saúdské těžaře",
-      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/spacex-miri-na-burzu-a-chce-vyrazne-prekonat-saudske-tezare-373691",
-      "dt": "2026-05-21T09:36:45Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "burzu",
-        "chce",
-        "míří",
-        "překonat",
-        "saúdské",
-        "spacex",
-        "těžaře",
-        "výrazně"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1514,7 +1514,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41966,
+      "bytes": 42239,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1574,11 +1574,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T04:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
-          "finance": 2,
+          "zpravy": 26,
+          "finance": 1,
           "other": 3
         },
         "drop_counts": {
@@ -1591,6 +1591,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Válka USA s Íránem má výrazný dopad na srílanský čajový průmysl",
+            "publishedAt": "2026-05-22T04:30:00Z"
+          },
           {
             "title": "Vysoký počet obcí přináší komplikace. Slučování také, namítají samosprávy",
             "publishedAt": "2026-05-22T04:00:00Z"
@@ -1618,10 +1622,6 @@
           {
             "title": "Němečtí poslanci schválili stavbu vysokorychlostní trati Drážďany–Praha",
             "publishedAt": "2026-05-21T18:26:12Z"
-          },
-          {
-            "title": "Hospodářství táhne spotřeba domácností a nově i investice firem, řekl ekonom Marek",
-            "publishedAt": "2026-05-21T18:21:48Z"
           }
         ]
       }
@@ -1727,7 +1727,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77692,
+      "bytes": 77682,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

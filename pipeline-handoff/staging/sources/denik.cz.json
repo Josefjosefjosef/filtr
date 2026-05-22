@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-22T04:10:01.804168Z",
+  "ingestedAt": "2026-05-22T04:49:55.152780Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Sudetští Němci se už 22 let mohou vrátit do Česka. Ale nevrací se, říká Rouček",
+      "url": "https://www.denik.cz/z_domova/sudetsti-nemci-brno-sjezd-libor-roucek-rozhovor.html",
+      "dt": "2026-05-22T04:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ale",
+        "let",
+        "nevrací",
+        "němci",
+        "rouček",
+        "sudetští",
+        "vrátit",
+        "česka",
+        "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -617,31 +643,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Obyvatele Záhřebu terorizují vrány. Odborníci radí lidem, jak se bránit",
-      "url": "https://www.denik.cz/staty-eu/chorvatsko-sede-vrany-chrani-mlade.html",
-      "dt": "2026-05-21T10:40:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bránit",
-        "lidem",
-        "obyvatele",
-        "odborníci",
-        "radí",
-        "terorizují",
-        "vrány",
-        "záhřebu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -652,7 +653,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29268,
+      "bytes": 29487,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -689,7 +690,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-22T03:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T04:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -705,6 +706,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sudetští Němci se už 22 let mohou vrátit do Česka. Ale nevrací se, říká Rouček",
+            "publishedAt": "2026-05-22T04:30:00Z"
+          },
           {
             "title": "Archeoskanzen představuje poklady Velké Moravy. Klenotnice vznikla v podzemí",
             "publishedAt": "2026-05-22T03:55:00Z"
@@ -732,10 +737,6 @@
           {
             "title": "Němečtí poslanci schválili záměr na stavbu vysokorychlostní trati Drážďany-Praha",
             "publishedAt": "2026-05-21T19:40:00Z"
-          },
-          {
-            "title": "V Maroku se zřítila obytná budova, zemřelo nejméně devět lidí",
-            "publishedAt": "2026-05-21T19:30:00Z"
           }
         ]
       }

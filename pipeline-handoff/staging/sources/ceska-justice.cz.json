@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-05-22T04:10:01.804168Z",
+  "ingestedAt": "2026-05-22T04:49:55.152780Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nezaplacená pokuta může zkazit dovolenou. Celníci radí, kde si to ověřit",
+      "url": "https://www.ceska-justice.cz/2026/05/nezaplacena-pokuta-dovolena-celnici/",
+      "dt": "2026-05-22T04:15:00Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "celníci",
+        "dovolenou",
+        "nezaplacená",
+        "ověřit",
+        "pokuta",
+        "radí",
+        "zkazit"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -238,31 +262,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Konec tunelování bez trestu? Insolvenční správci vytahují novou zbraň",
-      "url": "https://www.ceska-justice.cz/2026/05/konec-tunelovani-bez-trestu-insolvencni-spravci-nova-zbran/",
-      "dt": "2026-05-21T04:05:00Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "insolvenční",
-        "konec",
-        "novou",
-        "správci",
-        "trestu",
-        "tunelování",
-        "vytahují",
-        "zbraň"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -273,7 +272,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 121352,
+      "bytes": 106505,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -310,7 +309,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-21T15:28:14Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T04:15:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -325,6 +324,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nezaplacená pokuta může zkazit dovolenou. Celníci radí, kde si to ověřit",
+            "publishedAt": "2026-05-22T04:15:00Z"
+          },
           {
             "title": "Bradáčové vadí, že výtka pro Lastoveckou nepopisuje ohrožení bitcoinové kauzy",
             "publishedAt": "2026-05-21T15:28:14Z"
@@ -352,10 +355,6 @@
           {
             "title": "Ševčík je překvapený. Soud i po zásahu NSS znovu potvrdil jeho odvolání",
             "publishedAt": "2026-05-21T04:45:16Z"
-          },
-          {
-            "title": "Jako jediní v EU. Česko odmítlo podpořit tvrdší postup proti klimatickým škodám",
-            "publishedAt": "2026-05-21T04:37:37Z"
           }
         ]
       }
