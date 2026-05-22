@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-22T06:11:25.413201Z",
+  "ingestedAt": "2026-05-22T06:49:34.220082Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Desítky procent ročně a nezávislost na akciích. Jak fungují investice, o kterých většina lidí neslyšela",
+      "url": "https://podcasty.hn.cz/c1-67880190-desitky-procent-rocne-a-nezavislost-na-akciich-jak-funguji-investice-o-kterych-vetsina-lidi-neslysela",
+      "dt": "2026-05-22T06:23:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "akciích",
+        "desítky",
+        "fungují",
+        "investice",
+        "kterých",
+        "lidí",
+        "neslyšela",
+        "nezávislost",
+        "procent",
+        "ročně",
+        "většina"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -893,34 +921,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Druhá inflační vlna bohužel asi fakt přichází. Na dluhopisových trzích je opět rudo",
-      "url": "https://investice.hn.cz/c1-67880150-druha-inflacni-vlna-bohuzel-asi-fakt-prichazi-na-dluhopisovych-trzich-je-opet-rudo",
-      "dt": "2026-05-21T13:41:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "asi",
-        "bohužel",
-        "dluhopisových",
-        "druhá",
-        "fakt",
-        "inflační",
-        "opět",
-        "přichází",
-        "rudo",
-        "trzích",
-        "vlna"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -931,7 +931,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 178688,
+      "bytes": 178713,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -968,7 +968,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-22T05:08:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T06:23:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 36,
@@ -985,6 +985,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Desítky procent ročně a nezávislost na akciích. Jak fungují investice, o kterých většina lidí neslyšela",
+            "publishedAt": "2026-05-22T06:23:00Z"
+          },
           {
             "title": "Radary, pušky, média. Jak Česko brání Moldavsko před Ruskem a co je podle prezidentky Sanduové nejlepší projekt na Zemi",
             "publishedAt": "2026-05-22T05:08:00Z"
@@ -1011,10 +1015,6 @@
           },
           {
             "title": "Kosmetické tahy",
-            "publishedAt": "2026-05-21T22:00:00Z"
-          },
-          {
-            "title": "Zlatý grál",
             "publishedAt": "2026-05-21T22:00:00Z"
           }
         ]

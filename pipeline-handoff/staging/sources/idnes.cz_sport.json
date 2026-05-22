@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-22T06:11:25.413201Z",
+  "ingestedAt": "2026-05-22T06:49:34.220082Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Tým, který má šmrnc. I povzbudivý signál. Koubkův mírný pokrok v mezích možností",
+      "url": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/miroslav-koubek-nominace-ms-2026-prekvapeni-analyza.A260521_183755_ms-fotbal_czo",
+      "dt": "2026-05-22T06:26:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "koubkův",
+        "mezích",
+        "možností",
+        "mírný",
+        "pokrok",
+        "povzbudivý",
+        "signál",
+        "tým",
+        "šmrnc"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -749,32 +775,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dostálův možný konkurent, který deptal Čechy. Umí se zbláznit, chválili Claru",
-      "url": "https://www.idnes.cz/hokej/ms-2026/cesko-italie-damian-clara-brankar.A260521_090947_ms-hokej-2026_drev",
-      "dt": "2026-05-21T13:10:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "chválili",
-        "claru",
-        "deptal",
-        "dostálův",
-        "konkurent",
-        "možný",
-        "umí",
-        "zbláznit",
-        "čechy"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -785,7 +785,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45845,
+      "bytes": 45567,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -822,7 +822,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T05:54:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T06:26:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -837,6 +837,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tým, který má šmrnc. I povzbudivý signál. Koubkův mírný pokrok v mezích možností",
+            "publishedAt": "2026-05-22T06:26:00Z"
+          },
           {
             "title": "Knicks dál sviští Východem. Druhý bod jim zajistil Hart, Cleveland musí zabrat doma",
             "publishedAt": "2026-05-22T05:54:00Z"
@@ -864,10 +868,6 @@
           {
             "title": "Pavouk MS v hokeji 2026: program play off a možní soupeři Česka ve čtvrtfinále",
             "publishedAt": "2026-05-21T21:48:00Z"
-          },
-          {
-            "title": "MS v hokeji 2026 ONLINE: Reprezentace má volné dny, v sobotu vyzve Slováky",
-            "publishedAt": "2026-05-21T21:07:00Z"
           }
         ]
       }

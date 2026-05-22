@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-22T06:11:25.413201Z",
+  "ingestedAt": "2026-05-22T06:49:34.220082Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "USA chtějí vyhostit sestru šéfky kubánského konglomerátu, tlak na Havanu sílí",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/usa-chteji-vyhostit-sestru-sefky-kubanskeho-konglomeratu-tlak-na-havanu-sili-373725",
+      "dt": "2026-05-22T06:06:51Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "chtějí",
+        "havanu",
+        "konglomerátu",
+        "kubánského",
+        "sestru",
+        "sílí",
+        "tlak",
+        "usa",
+        "vyhostit",
+        "šéfky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -734,42 +761,18 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "USA se bránily návratu lékaře s ebolou, píší média",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/usa-se-branily-navratu-lekare-s-ebolou-pisi-media-373695",
-      "dt": "2026-05-21T10:24:39Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "bránily",
-        "ebolou",
-        "lékaře",
-        "média",
-        "návratu",
-        "píší",
-        "usa"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "sport",
       "contentType": "article",
-      "title": "Knicks si poradili s Clevelandem v semifinále i podruhé",
+      "title": "Knicks porazili Cleveland v semifinále i podruhé",
       "url": "https://sport.ceskatelevize.cz/clanek/basketbal/knicks-si-poradili-s-clevelandem-v-semifinale-i-podruhe-156945",
       "dt": "2026-05-22T06:01:54Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
-        "clevelandem",
+        "cleveland",
         "knicks",
         "podruhé",
-        "poradili",
+        "porazili",
         "semifinále"
       ],
       "feedCategory": "sport",
@@ -1507,7 +1510,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42545,
+      "bytes": 43015,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1567,11 +1570,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T06:06:51Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 3,
           "zpravy": 26,
+          "other": 3,
           "finance": 1
         },
         "drop_counts": {
@@ -1584,6 +1587,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "USA chtějí vyhostit sestru šéfky kubánského konglomerátu, tlak na Havanu sílí",
+            "publishedAt": "2026-05-22T06:06:51Z"
+          },
           {
             "title": "OBRAZEM: Nejkrásnější snímky Mléčné dráhy ukazují mizející nádheru",
             "publishedAt": "2026-05-22T06:00:00Z"
@@ -1611,10 +1618,6 @@
           {
             "title": "Ozbrojenci zabili v Hondurasu nejméně šestnáct lidí",
             "publishedAt": "2026-05-21T21:01:21Z"
-          },
-          {
-            "title": "Odborníci debatovali v 90' ČT24 o sudetoněmeckém sjezdu v Brně",
-            "publishedAt": "2026-05-21T19:48:38Z"
           }
         ]
       }
@@ -1626,7 +1629,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36374,
+      "bytes": 36445,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1679,7 +1682,7 @@
         },
         "sample_titles": [
           {
-            "title": "Knicks si poradili s Clevelandem v semifinále i podruhé",
+            "title": "Knicks porazili Cleveland v semifinále i podruhé",
             "publishedAt": "2026-05-22T06:01:54Z"
           },
           {
@@ -1720,7 +1723,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77775,
+      "bytes": 77783,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

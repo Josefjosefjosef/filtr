@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-22T06:11:25.413201Z",
+  "ingestedAt": "2026-05-22T06:49:34.220082Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Pohlavních nemocí je nejvíce za 10 let, kapavka vyletěla o 303 %. Mohou za to 2 věci",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/evropa-pohlavni-nemoci-rekord/",
+      "dt": "2026-05-22T06:18:20Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "303",
+        "kapavka",
+        "let",
+        "nejvíce",
+        "nemocí",
+        "pohlavních",
+        "vyletěla",
+        "věci"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -252,34 +277,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Do Berlína dorazila rodina lékaře nakaženého ebolou. Žena i čtyři děti jdou do izolace",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/berlina-rodina-lekare-nakazeneho-ebolou/",
-      "dt": "2026-05-21T07:44:51Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "berlína",
-        "dorazila",
-        "děti",
-        "ebolou",
-        "izolace",
-        "jdou",
-        "lékaře",
-        "nakaženého",
-        "rodina",
-        "čtyři",
-        "žena"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -290,7 +287,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 90720,
+      "bytes": 87662,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -327,7 +324,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-22T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T06:18:20Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -342,6 +339,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pohlavních nemocí je nejvíce za 10 let, kapavka vyletěla o 303 %. Mohou za to 2 věci",
+            "publishedAt": "2026-05-22T06:18:20Z"
+          },
           {
             "title": "Místo resuscitace mají telefonovat lékaři. Odboráři varují před nebezpečnými změnami u záchranářů",
             "publishedAt": "2026-05-22T06:00:00Z"
@@ -369,10 +370,6 @@
           {
             "title": "Masopust končí v čele ÚVN. Děje se tak krátce po skandálu s posudky",
             "publishedAt": "2026-05-21T10:09:51Z"
-          },
-          {
-            "title": "Máme volná lůžka pro ebolu, ale jen pro Čechy. Vojtěch utnul spekulace o dalších cizincích",
-            "publishedAt": "2026-05-21T09:36:54Z"
           }
         ]
       }

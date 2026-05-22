@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-05-22T06:11:25.413201Z",
+  "ingestedAt": "2026-05-22T06:49:34.220082Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Neschopenky v Česku: Každý dvacátý praktik nechává doma až polovinu svých pacientů",
+      "url": "https://www.betterlife.cz/neschopenky-v-cesku-kazdy-dvacaty-praktik-nechava-doma-az-polovinu-svych-pacientu/",
+      "dt": "2026-05-22T06:44:48Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "doma",
+        "dvacátý",
+        "každý",
+        "nechává",
+        "neschopenky",
+        "pacientů",
+        "polovinu",
+        "praktik",
+        "svých",
+        "česku"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -248,33 +275,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Ulice: Soňa se rozhodla, že Lumíra zničí. Zahájila proti němu ostrou kampaň",
-      "url": "https://www.betterlife.cz/ulice-sona-se-rozhodla-ze-lumira-znici-zahajila-proti-nemu-ostrou-kampan/",
-      "dt": "2026-05-15T08:49:12Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "kampaň",
-        "lumíra",
-        "němu",
-        "ostrou",
-        "proti",
-        "rozhodla",
-        "soňa",
-        "ulice",
-        "zahájila",
-        "zničí"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -285,7 +285,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 68482,
+      "bytes": 69043,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -345,7 +345,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-21T10:58:32Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T06:44:48Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -360,6 +360,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Neschopenky v Česku: Každý dvacátý praktik nechává doma až polovinu svých pacientů",
+            "publishedAt": "2026-05-22T06:44:48Z"
+          },
           {
             "title": "Slavnosti sněženek: Čtyři kanci, Bohumil Hrabal před kamerou a ideologické školení",
             "publishedAt": "2026-05-21T10:58:32Z"
@@ -387,10 +391,6 @@
           {
             "title": "Senioři v Česku speciální výhodu nedostanou. Billa u nás levnější nákupní středy nezavede",
             "publishedAt": "2026-05-16T07:44:41Z"
-          },
-          {
-            "title": "Z anonymního stalkera se vyklubal přítel rodiny. Ulice uzavírá napínavou linku",
-            "publishedAt": "2026-05-16T06:44:47Z"
           }
         ]
       }
