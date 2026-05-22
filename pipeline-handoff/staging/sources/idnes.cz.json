@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-22T04:49:55.152780Z",
+  "ingestedAt": "2026-05-22T05:29:44.159496Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nikdy neseděli za volantem, přesto získali řidičáky na kamion. Mongoly stíhá policie",
+      "url": "https://www.idnes.cz/jihlava/zpravy/policie-mongolsko-ulanbatar-asie-ridicsky-prukaz-auto.A260522_063453_jihlava-zpravy_hock",
+      "dt": "2026-05-22T04:34:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "kamion",
+        "mongoly",
+        "neseděli",
+        "nikdy",
+        "policie",
+        "přesto",
+        "stíhá",
+        "volantem",
+        "získali",
+        "řidičáky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -772,32 +799,6 @@
         "silná",
         "trump",
         "čína"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Firmy reagují na válku. Už je připravila o půl bilionu korun, vyčíslila analýza",
-      "url": "https://www.idnes.cz/ekonomika/zahranicni/aerolinky-konflikt-iran-naklady-inflace-zdrazeni-produkty.A260518_120949_eko-zahranicni_jla",
-      "dt": "2026-05-21T14:15:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "analýza",
-        "bilionu",
-        "firmy",
-        "korun",
-        "připravila",
-        "půl",
-        "reagují",
-        "vyčíslila",
-        "válku"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1597,7 +1598,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49266,
+      "bytes": 49067,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1634,11 +1635,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T04:26:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T04:34:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
-          "finance": 5
+          "zpravy": 26,
+          "finance": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1650,6 +1651,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nikdy neseděli za volantem, přesto získali řidičáky na kamion. Mongoly stíhá policie",
+            "publishedAt": "2026-05-22T04:34:00Z"
+          },
           {
             "title": "Trump oznámil, že USA vyšlou do Polska dalších 5 tisíc vojáků. Chybí ale termín",
             "publishedAt": "2026-05-22T04:26:00Z"
@@ -1676,10 +1681,6 @@
           },
           {
             "title": "Povinné čipování koček v celé Evropské unii se přiblížilo, v ČR se spustí registr psů",
-            "publishedAt": "2026-05-21T22:00:00Z"
-          },
-          {
-            "title": "Krizový květen pro účetní. Kvůli novému hlášení vyplňují čtyřikrát víc formulářů",
             "publishedAt": "2026-05-21T22:00:00Z"
           }
         ]

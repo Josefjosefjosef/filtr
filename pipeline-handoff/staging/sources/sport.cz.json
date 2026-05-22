@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-22T04:49:55.152780Z",
+  "ingestedAt": "2026-05-22T05:29:44.159496Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Antonellimu stačí zlepšit jedinou věc a bude nezastavitelný, soudí mistr světa",
+      "url": "https://www.sport.cz/clanek/moto-formule-1-antonellimu-staci-zlepsit-jedinou-vec-a-bude-nezastavitelny-soudi-mistr-sveta-5460014",
+      "dt": "2026-05-22T05:02:36Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "antonellimu",
+        "jedinou",
+        "mistr",
+        "nezastavitelný",
+        "soudí",
+        "stačí",
+        "světa",
+        "věc",
+        "zlepšit"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "KOMENTÁŘ: Hložek, Chorý a spol. v nominaci? Koubek ví, co dělá",
+      "url": "https://www.sport.cz/clanek/nazory-komentare-komentar-hlozek-chory-a-spol-v-nominaci-koubek-vi-co-dela-5460651",
+      "dt": "2026-05-22T04:46:32Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "chorý",
+        "dělá",
+        "hložek",
+        "komentář",
+        "koubek",
+        "nominaci",
+        "spol"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -694,54 +744,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "O zábavu na mistrovství světa se starají Češi",
-      "url": "https://www.sport.cz/clanek/hokej-ms-o-zabavu-na-mistrovstvi-sveta-se-staraji-cesi-5459991",
-      "dt": "2026-05-21T13:23:37Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "mistrovství",
-        "starají",
-        "světa",
-        "zábavu",
-        "češi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Soud ve Zlíně propustil z vazby posledního muže obviněného ve fotbalové kauze",
-      "url": "https://www.sport.cz/clanek/fotbal-soud-ve-zline-propustil-z-vazby-posledniho-muze-obvineneho-ve-fotbalove-kauze-5460005",
-      "dt": "2026-05-21T12:52:33Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "fotbalové",
-        "kauze",
-        "muže",
-        "obviněného",
-        "posledního",
-        "propustil",
-        "soud",
-        "vazby",
-        "zlíně"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -752,7 +754,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45436,
+      "bytes": 44774,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -789,10 +791,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T04:00:08Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T05:02:36Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 30
+          "zpravy": 1,
+          "sport": 29
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -804,6 +807,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Antonellimu stačí zlepšit jedinou věc a bude nezastavitelný, soudí mistr světa",
+            "publishedAt": "2026-05-22T05:02:36Z"
+          },
+          {
+            "title": "KOMENTÁŘ: Hložek, Chorý a spol. v nominaci? Koubek ví, co dělá",
+            "publishedAt": "2026-05-22T04:46:32Z"
+          },
           {
             "title": "Dobeš vychytal výhru v úvodním finále konference",
             "publishedAt": "2026-05-22T04:00:08Z"
@@ -827,14 +838,6 @@
           {
             "title": "Golfistka Napoleaová je dvanáctá po prvním kole v Rabatu",
             "publishedAt": "2026-05-21T21:17:03Z"
-          },
-          {
-            "title": "Slováci rozdrtili Dánsko! Švýcaři zapsali už páté vítězství. Kanada poprvé ztratila",
-            "publishedAt": "2026-05-21T07:19:54Z"
-          },
-          {
-            "title": "Ronaldo poprvé vyhrál saúdskou ligu",
-            "publishedAt": "2026-05-21T20:08:52Z"
           }
         ]
       }
