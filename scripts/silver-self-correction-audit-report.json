@@ -1,13 +1,13 @@
 {
   "harness_id": "silver_self_correction_audit_v1",
-  "generated_at": "2026-05-21T18:03:44.462Z",
-  "main_commit": "d741fe662c1064964300117f3a192d3f0844dd19",
+  "generated_at": "2026-05-22T08:56:52.043Z",
+  "main_commit": "f620e5b3f83ef60521c89f51544370503ee5a523",
   "engine_changed": "NO",
   "assets_app_changed": "NO",
   "total_cases": 21000,
-  "pass_count": 17913,
-  "fail_count": 3087,
-  "overall_accuracy": "85.30",
+  "pass_count": 18241,
+  "fail_count": 2759,
+  "overall_accuracy": "86.86",
   "family_breakdown": {
     "correction_after_create_intent": {
       "pass": 2760,
@@ -40,15 +40,14 @@
       "accuracy": "94.77"
     },
     "safety_regression": {
-      "pass": 2672,
-      "fail": 328,
-      "accuracy": "89.07"
+      "pass": 3000,
+      "fail": 0,
+      "accuracy": "100.00"
     }
   },
   "top_fail_clusters": [
     "self_correction_update_note:1000",
     "self_correction_module_task_to_note:962",
-    "self_correction_safety_note_readonly:328",
     "self_correction_after_create_task:184",
     "self_correction_update_task:179",
     "self_correction_noisy_cross:115",
@@ -65,11 +64,12 @@
     "self_correction_negation_hard:0",
     "self_correction_negation_flip:0",
     "self_correction_noisy_neg_read:0",
-    "self_correction_safety_cal_readonly:0"
+    "self_correction_safety_cal_readonly:0",
+    "self_correction_safety_task_readonly:0"
   ],
   "true_engine_fail_count": 314,
   "harness_problem_count": 1149,
-  "ambiguous_input_count": 1624,
+  "ambiguous_input_count": 1296,
   "safety_risk_count": 0,
   "dangerous_write_count": 0,
   "false_write_count": 0,

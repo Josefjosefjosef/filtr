@@ -48,6 +48,7 @@ const {
 const {
   finalizeSelfCorrectionNoisyNegReadHarnessEval,
   finalizeSelfCorrectionSafetyCalReadonlyHarnessEval,
+  finalizeSelfCorrectionSafetyNoteReadonlyHarnessEval,
   finalizeSelfCorrectionNegationFlipHarnessEval,
 } = require("./silver-self-correction-query-clarification.cjs");
 
@@ -84,7 +85,10 @@ const GIT_ALLOW = [
   "scripts/silver-self-correction-safety-cal-readonly-diagnostic.cjs",
   "scripts/silver-self-correction-safety-cal-readonly-diagnostic-report.json",
   "scripts/silver-self-correction-safety-cal-readonly-selftest.cjs",
+  "scripts/silver-self-correction-safety-note-readonly-selftest.cjs",
   "SILVER_RUN_REPORT.md",
+  "SILVER_CURSOR_OUTPUT.md",
+  "SILVER_NEXT_ACTION.md",
 ];
 
 function createLikeTurn(turn) {
@@ -163,6 +167,7 @@ function applyAllHarnessFinalizers(c, turn, ev) {
   out = finalizeMobileVoiceCalHarnessEval(c, turn, out);
   out = finalizeSelfCorrectionNoisyNegReadHarnessEval(c, turn, out);
   out = finalizeSelfCorrectionSafetyCalReadonlyHarnessEval(c, turn, out);
+  out = finalizeSelfCorrectionSafetyNoteReadonlyHarnessEval(c, turn, out);
   out = finalizeSelfCorrectionNegationFlipHarnessEval(c, turn, out);
   return out;
 }

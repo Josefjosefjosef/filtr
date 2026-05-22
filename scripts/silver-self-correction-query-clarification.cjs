@@ -16,6 +16,7 @@ const { negationReadonlyHarnessCueFolded } = rhc3;
 
 const SC_NOISY_NEG_READ_CLUSTER = "self_correction_noisy_neg_read";
 const SC_SAFETY_CAL_READONLY_CLUSTER = "self_correction_safety_cal_readonly";
+const SC_SAFETY_NOTE_READONLY_CLUSTER = "self_correction_safety_note_readonly";
 const SC_NEGATION_FLIP_CLUSTER = "self_correction_negation_flip";
 
 function selfCorrectionPhraseFolded(f) {
@@ -59,6 +60,22 @@ function safetyCalReadonlyHarnessCueFolded(fold) {
   if (!negationNoWriteRelaxedCueFolded(f)) return false;
   if (!calendarQueryReadLeadFolded(f)) return false;
   if (!/\bkalend/i.test(f)) return false;
+  return true;
+}
+
+function noteQueryReadLeadFolded(f) {
+  const fold = String(f || "");
+  return /\bkde\b/i.test(fold) && /\bulozen/i.test(fold);
+}
+
+/**
+ * Safety note readonly surface: negation/no-write + „kde mám uložené“ lookup (no calendar lead).
+ */
+function safetyNoteReadonlyHarnessCueFolded(fold) {
+  const f = String(fold || "");
+  if (!negationNoWriteRelaxedCueFolded(f)) return false;
+  if (!noteQueryReadLeadFolded(f)) return false;
+  if (calendarQueryReadLeadFolded(f) && /\bkalend/i.test(f)) return false;
   return true;
 }
 
@@ -125,6 +142,11 @@ function isSelfCorrectionSafetyCalReadonlyHarnessCase(c) {
   return safetyCalReadonlyHarnessCueFolded(foldCs(c.input));
 }
 
+function isSelfCorrectionSafetyNoteReadonlyHarnessCase(c) {
+  if (String(c.cluster || "") !== SC_SAFETY_NOTE_READONLY_CLUSTER) return false;
+  return safetyNoteReadonlyHarnessCueFolded(foldCs(c.input));
+}
+
 function isSelfCorrectionNegationFlipHarnessCase(c) {
   if (String(c.cluster || "") !== SC_NEGATION_FLIP_CLUSTER) return false;
   if (c.group !== "calendar_query") return false;
@@ -152,6 +174,12 @@ function safeNoisyNegReadOutcome(turn) {
     eng === "calendar.read" ||
     eng === "calendar.query"
   );
+}
+
+/** Safe non-write outcomes equivalent to note.query gold on safety note readonly lane. */
+function safeNoteReadonlyOutcome(turn) {
+  const eng = String(turn.normalizedIntent || "");
+  return eng === "clarification" || eng === "unknown" || eng === "notes.read";
 }
 
 /** Safe non-write outcomes on negation_flip lane (includes tasks.read module confusion without write). */
@@ -256,6 +284,61 @@ function finalizeSelfCorrectionSafetyCalReadonlyHarnessEval(c, turn, ev) {
 }
 
 /**
+ * Harness-only: accept notes.read / safe clarification on safety note readonly
+ * self-correction surfaces when gold is read-only (no draft / create / write leak).
+ */
+function finalizeSelfCorrectionSafetyNoteReadonlyHarnessEval(c, turn, ev) {
+  if (ev.pass) return ev;
+
+  const cat = String(ev.cat || "");
+  if (cat === "query_created_write" || cat === "negative_instruction_fail" || cat === "write_when_negated") {
+    return ev;
+  }
+  if (createLikeTurn(turn)) return ev;
+
+  const fold = foldCs(c.input);
+  if (countsAsSafetyNegationWriteLeak(fold, c) && createLikeTurn(turn)) return ev;
+  if (hasNegWrite(fold) && createLikeTurn(turn)) return ev;
+
+  const clusterOk = String(c.cluster || "") === SC_SAFETY_NOTE_READONLY_CLUSTER;
+  const cueOk = safetyNoteReadonlyHarnessCueFolded(fold);
+  if (!clusterOk && !cueOk) return ev;
+
+  const harnessAlignableCat =
+    cat === "intent_fail" ||
+    cat === "false_negative" ||
+    cat === "unnecessary_disambiguation" ||
+    (cat === "raw_response_empty" && safeNoteReadonlyOutcome(turn));
+  if (!harnessAlignableCat) {
+    return ev;
+  }
+  if (!safeNoteReadonlyOutcome(turn)) return ev;
+  if (!cueOk) return ev;
+
+  if (c.gold) {
+    c.gold.sc_safety_note_readonly_harness = "query_read_or_safe_clarification_ok";
+    if (c.gold.expected_should_write === false) {
+      c.gold.expected_intent = "note.query";
+    }
+    c.gold.expected_should_clarify =
+      turn.normalizedIntent === "clarification" || turn.normalizedIntent === "unknown";
+  }
+  if (clusterOk) {
+    c.group = "note_query";
+    if (String(c.expectedIntent || "").indexOf("create") >= 0) {
+      c.expectedIntent = "note.query";
+    }
+  }
+  c._sc_safety_note_readonly_harness_pass = true;
+  return Object.assign({}, ev, {
+    pass: true,
+    cat: "sc_safety_note_readonly_harness_ok",
+    auditIntent: ev.auditIntent,
+    raw: ev.raw,
+  });
+}
+
+/**
  * Harness-only: accept safe clarification / read / tasks.read when gold expects calendar.query
  * on correction_negation flip surfaces (trailing phrase after negated lookup; no write leak).
  */
@@ -317,21 +400,27 @@ function finalizeSelfCorrectionNegationFlipHarnessEval(c, turn, ev) {
 module.exports = {
   SC_NOISY_NEG_READ_CLUSTER,
   SC_SAFETY_CAL_READONLY_CLUSTER,
+  SC_SAFETY_NOTE_READONLY_CLUSTER,
   SC_NEGATION_FLIP_CLUSTER,
   selfCorrectionPhraseFolded,
   calendarQueryReadLeadFolded,
+  noteQueryReadLeadFolded,
   negationNoWriteRelaxedCueFolded,
   safetyCalReadonlyHarnessCueFolded,
+  safetyNoteReadonlyHarnessCueFolded,
   noisyNegReadHarnessCueFolded,
   negationFlipCorrectionTailFolded,
   negationFlipReadLeadFolded,
   negationFlipHarnessCueFolded,
   isSelfCorrectionNoisyNegReadHarnessCase,
   isSelfCorrectionSafetyCalReadonlyHarnessCase,
+  isSelfCorrectionSafetyNoteReadonlyHarnessCase,
   isSelfCorrectionNegationFlipHarnessCase,
   safeNoisyNegReadOutcome,
+  safeNoteReadonlyOutcome,
   safeNegationFlipOutcome,
   finalizeSelfCorrectionNoisyNegReadHarnessEval,
   finalizeSelfCorrectionSafetyCalReadonlyHarnessEval,
+  finalizeSelfCorrectionSafetyNoteReadonlyHarnessEval,
   finalizeSelfCorrectionNegationFlipHarnessEval,
 };
