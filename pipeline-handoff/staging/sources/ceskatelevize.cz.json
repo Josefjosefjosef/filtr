@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-22T21:35:12.902460Z",
+  "ingestedAt": "2026-05-22T22:14:33.152944Z",
   "items": [
     {
       "section": "aktualne",
@@ -756,6 +756,26 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Soutěž k MS v hokeji – 23. května",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/soutez-k-ms-v-hokeji-23-kvetna-156744",
+      "dt": "2026-05-22T22:00:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "hokeji",
+        "května",
+        "soutěž"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Pardubice vyrovnaly semifinálovou sérii s Brnem na 2:2",
       "url": "https://sport.ceskatelevize.cz/clanek/basketbal/domaci-souteze/pardubice-vyrovnaly-semifinalovou-serii-s-brnem-na-22-156952",
       "dt": "2026-05-22T19:44:48Z",
@@ -1480,29 +1500,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Montreal s Mlýnkovou ovládl finále zámořské PWHL",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/montreal-s-mlynkovou-ovladl-finale-zamorske-pwhl-156923",
-      "dt": "2026-05-21T06:39:15Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "finále",
-        "mlýnkovou",
-        "montreal",
-        "ovládl",
-        "pwhl",
-        "zámořské"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1632,7 +1629,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37424,
+      "bytes": 37198,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1669,7 +1666,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T19:44:48Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1684,6 +1681,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Soutěž k MS v hokeji – 23. května",
+            "publishedAt": "2026-05-22T22:00:00Z"
+          },
           {
             "title": "Pardubice vyrovnaly semifinálovou sérii s Brnem na 2:2",
             "publishedAt": "2026-05-22T19:44:48Z"
@@ -1711,10 +1712,6 @@
           {
             "title": "Rada věří Dukle a dodává: Pořád je v českém fotbale skrytý červíček",
             "publishedAt": "2026-05-22T07:00:00Z"
-          },
-          {
-            "title": "Knicks porazili Cleveland v semifinále i podruhé",
-            "publishedAt": "2026-05-22T06:01:54Z"
           }
         ]
       }
@@ -1726,7 +1723,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78387,
+      "bytes": 78454,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
