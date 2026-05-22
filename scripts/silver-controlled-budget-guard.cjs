@@ -120,6 +120,26 @@ const REPORT_SOURCES = {
   write_when_negated_count: "scripts/silver-*-report.json safety counters",
 };
 
+/** Authoritative report order (orchestration); avoids stale RHC3 baseline_metrics overrides. */
+const METRIC_AUTHORITATIVE_FILES = {
+  deep_product_real_ux_v2_accuracy: [
+    "silver-deep-product-real-ux-v2-report.json",
+    "silver-real-czech-public-ux-corpus-v2-report.json",
+  ],
+  realistic_overall_accuracy: ["silver-realistic-mobile-corpus-report.json"],
+  public_ux_corpus_accuracy: ["silver-real-czech-public-ux-corpus-v2-report.json"],
+  quality_accuracy: ["silver-quality-v2-report.json"],
+  real_czech_corpus_accuracy: ["silver-real-czech-corpus-v1-report.json"],
+};
+
+const METRIC_FIELD_ALIASES = {
+  deep_product_real_ux_v2_accuracy: ["deep_product_real_ux_v2_accuracy", "deep_product_accuracy"],
+};
+
+const METRIC_STALE_EMBED_SKIP = {
+  deep_product_real_ux_v2_accuracy: /real-human-chaos-v3-report\.json$/i,
+};
+
 function readJsonSafe(abs) {
   try {
     return JSON.parse(fs.readFileSync(abs, "utf8"));
@@ -350,15 +370,49 @@ function parsePct(raw) {
   return null;
 }
 
+function extractMetricFromReportData(data, key) {
+  if (!data) return null;
+  const fields = METRIC_FIELD_ALIASES[key] || [key];
+  for (const f of fields) {
+    if (data[f] != null && String(data[f]).trim() !== "") return data[f];
+  }
+  if (data.baseline_metrics && typeof data.baseline_metrics === "object") {
+    for (const f of fields) {
+      if (data.baseline_metrics[f] != null && String(data.baseline_metrics[f]).trim() !== "") {
+        return data.baseline_metrics[f];
+      }
+    }
+  }
+  if (data.safety && typeof data.safety === "object") {
+    for (const f of fields) {
+      if (data.safety[f] != null && String(data.safety[f]).trim() !== "") return data.safety[f];
+    }
+  }
+  return null;
+}
+
 function pickMetricFromReports(repoRoot, key) {
   const scriptsDir = path.join(repoRoot, "scripts");
   if (!fs.existsSync(scriptsDir)) {
     return { value: null, source: REPORT_SOURCES[key] || "NOT_AVAILABLE" };
   }
+  const authFiles = METRIC_AUTHORITATIVE_FILES[key];
+  if (authFiles) {
+    for (const fn of authFiles) {
+      const data = readJsonSafe(path.join(scriptsDir, fn));
+      const val = extractMetricFromReportData(data, key);
+      if (val != null) return { value: val, source: "scripts/" + fn };
+    }
+  }
+  const staleSkip = METRIC_STALE_EMBED_SKIP[key];
   const files = fs.readdirSync(scriptsDir).filter((f) => f.endsWith("-report.json"));
   for (const fn of files) {
+    if (authFiles && authFiles.indexOf(fn) >= 0) continue;
+    if (staleSkip && staleSkip.test(fn)) continue;
     const data = readJsonSafe(path.join(scriptsDir, fn));
     if (!data) continue;
+    const val = extractMetricFromReportData(data, key);
+    if (val != null) return { value: val, source: "scripts/" + fn };
     if (data[key] != null && String(data[key]).trim() !== "") {
       return { value: data[key], source: "scripts/" + fn };
     }
@@ -761,6 +815,8 @@ module.exports = {
   detectSelfExpandingGoal,
   buildMetricDeltaBlock,
   captureMetricSnapshot,
+  pickMetricFromReports,
+  extractMetricFromReportData,
   finalizeCap,
   runSelftest,
 };

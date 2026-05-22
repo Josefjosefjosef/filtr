@@ -97,7 +97,7 @@ const CAP10_PIPELINE_MAP = {
   planner_handoff: "buildCapDiagnosticProductHandoff / sanitize-next-action-md",
   outcome_finalize: "Invoke-SilverControlledBudgetGuardFinalize + validateCap10LifecycleOutcomeRecord",
   metric_delta_finalize: "buildMetricDeltaBlock → SILVER_RUN_REPORT.md CONTROLLED_BUDGET_METRIC_DELTA_BLOCK",
-  pr_lifecycle: "silver-autopilot.cjs --verify-pr / --merge-pr / --post-merge-proof",
+  pr_lifecycle: "silver-autopilot.cjs --verify-pr / --merge-pr / --post-merge-proof / silver-cap10-safe-autonomous-orchestrator.cjs phase",
   stop_states: [
     "ENGINE_FIX_TASK_READY",
     "HARNESS_ALIGNMENT_TASK_READY",
@@ -199,7 +199,7 @@ function nextStepForOutcome(outcome) {
     case "PR_READY":
       return "verify_pr_then_merge_when_ci_green";
     case "MERGED_AND_PROVED":
-      return "post_merge_proof_then_stop";
+      return "post_merge_proof_then_next_roi_cluster";
     case "NO_SAFE_FIX":
       return "document_evidence_stop";
     case "SAFE_BLOCKED":
