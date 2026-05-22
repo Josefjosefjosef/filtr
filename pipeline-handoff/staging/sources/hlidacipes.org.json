@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hlidacipes.org",
-  "ingestedAt": "2026-05-22T13:35:03.816202Z",
+  "ingestedAt": "2026-05-22T14:14:25.561933Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Jan Urban: Rekonstrukce jedné masové vraždy",
+      "url": "https://hlidacipes.org/jan-urban-rekonstrukce-jedne-masove-vrazdy/",
+      "dt": "2026-05-22T14:00:32Z",
+      "media_raw": "HlídacíPes",
+      "media_norm": "HlídacíPes",
+      "tokens": [
+        "jan",
+        "jedné",
+        "masové",
+        "rekonstrukce",
+        "urban",
+        "vraždy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_hlidacipes",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "hlidacipes.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -232,34 +255,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "hlidacipes.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Soud potají skartoval dokumenty ze spisu. Podnikateli tím zničil důkazy proti státu",
-      "url": "https://hlidacipes.org/soud-potaji-skartoval-dokumenty-ze-spisu-podnikateli-tim-znicil-dukazy-proti-statu/",
-      "dt": "2026-05-19T04:30:44Z",
-      "media_raw": "HlídacíPes",
-      "media_norm": "HlídacíPes",
-      "tokens": [
-        "dokumenty",
-        "důkazy",
-        "podnikateli",
-        "potají",
-        "proti",
-        "skartoval",
-        "soud",
-        "spisu",
-        "státu",
-        "tím",
-        "zničil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_hlidacipes",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "hlidacipes.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -270,7 +265,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://hlidacipes.org/feed/",
-      "bytes": 17244,
+      "bytes": 17751,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -307,7 +302,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-22T09:30:47Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T14:00:32Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -322,6 +317,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jan Urban: Rekonstrukce jedné masové vraždy",
+            "publishedAt": "2026-05-22T14:00:32Z"
+          },
           {
             "title": "Dechovka, pečení, Mynářová a zprávy. Rozhlasové regiony se dál hledají",
             "publishedAt": "2026-05-22T09:30:47Z"
@@ -349,10 +348,6 @@
           {
             "title": "Dana Huňátová: Když vybuchují ruské drony jen kousek od slovenských hranic",
             "publishedAt": "2026-05-20T09:30:08Z"
-          },
-          {
-            "title": "Telefonát jak z normalizace: Babiš žádal Němce, aby nejezdili do Brna",
-            "publishedAt": "2026-05-20T04:30:30Z"
           }
         ]
       }

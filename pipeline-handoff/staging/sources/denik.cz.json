@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-22T13:35:03.816202Z",
+  "ingestedAt": "2026-05-22T14:14:25.561933Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Jen léčba nestačí. Lidé s rakovinou potřebují podpořit i duši. Kde hledat pomoc",
+      "url": "https://www.denik.cz/zdravotnictvi/onkologicti-pacienti-potrebuji-vedle-lecby-podporit-i-dusi-kde-lze-hledat-pomoc.html",
+      "dt": "2026-05-22T14:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "duši",
+        "hledat",
+        "jen",
+        "lidé",
+        "léčba",
+        "nestačí",
+        "podpořit",
+        "pomoc",
+        "potřebují",
+        "rakovinou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -613,31 +640,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rusové v Záporoží umírají na otravu alkoholem. Disciplína na frontě upadá",
-      "url": "https://www.denik.cz/staty-mimo-eu/rusove-umrti-otrava-alkoholem-valka-na-ukrajine-zaporozi.html",
-      "dt": "2026-05-22T05:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "alkoholem",
-        "disciplína",
-        "frontě",
-        "otravu",
-        "rusové",
-        "umírají",
-        "upadá",
-        "záporoží"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -648,7 +650,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28399,
+      "bytes": 28530,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -685,10 +687,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-22T13:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T14:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
+          "zdravi": 1,
+          "zpravy": 22,
           "finance": 1,
           "cestovani": 1
         },
@@ -702,6 +705,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jen léčba nestačí. Lidé s rakovinou potřebují podpořit i duši. Kde hledat pomoc",
+            "publishedAt": "2026-05-22T14:00:00Z"
+          },
           {
             "title": "Ecce Homo Šternberk láká fanoušky rychlých aut i v letošním roce",
             "publishedAt": "2026-05-22T13:00:00Z"
@@ -729,10 +736,6 @@
           {
             "title": "Rumun má po návratu ze Srbska příznaky hantaviru. Leží v izolaci",
             "publishedAt": "2026-05-22T11:25:00Z"
-          },
-          {
-            "title": "Vražda dívky v Pardubicích: Ozval se šílený řev, bodnul ji zezadu, řekl školník",
-            "publishedAt": "2026-05-22T11:00:00Z"
           }
         ]
       }

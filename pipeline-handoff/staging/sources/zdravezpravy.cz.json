@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-22T13:35:03.816202Z",
+  "ingestedAt": "2026-05-22T14:14:25.561933Z",
   "items": [
     {
       "section": "zdravi",
@@ -19,6 +19,31 @@
         "rozumět",
         "stát",
         "závislostí"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Ministr Juchelka přestřeluje! Chce akční jednotku na kontrolu dávek",
+      "url": "https://www.zdravezpravy.cz/2026/05/22/ministr-juchelka-prestreluje-chce-akcni-jednotku-na-kontrolu-davek/",
+      "dt": "2026-05-22T12:14:42Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "akční",
+        "chce",
+        "dávek",
+        "jednotku",
+        "juchelka",
+        "kontrolu",
+        "ministr",
+        "přestřeluje"
       ],
       "feedCategory": "zdravi",
       "feedType": "rss",
@@ -472,31 +497,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Interny jsou v minusu a lékaři se jim vyhýbají. Bez nich to ale nepůjde",
-      "url": "https://www.zdravezpravy.cz/2026/05/14/interny-jsou-v-minusu-a-lekari-se-jim-vyhybaji-bez-nich-to-ale-nepujde/",
-      "dt": "2026-05-14T13:52:03Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "ale",
-        "interny",
-        "jim",
-        "lékaři",
-        "minusu",
-        "nepůjde",
-        "nich",
-        "vyhýbají"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -507,7 +507,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 203397,
+      "bytes": 204772,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -564,6 +564,10 @@
             "publishedAt": "2026-05-22T13:15:08Z"
           },
           {
+            "title": "Ministr Juchelka přestřeluje! Chce akční jednotku na kontrolu dávek",
+            "publishedAt": "2026-05-22T12:14:42Z"
+          },
+          {
             "title": "Pět minut cvičení nikoho nezabije. Naopak zkvalitní a prodlouží život",
             "publishedAt": "2026-05-22T09:10:30Z"
           },
@@ -586,10 +590,6 @@
           {
             "title": "Ebola z Afriky nás bezprostředně neohrožuje, ujišťuje Roman Prymula",
             "publishedAt": "2026-05-20T12:15:35Z"
-          },
-          {
-            "title": "S politikou závislostí šlápl premiér Babiš vedle, tvrdí experti",
-            "publishedAt": "2026-05-20T09:14:27Z"
           }
         ]
       }

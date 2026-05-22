@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-22T13:35:03.816202Z",
+  "ingestedAt": "2026-05-22T14:14:25.561933Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Chceme racionalitu, ne obstrukce, řekl k nařízení o obalech Červený",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/chceme-racionalitu-ne-obstrukce-rekl-k-narizeni-o-obalech-cerveny-373747",
+      "dt": "2026-05-22T14:02:26Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "chceme",
+        "nařízení",
+        "obalech",
+        "obstrukce",
+        "racionalitu",
+        "červený",
+        "řekl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -740,26 +764,23 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Němečtí poslanci schválili stavbu vysokorychlostní trati Drážďany–Praha",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/nemecti-poslanci-schvalili-stavbu-vysokorychlostni-trati-drazdany-praha-373718",
-      "dt": "2026-05-21T18:26:12Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "MS v hokeji: Kanada – Slovinsko a Německo – Maďarsko",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/ms-v-hokeji-kanada-slovinsko-a-nemecko-madarsko-156948",
+      "dt": "2026-05-22T13:58:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "drážďany",
-        "němečtí",
-        "poslanci",
-        "praha",
-        "schválili",
-        "stavbu",
-        "trati",
-        "vysokorychlostní"
+        "hokeji",
+        "kanada",
+        "maďarsko",
+        "německo",
+        "slovinsko"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1479,29 +1500,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Je to pro mě nepopsatelné. Čekám, jestli se probudím, uvedl Kačor",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/cekam-jestli-se-treba-probudim-uvedl-kacor-je-to-pro-me-nepopsatelne-156919",
-      "dt": "2026-05-20T21:42:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "jestli",
-        "kačor",
-        "nepopsatelné",
-        "probudím",
-        "uvedl",
-        "čekám"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1512,7 +1510,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43880,
+      "bytes": 44097,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1572,7 +1570,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T13:29:02Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T14:02:26Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1588,6 +1586,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chceme racionalitu, ne obstrukce, řekl k nařízení o obalech Červený",
+            "publishedAt": "2026-05-22T14:02:26Z"
+          },
           {
             "title": "U stolů na náměstí v Brně se usadili sudetští Němci i Češi, přišli také protestující",
             "publishedAt": "2026-05-22T13:29:02Z"
@@ -1615,10 +1617,6 @@
           {
             "title": "Ekonomická nespokojenost v Bolívii přerostla v protesty žádající odchod prezidenta",
             "publishedAt": "2026-05-22T10:05:31Z"
-          },
-          {
-            "title": "Pavel a Steinmeier věří, že se události v Brně ponesou v duchu porozumění",
-            "publishedAt": "2026-05-22T09:54:03Z"
           }
         ]
       }
@@ -1630,7 +1628,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36167,
+      "bytes": 36141,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1667,7 +1665,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T12:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T13:58:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1682,6 +1680,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "MS v hokeji: Kanada – Slovinsko a Německo – Maďarsko",
+            "publishedAt": "2026-05-22T13:58:00Z"
+          },
           {
             "title": "Hokej fokus podcast: Kdo míří na medaile? Analýza první poloviny šampionátu",
             "publishedAt": "2026-05-22T12:40:00Z"
@@ -1709,10 +1711,6 @@
           {
             "title": "Ronaldo slaví s an-Nasrem první titul, v posledním kole zvítězili nad Damacem",
             "publishedAt": "2026-05-21T20:41:01Z"
-          },
-          {
-            "title": "Bukovská dojela třetí v short tracku juniorek v Novém Městě",
-            "publishedAt": "2026-05-21T19:50:07Z"
           }
         ]
       }
@@ -1724,7 +1722,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78532,
+      "bytes": 78536,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-22T13:35:03.816202Z",
+  "ingestedAt": "2026-05-22T14:14:25.561933Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Giro ONLINE: Početný únik má náskok už přes 10 minut. Vyhlíží se velké finále",
+      "url": "https://www.idnes.cz/sport/cyklistika/giro-online-velka-prilezitost-pro-unik-ocekava-se-velke-finale.A260522_113427_cyklistika_mrg",
+      "dt": "2026-05-22T13:47:03Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "finále",
+        "giro",
+        "minut",
+        "náskok",
+        "online",
+        "početný",
+        "velké",
+        "vyhlíží",
+        "únik"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Dobeš dál oslňuje. Je podivín, popichují ho v týmu. Jako první ale vychytal suveréna",
+      "url": "https://www.idnes.cz/hokej/nhl/hokej-nhl-montreal-jakub-dobes-carolina-prohra.A260522_094309_nhl_luji",
+      "dt": "2026-05-22T13:45:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "ale",
+        "dobeš",
+        "jako",
+        "oslňuje",
+        "podivín",
+        "popichují",
+        "první",
+        "suveréna",
+        "týmu",
+        "vychytal"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -46,33 +99,6 @@
         "přijdou",
         "smutný",
         "zhrzený"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Giro ONLINE: Peloton zvolnil. Na čele patnáct uprchlíků, očekává se velké finále",
-      "url": "https://www.idnes.cz/sport/cyklistika/giro-online-velka-prilezitost-pro-unik-ocekava-se-velke-finale.A260522_113427_cyklistika_mrg",
-      "dt": "2026-05-22T12:16:27Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "finále",
-        "giro",
-        "online",
-        "očekává",
-        "patnáct",
-        "peloton",
-        "uprchlíků",
-        "velké",
-        "zvolnil",
-        "čele"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -753,32 +779,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rozjetý Montreal roznesl Carolinu. Dobeš pochytal 25 střel, zářil Slafkovský",
-      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-dobes-montreal.A260522_065230_nhl_mkr",
-      "dt": "2026-05-22T05:22:09Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "carolinu",
-        "dobeš",
-        "montreal",
-        "pochytal",
-        "rozjetý",
-        "roznesl",
-        "slafkovský",
-        "střel",
-        "zářil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47559,
+      "bytes": 47892,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T13:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T13:47:03Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -842,16 +842,20 @@
         },
         "sample_titles": [
           {
+            "title": "Giro ONLINE: Početný únik má náskok už přes 10 minut. Vyhlíží se velké finále",
+            "publishedAt": "2026-05-22T13:47:03Z"
+          },
+          {
+            "title": "Dobeš dál oslňuje. Je podivín, popichují ho v týmu. Jako první ale vychytal suveréna",
+            "publishedAt": "2026-05-22T13:45:00Z"
+          },
+          {
             "title": "Za medailemi skrývala velký boj. Digginsová promluvila o poruše příjmu potravy",
             "publishedAt": "2026-05-22T13:05:00Z"
           },
           {
             "title": "Zhrzený Maguire, opomenutý Camavinga, smutný Gnabry. Které hvězdy přijdou o MS",
             "publishedAt": "2026-05-22T12:55:00Z"
-          },
-          {
-            "title": "Giro ONLINE: Peloton zvolnil. Na čele patnáct uprchlíků, očekává se velké finále",
-            "publishedAt": "2026-05-22T12:16:27Z"
           },
           {
             "title": "Na chlapa dobrej výkon. Kajakář Dostál se pochlubil novým životním úspěchem",
@@ -868,10 +872,6 @@
           {
             "title": "Holán bude chybět, říká Červený. V Hořicích si chce vytetovat další čárku",
             "publishedAt": "2026-05-22T11:22:00Z"
-          },
-          {
-            "title": "Kouč Carrick dostal od United důvěru a smlouvu. S týmem podepsal do roku 2028",
-            "publishedAt": "2026-05-22T11:00:00Z"
           }
         ]
       }
