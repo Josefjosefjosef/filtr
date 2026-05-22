@@ -35035,6 +35035,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverIsNegatedWriteIntentNarrow(f, rawOpt) {
     const foldUse = String(f || "");
     const rawStr = rawOpt != null ? String(rawOpt) : foldUse;
+    if (iuSilverSelfCorrectionAfterCreateTaskBlocksCalendarUpdateFolded(foldUse)) return false;
+    if (iuSilverSelfCorrectionUpdateTaskBlocksCalendarUpdateFolded(foldUse)) return false;
     if (
       iuSilverExplicitCalendarWriteBasicMobileOpenerBundleFolded(foldUse) &&
       !/\bne\s+do\s+kalend/.test(foldUse) &&
@@ -37548,12 +37550,73 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P1 self_correction_after_create_task: úkolový lead + modulová negace kalendáře + korekční fráze
+   * nesmí spustit calendar-update guard (falešný anchor z „ne do kalendáře“).
+   */
+  function iuSilverSelfCorrectionAfterCreateTaskP1TaskLeadFolded(x) {
+    const s = String(x || "");
+    if (!s) return false;
+    if (/\bdo\s+(?:\S+\s+){0,4}ukol\w*\b/.test(s)) return true;
+    if (/\b(?:hod|dej|uloz|zapis|pridej|vytvor)\w*\s+(?:mi\s+)?(?:do\s+)?(?:\S+\s+){0,4}ukol\w*\b/.test(s)) return true;
+    return false;
+  }
+
+  /**
+   * P1 self_correction_update_task: „uprav/změň ten úkol … ne nový úkol“ — nesmí calendar-update / calendar.create.
+   */
+  function iuSilverSelfCorrectionUpdateTaskBlocksCalendarUpdateFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (!/\b(?:uprav|zmen)\s+(?:\S+\s+){0,2}ten\s+ukol/.test(x)) return false;
+    if (!/\bne\s+(?:\S+\s+){0,3}novy\s+ukol/.test(x) && !/\bne\s+novy\s+jako\s+ukol/.test(x)) return false;
+    return true;
+  }
+
+  function iuSilverSelfCorrectionAfterCreateTaskBlocksCalendarUpdateFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (!iuSilverSelfCorrectionAfterCreateTaskP1TaskLeadFolded(x)) return false;
+    if (!/\bne\s+do\s+(?:\S+\s+){0,3}kalend/.test(x) && !/\bne\s+v\s+(?:\S+\s+){0,3}kalend/.test(x)) return false;
+    if (/\bzmen\s+ten\s+ukol/.test(x)) return true;
+    if (/\buprav\s+ten\s+ukol/.test(x)) return true;
+    if (/\bspatne\s+prepis/.test(x)) return true;
+    if (/\bne\s+vlastne\b/.test(x)) return true;
+    if (/\bvlastne\s+zitra\s+ne\s+dnes/.test(x)) return true;
+    if (/\bto\s+ne\b/.test(x)) return true;
+    if (/\boprav\s+to\s+na\b/.test(x)) return true;
+    if (/\bmyslel\s+jsem/.test(x) || /\bmyslen/.test(x)) return true;
+    if (/\bprepis\w*\s+na\b/.test(x) && /\bukol/.test(x)) return true;
+    return false;
+  }
+
+  /** Kalendářový anchor pro update intent — „ne do kalendáře“ samo o sobě nepočítá. */
+  function iuSilverCalendarUpdateIntentPositiveCalAnchorFolded(x) {
+    const s = String(x || "");
+    if (!s) return false;
+    if (/\bzubar/.test(s)) return true;
+    if (/\bschuz/.test(s)) return true;
+    if (/\budalost/.test(s)) return true;
+    if (/\bpravn/.test(s)) return true;
+    if (/\bporad/.test(s)) return true;
+    if (/\bkonzultac/.test(s)) return true;
+    if (/\bnavstev/.test(s)) return true;
+    if (/\badvok/.test(s)) return true;
+    if (!/\bkalendar/.test(s)) return false;
+    const negCalOnly =
+      (/\bne\s+do\s+kalendar/.test(s) || /\bne\s+v\s+kalendar/.test(s) || /\bne\s+\S+\s+do\s+kalendar/.test(s)) &&
+      !/\b(?:uloz|dej|hod|zapis|pridej|vytvor|naplanuj|zaloz)\w*\s+(?:mi\s+|to\s+|si\s+)?[^,]{0,48}\s+do\s+kalendar/.test(s);
+    return !negCalOnly;
+  }
+
+  /**
    * P0 úzký signál: český imperativ úpravy existující kalendářové položky (datum/čas/cíl přesunu),
    * nikoli holý zápis — foldCs vstup; bez NLP.
    */
   function iuSilverIsCalendarUpdateIntentV1(foldedIn) {
     const x = String(foldedIn || "");
     if (!x) return false;
+    if (iuSilverSelfCorrectionAfterCreateTaskBlocksCalendarUpdateFolded(x)) return false;
+    if (iuSilverSelfCorrectionUpdateTaskBlocksCalendarUpdateFolded(x)) return false;
     if (/\bkdy\s+m(am|ame)\b/.test(x)) return false;
     if (/\bco\s+jsem\b/.test(x)) return false;
     if (/\bjak(e|y)\s+m(am|ame)\b/.test(x)) return false;
@@ -37571,16 +37634,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\buprav(?:it)?\s+cas\b/.test(x) ||
       /\bdej\s+to\s+na\s+jiny\s+cas\b/.test(x);
     if (!updateVerb) return false;
-    const calAnchor =
-      /\bzubar/.test(x) ||
-      /\bschuz/.test(x) ||
-      /\budalost/.test(x) ||
-      /\bkalendar/.test(x) ||
-      /\bpravn/.test(x) ||
-      /\bporad/.test(x) ||
-      /\bkonzultac/.test(x) ||
-      /\bnavstev/.test(x) ||
-      /\badvok/.test(x);
+    const calAnchor = iuSilverCalendarUpdateIntentPositiveCalAnchorFolded(x);
     if (!calAnchor) return false;
     const temporal =
       /\bzitrej/.test(x) ||
@@ -47079,6 +47133,34 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (taskNoteBodyEarly) {
         return iuSilverBuildNoteCreateTurn(taskNoteBodyEarly, now);
       }
+      return baseClarification("ambiguous_write", "unknown");
+    }
+
+    /**
+     * P1 self_correction_after_create_task (early): úkolový lead + „ne do kalendáře“ + korekční fráze
+     * → tasks.create (ne calendar-update / negated_write_request / implicit calendar).
+     */
+    if (iuSilverSelfCorrectionAfterCreateTaskBlocksCalendarUpdateFolded(folded)) {
+      const taskRawScAfter = iuSilverStripTaskTargetPhrases(raw);
+      const taskTurnScAfter = iuSilverBuildTaskCreateTurn(taskRawScAfter || raw, now, {
+        skipTargetStrip: true,
+        calendarOverridesTask: false,
+        fromExplicitTarget: true,
+        titleCleanupFullRawGate: raw
+      });
+      if (taskTurnScAfter) return taskTurnScAfter;
+      return baseClarification("ambiguous_write", "unknown");
+    }
+
+    if (iuSilverSelfCorrectionUpdateTaskBlocksCalendarUpdateFolded(folded)) {
+      const taskRawScUpd = iuSilverStripTaskTargetPhrases(raw);
+      const taskTurnScUpd = iuSilverBuildTaskCreateTurn(taskRawScUpd || raw, now, {
+        skipTargetStrip: true,
+        calendarOverridesTask: false,
+        fromExplicitTarget: true,
+        titleCleanupFullRawGate: raw
+      });
+      if (taskTurnScUpd) return taskTurnScUpd;
       return baseClarification("ambiguous_write", "unknown");
     }
 
