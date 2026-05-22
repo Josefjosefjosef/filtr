@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-22T03:31:15.693249Z",
+  "ingestedAt": "2026-05-22T04:10:01.804168Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Kde bydlí bohatí a kde chudí Pražané. Mapy ukazují, jak jsou promíchané různé sociální třídy",
+      "url": "https://domaci.hn.cz/c1-67877050-kde-bydli-bohati-a-kde-chudi-prazane-mapy-ukazuji-jak-jsou-promichane-ruzne-socialni-tridy",
+      "dt": "2026-05-22T04:00:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bohatí",
+        "bydlí",
+        "chudí",
+        "mapy",
+        "pražané",
+        "promíchané",
+        "různé",
+        "sociální",
+        "třídy",
+        "ukazují"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -897,36 +924,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "USA obvinily Raúla Castra ze čtyřnásobné vraždy a dalších vážných zločinů. Dojdou si pro něj Američané na Kubu?",
-      "url": "https://archiv.hn.cz/c1-67880130-usa-obvinily-raula-castra-ze-ctyrnasobne-vrazdy-a-dalsich-vaznych-zlocinu-dojdou-si-pro-nej-americane-na-kubu",
-      "dt": "2026-05-21T13:19:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "američané",
-        "castra",
-        "dalších",
-        "dojdou",
-        "kubu",
-        "něj",
-        "obvinily",
-        "raúla",
-        "usa",
-        "vraždy",
-        "vážných",
-        "zločinů",
-        "čtyřnásobné"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -937,7 +934,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 178706,
+      "bytes": 178602,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -974,12 +971,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-21T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T04:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 36,
+          "finance": 37,
           "zdravi": 1,
-          "zpravy": 3
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -991,6 +988,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kde bydlí bohatí a kde chudí Pražané. Mapy ukazují, jak jsou promíchané různé sociální třídy",
+            "publishedAt": "2026-05-22T04:00:00Z"
+          },
           {
             "title": "Firmy teď investicemi do AI spíš pálí peníze. Nikdo neví, jestli je levnější než lidé, říká globální HR expertka",
             "publishedAt": "2026-05-21T22:00:00Z"
@@ -1017,10 +1018,6 @@
           },
           {
             "title": "Žít architekturou",
-            "publishedAt": "2026-05-21T22:00:00Z"
-          },
-          {
-            "title": "Přehlídka designu",
             "publishedAt": "2026-05-21T22:00:00Z"
           }
         ]
