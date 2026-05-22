@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-22T10:50:59.746330Z",
+  "ingestedAt": "2026-05-22T11:34:54.403520Z",
   "items": [
     {
       "section": "finance",
@@ -46,6 +46,28 @@
         "sheinu",
         "temu",
         "zdraží"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Co jsou pelety a proč jsou stále populárnější pro vytápění?",
+      "url": "https://www.penize.cz/bydleni/490190-co-jsou-pelety-a-proc-jsou-stale-popularnejsi-pro-vytapeni",
+      "dt": "2026-05-22T00:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "pelety",
+        "populárnější",
+        "proč",
+        "stále",
+        "vytápění"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -486,34 +508,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Tříletá fixace, levnější první rok. E.ON láká na nový tarif plynu, má ale podmínku",
-      "url": "https://www.penize.cz/vlastnictvi-nemovitosti/489910-trileta-fixace-levnejsi-prvni-rok-e-on-laka-na-novy-tarif-plynu-ma-ale-podminku",
-      "dt": "2026-05-19T09:05:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "ale",
-        "fixace",
-        "levnější",
-        "láká",
-        "nový",
-        "plynu",
-        "podmínku",
-        "první",
-        "rok",
-        "tarif",
-        "tříletá"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -524,7 +518,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 19008,
+      "bytes": 18971,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -586,6 +580,10 @@
             "publishedAt": "2026-05-22T05:05:00Z"
           },
           {
+            "title": "Co jsou pelety a proč jsou stále populárnější pro vytápění?",
+            "publishedAt": "2026-05-22T00:00:00Z"
+          },
+          {
             "title": "Pět tipů, jak stihnout letadlo bez stresu. Letiště Praha upozornilo na letošní zádrhely",
             "publishedAt": "2026-05-21T15:26:00Z"
           },
@@ -604,10 +602,6 @@
           {
             "title": "Sítě plné finančních pastí: Projekt Partners učí mladé odhalit podvodníky",
             "publishedAt": "2026-05-21T07:30:00Z"
-          },
-          {
-            "title": "Průvodce nejistotou. Jak ochránit majetek, když přichází jedna krize za druhou",
-            "publishedAt": "2026-05-21T05:05:00Z"
           }
         ]
       }

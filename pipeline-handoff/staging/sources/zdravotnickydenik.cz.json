@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-22T10:50:59.746330Z",
+  "ingestedAt": "2026-05-22T11:34:54.403520Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Smrtící ebola kousek od českých hranic. Berlínská nemocnice popsala, jak na tom nakažený muž je",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/ebola-berlin-nemocnice-nakazeny-lekar/",
+      "dt": "2026-05-22T11:00:14Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "berlínská",
+        "ebola",
+        "hranic",
+        "kousek",
+        "muž",
+        "nakažený",
+        "nemocnice",
+        "popsala",
+        "smrtící",
+        "tom",
+        "českých"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -248,34 +276,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Čtvrt milionu za novou ordinaci. VZP tasí statisíce, aby do regionů dostala chybějící specialisty",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/vzp-plus-ctvrt-milionu-za-otevreni-ordinace-ambulantnich-specialistu/",
-      "dt": "2026-05-21T12:40:36Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "chybějící",
-        "dostala",
-        "milionu",
-        "novou",
-        "ordinaci",
-        "regionů",
-        "specialisty",
-        "statisíce",
-        "tasí",
-        "vzp",
-        "čtvrt"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -286,7 +286,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 90018,
+      "bytes": 88911,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -323,7 +323,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-22T10:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T11:00:14Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -338,6 +338,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Smrtící ebola kousek od českých hranic. Berlínská nemocnice popsala, jak na tom nakažený muž je",
+            "publishedAt": "2026-05-22T11:00:14Z"
+          },
           {
             "title": "Zdravotnická skupina EUC posiluje. Kupuje síť rehabilitačních pracovišť v 10 městech",
             "publishedAt": "2026-05-22T10:20:00Z"
@@ -365,10 +369,6 @@
           {
             "title": "Na nové léky proti rakovině čekají Češi přes 800 dní. Evropa nám utíká, ukázala nová data",
             "publishedAt": "2026-05-22T05:00:00Z"
-          },
-          {
-            "title": "Očkování i léky na předpis bez receptu přímo v lékárně. Najde Česko vzor v německé reformě?",
-            "publishedAt": "2026-05-21T14:10:00Z"
           }
         ]
       }

@@ -1,31 +1,56 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-22T10:50:59.746330Z",
+  "ingestedAt": "2026-05-22T11:34:54.403520Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Poučení z Maďarska: Když přihráváte zakázky oligarchům, nakonec prohrají všichni. Státní kasa je prázdná, říká ekonom",
+      "url": "https://zahranicni.hn.cz/c1-67880770-pouceni-z-madarska-kdyz-prihravate-zakazky-oligarchum-nakonec-prohraji-vsichni-statni-kasa-je-prazdna-rika-ekonom",
+      "dt": "2026-05-22T11:22:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "ekonom",
+        "kasa",
+        "když",
+        "maďarska",
+        "nakonec",
+        "oligarchům",
+        "poučení",
+        "prohrají",
+        "prázdná",
+        "přihráváte",
+        "státní",
+        "všichni",
+        "zakázky",
+        "říká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
-      "title": "V Brně se sešli odpůrci sjezdu sudetských Němců, postavili &bdquo;barikádu&ldquo; z krabic. Protestu se zúčastnila i Konečná",
+      "title": "U stolů na náměstí v Brně se usadili sudetští Němci, přišli i protestující",
       "url": "https://domaci.hn.cz/c1-67880810-v-brne-se-sesli-odpurci-sjezdu-sudetskych-nemcu-postavili-bdquo-barikadu-ldquo-z-krabic",
       "dt": "2026-05-22T07:51:00Z",
       "media_raw": "HN / Ekonomika",
       "media_norm": "HN / Ekonomika",
       "tokens": [
-        "barikádu",
-        "bdquo",
         "brně",
-        "konečná",
-        "krabic",
-        "ldquo",
-        "němců",
-        "odpůrci",
-        "postavili",
-        "protestu",
-        "sešli",
-        "sjezdu",
-        "sudetských",
-        "zúčastnila"
+        "náměstí",
+        "němci",
+        "protestující",
+        "přišli",
+        "stolů",
+        "sudetští",
+        "usadili"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -975,31 +1000,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Favorit s pověstí průšviháře. Kdo je kandidát na šéfa Krkonošského národního parku?",
-      "url": "https://archiv.hn.cz/c1-67880070-favorit-s-povesti-prusvihare-kdo-je-kandidat-na-sefa-krkonosskeho-narodniho-parku",
-      "dt": "2026-05-21T15:29:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "favorit",
-        "kandidát",
-        "krkonošského",
-        "národního",
-        "parku",
-        "pověstí",
-        "průšviháře",
-        "šéfa"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1010,7 +1010,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 179853,
+      "bytes": 179726,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1047,10 +1047,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-22T07:51:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T11:22:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 37,
+          "sport": 1,
+          "finance": 36,
           "zdravi": 2,
           "zpravy": 1
         },
@@ -1065,7 +1066,11 @@
         },
         "sample_titles": [
           {
-            "title": "V Brně se sešli odpůrci sjezdu sudetských Němců, postavili &bdquo;barikádu&ldquo; z krabic. Protestu se zúčastnila i Konečná",
+            "title": "Poučení z Maďarska: Když přihráváte zakázky oligarchům, nakonec prohrají všichni. Státní kasa je prázdná, říká ekonom",
+            "publishedAt": "2026-05-22T11:22:00Z"
+          },
+          {
+            "title": "U stolů na náměstí v Brně se usadili sudetští Němci, přišli i protestující",
             "publishedAt": "2026-05-22T07:51:00Z"
           },
           {
@@ -1091,10 +1096,6 @@
           {
             "title": "Elektromobil pod 600 tisíc korun? To už znamená opravdu hodně kompromisů, říká k cenám reportér HN",
             "publishedAt": "2026-05-22T04:43:00Z"
-          },
-          {
-            "title": "Kde bydlí bohatí a kde chudí Pražané. Mapy ukazují, jak jsou promíchané různé sociální třídy",
-            "publishedAt": "2026-05-22T04:00:00Z"
           }
         ]
       }

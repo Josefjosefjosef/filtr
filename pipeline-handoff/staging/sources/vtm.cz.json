@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-22T10:50:59.746330Z",
+  "ingestedAt": "2026-05-22T11:34:54.403520Z",
   "items": [
     {
       "section": "veda",
@@ -24,6 +24,32 @@
         "ukážou",
         "vybrali",
         "vám"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Nvidia vydělala jako Apple a Microsoft dohromady. O herních grafikách už ani nemluví",
+      "url": "https://www.zive.cz/clanky/nvidia-vydelala-jako-apple-a-microsoft-dohromady-o-hernich-grafikach-uz-ani-nemluvi/sc-3-a-241325/default.aspx",
+      "dt": "2026-05-22T10:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "apple",
+        "dohromady",
+        "grafikách",
+        "herních",
+        "jako",
+        "microsoft",
+        "nemluví",
+        "nvidia",
+        "vydělala"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -937,38 +963,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Recenze hry Zero Parades: For Dead Spies. Balancování na hraně deliria s hloubkou, jaká se ve hrách nevidí často",
-      "url": "https://doupe.zive.cz/zero-parades-recenze-pc",
-      "dt": "2026-05-19T18:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "balancování",
-        "dead",
-        "deliria",
-        "for",
-        "hloubkou",
-        "hraně",
-        "hry",
-        "hrách",
-        "jaká",
-        "nevidí",
-        "parades",
-        "recenze",
-        "spies",
-        "zero",
-        "často"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -979,7 +973,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23052,
+      "bytes": 23119,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1016,7 +1010,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-22T08:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T10:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1034,6 +1028,10 @@
           {
             "title": "S jakou navigací na dovolenou v roce 2026? Vybrali jsme 12 nejlepších aplikací, které vám ukážou cestu",
             "publishedAt": "2026-05-21T16:45:00Z"
+          },
+          {
+            "title": "Nvidia vydělala jako Apple a Microsoft dohromady. O herních grafikách už ani nemluví",
+            "publishedAt": "2026-05-22T10:45:00Z"
           },
           {
             "title": "Cenový masakr applovských produktů na Allegru. Rekordně zlevnily iPhony, iPady, Watch i Macy",
@@ -1058,10 +1056,6 @@
           {
             "title": "Češi už měsíčně spotřebují 15 GB mobilních dat. Neomezený tarif má přitom jen každý třetí",
             "publishedAt": "2026-05-21T18:15:00Z"
-          },
-          {
-            "title": "Recenze sluchátek Sony 1000X The Collexion: Luxusní verze legendární řady se povedla",
-            "publishedAt": "2026-05-21T17:45:00Z"
           }
         ]
       }

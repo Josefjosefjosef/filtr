@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-22T10:50:59.746330Z",
+  "ingestedAt": "2026-05-22T11:34:54.403520Z",
   "items": [
     {
       "section": "finance",
@@ -22,6 +22,31 @@
         "vypadá",
         "vzdávají",
         "vědy"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Stopka pro „obalovou vyhlášku“? Česko iniciuje celoevropskou výzvu za odklad",
+      "url": "https://ekonomickydenik.cz/stopka-pro-obalovou-vyhlasku-cesko-iniciuje-celoevropskou-vyzvu-za-odklad/",
+      "dt": "2026-05-22T10:30:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "celoevropskou",
+        "iniciuje",
+        "obalovou",
+        "odklad",
+        "stopka",
+        "vyhlášku",
+        "výzvu",
+        "česko"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -767,29 +792,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Prohlédněte si: Vítězné návrhy trojice mostů pro rychlovlaky",
-      "url": "https://ekonomickydenik.cz/vitezne-navrhy-trojice-mostu-rychlovlaky/",
-      "dt": "2026-05-20T14:48:09Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "mostů",
-        "návrhy",
-        "prohlédněte",
-        "rychlovlaky",
-        "trojice",
-        "vítězné"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73647,
+      "bytes": 73411,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -840,10 +842,10 @@
         "raw_feed_latest_publishedAt": "2026-05-22T10:33:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 19,
+          "finance": 20,
           "zdravi": 4,
           "sport": 1,
-          "zpravy": 6
+          "zpravy": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -858,6 +860,10 @@
           {
             "title": "Bohatí bohatnou, chudí to vzdávají. Tak vypadá byrokratická džungle na podporu vědy",
             "publishedAt": "2026-05-22T10:33:00Z"
+          },
+          {
+            "title": "Stopka pro „obalovou vyhlášku“? Česko iniciuje celoevropskou výzvu za odklad",
+            "publishedAt": "2026-05-22T10:30:00Z"
           },
           {
             "title": "Polská vláda jde ve stopách Stanjury. Chce uvalit mimořádnou daň na Orlen",
@@ -882,10 +888,6 @@
           {
             "title": "Fixní, flexi, nebo protiinflační? Experti radí, jak vybrat ten správný Dluhopis republiky",
             "publishedAt": "2026-05-22T04:30:00Z"
-          },
-          {
-            "title": "„Lukašenkova vyjádření nemají žádnou váhu,“ zní z Kyjeva. Ukrajina dál opevňuje hranice",
-            "publishedAt": "2026-05-21T18:01:43Z"
           }
         ]
       }
