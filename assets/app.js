@@ -40804,7 +40804,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bsoud\w*\b/.test(x) ||
       /\btermin\w*\b/.test(x) ||
       /\bporad\w*\b/.test(x) ||
-      /\budalost\w*\b/.test(x)
+      /\budalost\w*\b/.test(x) ||
+      /\bkuryr\w*\b/.test(x) ||
+      /\bservis\w*\b/.test(x)
     );
   }
 

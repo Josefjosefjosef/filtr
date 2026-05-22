@@ -1,0 +1,263 @@
+{
+  "harness_id": "silver_timeline_scope_tense_diagnostic_v1",
+  "cluster": "timeline_scope_and_tense",
+  "main_commit": "6636d71f2a9ee135937c80fc29a91f3e787f68da",
+  "total_cases": 24,
+  "positive_total": 10,
+  "positive_pass": 10,
+  "negative_total": 14,
+  "negative_pass": 14,
+  "true_engine_fail_count": 0,
+  "harness_issue_count": 0,
+  "ambiguity_count": 0,
+  "ranking_weakness_count": 0,
+  "summary_weakness_count": 0,
+  "alias_timeline_mismatch_count": 0,
+  "safe_clarification_count": 0,
+  "safety_risk_count": 0,
+  "dominant_root_cause": "none",
+  "ready_for_engine_fix": false,
+  "recommended_fix_scope": "harness_or_ambiguity_only — no engine change",
+  "results": [
+    {
+      "id": "tl_pos_01",
+      "polarity": "positive",
+      "input": "Kdy jsem měl kurýra?",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "tl_pos_02",
+      "polarity": "positive",
+      "input": "Kdy jsem měla kurýra?",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "tl_pos_03",
+      "polarity": "positive",
+      "input": "Kdy jsem měl servis?",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "tl_pos_04",
+      "polarity": "positive",
+      "input": "Kdy jsem měla kontrolu?",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "tl_pos_05",
+      "polarity": "positive",
+      "input": "Kdy jsem měl jednání?",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "tl_pos_06",
+      "polarity": "positive",
+      "input": "Kdy jsem měla schůzku?",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "tl_pos_07",
+      "polarity": "positive",
+      "input": "Kdy jsem měl termín?",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "tl_pos_08",
+      "polarity": "positive",
+      "input": "Kdy jsem měla termín?",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "tl_pos_09",
+      "polarity": "positive",
+      "input": "Kdy jsem měl pohovor?",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "tl_pos_10",
+      "polarity": "positive",
+      "input": "Kdy jsem měla doktora?",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "tl_neg_11",
+      "polarity": "negative",
+      "input": "Kdy jsem měl koupit mléko?",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "tasks.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "tl_neg_12",
+      "polarity": "negative",
+      "input": "Kdy jsem měla koupit mléko?",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "tasks.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "tl_neg_13",
+      "polarity": "negative",
+      "input": "Kdy jsem měl zavolat mámě?",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "unknown",
+      "processingState": "CLARIFICATION",
+      "bucket": ""
+    },
+    {
+      "id": "tl_neg_14",
+      "polarity": "negative",
+      "input": "Kdy jsem měla zaplatit nájem?",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "tasks.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "tl_neg_15",
+      "polarity": "negative",
+      "input": "Kdy jsem měl udělat úkol?",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "tasks.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "tl_neg_16",
+      "polarity": "negative",
+      "input": "Kdy jsem měla poslat dokumenty?",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "tasks.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "tl_neg_17",
+      "polarity": "negative",
+      "input": "Kdy jsem si poznamenal heslo?",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "clarification",
+      "processingState": "CLARIFICATION",
+      "bucket": ""
+    },
+    {
+      "id": "tl_neg_18",
+      "polarity": "negative",
+      "input": "Kdy jsem ukládal poznámku o bance?",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "clarification",
+      "processingState": "CLARIFICATION",
+      "bucket": ""
+    },
+    {
+      "id": "tl_neg_19",
+      "polarity": "negative",
+      "input": "Jen se ptám, kdy jsem měl kurýra, nic neukládej.",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "tl_neg_20",
+      "polarity": "negative",
+      "input": "Nechci nic vytvářet, kdy jsem měla kurýra?",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "tl_neg_21",
+      "polarity": "negative",
+      "input": "Kdy jsem měl kurýra, ale nic nepřidávej.",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "tl_neg_22",
+      "polarity": "negative",
+      "input": "Kdy jsem měla schůzku v kalendáři?",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "tl_neg_23",
+      "polarity": "negative",
+      "input": "Kdy jsem měla koupit dárek v úkolech?",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "unknown",
+      "processingState": "CLARIFICATION",
+      "bucket": ""
+    },
+    {
+      "id": "tl_neg_24",
+      "polarity": "negative",
+      "input": "Kdy jsem si zapsala poznámku o právníkovi?",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "clarification",
+      "processingState": "CLARIFICATION",
+      "bucket": ""
+    }
+  ]
+}
