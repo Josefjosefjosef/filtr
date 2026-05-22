@@ -70,6 +70,14 @@ const {
   runSimulatedProductHandoffContinuation,
   CLI_SELFTEST_MAP,
 } = require("./silver-product-handoff-continuation.cjs");
+const {
+  classifyProductArtifactGovernance,
+  classifyCap50CloseoutWithProductArtifacts,
+  pathAllowedAsAutonomousProductArtifact,
+  resolveProductArtifactContextFromRepo,
+  runProductArtifactClassifierSelftest,
+  cmdProductArtifactClassifierEval,
+} = require("./silver-product-artifact-classifier.cjs");
 
 const REPO = path.resolve(__dirname, "..");
 const SCRIPTS = __dirname;
@@ -323,11 +331,60 @@ function classifyCap50CloseoutFromDirtyPaths(paths, opts) {
       valid_product_work: vpwClass.valid_product_work || null,
     };
   }
-  if (vpwClass.closeout_kind === "runtime_artifact_restorable" || vpwClass.closeout_kind === "forbidden_dirty") {
+  if (vpwClass.closeout_kind === "runtime_artifact_restorable") {
     return {
       closeout_kind: vpwClass.closeout_kind,
       blocked_dirty_classification: vpwClass.blocked_dirty_classification || "",
       failure_class: vpwClass.failure_class || vpwClass.closeout_kind,
+    };
+  }
+  if (vpwClass.closeout_kind === "forbidden_dirty") {
+    const pacClass = classifyCap50CloseoutWithProductArtifacts(list, {
+      selectorCluster: o.selectorCluster || pickSelectorCluster(REPO, o.selectorCluster),
+      repoRoot: REPO,
+      safetyCounters: o.safetyCounters,
+      engineChanged: o.engineChanged,
+      assetsAppChanged: o.assetsAppChanged,
+      autonomousMode: o.autonomousMode,
+      capRuntime: o.capRuntime,
+      productHandoffContinuation: o.productHandoffContinuation,
+      expectedOutcome: o.expectedOutcome,
+    });
+    if (pacClass.closeout_kind === "product_artifact_runtime_pending") {
+      return {
+        closeout_kind: pacClass.closeout_kind,
+        blocked_dirty_classification: pacClass.blocked_dirty_classification || "",
+        failure_class: pacClass.failure_class || pacClass.closeout_kind,
+        product_artifact: pacClass.product_artifact || null,
+        git_status_clean: "NO",
+        safe_to_continue: "YES",
+      };
+    }
+    return {
+      closeout_kind: vpwClass.closeout_kind,
+      blocked_dirty_classification: vpwClass.blocked_dirty_classification || "",
+      failure_class: vpwClass.failure_class || vpwClass.closeout_kind,
+    };
+  }
+  const pacFallback = classifyCap50CloseoutWithProductArtifacts(list, {
+    selectorCluster: o.selectorCluster || pickSelectorCluster(REPO, o.selectorCluster),
+    repoRoot: REPO,
+    safetyCounters: o.safetyCounters,
+    engineChanged: o.engineChanged,
+    assetsAppChanged: o.assetsAppChanged,
+    autonomousMode: o.autonomousMode,
+    capRuntime: o.capRuntime,
+    productHandoffContinuation: o.productHandoffContinuation,
+    expectedOutcome: o.expectedOutcome,
+  });
+  if (pacFallback.closeout_kind === "product_artifact_runtime_pending") {
+    return {
+      closeout_kind: pacFallback.closeout_kind,
+      blocked_dirty_classification: pacFallback.blocked_dirty_classification || "",
+      failure_class: pacFallback.failure_class || pacFallback.closeout_kind,
+      product_artifact: pacFallback.product_artifact || null,
+      git_status_clean: "NO",
+      safe_to_continue: "YES",
     };
   }
   const restorableOnly = list.every((n) => Boolean(cap50RuntimeRestoreReason(n)));
@@ -381,12 +438,27 @@ function gitCleanExceptSkippableRuntimeArtifacts() {
   return true;
 }
 
-function cap50PreflightRuntimeCleanup(dryRunOnly) {
+function cap50PreflightRuntimeCleanup(dryRunOnly, opts) {
+  const o = opts || {};
+  const pacCtx = resolveProductArtifactContextFromRepo(REPO, {
+    selectorCluster: o.selectorCluster,
+    safetyCounters: o.safetyCounters,
+    autonomousMode: o.autonomousMode,
+    capRuntime: o.capRuntime,
+    productHandoffContinuation: o.productHandoffContinuation,
+    expectedOutcome: o.expectedOutcome,
+    engineChanged: o.engineChanged,
+    assetsAppChanged: o.assetsAppChanged,
+  });
+  const allowProductArtifact =
+    String(o.allowProductArtifactRuntimePending || "").toUpperCase() === "YES" ||
+    Boolean(o.allowProductArtifactRuntimePending);
   const po = gitStatusPorcelain();
   const dirtyBefore = [];
   const toRestore = [];
   const blocked = [];
   let allowCount = 0;
+  let productArtifactPendingCount = 0;
   if (po && po !== "DIRTY_UNKNOWN") {
     for (const raw of po.split(/\r?\n/)) {
       const line = String(raw || "").replace(/\r$/, "").trim();
@@ -407,6 +479,20 @@ function cap50PreflightRuntimeCleanup(dryRunOnly) {
       }
       const reason = cap50RuntimeRestoreReason(p);
       if (st === "??") {
+        if (allowProductArtifact) {
+          const pacOne = classifyProductArtifactGovernance(
+            Object.assign({ dirtyPaths: [p], repoRoot: REPO }, pacCtx, {
+              autonomousMode: pacCtx.autonomousMode ? "YES" : "NO",
+              capRuntime: pacCtx.capRuntime ? "YES" : "NO",
+              productHandoffContinuation: pacCtx.productHandoffContinuation ? "YES" : "NO",
+            }),
+          );
+          if (pacOne.classification === "SAFE_PRODUCT_SCRIPT_ONLY") {
+            productArtifactPendingCount++;
+            allowCount++;
+            continue;
+          }
+        }
         blocked.push(reason ? p + "(untracked_runtime_unknown)" : p + "(untracked_unknown)");
         continue;
       }
@@ -440,7 +526,17 @@ function cap50PreflightRuntimeCleanup(dryRunOnly) {
   }
   let cleanAfter = gitCleanExceptSkippableRuntimeArtifacts() ? "YES" : "NO";
   let remainingPaths = gitChangedFilesList();
-  let closeoutClass = classifyCap50CloseoutFromDirtyPaths(remainingPaths);
+  let closeoutClass = classifyCap50CloseoutFromDirtyPaths(remainingPaths, {
+    selectorCluster: o.selectorCluster,
+    safetyCounters: o.safetyCounters,
+    autonomousMode: allowProductArtifact && pacCtx.autonomousMode ? "YES" : "NO",
+    capRuntime: allowProductArtifact && pacCtx.capRuntime ? "YES" : "NO",
+    productHandoffContinuation:
+      allowProductArtifact && pacCtx.productHandoffContinuation ? "YES" : "NO",
+    expectedOutcome: pacCtx.expectedOutcome,
+    engineChanged: pacCtx.engineChanged,
+    assetsAppChanged: pacCtx.assetsAppChanged,
+  });
   if (!dryRunOnly && blocked.length === 0 && cleanAfter === "NO" && closeoutClass.closeout_kind === "runtime_artifact_restorable") {
     for (const rel of remainingPaths) {
       if (!cap50RuntimeRestoreReason(rel)) continue;
@@ -457,12 +553,33 @@ function cap50PreflightRuntimeCleanup(dryRunOnly) {
     }
     cleanAfter = gitCleanExceptSkippableRuntimeArtifacts() ? "YES" : "NO";
     remainingPaths = gitChangedFilesList();
-    closeoutClass = classifyCap50CloseoutFromDirtyPaths(remainingPaths);
+    closeoutClass = classifyCap50CloseoutFromDirtyPaths(remainingPaths, {
+      selectorCluster: o.selectorCluster,
+      safetyCounters: o.safetyCounters,
+      autonomousMode: allowProductArtifact && pacCtx.autonomousMode ? "YES" : "NO",
+      capRuntime: allowProductArtifact && pacCtx.capRuntime ? "YES" : "NO",
+      productHandoffContinuation:
+        allowProductArtifact && pacCtx.productHandoffContinuation ? "YES" : "NO",
+      expectedOutcome: pacCtx.expectedOutcome,
+      engineChanged: pacCtx.engineChanged,
+      assetsAppChanged: pacCtx.assetsAppChanged,
+    });
   }
   let safe = "NO";
   if (blocked.length === 0) {
     if (cleanAfter === "YES") safe = "YES";
     else if (dryRunOnly && toRestore.length > 0 && dirtyBefore.length === toRestore.length) safe = "YES";
+    else if (
+      allowProductArtifact &&
+      closeoutClass.closeout_kind === "product_artifact_runtime_pending" &&
+      closeoutClass.safe_to_continue === "YES"
+    ) {
+      safe = "YES";
+    } else if (o.allowHandoffDirty && closeoutClass.closeout_kind === "runtime_artifact_restorable") {
+      safe = "YES";
+    } else if (o.allowValidProductWork && closeoutClass.closeout_kind === "valid_product_work") {
+      safe = "YES";
+    }
   }
   const passFail = safe === "YES" ? "PASS" : "FAIL";
   const forbiddenRemaining = remainingPaths.filter(
@@ -471,10 +588,12 @@ function cap50PreflightRuntimeCleanup(dryRunOnly) {
   const result = {
     dirty_before: dirtyBefore.join(";"),
     allowlisted_runtime_dirty_count: String(allowCount),
+    product_artifact_runtime_pending_count: String(productArtifactPendingCount),
     restored_runtime_files: restored.join(";"),
     blocked_dirty_files: blocked.join(";"),
     git_clean_after: cleanAfter,
     safe_to_start_cycle: safe,
+    safe_to_continue: safe,
     PASS_FAIL: passFail,
     closeout_kind: closeoutClass.closeout_kind,
     failure_class: cleanAfter === "YES" ? "none" : closeoutClass.closeout_kind,
@@ -484,10 +603,14 @@ function cap50PreflightRuntimeCleanup(dryRunOnly) {
   console.log("=== SILVER_CAP50_PREFLIGHT_CLEANUP_RESULT ===");
   console.log("dirty_before=" + result.dirty_before);
   console.log("allowlisted_runtime_dirty_count=" + result.allowlisted_runtime_dirty_count);
+  if (result.product_artifact_runtime_pending_count) {
+    console.log("product_artifact_runtime_pending_count=" + result.product_artifact_runtime_pending_count);
+  }
   console.log("restored_runtime_files=" + result.restored_runtime_files);
   console.log("blocked_dirty_files=" + result.blocked_dirty_files);
   console.log("git_clean_after=" + result.git_clean_after);
   console.log("safe_to_start_cycle=" + result.safe_to_start_cycle);
+  if (result.safe_to_continue) console.log("safe_to_continue=" + result.safe_to_continue);
   console.log("closeout_kind=" + result.closeout_kind);
   console.log("failure_class=" + result.failure_class);
   if (result.blocked_dirty_classification) {
@@ -732,14 +855,38 @@ function safetyBlockFromRunReportMd(text) {
 
 function dirtyGitUnexpectedForFullAutoLoop(changedList) {
   const list = Array.isArray(changedList) ? changedList : [];
+  const normalized = list.map((rel) => normalizeRepoRel(rel)).filter(Boolean);
   const selectorCluster = pickSelectorCluster(REPO, "");
   const vpwProbe = classifyValidProductWork({
-    dirtyPaths: list.map((rel) => normalizeRepoRel(rel)).filter(Boolean),
+    dirtyPaths: normalized,
     selectorCluster,
     repoRoot: REPO,
   });
   if (vpwProbe.classification === "VALID_PRODUCT_WORK") {
     return { pass: true, firstUnexpected: "", valid_product_work: "YES", selector_cluster: selectorCluster };
+  }
+  const pacCtx = resolveProductArtifactContextFromRepo(REPO, {
+    selectorCluster,
+    autonomousMode: "YES",
+    capRuntime: "YES",
+    productHandoffContinuation: "YES",
+  });
+  const pacProbe = classifyProductArtifactGovernance(
+    Object.assign({ dirtyPaths: normalized, repoRoot: REPO }, pacCtx, {
+      autonomousMode: pacCtx.autonomousMode ? "YES" : "NO",
+      capRuntime: pacCtx.capRuntime ? "YES" : "NO",
+      productHandoffContinuation: pacCtx.productHandoffContinuation ? "YES" : "NO",
+    }),
+  );
+  if (pacProbe.classification === "SAFE_PRODUCT_SCRIPT_ONLY") {
+    return {
+      pass: true,
+      firstUnexpected: "",
+      valid_product_work: "NO",
+      product_artifact_runtime_pending: "YES",
+      selector_cluster: selectorCluster,
+      git_status_clean: "NO",
+    };
   }
   for (const rel of list) {
     const n = normalizeRepoRel(rel);
@@ -750,6 +897,7 @@ function dirtyGitUnexpectedForFullAutoLoop(changedList) {
     if (isTransientGeneratedAuditReportRel(n)) continue;
     if (isTransientGeneratedClusterClassifierReportRel(n)) continue;
     if (pathAllowedForFullAutoLoop(n, selectorCluster, REPO)) continue;
+    if (pathAllowedAsAutonomousProductArtifact(n, Object.assign({ repoRoot: REPO }, pacCtx))) continue;
     return { pass: false, firstUnexpected: n, valid_product_work: "NO", selector_cluster: selectorCluster };
   }
   return { pass: true, firstUnexpected: "", valid_product_work: "NO", selector_cluster: selectorCluster };
@@ -4477,6 +4625,8 @@ function parseArgs(argv) {
     else if (a === "--safe-blocked-handoff-contract-selftest") out.cmd = "safe-blocked-handoff-contract-selftest";
     else if (a === "--stale-cursor-invoke-hardening-selftest") out.cmd = "stale-cursor-invoke-hardening-selftest";
     else if (a === "--valid-product-work-closeout-selftest") out.cmd = "valid-product-work-closeout-selftest";
+    else if (a === "--product-artifact-classifier-selftest") out.cmd = "product-artifact-classifier-selftest";
+    else if (a === "--product-artifact-classifier-eval") out.cmd = "product-artifact-classifier-eval";
     else if (a === "--cluster-consistency-lock-selftest") out.cmd = "cluster-consistency-lock-selftest";
     else if (a === "--scorecard-finalize-runtime-selftest") out.cmd = "scorecard-finalize-runtime-selftest";
     else if (a === "--valid-product-work-closeout-eval") out.cmd = "valid-product-work-closeout-eval";
@@ -4587,6 +4737,10 @@ if (require.main === module) {
     process.exit(runStaleCursorInvokeHardeningSelftest(REPO) ? 0 : 1);
   } else if (p.cmd === "valid-product-work-closeout-selftest") {
     process.exit(runValidProductWorkCloseoutSelftest() ? 0 : 1);
+  } else if (p.cmd === "product-artifact-classifier-selftest") {
+    process.exit(runProductArtifactClassifierSelftest() ? 0 : 1);
+  } else if (p.cmd === "product-artifact-classifier-eval") {
+    process.exit(cmdProductArtifactClassifierEval(argv));
   } else if (p.cmd === "cluster-consistency-lock-selftest") {
     const { runClusterConsistencyLockSelftest } = require("./silver-cluster-consistency-lock.cjs");
     process.exit(runClusterConsistencyLockSelftest() ? 0 : 1);
