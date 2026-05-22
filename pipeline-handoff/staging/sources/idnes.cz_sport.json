@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-22T22:14:33.152944Z",
+  "ingestedAt": "2026-05-22T22:54:24.489872Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kvalifikace na sprint F1 v Kanadě patřila Mercedesu, vyhrál Russell před Antonellim",
+      "url": "https://www.idnes.cz/sport/formule/trenink-velka-cena-kanady-albon-srazil-sviste.A260522_202930_formule_ten",
+      "dt": "2026-05-22T22:22:38Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "antonellim",
+        "kanadě",
+        "kvalifikace",
+        "mercedesu",
+        "patřila",
+        "russell",
+        "sprint",
+        "vyhrál"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Peníze? Já jel za Červenkou! Birner o Fribourgu říká: Tehdy mě zachránil z Ruska",
+      "url": "https://www.idnes.cz/hokej/ms-2026/michal-birner-fribourg-angazma-cervenka-rozhovor.A260520_144018_ms-hokej-2026_hrj",
+      "dt": "2026-05-22T22:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "birner",
+        "fribourgu",
+        "jel",
+        "peníze",
+        "ruska",
+        "tehdy",
+        "zachránil",
+        "červenkou",
+        "říká"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -200,31 +251,6 @@
         "startu",
         "výsledky",
         "češi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Antonelli byl nejrychlejší v jediném tréninku F1 v Kanadě, Albon srazil sviště",
-      "url": "https://www.idnes.cz/sport/formule/trenink-velka-cena-kanady-albon-srazil-sviste.A260522_202930_formule_ten",
-      "dt": "2026-05-22T18:30:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "albon",
-        "antonelli",
-        "jediném",
-        "kanadě",
-        "nejrychlejší",
-        "srazil",
-        "sviště",
-        "tréninku"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -748,32 +774,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ronaldo s an-Nasrem konečně získal saúdský titul, na hřišti slavil i s rodinou",
-      "url": "https://www.idnes.cz/fotbal/zahranici/cristiano-ronaldo-an-nasr-oslavy.A260522_110020_fot_zahranici_kazdt",
-      "dt": "2026-05-22T09:39:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "hřišti",
-        "konečně",
-        "nasrem",
-        "rodinou",
-        "ronaldo",
-        "saúdský",
-        "slavil",
-        "titul",
-        "získal"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -784,7 +784,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47701,
+      "bytes": 48065,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -821,7 +821,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T21:16:37Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T22:22:38Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -836,6 +836,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kvalifikace na sprint F1 v Kanadě patřila Mercedesu, vyhrál Russell před Antonellim",
+            "publishedAt": "2026-05-22T22:22:38Z"
+          },
+          {
+            "title": "Peníze? Já jel za Červenkou! Birner o Fribourgu říká: Tehdy mě zachránil z Ruska",
+            "publishedAt": "2026-05-22T22:00:00Z"
+          },
           {
             "title": "Švédové si bezpečně poradili s Itálií. Kanada proti Slovinsku zpečetila postup",
             "publishedAt": "2026-05-22T21:16:37Z"
@@ -859,14 +867,6 @@
           {
             "title": "Pavouk MS v hokeji 2026: program play off a možní soupeři Česka ve čtvrtfinále",
             "publishedAt": "2026-05-22T20:29:00Z"
-          },
-          {
-            "title": "I čtvrtý zápas pro hosty. Jelínkovi to pálilo, ale koncovka patřila Pardubicím",
-            "publishedAt": "2026-05-22T20:13:38Z"
-          },
-          {
-            "title": "Giro d’Italia 2026: program, přehled a výsledky etap, favorité, Češi na startu",
-            "publishedAt": "2026-05-22T19:12:00Z"
           }
         ]
       }

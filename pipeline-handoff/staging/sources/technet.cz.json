@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-05-22T22:14:33.152944Z",
+  "ingestedAt": "2026-05-22T22:54:24.489872Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Nejen vrtulníková show mezi kapkami deště. Ohlédnutí za oslavou v Náměšti",
+      "url": "https://www.idnes.cz/technet/vojenstvi/namest-2026-dod.A260521_150751_vojenstvi_alv/foto",
+      "dt": "2026-05-22T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "deště",
+        "kapkami",
+        "nejen",
+        "náměšti",
+        "ohlédnutí",
+        "oslavou",
+        "show",
+        "vrtulníková"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -739,32 +764,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Objevila štěpení atomu, Nobelovku nemá. Meitnerová čelila nacistům i zneuznání",
-      "url": "https://www.idnes.cz/technet/veda/objevila-stepeni-atomu-nobelovku-nema-meitnerova-celila-nacistum-i-zneuznani.A260507_135437_veda_bury",
-      "dt": "2026-05-12T14:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "atomu",
-        "meitnerová",
-        "nacistům",
-        "nemá",
-        "nobelovku",
-        "objevila",
-        "zneuznání",
-        "čelila",
-        "štěpení"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -775,7 +774,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 46102,
+      "bytes": 46057,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -812,11 +811,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 17,
-          "zpravy": 13
+          "other": 18,
+          "zpravy": 12
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -828,6 +827,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejen vrtulníková show mezi kapkami deště. Ohlédnutí za oslavou v Náměšti",
+            "publishedAt": "2026-05-22T22:00:00Z"
+          },
           {
             "title": "Na exkurzi v mozku. Multitasking je pro něj nepřirozený, i během spánku hýří aktivitou",
             "publishedAt": "2026-05-22T15:00:00Z"
@@ -855,10 +858,6 @@
           {
             "title": "Lži a manipulace o druhé světové válce. Jak to bylo doopravdy",
             "publishedAt": "2026-05-20T22:00:00Z"
-          },
-          {
-            "title": "Za tajemstvím ultračistých krystalů. Fyzik prozrazuje, že výzkum v Česku si nezadá s tím na Západě",
-            "publishedAt": "2026-05-20T10:30:00Z"
           }
         ]
       }
