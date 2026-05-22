@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-22T10:09:33.738225Z",
+  "ingestedAt": "2026-05-22T10:50:59.746330Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zdravotnická skupina EUC posiluje. Kupuje síť rehabilitačních pracovišť v 10 městech",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/euc-kupuje-sit-rehabilitacnich-pracovist/",
+      "dt": "2026-05-22T10:20:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "euc",
+        "kupuje",
+        "městech",
+        "posiluje",
+        "pracovišť",
+        "rehabilitačních",
+        "skupina",
+        "síť",
+        "zdravotnická"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -250,36 +276,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Vlastní země ho nechtěla. Bílý dům tajně bránil návratu lékaře nakaženého ebolou, tvrdí tisk",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/bily-dum-ebola-nakazeny-lekar/",
-      "dt": "2026-05-21T10:32:28Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "bránil",
-        "bílý",
-        "dům",
-        "ebolou",
-        "lékaře",
-        "nakaženého",
-        "nechtěla",
-        "návratu",
-        "tajně",
-        "tisk",
-        "tvrdí",
-        "vlastní",
-        "země"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -290,7 +286,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 93080,
+      "bytes": 90018,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -327,7 +323,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-22T09:06:01Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T10:20:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -342,6 +338,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zdravotnická skupina EUC posiluje. Kupuje síť rehabilitačních pracovišť v 10 městech",
+            "publishedAt": "2026-05-22T10:20:00Z"
+          },
           {
             "title": "Tragédie na Ostravsku. Neočkovaný předškolák zemřel na záškrt, hygienici naléhavě varují rodiče",
             "publishedAt": "2026-05-22T09:06:01Z"
@@ -369,10 +369,6 @@
           {
             "title": "Očkování i léky na předpis bez receptu přímo v lékárně. Najde Česko vzor v německé reformě?",
             "publishedAt": "2026-05-21T14:10:00Z"
-          },
-          {
-            "title": "Zemřel šéf nemocnic Královéhradeckého kraje Tomáš Halajčuk. Bylo mu pouhých 45 let",
-            "publishedAt": "2026-05-21T12:55:42Z"
           }
         ]
       }

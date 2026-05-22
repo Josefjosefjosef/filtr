@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-22T10:09:33.738225Z",
+  "ingestedAt": "2026-05-22T10:50:59.746330Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ekonomická nespokojenost v Bolívii přerostla v protesty žádající odchod prezidenta",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/ekonomicka-nespokojenost-v-bolivii-prerostla-v-protesty-zadajici-odchod-prezidenta-373720",
+      "dt": "2026-05-22T10:05:31Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "bolívii",
+        "ekonomická",
+        "nespokojenost",
+        "odchod",
+        "prezidenta",
+        "protesty",
+        "přerostla",
+        "žádající"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -129,18 +154,24 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Správa železnic představila své plány na modernizaci tratí",
+      "title": "Do roku 2033 by mělo být elektrifikováno dalších 590 kilometrů tratí, řekl šéf Správy železnic",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/sprava-zeleznic-predstavuje-sve-plany-na-zabezpeceni-trati-373732",
       "dt": "2026-05-22T08:38:18Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "modernizaci",
-        "plány",
-        "představila",
-        "správa",
-        "své",
+        "2033",
+        "590",
+        "být",
+        "dalších",
+        "elektrifikováno",
+        "kilometrů",
+        "mělo",
+        "roku",
+        "správy",
         "tratí",
+        "řekl",
+        "šéf",
         "železnic"
       ],
       "feedCategory": "zpravy",
@@ -727,25 +758,26 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Sudetští Němci s Wintonovými dětmi uctili oběti holocaustu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/meeting-brno-a-setkani-sudetskych-nemcu-zahaji-pieta-za-obeti-holocaustu-373708",
-      "dt": "2026-05-21T14:56:28Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Velké loučení. Guardiola po deseti letech končí v Manchesteru City",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/velke-louceni-guardiola-po-deseti-letech-konci-v-manchesteru-city-156947",
+      "dt": "2026-05-22T10:40:24Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "dětmi",
-        "holocaustu",
-        "němci",
-        "oběti",
-        "sudetští",
-        "uctili",
-        "wintonovými"
+        "city",
+        "deseti",
+        "guardiola",
+        "končí",
+        "letech",
+        "loučení",
+        "manchesteru",
+        "velké"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1465,32 +1497,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Jsme zklamaní, hodnotil Kozel po finále. Naděje na start v pohárech se nevzdává",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/jsme-zklamani-hodnotil-kozel-po-finale-nadeje-na-start-v-poharech-se-nevzdava-156918",
-      "dt": "2026-05-20T21:05:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "finále",
-        "hodnotil",
-        "jsme",
-        "kozel",
-        "naděje",
-        "nevzdává",
-        "pohárech",
-        "start",
-        "zklamaní"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1501,7 +1507,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43059,
+      "bytes": 43312,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1561,7 +1567,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T09:54:03Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T10:05:31Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1578,6 +1584,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ekonomická nespokojenost v Bolívii přerostla v protesty žádající odchod prezidenta",
+            "publishedAt": "2026-05-22T10:05:31Z"
+          },
           {
             "title": "Pavel a Steinmeier věří, že se události v Brně ponesou v duchu porozumění",
             "publishedAt": "2026-05-22T09:54:03Z"
@@ -1599,16 +1609,12 @@
             "publishedAt": "2026-05-22T08:46:39Z"
           },
           {
-            "title": "Správa železnic představila své plány na modernizaci tratí",
+            "title": "Do roku 2033 by mělo být elektrifikováno dalších 590 kilometrů tratí, řekl šéf Správy železnic",
             "publishedAt": "2026-05-22T08:38:18Z"
           },
           {
             "title": "Unikátní nahrávky procesu s K. H. Frankem připomínají poválečnou atmosféru",
             "publishedAt": "2026-05-22T08:32:18Z"
-          },
-          {
-            "title": "Jde o transparentnost, hájí Vondráček zákon o neziskových organizacích. Umlčení nepohodlných, reaguje Richterová",
-            "publishedAt": "2026-05-22T08:25:51Z"
           }
         ]
       }
@@ -1620,7 +1626,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36487,
+      "bytes": 36295,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1657,7 +1663,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T10:40:24Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1672,6 +1678,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Velké loučení. Guardiola po deseti letech končí v Manchesteru City",
+            "publishedAt": "2026-05-22T10:40:24Z"
+          },
           {
             "title": "Rada věří Dukle a dodává: Pořád je v českém fotbale skrytý červíček",
             "publishedAt": "2026-05-22T07:00:00Z"
@@ -1699,10 +1709,6 @@
           {
             "title": "Pardubice otočily třetí duel s Brnem a v semifinálové sérii snížily",
             "publishedAt": "2026-05-21T19:13:48Z"
-          },
-          {
-            "title": "První varování na MS pro Kanadu. Norové hráli hodně fyzicky, řekl Scheifele. Úleva, přidal Cozens",
-            "publishedAt": "2026-05-21T18:45:06Z"
           }
         ]
       }
@@ -1714,7 +1720,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77861,
+      "bytes": 77832,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

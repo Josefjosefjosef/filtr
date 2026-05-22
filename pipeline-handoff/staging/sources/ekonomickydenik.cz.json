@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-22T10:09:33.738225Z",
+  "ingestedAt": "2026-05-22T10:50:59.746330Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Bohatí bohatnou, chudí to vzdávají. Tak vypadá byrokratická džungle na podporu vědy",
+      "url": "https://ekonomickydenik.cz/bohati-bohatnou-chudi-to-vzdavaji-byrokraticka-dzungle-na-podporu-vedy/",
+      "dt": "2026-05-22T10:33:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bohatnou",
+        "bohatí",
+        "byrokratická",
+        "chudí",
+        "džungle",
+        "podporu",
+        "tak",
+        "vypadá",
+        "vzdávají",
+        "vědy"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -763,32 +790,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Slovensko o krok blíž ke zmrazení evropských peněz. Důvodů je stále víc",
-      "url": "https://ekonomickydenik.cz/slovensko-zmrazeni-evropskych-penez/",
-      "dt": "2026-05-20T14:15:43Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "blíž",
-        "důvodů",
-        "evropských",
-        "krok",
-        "peněz",
-        "slovensko",
-        "stále",
-        "víc",
-        "zmrazení"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73861,
+      "bytes": 73647,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,7 +837,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T09:42:59Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T10:33:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 19,
@@ -854,6 +855,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bohatí bohatnou, chudí to vzdávají. Tak vypadá byrokratická džungle na podporu vědy",
+            "publishedAt": "2026-05-22T10:33:00Z"
+          },
           {
             "title": "Polská vláda jde ve stopách Stanjury. Chce uvalit mimořádnou daň na Orlen",
             "publishedAt": "2026-05-22T09:42:59Z"
@@ -881,10 +886,6 @@
           {
             "title": "„Lukašenkova vyjádření nemají žádnou váhu,“ zní z Kyjeva. Ukrajina dál opevňuje hranice",
             "publishedAt": "2026-05-21T18:01:43Z"
-          },
-          {
-            "title": "Havlíček: Česko má v energetickém tažení proti povolenkám dalšího spoluhráče",
-            "publishedAt": "2026-05-21T15:48:44Z"
           }
         ]
       }

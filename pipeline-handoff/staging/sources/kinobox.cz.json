@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-22T10:09:33.738225Z",
+  "ingestedAt": "2026-05-22T10:50:59.746330Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kinobox Daily: Nikdy neberte stopaře. Brad Pitt vám ukáže, proč je to špatný nápad",
+      "url": "https://www.kinobox.cz/clanky/daily/54050-kinobox-daily-neberte-stopare-nikdy-brad-pitt-vam-ukaze-proc-je-to-spatny-napad",
+      "dt": "2026-05-22T10:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "brad",
+        "daily",
+        "kinobox",
+        "neberte",
+        "nikdy",
+        "nápad",
+        "pitt",
+        "proč",
+        "stopaře",
+        "ukáže",
+        "vám",
+        "špatný"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -521,34 +550,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Největší herec historie by Schwarzeneggera rozmáčkl. Osmý div světa má rekordy v ringu i v alkoholu",
-      "url": "https://www.kinobox.cz/clanky/tema/20368-nejvetsi-herec-historie-by-schwarzeneggera-rozmackl-osmy-div-sveta-ma-rekordy-v-ringu-i-alkoholu",
-      "dt": "2026-05-19T15:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "alkoholu",
-        "div",
-        "herec",
-        "historie",
-        "největší",
-        "osmý",
-        "rekordy",
-        "ringu",
-        "rozmáčkl",
-        "schwarzeneggera",
-        "světa"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -559,7 +560,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28409,
+      "bytes": 28343,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -596,7 +597,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-22T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T10:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -611,6 +612,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinobox Daily: Nikdy neberte stopaře. Brad Pitt vám ukáže, proč je to špatný nápad",
+            "publishedAt": "2026-05-22T10:00:00Z"
+          },
           {
             "title": "Rick a Morty míří do kin. Na připravovaném filmu chtěl pracovat i Zack Snyder",
             "publishedAt": "2026-05-22T09:00:00Z"
@@ -638,10 +643,6 @@
           {
             "title": "Unikátní gesto šampionů z Asia Expressu. Hradilek se Slavíkem odmítli peníze",
             "publishedAt": "2026-05-21T11:00:00Z"
-          },
-          {
-            "title": "Kinobox Daily: Nesnesitelný génius, který pokořil Moskvu. Objevte odvrácenou stranu slávy Rudolfa Nurejeva",
-            "publishedAt": "2026-05-21T10:00:00Z"
           }
         ]
       }
