@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-05-22T16:14:38.174104Z",
+  "ingestedAt": "2026-05-22T16:54:17.305078Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Policie Modrava lámala rekordy sledovanosti, přesto skončila. Režisér Jaroslav Soukup pátou řadu zakázal",
+      "url": "https://www.betterlife.cz/policie-modrava-lamala-rekordy-sledovanosti-presto-skoncila-reziser-jaroslav-soukup-patou-radu-zakazal/",
+      "dt": "2026-05-22T16:11:33Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "jaroslav",
+        "lámala",
+        "modrava",
+        "policie",
+        "pátou",
+        "přesto",
+        "rekordy",
+        "režisér",
+        "skončila",
+        "sledovanosti",
+        "soukup",
+        "zakázal",
+        "řadu"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -248,32 +278,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Z anonymního stalkera se vyklubal přítel rodiny. Ulice uzavírá napínavou linku",
-      "url": "https://www.betterlife.cz/z-anonymniho-stalkera-se-vyklubal-pritel-rodiny-ulice-uzavira-napinavou-linku/",
-      "dt": "2026-05-16T06:44:47Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "anonymního",
-        "linku",
-        "napínavou",
-        "přítel",
-        "rodiny",
-        "stalkera",
-        "ulice",
-        "uzavírá",
-        "vyklubal"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -284,7 +288,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 65309,
+      "bytes": 63892,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -344,10 +348,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-22T07:28:04Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T16:11:33Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 10
+          "zpravy": 1,
+          "zdravi": 9
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -359,6 +364,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policie Modrava lámala rekordy sledovanosti, přesto skončila. Režisér Jaroslav Soukup pátou řadu zakázal",
+            "publishedAt": "2026-05-22T16:11:33Z"
+          },
           {
             "title": "Igor Orozovič jako násilnický manžel: „Zlým se člověk nerodí. Zlým se člověk stává.“",
             "publishedAt": "2026-05-22T07:28:04Z"
@@ -386,10 +395,6 @@
           {
             "title": "Rozpuštěný a vypuštěný: Problémy s obsazením, změna režiséra a syn Brodského, který se snažil maskovat svůj špatný výkon",
             "publishedAt": "2026-05-17T09:25:08Z"
-          },
-          {
-            "title": "Miroslava Pleštilová dala před slibnou kariérou přednost rodině. V soukromí tvoří stabilní pár s hereckým kolegou",
-            "publishedAt": "2026-05-16T10:24:25Z"
           }
         ]
       }
