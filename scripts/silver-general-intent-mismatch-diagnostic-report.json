@@ -1,0 +1,263 @@
+{
+  "harness_id": "silver_general_intent_mismatch_diagnostic_v1",
+  "cluster": "general_intent_mismatch",
+  "main_commit": "c1b19139a51765b24f981801dc0e784d79868a26",
+  "total_cases": 24,
+  "positive_total": 10,
+  "positive_pass": 10,
+  "negative_total": 14,
+  "negative_pass": 14,
+  "true_engine_fail_count": 0,
+  "harness_issue_count": 0,
+  "ambiguity_count": 0,
+  "ranking_weakness_count": 0,
+  "retrieval_weakness_count": 0,
+  "summary_weakness_count": 0,
+  "safe_clarification_count": 0,
+  "safety_risk_count": 0,
+  "dominant_root_cause": "none",
+  "ready_for_engine_fix": false,
+  "recommended_fix_scope": "harness_or_ambiguity_only — no engine change",
+  "results": [
+    {
+      "id": "gim_pos_01",
+      "polarity": "positive",
+      "input": "vole kdy jsem měl toho doktora",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "gim_pos_02",
+      "polarity": "positive",
+      "input": "hele kdy jsem byl u právníka",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "gim_pos_03",
+      "polarity": "positive",
+      "input": "kdy jsem měl tu schůzku s bankou",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "gim_pos_04",
+      "polarity": "positive",
+      "input": "kdy jsem měl servis auta",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "gim_pos_05",
+      "polarity": "positive",
+      "input": "kdy jsem měl ten pohovor",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "gim_pos_06",
+      "polarity": "positive",
+      "input": "kdy jsem měl kurýra",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "gim_pos_07",
+      "polarity": "positive",
+      "input": "hele mrkni kdy jsem měl kontrolu",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "gim_pos_08",
+      "polarity": "positive",
+      "input": "jen se podívej kdy jsem měl doktora",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "gim_pos_09",
+      "polarity": "positive",
+      "input": "kdy jsem měl v kalendáři termín s úřadem",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "gim_pos_10",
+      "polarity": "positive",
+      "input": "kdy jsem měl jednání s klientem",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "gim_neg_11",
+      "polarity": "negative",
+      "input": "kdy jsem měl koupit mlíko",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "unknown",
+      "processingState": "CLARIFICATION",
+      "bucket": ""
+    },
+    {
+      "id": "gim_neg_12",
+      "polarity": "negative",
+      "input": "kdy jsem měl zaplatit nájem",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "tasks.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "gim_neg_13",
+      "polarity": "negative",
+      "input": "kdy jsem měl zavolat mámě",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "tasks.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "gim_neg_14",
+      "polarity": "negative",
+      "input": "kdy jsem měl poslat smlouvu",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "tasks.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "gim_neg_15",
+      "polarity": "negative",
+      "input": "kdy jsem měl udělat úkol",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "tasks.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "gim_neg_16",
+      "polarity": "negative",
+      "input": "kdy jsem měl vyzvednout balík",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "tasks.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "gim_neg_17",
+      "polarity": "negative",
+      "input": "kdy jsem si poznamenal heslo",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "clarification",
+      "processingState": "CLARIFICATION",
+      "bucket": ""
+    },
+    {
+      "id": "gim_neg_18",
+      "polarity": "negative",
+      "input": "kdy jsem si psal poznámku o bance",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "clarification",
+      "processingState": "CLARIFICATION",
+      "bucket": ""
+    },
+    {
+      "id": "gim_neg_19",
+      "polarity": "negative",
+      "input": "kdy jsem ukládal poznámku o právníkovi",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "clarification",
+      "processingState": "CLARIFICATION",
+      "bucket": ""
+    },
+    {
+      "id": "gim_neg_20",
+      "polarity": "negative",
+      "input": "kdy jsem si zapsal číslo účtu",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "clarification",
+      "processingState": "CLARIFICATION",
+      "bucket": ""
+    },
+    {
+      "id": "gim_neg_21",
+      "polarity": "negative",
+      "input": "nic neukládej jen mi řekni kdy jsem měl doktora",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "gim_neg_22",
+      "polarity": "negative",
+      "input": "nechci nic vytvářet kdy jsem měl servis",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "gim_neg_23",
+      "polarity": "negative",
+      "input": "jen se ptám kdy jsem měl schůzku",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    },
+    {
+      "id": "gim_neg_24",
+      "polarity": "negative",
+      "input": "kdy jsem měl doktora ale nic nepřidávej",
+      "status": "PASS",
+      "cat": "",
+      "normalizedIntent": "calendar.read",
+      "processingState": "READ_OK",
+      "bucket": ""
+    }
+  ]
+}

@@ -35422,7 +35422,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bkdy\s+mam\s+nakoupit\b/.test(x)) return true;
     if (/\bdokdy\s+mam\s+koupit\b/.test(x)) return true;
     if (/\bdo\s+kdy\s+mam\s+koupit\b/.test(x)) return true;
-    if (/\bkdy\s+(jsem|sem)\s+(mel|mela)\s+(koupit|nakoupit|kupovat|zaplatit|zavolat|poslat|objednat|udelat)\b/.test(x)) return true;
+    if (/\bkdy\s+(jsem|sem)\s+(mel|mela)\s+(koupit|nakoupit|kupovat|zaplatit|zavolat|poslat|objednat|udelat|vyzvednout|napsat)\b/.test(x)) return true;
     return false;
   }
 
@@ -36063,7 +36063,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       .replace(/^\s*kdy\s+m[aá]m\s+nakoupit\b\s*/i, "")
       .replace(/^\s*dokdy\s+m[aá]m\s+koupit\b\s*/i, "")
       .replace(/^\s*do\s+kdy\s+m[aá]m\s+koupit\b\s*/i, "")
-      .replace(/^\s*kdy\s+(jsem|sem)\s+(m[eě]l|m[eě]la)\s+(koupit|nakoupit|kupovat|zaplatit|zavolat|poslat|objednat|ud[eě]lat)\s*/i, "")
+      .replace(/^\s*kdy\s+(jsem|sem)\s+(m[eě]l|m[eě]la)\s+(koupit|nakoupit|kupovat|zaplatit|zavolat|poslat|objednat|ud[eě]lat|vyzvednout|napsat)\s*/i, "")
       .trim();
     rTail = rTail.replace(/\s*[?.!…]+$/u, "").trim();
     const fTail = foldCs(rTail);
@@ -39625,6 +39625,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const foldedWork = foldCs(work);
     const foldedFull = foldCs(String(rawIn || ""));
     if (
+      /\bkdy\s+(jsem|sem)\s+(?:mel\w*|mela\w*)\b/.test(foldedFull) &&
+      iuSilverP1PastCalendarRetrievalTaskLikeCueFolded(foldedFull) &&
+      !opts.fromExplicitTarget
+    ) {
+      return null;
+    }
+    if (
       iuSilverNegationTargetsTasksOnlyFolded(foldedFull) &&
       !opts.fromExplicitTarget &&
       (iuSilverHasExplicitCalendarTarget(foldedFull) || iuSilverLooksLikeSchedulingFragment(foldedFull, String(rawIn || "")))
@@ -40814,11 +40821,18 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
    * P1 past_calendar_retrieval: „kdy jsem byl u doktora / měl doktora / byla na úřadě …" → calendar.read (find_by_title, preferPast).
    */
   function iuSilverTryP1PastCalendarRetrievalKdyJsemReadSpec(r0, f0) {
-    const r = String(r0 || "")
+    let r = String(r0 || "")
       .trim()
       .replace(/\s*[?.!…]+$/u, "")
       .trim();
-    const f = String(f0 || "");
+    for (let leadStrip = 0; leadStrip < 8; leadStrip++) {
+      const rNext = r
+        .replace(/^\s*(?:hele|vole|vlastne|pockej|tyjo|no\s+tak|btw)\s+/i, "")
+        .trim();
+      if (rNext === r) break;
+      r = rNext;
+    }
+    const f = foldCs(r);
     if (!r || !f) return null;
     if (iuSilverCalendarQueryReadonlyPastPresentGuardWriteCueFolded(f)) return null;
     if (iuSilverP1PastCalendarRetrievalTaskLikeCueFolded(f)) return null;
@@ -41380,6 +41394,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     rCalReadLeadStrip = rCalReadLeadStrip
       .replace(/^(?:jen\s+se\s+pt[aá]m|nechci\s+nic\s+vytv[aá]r[eě]t)\s+/i, "")
       .trim();
+    for (let mobLead = 0; mobLead < 8; mobLead++) {
+      const rMobNext = rCalReadLeadStrip
+        .replace(/^\s*(?:hele|vole|vlastne|pockej|tyjo|no\s+tak|btw)\s+/i, "")
+        .trim();
+      if (rMobNext === rCalReadLeadStrip) break;
+      rCalReadLeadStrip = rMobNext;
+    }
     const rUse = rCalReadLeadStrip.length >= 4 ? rCalReadLeadStrip : r;
     if (iuSilverSelfCorrectionNoisyNegReadGuardFolded(f) || iuSilverSelfCorrectionNegationFlipGuardFolded(f)) {
       const messyNoisy = iuSilverTryMessyShortColloquialCalendarReadSpecFolded(rUse, f, now);
