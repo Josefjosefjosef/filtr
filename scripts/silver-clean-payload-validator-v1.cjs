@@ -111,9 +111,29 @@ function validateRawCommandInPayload(turn, rawText) {
   const title = draftField(turn, "title");
   const foldRaw = foldCs(rawText);
   const foldTitle = foldCs(title);
-  if (title && foldTitle.length > 20 && foldRaw.indexOf(foldTitle.slice(0, Math.min(30, foldTitle.length))) === 0) {
-    violations.push("raw_command_stored_as_title");
+  if (!title || foldTitle.length <= 20) return violations;
+  let matchedLen = 0;
+  if (foldRaw.indexOf(foldTitle) === 0) {
+    matchedLen = foldTitle.length;
+  } else {
+    const prefix = foldTitle.slice(0, Math.min(30, foldTitle.length));
+    if (foldRaw.indexOf(prefix) !== 0) return violations;
+    matchedLen = prefix.length;
   }
+  const remainder = foldRaw.slice(matchedLen).trim();
+  if (!remainder) return violations;
+  if (/^(?:a\s+(?:napi[sš]|napis)\s+tam\b|a\s+(?:připomeň|pripomen)\b)/i.test(remainder)) return violations;
+  if (
+    /^(z[ií]tra|zejtra|zitra|dnes(?:ka)?|pondeli|pond[eě]l[ií]|utery|stredu|ctvrtek|patek|p[aá]tek|rano|r[aá]no|odpoledne|dopoledne|v\s+p[aá]tek|dal[sš][ií]|ne[jk]ak|fakt|jako|prosim|d[ií]k(?:y(?:\s+moc)?)?|no\s+stress|honem|sp[eě]ch[aá]m|[\u2014\-–—.,!?()\s])+$/i.test(
+      remainder
+    )
+  ) {
+    return violations;
+  }
+  if (/^(z[ií]tra|zejtra|dnes|pondeli|rano|v\s+p[aá]tek|dal[sš][ií]|d[ií]k(?:y(?:\s+moc)?)?)\b/.test(remainder) && remainder.length < 48) {
+    return violations;
+  }
+  violations.push("raw_command_stored_as_title");
   return violations;
 }
 

@@ -88,6 +88,9 @@ const INSTRUCTION_PREFIXES = [
   /\bvytvor\s+mi\b/i,
   /\bvytvoř\s+mi\b/i,
   /\bdej\s+mi\b/i,
+  /\bdej\s+do\s+(?:ukol|úkol)/i,
+  /\bpridej\s+do\s+ukol/i,
+  /\bpřidej\s+do\s+úkol/i,
 ];
 
 const EVENT_NOTE_CUES = [
@@ -143,6 +146,7 @@ function stripAssistantInvocation(text) {
   if (!s) return s;
   const pats = [
     /^(?:hej|ahoj|čau|cau|zdar|nazdar)\s*,?\s*silver[eau]?\s*(?:,|\s+pros[ií]m(?:\s+t[eě])?)?\s+/iu,
+    /^(?:hele|promi[nň]|teda|k[aá]mo|prost[eě]|vlastn[eě]|ee|no\s+jo|m[uů][zž]e[sš])\s+silver[eau]?\s+/iu,
     /^silver[eau]?\s*,?\s*pros[ií]m(?:\s+t[eě])?\s+/iu,
     /^silver[eau]?\s+/iu,
     /^(?:prosim\s+t[eě]|prosím\s+tě)\s+silver[eau]?\s+/iu,
@@ -152,7 +156,9 @@ function stripAssistantInvocation(text) {
     for (let i = 0; i < pats.length; i++) {
       s = s.replace(pats[i], "").trim();
     }
-    s = s.replace(/\bsilver[eau]?\s+(?=vlo[zž]|ulo[zž]|uloz|pridej|přidej|dej|zapi[sš]|hod|ho[dď]|pripomen|připomeň|napi[sš])/iu, "").trim();
+    s = s.replace(/\b(?:hele|promi[nň]|teda|k[aá]mo|prost[eě]|vlastn[eě]|ee|no\s+jo|m[uů][zž]e[sš])\s+silver[eau]?\s+/giu, "").trim();
+    s = s.replace(/\bsilver[eau]?\s+(?=vlo[zž]|ulo[zž]|uloz|pridej|přidej|dej|zapi[sš]|hod|ho[dď]|pripomen|připomeň|napi[sš]|prist|příst|pond|servis|technik|zubar|sch[uů]zk)/iu, "").trim();
+    s = s.replace(/\bsilver[eau]?\b/giu, " ").trim();
     s = normalizeWs(s);
     if (s === prev) break;
   }
