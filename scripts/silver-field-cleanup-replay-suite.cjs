@@ -371,6 +371,38 @@ const CASES = [
     input: "Snídaně v Praze kde je dobrá káva",
     expectedIntent: "clarification",
     expect: { processingState: "CLARIFICATION", title: "", note: "", location: "" }
+  },
+  {
+    id: "SSES_CAL_NOVOTNY",
+    cluster: "semantic_slot_extraction_v1",
+    input:
+      "Ulož mi do kalendáře schůzku kterou mám jít dneska s panem Novotným v 15 hodin máme se potkat v Praze jedna a připomeň mi ať si vezmu nabíječku",
+    expectedIntent: "calendar.create",
+    expect: {
+      processingState: "READY_TO_SAVE",
+      title: "Schůzka s panem Novotným",
+      note: "Nabíječku",
+      location: "Praha 1"
+    }
+  },
+  {
+    id: "SSES_TASK_ROHLIKY",
+    cluster: "semantic_slot_extraction_v1",
+    input: "Připomeň mi že mám zítra koupit 10 rohlíků a napiš tam že je to důležité",
+    expectedIntent: "tasks.create",
+    expect: { processingState: "READY_TO_SAVE", title: "Koupit 10 rohlíků", note: "Je to důležité", location: "" }
+  },
+  {
+    id: "SSES_CAL_OBED",
+    cluster: "semantic_slot_extraction_v1",
+    input: "Ulož mi do kalendáře oběd s Pavlem zítra ve 12 v restauraci u Anděla",
+    expectedIntent: "calendar.create",
+    expect: {
+      processingState: "READY_TO_SAVE",
+      title: "Oběd s Pavlem",
+      note: "",
+      location: "Restaurace u Anděla"
+    }
   }
 ];
 
@@ -393,7 +425,9 @@ function runCase(eng, c) {
   const actualIntent = String(r.normalizedIntent || "");
   const processingState = String(r.processingState || "");
   const title = String((r.draft && r.draft.title) || "");
-  const note = String((r.draft && r.draft.note) || "");
+  const note = String(
+    (r.draft && (r.draft.targetContainer === "tasks" ? r.draft.taskNote || r.draft.note : r.draft.note)) || ""
+  );
   const location = locAddr(r.draft);
   const exp = c.expect;
   const mismatches = [];

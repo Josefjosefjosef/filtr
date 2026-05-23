@@ -145,6 +145,22 @@ const AUDIT_CATALOG = [
     safety_sensitive: true,
   },
   {
+    id: "semantic_slot_extraction_v1",
+    audit_name: "Semantic Slot Extraction Engine V1",
+    audit_size: "400+",
+    public_product_impact: "HIGH",
+    harness_scripts: ["silver-semantic-slot-extraction-diagnostic.cjs"],
+    foundation_scripts: [
+      "silver-semantic-payload-engine-v1-core.cjs",
+      "silver-clean-payload-validator-v1.cjs",
+      "silver-action-mode-v1-core.cjs",
+      "silver-audit-anti-duplication-v1.cjs",
+    ],
+    report_json: "silver-semantic-slot-extraction-diagnostic-report.json",
+    cluster_prefix: "ssesv1_",
+    safety_sensitive: true,
+  },
+  {
     id: "save_search_mode_v1",
     audit_name: "Save/Search Mode Architecture V1",
     audit_size: "400+",
