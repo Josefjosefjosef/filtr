@@ -1,0 +1,234 @@
+{
+  "harness_id": "silver_clean_save_payload_production_line_v2",
+  "main_commit": "994432ecab94fd33f622f54e16196dedeeedce71",
+  "cases_generated": 3250,
+  "cases_after_anti_duplication": 2881,
+  "payload_clean_rate": 0.961471711211385,
+  "field_cleanliness": 0.961471711211385,
+  "contamination": {
+    "instruction_leakage": 86,
+    "title_pollution": 36,
+    "note_pollution": 0,
+    "location_pollution": 0
+  },
+  "manual_product_probes": [
+    {
+      "id": "probe_A",
+      "pass": true,
+      "intent": "calendar.create",
+      "title": "Schůzka s novotnym",
+      "location": "Praha 1",
+      "note": "Vzít si nabijecku",
+      "body": ""
+    },
+    {
+      "id": "probe_B",
+      "pass": true,
+      "intent": "tasks.create",
+      "title": "Koupit rohliky",
+      "location": "",
+      "note": "Nesmim zapomenout",
+      "body": ""
+    },
+    {
+      "id": "probe_C",
+      "pass": true,
+      "intent": "notes.create",
+      "title": "",
+      "location": "",
+      "note": "",
+      "body": "pracka ma zaruku do prosince 2028"
+    },
+    {
+      "id": "probe_D",
+      "pass": true,
+      "intent": "calendar.create",
+      "title": "Oběd s Pavlem",
+      "location": "U Anděla",
+      "note": "",
+      "body": ""
+    },
+    {
+      "id": "probe_E",
+      "pass": true,
+      "intent": "tasks.create",
+      "title": "Zavolat pravnikovi",
+      "location": "",
+      "note": "",
+      "body": ""
+    },
+    {
+      "id": "probe_F",
+      "pass": true,
+      "intent": "calendar.create",
+      "title": "Schůzka s kubou",
+      "location": "Brno",
+      "note": "Vzít smlouvu",
+      "body": ""
+    }
+  ],
+  "manual_pass": "6/6",
+  "top_fail_clusters": [
+    {
+      "cluster": "instruction_prefix_in_title",
+      "count": 82
+    },
+    {
+      "cluster": "raw_command_stored_as_title",
+      "count": 25
+    },
+    {
+      "cluster": "instruction_prefix_in_note",
+      "count": 4
+    }
+  ],
+  "save_mode_structured_card_accuracy": 100,
+  "search_mode_direct_answer_accuracy": 100,
+  "mobile_dictation_accuracy": 0.9492537313432836,
+  "no_diacritics_accuracy": 1,
+  "typo_handling_accuracy": 1,
+  "routing_20k": {
+    "overall": "100%",
+    "calendar_write": "3000/3000",
+    "calendar_query": "3000/3000",
+    "task_write": "3000/3000",
+    "task_query": "3000/3000",
+    "note_write": "3000/3000",
+    "note_query": "3000/3000"
+  },
+  "family_stats": {
+    "clean_save_payload_production": {
+      "total": 124,
+      "pass": 124,
+      "payload_clean": 124
+    },
+    "mobile_dictation_payloads": {
+      "total": 117,
+      "pass": 117,
+      "payload_clean": 117
+    },
+    "typo_payload_extraction": {
+      "total": 112,
+      "pass": 112,
+      "payload_clean": 112
+    },
+    "no_diacritics_payloads": {
+      "total": 105,
+      "pass": 105,
+      "payload_clean": 105
+    },
+    "chaotic_czech_payloads": {
+      "total": 120,
+      "pass": 120,
+      "payload_clean": 120
+    },
+    "instruction_leakage_cleanup": {
+      "total": 122,
+      "pass": 120,
+      "payload_clean": 120
+    },
+    "title_pollution_cleanup": {
+      "total": 124,
+      "pass": 118,
+      "payload_clean": 118
+    },
+    "location_extraction_cleanup": {
+      "total": 124,
+      "pass": 120,
+      "payload_clean": 120
+    },
+    "event_note_cleanup": {
+      "total": 117,
+      "pass": 113,
+      "payload_clean": 113
+    },
+    "task_note_cleanup": {
+      "total": 109,
+      "pass": 108,
+      "payload_clean": 108
+    },
+    "field_separation_cleanup": {
+      "total": 121,
+      "pass": 106,
+      "payload_clean": 106
+    },
+    "speech_contamination_cleanup": {
+      "total": 118,
+      "pass": 107,
+      "payload_clean": 107
+    },
+    "payload_field_cleanliness": {
+      "total": 124,
+      "pass": 124,
+      "payload_clean": 124
+    },
+    "structured_draft_card_quality": {
+      "total": 118,
+      "pass": 107,
+      "payload_clean": 107
+    },
+    "payload_contamination_detection": {
+      "total": 106,
+      "pass": 88,
+      "payload_clean": 88
+    },
+    "semantic_slot_accuracy": {
+      "total": 116,
+      "pass": 114,
+      "payload_clean": 114
+    },
+    "mobile_voice_payloads": {
+      "total": 115,
+      "pass": 98,
+      "payload_clean": 98
+    },
+    "real_world_save_commands": {
+      "total": 110,
+      "pass": 110,
+      "payload_clean": 110
+    },
+    "noisy_mobile_save_commands": {
+      "total": 103,
+      "pass": 103,
+      "payload_clean": 103
+    },
+    "payload_cluster_detection": {
+      "total": 125,
+      "pass": 123,
+      "payload_clean": 123
+    },
+    "short_chaotic_save_commands": {
+      "total": 112,
+      "pass": 103,
+      "payload_clean": 103
+    },
+    "long_chaotic_save_commands": {
+      "total": 57,
+      "pass": 56,
+      "payload_clean": 56
+    },
+    "broken_word_order_save_commands": {
+      "total": 92,
+      "pass": 89,
+      "payload_clean": 89
+    },
+    "raw_command_title_cluster": {
+      "total": 100,
+      "pass": 100,
+      "payload_clean": 100
+    },
+    "filler_phrase_save_commands": {
+      "total": 97,
+      "pass": 97,
+      "payload_clean": 97
+    },
+    "note_intro_strip_cluster": {
+      "total": 93,
+      "pass": 88,
+      "payload_clean": 88
+    }
+  },
+  "raw_command_stored_as_title_fails": 36,
+  "structured_draft_card_quality": 0.9067796610169492,
+  "pass": true
+}
