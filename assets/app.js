@@ -46637,10 +46637,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     if (tc === "calendar") {
       const note0 = String(draft.note || "").trim();
-      if (
-        note0 &&
-        (iuSilverDetectRawCommandStoredInFieldV1(note0, raw) || iuSilverSemanticHasInstructionLeakageV1(note0))
-      ) {
+      if (note0 && iuSilverDetectRawCommandStoredInFieldV1(note0, raw)) {
         const slots = iuSilverExtractSemanticSlotsV1("calendar.create", raw);
         const slotNote = String(slots["event.note"] || "").trim();
         if (slotNote && !iuSilverSemanticHasInstructionLeakageV1(slotNote)) {
