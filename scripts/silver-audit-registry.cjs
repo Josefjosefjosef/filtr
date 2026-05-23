@@ -127,6 +127,23 @@ const AUDIT_CATALOG = [
     cluster_prefix: "rcz2_",
     safety_sensitive: true,
   },
+  {
+    id: "semantic_payload_v1",
+    audit_name: "Semantic Payload Engine V1 Foundation",
+    audit_size: "480+",
+    public_product_impact: "HIGH",
+    harness_scripts: ["silver-semantic-payload-foundation-diagnostic.cjs"],
+    foundation_scripts: [
+      "silver-semantic-payload-engine-v1-core.cjs",
+      "silver-search-understanding-v1-core.cjs",
+      "silver-conversation-state-v1-core.cjs",
+      "silver-clean-payload-validator-v1.cjs",
+      "silver-audit-anti-duplication-v1.cjs",
+    ],
+    report_json: "silver-semantic-payload-foundation-diagnostic-report.json",
+    cluster_prefix: "spev1_",
+    safety_sensitive: true,
+  },
 ];
 
 function readJsonSafe(absPath) {
