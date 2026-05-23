@@ -37647,6 +37647,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverSelfCorrectionUpdateCalPivotP1Folded(folded) {
     const x = String(folded || "");
     if (!x) return false;
+    if (iuSilverCalendarQuerySignalFolded(x)) return false;
     if (iuSilverP0NoWriteNegationBeatsWriteLikeCueFolded(x)) return false;
     if (iuSilverSelfCorrectionUpdateTaskBlocksCalendarUpdateFolded(x)) return false;
     if (iuSilverSelfCorrectionAfterCreateTaskBlocksCalendarUpdateFolded(x)) return false;
@@ -38172,6 +38173,40 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       !/\bnevytvarej\s+poznam/.test(x)
     ) {
       return true;
+    }
+    return false;
+  }
+
+  /**
+   * P0 CAP15 query_created_write safety: globální „nic neukladej“ za explicitním write cue
+   * (dual/multi-intent) → žádný write lane. Modulové „nic neukladej do kalendáře|poznámek|úkolů“ mimo scope.
+   */
+  function iuSilverP0TrailingGlobalNicNeukladejBlocksWriteFolded(f) {
+    const x = String(f || "");
+    if (!/\bnic\s+neukladej\b/.test(x)) return false;
+    if (/\bnic\s+neukladej\s+do\s+(?:kalendar|poznam|ukol)/.test(x)) return false;
+    if (!/\bzaroven\b/.test(x)) return false;
+    if (!/\bdo\s+(?:kalend|poznam|ukol)/.test(x)) return false;
+    const negMatch = x.match(/\bnic\s+neukladej\b/);
+    if (!negMatch || negMatch.index == null || negMatch.index < 0) return false;
+    const negIdx = negMatch.index;
+    const writeRes = [
+      /\buloz\w*\b/,
+      /\bpridej\w*\b/,
+      /\bnapis\w*\b/,
+      /\bzapis\w*\b/,
+      /\bvytvor\w*\b/,
+      /\bnahod\w*\b/,
+      /\bdej\s+mi\b/,
+      /\bdo\s+kalend/,
+      /\bdo\s+poznam/,
+      /\bdo\s+ukol/
+    ];
+    for (let wi = 0; wi < writeRes.length; wi++) {
+      const re = writeRes[wi];
+      const m = re.exec(x);
+      re.lastIndex = 0;
+      if (m && m.index >= 0 && m.index < negIdx) return true;
     }
     return false;
   }
@@ -47315,9 +47350,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverMultiIntentSplitOnConnectorP0(raw) {
     const r = String(raw || "").trim();
     if (!r) return null;
+    const rf = foldCs(r);
     const re =
-      /\s+(a\s+zároveň|a\s+zaroven|ale\s+zároveň|ale\s+zaroven|a\s+kromě\s+toho|a\s+krome\s+toho|a\s+taky|a\s+také|a\s+ještě|a\s+jeste|a\s+n(?:e|\u011b)co\s+s\s+t(?:i|\u00ed)m)\s+/i;
-    const m = r.match(re);
+      /\s+(a\s+zaroven|ale\s+zaroven|a\s+krome\s+toho|a\s+taky|a\s+tak[eé]|a\s+jest[eé]|a\s+n(?:e|\u011b)co\s+s\s+t(?:i|\u00ed)m)\s+/i;
+    const m = rf.match(re);
     if (!m || m.index == null || m.index < 1) return null;
     const sepLen = m[0].length;
     const idx = m.index;
@@ -47339,6 +47375,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverMultiIntentPartBlocksWriteFolded(partF) {
     const f = String(partF || "");
     if (!f) return true;
+    if (iuSilverP0TrailingGlobalNicNeukladejBlocksWriteFolded(f)) return true;
     if (iuSilverNegationTargetsTasksOnlyFolded(f)) return false;
     if (iuSilverNegativeReadOnlyTaskPhrasesFolded(f)) return true;
     if (iuSilverIsNegatedBroadVerbExcludingTaskOnlyFolded(f)) return true;
