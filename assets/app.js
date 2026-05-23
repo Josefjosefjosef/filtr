@@ -41832,6 +41832,29 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         restrictDateStart = startOfWeekMondayFromDateStr(todayS);
         restrictDateEnd = addDays(restrictDateStart, 6);
       }
+    } else if (
+      wc <= 6 &&
+      (m = rU.match(/^\s*(zejtra|zitra|zittra|dnes(?:ka|ek)?|včera|vcera|vcere|vcerajs)\s+(.+)$/i)) &&
+      m[2]
+    ) {
+      /* Po strip lead „vole“ zůstane „zejtra právník“ — jen krátký peek (ne „příští týden v půl…“ write). */
+      const twLead = foldCs(String(m[1] || ""));
+      tail = String(m[2] || "").trim();
+      if (!iuSilverMessyShortCalendarPeekTimeFolded(twLead)) return null;
+      if (iuSilverHasWriteVerb(fAll) || iuSilverLooksLikeSchedulingFragment(fAll, rU)) return null;
+      if (/\bzejtra\b|\bzitr/.test(twLead)) {
+        preferFuturePeek = true;
+      } else if (/\bdnes/.test(twLead)) dateIso = todayS;
+      else if (/\bvcere|\bvcera|\bvcerajs/.test(twLead)) dateIso = addDays(todayS, -1);
+      else if (/\bpristi\s+tyden\b/.test(twLead)) {
+        const thisMonLead = startOfWeekMondayFromDateStr(todayS);
+        const nextMonLead = addDays(thisMonLead, 7);
+        restrictDateStart = nextMonLead;
+        restrictDateEnd = addDays(nextMonLead, 6);
+      } else if (/\bv\s+tejdnu\b|\btejdnu\b/.test(twLead)) {
+        restrictDateStart = startOfWeekMondayFromDateStr(todayS);
+        restrictDateEnd = addDays(restrictDateStart, 6);
+      }
     } else if ((m = rU.match(/^\s*kdy\s+m[aá]m\s+(.+)$/i)) && m[1]) {
       if (/\bkdy\s+mam\s+(koupit|nakoupit|kupovat|zaplatit|zavolat|poslat|objednat|udelat|napsat)\b/.test(fAll)) return null;
       tail = String(m[1] || "").trim();
@@ -41853,10 +41876,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       diacriticInsensitive: true,
       queryFolded: can.queryFolded || foldCs(String(can.query || ""))
     };
-    if (/\bkdy\s+(jsem|sem)\s+(byl|byla|byli|mel|mela)\b/.test(fAll) && !preferFuturePeek) {
-      out.preferPast = true;
-      out.preferPastMostRecent = true;
-    }
+    /* Bez preferPast v messy větvi: „kdy jsem měl doktora“ → nejbližší termín včetně budoucího seedu (viz P1 past guard). */
     if (preferFuturePeek) out.preferFuture = true;
     if (dateIso) out.dateIso = dateIso;
     if (restrictDateStart && restrictDateEnd) {
@@ -42743,7 +42763,20 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           if (todaySameTitle.length) {
             hits = [todaySameTitle[todaySameTitle.length - 1]];
           } else {
-            hits = [];
+            const futureNearest = hits
+              .filter(function (e) {
+                return parseDateTimeIso(e.date, e.time).getTime() >= t0p;
+              })
+              .sort(function (a, b) {
+                return parseDateTimeIso(a.date, a.time).getTime() - parseDateTimeIso(b.date, b.time).getTime();
+              });
+            if (futureNearest.length) {
+              hits = [futureNearest[0]];
+            } else if (hits.length) {
+              hits = [hits[hits.length - 1]];
+            } else {
+              hits = [];
+            }
           }
         } else {
           hits = [];
