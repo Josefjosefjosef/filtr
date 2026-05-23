@@ -117,6 +117,29 @@ function validateRawCommandInPayload(turn, rawText) {
   return violations;
 }
 
+function validateTitleTemporalWhenSlotsFilled(turn) {
+  const violations = [];
+  const intent = String(turn.normalizedIntent || "");
+  if (intent !== "calendar.create" && intent !== "tasks.create") return violations;
+  const d = turn.draft || {};
+  const title = foldCs(draftField(turn, "title"));
+  const hasDate = d.meta && d.meta.date === "certain";
+  const hasTime = d.meta && d.meta.time === "certain";
+  if (title && (hasDate || hasTime) && /\b(zitra|zejtra|dnes|kolem\s+\w|v\s+\d{1,2})\b/.test(title)) {
+    violations.push("title_contains_date_time");
+  }
+  return violations;
+}
+
+function validateLocationFiller(turn) {
+  const violations = [];
+  const loc = foldCs(draftField(turn, "location"));
+  if (loc && /\b(prosim\s+te|napi[sš]\s+tam|pripomen|nezapomenu|protoze\s+to\s+zase)\b/.test(loc)) {
+    violations.push("location_contains_note_or_filler");
+  }
+  return violations;
+}
+
 function validateCleanPayload(turn, rawText, options) {
   const opts = options || {};
   const violations = [];
@@ -125,6 +148,8 @@ function validateCleanPayload(turn, rawText, options) {
   violations.push.apply(violations, validateInstructionLeakageInTitle(turn));
   violations.push.apply(violations, validateLocationInTitle(turn));
   violations.push.apply(violations, validateRawCommandInPayload(turn, rawText));
+  violations.push.apply(violations, validateTitleTemporalWhenSlotsFilled(turn));
+  violations.push.apply(violations, validateLocationFiller(turn));
 
   if (opts.searchSemantics) {
     violations.push.apply(violations, searchCore.validateSearchModeAlignment(turn, opts.searchSemantics));
@@ -166,6 +191,8 @@ module.exports = {
   validateInstructionLeakageInTitle,
   validateLocationInTitle,
   validateRawCommandInPayload,
+  validateTitleTemporalWhenSlotsFilled,
+  validateLocationFiller,
   suggestCleanTitle,
   buildClarificationPreview,
   draftField,
