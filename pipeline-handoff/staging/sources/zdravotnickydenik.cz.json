@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-23T05:00:44.101402Z",
+  "ingestedAt": "2026-05-23T05:40:04.560498Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Strach z konfliktu v Evropě? Německo schválilo obří pakt, do civilní obrany nalije miliardy",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/nemecko-civilni-obrana-miliardy/",
+      "dt": "2026-05-23T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "civilní",
+        "evropě",
+        "konfliktu",
+        "miliardy",
+        "nalije",
+        "německo",
+        "obrany",
+        "obří",
+        "pakt",
+        "schválilo",
+        "strach"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -248,31 +276,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Pohlavních nemocí je nejvíce za 10 let, kapavka vyletěla o 303 %. Mohou za to 2 věci",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/evropa-pohlavni-nemoci-rekord/",
-      "dt": "2026-05-22T06:18:20Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "303",
-        "kapavka",
-        "let",
-        "nejvíce",
-        "nemocí",
-        "pohlavních",
-        "vyletěla",
-        "věci"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -283,7 +286,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 84536,
+      "bytes": 86727,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -320,7 +323,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-22T14:58:57Z",
+        "raw_feed_latest_publishedAt": "2026-05-23T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -336,6 +339,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Strach z konfliktu v Evropě? Německo schválilo obří pakt, do civilní obrany nalije miliardy",
+            "publishedAt": "2026-05-23T05:00:00Z"
+          },
           {
             "title": "Nestárneme postupně, ale ve skocích. Ve kterých dvou letech tělo prudce selhává?",
             "publishedAt": "2026-05-22T14:58:57Z"
@@ -363,10 +370,6 @@
           {
             "title": "Tragédie na Ostravsku. Neočkovaný předškolák zemřel na záškrt, hygienici naléhavě varují rodiče",
             "publishedAt": "2026-05-22T09:06:01Z"
-          },
-          {
-            "title": "V zahraničí léčí a píší recepty, v Česku jsme na začátku. Sestrám se mají radikálně změnit role",
-            "publishedAt": "2026-05-22T08:30:00Z"
           }
         ]
       }

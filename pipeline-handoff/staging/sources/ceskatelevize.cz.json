@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-23T05:00:44.101402Z",
+  "ingestedAt": "2026-05-23T05:40:04.560498Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Klimatická změna ukusuje Evropě jaro. Nástup léta začíná být náhlý",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/klimaticka-zmena-ukusuje-evrope-jaro-nastup-leta-zacina-byt-nahly-373728",
+      "dt": "2026-05-23T05:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "být",
+        "evropě",
+        "jaro",
+        "klimatická",
+        "léta",
+        "náhlý",
+        "nástup",
+        "ukusuje",
+        "začíná",
+        "změna"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -729,26 +756,28 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Policie obvinila z vraždy mladíka, který napadl dívku u školy v Pardubicích",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/policie-obvinila-z-vrazdy-mladika-ktery-napadl-divku-u-skoly-v-pardubicich-373733",
-      "dt": "2026-05-22T08:47:37Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Vegas udeřili v závěru a sviští západem. Na ledě Colorada vyhráli i druhý zápas",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/vegas-uderili-v-zaveru-a-svisti-zapadem-na-lede-colorada-vyhrali-i-druhy-zapas-156953",
+      "dt": "2026-05-23T05:13:27Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "dívku",
-        "mladíka",
-        "napadl",
-        "obvinila",
-        "pardubicích",
-        "policie",
-        "vraždy",
-        "školy"
+        "colorada",
+        "druhý",
+        "ledě",
+        "sviští",
+        "udeřili",
+        "vegas",
+        "vyhráli",
+        "západem",
+        "zápas",
+        "závěru"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1473,34 +1502,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Úžasný večer, radoval se ze zisku trofeje velký fanoušek Aston Villy princ William",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/uzasny-vecer-radoval-se-ze-zisku-trofeje-velky-fanousek-aston-villy-princ-william-156925",
-      "dt": "2026-05-21T08:38:54Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "aston",
-        "fanoušek",
-        "princ",
-        "radoval",
-        "trofeje",
-        "velký",
-        "večer",
-        "villy",
-        "william",
-        "zisku",
-        "úžasný"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1511,7 +1512,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42052,
+      "bytes": 41945,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1571,12 +1572,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-23T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-23T05:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 24,
-          "finance": 1,
-          "other": 5
+          "other": 6,
+          "zpravy": 23,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1588,6 +1589,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Klimatická změna ukusuje Evropě jaro. Nástup léta začíná být náhlý",
+            "publishedAt": "2026-05-23T05:00:00Z"
+          },
           {
             "title": "Komáři začínají být aktivní. O víkendu především na východě Čech",
             "publishedAt": "2026-05-23T04:00:00Z"
@@ -1615,10 +1620,6 @@
           {
             "title": "Schillerová zveřejní první návrh rozpočtu až koncem srpna. U Stanjury to kritizovala",
             "publishedAt": "2026-05-22T18:37:28Z"
-          },
-          {
-            "title": "Nedostatek herců z řad menšin v Česku trápí filmaře. Lákají je proto příplatky",
-            "publishedAt": "2026-05-22T18:27:05Z"
           }
         ]
       }
@@ -1630,7 +1631,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37392,
+      "bytes": 37398,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1667,7 +1668,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-23T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-23T05:13:27Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1682,6 +1683,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vegas udeřili v závěru a sviští západem. Na ledě Colorada vyhráli i druhý zápas",
+            "publishedAt": "2026-05-23T05:13:27Z"
+          },
           {
             "title": "Národní tým čeká důležitý zápas se Slovenskem, vítěz se přiblíží čtvrtfinále",
             "publishedAt": "2026-05-23T04:00:00Z"
@@ -1709,10 +1714,6 @@
           {
             "title": "Hokej fokus podcast: Kdo míří na medaile? Analýza první poloviny šampionátu",
             "publishedAt": "2026-05-22T12:40:00Z"
-          },
-          {
-            "title": "Velké loučení. Guardiola po deseti letech končí v Manchesteru City",
-            "publishedAt": "2026-05-22T10:40:24Z"
           }
         ]
       }
@@ -1724,7 +1725,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78721,
+      "bytes": 78732,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

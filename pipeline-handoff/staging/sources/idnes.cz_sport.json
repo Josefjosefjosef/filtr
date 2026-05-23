@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-23T05:00:44.101402Z",
+  "ingestedAt": "2026-05-23T05:40:04.560498Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vegas slaví druhou výhru na ledě Colorada, rozhodly tři góly ze závěru",
+      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-hertl-necas.A260523_070647_nhl_mkr",
+      "dt": "2026-05-23T05:29:22Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "colorada",
+        "druhou",
+        "góly",
+        "ledě",
+        "rozhodly",
+        "slaví",
+        "tři",
+        "vegas",
+        "výhru",
+        "závěru"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Boxerská legenda Bytyqi už je Richter, bez -ová. Svatební oběd měli v mekáči",
+      "url": "https://www.idnes.cz/sport/trendy/boxerska-legenda-fabiana-bytyqi-svatba-mekac.A260522_081604_trendy_pbi",
+      "dt": "2026-05-23T05:15:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "boxerská",
+        "bytyqi",
+        "legenda",
+        "mekáči",
+        "měli",
+        "oběd",
+        "ová",
+        "richter",
+        "svatební"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -726,57 +779,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Důrazné pokyny i změny v sestavě. Čechy čeká se Slováky boj o jistotu čtvrtfinále",
-      "url": "https://www.idnes.cz/hokej/ms-2026/cesko-patek-trenink-sestava.A260521_110220_ms-hokej-2026_hrj",
-      "dt": "2026-05-22T10:37:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "boj",
-        "důrazné",
-        "jistotu",
-        "pokyny",
-        "sestavě",
-        "slováky",
-        "změny",
-        "čechy",
-        "čeká",
-        "čtvrtfinále"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nominace Anglie na MS: Lídrem bude Kane, Tuchel ukázal i na Toneyho",
-      "url": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/anglie-nominace.A260522_120747_ms-fotbal_kazdt",
-      "dt": "2026-05-22T10:15:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "anglie",
-        "kane",
-        "lídrem",
-        "nominace",
-        "toneyho",
-        "tuchel",
-        "ukázal"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -787,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47682,
+      "bytes": 47420,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -824,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-23T04:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-23T05:29:22Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -839,6 +841,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vegas slaví druhou výhru na ledě Colorada, rozhodly tři góly ze závěru",
+            "publishedAt": "2026-05-23T05:29:22Z"
+          },
+          {
+            "title": "Boxerská legenda Bytyqi už je Richter, bez -ová. Svatební oběd měli v mekáči",
+            "publishedAt": "2026-05-23T05:15:00Z"
+          },
           {
             "title": "Opomíjený velikán Pila na závěr. Vingegaarda a spol. prověří na Giru hory",
             "publishedAt": "2026-05-23T04:33:00Z"
@@ -862,14 +872,6 @@
           {
             "title": "Finové porazili Británii a jsou nadále stoprocentní. Němci poprvé na MS vyhráli",
             "publishedAt": "2026-05-22T21:02:55Z"
-          },
-          {
-            "title": "Švédsko na MS v hokeji 2026: program, výsledky, soupiska, bilance s Čechy",
-            "publishedAt": "2026-05-22T20:54:13Z"
-          },
-          {
-            "title": "Finsko na MS v hokeji 2026: program, výsledky, soupiska, bilance s Čechy",
-            "publishedAt": "2026-05-22T20:50:37Z"
           }
         ]
       }
