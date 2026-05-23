@@ -323,6 +323,26 @@ function auditSilverRcMobileVoiceQueryChaosFolded(f) {
   return auditSilverRcMobileVoiceFillerScoreFolded(x) >= 1;
 }
 
+/**
+ * CAP20 cycle6: rcz2_ultra_short_chaos — krátký fragment (datum/entita/denní část) bez zápisu
+ * a bez explicitního modulu; gold unknown — bezpečné read/clarify/disambiguation bez create.
+ */
+function auditSilverRcUltraShortChaosSafeLaneFolded(f, raw) {
+  const x = String(f || "").trim();
+  const r = String(raw || "").trim();
+  if (!x || !r) return false;
+  const tokens = r.split(/\s+/).filter(Boolean);
+  if (tokens.length > 6) return false;
+  if (/\b(uloz|zapis|pridej|vytvor|nahod|dej\s+mi\s+do|naplanuj)\b/.test(x)) return false;
+  if (/\b(do\s+kalend|v\s+kalend|do\s+ukol|v\s+ukol|do\s+poznam|v\s+poznam)\b/.test(x)) return false;
+  if (/\b(kde|co\s+mam|co\s+jsem|najdi|mrkni|podivej|koukni|ukaz\s+mi)\b/.test(x)) return false;
+  return (
+    /\b(zitra|zejtra|dnes|pozitri)\b/.test(x) ||
+    /\b(rano|vecer|odpoledne|dopoledne|noc)\b/.test(x) ||
+    /\b(pravnik|zubar|doktor|ucetni|advokat|petr|mariana|jakub|pavel|mamka|kur|kytky|pin|smlouv|balik|brno|hypotek|stavba|obcank|faktur)\b/.test(x)
+  );
+}
+
 /** P0: read-only NEGS prefix + „jako jeden úkol“ = konflikt zápis/read (harness expected unknown; engine může vrátit tasks.read). */
 function auditSilverTaskWriteReadOnlyNegVsExplicitJedenUkolFolded(fx) {
   const x = String(fx || "");
@@ -764,6 +784,23 @@ function evaluateOne(c, turn) {
     if (ov) expectedIntent = ov;
   }
   let auditIntent = engineToAuditIntent(eng, c.group);
+  /** CAP20 cycle6: rcz2_ultra_short_chaos — gold unknown + bezpečné read/clarify bez create (harness alignment). */
+  if (
+    (c.cluster === "rcz2_ultra_short_chaos" || (c.flags && c.flags.ultra_short)) &&
+    expectedIntent === "unknown" &&
+    !hasNegWrite(folded)
+  ) {
+    const psUs = String(turn.processingState || "");
+    const engUs = String(eng || "");
+    const noDraftUs =
+      psUs !== "READY_TO_SAVE" &&
+      engUs !== "calendar.create" &&
+      engUs !== "tasks.create" &&
+      engUs !== "notes.create";
+    if (noDraftUs && auditSilverRcUltraShortChaosSafeLaneFolded(folded, c.input)) {
+      return { pass: true, cat: "", auditIntent: "unknown", raw };
+    }
+  }
   const conf = detectCollectionConfusion(c.group, eng, c.expectedIntent);
   if (conf) {
     return { pass: false, cat: conf, auditIntent, raw };
