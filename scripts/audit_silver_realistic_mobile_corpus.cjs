@@ -2371,8 +2371,9 @@ function main() {
       "calendar_reminder_tail_jakub",
       engineToAuditIntent(rmJak.normalizedIntent, "calendar_write") === "calendar.create" &&
         rmJak.processingState === "NEEDS_CLARIFICATION" &&
-        jakNote.indexOf("pripom") >= 0 &&
         jakNote.indexOf("mobil") >= 0 &&
+        (jakNote.indexOf("vzit") >= 0 || jakNote.indexOf("vezmu") >= 0) &&
+        jakNote.indexOf("pripom") < 0 &&
         jakTitle.indexOf("pripom") < 0
     ) && rmAll;
   console.log("real_mobile_cases=" + (rmAll ? "PASS" : "FAIL"));

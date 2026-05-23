@@ -138,8 +138,35 @@ function detectModuleScope(rawText) {
   return "clarification";
 }
 
+function stripAssistantInvocation(text) {
+  let s = normalizeWs(String(text || ""));
+  if (!s) return s;
+  const pats = [
+    /^(?:hej|ahoj|čau|cau|zdar|nazdar)\s*,?\s*silver[eau]?\s*(?:,|\s+pros[ií]m(?:\s+t[eě])?)?\s+/iu,
+    /^silver[eau]?\s*,?\s*pros[ií]m(?:\s+t[eě])?\s+/iu,
+    /^silver[eau]?\s+/iu,
+    /^(?:prosim\s+t[eě]|prosím\s+tě)\s+silver[eau]?\s+/iu,
+  ];
+  for (let rnd = 0; rnd < 12; rnd++) {
+    const prev = s;
+    for (let i = 0; i < pats.length; i++) {
+      s = s.replace(pats[i], "").trim();
+    }
+    s = s.replace(/\bsilver[eau]?\s+(?=vlo[zž]|ulo[zž]|uloz|pridej|přidej|dej|zapi[sš]|hod|ho[dď]|pripomen|připomeň|napi[sš])/iu, "").trim();
+    s = normalizeWs(s);
+    if (s === prev) break;
+  }
+  return s;
+}
+
+function hasAssistantNameLeakage(fieldValue) {
+  const fold = foldCs(fieldValue);
+  if (!fold) return false;
+  return /\bsilver[eau]?\b/.test(fold) || /\b(?:hej|ahoj)\s+silver\b/.test(fold);
+}
+
 function stripInstructionPrefixes(text) {
-  let s = String(text || "").trim();
+  let s = stripAssistantInvocation(String(text || "").trim());
   if (!s) return s;
   let changed = true;
   while (changed) {
@@ -379,6 +406,8 @@ module.exports = {
   foldCs,
   detectModuleScope,
   stripInstructionPrefixes,
+  stripAssistantInvocation,
+  hasAssistantNameLeakage,
   extractCalendarSlots,
   extractTaskSlots,
   extractNoteSlots,
