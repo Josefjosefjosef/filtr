@@ -36767,6 +36767,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     ) {
       return true;
     }
+    if (/\b(?:potrebuj\w*|chci)\s+vedet\s+jestli\b/.test(x) && iuSilverCalendarEntityContextFolded(x)) return true;
     return false;
   }
 
@@ -38720,6 +38721,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bv\s+kolik\s+m(am|eme|as)\b/.test(x)) return true;
     if (/\bm(am|eme)\s+neco\s+ulozen/.test(x)) return true;
     if (/\bco\s+m(am|eme)\s+vsechno\s+v\s+poznam/.test(x)) return true;
+    if (
+      (/\b(?:potrebuj\w*|chci)\s+vedet\s+jestli\b/.test(x) || /\bjestli\s+mam\b/.test(x)) &&
+      /\b(?:zitra|zittra|pozitr|dnes)\b/.test(x) &&
+      /zubar|doktor|pravnik|advokat|schuz|kuryr|lekaf/.test(x)
+    ) {
+      return true;
+    }
     return false;
   }
 
@@ -41669,6 +41677,47 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P1 CAP20 colloquial_when_uncertainty: „potřebuju vědět jestli mám zítra zubaře nebo až pozítří …"
+   * → calendar.read (find_by_title), ne WRITE_SCHED_PROBE / storage disambiguation.
+   */
+  function iuSilverTryColloquialWhenUncertaintyCalendarReadSpecP1(r0, f0) {
+    const r = String(r0 || "").trim();
+    const f = String(f0 || "");
+    if (!r || !f) return null;
+    if (iuSilverHasWriteVerb(f)) return null;
+    if (iuSilverCalendarQueryReadonlyPastPresentGuardWriteCueFolded(f)) return null;
+    const uncertaintyRead =
+      /\b(?:potrebuj\w*|chci)\s+vedet\s+jestli\b/.test(f) ||
+      (/\bjestli\s+mam\b/.test(f) && /\b(?:zitra|zittra|pozitr)\b/.test(f));
+    if (!uncertaintyRead) return null;
+    if (!/\b(?:zitra|zittra|pozitr|dnes)\b/.test(f)) return null;
+    if (!iuSilverCalendarEntityContextFolded(f)) return null;
+    let tail = "";
+    const mToho = f.match(/\b(?:toho|tu)\s+(zubar\w*|doktor\w*|pravnik\w*|advokat\w*|lekaf\w*|kuryr\w*)/);
+    if (mToho && mToho[1]) {
+      tail = mToho[1];
+    } else {
+      const mPo = f.match(/\b(?:zitra|zittra)\s+(?:toho\s+)?([a-z]{4,14})\b/);
+      if (mPo && mPo[1] && !/^(nebo|jestli|protoze|mam|je|to|az|ne)$/.test(mPo[1])) tail = mPo[1];
+    }
+    if (!tail || tail.length < 3) {
+      if (/\bzubar\w*\b/.test(f)) tail = "zubar";
+      else if (/\bkuryr\w*\b/.test(f)) tail = "kuryr";
+      else return null;
+    }
+    const can = iuSilverCanonicalCalendarEntityTitleFromPersonFragment(tail);
+    if (!can || !can.query || String(can.query).trim().length < 2) return null;
+    return {
+      intent: "find_by_title",
+      query: can.query,
+      normalizedQuery: can.query,
+      diacriticInsensitive: true,
+      queryFolded: can.queryFolded || foldCs(String(can.query || "")),
+      preferFuture: /\bzitra\b|\bzittra\b/.test(f) || /\bpozitr\b/.test(f)
+    };
+  }
+
+  /**
    * P1 messy_short_query_read: calendar entity tail for colloquial peek (foldCs), bez širokých osob (máma/táta).
    */
   function iuSilverMessyShortCalendarPeekEntityFolded(fx) {
@@ -41841,6 +41890,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const roPastPresentGuard = iuSilverTryCalendarQueryReadonlyPastPresentGuardReadSpec(r, f, rawIn, now);
       if (roPastPresentGuard) return roPastPresentGuard;
     }
+    {
+      const whenUncEarly = iuSilverTryColloquialWhenUncertaintyCalendarReadSpecP1(r, f);
+      if (whenUncEarly) return whenUncEarly;
+    }
     if (iuSilverCalendarReadSuppressedForWriteIntent(f)) return null;
     if (/\bukol/.test(f) && (/\bm(am|eme)\s+dnes\s+n[eě]jak/i.test(f) || /\bm(am|eme)\s+zitre\w*\s+n[eě]jak/i.test(f))) return null;
     let rCalReadLeadStrip = r.replace(
@@ -41928,6 +41981,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     {
       const messyFast = iuSilverTryMessyShortColloquialCalendarReadSpecFolded(rUse, f, now);
       if (messyFast) return messyFast;
+    }
+    {
+      const whenUnc = iuSilverTryColloquialWhenUncertaintyCalendarReadSpecP1(rUse, f);
+      if (whenUnc) return whenUnc;
     }
 
     if (!iuSilverCalendarPastQueryCountingCueFolded(f)) {
