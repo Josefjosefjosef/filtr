@@ -46429,11 +46429,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     const slotNote = String(slots["event.note"] || "").trim();
     const note0 = String(draft.note || "").trim();
+    const readyWhen = draft.meta.date === "certain" && draft.meta.time === "certain";
+    const napisTamCue = /\bnapis\s+tam\b/i.test(rawFold);
     if (
       slotNote &&
-      (!note0 ||
-        iuSilverSemanticHasInstructionLeakageV1(note0) ||
-        (/\b(pripomen|připomeň)\b/i.test(rawFold) && String(note0).length < String(slotNote).length))
+      ((readyWhen && (!note0 || iuSilverSemanticHasInstructionLeakageV1(note0))) ||
+        (napisTamCue && (!note0 || iuSilverSemanticHasInstructionLeakageV1(note0) || iuSilverSemanticHasInstructionLeakageV1(title0))))
     ) {
       draft.note = slotNote;
       draft.meta.note = "certain";
