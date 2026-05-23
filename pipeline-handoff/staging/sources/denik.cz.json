@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-23T01:39:29.205132Z",
+  "ingestedAt": "2026-05-23T02:20:03.829386Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Hantaviry? Větší hrozbou jsou nemoci přenášené komáry či chřipka, říká virolog",
+      "url": "https://www.denik.cz/zdravotnictvi/hantaviry-vetsi-hrozbou-jsou-nemoci-prenasene-komary-ci-chripka-rika-virolog.html",
+      "dt": "2026-05-23T02:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "chřipka",
+        "hantaviry",
+        "hrozbou",
+        "komáry",
+        "nemoci",
+        "přenášené",
+        "virolog",
+        "větší",
+        "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -614,31 +640,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Německo sníží daň z letenek. Vliv na ceny zůstává nejistý",
-      "url": "https://www.denik.cz/staty-eu/nemecko-letenky-ceny-snizeni-dane.html",
-      "dt": "2026-05-22T08:48:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ceny",
-        "daň",
-        "letenek",
-        "nejistý",
-        "německo",
-        "sníží",
-        "vliv",
-        "zůstává"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -649,7 +650,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28927,
+      "bytes": 29333,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -686,13 +687,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-22T19:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-23T02:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
+          "zdravi": 2,
           "zpravy": 21,
-          "finance": 2,
-          "zdravi": 1,
-          "cestovani": 1
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -704,6 +704,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hantaviry? Větší hrozbou jsou nemoci přenášené komáry či chřipka, říká virolog",
+            "publishedAt": "2026-05-23T02:00:00Z"
+          },
           {
             "title": "Ve zlínské zoo uhynula samice slona afrického, napadl ji samec. Oblast uzavřou",
             "publishedAt": "2026-05-22T19:55:00Z"
@@ -731,10 +735,6 @@
           {
             "title": "Zavázali jim oči a odešli. Matka a otčím nechali děti v lese napospas osudu",
             "publishedAt": "2026-05-22T15:42:00Z"
-          },
-          {
-            "title": "Móda z Cannes: Královnou je Demi Moore, šokoval šperk přes ňadra",
-            "publishedAt": "2026-05-22T14:43:00Z"
           }
         ]
       }

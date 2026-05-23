@@ -1,8 +1,40 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-23T01:39:29.205132Z",
+  "ingestedAt": "2026-05-23T02:20:03.829386Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pomocí dlažební kostky se v Týništi nad Orlicí dostal do trafiky, kde ukradl cigarety. Sotva si první stihl zapálit, zadrželi ho policisté",
+      "url": "https://tydenikpolicie.cz/pomoci-dlazebni-kostky-se-v-tynisti-nad-orlici-dostal-do-trafiky-kde-ukradl-cigarety-sotva-si-prvni-stihl-zapalit-zadrzeli-ho-policiste/",
+      "dt": "2026-05-23T02:02:18Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "cigarety",
+        "dlažební",
+        "dostal",
+        "kostky",
+        "orlicí",
+        "policisté",
+        "pomocí",
+        "první",
+        "sotva",
+        "stihl",
+        "trafiky",
+        "týništi",
+        "ukradl",
+        "zadrželi",
+        "zapálit"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -242,36 +274,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "GIBS při domovních prohlídkách zajistila více než deset litrů tekuté extáze. Užívat ji měl policista",
-      "url": "https://tydenikpolicie.cz/gibs-pri-domovnich-prohlidkach-zajistila-vice-nez-deset-litru-tekute-extaze-uzivat-ji-mel-policista/",
-      "dt": "2026-05-22T13:33:31Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "deset",
-        "domovních",
-        "extáze",
-        "gibs",
-        "litrů",
-        "měl",
-        "než",
-        "policista",
-        "prohlídkách",
-        "při",
-        "tekuté",
-        "užívat",
-        "zajistila"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +284,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 17031,
+      "bytes": 17085,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +321,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-22T18:30:30Z",
+        "raw_feed_latest_publishedAt": "2026-05-23T02:02:18Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -334,6 +336,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pomocí dlažební kostky se v Týništi nad Orlicí dostal do trafiky, kde ukradl cigarety. Sotva si první stihl zapálit, zadrželi ho policisté",
+            "publishedAt": "2026-05-23T02:02:18Z"
+          },
           {
             "title": "Motorkář na dálnici D11 naboural zezadu do kamionu. Na místě zemřel",
             "publishedAt": "2026-05-22T18:30:30Z"
@@ -361,10 +367,6 @@
           {
             "title": "Splašení koně nabourali v Rožnově pod Radhoštěm s povozem do stromu. Tři zranění",
             "publishedAt": "2026-05-22T14:15:35Z"
-          },
-          {
-            "title": "Autu na dálnici D6 upadlo za jízdy kolo, v protisměru narazilo do projíždějící škodovky. Dva mrtví",
-            "publishedAt": "2026-05-22T14:07:27Z"
           }
         ]
       }
