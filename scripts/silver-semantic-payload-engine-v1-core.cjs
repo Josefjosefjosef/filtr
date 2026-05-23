@@ -181,8 +181,15 @@ function normalizeLocationLabel(locRaw) {
 function cleanReminderNote(tailRaw) {
   let s = stripInstructionPrefixes(String(tailRaw || ""));
   s = s.replace(/^(?:a[tť]|ze|že|si|a)\s+/iu, "").trim();
+  s = s.replace(/^mu\s+/iu, "").trim();
+  s = s.replace(/^(?:že|ze)\s+m[aá]m\s+vz[ií]t\b/iu, "Vzít").trim();
+  s = s.replace(/^m[aá]m\s+vz[ií]t\b/iu, "Vzít").trim();
+  s = s.replace(/^mu\s+m[aá]m\s+vz[ií]t\b/iu, "Vzít").trim();
+  s = s.replace(/^(?:že|ze)\s+nesm[ií]m\s+zapomenout\b/iu, "Nesmím zapomenout").trim();
   if (/^(?:vezmu|vezu)\s+/iu.test(s)) {
-    s = "Vzít si " + s.replace(/^(?:vezmu|vezu)\s+/iu, "").trim();
+    s = "Vzít " + s.replace(/^(?:vezmu|vezu)\s+/iu, "").trim();
+  } else if (s && !/^vz[ií]t\b/i.test(s) && /\b(vz[ií]t|vezmu|vezu)\b/i.test(s)) {
+    s = "Vzít " + s;
   }
   if (s && /^[a-záčďěéíňóřšťúůýž]/.test(s)) {
     s = s.charAt(0).toLocaleUpperCase("cs-CZ") + s.slice(1);
@@ -193,6 +200,8 @@ function cleanReminderNote(tailRaw) {
 function cleanTaskNote(tailRaw) {
   let s = String(tailRaw || "").trim();
   s = s.replace(/^(?:a\s+)?napi[sš]\s+tam\s+(?:že\s+|ze\s+)?/iu, "").trim();
+  s = s.replace(/^(?:dej\s+tam\s+(?:pozn[aá]mk\w*\s+)?(?:že\s+|ze\s+)?)/iu, "").trim();
+  s = s.replace(/^(?:a[tť]\s+nezapomenu\s+)/iu, "").trim();
   s = s.replace(/^(?:že\s+|ze\s+)/iu, "").trim();
   s = stripInstructionPrefixes(s);
   if (s && /^[a-záčďěéíňóřšťúůýž]/.test(s)) {
@@ -235,6 +244,12 @@ function extractCalendarSlots(rawText, now) {
   const noteM = raw.match(/\b(?:a\s+)?(?:připomeň|pripomen)\s+mi\s+(?:a[tť]\s+)?(.+)$/iu);
   if (noteM && noteM[1]) {
     slots["event.note"] = cleanReminderNote(noteM[1]);
+  }
+  if (!slots["event.note"]) {
+    const noteTam = raw.match(/\b(?:a\s+)?napi[sš]\s+tam\s+(?:že\s+|ze\s+)?(.+)$/iu);
+    if (noteTam && noteTam[1]) {
+      slots["event.note"] = cleanReminderNote(noteTam[1]);
+    }
   }
 
   let titleCand = "";
@@ -280,8 +295,20 @@ function extractTaskSlots(rawText, now) {
   if (noteTail && noteTail[1]) {
     slots["task.note"] = cleanTaskNote(noteTail[1]);
   }
+  if (!slots["task.note"]) {
+    const noteDej = raw.match(/\bdej\s+tam\s+pozn[aá]mk\w*\s+(?:že\s+|ze\s+)?(.+)$/iu);
+    if (noteDej && noteDej[1]) slots["task.note"] = cleanTaskNote(noteDej[1]);
+  }
+  if (!slots["task.note"]) {
+    const noteAt = raw.match(/\ba[tť]\s+nezapomenu\s+(.+)$/iu);
+    if (noteAt && noteAt[1]) slots["task.note"] = cleanTaskNote(noteAt[1]);
+  }
 
-  let work = raw.replace(/\b(?:a\s+)?napi[sš]\s+tam\s+.+$/iu, "").trim();
+  let work = raw
+    .replace(/\b(?:a\s+)?napi[sš]\s+tam\s+.+$/iu, "")
+    .replace(/\bdej\s+tam\s+pozn[aá]mk\w*\s+.+$/iu, "")
+    .replace(/\ba[tť]\s+nezapomenu\s+.+$/iu, "")
+    .trim();
   work = work.replace(/^(?:připomeň|pripomen)\s+mi\s+(?:že\s+mám\s+|ze\s+mam\s+)?/iu, "").trim();
     work = work.replace(/\b(z[ií]tra|zejtra|zitra)\s+r[aá]no\b/iu, "").trim();
     work = work.replace(/\b(z[ií]tra|zejtra|zitra)\b/iu, "").trim();

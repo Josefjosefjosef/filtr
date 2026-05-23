@@ -22,7 +22,7 @@ const {
 function draftField(turn, name) {
   const d = turn && turn.draft ? turn.draft : {};
   if (name === "title") return String(d.title || d.eventTitle || "");
-  if (name === "note") return String(d.silverNoteText || d.note || d.eventNote || "");
+  if (name === "note") return String(d.silverNoteText || d.note || d.eventNote || d.taskNote || "");
   if (name === "location") return String(d.location || d.eventLocation || "");
   if (name === "body") return String(d.noteBody || d.body || d.silverNoteText || "");
   return String(d[name] || "");
