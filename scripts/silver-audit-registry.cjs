@@ -161,6 +161,22 @@ const AUDIT_CATALOG = [
     safety_sensitive: true,
   },
   {
+    id: "clean_save_payload_production_v1",
+    audit_name: "Clean Save Payload Production Line V1",
+    audit_size: "480+",
+    public_product_impact: "HIGH",
+    harness_scripts: ["silver-clean-save-payload-production-line-v1.cjs"],
+    foundation_scripts: [
+      "silver-semantic-payload-engine-v1-core.cjs",
+      "silver-clean-payload-validator-v1.cjs",
+      "silver-action-mode-v1-core.cjs",
+      "silver-audit-anti-duplication-v1.cjs",
+    ],
+    report_json: "silver-clean-save-payload-production-line-v1-report.json",
+    cluster_prefix: "cspplv1_",
+    safety_sensitive: true,
+  },
+  {
     id: "save_search_mode_v1",
     audit_name: "Save/Search Mode Architecture V1",
     audit_size: "400+",

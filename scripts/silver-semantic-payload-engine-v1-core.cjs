@@ -283,7 +283,8 @@ function extractTaskSlots(rawText, now) {
 
   let work = raw.replace(/\b(?:a\s+)?napi[sš]\s+tam\s+.+$/iu, "").trim();
   work = work.replace(/^(?:připomeň|pripomen)\s+mi\s+(?:že\s+mám\s+|ze\s+mam\s+)?/iu, "").trim();
-  work = work.replace(/\bz[ií]tra\b/iu, "").trim();
+    work = work.replace(/\b(z[ií]tra|zejtra|zitra)\s+r[aá]no\b/iu, "").trim();
+    work = work.replace(/\b(z[ií]tra|zejtra|zitra)\b/iu, "").trim();
   work = work.replace(/\b(?:že\s+mám|ze\s+mam)\s+/iu, "").trim();
   work = stripInstructionPrefixes(work);
   if (work) {
