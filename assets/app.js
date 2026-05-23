@@ -38378,15 +38378,67 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * CAP15 cycle7: modulová negace kalendáře + explicitní zápis do úkolů — task.create povolen.
+   */
+  function iuSilverCap15Cycle7ModuleSwitchNegBeatsGlobalNegForTaskFolded(f) {
+    const x = String(f || "");
+    if (!/\bne\s+do\s+kalend/.test(x)) return false;
+    if (!/\bdo\s+ukol/.test(x)) return false;
+    if (!iuSilverHasWriteVerb(x)) return false;
+    const calNeg = x.search(/\bne\s+do\s+kalend/);
+    const taskIdx = iuSilverEarliestExplicitTaskWriteCueIndexFolded(x);
+    if (calNeg < 0 || taskIdx < 0) return false;
+    const negIdx = iuSilverEarliestGlobalWriteNegationIndexFolded(x);
+    return calNeg < taskIdx && (negIdx < 0 || calNeg <= negIdx);
+  }
+
+  /**
+   * CAP15 cycle7: scoped „nevytvářej poznámku“ lead + explicitní task-write cue → ambiguous (no write).
+   */
+  function iuSilverCap15Cycle7ScopedNoteNegVersusTaskWriteFolded(f) {
+    const x = String(f || "");
+    if (!/^\s*nevytv\w*\s+poznam/.test(x)) return false;
+    return /\buloz\w*\s+do\s+ukol/.test(x) || (iuSilverHasWriteVerb(x) && /\bdo\s+ukol/.test(x));
+  }
+
+  /**
+   * CAP15 cycle7: sladění s auditSilverGlobalNegBlocksExplicitTaskWriteExpectUnknownFolded (globální neg + úkolový cíl).
+   */
+  function iuSilverCap15Cycle7GlobalNegVersusExplicitTaskDestinationFolded(f) {
+    const x = String(f || "");
+    const globalNeg =
+      /\bnic\s+neukladej\b/.test(x) ||
+      /\bnic\s+nevytv\w*\b/.test(x) ||
+      /\bneukladej\b/.test(x) ||
+      (/\bnevytv\w*\b/.test(x) && !/\bnevytv\w*\s+ukol\b/.test(x));
+    if (!globalNeg) return false;
+    const negIdx = iuSilverEarliestGlobalWriteNegationIndexFolded(x);
+    if (negIdx < 0) return false;
+    if (iuSilverCap15Cycle7ModuleSwitchNegBeatsGlobalNegForTaskFolded(x)) return false;
+    const doUkol = /\bdo\s+ukol\w*\b/.exec(x);
+    if (doUkol && doUkol.index >= 0 && negIdx < doUkol.index) return true;
+    const explicitCmd =
+      /\bukol\w*\b/.test(x) &&
+      (/\bpridej\b/.test(x) || /\bhod\b/.test(x) || /\buloz\b/.test(x) || /\bnapis\b/.test(x));
+    if (!explicitCmd) return false;
+    const cmdIdx = iuSilverEarliestExplicitTaskWriteCueIndexFolded(x);
+    return cmdIdx >= 0 && negIdx < cmdIdx;
+  }
+
+  /**
    * P0 task_write_06001: globální negace zápisu před explicitním zápisem do úkolů/poznámky
    * → ne task.create (konflikt). Modulová negace („ne do kalendáře“ + úkoly) zůstává mimo.
    */
   function iuSilverGlobalWriteNegationConflictsExplicitModuleWriteFolded(raw, folded) {
     const f = String(folded || "");
     const r = String(raw || "").trim();
-    if (!f || !iuSilverHasGlobalWriteNegationVersusExplicitWriteSignalFolded(f)) return false;
+    if (!f) return false;
+    if (iuSilverCap15Cycle7ScopedNoteNegVersusTaskWriteFolded(f)) return true;
+    if (iuSilverCap15Cycle7GlobalNegVersusExplicitTaskDestinationFolded(f)) return true;
+    if (!iuSilverHasGlobalWriteNegationVersusExplicitWriteSignalFolded(f)) return false;
     const negIdx = iuSilverEarliestGlobalWriteNegationIndexFolded(f);
     if (negIdx < 0) return false;
+    if (iuSilverCap15Cycle7ModuleSwitchNegBeatsGlobalNegForTaskFolded(f)) return false;
 
     const colonTaskLine = /^\s*ukol\w*\s*:/.test(f) || /^\s*ukoly\w*\s*:/.test(f);
     const explicitTask =
@@ -38396,7 +38448,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (explicitTask) {
       const taskIdx = iuSilverEarliestExplicitTaskWriteCueIndexFolded(f);
       if (taskIdx >= 0 && negIdx < taskIdx) {
-        if (/\b(pridej|vytvor)\w*\s+ukol\w*\b/.test(f)) return false;
         return true;
       }
     }
@@ -38909,6 +38960,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
       const taskCue = iuSilverEarliestExplicitTaskWriteCueIndexFolded(x);
       if (taskCue >= 0 && taskCue > ni) {
+        if (iuSilverCap15Cycle7ModuleSwitchNegBeatsGlobalNegForTaskFolded(x)) return false;
+        if (iuSilverCap15Cycle7GlobalNegVersusExplicitTaskDestinationFolded(x)) return true;
         return false;
       }
       const noteCue = iuSilverEarliestExplicitNoteWriteCueIndexFolded(x);
