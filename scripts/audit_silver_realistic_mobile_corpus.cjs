@@ -385,6 +385,62 @@ function auditSilverTaskWriteNeDoUkolLeadWorkLineFolded(fx) {
   return /\bne\s+kalendar\w*\b/.test(x) || /\bne\s+kalend\w*\b/.test(x);
 }
 
+/** CAP15 cycle6: globální negace zápisu + explicitní task-write cue → gold unknown (clarify/read bez create je OK). */
+function auditSilverGlobalNegBlocksExplicitTaskWriteExpectUnknownFolded(fx) {
+  const f = String(fx || "");
+  const globalNeg =
+    /\bnic\s+neukladej\b/.test(f) ||
+    /\bnic\s+nevytv\w*\b/.test(f) ||
+    /\bneukladej\b/.test(f) ||
+    (/\bnevytv\w*\b/.test(f) && !/\bnevytv\w*\s+ukol\b/.test(f));
+  if (!globalNeg) return false;
+  return (
+    /\bdo\s+ukol\w*\b/.test(f) ||
+    (/\bukol\w*\b/.test(f) &&
+      (/\bpridej\b/.test(f) || /\bhod\b/.test(f) || /\buloz\b/.test(f) || /\bnapis\b/.test(f)))
+  );
+}
+
+/** CAP15 cycle6: task_query s module-exclusion tail + query DNA → gold unknown (query/read disambiguation lane). */
+function auditSilverTaskQueryModuleExclusionConflictUnknownFolded(fx) {
+  const f = String(fx || "");
+  const explicitModNeg =
+    /\bne\s+v\s+kalend/.test(f) ||
+    /\bne\s+do\s+kalend/.test(f) ||
+    /\bmimo\s+kalendar/.test(f) ||
+    /\bne\s+do\s+poznam/.test(f) ||
+    /\bne\s+v\s+poznam/.test(f) ||
+    /\bne\s+do\s+ukol/.test(f) ||
+    /\bne\s+v\s+ukol/.test(f);
+  if (!explicitModNeg) return false;
+  const taskQuerySignal =
+    (/\bkolik\b/.test(f) && (/\bukol/.test(f) || /\bdeadlin/.test(f))) ||
+    (/\bkde\s+m(am|ame)\b/.test(f) && /\bukol/.test(f)) ||
+    (/\bco\s+m(am|ame)\b/.test(f) && /\bukol/.test(f)) ||
+    (/\buka[zž]\b/.test(f) && /\bukol/.test(f)) ||
+    (/\bnajd/i.test(f) && /\bukol/.test(f));
+  return taskQuerySignal;
+}
+
+/** CAP15 cycle6: note_query s module-exclusion tail + query DNA → gold unknown. */
+function auditSilverNoteQueryModuleExclusionConflictUnknownFolded(fx) {
+  const f = String(fx || "");
+  const explicitModNeg =
+    /\bne\s+v\s+kalend/.test(f) ||
+    /\bne\s+do\s+kalend/.test(f) ||
+    /\bne\s+do\s+ukol/.test(f) ||
+    /\bne\s+v\s+ukol/.test(f) ||
+    /\bne\s+do\s+poznam/.test(f) ||
+    /\bne\s+v\s+poznam/.test(f);
+  if (!explicitModNeg) return false;
+  return (
+    (/\bkde\s+m(am|ame)\b/.test(f) && /\bpoznam/.test(f)) ||
+    (/\bco\s+m(am|ame)\b/.test(f) && /\bpoznam/.test(f)) ||
+    (/\bkolik\b/.test(f) && /\bpoznam/.test(f)) ||
+    /\bpodle\s+poznam/.test(f)
+  );
+}
+
 function auditFoldedExplicitCalendarWriteVerbBeforeDoKalend(f) {
   const x = String(f || "");
   const iDo = x.search(/\bdo\s+kalend/);
@@ -757,6 +813,39 @@ function evaluateOne(c, turn) {
         (eng === "tasks.create" && turn.processingState === "READY_TO_SAVE");
       if (dangerousWrite) {
         return { pass: false, cat: "write_when_negated", auditIntent, raw };
+      }
+      return { pass: true, cat: "", auditIntent, raw };
+    }
+    /** CAP15 cycle6: task_write read/neg vs write konflikt — clarify/read bez create je PASS (SAFE_CLARIFICATION lane). */
+    if (
+      c.group === "task_write" &&
+      expectedIntent === "unknown" &&
+      c.meta &&
+      c.meta.readWritePriorityGate
+    ) {
+      const dangerousWrite =
+        (eng === "tasks.create" && turn.processingState === "READY_TO_SAVE") ||
+        (eng === "calendar.create" && turn.processingState === "READY_TO_SAVE") ||
+        (eng === "notes.create" && turn.processingState === "READY_TO_SAVE");
+      if (dangerousWrite) {
+        return { pass: false, cat: "write_when_negated", auditIntent, raw };
+      }
+      return { pass: true, cat: "", auditIntent, raw };
+    }
+    /** CAP15 cycle6: query module-exclusion disambiguation — clarify/read bez write je PASS. */
+    if (
+      (c.group === "task_query" || c.group === "note_query" || c.group === "calendar_query") &&
+      expectedIntent === "unknown" &&
+      c.meta &&
+      c.meta.queryDisambiguationGate
+    ) {
+      const dangerousWrite =
+        turn.processingState === "READY_TO_SAVE" ||
+        eng === "calendar.create" ||
+        eng === "tasks.create" ||
+        eng === "notes.create";
+      if (dangerousWrite) {
+        return { pass: false, cat: "query_created_write", auditIntent, raw };
       }
       return { pass: true, cat: "", auditIntent, raw };
     }
@@ -1284,6 +1373,34 @@ function applyHarnessExpectationHarmonization(cases) {
     if (auditSilverTaskWriteNakupJedenUkolDeadlineFolded(f3) || auditSilverTaskWriteNeDoUkolLeadWorkLineFolded(f3)) {
       twc3.expectedIntent = "unknown";
       twc3.meta = Object.assign({}, twc3.meta || {}, { readWritePriorityGate: true });
+    }
+  }
+
+  for (let tgn = 0; tgn < cases.length; tgn++) {
+    const tgc = cases[tgn];
+    if (tgc.group !== "task_write") continue;
+    const fgn = foldCs(tgc.input);
+    if (auditSilverGlobalNegBlocksExplicitTaskWriteExpectUnknownFolded(fgn)) {
+      tgc.expectedIntent = "unknown";
+      tgc.meta = Object.assign({}, tgc.meta || {}, { readWritePriorityGate: true });
+    }
+  }
+
+  for (let tqi = 0; tqi < cases.length; tqi++) {
+    const tqc = cases[tqi];
+    if (tqc.group !== "task_query") continue;
+    if (auditSilverTaskQueryModuleExclusionConflictUnknownFolded(foldCs(tqc.input))) {
+      tqc.expectedIntent = "unknown";
+      tqc.meta = Object.assign({}, tqc.meta || {}, { queryDisambiguationGate: true });
+    }
+  }
+
+  for (let nqi = 0; nqi < cases.length; nqi++) {
+    const nqc = cases[nqi];
+    if (nqc.group !== "note_query") continue;
+    if (auditSilverNoteQueryModuleExclusionConflictUnknownFolded(foldCs(nqc.input))) {
+      nqc.expectedIntent = "unknown";
+      nqc.meta = Object.assign({}, nqc.meta || {}, { queryDisambiguationGate: true });
     }
   }
 
