@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-22T23:34:44.360385Z",
+  "ingestedAt": "2026-05-23T00:14:39.877713Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ekonomická deziluze: Důvěra Američanů v ekonomiku se propadla na dno",
+      "url": "https://www.epenize.eu/ekonomicka-deziluze-duvera-americanu-v-ekonomiku-se-propadla-na-dno/",
+      "dt": "2026-05-22T23:00:00Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "američanů",
+        "deziluze",
+        "dno",
+        "důvěra",
+        "ekonomická",
+        "ekonomiku",
+        "propadla"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -491,31 +515,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "77 % Američanů viní z drahoty Trumpa: Prezident říká, že ho to „ani trochu“ netrápí",
-      "url": "https://www.epenize.eu/77-americanu-vini-z-drahoty-trumpa-prezident-rika-ze-ho-to-ani-trochu-netrapi/",
-      "dt": "2026-05-14T23:00:57Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "američanů",
-        "drahoty",
-        "netrápí",
-        "prezident",
-        "trochu",
-        "trumpa",
-        "viní",
-        "říká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -526,7 +525,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 125134,
+      "bytes": 124728,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -563,11 +562,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-22T06:15:38Z",
+        "raw_feed_latest_publishedAt": "2026-05-22T23:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 1,
           "finance": 18,
+          "zpravy": 1,
           "zdravi": 1
         },
         "drop_counts": {
@@ -580,6 +579,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ekonomická deziluze: Důvěra Američanů v ekonomiku se propadla na dno",
+            "publishedAt": "2026-05-22T23:00:00Z"
+          },
           {
             "title": "Vítejte drogy! Odvolání Béma nedává logiku",
             "publishedAt": "2026-05-22T06:15:38Z"
@@ -607,10 +610,6 @@
           {
             "title": "Zrazené jádro: Skalní voliči pláčou, Trumpa zajímá jen válka",
             "publishedAt": "2026-05-19T23:00:19Z"
-          },
-          {
-            "title": "Buranská politika. Redaktor ani nepoloží otázku a už ho premiér tepe",
-            "publishedAt": "2026-05-19T06:26:44Z"
           }
         ]
       }
