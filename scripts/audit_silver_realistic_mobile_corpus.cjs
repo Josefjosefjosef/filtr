@@ -199,6 +199,7 @@ function engineToAuditIntent(rawIntent, category) {
   if (i === "notes.create") return "note.create";
   if (i === "notes.empty_prompt") return "note.create";
   if (i === "calendar.create") return "calendar.create";
+  if (i === "calendar.update") return "calendar.create";
   if (i === "create.storage_disambiguation") {
     if (category === "calendar_write") return "calendar.create";
     if (category === "task_write") return "task.create";
@@ -512,6 +513,7 @@ function calendarWriteSemantic(turn, raw, foldedIn, harnessCase) {
     turn.processingState === "READY_TO_SAVE" ||
     turn.processingState === "NEEDS_CLARIFICATION" ||
     turn.processingState === "DRAFTING" ||
+    turn.normalizedIntent === "calendar.update" ||
     /kalendář|kalendar|událost|udalost|schůzk|schuzk|ulož|uloz|přid|prid/i.test(raw);
   if (!ok) return { ok: false, cat: "raw_response_wrong" };
   return { ok: true, cat: "" };

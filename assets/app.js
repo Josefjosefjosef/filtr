@@ -37608,6 +37608,53 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return true;
   }
 
+  /**
+   * P1 self_correction_update_cal: úprava existující události — edit lead (oprav/uprav/změň + událost/schůzka).
+   */
+  function iuSilverSelfCorrectionUpdateCalEditLeadFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    return (
+      /\b(?:oprav|uprav|zmen)\s+(?:\S+\s+){0,3}(?:udalost|schuz)\w*/.test(x) ||
+      /\b(?:oprav|uprav|zmen)\s+ten\s+(?:\S+\s+){0,3}(?:udalost|schuz)\w*/.test(x)
+    );
+  }
+
+  /** P1 self_correction_update_cal: scoped anti-create — „nevytvářej druhou schůzku“ (ne globální no-write). */
+  function iuSilverSelfCorrectionUpdateCalScopedAntiCreateFolded(f) {
+    const x = String(f || "");
+    if (/\bnevytv\w*(?:\s+\S+){0,3}\s+druhou\s+schuz/.test(x)) return true;
+    if (/\bnevytv\w*(?:\s+\S+){0,3}\s+druh[yý]\s+schuz/.test(x)) return true;
+    if (/\bnevytv\w*\s+jako\s+druhou\s+schuz/.test(x)) return true;
+    return false;
+  }
+
+  /** P1 self_correction_update_cal: korekce mění datum/čas/den — úzký temporal update signál. */
+  function iuSilverSelfCorrectionUpdateCalTemporalUpdateSignalFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (/\bna\s+(?:\S+\s+){0,4}(?:zitra|zitrej|dnes|patek|pondel|uterk|stred|ctvrt|sobot|nedel|vikend|tyden)\b/.test(x)) return true;
+    if (/\bna\s+\d{1,2}\s*[:.]\s*\d{1,2}\b/.test(x)) return true;
+    if (/\bv\s+\d{1,2}\b/.test(x)) return true;
+    if (/\b(?:po\s+obede|po\s+obe|rano|vecer|dopoledne|odpoledne)\b/.test(x)) return true;
+    return iuSilverReWeekdayOnce().test(x);
+  }
+
+  /**
+   * P1 self_correction_update_cal (cluster): úzký deterministic update pivot — bez broad NLP.
+   * Nesmí spustit calendar.read před update lane (např. „po obědě“ + „za týden“ misroute).
+   */
+  function iuSilverSelfCorrectionUpdateCalPivotP1Folded(folded) {
+    const x = String(folded || "");
+    if (!x) return false;
+    if (iuSilverP0NoWriteNegationBeatsWriteLikeCueFolded(x)) return false;
+    if (iuSilverSelfCorrectionUpdateTaskBlocksCalendarUpdateFolded(x)) return false;
+    if (iuSilverSelfCorrectionAfterCreateTaskBlocksCalendarUpdateFolded(x)) return false;
+    if (!iuSilverSelfCorrectionUpdateCalEditLeadFolded(x)) return false;
+    if (!iuSilverSelfCorrectionUpdateCalScopedAntiCreateFolded(x)) return false;
+    return !!iuSilverSelfCorrectionUpdateCalTemporalUpdateSignalFolded(x);
+  }
+
   function iuSilverSelfCorrectionAfterCreateTaskBlocksCalendarUpdateFolded(f) {
     const x = String(f || "");
     if (!x) return false;
@@ -37849,6 +37896,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bzmen(?:it)?\b/.test(x) ||
       /\bpresun(?:out)?\b/.test(x) ||
       /\buprav(?:it)?\b/.test(x) ||
+      /\boprav(?:it)?\b/.test(x) ||
       /\bprepis(?:at)?\b/.test(x) ||
       /\bposun(?:out)?\b/.test(x) ||
       /\bprehod\b/.test(x) ||
@@ -38073,6 +38121,33 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       clarificationText: ap.clarification,
       draft: draft
     };
+  }
+
+  /**
+   * P1 self_correction_update_cal: úzká update lane — calendar.update (ne calendar.read / false create).
+   * Reuse calendar field extract; bez broad orchestration rewrite.
+   */
+  function iuSilverBuildCalendarUpdateTurn(raw, now, prevDraft, rawFullForFieldCleanupOpt) {
+    const prev = prevDraft || createEmptyDraft();
+    const baseTurn = iuSilverBuildCalendarCreateTurn(raw, now, prev, rawFullForFieldCleanupOpt);
+    if (!baseTurn) return null;
+    const eng = String(baseTurn.normalizedIntent || "");
+    if (eng === "notes.create" || eng === "tasks.create") return null;
+    if (eng === "clarification" || eng === "unknown") {
+      if (String(baseTurn.clarificationReason || "") === "needs_existing_event_selection") {
+        return Object.assign({}, baseTurn, {
+          normalizedIntent: "calendar.update",
+          targetContainer: "calendar",
+          futureIntentCandidate: "calendar.update"
+        });
+      }
+      return baseTurn;
+    }
+    return Object.assign({}, baseTurn, {
+      normalizedIntent: "calendar.update",
+      targetContainer: "calendar",
+      futureIntentCandidate: "calendar.update"
+    });
   }
 
   /**
@@ -47728,6 +47803,30 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return baseClarification("ambiguous_write", "unknown");
     }
 
+    /**
+     * P1 self_correction_update_cal (early): oprav/změň událost + scoped anti-create + temporal update
+     * → calendar.update (ne calendar.read misroute přes tryParseCalendarRead / „po obědě“).
+     */
+    if (iuSilverSelfCorrectionUpdateCalPivotP1Folded(folded)) {
+      let calUpdateTurn = iuSilverBuildCalendarUpdateTurn(
+        raw,
+        now,
+        prevDraft || createEmptyDraft(),
+        raw
+      );
+      if (calUpdateTurn) {
+        const calUpEng = String(calUpdateTurn.normalizedIntent || "");
+        if (calUpEng === "unknown" || calUpEng === "clarification") {
+          calUpdateTurn = Object.assign({}, calUpdateTurn, {
+            normalizedIntent: "calendar.update",
+            targetContainer: "calendar",
+            futureIntentCandidate: "calendar.update"
+          });
+        }
+        return calUpdateTurn;
+      }
+    }
+
     if (
       /\bkdy\s+(jsem|sem)\s+(?:byl\w*|byla\w*|mel\w*|mela\w*)\b/.test(folded) &&
       iuSilverP1PastCalendarRetrievalAppointmentEntityFolded(folded) &&
@@ -48129,6 +48228,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     extractFromUtterance,
     iuSilverIsNoteRetrievalIntentV1: iuSilverIsNoteRetrievalIntentV1,
     iuSilverIsCalendarUpdateIntentV1: iuSilverIsCalendarUpdateIntentV1,
+    iuSilverSelfCorrectionUpdateCalPivotP1Folded: iuSilverSelfCorrectionUpdateCalPivotP1Folded,
     proofWeekdayRuleSnippet,
     calendarReadProbe,
     iuSilverNormalizeForSearch: iuSilverNormalizeForSearch,
