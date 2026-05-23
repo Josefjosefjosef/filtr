@@ -36438,6 +36438,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/^servis/.test(qFold)) return { query: "Servis", queryFolded: foldCs("Servis") };
     if (/^skol/.test(qFold)) return { query: "Škola", queryFolded: foldCs("Škola") };
     if (/^urad/.test(qFold)) return { query: "Úřad", queryFolded: foldCs("Úřad") };
+    if (/^kuryr|^kurier/.test(qFold)) return { query: "Kurýr", queryFolded: foldCs("Kurýr") };
     if (/\bpetra?\b/.test(qFold)) return { query: "Petra", queryFolded: foldCs("Petra") };
     if (/\bpetr\b/.test(qFold)) return { query: "Petr", queryFolded: foldCs("Petr") };
     if (/\btomas/.test(qFold)) return { query: "Tomáš", queryFolded: foldCs("Tomáš") };
@@ -41660,6 +41661,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       diacriticInsensitive: true,
       queryFolded: foldCs(canQ)
     };
+    if (hasKdyJsemMel) {
+      out.preferPast = true;
+      out.preferPastMostRecent = true;
+    }
     return out;
   }
 
@@ -42672,6 +42677,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           hits = pastOnly;
           if (spec.preferPastMostRecent && hits.length > 1) {
             hits = [hits[hits.length - 1]];
+          }
+        } else if (spec.preferPastMostRecent) {
+          const todaySameTitle = hits.filter(function (e) {
+            return String(e.date).slice(0, 10) === todayStr;
+          });
+          if (todaySameTitle.length) {
+            hits = [todaySameTitle[todaySameTitle.length - 1]];
+          } else {
+            hits = [];
           }
         } else {
           hits = [];
