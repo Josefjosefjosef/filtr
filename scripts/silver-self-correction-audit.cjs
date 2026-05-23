@@ -108,6 +108,7 @@ const {
   finalizeSelfCorrectionSafetyNoteReadonlyHarnessEval,
   finalizeSelfCorrectionNegationFlipHarnessEval,
   finalizeSelfCorrectionNoisyCalHarnessEval,
+  finalizeSelfCorrectionAfterCreateTaskHarnessEval,
   finalizeSelfCorrectionUpdateNoteHarnessEval,
   finalizeSelfCorrectionUpdateTaskHarnessEval,
 } = require("./silver-self-correction-query-clarification.cjs");
@@ -511,6 +512,15 @@ function classifyScFailBucket(c, turn, ev, gold) {
     ) {
       return "HARNESS_PROBLEM";
     }
+    if (
+      c.cluster === "self_correction_after_create_task" &&
+      !drafty &&
+      (turn.normalizedIntent === "clarification" ||
+        turn.normalizedIntent === "unknown" ||
+        turn.normalizedIntent === "create.storage_disambiguation")
+    ) {
+      return "HARNESS_PROBLEM";
+    }
     if (c.sc_lane === "noisy_mobile_self_correction") return "HARNESS_PROBLEM";
     return "AMBIGUOUS_INPUT";
   }
@@ -578,6 +588,7 @@ function applyAllHarnessFinalizers(c, turn, ev) {
   out = finalizeSelfCorrectionSafetyNoteReadonlyHarnessEval(c, turn, out);
   out = finalizeSelfCorrectionNegationFlipHarnessEval(c, turn, out);
   out = finalizeSelfCorrectionNoisyCalHarnessEval(c, turn, out);
+  out = finalizeSelfCorrectionAfterCreateTaskHarnessEval(c, turn, out);
   out = finalizeSelfCorrectionUpdateNoteHarnessEval(c, turn, out);
   out = finalizeSelfCorrectionUpdateTaskHarnessEval(c, turn, out);
   return out;

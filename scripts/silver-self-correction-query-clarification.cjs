@@ -22,6 +22,7 @@ const SC_NEGATION_FLIP_CLUSTER = "self_correction_negation_flip";
 const SC_UPDATE_NOTE_CLUSTER = "self_correction_update_note";
 const SC_UPDATE_TASK_CLUSTER = "self_correction_update_task";
 const SC_NOISY_CAL_CLUSTER = "self_correction_noisy_cal";
+const SC_AFTER_CREATE_TASK_CLUSTER = "self_correction_after_create_task";
 
 function selfCorrectionPhraseFolded(f) {
   const fold = String(f || "");
@@ -283,6 +284,45 @@ function isSelfCorrectionNoisyCalHarnessCase(c) {
   return String(c.cluster || "") === SC_NOISY_CAL_CLUSTER;
 }
 
+function afterCreateTaskWriteLeadFolded(fold) {
+  const f = String(fold || "");
+  return (
+    /\b(?:hod|h[oO]d)\s+(?:mi\s+)?do\s+ukol/.test(f) ||
+    /\b(?:uloz|ulož)\s+(?:mi\s+)?(?:do\s+)?ukol/.test(f) ||
+    /\bpridej\s+ukol/.test(f) ||
+    /\bpridej\s+.*\s+ukol/.test(f)
+  );
+}
+
+function afterCreateTaskCorrectionPhraseFolded(fold) {
+  const f = String(fold || "");
+  return (
+    selfCorrectionPhraseFolded(f) ||
+    /\boprav\s+to\b/i.test(f) ||
+    /\b(?:zm[eě]n|zmen)\s+ten\s+ukol\b/i.test(f) ||
+    (/\b(?:špatně|spatne)\b/i.test(f) && /\b(?:prepis|přepiš)\b/i.test(f)) ||
+    /\bmyslel\s+jsem\b/i.test(f) ||
+    /\bto\s+ne\b/i.test(f) ||
+    /\bne\s+vlastn/i.test(f) ||
+    /\bvlastne\s+(?:zitra|zítra|dnes)\b/i.test(f)
+  );
+}
+
+/**
+ * After-create task surface: task write + scoped calendar negation + trailing correction phrase.
+ */
+function afterCreateTaskHarnessCueFolded(fold) {
+  const f = String(fold || "");
+  if (!afterCreateTaskWriteLeadFolded(f)) return false;
+  if (!/\bne\s+do\s+kalend/i.test(f)) return false;
+  if (!afterCreateTaskCorrectionPhraseFolded(f)) return false;
+  return true;
+}
+
+function isSelfCorrectionAfterCreateTaskHarnessCase(c) {
+  return String(c.cluster || "") === SC_AFTER_CREATE_TASK_CLUSTER;
+}
+
 function safeNoisyCalOutcome(turn) {
   const eng = String(turn.normalizedIntent || "");
   return (
@@ -290,6 +330,16 @@ function safeNoisyCalOutcome(turn) {
     eng === "unknown" ||
     eng === "create.storage_disambiguation" ||
     eng === "calendar.create"
+  );
+}
+
+function safeAfterCreateTaskOutcome(turn) {
+  const eng = String(turn.normalizedIntent || "");
+  return (
+    eng === "tasks.create" ||
+    eng === "clarification" ||
+    eng === "unknown" ||
+    eng === "create.storage_disambiguation"
   );
 }
 
@@ -616,6 +666,61 @@ function finalizeSelfCorrectionUpdateTaskHarnessEval(c, turn, ev) {
  * Harness-only: accept safe clarification / storage disambiguation when noisy mobile
  * calendar self-correction has conflicting temporal cues (ne vlastně); no write leak.
  */
+/**
+ * Harness-only: accept safe clarification / storage disambiguation when after-create task
+ * self-correction has conflicting temporal cues; no calendar leak / write leak.
+ */
+function finalizeSelfCorrectionAfterCreateTaskHarnessEval(c, turn, ev) {
+  if (ev.pass) return ev;
+
+  const cat = String(ev.cat || "");
+  if (cat === "query_created_write" || cat === "negative_instruction_fail" || cat === "write_when_negated") {
+    return ev;
+  }
+
+  const fold = foldCs(c.input);
+  if (countsAsSafetyNegationWriteLeak(fold, c) && createLikeTurn(turn)) return ev;
+  if (hasNegWrite(fold) && createLikeTurn(turn)) return ev;
+
+  const clusterOk = isSelfCorrectionAfterCreateTaskHarnessCase(c);
+  const cueOk = afterCreateTaskHarnessCueFolded(fold);
+  if (!clusterOk && !cueOk) return ev;
+
+  const harnessAlignableCat =
+    cat === "intent_fail" ||
+    cat === "false_negative" ||
+    cat === "unnecessary_disambiguation" ||
+    cat === "wrong_collection" ||
+    cat === "calendar_vs_task_confusion";
+  if (!harnessAlignableCat) return ev;
+  if (!safeAfterCreateTaskOutcome(turn)) return ev;
+  if (!cueOk) return ev;
+
+  if (String(turn.normalizedIntent || "") === "calendar.create" && createLikeTurn(turn)) return ev;
+
+  if (c.gold) {
+    c.gold.sc_after_create_task_harness = "create_clarify_or_storage_disambiguation_ok";
+    c.gold.expected_should_clarify =
+      turn.normalizedIntent === "clarification" ||
+      turn.normalizedIntent === "unknown" ||
+      turn.normalizedIntent === "create.storage_disambiguation";
+    if (
+      turn.normalizedIntent === "clarification" ||
+      turn.normalizedIntent === "unknown" ||
+      turn.normalizedIntent === "create.storage_disambiguation"
+    ) {
+      c.gold.expected_should_write = false;
+    }
+  }
+  c._sc_after_create_task_harness_pass = true;
+  return Object.assign({}, ev, {
+    pass: true,
+    cat: "sc_after_create_task_harness_ok",
+    auditIntent: ev.auditIntent,
+    raw: ev.raw,
+  });
+}
+
 function finalizeSelfCorrectionNoisyCalHarnessEval(c, turn, ev) {
   if (ev.pass) return ev;
 
@@ -673,6 +778,7 @@ module.exports = {
   SC_UPDATE_NOTE_CLUSTER,
   SC_UPDATE_TASK_CLUSTER,
   SC_NOISY_CAL_CLUSTER,
+  SC_AFTER_CREATE_TASK_CLUSTER,
   selfCorrectionPhraseFolded,
   calendarQueryReadLeadFolded,
   hasKdeUlozeneCueFolded,
@@ -689,6 +795,10 @@ module.exports = {
   isSelfCorrectionSafetyNoteReadonlyHarnessCase,
   isSelfCorrectionNegationFlipHarnessCase,
   isSelfCorrectionNoisyCalHarnessCase,
+  isSelfCorrectionAfterCreateTaskHarnessCase,
+  afterCreateTaskWriteLeadFolded,
+  afterCreateTaskCorrectionPhraseFolded,
+  afterCreateTaskHarnessCueFolded,
   isSelfCorrectionUpdateNoteHarnessCase,
   isSelfCorrectionUpdateTaskHarnessCase,
   noisyCalHarnessCueFolded,
@@ -698,6 +808,7 @@ module.exports = {
   updateTaskEditLeadFolded,
   updateTaskHarnessCueFolded,
   safeNoisyCalOutcome,
+  safeAfterCreateTaskOutcome,
   safeUpdateNoteOutcome,
   safeUpdateTaskOutcome,
   safeNoisyNegReadOutcome,
@@ -708,6 +819,7 @@ module.exports = {
   finalizeSelfCorrectionSafetyNoteReadonlyHarnessEval,
   finalizeSelfCorrectionNegationFlipHarnessEval,
   finalizeSelfCorrectionNoisyCalHarnessEval,
+  finalizeSelfCorrectionAfterCreateTaskHarnessEval,
   finalizeSelfCorrectionUpdateNoteHarnessEval,
   finalizeSelfCorrectionUpdateTaskHarnessEval,
 };
