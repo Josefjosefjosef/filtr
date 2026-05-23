@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-23T03:40:08.313479Z",
+  "ingestedAt": "2026-05-23T04:20:03.413935Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Komáři začínají být aktivní. O víkendu především na východě Čech",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/komari-zacinaji-byt-aktivni-o-vikendu-predevsim-na-vychode-cech-373746",
+      "dt": "2026-05-23T04:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "aktivní",
+        "být",
+        "komáři",
+        "především",
+        "víkendu",
+        "východě",
+        "začínají",
+        "čech"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -729,26 +754,27 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Opravy železnice na jihu Čech uzavřou dvě desítky přejezdů",
-      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/opravy-zeleznice-na-jihu-cech-uzavrou-dve-desitky-prejezdu-373617",
-      "dt": "2026-05-22T08:46:39Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Národní tým čeká důležitý zápas se Slovenskem, vítěz se přiblíží čtvrtfinále",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/narodni-tym-ceka-dulezity-zapas-se-slovenskem-vitez-se-priblizi-ctvrtfinale-156950",
+      "dt": "2026-05-23T04:00:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "desítky",
-        "dvě",
-        "jihu",
-        "opravy",
-        "přejezdů",
-        "uzavřou",
-        "čech",
-        "železnice"
+        "důležitý",
+        "národní",
+        "přiblíží",
+        "slovenskem",
+        "tým",
+        "vítěz",
+        "zápas",
+        "čeká",
+        "čtvrtfinále"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1475,31 +1501,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vegas porazilo na úvod Colorado, Hertl přihrával, Nečas nebodoval",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/vegas-porazilo-colorado-hertl-prihraval-necas-nebodoval-156924",
-      "dt": "2026-05-21T06:54:25Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "colorado",
-        "hertl",
-        "nebodoval",
-        "nečas",
-        "porazilo",
-        "přihrával",
-        "vegas",
-        "úvod"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1510,7 +1511,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41893,
+      "bytes": 42052,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1570,7 +1571,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-23T00:45:43Z",
+        "raw_feed_latest_publishedAt": "2026-05-23T04:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1587,6 +1588,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Komáři začínají být aktivní. O víkendu především na východě Čech",
+            "publishedAt": "2026-05-23T04:00:00Z"
+          },
           {
             "title": "Při výbuších v New Yorku zemřel člověk, desítky lidí byly zraněny",
             "publishedAt": "2026-05-23T00:45:43Z"
@@ -1614,10 +1619,6 @@
           {
             "title": "Nedostatek herců z řad menšin v Česku trápí filmaře. Lákají je proto příplatky",
             "publishedAt": "2026-05-22T18:27:05Z"
-          },
-          {
-            "title": "Colbertova talkshow končí, podle kritiků kvůli Trumpovi",
-            "publishedAt": "2026-05-22T18:24:23Z"
           }
         ]
       }
@@ -1629,7 +1630,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37198,
+      "bytes": 37392,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1666,7 +1667,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-23T04:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1681,6 +1682,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Národní tým čeká důležitý zápas se Slovenskem, vítěz se přiblíží čtvrtfinále",
+            "publishedAt": "2026-05-23T04:00:00Z"
+          },
           {
             "title": "Soutěž k MS v hokeji – 23. května",
             "publishedAt": "2026-05-22T22:00:00Z"
@@ -1708,10 +1713,6 @@
           {
             "title": "Velké loučení. Guardiola po deseti letech končí v Manchesteru City",
             "publishedAt": "2026-05-22T10:40:24Z"
-          },
-          {
-            "title": "Rada věří Dukle a dodává: Pořád je v českém fotbale skrytý červíček",
-            "publishedAt": "2026-05-22T07:00:00Z"
           }
         ]
       }
@@ -1723,7 +1724,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78724,
+      "bytes": 78721,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

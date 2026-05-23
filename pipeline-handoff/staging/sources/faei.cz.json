@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-23T03:40:08.313479Z",
+  "ingestedAt": "2026-05-23T04:20:03.413935Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Českého turistu na Havaji postihla kožní nemoc. Vyšla na 7,5 milionu",
+      "url": "https://profitonline.cz/ceskeho-turistu-na-havaji-postihla-kozni-nemoc-vysla-na-75-milionu/",
+      "dt": "2026-05-23T04:00:58Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "havaji",
+        "kožní",
+        "milionu",
+        "nemoc",
+        "postihla",
+        "turistu",
+        "vyšla",
+        "českého"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -269,27 +294,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Eurostat: Česko mezi evropskými premianty",
-      "url": "https://profitonline.cz/eurostat-cesko-mezi-evropskymi-premianty/",
-      "dt": "2026-05-21T08:00:33Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "eurostat",
-        "evropskými",
-        "premianty",
-        "česko"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -300,7 +304,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18873,
+      "bytes": 18911,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -337,10 +341,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-22T21:00:42Z",
+        "raw_feed_latest_publishedAt": "2026-05-23T04:00:58Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 10,
+          "zdravi": 1,
+          "finance": 9,
           "cestovani": 2
         },
         "drop_counts": {
@@ -353,6 +358,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Českého turistu na Havaji postihla kožní nemoc. Vyšla na 7,5 milionu",
+            "publishedAt": "2026-05-23T04:00:58Z"
+          },
           {
             "title": "Inflační tlaky sílí, trhy čekají zvyšování úrokových sazeb",
             "publishedAt": "2026-05-22T21:00:42Z"
@@ -380,10 +389,6 @@
           {
             "title": "Vítězové burzovní rallye? Polovodiče a překvapivě měď",
             "publishedAt": "2026-05-22T06:00:35Z"
-          },
-          {
-            "title": "Ministři Zůna, Klempíř… A kdo opustí vládu z hnutí ANO?",
-            "publishedAt": "2026-05-22T04:00:48Z"
           }
         ]
       }

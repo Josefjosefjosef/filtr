@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-23T03:40:08.313479Z",
+  "ingestedAt": "2026-05-23T04:20:03.413935Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Celé roky poslouchali, že maso škodí. Výsledky rozsáhlé studie teď překvapily i experty",
+      "url": "https://magazin.aktualne.cz/cele-roky-poslouchali-ze-maso-skodi-vysledky-rozsahle-studie-ted-prekvapily-i-experty/r~aaa29c1c99fd180e673817b64db54209/",
+      "dt": "2026-05-23T03:59:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "celé",
+        "experty",
+        "maso",
+        "poslouchali",
+        "překvapily",
+        "roky",
+        "rozsáhlé",
+        "studie",
+        "výsledky",
+        "škodí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -503,33 +530,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Stát uvažuje o prodeji Explosie, výnos by podle Babiše mohl být velmi vysoký",
-      "url": "https://zpravy.aktualne.cz/domaci/stat-uvazuje-podle-babise-o-prodeji-explosie-vynos-by-mohl-byt-velmi-vysoky/r~aaa29b0fa68ec3c36ad2ae289ae66735/",
-      "dt": "2026-05-22T12:09:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "babiše",
-        "být",
-        "explosie",
-        "podle",
-        "prodeji",
-        "stát",
-        "uvažuje",
-        "velmi",
-        "vysoký",
-        "výnos"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -540,7 +540,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22539,
+      "bytes": 22490,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -577,7 +577,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-23T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-23T03:59:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 17,
@@ -593,6 +593,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Celé roky poslouchali, že maso škodí. Výsledky rozsáhlé studie teď překvapily i experty",
+            "publishedAt": "2026-05-23T03:59:00Z"
+          },
           {
             "title": "V čem je Kupka lepší než Fiala. Z Okamury se mi zvedá žaludek, říká vlivný muž ODS",
             "publishedAt": "2026-05-23T03:30:00Z"
@@ -620,10 +624,6 @@
           {
             "title": "Izrael podnikl útoky v Libanonu. Zemřelo deset lidí včetně záchranářů a dívky",
             "publishedAt": "2026-02-28T14:04:00Z"
-          },
-          {
-            "title": "Soud zamítl žalobu Trumpovy vlády na dříve omylem deportovaného Salvadorce",
-            "publishedAt": "2026-05-22T19:59:00Z"
           }
         ]
       }

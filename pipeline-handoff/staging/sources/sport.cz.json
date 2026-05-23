@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-23T03:40:08.313479Z",
+  "ingestedAt": "2026-05-23T04:20:03.413935Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Colorado v problémech, i podruhé prohrálo s Vegas",
+      "url": "https://www.sport.cz/clanek/hokej-colorado-v-problemech-i-podruhe-prohralo-s-vegas-5461432",
+      "dt": "2026-05-23T04:11:49Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "colorado",
+        "podruhé",
+        "problémech",
+        "prohrálo",
+        "vegas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -736,34 +758,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Federální derby mohl hrát za Slováky. Můj sen byl ale český nároďák, říká Kempný",
-      "url": "https://www.sport.cz/clanek/hokej-ms-federalni-derby-mohl-hrat-za-slovaky-muj-sen-byl-ale-cesky-narodak-rika-kempny-5460727",
-      "dt": "2026-05-22T10:33:44Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "ale",
-        "derby",
-        "federální",
-        "hrát",
-        "kempný",
-        "můj",
-        "nároďák",
-        "sen",
-        "slováky",
-        "český",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -774,7 +768,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44493,
+      "bytes": 43830,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -811,7 +805,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T21:40:58Z",
+        "raw_feed_latest_publishedAt": "2026-05-23T04:11:49Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 28,
@@ -827,6 +821,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Colorado v problémech, i podruhé prohrálo s Vegas",
+            "publishedAt": "2026-05-23T04:11:49Z"
+          },
           {
             "title": "Sprintová kvalifikace nejlépe sedla Mercedesu. Z první příčky vyjede Russell",
             "publishedAt": "2026-05-22T21:40:58Z"
@@ -854,10 +852,6 @@
           {
             "title": "V Evropské lize basketbalistů se utkají o titul Olympiakos a Real Madrid",
             "publishedAt": "2026-05-22T21:01:08Z"
-          },
-          {
-            "title": "Program MS v hokeji 2026 ve Švýcarsku: Česko ve skupině B ve Fribourgu",
-            "publishedAt": "2026-05-20T05:03:00Z"
           }
         ]
       }
