@@ -45790,6 +45790,40 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P0 CAP20: strip orphan command/filler tokens left mid/tail in draft titles (audit hod_hod|mi_mi|prosim).
+   * Whole-word only — does not touch hodin|nahod|Mariana|…; returns original if result would be too short.
+   */
+  function iuSilverStripTitleQualityOrphanFillersV1(titleIn) {
+    const original = String(titleIn || "").trim();
+    if (!original) return original;
+    let work = iuSilverNormalizeWs(original);
+    const stripRes = [
+      /(?:^|[\s,;]+)(?:pros[ií]m|prosim)(?=[\s,;]|$)/giu,
+      /(?:^|[\s,;]+)(?:ho[dď]|hod)(?=[\s,;]|$)/giu,
+      /(?:^|[\s,;]+)(?:napi[sš]|napis)(?=[\s,;]|$)/giu,
+      /(?:^|[\s,;]+)(?:ulo[zž]|uloz)(?=[\s,;]|$)/giu,
+      /(?:^|[\s,;]+)mi(?=[\s,;]|$)/giu,
+      /(?:^|[\s,;]+)si(?=[\s,;]|$)/giu
+    ];
+    for (let round = 0; round < 24; round++) {
+      const prev = work;
+      let ri;
+      for (ri = 0; ri < stripRes.length; ri++) {
+        work = work.replace(stripRes[ri], " ").trim();
+      }
+      work = work
+        .replace(/^\s*[,;:]+\s*/u, "")
+        .replace(/\s*[,;:]+\s*$/u, "")
+        .trim();
+      work = iuSilverNormalizeWs(work);
+      if (work === prev) break;
+    }
+    const foldOut = foldCs(work);
+    if (!foldOut || foldOut.length < 2) return original;
+    return work;
+  }
+
+  /**
    * Silver Normalizer v1 — title cleaning only (after routing). Strips leading command/filler
    * prefixes from cluster audit (hoď/hod, mi, prosím, napiš, ulož, si, …) without touching
    * words inside the real title; if the result would be empty or too short, returns original.
@@ -45912,6 +45946,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         if (foldCap && foldCap.length >= 2) work = capped;
       }
     }
+    work = iuSilverStripTitleQualityOrphanFillersV1(work);
+    if (!foldCs(work) || foldCs(work).length < 2) return original;
     return work;
   }
 

@@ -997,7 +997,8 @@ const ADDRS = [
 ];
 
 /** Silver Quality Audit v1 — informational only; must not affect routing PASS/FAIL or expectedIntent. */
-const TITLE_QUALITY_FILLER_RE = /pros[ií]m|ho[dď]|napi[šs]|ulo[zž]|\bsi\b|\bmi\b/i;
+const TITLE_QUALITY_FILLER_RE =
+  /\b(?:pros[ií]m|prosim)\b|\b(?:ho[dď]|hod)\b|\b(?:napi[šs]|napis)\b|\b(?:ulo[zž]|uloz)\b|\bsi\b|\bmi\b/i;
 const DATE_QUALITY_RELATIVE_RAW_RE =
   /\b(zitra|zítra|dnes|pozitri|pozítří|pondeli|pondělí|utery|úterý|streda|středa|stredu|středu|ctvrtek|čtvrtek|patek|pátek|vikend|víkend|tyden|týden|mesic|měsíc|pristi|příští|koncem|tento|tenhle)\b/i;
 
