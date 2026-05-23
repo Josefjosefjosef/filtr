@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-23T04:20:03.413935Z",
+  "ingestedAt": "2026-05-23T05:00:44.101402Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "K Jadranu bez kolon. Chorvatsko instaluje nové portály pro bezkontaktní mýto",
+      "url": "https://ekonomickydenik.cz/chorvatsko-elektronicke-mytne/",
+      "dt": "2026-05-23T04:30:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bezkontaktní",
+        "chorvatsko",
+        "instaluje",
+        "jadranu",
+        "kolon",
+        "mýto",
+        "nové",
+        "portály"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -767,31 +792,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "6 metrů od nebezpečné eskalace. Ruské stíhačky ohrožovaly letadlo NATO",
-      "url": "https://ekonomickydenik.cz/6-metru-eskalace-ruske-letouny-nato/",
-      "dt": "2026-05-21T05:50:35Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "eskalace",
-        "letadlo",
-        "metrů",
-        "nato",
-        "nebezpečné",
-        "ohrožovaly",
-        "ruské",
-        "stíhačky"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73999,
+      "bytes": 73412,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,11 +839,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T17:14:43Z",
+        "raw_feed_latest_publishedAt": "2026-05-23T04:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 22,
-          "zpravy": 3,
+          "finance": 23,
+          "zpravy": 2,
           "zdravi": 4,
           "sport": 1
         },
@@ -857,6 +857,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "K Jadranu bez kolon. Chorvatsko instaluje nové portály pro bezkontaktní mýto",
+            "publishedAt": "2026-05-23T04:30:00Z"
+          },
           {
             "title": "USA brzdí prodej zbraní Tchaj-wanu. Ustupuje Trump po jednání v Číně?",
             "publishedAt": "2026-05-22T17:14:43Z"
@@ -884,10 +888,6 @@
           {
             "title": "Nebe nad Evropou prořídne. Další aerolinka oznámila rušení letů",
             "publishedAt": "2026-05-22T11:44:20Z"
-          },
-          {
-            "title": "Bohatí bohatnou, chudí to vzdávají. Tak vypadá byrokratická džungle na podporu vědy",
-            "publishedAt": "2026-05-22T10:33:00Z"
           }
         ]
       }

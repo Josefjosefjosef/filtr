@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-23T04:20:03.413935Z",
+  "ingestedAt": "2026-05-23T05:00:44.101402Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Konopí není zázrak, ale parťák. Příběh úspěšné firmy z Vysočiny",
+      "url": "https://www.idnes.cz/magaziny/koktejl/konopi-masti-oleje-seminka-zelena-zeme-rozhovor.A260520_085727_koktejl_vanky",
+      "dt": "2026-05-23T04:30:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "ale",
+        "firmy",
+        "konopí",
+        "parťák",
+        "příběh",
+        "vysočiny",
+        "zázrak",
+        "úspěšné"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -760,30 +785,6 @@
         "srdce",
         "záškrtem",
         "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Do Česka míří mimořádné vedro. Mapa ukazuje, kde bude 30 stupňů",
-      "url": "https://www.idnes.cz/zpravy/domaci/do-ceska-miri-mimoradne-vedro-mapa-ukazuje-kde-bude-30-stupnu.A260522_155346_domaci_skr",
-      "dt": "2026-05-22T14:34:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "mapa",
-        "mimořádné",
-        "míří",
-        "stupňů",
-        "ukazuje",
-        "vedro",
-        "česka"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1589,7 +1590,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48728,
+      "bytes": 48861,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1626,7 +1627,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-23T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-23T04:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -1643,6 +1644,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konopí není zázrak, ale parťák. Příběh úspěšné firmy z Vysočiny",
+            "publishedAt": "2026-05-23T04:30:00Z"
+          },
           {
             "title": "Zábava pro děti, relax pro rodiče a originální gastro. Užijte si rodinný den na maximum",
             "publishedAt": "2026-05-23T03:00:00Z"
@@ -1670,10 +1675,6 @@
           {
             "title": "Na brněnském náměstí se hodovalo, tancovalo, ale i uráželo",
             "publishedAt": "2026-05-22T19:54:00Z"
-          },
-          {
-            "title": "Řidič utopil auto uprostřed rybníka. Nikdo nechápe, jak se tam dostal",
-            "publishedAt": "2026-05-22T19:32:00Z"
           }
         ]
       }

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-23T04:20:03.413935Z",
+  "ingestedAt": "2026-05-23T05:00:44.101402Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Čínský důl zasáhlo neštěstí. Pod zemí je devadesát horníků",
+      "url": "https://www.denik.cz/ze_sveta/cina-dulni-nestesti-uhli-obeti.html",
+      "dt": "2026-05-23T04:39:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "devadesát",
+        "důl",
+        "horníků",
+        "neštěstí",
+        "zasáhlo",
+        "zemí",
+        "čínský"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -618,32 +642,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "U školy v Pardubicích vzniklo pietní místo. Navštívil jej i premiér Babiš",
-      "url": "https://www.denik.cz/regiony/ubodana-divka-vrazda-pardubice-chemicka-skola-pieta-babis.html",
-      "dt": "2026-05-22T09:46:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "babiš",
-        "jej",
-        "místo",
-        "navštívil",
-        "pardubicích",
-        "pietní",
-        "premiér",
-        "vzniklo",
-        "školy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -654,7 +652,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30350,
+      "bytes": 30318,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -691,7 +689,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-23T04:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-23T04:39:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -708,6 +706,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Čínský důl zasáhlo neštěstí. Pod zemí je devadesát horníků",
+            "publishedAt": "2026-05-23T04:39:00Z"
+          },
           {
             "title": "Úleva pro rodiče i trenéry. Části dětských sportovců odpadnou prohlídky u lékaře",
             "publishedAt": "2026-05-23T04:05:00Z"
@@ -735,10 +737,6 @@
           {
             "title": "Herečku Janžurovou trápí zdravotní potíže. Stavovské divadlo zrušilo představení",
             "publishedAt": "2026-05-22T19:14:00Z"
-          },
-          {
-            "title": "Putin slibuje odvetu za údajný ukrajinský nálet na internát. Ukrajina ho popírá",
-            "publishedAt": "2026-05-22T17:22:00Z"
           }
         ]
       }

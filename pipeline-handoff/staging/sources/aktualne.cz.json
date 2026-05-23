@@ -1,8 +1,64 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-23T04:20:03.413935Z",
+  "ingestedAt": "2026-05-23T05:00:44.101402Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "„Nikoho lepšího jsem v hokeji nepotkal.“ Slovák vzhlíží k Čechovi, nadchli slavný tým",
+      "url": "https://sport.aktualne.cz/hokej/nikoho-lepsiho-jsem-v-hokeji-nepotkal-slovak-vzhlizi-k-cechovi-nadchli-slavny-tym/r~aaa29a12db45c768ee2fd52027abcabc/",
+      "dt": "2026-05-23T04:51:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "hokeji",
+        "jsem",
+        "lepšího",
+        "nadchli",
+        "nepotkal",
+        "nikoho",
+        "slavný",
+        "slovák",
+        "tým",
+        "vzhlíží",
+        "čechovi"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Unikátní pohled na konec devadesátek. Felicia nestála moc, dnešním pohledem je ale tristní",
+      "url": "https://zpravy.aktualne.cz/ekonomika/auto/historie-automobilu/unikatni-pohled-na-konec-devadesatek-felicia-nestala-moc-dnesnim-pohledem-je-ale-tristni/r~aaa29935ad195ccd79d61a36186f2fcb/",
+      "dt": "2026-05-23T04:32:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "ale",
+        "devadesátek",
+        "dnešním",
+        "felicia",
+        "konec",
+        "moc",
+        "nestála",
+        "pohled",
+        "pohledem",
+        "tristní",
+        "unikátní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -480,56 +536,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ukrajinci přelstili ruské radary. Nasadili techniku z 18. století",
-      "url": "https://zpravy.aktualne.cz/zahranici/ukrajinci-prelstili-ruske-radary-nasadili-techniku-z-18-stoleti/r~aaa296c5561b7a3a236273cead9d26f7/",
-      "dt": "2026-05-22T15:44:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "nasadili",
-        "přelstili",
-        "radary",
-        "ruské",
-        "století",
-        "techniku",
-        "ukrajinci"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Přesuny amerických vojáků v Evropě nejsou formou trestu, řekl Rubio",
-      "url": "https://zpravy.aktualne.cz/zahranici/presuny-americkych-vojaku-v-evrope-nejsou-formou-trestu-rekl-rubio/r~aaa29f23595b402d4302914280e2eb0e/",
-      "dt": "2026-05-22T10:29:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "amerických",
-        "evropě",
-        "formou",
-        "nejsou",
-        "přesuny",
-        "rubio",
-        "trestu",
-        "vojáků",
-        "řekl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -540,7 +546,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22490,
+      "bytes": 22554,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -577,11 +583,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-23T03:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-23T04:51:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 17,
-          "sport": 3
+          "sport": 4,
+          "finance": 1,
+          "zpravy": 15
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -593,6 +600,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Nikoho lepšího jsem v hokeji nepotkal.“ Slovák vzhlíží k Čechovi, nadchli slavný tým",
+            "publishedAt": "2026-05-23T04:51:00Z"
+          },
+          {
+            "title": "Unikátní pohled na konec devadesátek. Felicia nestála moc, dnešním pohledem je ale tristní",
+            "publishedAt": "2026-05-23T04:32:00Z"
+          },
           {
             "title": "Celé roky poslouchali, že maso škodí. Výsledky rozsáhlé studie teď překvapily i experty",
             "publishedAt": "2026-05-23T03:59:00Z"
@@ -616,14 +631,6 @@
           {
             "title": "Čechy čeká klíčový souboj se Slovenskem. Projděte si program, výsledky a čísla z MS",
             "publishedAt": "2026-05-15T11:37:00Z"
-          },
-          {
-            "title": "Kanada přehrála Slovince a má jisté čtvrtfinále. V něm už jsou i Finové",
-            "publishedAt": "2026-05-22T17:11:00Z"
-          },
-          {
-            "title": "Izrael podnikl útoky v Libanonu. Zemřelo deset lidí včetně záchranářů a dívky",
-            "publishedAt": "2026-02-28T14:04:00Z"
           }
         ]
       }
