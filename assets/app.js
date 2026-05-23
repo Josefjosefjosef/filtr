@@ -36429,7 +36429,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!q0 || q0.length < 2) return null;
     const qFold = foldCs(q0);
     if (/^zubar|^zubare/.test(qFold)) return { query: "Zubař", queryFolded: foldCs("Zubař") };
-    if (/^pravnik|^pravnika|^pravnici/.test(qFold)) return { query: "Právník", queryFolded: foldCs("Právník") };
+    if (/^pravnik|^pravnika|^pravnici|^prawnik/.test(qFold)) return { query: "Právník", queryFolded: foldCs("Právník") };
     if (/^advokat/.test(qFold)) return { query: "Advokát", queryFolded: foldCs("Advokát") };
     if (/^doktor|^lekaf|^lekari/.test(qFold)) return { query: "Doktor", queryFolded: foldCs("Doktor") };
     if (/^kontrol/.test(qFold)) return { query: "Kontrola", queryFolded: foldCs("Kontrola") };
@@ -41725,6 +41725,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!x) return false;
     return (
       /\bpravnik\w*\b/.test(x) ||
+      /\bprawnik\b/.test(x) ||
       /\badvokat/.test(x) ||
       /\bucetni\w*\b/.test(x) ||
       /\bdoktor\w*\b/.test(x) ||
