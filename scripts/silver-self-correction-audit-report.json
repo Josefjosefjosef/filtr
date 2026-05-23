@@ -1,18 +1,18 @@
 {
   "harness_id": "silver_self_correction_audit_v1",
-  "generated_at": "2026-05-22T23:30:05.043Z",
-  "main_commit": "077c498d817ac96d3ab2f7ed4199d793a3443ff8",
+  "generated_at": "2026-05-23T00:17:45.108Z",
+  "main_commit": "aeb2f7e83a5cb0d3b2de21e2b06935ec2a546cfd",
   "engine_changed": "NO",
   "assets_app_changed": "NO",
   "total_cases": 21000,
-  "pass_count": 20894,
-  "fail_count": 106,
-  "overall_accuracy": "99.50",
+  "pass_count": 20984,
+  "fail_count": 16,
+  "overall_accuracy": "99.92",
   "family_breakdown": {
     "correction_after_create_intent": {
-      "pass": 2944,
-      "fail": 56,
-      "accuracy": "98.13"
+      "pass": 2999,
+      "fail": 1,
+      "accuracy": "99.97"
     },
     "correction_module_switch": {
       "pass": 3000,
@@ -30,9 +30,9 @@
       "accuracy": "100.00"
     },
     "correction_update_vs_create": {
-      "pass": 2954,
-      "fail": 46,
-      "accuracy": "98.47"
+      "pass": 2989,
+      "fail": 11,
+      "accuracy": "99.63"
     },
     "noisy_mobile_self_correction": {
       "pass": 2996,
@@ -46,12 +46,11 @@
     }
   },
   "top_fail_clusters": [
-    "self_correction_after_create_note_task:56",
-    "self_correction_update_cal:35",
     "self_correction_update_task:11",
     "self_correction_noisy_cal:4",
+    "self_correction_after_create_task:1",
     "self_correction_after_create_cal:0",
-    "self_correction_after_create_task:0",
+    "self_correction_after_create_note_task:0",
     "self_correction_module_cal_to_note:0",
     "self_correction_module_task_to_note:0",
     "self_correction_module_note_to_cal:0",
@@ -61,24 +60,25 @@
     "self_correction_negation_hard:0",
     "self_correction_negation_flip:0",
     "self_correction_update_note:0",
+    "self_correction_update_cal:0",
     "self_correction_noisy_task:0",
     "self_correction_noisy_cross:0",
     "self_correction_noisy_neg_read:0",
     "self_correction_safety_cal_readonly:0",
     "self_correction_safety_task_readonly:0"
   ],
-  "true_engine_fail_count": 55,
-  "harness_problem_count": 36,
-  "ambiguous_input_count": 15,
+  "true_engine_fail_count": 5,
+  "harness_problem_count": 5,
+  "ambiguous_input_count": 6,
   "safety_risk_count": 0,
   "dangerous_write_count": 0,
   "false_write_count": 0,
   "query_created_write_count": 0,
   "write_when_negated_count": 0,
-  "recommended_next_task_type": "narrow_engine_diagnostic_fix",
-  "recommended_next_cluster": "self_correction_after_create_note_task",
-  "self_correction_status": "ACTIVE",
-  "self_correction_next_action": "TRUE_ENGINE_FAIL dominates — narrow engine diagnostic on top cluster before CAP.",
+  "recommended_next_task_type": "audit_expansion",
+  "recommended_next_cluster": "self_correction_update_task:11",
+  "self_correction_status": "STABLE",
+  "self_correction_next_action": "Expand clarification gold / harness tolerance for ambiguous self-correction surfaces.",
   "safety": {
     "dangerous_write_count": 0,
     "false_write_count": 0,
