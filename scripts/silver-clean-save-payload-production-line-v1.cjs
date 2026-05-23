@@ -422,8 +422,11 @@ function main() {
         encoding: "utf8",
         stdio: ["ignore", "pipe", "pipe"],
       });
-      const m1 = out.match(/save_mode_card_accuracy=([0-9.]+)/);
-      const m2 = out.match(/search_mode_direct_answer_accuracy=([0-9.]+)/);
+      const m1 =
+        out.match(/save_mode_structured_draft_card=([0-9.]+)/) || out.match(/save_mode_card_accuracy=([0-9.]+)/);
+      const m2 =
+        out.match(/search_mode_direct_answer_accuracy=([0-9.]+)/) ||
+        out.match(/search_mode_direct_answer=([0-9.]+)/);
       return {
         save: m1 ? parseFloat(m1[1]) : null,
         search: m2 ? parseFloat(m2[1]) : null,

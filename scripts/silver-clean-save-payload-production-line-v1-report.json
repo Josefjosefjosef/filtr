@@ -1,12 +1,12 @@
 {
   "harness_id": "silver_clean_save_payload_production_line_v1",
-  "main_commit": "a6759ca0bf905c9d77aebf3c1bdf3317e1734b3d",
+  "main_commit": "9c34667f34b387719f3661c3e04e70692152f4f5",
   "cases_generated": 480,
   "cases_after_anti_duplication": 472,
-  "payload_clean_rate": 0.8114406779661016,
-  "field_cleanliness": 0.8114406779661016,
+  "payload_clean_rate": 0.7902542372881356,
+  "field_cleanliness": 0.7902542372881356,
   "contamination": {
-    "instruction_leakage": 40,
+    "instruction_leakage": 60,
     "title_pollution": 58,
     "note_pollution": 0,
     "location_pollution": 0
@@ -71,7 +71,7 @@
   "top_fail_clusters": [
     {
       "cluster": "raw_command_stored_as_title",
-      "count": 49
+      "count": 39
     },
     {
       "cluster": "instruction_prefix_in_title",
@@ -79,7 +79,7 @@
     },
     {
       "cluster": "instruction_prefix_in_note",
-      "count": 2
+      "count": 22
     }
   ],
   "save_mode_structured_card_accuracy": null,
@@ -88,13 +88,13 @@
   "no_diacritics_accuracy": 0.9565217391304348,
   "typo_handling_accuracy": 0.6666666666666666,
   "routing_20k": {
-    "overall": "FAIL",
-    "calendar_write": "0/3000",
-    "calendar_query": "0/3000",
-    "task_write": "0/3000",
-    "task_query": "0/3000",
-    "note_write": "0/3000",
-    "note_query": "0/3000"
+    "overall": "100%",
+    "calendar_write": "3000/3000",
+    "calendar_query": "3000/3000",
+    "task_write": "3000/3000",
+    "task_query": "3000/3000",
+    "note_write": "3000/3000",
+    "note_query": "3000/3000"
   },
   "family_stats": {
     "clean_save_payload_production": {
@@ -139,8 +139,8 @@
     },
     "event_note_cleanup": {
       "total": 24,
-      "pass": 13,
-      "payload_clean": 13
+      "pass": 3,
+      "payload_clean": 3
     },
     "task_note_cleanup": {
       "total": 23,
