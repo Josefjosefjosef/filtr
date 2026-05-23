@@ -28,6 +28,14 @@ function draftField(turn, name) {
   return String(d[name] || "");
 }
 
+function hasAssistantNameLeakage(fieldValue) {
+  const fold = foldCs(fieldValue);
+  if (!fold) return false;
+  if (/\bsilver[eau]?\b/.test(fold)) return true;
+  if (/\b(?:hej|ahoj)\s+silver\b/.test(fold)) return true;
+  return false;
+}
+
 function validateEventNoteVsNotesModule(turn, rawText) {
   const violations = [];
   const intent = String(turn.normalizedIntent || "");
@@ -68,9 +76,19 @@ function validateInstructionLeakageInTitle(turn) {
   if (title && hasInstructionLeakage(title)) {
     violations.push("instruction_prefix_in_title");
   }
+  if (title && hasAssistantNameLeakage(title)) {
+    violations.push("assistant_name_in_title");
+  }
   const note = draftField(turn, "note");
   if (note && hasInstructionLeakage(note)) {
     violations.push("instruction_prefix_in_note");
+  }
+  if (note && hasAssistantNameLeakage(note)) {
+    violations.push("assistant_name_in_note");
+  }
+  const body = draftField(turn, "body");
+  if (body && hasAssistantNameLeakage(body)) {
+    violations.push("assistant_name_in_body");
   }
   return violations;
 }
@@ -141,6 +159,7 @@ function buildClarificationPreview(turn, rawText) {
 
 module.exports = {
   VALIDATOR_ID,
+  hasAssistantNameLeakage,
   validateCleanPayload,
   validateEventNoteVsNotesModule,
   validateTaskNoteVsNoteBody,
