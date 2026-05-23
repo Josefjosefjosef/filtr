@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-23T05:40:04.560498Z",
+  "ingestedAt": "2026-05-23T06:20:00.463005Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Třaskavý zápas i 33 let od rozpadu federace. Na Čechy se vždy víc namotivujeme. A uspějeme! věří si Slováci",
+      "url": "https://www.sport.cz/clanek/hokej-ms-pojdme-na-ne-hecuji-se-slovaci-pred-derby-proti-cesku-citi-extra-motivaci-5460713",
+      "dt": "2026-05-23T05:02:23Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "federace",
+        "let",
+        "namotivujeme",
+        "rozpadu",
+        "slováci",
+        "třaskavý",
+        "uspějeme",
+        "víc",
+        "věří",
+        "vždy",
+        "zápas",
+        "čechy"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Baník s Duklou hrají o přežití v první lize",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-banik-s-duklou-hraji-o-preziti-v-prvni-lize-5460728",
+      "dt": "2026-05-23T06:03:01Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "baník",
+        "duklou",
+        "hrají",
+        "lize",
+        "první",
+        "přežití"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -19,35 +71,6 @@
         "trestu",
         "trofej",
         "zázrak"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Třaskavý zápas i po 33 letech od rozpadu federace. Na Čechy se vždy víc namotivujeme. A uspějeme! věří si Slováci",
-      "url": "https://www.sport.cz/clanek/hokej-ms-pojdme-na-ne-hecuji-se-slovaci-pred-derby-proti-cesku-citi-extra-motivaci-5460713",
-      "dt": "2026-05-23T05:02:23Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "federace",
-        "letech",
-        "namotivujeme",
-        "rozpadu",
-        "slováci",
-        "třaskavý",
-        "uspějeme",
-        "víc",
-        "věří",
-        "vždy",
-        "zápas",
-        "čechy"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -735,32 +758,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Obří dopingový podvod v Liberci? Českou legendu možná připravil o zlato",
-      "url": "https://www.sport.cz/clanek/zimni-sporty-lyzovani-obri-dopingovy-podvod-v-liberci-ceskou-legendu-mozna-pripravil-o-zlato-5460719",
-      "dt": "2026-05-22T12:12:09Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dopingový",
-        "legendu",
-        "liberci",
-        "možná",
-        "obří",
-        "podvod",
-        "připravil",
-        "zlato",
-        "českou"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -771,7 +768,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44136,
+      "bytes": 44083,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -808,11 +805,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-23T05:34:03Z",
+        "raw_feed_latest_publishedAt": "2026-05-23T06:03:01Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 28,
-          "zpravy": 2
+          "sport": 29,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -825,12 +822,16 @@
         },
         "sample_titles": [
           {
-            "title": "Chorý v trestu, může přijít o trofej. Nastane fotbalový zázrak?",
-            "publishedAt": "2026-05-23T05:34:03Z"
+            "title": "Třaskavý zápas i 33 let od rozpadu federace. Na Čechy se vždy víc namotivujeme. A uspějeme! věří si Slováci",
+            "publishedAt": "2026-05-23T05:02:23Z"
           },
           {
-            "title": "Třaskavý zápas i po 33 letech od rozpadu federace. Na Čechy se vždy víc namotivujeme. A uspějeme! věří si Slováci",
-            "publishedAt": "2026-05-23T05:02:23Z"
+            "title": "Baník s Duklou hrají o přežití v první lize",
+            "publishedAt": "2026-05-23T06:03:01Z"
+          },
+          {
+            "title": "Chorý v trestu, může přijít o trofej. Nastane fotbalový zázrak?",
+            "publishedAt": "2026-05-23T05:34:03Z"
           },
           {
             "title": "Colorado v problémech, i podruhé prohrálo s Vegas",
@@ -851,10 +852,6 @@
           {
             "title": "SESTŘIH: Jasné vítězství nad Brity zařídili Finům beci",
             "publishedAt": "2026-05-22T20:34:02Z"
-          },
-          {
-            "title": "V čele Rallye Český Krumlov je Stříteský těsně před Březíkem a Kopeckým",
-            "publishedAt": "2026-05-22T21:20:39Z"
           }
         ]
       }

@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-05-23T05:40:04.560498Z",
+  "ingestedAt": "2026-05-23T06:20:00.463005Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Královny krásy: Jak se od svého zvolení změnily? Některé sklízí obdiv dodnes, jiné upadly v zapomnění",
+      "url": "https://www.prozeny.cz/clanek/zdravi-a-zivotni-styl-zaujalo-nas-kralovny-krasy-jak-se-od-sveho-zvoleni-zmenily-nektere-sklizi-obdiv-dodnes-jine-upadly-v-zapomneni-98613",
+      "dt": "2026-05-23T06:00:00Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "dodnes",
+        "jiné",
+        "královny",
+        "krásy",
+        "některé",
+        "obdiv",
+        "sklízí",
+        "svého",
+        "upadly",
+        "zapomnění",
+        "změnily",
+        "zvolení"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -811,35 +840,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Kosmetické must-have podle vizážistek: Opálení bez slunce, nejlepší SPF i obočí jako ze salonu",
-      "url": "https://www.prozeny.cz/clanek/krasa-a-moda-krasna-tvar-kosmeticke-must-have-podle-vizazistek-opaleni-bez-slunce-nejlepsi-spf-i-oboci-jako-ze-salonu-103544",
-      "dt": "2026-05-21T03:00:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "have",
-        "jako",
-        "kosmetické",
-        "must",
-        "nejlepší",
-        "obočí",
-        "opálení",
-        "podle",
-        "salonu",
-        "slunce",
-        "spf",
-        "vizážistek"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -850,7 +850,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 40109,
+      "bytes": 40120,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -887,7 +887,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-23T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-23T06:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 30
@@ -902,6 +902,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Královny krásy: Jak se od svého zvolení změnily? Některé sklízí obdiv dodnes, jiné upadly v zapomnění",
+            "publishedAt": "2026-05-23T06:00:00Z"
+          },
           {
             "title": "Velký úklid ložnice prospěje tělu i duši: uklidní mozek a zlepší spánek. Jak na to krok za krokem?",
             "publishedAt": "2026-05-23T03:00:00Z"
@@ -929,10 +933,6 @@
           {
             "title": "5 vět, které byste svému partnerovi neměly nikdy říkat. Zní nevinně, ale jsou velmi toxické",
             "publishedAt": "2026-05-22T11:56:44Z"
-          },
-          {
-            "title": "Záškrt není banalita, tato nemoc umí udusit miminko i dospělého. A zabíjí i dnes! Jak se bránit?",
-            "publishedAt": "2026-05-22T09:21:54Z"
           }
         ]
       }
