@@ -144,6 +144,23 @@ const AUDIT_CATALOG = [
     cluster_prefix: "spev1_",
     safety_sensitive: true,
   },
+  {
+    id: "save_search_mode_v1",
+    audit_name: "Save/Search Mode Architecture V1",
+    audit_size: "400+",
+    public_product_impact: "HIGH",
+    harness_scripts: ["silver-save-search-mode-architecture-diagnostic.cjs"],
+    foundation_scripts: [
+      "silver-action-mode-v1-core.cjs",
+      "silver-semantic-payload-engine-v1-core.cjs",
+      "silver-search-understanding-v1-core.cjs",
+      "silver-clean-payload-validator-v1.cjs",
+      "silver-audit-anti-duplication-v1.cjs",
+    ],
+    report_json: "silver-save-search-mode-architecture-diagnostic-report.json",
+    cluster_prefix: "ssmav1_",
+    safety_sensitive: true,
+  },
 ];
 
 function readJsonSafe(absPath) {
