@@ -1,0 +1,175 @@
+{
+  "harness_id": "silver_semantic_payload_foundation_v1",
+  "main_commit": "a3c78ced5160118ec098f4d24c98cf95b00a8e68",
+  "fixed_now": "2026-05-04T12:00:00",
+  "audit_families": [
+    "clean_payload_extraction",
+    "calendar_event_field_separation",
+    "task_payload_extraction",
+    "notes_payload_extraction",
+    "event_note_vs_notes_module",
+    "task_note_vs_note_body",
+    "search_scope_understanding",
+    "count_vs_list_vs_filter",
+    "followup_continuation",
+    "result_pagination",
+    "continuation_retrieval",
+    "conversation_carry_over",
+    "mobile_dictation_cleanup",
+    "dirty_long_czech_commands",
+    "multi_step_conversation",
+    "completed_vs_active_tasks",
+    "summary_cleanliness",
+    "continuation_after_partial_results",
+    "agenda_summary_overview",
+    "contextual_followup_understanding"
+  ],
+  "cases_generated": 480,
+  "cases_after_anti_duplication": 471,
+  "governance": {
+    "total_generated": 480,
+    "accepted_unique": 471,
+    "rejected_duplicates": 9,
+    "acceptance_rate": 0.98125,
+    "avg_entropy": 3.92,
+    "avg_template_dna_score": 3.86,
+    "anti_duplicate_protection": "ACTIVE",
+    "semantic_entropy_governance": "PASS",
+    "template_dna_quality_governance": "PASS"
+  },
+  "pass_routing": 0,
+  "total_cases": 471,
+  "payload_violations": 82,
+  "payload_clean_rate": 0.8259023354564756,
+  "family_stats": {
+    "clean_payload_extraction": {
+      "total": 24,
+      "payload_clean": 14,
+      "routing_pass": 0
+    },
+    "calendar_event_field_separation": {
+      "total": 24,
+      "payload_clean": 21,
+      "routing_pass": 0
+    },
+    "task_payload_extraction": {
+      "total": 24,
+      "payload_clean": 16,
+      "routing_pass": 0
+    },
+    "notes_payload_extraction": {
+      "total": 24,
+      "payload_clean": 24,
+      "routing_pass": 0
+    },
+    "event_note_vs_notes_module": {
+      "total": 24,
+      "payload_clean": 19,
+      "routing_pass": 0
+    },
+    "task_note_vs_note_body": {
+      "total": 24,
+      "payload_clean": 10,
+      "routing_pass": 0
+    },
+    "search_scope_understanding": {
+      "total": 24,
+      "payload_clean": 24,
+      "routing_pass": 0
+    },
+    "count_vs_list_vs_filter": {
+      "total": 23,
+      "payload_clean": 23,
+      "routing_pass": 0
+    },
+    "followup_continuation": {
+      "total": 24,
+      "payload_clean": 24,
+      "routing_pass": 0
+    },
+    "result_pagination": {
+      "total": 23,
+      "payload_clean": 23,
+      "routing_pass": 0
+    },
+    "continuation_retrieval": {
+      "total": 23,
+      "payload_clean": 23,
+      "routing_pass": 0
+    },
+    "conversation_carry_over": {
+      "total": 23,
+      "payload_clean": 23,
+      "routing_pass": 0
+    },
+    "mobile_dictation_cleanup": {
+      "total": 24,
+      "payload_clean": 24,
+      "routing_pass": 0
+    },
+    "dirty_long_czech_commands": {
+      "total": 24,
+      "payload_clean": 4,
+      "routing_pass": 0
+    },
+    "multi_step_conversation": {
+      "total": 24,
+      "payload_clean": 23,
+      "routing_pass": 0
+    },
+    "completed_vs_active_tasks": {
+      "total": 22,
+      "payload_clean": 22,
+      "routing_pass": 0
+    },
+    "summary_cleanliness": {
+      "total": 24,
+      "payload_clean": 22,
+      "routing_pass": 0
+    },
+    "continuation_after_partial_results": {
+      "total": 23,
+      "payload_clean": 8,
+      "routing_pass": 0
+    },
+    "agenda_summary_overview": {
+      "total": 23,
+      "payload_clean": 19,
+      "routing_pass": 0
+    },
+    "contextual_followup_understanding": {
+      "total": 23,
+      "payload_clean": 23,
+      "routing_pass": 0
+    }
+  },
+  "violation_histogram": {
+    "instruction_prefix_in_note": 18,
+    "raw_command_stored_as_title": 29,
+    "instruction_prefix_in_title": 34,
+    "continuation_wrong_intent": 15
+  },
+  "safety": {
+    "dangerous_write_count": 0,
+    "false_write_count": 0,
+    "query_created_write_count": 0,
+    "write_when_negated_count": 0
+  },
+  "foundation_layers": {
+    "payload_extraction_foundation": "ACTIVE",
+    "search_understanding_foundation": "ACTIVE",
+    "conversation_state_foundation": "ACTIVE",
+    "payload_validator_foundation": "ACTIVE",
+    "event_note_vs_notes_guard": "ACTIVE",
+    "task_note_vs_note_body_guard": "ACTIVE",
+    "search_scope_parser": "ACTIVE",
+    "count_list_filter_parser": "ACTIVE",
+    "continuation_foundation": "ACTIVE",
+    "anti_duplicate_protection": "ACTIVE",
+    "semantic_entropy_governance": "PASS",
+    "template_dna_quality_governance": "PASS"
+  },
+  "regression_detected": "NO",
+  "safe_to_continue_next_phase": "YES",
+  "recommended_next_phase": "narrow_engine_integration_of_clean_payload_helpers"
+}
