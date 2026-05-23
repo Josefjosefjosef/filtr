@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-23T02:59:55.169134Z",
+  "ingestedAt": "2026-05-23T03:40:08.313479Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zábava pro děti, relax pro rodiče a originální gastro. Užijte si rodinný den na maximum",
+      "url": "https://www.idnes.cz/spotrebitel/test/zabava-pro-deti-relax-pro-rodice-a-originalni-gastro-uzijte-si-rodinny-den-na-maximum.A260504_084058_test_matt",
+      "dt": "2026-05-23T03:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "den",
+        "děti",
+        "gastro",
+        "maximum",
+        "originální",
+        "relax",
+        "rodinný",
+        "rodiče",
+        "užijte",
+        "zábava"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -33,34 +60,6 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Nové tresty pro piráty silnic. Honička s policií bude trestný čin a stát zabaví auta",
-      "url": "https://www.idnes.cz/zpravy/domaci/nove-tresty-pro-piraty-silnic-honicka-s-policii-bude-trestny-cin-a-stat-zabavi-auta.A260522_193450_domaci_bury",
-      "dt": "2026-05-22T22:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "auta",
-        "honička",
-        "nové",
-        "piráty",
-        "policií",
-        "silnic",
-        "stát",
-        "trestný",
-        "tresty",
-        "zabaví",
-        "čin"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
       "title": "Ještě jsem nezačal bojovat! Americký korzár šel ke dnu, přesto potupil Británii",
       "url": "https://www.idnes.cz/zpravy/zahranicni/john-paul-jones-americke-namornictvo-serial-250-let-americke-nezavislosti.A260505_090824_zahranicni_aha",
       "dt": "2026-05-22T22:00:00Z",
@@ -78,6 +77,34 @@
         "potupil",
         "přesto",
         "šel"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nové tresty pro piráty silnic. Honička s policií bude trestný čin a stát zabaví auta",
+      "url": "https://www.idnes.cz/zpravy/domaci/nove-tresty-pro-piraty-silnic-honicka-s-policii-bude-trestny-cin-a-stat-zabavi-auta.A260522_193450_domaci_bury",
+      "dt": "2026-05-22T22:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "auta",
+        "honička",
+        "nové",
+        "piráty",
+        "policií",
+        "silnic",
+        "stát",
+        "trestný",
+        "tresty",
+        "zabaví",
+        "čin"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -757,34 +784,6 @@
         "ukazuje",
         "vedro",
         "česka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rusko chce ukrýt jaderné rakety pod moře, tajné služby NATO bijí na poplach",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/rusko-nato-jaderna-zbran-raketa-more.A260522_125013_zahranicni_dtt",
-      "dt": "2026-05-22T14:19:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bijí",
-        "chce",
-        "jaderné",
-        "moře",
-        "nato",
-        "poplach",
-        "rakety",
-        "rusko",
-        "služby",
-        "tajné",
-        "ukrýt"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1590,7 +1589,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49070,
+      "bytes": 48728,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1627,11 +1626,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-22T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-23T03:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 6,
           "zpravy": 23,
+          "finance": 6,
           "other": 1
         },
         "drop_counts": {
@@ -1645,15 +1644,19 @@
         },
         "sample_titles": [
           {
+            "title": "Zábava pro děti, relax pro rodiče a originální gastro. Užijte si rodinný den na maximum",
+            "publishedAt": "2026-05-23T03:00:00Z"
+          },
+          {
             "title": "Na vesnici vedou diskotéky, Praha chce gastrozážitky. Noční život prochází proměnou",
             "publishedAt": "2026-05-22T22:00:00Z"
           },
           {
-            "title": "Nové tresty pro piráty silnic. Honička s policií bude trestný čin a stát zabaví auta",
+            "title": "Ještě jsem nezačal bojovat! Americký korzár šel ke dnu, přesto potupil Británii",
             "publishedAt": "2026-05-22T22:00:00Z"
           },
           {
-            "title": "Ještě jsem nezačal bojovat! Americký korzár šel ke dnu, přesto potupil Británii",
+            "title": "Nové tresty pro piráty silnic. Honička s policií bude trestný čin a stát zabaví auta",
             "publishedAt": "2026-05-22T22:00:00Z"
           },
           {
@@ -1671,10 +1674,6 @@
           {
             "title": "Řidič utopil auto uprostřed rybníka. Nikdo nechápe, jak se tam dostal",
             "publishedAt": "2026-05-22T19:32:00Z"
-          },
-          {
-            "title": "Zlínská zoo truchlí, známou samici slona afrického zabil samec z Maďarska",
-            "publishedAt": "2026-05-22T19:01:00Z"
           }
         ]
       }
