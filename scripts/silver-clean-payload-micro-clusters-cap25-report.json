@@ -1,0 +1,234 @@
+{
+  "harness_id": "silver_clean_payload_micro_clusters_cap25",
+  "main_commit_before": "ec2f3539207b7efc134510b68a7fe2848a076bed",
+  "main_commit_after": "ec2f3539207b7efc134510b68a7fe2848a076bed",
+  "cap_requested": 25,
+  "cap_completed": 1,
+  "cap_stopped_reason": "single_engine_fix_iteration",
+  "payload_audit_cases_total": 2382,
+  "payload_audit_reason": "runtime_reduced_2382",
+  "loops": [
+    {
+      "loop": 1,
+      "top_cluster": "raw_command_stored_as_title",
+      "diagnosis": "DEFERRED",
+      "action": "engine_fix_instruction_prefix_in_note_v3",
+      "before": {
+        "payloadClean": 2259,
+        "fieldPass": 2259,
+        "total": 2382,
+        "clusterFails": {
+          "raw_command_stored_as_title": 91,
+          "instruction_prefix_in_note": 9,
+          "instruction_prefix_in_title": 23
+        },
+        "instructionLeakage": 32,
+        "instructionPrefixInNote": 9,
+        "eventNoteLeak": 0,
+        "taskNoteLeak": 0,
+        "noteBodyLeak": 0,
+        "titlePollution": 114,
+        "notePollution": 9,
+        "locationPollution": 0,
+        "reminderContamination": 0
+      },
+      "after": {
+        "payloadClean": 2259,
+        "fieldPass": 2259,
+        "total": 2382,
+        "clusterFails": {
+          "raw_command_stored_as_title": 91,
+          "instruction_prefix_in_note": 9,
+          "instruction_prefix_in_title": 23
+        },
+        "instructionLeakage": 32,
+        "instructionPrefixInNote": 9,
+        "eventNoteLeak": 0,
+        "taskNoteLeak": 0,
+        "noteBodyLeak": 0,
+        "titlePollution": 114,
+        "notePollution": 9,
+        "locationPollution": 0,
+        "reminderContamination": 0
+      }
+    }
+  ],
+  "product_probes": [
+    {
+      "id": "A",
+      "pass": false,
+      "intent": "calendar.create",
+      "title": "Schůzka s Petrem",
+      "note": "Vzít smlouvu",
+      "body": "",
+      "location": ""
+    },
+    {
+      "id": "B",
+      "pass": true,
+      "intent": "tasks.create",
+      "title": "Tě přidej úkol koupit mléko",
+      "note": "Nesmím zapomenout",
+      "body": "",
+      "location": ""
+    },
+    {
+      "id": "C",
+      "pass": true,
+      "intent": "notes.create",
+      "title": "",
+      "note": "",
+      "body": "pračka má záruku do prosince 2028",
+      "location": ""
+    },
+    {
+      "id": "D",
+      "pass": true,
+      "intent": "tasks.create",
+      "title": "Tam úkol zavolat právníkovi",
+      "note": "",
+      "body": "",
+      "location": ""
+    },
+    {
+      "id": "E",
+      "pass": true,
+      "intent": "calendar.create",
+      "title": "Oběd s Pavlem",
+      "note": "",
+      "body": "",
+      "location": "U Anděla"
+    },
+    {
+      "id": "F",
+      "pass": false,
+      "intent": "calendar.create",
+      "title": "Schůzka s Kubou někdy v Brně",
+      "note": "Vzít smlouvu",
+      "body": "",
+      "location": ""
+    },
+    {
+      "id": "G",
+      "pass": false,
+      "intent": "tasks.create",
+      "title": "Přidej úkol poslat účetní podklady a dej tam poznámku že musím přiložit faktury",
+      "note": "",
+      "body": "",
+      "location": ""
+    },
+    {
+      "id": "H",
+      "pass": true,
+      "intent": "notes.create",
+      "title": "",
+      "note": "",
+      "body": "servis auta mám zaplatit do konce měsíce",
+      "location": ""
+    },
+    {
+      "id": "I",
+      "pass": true,
+      "intent": "calendar.create",
+      "title": "Tě doktor tam že vzít kartičku pojišťovny",
+      "note": "Vzít kartičku pojišťovny",
+      "body": "",
+      "location": "Praha 4"
+    },
+    {
+      "id": "J",
+      "pass": false,
+      "intent": "tasks.create",
+      "title": "Do úkolů zavolat mámě a ať nezapomenu probrat léky",
+      "note": "",
+      "body": "",
+      "location": ""
+    }
+  ],
+  "gates": {
+    "scripts/silver-clean-save-payload-production-line-v2.cjs": {
+      "missing": false,
+      "ok": true,
+      "out": "=== SILVER_CLEAN_SAVE_PAYLOAD_PRODUCTION_LINE_V2 ===\nmain_commit_before=994432ecab94fd33f622f54e16196dedeeedce71\nmain_commit_after=ec2f3539207b7efc134510b68a7fe2848a076bed\nmain_commit_after_merge=PENDING\n\nscope_changed_files=assets/app.js,scripts/silver-clean-save-payload-production-line-v2.cjs\nengine_changed=YES\nui_css_backend_changed=NO\n\npayload_clean_rate_before=79.03%\npayload_clean_rate_after=96.18%\ndelta=17.15%\nverdict=IMPROVED\n\nfield_cleanliness_before=79.03%\nfield_cleanliness_after=96.18%\ndelta=17.15%\nverdict=IMPROVED\n\nraw_command_stored_as_title_before=39\nraw_command_stored_as_title_after=36\ndelta=-3\nverdict=IMPROVED\n\ninstruction_leakage_before=60\ninstruction_leakage_after=85\ndelta=25\nverdict=REGRESSED\n\ntitle_pollution_before=58\ntitle_pollution_after=36\ndelta=-22\nverdict=IMPROVED\n\nnote_pollution_before=0\nnote_pollution_after=0\ndelta=0\nverdict=IMPROVED\n\nlocation_pollution_before=0\nlocation_pollution_after=0\ndelta=0\nverdict=IMPROVED\n\nmobile_dictation_accuracy_before=81.43%\nmobile_dictation_accuracy_after=94.93%\ndelta=13.5%\nverdict=IMPROVED\n\nno_diacritics_accuracy_before=95.65%\nno_diacritics_accuracy_after=100%\ndelta=4.35%\nverdict=IMPROVED\n\ntypo_handling_before=66.67%\ntypo_handling_after=100%\ndelta=33.33%\nverdict=IMPROVED\n\nstructured_draft_card_quality_before=99.33%\nstructured_draft_card_quality_after=100%\ndelta=ACTIVE\nverdict=ACTIVE\n\nsemantic_slot_accuracy_before=79.03%\nsemantic_slot_accuracy_after=96.18%\ndelta=17.15%\nverdict=IMPROVED\n\nsave_mode_structured_card_accuracy=100%\nsearch_mode_direct_answer_accuracy=100%\ncreate_without_card_count=0\nquery_with_draft_card_count=0\n\n20k_overall_accuracy=100%\ncalendar_write_20k=3000/3000\ncalendar_query_20k=3000/3000\ntask_write_20k=3000/3000\ntask_query_20k=3000/3000\nnote_write_20k=3000/3000\nnote_query_20k=3000/3000\n\ndangerous_write_count=0\nfalse_write_count=0\nquery_created_write_count=0\nwrite_when_negated_count=0\n\nproduct_probes_pass=6/6\npayload_audit_cases_total=2881\npayload_audit_cases_pass=2771\npayload_audit_cases_fail=110\ntop_remaining_cluster=instruction_prefix_in_title\n\npr_created=PENDING\npr_merged=PENDING\npost_merge_proof=PENDING\nrepo_clean_after_merge=PENDING\n\nregression_detected=NO\nsafe_to_continue_next_phase=YES\nrecommended_next_phase=instruction_prefix_in_title_narrow_v3\n\nPASS_FAIL=PASS\n=== END_SILVER_CLEAN_SAVE_PAYLOAD_PRODUCTION_LINE_V2 ===\n"
+    },
+    "scripts/audit_silver_20000_routing_stable.cjs": {
+      "missing": false,
+      "ok": false,
+      "out": "=== SILVER_20000_AUDIT_ABORT ===\nreason=tracked_files_dirty\nM assets/app.js\n M scripts/silver-clean-payload-validator-v1.cjs\n M scripts/silver-semantic-payload-engine-v1-core.cjs\n?? scripts/silver-clean-payload-micro-clusters-cap25.cjs\n==== END_ABORT ====\n"
+    },
+    "scripts/audit_silver_quality_v2.cjs": {
+      "missing": false,
+      "ok": true,
+      "out": "=== SILVER_QUALITY_AUDIT_V2_FOUNDATION ===\nharness_id=audit_silver_quality_v2_foundation\nquality_total_cases=532\nquality_passed=532\nquality_failed=0\nquality_accuracy=100.00%\nrouting_accuracy=100.00%\nfield_quality_accuracy=100.00%\nsafety_accuracy=100.00%\ntitle_cleanliness_accuracy=100.00%\nnote_quality_accuracy=100.00%\naddress_quality_accuracy=100.00%\nretrieval_quality_accuracy=100.00%\nnormalization_quality_accuracy=100.00%\nupdate_flow_accuracy=100.00%\ndangerous_write_count=0\nfalse_write_count=0\nquery_created_write_count=0\nunnecessary_disambiguation_count=0\ntop_fail_clusters=\nrecommended_next_fix_cluster=title_pollution_detection\nrecommended_next_fix_reason=No recorded fails in this baseline slice; default focus remains title/command-stripping hygiene for Czech mobile prompts.\nquality_audit_v2_script_crash=NO\nquality_report_written=YES\n=== END_SILVER_QUALITY_AUDIT_V2_FOUNDATION ===\n"
+    },
+    "scripts/audit_silver_realistic_mobile_corpus.cjs": {
+      "missing": false,
+      "ok": false,
+      "out": "=== SILVER_REALISTIC_MOBILE_AUDIT_ABORT ===\nreason=tracked_files_dirty\nM assets/app.js\n M scripts/silver-clean-payload-validator-v1.cjs\n M scripts/silver-semantic-payload-engine-v1-core.cjs\n?? scripts/silver-clean-payload-micro-clusters-cap25.cjs\n==== END_ABORT ====\n"
+    },
+    "scripts/silver-real-czech-corpus-v1.cjs": {
+      "missing": false,
+      "ok": false,
+      "out": "=== SILVER_REAL_CZECH_CORPUS_V1_ABORT ===\nreason=tracked_files_dirty\nM assets/app.js\n M scripts/silver-clean-payload-validator-v1.cjs\n M scripts/silver-semantic-payload-engine-v1-core.cjs\n?? scripts/silver-clean-payload-micro-clusters-cap25.cjs\n==== END_ABORT ====\n"
+    },
+    "scripts/silver-real-czech-public-ux-corpus-v2.cjs": {
+      "missing": false,
+      "ok": false,
+      "out": "=== SILVER_REAL_CZECH_PUBLIC_UX_CORPUS_V2_ABORT ===\nreason=tracked_files_dirty\nM assets/app.js\n M scripts/silver-clean-payload-validator-v1.cjs\n M scripts/silver-semantic-payload-engine-v1-core.cjs\n?? scripts/silver-clean-payload-micro-clusters-cap25.cjs\n==== END_ABORT ====\n"
+    },
+    "scripts/silver-deep-product-real-ux-v2.cjs": {
+      "missing": false,
+      "ok": true,
+      "out": "=== SILVER_RETRIEVAL_CLUSTER_1_TOP_REPLAY_LINES ===\ncluster=retrieval_summary_missing_entity_signals\n=== END_SILVER_RETRIEVAL_CLUSTER_1_TOP_REPLAY_LINES ===\n\n=== SILVER_RETRIEVAL_CLUSTER_1_DEEPEN_RESULT ===\nmain_commit=ec2f3539207b7efc134510b68a7fe2848a076bed\n\nengine_changed=NO\nbehavior_changed=NO\nui_changed=NO\ncss_changed=NO\nbackend_changed=NO\n\ncluster=retrieval_summary_missing_entity_signals\ncluster_total=0\ninspected_examples=0\n\nroute_wrong_count=0\nroute_correct_summary_weak_count=0\nranking_wrong_count=0\nharness_too_strict_count=0\nambiguous_user_input_count=0\ntimeline_scope_problem_count=0\nentity_alias_problem_count=0\n\ndominant_subcluster=route_wrong\ndominant_subcluster_count=0\n\ntrue_product_fail_count=0\nharness_problem_count=0\n\ntop_real_fail_1=N/A\ntop_real_fail_1_root_cause=N/A\ntop_real_fail_1_replay_input=N/A\n\ntop_real_fail_2=N/A\ntop_real_fail_2_root_cause=N/A\ntop_real_fail_2_replay_input=N/A\n\ntop_real_fail_3=N/A\ntop_real_fail_3_root_cause=N/A\ntop_real_fail_3_replay_input=N/A\n\nrecommended_next_fix_scope=Routing: intent mismatch before content (rare in this cluster)\nfix_risk_level=HIGH\n\nsmoke=PASS\niu_perf_regression_guards=PASS\nsilver_field_cleanup_replay_suite=PASS\nsilver_calendar_create_regression=FAIL\naudit_20k=FAIL\nquality_v2=PASS\nrealistic_mobile=FAIL\nreal_czech_corpus=FAIL\ndeep_product_real_ux_v2=PASS\n\ndangerous_write_count=0\nfalse_write_count=0\nquery_created_write_count=0\nwrite_when_negated_count=0\n\ngit_status_clean=NO\n======= END_SILVER_RETRIEVAL_CLUSTER_1_DEEPEN_RESULT ===\n\n=== SILVER_DEEP_PRODUCT_REAL_UX_V2_RESULT ===\nmain_commit=ec2f3539207b7efc134510b68a7fe2848a076bed\nchanged_files=assets/app.js;scripts/silver-deep-product-real-ux-v2.cjs;scripts/silver-deep-product-real-ux-v2-report.json\n\nengine_changed=NO\nbehavior_changed=NO\nui_changed=NO\ncss_changed=NO\nbackend_changed=NO\n\ndeep_product_cases_total=100\ndeep_product_pass=100\ndeep_product_fail=0\ndeep_product_accuracy=100.00%\n\nretrieval_relevance_accuracy=100.00%\nupdate_vs_create_accuracy=100.00%\nclarification_quality_accuracy=100.00%\ncross_module_accuracy=100.00%\ntimeline_reasoning_accuracy=100.00%\ndirty_czech_accuracy=100.00%\ntitle_cleanliness_accuracy=100.00%\n\ndangerous_write_count=0\nfalse_write_count=0\nquery_created_write_count=0\nwrite_when_negated_count=0\n\ntop_cluster_1=NONE\ntop_cluster_1_count=0\ntop_cluster_1_severity=0\ntop_cluster_1_root_cause=n/a\ntop_cluster_2=NONE\ntop_cluster_2_count=0\ntop_cluster_2_severity=0\ntop_cluster_2_root_cause=n/a\ntop_cluster_3=NONE\ntop_cluster_3_count=0\ntop_cluster_3_severity=0\ntop_cluster_3_root_cause=n/a\ntop_cluster_4=NONE\ntop_cluster_4_count=0\ntop_cluster_4_severity=0\ntop_cluster_4_root_cause=n/a\ntop_cluster_5=NONE\ntop_cluster_5_count=0\ntop_cluster_5_severity=0\ntop_cluster_5_root_cause=n/a\ntop_cluster_6=NONE\ntop_cluster_6_count=0\ntop_cluster_6_severity=0\ntop_cluster_6_root_cause=n/a\ntop_cluster_7=NONE\ntop_cluster_7_count=0\ntop_cluster_7_severity=0\ntop_cluster_7_root_cause=n/a\ntop_cluster_8=NONE\ntop_cluster_8_count=0\ntop_cluster_8_severity=0\ntop_cluster_8_root_cause=n/a\ntop_cluster_9=NONE\ntop_cluster_9_count=0\ntop_cluster_9_severity=0\ntop_cluster_9_root_cause=n/a\ntop_cluster_10=NONE\ntop_cluster_10_count=0\ntop_cluster_10_severity=0\ntop_cluster_10_root_cause=n/a\n\nhighest_priority_product_problem=NONE\nhighest_priority_reason=no_failures_in_expanded_corpus\n\nsmoke=PASS\niu_perf_regression_guards=PASS\nsilver_field_cleanup_replay_suite=PASS\nsilver_calendar_create_regression=FAIL\naudit_20k=FAIL\nquality_v2=PASS\nrealistic_mobile=FAIL\nreal_czech_corpus=FAIL\n\nrecommended_next_fix_scope=Monitor production; keep silver harness needles aligned with real CZ phrasing\n\ngit_status_clean=NO\ngit_status_short=M assets/app.js |  M scripts/silver-clean-payload-validator-v1.cjs |  M scripts/silver-semantic-payload-engine-v1-core.cjs | ?? scripts/silver-clean-payload-micro-clusters-cap25.cjs\n\n======= END_SILVER_DEEP_PRODUCT_REAL_UX_V2_RESULT ===\n"
+    },
+    "scripts/silver-calendar-create-regression.mjs": {
+      "missing": false,
+      "ok": false,
+      "out": "{\"case\":\"A1\",\"pass\":true}\n{\"case\":\"A2\",\"pass\":true}\n{\"case\":\"A3\",\"pass\":true}\n{\"case\":\"A4\",\"pass\":true}\n{\"case\":\"B1\",\"pass\":true}\n{\"case\":\"B2\",\"pass\":true}\n{\"case\":\"B3\",\"pass\":true}\n{\"case\":\"B4\",\"pass\":true}\n{\"case\":\"C1\",\"pass\":true}\n{\"case\":\"C2\",\"pass\":true}\n{\"case\":\"C3\",\"pass\":true}\n{\"case\":\"D1\",\"pass\":true}\n{\"case\":\"D2\",\"pass\":true}\n{\"case\":\"D3\",\"pass\":true}\n{\"case\":\"D4\",\"pass\":true}\n{\"case\":\"E1\",\"pass\":true}\n{\"case\":\"E2\",\"pass\":true}\n{\"case\":\"E3\",\"pass\":true}\n{\"case\":\"E4\",\"pass\":true}\n{\"case\":\"F1\",\"pass\":true}\n{\"case\":\"F2\",\"pass\":true}\n{\"case\":\"F3\",\"pass\":true}\n{\"case\":\"F4\",\"pass\":true}\n{\"case\":\"F5\",\"pass\":true}\n{\"case\":\"G1\",\"pass\":true}\n{\"case\":\"G2\",\"pass\":true}\n{\"case\":\"G3\",\"pass\":true}\n{\"case\":\"G4\",\"pass\":true}\n{\"case\":\"G5\",\"pass\":true}\n{\"case\":\"G6\",\"pass\":true}\n{\"case\":\"X1\",\"pass\":true}\n{\"case\":\"X2\",\"pass\":true}\n{\"case\":\"E5\",\"pass\":true}\n{\"case\":\"P0-1\",\"pass\":true}\n{\"case\":\"P0-2\",\"pass\":true}\n{\"case\":\"P0-3\",\"pass\":true}\n{\"case\":\"P0-4\",\"pass\":true}\n{\"case\":\"P0-5\",\"pass\":true}\n{\"case\":\"P0-6\",\"pass\":true}\n{\"case\":\"P0-7\",\"pass\":true}\n{\"case\":\"P0-8\",\"pass\":true}\n{\"case\":\"P0-9\",\"pass\":true}\n{\"case\":\"RM-NOV\",\"pass\":true}\n{\"case\":\"RM-JAKUB-REM\",\"pass\":false}\n{\"summary\":{\"contractVersion\":\"3\",\"fixedNow\":\"2026-03-27T12:00:00\",\"total\":44,\"pass\":43,\"fail\":1,\"exitCode\":1}}\n{\"case\":\"REAL_MULTI_INTENT_CAL_NOTE_SPLIT\",\"pass\":true}\n{\"case\":\"REAL_MULTI_INTENT_ZELENKA_CAL_NOTE\",\"pass\":true}\n{\"case\":\"REAL_MOBILE_WARRANTY_NOTE_QUERY\",\"pass\":true}\n{\"case\":\"REAL_MOBILE_NESMIM_NAPSAT_TASK\",\"pass\":true}\n{\"case\":\"REAL_MOBILE_NESMIM_ZAPLATIT_TASK\",\"pass\":true}\n"
+    }
+  },
+  "script_missing": [],
+  "metrics": {
+    "before": {
+      "payloadClean": 2259,
+      "fieldPass": 2259,
+      "total": 2382,
+      "clusterFails": {
+        "raw_command_stored_as_title": 91,
+        "instruction_prefix_in_note": 9,
+        "instruction_prefix_in_title": 23
+      },
+      "instructionLeakage": 32,
+      "instructionPrefixInNote": 9,
+      "eventNoteLeak": 0,
+      "taskNoteLeak": 0,
+      "noteBodyLeak": 0,
+      "titlePollution": 114,
+      "notePollution": 9,
+      "locationPollution": 0,
+      "reminderContamination": 0
+    },
+    "after": {
+      "payloadClean": 2259,
+      "fieldPass": 2259,
+      "total": 2382,
+      "clusterFails": {
+        "raw_command_stored_as_title": 91,
+        "instruction_prefix_in_note": 9,
+        "instruction_prefix_in_title": 23
+      },
+      "instructionLeakage": 32,
+      "instructionPrefixInNote": 9,
+      "eventNoteLeak": 0,
+      "taskNoteLeak": 0,
+      "noteBodyLeak": 0,
+      "titlePollution": 114,
+      "notePollution": 9,
+      "locationPollution": 0,
+      "reminderContamination": 0
+    },
+    "payload_clean_rate": 0.9483627204030227,
+    "field_cleanliness": 0.9483627204030227
+  },
+  "pass": false
+}
