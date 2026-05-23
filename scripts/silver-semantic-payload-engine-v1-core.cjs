@@ -183,6 +183,20 @@ function stripInstructionPrefixes(text) {
   return s.replace(/\s+/g, " ").trim();
 }
 
+function extractCalendarEventHead(rawText) {
+  let work = stripInstructionPrefixes(stripAssistantInvocation(String(rawText || "").trim()));
+  if (!work) return "";
+  if (/\bdoktor\w*\b/i.test(work) && !/\bschuzk/i.test(foldCs(work))) return "Doktor";
+  if (/\bzubar\w*\b/i.test(work)) return "Zubař";
+  if (/\bservis\s+auta\b/i.test(work)) return "Servis auta";
+  const techM = work.match(/\btechnik(?:\s+kvuli\s+[^,.]+?)?\b/i);
+  if (techM && techM[0]) {
+    const tw = String(techM[0]).trim();
+    return tw.charAt(0).toLocaleUpperCase("cs-CZ") + tw.slice(1);
+  }
+  return "";
+}
+
 function hasInstructionLeakage(fieldValue) {
   const fold = foldCs(fieldValue);
   if (!fold) return false;
@@ -258,17 +272,19 @@ function extractCalendarSlots(rawText, now) {
     slots["event.location"] = normalizeLocationLabel(locMeet[1]);
   }
   if (!slots["event.location"]) {
-    const locRest = raw.match(/\bv\s+restauraci\s+(?:u\s+)?([^,.]+?)$/iu);
-    if (locRest && locRest[1]) {
-      const tail = String(locRest[1]).trim();
-      slots["event.location"] =
-        tail.toLowerCase().indexOf("restaurac") === 0
-          ? normalizeLocationLabel(tail)
-          : "Restaurace u " + (tail.charAt(0).toLocaleUpperCase("cs-CZ") + tail.slice(1));
+    const locPraha = raw.match(/\bpraha\s+(\d{1,2})\b/i);
+    if (locPraha && locPraha[1]) slots["event.location"] = "Praha " + locPraha[1];
+  }
+  if (!slots["event.location"]) {
+    const meetPotkat = raw.match(
+      /\b(?:m[aá]me\s+se\s+potkat|potkat\s+se|sejdeme)\s+(?:v\s+)?([^,.]+?)(?:\s+a\s+(?:napi[sš]|připomeň|pripomen)|\s+jo\s*$|$)/i
+    );
+    if (meetPotkat && meetPotkat[1]) {
+      slots["event.location"] = normalizeLocationLabel(meetPotkat[1]);
     }
   }
 
-  const noteM = raw.match(/\b(?:a\s+)?(?:připomeň|pripomen)\s+mi\s+(?:a[tť]\s+)?(.+)$/iu);
+  const noteM = raw.match(/\b(?:a\s+)?(?:připomeň|pripomen)\s+mi\s+(?:a[tť]\s+)?(.+)$/i);
   if (noteM && noteM[1]) {
     slots["event.note"] = cleanReminderNote(noteM[1]);
   }
@@ -296,8 +312,25 @@ function extractCalendarSlots(rawText, now) {
       if (nm) titleCand = "Oběd s " + nm.charAt(0).toLocaleUpperCase("cs-CZ") + nm.slice(1);
     }
   }
+  if (!titleCand && /\bdoktor\w*\b/i.test(raw) && !/\bschuzk/i.test(foldCs(raw))) {
+    titleCand = "Doktor";
+  }
+  if (!titleCand && /\bzubar\w*\b/i.test(raw)) {
+    titleCand = "Zubař";
+  }
+  if (!titleCand && /\bservis\s+auta\b/i.test(raw)) {
+    titleCand = "Servis auta";
+  }
+  if (!titleCand) {
+    const techHead = raw.match(/\btechnik(?:\s+kv[uů]li\s+[^,.]+?)?\b/i);
+    if (techHead && techHead[0]) {
+      const tw = String(techHead[0]).trim();
+      titleCand = tw.charAt(0).toLocaleUpperCase("cs-CZ") + tw.slice(1);
+    }
+  }
   if (titleCand) {
     titleCand = stripInstructionPrefixes(titleCand);
+    titleCand = titleCand.replace(/\s+m[aá]me\s+se\s+potkat\b.*$/i, "").trim();
     slots["event.title"] = titleCand.slice(0, 120);
   }
 
@@ -421,4 +454,5 @@ module.exports = {
   normalizeLocationLabel,
   cleanReminderNote,
   cleanTaskNote,
+  extractCalendarEventHead,
 };
