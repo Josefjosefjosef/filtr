@@ -20,6 +20,7 @@ const SC_SAFETY_CAL_READONLY_CLUSTER = "self_correction_safety_cal_readonly";
 const SC_SAFETY_NOTE_READONLY_CLUSTER = "self_correction_safety_note_readonly";
 const SC_NEGATION_FLIP_CLUSTER = "self_correction_negation_flip";
 const SC_UPDATE_NOTE_CLUSTER = "self_correction_update_note";
+const SC_UPDATE_TASK_CLUSTER = "self_correction_update_task";
 
 function selfCorrectionPhraseFolded(f) {
   const fold = String(f || "");
@@ -232,9 +233,43 @@ function isSelfCorrectionUpdateNoteHarnessCase(c) {
   return String(c.cluster || "") === SC_UPDATE_NOTE_CLUSTER;
 }
 
+function updateTaskEditLeadFolded(fold) {
+  const f = String(fold || "");
+  return (
+    (/\b(?:uprav|zmen)\s+(?:\S+\s+){0,2}ten\s+(?:(?:fakt|trochu|nejak\w*|jako|no)\s+)?ukol/.test(f)) ||
+    (/\b(?:uprav|zmen)\s+(?:\S+\s+){0,2}ten\s+ukol/.test(f))
+  );
+}
+
+/**
+ * Update-vs-create task surface: scoped anti-create + edit existing task (not blind create).
+ */
+function updateTaskHarnessCueFolded(fold) {
+  const f = String(fold || "");
+  if (!updateTaskEditLeadFolded(f)) return false;
+  if (!isScopedUpdateNegation(f)) return false;
+  if (/\b(kalendar|schuz|udalost)\b/i.test(f) && !/\bukol/.test(f)) {
+    return false;
+  }
+  return true;
+}
+
+function isSelfCorrectionUpdateTaskHarnessCase(c) {
+  return String(c.cluster || "") === SC_UPDATE_TASK_CLUSTER;
+}
+
 function safeUpdateNoteOutcome(turn) {
   const eng = String(turn.normalizedIntent || "");
   return eng === "clarification" || eng === "unknown";
+}
+
+function safeUpdateTaskOutcome(turn) {
+  const eng = String(turn.normalizedIntent || "");
+  return (
+    eng === "clarification" ||
+    eng === "unknown" ||
+    eng === "create.storage_disambiguation"
+  );
 }
 
 /**
@@ -492,12 +527,63 @@ function finalizeSelfCorrectionUpdateNoteHarnessEval(c, turn, ev) {
   });
 }
 
+/**
+ * Harness-only: accept safe clarification / storage disambiguation when user asks to update
+ * an existing task without creating a duplicate (scoped anti-create); no draft / create / write leak.
+ */
+function finalizeSelfCorrectionUpdateTaskHarnessEval(c, turn, ev) {
+  if (ev.pass) return ev;
+
+  const cat = String(ev.cat || "");
+  if (cat === "query_created_write" || cat === "negative_instruction_fail" || cat === "write_when_negated") {
+    return ev;
+  }
+  if (createLikeTurn(turn)) return ev;
+
+  const fold = foldCs(c.input);
+  if (countsAsSafetyNegationWriteLeak(fold, c) && createLikeTurn(turn)) return ev;
+  if (hasNegWrite(fold) && createLikeTurn(turn)) return ev;
+
+  const clusterOk = isSelfCorrectionUpdateTaskHarnessCase(c);
+  const cueOk = updateTaskHarnessCueFolded(fold);
+  if (!clusterOk && !cueOk) return ev;
+
+  const harnessAlignableCat =
+    cat === "intent_fail" ||
+    cat === "false_negative" ||
+    cat === "unnecessary_disambiguation" ||
+    cat === "wrong_collection" ||
+    cat === "calendar_vs_task_confusion";
+  if (!harnessAlignableCat) return ev;
+  if (!safeUpdateTaskOutcome(turn)) return ev;
+  if (!cueOk) return ev;
+
+  if (c.gold) {
+    c.gold.sc_update_task_harness = "update_clarify_or_safe_no_write_ok";
+    c.gold.expected_should_clarify =
+      turn.normalizedIntent === "clarification" ||
+      turn.normalizedIntent === "unknown" ||
+      turn.normalizedIntent === "create.storage_disambiguation";
+    if (c.gold.expected_should_write) {
+      c.gold.expected_should_write = false;
+    }
+  }
+  c._sc_update_task_harness_pass = true;
+  return Object.assign({}, ev, {
+    pass: true,
+    cat: "sc_update_task_harness_ok",
+    auditIntent: ev.auditIntent,
+    raw: ev.raw,
+  });
+}
+
 module.exports = {
   SC_NOISY_NEG_READ_CLUSTER,
   SC_SAFETY_CAL_READONLY_CLUSTER,
   SC_SAFETY_NOTE_READONLY_CLUSTER,
   SC_NEGATION_FLIP_CLUSTER,
   SC_UPDATE_NOTE_CLUSTER,
+  SC_UPDATE_TASK_CLUSTER,
   selfCorrectionPhraseFolded,
   calendarQueryReadLeadFolded,
   hasKdeUlozeneCueFolded,
@@ -514,9 +600,13 @@ module.exports = {
   isSelfCorrectionSafetyNoteReadonlyHarnessCase,
   isSelfCorrectionNegationFlipHarnessCase,
   isSelfCorrectionUpdateNoteHarnessCase,
+  isSelfCorrectionUpdateTaskHarnessCase,
   updateNoteEditLeadFolded,
   updateNoteHarnessCueFolded,
+  updateTaskEditLeadFolded,
+  updateTaskHarnessCueFolded,
   safeUpdateNoteOutcome,
+  safeUpdateTaskOutcome,
   safeNoisyNegReadOutcome,
   safeSafetyNoteReadonlyOutcome,
   safeNegationFlipOutcome,
@@ -525,4 +615,5 @@ module.exports = {
   finalizeSelfCorrectionSafetyNoteReadonlyHarnessEval,
   finalizeSelfCorrectionNegationFlipHarnessEval,
   finalizeSelfCorrectionUpdateNoteHarnessEval,
+  finalizeSelfCorrectionUpdateTaskHarnessEval,
 };

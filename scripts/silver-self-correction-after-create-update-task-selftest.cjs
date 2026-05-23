@@ -37,6 +37,7 @@ function applyAll(c, turn, ev) {
   out = rhc3.finalizeModuleSwitchTaskToNoteHarnessEval(c, turn, out);
   out = rhc3.finalizeModuleSwitchNegJakoCalToNoteHarnessEval(c, turn, out);
   out = scq.finalizeSelfCorrectionUpdateNoteHarnessEval(c, turn, out);
+  out = scq.finalizeSelfCorrectionUpdateTaskHarnessEval(c, turn, out);
   return out;
 }
 
