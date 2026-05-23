@@ -37603,8 +37603,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverSelfCorrectionUpdateTaskBlocksCalendarUpdateFolded(f) {
     const x = String(f || "");
     if (!x) return false;
-    if (!/\b(?:uprav|zmen)\s+(?:\S+\s+){0,2}ten\s+ukol/.test(x)) return false;
-    if (!/\bne\s+(?:\S+\s+){0,3}novy\s+ukol/.test(x) && !/\bne\s+novy\s+jako\s+ukol/.test(x)) return false;
+    if (
+      !/\b(?:uprav|zmen)\s+(?:\S+\s+){0,2}ten\s+(?:(?:fakt|trochu|nejak\w*|jako|no)\s+)?ukol/.test(x) &&
+      !/\b(?:uprav|zmen)\s+(?:\S+\s+){0,2}ten\s+ukol/.test(x)
+    ) {
+      return false;
+    }
+    if (
+      !/\bne\s+(?:\S+\s+){0,3}novy(?:\s+(?:fakt|trochu|nejak\w*|jako|no))?\s+ukol/.test(x) &&
+      !/\bne\s+(?:\S+\s+){0,3}novy\s+ukol/.test(x) &&
+      !/\bne\s+novy\s+jako\s+ukol/.test(x)
+    ) {
+      return false;
+    }
     return true;
   }
 

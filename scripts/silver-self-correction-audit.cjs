@@ -108,6 +108,7 @@ const {
   finalizeSelfCorrectionSafetyNoteReadonlyHarnessEval,
   finalizeSelfCorrectionNegationFlipHarnessEval,
   finalizeSelfCorrectionUpdateNoteHarnessEval,
+  finalizeSelfCorrectionUpdateTaskHarnessEval,
 } = require("./silver-self-correction-query-clarification.cjs");
 
 const {
@@ -491,12 +492,22 @@ function classifyScFailBucket(c, turn, ev, gold) {
     ) {
       return "HARNESS_PROBLEM";
     }
+    if (
+      c.cluster === "self_correction_update_task" &&
+      !drafty &&
+      (turn.normalizedIntent === "clarification" ||
+        turn.normalizedIntent === "unknown" ||
+        turn.normalizedIntent === "create.storage_disambiguation")
+    ) {
+      return "HARNESS_PROBLEM";
+    }
     if (c.sc_lane === "noisy_mobile_self_correction") return "HARNESS_PROBLEM";
     return "AMBIGUOUS_INPUT";
   }
 
   if (cat === "intent_fail" || cat === "wrong_collection" || cat === "calendar_vs_task_confusion") {
     if (c.cluster === "self_correction_update_note" && !drafty) return "HARNESS_PROBLEM";
+    if (c.cluster === "self_correction_update_task" && !drafty) return "HARNESS_PROBLEM";
     if (
       c.cluster === "self_correction_module_note_to_cal" &&
       turn.normalizedIntent === "calendar.create" &&
@@ -557,6 +568,7 @@ function applyAllHarnessFinalizers(c, turn, ev) {
   out = finalizeSelfCorrectionSafetyNoteReadonlyHarnessEval(c, turn, out);
   out = finalizeSelfCorrectionNegationFlipHarnessEval(c, turn, out);
   out = finalizeSelfCorrectionUpdateNoteHarnessEval(c, turn, out);
+  out = finalizeSelfCorrectionUpdateTaskHarnessEval(c, turn, out);
   return out;
 }
 
