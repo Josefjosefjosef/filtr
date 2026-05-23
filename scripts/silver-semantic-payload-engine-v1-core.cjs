@@ -3,6 +3,7 @@
  * Layer 1: intent + module scope
  * Layer 2: semantic slot extraction helpers
  * Layer 3: clean payload engine (instruction stripping)
+ * Layer 4: SEMANTIC SLOT EXTRACTION ENGINE V1 — unified slot API (mirrors assets/app.js)
  */
 "use strict";
 
@@ -67,7 +68,6 @@ const INSTRUCTION_PREFIXES = [
   /\bdo\s+kalendáře\b/i,
   /\bdo\s+ukolu\b/i,
   /\bdo\s+úkolu\b/i,
-  /\bdo\s+ukolu\b/i,
   /\bdo\s+poznamky\b/i,
   /\bdo\s+poznámky\b/i,
   /\bdneska\b/i,
@@ -116,6 +116,12 @@ function foldCs(s) {
     .replace(/[\u0300-\u036f]/g, "");
 }
 
+function normalizeWs(s) {
+  return String(s || "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function detectModuleScope(rawText) {
   const fold = foldCs(rawText);
   if (/\b(kolik|vypis|vypiš|ukaz|ukaž|najdi|seznam)\b/.test(fold)) {
@@ -150,49 +156,117 @@ function stripInstructionPrefixes(text) {
   return s.replace(/\s+/g, " ").trim();
 }
 
+function hasInstructionLeakage(fieldValue) {
+  const fold = foldCs(fieldValue);
+  if (!fold) return false;
+  for (let i = 0; i < INSTRUCTION_PREFIXES.length; i++) {
+    if (INSTRUCTION_PREFIXES[i].test(fold)) return true;
+  }
+  return false;
+}
+
+function normalizeLocationLabel(locRaw) {
+  let s = normalizeWs(locRaw).replace(/^v\s+/i, "").trim();
+  if (!s) return "";
+  const fold = foldCs(s);
+  if (/\bpraz[eě]\s+jedna\b/.test(fold) || /\bpraha\s+jedna\b/.test(fold)) return "Praha 1";
+  if (/^praz[eě]$/i.test(fold) || /^praha$/i.test(fold)) return "Praha";
+  if (/^restauraci\s+/i.test(s)) s = s.replace(/^restauraci\s+/i, "Restaurace ");
+  if (s && /^[a-záčďěéíňóřšťúůýž]/.test(s)) {
+    s = s.charAt(0).toLocaleUpperCase("cs-CZ") + s.slice(1);
+  }
+  return s.slice(0, 200);
+}
+
+function cleanReminderNote(tailRaw) {
+  let s = stripInstructionPrefixes(String(tailRaw || ""));
+  s = s.replace(/^(?:a[tť]|ze|že|si|a)\s+/iu, "").trim();
+  if (/^(?:vezmu|vezu)\s+/iu.test(s)) {
+    s = "Vzít si " + s.replace(/^(?:vezmu|vezu)\s+/iu, "").trim();
+  }
+  if (s && /^[a-záčďěéíňóřšťúůýž]/.test(s)) {
+    s = s.charAt(0).toLocaleUpperCase("cs-CZ") + s.slice(1);
+  }
+  return normalizeWs(s).slice(0, 1000);
+}
+
+function cleanTaskNote(tailRaw) {
+  let s = String(tailRaw || "").trim();
+  s = s.replace(/^(?:a\s+)?napi[sš]\s+tam\s+(?:že\s+|ze\s+)?/iu, "").trim();
+  s = s.replace(/^(?:že\s+|ze\s+)/iu, "").trim();
+  s = stripInstructionPrefixes(s);
+  if (s && /^[a-záčďěéíňóřšťúůýž]/.test(s)) {
+    s = s.charAt(0).toLocaleUpperCase("cs-CZ") + s.slice(1);
+  }
+  return normalizeWs(s).slice(0, 1000);
+}
+
 function extractPersonFromTitle(text) {
   const m = String(text || "").match(/\b(?:s|se)\s+([A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ][a-záčďéěíňóřšťúůýž]+(?:ov[ouá]|em|em|ou)?)\b/);
   return m ? m[1] : "";
 }
 
 function extractCalendarSlots(rawText, now) {
-  const fold = foldCs(rawText);
+  const raw = String(rawText || "").trim();
   const slots = {};
   for (let i = 0; i < CALENDAR_SLOTS.length; i++) slots[CALENDAR_SLOTS[i]] = "";
-
-  const person = extractPersonFromTitle(rawText);
-  if (person) {
-    slots["event.person"] = person;
-    slots["event.title"] = "Schůzka s " + person;
+  if (!raw) {
+    void now;
+    return slots;
   }
 
-  const schMatch = rawText.match(/\b(?:schůzk[au]|schuzk[au])\s+(?:s|se)\s+([^,.]+)/i);
-  if (schMatch) {
-    const head = schMatch[1].trim();
-    slots["event.title"] = stripInstructionPrefixes("Schůzka s " + head);
+  const locMeet = raw.match(
+    /\b(?:m[aá]me\s+se\s+potkat|potkat\s+se|sejdeme)\s+v\s+([^,.]+?)(?:\s+a\s+(?:připomeň|pripomen)|$)/iu
+  );
+  if (locMeet && locMeet[1]) {
+    slots["event.location"] = normalizeLocationLabel(locMeet[1]);
   }
-
-  if (/\bz[ií]tra\b/i.test(fold)) slots["event.date"] = "tomorrow";
-  if (/\bdnes(ka)?\b/i.test(fold)) slots["event.date"] = "today";
-  if (/\bpristi\s+tyden\b/i.test(fold) || /\bpříští\s+týden\b/i.test(fold)) slots["event.date"] = "next_week";
-
-  const timeM = rawText.match(/\bv\s+(\d{1,2}(?::\d{2})?)\b.dev/i) || rawText.match(/\b(\d{1,2}:\d{2})\b/);
-  if (timeM) slots["event.time"] = timeM[1];
-
-  const locM = rawText.match(/\bv\s+(?:praze|praha|brne|brno|ostrave|ostrava)\b/i);
-  if (locM) slots["event.location"] = locM[0].replace(/^v\s+/i, "").trim();
-
-  for (let j = 0; j < EVENT_NOTE_CUES.length; j++) {
-  const re = EVENT_NOTE_CUES[j];
-    const idx = rawText.search(re);
-    if (idx >= 0) {
-      const tail = rawText.slice(idx).replace(re, "").trim();
-      slots["event.note"] = stripInstructionPrefixes(tail.replace(/^(ze|že|si|a)\s+/i, ""));
-      break;
+  if (!slots["event.location"]) {
+    const locRest = raw.match(/\bv\s+restauraci\s+(?:u\s+)?([^,.]+?)$/iu);
+    if (locRest && locRest[1]) {
+      const tail = String(locRest[1]).trim();
+      slots["event.location"] =
+        tail.toLowerCase().indexOf("restaurac") === 0
+          ? normalizeLocationLabel(tail)
+          : "Restaurace u " + (tail.charAt(0).toLocaleUpperCase("cs-CZ") + tail.slice(1));
     }
   }
 
-  if (slots["event.title"]) slots["event.title"] = stripInstructionPrefixes(slots["event.title"]);
+  const noteM = raw.match(/\b(?:a\s+)?(?:připomeň|pripomen)\s+mi\s+(?:a[tť]\s+)?(.+)$/iu);
+  if (noteM && noteM[1]) {
+    slots["event.note"] = cleanReminderNote(noteM[1]);
+  }
+
+  let titleCand = "";
+  const schPan = raw.match(
+    /\b(?:sch[uů]zk[au]|schuzk[au])\s+(?:kterou\s+m[aá]m\s+j[ií]t\s+)?(?:dnes(?:ka)?\s+)?(?:z[ií]tra\s+)?(?:(?:s|se)\s+)?panem\s+([A-Za-zÁÉÍÓÚÝČĎĚŇŘŠŤŮÝŽáéíóúůýčďěňřšťůýž]{2,48})\b/iu
+  );
+  if (schPan && schPan[1]) {
+    const nm = String(schPan[1]).replace(/[.,;:]+$/g, "").trim();
+    if (nm.length >= 2) {
+      titleCand = "Schůzka s panem " + nm.charAt(0).toLocaleUpperCase("cs-CZ") + nm.slice(1);
+    }
+  }
+  if (!titleCand) {
+    const obedM = raw.match(/\bob[eě]d\s+(?:s|se)\s+([A-Za-zÁÉÍÓÚÝČĎĚŇŘŠŤŮÝŽáéíóúůýčďěňřšťůýž]{2,48})\b/iu);
+    if (obedM && obedM[1]) {
+      const nm = String(obedM[1]).replace(/[.,;:]+$/g, "").trim();
+      if (nm) titleCand = "Oběd s " + nm.charAt(0).toLocaleUpperCase("cs-CZ") + nm.slice(1);
+    }
+  }
+  if (titleCand) {
+    titleCand = stripInstructionPrefixes(titleCand);
+    slots["event.title"] = titleCand.slice(0, 120);
+  }
+
+  if (/\bz[ií]tra\b/i.test(foldCs(raw))) slots["event.date"] = "tomorrow";
+  if (/\bdnes(ka)?\b/i.test(foldCs(raw))) slots["event.date"] = "today";
+
+  const timeM = raw.match(/\bv\s+(\d{1,2})(?::(\d{2}))?\s*(?:hod(?:in)?)?\b/i) || raw.match(/\b(\d{1,2}:\d{2})\b/);
+  if (timeM) {
+    slots["event.time"] = timeM[2] != null ? timeM[1] + ":" + timeM[2] : timeM[1] + ":00";
+  }
+
   void now;
   return slots;
 }
@@ -201,17 +275,19 @@ function extractTaskSlots(rawText, now) {
   const slots = {};
   for (let i = 0; i < TASK_SLOTS.length; i++) slots[TASK_SLOTS[i]] = "";
 
-  const taskM = rawText.match(/\b(?:ukol|úkol)\s*[:\-]?\s*(.+?)(?:\s+do\s+poznamk|\s+do\s+poznámk|$)/i);
-  if (taskM) slots["task.title"] = stripInstructionPrefixes(taskM[1].trim());
+  const raw = String(rawText || "").trim();
+  const noteTail = raw.match(/\b(?:a\s+)?napi[sš]\s+tam\s+(?:že\s+|ze\s+)?(.+)$/iu);
+  if (noteTail && noteTail[1]) {
+    slots["task.note"] = cleanTaskNote(noteTail[1]);
+  }
 
-  for (let j = 0; j < TASK_NOTE_CUES.length; j++) {
-    const re = TASK_NOTE_CUES[j];
-    const idx = rawText.search(re);
-    if (idx >= 0) {
-      const tail = rawText.slice(idx).replace(re, "").trim();
-      slots["task.note"] = stripInstructionPrefixes(tail);
-      break;
-    }
+  let work = raw.replace(/\b(?:a\s+)?napi[sš]\s+tam\s+.+$/iu, "").trim();
+  work = work.replace(/^(?:připomeň|pripomen)\s+mi\s+(?:že\s+mám\s+|ze\s+mam\s+)?/iu, "").trim();
+  work = work.replace(/\bz[ií]tra\b/iu, "").trim();
+  work = work.replace(/\b(?:že\s+mám|ze\s+mam)\s+/iu, "").trim();
+  work = stripInstructionPrefixes(work);
+  if (work) {
+    slots["task.title"] = work.charAt(0).toLocaleUpperCase("cs-CZ") + work.slice(1);
   }
   void now;
   return slots;
@@ -221,10 +297,22 @@ function extractNoteSlots(rawText, now) {
   const slots = {};
   for (let i = 0; i < NOTE_SLOTS.length; i++) slots[NOTE_SLOTS[i]] = "";
 
-  const bodyM = rawText.match(/\b(?:poznamk[au]|poznámku)\s*[:\-]?\s*(.+)$/i);
-  if (bodyM) slots["note.body"] = stripInstructionPrefixes(bodyM[1].trim());
+  let body = String(rawText || "").trim();
+  body = body.replace(/^ul[oó][zž](?:te)?\s+mi\s+do\s+pozn[aá]m(?:ek|ky|ce)\s+(?:že\s+|ze\s+)?/iu, "").trim();
+  body = body.replace(/^uloz\s+mi\s+do\s+poznam\w*\s+(?:ze|že)\s+/iu, "").trim();
+  body = stripInstructionPrefixes(body);
+  if (body) slots["note.body"] = body;
   void now;
   return slots;
+}
+
+/** Unified SEMANTIC SLOT EXTRACTION ENGINE V1 entry (scripts mirror of engine API). */
+function iuSilverExtractSemanticSlotsV1(intent, rawText, now) {
+  const ni = String(intent || "");
+  if (ni === "calendar.create") return extractCalendarSlots(rawText, now || new Date());
+  if (ni === "tasks.create") return extractTaskSlots(rawText, now || new Date());
+  if (ni === "notes.create") return extractNoteSlots(rawText, now || new Date());
+  return {};
 }
 
 function serializeCleanPayload(slots) {
@@ -236,15 +324,6 @@ function serializeCleanPayload(slots) {
     if (v) parts.push(k + "=" + String(v));
   }
   return parts.join(";");
-}
-
-function hasInstructionLeakage(fieldValue) {
-  const fold = foldCs(fieldValue);
-  if (!fold) return false;
-  for (let i = 0; i < INSTRUCTION_PREFIXES.length; i++) {
-    if (INSTRUCTION_PREFIXES[i].test(fold)) return true;
-  }
-  return false;
 }
 
 function isEventNoteContext(rawText) {
@@ -275,10 +354,14 @@ module.exports = {
   extractCalendarSlots,
   extractTaskSlots,
   extractNoteSlots,
+  iuSilverExtractSemanticSlotsV1,
   serializeCleanPayload,
   hasInstructionLeakage,
   isEventNoteContext,
   isNotesModuleContext,
   isTaskNoteContext,
   extractPersonFromTitle,
+  normalizeLocationLabel,
+  cleanReminderNote,
+  cleanTaskNote,
 };
