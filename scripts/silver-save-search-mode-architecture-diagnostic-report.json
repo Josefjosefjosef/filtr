@@ -1,0 +1,212 @@
+{
+  "harness_id": "silver_save_search_mode_architecture_v1",
+  "main_commit": "0678c98b61f6c895146069ffeac5119cc2801a5c",
+  "fixed_now": "2026-05-04T12:00:00",
+  "audit_families": [
+    "save_mode_structured_draft_card",
+    "search_mode_direct_answer",
+    "create_never_direct_answer_without_card",
+    "query_never_draft_card",
+    "calendar_create_card_required",
+    "task_create_card_required",
+    "note_create_card_required",
+    "calendar_query_no_card",
+    "task_query_no_card",
+    "note_query_no_card",
+    "global_search_no_card",
+    "count_query_no_card",
+    "filter_query_no_card",
+    "continue_query_no_card",
+    "full_list_query_no_card",
+    "completed_tasks_query_no_card",
+    "event_note_not_notes_create",
+    "task_note_not_note_body",
+    "clean_search_answer_no_duplicates",
+    "save_payload_clean_before_card"
+  ],
+  "cases_generated": 400,
+  "cases_after_anti_duplication": 387,
+  "governance": {
+    "total_generated": 400,
+    "accepted_unique": 387,
+    "rejected_duplicates": 13,
+    "acceptance_rate": 0.9675,
+    "avg_entropy": 4.01,
+    "avg_template_dna_score": 4.07,
+    "anti_duplicate_protection": "ACTIVE",
+    "semantic_entropy_governance": "PASS",
+    "template_dna_quality_governance": "PASS"
+  },
+  "save_mode_card_accuracy": 0.9333333333333333,
+  "search_mode_direct_answer_accuracy": 1,
+  "create_without_card_count": 0,
+  "query_with_draft_card_count": 0,
+  "auto_save_without_card_count": 0,
+  "family_stats": {
+    "save_mode_structured_draft_card": {
+      "total": 20,
+      "pass": 20
+    },
+    "search_mode_direct_answer": {
+      "total": 20,
+      "pass": 20
+    },
+    "create_never_direct_answer_without_card": {
+      "total": 20,
+      "pass": 20
+    },
+    "query_never_draft_card": {
+      "total": 20,
+      "pass": 20
+    },
+    "calendar_create_card_required": {
+      "total": 20,
+      "pass": 20
+    },
+    "task_create_card_required": {
+      "total": 19,
+      "pass": 19
+    },
+    "note_create_card_required": {
+      "total": 19,
+      "pass": 19
+    },
+    "calendar_query_no_card": {
+      "total": 20,
+      "pass": 20
+    },
+    "task_query_no_card": {
+      "total": 19,
+      "pass": 19
+    },
+    "note_query_no_card": {
+      "total": 20,
+      "pass": 20
+    },
+    "global_search_no_card": {
+      "total": 20,
+      "pass": 20
+    },
+    "count_query_no_card": {
+      "total": 18,
+      "pass": 18
+    },
+    "filter_query_no_card": {
+      "total": 18,
+      "pass": 18
+    },
+    "continue_query_no_card": {
+      "total": 20,
+      "pass": 20
+    },
+    "full_list_query_no_card": {
+      "total": 18,
+      "pass": 18
+    },
+    "completed_tasks_query_no_card": {
+      "total": 17,
+      "pass": 17
+    },
+    "event_note_not_notes_create": {
+      "total": 20,
+      "pass": 20
+    },
+    "task_note_not_note_body": {
+      "total": 20,
+      "pass": 20
+    },
+    "clean_search_answer_no_duplicates": {
+      "total": 20,
+      "pass": 20
+    },
+    "save_payload_clean_before_card": {
+      "total": 19,
+      "pass": 9
+    }
+  },
+  "violation_histogram": {},
+  "manual_probes": [
+    {
+      "id": "save_cal_novotny",
+      "pass": true,
+      "mode": "save",
+      "card": "calendar_draft",
+      "intent": "calendar.create",
+      "violations": []
+    },
+    {
+      "id": "save_task_rohliky",
+      "pass": true,
+      "mode": "save",
+      "card": "task_draft",
+      "intent": "tasks.create",
+      "violations": []
+    },
+    {
+      "id": "save_note_pepsi",
+      "pass": true,
+      "mode": "save",
+      "card": "note_draft",
+      "intent": "notes.create",
+      "violations": []
+    },
+    {
+      "id": "search_cal_kdy_novotny",
+      "pass": true,
+      "mode": "search",
+      "card": "read_card",
+      "intent": "calendar.read",
+      "violations": []
+    },
+    {
+      "id": "search_cal_count_next_week",
+      "pass": true,
+      "mode": "search",
+      "card": "read_card",
+      "intent": "calendar.read",
+      "violations": []
+    },
+    {
+      "id": "search_task_completed",
+      "pass": true,
+      "mode": "search",
+      "card": "read_card",
+      "intent": "tasks.read",
+      "violations": []
+    },
+    {
+      "id": "search_note_adamek",
+      "pass": true,
+      "mode": "search",
+      "card": "read_card",
+      "intent": "notes.read",
+      "violations": []
+    },
+    {
+      "id": "search_note_full_list",
+      "pass": true,
+      "mode": "search",
+      "card": "read_card",
+      "intent": "notes.read",
+      "violations": []
+    },
+    {
+      "id": "search_continue",
+      "pass": true,
+      "mode": "search",
+      "card": "read_card",
+      "intent": "global.search",
+      "violations": []
+    }
+  ],
+  "manual_save_mode_probes": "3/3",
+  "manual_search_mode_probes": "6/6",
+  "safety": {
+    "dangerous_write_count": 0,
+    "false_write_count": 0,
+    "query_created_write_count": 0,
+    "write_when_negated_count": 0
+  },
+  "regression_detected": "NO",
+  "safe_to_continue_next_phase": "YES"
+}

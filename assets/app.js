@@ -46904,6 +46904,143 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return m;
   }
 
+  /** IU_SILVER_ACTION_MODE_V1 — SAVE vs SEARCH hard product layer */
+  function iuSilverIsCreateIntentV1(intent) {
+    const ni = String(intent || "");
+    return ni === "calendar.create" || ni === "tasks.create" || ni === "notes.create";
+  }
+
+  function iuSilverIsSearchIntentV1(intent) {
+    const ni = String(intent || "");
+    return (
+      ni === "calendar.read" ||
+      ni === "calendar.query" ||
+      ni === "tasks.read" ||
+      ni === "tasks.query" ||
+      ni === "notes.read" ||
+      ni === "notes.query" ||
+      ni === "global.search" ||
+      ni.indexOf(".read") > 0 ||
+      ni.indexOf(".query") > 0
+    );
+  }
+
+  function iuSilverHasSearchCueV1(fold) {
+    return (
+      /\b(kdy|kolik|vypis|vypi[sš]|ukaz|uka[zž]|najdi|hledej|vyhledej|co\s+m[aá]m|jak[eé]\s+m[aá]m|kde\s+m[aá]m|kde\s+je|zbytek|zbyvaj|dal[sš][ií]|pokracuj|pokra[cč]uj)\b/.test(fold) ||
+      /\b(jen\s+hotov|hotov[eé]\s+[uú]kol|aktivn[ií]\s+[uú]kol|dokoncen|dokon[cč]en)\b/.test(fold)
+    );
+  }
+
+  function iuSilverHasCreateCueV1(fold, rawText) {
+    const raw = String(rawText || "");
+    return (
+      /\b(uloz|ulo[zž]|pridej|p[rř]idej|vytvor|vytvo[rř]|zapis|zapi[sš]|hod\s+mi|dej\s+mi|pripomen|p[rř]ipome[nň]|nov[aá]\s+pozn[aá]mk)\b/.test(fold) ||
+      /\buloz\s+poznamku\b/i.test(raw) ||
+      /\bulo[zž]\s+pozn[aá]mku\b/i.test(raw) ||
+      /\bnova\s+poznamka\b/i.test(raw) ||
+      /\bnov[aá]\s+pozn[aá]mka\b/i.test(raw)
+    );
+  }
+
+  function iuSilverDetermineActionModeV1(rawText, turnOpt) {
+    const turn = turnOpt || {};
+    const ni = String(turn.normalizedIntent || "");
+    const ps = String(turn.processingState || "");
+    const fold = foldCs(rawText);
+
+    if (ni.indexOf(".update") > 0 || ni === "calendar.update" || ni === "tasks.update" || ni === "notes.update") {
+      return "update";
+    }
+    if (ni === "clarification" || ni === "unknown" || ps === "CLARIFICATION") return "clarification";
+    if (ps === "STORAGE_DISAMBIGUATION" || turn.storageDisambiguation) return "clarification";
+
+    if (iuSilverIsSearchIntentV1(ni) || ps === "READ_OK") return "search";
+    if (iuSilverIsCreateIntentV1(ni)) return "save";
+    if (ps === "READY_TO_SAVE" || ps === "NEEDS_CLARIFICATION") {
+      if (iuSilverIsCreateIntentV1(ni)) return "save";
+    }
+
+    if (iuSilverHasSearchCueV1(fold) && !iuSilverHasCreateCueV1(fold, rawText)) return "search";
+    if (
+      iuSilverHasCreateCueV1(fold, rawText) &&
+      !/\b(kdy|kolik|vypis|vypi[sš]|najdi|hledej|co\s+m[aá]m|jak[eé]\s+m[aá]m)\b/.test(fold)
+    ) {
+      return "save";
+    }
+
+    return "clarification";
+  }
+
+  function iuSilverTurnHasStructuredDraftCardV1(turn) {
+    const t = turn || {};
+    const ni = String(t.normalizedIntent || "");
+    const d = t.draft || {};
+    const tc = String(d.targetContainer || "");
+    if (!iuSilverIsCreateIntentV1(ni)) return false;
+    if (tc === "calendar") return true;
+    if (tc === "tasks" && String(d.title || "").trim()) return true;
+    if (tc === "notes" && String(d.silverNoteText || "").trim()) return true;
+    return false;
+  }
+
+  function iuSilverSuppressSearchAnswerDuplicatesV1(message) {
+    let s = String(message || "").trim();
+    if (!s) return s;
+    const parts = s.split(/\s+[—–-]\s+/);
+    if (parts.length === 2 && foldCs(parts[0]) === foldCs(parts[1].replace(/\.\s*$/, ""))) {
+      return parts[0].trim() + (/\.\s*$/.test(parts[1]) ? "." : "");
+    }
+    const dupTail = s.match(/^(.+?)\s+\1\s*\.?\s*$/i);
+    if (dupTail) return dupTail[1].trim() + (s.endsWith(".") ? "." : "");
+    return s;
+  }
+
+  function iuSilverApplySaveSearchModeGuardV1(turn, rawText) {
+    if (!turn || typeof turn !== "object") return turn;
+    const mode = iuSilverDetermineActionModeV1(rawText, turn);
+    turn.actionMode = mode;
+    turn.iuSilverActionModeV1 = mode;
+
+    if (mode === "search" && !turn.silverMultiIntentComposite) {
+      turn.silverSaveModeRequiresCard = false;
+      turn.silverSearchModeDirectAnswer = true;
+      turn.silverStructuredDraftCardRequired = false;
+      const d = turn.draft || {};
+      const tc = String(d.targetContainer || "");
+      if (tc === "calendar" || tc === "tasks" || tc === "notes") {
+        turn.draft = createEmptyDraft();
+      }
+      if (turn.processingState === "READY_TO_SAVE" || turn.processingState === "NEEDS_CLARIFICATION") {
+        if (turn.readAnswer && String(turn.readAnswer.message || "").trim()) {
+          turn.processingState = "READ_OK";
+        }
+      }
+      const msg =
+        turn.readAnswer && turn.readAnswer.message
+          ? turn.readAnswer.message
+          : turn.assistantLead && turn.processingState === "READ_OK"
+            ? turn.assistantLead
+            : "";
+      if (msg) {
+        const clean = iuSilverSuppressSearchAnswerDuplicatesV1(msg);
+        if (turn.readAnswer) turn.readAnswer.message = clean;
+        if (turn.processingState === "READ_OK") turn.assistantLead = clean;
+      }
+    } else if (mode === "save") {
+      turn.silverSaveModeRequiresCard = true;
+      turn.silverSearchModeDirectAnswer = false;
+      turn.silverStructuredDraftCardRequired = true;
+      if (!turn.silverMultiIntentComposite) {
+        turn.readAnswer = null;
+        turn.readQuery = null;
+      }
+      turn.confirmOnly = false;
+    }
+    return turn;
+  }
+  /** IU_SILVER_ACTION_MODE_V1_END */
+
   function buildAssistantParts(draft, processingState) {
     if (draft && draft.targetContainer === "notes") {
       if (processingState === "READY_TO_SAVE" && String(draft.silverNoteText || "").trim()) {
@@ -47919,7 +48056,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return multiIntentClarTurnP0();
   }
 
-  function processUserTurn(text, prevDraft, ctx) {
+  function iuSilverProcessUserTurnCore(text, prevDraft, ctx) {
     const now = ctx && ctx.now ? ctx.now : new Date();
     const raw0 = String(text || "").trim();
     /* v1.6: čísla slovy globálně; „Praha jedna“ normalizuj jen v read/entity/extract, ne zde (regrese „Praha jedna zítra“). */
@@ -48454,6 +48591,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return baseClarification("ambiguous_request", "clarification");
   }
 
+  function processUserTurn(text, prevDraft, ctx) {
+    return iuSilverApplySaveSearchModeGuardV1(iuSilverProcessUserTurnCore(text, prevDraft, ctx), String(text || "").trim());
+  }
+
   function proofWeekdayRuleSnippet() {
     return [
       "iuSilver weekday rule V1 (nextWeekdayDate):",
@@ -48493,6 +48634,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     iuSilverConversationPeek: iuSilverConversationPeek,
     iuSilverConversationSyncFromTurn: iuSilverConversationSyncFromTurn,
     iuSilverApplySessionContext: iuSilverApplySessionContext,
+    iuSilverDetermineActionModeV1: iuSilverDetermineActionModeV1,
+    iuSilverApplySaveSearchModeGuardV1: iuSilverApplySaveSearchModeGuardV1,
+    iuSilverSuppressSearchAnswerDuplicatesV1: iuSilverSuppressSearchAnswerDuplicatesV1,
     iuSilverDetectTaskIntent: iuSilverDetectTaskIntent,
     iuSilverBuildTaskDraft: function (text, nowOpt) {
       const n = nowOpt || new Date();
