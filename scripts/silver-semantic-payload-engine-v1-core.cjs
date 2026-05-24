@@ -275,11 +275,17 @@ function normalizeLocationLabel(locRaw) {
 
 function cleanReminderNote(tailRaw) {
   let s = stripInstructionPrefixes(String(tailRaw || ""));
+  s = s.replace(/^(?:do\s+pozn[aá]m(?:ek|ky|ce)\s+mi\s+(?:napi[sš]|dej)\s+)/iu, "").trim();
   s = s.replace(/^(?:a[tť]|ze|že|si|a)\s+/iu, "").trim();
   s = s.replace(/^mu\s+/iu, "").trim();
+  s = s.replace(/^mu\s+m[aá]m\s+/iu, "").trim();
   s = s.replace(/^(?:že|ze)\s+m[aá]m\s+vz[ií]t\b/iu, "Vzít").trim();
   s = s.replace(/^m[aá]m\s+vz[ií]t\b/iu, "Vzít").trim();
   s = s.replace(/^mu\s+m[aá]m\s+vz[ií]t\b/iu, "Vzít").trim();
+  s = s.replace(/^(?:že|ze)\s+nesm[ií]m\s+zapomenout\b/iu, "Vzít").trim();
+  s = s.replace(/^nesm[ií]m\s+si\s+zapomenout\s+(?:vz[ií]t\s+)?(?:sebou\s+)?/iu, "Vzít ").trim();
+  s = s.replace(/^vz[ií]t\s+m[aá]m\s+vz[ií]t\b/iu, "Vzít").trim();
+  s = s.replace(/^vz[ií]t\s+m[uů][sš][ií]m\s+vz[ií]t\b/iu, "Vzít").trim();
   s = s.replace(/^(?:že|ze)\s+nesm[ií]m\s+zapomenout\b/iu, "Nesmím zapomenout").trim();
   if (/^(?:vezmu|vezu)\s+/iu.test(s)) {
     s = "Vzít " + s.replace(/^(?:vezmu|vezu)\s+/iu, "").trim();
@@ -329,16 +335,23 @@ function extractCalendarSlots(rawText, now) {
     const locPraha = raw.match(/\bpraha\s+(\d{1,2})\b/i);
     if (locPraha && locPraha[1]) slots["event.location"] = "Praha " + locPraha[1];
   }
-  if (!slots["event.location"]) {
-    const meetPotkat = raw.match(
-      /\b(?:m[aá]me\s+se\s+potkat|potkat\s+se|sejdeme)\s+(?:v\s+)?([^,.]+?)(?:\s+a\s+(?:napi[sš]|připomeň|pripomen)|\s+jo\s*$|$)/i
-    );
-    if (meetPotkat && meetPotkat[1]) {
-      slots["event.location"] = normalizeLocationLabel(meetPotkat[1]);
+    if (!slots["event.location"]) {
+      const meetPotkat = raw.match(
+        /\b(?:m[aá]me\s+se\s+potkat|potkat\s+se|sejdeme)\s+(?:na\s+adrese\s+)?(?:v\s+)?([^,.]+?)(?:\s+a\s+(?:napi[sš]|připomeň|pripomen|nesm)|\s+jo\s*$|$)/i
+      );
+      if (meetPotkat && meetPotkat[1]) {
+        slots["event.location"] = normalizeLocationLabel(meetPotkat[1]);
+      }
     }
-  }
+    if (!slots["event.location"]) {
+      const meetNa = raw.match(/\b(?:m[aá]me\s+se\s+)?potkat\s+na\s+([^,.]+?)(?:\s+a\s+(?:připomeň|pripomen|nesm)|$)/iu);
+      if (meetNa && meetNa[1]) slots["event.location"] = normalizeLocationLabel(meetNa[1]);
+    }
+    if (!slots["event.location"] && /\bvinohradsk[yý]\s+ulici\b/i.test(raw)) {
+      slots["event.location"] = "Vinohradská ulice Praha";
+    }
 
-  const noteM = raw.match(/\b(?:a\s+)?(?:připomeň|pripomen)\s+mi\s+(?:a[tť]\s+)?(.+)$/i);
+    const noteM = raw.match(/\b(?:a\s+)?(?:připomeň|pripomen)\s+mi\s+(?:prosim\w*\s+t[eě]\s+)?(?:a[tť]\s+)?(.+)$/i);
   if (noteM && noteM[1]) {
     slots["event.note"] = cleanReminderNote(noteM[1]);
   }
@@ -369,9 +382,12 @@ function extractCalendarSlots(rawText, now) {
   if (!titleCand && /\bdoktor\w*\b/i.test(raw) && !/\bschuzk/i.test(foldCs(raw))) {
     titleCand = "Doktor";
   }
-  if (!titleCand && /\bzubar\w*\b/i.test(raw)) {
-    titleCand = "Zubař";
-  }
+    if (!titleCand && /\bzubar\w*\b/i.test(raw)) {
+      titleCand = "Zubař";
+    }
+    if (!titleCand && /\bholi[cč]\w*\b/i.test(raw) && !/\bschuzk/i.test(foldCs(raw))) {
+      titleCand = /\bn[aá]v[sš]t[eě]va\s+holi[cč]/i.test(raw) ? "Návštěva holiče" : "Holič";
+    }
   if (!titleCand && /\bservis\s+auta\b/i.test(raw)) {
     titleCand = "Servis auta";
   }
