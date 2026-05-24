@@ -91,6 +91,11 @@ const INSTRUCTION_PREFIXES = [
   /\bdej\s+do\s+(?:ukol|úkol)/i,
   /\bpridej\s+do\s+ukol/i,
   /\bpřidej\s+do\s+úkol/i,
+  /\bdej\s+mi\s+do\b/i,
+  /\bdej\s+mi\s+tam\b/i,
+  /\bjen\s+rychle\b/i,
+  /\bmyslim\b/i,
+  /\bmyslím\b/i,
 ];
 
 const EVENT_NOTE_CUES = [
@@ -108,7 +113,14 @@ const EVENT_NOTE_CUES = [
   /\ba\s+připomeň\b/i,
 ];
 
-const NOTES_MODULE_CUES = [/\buloz\s+poznamku\b/i, /\bulož\s+poznámku\b/i, /\bnova\s+poznamka\b/i, /\bnová\s+poznámka\b/i];
+const NOTES_MODULE_CUES = [
+  /\buloz\s+poznamku\b/i,
+  /\bulož\s+poznámku\b/i,
+  /\bnova\s+poznamka\b/i,
+  /\bnová\s+poznámka\b/i,
+  /\bjen\s+si\s+ne[kk]am\s+zapis/i,
+  /\buloz\s+mi\s+ne[kk]am\b/i,
+];
 
 const TASK_NOTE_CUES = [/\bdo\s+ukolu\b/i, /\bdo\s+úkolu\b/i, /\bk\s+ukolu\b/i, /\bk\s+úkolu\b/i, /\bukol\s+.*\bpoznam\b/i];
 
@@ -134,6 +146,12 @@ function detectModuleScope(rawText) {
     return "global.search";
   }
   if (NOTES_MODULE_CUES.some((re) => re.test(rawText))) return "notes.create";
+  if (
+    /\b(?:zapis\w*\s+si|zapi[sš]\s+si)\b/.test(fold) &&
+    /\b(?:nepis\s+to\s+jako\s+ukol|ne\s+jako\s+ukol|nechci\s+jako\s+ukol)\b/.test(fold)
+  ) {
+    return "notes.create";
+  }
   if (/\b(ukol|ukoly|úkol|úkoly)\b/.test(fold) && /\b(uloz|ulož|pridej|přidej|vytvor|vytvoř)\b/.test(fold)) return "tasks.create";
   if (/\b(schuzk|schůzk|kalend|udalost|událost)\b/.test(fold) && /\b(uloz|ulož|pridej|přidej|hod|dej|zapis|zapiš)\b/.test(fold))
     return "calendar.create";
@@ -334,6 +352,12 @@ function extractCalendarSlots(rawText, now) {
       titleCand = tw.charAt(0).toLocaleUpperCase("cs-CZ") + tw.slice(1);
     }
   }
+  if (!titleCand && /\bsch[uů]zk[au]\s+(?:s\s+)?[uú]četn[íi]m\b/i.test(raw)) {
+    titleCand = "Schůzka s účetní";
+  }
+  if (!titleCand && /\b[uú]četn[íi]m\s+kv[uů]li\b/i.test(raw)) {
+    titleCand = "Schůzka s účetní";
+  }
   if (titleCand) {
     titleCand = stripInstructionPrefixes(titleCand);
     titleCand = titleCand.replace(/\s+m[aá]me\s+se\s+potkat\b.*$/i, "").trim();
@@ -394,6 +418,8 @@ function extractNoteSlots(rawText, now) {
   let body = String(rawText || "").trim();
   body = body.replace(/^ul[oó][zž](?:te)?\s+mi\s+do\s+pozn[aá]m(?:ek|ky|ce)\s+(?:že\s+|ze\s+)?/iu, "").trim();
   body = body.replace(/^uloz\s+mi\s+do\s+poznam\w*\s+(?:ze|že)\s+/iu, "").trim();
+  body = body.replace(/^jen\s+si\s+ne[kk]am\s+zapi[sš]\s+(?:že\s+|ze\s+)?/iu, "").trim();
+  body = body.replace(/\s+nep[ií][sš]?\w*\s+to\s+jako\s+[uú]kol\w*.*$/iu, "").trim();
   body = stripInstructionPrefixes(body);
   if (body) slots["note.body"] = body;
   void now;
