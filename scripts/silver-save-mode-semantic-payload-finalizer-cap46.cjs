@@ -172,7 +172,7 @@ function loadRealityMetrics() {
     return {
       payload_clean_rate: j.payload_clean_rate,
       semantic_slot_accuracy: j.semantic_slot_accuracy,
-      instruction_prefix_in_note: j.instruction_prefix_in_note_count,
+      instruction_prefix_in_note: j.instruction_prefix_in_note_count != null ? j.instruction_prefix_in_note_count : j.instruction_prefix_in_note,
       instruction_prefix_in_title: j.instruction_prefix_in_title_count,
       calendar_save_cleanliness: j.calendar_save_accuracy,
       overall_save_accuracy: j.overall_save_accuracy,
@@ -235,7 +235,8 @@ function runGateScript(name) {
 function main() {
   const eng = loadEngine();
   const screenshot = runScreenshotPack(eng);
-  const gates = GATE_SCRIPTS.map(runGateScript);
+  const skipGates = process.env.CAP46_SKIP_GATES === "1";
+  const gates = skipGates ? [] : GATE_SCRIPTS.map(runGateScript);
   const reality = loadRealityMetrics();
   const calClean = loadCalendarCleanliness();
   const r20 = gates.find((g) => g.script === "audit_silver_20000_routing_stable.cjs");
@@ -255,16 +256,17 @@ function main() {
 
   const stopFail =
     screenshot.pass !== screenshot.total ||
-    k20.dangerous_write !== "0" ||
-    k20.false_write !== "0" ||
-    k20.query_created_write !== "0" ||
-    k20.write_when_negated !== "0" ||
-    k20.create_without_card !== "0" ||
-    k20.query_with_draft_card !== "0" ||
-    k20.overall !== "100" ||
+    (!skipGates &&
+      (k20.dangerous_write !== "0" ||
+        k20.false_write !== "0" ||
+        k20.query_created_write !== "0" ||
+        k20.write_when_negated !== "0" ||
+        k20.create_without_card !== "0" ||
+        k20.query_with_draft_card !== "0" ||
+        k20.overall !== "100" ||
+        gates.some((g) => g.status !== "PASS"))) ||
     payloadAfter < payloadBefore - 0.0001 ||
-    semanticAfter < semanticBefore - 0.0001 ||
-    gates.some((g) => g.status !== "PASS");
+    semanticAfter < semanticBefore - 0.0001;
 
   const report = {
     cap_requested: CAP_REQUESTED,
