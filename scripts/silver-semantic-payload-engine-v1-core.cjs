@@ -96,16 +96,27 @@ const INSTRUCTION_PREFIXES = [
 const EVENT_NOTE_CUES = [
   /\bdo\s+poznamky\b/i,
   /\bdo\s+poznámky\b/i,
+  /\bdo\s+poznam\w*\s+napi[sš]/i,
+  /\bdo\s+pozn[aá]mk\w*\s+napi[sš]/i,
+  /\bdej\s+mi\s+do\s+poznam/i,
+  /\bdej\s+mi\s+do\s+pozn[aá]mk/i,
   /\ba\s+do\s+poznamky\b/i,
   /\ba\s+do\s+poznámky\b/i,
   /\bpoznamenej\b/i,
   /\bpoznamenej\s+si\b/i,
+  /\bpripomen\s+mi\b/i,
+  /\bpřipomeň\s+mi\b/i,
   /\bpripomen\s+si\b/i,
   /\bpřipomeň\s+si\b/i,
   /\bhlavne\s+nezapomen\b/i,
   /\bhlavně\s+nezapomeň\b/i,
   /\ba\s+pripomen\b/i,
   /\ba\s+připomeň\b/i,
+  /\b(?:jeste\s+)?tam\s+napi[sš]/i,
+  /\bnapis\s+tam\b/i,
+  /\bnapi[sš]\s+tam\b/i,
+  /\bat\s+nezapomenu\b/i,
+  /\bupozorn\w*/i,
 ];
 
 const NOTES_MODULE_CUES = [/\buloz\s+poznamku\b/i, /\bulož\s+poznámku\b/i, /\bnova\s+poznamka\b/i, /\bnová\s+poznámka\b/i];
@@ -484,8 +495,26 @@ function serializeCleanPayload(slots) {
   return parts.join(";");
 }
 
+function isCalendarSchedulingContext(rawText) {
+  const f = foldCs(rawText);
+  if (!f) return false;
+  if (
+    /\b(schuz|porad|doktor|holic|zubar|servis|navstev|technik|meeting|termin|kalend|obed|kontrol|pravnik)\b/.test(f)
+  ) {
+    return true;
+  }
+  if (/\b(zitra|zejtra|dnes|pondeli|stredu|patek|ve\s+\d{1,2}|v\s+\d{1,2}|kolem\s+\d)\b/.test(f)) return true;
+  if (/\b(mam\s+byt|mam\s+jit|potkat\s+se|uloz\s+mi\s+tam)\b/.test(f)) return true;
+  return false;
+}
+
 function isEventNoteContext(rawText) {
-  return EVENT_NOTE_CUES.some((re) => re.test(rawText)) && !NOTES_MODULE_CUES.some((re) => re.test(rawText));
+  if (NOTES_MODULE_CUES.some((re) => re.test(rawText))) return false;
+  if (/\buloz\s+mi\s+(?:někam|nekam)\b/i.test(rawText) && !isCalendarSchedulingContext(rawText)) return false;
+  if (/\bzapis\s+si\b/i.test(rawText) && !isCalendarSchedulingContext(rawText)) return false;
+  const hasNoteCue = EVENT_NOTE_CUES.some((re) => re.test(rawText));
+  if (!hasNoteCue) return false;
+  return isCalendarSchedulingContext(rawText);
 }
 
 function isNotesModuleContext(rawText) {
@@ -518,6 +547,7 @@ module.exports = {
   serializeCleanPayload,
   hasInstructionLeakage,
   isEventNoteContext,
+  isCalendarSchedulingContext,
   isNotesModuleContext,
   isTaskNoteContext,
   extractPersonFromTitle,

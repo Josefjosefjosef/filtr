@@ -1991,7 +1991,14 @@ function gitTrackedClean() {
       "scripts/silver-real-czech-public-ux-corpus-v2.cjs",
       "scripts/silver-real-czech-corpus-v1-30k-report.json",
       "SILVER_RUN_REPORT.md",
-      "assets/app.js"
+      "assets/app.js",
+      "scripts/silver-semantic-payload-engine-v1-core.cjs",
+      "scripts/silver-cap53-public-save-mode-stabilization-diagnostic.cjs",
+      "scripts/silver-public-save-readiness-pack-v1.cjs",
+      "scripts/silver-public-save-readiness-audit-v1.cjs",
+      "scripts/silver-event-note-vs-notes-create-audit-v1.cjs",
+      "scripts/silver-token-anchor-normalizer-v1-audit.cjs",
+      "scripts/silver-cross-field-validation-contract-v1-audit.cjs"
     ];
     const bad = tracked.filter((l) => {
       const t = l.replace(/^\s+/, "").trim();
