@@ -185,6 +185,26 @@ const CAP44_TITLE_COMMAND_STRIP_PATS = [
   /^(?:že\s+mám\s+|ze\s+mam\s+)/iu,
 ];
 
+const CAP45_TITLE_COMMAND_STRIP_PATS = [
+  /^dej\s+mi\s+tam\s+/iu,
+  /^dej\s+mi\s+(?:na\s+)?(?:prosim\w*\s+t[eě]\s+)?/iu,
+  /^vlo[zž]\s+mi\s+(?:prosim\w*\s+t[eě]\s+)?(?:tam\s+)?(?:do\s+kalend[aá]ře?\s+)?(?:že\s+)?/iu,
+  /^ul[oó][zž]\s+mi\s+(?:to\s+)?(?:nekam\s+|někam\s+|nejam\s+)?/iu,
+  /^uloz\s+mi\s+(?:to\s+)?(?:nekam\s+|nejam\s+)?/iu,
+  /^zapi[sš]\s+(?:si\s+|mi\s+)?(?:to\s+)?/iu,
+  /^tak[zž]e\s+(?:mi\s+)?(?:dej|vlo[zž]|ul[oó][zž]|zapi[sš])\w*\s+/iu,
+  /^(?:a\s+)?je[sš]t[eě]\s+(?:mi\s+)?(?:dej|vlo[zž]|ul[oó][zž]|zapi[sš])\w*\s+/iu,
+  /^možná\s+/iu,
+  /^mozna\s+/iu,
+  /^dej\s+to\s+do\s+(?:úkol[uů]?|ukol[uů]?)\s+/iu,
+  /^poznamenat\s+(?:že\s+|ze\s+)?/iu,
+  /^no\s+(?:teda\s+|jo\s+)?(?:dej\s+)?(?:do\s+(?:úkol[uů]?|ukol[uů]?)\s+)?(?:že\s+m[aá]m\s+|ze\s+mam\s+)?/iu,
+  /^no\s+do\s+(?:úkol[uů]?|ukol[uů]?)\s+/iu,
+  /^dej\s+pls\s+do\s+(?:úkol[uů]?|ukol[uů]?)\s+/iu,
+  /^hele\s+dej\s+pls\s+do\s+(?:úkol[uů]?|ukol[uů]?)\s+/iu,
+  /^(?:jo\s+)?(?:trochu\s+|nějak\s+)?hele\s+dej\s+(?:mi\s+)?(?:do\s+)?(?:úkol[uů]?|ukol[uů]?)\s+/iu,
+];
+
 function stripInstructionPrefixes(text) {
   let s = stripAssistantInvocation(String(text || "").trim());
   if (!s) return s;
@@ -193,6 +213,13 @@ function stripInstructionPrefixes(text) {
     changed = false;
     for (let ci = 0; ci < CAP44_TITLE_COMMAND_STRIP_PATS.length; ci++) {
       const next = s.replace(CAP44_TITLE_COMMAND_STRIP_PATS[ci], "").trim();
+      if (next !== s) {
+        s = next;
+        changed = true;
+      }
+    }
+    for (let ci = 0; ci < CAP45_TITLE_COMMAND_STRIP_PATS.length; ci++) {
+      const next = s.replace(CAP45_TITLE_COMMAND_STRIP_PATS[ci], "").trim();
       if (next !== s) {
         s = next;
         changed = true;
