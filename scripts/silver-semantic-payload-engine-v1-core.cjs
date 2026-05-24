@@ -89,6 +89,10 @@ const INSTRUCTION_PREFIXES = [
   /\bvytvoř\s+mi\b/i,
   /\bdej\s+mi\b/i,
   /\bdej\s+do\s+(?:ukol|úkol)/i,
+  /\bdej\s+tam\b/i,
+  /\bho[dď]\s+tam\b/i,
+  /\bho[dď]\s+mi\b/i,
+  /\bnapl[aá]nuj\b/i,
   /\bpridej\s+do\s+ukol/i,
   /\bpřidej\s+do\s+úkol/i,
 ];
@@ -198,6 +202,10 @@ const CAP44_TITLE_COMMAND_STRIP_PATS = [
 
 const CAP45_TITLE_COMMAND_STRIP_PATS = [
   /^dej\s+mi\s+tam\s+/iu,
+  /^ho[dď]\s+tam\s+/iu,
+  /^ho[dď]\s+mi\s+/iu,
+  /^nezapome[nň]\s+(?:mi\s+|si\s+)?/iu,
+  /^napl[aá]nuj\s+(?:mi\s+)?/iu,
   /^dej\s+mi\s+(?:na\s+)?(?:prosim\w*\s+t[eě]\s+)?/iu,
   /^vlo[zž]\s+mi\s+(?:prosim\w*\s+t[eě]\s+)?(?:tam\s+)?(?:do\s+kalend[aá]ře?\s+)?(?:že\s+)?/iu,
   /^ul[oó][zž]\s+mi\s+(?:to\s+)?(?:nekam\s+|někam\s+|nejam\s+)?/iu,
@@ -525,6 +533,52 @@ function isTaskNoteContext(rawText) {
   return TASK_NOTE_CUES.some((re) => re.test(rawText));
 }
 
+function instructionPrefixTitleCleanerV3(titleRaw, targetContainer, rawFull) {
+  let t = stripInstructionPrefixes(String(titleRaw || "").trim());
+  if (!t) return t;
+  const fallback = t;
+  const v3Pats = [
+    /^zapi[sš]\s+mi\s+/iu,
+    /^hele\s+/iu,
+    /^pros[ií]m\s+t[eě]\s+/iu,
+    /^nezapome[nň]\s+/iu,
+    /^ho[dď]\s+tam\s+/iu,
+    /^do\s+kalend[aá]ře\s+/iu,
+    /^m[aá]m\s+m[ií]t\s+/iu,
+    /^zapi[sš]\s+/iu,
+    /^napl[aá]nuj\s+/iu,
+    /^dej\s+tam\s+/iu
+  ];
+  for (let rnd = 0; rnd < 12; rnd++) {
+    const prev = t;
+    for (let i = 0; i < v3Pats.length; i++) t = t.replace(v3Pats[i], "").trim();
+    t = stripInstructionPrefixes(t);
+    if (t === prev) break;
+  }
+  if (hasInstructionLeakage(t)) {
+    const cal = extractCalendarSlots(String(rawFull || ""), new Date());
+    if (targetContainer === "calendar" && cal["event.title"]) t = cal["event.title"];
+    else {
+      const task = extractTaskSlots(String(rawFull || ""), new Date());
+      if (targetContainer === "tasks" && task["task.title"]) t = task["task.title"];
+    }
+  }
+  t = normalizeWs(t);
+  if (!t || t.length < 2) return fallback;
+  if (/^[a-záčďěéíňóřšťúůýž]/.test(t)) t = t.charAt(0).toLocaleUpperCase("cs-CZ") + t.slice(1);
+  return t.slice(0, targetContainer === "tasks" ? 200 : 120);
+}
+
+function calendarSaveConfidenceOverrideV1(folded, raw) {
+  const f = String(folded || "");
+  const r = String(raw || "").trim();
+  if (!f || !r) return false;
+  if (/\buloz\s+mi\s+tam\b/.test(f) && /\bze\s+mam\b/.test(f) && /\b(zitra|v\s+\d|ve\s+\d)/.test(f)) return true;
+  if (/\bschuz/.test(f) && /\bvlastne\s+ne\b/.test(f) && /\bposun\s+(?:to\s+)?na\b/.test(f)) return true;
+  if (/\b(oprava|vlastne)\b/.test(f) && /\b(trenink|schuz|porad|obed|kontrol|zubar|servis|prezentac)\b/.test(f)) return true;
+  return false;
+}
+
 module.exports = {
   CORE_ID,
   MODULE_INTENTS,
@@ -555,4 +609,6 @@ module.exports = {
   cleanReminderNote,
   cleanTaskNote,
   extractCalendarEventHead,
+  instructionPrefixTitleCleanerV3,
+  calendarSaveConfidenceOverrideV1,
 };
