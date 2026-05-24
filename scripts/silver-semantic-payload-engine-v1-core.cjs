@@ -144,12 +144,15 @@ function detectModuleScope(rawText) {
 function stripAssistantInvocation(text) {
   let s = normalizeWs(String(text || ""));
   if (!s) return s;
+  if (/\bsilver[eau]?\b/i.test(s) && /(?:řídím|ridim)/i.test(s) && /[—–-]/.test(s)) {
+    s = s.replace(/^[\s\S]*?(?:řídím|ridim)\s*[—–-]\s*/iu, "").trim();
+  }
   const pats = [
     /^(?:hej|ahoj|čau|cau|zdar|nazdar)\s*,?\s*silver[eau]?\s*(?:,|\s+pros[ií]m(?:\s+t[eě])?)?\s+/iu,
     /^(?:hele|promi[nň]|teda|k[aá]mo|prost[eě]|vlastn[eě]|ee|no\s+jo|m[uů][zž]e[sš])\s+silver[eau]?\s+/iu,
     /^silver[eau]?\s*,?\s*pros[ií]m(?:\s+t[eě])?\s+/iu,
     /^silver[eau]?\s+/iu,
-    /^(?:prosim\s+t[eě]|prosím\s+tě)\s+silver[eau]?\s+/iu,
+    /^(?:prosim\s+t[eě]|prosím\s+tě|pls\s+t[eě])\s+silver[eau]?\s+/iu,
   ];
   for (let rnd = 0; rnd < 12; rnd++) {
     const prev = s;
@@ -171,12 +174,30 @@ function hasAssistantNameLeakage(fieldValue) {
   return /\bsilver[eau]?\b/.test(fold) || /\b(?:hej|ahoj)\s+silver\b/.test(fold);
 }
 
+const CAP44_TITLE_COMMAND_STRIP_PATS = [
+  /^dej\s+(?:no\s+|nějak\s+|ne[kk]ak\s+|fakt\s+)?(?:mi\s+)?do\s+(?:úkol[uů]?|ukol[uů]?)\s+/iu,
+  /^nějak\s+dej\s+do\s+(?:úkol[uů]?|ukol[uů]?)\s+/iu,
+  /^dej\s+do\s+(?:úkol[uů]?|ukol[uů]?)\s+/iu,
+  /^do\s+(?:úkol[uů]?|ukol[uů]?)\s+/iu,
+  /^ho[dď]\s+mi\s+do\s+(?:úkol[uů]?|ukol[uů]?)\s+/iu,
+  /^dej\s+mi\s+do\s+kalend[aá]ře?\s+/iu,
+  /^vlo[zž]\s+mi\s+(?:prosim\w*\s+t[eě]\s+)?(?:do\s+kalend[aá]ře?\s+)?(?:že\s+)?/iu,
+  /^(?:že\s+mám\s+|ze\s+mam\s+)/iu,
+];
+
 function stripInstructionPrefixes(text) {
   let s = stripAssistantInvocation(String(text || "").trim());
   if (!s) return s;
   let changed = true;
   while (changed) {
     changed = false;
+    for (let ci = 0; ci < CAP44_TITLE_COMMAND_STRIP_PATS.length; ci++) {
+      const next = s.replace(CAP44_TITLE_COMMAND_STRIP_PATS[ci], "").trim();
+      if (next !== s) {
+        s = next;
+        changed = true;
+      }
+    }
     for (let i = 0; i < INSTRUCTION_PREFIXES.length; i++) {
       const re = INSTRUCTION_PREFIXES[i];
       const next = s.replace(re, "").replace(/^\s+/, "").trim();
