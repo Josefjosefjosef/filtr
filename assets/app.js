@@ -39149,6 +39149,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const body = iuSilverNoteCreateFinalizeBody(String(m2[1]).trim());
       if (body) return body;
     }
+    const m3 = raw.match(/\bzapis\w*\s+si\s+(.+?)(?:\s+nep[ií][sš]?\w*\s+to\s+jako\s+[uú]kol\w*|\s+ne\s+jako\s+[uú]kol\w*|$)/iu);
+    if (m3 && m3[1]) {
+      const body = iuSilverNoteCreateFinalizeBody(String(m3[1]).trim());
+      if (body) return body;
+    }
     return "";
   }
 
