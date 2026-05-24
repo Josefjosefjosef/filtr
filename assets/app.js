@@ -48582,7 +48582,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       .trim();
     s = s.replace(/^vz[ií]t\s+m[aá]m\s+vz[ií]t\b/iu, "Vzít").trim();
     s = s.replace(/^vz[ií]t\s+m[uů][sš][ií]m\s+vz[ií]t\b/iu, "Vzít").trim();
-    s = s.replace(/^vz[ií]t\s+sebou\s+/iu, "Vzít ").trim();
+    if (/\bnesm[ií]m\s+si\s+zapomenout\b/i.test(String(rawFull || ""))) {
+      s = s.replace(/^vz[ií]t\s+sebou\s+/iu, "Vzít ").trim();
+    }
     s = s.replace(/\b(vz[ií]t)\s+(?:m[aá]m|mus[ií]m)\s+\1\b/giu, "$1").trim();
     if (s && /^[a-záčďěéíňóřšťúůýž]/.test(s)) {
       s = s.charAt(0).toLocaleUpperCase("cs-CZ") + s.slice(1);
@@ -48616,7 +48618,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         if (/vinohradsk[yý]\s+ulici/.test(lf)) {
           loc = "Vinohradská ulice Praha";
         }
-        if (loc && /^[a-záčďěéíňóřšťúůýž]/.test(loc)) {
+        const mMisto = raw.match(/\bm[ií]sto\s+je\s+(.+?)(?:\s*$)/iu);
+        if (mMisto && mMisto[1] && /restaurac/i.test(foldCs(mMisto[1]))) {
+          loc = String(mMisto[1]).trim();
+        }
+        if (loc && /^[a-záčďěéíňóřšťúůýž]/.test(loc) && !/^restaurac/i.test(foldCs(loc))) {
           loc = loc.charAt(0).toLocaleUpperCase("cs-CZ") + loc.slice(1);
         }
         draft.location = loc;
