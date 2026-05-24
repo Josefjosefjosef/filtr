@@ -39114,7 +39114,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!x) return false;
     const hasNoteCue =
       /\b(?:zapis\w*\s+si|zapi[sš]\s+si|uloz\w*\s+mi\s+ne[kk]am|ul[oó][zž]\s+mi\s+ne[kk]am|jen\s+si\s+ne[kk]am\s+zapis)/.test(x) ||
-      (/\bjen\s+si\b/.test(x) && /\b(?:zapis|uloz|ul[oó][zž])\w*/.test(x));
+      (/\bjen\s+si\b/.test(x) && /\b(?:zapis|uloz|ul[oó][zž])\w*/.test(x)) ||
+      (/\bzapis\w*\s+si\b/.test(x) && /\bnep[ií][sš]?\w*\s+to\s+jako\s+[uú]kol/.test(x));
     if (!hasNoteCue) return false;
     return (
       /\bnep[ií][sš]?\w*\s+to\s+jako\s+[uú]kol/.test(x) ||
@@ -49781,6 +49782,23 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         if (hitNegNote && hitNegNote.kind === "body") noteBodyCap43 = hitNegNote.body;
       }
       if (noteBodyCap43) return iuSilverBuildNoteCreateTurn(noteBodyCap43, now);
+    }
+
+    if (
+      /\buloz\w*\s+ze\b/.test(folded) &&
+      !/\b(schuzk|ukol|kalend|pripomen)\b/.test(folded) &&
+      /\b(mamka|mama|tata|rodic|dite|deti|pin|hesl|kluc)\b/.test(folded)
+    ) {
+      const mUl = raw.match(/\buloz\w*\s+ze\s+(.+)$/iu);
+      if (mUl && mUl[1]) {
+        const nb = iuSilverNoteCreateFinalizeBody(String(mUl[1]).trim());
+        if (nb) return iuSilverBuildNoteCreateTurn(nb, now);
+      }
+    }
+
+    if (/\bdej\s+mi\s+tam\b/.test(folded) && /\bschuzk/.test(folded) && !iuSilverHasExplicitTasksTarget(folded)) {
+      const calTurnTam = iuSilverBuildCalendarCreateTurn(raw, now, prevDraft || createEmptyDraft(), raw);
+      if (calTurnTam && calTurnTam.normalizedIntent === "calendar.create") return calTurnTam;
     }
 
     /**
