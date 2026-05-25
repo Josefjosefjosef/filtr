@@ -1219,9 +1219,19 @@ function buildCases() {
     ];
     const inp = diacVariant(i, lines[i % lines.length]);
     const f = foldCs(inp);
+    const hasDualConnector = /zároveň|zaroven|a\s+zároveň|a\s+zaroven/i.test(inp);
+    const hasWriteVerb =
+      /\b(uloz|ulozit|ulož|uložit|pridej|přidej|dej|zapis|zapisat|nahod|nahoď|napi[sš]|zapamatuj|poznamenej)\b/.test(f);
+    const hasWriteTarget = /\bdo\s+(poznam|kalend|ukol|ukolu|kalendare|kalendari)\b/.test(f);
+    const readOnlyDualQuery =
+      /\b(zjist|najd|hledej|ukaz|ukaž|podivej)\w*\b/.test(f) &&
+      /\b(poznam|ukol|kalend)\b/.test(f) &&
+      !hasWriteVerb &&
+      !hasWriteTarget;
     const needsDualWrite =
-      /zároveň|zaroven|a\s+zároveň|a\s+zaroven/i.test(inp) &&
-      /\bdo\s+poznam|\bpoznam|\bdo\s+kalend|\bdo\s+ukol|\buloz|\bulož|\bpridej|\bpřidej/i.test(f);
+      hasDualConnector &&
+      !readOnlyDualQuery &&
+      ((hasWriteVerb && /\b(poznam|kalend|ukol)\b/.test(f)) || (hasWriteTarget && hasWriteVerb));
     const queryNeg = /jen\s+se\s+podivej|jen\s+cti|nic\s+neuklad/.test(f) ? f : "";
     push(
       "multi_intent",
@@ -2711,3 +2721,14 @@ function main() {
 }
 
 main();
+
+module.exports = {
+  buildCases,
+  evaluateOne,
+  rawUserMessage,
+  engineToAuditIntent,
+  foldCs,
+  ctxQuery,
+  ctxForCase,
+  FIXED_NOW
+};
