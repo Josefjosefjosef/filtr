@@ -55952,6 +55952,201 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
   }
 
+  /** Line O — Assistant Capability / Help / Product Guidance + Capability Safety V2 (Omega) */
+  const IU_SILVER_LINE_O_V1 = true;
+
+  const IU_SILVER_LINE_O_FORBIDDEN_CLAIM_RE_V1 =
+    /\b(umim\s+vsechno|umim\s+vse|rozumim\s+cestine\s+dokonale|perfektne\s+cesky|mam\s+pristup\s+na\s+internet|pripojim\s+se\s+na\s+internet|pamatuju\s+si\s+vse\s+navzdy|nekonecnou\s+pamet|jsem\s+(?:ai\s+)?chatbot|jsem\s+chatgpt|mam\s+cloudovy\s+backend|openai\s+backend)\b/i;
+
+  const IU_SILVER_LINE_O_COPY_V1 = {
+    general:
+      "Silver je lokální asistent infoUzlu: pomoc s kalendářem, úkoly, poznámkami, připomínkami a vyhledáváním. Bez internetu a cloud AI — jen v prohlížeči.",
+    silver:
+      "Silver rozumí českým hlasovým příkazům, navazuje v relaci a vede tě krok za krokem. Není to chatbot — lokální produktový mozek.",
+    calendar:
+      "Kalendář: schůzky a události s datem, časem, místem a poznámkou. Příklad: „Zítra v 10 schůzka s Kubou v Praze.“",
+    tasks:
+      "Úkoly a připomínky s termínem. Příklad: „Připomeň mi zítra koupit mléko.“ nebo „Úkol zaplatit nájem v pátek.“",
+    notes:
+      "Poznámky ukládáš přímo: „Ulož do poznámek PIN 1234.“ Hledání: „Najdi poznámku o televizi.“",
+    reminders:
+      "Připomínky: „Připomeň mi…“ je úkol nebo kalendář podle kontextu — krátká činnost → úkol, schůzka s časem → kalendář.",
+    continuation:
+      "Navazování: po uložení řekni „Přidej tam adresu“ nebo „K tomu napiš…“ — vícekrokově drží aktivní draft v relaci.",
+    memory:
+      "Paměť konverzace a navazování na předchozí zprávy je v rámci relace (drafty, poslední dotaz). Není věčná — po zavření stránky začínáš znovu.",
+    agenda:
+      "Agenda: „Co mám zítra?“ nebo „Co mám tento týden?“ — přehled kalendáře bez vytváření nových záznamů.",
+    search:
+      "Vyhledávání v kalendáři, úkolech i poznámkách — lokálně, bez sítě. Příklad: „Najdi schůzku s doktorem.“",
+    drafts:
+      "Draft = koncept před uložením. Více draftů v jedné relaci — přepínání přes „k tomu“, „ta schůzka“, „servis“.",
+    edits:
+      "Úpravy: „Změň čas na 15“, „Přesuň na pátek“, „Změň lokaci/místo“, „Smaž to“ — u aktivního draftu nebo poslední události.",
+    save:
+      "Uložit umím: schůzku (kalendář), úkol/připomínku, poznámku. Řekni cíl jasně: „Ulož schůzku…“, „Připomeň mi…“.",
+    event_notes:
+      "K události přidáš poznámku v jedné větě: „Schůzka s Kubou a napiš tam adresu.“ nebo follow-up „K tomu techničák“.",
+    notes_search: "Hledání v poznámkách: „Najdi poznámku o…“, „Co mám v poznámkách o PIN?“ — jen čtení.",
+    calendar_search: "Hledání v kalendáři: „Kdy mám doktora?“, „Najdi schůzku s Kubou.“ — bez vytváření události.",
+    tasks_search: "Hledání v úkolech: „Co mám koupit?“, „Úkol zaplatit nájem.“ — termíny a titulky.",
+    commands:
+      "Mluv jasně: co + kdy + kde. Typy příkazů chápu — ulož, připomeň, najdi, uprav. Krátké věty fungují nejlépe.",
+    corrections:
+      "Chyba? Řekni opravu nebo smaž: „Ne, až ve čtvrtek“, „Změň titul“, „Smaž to“, „Nic neukládej.“ Silver přepíše draft.",
+    historical:
+      "Historické reference: „Ta schůzka minulý týden“ — v relaci drží kotvy; bez sítě a bez věčné paměti.",
+    interruption:
+      "Přerušení: „Počkej“, „Ne“, pak navazuj — Silver obnoví draft z relace (Line N persistence).",
+    long_session:
+      "Dlouhá konverzace: drží registry draftů a komprimované kotvy témat — stále jen v této relaci.",
+    long_dictation:
+      "Dlouhé diktování: rozseká věty na moduly (kalendář + úkol + poznámka). Lepší kratší věty za sebou.",
+    multi:
+      "Práce s více věcmi najednou: „Schůzka s Kubou a připomeň mi koupit mléko“ — orchestrace více modulů v relaci.",
+    boundaries:
+      "Nemám internet, cloud AI ani dokonalou češtinu. Nepamatuji si věčně vše — jen lokální relaci v prohlížeči.",
+    guidance_calendar: "Příklad schůzky: „Pátek v 14:00 schůzka s Novotným v kanceláři.“",
+    guidance_tasks: "Příklad úkolu: „Připomeň mi v pondělí zavolat účetní.“",
+    guidance_commands:
+      "Formuluj jasně: akce + modul + datum/čas. Např. ulož / připomeň / najdi + kalendář / úkol / poznámka."
+  };
+
+  function iuSilverLineOBuildCapabilityTurnV1(lead, topicId) {
+    let safe = String(lead || "").trim();
+    if (IU_SILVER_LINE_O_FORBIDDEN_CLAIM_RE_V1.test(foldCs(safe))) {
+      safe = IU_SILVER_LINE_O_COPY_V1.boundaries;
+    }
+    return {
+      normalizedIntent: "assistant.capability",
+      targetContainer: "none",
+      processingState: "CAPABILITY_OK",
+      iuSilverCapabilityTopicV1: topicId || "general",
+      clarificationReason: null,
+      futureIntentCandidate: null,
+      readQuery: null,
+      readAnswer: null,
+      extractedFields: {},
+      missingFields: [],
+      ambiguousFields: [],
+      userFacingSummary: safe,
+      assistantLead: safe,
+      clarificationText: "",
+      draft: createEmptyDraft(),
+      silverCapabilityTurn: true,
+      silverNoWrite: true
+    };
+  }
+
+  function iuSilverLineOIsCapabilityUtteranceV1(f) {
+    if (!f) return false;
+    if (/\bco\s+mam\s+(?:zitra|dnes|tento|v\s+pond)/.test(f)) return false;
+    if (/^\s*(?:najdi|uklad|uloz|pripomen|zapis|zapis)\b/.test(f)) return false;
+    if (/\bco\s+neumis\b/.test(f)) return true;
+    if (/\bukaz\s+priklad/.test(f) || /\bpriklad\s+ukol/.test(f) || /\bpriklad\s+prikaz/.test(f) || /\bpriklad\s+schuz/.test(f)) {
+      return true;
+    }
+    if (/\bfollow[\s-]?up\b/.test(f) || /\bjak\s+napsat\s+follow/.test(f)) return true;
+    if (/\bjak\s+pokracovat\s+v\s+konverzac/.test(f)) return true;
+    if (/\bjak\s+vytvor\w*/.test(f)) return true;
+    if (/\bjak\s+pridam\s+poznam/.test(f)) return true;
+    if (/\bjak\s+zmenim\s+lokaci/.test(f)) return true;
+    if (/\bjak\s+neco\s+oprav/.test(f) || /\bjak\s+neco\s+smaz/.test(f)) return true;
+    if (/\bjak\s+s\s+tebou\s+mam\s+mluvit/.test(f)) return true;
+    if (/\bjake\s+typy\s+prikaz/.test(f)) return true;
+    if (/\bco\s+kdyz\s+udelam\s+chybu/.test(f)) return true;
+    if (/\b(rozumis\s+perfektne|perfektne\s+cesky|rozumis\s+cestine\s+dokonale)\b/.test(f)) return true;
+    if (
+      /\b(co\s+umis|co\s+vsechno\s+umis|s\s+cim\s+(?:mi\s+)?pomuzes|jak\s+funguje|jak\s+funguji|co\s+je\s+silver|napoveda|\bpomoc\b|\bhelp\b|jak\s+zacit|jak\s+to\s+pouzivat|jak\s+pouzivat|spravne\s+formulovat|ukaz\s+priklad|priklad\s+prikaz|kdo\s+jsi|jak\s+nejak\s+oprav|jak\s+nejak\s+smaz)\b/.test(
+        f
+      )
+    ) {
+      return true;
+    }
+    if (
+      /\b(chatgpt|openai|internet|cloudovy\s+backend|umis\s+vsechno|nekonecnou\s+pamet|pamatuju\s+si\s+vse|jsem\s+ai\b|jsi\s+ai\b|jsi\s+umela\s+inteligence)\b/.test(
+        f
+      )
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  function iuSilverLineOResolveTopicV1(f) {
+    if (/\bco\s+neumis\b/.test(f)) return "boundaries";
+    if (
+      /\b(chatgpt|openai|internet|cloud|cloudov\w*\s+backend|umis\s+vsechno|nekonecn\w*|pamet\s+navzdy|pamatuju\s+si\s+vse|vse\s+navzdy|dokonal\w*\s+cestin\w*|rozumis\s+cestin\w*\s+dokonal\w*|perfektne\s+cesky|jsem\s+ai|jsi\s+ai|jsi\s+umela)\b/.test(
+        f
+      )
+    ) {
+      return "boundaries";
+    }
+    if (/\b(kdo\s+jsi|co\s+je\s+silver|jak\s+funguje\s+silver)\b/.test(f)) return "silver";
+    if (/\bpriklad\s+prikaz.*schuz|priklad.*\bschuz/.test(f)) return "guidance_calendar";
+    if (/\bpriklad\s+ukol/.test(f)) return "guidance_tasks";
+    if (/\bcontinuation\b/.test(f)) return "continuation";
+    if (/\bfollow[\s-]?up|jak\s+napsat\s+follow|jak\s+pokracovat\s+v\s+konverzac/.test(f)) return "continuation";
+    if (/\bpriklad\s+prikaz|spravne\s+formulovat|ukaz\s+priklad/.test(f)) return "guidance_commands";
+    if (/\bjak\s+s\s+tebou\s+mam\s+mluvit|jake\s+typy\s+prikaz/.test(f)) return "commands";
+    if (/\bjak\s+neco\s+oprav|jak\s+neco\s+smaz|co\s+kdyz\s+udelam\s+chybu/.test(f)) return "corrections";
+    if (/\bhledani\s+v\s+poznam|poznamk.*hled/.test(f)) return "notes_search";
+    if (/\bhledani\s+v\s+kalend|kalend.*hled/.test(f)) return "calendar_search";
+    if (/\bhledani\s+v\s+ukol|ukol.*hled/.test(f)) return "tasks_search";
+    if (/\bprace\s+s\s+vice\s+vec\w*|vice\s+vec\w*\s+najednou/.test(f)) return "multi";
+    if (/\bco\s+umis\s+hledat|jak\s+funguje\s+vyhled/.test(f)) return "search";
+    if (/\bagenda\s+tydne|agenda\b/.test(f)) return "agenda";
+    if (/\bprerusen/.test(f)) return "interruption";
+    if (/\bhistorick/.test(f)) return "historical";
+    if (/\bdlouhe\s+diktov/.test(f)) return "long_dictation";
+    if (/\bdlouhou\s+konverzac|dlouha\s+konverzac/.test(f)) return "long_session";
+    if (/\bnavazovani\s+na\s+predchoz/.test(f)) return "memory";
+    if (/\bvice\s+krokov|krokov[eé]\s+konverzac/.test(f)) return "continuation";
+    if (/\bconversational\s+memory|pamat\w*\s+konverzac/.test(f) && !/\bnekonecn\w*/.test(f)) return "memory";
+    if (/\bdraft|koncept/.test(f)) return "drafts";
+    if (/\boprav|smaz|chybu|co\s+kdyz\s+udelam\s+chybu/.test(f)) return "corrections";
+    if (/\buprav|zmena\s+casu|zmeny\s+casu|presun|lokac|misto/.test(f)) return "edits";
+    if (/\bco\s+umis\s+ulozit|ulozit\s+umis/.test(f)) return "save";
+    if (/\bco\s+umis\s+upravit/.test(f)) return "edits";
+    if (/\bpoznamk.*udalost|udalost.*poznam/.test(f)) return "event_notes";
+    if (/\bpripomink|pripomen|reminder/.test(f)) return "reminders";
+    if (/\bpoznam/.test(f)) return "notes";
+    if (/\bukol/.test(f)) return "tasks";
+    if (/\bkalend|\bschuz/.test(f)) return "calendar";
+    if (/\bvyhled|\bhledani\b/.test(f)) return "search";
+    if (/\bjak\s+to\s+pouzivat|jak\s+pouzivat\b/.test(f)) return "commands";
+    if (/\bprikaz|mluvit|mluv\b/.test(f)) return "commands";
+    if (/\bzacit\s+se\s+silver|jak\s+zacit/.test(f)) return "silver";
+    if (/^\s*napoveda\s*$|^\s*pomoc\s*$/.test(f)) return "general";
+    if (/\bnejak\s+zacit|pomoc\b/.test(f)) return "general";
+    if (/\bco\s+umis|co\s+vsechno\s+umis|s\s+cim\s+pomu/.test(f)) return "general";
+    return "general";
+  }
+
+  function iuSilverLineOCapabilityHelpEngineV1(raw, now, ctx) {
+    void now;
+    void ctx;
+    const f = foldCs(String(raw || "").trim()).replace(/[?!.,;:]+$/g, "");
+    if (!IU_SILVER_LINE_O_V1 || !iuSilverLineOIsCapabilityUtteranceV1(f)) return null;
+    const topic = iuSilverLineOResolveTopicV1(f);
+    const copy = IU_SILVER_LINE_O_COPY_V1[topic] || IU_SILVER_LINE_O_COPY_V1.general;
+    return iuSilverLineOBuildCapabilityTurnV1(copy, topic);
+  }
+
+  function iuSilverCzechTemporalAspectTagV1(text) {
+    const f = foldCs(text);
+    if (/\b(mel\s+jsem|mela\s+jsem|meli\s+jsme|resil\s+jsem|resila\s+jsem|co\s+jsem\s+resil|minuly|vcera\s+jsme)\b/.test(f)) {
+      return "past";
+    }
+    if (/\b(budu\s+mit|budeme\s+mit|budes\s+mit|co\s+budu\s+resit|pristi\s+tyden\s+budu)\b/.test(f)) {
+      return "future";
+    }
+    if (/\b(mam\s+schuzku|mame\s+schuzku|co\s+resim|co\s+mam\s+resit|dnes\s+resim|prave\s+resim)\b/.test(f)) {
+      return "present";
+    }
+    return "neutral";
+  }
+
   /** Line N — Extreme Real-World Hardening: Persistence Recovery + Interruption Storm + Pathological Session V1 */
   const IU_SILVER_LINE_N_V1 = true;
   const IU_SILVER_LINE_N_STORAGE_KEY = "iu_silver_line_n_persistence_v1";
@@ -57262,6 +57457,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const now = ctx && ctx.now ? ctx.now : new Date();
     const raw0 = String(text || "").trim();
     {
+      const lineOCapEarly = IU_SILVER_LINE_O_V1 && iuSilverLineOCapabilityHelpEngineV1(raw0, now, ctx);
+      if (lineOCapEarly) {
+        iuSilverLineLPostTurnSync(lineOCapEarly, raw0);
+        return lineOCapEarly;
+      }
+    }
+    {
       const agendaSummaryEarly = iuSilverLineMAgendaSummaryReadTurnV1(raw0, now, ctx);
       if (agendaSummaryEarly) {
         iuSilverLineLPostTurnSync(agendaSummaryEarly, raw0);
@@ -58389,6 +58591,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     iuSilverLineNPersistenceSnapshotV1: iuSilverLineNPersistenceSnapshotV1,
     iuSilverLineNPersistenceRestoreV1: iuSilverLineNPersistenceRestoreV1,
     iuSilverLineNPersistenceTryLoadV1: iuSilverLineNPersistenceTryLoadV1,
+    iuSilverLineOCapabilityHelpEngineV1: iuSilverLineOCapabilityHelpEngineV1,
+    iuSilverCzechTemporalAspectTagV1: iuSilverCzechTemporalAspectTagV1,
     iuSilverConversationSyncFromTurn: iuSilverConversationSyncFromTurn,
     iuSilverApplySessionContext: iuSilverApplySessionContext,
     iuSilverDetermineActionModeV1: iuSilverDetermineActionModeV1,
