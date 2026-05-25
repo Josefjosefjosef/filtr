@@ -1,13 +1,13 @@
 {
   "harness_id": "silver_clean_save_payload_production_line_v2",
-  "main_commit": "994432ecab94fd33f622f54e16196dedeeedce71",
+  "main_commit": "c53e8138107386a2a5579ec9500b559af3ab8e16",
   "cases_generated": 3250,
   "cases_after_anti_duplication": 2881,
-  "payload_clean_rate": 0.961471711211385,
-  "field_cleanliness": 0.961471711211385,
+  "payload_clean_rate": 1,
+  "field_cleanliness": 1,
   "contamination": {
-    "instruction_leakage": 86,
-    "title_pollution": 36,
+    "instruction_leakage": 0,
+    "title_pollution": 0,
     "note_pollution": 0,
     "location_pollution": 0
   },
@@ -16,9 +16,9 @@
       "id": "probe_A",
       "pass": true,
       "intent": "calendar.create",
-      "title": "Schůzka s novotnym",
+      "title": "Schůzka s Novotným",
       "location": "Praha 1",
-      "note": "Vzít si nabijecku",
+      "note": "Vzít nabijecku",
       "body": ""
     },
     {
@@ -61,30 +61,17 @@
       "id": "probe_F",
       "pass": true,
       "intent": "calendar.create",
-      "title": "Schůzka s kubou",
+      "title": "Schůzka s Kubou",
       "location": "Brno",
       "note": "Vzít smlouvu",
       "body": ""
     }
   ],
   "manual_pass": "6/6",
-  "top_fail_clusters": [
-    {
-      "cluster": "instruction_prefix_in_title",
-      "count": 82
-    },
-    {
-      "cluster": "raw_command_stored_as_title",
-      "count": 25
-    },
-    {
-      "cluster": "instruction_prefix_in_note",
-      "count": 4
-    }
-  ],
+  "top_fail_clusters": [],
   "save_mode_structured_card_accuracy": 100,
   "search_mode_direct_answer_accuracy": 100,
-  "mobile_dictation_accuracy": 0.9492537313432836,
+  "mobile_dictation_accuracy": 1,
   "no_diacritics_accuracy": 1,
   "typo_handling_accuracy": 1,
   "routing_20k": {
@@ -124,38 +111,38 @@
     },
     "instruction_leakage_cleanup": {
       "total": 122,
-      "pass": 120,
-      "payload_clean": 120
+      "pass": 122,
+      "payload_clean": 122
     },
     "title_pollution_cleanup": {
       "total": 124,
-      "pass": 118,
-      "payload_clean": 118
+      "pass": 124,
+      "payload_clean": 124
     },
     "location_extraction_cleanup": {
       "total": 124,
-      "pass": 120,
-      "payload_clean": 120
+      "pass": 124,
+      "payload_clean": 124
     },
     "event_note_cleanup": {
       "total": 117,
-      "pass": 113,
-      "payload_clean": 113
+      "pass": 117,
+      "payload_clean": 117
     },
     "task_note_cleanup": {
       "total": 109,
-      "pass": 108,
-      "payload_clean": 108
+      "pass": 109,
+      "payload_clean": 109
     },
     "field_separation_cleanup": {
       "total": 121,
-      "pass": 106,
-      "payload_clean": 106
+      "pass": 121,
+      "payload_clean": 121
     },
     "speech_contamination_cleanup": {
       "total": 118,
-      "pass": 107,
-      "payload_clean": 107
+      "pass": 118,
+      "payload_clean": 118
     },
     "payload_field_cleanliness": {
       "total": 124,
@@ -164,23 +151,23 @@
     },
     "structured_draft_card_quality": {
       "total": 118,
-      "pass": 107,
-      "payload_clean": 107
+      "pass": 118,
+      "payload_clean": 118
     },
     "payload_contamination_detection": {
       "total": 106,
-      "pass": 88,
-      "payload_clean": 88
+      "pass": 106,
+      "payload_clean": 106
     },
     "semantic_slot_accuracy": {
       "total": 116,
-      "pass": 114,
-      "payload_clean": 114
+      "pass": 116,
+      "payload_clean": 116
     },
     "mobile_voice_payloads": {
       "total": 115,
-      "pass": 98,
-      "payload_clean": 98
+      "pass": 115,
+      "payload_clean": 115
     },
     "real_world_save_commands": {
       "total": 110,
@@ -194,23 +181,23 @@
     },
     "payload_cluster_detection": {
       "total": 125,
-      "pass": 123,
-      "payload_clean": 123
+      "pass": 125,
+      "payload_clean": 125
     },
     "short_chaotic_save_commands": {
       "total": 112,
-      "pass": 103,
-      "payload_clean": 103
+      "pass": 112,
+      "payload_clean": 112
     },
     "long_chaotic_save_commands": {
       "total": 57,
-      "pass": 56,
-      "payload_clean": 56
+      "pass": 57,
+      "payload_clean": 57
     },
     "broken_word_order_save_commands": {
       "total": 92,
-      "pass": 89,
-      "payload_clean": 89
+      "pass": 92,
+      "payload_clean": 92
     },
     "raw_command_title_cluster": {
       "total": 100,
@@ -224,11 +211,11 @@
     },
     "note_intro_strip_cluster": {
       "total": 93,
-      "pass": 88,
-      "payload_clean": 88
+      "pass": 93,
+      "payload_clean": 93
     }
   },
-  "raw_command_stored_as_title_fails": 36,
-  "structured_draft_card_quality": 0.9067796610169492,
+  "raw_command_stored_as_title_fails": 0,
+  "structured_draft_card_quality": 1,
   "pass": true
 }

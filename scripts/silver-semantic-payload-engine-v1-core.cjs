@@ -308,14 +308,27 @@ function cleanReminderNote(tailRaw) {
   s = s.replace(/^(?:že|ze)\s+nesm[ií]m\s+zapomenout\b/iu, "Nesmím zapomenout").trim();
   if (/^(?:vezmu|vezu)\s+/iu.test(s)) {
     s = "Vzít " + s.replace(/^(?:vezmu|vezu)\s+/iu, "").trim();
-  } else if (s && !/^vz[ií]t\b/i.test(s) && /\b(vz[ií]t|vezmu|vezu)\b/i.test(s)) {
-    s = "Vzít " + s;
+    } else if (s && !/^vz[ií]t\b/i.test(s) && /\b(vz[ií]t|vezmu|vezu)\b/i.test(s)) {
+      s = "Vzít " + s;
+    }
+    if (/^vz[ií]t\b/i.test(s)) {
+      for (let ri = 0; ri < 10; ri++) {
+        const prevR = s;
+        s = s
+          .replace(
+            /^Vzít\s+(?:(?:fakt|jako|trochu|nejak|nějak|no|prost[eě]|teda|ee)\s+)+(?:a[tť]\s+si\s+)?(?:vezmu\s+)?/iu,
+            "Vzít "
+          )
+          .replace(/^Vzít\s+(?:a[tť]\s+si\s+)?vezmu\s+/iu, "Vzít ")
+          .trim();
+        if (s === prevR) break;
+      }
+    }
+    if (s && /^[a-záčďěéíňóřšťúůýž]/.test(s)) {
+      s = s.charAt(0).toLocaleUpperCase("cs-CZ") + s.slice(1);
+    }
+    return normalizeWs(s).slice(0, 1000);
   }
-  if (s && /^[a-záčďěéíňóřšťúůýž]/.test(s)) {
-    s = s.charAt(0).toLocaleUpperCase("cs-CZ") + s.slice(1);
-  }
-  return normalizeWs(s).slice(0, 1000);
-}
 
 function cleanTaskNote(tailRaw) {
   let s = String(tailRaw || "").trim();
@@ -533,6 +546,98 @@ function isTaskNoteContext(rawText) {
   return TASK_NOTE_CUES.some((re) => re.test(rawText));
 }
 
+/** CAP55 — note field instruction prefix strip (after semantic extraction + strict note lock). */
+const INSTRUCTION_PREFIX_NOTE_CLEANER_V2_PATS = [
+  /^do\s+pozn[aá]m(?:ek|ky|ce)\s+(?:mi\s+)?(?:napi[sš]|zapi[sš]|dej|p[rř]idej)\s+(?:že|ze)?\s*/iu,
+  /^do\s+pozn[aá]mk\w*\s+napi[sš]\s+(?:že|ze)?\s*/iu,
+  /^zapi[sš]\s+(?:mi\s+|si\s+)?(?:že|ze)?\s*/iu,
+  /^zapi[sš]\s+/iu,
+  /^ho[dď]\s+tam\s+/iu,
+  /^ho[dď]\s+mi\s+/iu,
+  /^prosim\w*\s+t[eě]\s+/iu,
+  /^pros[ií]m\s+t[eě]\s+/iu,
+  /^nezapome[nň]\s+(?:mi\s+|si\s+)?/iu,
+  /^dej\s+mi\s+do\s+pozn[aá]mk\w*\s+/iu,
+  /^dej\s+tam\s+(?:pozn[aá]mk\w*\s+)?(?:že|ze)?\s*/iu,
+  /^napi[sš]\s+tam\s+(?:že|ze)?\s*/iu,
+  /^napis\s+tam\s+(?:ze|že)?\s*/iu,
+  /^p[rř]ipome[nň]\s+mi\s+(?:prosim\w*\s+t[eě]\s+)?(?:a[tť]\s+)?/iu,
+  /^pripomen\s+mi\s+/iu,
+  /^jest[eě]\s+tam\s+(?:dej|napi[sš])\s+/iu,
+  /^a\s+jest[eě]\s+tam\s+napi[sš]\s+(?:že|ze)?\s*/iu,
+  /^a\s+napi[sš]\s+tam\s+(?:že|ze)?\s*/iu,
+  /^mozna\s+jeste\s+tam\s+napi[sš]\s+/iu,
+  /^možná\s+ještě\s+tam\s+napiš\s+/iu,
+  /^ul[oó][zž]\s+mi\s+do\s+pozn[aá]mk\w*\s+(?:že|ze)?\s*/iu,
+];
+
+function instructionPrefixNoteCleanerV2(noteRaw, targetContainer, rawFull) {
+  let s = normalizeWs(String(noteRaw || "").trim());
+  if (!s) return s;
+  const fallback = s;
+  const tc = targetContainer === "tasks" ? "tasks" : "calendar";
+  for (let rnd = 0; rnd < 14; rnd++) {
+    const prev = s;
+    for (let pi = 0; pi < INSTRUCTION_PREFIX_NOTE_CLEANER_V2_PATS.length; pi++) {
+      s = s.replace(INSTRUCTION_PREFIX_NOTE_CLEANER_V2_PATS[pi], "").trim();
+    }
+    s = stripInstructionPrefixes(s);
+    if (tc === "calendar") s = cleanReminderNote(s);
+    else if (tc === "tasks") s = cleanTaskNote(s);
+    s = normalizeWs(s);
+    if (s === prev) break;
+  }
+  if (/^vz[ií]t\b/i.test(s)) {
+    for (let ri = 0; ri < 10; ri++) {
+      const prevR = s;
+      s = s
+        .replace(
+          /^Vzít\s+(?:(?:fakt|jako|trochu|nejak|nějak|no|prost[eě]|teda|ee)\s+)+(?:a[tť]\s+si\s+)?(?:vezmu\s+)?/iu,
+          "Vzít "
+        )
+        .replace(/^Vzít\s+(?:a[tť]\s+si\s+)?vezmu\s+/iu, "Vzít ")
+        .trim();
+      if (s === prevR) break;
+    }
+  }
+  for (let ti = 0; ti < 8; ti++) {
+    const prevT = s;
+    s = s.replace(/\s*\([^)]{0,48}\)\s*$/u, "").trim();
+    s = s
+      .replace(
+        /\s+(?:jo|no|d[ií]ky(?:\s+moc)?|honem|no\s+stress|stress|prosim(?:\w*)?(?:\s+t[eě])?|rychle)\s*$/giu,
+        ""
+      )
+      .trim();
+    s = s
+      .replace(
+        /\s+(?:z[ií]tra|zejtra|dnes(?:ka)?|v\s+p[aá]tek|r[aá]no|odpoledne|ve\s+stredu|pond[eě]l[ií]?|utery|ctvrtek)(?:\s+\S+)*\s*$/iu,
+        ""
+      )
+      .trim();
+    if (s === prevT) break;
+  }
+  for (let fi = 0; fi < 8; fi++) {
+    const prevF = s;
+    s = s.replace(/^(?:jako|trochu|nejak|nějak|no|fakt|prost[eě]|hele|jo)\s+/iu, "").trim();
+    if (s === prevF) break;
+  }
+  if (hasInstructionLeakage(s)) {
+    const ni = tc === "tasks" ? "tasks.create" : "calendar.create";
+    const slots = iuSilverExtractSemanticSlotsV1(ni, String(rawFull || ""));
+    const slotNote = String((tc === "tasks" ? slots["task.note"] : slots["event.note"]) || "").trim();
+    if (slotNote && slotNote.length >= 2 && !hasInstructionLeakage(slotNote)) {
+      s = slotNote;
+    }
+  }
+  s = normalizeWs(s);
+  if (!s || s.length < 2) return fallback;
+  if (/^[a-záčďěéíňóřšťúůýž]/.test(s)) {
+    s = s.charAt(0).toLocaleUpperCase("cs-CZ") + s.slice(1);
+  }
+  return s.slice(0, 1000);
+}
+
 function instructionPrefixTitleCleanerV3(titleRaw, targetContainer, rawFull) {
   let t = stripInstructionPrefixes(String(titleRaw || "").trim());
   if (!t) return t;
@@ -610,5 +715,7 @@ module.exports = {
   cleanTaskNote,
   extractCalendarEventHead,
   instructionPrefixTitleCleanerV3,
+  instructionPrefixNoteCleanerV2,
+  INSTRUCTION_PREFIX_NOTE_CLEANER_V2_PATS,
   calendarSaveConfidenceOverrideV1,
 };

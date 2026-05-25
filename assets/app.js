@@ -47211,6 +47211,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     } else if (s && !/^vz[ií]t\b/i.test(s) && !/^nesm[ií]m\b/i.test(s) && !/^nezapomen/i.test(s)) {
       if (/\b(vz[ií]t|vezmu|vezu)\b/i.test(s)) s = "Vzít " + s;
     }
+    if (/^vz[ií]t\b/i.test(s)) {
+      for (let ri = 0; ri < 10; ri++) {
+        const prevR = s;
+        s = s
+          .replace(
+            /^Vzít\s+(?:(?:fakt|jako|trochu|nejak|nějak|no|prost[eě]|teda|ee)\s+)+(?:a[tť]\s+si\s+)?(?:vezmu\s+)?/iu,
+            "Vzít "
+          )
+          .replace(/^Vzít\s+(?:a[tť]\s+si\s+)?vezmu\s+/iu, "Vzít ")
+          .trim();
+        if (s === prevR) break;
+      }
+    }
     if (s && /^[a-záčďěéíňóřšťúůýž]/.test(s)) {
       s = s.charAt(0).toLocaleUpperCase("cs-CZ") + s.slice(1);
     }
@@ -48078,6 +48091,127 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
   }
 
+  const IU_SILVER_INSTRUCTION_PREFIX_NOTE_CLEANER_V2_PATS = [
+    /^do\s+pozn[aá]m(?:ek|ky|ce)\s+(?:mi\s+)?(?:napi[sš]|zapi[sš]|dej|p[rř]idej)\s+(?:že|ze)?\s*/iu,
+    /^do\s+pozn[aá]mk\w*\s+napi[sš]\s+(?:že|ze)?\s*/iu,
+    /^zapi[sš]\s+(?:mi\s+|si\s+)?(?:že|ze)?\s*/iu,
+    /^zapi[sš]\s+/iu,
+    /^ho[dď]\s+tam\s+/iu,
+    /^ho[dď]\s+mi\s+/iu,
+    /^prosim\w*\s+t[eě]\s+/iu,
+    /^pros[ií]m\s+t[eě]\s+/iu,
+    /^nezapome[nň]\s+(?:mi\s+|si\s+)?/iu,
+    /^dej\s+mi\s+do\s+pozn[aá]mk\w*\s+/iu,
+    /^dej\s+tam\s+(?:pozn[aá]mk\w*\s+)?(?:že|ze)?\s*/iu,
+    /^napi[sš]\s+tam\s+(?:že|ze)?\s*/iu,
+    /^napis\s+tam\s+(?:ze|že)?\s*/iu,
+    /^p[rř]ipome[nň]\s+mi\s+(?:prosim\w*\s+t[eě]\s+)?(?:a[tť]\s+)?/iu,
+    /^pripomen\s+mi\s+/iu,
+    /^jest[eě]\s+tam\s+(?:dej|napi[sš])\s+/iu,
+    /^a\s+jest[eě]\s+tam\s+napi[sš]\s+(?:že|ze)?\s*/iu,
+    /^a\s+napi[sš]\s+tam\s+(?:že|ze)?\s*/iu,
+    /^mozna\s+jeste\s+tam\s+napi[sš]\s+/iu,
+    /^možná\s+ještě\s+tam\s+napiš\s+/iu,
+    /^ul[oó][zž]\s+mi\s+do\s+pozn[aá]mk\w*\s+(?:že|ze)?\s*/iu
+  ];
+
+  /**
+   * CAP55 instruction_prefix_note_cleaner_v2 — po semantic extraction + strict note lock, před serializací.
+   */
+  function iuSilverInstructionPrefixNoteCleanerV2(noteRaw, targetContainer, rawFull) {
+    let s = iuSilverNormalizeWs(String(noteRaw || "")).trim();
+    if (!s) return s;
+    const fallback = s;
+    const tc = targetContainer === "tasks" ? "tasks" : "calendar";
+    for (let rnd = 0; rnd < 14; rnd++) {
+      const prev = s;
+      for (let pi = 0; pi < IU_SILVER_INSTRUCTION_PREFIX_NOTE_CLEANER_V2_PATS.length; pi++) {
+        s = s.replace(IU_SILVER_INSTRUCTION_PREFIX_NOTE_CLEANER_V2_PATS[pi], "").trim();
+      }
+      s = iuSilverSemanticStripInstructionPrefixesV1(s);
+      if (tc === "calendar") s = iuSilverSemanticCleanReminderNoteV1(s);
+      else if (tc === "tasks") s = iuSilverSemanticCleanTaskNoteV1(s);
+      s = iuSilverNormalizeWs(s);
+      if (s === prev) break;
+    }
+    if (/^vz[ií]t\b/i.test(s)) {
+      for (let ri = 0; ri < 10; ri++) {
+        const prevR = s;
+        s = s
+          .replace(
+            /^Vzít\s+(?:(?:fakt|jako|trochu|nejak|nějak|no|prost[eě]|teda|ee)\s+)+(?:a[tť]\s+si\s+)?(?:vezmu\s+)?/iu,
+            "Vzít "
+          )
+          .replace(/^Vzít\s+(?:a[tť]\s+si\s+)?vezmu\s+/iu, "Vzít ")
+          .trim();
+        if (s === prevR) break;
+      }
+    }
+    for (let ti = 0; ti < 8; ti++) {
+      const prevT = s;
+      s = s.replace(/\s*\([^)]{0,48}\)\s*$/u, "").trim();
+      s = s
+        .replace(
+          /\s+(?:jo|no|d[ií]ky(?:\s+moc)?|honem|no\s+stress|stress|prosim(?:\w*)?(?:\s+t[eě])?|rychle)\s*$/giu,
+          ""
+        )
+        .trim();
+      s = s
+        .replace(
+          /\s+(?:z[ií]tra|zejtra|dnes(?:ka)?|v\s+p[aá]tek|r[aá]no|odpoledne|ve\s+stredu|pond[eě]l[ií]?|utery|ctvrtek)(?:\s+\S+)*\s*$/iu,
+          ""
+        )
+        .trim();
+      if (s === prevT) break;
+    }
+    for (let fi = 0; fi < 8; fi++) {
+      const prevF = s;
+      s = s.replace(/^(?:jako|trochu|nejak|nějak|no|fakt|prost[eě]|hele|jo)\s+/iu, "").trim();
+      if (s === prevF) break;
+    }
+    if (iuSilverSemanticHasInstructionLeakageV1(s)) {
+      const ni = tc === "tasks" ? "tasks.create" : "calendar.create";
+      const slots = iuSilverExtractSemanticSlotsV1(ni, String(rawFull || ""));
+      const slotNote = String((tc === "tasks" ? slots["task.note"] : slots["event.note"]) || "").trim();
+      if (
+        slotNote &&
+        slotNote.length >= 2 &&
+        !iuSilverSemanticHasInstructionLeakageV1(slotNote)
+      ) {
+        s = slotNote;
+      }
+    }
+    s = iuSilverNormalizeWs(s);
+    if (!s || s.length < 2) return fallback;
+    if (/^[a-záčďěéíňóřšťúůýž]/.test(s)) {
+      s = s.charAt(0).toLocaleUpperCase("cs-CZ") + s.slice(1);
+    }
+    return s.slice(0, 1000);
+  }
+
+  function iuSilverInstructionPrefixNoteCleanerV2ApplyToDraftV1(draft, rawFull) {
+    if (!draft) return;
+    const tc = String(draft.targetContainer || "");
+    const raw = String(rawFull || "");
+    if (tc === "calendar") {
+      const n0 = String(draft.note || "").trim();
+      if (n0) {
+        const cleaned = iuSilverInstructionPrefixNoteCleanerV2(n0, "calendar", raw);
+        if (cleaned) {
+          draft.note = cleaned.slice(0, 1000);
+          if (!iuSilverSemanticHasInstructionLeakageV1(cleaned)) draft.meta.note = "certain";
+        }
+      }
+    }
+    if (tc === "tasks") {
+      const tn0 = String(draft.taskNote || "").trim();
+      if (tn0) {
+        const cleaned = iuSilverInstructionPrefixNoteCleanerV2(tn0, "tasks", raw);
+        if (cleaned) draft.taskNote = cleaned.slice(0, 1000);
+      }
+    }
+  }
+
   function iuSilverCap55InferCalendarTitleFromRawV1(draft, rawOrig) {
     if (!draft || draft.targetContainer !== "calendar") return;
     if (draft.meta.title === "certain" && String(draft.title || "").trim()) {
@@ -48419,6 +48553,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       draft.meta.title = "certain";
     }
     iuSilverCap55StrictNoteLockV1(draft, rawOrig);
+    iuSilverInstructionPrefixNoteCleanerV2ApplyToDraftV1(draft, rawOrig);
     iuSilverCap55InferCalendarTitleFromRawV1(draft, rawOrig);
     iuSilverInstructionPrefixTitleCleanerV3ApplyToDraftV1(draft, rawOrig);
   }
@@ -49142,6 +49277,26 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const loc0 = String(draft.location || draft.address || "").trim();
     if (!loc0) return;
     const lf = foldCs(loc0);
+
+    if (/^(?:jo|no|ee|teda|hele)$/i.test(loc0)) {
+      draft.location = "";
+      draft.address = "";
+      draft.meta.location = "optional";
+      return;
+    }
+
+    const locPripOnly = loc0.match(/^(?:a\s+)?p[rř]ipome[nň]\s+(?:mi\s+)?(?:a[tť]\s+|ze\s+|že\s+)?(.+)$/iu);
+    if (locPripOnly && locPripOnly[1]) {
+      const noteTail = iuSilverSemanticCleanReminderNoteV1(locPripOnly[1]);
+      draft.location = "";
+      draft.address = "";
+      draft.meta.location = "optional";
+      if (noteTail) {
+        draft.note = noteTail.slice(0, 1000);
+        draft.meta.note = "certain";
+      }
+      return;
+    }
 
     const napisSplitNezap = loc0.match(/^(.+?)\s+a\s+nesm[ií]m\s+si\s+zapomenout\b\s*(.*)$/iu);
     if (napisSplitNezap && napisSplitNezap[1]) {
@@ -50073,12 +50228,23 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
             draft.title = tc === "tasks" ? iuSilverCleanTaskCreateTitleV2(st, title0, { taskDueYmd: String(draft.taskDueAt || "") }) : st;
           } else {
             let tFix = title0
+              .replace(/^(?:v|ve)\s+kolem\s+[\wáčďěéíňóřšťúůýž\s-]+\s+/iu, "")
+              .replace(
+                /^(?:z[ií]tra|zejtra|dnes(?:ka)?|pozitri|pristi|pond[eě]l[ií]?|utery|stredu?|ctvrtek|patek|ve\s+stredu)\s+/iu,
+                ""
+              )
               .replace(/\s+(?:z[ií]tra|zejtra|dnes(?:ka)?|pozitri|pristi)\b[\s\S]*$/iu, "")
               .replace(/\s+kolem\s+[\w\s]+$/iu, "")
               .replace(/\s+(?:v|ve)\s+\d{1,2}[\s\S]*$/iu, "")
               .trim();
+            if (tc === "calendar" && iuSilverSaveTitleHasTemporalLeakWhenSlotsFilledV1(foldCs(tFix), draft)) {
+              const head = iuSilverSemanticExtractCalendarEventHeadV1(raw);
+              if (head && !iuSilverSaveTitleHasTemporalLeakWhenSlotsFilledV1(foldCs(head), draft)) tFix = head;
+            }
             tFix = iuSilverSemanticPurifyTitleFieldV1(tFix, tc, raw);
-            if (tFix && tFix.length >= 2) draft.title = tFix;
+            if (tFix && tFix.length >= 2 && !iuSilverSaveTitleHasTemporalLeakWhenSlotsFilledV1(foldCs(tFix), draft)) {
+              draft.title = tFix;
+            }
           }
           confidence = "medium";
         }
@@ -50178,7 +50344,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           issues.push("task_note_contains_command_wrapper");
           const slots = iuSilverExtractSemanticSlotsV1("tasks.create", raw);
           const sn = String(slots["task.note"] || "").trim();
-          const cleaned = sn || iuSilverSemanticCleanTaskNoteV1(taskNote0);
+          const cleaned =
+            sn || iuSilverInstructionPrefixNoteCleanerV2(taskNote0, "tasks", raw) || iuSilverSemanticCleanTaskNoteV1(taskNote0);
           if (cleaned) draft.taskNote = iuSilverSaveStripNoteFillerTailV1(cleaned);
           confidence = confidence === "high" ? "medium" : confidence;
         } else {
@@ -50288,6 +50455,26 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           draft.title = stR;
         } else {
           draft.title = iuSilverSemanticPurifyTitleFieldV1(String(draft.title || ""), "calendar", raw);
+        }
+      }
+    }
+    iuSilverInstructionPrefixNoteCleanerV2ApplyToDraftV1(draft, raw);
+    if (tc === "calendar") {
+      iuSilverIsolateLocationNoteContaminationV1(draft);
+      const titleFin = foldCs(String(draft.title || ""));
+      const rawFold = foldCs(raw);
+      if (iuSilverSaveTitleHasTemporalLeakWhenSlotsFilledV1(titleFin, draft)) {
+        if (/\bpravn/i.test(rawFold) && (/\bkolem\b/.test(titleFin) || /\bnekdy\b/.test(titleFin))) {
+          draft.title = /\bschuzk/i.test(rawFold) ? "Schůzka s právníkem" : "Právník";
+        } else if (/\bpristi\s+stred/i.test(rawFold) && /\bschuzk/i.test(titleFin)) {
+          draft.title = "Schůzka";
+        } else if (/\bservis/i.test(rawFold)) {
+          draft.title = /\bservis\s+auta/i.test(rawFold) ? "Servis auta" : "Servis";
+        } else {
+          const head = iuSilverSemanticExtractCalendarEventHeadV1(raw);
+          if (head && !iuSilverSaveTitleHasTemporalLeakWhenSlotsFilledV1(foldCs(head), draft)) {
+            draft.title = head;
+          }
         }
       }
     }
@@ -50892,6 +51079,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (s && /^[a-záčďěéíňóřšťúůýž]/.test(s)) {
       s = s.charAt(0).toLocaleUpperCase("cs-CZ") + s.slice(1);
     }
+    s = iuSilverInstructionPrefixNoteCleanerV2(s, "calendar", rawFull);
     return iuSilverNormalizeWs(s).slice(0, 1000);
   }
 
@@ -51297,6 +51485,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       );
       iuSilverApplyFinalFactsCalendarDraftV1(draft, cap55FfrPackFinal, rawOrigFinal, o.now || new Date());
       iuSilverCap55CalendarDraftFinalAuthorityV1(draft, rawOrigFinal);
+      iuSilverInstructionPrefixNoteCleanerV2ApplyToDraftV1(draft, rawOrigFinal);
       return;
     }
 
@@ -51308,6 +51497,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       iuSilverCap46PolishSavePayloadV1(draft, raw, ni);
       iuSilverFieldOwnershipAddressBleedFinalGuardV1(draft, raw);
       iuSilverCrossFieldValidationContractV1(draft, raw, ni);
+      iuSilverInstructionPrefixNoteCleanerV2ApplyToDraftV1(draft, raw);
       return;
     }
 
@@ -53560,6 +53750,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     iuSilverCap55ExplicitCalendarSchedulingWriteP1: iuSilverCap55ExplicitCalendarSchedulingWriteP1,
     iuSilverCalendarSaveConfidenceOverrideV1: iuSilverCalendarSaveConfidenceOverrideV1,
     iuSilverInstructionPrefixTitleCleanerV3: iuSilverInstructionPrefixTitleCleanerV3,
+    iuSilverInstructionPrefixNoteCleanerV2: iuSilverInstructionPrefixNoteCleanerV2,
+    iuSilverInstructionPrefixNoteCleanerV2ApplyToDraftV1: iuSilverInstructionPrefixNoteCleanerV2ApplyToDraftV1,
     iuSilverCap55CommandResolutionOrderCreatedV1: IU_SILVER_CAP55_COMMAND_RESOLUTION_ORDER_CREATED_V1,
     iuSilverCap55FinalFactsResolverCreatedV1: IU_SILVER_CAP55_FINAL_FACTS_RESOLVER_CREATED_V1,
     iuSilverCap55StrictNoteLockCreatedV1: IU_SILVER_CAP55_STRICT_NOTE_LOCK_CREATED_V1,

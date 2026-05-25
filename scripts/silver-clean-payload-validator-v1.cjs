@@ -68,6 +68,35 @@ function validateTaskNoteVsNoteBody(turn, rawText) {
   return violations;
 }
 
+function hasInstructionLeakageInNoteField(noteValue) {
+  let s = String(noteValue || "").trim();
+  if (!s) return false;
+  for (let ti = 0; ti < 8; ti++) {
+    const prevT = s;
+    s = s.replace(/\s*\([^)]{0,48}\)\s*$/u, "").trim();
+    s = s
+      .replace(
+        /\s+(?:jo|no|d[ií]ky(?:\s+moc)?|honem|no\s+stress|stress|prosim(?:\w*)?(?:\s+t[eě])?|rychle)\s*$/giu,
+        ""
+      )
+      .trim();
+    s = s
+      .replace(
+        /\s+(?:z[ií]tra|zejtra|dnes(?:ka)?|v\s+p[aá]tek|r[aá]no|odpoledne|ve\s+stredu|pond[eě]l[ií]?|utery|ctvrtek)(?:\s+\S+)*\s*$/iu,
+        ""
+      )
+      .trim();
+    if (s === prevT) break;
+  }
+  for (let i = 0; i < 8; i++) {
+    const prev = s;
+    s = s.replace(/^(?:jako|trochu|nejak|nějak|no|fakt|prost[eě]|hele|jo)\s+/iu, "").trim();
+    if (s === prev) break;
+  }
+  const lead = s.slice(0, 80);
+  return hasInstructionLeakage(lead);
+}
+
 function validateInstructionLeakageInTitle(turn) {
   const violations = [];
   const intent = String(turn.normalizedIntent || "");
@@ -80,7 +109,7 @@ function validateInstructionLeakageInTitle(turn) {
     violations.push("assistant_name_in_title");
   }
   const note = draftField(turn, "note");
-  if (note && hasInstructionLeakage(note)) {
+  if (note && hasInstructionLeakageInNoteField(note)) {
     violations.push("instruction_prefix_in_note");
   }
   if (note && hasAssistantNameLeakage(note)) {

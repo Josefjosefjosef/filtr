@@ -1959,6 +1959,7 @@ function gitTrackedClean() {
     const tracked = lines.filter((l) => !l.startsWith("??"));
     const allow = [
       "scripts/audit_silver_20000_routing_stable.cjs",
+      "scripts/audit_silver_20000_routing_stable",
       "scripts/audit_silver_real_ux_v1.cjs",
       "scripts/audit_silver_realistic_mobile_corpus.cjs",
       "scripts/silver-quality-v2-report.json",
@@ -1998,7 +1999,18 @@ function gitTrackedClean() {
       "scripts/silver-public-save-readiness-audit-v1.cjs",
       "scripts/silver-event-note-vs-notes-create-audit-v1.cjs",
       "scripts/silver-token-anchor-normalizer-v1-audit.cjs",
-      "scripts/silver-cross-field-validation-contract-v1-audit.cjs"
+      "scripts/silver-cross-field-validation-contract-v1-audit.cjs",
+      "scripts/silver-clean-payload-validator-v1.cjs",
+      "scripts/silver-clean-save-payload-production-line-v2-report.json",
+      "scripts/silver-note-prefix-residual-diagnostic-v1.cjs",
+      "scripts/silver-note-prefix-residual-diagnostic-v1-report.json",
+      "scripts/silver-long-session-save-replay-v1.cjs",
+      "scripts/silver-long-session-save-replay-v1-report.json",
+      "scripts/silver-long-session-save-stability-audit-v1.cjs",
+      "scripts/silver-long-session-save-stability-audit-v1-report.json",
+      "scripts/silver-public-hardening-residuals-v1.cjs",
+      "scripts/silver-public-hardening-residuals-v1-report.json",
+      "scripts/silver-public-save-readiness-audit-v1-report.json"
     ];
     const bad = tracked.filter((l) => {
       const t = l.replace(/^\s+/, "").trim();
