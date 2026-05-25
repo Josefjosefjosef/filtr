@@ -22,6 +22,9 @@ function draftField(turn, name) {
   return validator.draftField(turn, name);
 }
 
+const SILVER_RELOAD_SENTINEL = "__SILVER_RELOAD__";
+const SILVER_DELAY_SENTINEL = "__SILVER_DELAY__";
+
 function runChain(eng, steps, group) {
   eng.iuSilverConversationReset();
   const ctx = ctxForCase(group || "calendar_write");
@@ -30,7 +33,23 @@ function runChain(eng, steps, group) {
   let duplicateCreates = 0;
   let prevIntent = null;
   for (let i = 0; i < steps.length; i++) {
-    const t = eng.processUserTurn(steps[i], prev, ctx);
+    const step = steps[i];
+    if (step === SILVER_RELOAD_SENTINEL || step === SILVER_DELAY_SENTINEL) {
+      let snap = null;
+      if (typeof eng.iuSilverLineNPersistenceSnapshotV1 === "function") {
+        snap = eng.iuSilverLineNPersistenceSnapshotV1();
+      }
+      prev = eng.createEmptyDraft();
+      if (typeof eng.iuSilverConversationReset === "function") eng.iuSilverConversationReset();
+      if (snap && typeof eng.iuSilverLineNPersistenceRestoreV1 === "function") {
+        eng.iuSilverLineNPersistenceRestoreV1(snap);
+      }
+      continue;
+    }
+    const t = eng.processUserTurn(step, prev, ctx);
+    if (typeof eng.iuSilverConversationSyncFromTurn === "function") {
+      eng.iuSilverConversationSyncFromTurn(t, step);
+    }
     if (i > 0 && t.silverConversationAction !== "update" && t.normalizedIntent === "calendar.create") {
       const afterRead = String(prevIntent || "").indexOf(".read") >= 0 || prevIntent === "calendar.read";
       if (!afterRead) duplicateCreates++;
@@ -112,4 +131,12 @@ function runAudit(harnessId, scenarios, reportPath) {
   return report.pass_fail === "PASS" ? 0 : 1;
 }
 
-module.exports = { runAudit, runChain, foldCs, hasAny, mainCommit };
+module.exports = {
+  runAudit,
+  runChain,
+  foldCs,
+  hasAny,
+  mainCommit,
+  SILVER_RELOAD_SENTINEL,
+  SILVER_DELAY_SENTINEL
+};

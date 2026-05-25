@@ -1,0 +1,39 @@
+{
+  "report": {
+    "harness_id": "silver_cross_day_continuity_audit_v1",
+    "main_commit": "d8f934b9aea07b45bfbaa4bf93849bfe0aec1c98",
+    "cases_total": 3,
+    "pass_count": 3,
+    "accuracy": 1,
+    "pass_fail": "PASS"
+  },
+  "results": [
+    {
+      "id": "CDC_F1",
+      "issues": [],
+      "pass": true,
+      "title": "Včera schůzka s Kuba",
+      "note": "",
+      "loc": "adresu",
+      "intent": "calendar.create"
+    },
+    {
+      "id": "CDC_F2",
+      "issues": [],
+      "pass": true,
+      "title": "Doktor",
+      "note": "",
+      "loc": "",
+      "intent": "calendar.create"
+    },
+    {
+      "id": "CDC_F3",
+      "issues": [],
+      "pass": true,
+      "title": "Servis auta",
+      "note": "poznámka",
+      "loc": "",
+      "intent": "calendar.create"
+    }
+  ]
+}
