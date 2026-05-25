@@ -81,6 +81,14 @@ function runAudit(harnessId, scenarios, reportPath) {
         if (chain.trace[ti].silverConversationAction !== "update") issues.push("missing_update_action");
       }
     }
+    if (s.expectReadIntent && intent !== s.expectReadIntent) issues.push("read_intent_" + intent);
+    if (s.mustNotWrite && intent === "calendar.create") issues.push("query_write_leak");
+    if (s.readQueryNeed && turn.readQuery) {
+      const rq = String((turn.readQuery && turn.readQuery.intent) || "");
+      if (s.readQueryNeed.indexOf(rq) < 0) issues.push("read_query_mismatch");
+    } else if (s.readQueryNeed && !turn.readQuery) {
+      issues.push("read_query_missing");
+    }
 
     const ok = issues.length === 0;
     if (ok) pass++;
