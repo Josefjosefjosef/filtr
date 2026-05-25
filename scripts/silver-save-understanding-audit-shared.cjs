@@ -32,6 +32,7 @@ function runCase(eng, c, ctx) {
   const intent = turn.normalizedIntent || "";
   const title = draftField(turn, "title");
   const note = draftField(turn, "note") || draftField(turn, "body");
+  const location = draftField(turn, "location");
   const issues = [];
   const expect = c.expect || c.expectedIntent || "";
 
@@ -76,6 +77,19 @@ function runCase(eng, c, ctx) {
       }
     }
     if (!hit) issues.push("note_missing:" + tokens.join("|"));
+  }
+
+  if (c.locNeed) {
+    const f = foldCs(location);
+    const tokens = Array.isArray(c.locNeed) ? c.locNeed : [c.locNeed];
+    let hit = false;
+    for (let i = 0; i < tokens.length; i++) {
+      if (f.indexOf(foldCs(tokens[i])) >= 0) {
+        hit = true;
+        break;
+      }
+    }
+    if (!hit) issues.push("location_missing:" + tokens.join("|"));
   }
 
   if (c.companionNoteNeed && turn.silverCompanionNoteTurn) {

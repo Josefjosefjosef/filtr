@@ -38700,6 +38700,52 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return cleaned;
   }
 
+  function iuSilverPromoteEmbeddedNapisSiNoteFromRawV1(draft, raw, now) {
+    const rawS = String(raw || "").trim();
+    if (!rawS || !draft || draft.targetContainer !== "calendar") return;
+    const m =
+      rawS.match(/\bnapi[sš]\s+si\s+(.+?)\s+a\s+vlastn[eě]/iu) ||
+      rawS.match(/\bnapi[sš]\s+si\s+(.+?)(?:\s+a\s+vlastn[eě]|\s+vlastn[eě]\b|\s+jo\s+a\s+|$)/iu);
+    if (!m || !m[1]) return;
+    let tail = String(m[1]).trim();
+    tail = tail.replace(/\s+vlastn[eě]\s+.*$/iu, "").trim();
+    const noteBody = iuSilverSemanticCleanReminderNoteV1(tail);
+    if (!noteBody) return;
+    draft.note = noteBody.slice(0, 1000);
+    draft.meta.note = "certain";
+    if (/\bvlastn[eě]\b/i.test(rawS)) {
+      const fV = foldCs(rawS);
+      let relV = findRelativeDay(rawS, now, draft.meta && draft.meta.time === "certain", draft.time || null);
+      if (!relV || !relV.date) {
+        const wdV = fV.match(/\b(?:na\s+)?(pondeli|utor|stred|ctvrt|patek|sobot|nedeli)\b/);
+        if (wdV && wdV[1]) relV = findRelativeDay("v " + wdV[1], now, draft.meta && draft.meta.time === "certain", draft.time || null);
+      }
+      if (relV && relV.date) {
+        draft.date = relV.date;
+        draft.meta.date = "certain";
+      }
+    }
+    const tf = foldCs(String(draft.title || ""));
+    if (/\bnapis\w*\s+si\b/.test(tf) || /\btechn\w*\b/.test(tf) || /\bzelen\w*\b/.test(tf)) {
+      const headM = rawS.match(/^(.+?)\s+napi[sš]\s+si\b/iu);
+      if (headM && headM[1]) {
+        iuSilverCap55InferCalendarTitleFromRawV1(draft, headM[1]);
+        iuSilverInstructionPrefixTitleCleanerV3ApplyToDraftV1(draft, headM[1]);
+        iuSilverApplyExtractedEntitiesToCalendarDraft(draft, iuSilverExtractEntities(headM[1], now));
+      }
+    }
+  }
+
+  function iuSilverTryDoctorAppointmentCalendarEarlyTurnV1(raw, now, prevDraft) {
+    const f = foldCs(String(raw || ""));
+    if (!/\b(doktor|zubar|lek[aá]ř)\w*\b/.test(f)) return null;
+    if (!/\b(pondeli|utor|stred|ctvrt|patek|sobot|nedeli|zitra|zejtra)\b/.test(f)) return null;
+    if (!/\bnapis\w*\s+si\b/.test(f) && !/\bpripomen\w*\s+mi\b/.test(f)) return null;
+    const calTurn = iuSilverBuildCalendarCreateTurn(raw, now, prevDraft || createEmptyDraft(), raw);
+    if (calTurn && calTurn.normalizedIntent === "calendar.create") return calTurn;
+    return null;
+  }
+
   function iuSilverBuildCalendarCreateTurn(raw, now, prevDraft, rawFullForFieldCleanupOpt) {
     const folded = foldCs(raw);
     const prev = prevDraft || createEmptyDraft();
@@ -38747,6 +38793,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       rawOriginal: cleanupRawFull,
       now: now
     });
+    iuSilverPromoteEmbeddedNapisSiNoteFromRawV1(draft, cleanupRawFull, now);
 
     let processingState = "NEEDS_CLARIFICATION";
     if (draft.meta.date === "certain" && draft.meta.time === "certain" && draft.meta.title === "certain" && String(draft.title || "").trim()) {
@@ -50398,6 +50445,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         return null;
       }
     }
+    if (
+      /\b(doktor|zubar|lek[aá]ř)\w*\b/.test(f) &&
+      /\b(pondeli|utor|stred|ctvrt|patek|sobot|nedeli|zitra|zejtra)\b/.test(f) &&
+      /\bnapis\w*\s+si\b/.test(f)
+    ) {
+      return null;
+    }
     const own = iuSilverTaskCalendarOwnershipEngineV1Folded(f, r);
     if (own !== "task") return null;
     if (!iuSilverHasTaskActionVerb(f) && !IU_SILVER_REMINDER_TASK_DOMINANCE_RE_V1.test(f)) return null;
@@ -54685,6 +54739,188 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
   }
 
+  const IU_SILVER_SAVE_PAYLOAD_INTELLIGENCE_V2_CREATED = true;
+
+  function iuSilverCalendarContinuationUpdateTurn(prevDraft, now, mutateFn) {
+    const d = cloneDraft(prevDraft);
+    d.targetContainer = "calendar";
+    d.activeCalendarSession = true;
+    if (typeof mutateFn === "function") mutateFn(d);
+    iuSilverSanitizeDraftTitle(d);
+    iuSilverCleanCalendarTitleTemporalLeakV1(d);
+    iuSilverCleanDraftFieldRawCommandWrapperV1(d, "");
+    const ps = processingStateFromDraft(d);
+    const ap = buildAssistantParts(d, ps);
+    return {
+      normalizedIntent: "calendar.create",
+      targetContainer: "calendar",
+      processingState: ps,
+      clarificationReason: null,
+      futureIntentCandidate: null,
+      readQuery: null,
+      readAnswer: null,
+      extractedFields: {},
+      missingFields: computeMissing(d),
+      ambiguousFields: [],
+      userFacingSummary: "",
+      assistantLead: ap.assistantLead,
+      clarificationText: ap.clarification,
+      draft: d,
+      silverConversationAction: "update",
+      savePayloadIntelligenceV2: IU_SILVER_SAVE_PAYLOAD_INTELLIGENCE_V2_CREATED
+    };
+  }
+
+  function iuSilverCalendarContinuationEligibleV1(prev, conv) {
+    const p = prev || createEmptyDraft();
+    const c = conv || IU_SILVER_CONVERSATION_V12;
+    if (p.targetContainer !== "calendar") return false;
+    const hasTitle = String(p.title || "").trim().length > 1;
+    if (!hasTitle) return false;
+    return !!(
+      p.activeCalendarSession === true ||
+      c.lastDraftType === "calendar" ||
+      c.lastAssistantIntent === "calendar.create"
+    );
+  }
+
+  function iuSilverParseCalendarContinuationNoteTailV1(raw) {
+    const rawS = String(raw || "").trim();
+    if (!rawS) return "";
+    const patterns = [
+      /^\s*a\s+(?:je[sš]?t[eě]\s+)?(?:napi[sš]\s+si|pripomen(?:\s+mi)?)\s*(?:že\s+|ze\s+)?(.+)$/iu,
+      /^\s*a\s+p[rř]ipome[nň]\s+mi\s+(.+)$/iu,
+      /^\s*a\s+(?:vezmi|vezmu|vezu|m[aá]m\s+vz[ií]t)\s+(.+)$/iu,
+      /^\s*(?:napi[sš]\s+si|pripomen(?:\s+mi)?)\s*(?:že\s+|ze\s+)?(.+)$/iu,
+      /^\s*p[rř]idej\s+pozn[aá]mku\s+(?:že\s+|ze\s+)?(.+)$/iu,
+      /^\s*a\s+(?:je[sš]?t[eě]\s+)?(?:tam\s+)?(?:napis|napi[sš])(?:\s+tam)?\s*(?:že\s+|ze\s+)?(.+)$/iu
+    ];
+    for (let i = 0; i < patterns.length; i++) {
+      const m = rawS.match(patterns[i]);
+      if (m && m[1]) return iuSilverSemanticCleanReminderNoteV1(String(m[1]).trim());
+    }
+    return "";
+  }
+
+  function iuSilverSavePayloadIntelligenceFollowupV1(raw, now, prev) {
+    const p = prev || createEmptyDraft();
+    const c = IU_SILVER_CONVERSATION_V12;
+    const f = foldCs(raw);
+    const rawS = String(raw || "").trim();
+    if (!rawS || !iuSilverCalendarContinuationEligibleV1(p, c)) return null;
+
+    const timeChange =
+      f.match(/^\s*(?:a\s+)?(?:zmen|zmenit|zm[eě][nň])\s+cas\s+na\s+(\d{1,2})(?:\s*:\s*(\d{2}))?/) ||
+      f.match(/^\s*(?:a\s+)?(?:zmen|zmenit|zm[eě][nň])\s+cas\s+na\s+(\d{1,2})\s*hod/);
+    if (timeChange) {
+      const hh = Math.min(23, Math.max(0, Number(timeChange[1])));
+      const mm = timeChange[2] != null && timeChange[2] !== "" ? Math.min(59, Math.max(0, Number(timeChange[2]))) : 0;
+      const tFix = pad(hh) + ":" + pad(mm);
+      return iuSilverCalendarContinuationUpdateTurn(p, now, function (d) {
+        d.time = tFix;
+        d.meta.time = "certain";
+      });
+    }
+
+    const thOnly = findTime(rawS, now, rawS);
+    const timeOnlyFrag =
+      /^\s*(?:ve|v)\s+\d{1,2}/.test(f) ||
+      /^\s*(?:ve|v)\s+\d{1,2}\s*hod/.test(f) ||
+      /^\s*v\s+\d{1,2}\s*rano/.test(f);
+    if (timeOnlyFrag && thOnly && thOnly.time && !iuSilverHasWriteVerb(f)) {
+      return iuSilverCalendarContinuationUpdateTurn(p, now, function (d) {
+        const keepDate = String(p.date || d.date || "").slice(0, 10);
+        d.time = thOnly.time;
+        d.meta.time = "certain";
+        if (keepDate) {
+          d.date = keepDate;
+          d.meta.date = "certain";
+        }
+      });
+    }
+
+    if (/\bvlastn[eě]\b/.test(f)) {
+      let rel = null;
+      const negSwap = f.match(
+        /\b(?:ne\s+)?(?:zitra|zejtra|zittra)\b[^]{0,48}?\b(?:ale\s+)?(?:v\s+)?(patek|pondeli|utor|stred|ctvrt|sobot|nedeli)\b/
+      );
+      if (negSwap && negSwap[1]) {
+        rel = findRelativeDay("v " + negSwap[1], now, p.meta && p.meta.time === "certain", p.time || null);
+      }
+      if (!rel || !rel.date) rel = findRelativeDay(rawS, now, p.meta && p.meta.time === "certain", p.time || null);
+      if (!rel || !rel.date) {
+        const wd = f.match(/\b(patek|pondeli|utor|stred|ctvrt|sobot|nedeli)\b/);
+        if (wd && wd[1]) rel = findRelativeDay("v " + wd[1], now, p.meta && p.meta.time === "certain", p.time || null);
+      }
+      if (rel && rel.date) {
+        return iuSilverCalendarContinuationUpdateTurn(p, now, function (d) {
+          d.date = rel.date;
+          d.meta.date = "certain";
+        });
+      }
+    }
+
+    const locMove = rawS.match(/^\s*(?:p[rř]esu[nň]|presun)\s+(?:to\s+)?na\s+(.+)$/iu);
+    const locAddr =
+      rawS.match(/^\s*a\s+je[sš]?t[eě]\s+tam\s+dej\s+adresu\s+(.+)$/iu) ||
+      rawS.match(/^\s*(?:a\s+)?(?:je[sš]?t[eě]\s+)?tam\s+dej\s+adresu\s+(.+)$/iu) ||
+      rawS.match(/^\s*(?:zmen|zm[eě][nň])\s+adresu\s+(?:na\s+)?(.+)$/iu);
+    const locNa = rawS.match(/^\s*na\s+(.+)$/iu);
+    let locRaw = "";
+    if (locMove && locMove[1]) locRaw = String(locMove[1]).trim();
+    else if (locAddr && locAddr[1]) locRaw = String(locAddr[1]).trim();
+    else if (locNa && locNa[1] && rawS.split(/\s+/).length <= 6 && !iuSilverHasWriteVerb(f)) locRaw = String(locNa[1]).trim();
+    if (locRaw) {
+      const entL = iuSilverExtractEntities("na " + locRaw, now);
+      let locNorm =
+        entL && entL.locationNormalized
+          ? String(entL.locationNormalized || "").trim()
+          : iuSilverNormalizeWs(locRaw).slice(0, 200);
+      if (locMove && locNorm && locNorm.split(/\s+/).length <= 3) {
+        locNorm = iuSilverNormalizeWs(locRaw).slice(0, 200);
+      }
+      if (locNorm) {
+        return iuSilverCalendarContinuationUpdateTurn(p, now, function (d) {
+          const keepTitle = String(p.title || d.title || "").trim();
+          if (keepTitle) {
+            d.title = keepTitle.slice(0, 200);
+            d.meta.title = "certain";
+          }
+          d.location = locNorm;
+          d.address = locNorm;
+          d.meta.location = "certain";
+        });
+      }
+    }
+
+    const noteTail = iuSilverParseCalendarContinuationNoteTailV1(rawS);
+    if (noteTail && !/^\s*a\s+je[sš]?t[eě]\s+tam\s+dej\s+adresu\b/i.test(rawS)) {
+      return iuSilverCalendarContinuationUpdateTurn(p, now, function (d) {
+        const prevNote = String(d.note || "").trim();
+        d.note = prevNote ? iuSilverNormalizeWs(prevNote + " " + noteTail) : noteTail;
+        d.meta.note = "certain";
+      });
+    }
+
+    const sPerson = rawS.match(/^\s*s\s+([A-Za-zÁČĚÍŇÓŘŠŤÚŮÝŽ][\wáčďěíňóřšťúůýž.-]{1,40})\s*$/iu);
+    if (sPerson && sPerson[1]) {
+      const base = String(p.title || "").trim();
+      const bf = foldCs(base);
+      if (
+        /^(sch[uů]zka|porada|doktor|servis|schuzka)\b/.test(bf) &&
+        bf.indexOf(" s ") < 0 &&
+        bf.indexOf(foldCs(sPerson[1])) < 0
+      ) {
+        return iuSilverCalendarContinuationUpdateTurn(p, now, function (d) {
+          d.title = (base + " s " + String(sPerson[1]).trim()).slice(0, 200);
+          d.meta.title = "certain";
+        });
+      }
+    }
+
+    return null;
+  }
+
   function iuSilverTaskContinuationRaw(prevTitle, rest) {
     const r = String(rest || "").trim();
     if (!r) return "";
@@ -54705,6 +54941,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const c = IU_SILVER_CONVERSATION_V12;
     const f = foldCs(raw);
     const p = prev || createEmptyDraft();
+
+    const spiFollow = iuSilverSavePayloadIntelligenceFollowupV1(raw, now, p);
+    if (spiFollow) return spiFollow;
 
     if (c.awaitingField === "noteText" && String(raw || "").trim()) {
       const emptyAgain = iuSilverTryParseExplicitNoteCreate(raw);
@@ -54832,7 +55071,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     const calNoteContTail = (function () {
       const rf = foldCs(String(raw || "").trim());
-      const m = rf.match(/^\s*a\s+(?:jeste\s+)?(?:tam\s+)?(?:napis|dej)(?:\s+tam)?\s*(?:ze\s+)?(.+)$/i);
+      const m = rf.match(/^\s*a\s+(?:je[sš]?t[eě]\s+)?(?:tam\s+)?(?:napis|dej)(?!\s+adresu)(?:\s+tam)?\s*(?:ze\s+)?(.+)$/i);
       if (!m || !m[1]) return "";
       const rawZe = String(raw || "").trim().match(/(?:že|ze)\s+(.+)$/i);
       return rawZe && rawZe[1] ? String(rawZe[1]).trim() : String(m[1]).trim();
@@ -55565,11 +55804,20 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       raw = iuSilverHumanSpokenSaveCleanupV1(raw);
     }
     let folded = foldCs(raw);
+    {
+      const prevConvEarly = prevDraft || createEmptyDraft();
+      const convEarlyFollow = iuSilverConversationTryFollowup(raw, now, prevConvEarly);
+      if (convEarlyFollow) return convEarlyFollow;
+    }
     if (iuSilverSaveUnderstandingEarlyLaneEligibleV1(raw, folded)) {
+      const docApptEarly = iuSilverTryDoctorAppointmentCalendarEarlyTurnV1(raw, now, prevDraft || createEmptyDraft());
+      if (docApptEarly) return docApptEarly;
       const multiEarlyV1 = iuSilverTrySaveUnderstandingMultiModuleEarlyTurnV1(raw, now, prevDraft || createEmptyDraft());
       if (multiEarlyV1) return multiEarlyV1;
-      const noteEarlyV1 = iuSilverTryExplicitNoteWriteEarlyTurnV1(raw, now);
-      if (noteEarlyV1) return noteEarlyV1;
+      if (!iuSilverCalendarContinuationEligibleV1(prevDraft || createEmptyDraft(), IU_SILVER_CONVERSATION_V12)) {
+        const noteEarlyV1 = iuSilverTryExplicitNoteWriteEarlyTurnV1(raw, now);
+        if (noteEarlyV1) return noteEarlyV1;
+      }
       const remTaskEarlyV1 = iuSilverTryReminderSemanticTaskDominanceEarlyTurnV1(raw, now, prevDraft || createEmptyDraft());
       if (remTaskEarlyV1) return remTaskEarlyV1;
       const ownTaskEarlyV1 = iuSilverTryTaskCalendarOwnershipTaskEarlyTurnV1(raw, now, prevDraft || createEmptyDraft());
