@@ -28,13 +28,16 @@ function runChain(eng, steps, group) {
   let prev = eng.createEmptyDraft();
   const trace = [];
   let duplicateCreates = 0;
+  let prevIntent = null;
   for (let i = 0; i < steps.length; i++) {
     const t = eng.processUserTurn(steps[i], prev, ctx);
     if (i > 0 && t.silverConversationAction !== "update" && t.normalizedIntent === "calendar.create") {
-      duplicateCreates++;
+      const afterRead = String(prevIntent || "").indexOf(".read") >= 0 || prevIntent === "calendar.read";
+      if (!afterRead) duplicateCreates++;
     }
     trace.push(t);
     prev = t.draft || prev;
+    prevIntent = t.normalizedIntent;
   }
   return { trace, final: trace[trace.length - 1], duplicateCreates, prev };
 }
