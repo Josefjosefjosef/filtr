@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 "use strict";
+
 const { execSync } = require("child_process");
 const path = require("path");
+
 const REPO = path.resolve(__dirname, "..");
 const SCRIPT = path.join(__dirname, "silver-chaotic-spoken-save-slot-ownership-audit-v1.cjs");
 
@@ -25,9 +27,11 @@ function main() {
   const eventLeak = /event_note_leaked_to_notes_create_count=0/.test(out);
   const storageFp = /storage_disambiguation_false_positive_count=0/.test(out);
   const ok = eventLeak && storageFp && acc >= 76.5;
-  console.log("=== SILVER_CHAOTIC_SPOKEN_SAVE_SLOT_OWNERSHIP_REGRESSION_GUARD ===");
+  console.log("=== SILVER_SLOT_OWNERSHIP_CONTRACT_GUARD ===");
+  console.log("guard_id=silver_slot_ownership_contract_guard_v2");
+  console.log("chaotic_save_slot_ownership_accuracy=" + acc);
   console.log("PASS_FAIL=" + (ok ? "PASS" : "FAIL"));
-  console.log("=== END_SILVER_CHAOTIC_SPOKEN_SAVE_SLOT_OWNERSHIP_REGRESSION_GUARD ===");
+  console.log("=== END_SILVER_SLOT_OWNERSHIP_CONTRACT_GUARD ===");
   process.exit(ok ? 0 : 1);
 }
 
