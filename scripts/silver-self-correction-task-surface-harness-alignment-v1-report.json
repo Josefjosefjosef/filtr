@@ -1,0 +1,22 @@
+{
+  "harness_id": "silver_self_correction_task_surface_harness_alignment_v1",
+  "generated_at": "2026-05-26T23:44:38.797Z",
+  "main_commit": "e03dac4bbbfeeb059e3e760b5f01bfe7f81481aa",
+  "cluster": "self_correction_update_task",
+  "cases_total": 1000,
+  "pass_count": 1000,
+  "fail_count": 0,
+  "harness_problem_count": 0,
+  "gold_label_problem_count": 0,
+  "true_engine_bug_count": 0,
+  "safe_clarification_count": 0,
+  "expected_unknown_count": 0,
+  "calendar_create_leak_count": 0,
+  "write_leak_count": 0,
+  "root_cause_buckets": {
+    "pass": 1000
+  },
+  "fix_type": "scripts_only_harness_alignment",
+  "replay_guard": "silver-self-correction-update-task-guard-v1.cjs",
+  "PASS_FAIL": "PASS"
+}
