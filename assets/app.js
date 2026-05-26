@@ -54573,7 +54573,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     activeDraftKey: null,
     agendaContext: null,
     pendingInterrupt: null,
-    lastWasReadQuery: false
+    lastWasReadQuery: false,
+    sessionTurnCount: 0,
+    historicalAnchors: [],
+    draftLifecycle: {},
+    compressedTopics: []
   };
 
   function iuSilverSessionEntitiesClear() {
@@ -54598,6 +54602,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     IU_SILVER_CONVERSATION_V12.agendaContext = null;
     IU_SILVER_CONVERSATION_V12.pendingInterrupt = null;
     IU_SILVER_CONVERSATION_V12.lastWasReadQuery = false;
+    IU_SILVER_CONVERSATION_V12.sessionTurnCount = 0;
+    IU_SILVER_CONVERSATION_V12.historicalAnchors = [];
+    IU_SILVER_CONVERSATION_V12.draftLifecycle = {};
+    IU_SILVER_CONVERSATION_V12.compressedTopics = [];
     iuSilverSessionEntitiesClear();
   }
 
@@ -54624,7 +54632,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       agendaContext: IU_SILVER_CONVERSATION_V12.agendaContext
         ? Object.assign({}, IU_SILVER_CONVERSATION_V12.agendaContext)
         : null,
-      lastWasReadQuery: IU_SILVER_CONVERSATION_V12.lastWasReadQuery
+      lastWasReadQuery: IU_SILVER_CONVERSATION_V12.lastWasReadQuery,
+      sessionTurnCount: IU_SILVER_CONVERSATION_V12.sessionTurnCount || 0,
+      historicalAnchorCount: Array.isArray(IU_SILVER_CONVERSATION_V12.historicalAnchors)
+        ? IU_SILVER_CONVERSATION_V12.historicalAnchors.length
+        : 0
     };
   }
 
@@ -54961,7 +54973,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const c = IU_SILVER_CONVERSATION_V12;
     if (!Array.isArray(c.draftRegistry)) c.draftRegistry = [];
     const key = iuSilverLineLDraftRegistryKey(draft);
-    const entry = { key: key, draft: cloneDraft(draft), titleFold: foldCs(title), ts: Date.now() };
+    const entry = { key: key, draft: cloneDraft(draft), titleFold: foldCs(title), ts: Date.now(), pinned: false };
+    const tf = entry.titleFold;
+    if (/\bkub\b|\bdoktor\b|\bservis\b|\bnovotn\b/.test(tf)) entry.pinned = true;
     let idx = -1;
     for (let i = 0; i < c.draftRegistry.length; i++) {
       if (c.draftRegistry[i].key === key) {
@@ -54971,7 +54985,17 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     if (idx >= 0) c.draftRegistry[idx] = entry;
     else c.draftRegistry.push(entry);
-    if (c.draftRegistry.length > 8) c.draftRegistry.shift();
+    while (c.draftRegistry.length > 12) {
+      let dropIdx = -1;
+      for (let j = 0; j < c.draftRegistry.length; j++) {
+        if (!c.draftRegistry[j].pinned) {
+          dropIdx = j;
+          break;
+        }
+      }
+      if (dropIdx < 0) dropIdx = 0;
+      c.draftRegistry.splice(dropIdx, 1);
+    }
     c.activeDraftKey = key;
   }
 
@@ -55016,6 +55040,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
       if (prev && prev.targetContainer === "calendar" && String(prev.title || "").trim()) return cloneDraft(prev);
       if (reg.length) return cloneDraft(reg[reg.length - 1].draft);
+    }
+    if (/^\s*k\s+servisu\b/.test(f) || (/\bservis/.test(f) && /\b(napis|napi[sš]|techn|dej|p[rř]idej)\b/.test(f))) {
+      for (let i = reg.length - 1; i >= 0; i--) {
+        if (/\bservis/.test(reg[i].titleFold)) return cloneDraft(reg[i].draft);
+      }
     }
     const schNamed = f.match(/\bsch[uů]z(?:ka|ce|ku)\s+(?:s\s+)?(\w{3,20})/);
     if (schNamed && schNamed[1]) {
@@ -55363,6 +55392,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverLineLPreCapEligible(raw0, prevDraft) {
     const p = prevDraft || createEmptyDraft();
     const c = IU_SILVER_CONVERSATION_V12;
+    if (iuSilverLineMPreCapEligible(raw0, prevDraft)) return true;
     if (iuSilverLineLIsInterruptOnly(raw0)) return true;
     if (iuSilverLineLAgendaReadQueryEligible(raw0)) return true;
     if (c.lastWasReadQuery) return true;
@@ -55428,6 +55458,496 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       c.lastWasReadQuery = false;
       iuSilverLineLDraftRegistryUpsert(turn.draft);
     }
+    iuSilverLineMPostTurnSync(turn, rawText);
+  }
+
+  /** Line M — Long-Term Conversational Intelligence + Session Memory + Historical Context V1 */
+  const IU_SILVER_LINE_M_V1 = true;
+  const IU_SILVER_LINE_M_MAX_TURNS = 48;
+  const IU_SILVER_LINE_M_MAX_ANCHORS = 12;
+
+  function iuSilverLineMSetDraftLifecycle(draft, state) {
+    if (!draft || draft.targetContainer !== "calendar") return;
+    const key = iuSilverLineLDraftRegistryKey(draft);
+    if (!key) return;
+    const c = IU_SILVER_CONVERSATION_V12;
+    if (!c.draftLifecycle || typeof c.draftLifecycle !== "object") c.draftLifecycle = {};
+    c.draftLifecycle[key] = state;
+  }
+
+  function iuSilverLineMGetDraftLifecycle(draft) {
+    const key = iuSilverLineLDraftRegistryKey(draft);
+    const c = IU_SILVER_CONVERSATION_V12;
+    if (!key || !c.draftLifecycle) return "active";
+    return c.draftLifecycle[key] || "active";
+  }
+
+  function iuSilverLineMRegisterHistoricalAnchor(draft, rawText) {
+    const c = IU_SILVER_CONVERSATION_V12;
+    if (!Array.isArray(c.historicalAnchors)) c.historicalAnchors = [];
+    const key = iuSilverLineLDraftRegistryKey(draft);
+    const f = foldCs(String(rawText || ""));
+    const dateISO = String((draft && draft.date) || "").slice(0, 10);
+    const titleFold = foldCs(String((draft && draft.title) || ""));
+    const labels = [];
+    if (/\bvcera\b|\bvcerajs/.test(f)) labels.push("vcera");
+    if (/\brano\b/.test(f)) labels.push("rano");
+    if (/\br[aá]no\b/.test(String(rawText || ""))) labels.push("rano");
+    if (/\bv\s+pondeli\b|\bpondeli\b/.test(f)) labels.push("pondeli");
+    if (/\bvcera\b|\brano\b|\bpondeli\b/.test(f) || labels.length) {
+      for (let i = 0; i < labels.length; i++) {
+        c.historicalAnchors.push({
+          label: labels[i],
+          dateISO: dateISO,
+          draftKey: key,
+          titleFold: titleFold,
+          ts: Date.now()
+        });
+      }
+      if (!labels.length && dateISO) {
+        c.historicalAnchors.push({ label: "historical", dateISO: dateISO, draftKey: key, titleFold: titleFold, ts: Date.now() });
+      }
+      while (c.historicalAnchors.length > IU_SILVER_LINE_M_MAX_ANCHORS) c.historicalAnchors.shift();
+    }
+  }
+
+  function iuSilverLineMFindHistoricalDraft(raw, prev) {
+    const f = foldCs(raw);
+    const c = IU_SILVER_CONVERSATION_V12;
+    const anchors = Array.isArray(c.historicalAnchors) ? c.historicalAnchors : [];
+    const reg = Array.isArray(c.draftRegistry) ? c.draftRegistry : [];
+    const byKey = function (k) {
+      for (let i = reg.length - 1; i >= 0; i--) {
+        if (reg[i].key === k) return cloneDraft(reg[i].draft);
+      }
+      return null;
+    };
+    if (/\bvcera\b|\bvcerajs/.test(f)) {
+      for (let i = anchors.length - 1; i >= 0; i--) {
+        if (anchors[i].label === "vcera") return byKey(anchors[i].draftKey) || iuSilverLineLDraftRegistryFind("novotn", prev);
+      }
+    }
+    if (/\brano\b/.test(f) && /\bdoktor/.test(f)) {
+      for (let i = reg.length - 1; i >= 0; i--) {
+        if (/\bdoktor/.test(reg[i].titleFold)) return cloneDraft(reg[i].draft);
+      }
+    }
+  if (/\bv\s+pondeli\b|\bpondeli\b/.test(f) && /\bservis/.test(f)) {
+      for (let i = anchors.length - 1; i >= 0; i--) {
+        if (anchors[i].label === "pondeli" && /\bservis/.test(anchors[i].titleFold)) return byKey(anchors[i].draftKey);
+      }
+      return iuSilverLineLDraftRegistryFind("servis", prev);
+    }
+    if (/\btomu\s+co\s+jsem\s+(?:pridal|pridala|resil|resila)\s+rano\b/.test(f) || /\brano\b/.test(f)) {
+      for (let i = reg.length - 1; i >= 0; i--) {
+        if (/\bdoktor/.test(reg[i].titleFold)) return cloneDraft(reg[i].draft);
+      }
+    }
+    return null;
+  }
+
+  function iuSilverLineMStripConversationalLead(raw) {
+    return String(raw || "")
+      .replace(/^(?:no\s+)?(?:hele\s+|proste\s+|prost[eě]\s+|silvr?\s+|silver\s+)+/iu, "")
+      .replace(/^\s*(?:jo\s+a\s+|a\s+)/iu, "")
+      .trim();
+  }
+
+  function iuSilverLineMIsNewCalendarEventUtterance(raw) {
+    const stripped = iuSilverLineMStripConversationalLead(raw);
+    const f = foldCs(stripped);
+    if (!f) return false;
+    if (/\b(zitra|zejtra|zittra|vcera|vcerajs|pondeli|utor|stred|ctvrt|patek|sobot|nedeli|rano)\b/.test(f)) {
+      if (/\b(schuz|doktor|servis|porad|kontrol|obed)\b/.test(f)) return true;
+    }
+    if (/^(?:z[ií]tra|zejtra|v\s+p[aá]tek|r[aá]no|v\s+pond[eě]l[ií])\s+[A-Za-zÁČĚÍŇÓŘŠŤÚŮÝŽ]/iu.test(stripped)) return true;
+    return false;
+  }
+
+  function iuSilverLineMTryBarePersonDateCreate(raw, now) {
+    const stripped = iuSilverLineMStripConversationalLead(raw);
+    const f = foldCs(stripped);
+    const personDate = stripped.match(
+      /^(z[ií]tra|zejtra|zittra|v\s+p[aá]tek|r[aá]no|v\s+pond[eě]l[ií]|ve\s+[\u010dt]tvrtek)\s+([A-Za-zÁČĚÍŇÓŘŠŤÚŮÝŽ][\wáčďěíňóřšťúůýž.-]{2,30})$/iu
+    );
+    if (personDate && personDate[2]) {
+      const who = String(personDate[2]).trim();
+      const wf = foldCs(who);
+      if (!/^(schuz|doktor|servis|porad|ukol|hotovo|vrat)/.test(wf)) {
+        return iuSilverBuildCalendarCreateTurn(String(personDate[1]) + " schůzka s " + who, now, createEmptyDraft(), raw);
+      }
+    }
+    if (/^(doktor|servis(?:\s+auta)?)$/i.test(stripped)) {
+      return iuSilverBuildCalendarCreateTurn(stripped, now, createEmptyDraft(), raw);
+    }
+    if (/^servis\s+auta$/i.test(f) || /^doktor\s+v\s+p[aá]tek$/i.test(stripped)) {
+      return iuSilverBuildCalendarCreateTurn(stripped, now, createEmptyDraft(), raw);
+    }
+    return null;
+  }
+
+  function iuSilverLineMTryHistoricalCalendarCreate(raw, now) {
+    const stripped = iuSilverLineMStripConversationalLead(raw);
+    const f = foldCs(stripped);
+    if (!/\b(schuz\w*|doktor\w*|servis\w*|porad\w*)\b/.test(f)) return null;
+    if (
+      /\b(vcera|vcerajs|rano|v\s+pondeli|v\s+pondel[ií]|r[aá]no)\b/.test(f) ||
+      /^\s*(vcera|vcerajs|rano|r[aá]no|v\s+pond[eě]l[ií])\s+/i.test(stripped)
+    ) {
+      return iuSilverBuildCalendarCreateTurn(stripped, now, createEmptyDraft(), raw);
+    }
+    return null;
+  }
+
+  function iuSilverLineMAgendaSummaryEligible(raw) {
+    const f = foldCs(String(raw || "").trim());
+    if (!f) return false;
+    if (/\bale\s+ne\b/.test(f) || /\bne\s+v\s+kalend/.test(f)) return false;
+    return (
+      /^\s*shrn(?:i|u|out)?\s+(?:mi\s+)?p[aá]tek(?:\s*[?.!]*)?\s*$/.test(f) ||
+      /^\s*shrn(?:i|u|out)?\s+(?:mi\s+)?(?:z[ií]tra|zittra|zejtra|pondeli|utor|stred|ctvrt|patek|sobot|nedeli)(?:\s*[?.!]*)?\s*$/.test(f) ||
+      /^\s*jak\s+vypad[aá]\s+tento\s+t[yý]den(?:\s*[?.!]*)?\s*$/.test(f) ||
+      /^\s*co\s+m[aá]m\s+kolem\s+(doktor\w*|servis\w*|schuz\w*)(?:\s*[?.!]*)?\s*$/.test(f) ||
+      /^\s*co\s+m[aá]m\s+(?:u\s+)?(?:k\s+)?doktor\w*(?:\s*[?.!]*)?\s*$/.test(f)
+    );
+  }
+
+  function iuSilverLineMAgendaSummaryReadTurnV1(raw, now, ctx) {
+    const f = foldCs(String(raw || "").trim());
+    if (!f || !iuSilverLineMAgendaSummaryEligible(raw)) return null;
+    const empty = createEmptyDraft();
+    if (/^\s*shrn(?:i|u|out)?\s+(?:mi\s+)?p[aá]tek(?:\s*[?.!]*)?\s*$/.test(f)) {
+      const rel = findRelativeDay("v pátek", now, false, null);
+      return iuSilverBuildCalendarReadFromSpecTurnV1(
+        { intent: "agenda_for_day", dateISO: rel && rel.date ? rel.date : null, filter: null },
+        ctx || {},
+        empty,
+        now
+      );
+    }
+    if (/^\s*jak\s+vypad[aá]\s+tento\s+t[yý]den(?:\s*[?.!]*)?\s*$/.test(f)) {
+      return iuSilverBuildCalendarReadFromSpecTurnV1({ intent: "agenda_for_week", filter: null }, ctx || {}, empty, now);
+    }
+    const kolem = f.match(/^\s*co\s+m[aá]m\s+kolem\s+(doktor\w*|servis\w*|schuz\w*)(?:\s*[?.!]*)?\s*$/);
+    if (kolem && kolem[1]) {
+      const q = String(kolem[1]).replace(/a$/, "").slice(0, 24);
+      return iuSilverBuildCalendarReadFromSpecTurnV1(
+        {
+          intent: "find_by_title",
+          query: q,
+          normalizedQuery: q,
+          diacriticInsensitive: true,
+          queryFolded: foldCs(q),
+          preferFuture: true
+        },
+        ctx || {},
+        empty,
+        now
+      );
+    }
+    if (/^\s*co\s+m[aá]m\s+(?:u\s+)?(?:k\s+)?doktor\w*(?:\s*[?.!]*)?\s*$/.test(f)) {
+      return iuSilverBuildCalendarReadFromSpecTurnV1(
+        {
+          intent: "find_by_title",
+          query: "doktor",
+          normalizedQuery: "doktor",
+          diacriticInsensitive: true,
+          queryFolded: "doktor",
+          preferFuture: true
+        },
+        ctx || {},
+        empty,
+        now
+      );
+    }
+    const shrnDay = f.match(/^\s*shrn(?:i|u|out)?\s+(?:mi\s+)?(z[ií]tra|zittra|zejtra|pondeli|utor|stred|ctvrt|patek|sobot|nedeli)(?:\s*[?.!]*)?\s*$/);
+    if (shrnDay && shrnDay[1]) {
+      const rel = findRelativeDay(String(shrnDay[1]), now, false, null);
+      return iuSilverBuildCalendarReadFromSpecTurnV1(
+        { intent: "agenda_for_day", dateISO: rel && rel.date ? rel.date : null, filter: null },
+        ctx || {},
+        empty,
+        now
+      );
+    }
+    return null;
+  }
+
+  function iuSilverLineMPreCapEligible(raw0, prevDraft) {
+    const f = foldCs(String(raw0 || "").trim());
+    if (!f) return false;
+    if (iuSilverLineMAgendaSummaryEligible(raw0)) return true;
+    if (/^(?:z[ií]tra|zejtra|v\s+p[aá]tek|r[aá]no)\s+[a-záčďéěíňóřšťúůýž]{2,30}$/.test(f)) return true;
+    if (/^\s*(?:vcera|vcerajs|rano|v\s+pondeli)\s+(?:schuz\w*|doktor\w*|servis\w*|porad\w*)/.test(f)) return true;
+    if (/^\s*(?:vrat\s+se\s+k|vra[tť]\s+se\s+k)\s+t[eé]\s+sch[uů]z/.test(f)) return true;
+    if (/^\s*hotovo\s*$/.test(f)) return true;
+    if (/^\s*k\s+servisu\s+(?:napi[sš]|dej|p[rř]idej)\b/.test(f)) return true;
+    if (/^\s*(?:a\s+)?(?:kub(?:ovi|a|u|em)?|doktor(?:ovi|a|em)?)\s+(?:notebook|vysled|techn|adres)/.test(f)) return true;
+    if (/^\s*te\s+sch[uů]zce\s+s\s+\w+/.test(f) && /\badres/.test(f)) return true;
+    if (/^\s*vlastn[eě]\s+(?:servis|doktor|schuz|zmen)/.test(f)) return true;
+    if (/^\s*(?:a\s+)?pridej\s+servis\b/.test(f)) return true;
+    if (/^\s*p[rř]idej\s+lokaci\b/.test(f)) return true;
+    if (/^\s*t[eé]\s+(?:minule\s+|vcerejsi\s+)?sch[uů]zce/.test(f)) return true;
+    const c = IU_SILVER_CONVERSATION_V12;
+    if ((c.sessionTurnCount || 0) >= 8) return true;
+    return false;
+  }
+
+  function iuSilverLineMConversationalEngineV1(raw, now, prev) {
+    const p = prev || createEmptyDraft();
+    const c = IU_SILVER_CONVERSATION_V12;
+    const f = foldCs(raw);
+    const rawS = String(raw || "").trim();
+    if (!rawS) return null;
+
+    const bareCreate = iuSilverLineMTryBarePersonDateCreate(rawS, now);
+    if (bareCreate) return bareCreate;
+
+    const histCreate = iuSilverLineMTryHistoricalCalendarCreate(rawS, now);
+    if (histCreate) return histCreate;
+
+    if (iuSilverLineMIsNewCalendarEventUtterance(rawS) && !/\bk\s+tomu\b/.test(f) && !/\bp[rř]idej\b/.test(f)) {
+      const stripped = iuSilverLineMStripConversationalLead(rawS);
+      if (/\b(schuz|doktor|servis|porad)\b/.test(foldCs(stripped))) {
+        return iuSilverBuildCalendarCreateTurn(stripped, now, createEmptyDraft(), rawS);
+      }
+    }
+
+    const resumeBack = rawS.match(/^\s*(?:vrat\s+se\s+k|vra[tť]\s+se\s+k)\s+(t[eé]\s+sch[uů]z(?:ka|ce|ku)?(?:\s+s\s+\w+)?)/iu);
+    if (resumeBack) {
+      const refDraft = iuSilverLineLDraftRegistryFind(rawS, p) || iuSilverLineMFindHistoricalDraft(rawS, p);
+      if (refDraft && iuSilverLineMGetDraftLifecycle(refDraft) !== "completed") {
+        c.activeDraftKey = iuSilverLineLDraftRegistryKey(refDraft);
+        iuSilverLineMSetDraftLifecycle(refDraft, "active");
+        const hold = iuSilverLineLContinuationUpdateTurn(refDraft, now, function () {});
+        hold.silverConversationAction = "update";
+        return hold;
+      }
+    }
+
+    if (/^\s*hotovo\s*$/.test(f)) {
+      const target = iuSilverLineLDraftRegistryFind("", p) || (p.targetContainer === "calendar" ? p : null);
+      if (target && String(target.title || "").trim()) {
+        iuSilverLineMSetDraftLifecycle(target, "completed");
+        const done = iuSilverLineLContinuationUpdateTurn(target, now, function () {});
+        done.silverConversationAction = "update";
+        done.processingState = "READY_TO_SAVE";
+        return done;
+      }
+    }
+
+    const kServisu = rawS.match(/^\s*k\s+servisu\s+(?:napi[sš]|dej|p[rř]idej)\s+(.+)$/iu);
+    if (kServisu && kServisu[1]) {
+      const refDraft = iuSilverLineLDraftRegistryFind("servis", p);
+      if (refDraft) {
+        const noteTail = iuSilverSemanticCleanReminderNoteV1(String(kServisu[1]).trim()) || String(kServisu[1]).trim();
+        c.activeDraftKey = iuSilverLineLDraftRegistryKey(refDraft);
+        return iuSilverLineLContinuationUpdateTurn(refDraft, now, function (d) {
+          d.note = noteTail;
+          d.meta.note = "certain";
+        });
+      }
+    }
+
+    const dativePerson = rawS.match(
+      /^\s*(?:a\s+)?(kub(?:ovi|a|u|em)?|doktor(?:ovi|a|em)?|novotn(?:ym|emu|ovi|eho)?)\s+(notebook|vysled\w*|techn\w*|adres\w*.*)$/iu
+    );
+    if (dativePerson && dativePerson[2]) {
+      const refDraft = iuSilverLineLDraftRegistryFind(String(dativePerson[1]), p);
+      if (refDraft) {
+        const tail = String(dativePerson[2]).trim();
+        const tailF = foldCs(tail);
+        c.activeDraftKey = iuSilverLineLDraftRegistryKey(refDraft);
+        if (/\badres/.test(tailF)) {
+          return iuSilverLineLContinuationUpdateTurn(refDraft, now, function (d) {
+            d.location = tail.slice(0, 200);
+            d.address = tail.slice(0, 200);
+            d.meta.location = "certain";
+          });
+        }
+        const noteTail = iuSilverSemanticCleanReminderNoteV1(tail) || tail;
+        return iuSilverLineLContinuationUpdateTurn(refDraft, now, function (d) {
+          const prevNote = String(d.note || "").trim();
+          d.note = prevNote ? iuSilverNormalizeWs(prevNote + " " + noteTail) : noteTail;
+          d.meta.note = "certain";
+        });
+      }
+    }
+
+    const schAddrOnly = rawS.match(/^\s*t[eé]\s+sch[uů]zce\s+(?:s\s+\w+\s+)?adresu(?:\s+(.+))?$/iu);
+    if (schAddrOnly) {
+      const refDraft = iuSilverLineLDraftRegistryFind(rawS, p);
+      if (refDraft) {
+        const addrTail = schAddrOnly[1] ? String(schAddrOnly[1]).trim() : "adresa";
+        c.activeDraftKey = iuSilverLineLDraftRegistryKey(refDraft);
+        return iuSilverLineLContinuationUpdateTurn(refDraft, now, function (d) {
+          d.location = addrTail.slice(0, 200);
+          d.address = addrTail.slice(0, 200);
+          d.meta.location = "certain";
+        });
+      }
+    }
+
+    const histRef =
+      rawS.match(/^\s*t[eé]\s+(?:minule\s+|vcerejsi\s+)?sch[uů]zce(?:\s+s\s+\w+)?\s+p[rř]idej\s+(.+)$/iu) ||
+      rawS.match(/^\s*t[eé]\s+sch[uů]zce(?:\s+s\s+\w+)?\s+p[rř]idej\s+(.+)$/iu);
+    if (histRef && histRef[1]) {
+      const refDraft = iuSilverLineMFindHistoricalDraft(rawS, p) || iuSilverLineLDraftRegistryFind(rawS, p);
+      if (refDraft) {
+        const noteTail = iuSilverSemanticCleanReminderNoteV1(String(histRef[1]).trim()) || String(histRef[1]).trim();
+        c.activeDraftKey = iuSilverLineLDraftRegistryKey(refDraft);
+        return iuSilverLineLContinuationUpdateTurn(refDraft, now, function (d) {
+          const prevNote = String(d.note || "").trim();
+          d.note = prevNote ? iuSilverNormalizeWs(prevNote + " " + noteTail) : noteTail;
+          d.meta.note = "certain";
+        });
+      }
+    }
+
+    if (/^\s*k\s+tomu\b/.test(f) && !/\bdoktor\b/.test(f) && p.targetContainer === "calendar" && /\bdoktor/.test(foldCs(String(p.title || "")))) {
+      const tail = rawS.replace(/^\s*k\s+tomu\s+/iu, "").trim();
+      const noteTail = iuSilverSemanticCleanReminderNoteV1(tail) || tail;
+      if (noteTail) {
+        return iuSilverLineLContinuationUpdateTurn(p, now, function (d) {
+          d.note = noteTail;
+          d.meta.note = "certain";
+        });
+      }
+    }
+
+    if (c.lastWasReadQuery && c.agendaContext && c.agendaContext.label) {
+      const agServ = rawS.match(/^\s*(?:a\s+)?(?:p[rř]idej|dej)\s+servis(?:\s+auta)?(?:\s*[!.]*)?\s*$/iu);
+      if (agServ) {
+        c.lastWasReadQuery = false;
+        const label = c.agendaContext.label || "zítra";
+        return iuSilverBuildCalendarCreateTurn(label + " servis auta", now, createEmptyDraft(), rawS);
+      }
+    }
+
+    if (/^\s*vlastn[eě]\s+servis\b/.test(f)) {
+      const refDraft = iuSilverLineLDraftRegistryFind("servis", p);
+      if (refDraft) {
+        const rel = findRelativeDay(rawS, now, refDraft.meta && refDraft.meta.time === "certain", refDraft.time || null);
+        if (rel && rel.date) {
+          c.activeDraftKey = iuSilverLineLDraftRegistryKey(refDraft);
+          return iuSilverLineLContinuationUpdateTurn(refDraft, now, function (d) {
+            d.date = rel.date;
+            d.meta.date = "certain";
+          });
+        }
+      }
+    }
+
+    if (/^\s*vlastn[eě]\s+zm[eě][nň]\s+cas\b/.test(f)) {
+      const refDraft =
+        iuSilverLineLDraftRegistryFind("doktor", p) ||
+        (iuSilverLineMGetDraftLifecycle(p) === "completed" ? iuSilverLineLDraftRegistryFind("doktor", p) : null) ||
+        p;
+      if (refDraft && refDraft.targetContainer === "calendar") {
+        const timeChange = f.match(/(?:zmen|zmenit|zmen)\s+cas\s+na\s+(\d{1,2})(?:\s*:\s*(\d{2}))?/);
+        if (timeChange) {
+          const hh = Math.min(23, Math.max(0, Number(timeChange[1])));
+          const mm = timeChange[2] != null && timeChange[2] !== "" ? Math.min(59, Math.max(0, Number(timeChange[2]))) : 0;
+          c.activeDraftKey = iuSilverLineLDraftRegistryKey(refDraft);
+          iuSilverLineMSetDraftLifecycle(refDraft, "active");
+          return iuSilverLineLContinuationUpdateTurn(refDraft, now, function (d) {
+            d.time = pad(hh) + ":" + pad(mm);
+            d.meta.time = "certain";
+          });
+        }
+      }
+    }
+
+    if (/^\s*p[rř]idej\s+lokaci\b/.test(f) || /^\s*p[rř]idej\s+lokaci\s+/i.test(rawS)) {
+      const reg = Array.isArray(c.draftRegistry) ? c.draftRegistry : [];
+      let refDraft = null;
+      if (c.activeDraftKey) {
+        for (let ri = 0; ri < reg.length; ri++) {
+          if (reg[ri].key === c.activeDraftKey) {
+            refDraft = cloneDraft(reg[ri].draft);
+            break;
+          }
+        }
+      }
+      if (!refDraft) refDraft = iuSilverLineLDraftRegistryFind("kub", p) || iuSilverLineLDraftRegistryFind(rawS, p);
+      if (!refDraft && p.targetContainer === "calendar" && String(p.title || "").trim()) refDraft = p;
+      if (refDraft && refDraft.targetContainer === "calendar") {
+        const locM = rawS.match(/^\s*p[rř]idej\s+lokaci\s+(.+)$/iu);
+        const locRaw = locM && locM[1] ? String(locM[1]).trim() : "lokace";
+        c.activeDraftKey = iuSilverLineLDraftRegistryKey(refDraft);
+        return iuSilverLineLContinuationUpdateTurn(refDraft, now, function (d) {
+          const keepTitle = String(refDraft.title || d.title || "").trim();
+          if (keepTitle) {
+            d.title = keepTitle.slice(0, 200);
+            d.meta.title = "certain";
+          }
+          d.location = locRaw.slice(0, 200);
+          d.address = locRaw.slice(0, 200);
+          d.meta.location = "certain";
+        });
+      }
+    }
+
+    const schuzcePridej = rawS.match(/^\s*sch[uů]zce\s+(?:s\s+\w+\s+)?p[rř]idej\s+(.+)$/iu);
+    if (schuzcePridej && schuzcePridej[1]) {
+      const refDraft = iuSilverLineLDraftRegistryFind(rawS, p);
+      if (refDraft) {
+        const noteTail = iuSilverSemanticCleanReminderNoteV1(String(schuzcePridej[1]).trim()) || String(schuzcePridej[1]).trim();
+        c.activeDraftKey = iuSilverLineLDraftRegistryKey(refDraft);
+        return iuSilverLineLContinuationUpdateTurn(refDraft, now, function (d) {
+          const keepTitle = String(refDraft.title || d.title || "").trim();
+          if (keepTitle) {
+            d.title = keepTitle.slice(0, 200);
+            d.meta.title = "certain";
+          }
+          const prevNote = String(d.note || "").trim();
+          d.note = prevNote ? iuSilverNormalizeWs(prevNote + " " + noteTail) : noteTail;
+          d.meta.note = "certain";
+        });
+      }
+    }
+
+    const kServisuBare = rawS.match(/^\s*k\s+servisu\s+(.+)$/iu);
+    if (kServisuBare && kServisuBare[1] && !/^\s*(?:napi[sš]|dej|p[rř]idej)\s/.test(String(kServisuBare[1]))) {
+      const refDraft = iuSilverLineLDraftRegistryFind("servis", p);
+      if (refDraft) {
+        const noteTail = iuSilverSemanticCleanReminderNoteV1(String(kServisuBare[1]).trim()) || String(kServisuBare[1]).trim();
+        c.activeDraftKey = iuSilverLineLDraftRegistryKey(refDraft);
+        return iuSilverLineLContinuationUpdateTurn(refDraft, now, function (d) {
+          const keepTitle = String(refDraft.title || d.title || "").trim();
+          if (keepTitle) {
+            d.title = keepTitle.slice(0, 200);
+            d.meta.title = "certain";
+          }
+          d.note = noteTail;
+          d.meta.note = "certain";
+        });
+      }
+    }
+
+    return null;
+  }
+
+  function iuSilverLineMPostTurnSync(turn, rawText) {
+    if (!turn || typeof turn !== "object") return;
+    const c = IU_SILVER_CONVERSATION_V12;
+    c.sessionTurnCount = (c.sessionTurnCount || 0) + 1;
+    if (c.sessionTurnCount > IU_SILVER_LINE_M_MAX_TURNS && Array.isArray(c.compressedTopics)) {
+      while (c.compressedTopics.length > 6) c.compressedTopics.shift();
+    }
+    const ni = String(turn.normalizedIntent || "");
+    if (ni === "calendar.create" && turn.draft && turn.draft.targetContainer === "calendar") {
+      iuSilverLineMRegisterHistoricalAnchor(turn.draft, rawText);
+      if (turn.silverConversationAction !== "update") {
+        iuSilverLineMSetDraftLifecycle(turn.draft, "active");
+      }
+      const key = iuSilverLineLDraftRegistryKey(turn.draft);
+      if (key && !Array.isArray(c.compressedTopics)) c.compressedTopics = [];
+      if (key && c.compressedTopics && c.compressedTopics.indexOf(key) < 0) {
+        c.compressedTopics.push(key);
+        if (c.compressedTopics.length > 8) c.compressedTopics.shift();
+      }
+    }
   }
 
   function iuSilverTaskContinuationRaw(prevTitle, rest) {
@@ -55451,8 +55971,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const f = foldCs(raw);
     const p = prev || createEmptyDraft();
 
-    const lineLFollow = iuSilverLineLConversationalEngineV1(raw, now, p);
+    const lineLFollow = iuSilverLineMConversationalEngineV1(raw, now, p);
     if (lineLFollow) return lineLFollow;
+
+    const lineLFollowL = iuSilverLineLConversationalEngineV1(raw, now, p);
+    if (lineLFollowL) return lineLFollowL;
 
     const spiFollow = iuSilverSavePayloadIntelligenceFollowupV1(raw, now, p);
     if (spiFollow) return spiFollow;
@@ -56298,8 +56821,23 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const now = ctx && ctx.now ? ctx.now : new Date();
     const raw0 = String(text || "").trim();
     {
+      const agendaSummaryEarly = iuSilverLineMAgendaSummaryReadTurnV1(raw0, now, ctx);
+      if (agendaSummaryEarly) {
+        iuSilverLineLPostTurnSync(agendaSummaryEarly, raw0);
+        return agendaSummaryEarly;
+      }
+    }
+    {
+      const bareEarly = iuSilverLineMTryBarePersonDateCreate(raw0, now);
+      if (bareEarly) return bareEarly;
+      const histEarly = iuSilverLineMTryHistoricalCalendarCreate(raw0, now);
+      if (histEarly) return histEarly;
+    }
+    {
       const prevConvEarly = prevDraft || createEmptyDraft();
       if (iuSilverLineLPreCapEligible(raw0, prevConvEarly)) {
+        const lineMPreCap = iuSilverLineMConversationalEngineV1(raw0, now, prevConvEarly);
+        if (lineMPreCap) return lineMPreCap;
         const lineLPreCap = iuSilverLineLConversationalEngineV1(raw0, now, prevConvEarly);
         if (lineLPreCap) return lineLPreCap;
       }
