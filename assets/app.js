@@ -54249,6 +54249,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const ps = String(turn.processingState || "");
     const fold = foldCs(rawText);
 
+    if (iuSilverIsHelpGuidanceRenderModeV1(turn)) return "help";
+
     if (ni.indexOf(".update") > 0 || ni === "calendar.update" || ni === "tasks.update" || ni === "notes.update") {
       return "update";
     }
@@ -54305,6 +54307,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function iuSilverApplySaveSearchModeGuardV1(turn, rawText, ctxOpt) {
     if (!turn || typeof turn !== "object") return turn;
+    if (iuSilverIsHelpGuidanceRenderModeV1(turn)) {
+      turn.actionMode = "help";
+      turn.iuSilverActionModeV1 = "help";
+      turn.silverSaveModeRequiresCard = false;
+      turn.silverSearchModeDirectAnswer = true;
+      turn.silverStructuredDraftCardRequired = false;
+      turn.iuSilverHelpRenderOnlyV1 = true;
+      turn.readQuery = null;
+      turn.readAnswer = null;
+      turn.draft = createEmptyDraft();
+      turn.confirmOnly = false;
+      return turn;
+    }
     const mode = iuSilverDetermineActionModeV1(rawText, turn);
     turn.actionMode = mode;
     turn.iuSilverActionModeV1 = mode;
@@ -54735,6 +54750,31 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverGovIsCapabilityIntent(ni) {
     const x = String(ni || "");
     return x === "assistant.capability" || x === "assistant.help" || x === "assistant.guidance";
+  }
+
+  /** HELP / GUIDANCE render governance V1 — text-only UI; never save shell / draft card. */
+  function iuSilverIsHelpGuidanceRenderModeV1(turn) {
+    if (!turn || typeof turn !== "object") return false;
+    if (turn.silverCapabilityTurn || turn.silverNoWrite) return true;
+    if (iuSilverGovIsCapabilityIntent(turn.normalizedIntent)) return true;
+    if (String(turn.processingState || "") === "CAPABILITY_OK") return true;
+    if (turn.iuSilverHelpRenderOnlyV1) return true;
+    return false;
+  }
+
+  function iuSilverHelpGuidanceQuestionSemanticsFoldedV1(f) {
+    const x = String(f || "")
+      .replace(/^(?:no\s+)?(?:hele\s+|prosim\s+|kratce\s+|vlastne\s+|rekni\s+mi\s+|silver\s+|muzes\s+mi\s+rict\s+|fakt\s+nechapu\s+|potrebuju\s+vedet\s+|nevim\s+jak\s+)+/iu, "")
+      .trim();
+    if (!x) return false;
+    if (/^\s*(?:uloz|ulozit|pridej|pripomen|zapis|vytvor|naplanuj|dej\s+mi\s+(?:do|na)|vloz)\b/.test(x)) return false;
+    if (/\bco\s+m(?:am|ame)\b/.test(x)) return false;
+    if (/\b(najdi|hledej|vyhled|ukaz|vypis)\b/.test(x)) return false;
+    if (/\b(kdy|kolik)\s+m(?:am|ame)\b/.test(x)) return false;
+    if (/^\s*(?:jak|co|na\s+co|k\s+cemu|proc|umis|silver|silvr|co\s+umis)\b/.test(x)) return true;
+    if (/\b(?:funguj|funguje|umis|vysvetl|porad|priklad|onboarding|napoveda)\b/.test(x)) return true;
+    if (/\bna\s+co\s+(?:jsou|je)\b/.test(x) || /\bk\s+cemu\s+(?:jsou|je|slouzi)\b/.test(x)) return true;
+    return false;
   }
 
   function iuSilverGovEnsureMetaV1() {
@@ -56580,11 +56620,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bdej\s+mi\s+priklad\b/.test(x)) return true;
     if (/\bnapis\s+mi\s+priklad\b/.test(x)) return true;
     if (/\bco\s+kdyz\s+chci\s+jen\s+poradit\b/.test(x)) return true;
-    if (/\bco\s+kdyz\s+nechci\s+nic\s+ulozit\b/.test(x)) return true;
+    if (/\bco\s+kdyz\s+nechci\s+nic\s+uklad/.test(x)) return true;
     if (/\bco\s+mam\s+napsat\b/.test(x)) return true;
     if (/\bco\s+se\s+da\s+ulozit\b/.test(x)) return true;
     if (/\bco\s+se\s+da\s+ukladat\b/.test(x)) return true;
-    if (/\bumis\s+(?:pripom|kalendar|kalend|poznam|ukol|ukoly|hled|vyhled|schuz)\w*\b/.test(x)) return true;
+    if (/\bna\s+co\s+(?:jsou|je)\b/.test(x)) return true;
+    if (/\bk\s+cemu\s+(?:jsou|je|slouzi)\b/.test(x)) return true;
+    if (/\bjak\s+(?:muzu|mohu|se\s+da)\s+.*\b(?:vyhled|hledat|hledani|najit|najdu)\b/.test(x)) return true;
+    if (/\bjak\s+funguje\s+(?:vyhled|hledani)\b/.test(x)) return true;
+    if (/\bjak\s+hledat\b/.test(x) || /\bjak\s+vyhledat\b/.test(x)) return true;
+    if (/\bumis\s+(?:pripom|kalendar|kalend|poznam|ukol|ukoly|hled|vyhled|schuz|uklad|silver)\w*\b/.test(x)) return true;
     if (/\bjak\s+(?:uloz\w*|zad\w*|prid\w*|vytvor\w*|zaps\w*|napis\w*|napsat)\b/.test(x)) return true;
     if (/\bjak\s+mam\s+(?:napsat|vytvorit|zapsat|zadal|vytvorit)\b/.test(x)) return true;
     if (/\bjak\s+funguje\s+(?:uloz|ulozeni|zapamat|navaz|pokrac|organiz|pridav|vytvor|planov|uklad)\w*/.test(x)) return true;
@@ -56613,6 +56658,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bjake\s+typy\s+prikaz/.test(f)) return true;
     if (/\bco\s+kdyz\s+udelam\s+chybu/.test(f)) return true;
     if (/\b(rozumis\s+perfektne|perfektne\s+cesky|rozumis\s+cestine\s+dokonale|rozumis\s+cesky\s+dokonal\w*)\b/.test(f)) return true;
+    if (/\bna\s+co\s+(?:jsou|je)\b/.test(f) || /\bk\s+cemu\s+(?:jsou|je|slouzi)\b/.test(f)) return true;
+    if (/\bumis\s+silver\b/.test(f)) return true;
+    if (/\bjak\s+(?:muzu|mohu|se\s+da)\s+.*\b(?:vyhled|hledat|hledani|najit)\b/.test(f)) return true;
+    if (/\bjak\s+(?:hledat|vyhledat|funguje\s+hledani|funguje\s+vyhled)\b/.test(f)) return true;
     if (
       /\b(co\s+umis|co\s+vsechno\s+umis|co\s+se\s+da\s+ulozit|co\s+se\s+da\s+ukladat|s\s+cim\s+(?:mi\s+)?pomuzes|jak\s+funguje|jak\s+funguji|co\s+je\s+silver|napoveda|\bpomoc\b|\bhelp\b|jak\s+zacit|jak\s+to\s+pouzivat|jak\s+pouzivat|spravne\s+formulovat|ukaz\s+priklad|priklad\s+prikaz|kdo\s+jsi|jak\s+nejak\s+oprav|jak\s+nejak\s+smaz)\b/.test(
         f
@@ -56689,8 +56738,18 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverLineOCapabilityHelpEngineV1(raw, now, ctx) {
     void now;
     void ctx;
-    const f = foldCs(String(raw || "").trim()).replace(/[?!.,;:]+$/g, "");
-    if (!IU_SILVER_LINE_O_V1 || !iuSilverLineOIsCapabilityUtteranceV1(f)) return null;
+    const rawTrim = String(raw || "").trim();
+    const f = foldCs(rawTrim).replace(/[?!.,;:]+$/g, "");
+    if (!IU_SILVER_LINE_O_V1) return null;
+    if (/\?/.test(rawTrim) && iuSilverHelpGuidanceQuestionSemanticsFoldedV1(f) && !iuSilverHelpGuidanceFirewallV2Folded(f)) {
+      if (!/^\s*(?:uloz|pridej|pripomen|zapis|vytvor)\b/.test(f)) {
+        const topicQ = iuSilverLineOResolveTopicV1(f);
+        const copyQ = IU_SILVER_LINE_O_COPY_V1[topicQ] || IU_SILVER_LINE_O_COPY_V1.general;
+        const staticIntentQ = iuSilverLineOResolveAssistantStaticIntentV1(f);
+        return iuSilverLineOBuildCapabilityTurnV1(copyQ, topicQ, staticIntentQ);
+      }
+    }
+    if (!iuSilverLineOIsCapabilityUtteranceV1(f)) return null;
     const topic = iuSilverLineOResolveTopicV1(f);
     const copy = IU_SILVER_LINE_O_COPY_V1[topic] || IU_SILVER_LINE_O_COPY_V1.general;
     const staticIntent = iuSilverLineOResolveAssistantStaticIntentV1(f);
@@ -59224,6 +59283,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     iuSilverLineNPersistenceRestoreV1: iuSilverLineNPersistenceRestoreV1,
     iuSilverLineNPersistenceTryLoadV1: iuSilverLineNPersistenceTryLoadV1,
     iuSilverLineOCapabilityHelpEngineV1: iuSilverLineOCapabilityHelpEngineV1,
+    iuSilverIsHelpGuidanceRenderModeV1: iuSilverIsHelpGuidanceRenderModeV1,
+    iuSilverHelpGuidanceFirewallV2Folded: iuSilverHelpGuidanceFirewallV2Folded,
+    iuSilverHelpGuidanceQuestionSemanticsFoldedV1: iuSilverHelpGuidanceQuestionSemanticsFoldedV1,
     iuSilverSessionStateGovernanceTickV1: iuSilverSessionStateGovernanceTickV1,
     iuSilverSessionStateGovernancePeekV1: iuSilverSessionStateGovernancePeekV1,
     iuSilverRuntimeDebugSnapshotV1: iuSilverRuntimeDebugSnapshotV1,
@@ -59415,6 +59477,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function renderDraftCard(turn, opts) {
     opts = opts || {};
     const editMode = !!opts.editMode;
+    if (iuSilverIsHelpGuidanceRenderModeV1(turn)) {
+      const lead = String(turn.assistantLead || turn.userFacingSummary || "").trim();
+      return `<div class="iuSilverMsg iuSilverMsg--assistant iuSilverMsg--help" data-iu-silver-msg="assistant" data-iu-silver-help-only="1">
+  <p class="iuSilverMsgLead iuSilverMsgLead--help">${esc(iuSilverDecorateAssistantLead(lead))}</p>
+</div>`;
+    }
     if (turn.confirmOnly) {
       return `<div class="iuSilverMsg iuSilverMsg--assistant" data-iu-silver-msg="assistant">
   <p class="iuSilverMsgLead">${esc(iuSilverDecorateAssistantLead(turn.assistantLead))}</p>
@@ -60044,7 +60112,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function appendAssistantTurn(turn) {
     const host = document.getElementById("iuSilverChatMessages");
     if (!host) return;
-    if (turn.confirmOnly) {
+    if (iuSilverIsHelpGuidanceRenderModeV1(turn)) {
+      chatState.lastDraftTurn = null;
+      chatState.silverCompanionNoteDraft = null;
+      chatState.cardEditMode = false;
+      chatState.draft = createEmptyDraft();
+      clearPendingStorageDisambiguation();
+    } else if (turn.confirmOnly) {
       chatState.lastDraftTurn = null;
       chatState.silverCompanionNoteDraft = null;
       chatState.cardEditMode = false;
