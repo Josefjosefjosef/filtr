@@ -49048,7 +49048,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     } else if (noteChaoticLead && noteChaoticLead[1]) {
       slots["event.note"] = iuSilverSemanticCleanReminderNoteV1(noteChaoticLead[1]);
     }
-    const noteM = work.match(/\b(?:a\s+)?(?:připomeň|pripomen)\s+mi\s+(?:prosim\w*\s+t[eě]\s+)?(?:a[tť]\s+)?(.+)$/iu);
+    const noteM = work.match(/\b(?:a\s+)?(?:připomeň|pripomen)\s+mi\s+(?:prosim\w*\s+t[eě]\s+)?(.+)$/iu);
     if (!slots["event.note"] && noteM && noteM[1]) {
       slots["event.note"] = iuSilverSemanticCleanReminderNoteV1(noteM[1]);
     }
@@ -53340,10 +53340,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const o = opts || {};
     const raw = String(rawFull || "").trim();
     const ni = String(intentNorm || "");
-    const slots = iuSilverExtractSemanticSlotsV1(ni, raw);
+    let slots = iuSilverExtractSemanticSlotsV1(ni, raw);
 
     if (ni === "calendar.create") {
       const cleanupRaw = String(o.cleanupRawFull != null ? o.cleanupRawFull : raw).trim();
+      if (cleanupRaw && cleanupRaw !== raw) {
+        const slotsFull = iuSilverSemanticExtractCalendarSlotsV1(cleanupRaw);
+        if (slotsFull["event.note"] && String(slotsFull["event.note"]).trim() && !String(slots["event.note"] || "").trim()) {
+          slots = Object.assign({}, slots, { "event.note": slotsFull["event.note"] });
+        }
+      }
       iuSilverApplySemanticSlotsToCalendarDraftV1(draft, slots, raw);
       iuSilverFieldOwnershipEngineV1(draft, slots, raw, ni);
       iuSilverSanitizeDraftTitle(draft);
@@ -58191,9 +58197,24 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (calTaskComboEarly) return calTaskComboEarly;
       const spCalTaskEarly = iuSilverMultiIntentSplitOnConnectorP0(raw);
       if (spCalTaskEarly) {
+        let rightCalEarly = iuSilverMultiIntentSanitizeWriteSideRaw(spCalTaskEarly.right);
+        const rfCalEarly = foldCs(rightCalEarly);
+        const preferCalNoteEarly =
+          /\b(at\s+si|a[tť]\s+si|sebou|ze\s+mam|ze\s+m[aá]m|že\s+mám)\b/.test(rfCalEarly) &&
+          /\bpripom(?:en|i[nň])\s+(?:mi\s+)?/.test(rfCalEarly);
+        if (preferCalNoteEarly) {
+          const calNoteEarly = iuSilverTryMultiIntentCalendarPlusEmbeddedNoteWriteP0(
+            spCalTaskEarly.left,
+            rightCalEarly,
+            now,
+            prevDraft || createEmptyDraft(),
+            raw0 || raw
+          );
+          if (calNoteEarly) return calNoteEarly;
+        }
         const calTaskEarly = iuSilverTryMultiIntentCalendarPlusTaskWriteP0(
           spCalTaskEarly.left,
-          iuSilverMultiIntentSanitizeWriteSideRaw(spCalTaskEarly.right),
+          rightCalEarly,
           now,
           prevDraft || createEmptyDraft(),
           raw
