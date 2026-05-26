@@ -1,5 +1,10 @@
 import { getExternalOriginMeta, isAllowedExternalOrigin, IU_OPEN_METEO_FORECAST_BASE } from "./iu-external-origins.js";
 import {
+  iuSilverHashSafeLabelV1 as iuSilverHashSafeLabelLeafV1,
+  iuSilverReplayChecksumV1 as iuSilverReplayChecksumLeafV1,
+  iuSilverExpandRuntimeDebugMetaV1 as iuSilverExpandRuntimeDebugMetaLeafV1
+} from "./silver-runtime-debug-leaf.js";
+import {
   buildPublicationClusterUrlMap,
   canonicalArticleUrlKey,
   clusterAndPickFinalArticles,
@@ -47996,6 +48001,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bzitra\b|\bdnes\b|\bdnesni\b|\bpozit/.test(f)) return false;
     if (/^(dnes|zitra|pozitri|odpoledne|rano|vecer|dopoledne|dnesni)$/.test(f)) return false;
     if (/\b(ponděl|úter|střed|čtvrtek|pátek|sobota|neděl)/i.test(t)) return false;
+    if (/\bpripomen\s+mi\b/.test(f)) return false;
+    if (/\bdo\s+poznam\w*\s+napi[sš]\b/.test(f)) return false;
+    if (/\bdo\s+pozn[aá]mk\w*\s+napi[sš]\b/.test(f)) return false;
+    if (/\bnapis\s+mi\s+do\s+poznam/.test(f)) return false;
     return true;
   }
 
@@ -49659,7 +49668,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     /^no\s+jo\s+/iu,
     /^prost[eě]\s+/iu,
     /^promi[nň]\s+/iu,
-    /^m[uů][zž]e[sš]\s+/iu
+    /^m[uů][zž]e[sš]\s+/iu,
+    /^pripomen\s+mi\s+(?:at|a[tť])\s+/iu,
+    /^pripomen\s+mi\s+/iu,
+    /^do\s+pozn[aá]mk\w*\s+napi[sš]\s+/iu,
+    /^do\s+poznam\w*\s+napi[sš]\s+/iu
   ];
 
   /**
@@ -54927,15 +54940,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     };
   }
 
-  /** Audit-only: safe runtime metrics (counts + hashes, no user text). */
+  /** Audit-only: safe runtime metrics (counts + hashes, no user text). Leaf: silver-runtime-debug-leaf.js */
   function iuSilverHashSafeLabelV1(s) {
-    let h = 2166136261;
-    const x = String(s || "");
-    for (let i = 0; i < x.length; i++) {
-      h ^= x.charCodeAt(i);
-      h = Math.imul(h, 16777619);
-    }
-    return (h >>> 0).toString(16).padStart(8, "0");
+    return iuSilverHashSafeLabelLeafV1(s);
   }
 
   function iuSilverRuntimeDebugSnapshotV1() {
@@ -54944,10 +54951,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const gov = c._gov || {};
     const now = iuSilverGovNowMs();
     let staleContextSlots = 0;
+    let staleChainCount = 0;
     const slots = Array.isArray(c._govSlots) ? c._govSlots : [];
     for (let i = 0; i < slots.length; i++) {
       const s = slots[i];
-      if (now - (s.updatedAt || s.createdAt || 0) > IU_SILVER_GOV_TTL_MS_SLOT) staleContextSlots++;
+      const age = now - (s.updatedAt || s.createdAt || 0);
+      if (age > IU_SILVER_GOV_TTL_MS_SLOT) staleContextSlots++;
+      if (age > IU_SILVER_GOV_TTL_MS_SLOT * 2) staleChainCount++;
     }
     const regKeys = {};
     const reg = Array.isArray(c.draftRegistry) ? c.draftRegistry : [];
@@ -54956,8 +54966,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (k) regKeys[String(k)] = true;
     }
     let orphanPayload = 0;
+    let draftLifecycleCount = 0;
     if (c.draftLifecycle && typeof c.draftLifecycle === "object") {
       const lifeKeys = Object.keys(c.draftLifecycle);
+      draftLifecycleCount = lifeKeys.length;
       for (let li = 0; li < lifeKeys.length; li++) {
         if (!regKeys[lifeKeys[li]]) orphanPayload++;
       }
@@ -54973,7 +54985,18 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       !c.lastWasReadQuery ||
       !c.lastDraft ||
       (c.lastDraft && String(c.lastDraft.targetContainer || "none") === "none");
-    return {
+    const footprint = peek.runtimeFootprintAfter || peek.runtimeFootprintBefore || 0;
+    const replayChecksum = iuSilverReplayChecksumLeafV1([
+      activeDrafts,
+      peek.contextSlotCount || 0,
+      peek.continuationDepth || 0,
+      peek.continuationChain || 0,
+      staleContextSlots,
+      orphanPayload,
+      gov.lastPruneDropped || 0,
+      footprint
+    ]);
+    const base = {
       schema: "iu_silver_runtime_debug_snapshot_v1",
       active_drafts_count: activeDrafts,
       active_context_slots_count: peek.contextSlotCount || 0,
@@ -54982,18 +55005,31 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       stale_context_slots_count: staleContextSlots,
       orphan_payload_count: orphanPayload,
       capability_fallthrough_count: gov.capabilityFallthroughCount || 0,
+      capability_isolation_violation_count: gov.capabilityIsolationViolationCount || 0,
       query_write_separation_ok: queryWriteSep ? 1 : 0,
       governance_cleanup_count: gov.lastPruneDropped || 0,
       ttl_cleanup_count: gov.lastTtlDropped || 0,
+      payload_cleanup_count: gov.payloadCleanupCount || gov.lastPayloadCleanupCount || 0,
       memory_budget_state: {
         max_drafts: IU_SILVER_GOV_MAX_DRAFTS,
         max_context_slots: IU_SILVER_GOV_MAX_CONTEXT_SLOTS,
         max_continuation_depth: IU_SILVER_GOV_MAX_CONTINUATION_DEPTH,
-        runtime_footprint: peek.runtimeFootprintAfter || peek.runtimeFootprintBefore || 0,
+        runtime_footprint: footprint,
         session_turn_count: peek.sessionTurnCount || 0
       },
       context_slot_kind_hashes: slotKindHashes
     };
+    return iuSilverExpandRuntimeDebugMetaLeafV1(base, {
+      runtime_memory_footprint: footprint,
+      continuation_graph_size: (peek.continuationChain || 0) + (peek.continuationDepth || 0),
+      stale_chain_count: staleChainCount,
+      governance_cleanup_count: gov.lastPruneDropped || 0,
+      payload_cleanup_count: gov.payloadCleanupCount || gov.lastPayloadCleanupCount || 0,
+      draft_lifecycle_count: draftLifecycleCount,
+      capability_isolation_count: gov.capabilityIsolationViolationCount || 0,
+      deterministic_replay_checksum: replayChecksum,
+      replay_replayability_hash: iuSilverHashSafeLabelV1("replay:" + replayChecksum)
+    });
   }
 
   function iuSilverConversationPeek() {
