@@ -75,6 +75,26 @@ const FRESH_TIER_A_PROOF_STEPS = [
   { kind: "node", file: "silver-prod-proof.mjs" },
   { kind: "node", file: "silver-calendar-create-regression.mjs" },
   { kind: "node", file: "audit_silver_20000_routing_stable.cjs" },
+  { kind: "node", file: "silver-calendar-query-20k-regression-guard.cjs" },
+  { kind: "node", file: "silver-task-query-20k-regression-guard.cjs" },
+  { kind: "node", file: "silver-note-query-20k-regression-guard.cjs" },
+  { kind: "node", file: "silver-calendar-write-20k-regression-guard.cjs" },
+  { kind: "node", file: "silver-query-safety-regression-guard.cjs" },
+  { kind: "node", file: "silver-production-line-v2-regression-guard.cjs" },
+  { kind: "node", file: "silver-multi-intent-20k-regression-guard.cjs" },
+  { kind: "node", file: "silver-help-privacy-storage-governance-guard-v1.cjs" },
+  { kind: "node", file: "silver-storage-capacity-guidance-guard-v1.cjs" },
+  { kind: "node", file: "silver-task-guidance-help-guard-v1.cjs" },
+  { kind: "node", file: "silver-multi-storage-capability-guard-v1.cjs" },
+  { kind: "node", file: "silver-calendar-update-safe-clarification-guard-v1.cjs" },
+  { kind: "node", file: "silver-help-render-governance-guard-v1.cjs" },
+  { kind: "node", file: "silver-help-save-isolation-guard-v1.cjs" },
+  { kind: "node", file: "silver-guidance-understanding-guard-v1.cjs" },
+  { kind: "node", file: "silver-question-semantics-guard-v1.cjs" },
+  { kind: "node", file: "silver-save-shell-suppression-guard-v1.cjs" },
+  { kind: "node", file: "silver-runtime-render-consistency-guard-v1.cjs" },
+  { kind: "node", file: "silver-help-chaos-guard-v1.cjs" },
+  { kind: "node", file: "silver-self-correction-update-task-guard-v1.cjs" },
   { kind: "node", file: "audit_silver_quality_v2.cjs" },
   { kind: "node", file: "audit_silver_realistic_mobile_corpus.cjs" },
   { kind: "node", file: "silver-real-czech-corpus-v1.cjs" },
@@ -82,6 +102,16 @@ const FRESH_TIER_A_PROOF_STEPS = [
   { kind: "node", file: "silver-deep-product-real-ux-v2.cjs" },
   { kind: "node", file: "silver-self-correction-audit.cjs" },
 ];
+
+/** Permanent: do not stop production line on narrow TRUE_ENGINE_FAIL when safety PASS. */
+const TRUE_ENGINE_AUTO_FIX_RULE_V1 = {
+  enabled: true,
+  require_narrow_deterministic: true,
+  require_safety_pass: true,
+  require_replay_guard: true,
+  forbid_broad_refactor: true,
+  auto_continue_after_fix: true,
+};
 
 const EXTENDED_METRIC_KEYS = [
   "20k_overall_accuracy",
@@ -687,6 +717,10 @@ function writeNextClusterHandoff(repoRoot, roi) {
     "autonomous_continue=YES",
     "fresh_tier_a_proof=REQUIRED",
     "prior_tier_a_reused=NO",
+    "TRUE_ENGINE_AUTO_FIX_RULE=enabled",
+    "true_engine_auto_fix_narrow_deterministic=REQUIRED",
+    "true_engine_auto_fix_broad_refactor_detected=NO",
+    "true_engine_auto_fix_stop_only_on=safety_fail|gates_fail|boundary_unclear|broad_rewrite",
     "=== END_CAP10_SAFE_AUTONOMOUS_ORCHESTRATOR_HANDOFF ===",
   ].join("\n");
   fs.writeFileSync(path.join(repoRoot, "SILVER_NEXT_ACTION.md"), handoff + extra + "\n", "utf8");
