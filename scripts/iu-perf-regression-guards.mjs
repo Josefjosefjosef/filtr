@@ -65,7 +65,7 @@ function waitForPort(host, port, timeoutMs) {
 }
 
 async function measureNavOnce(page, btn) {
-  await page.goto(BASE + "?iuRobust=1", { waitUntil: "networkidle", timeout: 120000 });
+  await page.goto(BASE + "?iuRobust=1", { waitUntil: "domcontentloaded", timeout: 60000 });
   await page.waitForSelector(`#iuLeftRail a[data-accent="${btn.accent}"]`, { timeout: 60000 });
   await page.waitForTimeout(350);
 

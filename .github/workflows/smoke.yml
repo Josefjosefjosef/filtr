@@ -5,13 +5,16 @@ permissions:
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
   pull_request_target:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches:
       - main
       # Force-pushes z update-articles.yml často nespustí pull_request synchronize → povinné checky na data PR zůstaly viset (mergeStateStatus BLOCKED).
       - automation/update-articles-data
+      # Silver/release PR heads: pull_request webhooks občas nedorazí; push na fix/* spustí required status na head SHA.
+      - "fix/**"
   workflow_dispatch:
 
 jobs:

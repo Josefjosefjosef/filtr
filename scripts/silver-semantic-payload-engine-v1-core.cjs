@@ -95,6 +95,19 @@ const INSTRUCTION_PREFIXES = [
   /\bnapl[aá]nuj\b/i,
   /\bpridej\s+do\s+ukol/i,
   /\bpřidej\s+do\s+úkol/i,
+  /\bchci\s+si\s+ulozit\b/i,
+  /\bchci\s+si\s+uložit\b/i,
+  /\bpotrebuji\s+si\s+zapsat\b/i,
+  /\bpotřebuji\s+si\s+zapsat\b/i,
+  /\bjenom\s+mi\b/i,
+  /\bpoznamenej\s+mi\b/i,
+  /\bprosim\s+uloz\b/i,
+  /\bprosím\s+ulož\b/i,
+  /\bna\s+dnesek\b/i,
+  /\bna\s+zitrek\b/i,
+  /\bna\s+zítřek\b/i,
+  /\bjo\s+a\s+pripomen\b/i,
+  /\bjo\s+a\s+připomeň\b/i,
 ];
 
 const EVENT_NOTE_CUES = [
@@ -222,6 +235,24 @@ const CAP45_TITLE_COMMAND_STRIP_PATS = [
   /^dej\s+pls\s+do\s+(?:úkol[uů]?|ukol[uů]?)\s+/iu,
   /^hele\s+dej\s+pls\s+do\s+(?:úkol[uů]?|ukol[uů]?)\s+/iu,
   /^(?:jo\s+)?(?:trochu\s+|nějak\s+)?hele\s+dej\s+(?:mi\s+)?(?:do\s+)?(?:úkol[uů]?|ukol[uů]?)\s+/iu,
+  /^chci\s+si\s+uložit\s+/iu,
+  /^chci\s+si\s+ulozit\s+/iu,
+  /^chci\s+/iu,
+  /^potřebuji\s+si\s+zapsat\s+/iu,
+  /^potrebuji\s+si\s+zapsat\s+/iu,
+  /^jenom\s+mi\s+/iu,
+  /^na\s+(?:dnesek|dnes|zítřek|zitrek)\s+mi\s+/iu,
+  /^ulož\s+mi\s+na\s+(?:dnesek|dnes|zítřek|zitrek)\s+/iu,
+  /^uloz\s+mi\s+na\s+(?:dnesek|dnes|zitrek)\s+/iu,
+  /^ať\s+nezapomenu\s+/iu,
+  /^at\s+nezapomenu\s+/iu,
+  /^poznamenej\s+mi\s+/iu,
+  /^prosím\s+ulož\s+/iu,
+  /^prosim\s+uloz\s+/iu,
+  /^jo\s+a\s+připomeň\s+mi\s+/iu,
+  /^jo\s+a\s+pripomen\s+mi\s+/iu,
+  /^vytvoř\s+mi\s+/iu,
+  /^vytvor\s+mi\s+/iu,
 ];
 
 function stripInstructionPrefixes(text) {
@@ -273,6 +304,8 @@ function extractCalendarEventHead(rawText) {
 function hasInstructionLeakage(fieldValue) {
   const fold = foldCs(fieldValue);
   if (!fold) return false;
+  if (/^dnes\s+/.test(fold) || /^dneska\s+/.test(fold)) return true;
+  if (/^chci\s+/.test(fold) || /^jenom\s+/.test(fold)) return true;
   for (let i = 0; i < INSTRUCTION_PREFIXES.length; i++) {
     if (INSTRUCTION_PREFIXES[i].test(fold)) return true;
   }
