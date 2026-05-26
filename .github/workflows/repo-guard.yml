@@ -8,9 +8,11 @@ on:
     branches:
       - main
       - automation/update-articles-data
+      - "fix/**"
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
   pull_request_target:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
 
 jobs:

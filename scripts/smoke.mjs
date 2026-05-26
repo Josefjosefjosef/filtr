@@ -378,21 +378,30 @@ async function runSmoke() {
 
     // Počasí historical inline video must teardown (no background audio) when leaving the section
     await gotoDomContentLoaded(page, `${BASE}/projects/?section=pocasi`);
-    await page.waitForTimeout(1600);
     try {
-      await page.waitForSelector("#iuWeatherHistoryPlay", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
+      await page.waitForFunction(
+        () => {
+          const btn = document.getElementById("iuWeatherHistoryPlay");
+          const card = document.getElementById("iuWeatherHistoryCard");
+          return !!(btn && card && !card.hidden);
+        },
+        { timeout: PREVIEW_SELECTOR_TIMEOUT_MS }
+      );
     } catch (e) {
-      fail(`Weather history play control missing: ${e && e.message ? e.message : String(e)}`);
-    }
-    const wxPlayHidden = await page.evaluate(() => {
-      const btn = document.getElementById("iuWeatherHistoryPlay");
-      const card = document.getElementById("iuWeatherHistoryCard");
-      if (!btn) return { ok: false, reason: "no_btn" };
-      if (card && card.hidden) return { ok: false, reason: "card_hidden" };
-      return { ok: true };
-    });
-    if (!wxPlayHidden || !wxPlayHidden.ok) {
-      fail(`Weather history card not ready for play: ${JSON.stringify(wxPlayHidden)}`);
+      const wxDiag = await page.evaluate(() => {
+        const btn = document.getElementById("iuWeatherHistoryPlay");
+        const card = document.getElementById("iuWeatherHistoryCard");
+        const fb = document.getElementById("iuWeatherHistoryFallback");
+        return {
+          hasBtn: !!btn,
+          cardHidden: card ? !!card.hidden : null,
+          fallbackHidden: fb ? !!fb.hidden : null,
+          initFlag: typeof window.__iu_weatherHistoryInit !== "undefined" ? window.__iu_weatherHistoryInit : null,
+        };
+      });
+      fail(
+        `Weather history card not ready for play: ${e && e.message ? e.message : String(e)} diag=${JSON.stringify(wxDiag)}`
+      );
     }
     await page.click("#iuWeatherHistoryPlay");
     await page.waitForTimeout(900);

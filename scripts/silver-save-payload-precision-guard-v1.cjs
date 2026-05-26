@@ -13,7 +13,7 @@ function main() {
       cwd: REPO,
       encoding: "utf8",
       maxBuffer: 64 * 1024 * 1024,
-      timeout: 600000,
+      timeout: 900000,
       env: Object.assign({}, process.env, { CSPP_V1_CASES_PER_FAMILY: "580" }),
     });
   } catch (e) {

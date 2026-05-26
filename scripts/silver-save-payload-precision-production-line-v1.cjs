@@ -186,4 +186,6 @@ function main() {
   process.exit(ok ? 0 : 1);
 }
 
+module.exports = { generateCases, FAMILIES, groupForFamily };
+
 if (require.main === module) main();
