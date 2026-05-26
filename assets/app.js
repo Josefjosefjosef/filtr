@@ -44636,6 +44636,17 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       [/\bzubare\b|\bzubari\b|\bzubarem\b|\bzubar\b/g, "zubar"],
       [/\bservisem\b|\bservisu\b|\bservis\b/g, "servis"],
       [/\bschuzku\b|\bschuzky\b|\bschuzce\b|\bschuzka\b/g, "schuzka"],
+      [/\bnovakovi\b|\bnovaka\b|\bnovakem\b|\bnovak\b/g, "novak"],
+      [/\bbance\b|\bbanky\b|\bbanku\b|\bbanka\b/g, "banka"],
+      [/\blekarny\b|\blekarne\b|\blekarnu\b|\blekarna\b/g, "lekarna"],
+      [/\brevizi\b|\brevize\b/g, "revize"],
+      [/\bpojistovne\b|\bpojistovny\b|\bpojistovnu\b|\bpojistovna\b/g, "pojistovna"],
+      [/\btechnika\b|\btechnikovi\b|\btechnikem\b|\btechnik\b/g, "technik"],
+      [/\bmanazera\b|\bmanazerovi\b|\bmanazerem\b|\bmanazer\b/g, "manazer"],
+      [/\bkolegovi\b|\bkolegou\b|\bkolega\b/g, "kolega"],
+      [/\bzakaznika\b|\bzakaznikovi\b|\bzakaznikem\b|\bzakaznik\b/g, "zakaznik"],
+      [/\bservisaka\b|\bservisakovi\b|\bservisakem\b|\bservisak\b/g, "servisak"],
+      [/\bprojektu\b|\bprojekty\b|\bprojektem\b|\bprojekt\b/g, "projekt"],
       [/\bsetkani\b|\bsetkan\b/g, "setkani"],
       [/\bmeetingu\b|\bmeetingem\b|\bmeeting\b/g, "meeting"],
       [/\bporadu\b|\bporade\b|\bporady\b|\bporada\b/g, "porada"],
@@ -54866,6 +54877,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       pruned++;
     }
     gov.lastPruneAt = now;
+    gov.lastPruneDropped = pruned;
+    gov.lastTtlDropped = pruned;
     gov.runtimeFootprintAfter = iuSilverGovMeasureFootprintV1();
     return { pruned: pruned, footprint: gov.runtimeFootprintAfter };
   }
@@ -54911,6 +54924,75 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       runtimeFootprintBefore: gov.runtimeFootprintBefore || 0,
       runtimeFootprintAfter: gov.runtimeFootprintAfter || 0,
       sessionTurnCount: c.sessionTurnCount || 0
+    };
+  }
+
+  /** Audit-only: safe runtime metrics (counts + hashes, no user text). */
+  function iuSilverHashSafeLabelV1(s) {
+    let h = 2166136261;
+    const x = String(s || "");
+    for (let i = 0; i < x.length; i++) {
+      h ^= x.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return (h >>> 0).toString(16).padStart(8, "0");
+  }
+
+  function iuSilverRuntimeDebugSnapshotV1() {
+    const peek = iuSilverSessionStateGovernancePeekV1();
+    const c = IU_SILVER_CONVERSATION_V12;
+    const gov = c._gov || {};
+    const now = iuSilverGovNowMs();
+    let staleContextSlots = 0;
+    const slots = Array.isArray(c._govSlots) ? c._govSlots : [];
+    for (let i = 0; i < slots.length; i++) {
+      const s = slots[i];
+      if (now - (s.updatedAt || s.createdAt || 0) > IU_SILVER_GOV_TTL_MS_SLOT) staleContextSlots++;
+    }
+    const regKeys = {};
+    const reg = Array.isArray(c.draftRegistry) ? c.draftRegistry : [];
+    for (let ri = 0; ri < reg.length; ri++) {
+      const k = reg[ri] && reg[ri].key;
+      if (k) regKeys[String(k)] = true;
+    }
+    let orphanPayload = 0;
+    if (c.draftLifecycle && typeof c.draftLifecycle === "object") {
+      const lifeKeys = Object.keys(c.draftLifecycle);
+      for (let li = 0; li < lifeKeys.length; li++) {
+        if (!regKeys[lifeKeys[li]]) orphanPayload++;
+      }
+    }
+    const slotKindHashes = [];
+    for (let si = 0; si < slots.length && si < 16; si++) {
+      slotKindHashes.push(
+        iuSilverHashSafeLabelV1(String(slots[si].kind || "slot") + ":" + String(slots[si].key || si))
+      );
+    }
+    const activeDrafts = peek.draftRegistryCount || 0;
+    const queryWriteSep =
+      !c.lastWasReadQuery ||
+      !c.lastDraft ||
+      (c.lastDraft && String(c.lastDraft.targetContainer || "none") === "none");
+    return {
+      schema: "iu_silver_runtime_debug_snapshot_v1",
+      active_drafts_count: activeDrafts,
+      active_context_slots_count: peek.contextSlotCount || 0,
+      continuation_depth: peek.continuationDepth || 0,
+      continuation_chain_length: peek.continuationChain || 0,
+      stale_context_slots_count: staleContextSlots,
+      orphan_payload_count: orphanPayload,
+      capability_fallthrough_count: gov.capabilityFallthroughCount || 0,
+      query_write_separation_ok: queryWriteSep ? 1 : 0,
+      governance_cleanup_count: gov.lastPruneDropped || 0,
+      ttl_cleanup_count: gov.lastTtlDropped || 0,
+      memory_budget_state: {
+        max_drafts: IU_SILVER_GOV_MAX_DRAFTS,
+        max_context_slots: IU_SILVER_GOV_MAX_CONTEXT_SLOTS,
+        max_continuation_depth: IU_SILVER_GOV_MAX_CONTINUATION_DEPTH,
+        runtime_footprint: peek.runtimeFootprintAfter || peek.runtimeFootprintBefore || 0,
+        session_turn_count: peek.sessionTurnCount || 0
+      },
+      context_slot_kind_hashes: slotKindHashes
     };
   }
 
@@ -56386,7 +56468,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bjak\s+s\s+tebou\s+mam\s+mluvit/.test(f)) return true;
     if (/\bjake\s+typy\s+prikaz/.test(f)) return true;
     if (/\bco\s+kdyz\s+udelam\s+chybu/.test(f)) return true;
-    if (/\b(rozumis\s+perfektne|perfektne\s+cesky|rozumis\s+cestine\s+dokonale)\b/.test(f)) return true;
+    if (/\b(rozumis\s+perfektne|perfektne\s+cesky|rozumis\s+cestine\s+dokonale|rozumis\s+cesky\s+dokonal\w*)\b/.test(f)) return true;
     if (
       /\b(co\s+umis|co\s+vsechno\s+umis|s\s+cim\s+(?:mi\s+)?pomuzes|jak\s+funguje|jak\s+funguji|co\s+je\s+silver|napoveda|\bpomoc\b|\bhelp\b|jak\s+zacit|jak\s+to\s+pouzivat|jak\s+pouzivat|spravne\s+formulovat|ukaz\s+priklad|priklad\s+prikaz|kdo\s+jsi|jak\s+nejak\s+oprav|jak\s+nejak\s+smaz)\b/.test(
         f
@@ -56401,13 +56483,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     ) {
       return true;
     }
+    if (/\b(mas|mam)\s+cloud\b/.test(f)) return true;
+    if (/\b(mas|mam)\s+pristup\s+na\s+internet\b/.test(f)) return true;
+    if (/\bgooglit\b/.test(f)) return true;
+    if (/\bgpt[\s-]?4\b/.test(f)) return true;
+    if (/\bneuronov\w*\s+sit\b/.test(f)) return true;
+    if (/\bpreloz\w*.*\bonline\b/.test(f)) return true;
     return false;
   }
 
   function iuSilverLineOResolveTopicV1(f) {
     if (/\bco\s+neumis\b/.test(f)) return "boundaries";
     if (
-      /\b(chatgpt|openai|internet|cloud|cloudov\w*\s+backend|umis\s+vsechno|nekonecn\w*|pamet\s+navzdy|pamatuju\s+si\s+vse|vse\s+navzdy|dokonal\w*\s+cestin\w*|rozumis\s+cestin\w*\s+dokonal\w*|perfektne\s+cesky|jsem\s+ai|jsi\s+ai|jsi\s+umela)\b/.test(
+      /\b(chatgpt|openai|internet|cloud|cloudov\w*\s+backend|umis\s+vsechno|nekonecn\w*|pamet\s+navzdy|pamatuju\s+si\s+vse|vse\s+navzdy|dokonal\w*\s+cestin\w*|rozumis\s+cestin\w*\s+dokonal\w*|rozumis\s+cesky\s+dokonal\w*|perfektne\s+cesky|jsem\s+ai|jsi\s+ai|jsi\s+umela|googlit|gpt[\s-]?4|neuronov\w*\s+sit|preloz\w*.*\bonline)\b/.test(
         f
       )
     ) {
@@ -58936,6 +59024,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     iuSilverLineOCapabilityHelpEngineV1: iuSilverLineOCapabilityHelpEngineV1,
     iuSilverSessionStateGovernanceTickV1: iuSilverSessionStateGovernanceTickV1,
     iuSilverSessionStateGovernancePeekV1: iuSilverSessionStateGovernancePeekV1,
+    iuSilverRuntimeDebugSnapshotV1: iuSilverRuntimeDebugSnapshotV1,
     iuSilverGovIsCapabilityIntent: iuSilverGovIsCapabilityIntent,
     iuSilverGovMeasureFootprintV1: iuSilverGovMeasureFootprintV1,
     iuSilverCzechTemporalAspectTagV1: iuSilverCzechTemporalAspectTagV1,

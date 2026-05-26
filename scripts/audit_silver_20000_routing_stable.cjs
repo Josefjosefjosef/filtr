@@ -2034,7 +2034,14 @@ function gitTrackedClean() {
       "scripts/silver-long-session-save-stability-audit-v1-report.json",
       "scripts/silver-public-hardening-residuals-v1.cjs",
       "scripts/silver-public-hardening-residuals-v1-report.json",
-      "scripts/silver-public-save-readiness-audit-v1-report.json"
+      "scripts/silver-public-save-readiness-audit-v1-report.json",
+      "scripts/silver-runtime-layer-segmentation-diagnostic-v1.cjs",
+      "scripts/silver-runtime-layer-segmentation-regression-guard.cjs",
+      "scripts/silver-runtime-layer-segmentation-diagnostic-v1-report.json",
+      "scripts/silver-public-beta-governance-guard-v1.cjs",
+      "scripts/silver-public-beta-governance-regression-guard.cjs",
+      "scripts/silver-capability-safety-audit-v1.cjs",
+      "scripts/silver-czech-morphology-audit-v1.cjs"
     ];
     const bad = tracked.filter((l) => {
       const t = l.replace(/^\s+/, "").trim();

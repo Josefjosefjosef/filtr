@@ -1,0 +1,180 @@
+{
+  "harness_id": "silver_runtime_layer_segmentation_diagnostic_v1",
+  "main_commit": "8501b95bb2e7796fe52e237a0f847d306e663b55",
+  "layers": [
+    {
+      "layer": "Capability",
+      "anchors": [
+        {
+          "anchor": "iuSilverLineOCapabilityHelpEngineV1",
+          "count": 4
+        },
+        {
+          "anchor": "silverCapabilityTurn",
+          "count": 4
+        },
+        {
+          "anchor": "assistant.capability",
+          "count": 3
+        }
+      ],
+      "contamination": []
+    },
+    {
+      "layer": "Routing",
+      "anchors": [
+        {
+          "anchor": "iuSilverBrainRoute",
+          "count": 16
+        },
+        {
+          "anchor": "iuSilverCommandResolutionOrderV1",
+          "count": 7
+        },
+        {
+          "anchor": "processUserTurn",
+          "count": 10
+        }
+      ],
+      "contamination": []
+    },
+    {
+      "layer": "Save",
+      "anchors": [
+        {
+          "anchor": "iuSilverApplyFinalFactsCalendarDraftV1",
+          "count": 5
+        },
+        {
+          "anchor": "iuSilverApplySaveSearchModeGuardV1",
+          "count": 4
+        },
+        {
+          "anchor": "iuSilverCap55StrictNoteLockV1",
+          "count": 4
+        }
+      ],
+      "contamination": []
+    },
+    {
+      "layer": "Retrieval",
+      "anchors": [
+        {
+          "anchor": "iuSilverSearchLocalData",
+          "count": 29
+        },
+        {
+          "anchor": "iuSilverBuildAnswerFromSearch",
+          "count": 19
+        },
+        {
+          "anchor": "iuSilverIsNoteRetrievalIntentV1",
+          "count": 6
+        }
+      ],
+      "contamination": []
+    },
+    {
+      "layer": "Continuation",
+      "anchors": [
+        {
+          "anchor": "iuSilverGovContinuationBumpV1",
+          "count": 2
+        },
+        {
+          "anchor": "iuSilverResolveFollowupReference",
+          "count": 4
+        },
+        {
+          "anchor": "silverConversationAction",
+          "count": 15
+        }
+      ],
+      "contamination": []
+    },
+    {
+      "layer": "Orchestration",
+      "anchors": [
+        {
+          "anchor": "iuSilverLineL",
+          "count": 153
+        },
+        {
+          "anchor": "iuSilverDetermineActionModeV1",
+          "count": 4
+        }
+      ],
+      "contamination": []
+    },
+    {
+      "layer": "Persistence",
+      "anchors": [
+        {
+          "anchor": "iuSilverLineNPersistenceSnapshotV1",
+          "count": 4
+        },
+        {
+          "anchor": "iuSilverLineNPersistenceRestoreV1",
+          "count": 4
+        },
+        {
+          "anchor": "iuSilverGovCompactPersistenceSnapshotV1",
+          "count": 2
+        }
+      ],
+      "contamination": []
+    },
+    {
+      "layer": "Governance",
+      "anchors": [
+        {
+          "anchor": "iuSilverSessionStateGovernanceTickV1",
+          "count": 8
+        },
+        {
+          "anchor": "iuSilverSessionStateGovernancePeekV1",
+          "count": 4
+        },
+        {
+          "anchor": "iuSilverRuntimeDebugSnapshotV1",
+          "count": 3
+        }
+      ],
+      "contamination": []
+    },
+    {
+      "layer": "Agenda",
+      "anchors": [
+        {
+          "anchor": "agendaContext",
+          "count": 24
+        },
+        {
+          "anchor": "AgendaSummary",
+          "count": 5
+        }
+      ],
+      "contamination": []
+    },
+    {
+      "layer": "DebugProof",
+      "anchors": [
+        {
+          "anchor": "iuSilverRuntimeDebugSnapshotV1",
+          "count": 3
+        },
+        {
+          "anchor": "calendarReadProbe",
+          "count": 2
+        },
+        {
+          "anchor": "proofWeekdayRuleSnippet",
+          "count": 2
+        }
+      ],
+      "contamination": []
+    }
+  ],
+  "cross_layer_contamination": [],
+  "PASS_FAIL": "PASS"
+}
