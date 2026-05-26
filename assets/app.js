@@ -54966,8 +54966,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\b(najdi|hledej|vyhled|ukaz|vypis)\b/.test(x)) return false;
     if (/\b(kdy|kolik)\s+m(?:am|ame)\b/.test(x)) return false;
     if (/^\s*(?:jak|co|na\s+co|k\s+cemu|proc|umis|silver|silvr|co\s+umis)\b/.test(x)) return true;
+    if (/^\s*(?:odchazi|kam\s+se|kolik\s+si|kde\s+si)\b/.test(x)) return true;
     if (/\b(?:funguj|funguje|umis|vysvetl|porad|priklad|onboarding|napoveda)\b/.test(x)) return true;
     if (/\bna\s+co\s+(?:jsou|je)\b/.test(x) || /\bk\s+cemu\s+(?:jsou|je|slouzi)\b/.test(x)) return true;
+    if (iuSilverScreenshotGovernanceHelpFirewallV1(x)) return true;
     return false;
   }
 
@@ -56758,8 +56760,70 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     guidance_calendar: "Příklad schůzky: „Pátek v 14:00 schůzka s Novotným v kanceláři.“",
     guidance_tasks: "Příklad úkolu: „Připomeň mi v pondělí zavolat účetní.“",
     guidance_commands:
-      "Formuluj jasně: akce + modul + datum/čas. Např. ulož / připomeň / najdi + kalendář / úkol / poznámka."
+      "Formuluj jasně: akce + modul + datum/čas. Např. ulož / připomeň / najdi + kalendář / úkol / poznámka.",
+    privacy_storage:
+      "Data zůstávají jen ve vašem prohlížeči a zařízení. Při ukládání do kalendáře, úkolů nebo poznámek nic neposílám mimo váš telefon — žádný cloud ani server.",
+    storage_capacity:
+      "Úložiště je lokální v prohlížeči. Není tu pevný cloudový limit — prakticky tolik záznamů, kolik unese vaše zařízení.",
+    task_guidance_read:
+      "Úkoly si přečtete v sekci Úkoly. Připomínky fungují jako termínované úkoly — Silver vás upozorní v aplikaci po uložení.",
+    multi_storage:
+      "V jednom pokynu cílíte na jeden modul. Pro více cílů použijte vícekrokové pokračování nebo dva jasné příkazy — např. schůzku a zvlášť úkol."
   };
+
+  /** Screenshot governance V1 — HELP/privacy/storage/capability questions; never save shell. */
+  function iuSilverScreenshotGovernanceHelpFirewallV1(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (/\b(odchazi|odchaze|posilas|posila|posilat|odesilas|odesila)\b/.test(x) && /\b(telefon|mimo|internet|cloud|server|zarizeni|prohlizec)\b/.test(x)) {
+      return true;
+    }
+    if (/\b(telefon|zarizeni|prohlizec)\b.*\b(mimo|odchazi|posil|odesil)\b/.test(x)) return true;
+    if (/\bkdyz\s+si\b.*\buloz\w*/i.test(x) && /\b(vymaz\w*|smaz\w*|zmizi\w*|zustan\w*|uklad\w*|posil\w*|odchaz\w*|nekde)\b/.test(x)) {
+      return true;
+    }
+    if (/\bkam\s+se\s+uklad/.test(x)) return true;
+    if (/\b(informace|data|udaje)\b/.test(x) && /\b(uklad|kam|kde|posil)\b/.test(x)) return true;
+    if (/\b(soukrom|privacy|bezpecnost\s+dat|lokaln\w*\s+uloz)\b/.test(x)) return true;
+    if (/\b(?:zustav|zustan)\w*\s+(?:moje\s+)?(?:veci|data)\b.*\b(?:prohlizec|telefon|zarizeni)\b/.test(x)) return true;
+    if (/\b(?:bezpecn|bezpec)\w*\b.*\buloz\w*/.test(x)) return true;
+    if (/\b(?:posilas|odesilas|posila|odesila|odesilas)\b/.test(x)) return true;
+    if (/\bmoje\s+(?:veci|data|informace)\s+jen\b/.test(x)) return true;
+    if (/\b(?:limit|kapacit|ulozist)\w*/.test(x) && /\b(?:poznam|ukol|kalendar|zaznam)\w*/.test(x)) return true;
+    if (/\bje\s+nejaky\s+limit\b/.test(x)) return true;
+    if (/\bkolik\s+(?:ukol|poznam|zaznam|udalost)\w*/.test(x)) return true;
+    if (/\b(?:kde|jak)\s+(?:si\s+)?(?:prec|ct|najdu|uvid|prectu)\w*\b.*\bukol/.test(x)) return true;
+    if (/\bulozen\w*\s+ukol/.test(x) && /\b(?:kde|jak|prec|ct)\b/.test(x)) return true;
+    if (/\b(?:jde|lze|umis)\b.*\bulozit\b.*\b(?:kalendar|ukol|poznam)/.test(x)) return true;
+    if (/\b(?:muz|lze|jde|umis)\w*\b.*\b(?:najednou|soucasne|zaroven|rovnou|vice\s+modul)\b.*\b(?:ukol|poznam|kalendar|modul)/.test(x)) {
+      return true;
+    }
+    if (/\b(?:najednou|soucasne)\b.*\b(?:ukol|poznam|kalendar)\b/.test(x) && /\?/.test(x) && !/^\s*uloz\b/.test(x)) return true;
+    if (/\bchci\s+vedet\b.*\b(?:odchaz|telefon|posil|mimo|uklad)\b/.test(x)) return true;
+    if (/\b(?:informace|data)\b.*\b(?:odchaz|posil|mimo|telefon)\b/.test(x)) return true;
+    if (/\bkam\s+(?:jdou|puti|patri)\b.*\b(?:poznam|ukol|data|informace)\b/.test(x)) return true;
+    if (/\bkam\s+(?:jdou|puti|patri)\b.*\buloz\w*/.test(x)) return true;
+    if (/\b(?:ukladas|ukladas|ukladat)\w*\b.*\b(?:server|cloud|nekde)\b/.test(x)) return true;
+    if (/\b(?:nekde|n(a|e)kde)\s+na\s+server\b/.test(x)) return true;
+    if (/\bje\s+ulozist\w*\b.*\b(?:neomezen|limit)\b/.test(x)) return true;
+    if (/\bulozist\w*\b.*\bneomezen/.test(x)) return true;
+    if (/\bbudu\s+mit\b.*\b(?:pripom|upozorn)\w*/.test(x)) return true;
+    if (/\bv\s+jedn\w*\s+v(?:ete|eta)\b.*\b(?:kalendar|ukol|poznam)/.test(x)) return true;
+    if (/\bkolik\s+si\s+(?:muz|mohu|muzeme)\s+ulozit\b/.test(x)) return true;
+    if (/\bjak\s+velk\w*\s+je\s+ulozist/.test(x)) return true;
+    if (/\bkapacit\w*\s+(?:ulozist|poznam|kalendar|ukol)/.test(x)) return true;
+    if (/\blimit\s+(?:ulozist|poznam|zaznam)/.test(x)) return true;
+    if (/\b(?:pripomenes|pripominate|pripomenuti)\b/.test(x) && /\b(?:ukol|uloz)/.test(x)) return true;
+    if (/\bkde\s+si\s+(?:potom|pak)\s+(?:ty\s+)?(?:ukol|ukoly)\s+(?:prec|ct|najdu|uvid)/.test(x)) return true;
+    if (/\b(?:ty\s+mi\s+)?(?:ty\s+)?ukol\w*\s+(?:pripomen|prec|ct|najdu)/.test(x)) return true;
+    if (/\bmuz(?:u|eme)\s+ulozit\s+(?:neco|co)\b/.test(x) && /\b(?:zaroven|rovnou|v\s+jednom\s+pokynu|soucasne)\b/.test(x)) {
+      return true;
+    }
+    if (/\bmuz/.test(x) && /\b(?:ulozit|uloz)\b.*\b(?:zaroven|rovnou\s+i|v\s+jednom\s+pokynu)\b.*\b(?:kalendar|ukol|poznam)/.test(x)) {
+      return true;
+    }
+    return false;
+  }
 
   function iuSilverLineOResolveAssistantStaticIntentV1(f) {
     if (/^\s*(?:napoveda|pomoc|help)\s*$/i.test(f) || (/\b(?:napoveda|pomoc|help)\b/.test(f) && !/\bpriklad\b/.test(f) && !/\bukaz\b/.test(f))) {
@@ -56808,6 +56872,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverHelpGuidanceFirewallV2Folded(f) {
     const x = String(f || "");
     if (!x) return false;
+    if (iuSilverScreenshotGovernanceHelpFirewallV1(x)) return true;
     if (/^\s*(?:uloz|ulozit|pridej|pripomen|zapis|vytvor|naplanuj|dej\s+mi\s+(?:do|na)|vloz)\b/.test(x)) return false;
     if (/^\s*(?:najdi|co\s+mam\s+(?:zitra|dnes|tento|v\s+pond))\b/.test(x)) return false;
     if (/\bjen\s+mi\s+(?:porad|vysvetl|ukaz)\b/.test(x)) return true;
@@ -56880,6 +56945,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   function iuSilverLineOResolveTopicV1(f) {
+    if (iuSilverScreenshotGovernanceHelpFirewallV1(f)) {
+      if (/\bkolik\s+si\s+(?:muz|mohu)|\bjak\s+velk\w*\s+je\s+ulozist|\bkapacit|\blimit\s+ulozist/.test(f)) return "storage_capacity";
+      if (/\b(?:pripomenes|kde\s+si\s+(?:potom|pak))\b/.test(f) && /\bukol/.test(f)) return "task_guidance_read";
+      if (/\bmuz(?:u|eme)\s+ulozit\b/.test(f) && /\b(?:zaroven|rovnou|v\s+jednom\s+pokynu)\b/.test(f)) return "multi_storage";
+      return "privacy_storage";
+    }
     if (/\bco\s+neumis\b/.test(f)) return "boundaries";
     if (
       /\b(chatgpt|openai|internet|cloud|cloudov\w*\s+backend|umis\s+vsechno|nekonecn\w*|pamet\s+navzdy|pamatuju\s+si\s+vse|vse\s+navzdy|dokonal\w*\s+cestin\w*|rozumis\s+cestin\w*\s+dokonal\w*|rozumis\s+cesky\s+dokonal\w*|perfektne\s+cesky|jsem\s+ai|jsi\s+ai|jsi\s+umela|googlit|gpt[\s-]?4|neuronov\w*\s+sit|preloz\w*.*\bonline)\b/.test(
@@ -56935,6 +57006,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const rawTrim = String(raw || "").trim();
     const f = foldCs(rawTrim).replace(/[?!.,;:]+$/g, "");
     if (!IU_SILVER_LINE_O_V1) return null;
+    if (iuSilverScreenshotGovernanceHelpFirewallV1(f)) {
+      const topicGov = iuSilverLineOResolveTopicV1(f);
+      const copyGov = IU_SILVER_LINE_O_COPY_V1[topicGov] || IU_SILVER_LINE_O_COPY_V1.general;
+      const staticIntentGov = iuSilverLineOResolveAssistantStaticIntentV1(f);
+      return iuSilverLineOBuildCapabilityTurnV1(copyGov, topicGov, staticIntentGov);
+    }
     if (/\?/.test(rawTrim) && iuSilverHelpGuidanceQuestionSemanticsFoldedV1(f) && !iuSilverHelpGuidanceFirewallV2Folded(f)) {
       if (!/^\s*(?:uloz|pridej|pripomen|zapis|vytvor)\b/.test(f)) {
         const topicQ = iuSilverLineOResolveTopicV1(f);
@@ -59499,6 +59576,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     iuSilverLineOCapabilityHelpEngineV1: iuSilverLineOCapabilityHelpEngineV1,
     iuSilverIsHelpGuidanceRenderModeV1: iuSilverIsHelpGuidanceRenderModeV1,
     iuSilverHelpGuidanceFirewallV2Folded: iuSilverHelpGuidanceFirewallV2Folded,
+    iuSilverScreenshotGovernanceHelpFirewallV1: iuSilverScreenshotGovernanceHelpFirewallV1,
     iuSilverHelpGuidanceQuestionSemanticsFoldedV1: iuSilverHelpGuidanceQuestionSemanticsFoldedV1,
     iuSilverSessionStateGovernanceTickV1: iuSilverSessionStateGovernanceTickV1,
     iuSilverSessionStateGovernancePeekV1: iuSilverSessionStateGovernancePeekV1,
