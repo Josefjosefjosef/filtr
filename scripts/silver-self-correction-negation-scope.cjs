@@ -33,6 +33,9 @@ function isGlobalNoWriteNegation(fold) {
  */
 function isScopedUpdateNegation(fold) {
   const f = String(fold || "");
+  const neNovWithFiller =
+    /\bne\s+(?:(?:trochu|jako|nejak\w*|ne\w*|no|fakt)\s+)+(?:novy|novou|dalsi|druh\w*)\b/i.test(f) ||
+    /\bne\s+(?:(?:trochu|jako|nejak\w*|ne\w*|no|fakt)\s+)+nov\w*\s+ukol\b/i.test(f);
   return (
     /\bnevytv\w*\s+druhou\b/i.test(f) ||
     /\bnevytv\w*\s+novou\b/i.test(f) ||
@@ -41,6 +44,7 @@ function isScopedUpdateNegation(fold) {
     /\bne\s+novy\b/i.test(f) ||
     /\bne\s+nový\b/i.test(f) ||
     /\bne\s+novou\b/i.test(f) ||
+    neNovWithFiller ||
     /\bneprid\w*\s+novou\b/i.test(f) ||
     /\bnepřid\w*\s+novou\b/i.test(f) ||
     /\bne\s+druh[yý]\b/i.test(f) ||
