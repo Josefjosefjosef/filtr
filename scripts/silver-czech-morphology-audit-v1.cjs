@@ -7,13 +7,36 @@ const harness = require("./audit_silver_realistic_mobile_corpus.cjs");
 const PAIRS = [
   ["doktor", "doktorovi"],
   ["doktor", "doktora"],
+  ["doktor", "doktorem"],
   ["schuzka", "schuzce"],
+  ["schuzka", "schuzku"],
   ["servis", "servisu"],
+  ["servis", "servisem"],
   ["ukol", "ukolu"],
+  ["ukol", "ukolem"],
   ["poznamka", "poznamce"],
+  ["poznamka", "poznamku"],
   ["kuba", "kubovi"],
-  ["zaloha", "zalohy"]
+  ["kuba", "kubou"],
+  ["zaloha", "zalohy"],
+  ["novak", "novaka"],
+  ["novak", "novakovi"],
+  ["telefon", "telefonu"],
+  ["banka", "bance"],
+  ["faktura", "faktury"],
+  ["projekt", "projektu"],
+  ["lekarna", "lekarny"],
+  ["revize", "revizi"],
+  ["pojistovna", "pojistovne"],
+  ["technik", "technika"],
+  ["manazer", "manazera"],
+  ["kolega", "kolegovi"],
+  ["zakaznik", "zakaznika"],
+  ["servisak", "servisaka"]
 ];
+
+const QUERY_VERBS = ["najdi", "ukaz", "kde je", "hledej", "co je v", "vyhledej"];
+const QUERY_MODULES = ["note_query", "calendar_query", "task_query"];
 
 const TIME_PHRASES = [
   { input: "mel jsem schuzku s doktorem", aspect: "past", need: ["doktor"] },
@@ -38,18 +61,23 @@ function buildCases() {
     n++;
     cases.push({ id: "TIM_" + n, phrase: TIME_PHRASES[t].input, aspect: TIME_PHRASES[t].aspect, type: "time_aspect" });
   }
-  const fillers = ["", "hele ", "prosim "];
-  for (let pi = 0; pi < fillers.length; pi++) {
-    for (let i = 0; i < PAIRS.length; i++) {
-      for (let vi = 0; vi < 3; vi++) {
-        n++;
-        const variant = PAIRS[i][vi % 2 === 0 ? 1 : 0];
-        cases.push({
-          id: "MORQ_" + n,
-          input: fillers[pi] + "najdi " + variant,
-          type: "query_variant",
-          canon: PAIRS[i][0]
-        });
+  const fillers = ["", "hele ", "prosim ", "kratce ", "rekni "];
+  for (let mi = 0; mi < QUERY_MODULES.length; mi++) {
+    for (let pi = 0; pi < fillers.length; pi++) {
+      for (let qi = 0; qi < QUERY_VERBS.length; qi++) {
+        for (let i = 0; i < PAIRS.length; i++) {
+          if (QUERY_VERBS[qi] === "co je v" && PAIRS[i][0] === "schuzka") continue;
+          for (let vi = 1; vi < PAIRS[i].length; vi++) {
+            n++;
+            cases.push({
+              id: "MORQ_" + n,
+              input: fillers[pi] + QUERY_VERBS[qi] + " " + PAIRS[i][vi],
+              type: "query_variant",
+              module: QUERY_MODULES[mi],
+              canon: PAIRS[i][0]
+            });
+          }
+        }
       }
     }
   }
@@ -66,9 +94,17 @@ function runCase(eng, c) {
     const tag = eng.iuSilverCzechTemporalAspectTagV1(c.phrase);
     if (tag !== c.aspect) issues.push("aspect_expected_" + c.aspect + "_got_" + tag);
   } else if (c.type === "query_variant") {
-    const turn = eng.processUserTurn(c.input, eng.createEmptyDraft(), harness.ctxForCase("note_query"));
+    const mod = c.module || "note_query";
+    const turn = eng.processUserTurn(c.input, eng.createEmptyDraft(), harness.ctxForCase(mod));
     const intent = String(turn.normalizedIntent || "");
-    if (intent === "calendar.create" || intent === "tasks.create") issues.push("morph_query_created_write:" + intent);
+    if (
+      intent === "calendar.create" ||
+      intent === "tasks.create" ||
+      intent === "notes.create" ||
+      turn.processingState === "READY_TO_SAVE"
+    ) {
+      issues.push("morph_query_created_write:" + intent);
+    }
   }
   return { id: c.id, issues, pass: issues.length === 0 };
 }
