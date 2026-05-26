@@ -162,7 +162,7 @@ async function measureNavOnce(page, btn) {
 }
 
 async function runFlickerPhaseGuard(page) {
-  await page.goto(BASE + "?iuFlickerGuard=1", { waitUntil: "networkidle", timeout: 120000 });
+  await page.goto(BASE + "?iuFlickerGuard=1", { waitUntil: "domcontentloaded", timeout: 60000 });
   await page.waitForTimeout(600);
 
   return page.evaluate(() => {
@@ -241,7 +241,7 @@ async function runFlickerPhaseGuard(page) {
 }
 
 async function runCalendarSilverSurface(page) {
-  await page.goto(BASE, { waitUntil: "networkidle", timeout: 120000 });
+  await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 60000 });
   await page.waitForFunction(() => typeof window.iuSilverCalendarEngine !== "undefined", null, { timeout: 120000 });
 
   const summary = await page.evaluate(() => {
@@ -307,7 +307,7 @@ async function runCalendarSilverSurface(page) {
 }
 
 async function runDesktopUiSanity(page) {
-  await page.goto(BASE, { waitUntil: "networkidle", timeout: 120000 });
+  await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 60000 });
   await page.waitForTimeout(500);
   return page.evaluate(() => {
     const rail = !!document.getElementById("iuLeftRail");
