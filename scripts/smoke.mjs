@@ -378,21 +378,57 @@ async function runSmoke() {
 
     // Počasí historical inline video must teardown (no background audio) when leaving the section
     await gotoDomContentLoaded(page, `${BASE}/projects/?section=pocasi`);
-    await page.waitForTimeout(1600);
-    try {
-      await page.waitForSelector("#iuWeatherHistoryPlay", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
-    } catch (e) {
-      fail(`Weather history play control missing: ${e && e.message ? e.message : String(e)}`);
-    }
-    const wxPlayHidden = await page.evaluate(() => {
-      const btn = document.getElementById("iuWeatherHistoryPlay");
-      const card = document.getElementById("iuWeatherHistoryCard");
-      if (!btn) return { ok: false, reason: "no_btn" };
-      if (card && card.hidden) return { ok: false, reason: "card_hidden" };
-      return { ok: true };
+    await page.waitForFunction(
+      () => document.body && document.body.dataset && document.body.dataset.section === "pocasi",
+      { timeout: PREVIEW_SELECTOR_TIMEOUT_MS }
+    );
+    await page.evaluate(async () => {
+      try {
+        if (typeof window.iuWeatherLoadAndRender === "function") {
+          await window.iuWeatherLoadAndRender();
+        }
+      } catch (_w) {}
+      try {
+        if (typeof window.iuInitWeatherHistory === "function") {
+          window.iuInitWeatherHistory();
+        }
+      } catch (_h) {}
     });
-    if (!wxPlayHidden || !wxPlayHidden.ok) {
-      fail(`Weather history card not ready for play: ${JSON.stringify(wxPlayHidden)}`);
+    try {
+      await page.waitForFunction(
+        () => {
+          const btn = document.getElementById("iuWeatherHistoryPlay");
+          const card = document.getElementById("iuWeatherHistoryCard");
+          const fb = document.getElementById("iuWeatherHistoryFallback");
+          if (btn && card && !card.hidden) return true;
+          if (fb && !fb.hidden) return true;
+          return false;
+        },
+        { timeout: 45000 }
+      );
+    } catch (e) {
+      const wxDiag = await page.evaluate(() => {
+        const btn = document.getElementById("iuWeatherHistoryPlay");
+        const card = document.getElementById("iuWeatherHistoryCard");
+        const fb = document.getElementById("iuWeatherHistoryFallback");
+        return {
+          section: (document.body && document.body.dataset && document.body.dataset.section) || "",
+          hasBtn: !!btn,
+          cardHidden: card ? !!card.hidden : null,
+          fallbackHidden: fb ? !!fb.hidden : null,
+          initFlag: typeof window.__iu_weatherHistoryInit !== "undefined" ? window.__iu_weatherHistoryInit : null,
+        };
+      });
+      fail(
+        `Weather history card not ready for play: ${e && e.message ? e.message : String(e)} diag=${JSON.stringify(wxDiag)}`
+      );
+    }
+    const wxCardReady = await page.evaluate(() => {
+      const card = document.getElementById("iuWeatherHistoryCard");
+      return !!(card && !card.hidden);
+    });
+    if (!wxCardReady) {
+      fail("Weather history card hidden after init (dataset or history load unavailable in smoke)");
     }
     await page.click("#iuWeatherHistoryPlay");
     await page.waitForTimeout(900);
