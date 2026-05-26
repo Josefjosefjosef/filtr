@@ -54606,7 +54606,312 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     IU_SILVER_CONVERSATION_V12.historicalAnchors = [];
     IU_SILVER_CONVERSATION_V12.draftLifecycle = {};
     IU_SILVER_CONVERSATION_V12.compressedTopics = [];
+    IU_SILVER_CONVERSATION_V12._gov = null;
+    IU_SILVER_CONVERSATION_V12._govSlots = null;
+    IU_SILVER_CONVERSATION_V12.persistenceRecovered = false;
     iuSilverSessionEntitiesClear();
+  }
+
+  /** Session State Governance V1 — deterministic TTL, budgets, pruning (Omega follow-up; no AI memory). */
+  const IU_SILVER_STATE_GOVERNANCE_V1 = true;
+  const IU_SILVER_GOV_MAX_DRAFTS = 12;
+  const IU_SILVER_GOV_MAX_CONTINUATION_DEPTH = 8;
+  const IU_SILVER_GOV_MAX_CONTINUATION_CHAIN = 24;
+  const IU_SILVER_GOV_MAX_CONTEXT_SLOTS = 16;
+  const IU_SILVER_GOV_MAX_SESSION_MEMORY_OBJECTS = 32;
+  const IU_SILVER_GOV_MAX_STALE_HISTORY = 48;
+  const IU_SILVER_GOV_MAX_RECOVERY_PAYLOAD_BYTES = 48000;
+  const IU_SILVER_GOV_TTL_MS_DRAFT = 2 * 60 * 60 * 1000;
+  const IU_SILVER_GOV_TTL_MS_CONTINUATION = 45 * 60 * 1000;
+  const IU_SILVER_GOV_TTL_MS_SLOT = 30 * 60 * 1000;
+  const IU_SILVER_GOV_TTL_MS_ORCHESTRATION = 20 * 60 * 1000;
+
+  function iuSilverGovNowMs() {
+    return Date.now();
+  }
+
+  function iuSilverGovIsCapabilityIntent(ni) {
+    const x = String(ni || "");
+    return x === "assistant.capability" || x === "assistant.help" || x === "assistant.guidance";
+  }
+
+  function iuSilverGovEnsureMetaV1() {
+    const c = IU_SILVER_CONVERSATION_V12;
+    const now = iuSilverGovNowMs();
+    if (!c._gov || typeof c._gov !== "object") {
+      c._gov = {
+        createdAt: now,
+        updatedAt: now,
+        continuationDepth: 0,
+        continuationChain: 0,
+        lastContinuationAt: 0,
+        lastPruneAt: 0,
+        runtimeFootprintBefore: 0,
+        runtimeFootprintAfter: 0
+      };
+    }
+    if (!Array.isArray(c._govSlots)) c._govSlots = [];
+    c._gov.updatedAt = now;
+    return c._gov;
+  }
+
+  function iuSilverGovMeasureFootprintV1() {
+    const c = IU_SILVER_CONVERSATION_V12;
+    let n = 0;
+    if (Array.isArray(c.draftRegistry)) n += c.draftRegistry.length;
+    if (Array.isArray(c.historicalAnchors)) n += c.historicalAnchors.length;
+    if (c.draftLifecycle && typeof c.draftLifecycle === "object") n += Object.keys(c.draftLifecycle).length;
+    if (Array.isArray(c.compressedTopics)) n += c.compressedTopics.length;
+    if (Array.isArray(c._govSlots)) n += c._govSlots.length;
+    if (c.lastDraft) n += 1;
+    if (c.pendingInterrupt) n += 1;
+    if (c.agendaContext) n += 1;
+    return n;
+  }
+
+  function iuSilverGovTouchSlotV1(kind, key) {
+    const c = IU_SILVER_CONVERSATION_V12;
+    iuSilverGovEnsureMetaV1();
+    const now = iuSilverGovNowMs();
+    const id = String(kind || "slot") + ":" + String(key || "default");
+    let slots = c._govSlots;
+    let idx = -1;
+    for (let i = 0; i < slots.length; i++) {
+      if (slots[i].id === id) {
+        idx = i;
+        break;
+      }
+    }
+    const entry = { id: id, kind: kind, key: key, createdAt: idx >= 0 ? slots[idx].createdAt : now, updatedAt: now };
+    if (idx >= 0) slots[idx] = entry;
+    else slots.push(entry);
+    while (slots.length > IU_SILVER_GOV_MAX_CONTEXT_SLOTS) slots.shift();
+    return entry;
+  }
+
+  function iuSilverGovPruneExpiredSlotsV1(now) {
+    const c = IU_SILVER_CONVERSATION_V12;
+    if (!Array.isArray(c._govSlots)) return 0;
+    const out = [];
+    let dropped = 0;
+    for (let i = 0; i < c._govSlots.length; i++) {
+      const s = c._govSlots[i];
+      if (now - (s.updatedAt || s.createdAt || 0) <= IU_SILVER_GOV_TTL_MS_SLOT) out.push(s);
+      else dropped++;
+    }
+    c._govSlots = out;
+    return dropped;
+  }
+
+  function iuSilverGovPruneDraftRegistryV1(now) {
+    const c = IU_SILVER_CONVERSATION_V12;
+    if (!Array.isArray(c.draftRegistry)) return 0;
+    const keep = [];
+    let dropped = 0;
+    for (let i = 0; i < c.draftRegistry.length; i++) {
+      const e = c.draftRegistry[i];
+      const ts = e && e.ts ? e.ts : 0;
+      if (!ts || now - ts <= IU_SILVER_GOV_TTL_MS_DRAFT || e.pinned) keep.push(e);
+      else dropped++;
+    }
+    while (keep.length > IU_SILVER_GOV_MAX_DRAFTS) {
+      let dropIdx = -1;
+      for (let j = 0; j < keep.length; j++) {
+        if (!keep[j].pinned) {
+          dropIdx = j;
+          break;
+        }
+      }
+      if (dropIdx < 0) dropIdx = 0;
+      keep.splice(dropIdx, 1);
+      dropped++;
+    }
+    c.draftRegistry = keep;
+    if (c.activeDraftKey) {
+      let found = false;
+      for (let k = 0; k < keep.length; k++) {
+        if (keep[k].key === c.activeDraftKey) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) c.activeDraftKey = keep.length ? keep[keep.length - 1].key : null;
+    }
+    return dropped;
+  }
+
+  function iuSilverGovPruneHistoricalAnchorsV1(now) {
+    const c = IU_SILVER_CONVERSATION_V12;
+    if (!Array.isArray(c.historicalAnchors)) return 0;
+    const keep = [];
+    let dropped = 0;
+    for (let i = 0; i < c.historicalAnchors.length; i++) {
+      const a = c.historicalAnchors[i];
+      const ts = a && a.ts ? a.ts : 0;
+      if (!ts || now - ts <= IU_SILVER_GOV_TTL_MS_DRAFT) keep.push(a);
+      else dropped++;
+    }
+    while (keep.length > IU_SILVER_LINE_M_MAX_ANCHORS) {
+      keep.shift();
+      dropped++;
+    }
+    while (keep.length > IU_SILVER_GOV_MAX_STALE_HISTORY) {
+      keep.shift();
+      dropped++;
+    }
+    c.historicalAnchors = keep;
+    return dropped;
+  }
+
+  function iuSilverGovPruneDraftLifecycleV1(now) {
+    const c = IU_SILVER_CONVERSATION_V12;
+    if (!c.draftLifecycle || typeof c.draftLifecycle !== "object") return 0;
+    const regKeys = {};
+    if (Array.isArray(c.draftRegistry)) {
+      for (let i = 0; i < c.draftRegistry.length; i++) regKeys[c.draftRegistry[i].key] = true;
+    }
+    const next = {};
+    let dropped = 0;
+    const keys = Object.keys(c.draftLifecycle);
+    for (let i = 0; i < keys.length; i++) {
+      const k = keys[i];
+      if (regKeys[k]) next[k] = c.draftLifecycle[k];
+      else {
+        dropped++;
+      }
+    }
+    c.draftLifecycle = next;
+    void now;
+    return dropped;
+  }
+
+  function iuSilverGovPruneCompressedTopicsV1() {
+    const c = IU_SILVER_CONVERSATION_V12;
+    if (!Array.isArray(c.compressedTopics)) return 0;
+    let dropped = 0;
+    while (c.compressedTopics.length > 8) {
+      c.compressedTopics.shift();
+      dropped++;
+    }
+    return dropped;
+  }
+
+  function iuSilverGovPruneAgendaContextV1(now) {
+    const c = IU_SILVER_CONVERSATION_V12;
+    if (!c.agendaContext || typeof c.agendaContext !== "object") return 0;
+    const ts = c.agendaContext.updatedAt || c.agendaContext.createdAt || 0;
+    if (ts && now - ts > IU_SILVER_GOV_TTL_MS_ORCHESTRATION) {
+      c.agendaContext = null;
+      return 1;
+    }
+    return 0;
+  }
+
+  function iuSilverGovPruneStaleContinuationV1(gov, now) {
+    if (!gov) return 0;
+    if (gov.lastContinuationAt && now - gov.lastContinuationAt > IU_SILVER_GOV_TTL_MS_CONTINUATION) {
+      gov.continuationDepth = 0;
+      gov.continuationChain = 0;
+      return 1;
+    }
+    return 0;
+  }
+
+  function iuSilverGovContinuationBumpV1() {
+    const gov = iuSilverGovEnsureMetaV1();
+    const now = iuSilverGovNowMs();
+    iuSilverGovPruneStaleContinuationV1(gov, now);
+    gov.lastContinuationAt = now;
+    gov.continuationDepth = Math.min(IU_SILVER_GOV_MAX_CONTINUATION_DEPTH, (gov.continuationDepth || 0) + 1);
+    gov.continuationChain = Math.min(IU_SILVER_GOV_MAX_CONTINUATION_CHAIN, (gov.continuationChain || 0) + 1);
+    if (gov.continuationDepth >= IU_SILVER_GOV_MAX_CONTINUATION_DEPTH) {
+      const c = IU_SILVER_CONVERSATION_V12;
+      c.pendingInterrupt = null;
+      gov.continuationDepth = 0;
+    }
+  }
+
+  function iuSilverGovContinuationResetV1() {
+    const gov = iuSilverGovEnsureMetaV1();
+    gov.continuationDepth = 0;
+    gov.continuationChain = 0;
+    gov.lastContinuationAt = 0;
+  }
+
+  function iuSilverSessionStateGovernanceTickV1(opts) {
+    if (!IU_SILVER_STATE_GOVERNANCE_V1) return iuSilverGovMeasureFootprintV1();
+    const o = opts || {};
+    const c = IU_SILVER_CONVERSATION_V12;
+    const gov = iuSilverGovEnsureMetaV1();
+    const now = iuSilverGovNowMs();
+    if (!gov.runtimeFootprintBefore) gov.runtimeFootprintBefore = iuSilverGovMeasureFootprintV1();
+    let pruned = 0;
+    pruned += iuSilverGovPruneExpiredSlotsV1(now);
+    pruned += iuSilverGovPruneDraftRegistryV1(now);
+    pruned += iuSilverGovPruneHistoricalAnchorsV1(now);
+    pruned += iuSilverGovPruneDraftLifecycleV1(now);
+    pruned += iuSilverGovPruneCompressedTopicsV1();
+    pruned += iuSilverGovPruneAgendaContextV1(now);
+    pruned += iuSilverGovPruneStaleContinuationV1(gov, now);
+    let memObjs =
+      (Array.isArray(c.draftRegistry) ? c.draftRegistry.length : 0) +
+      (Array.isArray(c.historicalAnchors) ? c.historicalAnchors.length : 0) +
+      (c.draftLifecycle ? Object.keys(c.draftLifecycle).length : 0) +
+      (Array.isArray(c._govSlots) ? c._govSlots.length : 0);
+    while (memObjs > IU_SILVER_GOV_MAX_SESSION_MEMORY_OBJECTS) {
+      if (Array.isArray(c.historicalAnchors) && c.historicalAnchors.length) c.historicalAnchors.shift();
+      else if (Array.isArray(c._govSlots) && c._govSlots.length) c._govSlots.shift();
+      else break;
+      memObjs--;
+      pruned++;
+    }
+    gov.lastPruneAt = now;
+    gov.runtimeFootprintAfter = iuSilverGovMeasureFootprintV1();
+    return { pruned: pruned, footprint: gov.runtimeFootprintAfter };
+  }
+
+  function iuSilverGovCompactPersistenceSnapshotV1(snap) {
+    if (!snap || typeof snap !== "object") return snap;
+    const reg = Array.isArray(snap.draftRegistry) ? snap.draftRegistry : [];
+    const trimmed = [];
+    for (let i = Math.max(0, reg.length - IU_SILVER_GOV_MAX_DRAFTS); i < reg.length; i++) {
+      trimmed.push(reg[i]);
+    }
+    snap.draftRegistry = trimmed;
+    if (Array.isArray(snap.historicalAnchors) && snap.historicalAnchors.length > IU_SILVER_LINE_M_MAX_ANCHORS) {
+      snap.historicalAnchors = snap.historicalAnchors.slice(-IU_SILVER_LINE_M_MAX_ANCHORS);
+    }
+    if (Array.isArray(snap.compressedTopics) && snap.compressedTopics.length > 8) {
+      snap.compressedTopics = snap.compressedTopics.slice(-8);
+    }
+    try {
+      const raw = JSON.stringify(snap);
+      if (raw.length > IU_SILVER_GOV_MAX_RECOVERY_PAYLOAD_BYTES) {
+        snap.draftRegistry = trimmed.slice(-6);
+        snap.historicalAnchors = [];
+        snap.compressedTopics = [];
+        snap.lastDraft = null;
+        snap.pendingInterrupt = null;
+      }
+    } catch (_) {}
+    return snap;
+  }
+
+  function iuSilverSessionStateGovernancePeekV1() {
+    const c = IU_SILVER_CONVERSATION_V12;
+    const gov = c._gov || {};
+    return {
+      maxDrafts: IU_SILVER_GOV_MAX_DRAFTS,
+      maxContextSlots: IU_SILVER_GOV_MAX_CONTEXT_SLOTS,
+      maxContinuationDepth: IU_SILVER_GOV_MAX_CONTINUATION_DEPTH,
+      draftRegistryCount: Array.isArray(c.draftRegistry) ? c.draftRegistry.length : 0,
+      contextSlotCount: Array.isArray(c._govSlots) ? c._govSlots.length : 0,
+      continuationDepth: gov.continuationDepth || 0,
+      continuationChain: gov.continuationChain || 0,
+      runtimeFootprintBefore: gov.runtimeFootprintBefore || 0,
+      runtimeFootprintAfter: gov.runtimeFootprintAfter || 0,
+      sessionTurnCount: c.sessionTurnCount || 0
+    };
   }
 
   function iuSilverConversationPeek() {
@@ -54985,7 +55290,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     if (idx >= 0) c.draftRegistry[idx] = entry;
     else c.draftRegistry.push(entry);
-    while (c.draftRegistry.length > 12) {
+    const maxReg = IU_SILVER_STATE_GOVERNANCE_V1 ? IU_SILVER_GOV_MAX_DRAFTS : 12;
+    while (c.draftRegistry.length > maxReg) {
       let dropIdx = -1;
       for (let j = 0; j < c.draftRegistry.length; j++) {
         if (!c.draftRegistry[j].pinned) {
@@ -54997,6 +55303,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       c.draftRegistry.splice(dropIdx, 1);
     }
     c.activeDraftKey = key;
+    if (IU_SILVER_STATE_GOVERNANCE_V1) iuSilverGovTouchSlotV1("draft", key);
   }
 
   function iuSilverLineLDraftRegistryFind(raw, prev) {
@@ -55069,6 +55376,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   function iuSilverLineLContinuationUpdateTurn(targetDraft, now, mutateFn) {
+    if (IU_SILVER_STATE_GOVERNANCE_V1) {
+      iuSilverGovContinuationBumpV1();
+      iuSilverGovTouchSlotV1("continuation", iuSilverLineLDraftRegistryKey(targetDraft));
+    }
     const turn = iuSilverCalendarContinuationUpdateTurn(targetDraft, now, mutateFn);
     if (turn && turn.draft) iuSilverLineLDraftRegistryUpsert(turn.draft);
     return turn;
@@ -55433,6 +55744,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function iuSilverLineLPostTurnSync(turn, rawText) {
     if (!turn || typeof turn !== "object") return;
+    if (turn.silverCapabilityTurn || turn.silverNoWrite || iuSilverGovIsCapabilityIntent(turn.normalizedIntent)) return;
     const c = IU_SILVER_CONVERSATION_V12;
     const ni = String(turn.normalizedIntent || "");
     if (ni.indexOf(".read") >= 0 || ni.indexOf(".query") >= 0 || ni === "calendar.read") {
@@ -55453,14 +55765,21 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         const z = findRelativeDay("v pátek", now, false, null);
         if (z && z.date) c.agendaContext = { dateISO: z.date, scope: "day", label: "v pátek" };
       }
+      if (c.agendaContext) {
+        const gnow = iuSilverGovNowMs();
+        c.agendaContext.createdAt = c.agendaContext.createdAt || gnow;
+        c.agendaContext.updatedAt = gnow;
+      }
       return;
     }
     if (ni === "calendar.create" && turn.draft && turn.draft.targetContainer === "calendar") {
       c.lastWasReadQuery = false;
       iuSilverLineLDraftRegistryUpsert(turn.draft);
+      if (IU_SILVER_STATE_GOVERNANCE_V1) iuSilverGovContinuationResetV1();
     }
     iuSilverLineMPostTurnSync(turn, rawText);
     if (IU_SILVER_LINE_N_V1) iuSilverLineNPersistenceTryStoreV1();
+    if (IU_SILVER_STATE_GOVERNANCE_V1) iuSilverSessionStateGovernanceTickV1({ skipSessionBump: true });
   }
 
   /** Line M — Long-Term Conversational Intelligence + Session Memory + Historical Context V1 */
@@ -56012,13 +56331,24 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       "Formuluj jasně: akce + modul + datum/čas. Např. ulož / připomeň / najdi + kalendář / úkol / poznámka."
   };
 
-  function iuSilverLineOBuildCapabilityTurnV1(lead, topicId) {
+  function iuSilverLineOResolveAssistantStaticIntentV1(f) {
+    if (/^\s*(?:napoveda|pomoc|help)\s*$/i.test(f) || (/\b(?:napoveda|pomoc|help)\b/.test(f) && !/\bpriklad\b/.test(f) && !/\bukaz\b/.test(f))) {
+      return "assistant.help";
+    }
+    if (/\bpriklad\s+prikaz|priklad\s+ukol|spravne\s+formulovat|ukaz\s+priklad/.test(f)) {
+      return "assistant.guidance";
+    }
+    return "assistant.capability";
+  }
+
+  function iuSilverLineOBuildCapabilityTurnV1(lead, topicId, intentOverride) {
     let safe = String(lead || "").trim();
     if (IU_SILVER_LINE_O_FORBIDDEN_CLAIM_RE_V1.test(foldCs(safe))) {
       safe = IU_SILVER_LINE_O_COPY_V1.boundaries;
     }
+    const ni = intentOverride || "assistant.capability";
     return {
-      normalizedIntent: "assistant.capability",
+      normalizedIntent: ni,
       targetContainer: "none",
       processingState: "CAPABILITY_OK",
       iuSilverCapabilityTopicV1: topicId || "general",
@@ -56048,6 +56378,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     if (/\bfollow[\s-]?up\b/.test(f) || /\bjak\s+napsat\s+follow/.test(f)) return true;
     if (/\bjak\s+pokracovat\s+v\s+konverzac/.test(f)) return true;
+    if (/\bjak\s+navazovat\s+na\s+predchoz/.test(f)) return true;
     if (/\bjak\s+vytvor\w*/.test(f)) return true;
     if (/\bjak\s+pridam\s+poznam/.test(f)) return true;
     if (/\bjak\s+zmenim\s+lokaci/.test(f)) return true;
@@ -56100,7 +56431,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bhistorick/.test(f)) return "historical";
     if (/\bdlouhe\s+diktov/.test(f)) return "long_dictation";
     if (/\bdlouhou\s+konverzac|dlouha\s+konverzac/.test(f)) return "long_session";
-    if (/\bnavazovani\s+na\s+predchoz/.test(f)) return "memory";
+    if (/\bnavazovani\s+na\s+predchoz/.test(f) || /\bjak\s+navazovat\s+na\s+predchoz/.test(f)) return "memory";
     if (/\bvice\s+krokov|krokov[eé]\s+konverzac/.test(f)) return "continuation";
     if (/\bconversational\s+memory|pamat\w*\s+konverzac/.test(f) && !/\bnekonecn\w*/.test(f)) return "memory";
     if (/\bdraft|koncept/.test(f)) return "drafts";
@@ -56130,7 +56461,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!IU_SILVER_LINE_O_V1 || !iuSilverLineOIsCapabilityUtteranceV1(f)) return null;
     const topic = iuSilverLineOResolveTopicV1(f);
     const copy = IU_SILVER_LINE_O_COPY_V1[topic] || IU_SILVER_LINE_O_COPY_V1.general;
-    return iuSilverLineOBuildCapabilityTurnV1(copy, topic);
+    const staticIntent = iuSilverLineOResolveAssistantStaticIntentV1(f);
+    return iuSilverLineOBuildCapabilityTurnV1(copy, topic, staticIntent);
   }
 
   function iuSilverCzechTemporalAspectTagV1(text) {
@@ -56199,8 +56531,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverLineNPersistenceTryStoreV1() {
     try {
       if (typeof sessionStorage === "undefined") return;
-      const snap = iuSilverLineNPersistenceSnapshotV1();
+      let snap = iuSilverLineNPersistenceSnapshotV1();
       if (!snap.draftRegistry.length && !snap.lastDraft) return;
+      if (IU_SILVER_STATE_GOVERNANCE_V1) snap = iuSilverGovCompactPersistenceSnapshotV1(snap);
       sessionStorage.setItem(IU_SILVER_LINE_N_STORAGE_KEY, JSON.stringify(snap));
     } catch (_) {}
   }
@@ -57459,7 +57792,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     {
       const lineOCapEarly = IU_SILVER_LINE_O_V1 && iuSilverLineOCapabilityHelpEngineV1(raw0, now, ctx);
       if (lineOCapEarly) {
-        iuSilverLineLPostTurnSync(lineOCapEarly, raw0);
+        if (IU_SILVER_STATE_GOVERNANCE_V1) {
+          iuSilverSessionStateGovernanceTickV1({ capabilityTurn: true });
+        }
         return lineOCapEarly;
       }
     }
@@ -58536,15 +58871,22 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function processUserTurn(text, prevDraft, ctx) {
     const prev0 = prevDraft || createEmptyDraft();
+    if (IU_SILVER_STATE_GOVERNANCE_V1) iuSilverSessionStateGovernanceTickV1({ skipSessionBump: true });
     if (
       IU_SILVER_LINE_N_V1 &&
       (!prev0.title || !String(prev0.title || "").trim()) &&
       (!Array.isArray(IU_SILVER_CONVERSATION_V12.draftRegistry) || !IU_SILVER_CONVERSATION_V12.draftRegistry.length)
     ) {
       iuSilverLineNPersistenceTryLoadV1();
+      if (IU_SILVER_STATE_GOVERNANCE_V1) iuSilverSessionStateGovernanceTickV1({ skipSessionBump: true });
     }
     const turn = iuSilverApplySaveSearchModeGuardV1(iuSilverProcessUserTurnCore(text, prevDraft, ctx), String(text || "").trim(), ctx);
-    iuSilverLineLPostTurnSync(turn, String(text || "").trim());
+    if (!turn.silverCapabilityTurn && !iuSilverGovIsCapabilityIntent(turn.normalizedIntent)) {
+      iuSilverLineLPostTurnSync(turn, String(text || "").trim());
+    }
+    if (IU_SILVER_STATE_GOVERNANCE_V1 && !turn.silverCapabilityTurn) {
+      iuSilverSessionStateGovernanceTickV1({ skipSessionBump: true });
+    }
     return turn;
   }
 
@@ -58592,6 +58934,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     iuSilverLineNPersistenceRestoreV1: iuSilverLineNPersistenceRestoreV1,
     iuSilverLineNPersistenceTryLoadV1: iuSilverLineNPersistenceTryLoadV1,
     iuSilverLineOCapabilityHelpEngineV1: iuSilverLineOCapabilityHelpEngineV1,
+    iuSilverSessionStateGovernanceTickV1: iuSilverSessionStateGovernanceTickV1,
+    iuSilverSessionStateGovernancePeekV1: iuSilverSessionStateGovernancePeekV1,
+    iuSilverGovIsCapabilityIntent: iuSilverGovIsCapabilityIntent,
+    iuSilverGovMeasureFootprintV1: iuSilverGovMeasureFootprintV1,
     iuSilverCzechTemporalAspectTagV1: iuSilverCzechTemporalAspectTagV1,
     iuSilverConversationSyncFromTurn: iuSilverConversationSyncFromTurn,
     iuSilverApplySessionContext: iuSilverApplySessionContext,

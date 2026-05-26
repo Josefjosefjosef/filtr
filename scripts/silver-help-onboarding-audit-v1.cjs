@@ -5,12 +5,12 @@ const path = require("path");
 const shared = require("./silver-line-o-capability-audit-shared.cjs");
 
 const ONBOARDING = [
-  { input: "jak začít se Silverem", topic: "silver", need: ["silver", "prikaz"] },
-  { input: "co je Silver", topic: "silver", need: ["asistent", "lokal"] },
-  { input: "nápověda", topic: "general", need: ["kalend", "ukol"] },
-  { input: "pomoc", topic: "general", need: ["pomoc", "ukol"] },
-  { input: "help", topic: "general", need: ["kalend"] },
-  { input: "jak to používat", topic: "commands", need: ["prikaz", "jasn"] }
+  { input: "jak začít se Silverem", topic: "silver", need: ["silver", "prikaz"], expectIntent: "assistant.capability" },
+  { input: "co je Silver", topic: "silver", need: ["asistent", "lokal"], expectIntent: "assistant.capability" },
+  { input: "nápověda", topic: "general", need: ["kalend", "ukol"], expectIntent: "assistant.help" },
+  { input: "pomoc", topic: "general", need: ["pomoc", "ukol"], expectIntent: "assistant.help" },
+  { input: "help", topic: "general", need: ["kalend"], expectIntent: "assistant.help" },
+  { input: "jak to používat", topic: "commands", need: ["prikaz", "jasn"], expectIntent: "assistant.capability" }
 ];
 
 function buildCases() {
@@ -25,6 +25,7 @@ function buildCases() {
       input: o.input + "?",
       topic: o.topic,
       needTokens: o.need,
+      expectIntent: o.expectIntent,
       forbidTokens: ["chatgpt", "jsem chatgpt"]
     });
   }
@@ -37,6 +38,7 @@ function buildCases() {
         id: "ONB_" + String(n).padStart(4, "0"),
         input: spokenChaos[pi] + o.input + "?",
         topic: o.topic,
+        expectAnyStatic: true,
         relaxed: true
       });
     }
