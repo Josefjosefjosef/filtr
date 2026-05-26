@@ -41,8 +41,9 @@ function runCapabilityCase(eng, c) {
   const fLead = foldCs(lead);
   const issues = [];
 
+  const STATIC_ASSISTANT = new Set(["assistant.capability", "assistant.help", "assistant.guidance"]);
   if (c.expectNotCapability) {
-    if (intent === "assistant.capability" || turn.silverCapabilityTurn) {
+    if (STATIC_ASSISTANT.has(intent) || turn.silverCapabilityTurn) {
       issues.push("unexpected_capability_turn");
     }
     if (WRITE_INTENTS.has(intent) && c.mustNotWrite) issues.push("unexpected_write:" + intent);
@@ -50,13 +51,18 @@ function runCapabilityCase(eng, c) {
   }
 
   if (c.relaxed) {
-    if (intent !== "assistant.capability") issues.push("intent_expected_assistant_capability_got_" + intent);
+    if (!STATIC_ASSISTANT.has(intent)) issues.push("intent_expected_assistant_static_got_" + intent);
     if (WRITE_INTENTS.has(intent)) issues.push("capability_must_not_write");
     if (turn.readQuery) issues.push("readQuery_must_be_null");
     return { id: c.id, input: c.input, intent, lead, issues, pass: issues.length === 0, turn };
   }
 
-  if (intent !== "assistant.capability") issues.push("intent_expected_assistant_capability_got_" + intent);
+  const expectIntent = c.expectIntent || "assistant.capability";
+  if (c.expectAnyStatic) {
+    if (!STATIC_ASSISTANT.has(intent)) issues.push("intent_expected_assistant_static_got_" + intent);
+  } else if (intent !== expectIntent) {
+    issues.push("intent_expected_" + expectIntent + "_got_" + intent);
+  }
   if (turn.processingState !== "CAPABILITY_OK") issues.push("state_expected_CAPABILITY_OK_got_" + turn.processingState);
   if (turn.readQuery) issues.push("readQuery_must_be_null");
   if (WRITE_INTENTS.has(intent)) issues.push("capability_must_not_write");

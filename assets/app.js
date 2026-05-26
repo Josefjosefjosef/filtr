@@ -56332,10 +56332,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   };
 
   function iuSilverLineOResolveAssistantStaticIntentV1(f) {
-    if (/^\s*(?:napoveda|pomoc|help)\s*$/i.test(f) || /\b(?:napoveda|pomoc|help)\b/.test(f) && !/\bpriklad\b/.test(f)) {
+    if (/^\s*(?:napoveda|pomoc|help)\s*$/i.test(f) || (/\b(?:napoveda|pomoc|help)\b/.test(f) && !/\bpriklad\b/.test(f) && !/\bukaz\b/.test(f))) {
       return "assistant.help";
     }
-    if (/\bpriklad\s+prikaz|spravne\s+formulovat|guidance|jak\s+zacit\s+se\s+silver|ukaz\s+priklad/.test(f)) {
+    if (/\bpriklad\s+prikaz|priklad\s+ukol|spravne\s+formulovat|ukaz\s+priklad/.test(f)) {
       return "assistant.guidance";
     }
     return "assistant.capability";

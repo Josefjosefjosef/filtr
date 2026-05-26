@@ -5,11 +5,11 @@ const path = require("path");
 const shared = require("./silver-line-o-capability-audit-shared.cjs");
 
 const GUIDANCE = [
-  { input: "ukaž příklad příkazu pro schůzku", topic: "guidance_calendar", need: ["priklad", "schuz"] },
-  { input: "příklad úkolu", topic: "guidance_tasks", need: ["priklad", "ukol"] },
-  { input: "jak správně formulovat příkazy", topic: "guidance_commands", need: ["jasn", "datum"] },
-  { input: "jak napsat follow-up", topic: "continuation", need: ["navaz", "pridej"] },
-  { input: "jak pokračovat v konverzaci", topic: "continuation", need: ["navaz"] }
+  { input: "ukaž příklad příkazu pro schůzku", topic: "guidance_calendar", need: ["priklad", "schuz"], expectIntent: "assistant.guidance" },
+  { input: "příklad úkolu", topic: "guidance_tasks", need: ["priklad", "ukol"], expectIntent: "assistant.guidance" },
+  { input: "jak správně formulovat příkazy", topic: "guidance_commands", need: ["jasn", "datum"], expectIntent: "assistant.guidance" },
+  { input: "jak napsat follow-up", topic: "continuation", need: ["navaz", "pridej"], expectIntent: "assistant.capability" },
+  { input: "jak pokračovat v konverzaci", topic: "continuation", need: ["navaz"], expectIntent: "assistant.capability" }
 ];
 
 function buildCases() {
@@ -25,6 +25,7 @@ function buildCases() {
         input: prefixes[pi] + g.input + "?",
         topic: g.topic,
         needTokens: g.need,
+        expectIntent: g.expectIntent,
         forbidTokens: ["chatgpt"]
       });
     }
