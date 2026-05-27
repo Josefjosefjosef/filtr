@@ -55668,11 +55668,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bco\s+(?:mam|musim|mel\s+bych)\s+(?:zaplatit|koupit|zavolat|poslat|objednat|vyridit|udelat|splnit)\b/.test(x)) return true;
     if (/\bco\s+(?:\w+\s+){0,5}(?:mam|musim)\s+(?:zaplatit|koupit|zavolat|poslat|objednat|vyridit|udelat|splnit|jeste\s+zaridit)\b/.test(x)) return true;
     if (/\b(?:mam|musim)\s+(?:zavolat|zaplatit|koupit|poslat|objednat)\b/.test(x) && /\?/.test(x)) return true;
+    if (/^\s*(?:hele|no|prosim|kratce|vlastne)?\s*(?:mam|musim)\s+(?:zavolat|zaplatit|koupit|poslat|objednat)\b/.test(iuSilverTemporalTaskQueryRoutingV1StripPrefixFolded(x))) return true;
     if (/\bmam\s+neco\s+(?:\w+\s+){0,3}(?:ohledne|kolem)\b/.test(x)) return true;
     if (/\bco\s+(?:\w+\s+){0,5}jsem\s+(?:mel|mela|meli|resil|resi|resila)\b/.test(x) && !/\b(kalend|schuz|udalost)\b/.test(x)) return true;
     if (/\bco\s+mam\s+(?:kolem|ohledne)\b/.test(x) && !/\b(kalend|schuz|poznam)\b/.test(x)) return true;
     if (/\bco\s+mam\s+s\s+\w+/.test(x) && !iuSilverRelationshipCoMamSExplicitCalendarCueFolded(x)) return true;
-    if (/\b(?:mam|musim)\s+(?:zavolat|zaplatit|koupit|poslat|objednat)\b/.test(x) && !/\b(uloz|pridej|zapis|vytvor|dej\s+do)\b/.test(x)) return true;
+    if (/\b(podivej|zjist)\w*\s+jen\s+do\s+ukol/.test(x)) return false;
+    if (/\bne\s+do\s+ukol/.test(x) && /\bjestli\s+mam\b/.test(x)) return false;
     return false;
   }
 
@@ -55722,7 +55724,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (taskEarly) return taskEarly;
     const taskDeadline = iuSilverTryTaskDeadlineAnswerReadTurnV2(raw, now, f, ctx, empty);
     if (taskDeadline) return taskDeadline;
-    if (/\b(?:mam|musim)\s+(?:zavolat|zaplatit|koupit|poslat|objednat)\b/.test(f) && !/\b(uloz|pridej|zapis|vytvor|dej\s+do)\b/.test(f)) {
+    if (/\b(?:mam|musim)\s+(?:zavolat|zaplatit|koupit|poslat|objednat)\b/.test(f) && (/\?/.test(r0) || /^\s*(?:hele|no|prosim|kratce|vlastne)?\s*(?:mam|musim)\s+(?:zavolat|zaplatit|koupit)/.test(iuSilverTemporalTaskQueryRoutingV1StripPrefixFolded(f))) && !/\b(uloz|pridej|zapis|vytvor|dej\s+do)\b/.test(f)) {
       return iuSilverBuildTasksReadListTurn(ctx || {}, empty, f, now);
     }
     if (/\bmam\s+neco\s+(?:\w+\s+){0,3}(?:ohledne|kolem)\b/.test(f)) {
