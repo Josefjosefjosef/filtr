@@ -544,6 +544,8 @@ const GUARD_FAMILY_MAP = {
 
 const GUARD_MIN_ACCURACY = {
   wrapper: 0.91,
+  field_cleanup_isolation: 0.82,
+  payload_cleanliness: 0.88,
   default: 0.93,
 };
 
