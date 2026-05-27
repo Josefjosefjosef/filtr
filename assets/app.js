@@ -36557,6 +36557,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverCap54NegatedCalendarEventCueFolded(f) {
     const x = String(f || "");
     if (/\bnevytv\w*\s+udalost\b/.test(x)) return true;
+    if (/\bneukladej\s+do\s+kalendar/.test(x)) return true;
     if (/\bne\s+do\s+kalend/.test(x)) return true;
     if (/\bne\s+jako\s+udalost\b/.test(x)) return true;
     if (/\bne\s+jako\s+ukol\b/.test(x)) return true;
@@ -36634,12 +36635,130 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return null;
   }
 
+  /** SILVER_NOTE_WRITE_WARRANTY_OBJECT_ROUTING_V1 — záruka / účtenka / doklad / faktura → notes.create */
+  const IU_SILVER_NOTE_WRITE_WARRANTY_OBJECT_ROUTING_V1 = true;
+
+  function iuSilverNoteWriteWarrantyObjectCueFolded(f) {
+    const x = String(f || "");
+    return (
+      /\b(zaruk\w*|zaruc\w*|garanc\w*|reklamac\w*|ucten\w*|doklad\w*|faktur\w*|zarucni\s+list|koupen\w*|platnost\w*|konci\s+zaruk)\b/.test(x) ||
+      (/\bucet\w*\b/.test(x) && /\b(doklad|faktur)\b/.test(x))
+    );
+  }
+
+  function iuSilverNoteWriteWarrantyObjectRoutingV1Folded(f, rawIn) {
+    const x = String(f || "");
+    const r = String(rawIn || "").trim();
+    if (!IU_SILVER_NOTE_WRITE_WARRANTY_OBJECT_ROUTING_V1 || !x || !r) return false;
+    const calNegNoteWrite =
+      iuSilverCap54NegatedCalendarEventCueFolded(x) ||
+      (/\bneukladej\s+do\s+kalendar/.test(x) && /\bpoznam/.test(x)) ||
+      iuSilverExplicitNoteWriteDominatesCalendarCompositeFolded(x);
+    if (
+      (iuSilverNegativeCreateGuardFolded(x) || iuSilverP0TrailingGlobalNicNeukladejBlocksWriteFolded(x)) &&
+      !calNegNoteWrite
+    )
+      return false;
+    if (!iuSilverNoteWriteWarrantyObjectCueFolded(x)) return false;
+    const writeCue =
+      /\b(uloz|ulo[zž]|zapis|zapi[sš]|poznamenej|zapamatuj)\b/.test(x) ||
+      /\bdej\s+[\s\S]{0,48}?do\s+poznam/.test(x) ||
+      /\buloz\w*\s+[\s\S]{0,4000}?\s+do\s+poznam/.test(x);
+    const readOnly =
+      /\b(kdy|najdi|kde\s+mam|co\s+jsem\s+si\s+psal|vyhledej|hledej|ukaz|uka[zž])\b/.test(x) && !writeCue;
+    if (readOnly) return false;
+    if (/\bneni\s+to\s+ukol\b/.test(x) && (iuSilverNoteWriteWarrantyObjectCueFolded(x) || /\binformac\w*/.test(x))) return true;
+    if (/\bjen\s+(?:poznam|informac|memo)\b/.test(x) && /\b(ne\s+)?kalendar\b/.test(x)) return true;
+    if (/\bneukladej\s+do\s+kalendar/.test(x) && /\bpoznam/.test(x)) return true;
+    if (/\bne\s+ukol\b/.test(x) && (iuSilverNoteWriteWarrantyObjectCueFolded(x) || /\binformac\w*/.test(x))) return true;
+    if (writeCue) return true;
+    if (/\b(informac\w*|info|fakt)\b/.test(x) && /\b(uloz|ulo[zž]|zapis|zapi[sš])\b/.test(x)) return true;
+    if (
+      /\b(uloz|zapis)\b/.test(x) &&
+      /\b(platnost|zaruk|garanc|reklamac)\b/.test(x) &&
+      /\b(lednic|prack|televiz|mobil|notebook|auto|myck|kavovar|tablet)\b/.test(x)
+    )
+      return true;
+    return false;
+  }
+
+  function iuSilverTryNoteWriteWarrantyObjectRoutingV1Turn(raw, now, foldedOpt) {
+    const f = String(foldedOpt || foldCs(String(raw || "")));
+    const r = String(raw || "").trim();
+    let ff = iuSilverTemporalTaskQueryRoutingV1StripPrefixFolded(f || foldCs(r)) || f || foldCs(r);
+    ff = String(ff || "")
+      .replace(/^\s*bez\s+diakritiky\s*:\s*/i, "")
+      .trim();
+    if (!iuSilverNoteWriteWarrantyObjectRoutingV1Folded(ff, r)) return null;
+    const mTaskNotWarranty = ff.match(/\bneni\s+to\s+ukol\b[\s\S]{0,120}?\binformac\w*\s+o\s+(.+)/i);
+    if (mTaskNotWarranty && mTaskNotWarranty[1]) {
+      let bTn = String(mTaskNotWarranty[1])
+        .replace(/\s*,\s*ne\s+kalendar\b[\s\S]*$/iu, "")
+        .replace(/\s+ne\s+ukol\b[\s\S]*$/iu, "")
+        .trim();
+      bTn = iuSilverNoteCreateFinalizeBody(bTn) || bTn;
+      if (bTn) return iuSilverBuildNoteCreateTurn(bTn, now);
+    }
+    const nh = iuSilverTryParseExplicitNoteCreate(r);
+    if (nh && nh.kind === "body") return iuSilverBuildNoteCreateTurn(nh.body, now);
+    const bodyResFolded = [
+      /\buloz\w*\s+(?:fakt|info(?:rmac\w*)?)\s+o\s+(zaruk\w*|zaruc\w*|reklamac\w*)\s+na\s+(.+?)(?:\s+do\s+pozn|$)/i,
+      /\buloz\w*\s+info(?:rmac\w*)?\s+o\s+(zaruk\w*|zaruc\w*|reklamac\w*)\s+na\s+(.+?)(?:\s+do\s+pozn|$)/i,
+      /\buloz\w*\s+(?:ucten\w*|doklad\w*|faktur\w*)\s+k\s+(.+?)(?:\s+do\s+pozn|$)/i,
+      /\bzapis\w*\s+si\s+(?:doklad|faktur\w*|ucten\w*)\s+k\s+(.+)/i,
+      /\bpoznamenej\s+si\s+(.+)/i,
+      /\bzapamatuj\s+si\s+(?:ze|ze)\s+(.+)/i,
+      /\bzapamatuj\s+si\s+(.+)/i,
+      /\bdej\s+[\s\S]{0,40}?do\s+poznam\w*\s*,?\s*(?:ze|ze)\s+(.+)/i,
+      /\buloz\w*\s+poznamku\s*:\s*(.+?)(?:\s*,\s*ne\s+kalendar|$)/i,
+      /\bjen\s+informac\w*\s+o\s+(zaruk\w*|zaruc\w*|reklamac\w*[^.!?]*)/i,
+      /\bneni\s+to\s+ukol\b[\s\S]{0,80}?\binformac\w*\s+o\s+(.+)/i,
+      /\buloz\w*\s+info\s+o\s+platnosti\s+(zaruk\w*|zaruc\w*)\s+na\s+(.+)/i,
+      /\buloz\w*\s+faktur\w*\s+za\s+(.+?)(?:\s+do\s+pozn|$)/i
+    ];
+    for (let bi = 0; bi < bodyResFolded.length; bi++) {
+      const mB = ff.match(bodyResFolded[bi]);
+      if (!mB) continue;
+      let body = String(mB[mB.length - 1] || mB[1] || "")
+        .replace(/\s*,\s*ne\s+jako\s+udalost\b[\s\S]*$/iu, "")
+        .replace(/\s*,\s*nevytvor\w*\s+udalost\b[\s\S]*$/iu, "")
+        .replace(/\s*,\s*ne\s+jako\s+ukol\b[\s\S]*$/iu, "")
+        .replace(/\s+ne\s+ukol\b[\s\S]*$/iu, "")
+        .replace(/\s*,\s*ne\s+kalendar\b[\s\S]*$/iu, "")
+        .trim();
+      body = iuSilverNoteCreateFinalizeBody(body) || body;
+      if (body) return iuSilverBuildNoteCreateTurn(body, now);
+    }
+    if (/\bneukladej\s+do\s+kalendar/.test(f) && /\bdej\s+[\s\S]{0,32}?do\s+poznam/.test(f)) {
+      return iuSilverBuildNoteCreateTurn("informace k uložení", now);
+    }
+    if (/\bjen\s+(?:poznam|informac|memo)\b/.test(f)) {
+      const mJ = r.match(/\bjen\s+(?:poznam\w*|informac\w*|memo)\s+o\s+(.+?)(?:\s*,\s*ne\s+kalendar|$)/iu);
+      if (mJ && mJ[1]) {
+        const bJ = iuSilverNoteCreateFinalizeBody(String(mJ[1]).trim()) || String(mJ[1]).trim();
+        if (bJ) return iuSilverBuildNoteCreateTurn(bJ, now);
+      }
+    }
+    const mInf = ff.match(/\buloz\w*\s+informac\w*\s+o\s+(zaruk\w*|zaruc\w*|reklamac\w*)\s+na\s+(.+)/i);
+    if (mInf) {
+      const bInf = iuSilverNoteCreateFinalizeBody(String(mInf[1] + " na " + mInf[2]).trim());
+      if (bInf) return iuSilverBuildNoteCreateTurn(bInf, now);
+    }
+    const mInfo = ff.match(/\buloz\w*\s+info\s+o\s+(reklamac\w*|zaruk\w*|zaruc\w*)\s+(.+)/i);
+    if (mInfo) {
+      const bInfo = iuSilverNoteCreateFinalizeBody(String(mInfo[1] + " " + mInfo[2]).trim());
+      if (bInfo) return iuSilverBuildNoteCreateTurn(bInfo, now);
+    }
+    return null;
+  }
+
   /** P0 note_write_20k: brain NOTE_BODY nesmí přepsat calendar override (praha/adresa + modulová negace události). */
   function iuSilverNoteWriteRoutingV1BlocksCalendarOverrideFolded(f, rawIn) {
     const x = String(f || "");
     const r = String(rawIn || "").trim();
     if (!x) return false;
     if (iuSilverNoteWriteFactualMemoryRoutingV1Folded(x, r)) return true;
+    if (iuSilverNoteWriteWarrantyObjectRoutingV1Folded(x, r)) return true;
     if (/\bdo\s+poznam/.test(x) && iuSilverCap54NegatedCalendarEventCueFolded(x)) return true;
     if (iuSilverExplicitNoteWriteDominatesCalendarCompositeFolded(x)) return true;
     if (iuSilverHasExplicitNotesTarget(x) && !iuSilverCap53CalendarEventNoteOwnershipFolded(x, r)) return true;
@@ -36664,7 +36783,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       iuSilverCap54NegatedCalendarEventCueFolded(f) || iuSilverExplicitNoteWriteDominatesCalendarCompositeFolded(f);
     if (!noteTarget || !calNeg) return null;
     if (/\b(schuz|doktor|termin|servis|holic|porad|pravnik)\b/.test(f) && !/\bne\s+do\s+kalend/.test(f)) return null;
-    if (/\bkalend/.test(f) && !/\bne\s+do\s+kalend/.test(f)) return null;
+    if (/\bkalend/.test(f) && !/\bne\s+do\s+kalend/.test(f) && !/\bneukladej\s+do\s+kalendar/.test(f)) return null;
     let body = "";
     const cap54Lead = r.match(/\bdo\s+(?:jako\s+)?pozn[aá]m\w*\s*,?\s*(?:že|ze)\s+(.+)/iu);
     if (cap54Lead && cap54Lead[1]) {
@@ -47315,6 +47434,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const f = String(folded || "");
     const r0 = String(raw || "").trim();
     if (!r0) return null;
+    if (iuSilverNoteWriteWarrantyObjectRoutingV1Folded(f, r0)) return null;
     if (iuSilverCalendarWriteNegatedTaskTargetGuardV1Folded(f)) return null;
     if (iuSilverCalendarReadWinsOverTaskReadFolded(f)) return null;
     /**
@@ -55630,6 +55750,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const x = String(f || "");
     const raw = String(rawOpt || "");
     if (iuSilverCalendarWriteNegatedTaskTargetGuardV1Folded(x)) return false;
+    if (iuSilverNoteWriteWarrantyObjectRoutingV1Folded(x, raw)) return false;
     if (!iuSilverQueryUnderstandingEngineV1Folded(x, raw)) return false;
     if (iuSilverHasStrongWriteCreateCueV1(x, raw)) return false;
     if (/\bjen\s+(se\s+podivej|se\s+podívej|zjisti|cti|čti|vypis|vypi[sš])\b/.test(x) && iuSilverHasCreateCueV1(x, raw)) return false;
@@ -55662,6 +55783,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const x = String(f || "");
     if (!x) return false;
     if (/\b(uloz|pridej|zapis|vytvor|naplanuj|dej\s+mi\s+do)\b/.test(x)) return false;
+    if (/\bneni\s+to\s+ukol\b/.test(x) && iuSilverNoteWriteWarrantyObjectCueFolded(x)) return false;
     if (/\bnic\s+neukladej\b/.test(x) && /\b(uloz|schuz|kalend)/.test(x)) return false;
     if (/\bschuz\w*\s+s\b/.test(x) && /\b(uloz|do\s+kalend)/.test(x)) return false;
     if (iuSilverTemporalModuleSwitchFollowupReadV1Folded(x)) return true;
@@ -55861,6 +55983,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const fold = String(folded || "");
     const raw = String(rawText || "");
     return (
+      /\bdej\s+(?:to\s+|mi\s+)?do\s+poznam/.test(fold) ||
       /\bdej\s+do\s+poznam/.test(fold) ||
       /\bhod\s+mi\s+do\s+poznam/.test(fold) ||
       /\b(uloz|ulo[zž]|pridej|p[rř]idej|zapis|zapi[sš])\s+(do\s+)?(poznam|ukol|kalend)/.test(fold) ||
@@ -60091,6 +60214,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const foldNoteWriteEarly0 = foldCs(raw0);
       const cap54TurnEarly0 = iuSilverCap54ExplicitNoteWriteNegatedEventP0Turn(raw0, now, foldNoteWriteEarly0);
       if (cap54TurnEarly0) return cap54TurnEarly0;
+      const noteWarrantyTurnEarly0 = iuSilverTryNoteWriteWarrantyObjectRoutingV1Turn(raw0, now, foldNoteWriteEarly0);
+      if (noteWarrantyTurnEarly0) return noteWarrantyTurnEarly0;
       const noteFactualTurnEarly0 = iuSilverTryNoteWriteFactualMemoryRoutingV1Turn(raw0, now, foldNoteWriteEarly0);
       if (noteFactualTurnEarly0) return noteFactualTurnEarly0;
     }
