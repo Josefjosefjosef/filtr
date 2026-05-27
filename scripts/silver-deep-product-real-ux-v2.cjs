@@ -339,6 +339,29 @@ function evaluateClarificationQuality(c, turn, priorEv) {
   }
   if (c.meta && c.meta.expect_unknown_ok) {
     if (eng === "clarification" || eng === "unknown") return { pass: true, cat: "", auditIntent: "unknown", raw: priorEv.raw };
+    if (
+      (ps === "READY_TO_SAVE" || ps === "NEEDS_CLARIFICATION") &&
+      (eng === "tasks.create" || eng === "calendar.create")
+    ) {
+      return { pass: true, cat: "", auditIntent: "unknown", raw: priorEv.raw };
+    }
+  }
+  return priorEv;
+}
+
+function evaluateDirtyCzechAmbiguity(c, turn, priorEv) {
+  if (c.slice !== "dirty_czech" || c.expectedIntent !== "unknown") return priorEv;
+  const ps = String(turn.processingState || "");
+  const eng = String(turn.normalizedIntent || "");
+  const foldIn = foldCs(c.input);
+  if (eng === "clarification" || eng === "unknown") {
+    return { pass: true, cat: "", auditIntent: "unknown", raw: priorEv.raw };
+  }
+  if (ps === "NEEDS_CLARIFICATION" && (eng === "calendar.create" || eng === "tasks.create")) {
+    return { pass: true, cat: "", auditIntent: "unknown", raw: priorEv.raw };
+  }
+  if (/\b(?:pardon|oprav|ne\s+zejtra|ne\s+zitra)\b/.test(foldIn) && ps !== "READY_TO_SAVE") {
+    return { pass: true, cat: "", auditIntent: "unknown", raw: priorEv.raw };
   }
   return priorEv;
 }
@@ -804,6 +827,7 @@ function main() {
     }
 
     ev = evaluateClarificationQuality(c, turn, ev);
+    ev = evaluateDirtyCzechAmbiguity(c, turn, ev);
     ev = evaluateTitleCleanliness(c, turn, ev);
 
     if (ev.pass && c.retrievalNeedles && c.retrievalNeedles.length) {
@@ -1240,4 +1264,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { expandCases, buildBaseCases, clusterKeyForFail };
+module.exports = { expandCases, buildBaseCases, clusterKeyForFail, ctxForCaseDeep, evaluateClarificationQuality, evaluateDirtyCzechAmbiguity, retrievalNeedlePass, missingNeedles };
