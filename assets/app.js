@@ -55670,6 +55670,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\b(?:mam|musim)\s+(?:zavolat|zaplatit|koupit|poslat|objednat)\b/.test(x) && /\?/.test(x)) return true;
     if (/^\s*(?:hele|no|prosim|kratce|vlastne)?\s*(?:mam|musim)\s+(?:zavolat|zaplatit|koupit|poslat|objednat)\b/.test(iuSilverTemporalTaskQueryRoutingV1StripPrefixFolded(x))) return true;
     if (/\bmam\s+neco\s+(?:\w+\s+){0,3}(?:ohledne|kolem)\b/.test(x)) return true;
+    if (/\bmam\s+neco\s+na\s+(?:pondeli|utor|stredu|ctvrt|patek|sobot|nedeli|zitra|dnes)\b/.test(x) && !/\b(kalend|schuz|udalost)\b/.test(x)) return true;
     if (/\bco\s+(?:\w+\s+){0,5}jsem\s+(?:mel|mela|meli|resil|resi|resila)\b/.test(x) && !/\b(kalend|schuz|udalost)\b/.test(x)) return true;
     if (/\bco\s+mam\s+(?:kolem|ohledne)\b/.test(x) && !/\b(kalend|schuz|poznam)\b/.test(x)) return true;
     if (/\bco\s+mam\s+s\s+\w+/.test(x) && !iuSilverRelationshipCoMamSExplicitCalendarCueFolded(x)) return true;
@@ -55725,6 +55726,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const taskDeadline = iuSilverTryTaskDeadlineAnswerReadTurnV2(raw, now, f, ctx, empty);
     if (taskDeadline) return taskDeadline;
     if (/\b(?:mam|musim)\s+(?:zavolat|zaplatit|koupit|poslat|objednat)\b/.test(f) && (/\?/.test(r0) || /^\s*(?:hele|no|prosim|kratce|vlastne)?\s*(?:mam|musim)\s+(?:zavolat|zaplatit|koupit)/.test(iuSilverTemporalTaskQueryRoutingV1StripPrefixFolded(f))) && !/\b(uloz|pridej|zapis|vytvor|dej\s+do)\b/.test(f)) {
+      return iuSilverBuildTasksReadListTurn(ctx || {}, empty, f, now);
+    }
+    if (/\bmam\s+neco\s+na\s+(?:pondeli|utor|stredu|ctvrt|patek|sobot|nedeli|zitra|dnes)\b/.test(f) && !/\b(kalend|schuz|udalost)\b/.test(f)) {
       return iuSilverBuildTasksReadListTurn(ctx || {}, empty, f, now);
     }
     if (/\bmam\s+neco\s+(?:\w+\s+){0,3}(?:ohledne|kolem)\b/.test(f)) {
